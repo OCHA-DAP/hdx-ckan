@@ -1,0 +1,41 @@
+syntax: glob
+# generic
+*.pyc
+*.swp
+*.swo
+.DS_Store
+ckan.egg-info/*
+sandbox/*
+dist
+
+# pylons
+development.ini*
+sstore/*
+data/*
+pylons_data/*
+#ckan/il8n/*/*/*.mo
+
+# other
+pip-requirements-local.txt
+migrate/*
+build/*
+solr_runtime/*
+fl_notes.txt
+*.ini
+.noseids
+*~
+
+# nosetest coverage output
+.coverage
+htmlcov/*
+
+# CKAN
+ckan.log
+ckan_deb/DEBIAN/control
+ckan_deb/DEBIAN/prerm
+etc/default/*.ini
+
+# node.js
+node_modules/
+
+

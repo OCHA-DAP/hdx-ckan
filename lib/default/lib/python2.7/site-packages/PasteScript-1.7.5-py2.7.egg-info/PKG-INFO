@@ -1,0 +1,44 @@
+Metadata-Version: 1.1
+Name: PasteScript
+Version: 1.7.5
+Summary: A pluggable command-line frontend, including commands to setup package file layouts
+Home-page: http://pythonpaste.org/script/
+Author: Ian Bicking
+Author-email: ianb@colorstudy.com
+License: MIT
+Description: This is a pluggable command-line tool.
+        
+        It includes some built-in features;
+        
+        * Create file layouts for packages.  For instance, ``paste create
+          --template=basic_package MyPackage`` will create a `setuptools
+          <http://peak.telecommunity.com/DevCenter/setuptools>`_-ready
+          file layout.
+        
+        * Serving up web applications, with configuration based on
+          `paste.deploy <http://pythonpaste.org/deploy/paste-deploy.html>`_.
+        
+        The latest version is available in a `Mercurial repository
+        <http://bitbucket.org/ianb/pastescript/>`_.
+        
+        For the latest changes see the `news file
+        <http://pythonpaste.org/script/news.html>`_.
+        
+        Changes in 1.7.5
+        ----------------
+        
+        * Import CherryPy directly instead of including its server inline in the
+          ``paste.script`` package.  You must install CherryPy before using
+          ``egg:PasteScript#cherrypy``
+        
+        
+Keywords: web wsgi setuptools framework command-line setup
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python
+Classifier: Topic :: Internet :: WWW/HTTP
+Classifier: Topic :: Internet :: WWW/HTTP :: Dynamic Content
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Framework :: Paste

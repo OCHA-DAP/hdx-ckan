@@ -1,0 +1,5 @@
+repoze.who<1.9
+python-openid>=2.0
+setuptools
+webob
+zope.interface

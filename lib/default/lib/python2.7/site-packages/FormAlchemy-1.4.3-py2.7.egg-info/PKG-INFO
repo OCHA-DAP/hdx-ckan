@@ -1,0 +1,480 @@
+Metadata-Version: 1.1
+Name: FormAlchemy
+Version: 1.4.3
+Summary: FormAlchemy greatly speeds development with SQLAlchemy mapped classes (models) in a HTML forms environment.
+Home-page: http://docs.formalchemy.org/
+Author: Alexandre Conrad, Jonathan Ellis, Gaël Pasgrimaud
+Author-email: formalchemy@googlegroups.com
+License: MIT License
+Description: .. contents::
+        
+        Description
+        ===========
+        
+        FormAlchemy eliminates boilerplate by autogenerating HTML input fields from a
+        given model. FormAlchemy will try to figure out what kind of HTML code should
+        be returned by introspecting the model's properties and generate ready-to-use
+        HTML code that will fit the developer's application.
+        
+        Of course, FormAlchemy can't figure out everything, i.e, the developer might
+        want to display only a few columns from the given model. Thus, FormAlchemy is
+        also highly customizable.
+        
+        Please visit the FormAlchemy's homepage for documentation and more information:
+        
+          http://docs.formalchemy.org/
+        
+        You can subscribe to FormAlchemy's mailing list:
+        
+          http://groups.google.com/group/formalchemy
+        
+        
+        Changes
+        =======
+        
+        1.4.3
+        --------
+        
+        * Allow fields to set their `readonly` status to False as well as True.
+        
+        * SQLAlchemy 0.8+ support
+        
+        1.4.2
+        -----
+        
+        * WebOb1.2 compat
+        
+        * Add some HTML5 renderer
+        
+        * Improve fsblob deletion. issue 16
+        
+        * Add support for fanstatic in pytlons (thanks to Bruno Binet aka inneos)
+        
+        1.4.1
+        -----
+        
+        * Implemented WebOb-like request passing to FieldSet directly.
+        
+        * Also implemented request passing to Grid
+        
+        * Added support to set `.html_options` with Field.set(html={'some': 'thing'})
+        
+        * Added support for set(validators=[validator1, validator2]) which adds the
+          specified validators.
+        
+        * Fixed the set(null_as=...), was nul_as and badly wired in.
+        
+        * Improved documentation for the Field.set() method
+        
+        * Support zope.schema.Password
+        
+        * Fix issues 9, 10, 11, 12
+        
+        
+        1.4
+        ----
+        
+        * Fix issue 5, 7
+        
+        * Allow to binf form to a webob like request
+        
+        * Add Column wrapper to store some form options in models
+        
+        * Field label translation
+        
+        1.3.9
+        -----
+        
+        * fix unicode issue with non webob based framework
+        
+        1.3.8
+        -----
+        
+        * use webob.multidict as ``data``. This will improve unicode handling in the
+          future (eg: py3k migration). WebOb is now a dependency.
+        
+        * add to_dict() method and .bind(with_prefix=True/False) to help to work with json data
+        
+        * improve ext.fsblob. files are wrote on the file system using
+          ``shutil.copyfileobj`` from the ``cgi.FieldStorage`` field
+        
+        * Add a HiddenFieldRendererFactory and allow to hide Date/Time fields via
+          ``.hidden()`` and ``.set(hidden=True)`` (Thanks to tarek to put this idea in
+          my brain)
+        
+        * added german translation (thanks @disko for pull request)
+        
+        * fix issue 1, 2 (on github)
+        
+        1.3.6
+        -----
+        
+        * fix issues 150, 151, 153, 161, 162
+        
+        * Added `field.label()` and `field.label_tags()`
+        
+        * Major refactoring. The `base` module no longer existe.
+        
+        1.3.5
+        -----
+        
+        * No longer use Binary type. Use LargeBinary instead.
+        
+        * fix issues 145, 147
+        
+        1.3.4
+        ------
+        
+        * renderer._value is deprecated. Use renderer.value
+        
+        * added renderer.raw_value
+        
+        * Model.__html__() (if any) is used to render model in read_only mode.
+        
+        1.3.3
+        -----
+        
+        * Added `.insert_after(field, new_field)` to the `FieldSet` object.  Same
+          as `.insert()`, except it adds it after the specified field.
+        
+        * Docs improvements
+        
+        * Fix 131 to 137
+        
+        1.3.2
+        -----
+        
+        * Added `.value_objects` to both Field and FieldRenderer objects. Returns the
+          objects instead of list of primary keys when working with ForeignKeys.
+        
+        * add IntervalFieldRenderer
+        
+        * switch back to WebHelpers
+        
+        * add Hungarian translation (125)
+        
+        * fix bug with latest version of couchdbkit
+        
+        * update paster template to Pylons 1.0b1
+        
+        * fix issues 123, 124, 127, 128
+        
+        1.3.1
+        -------
+        
+        * include css in MANIFEST.in
+        
+        1.3
+        -----
+        
+        * new controllers to generate CRUD interfaces based on pylons RESTController
+        
+        * couchdb support improvement (allow to use RESTController)
+        
+        * Experimental RDFAlchemy support
+        
+        * Add date formats to config module.
+        
+        * add fs.copy()
+        
+        * zope.schema.List and zope.schema.Choice support (thanks to Christophe Combelles)
+        
+        * fix issues 107, 113, 114, 117, 118
+        
+        * css improvement for pylons admin interface
+        
+        1.2.1
+        -----
+        
+        * Added fs.append(field) fs.insert(field, new_field) and del fs.field to
+          Fieldset. fs.add() is deprecated.
+        
+        * Added field.set() to modify the field inplace.
+        
+        * bug fixes: issues 70, 80, 82, 97
+        
+        * added spanish tanslation (thanks to robarago)
+        
+        * added the `.with_html` method to `AbstractField` which will be
+          passed to the renderers, allowing to add some HTML attributes to rendered
+          HTML tags.  Removed html_options from render method.  (See issue #60)
+        
+        * validators are now passed as second argument the `field` being validated. WARN:
+          this will mean adding the parameter to your functions to be backwards compatible.
+          The validator function signature changed from `myfunc(value)` to
+          `myfunc(value, field=None)`.
+        
+        * ext.couchdb now use couchdbkit instead of py-simplecouchdb
+        
+        * added the `.with_metadata` method to `AbstractField` which allows
+          you to add metadata to your field. The difference with `.with_html()` is that
+          the attributes passed in will not be rendered in the HTML element, but are there
+          only to be used in your templates, to tweak the output according to those
+          properties. See docs/forms.txt
+        
+        
+        1.2
+        ---
+        
+        * add a paster template to bootstrap a pylons project with FA support enabled
+        
+        * much sexier look for admin interface
+        
+        * performance improvements
+        
+        * non-SQLA Fields are no longer considered "experimental"
+        
+        * with_null_as feature (see issue #52)
+        
+        * prefix feature (see issue #59)
+        
+        * when auto-querying for option values, the order_by given on the relation is used, if any
+        
+        * synonym awareness (you don't have to manually exclude the shadowed attribute)
+        
+        * ext.couchdb (experimental)
+        
+        
+        1.1.1
+        -----
+        
+        * bug fixes: issues 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 49
+        
+        * added EscapingReadonlyRenderer
+        
+        * add Date*Renderer translation
+        
+        
+        1.1
+        ---
+        
+        * formalchemy.ext.pylons.admin added; see
+          http://docs.formalchemy.org/ext/pylons.html
+        
+        * formalchemy.ext.fsblob added; see
+          http://docs.formalchemy.org/ext/fsblob.html
+        
+        * support for composite primary keys
+        
+        * support for composite foreign keys of primitive types
+        
+        * model argument now optional for FieldSet.bind
+        
+        * apply i8n to Grid labels
+        
+        * documentation improvement
+        
+        * bug fixes
+        
+        
+        1.0.1
+        -----
+        
+        * Bug fixes
+        
+        
+        1.0
+        ---
+        
+        * i18n support (gael.pasgrimaud)
+        
+        * file upload support (gael.pasgrimaud)
+        
+        * mapper property alias support (gael.pasgrimaud)
+        
+        * add `kwargs` to FieldSet and Grid render methods, which are passed
+          on to the template.  this allows easy custom template use w/o having
+          to subclass.  (lbruno)
+        
+        * removed query_options.  Just pass the query as the argument to the
+          options parameter, and FA will turn it into (description, value)
+          pairs.  FA will also accept an iterable of objects as a value to the
+          options parameter.
+        
+        * unicode(object) is used as the default option description, not
+          str(object).  (Before, unicode was only used if the engine had
+          convert_unicode turned on.)  This is more consistent with normal SA
+          behavior.
+        
+        * added sanity checks to disallow getting into an inconsistent state.
+          notably, binding to an object that belongs to a session but does NOT
+          have a primary key set is not allowed.  workaround: bind to the
+          class, and FA will instantiate it and take it out of the session
+          [until sync()].  Then you can pull that instance out as the .model
+          attribute.
+        
+        * sync() will save model to session, if necessary
+        
+        * add Field.with_renderer
+        
+        * allow manually-added fields to pull their value from the bound model
+        
+        * fs.[field] returns the configured version of the field, not the
+          unconfigured.  fs.fields renamed to fs._fields.  Added Field.reset()
+          to deepcopy the unconfigured version.
+        
+        * explicit renderers required for custom types (FieldRenderer.render removed)
+        
+        * new documentation http://docs.formalchemy.org (gael.pasgrimaud)
+        
+        * bug fixes
+        
+        
+        0.5.1
+        -----
+        
+        * Synonym support
+        
+        * Bug fixes
+        
+        
+        0.5
+        ---
+        
+        * Composite field and custom type support
+        
+        * Joined table support
+        
+        * Grid (companion to FieldSet) renders and edits multiple instances
+          at once.
+        
+        * readonly support for FieldSet (replacing undocumented Table), Grid
+          (replacing TableCollection)
+        
+        * FieldSet can render Fields from a non-mapped class (experimental)
+        
+        * Saner (backwards-incompatible, but easy port) widget
+          (FieldRenderer) API
+        
+        * FieldSet.render_fields is now an OrderedDict like FieldSet.fields.
+          Use render_fields.[iter]values() to get an iterable like the old
+          render_fields.
+        
+        * Bug fixes
+        
+        
+        0.3.1
+        -----
+        
+        * Bug fixes
+        
+        * Much better DateTime support
+        
+        * Extensible widget API (want to use your favorite date picker instead?  No problem.)
+        
+        * `FieldRenderer` is now part of `from formalchemy import *` for use here
+        
+        * Minor changes to template API (details in documentation).  Does not affect
+          you unless you already wrote a custom template
+        
+        * order fields by declared order as much as possible, instead of alphabetical,
+          when include= is absent
+        
+        * Validator suite fleshed out (minlength, maxlength, regex, email, currency)
+        
+        * Added doc sections on widget API and validation functions
+        
+        
+        0.3
+        ---
+        
+        * Completely new API, based on Fields instead of column names
+        
+        * Support manually added Fields, not just attributes from the SA model
+        
+        * Relations (a FK will be rendered with a dropdown of related objects)
+        
+        * Validation + sync
+        
+        * Template-based rendering for greater customizibility.  Tempita is included;
+          Mako is detected and used if present
+        
+        * WebHelpers is no longer a dependency; the small parts FA needs have been
+          moved into helpers.py.  (This was prompted by WebHelpers 0.6 breaking
+          backwards compatibility in nontrivial ways.)
+        
+        * Pervasive docstrings
+        
+        * Preliminary SA 0.5 support
+        
+        * Regression test suite
+        
+        
+        0.2
+        ---
+        
+        * Added 'disable', 'disable_pk', 'disable_fk' options.
+        
+        * Fixed a bug where 'readonly*' options only worked for 'password' fields.
+        
+        * Added 'date', 'time' and 'datetime' options for date/time fields formatting.
+        
+        * Added 'bool_as_radio' option.
+        
+        * Added a hack to force browsers to POST unckecked checkboxes.
+        
+        * Fixed a bug where 'opts' from the 'dropdown' option is no longer rendered as
+          an attribute of the &lt;select&gt; tag.
+        
+        * Fixed a compatibility issue with SQLAlchemy 0.4.1. The 'foreign_key' Column
+          attribute is now 'foreign_keys'.
+        
+        * Added 'fieldset' option.
+        
+        * Added 'include' option. Patch from Adam Gomaa.
+        
+        * Added 'textarea' option. Additionnal patch provided by Adam Gomaa for passing
+          native tuple of intergers as `size` argument value.
+        
+        * Added new experimental, little customizable, 'TableItem' and
+          'TableCollection'. TableItem renders a table from a bound model.
+          TableCollection renders a table from a collection of items that are of the
+          same class than the bound model: TableCollection(bind=client,
+          collection=client_list). The bound model can be a non-instantiated mapped
+          class.
+        
+        * Removed NullType type column detection for now, as it seems to be a SA 0.4
+          only thing. What would a NullType HTML field represent anyway?
+        
+        * FieldSet now returns fields embedded in &lt;fieldset&gt; HTML tags.
+        
+        * Implemented the 'legend' option for FieldSet to provide an optional and
+          customizable &lt;legend&gt; tag. FieldSet uses the bound model's class name as the
+          legend by default. The legend can be customized by passing a string to the
+          'legend' option: `legend='My legend'`. The fieldset can be legend-less by
+          passing `legend=False`.
+        
+        * Big core changes. Splitted the single formalchemy.py module into a
+          formalchemy package. More classes, more flexibility. Plus, we're now using
+          model-level and column-level rendering engines: 'ModelRenderer' and
+          'FieldRenderer'.
+        
+        * 'ModelRender' and 'FieldRender' allows you to render a whole model (like
+          FieldSet, but without the fieldset/legend tags) or a single column.
+        
+        * FieldSet now uses 'ModelRenderer'.
+        
+        * Added new experimental, little customizable, non-form related, 'TableItem'
+          and 'TableCollection'. TableItem renders a table from a bound model.
+          TableCollection renders a table from a collection of items that are of the
+          same class than the bound model: TableCollection(bind=client,
+          collection=client_list). The bound model can be a non-instantiated mapped
+          class.
+        
+        
+        0.1
+        ---
+        
+        * Initial release.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Natural Language :: English
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Topic :: Software Development :: User Interfaces
+Classifier: Topic :: Text Processing :: Markup :: HTML
+Classifier: Topic :: Utilities
