@@ -1,5 +1,0 @@
-Paste
-WebOb
-
-[test]
-pytest >= 2.0

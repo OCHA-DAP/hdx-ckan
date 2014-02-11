@@ -1,6 +1,0 @@
-
-
-[Paste]
-Paste
-
-[Config]

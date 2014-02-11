@@ -1,4 +1,0 @@
-
-    [buildutils.optional_commands]
-    compress_resources = webhelpers.commands
-    
