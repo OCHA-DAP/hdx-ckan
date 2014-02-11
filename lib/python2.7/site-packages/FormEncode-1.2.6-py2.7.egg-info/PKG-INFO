@@ -1,0 +1,20 @@
+Metadata-Version: 1.1
+Name: FormEncode
+Version: 1.2.6
+Summary: HTML form validation, generation, and conversion package
+Home-page: http://formencode.org
+Author: Ian Bicking
+Author-email: ianb@colorstudy.com
+License: PSF
+Description: FormEncode validates and converts nested structures.  It allows for
+        a declarative form of defining the validation, and decoupled processes
+        for filling and generating forms.
+        
+        The official repo is at GitHub: https://github.com/formencode/formencode
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Python Software Foundation License
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

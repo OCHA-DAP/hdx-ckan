@@ -1,0 +1,10 @@
+#!/usr/lib/ckan/default/bin/python
+# EASY-INSTALL-ENTRY-SCRIPT: 'ofs==0.4.1','console_scripts','ofs_upload'
+__requires__ = 'ofs==0.4.1'
+import sys
+from pkg_resources import load_entry_point
+
+if __name__ == '__main__':
+    sys.exit(
+        load_entry_point('ofs==0.4.1', 'console_scripts', 'ofs_upload')()
+    )

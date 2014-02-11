@@ -1,0 +1,8 @@
+[paste.app_factory]
+serf = fanstatic:make_serf
+
+[paste.filter_app_factory]
+fanstatic = fanstatic:make_fanstatic
+publisher = fanstatic:make_publisher
+injector = fanstatic:make_injector
+

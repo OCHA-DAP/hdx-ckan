@@ -1,0 +1,13 @@
+setuptools
+
+[test]
+zope.event
+
+[docs]
+Sphinx
+repoze.sphinx.autointerface
+
+[testing]
+zope.event
+nose
+coverage
