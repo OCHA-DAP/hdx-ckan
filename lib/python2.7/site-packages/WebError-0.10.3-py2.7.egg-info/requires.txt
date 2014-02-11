@@ -1,4 +1,0 @@
-WebOb
-Tempita
-Pygments
-Paste>=1.7.1

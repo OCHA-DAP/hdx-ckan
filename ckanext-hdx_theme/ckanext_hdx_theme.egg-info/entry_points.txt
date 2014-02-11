@@ -1,0 +1,4 @@
+
+        [ckan.plugins]
+	hdx_theme=ckanext.hdx_theme.plugin:HDXThemePlugin
+	
