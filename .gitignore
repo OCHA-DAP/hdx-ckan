@@ -31,8 +31,7 @@ htmlcov/*
 
 # CKAN
 ckan.log
-ckan_deb/DEBIAN/control
-ckan_deb/DEBIAN/prerm
+ckan_deb/
 etc/default/*.ini
 
 # node.js
