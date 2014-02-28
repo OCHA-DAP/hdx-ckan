@@ -8,11 +8,10 @@ from ckan.common import _
 def convert_to_extras(key, data, errors, context):
     extras = data.get(('extras',), [])
     if not extras:
-        data[('extras',)] = extras
+        data[('extras',)] = extras 
     extras.append({'key': key[-1], 'value': data[key]})
 
 def convert_from_extras(key, data, errors, context):
-
     def remove_from_extras(data, key):
         to_remove = []
         for data_key, data_value in data.iteritems():

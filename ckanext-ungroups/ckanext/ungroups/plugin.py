@@ -30,26 +30,27 @@ class UNIGroupFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 		return []
 
 	def _modify_group_schema(self, schema):
-		schema.update({'language_code':[tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
+		schema.update({'language_code':[tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],})
+		schema.update({'relief_web_url':[tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
+		schema.update({'hr_info_url':[tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
+		schema.update({'geojson':[tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
 		return schema
 
-	def create_group_schema(self):
-		schema = super(UNIGroupFormPlugin, self).create_group_schema()
+	def form_to_db_schema(self):
+		schema = super(UNIGroupFormPlugin, self).form_to_db_schema()
 		schema = self._modify_group_schema(schema)
 		return schema
 
-	def update_group_schema(self):
-		schema = super(UNIGroupFormPlugin, self).update_group_schema()
-		schema = self._modify_group_schema(schema)
-		return schema
-
-	def show_group_schema(self):
-		schema = super(UNIGroupFormPlugin, self).show_group_schema()
-		schema.update({
-			'language_code': [
-			tk.get_converter('convert_from_extras'),
-			tk.get_validator('ignore_missing')]
-	})
-		return schema
+	def db_to_form_schema(self):
+		#There's a bug in dictionary validation when form isn't present
+		if tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
+			schema = super(UNIGroupFormPlugin, self).form_to_db_schema()
+			schema.update({'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+			schema.update({'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+			schema.update({'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+			schema.update({'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+			return schema
+		else:
+			return None
 
 
