@@ -107,16 +107,7 @@
       {% endblock #}
 
     </div>
-    <div id="group_nav">
-      <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
-      <div id="group_dropdown" class="pull-right">
-        <select>
-          {% for group in c.group_package_stuff %}
-          {% snippet 'group/snippets/group_dropdown.html', group=group.group_dict, truncate=50, truncate_title=35 %}
-          {% endfor %}
-          </select>
-      </div>
-    </div>
+    
   </div>
 </header>
 {% endblock %}

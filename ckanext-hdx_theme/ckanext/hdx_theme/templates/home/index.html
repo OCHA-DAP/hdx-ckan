@@ -8,6 +8,7 @@
   <div role="main" class="hero">
     <div id="content" class="container">
       {{ self.flash() }}
+      {{ self.group_drop() }}
       {{ self.group_map() }}
     </div>
   </div>
@@ -16,6 +17,19 @@
       {{ self.primary_content() }}
     </div>
   </div>
+{% endblock %}
+
+{% block group_drop %}
+<div id="group_nav">
+      <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
+      <div id="group_dropdown" class="pull-right">
+        <select>
+          {% for group in c.group_package_stuff %}
+          {% snippet 'group/snippets/group_dropdown.html', group=group.group_dict, truncate=50, truncate_title=35 %}
+          {% endfor %}
+          </select>
+      </div>
+    </div>
 {% endblock %}
 
 {% block group_map %}
