@@ -150,8 +150,8 @@ class HomeController(base.BaseController):
                 group = get_group(group_name)
                 if group:
                     groups_data.append(group)
-                if len(groups_data) == 2:
-                    break
+                #if len(groups_data) == 2:
+                #    break
 
             # c.groups is from the solr query above
             if len(groups_data) < 2 and len(c.groups) > 0:

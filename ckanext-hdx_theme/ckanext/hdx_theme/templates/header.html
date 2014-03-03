@@ -96,7 +96,7 @@
         </nav>
       {% endblock %}
 
-      {% block header_site_search %}
+      {# block header_site_search %}
         <form class="section site-search simple-input" action="{% url_for controller='package', action='search' %}" method="get">
           <div class="field">
             <label for="field-sitewide-search">{{ _('Search Datasets') }}</label>
@@ -104,8 +104,18 @@
             <button class="btn-search" type="submit">{{ _('Search') }}</button>
           </div>
         </form>
-      {% endblock %}
+      {% endblock #}
 
+    </div>
+    <div id="group_nav">
+      <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
+      <div id="group_dropdown" class="pull-right">
+        <select>
+          {% for group in c.group_package_stuff %}
+          {% snippet 'group/snippets/group_dropdown.html', group=group.group_dict, truncate=50, truncate_title=35 %}
+          {% endfor %}
+          </select>
+      </div>
     </div>
   </div>
 </header>

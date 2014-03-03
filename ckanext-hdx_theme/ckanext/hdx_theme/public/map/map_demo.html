@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)http://leafletjs.com/examples/quick-start-example.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>Leaflet Quick Start Guide Example</title>
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css">
+	<style>
+	#map{position:absolute;top:100px;left:0px;}
+	</style>
+</head>
+<body>
+	<div id="map" style="width:100%; height: 400px"></div>
+	
+	<script src="./Leaflet_example_files/leaflet.js"></script>
+	<script src="un_groups.json"></script>
+	<script>
+	
+	var map = L.map('map', {
+		center: [49.1642292,10.4541193],
+		maxZoom: 10,
+		zoom: 4,
+		zoomControl: false
+	});
+	var groupStyle = {
+	    "color": "#1b8bbb",
+	    "weight": 5,
+	    "opacity": 0.65
+	};
+	
+	L.tileLayer('http://129.206.74.245:8008/tms_rg.ashx?x={x}&y={y}&z={z}', {
+		attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+	}).addTo(map);
+	geo = L.geoJson(world, {style:groupStyle,onEachFeature: onEachFeature}).addTo(map);
+
+	function zoomToFeature(e) {
+	            console.log(e.target.feature.properties.name);
+	        }
+	function pausePan(){
+		clearInterval(panning)
+	}
+	
+	function resumePan(){
+		window.panning = setInterval(function(){map.panBy([12, 5], {'animate': true, 'duration': .499, 'easeLinearity': 1})},500);
+	}
+		
+	function onEachFeature(feature, layer) {
+
+			if (feature.properties && feature.properties.name) {
+					layer.on({
+				     	mouseover: pausePan,
+				        mouseout: resumePan,
+				        click: zoomToFeature
+				    });
+			    }
+	}
+	resumePan();
+	</script>
+
+</body></html>

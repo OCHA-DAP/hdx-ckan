@@ -19,10 +19,85 @@
 {% endblock %}
 
 {% block group_map %}
+<div id="map_outer" style="width:98%; height: 420px">
+<div id="map" style="width:100%; height: 400px"></div></div>
+  <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css">
+  
+  <script src="/map/leaflet/leaflet.js"></script>
+  <script src="/map/un_groups.json"></script>
+  <script>
+  
+  var map = L.map('map', {
+    center: [49.1642292,10.4541193],
+    maxZoom: 10,
+    zoom: 4,
+    zoomControl: false
+  });
+  var groupStyle = {
+      "color": "#1b8bbb",
+      "weight": 5,
+      "opacity": 0.65
+  };
+  
+  L.tileLayer('http://129.206.74.245:8008/tms_rg.ashx?x={x}&y={y}&z={z}', {
+    attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+  }).addTo(map);
+  geo = L.geoJson(world, {style:groupStyle,onEachFeature: onEachFeature}).addTo(map);
+
+  function zoomToFeature(e) {
+              console.log(e.target.feature.properties.name);
+          }
+  function pausePan(){
+    clearInterval(panning)
+  }
+  
+  function resumePan(){
+    window.panning = setInterval(function(){map.panBy([12, 5], {'animate': true, 'duration': .499, 'easeLinearity': 1})},500);
+  }
+    
+  function onEachFeature(feature, layer) {
+
+      if (feature.properties && feature.properties.name) {
+          layer.on({
+              //mouseover: pausePan,
+                //mouseout: resumePan,
+                click: zoomToFeature
+            });
+          }
+  }
+  //resumePan();
+  </script>
+
 {% endblock %}
 
 {% block primary_content %}
-  <div class="hero-primary module module-popup">
+{% block home_secondary_content %}
+  <div class="module module-shallow module-narrow module-dark info box">
+            {% block home_search %}
+              <form class="module-content search-form" method="get" action="{% url_for controller='package', action='search' %}">
+                <h3 class="heading">{{ _("Search Your Data") }}</h3>
+                <div class="search-input control-group search-giant">
+                  <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. Gold Prices') }}" />
+                  <button type="submit">
+                    <i class="icon-search"></i>
+                    <span>{{ _('Search') }}</span>
+                  </button>
+                </div>
+              </form>
+            {% endblock %}
+            {# block home_tags %}
+              <div class="tags">
+                <h3>{{ _('Popular Tags') }}</h3>
+                {% set tags = h.get_facet_items_dict('tags', limit=3) %}
+                {% for tag in tags %}
+                  <a class="tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+                {% endfor %}
+              </div>
+            {% endblock #}
+          </div>
+      {% endblock %}
+
+  <div class="module module-popup">
     <div class="module-content box">
       {% block home_primary %}
         <header>
@@ -43,59 +118,13 @@
         </header>
       {% endblock %}
 
-      {% block home_image %}
-        <section class="featured media-overlay">
-          <h2 class="media-heading">{% block home_image_caption %}{{ _("This is a featured section") }}{% endblock %}</h2>
-          {% block home_image_content %}
-            <a class="media-image" href="#">
-              <img src="http://placehold.it/420x220" alt="Placeholder" width="420" height="220" />
-            </a>
-          {% endblock %}
-        </section>
-      {% endblock %}
     </div>
   </div>
-  <div class="hero-secondary">
-    <div class="hero-secondary-inner">
-      {% block home_secondary_content %}
-          <div class="module module-shallow module-narrow module-dark info box">
-            {% block home_search %}
-              <form class="module-content search-form" method="get" action="{% url_for controller='package', action='search' %}">
-                <h3 class="heading">{{ _("Search Your Data") }}</h3>
-                <div class="search-input control-group search-giant">
-                  <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. Gold Prices') }}" />
-                  <button type="submit">
-                    <i class="icon-search"></i>
-                    <span>{{ _('Search') }}</span>
-                  </button>
-                </div>
-              </form>
-            {% endblock %}
-            {% block home_tags %}
-              <div class="tags">
-                <h3>{{ _('Popular Tags') }}</h3>
-                {% set tags = h.get_facet_items_dict('tags', limit=3) %}
-                {% for tag in tags %}
-                  <a class="tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-                {% endfor %}
-              </div>
-            {% endblock %}
-          </div>
-      {% endblock %}
-    </div>
-  </div>
+
 {% endblock %}
 
 {% block secondary_content %}
-  <div class="row group-listing">
-    {% for group in c.group_package_stuff %}
-      <div class="span6">
-        <div class="box">
-          {% snippet 'snippets/group_item.html', group=group.group_dict, truncate=50, truncate_title=35 %}
-        </div>
-      </div>
-    {% endfor %}
-  </div>
+ 
 {% endblock %}
 
 {# Remove the toolbar. #}

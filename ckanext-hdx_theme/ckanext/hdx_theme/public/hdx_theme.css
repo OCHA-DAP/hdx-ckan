@@ -1,0 +1,108 @@
+body {
+    background: #fff;
+}
+
+.masthead {
+    background: #fff;
+    color: #222;
+}
+.masthead a {
+    color: #000;
+}
+
+.account-masthead {
+    min-height: 30px;
+    color: #fff;
+    background: #444;
+}
+
+.account-masthead {
+    color: #fff;
+}
+
+.account-masthead .account ul li a:hover {
+  color: #fff;
+  background-color: #333;
+  text-decoration: none;
+}
+
+.account-masthead .account ul li a {
+  display: block;
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 0 10px;
+  line-height: 31px;
+}
+
+.masthead .navigation .nav-pills li a:hover, .masthead .navigation .nav-pills li.active a {
+    background-color: transparent;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+    color: #000;
+    font-weight: bold;
+}
+
+
+.account-masthead .account .notifications a span {
+    font-size: 12px;
+    margin-left: 3px;
+    padding: 1px 6px;
+    background-color: #444;
+    border-radius: 4px;
+}
+
+
+.site-footer {
+  *zoom: 1;
+  min-height: 55px;
+  color: #ffffff;
+  background: #444;
+  padding: 20px 0;
+}
+
+.site-footer .navigation .nav-pills li a:hover,
+.site-footer .navigation .nav-pills li.active a {
+  background-color: #444;
+}
+
+.site-footer,
+.site-footer label,
+.site-footer small {
+  color: #fff;
+}
+.site-footer a {
+  color: #fff;
+}
+.attribution small {
+  color: #fff;
+  font-size: 12px;
+}
+
+
+
+#map_outer{
+	background: #444;
+	margin: 0px;
+	height:30px;
+	padding: 10px;
+	border-radius: 6px;
+	border-color: #333;
+}
+
+#group_nav{
+	background: #444;
+	color: #fff;
+	margin: 0px;
+	height:30px;
+	padding: 10px;
+	border-radius: 6px;
+	border-color: #333;
+}
+
+#group_nav_text{
+	height: 30px;
+	padding: 5px;
+	float: left;
+}
