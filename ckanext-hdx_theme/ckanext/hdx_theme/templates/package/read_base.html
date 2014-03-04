@@ -22,7 +22,7 @@
 
 {% block content_primary_nav %}
   {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name) }}
-  {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name) }}
+  {#{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name) }#}
   {{ h.build_nav_icon('related_list', _('Related'), id=pkg.name) }}
 {% endblock %}
 
@@ -95,6 +95,10 @@
 
   {% block package_license %}
     {% snippet "snippets/license.html", pkg_dict=pkg %}
+  {% endblock %}
+
+  {% block other_sidebar_links %}
+    {% snippet "snippets/other_sidebar_links.html", pkg_dict=pkg %}
   {% endblock %}
 
 {% endblock %}

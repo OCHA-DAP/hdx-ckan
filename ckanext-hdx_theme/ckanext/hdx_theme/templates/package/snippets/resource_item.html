@@ -14,7 +14,30 @@
     {% endif %}
   </p>
   {% block resource_item_explore %}
-  <div class="dropdown btn-group">
+    <div class="btn-group">
+    {% block resource_item_explore_links %}
+    <a href="{{ url }}" class="btn btn-secondary">
+          {% if res.can_be_previewed %}
+            <i class="icon-bar-chart"></i>
+            {{ _('Preview') }}
+          {% else %}
+            <i class="icon-info-sign"></i>
+            {{ _('More information') }}
+          {% endif %}
+        </a>
+     <a href="{{ res.url }}" class="btn btn-primary resource-url-analytics" target="_blank">
+          {% if res.can_be_previewed %}
+            <i class="icon-download"></i>
+            {{ _('Download') }}
+          {% else %}
+            <i class="icon-external-link"></i>
+            {{ _('Go to resource') }}
+          {% endif %}
+        </a>
+      {% endblock %}
+  </div>
+
+  {# <div class="dropdown btn-group">
     <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
       <i class="icon-share-alt"></i>
       {{ _('Explore') }}
@@ -46,6 +69,6 @@
       </li>
       {% endblock %}
     </ul>
-  </div>
+  </div> #}
   {% endblock %}
 </li>

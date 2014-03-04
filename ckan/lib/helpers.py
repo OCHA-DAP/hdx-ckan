@@ -452,7 +452,9 @@ def _make_menu_item(menu_item, title, **kw):
     '''
     _menu_items = config['routes.named_routes']
     if menu_item not in _menu_items:
-        raise Exception('menu item `%s` cannot be found' % menu_item)
+        #Return just a plain link
+        return literal('<li><a href="%s">' % menu_item)+title+literal('</a></li>')
+        #raise Exception('menu item `%s` cannot be found' % menu_item)
     item = copy.copy(_menu_items[menu_item])
     item.update(kw)
     active = _link_active(item)

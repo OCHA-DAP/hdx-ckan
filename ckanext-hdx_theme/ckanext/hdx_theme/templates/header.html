@@ -84,12 +84,14 @@
       {% block header_site_navigation %}
         <nav class="section navigation">
           <ul class="nav nav-pills">
+            {# ('organizations_index', _('Organizations')), #}
             {% block header_site_navigation_tabs %}
             {{ h.build_nav_main(
-              ('search', _('Datasets')),
-              ('organizations_index', _('Organizations')),
-              ('group_index', _('Groups')),
-              ('about', _('About'))
+              ('about', _('About')),
+              ('search', _('Data')),
+              ('group_index', _('Contribute')),
+              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
+              ('#', _('Help')),
             ) }}
             {% endblock %}
           </ul>

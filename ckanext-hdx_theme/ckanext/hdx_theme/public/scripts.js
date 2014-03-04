@@ -23,7 +23,7 @@ $('.group_title input').blur(function(){
 			json = e.body[0]
 			json.properties.url = link
 
-			//Insert url into geojson
+			//Insert geojson into form
 			$('#field-geojson').text(JSON.stringify(json));
 		}
 	});
