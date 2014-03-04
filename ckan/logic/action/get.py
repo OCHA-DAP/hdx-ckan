@@ -335,7 +335,6 @@ def _group_or_org_list(context, data_dict, is_org=False):
 
     all_fields = data_dict.get('all_fields', None)
 
-
     query = model.Session.query(model.Group).join(model.GroupRevision)
     query = query.filter(model.GroupRevision.state=='active')
     query = query.filter(model.GroupRevision.current==True)
@@ -356,6 +355,7 @@ def _group_or_org_list(context, data_dict, is_org=False):
     group_list = model_dictize.group_list_dictize(groups, context,
                                                   lambda x:x[sort_info[0][0]],
                                                   sort_info[0][1] == 'desc')
+
 
     if not all_fields:
         group_list = [group[ref_group_by] for group in group_list]

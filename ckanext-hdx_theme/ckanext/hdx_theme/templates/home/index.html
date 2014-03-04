@@ -23,7 +23,7 @@
 <div id="group_nav">
       <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
       <div id="group_dropdown" class="pull-right">
-        <select>
+        <select id="group_select">
           {% for group in c.group_package_stuff %}
           {% snippet 'group/snippets/group_dropdown.html', group=group.group_dict, truncate=50, truncate_title=35 %}
           {% endfor %}
@@ -38,9 +38,15 @@
   <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css">
   
   <script src="/map/leaflet/leaflet.js"></script>
-  <script src="/map/un_groups.json"></script>
   <script>
-  
+  var world = [{% for group in c.group_package_stuff %}
+    {% if group.group_dict.geojson is defined %}
+      {{group.group_dict.geojson|safe}}
+      {% if not loop.last %}
+      ,
+      {% endif %}
+    {% endif %}
+  {% endfor %}];
   var map = L.map('map', {
     center: [49.1642292,10.4541193],
     maxZoom: 10,
@@ -59,7 +65,7 @@
   geo = L.geoJson(world, {style:groupStyle,onEachFeature: onEachFeature}).addTo(map);
 
   function zoomToFeature(e) {
-              console.log(e.target.feature.properties.name);
+              window.location = e.target.feature.properties.url;
           }
   function pausePan(){
     clearInterval(panning)
@@ -139,6 +145,10 @@
 
 {% block secondary_content %}
  
+{% endblock %}
+
+{% block scripts %}
+   {{ super() }}
 {% endblock %}
 
 {# Remove the toolbar. #}

@@ -38,7 +38,6 @@ def group_list_dictize(obj_list, context,
         group_dict.pop('created')
         if active and obj.state not in ('active', 'pending'):
             continue
-
         group_dict['display_name'] = obj.display_name
 
         if obj.is_organization:
