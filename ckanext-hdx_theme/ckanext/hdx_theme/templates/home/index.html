@@ -25,7 +25,7 @@
       <div id="group_dropdown" class="pull-right">
         <select id="group_select">
           {% for group in c.group_package_stuff %}
-          {% snippet 'group/snippets/group_dropdown.html', group=group.group_dict, truncate=50, truncate_title=35 %}
+          {% snippet 'group/snippets/group_dropdown.html', group=group, truncate=50, truncate_title=35 %}
           {% endfor %}
           </select>
       </div>
@@ -40,8 +40,8 @@
   <script src="/map/leaflet/leaflet.js"></script>
   <script>
   var world = [{% for group in c.group_package_stuff %}
-    {% if group.group_dict.geojson is defined %}
-      {{group.group_dict.geojson|safe}}
+    {% if group.geojson is defined %}
+      {{group.geojson|safe}}
       {% if not loop.last %}
       ,
       {% endif %}
