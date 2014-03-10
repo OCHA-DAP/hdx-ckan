@@ -3686,7 +3686,7 @@ msgstr "Changes"
 #: ckan/templates/revision/read.html:74
 #: ckan/templates_legacy/revision/read.html:54
 msgid "Datasets' Tags"
-msgstr "Datasets' Tags"
+msgstr "Collections' Tags"
 
 #: ckan/templates/revision/snippets/revisions_list.html:7
 #: ckan/templates_legacy/snippets/revision_list.html:11

@@ -441,7 +441,7 @@ msgstr "Invalid revision format: %r"
 #: ckan/controllers/package.py:1232 ckan/controllers/package.py:1252
 #: ckan/controllers/related.py:110 ckan/controllers/related.py:119
 msgid "Dataset not found"
-msgstr "Dataset not found"
+msgstr "Collection not found"
 
 #: ckan/controllers/package.py:341 ckan/controllers/package.py:392
 #: ckan/controllers/package.py:743 ckan/controllers/package.py:799
@@ -512,7 +512,7 @@ msgstr "Unauthorized to delete package %s"
 
 #: ckan/controllers/package.py:1027
 msgid "Dataset has been deleted."
-msgstr "Dataset has been deleted."
+msgstr "Collection has been deleted."
 
 #: ckan/controllers/package.py:1052
 msgid "Resource has been deleted."
@@ -655,7 +655,7 @@ msgstr "Recent changes to the CKAN repository."
 #: ckan/controllers/revision.py:116
 #, python-format
 msgid "Datasets affected: %s.\n"
-msgstr "Datasets affected: %s.\n"
+msgstr "Collections affected: %s.\n"
 
 #: ckan/controllers/revision.py:196
 msgid "Revision updated"
@@ -1212,7 +1212,7 @@ msgstr "User"
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:65
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:74
 msgid "Dataset"
-msgstr "Dataset"
+msgstr "Collection"
 
 #: ckan/logic/converters.py:170 ckan/logic/validators.py:178
 #: ckanext/stats/templates/ckanext/stats/index.html:113
@@ -2099,7 +2099,7 @@ msgstr "Register"
 #: ckan/templates_legacy/user/read.html:55
 #: ckan/templates_legacy/user/read.html:78
 msgid "Datasets"
-msgstr "Datasets"
+msgstr "Collections"
 
 #: ckan/templates/header.html:102
 msgid "Search Datasets"
@@ -2608,7 +2608,7 @@ msgstr ""
 #: ckan/templates/group/snippets/feeds.html:3
 #: ckan/templates/organization/snippets/feeds.html:3
 msgid "Datasets in group: {group}"
-msgstr "Datasets in country: {group}"
+msgstr "Collections in country: {group}"
 
 #: ckan/templates/group/snippets/feeds.html:4
 #: ckan/templates/organization/snippets/feeds.html:4
@@ -3295,7 +3295,7 @@ msgstr "eg. A descriptive title"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:13
 msgid "eg. my-dataset"
-msgstr "eg. my-dataset"
+msgstr "eg. my-collection"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:20
 msgid "eg. Some useful notes about the data"
@@ -3686,7 +3686,7 @@ msgstr "Changes"
 #: ckan/templates/revision/read.html:74
 #: ckan/templates_legacy/revision/read.html:54
 msgid "Datasets' Tags"
-msgstr "Datasets' Tags"
+msgstr "Collections' Tags"
 
 #: ckan/templates/revision/snippets/revisions_list.html:7
 #: ckan/templates_legacy/snippets/revision_list.html:11
@@ -4740,7 +4740,7 @@ msgid ""
 "who owns it and whether it is freely available, and what subject areas the "
 "data is about. Other users can improve or add to this information (CKAN "
 "keeps a fully versioned history)."
-msgstr "This site is running a powerful piece of open-source data cataloguing software called [1:CKAN], written and maintained by the [2:Open Knowledge Foundation]. Each 'dataset' record on CKAN contains a description of the data and other useful information, such as what formats it is available in, who owns it and whether it is freely available, and what subject areas the data is about. Other users can improve or add to this information (CKAN keeps a fully versioned history)."
+msgstr "This site is running a powerful piece of open-source data cataloguing software called [1:CKAN], written and maintained by the [2:Open Knowledge Foundation]. Each 'collection' record on CKAN contains a description of the data and other useful information, such as what formats it is available in, who owns it and whether it is freely available, and what subject areas the data is about. Other users can improve or add to this information (CKAN keeps a fully versioned history)."
 
 #: ckan/templates_legacy/home/about.html:27
 msgid ""
@@ -4792,7 +4792,7 @@ msgstr "contains"
 
 #: ckan/templates_legacy/home/index.html:24
 msgid "datasets"
-msgstr "datasets"
+msgstr "collections"
 
 #: ckan/templates_legacy/home/index.html:24
 msgid ""
@@ -4850,7 +4850,7 @@ msgstr "has"
 
 #: ckan/templates_legacy/home/index.html:75
 msgid "datasets."
-msgstr "datasets."
+msgstr "collections."
 
 #: ckan/templates_legacy/importer/importer.html:5
 msgid "Importer"
@@ -4880,7 +4880,7 @@ msgstr "Import Preview"
 
 #: ckan/templates_legacy/importer/preview.html:16
 msgid "dataset"
-msgstr "dataset"
+msgstr "collection"
 
 #: ckan/templates_legacy/importer/preview.html:16
 msgid "read from"
@@ -4988,7 +4988,7 @@ msgstr "with value"
 #: ckan/templates_legacy/package/read.html:101
 #: ckan/templates_legacy/related/related_list.html:67
 msgid "Dataset History"
-msgstr "Dataset History"
+msgstr "Collection History"
 
 #: ckan/templates_legacy/package/layout.html:14
 msgid "Resources (0)"
@@ -5447,7 +5447,7 @@ msgstr "Log Message:"
 
 #: ckan/templates_legacy/revision/read.html:57
 msgid "Dataset -"
-msgstr "Dataset -"
+msgstr "Collection -"
 
 #: ckan/templates_legacy/revision/read.html:58
 msgid ""
@@ -5878,7 +5878,7 @@ msgstr "Total collections"
 #: ckanext/stats/templates/ckanext/stats/index.html:33
 #: ckanext/stats/templates/ckanext/stats/index.html:179
 msgid "Dataset Revisions per Week"
-msgstr "Dataset Revisions per Week"
+msgstr "Collection Revisions per Week"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:41
 msgid "All dataset revisions"
@@ -5980,7 +5980,7 @@ msgstr "Leaderboard - Stats"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:17
 msgid "Dataset Leaderboard"
-msgstr "Dataset Leaderboard"
+msgstr "Collection Leaderboard"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:18
 msgid ""
