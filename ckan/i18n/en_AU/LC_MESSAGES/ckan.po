@@ -5928,7 +5928,7 @@ msgstr "No edited collections"
 #: ckanext/stats/templates/ckanext/stats/index.html:182
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:80
 msgid "Largest Groups"
-msgstr "Largest Groups"
+msgstr "Largest Countries"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:127
 msgid "No groups"
