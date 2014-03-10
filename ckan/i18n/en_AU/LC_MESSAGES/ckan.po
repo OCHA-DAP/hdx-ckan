@@ -2476,7 +2476,7 @@ msgstr "Countries of Collections"
 #: ckan/templates/user/dashboard_groups.html:7
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Add Group"
-msgstr "Add Countries"
+msgstr "Add Country"
 
 #: ckan/templates/group/index.html:20
 msgid "Search groups..."

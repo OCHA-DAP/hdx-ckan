@@ -2632,7 +2632,7 @@ msgstr "My Country"
 
 #: ckan/templates/group/snippets/group_form.html:18
 msgid "my-group"
-msgstr "my-group"
+msgstr "my-country"
 
 #: ckan/templates/group/snippets/group_form.html:20
 #: ckan/templates/organization/snippets/organization_form.html:20
