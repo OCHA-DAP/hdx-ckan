@@ -237,7 +237,7 @@ msgstr "Request params must be in form of a json encoded dictionary."
 #: ckan/controllers/group.py:658 ckan/controllers/group.py:689
 #: ckan/controllers/group.py:748 ckan/controllers/group.py:829
 msgid "Group not found"
-msgstr "Group not found"
+msgstr "Country not found"
 
 #: ckan/controllers/feed.py:285 ckan/controllers/feed.py:287
 #: ckan/controllers/feed.py:437 ckan/controllers/feed.py:439
@@ -266,7 +266,7 @@ msgstr "Unauthorized to read country %s"
 #: ckan/templates_legacy/package/search.html:26
 #: ckan/templates_legacy/revision/read.html:64
 msgid "Groups"
-msgstr "Groups"
+msgstr "Countries"
 
 #: ckan/controllers/group.py:282 ckan/controllers/home.py:70
 #: ckan/controllers/package.py:219 ckan/lib/helpers.py:544
@@ -336,7 +336,7 @@ msgstr "Organisation has been deleted."
 
 #: ckan/controllers/group.py:581
 msgid "Group has been deleted."
-msgstr "Group has been deleted."
+msgstr "Country has been deleted."
 
 #: ckan/controllers/group.py:627
 #, python-format
@@ -350,7 +350,7 @@ msgstr "Unauthorized to delete country %s members"
 
 #: ckan/controllers/group.py:650
 msgid "Group member has been deleted."
-msgstr "Group member has been deleted."
+msgstr "Country member has been deleted."
 
 #: ckan/controllers/group.py:672 ckan/controllers/package.py:375
 msgid "Select two revisions before doing the comparison."
@@ -1218,7 +1218,7 @@ msgstr "Collection"
 #: ckanext/stats/templates/ckanext/stats/index.html:113
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:82
 msgid "Group"
-msgstr "Group"
+msgstr "Country"
 
 #: ckan/logic/validators.py:28
 msgid "A organization must be supplied"
@@ -1309,7 +1309,7 @@ msgstr "Duplicate key \"%s\""
 
 #: ckan/logic/validators.py:356
 msgid "Group name already exists in database"
-msgstr "Group name already exists in database"
+msgstr "Country name already exists in database"
 
 #: ckan/logic/validators.py:362
 #, python-format
@@ -1596,7 +1596,7 @@ msgstr "User %s not authorized to create users"
 
 #: ckan/logic/auth/create.py:143
 msgid "Group was not found."
-msgstr "Group was not found."
+msgstr "Country was not found."
 
 #: ckan/logic/auth/create.py:163
 msgid "Valid API key needed to create a package"
@@ -2400,7 +2400,7 @@ msgstr "Add a Country"
 
 #: ckan/templates/group/base_form_page.html:11
 msgid "Group Form"
-msgstr "Group Form"
+msgstr "Country Form"
 
 #: ckan/templates/group/confirm_delete.html:3
 #: ckan/templates/group/confirm_delete.html:15
@@ -2469,7 +2469,7 @@ msgstr "History"
 #: ckan/templates/group/index.html:3 ckan/templates_legacy/group/index.html:6
 #: ckan/templates_legacy/group/index.html:7
 msgid "Groups of Datasets"
-msgstr "Groups of Collections"
+msgstr "Countries of Collections"
 
 #: ckan/templates/group/index.html:13
 #: ckan/templates/package/snippets/package_metadata_fields.html:40
@@ -4598,7 +4598,7 @@ msgstr "Compare »"
 
 #: ckan/templates_legacy/group/history.html:54
 msgid "Group History"
-msgstr "Group History"
+msgstr "Country History"
 
 #: ckan/templates_legacy/group/index.html:11
 msgid "What Are Groups?"
