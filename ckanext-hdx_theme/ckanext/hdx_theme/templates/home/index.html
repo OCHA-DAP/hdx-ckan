@@ -26,7 +26,7 @@
         <select id="group_select">
           <option selected value="#">Select country</option>
           {% for group in c.group_package_stuff %}
-          {% snippet 'group/snippets/group_dropdown.html', group=group, truncate=50, truncate_title=35 %}
+          {% snippet 'group/snippets/group_dropdown.html', group=group, truncate_title=35 %}
           {% endfor %}
           </select>
       </div>
@@ -40,13 +40,17 @@
   
   <script src="/map/leaflet/leaflet.js"></script>
   <script>
-  var world = [{% for group in c.group_package_stuff %}
-    {% if group.geojson is defined %}
-      {{group.geojson|safe}}
-      {% if not loop.last %}
-      ,
-      {% endif %}
-    {% endif %}
+  var world = [
+  {% for group in c.group_package_stuff %}
+  {# Alittle hacky for now, should go through db_to_form_schema #}
+      {% for e in group.extras %}
+        {% if e.key == 'geojson' %}
+          {{e.value|safe}}
+          {% if not loop.last %}
+          ,
+          {% endif %}
+        {% endif %}
+      {% endfor %}
   {% endfor %}];
   var map = L.map('map', {
     center: [49.1642292,10.4541193],

@@ -39,7 +39,7 @@ class SplashPageController(HomeController):
 
 		c.group_package_stuff = self._action('group_list')(context, data_dict)
 
-		print c.group_package_stuff
+		#print c.group_package_stuff
 
 		if c.userobj is not None:
 			msg = None

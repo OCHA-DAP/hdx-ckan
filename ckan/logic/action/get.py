@@ -345,17 +345,18 @@ def _group_or_org_list(context, data_dict, is_org=False):
         query = query.filter(_or_(
             model.GroupRevision.name.ilike(q),
             model.GroupRevision.title.ilike(q),
-            model.GroupRevision.description.ilike(q),
+            model.GroupRevision.description.ilike(q)
         ))
 
 
     query = query.filter(model.GroupRevision.is_organization==is_org)
 
     groups = query.all()
-    group_list = model_dictize.group_list_dictize(groups, context,
-                                                  lambda x:x[sort_info[0][0]],
-                                                  sort_info[0][1] == 'desc')
-
+    #A quick hack for our purposes
+    group_list = [ model_dictize.group_dictize(g, context) for g in groups]
+    #group_list = model_dictize.group_list_dictize(groups, context,
+    #                                              lambda x:x[sort_info[0][0]],
+    #                                              sort_info[0][1] == 'desc')
 
     if not all_fields:
         group_list = [group[ref_group_by] for group in group_list]

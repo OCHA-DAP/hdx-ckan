@@ -21,7 +21,7 @@ class UNIGroupFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 		tk.add_template_directory(config, 'templates')
 
 	def get_helpers(self):
-		return {'language_code':'en'}
+		return {}
 
 	def is_fallback(self):
 		return True

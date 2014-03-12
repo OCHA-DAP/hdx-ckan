@@ -36,7 +36,8 @@ Example:
   {% endblock %}
   {% block datasets %}
     {% if group.packages %}
-      <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', group.packages).format(num=group.packages) }}</strong>
+    {% set num_of_pack = group.packages|length %}
+    <strong class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</strong>
     {% else %}
       <span class="count">{{ _('0 Datasets') }}</span>
     {% endif %}
