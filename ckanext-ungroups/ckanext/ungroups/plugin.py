@@ -42,7 +42,6 @@ class UNIGroupFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 		return schema
 
 	def db_to_form_schema(self):
-		print tk.request.urlvars['action']
 		#There's a bug in dictionary validation when form isn't present
 		if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
 			schema = super(UNIGroupFormPlugin, self).form_to_db_schema()
