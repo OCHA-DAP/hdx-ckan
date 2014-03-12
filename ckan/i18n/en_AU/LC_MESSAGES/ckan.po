@@ -3058,8 +3058,8 @@ msgstr "View Collection"
 #: ckan/templates/package/new.html:3
 #: ckan/templates/package/snippets/stages.html:25
 #: ckan/templates/package/snippets/stages.html:27
-msgid "Create Collection"
-msgstr "Create Collection"
+#: msgid "Create Collection"
+#: msgstr "Create Collection"
 
 #: ckan/templates/package/new_package_form.html:23
 msgid "Update Collection"
