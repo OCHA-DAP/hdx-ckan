@@ -39,6 +39,13 @@ class SplashPageController(HomeController):
 
 		c.group_package_stuff = self._action('group_list')(context, data_dict)
 
+		##Removing groups without geojson for the map
+		c.group_map = []
+		for gp in c.group_package_stuff:
+			for e in gp['extras']:
+				if e['key'] == 'geojson' and e['value']:
+					c.group_map.append(gp)
+
 		#print c.group_package_stuff
 
 		if c.userobj is not None:

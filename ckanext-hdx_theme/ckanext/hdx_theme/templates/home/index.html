@@ -41,7 +41,7 @@
   <script src="/map/leaflet/leaflet.js"></script>
   <script>
   var world = [
-  {% for group in c.group_package_stuff %}
+  {% for group in c.group_map %}
   {# Alittle hacky for now, should go through db_to_form_schema #}
       {% for e in group.extras %}
         {% if e.key == 'geojson' %}
@@ -52,6 +52,8 @@
         {% endif %}
       {% endfor %}
   {% endfor %}];
+  console.log(world)
+
   var map = L.map('map', {
     center: [49.1642292,10.4541193],
     maxZoom: 10,
