@@ -56,7 +56,7 @@
 
   var map = L.map('map', {
     center: [28.1642292,16.4541193],
-    maxZoom: 10,
+    maxZoom: 4,
     zoom: 4,
     zoomControl: false
   });
@@ -86,13 +86,13 @@
 
       if (feature.properties && feature.properties.name) {
           layer.on({
-              //mouseover: pausePan,
-                //mouseout: resumePan,
+              mouseover: pausePan,
+                mouseout: resumePan,
                 click: zoomToFeature
             });
           }
   }
-  //resumePan();
+  resumePan();
   </script>
 
 {% endblock %}
