@@ -28,3 +28,8 @@ $('.group_title input').blur(function(){
 		}
 	});
 });
+
+$('#data-themes').change(function(){
+          var go = $('#data-themes option:selected').val();
+          window.location = go;
+        });
