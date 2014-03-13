@@ -37,7 +37,8 @@ class SplashPageController(HomeController):
 			context['user_id'] = c.userobj.id
 			context['user_is_admin'] = c.userobj.sysadmin
 
-		c.group_package_stuff = self._action('group_list')(context, data_dict)
+		group_package_stuff = self._action('group_list')(context, data_dict)
+		c.group_package_stuff = sorted(group_package_stuff, key=lambda k: k['title'])
 
 		##Removing groups without geojson for the map
 		c.group_map = []
