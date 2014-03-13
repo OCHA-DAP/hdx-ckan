@@ -466,13 +466,13 @@ msgstr "Unauthorized to create a package"
 
 #: ckan/controllers/package.py:526
 msgid "Unauthorized to edit this resource"
-msgstr "Unauthorized to edit this resource"
+msgstr "Unauthorized to edit this file"
 
 #: ckan/controllers/package.py:546 ckan/controllers/package.py:1059
 #: ckan/controllers/package.py:1135 ckan/controllers/package.py:1173
 #: ckan/controllers/package.py:1280 ckan/controllers/package.py:1361
 msgid "Resource not found"
-msgstr "Resource not found"
+msgstr "File not found"
 
 #: ckan/controllers/package.py:594 ckan/controllers/package.py:698
 msgid "Unauthorized to update collection"
@@ -485,7 +485,7 @@ msgstr ""
 
 #: ckan/controllers/package.py:600
 msgid "You must add at least one data resource"
-msgstr "You must add at least one data resource"
+msgstr "You must add at least one data file"
 
 #: ckan/controllers/package.py:608
 #: ckan/templates_legacy/error_document_template.html:5
@@ -494,7 +494,7 @@ msgstr "Error"
 
 #: ckan/controllers/package.py:626
 msgid "Unauthorized to create a resource"
-msgstr "Unauthorized to create a resource"
+msgstr "Unauthorized to create a file"
 
 #: ckan/controllers/package.py:925
 msgid "Unable to add package to search index."
@@ -516,18 +516,18 @@ msgstr "Collection has been deleted."
 
 #: ckan/controllers/package.py:1052
 msgid "Resource has been deleted."
-msgstr "Resource has been deleted."
+msgstr "File has been deleted."
 
 #: ckan/controllers/package.py:1057
 #, python-format
 msgid "Unauthorized to delete resource %s"
-msgstr "Unauthorized to delete resource %s"
+msgstr "Unauthorized to delete file %s"
 
 #: ckan/controllers/package.py:1137 ckan/controllers/package.py:1175
 #: ckan/controllers/package.py:1282 ckan/controllers/package.py:1363
 #, python-format
 msgid "Unauthorized to read resource %s"
-msgstr "Unauthorized to read resource %s"
+msgstr "Unauthorized to read file %s"
 
 #: ckan/controllers/package.py:1178
 msgid "No download is available"
@@ -820,7 +820,7 @@ msgstr "{actor} changed the extra {extra} of the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:79
 msgid "{actor} updated the resource {resource} in the collection {dataset}"
-msgstr "{actor} updated the resource {resource} in the collection {dataset}"
+msgstr "{actor} updated the file {resource} in the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:82
 msgid "{actor} updated their profile"
@@ -853,7 +853,7 @@ msgstr "{actor} deleted the extra {extra} from the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:104
 msgid "{actor} deleted the resource {resource} from the collection {dataset}"
-msgstr "{actor} deleted the resource {resource} from the collection {dataset}"
+msgstr "{actor} deleted the file {resource} from the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:108
 msgid "{actor} created the group {group}"
@@ -873,7 +873,7 @@ msgstr "{actor} added the extra {extra} to the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:120
 msgid "{actor} added the resource {resource} to the collection {dataset}"
-msgstr "{actor} added the resource {resource} to the collection {dataset}"
+msgstr "{actor} added the file {resource} to the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:123
 msgid "{actor} signed up"
@@ -1170,7 +1170,7 @@ msgstr "Resources"
 
 #: ckan/logic/__init__.py:82 ckan/logic/action/__init__.py:54
 msgid "Package resource(s) invalid"
-msgstr "Package resource(s) invalid"
+msgstr "Package file(s) invalid"
 
 #: ckan/logic/__init__.py:84 ckan/logic/__init__.py:86
 #: ckan/logic/action/__init__.py:56 ckan/logic/action/__init__.py:58
@@ -1211,7 +1211,7 @@ msgstr "User"
 #: ckanext/stats/templates/ckanext/stats/index.html:89
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:65
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:74
-msgid "Collection"
+msgid "Dataset"
 msgstr "Collection"
 
 #: ckan/logic/converters.py:170 ckan/logic/validators.py:178
@@ -1261,7 +1261,7 @@ msgstr "Activity type"
 #: ckan/templates/package/snippets/resource_form.html:41
 #: ckan/templates_legacy/package/new_package_form.html:20
 msgid "Resource"
-msgstr "Resource"
+msgstr "File"
 
 #: ckan/logic/validators.py:281
 msgid "That name cannot be used"
@@ -1526,7 +1526,7 @@ msgstr "Item was not found."
 
 #: ckan/logic/action/update.py:207
 msgid "Resource was not found."
-msgstr "Resource was not found."
+msgstr "File was not found."
 
 #: ckan/logic/action/update.py:228 ckan/logic/action/update.py:305
 #: ckan/logic/action/update.py:456
@@ -1619,12 +1619,12 @@ msgstr "User %s not authorized to delete package %s"
 #: ckan/logic/auth/delete.py:29 ckan/logic/auth/get.py:132
 #: ckan/logic/auth/update.py:58
 msgid "No package found for this resource, cannot check auth."
-msgstr "No package found for this resource, cannot check auth."
+msgstr "No package found for this file, cannot check auth."
 
 #: ckan/logic/auth/delete.py:35
 #, python-format
 msgid "User %s not authorized to delete resource %s"
-msgstr "User %s not authorized to delete resource %s"
+msgstr "User %s not authorized to delete file %s"
 
 #: ckan/logic/auth/delete.py:44 ckan/logic/auth/delete.py:58
 msgid "Only the owner can delete a related item"
@@ -1678,7 +1678,7 @@ msgstr "User %s not authorized to read package %s"
 #: ckan/logic/auth/get.py:138
 #, python-format
 msgid "User %s not authorized to read resource %s"
-msgstr "User %s not authorized to read resource %s"
+msgstr "User %s not authorized to read file %s"
 
 #: ckan/logic/auth/get.py:213
 msgid "You must be logged in to access your dashboard."
@@ -1692,7 +1692,7 @@ msgstr "User %s not authorized to edit package %s"
 #: ckan/logic/auth/update.py:66
 #, python-format
 msgid "User %s not authorized to edit resource %s"
-msgstr "User %s not authorized to edit resource %s"
+msgstr "User %s not authorized to edit file %s"
 
 #: ckan/logic/auth/update.py:89
 #, python-format
@@ -1877,7 +1877,7 @@ msgstr "Loading..."
 
 #: ckan/public/base/javascript/modules/api-info.js:20
 msgid "There is no API data to load for this resource"
-msgstr "There is no API data to load for this resource"
+msgstr "There is no API data to load for this file"
 
 #: ckan/public/base/javascript/modules/api-info.js:21
 msgid "Failed to load data API information"
@@ -1965,7 +1965,7 @@ msgstr "An Error Occurred"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:27
 msgid "Resource uploaded"
-msgstr "Resource uploaded"
+msgstr "File uploaded"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:28
 msgid "Unable to upload file"
@@ -2098,7 +2098,7 @@ msgstr "Register"
 #: ckan/templates_legacy/revision/read.html:45
 #: ckan/templates_legacy/user/read.html:55
 #: ckan/templates_legacy/user/read.html:78
-msgid "Collections"
+msgid "Datasets"
 msgstr "Collections"
 
 #: ckan/templates/header.html:102
@@ -2269,7 +2269,7 @@ msgstr ""
 
 #: ckan/templates/dataviewer/snippets/data_preview.html:9
 msgid "This resource can not be previewed at the moment."
-msgstr "This resource can not be previewed at the moment."
+msgstr "This file can not be previewed at the moment."
 
 #: ckan/templates/dataviewer/snippets/data_preview.html:11
 msgid "Click here for more information."
@@ -2277,7 +2277,7 @@ msgstr "Click here for more information."
 
 #: ckan/templates/dataviewer/snippets/data_preview.html:18
 msgid "Download resource"
-msgstr "Download resource"
+msgstr "Download file"
 
 #: ckan/templates/dataviewer/snippets/data_preview.html:23
 msgid "Your browser does not support iframes."
@@ -3030,6 +3030,9 @@ msgstr ""
 
 #: ckan/templates/package/base.html:20
 #: ckan/templates/package/snippets/new_package_breadcrumb.html:2
+#: ckan/templates/package/new.html:3
+#: ckan/templates/package/snippets/stages.html:25
+#: ckan/templates/package/snippets/stages.html:27
 msgid "Create Collection"
 msgstr "Create Collection"
 
@@ -3049,7 +3052,7 @@ msgstr "Are you sure you want to delete collection - {name}?"
 
 #: ckan/templates/package/confirm_delete_resource.html:11
 msgid "Are you sure you want to delete resource - {name}?"
-msgstr "Are you sure you want to delete resource - {name}?"
+msgstr "Are you sure you want to delete file - {name}?"
 
 #: ckan/templates/package/edit.html:17
 msgid "View Collection"
@@ -3075,11 +3078,11 @@ msgstr "Add data to the collection"
 
 #: ckan/templates/package/new_resource.html:18
 msgid "What's a resource?"
-msgstr "What's a resource?"
+msgstr "What's a file?"
 
 #: ckan/templates/package/new_resource.html:20
 msgid "A resource can be any file or link to a file containing useful data."
-msgstr "A resource can be any file or link to a file containing useful data."
+msgstr "A file can be any file or link to a file containing useful data."
 
 #: ckan/templates/package/read_base.html:38
 #, python-format
@@ -3108,7 +3111,7 @@ msgstr "Add Related Item"
 
 #: ckan/templates/package/resource_edit.html:16
 msgid "View resource"
-msgstr "View resource"
+msgstr "View file"
 
 #: ckan/templates/package/resource_read.html:36
 #: ckan/templates_legacy/group/layout.html:12
@@ -3141,7 +3144,7 @@ msgstr "URL:"
 
 #: ckan/templates/package/resource_read.html:65
 msgid "There is no description for this resource"
-msgstr "There is no description for this resource"
+msgstr "There is no description for this file"
 
 #: ckan/templates/package/resource_read.html:68
 msgid "From the collection abstract"
@@ -3287,7 +3290,7 @@ msgstr "Edit Resources"
 
 #: ckan/templates/package/snippets/info.html:31
 msgid "Add New Resource"
-msgstr "Add New Resource"
+msgstr "Add New File"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:4
 msgid "eg. A descriptive title"
@@ -3374,7 +3377,7 @@ msgstr "Finish"
 
 #: ckan/templates/package/snippets/resource_edit_form.html:12
 msgid "Update Resource"
-msgstr "Update Resource"
+msgstr "Update File"
 
 #: ckan/templates/package/snippets/resource_form.html:32
 #: ckan/templates_legacy/package/new_package_form.html:147
@@ -3436,7 +3439,7 @@ msgstr "eg. application/json"
 
 #: ckan/templates/package/snippets/resource_form.html:82
 msgid "Are you sure you want to delete this resource?"
-msgstr "Are you sure you want to delete this resource?"
+msgstr "Are you sure you want to delete this file?"
 
 #: ckan/templates/package/snippets/resource_form.html:92
 msgid "Save & add another"
@@ -3448,7 +3451,7 @@ msgstr "Next: Additional Info"
 
 #: ckan/templates/package/snippets/resource_item.html:13
 msgid "No description for this resource"
-msgstr "No description for this resource"
+msgstr "No description for this file"
 
 #: ckan/templates/package/snippets/resource_item.html:20
 msgid "Explore"
@@ -4275,7 +4278,7 @@ msgstr "(no name)"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Delete the resource '%name%'?"
-msgstr "Delete the resource '%name%'?"
+msgstr "Delete the file '%name%'?"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Preview not available for data type: "
@@ -4332,7 +4335,7 @@ msgstr "Url"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Resource Type"
-msgstr "Resource Type"
+msgstr "File Type"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "DataStore enabled"
@@ -4364,7 +4367,7 @@ msgstr "Done"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "This resource has unsaved changes."
-msgstr "This resource has unsaved changes."
+msgstr "This file has unsaved changes."
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "e.g. csv, html, xls, rdf, ..."
@@ -4384,7 +4387,7 @@ msgstr "Key"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Delete Resource"
-msgstr "Delete Resource"
+msgstr "Delete File"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "You can use %aMarkdown formatting%b here."
@@ -4696,7 +4699,7 @@ msgstr "Add collections"
 #: ckan/templates_legacy/group/read.html:29
 #: ckan/templates_legacy/package/search.html:25
 msgid "Resource Formats"
-msgstr "Resource Formats"
+msgstr "File Formats"
 
 #: ckan/templates_legacy/group/read.html:33
 msgid "State:"
@@ -5075,7 +5078,7 @@ msgstr "Upload or link data files, APIs and other materials related to your coll
 
 #: ckan/templates_legacy/package/new_package_form.html:139
 msgid "New resource..."
-msgstr "New resource..."
+msgstr "New file..."
 
 #: ckan/templates_legacy/package/new_package_form.html:144
 msgid "x"
@@ -5256,11 +5259,11 @@ msgstr "[1:Dataset page] on \n            [2:%(harvest_catalogue_name)s]"
 #: ckan/templates_legacy/package/resource_embedded_dataviewer.html:87
 #: ckan/templates_legacy/package/resource_read.html:58
 msgid "- Collection - Resource"
-msgstr "- Collection - Resource"
+msgstr "- Collection - File"
 
 #: ckan/templates_legacy/package/resource_read.html:87
 msgid "Data API is unavailable for this resource as DataStore is disabled"
-msgstr "Data API is unavailable for this resource as DataStore is disabled"
+msgstr "Data API is unavailable for this file as DataStore is disabled"
 
 #: ckan/templates_legacy/package/resource_read.html:113
 msgid "License unknown"
@@ -5272,7 +5275,7 @@ msgstr "From the [1:Dataset]:"
 
 #: ckan/templates_legacy/package/resource_read.html:150
 msgid "Cannot embed as resource is private."
-msgstr "Cannot embed as resource is private."
+msgstr "Cannot embed as file is private."
 
 #: ckan/templates_legacy/package/resource_read.html:150
 #: ckan/templates_legacy/package/resource_read.html:151
@@ -5799,11 +5802,11 @@ msgstr ""
 #: ckanext/datastore/logic/action.py:268 ckanext/datastore/logic/action.py:352
 #: ckanext/datastore/logic/action.py:378
 msgid "Resource \"{0}\" was not found."
-msgstr "Resource \"{0}\" was not found."
+msgstr "File \"{0}\" was not found."
 
 #: ckanext/datastore/logic/auth.py:15
 msgid "User {0} not authorized to update resource {1}"
-msgstr "User {0} not authorized to update resource {1}"
+msgstr "User {0} not authorized to update file {1}"
 
 #: ckanext/example_idatasetform/templates/package/snippets/package_basic_fields.html:4
 msgid "Custom Text"
