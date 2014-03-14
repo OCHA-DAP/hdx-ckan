@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css">
   
   <script src="/map/leaflet/leaflet.js"></script>
+  <script src="/base/vendor/jquery.js"></script>
   <script>
   var world = [
   {% for group in c.group_map %}
@@ -55,16 +56,16 @@
   console.log(world)
 
   var map = L.map('map', {
-    center: [28.1642292,16.4541193],
-    maxZoom: 5,
-    minZoom: 5,
-    zoom: 5,
+    center: [48.1642292,16.4541193],
+    maxZoom: 3,
+    minZoom: 3,
+    zoom: 3,
     zoomControl: false
   });
   var groupStyle = {
       "color": "#1b8bbb",
-      "weight": 5,
-      "opacity": 0.65
+      "weight": 2,
+      "opacity": 0.9
   };
   
   L.tileLayer('http://129.206.74.245:8008/tms_rg.ashx?x={x}&y={y}&z={z}', {
@@ -76,11 +77,43 @@
               window.location = e.target.feature.properties.url;
           }
   function pausePan(){
-    clearInterval(panning)
+    clearInterval(panning1);
+    clearInterval(panning2);
+  }
+
+  var panning1, panning2
+  window.reverse = false;
+
+  function pan(){
+    pos = map.getCenter();
+    if(pos.lat < -75){
+      window.reverse = true;
+    }
+    if(pos.lat > 75){
+      window.reverse = false;
+    }
+    if(window.reverse){
+      map.panBy([12, -5], {'animate': true, 'duration': .499, 'easeLinearity': 1});
+    }else{
+      map.panBy([12, 5], {'animate': true, 'duration': .499, 'easeLinearity': 1});
+    }
+  }
+
+  function pan1(){
+    pan();
+    clearInterval(window.panning2);
+    window.panning1 = setInterval(pan2,500);
   }
   
+  function pan2(){
+    pan();
+    clearInterval(window.panning1);
+    window.panning2 = setInterval(pan1,500);
+  }
+  
+
   function resumePan(){
-    window.panning = setInterval(function(){map.panBy([12, 5], {'animate': true, 'duration': .499, 'easeLinearity': 1})},500);
+    window.panning1 = setInterval(pan2,20)
   }
     
   function onEachFeature(feature, layer) {
@@ -93,7 +126,9 @@
             });
           }
   }
-  resumePan();
+  $('document').ready(function(){
+      resumePan();
+  });
   </script>
 
 {% endblock %}
