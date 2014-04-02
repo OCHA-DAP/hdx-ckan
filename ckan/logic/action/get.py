@@ -1429,6 +1429,12 @@ def package_search(context, data_dict):
                 search_results['search_facets'][facet]['items'],
                 key=lambda facet: facet['display_name'], reverse=True)
 
+    #QUICK HACK for now Fixed sort case sensitive issue
+    if data_dict['sort'] == 'title_string desc':
+        search_results['results'] = sorted(search_results['results'], key=lambda d: d['title'].lower(), reverse=True)
+    if data_dict['sort'] == 'title_string asc':
+        search_results['results'] = sorted(search_results['results'], key=lambda d: d['title'].lower())
+
     return search_results
 
 def resource_search(context, data_dict):
