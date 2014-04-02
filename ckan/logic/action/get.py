@@ -353,7 +353,10 @@ def _group_or_org_list(context, data_dict, is_org=False):
 
     groups = query.all()
     #A quick hack for our purposes
-    group_list = [ model_dictize.group_dictize(g, context) for g in groups]
+    if sort == 'name desc':
+        group_list = sorted([ model_dictize.group_dictize(g, context) for g in groups],key=lambda x:x[sort_info[0][0]], reverse=True)
+    else:    
+        group_list = sorted([ model_dictize.group_dictize(g, context) for g in groups],key=lambda x:x[sort_info[0][0]])
     #group_list = model_dictize.group_list_dictize(groups, context,
     #                                              lambda x:x[sort_info[0][0]],
     #                                              sort_info[0][1] == 'desc')
