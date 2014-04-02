@@ -57,10 +57,10 @@
 
   var map = L.map('map', {
     center: [48.1642292,16.4541193],
-    maxZoom: 3,
-    minZoom: 3,
-    zoom: 3,
-    zoomControl: false
+    maxZoom: 5,
+    minZoom: 2,
+    zoom: 2,
+    zoomControl: true
   });
   var groupStyle = {
       "color": "#1b8bbb",
@@ -120,14 +120,14 @@
 
       if (feature.properties && feature.properties.name) {
           layer.on({
-              mouseover: pausePan,
-                mouseout: resumePan,
+              //mouseover: pausePan,
+                //mouseout: resumePan,
                 click: zoomToFeature
             });
           }
   }
   $('document').ready(function(){
-      resumePan();
+      //resumePan();
   });
   </script>
 
