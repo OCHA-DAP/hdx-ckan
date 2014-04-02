@@ -35,8 +35,12 @@ Example:
     {% endif %}
   {% endblock %}
   {% block datasets %}
-    {% if group.packages %}
+  {% if group.packages %}
+  {% if group.packages is number %}
+    {% set num_of_pack = group.packages %}
+    {% else %}
     {% set num_of_pack = group.packages|length %}
+    {% endif %}
     <strong class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</strong>
     {% else %}
       <span class="count">{{ _('0 Datasets') }}</span>

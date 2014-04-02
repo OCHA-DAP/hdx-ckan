@@ -29,7 +29,11 @@ Example:
   {% endblock %}
   {% block datasets %}
   {% if organization.packages %}
+    {% if organization.packages is number %}
+    {% set num_of_pack = organization.packages %}
+    {% else %}
     {% set num_of_pack = organization.packages|length %}
+    {% endif %}
     <strong class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</strong>
     {% else %}
       <span class="count">{{ _('0 Datasets') }}</span>
