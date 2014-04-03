@@ -17,9 +17,11 @@
   {% else %}
     <p class="empty">
       {{ _('You haven\'t created any datasets.') }}
-      {% if h.check_access('package_create') %}
-        {% link_for _('Create one now?'), controller='package', action='new' %}
-      {% endif %}
+      {# Users must go to a country before creating a new collection so I commented out the part below.
+	      {% if h.check_access('package_create') %}
+	        {% link_for _('Create one now?'), controller='package', action='new' %}
+	      {% endif %}
+      #}
     </p>
   {% endif %}
 {% endblock %}
