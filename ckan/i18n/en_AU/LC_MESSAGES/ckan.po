@@ -2733,13 +2733,13 @@ msgstr "This country has no description"
 #: ckan/templates/organization/snippets/organization_item.html:32
 msgid "{num} Dataset"
 msgid_plural "{num} Datasets"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{num} Collection"
+msgstr[1] "{num} Collections"
 
 #: ckan/templates/group/snippets/group_item.html:33
 #: ckan/templates/organization/snippets/organization_item.html:34
 msgid "0 Datasets"
-msgstr ""
+msgstr "0 Collections"
 
 #: ckan/templates/group/snippets/group_item.html:36
 #: ckan/templates/group/snippets/group_item.html:37
@@ -2923,7 +2923,7 @@ msgstr "The form contains invalid entries:"
 #: ckan/templates/organization/about.html:11
 #: ckan/templates/snippets/organization.html:35
 #: ckan/templates/snippets/organization_item.html:16
-msgid "There is no description for this organization"
+msgid "There is no description fosr this organization"
 msgstr "There is no description for this organisation"
 
 #: ckan/templates/organization/base_form_page.html:5
