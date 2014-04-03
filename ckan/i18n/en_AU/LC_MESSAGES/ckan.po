@@ -1577,7 +1577,7 @@ msgstr "User %s not authorized to edit these countries"
 #: ckan/logic/auth/create.py:29
 #, python-format
 msgid "User %s not authorized to add dataset to this organization"
-msgstr ""
+msgstr "User %s not authorized to add collection to this organization"
 
 #: ckan/logic/auth/create.py:51
 msgid "You must be a sysadmin to create a featured related item"
@@ -2653,16 +2653,16 @@ msgstr "Update Country"
 #: ckan/templates_legacy/js_strings.html:16
 #: ckan/templates_legacy/group/layout.html:16
 msgid "Add Dataset"
-msgstr ""
+msgstr "Add Collection"
 
 #: ckan/templates/group/read.html:18 ckan/templates/organization/read.html:18
 msgid "Search datasets..."
-msgstr ""
+msgstr "Search Collections"
 
 #: ckan/templates/group/snippets/feeds.html:3
 #: ckan/templates/organization/snippets/feeds.html:3
 msgid "Datasets in group: {group}"
-msgstr ""
+msgstr "Collections in country: {group}"
 
 #: ckan/templates/group/snippets/feeds.html:4
 #: ckan/templates/organization/snippets/feeds.html:4
@@ -2937,7 +2937,7 @@ msgstr ""
 
 #: ckan/templates/organization/bulk_process.html:6
 msgid "Add dataset"
-msgstr ""
+msgstr "Add collection"
 
 #: ckan/templates/organization/bulk_process.html:16
 msgid " found for \"{query}\""
@@ -2979,11 +2979,11 @@ msgstr "Private"
 #: ckan/templates/organization/bulk_process.html:81
 #: ckan/templates/snippets/package_item.html:45
 msgid "This dataset has no description"
-msgstr ""
+msgstr "This collection has no description"
 
 #: ckan/templates/organization/bulk_process.html:90
 msgid "This organization has no datasets associated to it"
-msgstr ""
+msgstr "This organization has no collections associated to it"
 
 #: ckan/templates/organization/bulk_process.html:99
 #: ckan/templates/package/search.html:30
@@ -3039,10 +3039,10 @@ msgstr "There are currently no organisations for this site"
 
 #: ckan/templates/organization/member_new.html:52
 msgid ""
-" <p><strong>Admin:</strong> Can add/edit and delete datasets, as well as "
+" <p><strong>Admin:</strong> Can add/edit and delete collections, as well as "
 "manage organization members.</p> <p><strong>Editor:</strong> Can add and "
-"edit datasets, but not manage organization members.</p> "
-"<p><strong>Member:</strong> Can view the organization's private datasets,"
+"edit collections, but not manage organization members.</p> "
+"<p><strong>Member:</strong> Can view the organization's private collections,"
 " but not add new datasets.</p> "
 msgstr ""
 
@@ -3119,7 +3119,7 @@ msgstr ""
 #: ckan/templates/package/base.html:20
 #: ckan/templates/package/snippets/new_package_breadcrumb.html:2
 msgid "Create Dataset"
-msgstr ""
+msgstr "Create Collection"
 
 #: ckan/templates/package/base_form_page.html:14
 msgid "What are datasets?"
@@ -3134,7 +3134,7 @@ msgstr ""
 
 #: ckan/templates/package/confirm_delete.html:11
 msgid "Are you sure you want to delete dataset - {name}?"
-msgstr ""
+msgstr "Are you sure you want to delete collection - {name}?"
 
 #: ckan/templates/package/confirm_delete_resource.html:11
 msgid "Are you sure you want to delete resource - {name}?"
@@ -3142,25 +3142,25 @@ msgstr "Are you sure you want to delete file - {name}?"
 
 #: ckan/templates/package/edit.html:17
 msgid "View dataset"
-msgstr ""
+msgstr "View collection"
 
 #: ckan/templates/package/new.html:3
 #: ckan/templates/package/snippets/stages.html:25
 #: ckan/templates/package/snippets/stages.html:27
 msgid "Create dataset"
-msgstr ""
+msgstr "Create collection"
 
 #: ckan/templates/package/new_package_form.html:23
 msgid "Update Dataset"
-msgstr ""
+msgstr "Update Collection"
 
 #: ckan/templates/package/new_package_metadata.html:3
 msgid "Add metadata to the dataset"
-msgstr ""
+msgstr "Add metadata to the collection"
 
 #: ckan/templates/package/new_resource.html:9
 msgid "Add data to the dataset"
-msgstr ""
+msgstr "Add data to the collection"
 
 #: ckan/templates/package/new_resource.html:18
 msgid "What's a resource?"
@@ -3234,7 +3234,7 @@ msgstr "There is no description for this file"
 
 #: ckan/templates/package/resource_read.html:68
 msgid "From the dataset abstract"
-msgstr ""
+msgstr "From the collection abstract"
 
 #: ckan/templates/package/resource_read.html:70
 #, python-format
@@ -3292,7 +3292,7 @@ msgstr "Format"
 
 #: ckan/templates/package/search.html:4
 msgid "Search for a Dataset"
-msgstr ""
+msgstr "Search for a Collection"
 
 #: ckan/templates/package/search.html:29
 #: ckan/templates/snippets/sort_by.html:14
@@ -3372,7 +3372,7 @@ msgstr "Data API"
 
 #: ckan/templates/package/snippets/info.html:15
 msgid "Edit Dataset"
-msgstr ""
+msgstr "Edit Collection"
 
 #: ckan/templates/package/snippets/info.html:22
 msgid "Edit Resources"
@@ -3388,7 +3388,7 @@ msgstr "eg. A descriptive title"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:13
 msgid "eg. my-dataset"
-msgstr ""
+msgstr "eg. my-collection"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:20
 msgid "eg. Some useful notes about the data"
@@ -3425,7 +3425,7 @@ msgstr "Public"
 
 #: ckan/templates/package/snippets/package_context.html:10
 msgid "There is no description for this dataset"
-msgstr ""
+msgstr "There is no description for this collection"
 
 #: ckan/templates/package/snippets/package_form.html:28
 msgid ""
@@ -3575,6 +3575,8 @@ msgid ""
 " <p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not"
 " add some?</a> "
 msgstr ""
+" <p class=\"empty\">This collection has no data, <a href=\"%(url)s\">why not"
+" add some?</a> "
 
 #: ckan/templates/package/snippets/revisions_table.html:24
 #: ckan/templates_legacy/package/history.html:37
@@ -4023,7 +4025,7 @@ msgstr ""
 #: ckan/templates/user/dashboard.html:21
 #: ckan/templates/user/dashboard_groups.html:12
 msgid "My Groups"
-msgstr ""
+msgstr "My Countries"
 
 #: ckan/templates/user/dashboard.html:33
 msgid "Activity from items that you follow"
@@ -4043,7 +4045,7 @@ msgstr "Create one now?"
 
 #: ckan/templates/user/dashboard_groups.html:20
 msgid "You are not a member of any groups."
-msgstr ""
+msgstr "You are not a member of any country groups"
 
 #: ckan/templates/user/dashboard_organizations.html:20
 msgid "You are not a member of any organizations."
@@ -4735,11 +4737,11 @@ msgstr ""
 
 #: ckan/templates_legacy/group/layout.html:18
 msgid "New Dataset..."
-msgstr ""
+msgstr "New Collection..."
 
 #: ckan/templates_legacy/group/layout.html:19
 msgid "Existing Dataset..."
-msgstr ""
+msgstr "Existing Collection..."
 
 #: ckan/templates_legacy/group/layout.html:29
 msgid "List Groups"
@@ -4812,7 +4814,7 @@ msgstr "Value ="
 
 #: ckan/templates_legacy/group/new_group_form.html:116
 msgid "Add datasets"
-msgstr ""
+msgstr "Add collections"
 
 #: ckan/templates_legacy/group/read.html:29
 #: ckan/templates_legacy/package/search.html:25
@@ -6102,26 +6104,26 @@ msgstr "Date"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:18
 msgid "Total datasets"
-msgstr ""
+msgstr "Total collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:33
 #: ckanext/stats/templates/ckanext/stats/index.html:179
 msgid "Dataset Revisions per Week"
-msgstr ""
+msgstr "Collection Revisions per Week"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:41
 msgid "All dataset revisions"
-msgstr ""
+msgstr "All collection revisions"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:42
 msgid "New datasets"
-msgstr ""
+msgstr "New collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:58
 #: ckanext/stats/templates/ckanext/stats/index.html:180
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:63
 msgid "Top Rated Datasets"
-msgstr ""
+msgstr "Top Rated Collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:64
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:65
@@ -6142,7 +6144,7 @@ msgstr "No ratings"
 #: ckanext/stats/templates/ckanext/stats/index.html:181
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:72
 msgid "Most Edited Datasets"
-msgstr ""
+msgstr "Most Edited Collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:90
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:74
@@ -6151,7 +6153,7 @@ msgstr "Number of edits"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:103
 msgid "No edited datasets"
-msgstr ""
+msgstr "No edited collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:108
 #: ckanext/stats/templates/ckanext/stats/index.html:182
@@ -6176,12 +6178,12 @@ msgstr "Tag Name"
 #: ckanext/stats/templates/ckanext/stats/index.html:137
 #: ckanext/stats/templates/ckanext/stats/index.html:157
 msgid "Number of Datasets"
-msgstr ""
+msgstr "Number of Collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:152
 #: ckanext/stats/templates/ckanext/stats/index.html:184
 msgid "Users Owning Most Datasets"
-msgstr ""
+msgstr "Users Owning Most Collections"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:175
 msgid "Statistics Menu"
@@ -6189,15 +6191,15 @@ msgstr "Statistics Menu"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:178
 msgid "Total Number of Datasets"
-msgstr ""
+msgstr "Total Number of Collections"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:60
 msgid "Revisions to Datasets per week"
-msgstr ""
+msgstr "Revisions to Collections per week"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:95
 msgid "Users owning most datasets"
-msgstr ""
+msgstr "Users owning most collections"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:102
 msgid "Page last updated:"
@@ -6209,519 +6211,11 @@ msgstr "Leaderboard - Stats"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:17
 msgid "Dataset Leaderboard"
-msgstr ""
+msgstr "Collection Leaderboard"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:18
 msgid ""
 "Choose a dataset attribute and find out which categories in that area "
 "have the most datasets. E.g. tags, groups, license, res_format, country."
 msgstr ""
-
-#: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:20
-msgid "Choose area"
-msgstr "Choose area"
-
-#~ msgid "Collection not found"
-#~ msgstr "Collection not found"
-
-#~ msgid "CKAN Collection Revision History"
-#~ msgstr "CKAN Collection Revision History"
-
-#~ msgid "Recent changes to CKAN Collection: "
-#~ msgstr "Recent changes to CKAN Collection: "
-
-#~ msgid "Unauthorized to update collection"
-#~ msgstr "Unauthorized to update collection"
-
-#~ msgid "The collection {id} could not be found."
-#~ msgstr ""
-
-#~ msgid "Collection has been deleted."
-#~ msgstr "Collection has been deleted."
-
-#~ msgid "Unauthorized to read collection %s"
-#~ msgstr "Unauthorized to read collection %s"
-
-#~ msgid "Collections affected: %s.\n"
-#~ msgstr "Collections affected: %s.\n"
-
-#~ msgid "{actor} added the tag {tag} to the collection {dataset}"
-#~ msgstr "{actor} added the tag {tag} to the collection {dataset}"
-
-#~ msgid "{actor} updated the collection {dataset}"
-#~ msgstr "{actor} updated the collection {dataset}"
-
-#~ msgid "{actor} changed the extra {extra} of the collection {dataset}"
-#~ msgstr "{actor} changed the extra {extra} of the collection {dataset}"
-
-#~ msgid "{actor} updated the resource {resource} in the collection {dataset}"
-#~ msgstr "{actor} updated the file {resource} in the collection {dataset}"
-
-#~ msgid ""
-#~ "{actor} updated the {related_type} "
-#~ "{related_item} of the collection {dataset}"
-#~ msgstr ""
-
-#~ msgid "{actor} deleted the collection {dataset}"
-#~ msgstr "{actor} deleted the collection {dataset}"
-
-#~ msgid "{actor} deleted the extra {extra} from the collection {dataset}"
-#~ msgstr "{actor} deleted the extra {extra} from the collection {dataset}"
-
-#~ msgid "{actor} deleted the resource {resource} from the collection {dataset}"
-#~ msgstr "{actor} deleted the file {resource} from the collection {dataset}"
-
-#~ msgid "{actor} created the collection {dataset}"
-#~ msgstr "{actor} created the collection {dataset}"
-
-#~ msgid "{actor} added the extra {extra} to the collection {dataset}"
-#~ msgstr "{actor} added the extra {extra} to the collection {dataset}"
-
-#~ msgid "{actor} added the resource {resource} to the collection {dataset}"
-#~ msgstr "{actor} added the file {resource} to the collection {dataset}"
-
-#~ msgid "{actor} removed the tag {tag} from the collection {dataset}"
-#~ msgstr "{actor} removed the tag {tag} from the collection {dataset}"
-
-#~ msgid ""
-#~ "{actor} added the {related_type} "
-#~ "{related_item} to the collection {dataset}"
-#~ msgstr ""
-
-#~ msgid "Created new collection."
-#~ msgstr "Created new collection."
-
-#~ msgid "You cannot add a collection to this organization"
-#~ msgstr "You cannot add a collection to this organisation"
-
-#~ msgid "Collections with no organization can't be private."
-#~ msgstr ""
-
-#~ msgid "You must be logged in to follow a collection."
-#~ msgstr "You must be logged in to follow a collection."
-
-#~ msgid "User %s not authorized to add collection to this organization"
-#~ msgstr ""
-
-#~ msgid "Search Collections"
-#~ msgstr "Search Collections"
-
-#~ msgid "Groups of Collections"
-#~ msgstr "Countries of Collections"
-
-#~ msgid ""
-#~ " <p><strong>Admin:</strong> Can add/edit and"
-#~ " delete collections, as well as "
-#~ "manage group members.</p> "
-#~ "<p><strong>Editor:</strong> Can add and edit"
-#~ " collections, but not manage group "
-#~ "members.</p> <p><strong>Member:</strong> Can view"
-#~ " the group's private collections, but "
-#~ "not add new collections.</p> "
-#~ msgstr ""
-
-#~ msgid "Add Collection"
-#~ msgstr "Add Collection"
-
-#~ msgid "Search collections..."
-#~ msgstr ""
-
-#~ msgid "Collections in group: {group}"
-#~ msgstr "Collections in country: {group}"
-
-#~ msgid "{num} Collection"
-#~ msgid_plural "{num} Collections"
-#~ msgstr[0] "{num} Collection"
-#~ msgstr[1] "{num} Collections"
-
-#~ msgid "0 Collections"
-#~ msgstr "0 Collections"
-
-#~ msgid ""
-#~ " <p>Groups allow you to group "
-#~ "together collections of data under a "
-#~ "community (for example, Civil Liberty "
-#~ "data) or topic (e.g. Transport, Health,"
-#~ " Environment) to make it easier for"
-#~ " users to browse datasets by theme."
-#~ " Datasets can be part of a "
-#~ "group, but do not belong to the"
-#~ " group for editing or authorisation "
-#~ "purposes.</p> "
-#~ msgstr ""
-#~ " <p>Countries allow you to group "
-#~ "together collections of data under a "
-#~ "community (for example, Civil Liberty "
-#~ "data) or topic (e.g. Transport, Health,"
-#~ " Environment) to make it easier for"
-#~ " users to browse collections by "
-#~ "theme. Collections can be part of "
-#~ "a country, but do not belong to"
-#~ " the country for editing or "
-#~ "authorisation purposes.</p> "
-
-#~ msgid "eg. Gold Prices"
-#~ msgstr "eg. Gold Prices"
-
-#~ msgid "Edit Collections"
-#~ msgstr ""
-
-#~ msgid "Add collection"
-#~ msgstr ""
-
-#~ msgid "Sorry no collections found for \"{query}\""
-#~ msgstr "Sorry no collections found for \"{query}\""
-
-#~ msgid "This collection has no description"
-#~ msgstr "This collection has no description"
-
-#~ msgid "This organization has no collections associated to it"
-#~ msgstr ""
-
-#~ msgid ""
-#~ " <p><strong>Admin:</strong> Can add/edit and"
-#~ " delete collections, as well as "
-#~ "manage organization members.</p> "
-#~ "<p><strong>Editor:</strong> Can add and edit"
-#~ " collections, but not manage organization"
-#~ " members.</p> <p><strong>Member:</strong> Can "
-#~ "view the organization's private collections,"
-#~ " but not add new collections.</p> "
-#~ msgstr ""
-#~ " <p><strong>Admin:</strong> Can add/edit and"
-#~ " delete collections, as well as "
-#~ "manage organisation members.</p> "
-#~ "<p><strong>Editor:</strong> Can add and edit"
-#~ " collections, but not manage organisation"
-#~ " members.</p> <p><strong>Member:</strong> Can "
-#~ "view the organisation's private collections,"
-#~ " but not add new collections.</p> "
-
-#~ msgid "Create Collection"
-#~ msgstr "Create Collection"
-
-#~ msgid "What are Collections?"
-#~ msgstr "What are Collections?"
-
-#~ msgid ""
-#~ " Collections are simply used to "
-#~ "group related pieces of data. These "
-#~ "can then be found under a single"
-#~ " url with a description and licensing"
-#~ " information. "
-#~ msgstr ""
-#~ " Collections are simply used to "
-#~ "group related pieces of data. These "
-#~ "can then be found under a single"
-#~ " url with a description and licensing"
-#~ " information. "
-
-#~ msgid "Are you sure you want to delete collection - {name}?"
-#~ msgstr "Are you sure you want to delete collection - {name}?"
-
-#~ msgid "View Collection"
-#~ msgstr "View Collection"
-
-#~ msgid "Update Collection"
-#~ msgstr "Update Collection"
-
-#~ msgid "Add metadata to the collection"
-#~ msgstr "Add metadata to the collection"
-
-#~ msgid "Add data to the collection"
-#~ msgstr "Add data to the collection"
-
-#~ msgid ""
-#~ "This is an old revision of this"
-#~ " collection, as edited at %(timestamp)s."
-#~ " It may differ significantly from the"
-#~ " <a href=\"%(url)s\">current revision</a>."
-#~ msgstr ""
-#~ "This is an old revision of this"
-#~ " collection, as edited at %(timestamp)s."
-#~ " It may differ significantly from the"
-#~ " <a href=\"%(url)s\">current revision</a>."
-
-#~ msgid ""
-#~ "This is the current revision of "
-#~ "this collection, as edited at "
-#~ "%(timestamp)s."
-#~ msgstr ""
-#~ "This is the current revision of "
-#~ "this collection, as edited at "
-#~ "%(timestamp)s."
-
-#~ msgid "From the collection abstract"
-#~ msgstr "From the collection abstract"
-
-#~ msgid "Search for a Collection"
-#~ msgstr "Search for a Collection"
-
-#~ msgid "Edit Collection"
-#~ msgstr "Edit Collection"
-
-#~ msgid "eg. my-collection"
-#~ msgstr "eg. my-collection"
-
-#~ msgid "Select an organization..."
-#~ msgstr "Select an organisation..."
-
-#~ msgid "There is no description for this collection"
-#~ msgstr "There is no description for this collection"
-
-#~ msgid "eg. http://example.com/gold-prices-jan-2011.json"
-#~ msgstr "eg. http://example.com/gold-prices-jan-2011.json"
-
-#~ msgid "eg. January 2011 Gold Prices"
-#~ msgstr "eg. January 2011 Gold Prices"
-
-#~ msgid ""
-#~ " <p class=\"empty\">This collection has "
-#~ "no data, <a href=\"%(url)s\">why not add"
-#~ " some?</a> "
-#~ msgstr ""
-#~ " <p class=\"empty\">This collection has "
-#~ "no data, <a href=\"%(url)s\">why not add"
-#~ " some?</a> "
-
-#~ msgid "New Collection..."
-#~ msgstr "New Collection..."
-
-#~ msgid "Existing Collection..."
-#~ msgstr "Existing Collection..."
-
-#~ msgid "Add collections"
-#~ msgstr "Add collections"
-
-#~ msgid ""
-#~ "[1:You searched for \"%(query)s\". "
-#~ "]%(number_of_results)s collections found."
-#~ msgstr ""
-#~ "[1:You searched for \"%(query)s\". "
-#~ "]%(number_of_results)s collections found."
-
-#~ msgid ""
-#~ "This site is running a powerful "
-#~ "piece of open-source data cataloguing"
-#~ " software called [1:CKAN], written and "
-#~ "maintained by the [2:Open Knowledge "
-#~ "Foundation]. Each 'collection' record on "
-#~ "CKAN contains a description of the "
-#~ "data and other useful information, such"
-#~ " as what formats it is available "
-#~ "in, who owns it and whether it "
-#~ "is freely available, and what subject"
-#~ " areas the data is about. Other "
-#~ "users can improve or add to this"
-#~ " information (CKAN keeps a fully "
-#~ "versioned history)."
-#~ msgstr ""
-#~ "This site is running a powerful "
-#~ "piece of open-source data cataloguing"
-#~ " software called [1:CKAN], written and "
-#~ "maintained by the [2:Open Knowledge "
-#~ "Foundation]. Each 'collection' record on "
-#~ "CKAN contains a description of the "
-#~ "data and other useful information, such"
-#~ " as what formats it is available "
-#~ "in, who owns it and whether it "
-#~ "is freely available, and what subject"
-#~ " areas the data is about. Other "
-#~ "users can improve or add to this"
-#~ " information (CKAN keeps a fully "
-#~ "versioned history)."
-
-#~ msgid "collections"
-#~ msgstr "collections"
-
-#~ msgid ""
-#~ "Add your own collections to share them with others and\n"
-#~ "          to find other people interested in your data."
-#~ msgstr ""
-#~ "Add your own collections to share them with others and\n"
-#~ "          to find other people interested in your data."
-
-#~ msgid "Create a collection »"
-#~ msgstr "Create a collection »"
-
-#~ msgid "collections."
-#~ msgstr "collections."
-
-#~ msgid "Import Collections"
-#~ msgstr "Import Collections"
-
-#~ msgid ""
-#~ "Here you can supply an Excel file"
-#~ " with details of multiple collections "
-#~ "and import these into"
-#~ msgstr ""
-#~ "Here you can supply an Excel file"
-#~ " with details of multiple collections "
-#~ "and import these into"
-
-#~ msgid "collection"
-#~ msgstr "collection"
-
-#~ msgid "Further collection previews not shown."
-#~ msgstr "Further collection previews not shown."
-
-#~ msgid "- Collections - History"
-#~ msgstr "- Collections - History"
-
-#~ msgid "- Edit - Collections"
-#~ msgstr "- Edit - Collections"
-
-#~ msgid "- Edit Resources - Collections"
-#~ msgstr "- Edit Resources - Collections"
-
-#~ msgid "- Collections - Followers"
-#~ msgstr "- Collections - Followers"
-
-#~ msgid "Collection History"
-#~ msgstr "Collection History"
-
-#~ msgid "Add - Collections"
-#~ msgstr "Add - Collections"
-
-#~ msgid "Add a Collection"
-#~ msgstr "Add a Collection"
-
-#~ msgid "A short descriptive title for the collection"
-#~ msgstr "A short descriptive title for the collection"
-
-#~ msgid ""
-#~ "Comma-separated terms that may link "
-#~ "this collection to similar ones. For "
-#~ "more information on conventions, see "
-#~ "[1:this wiki page]."
-#~ msgstr ""
-#~ "Comma-separated terms that may link "
-#~ "this collection to similar ones. For "
-#~ "more information on conventions, see "
-#~ "[1:this wiki page]."
-
-#~ msgid ""
-#~ "Upload or link data files, APIs "
-#~ "and other materials related to your "
-#~ "collection."
-#~ msgstr ""
-#~ "Upload or link data files, APIs "
-#~ "and other materials related to your "
-#~ "collection."
-
-#~ msgid ""
-#~ "The name of the main contact, for"
-#~ " enquiries about this particular "
-#~ "collection, using the e-mail address in"
-#~ " the following field."
-#~ msgstr ""
-#~ "The name of the main contact, for"
-#~ " enquiries about this particular "
-#~ "collection, using the e-mail address in"
-#~ " the following field."
-
-#~ msgid ""
-#~ "Adding custom fields to the collection"
-#~ " such as \"location:uk\" can help "
-#~ "users find it in the search "
-#~ "engine. This data will also appear "
-#~ "under"
-#~ msgstr ""
-#~ "Adding custom fields to the collection"
-#~ " such as \"location:uk\" can help "
-#~ "users find it in the search "
-#~ "engine. This data will also appear "
-#~ "under"
-
-#~ msgid "when viewing the collection."
-#~ msgstr "when viewing the collection."
-
-#~ msgid "Do you really want to change the state of this collection?"
-#~ msgstr "Do you really want to change the state of this collection?"
-
-#~ msgid "This collection is"
-#~ msgstr "This collection is"
-
-#~ msgid "- Collections"
-#~ msgstr "- Collections"
-
-#~ msgid "Related Collections"
-#~ msgstr "Related Collections"
-
-#~ msgid "This is an old revision of this collection, as edited"
-#~ msgstr "This is an old revision of this collection, as edited"
-
-#~ msgid "This is the current revision of this collection, as edited"
-#~ msgstr "This is the current revision of this collection, as edited"
-
-#~ msgid "- Collection - Resource"
-#~ msgstr "- Collection - File"
-
-#~ msgid "Do you know of a collection that should be added to"
-#~ msgstr "Do you know of a collection that should be added to"
-
-#~ msgid "[1:%(item_count)s] collections found"
-#~ msgstr "[1:%(item_count)s] collections found"
-
-#~ msgid "Collection -"
-#~ msgstr "Collection -"
-
-#~ msgid "There are %(count)s collections tagged with [1:%(tagname)s]:"
-#~ msgstr "There are %(count)s collections tagged with [1:%(tagname)s]:"
-
-#~ msgid "Add a new collection"
-#~ msgstr "Add a new collection"
-
-#~ msgid "Total number of Collections"
-#~ msgstr "Total number of Collections"
-
-#~ msgid "Total collections"
-#~ msgstr "Total collections"
-
-#~ msgid "Collection Revisions per Week"
-#~ msgstr "Collection Revisions per Week"
-
-#~ msgid "All collection revisions"
-#~ msgstr "All collection revisions"
-
-#~ msgid "New collections"
-#~ msgstr "New collections"
-
-#~ msgid "Top Rated Collections"
-#~ msgstr "Top Rated Collections"
-
-#~ msgid "Most Edited Collections"
-#~ msgstr "Most Edited Collections"
-
-#~ msgid "No edited collections"
-#~ msgstr "No edited collections"
-
-#~ msgid "Number of Collections"
-#~ msgstr "Number of Collections"
-
-#~ msgid "Users Owning Most Collections"
-#~ msgstr "Users Owning Most Collections"
-
-#~ msgid "Total Number of Collections"
-#~ msgstr "Total Number of Collections"
-
-#~ msgid "Revisions to Collections per week"
-#~ msgstr "Revisions to Collections per week"
-
-#~ msgid "Users owning most collections"
-#~ msgstr "Users owning most collections"
-
-#~ msgid "Collection Leaderboard"
-#~ msgstr "Collection Leaderboard"
-
-#~ msgid ""
-#~ "Choose a collection attribute and find"
-#~ " out which categories in that area"
-#~ " have the most collections. E.g. "
-#~ "tags, groups, license, res_format, country."
-#~ msgstr ""
-#~ "Choose a collection attribute and find"
-#~ " out which categories in that area"
-#~ " have the most collections. E.g. "
-#~ "tags, countries, license, res_format, country."
 
