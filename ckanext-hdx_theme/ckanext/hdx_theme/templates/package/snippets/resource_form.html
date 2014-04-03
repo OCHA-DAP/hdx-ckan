@@ -38,11 +38,11 @@
     {% endblock %}
 
     {% block basic_fields_url %}
-    {{ form.input('url', id='field-url', label=_('Resource'), placeholder="{{ _('eg. http://example.com/population-jan-2011.json') }}, value=data.url, error=errors.url, classes=['control-full', 'control-large']) }}
+    {{ form.input('url', id='field-url', label=_('Resource'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large']) }}
     {% endblock %}
 
     {% block basic_fields_name %}
-    {{ form.input('name', id='field-name', label=_('Name'), placeholder="{{ _('eg. Population') }}", value=data.name, error=errors.name, classes=['control-full']) }}
+    {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. Population'), value=data.name, error=errors.name, classes=['control-full']) }}
     {% endblock %}
 
     {% block basic_fields_description %}
