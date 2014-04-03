@@ -3413,7 +3413,7 @@ msgstr "eg. CSV, XML or JSON"
 
 #: ckan/templates/package/snippets/resource_form.html:57
 msgid "This is generated automatically. You can edit if you wish"
-msgstr "This is generated automatically. You can edit if you wish"
+msgstr "Format is generated automatically. You can edit if you wish."
 
 #: ckan/templates/package/snippets/resource_form.html:68
 msgid "eg. 2012-06-05"
