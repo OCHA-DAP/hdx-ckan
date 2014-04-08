@@ -37,4 +37,6 @@ etc/default/*.ini
 # node.js
 node_modules/
 
+#Idea PyCharm - project folder
+.idea
 
