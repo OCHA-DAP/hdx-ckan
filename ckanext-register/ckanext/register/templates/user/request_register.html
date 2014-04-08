@@ -1,0 +1,32 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Request registration') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('Request registration'), controller='ckanext.register.request:RequestController', action='request' %}</li>
+{% endblock %}
+
+{% block primary_content %}
+  <article class="module">
+    <div class="module-content">
+      <h1 class="page-heading">{{ _('Request registration') }}</h1>
+      {% block form %}
+        <form action="" method="post" class="form-inline control-medium">
+          <label for="field-email">{{ _('Email') }}</label>
+          <input id="field-email" name="email" value="" />
+          <button class="btn btn-large btn-primary" type="submit" name="request">{{ _("Request") }}</button>
+        </form>
+      {% endblock %}
+    </div>
+  </article>
+{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">{{ _('How does this work?') }}</h2>
+    <div class="module-content">
+      <p>{% trans %}Enter your email into the box and we will send you
+      an email with a link to register, when this is available.{% endtrans %}</p>
+    </div>
+  </section>
+{% endblock %}

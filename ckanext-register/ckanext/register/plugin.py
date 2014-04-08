@@ -1,4 +1,6 @@
 import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
+
 
 def user_create(context, data_dict=None):
     #Disable registering new users
@@ -7,6 +9,18 @@ def user_create(context, data_dict=None):
 
 class DisableUserRegistration(plugins.SingletonPlugin):
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.IRoutes, inherit=True)
+
+    def update_config(self, config):
+        toolkit.add_template_directory(config, 'templates')
 
     def get_auth_functions(self):
         return {'user_create': user_create}
+
+    def before_map(self, map):
+        map.connect('/user/request',
+                    controller='ckanext.register.request:RequestController',
+                    action='request')
+        return map
+
