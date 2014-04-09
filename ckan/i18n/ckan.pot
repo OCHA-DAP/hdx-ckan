@@ -5924,3 +5924,14 @@ msgstr ""
 msgid "Choose area"
 msgstr ""
 
+#: ckanext-hdx_theme/ckanext/hdx_theme/templates/package/snippets/resource_form.html:41
+msgid "eg. http://example.com/population-jan-2011.json"
+msgstr ""
+
+#: ckanext-hdx_theme/ckanext/hdx_theme/templates/home/index.html:63
+msgid "eg. Population"
+msgstr ""
+
+#: ckanext-hdx_theme/ckanext/hdx_theme/templates/package/snippets/resource_form.html:45
+msgid "eg. January 2011 Population"
+msgstr ""
