@@ -1,40 +1,40 @@
-# Translations template for ckan.
+# Korean (South Korea) translations for ckan.
 # Copyright (C) 2013 ORGANIZATION
 # This file is distributed under the same license as the ckan project.
-# 
+#
 # Translators:
 # haklaekim <haklae.kim@gmail.com>, 2012-2013
 # notsun <notsun.me@gmail.com>, 2013
 msgid ""
 msgstr ""
-"Project-Id-Version: CKAN\n"
+"Project-Id-Version:  CKAN\n"
 "Report-Msgid-Bugs-To: http://trac.ckan.org/\n"
-"POT-Creation-Date: 2013-07-01 17:35+0100\n"
+"POT-Creation-Date: 2014-04-09 16:34+0300\n"
 "PO-Revision-Date: 2013-07-01 17:00+0000\n"
 "Last-Translator: amercader <amercadero@gmail.com>\n"
-"Language-Team: Korean (Korea) (http://www.transifex.com/projects/p/ckan/language/ko_KR/)\n"
+"Language-Team: Korean (Korea) "
+"(http://www.transifex.com/projects/p/ckan/language/ko_KR/)\n"
+"Plural-Forms: nplurals=1; plural=0\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 0.9.6\n"
-"Language: ko_KR\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ckan/new_authz.py:82
+#: ckan/new_authz.py:84
 #, python-format
 msgid "Authorization function not found: %s"
 msgstr "권한 기능을 찾을 수 없습니다:  %s"
 
-#: ckan/new_authz.py:92 ckan/templates/organization/edit_base.html:11
+#: ckan/new_authz.py:94 ckan/templates/organization/edit_base.html:11
 #: ckan/templates/organization/read_base.html:12
 msgid "Admin"
 msgstr "관리"
 
-#: ckan/new_authz.py:95
+#: ckan/new_authz.py:97
 msgid "Editor"
 msgstr "편집자"
 
-#: ckan/new_authz.py:98
+#: ckan/new_authz.py:100
 msgid "Member"
 msgstr "멤버"
 
@@ -114,7 +114,7 @@ msgstr "제거 완료"
 msgid "Action not implemented."
 msgstr "작업이 실행되지 않음."
 
-#: ckan/controllers/api.py:59 ckan/controllers/group.py:149
+#: ckan/controllers/api.py:59 ckan/controllers/group.py:150
 #: ckan/controllers/home.py:28 ckan/controllers/package.py:120
 #: ckan/controllers/related.py:86 ckan/controllers/related.py:112
 #: ckan/controllers/revision.py:30 ckan/controllers/tag.py:22
@@ -129,8 +129,8 @@ msgid "Access denied"
 msgstr "접근이 거부됨"
 
 #: ckan/controllers/api.py:121 ckan/controllers/api.py:203
-#: ckan/logic/converters.py:120 ckan/logic/converters.py:145
-#: ckan/logic/converters.py:170 ckan/logic/validators.py:102
+#: ckan/logic/converters.py:119 ckan/logic/converters.py:144
+#: ckan/logic/converters.py:169 ckan/logic/validators.py:102
 #: ckan/logic/validators.py:113 ckan/logic/validators.py:134
 #: ckan/logic/validators.py:148 ckan/logic/validators.py:165
 #: ckan/logic/validators.py:178 ckan/logic/validators.py:192
@@ -159,7 +159,7 @@ msgstr "JSON 오류: %s"
 msgid "Bad request data: %s"
 msgstr "잘못된 요청 데이터: %s"
 
-#: ckan/controllers/api.py:272 ckan/logic/action/get.py:1876
+#: ckan/controllers/api.py:272 ckan/logic/action/get.py:1888
 #, python-format
 msgid "Cannot list entity of this type: %s"
 msgstr "이 형식의 개체를 목록화할 수 없음: %s"
@@ -229,13 +229,13 @@ msgstr ""
 msgid "Request params must be in form of a json encoded dictionary."
 msgstr "요청 매개변수는 디렉토리로 인코딩된 json 형식입니다."
 
-#: ckan/controllers/feed.py:176 ckan/controllers/group.py:182
-#: ckan/controllers/group.py:369 ckan/controllers/group.py:453
-#: ckan/controllers/group.py:498 ckan/controllers/group.py:531
-#: ckan/controllers/group.py:542 ckan/controllers/group.py:587
-#: ckan/controllers/group.py:602 ckan/controllers/group.py:629
-#: ckan/controllers/group.py:658 ckan/controllers/group.py:689
-#: ckan/controllers/group.py:748 ckan/controllers/group.py:829
+#: ckan/controllers/feed.py:176 ckan/controllers/group.py:183
+#: ckan/controllers/group.py:370 ckan/controllers/group.py:454
+#: ckan/controllers/group.py:499 ckan/controllers/group.py:532
+#: ckan/controllers/group.py:543 ckan/controllers/group.py:588
+#: ckan/controllers/group.py:603 ckan/controllers/group.py:630
+#: ckan/controllers/group.py:659 ckan/controllers/group.py:690
+#: ckan/controllers/group.py:749 ckan/controllers/group.py:830
 msgid "Group not found"
 msgstr "그룹을 찾을 수 없음 "
 
@@ -244,15 +244,15 @@ msgstr "그룹을 찾을 수 없음 "
 msgid "\"page\" parameter must be a positive integer"
 msgstr "\"페이지\" 매개변수는 양의 정수 값이어야 함"
 
-#: ckan/controllers/group.py:184 ckan/controllers/group.py:371
-#: ckan/controllers/group.py:455 ckan/controllers/group.py:496
-#: ckan/controllers/group.py:529 ckan/controllers/group.py:831
+#: ckan/controllers/group.py:185 ckan/controllers/group.py:372
+#: ckan/controllers/group.py:456 ckan/controllers/group.py:497
+#: ckan/controllers/group.py:530 ckan/controllers/group.py:832
 #, python-format
 msgid "Unauthorized to read group %s"
 msgstr "그룹 %s를 읽기 위한 권한 없음 "
 
-#: ckan/controllers/group.py:281 ckan/controllers/home.py:69
-#: ckan/controllers/package.py:218 ckan/lib/helpers.py:543
+#: ckan/controllers/group.py:282 ckan/controllers/home.py:69
+#: ckan/controllers/package.py:218 ckan/lib/helpers.py:545
 #: ckan/templates/header.html:91 ckan/templates/group/base_form_page.html:6
 #: ckan/templates/group/edit.html:4 ckan/templates/group/edit_base.html:6
 #: ckan/templates/group/index.html:6 ckan/templates/group/index.html:18
@@ -268,8 +268,8 @@ msgstr "그룹 %s를 읽기 위한 권한 없음 "
 msgid "Groups"
 msgstr "그룹"
 
-#: ckan/controllers/group.py:282 ckan/controllers/home.py:70
-#: ckan/controllers/package.py:219 ckan/lib/helpers.py:544
+#: ckan/controllers/group.py:283 ckan/controllers/home.py:70
+#: ckan/controllers/package.py:219 ckan/lib/helpers.py:546
 #: ckan/logic/__init__.py:88
 #: ckan/templates/package/snippets/package_basic_fields.html:25
 #: ckan/templates/snippets/context/dataset.html:17
@@ -284,13 +284,13 @@ msgstr "그룹"
 msgid "Tags"
 msgstr "태그 "
 
-#: ckan/controllers/group.py:283 ckan/controllers/home.py:71
-#: ckan/controllers/package.py:220 ckan/lib/helpers.py:545
+#: ckan/controllers/group.py:284 ckan/controllers/home.py:71
+#: ckan/controllers/package.py:220 ckan/lib/helpers.py:547
 msgid "Formats"
 msgstr "포맷"
 
-#: ckan/controllers/group.py:284 ckan/controllers/home.py:72
-#: ckan/controllers/package.py:221 ckan/lib/helpers.py:546
+#: ckan/controllers/group.py:285 ckan/controllers/home.py:72
+#: ckan/controllers/package.py:221 ckan/lib/helpers.py:548
 #: ckan/templates/package/resource_read.html:109
 #: ckan/templates/package/snippets/package_basic_fields.html:31
 #: ckan/templates/snippets/license.html:4
@@ -299,95 +299,95 @@ msgstr "포맷"
 msgid "License"
 msgstr "라이센스"
 
-#: ckan/controllers/group.py:401
+#: ckan/controllers/group.py:402
 msgid "Not authorized to perform bulk update"
 msgstr ""
 
-#: ckan/controllers/group.py:418
+#: ckan/controllers/group.py:419
 msgid "Unauthorized to create a group"
 msgstr "그룹을 생성하기 위해 인증되지 않음 "
 
-#: ckan/controllers/group.py:464 ckan/controllers/package.py:759
+#: ckan/controllers/group.py:465 ckan/controllers/package.py:759
 #, python-format
 msgid "User %r not authorized to edit %s"
 msgstr "사용자 %r이 %s를 편집할 권한 없음 "
 
-#: ckan/controllers/group.py:500 ckan/controllers/group.py:533
+#: ckan/controllers/group.py:501 ckan/controllers/group.py:534
 #: ckan/controllers/package.py:919 ckan/controllers/package.py:970
 #: ckan/controllers/related.py:186 ckan/controllers/user.py:193
 #: ckan/controllers/user.py:297 ckan/controllers/user.py:476
 msgid "Integrity Error"
 msgstr "무결성 오류"
 
-#: ckan/controllers/group.py:556
+#: ckan/controllers/group.py:557
 #, python-format
 msgid "User %r not authorized to edit %s authorizations"
 msgstr "사용자 %r은 %s 권한을 편집할 수 있는 권한이 없습니다.  "
 
-#: ckan/controllers/group.py:573 ckan/controllers/group.py:585
-#: ckan/controllers/group.py:600 ckan/controllers/group.py:656
+#: ckan/controllers/group.py:574 ckan/controllers/group.py:586
+#: ckan/controllers/group.py:601 ckan/controllers/group.py:657
 #, python-format
 msgid "Unauthorized to delete group %s"
 msgstr "그룹 %s를 삭제하기 위한 권한 없음 "
 
-#: ckan/controllers/group.py:579
+#: ckan/controllers/group.py:580
 msgid "Organization has been deleted."
 msgstr "조직이 삭제되었습니다."
 
-#: ckan/controllers/group.py:581
+#: ckan/controllers/group.py:582
 msgid "Group has been deleted."
 msgstr "그룹이 삭제 되었습니다."
 
-#: ckan/controllers/group.py:627
+#: ckan/controllers/group.py:628
 #, python-format
 msgid "Unauthorized to add member to group %s"
 msgstr "그룹 %s의 멤버를 추가하기 위한 권한 없음"
 
-#: ckan/controllers/group.py:644
+#: ckan/controllers/group.py:645
 #, python-format
 msgid "Unauthorized to delete group %s members"
 msgstr "그룹 %s의 멤버를 삭제하기 위한 권한 없음"
 
-#: ckan/controllers/group.py:650
+#: ckan/controllers/group.py:651
 msgid "Group member has been deleted."
 msgstr "그룹의 멤버가 삭제 되었습니다."
 
-#: ckan/controllers/group.py:672 ckan/controllers/package.py:375
+#: ckan/controllers/group.py:673 ckan/controllers/package.py:375
 msgid "Select two revisions before doing the comparison."
 msgstr "비교를 위해 두 개의 수정안을 선택하세 "
 
-#: ckan/controllers/group.py:691
+#: ckan/controllers/group.py:692
 #, python-format
 msgid "User %r not authorized to edit %r"
 msgstr "사용자 %r은 %r 편집을 위한 권한 없음"
 
-#: ckan/controllers/group.py:698
+#: ckan/controllers/group.py:699
 msgid "CKAN Group Revision History"
 msgstr "CKAN 그룹 수정 이력 "
 
-#: ckan/controllers/group.py:701
+#: ckan/controllers/group.py:702
 msgid "Recent changes to CKAN Group: "
 msgstr "CKAN 그룹의 최근 변경내:"
 
-#: ckan/controllers/group.py:722 ckan/controllers/package.py:425
+#: ckan/controllers/group.py:723 ckan/controllers/package.py:425
 msgid "Log message: "
 msgstr "로그 메시지: "
 
-#: ckan/controllers/group.py:751
+#: ckan/controllers/group.py:752
 msgid "Unauthorized to read group {group_id}"
 msgstr "그룹 {group_id}를 읽기 위한 권한 없음 "
 
-#: ckan/controllers/group.py:771 ckan/controllers/package.py:1190
+#: ckan/controllers/group.py:772 ckan/controllers/package.py:1190
 #: ckan/controllers/user.py:632
 msgid "You are now following {0}"
 msgstr "{0}을 팔로잉중입니다."
 
-#: ckan/controllers/group.py:790 ckan/controllers/package.py:1209
+#: ckan/controllers/group.py:791 ckan/controllers/package.py:1209
 #: ckan/controllers/user.py:651
 msgid "You are no longer following {0}"
 msgstr "이미 {0}을 팔로잉하지 않고 있습니다."
 
-#: ckan/controllers/group.py:808 ckan/controllers/user.py:506
+#: ckan/controllers/group.py:809 ckan/controllers/user.py:506
 #, python-format
 msgid "Unauthorized to view followers %s"
 msgstr "팔로워 %s를 보기 위한 권한 없음"
@@ -398,10 +398,12 @@ msgstr "이 사이트는 현재 오프라인입니다. 데이터베이스가 초
 
 #: ckan/controllers/home.py:98
 msgid ""
-"Please <a href=\"{link}\">update your profile</a> and add your email address"
-" and your full name. {site} uses your email address if you need to reset "
-"your password."
-msgstr "<a href=\"{link}\">프로파일</a>, 이메일 주소, 성명을 업데이트하세요. 패스워드의 재설정이 필요한 경우 {site}는 이메일 주소를 사용합니다."
+"Please <a href=\"{link}\">update your profile</a> and add your email "
+"address and your full name. {site} uses your email address if you need to"
+" reset your password."
+msgstr ""
+"<a href=\"{link}\">프로파일</a>, 이메일 주소, 성명을 업데이트하세요. 패스워드의 재설정이 필요한 경우 "
+"{site}는 이메일 주소를 사용합니다."
 
 #: ckan/controllers/home.py:101
 #, python-format
@@ -684,7 +686,7 @@ msgstr "사용자 %s를 생성하기 위한 권한 없음"
 
 #: ckan/controllers/user.py:191 ckan/controllers/user.py:254
 #: ckan/controllers/user.py:295 ckan/controllers/user.py:454
-#: ckan/controllers/user.py:474
+#: ckan/controllers/user.py:474 ckan/logic/auth/update.py:188
 msgid "User not found"
 msgstr "사용자를 찾을 수 없음 "
 
@@ -827,8 +829,7 @@ msgid "{actor} updated their profile"
 msgstr "{actor}가 프로파일을 업데이트함"
 
 #: ckan/lib/activity_streams.py:86
-msgid ""
-"{actor} updated the {related_type} {related_item} of the dataset {dataset}"
+msgid "{actor} updated the {related_type} {related_item} of the dataset {dataset}"
 msgstr ""
 
 #: ckan/lib/activity_streams.py:89
@@ -900,8 +901,7 @@ msgid "{actor} started following {group}"
 msgstr "{actor}가 {group}를 팔로잉함"
 
 #: ckan/lib/activity_streams.py:142
-msgid ""
-"{actor} added the {related_type} {related_item} to the dataset {dataset}"
+msgid "{actor} added the {related_type} {related_item} to the dataset {dataset}"
 msgstr ""
 
 #: ckan/lib/activity_streams.py:145
@@ -1040,49 +1040,49 @@ msgstr "{z}Z"
 msgid "{y}Y"
 msgstr "{y}Y"
 
-#: ckan/lib/helpers.py:712
+#: ckan/lib/helpers.py:714
 msgid "Update your avatar at gravatar.com"
 msgstr "gravatar.com에 아바타를 업데이트해 주세요"
 
-#: ckan/lib/helpers.py:910 ckan/templates_legacy/js_strings.html:16
+#: ckan/lib/helpers.py:912 ckan/templates_legacy/js_strings.html:16
 msgid "Unknown"
 msgstr "알 수 없음"
 
-#: ckan/lib/helpers.py:951
+#: ckan/lib/helpers.py:953
 msgid "Unnamed resource"
 msgstr ""
 
-#: ckan/lib/helpers.py:998
+#: ckan/lib/helpers.py:1000
 msgid "Created new dataset."
 msgstr "새로운 데이터셋이 생성됨"
 
-#: ckan/lib/helpers.py:1000
+#: ckan/lib/helpers.py:1002
 msgid "Edited resources."
 msgstr "리소스가 편집됨"
 
-#: ckan/lib/helpers.py:1002
+#: ckan/lib/helpers.py:1004
 msgid "Edited settings."
 msgstr "설정이 편집됨"
 
-#: ckan/lib/helpers.py:1264
+#: ckan/lib/helpers.py:1266
 msgid "{number} view"
 msgid_plural "{number} views"
 msgstr[0] "{number} 뷰"
 
-#: ckan/lib/helpers.py:1266
+#: ckan/lib/helpers.py:1268
 msgid "{number} recent view"
 msgid_plural "{number} recent views"
 msgstr[0] "{number} 최근 뷰"
 
-#: ckan/lib/helpers.py:1507
+#: ckan/lib/helpers.py:1509
 msgid "The resource url is not specified."
 msgstr ""
 
-#: ckan/lib/helpers.py:1525
+#: ckan/lib/helpers.py:1527
 msgid "No preview handler for resource of type {0}"
 msgstr ""
 
-#: ckan/lib/helpers.py:1529
+#: ckan/lib/helpers.py:1531
 msgid "The resource format is not specified."
 msgstr ""
 
@@ -1108,7 +1108,12 @@ msgid ""
 "Please click the following link to confirm this request:\n"
 "\n"
 "   %(reset_link)s\n"
-msgstr "%(site_title)s의 비밀번호를 재설정하는 요청이 있습니다.\n\n이 요청을 승인하기 위해 다음의 링크를 클릭하세요:\n\n   %(reset_link)s\n"
+msgstr ""
+"%(site_title)s의 비밀번호를 재설정하는 요청이 있습니다.\n"
+"\n"
+"이 요청을 승인하기 위해 다음의 링크를 클릭하세요:\n"
+"\n"
+"   %(reset_link)s\n"
 
 #: ckan/lib/mailer.py:136 ckan/templates_legacy/user/perform_reset.html:6
 #: ckan/templates_legacy/user/perform_reset.html:14
@@ -1140,7 +1145,7 @@ msgstr "로그 메시지에 허용된 링크가 없음"
 #: ckan/lib/navl/dictization_functions.py:22
 #: ckan/lib/navl/dictization_functions.py:24 ckan/lib/navl/validators.py:23
 #: ckan/lib/navl/validators.py:30 ckan/lib/navl/validators.py:50
-#: ckan/logic/validators.py:525 ckan/logic/action/get.py:1522
+#: ckan/logic/validators.py:525 ckan/logic/action/get.py:1530
 msgid "Missing value"
 msgstr "누락된 값"
 
@@ -1181,16 +1186,15 @@ msgstr "누락된 값"
 msgid "No valid API key provided."
 msgstr "유효한 API 키가 제공되지 않음. "
 
-#: ckan/logic/converters.py:73 ckan/logic/converters.py:88
+#: ckan/logic/converters.py:72 ckan/logic/converters.py:87
 #, python-format
 msgid "Tag vocabulary \"%s\" does not exist"
 msgstr "태그 어휘 \"%s\" 가 존재하지 않습니다 "
 
-#: ckan/logic/converters.py:120 ckan/logic/validators.py:148
+#: ckan/logic/converters.py:119 ckan/logic/validators.py:148
 #: ckan/logic/validators.py:165 ckan/logic/validators.py:625
 #: ckan/templates/group/member_new.html:17
-#: ckan/templates/group/member_new.html:20
-#: ckan/templates/group/members.html:14
+#: ckan/templates/group/member_new.html:20 ckan/templates/group/members.html:14
 #: ckan/templates/organization/member_new.html:19
 #: ckan/templates/organization/member_new.html:22
 #: ckan/templates/organization/members.html:17
@@ -1199,7 +1203,7 @@ msgstr "태그 어휘 \"%s\" 가 존재하지 않습니다 "
 msgid "User"
 msgstr "사용자"
 
-#: ckan/logic/converters.py:145 ckan/logic/validators.py:102
+#: ckan/logic/converters.py:144 ckan/logic/validators.py:102
 #: ckan/logic/validators.py:134 ckan/templates/package/read_base.html:24
 #: ckan/templates_legacy/group/new_group_form.html:118
 #: ckanext/stats/templates/ckanext/stats/index.html:89
@@ -1208,7 +1212,7 @@ msgstr "사용자"
 msgid "Dataset"
 msgstr "데이터셋"
 
-#: ckan/logic/converters.py:170 ckan/logic/validators.py:178
+#: ckan/logic/converters.py:169 ckan/logic/validators.py:178
 #: ckanext/stats/templates/ckanext/stats/index.html:113
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:82
 msgid "Group"
@@ -1471,11 +1475,11 @@ msgid "REST API: Delete Member: %s"
 msgstr "REST API: 멤버 삭제: %s"
 
 #: ckan/logic/action/delete.py:311 ckan/logic/action/delete.py:337
-#: ckan/logic/action/get.py:1938 ckan/logic/action/update.py:853
+#: ckan/logic/action/get.py:1950 ckan/logic/action/update.py:853
 msgid "id not in data"
 msgstr "데이터에 없는 id"
 
-#: ckan/logic/action/delete.py:315 ckan/logic/action/get.py:1941
+#: ckan/logic/action/delete.py:315 ckan/logic/action/get.py:1953
 #: ckan/logic/action/update.py:857
 #, python-format
 msgid "Could not find vocabulary \"%s\""
@@ -1494,23 +1498,23 @@ msgstr "언팔로우하기 위해 로그인해야 합니다."
 msgid "You are not following {0}."
 msgstr "{0}을 팔로잉하지 않고 있습니다."
 
-#: ckan/logic/action/get.py:115
+#: ckan/logic/action/get.py:118
 msgid "Must be larger than 0"
 msgstr ""
 
-#: ckan/logic/action/get.py:1526
+#: ckan/logic/action/get.py:1534
 msgid "Do not specify if using \"query\" parameter"
 msgstr "\"query\" 매개변수를 사용하는 경우 구체화하지 않음"
 
-#: ckan/logic/action/get.py:1535
+#: ckan/logic/action/get.py:1543
 msgid "Must be <field>:<value> pair(s)"
 msgstr "<filed>:<value> 쌍이어야 함"
 
-#: ckan/logic/action/get.py:1563
+#: ckan/logic/action/get.py:1574
 msgid "Field \"{field}\" not recognised in resource_search."
 msgstr "필드 \"{field}\"가 resource_search에서 인식되지 않음."
 
-#: ckan/logic/action/get.py:1885
+#: ckan/logic/action/get.py:1897
 msgid "unknown user:"
 msgstr "알 수 없는 사용자:"
 
@@ -1721,35 +1725,35 @@ msgstr "사용자 %s는 그룹 %s의 상태를 변경하기 위한 권한 없음
 msgid "User %s not authorized to edit permissions of group %s"
 msgstr "사용자 %s는 그룹 %s의 허가를 편집하기 위한 권한 없음"
 
-#: ckan/logic/auth/update.py:183
+#: ckan/logic/auth/update.py:199
 msgid "Have to be logged in to edit user"
 msgstr ""
 
-#: ckan/logic/auth/update.py:191
+#: ckan/logic/auth/update.py:207
 #, python-format
 msgid "User %s not authorized to edit user %s"
 msgstr "사용자 %s는 사용자 %s를 편집하기 위한 권한 없음"
 
-#: ckan/logic/auth/update.py:202
+#: ckan/logic/auth/update.py:216
 #, python-format
 msgid "User %s not authorized to change state of revision"
 msgstr "사용자 %s는 개정 상태를 변경하기 위한 권한 없음"
 
-#: ckan/logic/auth/update.py:211
+#: ckan/logic/auth/update.py:225
 #, python-format
 msgid "User %s not authorized to update task_status table"
 msgstr "사용자 %s는 task_status 테이블을 업데이트하기 위한 권한 없음"
 
-#: ckan/logic/auth/update.py:225
+#: ckan/logic/auth/update.py:239
 #, python-format
 msgid "User %s not authorized to update term_translation table"
 msgstr "사용자 %s는 term_translation 테이블을 업데이트하기 위한 권한 없음"
 
-#: ckan/logic/auth/update.py:247
+#: ckan/logic/auth/update.py:261
 msgid "Valid API key needed to edit a package"
 msgstr "유효한 API가 패키지를 편집하기 위해 필요함"
 
-#: ckan/logic/auth/update.py:257
+#: ckan/logic/auth/update.py:271
 msgid "Valid API key needed to edit a group"
 msgstr "유효한 API 키가 그룹을 편집하기 위해 필요함 "
 
@@ -1859,7 +1863,9 @@ msgid "has sibling %s"
 msgstr "형제 %s를 갖는다 "
 
 #: ckan/public/base/javascript/modules/activity-stream.js:20
+#: ckan/public/base/javascript/modules/activity-stream.min.js:1
 #: ckan/public/base/javascript/modules/popover-context.js:45
+#: ckan/public/base/javascript/modules/popover-context.min.js:1
 #: ckan/templates/package/snippets/data_api_button.html:8
 #: ckan/templates/tests/mock_json_resource_preview_template.html:7
 #: ckan/templates/tests/mock_resource_preview_template.html:7
@@ -1870,44 +1876,54 @@ msgid "Loading..."
 msgstr "로딩중…"
 
 #: ckan/public/base/javascript/modules/api-info.js:20
+#: ckan/public/base/javascript/modules/api-info.min.js:1
 msgid "There is no API data to load for this resource"
 msgstr "이 리소스를 적재할 API 데이터가 없음"
 
 #: ckan/public/base/javascript/modules/api-info.js:21
+#: ckan/public/base/javascript/modules/api-info.min.js:1
 msgid "Failed to load data API information"
 msgstr "데이터 API 정보를 읽어오는데 실패했습니다"
 
 #: ckan/public/base/javascript/modules/autocomplete.js:31
+#: ckan/public/base/javascript/modules/autocomplete.min.js:1
 msgid "No matches found"
 msgstr "일치하는 것을 찾을 수 없음"
 
 #: ckan/public/base/javascript/modules/autocomplete.js:32
+#: ckan/public/base/javascript/modules/autocomplete.min.js:1
 msgid "Start typing…"
 msgstr "타이핑 시작..."
 
 #: ckan/public/base/javascript/modules/autocomplete.js:34
+#: ckan/public/base/javascript/modules/autocomplete.min.js:1
 msgid "Input is too short, must be at least one character"
 msgstr "입력값이 적습니다. 하나 이상의 character를 입력하세요."
 
 #: ckan/public/base/javascript/modules/basic-form.js:4
+#: ckan/public/base/javascript/modules/basic-form.min.js:1
 msgid "There are unsaved modifications to this form"
 msgstr "이 양식에 저장되지 않은 변경사항이 있습니다."
 
 #: ckan/public/base/javascript/modules/confirm-action.js:7
+#: ckan/public/base/javascript/modules/confirm-action.min.js:1
 msgid "Please Confirm Action"
 msgstr "작업을 승인해 주세요"
 
 #: ckan/public/base/javascript/modules/confirm-action.js:8
+#: ckan/public/base/javascript/modules/confirm-action.min.js:1
 msgid "Are you sure you want to perform this action?"
 msgstr "이 작업의 수행을 원합니까?"
 
 #: ckan/public/base/javascript/modules/confirm-action.js:9
+#: ckan/public/base/javascript/modules/confirm-action.min.js:1
 #: ckan/templates/user/new_user_form.html:9
 #: ckan/templates/user/perform_reset.html:20
 msgid "Confirm"
 msgstr "승인"
 
 #: ckan/public/base/javascript/modules/confirm-action.js:10
+#: ckan/public/base/javascript/modules/confirm-action.min.js:1
 #: ckan/templates/admin/confirm_reset.html:9
 #: ckan/templates/group/confirm_delete.html:14
 #: ckan/templates/group/confirm_delete_member.html:15
@@ -1927,6 +1943,7 @@ msgid "Cancel"
 msgstr "취소"
 
 #: ckan/public/base/javascript/modules/follow.js:23
+#: ckan/public/base/javascript/modules/follow.min.js:1
 #: ckan/templates/snippets/follow_button.html:14
 #: ckan/templates_legacy/js_strings.html:16
 #: ckan/templates_legacy/snippets/follow_button.html:9
@@ -1934,6 +1951,7 @@ msgid "Follow"
 msgstr "Follow"
 
 #: ckan/public/base/javascript/modules/follow.js:24
+#: ckan/public/base/javascript/modules/follow.min.js:1
 #: ckan/templates/snippets/follow_button.html:9
 #: ckan/templates_legacy/js_strings.html:16
 #: ckan/templates_legacy/snippets/follow_button.html:8
@@ -1941,45 +1959,55 @@ msgid "Unfollow"
 msgstr "Unfollow"
 
 #: ckan/public/base/javascript/modules/related-item.js:25
+#: ckan/public/base/javascript/modules/related-item.min.js:1
 msgid "show more"
 msgstr "더 보기"
 
 #: ckan/public/base/javascript/modules/related-item.js:26
+#: ckan/public/base/javascript/modules/related-item.min.js:1
 msgid "show less"
 msgstr "적게 보기"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:25
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 #: ckan/templates_legacy/package/new_package_form.html:149
 msgid "Upload a file"
 msgstr "파일 업로드하기"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:26
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 msgid "An Error Occurred"
 msgstr "오류 발생"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:27
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 msgid "Resource uploaded"
 msgstr "리소스가 업로드 되었음"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:28
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 msgid "Unable to upload file"
 msgstr "파일 업로드 불가"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:29
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 msgid "Unable to authenticate upload"
 msgstr "업로드를 인증할 수 없습니다"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:30
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 msgid "Unable to get data for uploaded file"
 msgstr "파일을 업로드하기 위한 데이터를 가져올 수 없음"
 
 #: ckan/public/base/javascript/modules/resource-upload-field.js:31
+#: ckan/public/base/javascript/modules/resource-upload-field.min.js:1
 msgid ""
-"You are uploading a file. Are you sure you want to navigate away and stop "
-"this upload?"
+"You are uploading a file. Are you sure you want to navigate away and stop"
+" this upload?"
 msgstr ""
 
 #: ckan/public/base/javascript/modules/slug-preview.js:32
+#: ckan/public/base/javascript/modules/slug-preview.min.js:1
 #: ckan/templates/group/snippets/group_form.html:18
 #: ckan/templates/organization/snippets/organization_form.html:18
 #: ckan/templates/package/snippets/package_basic_fields.html:13
@@ -1989,6 +2017,7 @@ msgid "URL"
 msgstr "URL"
 
 #: ckan/public/base/javascript/modules/slug-preview.js:33
+#: ckan/public/base/javascript/modules/slug-preview.min.js:1
 #: ckan/templates/group/edit.html:7 ckan/templates/group/edit_base.html:9
 #: ckan/templates/group/edit_base.html:18 ckan/templates/group/members.html:29
 #: ckan/templates/group/read_base.html:12
@@ -2000,17 +2029,18 @@ msgstr "URL"
 #: ckan/templates/package/resource_read.html:30
 #: ckan/templates/related/snippets/related_item.html:38
 #: ckan/templates/user/edit.html:12 ckan/templates/user/read_base.html:14
-#: ckan/templates_legacy/_util.html:11
-#: ckan/templates_legacy/js_strings.html:16
+#: ckan/templates_legacy/_util.html:11 ckan/templates_legacy/js_strings.html:16
 #: ckan/templates_legacy/group/layout.html:24
 msgid "Edit"
 msgstr "편집"
 
 #: ckan/public/base/javascript/modules/table-toggle-more.js:9
+#: ckan/public/base/javascript/modules/table-toggle-more.min.js:1
 msgid "Show more"
 msgstr "더 보기"
 
 #: ckan/public/base/javascript/modules/table-toggle-more.js:10
+#: ckan/public/base/javascript/modules/table-toggle-more.min.js:1
 msgid "Hide"
 msgstr "숨기기"
 
@@ -2035,7 +2065,9 @@ msgstr "Open Knowledge Foundation"
 msgid ""
 "<strong>Powered by</strong> <a class=\"hide-text ckan-footer-logo\" "
 "href=\"http://ckan.org\">CKAN</a>"
-msgstr "<strong>Powered by</strong> <a class=\"hide-text ckan-footer-logo\" href=\"http://ckan.org\">CKAN</a>"
+msgstr ""
+"<strong>Powered by</strong> <a class=\"hide-text ckan-footer-logo\" "
+"href=\"http://ckan.org\">CKAN</a>"
 
 #: ckan/templates/header.html:11
 msgid "Sysadmin settings"
@@ -2080,11 +2112,10 @@ msgstr "등록"
 #: ckan/templates/package/snippets/new_package_breadcrumb.html:1
 #: ckan/templates/related/base_form_page.html:4
 #: ckan/templates/revision/diff.html:11 ckan/templates/revision/read.html:65
-#: ckan/templates/snippets/organization.html:42
+#: ckan/templates/snippets/organization.html:48
 #: ckan/templates/snippets/context/group.html:17
-#: ckan/templates/snippets/context/user.html:19
-#: ckan/templates/user/read.html:7 ckan/templates/user/read_base.html:27
-#: ckan/templates/user/read_base.html:62
+#: ckan/templates/snippets/context/user.html:19 ckan/templates/user/read.html:7
+#: ckan/templates/user/read_base.html:19 ckan/templates/user/read_base.html:46
 #: ckan/templates_legacy/group/edit_form.html:10
 #: ckan/templates_legacy/group/new_group_form.html:101
 #: ckan/templates_legacy/group/read.html:45
@@ -2135,8 +2166,7 @@ msgstr "시스템 관리자"
 msgid "Config"
 msgstr "구성"
 
-#: ckan/templates/admin/config.html:9
-#: ckan/templates/admin/confirm_reset.html:7
+#: ckan/templates/admin/config.html:9 ckan/templates/admin/confirm_reset.html:7
 msgid "Are you sure you want to reset the config?"
 msgstr "구성을 리셋하기 원합니까?"
 
@@ -2155,20 +2185,30 @@ msgstr "CKAN 구성 옵션"
 #: ckan/templates/admin/config.html:26
 #, python-format
 msgid ""
-" <p><strong>Site Title:</strong> This is the title of this CKAN instance It "
-"appears in various places throughout CKAN.</p> <p><strong>Style:</strong> "
-"Choose from a list of simple variations of the main colour scheme to get a "
-"very quick custom theme working.</p> <p><strong>Site Tag Logo:</strong> This"
-" is the logo that appears in the header of all the CKAN instance "
-"templates.</p> <p><strong>About:</strong> This text will appear on this CKAN"
-" instances <a href=\"%(about_url)s\">about page</a>.</p> <p><strong>Intro "
+" <p><strong>Site Title:</strong> This is the title of this CKAN instance "
+"It appears in various places throughout CKAN.</p> "
+"<p><strong>Style:</strong> Choose from a list of simple variations of the"
+" main colour scheme to get a very quick custom theme working.</p> "
+"<p><strong>Site Tag Logo:</strong> This is the logo that appears in the "
+"header of all the CKAN instance templates.</p> <p><strong>About:</strong>"
+" This text will appear on this CKAN instances <a "
+"href=\"%(about_url)s\">about page</a>.</p> <p><strong>Intro "
 "Text:</strong> This text will appear on this CKAN instances <a "
 "href=\"%(home_url)s\">home page</a> as a welcome to visitors.</p> "
 "<p><strong>Custom CSS:</strong> This is a block of CSS that appears in "
-"<code>&lt;head&gt;</code> tag of every page. If you wish to customize the "
-"templates more fully we recommend <a href=\"%(docs_url)s\" "
+"<code>&lt;head&gt;</code> tag of every page. If you wish to customize the"
+" templates more fully we recommend <a href=\"%(docs_url)s\" "
 "target=\"_blank\">reading the documentation</a>.</p> "
-msgstr "<p><strong>사이트 제목:</strong> CKAN 인스턴스의 제목입니다 이 제목은 CKAN의 다양한 곳에 보여집니다.</p> <p><strong>스타일:</strong> 쉽게 수정할 수 있는 배경을 위해 색상표를 선택하세요.</p> <p><strong>사이트 태그 로고:</strong> 모든 CKAN 인스턴스 템플릿의 헤더에 보여지는 로고입니다.</p> <p><strong>About:</strong> 이 텍스트는 CKAN 인스턴스의  <a href=\"%(about_url)s\">페이지</a>에 나타납니다.</p> <p><strong>소개글:</strong> 이 텍스트는 방문자를 위한 환영글로 CKAN 인스턴스 <a href=\"%(home_url)s\">홈페이지</a>에 보여집니다.</p> <p><strong>커스텀 CSS:</strong> CSS 일부로 모든 페이지의 <code>&lt;head&gt;</code> 태그입니다. 전체적인 템플릿을 수정하려면 <a href=\"%(docs_url)s\" target=\"_blank\">문서 읽기</a>를 추천합니다.</p>"
+msgstr ""
+"<p><strong>사이트 제목:</strong> CKAN 인스턴스의 제목입니다 이 제목은 CKAN의 다양한 곳에 "
+"보여집니다.</p> <p><strong>스타일:</strong> 쉽게 수정할 수 있는 배경을 위해 색상표를 선택하세요.</p> "
+"<p><strong>사이트 태그 로고:</strong> 모든 CKAN 인스턴스 템플릿의 헤더에 보여지는 로고입니다.</p> "
+"<p><strong>About:</strong> 이 텍스트는 CKAN 인스턴스의  <a "
+"href=\"%(about_url)s\">페이지</a>에 나타납니다.</p> <p><strong>소개글:</strong> 이 "
+"텍스트는 방문자를 위한 환영글로 CKAN 인스턴스 <a href=\"%(home_url)s\">홈페이지</a>에 보여집니다.</p>"
+" <p><strong>커스텀 CSS:</strong> CSS 일부로 모든 페이지의 <code>&lt;head&gt;</code> "
+"태그입니다. 전체적인 템플릿을 수정하려면 <a href=\"%(docs_url)s\" target=\"_blank\">문서 "
+"읽기</a>를 추천합니다.</p>"
 
 #: ckan/templates/admin/confirm_reset.html:3
 #: ckan/templates/admin/confirm_reset.html:10
@@ -2181,10 +2221,12 @@ msgstr "시스템 관리자란?"
 
 #: ckan/templates/admin/index.html:19
 msgid ""
-" <p>A sysadmin is someone that has full control over a CKAN instance. You "
-"can only add CKAN sysadmins via the <code>sysadmin</code> paster "
+" <p>A sysadmin is someone that has full control over a CKAN instance. You"
+" can only add CKAN sysadmins via the <code>sysadmin</code> paster "
 "command.</p> "
-msgstr "<p>시스템 관리자는 CKAN 시스템의 모든 권한을 갖고 있는 사람입니다.  paster 명령어인 <code>sysadmin</code>를 통해 CKAN 시스템 관리자를 추가할 수 있습니다.</p>"
+msgstr ""
+"<p>시스템 관리자는 CKAN 시스템의 모든 권한을 갖고 있는 사람입니다.  paster 명령어인 "
+"<code>sysadmin</code>를 통해 CKAN 시스템 관리자를 추가할 수 있습니다.</p>"
 
 #: ckan/templates/admin/index.html:24
 msgid "Read the documentation"
@@ -2202,7 +2244,8 @@ msgstr ""
 msgid ""
 " Further information in the <a       "
 "href=\"http://docs.ckan.org/en/latest/datastore.html\" "
-"target=\"_blank\">main CKAN Data API and DataStore documentation</a>.</p> "
+"target=\"_blank\">main CKAN Data API and DataStore documentation</a>.</p>"
+" "
 msgstr ""
 
 #: ckan/templates/ajax_snippets/api_info.html:33
@@ -2211,8 +2254,8 @@ msgstr ""
 
 #: ckan/templates/ajax_snippets/api_info.html:37
 msgid ""
-"The Data API can be accessed via the following actions of the CKAN action "
-"API."
+"The Data API can be accessed via the following actions of the CKAN action"
+" API."
 msgstr ""
 
 #: ckan/templates/ajax_snippets/api_info.html:42
@@ -2375,13 +2418,13 @@ msgstr "이 그룹에 대한 설명 없음"
 #: ckan/templates/package/read_base.html:25
 #: ckan/templates/user/activity_stream.html:3
 #: ckan/templates/user/activity_stream.html:6
-#: ckan/templates/user/read_base.html:28
+#: ckan/templates/user/read_base.html:20
 msgid "Activity Stream"
 msgstr "활동 흐름"
 
-#: ckan/templates/group/admins.html:3 ckan/templates/group/admins.html:7
+#: ckan/templates/group/admins.html:3 ckan/templates/group/admins.html:6
 #: ckan/templates/organization/admins.html:3
-#: ckan/templates/organization/admins.html:7
+#: ckan/templates/organization/admins.html:6
 #: ckan/templates_legacy/group/read.html:20
 msgid "Administrators"
 msgstr "관리자"
@@ -2433,26 +2476,26 @@ msgstr ""
 #: ckan/templates/organization/edit_base.html:25
 #: ckan/templates/organization/member_new.html:7
 #: ckan/templates/organization/members.html:3
-#: ckan/templates/snippets/organization.html:38
+#: ckan/templates/snippets/organization.html:44
 msgid "Members"
 msgstr "멤버"
 
-#: ckan/templates/group/followers.html:3 ckan/templates/group/followers.html:7
+#: ckan/templates/group/followers.html:3 ckan/templates/group/followers.html:6
 #: ckan/templates/group/snippets/info.html:20
 #: ckan/templates/package/followers.html:3
 #: ckan/templates/package/followers.html:6
 #: ckan/templates/package/read_base.html:58
-#: ckan/templates/snippets/organization.html:34
+#: ckan/templates/snippets/organization.html:40
 #: ckan/templates/snippets/context/group.html:13
 #: ckan/templates/snippets/context/user.html:15
 #: ckan/templates/user/followers.html:3 ckan/templates/user/followers.html:7
-#: ckan/templates/user/read_base.html:58
+#: ckan/templates/user/read_base.html:42
 #: ckan/templates_legacy/package/followers.html:11
 #: ckan/templates_legacy/user/read.html:65
 msgid "Followers"
 msgstr "Followers"
 
-#: ckan/templates/group/history.html:3 ckan/templates/group/history.html:7
+#: ckan/templates/group/history.html:3 ckan/templates/group/history.html:6
 #: ckan/templates/package/history.html:3 ckan/templates/package/history.html:6
 #: ckan/templates_legacy/group/layout.html:13
 #: ckan/templates_legacy/package/layout.html:38
@@ -2479,8 +2522,7 @@ msgstr ""
 msgid "There are currently no groups for this site"
 msgstr "현재 이 사이트에 그룹이 없습니다."
 
-#: ckan/templates/group/index.html:29
-#: ckan/templates/organization/index.html:29
+#: ckan/templates/group/index.html:29 ckan/templates/organization/index.html:29
 msgid "How about creating one?"
 msgstr "하나를 생성하겠습니까?"
 
@@ -2505,29 +2547,26 @@ msgstr "멤버 추가"
 #: ckan/templates/user/edit_user_form.html:9
 #: ckan/templates/user/logout_first.html:11
 #: ckan/templates/user/new_user_form.html:5
-#: ckan/templates/user/read_base.html:76
+#: ckan/templates/user/read_base.html:65
 #: ckan/templates/user/request_reset.html:15
 #: ckan/templates/user/snippets/login_form.html:20
 #: ckan/templates_legacy/user/edit_user_form.html:63
 msgid "Username"
 msgstr "사용자명"
 
-#: ckan/templates/group/member_new.html:23
-#: ckan/templates/group/members.html:15
+#: ckan/templates/group/member_new.html:23 ckan/templates/group/members.html:15
 #: ckan/templates/organization/member_new.html:25
 #: ckan/templates/organization/members.html:18
 msgid "Role"
 msgstr "역할"
 
-#: ckan/templates/group/member_new.html:26
-#: ckan/templates/group/members.html:27
+#: ckan/templates/group/member_new.html:26 ckan/templates/group/members.html:27
 #: ckan/templates/organization/member_new.html:28
 #: ckan/templates/organization/members.html:30
 msgid "Are you sure you want to delete this member?"
 msgstr "이 멤버의 삭제를 원합니까?"
 
-#: ckan/templates/group/member_new.html:27
-#: ckan/templates/group/members.html:32
+#: ckan/templates/group/member_new.html:27 ckan/templates/group/members.html:32
 #: ckan/templates/group/snippets/group_form.html:76
 #: ckan/templates/organization/bulk_process.html:47
 #: ckan/templates/organization/member_new.html:29
@@ -2570,8 +2609,8 @@ msgstr "역할이란?"
 msgid ""
 " <p><strong>Admin:</strong> Can add/edit and delete datasets, as well as "
 "manage group members.</p> <p><strong>Editor:</strong> Can add and edit "
-"datasets, but not manage group members.</p> <p><strong>Member:</strong> Can "
-"view the group's private datasets, but not add new datasets.</p> "
+"datasets, but not manage group members.</p> <p><strong>Member:</strong> "
+"Can view the group's private datasets, but not add new datasets.</p> "
 msgstr ""
 
 #: ckan/templates/group/new.html:3 ckan/templates/group/new.html:7
@@ -2594,7 +2633,7 @@ msgstr "그룹 갱신"
 msgid "Add Dataset"
 msgstr "데이터셋 추가"
 
-#: ckan/templates/group/read.html:18 ckan/templates/organization/read.html:19
+#: ckan/templates/group/read.html:18 ckan/templates/organization/read.html:18
 msgid "Search datasets..."
 msgstr ""
 
@@ -2691,11 +2730,14 @@ msgstr "그룹이란?"
 #: ckan/templates/group/snippets/helper.html:7
 msgid ""
 " <p>Groups allow you to group together datasets under a community (for "
-"example, Civil Liberty data) or topic (e.g. Transport, Health, Environment) "
-"to make it easier for users to browse datasets by theme. Datasets can be "
-"part of a group, but do not belong to the group for editing or authorisation"
-" purposes.</p> "
-msgstr "<p>그룹은 특정한 커뮤니티에 있는 데이터를 그룹으로 만들게 하거나 (예: Civil Liberty 데이터), 사용자가 주제별  (예: 교통, 헬스, 환경)로 데이터셋을 탐색할 수 있게 합니다. 데이터셋은 그룹의 일부일 수 있습니다. 그러나 편집이나 권한 설정을 위한 목적으로 해당 그룹에 포함되지 않습니다.</p>"
+"example, Civil Liberty data) or topic (e.g. Transport, Health, "
+"Environment) to make it easier for users to browse datasets by theme. "
+"Datasets can be part of a group, but do not belong to the group for "
+"editing or authorisation purposes.</p> "
+msgstr ""
+"<p>그룹은 특정한 커뮤니티에 있는 데이터를 그룹으로 만들게 하거나 (예: Civil Liberty 데이터), 사용자가 주제별  "
+"(예: 교통, 헬스, 환경)로 데이터셋을 탐색할 수 있게 합니다. 데이터셋은 그룹의 일부일 수 있습니다. 그러나 편집이나 권한 "
+"설정을 위한 목적으로 해당 그룹에 포함되지 않습니다.</p>"
 
 #: ckan/templates/group/snippets/history_revisions.html:10
 #: ckan/templates/package/snippets/history_revisions.html:10
@@ -2704,7 +2746,7 @@ msgstr ""
 
 #: ckan/templates/group/snippets/info.html:12
 #: ckan/templates/package/snippets/package_context.html:7
-#: ckan/templates/snippets/organization.html:26
+#: ckan/templates/snippets/organization.html:32
 msgid "read more"
 msgstr "더 읽기"
 
@@ -2765,8 +2807,8 @@ msgstr "CKAN에 오신 것을 환영합니다"
 
 #: ckan/templates/home/index.html:33
 msgid ""
-"This is a nice introductory paragraph about CKAN or the site in general. We "
-"don't have any copy to go here yet but soon we will "
+"This is a nice introductory paragraph about CKAN or the site in general. "
+"We don't have any copy to go here yet but soon we will "
 msgstr "CKAN이나 사이트에 대해 서문입니다. "
 
 #: ckan/templates/home/index.html:45
@@ -2778,8 +2820,8 @@ msgid "Search Your Data"
 msgstr "데이터 검색"
 
 #: ckan/templates/home/index.html:63
-msgid "eg. Gold Prices"
-msgstr "예. 금값"
+msgid "eg. Population"
+msgstr ""
 
 #: ckan/templates/home/index.html:73
 msgid "Popular Tags"
@@ -2790,13 +2832,14 @@ msgid ""
 " <p>CKAN is the world’s leading open-source data portal platform.</p> "
 "<p>CKAN is a complete out-of-the-box software solution that makes data "
 "accessible and usable – by providing tools to streamline publishing, "
-"sharing, finding and using data (including storage of data and provision of "
-"robust data APIs). CKAN is aimed at data publishers (national and regional "
-"governments, companies and organizations) wanting to make their data open "
-"and available.</p> <p>CKAN is used by governments and user groups worldwide "
-"and powers a variety of official and community data portals including "
-"portals for local, national and international government, such as the UK’s "
-"<a href=\"http://data.gov.uk\">data.gov.uk</a> and the European Union’s <a "
+"sharing, finding and using data (including storage of data and provision "
+"of robust data APIs). CKAN is aimed at data publishers (national and "
+"regional governments, companies and organizations) wanting to make their "
+"data open and available.</p> <p>CKAN is used by governments and user "
+"groups worldwide and powers a variety of official and community data "
+"portals including portals for local, national and international "
+"government, such as the UK’s <a "
+"href=\"http://data.gov.uk\">data.gov.uk</a> and the European Union’s <a "
 "href=\"http://publicdata.eu/\">publicdata.eu</a>, the Brazilian <a "
 "href=\"http://dados.gov.br/\">dados.gov.br</a>, Dutch and Netherland "
 "government portals, as well as city and municipal sites in the US, UK, "
@@ -2805,13 +2848,35 @@ msgid ""
 "href=\"http://ckan.org/tour/\">http://ckan.org/tour/</a><br /> Features "
 "overview: <a "
 "href=\"http://ckan.org/features/\">http://ckan.org/features/</a></p> "
-msgstr "<p>CKAN is the world’s leading open-source data portal platform.</p> <p>CKAN is a complete out-of-the-box software solution that makes data accessible and usable – by providing tools to streamline publishing, sharing, finding and using data (including storage of data and provision of robust data APIs). CKAN is aimed at data publishers (national and regional governments, companies and organizations) wanting to make their data open and available.</p> <p>CKAN is used by governments and user groups worldwide and powers a variety of official and community data portals including portals for local, national and international government, such as the UK’s <a href=\"http://data.gov.uk\">data.gov.uk</a> and the European Union’s <a href=\"http://publicdata.eu/\">publicdata.eu</a>, the Brazilian <a href=\"http://dados.gov.br/\">dados.gov.br</a>, Dutch and Netherland government portals, as well as city and municipal sites in the US, UK, Argentina, Finland and elsewhere.</p> <p>CKAN: <a href=\"http://ckan.org/\">http://ckan.org/</a><br /> CKAN Tour: <a href=\"http://ckan.org/tour/\">http://ckan.org/tour/</a><br /> Features overview: <a href=\"http://ckan.org/features/\">http://ckan.org/features/</a></p>"
+msgstr ""
+"<p>CKAN is the world’s leading open-source data portal platform.</p> "
+"<p>CKAN is a complete out-of-the-box software solution that makes data "
+"accessible and usable – by providing tools to streamline publishing, "
+"sharing, finding and using data (including storage of data and provision "
+"of robust data APIs). CKAN is aimed at data publishers (national and "
+"regional governments, companies and organizations) wanting to make their "
+"data open and available.</p> <p>CKAN is used by governments and user "
+"groups worldwide and powers a variety of official and community data "
+"portals including portals for local, national and international "
+"government, such as the UK’s <a "
+"href=\"http://data.gov.uk\">data.gov.uk</a> and the European Union’s <a "
+"href=\"http://publicdata.eu/\">publicdata.eu</a>, the Brazilian <a "
+"href=\"http://dados.gov.br/\">dados.gov.br</a>, Dutch and Netherland "
+"government portals, as well as city and municipal sites in the US, UK, "
+"Argentina, Finland and elsewhere.</p> <p>CKAN: <a "
+"href=\"http://ckan.org/\">http://ckan.org/</a><br /> CKAN Tour: <a "
+"href=\"http://ckan.org/tour/\">http://ckan.org/tour/</a><br /> Features "
+"overview: <a "
+"href=\"http://ckan.org/features/\">http://ckan.org/features/</a></p>"
 
 #: ckan/templates/macros/form.html:120
 msgid ""
-"You can use <a href=\"http://daringfireball.net/projects/markdown/syntax\" "
+"You can use <a "
+"href=\"http://daringfireball.net/projects/markdown/syntax\" "
 "target=\"_blank\">Markdown formatting</a> here"
-msgstr "<a href=\"http://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">Markdown formatting</a>을 사용할 수 있습니다"
+msgstr ""
+"<a href=\"http://daringfireball.net/projects/markdown/syntax\" "
+"target=\"_blank\">Markdown formatting</a>을 사용할 수 있습니다"
 
 #: ckan/templates/macros/form.html:226
 #: ckan/templates/snippets/search_form.html:60
@@ -2833,7 +2898,7 @@ msgid "The form contains invalid entries:"
 msgstr "이 폼은 유효하지 않은 개체를 포함하고 있습니다:"
 
 #: ckan/templates/organization/about.html:11
-#: ckan/templates/snippets/organization.html:29
+#: ckan/templates/snippets/organization.html:35
 #: ckan/templates/snippets/organization_item.html:16
 msgid "There is no description for this organization"
 msgstr "이 조직을 위한 설명이 없습니다"
@@ -2881,10 +2946,10 @@ msgstr "삭제됨"
 
 #: ckan/templates/organization/bulk_process.html:75
 #: ckan/templates/package/read.html:13
-#: ckan/templates/package/snippets/package_basic_fields.html:89
+#: ckan/templates/package/snippets/package_basic_fields.html:90
 #: ckan/templates/snippets/package_item.html:28
-#: ckan/templates/snippets/private.html:3
-#: ckan/templates/user/read_base.html:82 ckan/templates/user/read_base.html:92
+#: ckan/templates/snippets/private.html:3 ckan/templates/user/read_base.html:71
+#: ckan/templates/user/read_base.html:81
 msgid "Private"
 msgstr "개인"
 
@@ -2954,9 +3019,12 @@ msgid ""
 " <p><strong>Admin:</strong> Can add/edit and delete datasets, as well as "
 "manage organization members.</p> <p><strong>Editor:</strong> Can add and "
 "edit datasets, but not manage organization members.</p> "
-"<p><strong>Member:</strong> Can view the organization's private datasets, "
-"but not add new datasets.</p> "
-msgstr "<p><strong>관리자:</strong> 데이터셋을 추가/삭제/삭제할 수 있고, 조직 멤버를 관리할 수 있습니다.</p> <p><strong>편집자:</strong> 데이터셋을 추가/편집할 수 있지만, 조직 멤버를 관리하지 못합니다.</p> <p><strong>구성원:</strong> 조직내 데이터셋을 볼 수 있지만, 새로운 데이터셋을 추가하지 못합니다.</p>"
+"<p><strong>Member:</strong> Can view the organization's private datasets,"
+" but not add new datasets.</p> "
+msgstr ""
+"<p><strong>관리자:</strong> 데이터셋을 추가/삭제/삭제할 수 있고, 조직 멤버를 관리할 수 있습니다.</p> "
+"<p><strong>편집자:</strong> 데이터셋을 추가/편집할 수 있지만, 조직 멤버를 관리하지 못합니다.</p> "
+"<p><strong>구성원:</strong> 조직내 데이터셋을 볼 수 있지만, 새로운 데이터셋을 추가하지 못합니다.</p>"
 
 #: ckan/templates/organization/new.html:3
 #: ckan/templates/organization/new.html:5
@@ -2981,13 +3049,18 @@ msgstr "조직이란?"
 #: ckan/templates/organization/snippets/help.html:7
 #: ckan/templates/organization/snippets/helper.html:7
 msgid ""
-" <p>Organizations act like publishing departments for datasets (for example,"
-" the Department of Health). This means that datasets can be published by and"
-" belong to a department instead of an individual user.</p> <p>Within "
-"organizations, admins can assign roles and authorisation its members, giving"
-" individual users the right to publish datasets from that particular "
-"organisation (e.g. Office of National Statistics).</p> "
-msgstr "<p>조직은 데이터셋을 출판하는 부서와 유사합니다 (예, the Department of Health). 데이터셋은 개별 사용자가 아닌 특정 부서에 귀속되거나 해당 부서에 의해 공개될 수 있습니다.</p> <p>조직내에서, 관리자는 구성원의 역할과 권한을 정의할 수 있고, 개별 사용자가 특정한 조직으로부터 데이터를 공개하는 권한을 부여할 수 있습니다 (e.g. Office of National Statistics).</p>"
+" <p>Organizations act like publishing departments for datasets (for "
+"example, the Department of Health). This means that datasets can be "
+"published by and belong to a department instead of an individual "
+"user.</p> <p>Within organizations, admins can assign roles and "
+"authorisation its members, giving individual users the right to publish "
+"datasets from that particular organisation (e.g. Office of National "
+"Statistics).</p> "
+msgstr ""
+"<p>조직은 데이터셋을 출판하는 부서와 유사합니다 (예, the Department of Health). 데이터셋은 개별 사용자가 "
+"아닌 특정 부서에 귀속되거나 해당 부서에 의해 공개될 수 있습니다.</p> <p>조직내에서, 관리자는 구성원의 역할과 권한을 정의할"
+" 수 있고, 개별 사용자가 특정한 조직으로부터 데이터를 공개하는 권한을 부여할 수 있습니다 (e.g. Office of "
+"National Statistics).</p>"
 
 #: ckan/templates/organization/snippets/organization_form.html:10
 msgid "My Organization"
@@ -3003,8 +3076,8 @@ msgstr "내 조직에 대한 일부 정보..."
 
 #: ckan/templates/organization/snippets/organization_form.html:77
 msgid ""
-"Are you sure you want to delete this Organization? This will delete all the "
-"public and private datasets belonging to this organization."
+"Are you sure you want to delete this Organization? This will delete all "
+"the public and private datasets belonging to this organization."
 msgstr ""
 
 #: ckan/templates/organization/snippets/organization_form.html:81
@@ -3031,9 +3104,12 @@ msgstr "데이터셋이란?"
 
 #: ckan/templates/package/base_form_page.html:17
 msgid ""
-" Datasets are simply used to group related pieces of data. These can then be"
-" found under a single url with a description and licensing information. "
-msgstr "데이터셋은 데이터와 관련된 항목들을 그룹하는데 사용할 수 있습니다. 데이터셋은 설명과 라이센스 정보를 포함한 단일 URL로 찾을 수 있습니다. "
+" Datasets are simply used to group related pieces of data. These can then"
+" be found under a single url with a description and licensing "
+"information. "
+msgstr ""
+"데이터셋은 데이터와 관련된 항목들을 그룹하는데 사용할 수 있습니다. 데이터셋은 설명과 라이센스 정보를 포함한 단일 URL로 찾을 수"
+" 있습니다. "
 
 #: ckan/templates/package/confirm_delete.html:11
 msgid "Are you sure you want to delete dataset - {name}?"
@@ -3076,14 +3152,16 @@ msgstr "리소스는 유용한 데이터를 포함하는 파일, 파일에 연�
 #: ckan/templates/package/read_base.html:38
 #, python-format
 msgid ""
-"This is an old revision of this dataset, as edited at %(timestamp)s. It may "
-"differ significantly from the <a href=\"%(url)s\">current revision</a>."
-msgstr "%(timestamp)s에 편집된 데이터의 이전 버전입니다.  <a href=\"%(url)s\">현재 버전</a>과 차이가 있을 수 있습니다."
+"This is an old revision of this dataset, as edited at %(timestamp)s. It "
+"may differ significantly from the <a href=\"%(url)s\">current "
+"revision</a>."
+msgstr ""
+"%(timestamp)s에 편집된 데이터의 이전 버전입니다.  <a href=\"%(url)s\">현재 버전</a>과 차이가 있을 "
+"수 있습니다."
 
 #: ckan/templates/package/read_base.html:40
 #, python-format
-msgid ""
-"This is the current revision of this dataset, as edited at %(timestamp)s."
+msgid "This is the current revision of this dataset, as edited at %(timestamp)s."
 msgstr "%(timestamp)s 편집된, 데이터의 현재 개정판입니다. "
 
 #: ckan/templates/package/related_list.html:6
@@ -3224,7 +3302,9 @@ msgstr "전체 {format} 덤프"
 msgid ""
 " You can also access this registry using the %(api_link)s (see "
 "%(api_doc_link)s) or download a %(dump_link)s. "
-msgstr " %(api_link)s (see %(api_doc_link)s)를 이용하여 이 레지스트리에 접근하거나 %(dump_link)s를 다운로드 할 수 있습니다."
+msgstr ""
+" %(api_link)s (see %(api_doc_link)s)를 이용하여 이 레지스트리에 접근하거나 %(dump_link)s를 "
+"다운로드 할 수 있습니다."
 
 #: ckan/templates/package/search.html:59
 #, python-format
@@ -3301,21 +3381,25 @@ msgstr "예) 경제, 정신 건강, 정부"
 msgid ""
 " License definitions and additional information can be found at <a "
 "href=\"http://opendefinition.org/licenses/\">opendefinition.org</a> "
-msgstr "라이센스 정의와 추가적인 정보는 <a href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>에서 찾을 수 있습니다"
+msgstr ""
+"라이센스 정의와 추가적인 정보는 <a "
+"href=\"http://opendefinition.org/licenses/\">opendefinition.org</a>에서 찾을 "
+"수 있습니다"
 
-#: ckan/templates/package/snippets/package_basic_fields.html:69
+#: ckan/templates/package/snippets/package_basic_fields.html:70
+#: ckan/templates/snippets/organization.html:20
 msgid "Organization"
 msgstr "조직"
 
-#: ckan/templates/package/snippets/package_basic_fields.html:72
-msgid "Select an organization..."
-msgstr "조직 선택하기..."
+#: ckan/templates/package/snippets/package_basic_fields.html:73
+msgid "No organization"
+msgstr ""
 
-#: ckan/templates/package/snippets/package_basic_fields.html:86
+#: ckan/templates/package/snippets/package_basic_fields.html:87
 msgid "Visibility"
 msgstr "가시성"
 
-#: ckan/templates/package/snippets/package_basic_fields.html:89
+#: ckan/templates/package/snippets/package_basic_fields.html:90
 msgid "Public"
 msgstr "공공"
 
@@ -3325,8 +3409,8 @@ msgstr "이 데이터셋에 대한 설명이 없습니다."
 
 #: ckan/templates/package/snippets/package_form.html:28
 msgid ""
-"Important: By submitting content, you agree to release your contributions "
-"under the Open Database License."
+"Important: By submitting content, you agree to release your contributions"
+" under the Open Database License."
 msgstr "중요: 컨텐트를 제출하면, 오픈 데이터 라이센스로 당신의 공헌을 공개하는데 기여하는 것을 의미합니다."
 
 #: ckan/templates/package/snippets/package_form.html:37
@@ -3379,8 +3463,8 @@ msgid "Link to an API"
 msgstr "API 연결하기"
 
 #: ckan/templates/package/snippets/resource_form.html:41
-msgid "eg. http://example.com/gold-prices-jan-2011.json"
-msgstr "eg. http://example.com/gold-prices-jan-2011.json"
+msgid "eg. http://example.com/population-jan-2011.json"
+msgstr ""
 
 #: ckan/templates/package/snippets/resource_form.html:45
 #: ckan/templates_legacy/js_strings.html:16
@@ -3389,8 +3473,8 @@ msgid "Name"
 msgstr "이름"
 
 #: ckan/templates/package/snippets/resource_form.html:45
-msgid "eg. January 2011 Gold Prices"
-msgstr "eg. January 2011 Gold Prices"
+msgid "eg. January 2011 Population"
+msgstr ""
 
 #: ckan/templates/package/snippets/resource_form.html:49
 msgid "Some useful notes about the data"
@@ -3448,8 +3532,7 @@ msgstr "탐색"
 
 #: ckan/templates/package/snippets/resource_item.html:29
 #: ckan/templates/snippets/datapreview_embed_dialog.html:16
-#: ckan/templates_legacy/_util.html:12
-#: ckan/templates_legacy/js_strings.html:16
+#: ckan/templates_legacy/_util.html:12 ckan/templates_legacy/js_strings.html:16
 #: ckan/templates_legacy/importer/importer.html:26
 #: ckan/templates_legacy/package/resource_read.html:148
 #: ckan/templates_legacy/snippets/data-viewer-embed-dialog.html:27
@@ -3467,9 +3550,11 @@ msgstr "데이터와 리소스"
 #: ckan/templates/package/snippets/resources_list.html:26
 #, python-format
 msgid ""
-" <p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not "
-"add some?</a> "
-msgstr "<p class=\"empty\">이 데이터셋은 데이터가 없습니다, <a href=\"%(url)s\">처음으로 데이터를 추가해 보세요?</a>"
+" <p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not"
+" add some?</a> "
+msgstr ""
+"<p class=\"empty\">이 데이터셋은 데이터가 없습니다, <a href=\"%(url)s\">처음으로 데이터를 추가해 "
+"보세요?</a>"
 
 #: ckan/templates/package/snippets/revisions_table.html:24
 #: ckan/templates_legacy/package/history.html:37
@@ -3499,11 +3584,13 @@ msgstr "관련된 항목은?"
 
 #: ckan/templates/related/base_form_page.html:22
 msgid ""
-" <p>Related Media is any app, article, visualisation or idea related to this"
-" dataset.</p> <p>For example, it could be a custom visualisation, pictograph"
-" or bar chart, an app using all or part of the data or even a news story "
-"that references this dataset.</p> "
-msgstr "<p>관련 미디어는 이 데이터와 관련된 앱, 기사, 시각화 또는 아이디어를 포함합니다.</p> <p>예를 들어, 데이터 전체나 일부를 이용하여 시각화, 그림문자, 바 차트, 또는 데이터를 참조하는 새로운 이야기도 포함될 수 있습니다.</p>"
+" <p>Related Media is any app, article, visualisation or idea related to "
+"this dataset.</p> <p>For example, it could be a custom visualisation, "
+"pictograph or bar chart, an app using all or part of the data or even a "
+"news story that references this dataset.</p> "
+msgstr ""
+"<p>관련 미디어는 이 데이터와 관련된 앱, 기사, 시각화 또는 아이디어를 포함합니다.</p> <p>예를 들어, 데이터 전체나 "
+"일부를 이용하여 시각화, 그림문자, 바 차트, 또는 데이터를 참조하는 새로운 이야기도 포함될 수 있습니다.</p>"
 
 #: ckan/templates/related/confirm_delete.html:11
 msgid "Are you sure you want to delete related item - {name}?"
@@ -3522,7 +3609,9 @@ msgstr "Apps & Ideas"
 msgid ""
 " <p>Showing items <strong>%(first)s - %(last)s</strong> of "
 "<strong>%(item_count)s</strong> related items found</p> "
-msgstr "<p><strong>%(item_count)s</strong> 건의 관련된 항목으로 찾은 <strong>%(first)s - %(last)s</strong> 보여주기</p>"
+msgstr ""
+"<p><strong>%(item_count)s</strong> 건의 관련된 항목으로 찾은 <strong>%(first)s - "
+"%(last)s</strong> 보여주기</p>"
 
 #: ckan/templates/related/dashboard.html:25
 #, python-format
@@ -3539,8 +3628,8 @@ msgstr "애플리케이션은 무엇인가?"
 
 #: ckan/templates/related/dashboard.html:50
 msgid ""
-" These are applications built with the datasets as well as ideas for things "
-"that could be done with them. "
+" These are applications built with the datasets as well as ideas for "
+"things that could be done with them. "
 msgstr "데이터셋과 아이디어를 개발된 애플리케이션이 있습니다."
 
 #: ckan/templates/related/dashboard.html:58
@@ -3858,7 +3947,7 @@ msgstr "구독하기"
 #: ckan/templates/snippets/subscribe.html:4
 #: ckan/templates/user/edit_user_form.html:13
 #: ckan/templates/user/new_user_form.html:7
-#: ckan/templates/user/read_base.html:82
+#: ckan/templates/user/read_base.html:71
 #: ckan/templates_legacy/user/read.html:32
 msgid "Email"
 msgstr "이메일"
@@ -3868,7 +3957,7 @@ msgid "RSS"
 msgstr "RSS"
 
 #: ckan/templates/snippets/context/user.html:23
-#: ckan/templates/user/read_base.html:66
+#: ckan/templates/user/read_base.html:50
 #: ckan/templates_legacy/user/read.html:59
 msgid "Edits"
 msgstr "편집"
@@ -3941,7 +4030,8 @@ msgstr "계정 정보"
 
 #: ckan/templates/user/edit.html:24
 msgid ""
-" Your profile lets other CKAN users know about who you are and what you do. "
+" Your profile lets other CKAN users know about who you are and what you "
+"do. "
 msgstr "프로파일을 CKAN 사용자가 볼 수 있도록 해 주세요"
 
 #: ckan/templates/user/edit_user_form.html:7
@@ -4116,27 +4206,27 @@ msgstr "비밀번호를 입력하면 계정을 업데이트합니다."
 msgid "User hasn't created any datasets."
 msgstr "사용자가 데이터셋을 생성하지 않았습니다"
 
-#: ckan/templates/user/read_base.html:50
+#: ckan/templates/user/read_base.html:34
 msgid "You have not provided a biography."
 msgstr "자기소개를 제공하지 않습니다"
 
-#: ckan/templates/user/read_base.html:52
+#: ckan/templates/user/read_base.html:36
 msgid "This user has no biography."
 msgstr "자기소개가 없습니다"
 
-#: ckan/templates/user/read_base.html:73
+#: ckan/templates/user/read_base.html:62
 msgid "Open ID"
 msgstr "Open ID"
 
-#: ckan/templates/user/read_base.html:82 ckan/templates/user/read_base.html:92
+#: ckan/templates/user/read_base.html:71 ckan/templates/user/read_base.html:81
 msgid "This means only you can see this"
 msgstr "당신만 볼 수 있음을 의미합니다"
 
-#: ckan/templates/user/read_base.html:87
+#: ckan/templates/user/read_base.html:76
 msgid "Member Since"
 msgstr "부터 멤버"
 
-#: ckan/templates/user/read_base.html:92
+#: ckan/templates/user/read_base.html:81
 #: ckan/templates_legacy/user/read.html:42
 msgid "API Key"
 msgstr "API 키"
@@ -4147,8 +4237,8 @@ msgstr "초기화 요청하기"
 
 #: ckan/templates/user/request_reset.html:28
 msgid ""
-"Enter your username into the box and we will send you an email with a link "
-"to enter a new password."
+"Enter your username into the box and we will send you an email with a "
+"link to enter a new password."
 msgstr "텍스트박스에 사용자 이름을 넣으면 새로운 비밀번호를 입력하기 위한 링크를 이메일로 보내드립니다"
 
 #: ckan/templates/user/snippets/back_to_user_action.html:1
@@ -4223,7 +4313,9 @@ msgstr "등급이 아직 없음"
 msgid ""
 "–\n"
 "    rate it now"
-msgstr "-\n   지금 등급 메기기"
+msgstr ""
+"-\n"
+"   지금 등급 메기기"
 
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Checking..."
@@ -4378,8 +4470,7 @@ msgstr "%aMarkdown formatting%b을 이곳에 사용할 수 있습니다. "
 
 #: ckan/templates_legacy/js_strings.html:16
 #, python-format
-msgid ""
-"Dates are in %aISO Format%b — eg. %c2012-12-25%d or %c2010-05-31T14:30%d."
+msgid "Dates are in %aISO Format%b — eg. %c2012-12-25%d or %c2010-05-31T14:30%d."
 msgstr "날짜는 %aISO Format%b 입니다 — 예. %c2012-12-25%d or %c2010-05-31T14:30%d."
 
 #: ckan/templates_legacy/js_strings.html:16
@@ -4592,11 +4683,13 @@ msgstr "그룹은 무엇인가?"
 
 #: ckan/templates_legacy/group/index.html:12
 msgid ""
-"Whilst tags are great at collecting datasets together, there are occasions "
-"when you want to restrict users from editing a collection. A [1:group] can "
-"be set-up to specify which users have permission to add or remove datasets "
-"from it."
-msgstr "태그는 데이터셋을 함께 수집하는데 좋지만, 컬렉션을 편집하는데 있어 사용자들을 제한시키는 것이 필요할 수 있습니다. [1:그룹]은 사용자가 데이터의 추가 및 제거할 수 있는 권한을 지정할 수 있습니다."
+"Whilst tags are great at collecting datasets together, there are "
+"occasions when you want to restrict users from editing a collection. A "
+"[1:group] can be set-up to specify which users have permission to add or "
+"remove datasets from it."
+msgstr ""
+"태그는 데이터셋을 함께 수집하는데 좋지만, 컬렉션을 편집하는데 있어 사용자들을 제한시키는 것이 필요할 수 있습니다. [1:그룹]은 "
+"사용자가 데이터의 추가 및 제거할 수 있는 권한을 지정할 수 있습니다."
 
 #: ckan/templates_legacy/group/layout.html:18
 msgid "New Dataset..."
@@ -4696,22 +4789,29 @@ msgstr "[1: 검색한 질의로  \"%(query)s\". ]%(number_of_results)s 데이터
 #: ckan/templates_legacy/home/about.html:14
 msgid ""
 "What was the [1:average price] of a house in the UK in 1935? When will "
-"India's projected population [2:overtake] that of China? Where can you see "
-"[3:publicly-funded art] in Seattle? Data to answer many, many questions like"
-" these is out there on the Internet somewhere - but it is not always easy to"
-" find."
-msgstr "1935년, 영국에 있었던 집의 [1:평균 가격]은 얼마였을까요? 언제쯤 인도의 공식 인구가 중국을 [2:넘을]까요? 시애틀에서 [3:공립 예술] 작품을 볼 수 있는 곳은 어디일까요? 이런 질문에 답을 줄 수 있는 데이터는 인터넷 어딘가에 있지만, 항상 쉽게 찾을 수 있진 않습니다."
+"India's projected population [2:overtake] that of China? Where can you "
+"see [3:publicly-funded art] in Seattle? Data to answer many, many "
+"questions like these is out there on the Internet somewhere - but it is "
+"not always easy to find."
+msgstr ""
+"1935년, 영국에 있었던 집의 [1:평균 가격]은 얼마였을까요? 언제쯤 인도의 공식 인구가 중국을 [2:넘을]까요? 시애틀에서 "
+"[3:공립 예술] 작품을 볼 수 있는 곳은 어디일까요? 이런 질문에 답을 줄 수 있는 데이터는 인터넷 어딘가에 있지만, 항상 쉽게 "
+"찾을 수 있진 않습니다."
 
 #: ckan/templates_legacy/home/about.html:16
 #, python-format
 msgid ""
-"%(site_title)s is a community-run catalogue of useful sets of data on the "
-"Internet. You can collect links here to data from around the web for "
-"yourself and others to use, or search for data that others have collected. "
-"Depending on the type of data (and its conditions of use), %(site_title)s "
-"may also be able to store a copy of the data or host it in a database, and "
-"provide some basic visualisation tools."
-msgstr "%(site_title)s는 인터넷에 있는 유용한 데이터 집합을 커뮤니티의 참여를 통해 만드는 목록입니다. 자신을 위해 웹에 있는 데이터를 수집하여 링크를 제공할 수 있으며, 이런 데이터를 다른 사람이 사용할 수 있습니다. 또한 다른 사람들이 수집한 데이터를 검색할 수도 있습니다. 데이터의 형식 (사용 조건)에 따라 다를 수 있지만, %(site_title)s는 데이터의 복사본을 저장하거나, 데이터베이스를 호스트해 줄 수 있으며, 기본적인 시각화 도구를 제공합니다."
+"%(site_title)s is a community-run catalogue of useful sets of data on the"
+" Internet. You can collect links here to data from around the web for "
+"yourself and others to use, or search for data that others have "
+"collected. Depending on the type of data (and its conditions of use), "
+"%(site_title)s may also be able to store a copy of the data or host it in"
+" a database, and provide some basic visualisation tools."
+msgstr ""
+"%(site_title)s는 인터넷에 있는 유용한 데이터 집합을 커뮤니티의 참여를 통해 만드는 목록입니다. 자신을 위해 웹에 있는 "
+"데이터를 수집하여 링크를 제공할 수 있으며, 이런 데이터를 다른 사람이 사용할 수 있습니다. 또한 다른 사람들이 수집한 데이터를 "
+"검색할 수도 있습니다. 데이터의 형식 (사용 조건)에 따라 다를 수 있지만, %(site_title)s는 데이터의 복사본을 "
+"저장하거나, 데이터베이스를 호스트해 줄 수 있으며, 기본적인 시각화 도구를 제공합니다."
 
 #: ckan/templates_legacy/home/about.html:23
 msgid "How it works"
@@ -4720,24 +4820,33 @@ msgstr "어떻게 동작하는가?"
 #: ckan/templates_legacy/home/about.html:25
 msgid ""
 "This site is running a powerful piece of open-source data cataloguing "
-"software called [1:CKAN], written and maintained by the [2:Open Knowledge "
-"Foundation]. Each 'dataset' record on CKAN contains a description of the "
-"data and other useful information, such as what formats it is available in, "
-"who owns it and whether it is freely available, and what subject areas the "
-"data is about. Other users can improve or add to this information (CKAN "
-"keeps a fully versioned history)."
-msgstr "이 사이트는 강력한 오픈 소스 데이터 목록 소프트웨어인 [1:CKAN]을 기반으로 하며, [2:Open Knowledge Foundation]에 의해 개발 및 운영됩니다. CKAN에 있는 개별 '데이터셋'은 사용할 수 있는 포맷의 종류, 소유자, 자유롭게 사용할 수 있는 조건, 데이터의 주제 영역 등의 데이터에 대한 유용한 정보를 제공합니다. 다른 사용자도 데이터에 대한 정보를 개선하거나 추가할 수 있습니다 (CKAN은 데이터의 버전 이력을 완벽히 유지합니다)."
+"software called [1:CKAN], written and maintained by the [2:Open Knowledge"
+" Foundation]. Each 'dataset' record on CKAN contains a description of the"
+" data and other useful information, such as what formats it is available "
+"in, who owns it and whether it is freely available, and what subject "
+"areas the data is about. Other users can improve or add to this "
+"information (CKAN keeps a fully versioned history)."
+msgstr ""
+"이 사이트는 강력한 오픈 소스 데이터 목록 소프트웨어인 [1:CKAN]을 기반으로 하며, [2:Open Knowledge "
+"Foundation]에 의해 개발 및 운영됩니다. CKAN에 있는 개별 '데이터셋'은 사용할 수 있는 포맷의 종류, 소유자, "
+"자유롭게 사용할 수 있는 조건, 데이터의 주제 영역 등의 데이터에 대한 유용한 정보를 제공합니다. 다른 사용자도 데이터에 대한 "
+"정보를 개선하거나 추가할 수 있습니다 (CKAN은 데이터의 버전 이력을 완벽히 유지합니다)."
 
 #: ckan/templates_legacy/home/about.html:27
 msgid ""
-"CKAN powers a number of data catalogues on the Internet. [1:The Data Hub] is"
-" an openly editable open data catalogue, in the style of Wikipedia. The UK "
-"Government uses CKAN to run [2:data.gov.uk], which currently lists 8,000 "
-"government datasets. Official public data from most European countries is "
-"listed in a CKAN catalogue at [3:publicdata.eu]. There is a comprehensive "
-"list of catalogues like these around the world at [4:datacatalogs.org], "
-"which is itself powered by CKAN."
-msgstr "CKAN은 인터넷에서 있는 다수의 데이터 목록을 지원하고 있습니다. [1:The Data Hub]는 위키피디아 스타일의 오픈 데이터 목록으로 공개적으로 편집이 가능합니다. 영국 정부는 CKAN을 이용하여 [2:data.gov.uk]를 운영하고 있으며, 현재 8,000개의 정부 데이터셋이 서비스되고 있습니다. [3:publicdata.eu]는 대부분의 유럽 국가에서 수집된 공식적인 공공 데이터의 목록을 CKAN을 통해 제공합니다. 뿐만 아니라 전세계의 포괄적인 목록 리스트인 [4:datacatalogs.org]도 CKAN에 의해 운영되고 있습니다."
+"CKAN powers a number of data catalogues on the Internet. [1:The Data Hub]"
+" is an openly editable open data catalogue, in the style of Wikipedia. "
+"The UK Government uses CKAN to run [2:data.gov.uk], which currently lists"
+" 8,000 government datasets. Official public data from most European "
+"countries is listed in a CKAN catalogue at [3:publicdata.eu]. There is a "
+"comprehensive list of catalogues like these around the world at "
+"[4:datacatalogs.org], which is itself powered by CKAN."
+msgstr ""
+"CKAN은 인터넷에서 있는 다수의 데이터 목록을 지원하고 있습니다. [1:The Data Hub]는 위키피디아 스타일의 오픈 데이터"
+" 목록으로 공개적으로 편집이 가능합니다. 영국 정부는 CKAN을 이용하여 [2:data.gov.uk]를 운영하고 있으며, 현재 "
+"8,000개의 정부 데이터셋이 서비스되고 있습니다. [3:publicdata.eu]는 대부분의 유럽 국가에서 수집된 공식적인 공공 "
+"데이터의 목록을 CKAN을 통해 제공합니다. 뿐만 아니라 전세계의 포괄적인 목록 리스트인 [4:datacatalogs.org]도 "
+"CKAN에 의해 운영되고 있습니다."
 
 #: ckan/templates_legacy/home/about.html:30
 msgid "Open data and the Open Knowledge Foundation"
@@ -4747,22 +4856,30 @@ msgstr "Open data and the Open Knowledge Foundation"
 #, python-format
 msgid ""
 "Most of the data indexed at %(site_title)s is openly licensed, meaning "
-"anyone is free to use or re-use it however they like. Perhaps someone will "
-"take that nice dataset of a city's public art that you found, and add it to "
-"a tourist map - or even make a neat app for your phone that'll help you find"
-" artworks when you visit the city. Open data means more enterprise, "
-"collaborative science and transparent government. You can read more about "
-"open data in the [1:Open Data Handbook]."
-msgstr "%(site_title)s에 인덱스된 대부분의 데이터는 공개적으로 허가된 것으로 누구나 자유롭게 사용 또는 재사용이 가능합니다. 어떤 사용자는 당신이 찾은 양질의 도시의 공공 예술 작품과 관련된 데이터를 관광지도에 추가할 수 있고 - 심지어 당신이 어떤 도시를 방문할 때 예술작품을 찾을 수 있도록 휴대폰에서 사용할 수 있는 근사한 앱을 만들 수도 있습니다. 오픈 데이터는 더 기업적이며, 협력적인 학문과 투명한 정부를 의미합니다. 오픈데이터에 대한 자세한 정보는 [1:Open Data Handbook]에서 찾을 수 있습니다."
+"anyone is free to use or re-use it however they like. Perhaps someone "
+"will take that nice dataset of a city's public art that you found, and "
+"add it to a tourist map - or even make a neat app for your phone that'll "
+"help you find artworks when you visit the city. Open data means more "
+"enterprise, collaborative science and transparent government. You can "
+"read more about open data in the [1:Open Data Handbook]."
+msgstr ""
+"%(site_title)s에 인덱스된 대부분의 데이터는 공개적으로 허가된 것으로 누구나 자유롭게 사용 또는 재사용이 가능합니다. "
+"어떤 사용자는 당신이 찾은 양질의 도시의 공공 예술 작품과 관련된 데이터를 관광지도에 추가할 수 있고 - 심지어 당신이 어떤 도시를"
+" 방문할 때 예술작품을 찾을 수 있도록 휴대폰에서 사용할 수 있는 근사한 앱을 만들 수도 있습니다. 오픈 데이터는 더 기업적이며, "
+"협력적인 학문과 투명한 정부를 의미합니다. 오픈데이터에 대한 자세한 정보는 [1:Open Data Handbook]에서 찾을 수 "
+"있습니다."
 
 #: ckan/templates_legacy/home/about.html:34
 msgid ""
-"The [1:Open Knowledge Foundation] is a non-profit organisation [2:promoting]"
-" open knowledge: writing and improving CKAN is one of the ways we do that. "
-"If you want to get involved with its design or code, join the discussion or "
-"development [3:mailing lists], or take a look at the [4:OKFN] site to find "
-"out about our other projects."
-msgstr "[1:Open Knowledge Foundation]은 열린 지식을 [2:장려하는] 비영리 기업입니다: CKAN을 개발하고 향상시키는 것이 그 중 하나입니다. CKAN의 설계 및 코드에 참여하기 원하면 토론 또는 개발 [3:메일링 리스트]에 가입하거나 [4:OKFN] 사이트의 프로젝트를 참고하시기 바랍니다."
+"The [1:Open Knowledge Foundation] is a non-profit organisation "
+"[2:promoting] open knowledge: writing and improving CKAN is one of the "
+"ways we do that. If you want to get involved with its design or code, "
+"join the discussion or development [3:mailing lists], or take a look at "
+"the [4:OKFN] site to find out about our other projects."
+msgstr ""
+"[1:Open Knowledge Foundation]은 열린 지식을 [2:장려하는] 비영리 기업입니다: CKAN을 개발하고 "
+"향상시키는 것이 그 중 하나입니다. CKAN의 설계 및 코드에 참여하기 원하면 토론 또는 개발 [3:메일링 리스트]에 가입하거나 "
+"[4:OKFN] 사이트의 프로젝트를 참고하시기 바랍니다."
 
 #: ckan/templates_legacy/home/index.html:13
 msgid "Welcome to"
@@ -4784,7 +4901,9 @@ msgstr "데이터셋을"
 msgid ""
 "that you can \n"
 "            browse, learn about and download."
-msgstr "데이터셋을 탐색하고 \n배우고, 다운로드할 수 있습니다."
+msgstr ""
+"데이터셋을 탐색하고 \n"
+"배우고, 다운로드할 수 있습니다."
 
 #: ckan/templates_legacy/home/index.html:32
 msgid "Share data"
@@ -4794,7 +4913,9 @@ msgstr "데이터 공유"
 msgid ""
 "Add your own datasets to share them with others and\n"
 "          to find other people interested in your data."
-msgstr "데이터셋을 다른 사람에게 공유하고  \n 당신의 데이터에 관심 있는 사용자를 찾기 위해 데이터셋을 추가하세요."
+msgstr ""
+"데이터셋을 다른 사람에게 공유하고  \n"
+" 당신의 데이터에 관심 있는 사용자를 찾기 위해 데이터셋을 추가하세요."
 
 #: ckan/templates_legacy/home/index.html:38
 msgid "Create a dataset »"
@@ -4812,7 +4933,9 @@ msgstr "협업"
 msgid ""
 "Find out more about working with open data by exploring \n"
 "          these resources:"
-msgstr "다음의 리소스를 통해 \n오픈 데이터와 함께 할 수 있는 것을 찾아보세요:"
+msgstr ""
+"다음의 리소스를 통해 \n"
+"오픈 데이터와 함께 할 수 있는 것을 찾아보세요:"
 
 #: ckan/templates_legacy/home/index.html:54
 msgid "GetTheData.org"
@@ -4934,9 +5057,11 @@ msgstr "저장하기 전 (새창에서 열림)"
 #: ckan/templates_legacy/package/edit_form.html:31
 msgid ""
 "[1:Important:] By submitting content, you agree to release your "
-"contributions under the [2:Open Database License]. Please [3:refrain] from "
-"editing this page if you are [4:not] happy to do this."
-msgstr "[1:Important:] 컨텐트를 제출하면 [2:Open Database License]로 귀하의 공헌을 배포하는 것에 동의하는 것입니다. 만약 이것에 동의하지 [4:not] 않는다면, 이 페이지의 편집을 [3:refrain] 멈춰주세요."
+"contributions under the [2:Open Database License]. Please [3:refrain] "
+"from editing this page if you are [4:not] happy to do this."
+msgstr ""
+"[1:Important:] 컨텐트를 제출하면 [2:Open Database License]로 귀하의 공헌을 배포하는 것에 동의하는 "
+"것입니다. 만약 이것에 동의하지 [4:not] 않는다면, 이 페이지의 편집을 [3:refrain] 멈춰주세요."
 
 #: ckan/templates_legacy/package/editresources.html:6
 msgid "- Edit Resources - Datasets"
@@ -5042,9 +5167,11 @@ msgstr "그룹을 추가할 수 없음. "
 
 #: ckan/templates_legacy/package/new_package_form.html:122
 msgid ""
-"Comma-separated terms that may link this dataset to similar ones. For more "
-"information on conventions, see [1:this wiki page]."
-msgstr "이 데이터셋이 유사한 데이터셋과 연결될 수 있는 콤마로 구분된 단어. 규칙에 대한 자세한 정보는 [1:this wiki page]를 참조하기 바랍니다."
+"Comma-separated terms that may link this dataset to similar ones. For "
+"more information on conventions, see [1:this wiki page]."
+msgstr ""
+"이 데이터셋이 유사한 데이터셋과 연결될 수 있는 콤마로 구분된 단어. 규칙에 대한 자세한 정보는 [1:this wiki page]를"
+" 참조하기 바랍니다."
 
 #: ckan/templates_legacy/package/new_package_form.html:123
 msgid "e.g. pollution, rivers, water quality"
@@ -5056,7 +5183,8 @@ msgstr "리소스 추가하기"
 
 #: ckan/templates_legacy/package/new_package_form.html:132
 msgid ""
-"Upload or link data files, APIs and other materials related to your dataset."
+"Upload or link data files, APIs and other materials related to your "
+"dataset."
 msgstr "데이터셋과 관련있는 데이터 파일, API, 기타 자료를 업로드 또는 연결하세요."
 
 #: ckan/templates_legacy/package/new_package_form.html:139
@@ -5077,8 +5205,8 @@ msgstr "API URL"
 
 #: ckan/templates_legacy/package/new_package_form.html:193
 msgid ""
-"The name of the main contact, for enquiries about this particular dataset, "
-"using the e-mail address in the following field."
+"The name of the main contact, for enquiries about this particular "
+"dataset, using the e-mail address in the following field."
 msgstr "다음 필드에서 이메일을 통해 특정 데이터셋에 질의할 수 있는 주요 연락처 이름"
 
 #: ckan/templates_legacy/package/new_package_form.html:198
@@ -5087,8 +5215,8 @@ msgstr "저자 이메일"
 
 #: ckan/templates_legacy/package/new_package_form.html:208
 msgid ""
-"If there is another important contact person (in addition to the person in "
-"the Author field) then provide details here."
+"If there is another important contact person (in addition to the person "
+"in the Author field) then provide details here."
 msgstr "중요 연락 담당자가 있다면 (저자 필드에 있는 사람과 더불어), 이곳에 상세 정보를 제공해 주시기 바랍니다. "
 
 #: ckan/templates_legacy/package/new_package_form.html:213
@@ -5105,9 +5233,11 @@ msgstr "예. 1.2.0"
 
 #: ckan/templates_legacy/package/new_package_form.html:230
 msgid ""
-"Adding custom fields to the dataset such as \"location:uk\" can help users "
-"find it in the search engine. This data will also appear under"
-msgstr " \"location:uk\" 같이 데이터셋에 사용자 정의 필드를 추가하는 것은 사용자가 검색엔진에서 찾는 것을 도울 수 있습니다. 이 데이터는 보여집니다"
+"Adding custom fields to the dataset such as \"location:uk\" can help "
+"users find it in the search engine. This data will also appear under"
+msgstr ""
+" \"location:uk\" 같이 데이터셋에 사용자 정의 필드를 추가하는 것은 사용자가 검색엔진에서 찾는 것을 도울 수 있습니다."
+" 이 데이터는 보여집니다"
 
 #: ckan/templates_legacy/package/new_package_form.html:230
 msgid "when viewing the dataset."
@@ -5137,15 +5267,16 @@ msgstr "변경 사항에 대해 간단히 설명해 주세요..."
 msgid ""
 "Since you have not signed in this will just be your IP address.\n"
 "    [1:Click here to sign in] before saving (opens in new window)."
-msgstr "이것에 가입되어 있지 않아 IP주소만 있습니다. \n   저장하기 전에[1:Click here to sign in]  (새창이 열림)."
+msgstr ""
+"이것에 가입되어 있지 않아 IP주소만 있습니다. \n"
+"   저장하기 전에[1:Click here to sign in]  (새창이 열림)."
 
 #: ckan/templates_legacy/package/new_package_form.html:305
 msgid "Important:"
 msgstr "중요:"
 
 #: ckan/templates_legacy/package/new_package_form.html:305
-msgid ""
-"By submitting content, you agree to release your contributions under the"
+msgid "By submitting content, you agree to release your contributions under the"
 msgstr "콘텐트를 제출하면 귀하의 공헌을 배포하는 것에 동의하는 것입니다"
 
 #: ckan/templates_legacy/package/new_package_form.html:305
@@ -5237,7 +5368,9 @@ msgstr "Harvest Source"
 msgid ""
 "[1:Dataset page] on \n"
 "            [2:%(harvest_catalogue_name)s]"
-msgstr "[1:Dataset page] on \n            [2:%(harvest_catalogue_name)s]"
+msgstr ""
+"[1:Dataset page] on \n"
+"            [2:%(harvest_catalogue_name)s]"
 
 #: ckan/templates_legacy/package/resource_embedded_dataviewer.html:87
 #: ckan/templates_legacy/package/resource_read.html:58
@@ -5306,7 +5439,9 @@ msgstr "덤프"
 msgid ""
 "[1:There was an error while searching.] \n"
 "            Please try again."
-msgstr "[1:There was an error while searching.] \n            다시 시도해 주세요."
+msgstr ""
+"[1:There was an error while searching.] \n"
+"            다시 시도해 주세요."
 
 #: ckan/templates_legacy/package/search.html:54
 #, python-format
@@ -5413,7 +5548,9 @@ msgstr "리스트"
 msgid ""
 "Track the most recent changes to the system, with most recent\n"
 "    changes first."
-msgstr "시스템에서 가장 최근 수정내용을 추적하기, 가장 최근\n변경사항을 처음으로."
+msgstr ""
+"시스템에서 가장 최근 수정내용을 추적하기, 가장 최근\n"
+"변경사항을 처음으로."
 
 #: ckan/templates_legacy/revision/read.html:6
 msgid "Revision:"
@@ -5439,7 +5576,9 @@ msgstr "데이터셋 - "
 msgid ""
 ",\n"
 "      Tag -"
-msgstr ",\n      태그 -"
+msgstr ""
+",\n"
+"      태그 -"
 
 #: ckan/templates_legacy/snippets/data-viewer-embed-dialog.html:19
 msgid "Embed this view"
@@ -5457,7 +5596,9 @@ msgstr "공개적인 라이센스 없음"
 msgid ""
 "This upload form is valid for a limited time (usually 1h or so). If the\n"
 "    form expires please reload the page."
-msgstr "업로드 폼은 제한된 시간동안 유효합니다 (보통 1시간 정도). 만약 \n폼이 만료된다면 페이지를 새로 열어주세요"
+msgstr ""
+"업로드 폼은 제한된 시간동안 유효합니다 (보통 1시간 정도). 만약 \n"
+"폼이 만료된다면 페이지를 새로 열어주세요"
 
 #: ckan/templates_legacy/storage/index.html:33
 msgid "File:"
@@ -5572,8 +5713,8 @@ msgstr "사용자명 변경하기"
 
 #: ckan/templates_legacy/user/edit_user_form.html:66
 msgid ""
-"Changing your username will log you out, and require you to log back in with"
-" the new username"
+"Changing your username will log you out, and require you to log back in "
+"with the new username"
 msgstr "사용자명을 변경하면 로그아웃됩니다, 새로운 사용자명을 쓰기 위해 다시 로그인해야 합니다"
 
 #: ckan/templates_legacy/user/followers.html:6
@@ -5652,9 +5793,11 @@ msgstr "Open ID를 이용하여 로그인하기"
 
 #: ckan/templates_legacy/user/login.html:62
 msgid ""
-"NB: To set-up your OpenID for this site, you first need to [1:Register] and "
-"then edit your Profile to provide your OpenID."
-msgstr "주의: 이 사이트에서 OpenID를 설정하기 위해 먼저 [1:Register] 이 필요하며, 이후  OpenID에서 제공한 프로파일을 편집하세요."
+"NB: To set-up your OpenID for this site, you first need to [1:Register] "
+"and then edit your Profile to provide your OpenID."
+msgstr ""
+"주의: 이 사이트에서 OpenID를 설정하기 위해 먼저 [1:Register] 이 필요하며, 이후  OpenID에서 제공한 "
+"프로파일을 편집하세요."
 
 #: ckan/templates_legacy/user/login.html:64
 msgid "Please click your account provider:"
@@ -5673,9 +5816,15 @@ msgid ""
 "OpenID is service that allows you to log-on to many different websites\n"
 "          using a single identity. Find out [1:more\n"
 "          about OpenID] and [2:how to get an\n"
-"          OpenID enabled account]. Probably the simplest way is sign up with a\n"
+"          OpenID enabled account]. Probably the simplest way is sign up "
+"with a\n"
 "          free OpenID provider such as [3:https://www.myopenid.com/]."
-msgstr "OpenID는 서로 다른 웹사이트에 로그인을 할 수 있는 서비스입니다\n         하나의 아이덴티티를 이용하여. [1:more\n         about OpenID]와 [2:how to get an\n         OpenID enabled account]를 참조하세요. 가장 간단한 방법은 \n         [3:https://www.myopenid.com/]와 같은 무료 OpenID 제공자에 가입하는 것입니다."
+msgstr ""
+"OpenID는 서로 다른 웹사이트에 로그인을 할 수 있는 서비스입니다\n"
+"         하나의 아이덴티티를 이용하여. [1:more\n"
+"         about OpenID]와 [2:how to get an\n"
+"         OpenID enabled account]를 참조하세요. 가장 간단한 방법은 \n"
+"         [3:https://www.myopenid.com/]와 같은 무료 OpenID 제공자에 가입하는 것입니다."
 
 #: ckan/templates_legacy/user/login.html:83
 msgid "Sign in with OpenID"
@@ -5782,8 +5931,8 @@ msgid "DataStore resource not found"
 msgstr ""
 
 #: ckanext/datastore/logic/action.py:140 ckanext/datastore/logic/action.py:184
-#: ckanext/datastore/logic/action.py:268 ckanext/datastore/logic/action.py:352
-#: ckanext/datastore/logic/action.py:378
+#: ckanext/datastore/logic/action.py:266 ckanext/datastore/logic/action.py:350
+#: ckanext/datastore/logic/action.py:376
 msgid "Resource \"{0}\" was not found."
 msgstr "리소스 \"{0}\"를 찾을 수 없음."
 
@@ -5825,27 +5974,72 @@ msgid ""
 "LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION\n"
 "OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION\n"
 "WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
-msgstr "Copyright (c) 2010 Michael Leibman, http://github.com/mleibman/slickgrid⏎\n⏎\nPermission is hereby granted, free of charge, to any person obtaining⏎\na copy of this software and associated documentation files (the⏎\n\"Software\"), to deal in the Software without restriction, including⏎\nwithout limitation the rights to use, copy, modify, merge, publish,⏎\ndistribute, sublicense, and/or sell copies of the Software, and to⏎\npermit persons to whom the Software is furnished to do so, subject to⏎\nthe following conditions:⏎\n⏎\nThe above copyright notice and this permission notice shall be⏎\nincluded in all copies or substantial portions of the Software.⏎\n⏎\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,⏎\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF⏎\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND⏎\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE⏎\nLIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION⏎\nOF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION⏎\nWITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+msgstr ""
+"Copyright (c) 2010 Michael Leibman, http://github.com/mleibman/slickgrid⏎"
+"\n"
+"⏎\n"
+"Permission is hereby granted, free of charge, to any person obtaining⏎\n"
+"a copy of this software and associated documentation files (the⏎\n"
+"\"Software\"), to deal in the Software without restriction, including⏎\n"
+"without limitation the rights to use, copy, modify, merge, publish,⏎\n"
+"distribute, sublicense, and/or sell copies of the Software, and to⏎\n"
+"permit persons to whom the Software is furnished to do so, subject to⏎\n"
+"the following conditions:⏎\n"
+"⏎\n"
+"The above copyright notice and this permission notice shall be⏎\n"
+"included in all copies or substantial portions of the Software.⏎\n"
+"⏎\n"
+"THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND,⏎\n"
+"EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF⏎\n"
+"MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND⏎\n"
+"NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE⏎\n"
+"LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION⏎\n"
+"OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION⏎\n"
+"WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
 
 #: ckanext/reclinepreview/theme/public/vendor/slickgrid/2.0.1/README.txt:1
 msgid ""
-"This compiled version of SlickGrid has been obtained with the Google Closure\n"
+"This compiled version of SlickGrid has been obtained with the Google "
+"Closure\n"
 "Compiler, using the following command:\n"
 "\n"
-"java -jar compiler.jar --js=slick.core.js --js=slick.grid.js --js=slick.editors.js --js_output_file=slick.grid.min.js\n"
+"java -jar compiler.jar --js=slick.core.js --js=slick.grid.js "
+"--js=slick.editors.js --js_output_file=slick.grid.min.js\n"
 "\n"
-"There are two other files required for the SlickGrid view to work properly:\n"
+"There are two other files required for the SlickGrid view to work "
+"properly:\n"
 "\n"
 " * jquery-ui-1.8.16.custom.min.js \n"
 " * jquery.event.drag-2.0.min.js\n"
 "\n"
-"These are included in the Recline source, but have not been included in the\n"
+"These are included in the Recline source, but have not been included in "
+"the\n"
 "built file to make easier to handle compatibility problems.\n"
 "\n"
 "Please check SlickGrid license in the included MIT-LICENSE.txt file.\n"
 "\n"
 "[1] https://developers.google.com/closure/compiler/"
-msgstr "This compiled version of SlickGrid has been obtained with the Google Closure⏎\nCompiler, using the following command:⏎\n⏎\njava -jar compiler.jar --js=slick.core.js --js=slick.grid.js --js=slick.editors.js --js_output_file=slick.grid.min.js⏎\n⏎\nThere are two other files required for the SlickGrid view to work properly:⏎\n⏎\n* jquery-ui-1.8.16.custom.min.js ⏎\n* jquery.event.drag-2.0.min.js⏎\n⏎\nThese are included in the Recline source, but have not been included in the⏎\nbuilt file to make easier to handle compatibility problems.⏎\n⏎\nPlease check SlickGrid license in the included MIT-LICENSE.txt file.⏎\n⏎\n[1] https://developers.google.com/closure/compiler/"
+msgstr ""
+"This compiled version of SlickGrid has been obtained with the Google "
+"Closure⏎\n"
+"Compiler, using the following command:⏎\n"
+"⏎\n"
+"java -jar compiler.jar --js=slick.core.js --js=slick.grid.js "
+"--js=slick.editors.js --js_output_file=slick.grid.min.js⏎\n"
+"⏎\n"
+"There are two other files required for the SlickGrid view to work "
+"properly:⏎\n"
+"⏎\n"
+"* jquery-ui-1.8.16.custom.min.js ⏎\n"
+"* jquery.event.drag-2.0.min.js⏎\n"
+"⏎\n"
+"These are included in the Recline source, but have not been included in "
+"the⏎\n"
+"built file to make easier to handle compatibility problems.⏎\n"
+"⏎\n"
+"Please check SlickGrid license in the included MIT-LICENSE.txt file.⏎\n"
+"⏎\n"
+"[1] https://developers.google.com/closure/compiler/"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:10
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:57
@@ -5970,10 +6164,25 @@ msgstr "데이터셋 리더보드"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:18
 msgid ""
-"Choose a dataset attribute and find out which categories in that area have "
-"the most datasets. E.g. tags, groups, license, res_format, country."
-msgstr "데이터셋의 속성을 선택하고, 해당 영역에서 어떤 카테고리가 가장 많은 데이터셋을 갖는지 탐색. 예. 태그, 그룹, 라이센스, res_format, 국가"
+"Choose a dataset attribute and find out which categories in that area "
+"have the most datasets. E.g. tags, groups, license, res_format, country."
+msgstr ""
+"데이터셋의 속성을 선택하고, 해당 영역에서 어떤 카테고리가 가장 많은 데이터셋을 갖는지 탐색. 예. 태그, 그룹, 라이센스, "
+"res_format, 국가"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:20
 msgid "Choose area"
 msgstr "영역 선택"
+
+#~ msgid "eg. Gold Prices"
+#~ msgstr "예. 금값"
+
+#~ msgid "Select an organization..."
+#~ msgstr "조직 선택하기..."
+
+#~ msgid "eg. http://example.com/gold-prices-jan-2011.json"
+#~ msgstr "eg. http://example.com/gold-prices-jan-2011.json"
+
+#~ msgid "eg. January 2011 Gold Prices"
+#~ msgstr "eg. January 2011 Gold Prices"
+
