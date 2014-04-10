@@ -1,0 +1,11 @@
+{% ckan_extends %}
+
+{% block package_additional_info %}
+{{ super() }}
+
+	<tr>
+      <th scope="row" class="dataset-label">{{ _("Creator") }}</th>
+      <td class="dataset-details">{{ pkg_dict.package_creator }}</td>
+    </tr>
+
+{% endblock %}
