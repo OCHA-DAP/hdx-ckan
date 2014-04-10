@@ -22,7 +22,7 @@ def send_mail(name, email, org, reason = ''):
            '(This is an automated mail)' \
            ''.format(fn=name, mail=email, org=org, reason=reason)
 
-    mailer.mail_recipient("Registration", "test@test.com", "New user registration", body)
+    mailer.mail_recipient("HDX Registration", "hdx@un.org", "New user registration", body)
 
     return
 
@@ -48,11 +48,10 @@ class RequestController(ckan.controllers.user.UserController):
             if name and email and org:
                 try:
                     send_mail(name, email, org, reason)
-                    h.flash_success(_('Please check your inbox for '
-                                    'a reset code.'))
-                    #h.redirect_to('/')
+                    h.flash_success(_('We will check your request and we will send you an email!'))
+                    h.redirect_to('/')
                 except mailer.MailerException, e:
-                    h.flash_error(_('Could not send reset link: %s') %
+                    h.flash_error(_('Could not send request for access: %s') %
                                   unicode(e))
             else:
                 h.flash_error(_('Please fill all the fields!'))
