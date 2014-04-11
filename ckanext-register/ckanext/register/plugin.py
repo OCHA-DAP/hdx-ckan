@@ -22,5 +22,10 @@ class DisableUserRegistration(plugins.SingletonPlugin):
         map.connect('/user/request',
                     controller='ckanext.register.request:RequestController',
                     action='request')
+
+        map.connect('/user/register',
+                    controller='ckanext.register.request:RequestController',
+                    action='register')
+
         return map
 

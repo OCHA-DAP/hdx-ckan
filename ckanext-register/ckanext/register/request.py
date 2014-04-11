@@ -5,13 +5,17 @@ import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
 import ckan.model as model
 import ckan.logic as logic
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckan.lib.captcha as captcha
+import pylons.configuration as configuration
 
 abort = base.abort
 check_access = logic.check_access
-get_action = logic.get_action
-
-NotFound = logic.NotFound
+render = base.render
 NotAuthorized = logic.NotAuthorized
+unflatten = dictization_functions.unflatten
+ValidationError = logic.ValidationError
+
 
 def send_mail(name, email, org, reason = ''):
     body = 'New user registration request\n' \
@@ -22,39 +26,79 @@ def send_mail(name, email, org, reason = ''):
            '(This is an automated mail)' \
            ''.format(fn=name, mail=email, org=org, reason=reason)
 
-    mailer.mail_recipient("HDX Registration", "hdx@un.org", "New user registration", body)
+    mailer.mail_recipient("HDX Registration", "vagrant@ckan.lo", "New user registration", body)
 
     return
 
 class RequestController(ckan.controllers.user.UserController):
+    request_register_form = 'user/request_register.html'
+    @staticmethod
+    def _validate_form(data, errors):
+        if not data['fullname']:
+            errors['fullname'] = [_(u'Fullname is required!')]
+        if not data['email']:
+            errors['email'] = [_(u'Email is required!')]
+        if not data['org']:
+            errors['org'] = [_(u'Organisation is required!')]
 
-    def request(self):
+    def request(self, data=None, errors=None, error_summary=None):
 
-        context = {'model': model, 'session': model.Session, 'user': c.user}
-        data_dict = {'id': request.params.get('user')}
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user,
+                   'request': 'request' in request.params}
         #try:
         #    check_access('request_register', context)
         #except NotAuthorized:
         #    abort(401, _('Unauthorized to request new registration.'))
 
-        if request.method == 'POST':
-            name = request.params.get('fullname')
-            email = request.params.get('email')
-            org = request.params.get('org')
-            reason = request.params.get('reason')
+        if context['request'] and not data:
+            data = logic.clean_dict(unflatten(
+                logic.tuplize_dict(logic.parse_params(request.params))))
+            errors = dict()
+            error_summary = dict()
 
-            h.log.info('Request access for {name} ({email}) of {org} with reason: {reason}'.format(name = name, email = email, org = org, reason=reason))
+            self._validate_form(data, errors)
+            try:
+                captcha.check_recaptcha(request)
+            except captcha.CaptchaError:
+                error_msg = _(u'Bad Captcha. Please try again.')
+                error_summary['captcha'] = error_msg
+                errors['captcha'] = [error_msg]
 
-            if name and email and org:
+            if errors == {}:
+                name = data['fullname']
+                email = data['email']
+                org = data['org']
+                reason = data['reason']
+
+                h.log.info('Request access for {name} ({email}) of {org} with reason: {reason}'.format(name = name, email = email, org = org, reason=reason))
                 try:
                     send_mail(name, email, org, reason)
                     h.flash_success(_('We will check your request and we will send you an email!'))
                     h.redirect_to('/')
                 except mailer.MailerException, e:
-                    h.flash_error(_('Could not send request for access: %s') %
-                                  unicode(e))
-            else:
-                h.flash_error(_('Please fill all the fields!'))
-                return
+                    error_summary['sendError'] = _('Could not send request for access: %s') % unicode(e)
 
-        return base.render('user/request_register.html', cache_force=True)
+        data = data or {}
+        errors = errors or {}
+        error_summary = error_summary or {}
+        vars = {'data': data,
+                'errors': errors,
+                'error_summary': error_summary,
+                'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
+        c.form = render(self.request_register_form, extra_vars=vars)
+        return base.render(self.request_register_form, cache_force=True, extra_vars=vars)
+
+    def register(self, data=None, errors=None, error_summary=None):
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        try:
+            check_access('user_create', context)
+        except NotAuthorized:
+            abort(401, _('Unauthorized to register as a user.'))
+        #hack to disable check if user is logged in
+        save_user = c.user
+        c.user = None
+        result = self.new(data, errors, error_summary)
+        c.user = save_user
+
+        return result
