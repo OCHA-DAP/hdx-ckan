@@ -1,11 +1,36 @@
 {% ckan_extends %}
 
 {% block package_additional_info %}
-{{ super() }}
+	  {% if pkg_dict.url %}
+        <tr>
+          <th scope="row" class="dataset-label">{{ _('Source') }}</th>
+          <td class="dataset-details" property="foaf:homepage">{{ h.link_to(pkg_dict.url, pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
+        </tr>
+      {% endif %}
 
-	<tr>
-      <th scope="row" class="dataset-label">{{ _("Creator") }}</th>
-      <td class="dataset-details">{{ pkg_dict.package_creator }}</td>
-    </tr>
+      
+
+      {% if pkg_dict.version %}
+        <tr>
+          <th scope="row" class="dataset-label">{{ _("Version") }}</th>
+          <td class="dataset-details">{{ pkg_dict.version }}</td>
+        </tr>
+      {% endif %}
+
+	  {% if pkg_dict.package_creator %}
+		<tr>
+	      <th scope="row" class="dataset-label">{{ _("Creator") }}</th>
+	      <td class="dataset-details">{{ pkg_dict.package_creator }}</td>
+	    </tr>
+	  {% endif %}
+
+      {% for extra in h.sorted_extras(pkg_dict.extras) %}
+        {% set key, value = extra %}
+        <tr rel="dc:relation" resource="_:extra{{ i }}">
+          <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+          <td class="dataset-details" property="rdf:value">{{ value }}</td>
+        </tr>
+      {% endfor %}
+
 
 {% endblock %}

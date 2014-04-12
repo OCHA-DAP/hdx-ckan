@@ -8,11 +8,12 @@ import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 
+import ckanext.metadata_fields.custom_validator as vd
+
 
 class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IDatasetForm, inherit=False)
-    plugins.implements(plugins.IPackageController, inherit=True)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -29,6 +30,9 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema.update({
                 'package_creator': [tk.get_validator('not_empty'),
                     tk.get_converter('convert_to_extras')]
+                })
+        schema.update({
+                'groups_list': [vd.groups_not_empty]
                 })
         
         return schema
@@ -51,7 +55,11 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_creator': [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')]
             })
-
         return schema
+        
+    def edit(self, entity):
+        logging.warn("blabla");
+        pass
+
 
 
