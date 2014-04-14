@@ -112,3 +112,83 @@ body {
 	padding: 5px;
 	float: left;
 }
+
+.jumbotron {
+    height: 500px;
+    margin-bottom: 30px;
+    background: url('/hdxmap2.png') no-repeat;
+    background-color: #e3e3e3;
+    color: #ffffff;
+    text-align: center;
+}
+.jumbotron hr {
+    margin: 9px;
+    font: serif;
+}
+.jumbotron .hdxTitle {
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.jumbotron .hdxPhrase {
+    font-size: 30px;
+}
+
+.jumbotron .itemCount {
+    color: orangered;
+    font-size: 80px;
+    line-height: 80px;
+    margin-bottom: 10px;
+}
+
+.jumbotron .itemCount a{
+    color: orangered;
+}
+
+.jumbotron .itemName {
+    color: #0e0e0e;
+    text-transform: uppercase;
+}
+
+.jumbotron .searchWidget {
+    margin-left: 30px;
+    margin-right: 15px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 10px solid rgba(0, 0, 0, .3);
+    -webkit-background-clip: padding-box; /* for Safari */
+    background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
+    color: #6b6b6b;
+    text-align: center;
+}
+
+.jumbotron .searchWidget p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.jumbotron .searchWidget hr {
+    margin: 20px;
+}
+
+.jumbotron .searchWidget .search-giant .search{
+    border-radius: 16px;
+    border: 1px solid #a0a0a0;
+    background-color: #efefef;
+    font-style: italic;
+}
+
+.jumbotron .searchWidget .search-form {
+    border: 0;
+    padding-top: 10px;
+    padding-bottom: 0;
+}
+.jumbotron .searchWidget .search-giant .icon-search {
+    color: #808080;
+}
+
+
+.hero {
+    margin-top: 0px;
+    padding-top: 0px;
+}
