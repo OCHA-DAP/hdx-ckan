@@ -30,8 +30,8 @@ def groups_not_empty(key, data, errors, context):
                 break
                 
     if not first_phase and (allow_partial_update != allow_state_change) :
-        for data_key in data.viewkeys():
-            if data_key[0]=='groups':
+        for data_key, data_value in data.items():
+            if data_key[0]=='groups' and data_key[2]=='id' and data_value != '-1':
                 groups_found    = True
                 break
         if not groups_found:

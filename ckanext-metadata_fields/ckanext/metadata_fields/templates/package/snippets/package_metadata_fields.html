@@ -4,19 +4,39 @@
   {% block dataset_fields %}
     {% if data.groups %}
       <div class="control-group">
-        <label class="control-label">QQQQ{{ _('Groups') }}</label>
+        <label class="control-label">{{ _('Groups') }}</label>
         <div class="controls">
           {% for group in data.groups %}
+          	{% if group.id != '-1' %}
             <label class="checkbox" for="field-group-{{ loop.index0 }}">
               <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked" />
               {{ group.title }}
             </label>
+            {% endif %}
           {% endfor %}
         </div>
       </div>
     {% endif %}
     {% set group_name = 'groups__%s__id' % data.groups|length %}
+    {% set available_groups = h.groups_available() %}
+	<div class="control-group">
+	  	{% set error = errors.groups_list %}
+	  	<label class="control-label" for="field-group">{{ _("Add Group") }}</label>
+		<div class="controls">
+	    	<select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+	    		<option value="-1">{{ _('Please select from below') }}</option>
+	    	  {% for grp in available_groups  %}
+	    	    <option value="{{ grp.id }}">{{ grp.display_name }}</option>
+	    	  {% endfor %}
+	    	</select>
+	    	{% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+	    </div>
+	</div>
+    
+    {# Replacing ajax-autocomplete with dropdown
     {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
     {{ form.input(group_name, label=_('Add Group'), id="field-group", value=data[group_name], classes=['control-medium'], error=errors.groups_list, attrs=group_attrs) }}
+    #}
+    
   {% endblock %}
 {% endblock %}
