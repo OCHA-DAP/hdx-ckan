@@ -1,7 +1,7 @@
 
 
 downloadable_formats = {
-    'csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip'
+    'csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
 }
 
 def is_downloadable(resource):
