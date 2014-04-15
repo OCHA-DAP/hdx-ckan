@@ -8,11 +8,15 @@ body {
     background: #fff;
     color: #222;
     font-weight: 300;
-    font-size: 1.5em;
+    font-size: 1.4em;
     margin-top:5px;
 }
 .masthead a {
     color: #000;
+}
+
+.masthead .header-image {
+	padding-top: 10px;
 }
 
 .account-masthead {
@@ -113,11 +117,24 @@ body {
 	float: left;
 }
 
-.facet-hidden{
-    display: none;
+.navbar .nav > .active > a, .navbar .nav > .active > a:hover, .navbar .nav > .active > a:focus {
+	box-shadow: none;
 }
 
-
-.facet-h2{
-    cursor: pointer;
+.navbar .nav > li > a {
+	color: #000;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 8px;
+	padding-right: 8px;
 }
+
+.navbar-inner {
+	box-shadow: none;
+	border: none;
+	background: none;
+}
+.navbar .nav .dropdown-menu > li > a {
+    font-size: 15px;
+}
+
