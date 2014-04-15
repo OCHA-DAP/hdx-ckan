@@ -116,7 +116,11 @@ body {
 .jumbotron {
     height: 500px;
     margin-bottom: 30px;
-    background: url('/hdxmap2.png') no-repeat;
+    background: url('/watermap.png') no-repeat;
+    /* background image generated from:
+         - http://maps.stamen.com/m2i/image/20140415/watercolor_LU_hZxKvOgo
+         - http://maps.stamen.com/m2i/#watercolor/940:300/3/29.15/53.87
+     */
     background-color: #e3e3e3;
     color: #ffffff;
     text-align: center;
