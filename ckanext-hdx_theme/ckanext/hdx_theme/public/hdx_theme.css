@@ -114,28 +114,41 @@ body {
 }
 
 .jumbotron {
-    height: 500px;
+    height: 470px;
     margin-bottom: 30px;
+    background-color: rgba(200,200,200, 0.5);
+    color: #ffffff;
+    text-align: center;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+}
+.jumbotron .maprow {
     background: url('/watermap.png') no-repeat;
     /* background image generated from:
          - http://maps.stamen.com/m2i/image/20140415/watercolor_LU_hZxKvOgo
          - http://maps.stamen.com/m2i/#watercolor/940:300/3/29.15/53.87
      */
-    background-color: #e3e3e3;
-    color: #ffffff;
-    text-align: center;
+}
+.jumbotron .maprow .col-alpha {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.jumbotron .maprow .col-alpha a {
+    color: white;
 }
 .jumbotron hr {
     margin: 9px;
-    font: serif;
+    border-top: 0;
 }
 .jumbotron .hdxTitle {
     text-transform: uppercase;
     font-size: 18px;
+    font-weight: 400;
 }
 
 .jumbotron .hdxPhrase {
     font-size: 30px;
+    font-weight: 300;
 }
 
 .jumbotron .itemCount {
@@ -154,9 +167,7 @@ body {
     text-transform: uppercase;
 }
 
-.jumbotron .searchWidget {
-    margin-left: 30px;
-    margin-right: 15px;
+.searchWidget {
     background-color: #ffffff;
     border-radius: 8px;
     border: 10px solid rgba(0, 0, 0, .3);
@@ -164,30 +175,35 @@ body {
     background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
     color: #6b6b6b;
     text-align: center;
+    width: 300px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    float: left;
 }
 
-.jumbotron .searchWidget p {
+.searchWidget p {
     margin-left: 10px;
     margin-right: 10px;
 }
 
-.jumbotron .searchWidget hr {
+.searchWidget hr {
     margin: 20px;
 }
 
-.jumbotron .searchWidget .search-giant .search{
+.searchWidget .search-giant .search{
     border-radius: 16px;
     border: 1px solid #a0a0a0;
     background-color: #efefef;
     font-style: italic;
 }
 
-.jumbotron .searchWidget .search-form {
+.searchWidget .search-form {
     border: 0;
     padding-top: 10px;
     padding-bottom: 0;
 }
-.jumbotron .searchWidget .search-giant .icon-search {
+.searchWidget .search-giant .icon-search {
     color: #808080;
 }
 
