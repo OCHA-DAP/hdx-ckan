@@ -122,15 +122,14 @@ body {
 }
 
 .navbar .nav > li > a.btn {
-	color: #ffffff;
 	font-family: 'Helvetica Neue',Helvetica,Arial,sans-serif;
 	margin-top: 2px;
-	background-color: #206B82;
-	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	text-shadow: none;
 }
 .navbar .nav > li > a:hover.btn {
-	background-color: #085871;
+	background-color: #EAEAEA;
 }
+
 
 .navbar .nav > li > a {
 	color: #000000;
@@ -151,6 +150,7 @@ body {
 
 .navbar .nav .special-menuitem {
 	color: #1C687F;
+	font-size: 18px;
 }
 
 

@@ -102,7 +102,7 @@
             {% else %}
 	            {% block header_account_notlogged %}
 	            	<li>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
-	            	<li>{% link_for _('Register'), controller='user', action='register', class_='btn btn-primary' %}</li>
+	            	<li>{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
 	            {% endblock %}
             {% endif %}
           </ul>
