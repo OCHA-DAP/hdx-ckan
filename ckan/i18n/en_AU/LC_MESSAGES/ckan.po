@@ -1221,7 +1221,7 @@ msgstr "User"
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:65
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:74
 msgid "Dataset"
-msgstr "Collection"
+msgstr "Dataset"
 
 #: ckan/logic/converters.py:169 ckan/logic/validators.py:178
 #: ckanext/stats/templates/ckanext/stats/index.html:113
@@ -1577,7 +1577,7 @@ msgstr "User %s not authorized to edit these countries"
 #: ckan/logic/auth/create.py:29
 #, python-format
 msgid "User %s not authorized to add dataset to this organization"
-msgstr "User %s not authorized to add collection to this organization"
+msgstr "User %s not authorized to add dataset to this organization"
 
 #: ckan/logic/auth/create.py:51
 msgid "You must be a sysadmin to create a featured related item"
@@ -2139,7 +2139,7 @@ msgstr "Register"
 #: ckan/templates_legacy/user/read.html:55
 #: ckan/templates_legacy/user/read.html:78
 msgid "Datasets"
-msgstr "Collections"
+msgstr "Datasets"
 
 #: ckan/templates/header.html:102
 msgid "Search Datasets"
@@ -2653,16 +2653,16 @@ msgstr "Update Country"
 #: ckan/templates_legacy/js_strings.html:16
 #: ckan/templates_legacy/group/layout.html:16
 msgid "Add Dataset"
-msgstr "Add Collection"
+msgstr "Add Dataset"
 
 #: ckan/templates/group/read.html:18 ckan/templates/organization/read.html:18
 msgid "Search datasets..."
-msgstr "Search Collections"
+msgstr "Search Datasets"
 
 #: ckan/templates/group/snippets/feeds.html:3
 #: ckan/templates/organization/snippets/feeds.html:3
 msgid "Datasets in group: {group}"
-msgstr "Collections in country: {group}"
+msgstr "Datasets in country: {group}"
 
 #: ckan/templates/group/snippets/feeds.html:4
 #: ckan/templates/organization/snippets/feeds.html:4
@@ -2733,13 +2733,13 @@ msgstr "This country has no description"
 #: ckan/templates/organization/snippets/organization_item.html:32
 msgid "{num} Dataset"
 msgid_plural "{num} Datasets"
-msgstr[0] "{num} Collection"
-msgstr[1] "{num} Collections"
+msgstr[0] "{num} Dataset"
+msgstr[1] "{num} Datasets"
 
 #: ckan/templates/group/snippets/group_item.html:33
 #: ckan/templates/organization/snippets/organization_item.html:34
 msgid "0 Datasets"
-msgstr "0 Collections"
+msgstr "0 Datasets"
 
 #: ckan/templates/group/snippets/group_item.html:36
 #: ckan/templates/group/snippets/group_item.html:37
@@ -2937,7 +2937,7 @@ msgstr ""
 
 #: ckan/templates/organization/bulk_process.html:6
 msgid "Add dataset"
-msgstr "Add collection"
+msgstr "Add dataset"
 
 #: ckan/templates/organization/bulk_process.html:16
 msgid " found for \"{query}\""
@@ -2979,11 +2979,11 @@ msgstr "Private"
 #: ckan/templates/organization/bulk_process.html:81
 #: ckan/templates/snippets/package_item.html:45
 msgid "This dataset has no description"
-msgstr "This collection has no description"
+msgstr "This dataset has no description"
 
 #: ckan/templates/organization/bulk_process.html:90
 msgid "This organization has no datasets associated to it"
-msgstr "This organization has no collections associated to it"
+msgstr "This organization has no datasets associated to it"
 
 #: ckan/templates/organization/bulk_process.html:99
 #: ckan/templates/package/search.html:30
@@ -3039,10 +3039,10 @@ msgstr "There are currently no organisations for this site"
 
 #: ckan/templates/organization/member_new.html:52
 msgid ""
-" <p><strong>Admin:</strong> Can add/edit and delete collections, as well as "
+" <p><strong>Admin:</strong> Can add/edit and delete datasets, as well as "
 "manage organization members.</p> <p><strong>Editor:</strong> Can add and "
-"edit collections, but not manage organization members.</p> "
-"<p><strong>Member:</strong> Can view the organization's private collections,"
+"edit datasets, but not manage organization members.</p> "
+"<p><strong>Member:</strong> Can view the organization's private datasets,"
 " but not add new datasets.</p> "
 msgstr ""
 
@@ -3077,12 +3077,12 @@ msgid ""
 "datasets from that particular organisation (e.g. Office of National "
 "Statistics).</p> "
 msgstr ""
-" <p>Organisations act like publishing departments for collections (for "
-"example, the Department of Health). This means that collections can be "
+" <p>Organisations act like publishing departments for datasets (for "
+"example, the Department of Health). This means that datasets can be "
 "published by and belong to a department instead of an individual "
 "user.</p> <p>Within organisations, admins can assign roles and "
 "authorisation its members, giving individual users the right to publish "
-"collections from that particular organisation (e.g. Office of National "
+"datasets from that particular organisation (e.g. Office of National "
 "Statistics).</p> "
 
 #: ckan/templates/organization/snippets/organization_form.html:10
@@ -3119,7 +3119,7 @@ msgstr ""
 #: ckan/templates/package/base.html:20
 #: ckan/templates/package/snippets/new_package_breadcrumb.html:2
 msgid "Create Dataset"
-msgstr "Create Collection"
+msgstr "Create Dataset"
 
 #: ckan/templates/package/base_form_page.html:14
 msgid "What are datasets?"
@@ -3134,7 +3134,7 @@ msgstr ""
 
 #: ckan/templates/package/confirm_delete.html:11
 msgid "Are you sure you want to delete dataset - {name}?"
-msgstr "Are you sure you want to delete collection - {name}?"
+msgstr "Are you sure you want to delete dataset - {name}?"
 
 #: ckan/templates/package/confirm_delete_resource.html:11
 msgid "Are you sure you want to delete resource - {name}?"
@@ -3142,25 +3142,25 @@ msgstr "Are you sure you want to delete file - {name}?"
 
 #: ckan/templates/package/edit.html:17
 msgid "View dataset"
-msgstr "View collection"
+msgstr "View dataset"
 
 #: ckan/templates/package/new.html:3
 #: ckan/templates/package/snippets/stages.html:25
 #: ckan/templates/package/snippets/stages.html:27
 msgid "Create dataset"
-msgstr "Create collection"
+msgstr "Create dataset"
 
 #: ckan/templates/package/new_package_form.html:23
 msgid "Update Dataset"
-msgstr "Update Collection"
+msgstr "Update Dataset"
 
 #: ckan/templates/package/new_package_metadata.html:3
 msgid "Add metadata to the dataset"
-msgstr "Add metadata to the collection"
+msgstr "Add metadata to the dataset"
 
 #: ckan/templates/package/new_resource.html:9
 msgid "Add data to the dataset"
-msgstr "Add data to the collection"
+msgstr "Add data to the dataset"
 
 #: ckan/templates/package/new_resource.html:18
 msgid "What's a resource?"
@@ -3234,7 +3234,7 @@ msgstr "There is no description for this file"
 
 #: ckan/templates/package/resource_read.html:68
 msgid "From the dataset abstract"
-msgstr "From the collection abstract"
+msgstr "From the dataset abstract"
 
 #: ckan/templates/package/resource_read.html:70
 #, python-format
@@ -3292,7 +3292,7 @@ msgstr "Format"
 
 #: ckan/templates/package/search.html:4
 msgid "Search for a Dataset"
-msgstr "Search for a Collection"
+msgstr "Search for a Dataset"
 
 #: ckan/templates/package/search.html:29
 #: ckan/templates/snippets/sort_by.html:14
@@ -3372,7 +3372,7 @@ msgstr "Data API"
 
 #: ckan/templates/package/snippets/info.html:15
 msgid "Edit Dataset"
-msgstr "Edit Collection"
+msgstr "Edit Dataset"
 
 #: ckan/templates/package/snippets/info.html:22
 msgid "Edit Resources"
@@ -3388,7 +3388,7 @@ msgstr "eg. A descriptive title"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:13
 msgid "eg. my-dataset"
-msgstr "eg. my-collection"
+msgstr "eg. my-dataset"
 
 #: ckan/templates/package/snippets/package_basic_fields.html:20
 msgid "eg. Some useful notes about the data"
@@ -3425,7 +3425,7 @@ msgstr "Public"
 
 #: ckan/templates/package/snippets/package_context.html:10
 msgid "There is no description for this dataset"
-msgstr "There is no description for this collection"
+msgstr "There is no description for this dataset"
 
 #: ckan/templates/package/snippets/package_form.html:28
 msgid ""
@@ -3437,7 +3437,7 @@ msgstr ""
 
 #: ckan/templates/package/snippets/package_form.html:37
 msgid "Are you sure you want to delete this dataset?"
-msgstr "Are you sure you want to delete this collection?"
+msgstr "Are you sure you want to delete this dataset?"
 
 #: ckan/templates/package/snippets/package_form.html:44
 msgid "Next: Add Data"
@@ -3575,14 +3575,14 @@ msgid ""
 " <p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not"
 " add some?</a> "
 msgstr ""
-" <p class=\"empty\">This collection has no data, <a href=\"%(url)s\">why not"
+" <p class=\"empty\">This dataset has no data, <a href=\"%(url)s\">why not"
 " add some?</a> "
 
 #: ckan/templates/package/snippets/revisions_table.html:24
 #: ckan/templates_legacy/package/history.html:37
 #, python-format
 msgid "Read dataset as of %s"
-msgstr "Read collection as of %s"
+msgstr "Read dataset as of %s"
 
 #: ckan/templates/package/snippets/stages.html:32
 #: ckan/templates/package/snippets/stages.html:36
@@ -3612,9 +3612,9 @@ msgid ""
 "news story that references this dataset.</p> "
 msgstr ""
 " <p>Related Media is any app, article, visualisation or idea related to "
-"this collection.</p> <p>For example, it could be a custom visualisation, "
+"this dataset.</p> <p>For example, it could be a custom visualisation, "
 "pictograph or bar chart, an app using all or part of the data or even a "
-"news story that references this collection.</p> "
+"news story that references this dataset.</p> "
 
 #: ckan/templates/related/confirm_delete.html:11
 msgid "Are you sure you want to delete related item - {name}?"
@@ -3655,7 +3655,7 @@ msgid ""
 " These are applications built with the datasets as well as ideas for "
 "things that could be done with them. "
 msgstr ""
-" These are applications built with the collections as well as ideas for "
+" These are applications built with the datasets as well as ideas for "
 "things that could be done with them. "
 
 #: ckan/templates/related/dashboard.html:58
@@ -3793,7 +3793,7 @@ msgstr "Changes"
 #: ckan/templates/revision/read.html:74
 #: ckan/templates_legacy/revision/read.html:54
 msgid "Datasets' Tags"
-msgstr "Collections' Tags"
+msgstr "Datasets' Tags"
 
 #: ckan/templates/revision/snippets/revisions_list.html:7
 #: ckan/templates_legacy/snippets/revision_list.html:11
@@ -3870,7 +3870,7 @@ msgstr "Go"
 #: ckan/templates_legacy/package/resource_read.html:116
 #: ckan/templates_legacy/snippets/package_list.html:31
 msgid "This dataset satisfies the Open Definition."
-msgstr "This collection satisfies the Open Definition."
+msgstr "This dataset satisfies the Open Definition."
 
 #: ckan/templates/snippets/license.html:22
 msgid "No License Provided"
@@ -3882,7 +3882,7 @@ msgid ""
 "yet."
 msgstr ""
 "No apps, ideas, news stories or images have been related to this "
-"collection yet."
+"dataset yet."
 
 #: ckan/templates/snippets/related.html:18
 msgid "Add Item"
@@ -3919,18 +3919,18 @@ msgstr ""
 #: ckan/templates/snippets/search_result_text.html:15
 msgid "{number} dataset found for \"{query}\""
 msgid_plural "{number} datasets found for \"{query}\""
-msgstr[0] "{number} collection found for \"{query}\""
-msgstr[1] "{number} collections found for \"{query}\""
+msgstr[0] "{number} dataset found for \"{query}\""
+msgstr[1] "{number} datasets found for \"{query}\""
 
 #: ckan/templates/snippets/search_result_text.html:17
 msgid "{number} dataset found"
 msgid_plural "{number} datasets found"
-msgstr[0] "{number} collection found"
-msgstr[1] "{number} collections found"
+msgstr[0] "{number} dataset found"
+msgstr[1] "{number} datasets found"
 
 #: ckan/templates/snippets/search_result_text.html:18
 msgid "Sorry no datasets found"
-msgstr "Sorry no collections found"
+msgstr "Sorry no datasets found"
 
 #: ckan/templates/snippets/search_result_text.html:21
 msgid "{number} group found for \"{query}\""
@@ -4015,7 +4015,7 @@ msgstr "News feed"
 #: ckan/templates/user/dashboard.html:19
 #: ckan/templates/user/dashboard_datasets.html:12
 msgid "My Datasets"
-msgstr "My Collections"
+msgstr "My Datasets"
 
 #: ckan/templates/user/dashboard.html:20
 #: ckan/templates/user/dashboard_organizations.html:12
@@ -4034,7 +4034,7 @@ msgstr "Activity from items that you follow"
 #: ckan/templates/user/dashboard_datasets.html:17
 #: ckan/templates/user/read.html:16
 msgid "You haven't created any datasets."
-msgstr "You haven't created any collections."
+msgstr "You haven't created any datasets."
 
 #: ckan/templates/user/dashboard_datasets.html:19
 #: ckan/templates/user/dashboard_groups.html:22
@@ -4205,7 +4205,7 @@ msgstr "Why Sign Up?"
 
 #: ckan/templates/user/new.html:24
 msgid "Create datasets, groups and other exciting things"
-msgstr "Create collections, countries and other exciting things"
+msgstr "Create datasets, countries and other exciting things"
 
 #: ckan/templates/user/new_user_form.html:6
 msgid "Full Name"
@@ -4242,7 +4242,7 @@ msgstr "Simply enter a new password and we'll update your account"
 
 #: ckan/templates/user/read.html:23
 msgid "User hasn't created any datasets."
-msgstr "User hasn't created any collections."
+msgstr "User hasn't created any datasets."
 
 #: ckan/templates/user/read_base.html:34
 msgid "You have not provided a biography."
@@ -4323,11 +4323,11 @@ msgstr "here."
 #: ckanext/stats/templates/ckanext/stats/index.html:114
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:82
 msgid "Number of datasets"
-msgstr "Number of collections"
+msgstr "Number of datasets"
 
 #: ckan/templates_legacy/_util.html:101
 msgid "View dataset resources"
-msgstr "View collection resources"
+msgstr "View dataset resources"
 
 #: ckan/templates_legacy/_util.html:101
 msgid "DOWNLOAD"
@@ -4534,12 +4534,12 @@ msgstr "DataStore returned an error"
 #: ckan/templates_legacy/layout_base.html:72
 #: ckan/templates_legacy/home/index.html:22
 msgid "Find datasets"
-msgstr "Find collections"
+msgstr "Find datasets"
 
 #: ckan/templates_legacy/layout_base.html:76
 #: ckan/templates_legacy/package/search.html:15
 msgid "Add a dataset"
-msgstr "Add a collection"
+msgstr "Add a dataset"
 
 #: ckan/templates_legacy/layout_base.html:94
 msgid "Page Logo"
@@ -4670,7 +4670,7 @@ msgstr "Purge them all (forever and irreversibly)"
 
 #: ckan/templates_legacy/admin/trash.html:27
 msgid "Deleted Datasets"
-msgstr "Deleted Collections"
+msgstr "Deleted Datasets"
 
 #: ckan/templates_legacy/admin/trash.html:29
 #: ckan/templates_legacy/package/new_package_form.html:107
@@ -4693,7 +4693,7 @@ msgstr "Edit:"
 #: ckan/templates_legacy/group/edit_form.html:17
 #: ckan/templates_legacy/group/new_group_form.html:114
 msgid "There are no datasets currently in this group."
-msgstr "There are no collections currently in this country."
+msgstr "There are no datasets currently in this country."
 
 #: ckan/templates_legacy/group/history.html:5
 #: ckan/templates_legacy/group/history.html:6
@@ -4726,22 +4726,22 @@ msgstr "What Are Countries?"
 #: ckan/templates_legacy/group/index.html:12
 msgid ""
 "Whilst tags are great at collecting datasets together, there are "
-"occasions when you want to restrict users from editing a collection. A "
+"occasions when you want to restrict users from editing a dataset. A "
 "[1:group] can be set-up to specify which users have permission to add or "
 "remove datasets from it."
 msgstr ""
-"Whilst tags are great at collecting collections together, there are "
-"occasions when you want to restrict users from editing a collection. A "
+"Whilst tags are great at collecting datasets together, there are "
+"occasions when you want to restrict users from editing a dataset. A "
 "[1:group] can be set-up to specify which users have permission to add or "
-"remove collections from it."
+"remove datasets from it."
 
 #: ckan/templates_legacy/group/layout.html:18
 msgid "New Dataset..."
-msgstr "New Collection..."
+msgstr "New Dataset..."
 
 #: ckan/templates_legacy/group/layout.html:19
 msgid "Existing Dataset..."
-msgstr "Existing Collection..."
+msgstr "Existing Dataset..."
 
 #: ckan/templates_legacy/group/layout.html:29
 msgid "List Groups"
@@ -4814,7 +4814,7 @@ msgstr "Value ="
 
 #: ckan/templates_legacy/group/new_group_form.html:116
 msgid "Add datasets"
-msgstr "Add collections"
+msgstr "Add datasets"
 
 #: ckan/templates_legacy/group/read.html:29
 #: ckan/templates_legacy/package/search.html:25
@@ -4911,7 +4911,7 @@ msgid ""
 msgstr ""
 "Most of the data indexed at %(site_title)s is openly licensed, meaning "
 "anyone is free to use or re-use it however they like. Perhaps someone "
-"will take that nice collection of a city's public art that you found, and"
+"will take that nice dataset of a city's public art that you found, and"
 " add it to a tourist map - or even make a neat app for your phone that'll"
 " help you find artworks when you visit the city. Open data means more "
 "enterprise, collaborative science and transparent government. You can "
@@ -6104,26 +6104,26 @@ msgstr "Date"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:18
 msgid "Total datasets"
-msgstr "Total collections"
+msgstr "Total datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:33
 #: ckanext/stats/templates/ckanext/stats/index.html:179
 msgid "Dataset Revisions per Week"
-msgstr "Collection Revisions per Week"
+msgstr "Dataset Revisions per Week"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:41
 msgid "All dataset revisions"
-msgstr "All collection revisions"
+msgstr "All dataset revisions"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:42
 msgid "New datasets"
-msgstr "New collections"
+msgstr "New datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:58
 #: ckanext/stats/templates/ckanext/stats/index.html:180
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:63
 msgid "Top Rated Datasets"
-msgstr "Top Rated Collections"
+msgstr "Top Rated Datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:64
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:65
@@ -6144,7 +6144,7 @@ msgstr "No ratings"
 #: ckanext/stats/templates/ckanext/stats/index.html:181
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:72
 msgid "Most Edited Datasets"
-msgstr "Most Edited Collections"
+msgstr "Most Edited Datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:90
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:74
@@ -6153,7 +6153,7 @@ msgstr "Number of edits"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:103
 msgid "No edited datasets"
-msgstr "No edited collections"
+msgstr "No edited datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:108
 #: ckanext/stats/templates/ckanext/stats/index.html:182
@@ -6178,12 +6178,12 @@ msgstr "Tag Name"
 #: ckanext/stats/templates/ckanext/stats/index.html:137
 #: ckanext/stats/templates/ckanext/stats/index.html:157
 msgid "Number of Datasets"
-msgstr "Number of Collections"
+msgstr "Number of Datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:152
 #: ckanext/stats/templates/ckanext/stats/index.html:184
 msgid "Users Owning Most Datasets"
-msgstr "Users Owning Most Collections"
+msgstr "Users Owning Most Datasets"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:175
 msgid "Statistics Menu"
@@ -6191,15 +6191,15 @@ msgstr "Statistics Menu"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:178
 msgid "Total Number of Datasets"
-msgstr "Total Number of Collections"
+msgstr "Total Number of Datasets"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:60
 msgid "Revisions to Datasets per week"
-msgstr "Revisions to Collections per week"
+msgstr "Revisions to Datasets per week"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:95
 msgid "Users owning most datasets"
-msgstr "Users owning most collections"
+msgstr "Users owning most datasets"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:102
 msgid "Page last updated:"
@@ -6211,7 +6211,7 @@ msgstr "Leaderboard - Stats"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:17
 msgid "Dataset Leaderboard"
-msgstr "Collection Leaderboard"
+msgstr "Dataset Leaderboard"
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:18
 msgid ""
