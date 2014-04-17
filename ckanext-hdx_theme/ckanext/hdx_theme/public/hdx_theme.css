@@ -153,4 +153,106 @@ body {
 	font-size: 18px;
 }
 
+.map_block{
+  position:relative;
+}
 
+.jumbotron {
+    height: 470px;
+    margin-bottom: 30px;
+    background-color: rgba(200,200,200, 0.5);
+    color: #ffffff;
+    text-align: center;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+}
+.jumbotron .maprow {
+    background: url('/watermap.png') no-repeat;
+    /* background image generated from:
+         - http://maps.stamen.com/m2i/image/20140415/watercolor_LU_hZxKvOgo
+         - http://maps.stamen.com/m2i/#watercolor/940:300/3/29.15/53.87
+     */
+}
+.jumbotron .maprow .col-alpha {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.jumbotron .maprow .col-alpha a {
+    color: white;
+}
+.jumbotron hr {
+    margin: 9px;
+    border-top: 0;
+}
+.jumbotron .hdxTitle {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.jumbotron .hdxPhrase {
+    font-size: 30px;
+    font-weight: 300;
+}
+
+.jumbotron .itemCount {
+    color: orangered;
+    font-size: 80px;
+    line-height: 80px;
+    margin-bottom: 10px;
+}
+
+.jumbotron .itemCount a{
+    color: orangered;
+}
+
+.jumbotron .itemName {
+    color: #0e0e0e;
+    text-transform: uppercase;
+}
+
+.searchWidget {
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 10px solid rgba(0, 0, 0, .3);
+    -webkit-background-clip: padding-box; /* for Safari */
+    background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
+    color: #6b6b6b;
+    text-align: center;
+    width: 300px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    float: left;
+}
+
+.searchWidget p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.searchWidget hr {
+    margin: 20px;
+}
+
+.searchWidget .search-giant .search{
+    border-radius: 16px;
+    border: 1px solid #a0a0a0;
+    background-color: #efefef;
+    font-style: italic;
+}
+
+.searchWidget .search-form {
+    border: 0;
+    padding-top: 10px;
+    padding-bottom: 0;
+}
+.searchWidget .search-giant .icon-search {
+    color: #808080;
+}
+
+
+.hero {
+    margin-top: 0px;
+    padding-top: 0px;
+}

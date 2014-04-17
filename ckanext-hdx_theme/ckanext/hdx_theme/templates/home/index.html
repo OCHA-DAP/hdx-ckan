@@ -8,8 +8,12 @@
   <div role="main" class="hero">
     <div id="content" class="container">
       {{ self.flash() }}
+    <div class="map_block">
+        {{ self.jumbotron() }}
+    </div>
       {{ self.group_drop() }}
-      {{ self.group_map() }}
+      {{ self.map_temporary() }}
+      {# { self.group_map() } #}
     </div>
   </div>
   <div class="main homepage">
@@ -19,19 +23,167 @@
   </div>
 {% endblock %}
 
-{% block group_drop %}
-<div id="group_nav">
-      <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
-      <div id="group_dropdown" class="pull-right">
-        <select id="group_select">
-          <option selected value="#">Select country</option>
-          {% for group in c.group_package_stuff %}
-          {% snippet 'group/snippets/group_dropdown.html', group=group, truncate_title=35 %}
-          {% endfor %}
-          </select>
+{% block map_temporary %}
+    {# since is temporary no need to create css class :) #}
+    <div id="map_outer" style="width:98%; height: 420px">
+      <div style="background: url('/tempmap-toremove.png') no-repeat; background-size:100% 100%; height: 400px;">
+
       </div>
-    </div>
+    </div></div>
+
 {% endblock %}
+
+
+
+{% block jumbotron %}
+
+  {% resource 'hdx_theme/count.js' %}
+
+  <div class="searchWidget">
+    <div>
+      <br/>
+    </div>
+    <div>
+      Start by searching for keyword
+    </div>
+    <div>
+      {{ self.home_search() }}
+    </div>
+    <div>
+      <p>
+        e.g. <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">preparedness data for Kenya</a>
+        or <a href="{% url_for controller='package', action='search', q='world health statistics' %}">world health statistics</a>
+      </p>
+
+    </div>
+    <div >
+      <hr/>
+    </div>
+    <div style="margin: 20px;">
+      or Search by Country
+    </div>
+    <div style="margin-bottom: 30px;">
+      {{ self.group_select() }}
+    </div>
+  </div>
+
+  <div class="jumbotron">
+    <div class="maprow">
+
+      <div class="row">
+        <div class="span12 col-alpha" style="height: 80px;">
+          &nbsp;
+        </div>
+      </div>
+      <div class="row">
+        <div class="span12 col-alpha">
+          <div class="row">
+            <div class="offset5 span6">
+              <div class="row" style="margin-bottom: 30px;">
+                <div class="span1">
+                  <hr/>
+                </div>
+                <div class="span4 hdxTitle">
+                  THE HUMANITARIAN DATA EXCHANGE
+                </div>
+                <div class="span1">
+                  <hr/>
+                </div>
+              </div>
+              <div class="row" style="margin-bottom: 30px;">
+                <div class="span6 hdxPhrase">
+                  Find and share Humanitarian Data.
+                </div>
+              </div>
+              <div class="row" style="margin-bottom: 40px; height: 80px;">
+                <div class="span6">
+                  The HDX (Humanitarian Data Exchange) Repository is a community-driven space that allows
+                  people to find and share global humanitarian data, including 3W and assessment information.
+                  To view this data, use the navigation options provided.
+                  To contribute to the repository, <a href="{% url_for controller='user', action='login' %}">login</a>.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row separator">
+            <div class="span12" style="background: #696969; height: 15px;">
+
+            </div>
+          </div>
+        </div>
+      </div>
+          <div class="row">
+            <div class="offset5 span6">
+              <div class="row" style="margin-top: 15px; margin-bottom: 30px;">
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="{% url_for 'search' %}"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
+                      0
+                    </a>
+                  </div>
+                  <div class="span2 itemName">
+                    Data collections
+                  </div>
+                </div>
+              </div>
+
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="{% url_for 'group_index' %}"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
+                      0
+                    </a>
+                  </div>
+                  <div class="span2 itemName">
+                    Countries
+                  </div>
+                </div>
+              </div>
+
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="#"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
+                      0
+                    </a>
+                  </div>
+                  <div class="span2 itemName">
+                    Sources
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            </div>
+          </div>
+    </div>
+
+  </div>
+{% endblock %}
+
+
+
+{% block group_drop %}
+  <div id="group_nav">
+    <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
+    <div id="group_dropdown" class="pull-right">
+      {% block group_select %}
+      <select id="group_select">
+        <option selected value="#"> -- Choose Country -- </option>
+        {% for group in c.group_package_stuff %}
+        {% snippet 'group/snippets/group_dropdown.html', group=group, truncate_title=35 %}
+        {% endfor %}
+      </select>
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+
 
 {% block group_map %}
 <div id="map_outer" style="width:98%; height: 420px">
@@ -133,9 +285,22 @@
 
 {% endblock %}
 
+{% block home_search %}
+  <form class="module-content search-form" method="get" action="{% url_for controller='package', action='search' %}">
+    <div class="search-input control-group search-giant">
+      <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}" />
+      <button type="submit">
+        <i class="icon-search"></i>
+        <span>{{ _('Search') }}</span>
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
 {% block primary_content %}
 {% block home_secondary_content %}
   <div class="module module-shallow module-narrow module-dark info box">
+<<<<<<< HEAD
             {% block home_search %}
               <form class="module-content search-form" method="get" action="{% url_for controller='package', action='search' %}">
                 <h3 class="heading">{{ _("Search Your Data") }}</h3>
@@ -148,6 +313,9 @@
                 </div>
               </form>
             {% endblock %}
+=======
+            {{ self.home_search() }}
+>>>>>>> homepageChanges
             {# block home_tags %}
               <div class="tags">
                 <h3>{{ _('Popular Tags') }}</h3>
