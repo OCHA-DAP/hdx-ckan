@@ -112,3 +112,12 @@ body {
 	padding: 5px;
 	float: left;
 }
+
+.facet-hidden{
+    display: none;
+}
+
+
+.facet-h2{
+    cursor: pointer;
+}
