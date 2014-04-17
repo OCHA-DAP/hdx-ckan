@@ -8,7 +8,10 @@ import ckan.logic as logic
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.lib.captcha as captcha
 import pylons.configuration as configuration
+import re
 
+
+EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 abort = base.abort
 check_access = logic.check_access
 render = base.render
@@ -38,6 +41,10 @@ class RequestController(ckan.controllers.user.UserController):
             errors['fullname'] = [_(u'Fullname is required!')]
         if not data['email']:
             errors['email'] = [_(u'Email is required!')]
+        else:
+            if not EMAIL_REGEX.match(data['email']):
+                errors['email'] = [_(u'Email entered is not valid!')]
+
         if not data['org']:
             errors['org'] = [_(u'Organisation is required!')]
 
