@@ -1,0 +1,19 @@
+{% ckan_extends %}
+
+{% set username = request.environ.get('REMOTE_USER') %}
+{% if data.package_creator %}
+	{% set package_creator = data.package_creator %}
+{% else %}
+	{% set package_creator = username %}
+{% endif %}
+
+{% block package_basic_fields_custom %}
+	{% block package_basic_fields_custom_creator %}
+	<div class="control-group">
+        <label class="control-label" for="field-package-creator">{{ _('Creator') }} </label>
+        <div class="controls">
+			<input type="text" value="{{ package_creator }}" name="package_creator" id="field-package-creator" readonly="readonly" />
+		</div>
+	</div>
+	{% endblock %}
+{% endblock %}
