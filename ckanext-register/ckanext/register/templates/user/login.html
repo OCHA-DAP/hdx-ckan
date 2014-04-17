@@ -4,27 +4,17 @@
 
 {% block secondary_content %}
   {% if h.check_access('user_create') %}
-  <section class="module module-narrow module-shallow">
-    <h2 class="module-heading">{{ _('Need an Account?') }}</h2>
-    <div class="module-content">
-      <p>{% trans %}Then sign right up, it only takes a minute.{% endtrans %}</p>
-      <p class="action">
-        <a class="btn" href="{{ h.url_for(controller='user', action='register') }}">{{ _('Create an Account') }}</a>
-      </p>
-    </div>
-  </section>
+    {{ super() }}
   {% else %}
   <section class="module module-narrow module-shallow">
     <h2 class="module-heading">{{ _('Need an Account?') }}</h2>
     <div class="module-content">
       <p>{% trans %}Then request access, it only takes a minute.{% endtrans %}</p>
       <p class="action">
-        <a class="btn" href="{{ h.url_for(controller='ckanext.register.request:RequestController', action='request') }}">{{ _('Request registration') }}</a>
+        <a class="btn" href="{{ h.url_for(controller='ckanext.register.request:RequestController', action='request') }}">{{ _('Register') }}</a>
       </p>
     </div>
   </section>
-  {% endif %}
-
   <section class="module module-narrow module-shallow">
     <h2 class="module-heading">{{ _('Forgotten your details?') }}</h2>
     <div class="module-content">
@@ -34,4 +24,5 @@
       </p>
     </div>
   </section>
+  {% endif %}
 {% endblock %}
