@@ -1,61 +1,5 @@
 {% block header_wrapper %}
-{% block header_account %}
-  <header class="account-masthead">
-    <div class="container">
-      {% if c.userobj %}
-        <div class="account avatar authed" data-module="me" data-me="{{ c.userobj.id }}">
-          <ul class="unstyled">
-            {% block header_account_logged %}
-            {% if c.userobj.sysadmin %}
-              <li>
-                <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
-                  <i class="icon-legal"></i>
-                </a>
-              </li>
-            {% endif %}
-            <li>
-              <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
-                {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=22) }}
-                <span class="username">{{ c.userobj.display_name }}</span>
-              </a>
-            </li>
-            <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
-              {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
-              <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
-                <i class="icon-dashboard"></i>
-                <span>{{ c.new_activities }}</span>
-              </a>
-            </li>
-            {% block header_account_settings_link %}
-            <li>
-              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
-                <i class="icon-cog"></i>
-              </a>
-            </li>
-            {% endblock %}
-            {% block header_account_log_out_link %}
-            <li>
-              <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
-                <i class="icon-signout"></i>
-              </a>
-            </li>
-            {% endblock %}
-            {% endblock %}
-          </ul>
-        </div>
-      {% else %}
-        <nav class="account not-authed">
-          <ul class="unstyled">
-            {% block header_account_notlogged %}
-            <li>{% link_for _('Log in'), controller='user', action='login' %}</li>
-            <li>{% link_for _('Register'), controller='user', action='register', class_='sub' %}</li>
-            {% endblock %}
-          </ul>
-        </nav>
-      {% endif %}
-    </div>
-  </header>
-{% endblock %}
+
 <header class="masthead">
   {% block header_debug %}
   {% if g.debug and not g.debug_supress_header %}
@@ -68,7 +12,7 @@
 
       {% block header_logo %}
         {% if g.site_logo %}
-          <a class="logo" href="{{ h.url('home') }}"><img src="{{ h.url_for_static(g.site_logo) }}" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" width="400px"/></a>
+          <a class="logo" href="{{ h.url('home') }}"><img src="{{ h.url_for_static(g.site_logo) }}" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" width="320px"/></a>
         {% else %}
           <h1>
             <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
@@ -82,20 +26,90 @@
     <div class="content">
 
       {% block header_site_navigation %}
+      <div class="navbar">
+      	<div class="navbar-inner">
+      	<div class="container">
+	      	{# This is only needed for responsive design and the corresponding bootstrap plugin is currently missing
+	      	<a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+	        	<span class="icon-bar"></span>
+	        	<span class="icon-bar"></span>
+	        	<span class="icon-bar"></span>
+	    	</a>
+	    	#}	
         <nav class="section navigation">
-          <ul class="nav nav-pills">
-            {# ('organizations_index', _('Organizations')), #}
-            {% block header_site_navigation_tabs %}
-            {{ h.build_nav_main(
-              ('about', _('About')),
-              ('search', _('Data')),
-              ('group_index', _('Contribute')),
-              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-              ('mailto:&#104;&#100;&#120;&#064;&#117;&#110;&#046;&#111;&#114;&#103;', _('Help')),
-            ) }}
-            {% endblock %}
+          	<ul class="nav nav-pills">
+	            {# ('organizations_index', _('Organizations')), #}
+	            {% block header_site_navigation_tabs %}
+	            {{ h.build_nav_main(
+	              ('about', _('About')),
+	              ('search', _('Data')),
+	              ('group_index', _('Contribute')),
+	              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
+	              ('mailto:&#104;&#100;&#120;&#064;&#117;&#110;&#046;&#111;&#114;&#103;', _('Help')),
+	            ) }}
+	            {% endblock %}
+			</ul>
+			<ul class="nav nav-pills pull-right">
+			{% if c.userobj %}
+          		<li class="dropdown"> 
+			  		<a href="#" class="dropdown-toggle special-menuitem" data-toggle="dropdown">
+				  			{{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=22) }}
+				  			<span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
+				  			<b class="caret"></b>
+					</a>
+          			<ul class="dropdown-menu">
+          			 	{% block header_account_logged %}
+			            {% if c.userobj.sysadmin %}
+			              <li>
+			                <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
+			                  <i class="icon-legal"></i> 
+			                  <span>{{ _('Sysadmin settings') }}</span>
+			                </a>
+			              </li>
+			            {% endif %}
+			            <li>
+			              <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+			              <i class="icon-user"></i>
+			              	<span>{{ _('Profile') }}</span>
+			              </a>
+			            </li>
+			            <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
+			              {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
+			              <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
+			                <i class="icon-dashboard"></i>
+			                <span> {{ _('Dashboard') }} ({{ c.new_activities }})</span>
+			              </a>
+			            </li>
+			            {% block header_account_settings_link %}
+			            <li>
+			              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
+			                <i class="icon-cog"></i>
+			                <span>{{ _('User settings') }}</span>
+			              </a>
+			            </li>
+			            {% endblock %}
+			            {% block header_account_log_out_link %}
+			            <li>
+			              <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+			                <i class="icon-signout"></i>
+			                <span>{{ _('Log out') }}</span>
+			              </a>
+			            </li>
+			            {% endblock %}
+			            {% endblock %}
+          			</ul>
+            	</li>
+            {% else %}
+	            {% block header_account_notlogged %}
+	            	<li>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
+	            	<li>{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
+	            {% endblock %}
+            {% endif %}
           </ul>
         </nav>
+        </div>
+        </div>
+      </div>
       {% endblock %}
 
       {# block header_site_search %}
