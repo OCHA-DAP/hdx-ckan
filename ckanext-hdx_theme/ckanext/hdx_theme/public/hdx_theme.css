@@ -256,3 +256,12 @@ body {
     margin-top: 0px;
     padding-top: 0px;
 }
+
+.facet-hidden{
+    display: none;
+}
+
+
+.facet-h2{
+    cursor: pointer;
+}
