@@ -827,7 +827,7 @@ msgstr ""
 
 #: ckan/lib/activity_streams.py:79
 msgid "{actor} updated the resource {resource} in the dataset {dataset}"
-msgstr ""
+msgstr "{actor} updated the file {resource} in the dataset {dataset}"
 
 #: ckan/lib/activity_streams.py:82
 msgid "{actor} updated their profile"
@@ -859,7 +859,7 @@ msgstr ""
 
 #: ckan/lib/activity_streams.py:104
 msgid "{actor} deleted the resource {resource} from the dataset {dataset}"
-msgstr ""
+msgstr "{actor} deleted the file {resource} from the dataset {dataset}"
 
 #: ckan/lib/activity_streams.py:108
 msgid "{actor} created the group {group}"
@@ -879,7 +879,7 @@ msgstr ""
 
 #: ckan/lib/activity_streams.py:120
 msgid "{actor} added the resource {resource} to the dataset {dataset}"
-msgstr ""
+msgstr "{actor} added the file {resource} to the dataset {dataset}"
 
 #: ckan/lib/activity_streams.py:123
 msgid "{actor} signed up"
@@ -1059,7 +1059,7 @@ msgstr "Unknown"
 
 #: ckan/lib/helpers.py:953
 msgid "Unnamed resource"
-msgstr ""
+msgstr "Unnamed file"
 
 #: ckan/lib/helpers.py:1000
 msgid "Created new dataset."
@@ -1087,15 +1087,15 @@ msgstr[1] "{number} recent views"
 
 #: ckan/lib/helpers.py:1509
 msgid "The resource url is not specified."
-msgstr ""
+msgstr "The file url is not specified."
 
 #: ckan/lib/helpers.py:1527
 msgid "No preview handler for resource of type {0}"
-msgstr ""
+msgstr "No preview handler for file of type {0}"
 
 #: ckan/lib/helpers.py:1531
 msgid "The resource format is not specified."
-msgstr ""
+msgstr "The file format is not specified."
 
 #: ckan/lib/mailer.py:25
 #, python-format
@@ -2260,7 +2260,7 @@ msgstr ""
 
 #: ckan/templates/ajax_snippets/api_info.html:23
 msgid "Access resource data via a web API with powerful query support"
-msgstr ""
+msgstr "Access data via a web API with powerful query support"
 
 #: ckan/templates/ajax_snippets/api_info.html:24
 msgid ""
@@ -3216,7 +3216,7 @@ msgstr "API Endpoint"
 #: ckan/templates/package/resource_read.html:40
 #: ckan/templates/package/snippets/resource_item.html:43
 msgid "Go to resource"
-msgstr ""
+msgstr "Go to file"
 
 #: ckan/templates/package/resource_read.html:42
 #: ckan/templates/package/snippets/resource_item.html:40
@@ -5424,7 +5424,7 @@ msgstr ""
 #: ckan/templates_legacy/package/resource_embedded_dataviewer.html:87
 #: ckan/templates_legacy/package/resource_read.html:58
 msgid "- Dataset - Resource"
-msgstr ""
+msgstr "- Dataset - File"
 
 #: ckan/templates_legacy/package/resource_read.html:87
 msgid "Data API is unavailable for this resource as DataStore is disabled"
