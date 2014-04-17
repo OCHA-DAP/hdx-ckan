@@ -113,6 +113,10 @@ body {
 	float: left;
 }
 
+.map_block{
+  position:relative;
+}
+
 .jumbotron {
     height: 470px;
     margin-bottom: 30px;

@@ -8,7 +8,9 @@
   <div role="main" class="hero">
     <div id="content" class="container">
       {{ self.flash() }}
-      {{ self.jumbotron() }}
+    <div class="map_block">
+        {{ self.jumbotron() }}
+    </div>
       {{ self.group_drop() }}
       {{ self.map_temporary() }}
       {# { self.group_map() } #}
