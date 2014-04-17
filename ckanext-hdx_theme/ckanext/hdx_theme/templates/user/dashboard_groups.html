@@ -20,9 +20,9 @@
   {% else %}
     <p class="empty">
       {{ _('You are not a member of any groups.') }}
-      {% if h.check_access('group_create') %}
+      {# if h.check_access('group_create') %}
         {% link_for _('Create one now?'), controller='group', action='new' %}
-      {% endif %}
+      {% endif #}
     </p>
   {% endif %}
 {% endblock %}
