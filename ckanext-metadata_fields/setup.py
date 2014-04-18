@@ -25,7 +25,8 @@ setup(
 	entry_points=\
 	"""
         [ckan.plugins]
-        metadata_fields=ckanext.metadata_fields.plugin:HdxMetadataFieldsPlugin  
+        metadata_fields=ckanext.metadata_fields.plugin:HdxMetadataFieldsPlugin
+        dataset_auth=ckanext.metadata_fields.dataset_auth:DatasetIAuthFunctionsPlugin  
 	# Add plugins here, eg
 	# myplugin=ckanext.metadata_fields:PluginClass
 	""",

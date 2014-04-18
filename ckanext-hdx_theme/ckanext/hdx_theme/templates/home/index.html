@@ -11,17 +11,70 @@
     <div class="map_block">
         {{ self.jumbotron() }}
     </div>
-      {{ self.group_drop() }}
-      {{ self.map_temporary() }}
+      {# { self.group_drop() } #}
+      {# { self.map_temporary() } #}
       {# { self.group_map() } #}
     </div>
   </div>
+  {#
   <div class="main homepage">
     <div class="container">
       {{ self.primary_content() }}
     </div>
   </div>
+    #}
 {% endblock %}
+
+{%- block footer %}
+
+  <div class="container jumbotron">
+    <div class="maprow">
+      <div class="row creditsRow">
+        <div class="span12">
+          <div class="row creditsTextRow">
+            <div class="span2">
+              A project by:
+            </div>
+            <div class="offset4 span5">
+              Related Sites:
+            </div>
+          </div>
+          <div class="row">
+            <div class="span2">
+              <img src="/images/homepage/logo-ocha.png"/>
+            </div>
+            <div class="offset4 span2">
+              <img src="/images/homepage/logo-humanitarianresponse-tall.png"/>
+            </div>
+            <div class="span2">
+              <img src="/images/homepage/logo-reliefweb.png"/>
+            </div>
+            <div class="span2">
+              <img src="/images/homepage/logo-fts.png"/>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row socialRow">
+        <div class="span12">
+          <div style="margin-top: 20px; margin-bottom: 20px;">
+
+            Stay connected with us:
+            <span style="margin-left: 20px; margin-right: 20px;">
+                <img src="/images/homepage/github.png"/>
+                <img src="/images/homepage/twitter.png"/>
+                <img src="/images/homepage/email.png"/>
+            </span>
+
+            <input type="text" class="newsletter" placeholder="Sign up for our newsletter" />
+            <input type="button" class="signup" value="Sign Up"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock -%}
+
 
 {% block map_temporary %}
     {# since is temporary no need to create css class :) #}
@@ -40,16 +93,13 @@
   {% resource 'hdx_theme/count.js' %}
 
   <div class="searchWidget">
-    <div>
-      <br/>
-    </div>
-    <div>
+    <div class="searchForKeywordText">
       Start by searching for keyword
     </div>
     <div>
       {{ self.home_search() }}
     </div>
-    <div>
+    <div class="searchExamplesText">
       <p>
         e.g. <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">preparedness data for Kenya</a>
         or <a href="{% url_for controller='package', action='search', q='world health statistics' %}">world health statistics</a>
@@ -59,11 +109,16 @@
     <div >
       <hr/>
     </div>
-    <div style="margin: 20px;">
-      or Search by Country
+    <div class="searchByCountryText">
+      Alternatively, search by country
     </div>
-    <div style="margin-bottom: 30px;">
+    <div class="searchByCountryDropdown">
       {{ self.group_select() }}
+    </div>
+    <div class="ribbon">
+      <p class="ribbon-content">
+        OR SHARE YOUR DATASET
+      </p>
     </div>
   </div>
 
@@ -71,15 +126,15 @@
     <div class="maprow">
 
       <div class="row">
-        <div class="span12 col-alpha" style="height: 80px;">
+        <div class="span12 col-alpha" style="height: 40px;">
           &nbsp;
         </div>
       </div>
       <div class="row">
         <div class="span12 col-alpha">
           <div class="row">
-            <div class="offset5 span6">
-              <div class="row" style="margin-bottom: 30px;">
+            <div class="span6 hdxTextRow">
+              <div class="row" style="margin-top: 20px; margin-bottom: 30px;">
                 <div class="span1">
                   <hr/>
                 </div>
@@ -90,13 +145,13 @@
                   <hr/>
                 </div>
               </div>
-              <div class="row" style="margin-bottom: 30px;">
+              <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
                 <div class="span6 hdxPhrase">
-                  Find and share Humanitarian Data.
+                  Find and share humanitarian data.
                 </div>
               </div>
-              <div class="row" style="margin-bottom: 40px; height: 80px;">
-                <div class="span6">
+              <div class="row" style="margin-top: 30px; margin-bottom: 30px; height: 80px;">
+                <div class="span6 hdxDescription">
                   The HDX (Humanitarian Data Exchange) Repository is a community-driven space that allows
                   people to find and share global humanitarian data, including 3W and assessment information.
                   To view this data, use the navigation options provided.
@@ -106,60 +161,66 @@
             </div>
           </div>
           <div class="row separator">
-            <div class="span12" style="background: #696969; height: 15px;">
+            <div class="span12" style="background: #F65C51; height: 10px;">
 
             </div>
           </div>
         </div>
       </div>
+      <div class="row countRow">
+        <div class="span6 hdxTextRow ">
           <div class="row">
-            <div class="offset5 span6">
-              <div class="row" style="margin-top: 15px; margin-bottom: 30px;">
-              <div class="span2">
-                <div class="row">
-                  <div class="span2 itemCount">
-                    <a href="{% url_for 'search' %}"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
-                      0
-                    </a>
-                  </div>
-                  <div class="span2 itemName">
-                    Data collections
-                  </div>
+            <div class="span2">
+              <div class="row">
+                <div class="span2 itemCount">
+                  <a href="{% url_for 'search' %}"
+                     data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
+                    0
+                  </a>
                 </div>
               </div>
-
-              <div class="span2">
-                <div class="row">
-                  <div class="span2 itemCount">
-                    <a href="{% url_for 'group_index' %}"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
-                      0
-                    </a>
-                  </div>
-                  <div class="span2 itemName">
-                    Countries
-                  </div>
+              <div class="row">
+                <div class="span2 itemName">
+                  Datasets
                 </div>
               </div>
-
-              <div class="span2">
-                <div class="row">
-                  <div class="span2 itemCount">
-                    <a href="#"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
-                      0
-                    </a>
-                  </div>
-                  <div class="span2 itemName">
-                    Sources
-                  </div>
-                </div>
-              </div>
-
             </div>
+
+          <div class="span2">
+            <div class="row">
+              <div class="span2 itemCount">
+                <a href="{% url_for 'group_index' %}"
+                   data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
+                  0
+                </a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="span2 itemName">
+                Countries
+              </div>
             </div>
           </div>
+
+          <div class="span2">
+            <div class="row">
+              <div class="span2 itemCount">
+                <a href="#"
+                   data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
+                  0
+                </a>
+              </div>
+            </div>
+            <div class="row">
+              <div class="span2 itemName">
+                Sources
+              </div>
+            </div>
+          </div>
+
+        </div>
+        </div>
+      </div>
     </div>
 
   </div>
