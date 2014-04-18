@@ -10,7 +10,7 @@ def package_create(context, data_dict=None):
 
 	try:
 		user_id = convert_user_name_or_id_to_id(user_name, context)
-	except toolkit.Invalid:
+	except:
 		return {'success':False, 'msg':'You must be logged in to create a dataset'}
 
 	#If we want to all org members to be able to upload
