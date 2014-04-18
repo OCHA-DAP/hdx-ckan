@@ -269,29 +269,3 @@ class DatasetController(PackageController):
 
 
 
-
-	def check_access(action, context, data_dict=None):
-		user = context.get('user')
-
-		#Is user logged in?
-
-		#Does the user have access to the org?
-		log.debug('check access - user %r, action %s' % (user, action))
-
-		if action:
-		#if action != model.Action.READ and user in
-		# (model.PSEUDO_USER__VISITOR, ''):
-		#    # TODO Check the API key is valid at some point too!
-		#    log.debug('Valid API key needed to make changes')
-		#    raise NotAuthorized
-			logic_authorization = new_authz.is_authorized(action, context, data_dict)
-			if not logic_authorization['success']:
-				msg = logic_authorization.get('msg', '')
-				raise NotAuthorized(msg)
-		elif not user:
-			msg = _('No valid API key provided.')
-			log.debug(msg)
-			raise NotAuthorized(msg)
-
-		log.debug('Access OK.')
-		return True

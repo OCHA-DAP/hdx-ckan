@@ -495,6 +495,7 @@ class PackageController(base.BaseController):
         else:
             c.form = render(self._package_form(package_type=package_type),
                             extra_vars=vars)
+        print package_type
         return render(self._new_template(package_type),
                       extra_vars={'stage': stage})
 
