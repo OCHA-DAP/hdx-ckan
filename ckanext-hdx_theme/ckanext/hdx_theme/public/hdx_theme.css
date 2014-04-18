@@ -9,7 +9,7 @@ body {
     color: #222;
     font-weight: 300;
     font-size: 1.4em;
-    margin-top:5px;
+    margin: 20px 30px;
 }
 .masthead a {
     color: #000;
@@ -155,26 +155,25 @@ body {
 
 .map_block{
   position:relative;
+  font-family: 'Roboto', sans-serif;
 }
 
 .jumbotron {
-    height: 470px;
-    margin-bottom: 30px;
     background-color: rgba(200,200,200, 0.5);
     color: #ffffff;
     text-align: center;
-    font-family: 'Source Sans Pro', sans-serif;
+    font-family: 'Roboto', sans-serif;
     font-weight: 300;
 }
 .jumbotron .maprow {
-    background: url('/watermap.png') no-repeat;
+    background: url('/images/homepage/watermap.png') no-repeat;
     /* background image generated from:
          - http://maps.stamen.com/m2i/image/20140415/watercolor_LU_hZxKvOgo
          - http://maps.stamen.com/m2i/#watercolor/940:300/3/29.15/53.87
      */
 }
 .jumbotron .maprow .col-alpha {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(51, 51, 51, 0.5);
 }
 
 .jumbotron .maprow .col-alpha a {
@@ -184,45 +183,130 @@ body {
     margin: 9px;
     border-top: 0;
 }
+
+.jumbotron .hdxTextRow {
+    padding-left: 65px;
+    margin-right: 65px;
+}
+
+.jumbotron .countRow {
+    margin-left: 0;
+    background: linear-gradient(to bottom, rgba(250, 250, 250, 0.90) 0%, rgba(250, 250, 250, 0.90) 100%), url('/images/homepage/lineVert2.gif') repeat 0 0;
+}
+
+.jumbotron .countRow .hdxTextRow{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 0;
+}
+
+.jumbotron .creditsRow {
+    margin-left: 0;
+    background-color: #ffffff;
+    text-align: left;
+    padding-bottom: 20px;
+}
+
+.jumbotron .creditsRow img{
+    max-height: 30px;
+}
+
+.jumbotron .creditsRow .creditsTextRow{
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #999999;
+    font-weight: 500;
+}
+
+.jumbotron .socialRow {
+    margin-left: 0;
+    text-align: center;
+    vertical-align: middle;
+    background: linear-gradient(to bottom, rgba(9, 136, 187, 0.75) 0%, rgba(9, 136, 187, 0.75) 100%), url('/images/homepage/lineVert2.gif') repeat 0 0;
+    font-size: 14px;
+    font-weight: 400;
+    color: #ffffff;
+}
+.jumbotron .socialRow .span12{
+    margin: 0;
+}
+
+.jumbotron .socialRow img {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.jumbotron .socialRow input {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.jumbotron .socialRow .newsletter{
+    border-radius: 0;
+}
+
+.jumbotron .socialRow .signup{
+    height: 30px;
+    border: 1px;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 300;
+    background-color: #fafafa;
+}
+
 .jumbotron .hdxTitle {
     text-transform: uppercase;
-    font-size: 18px;
-    font-weight: 400;
+    font-size: 17px;
+    font-weight: 700;
 }
 
 .jumbotron .hdxPhrase {
+    font-family: 'Raleway', sans-serif;
     font-size: 30px;
-    font-weight: 300;
+    font-weight: 100;
+}
+
+.jumbotron .hdxDescription {
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .jumbotron .itemCount {
-    color: orangered;
-    font-size: 80px;
-    line-height: 80px;
-    margin-bottom: 10px;
+    color: #333333;
+    font-size: 62px;
+    font-weight: 300;
+    line-height: 62px;
+    margin-bottom: 25px;
 }
 
 .jumbotron .itemCount a{
-    color: orangered;
+    color: #333333;
 }
 
 .jumbotron .itemName {
-    color: #0e0e0e;
+    color: #333333;
+    font-size: 12px;
+    font-weight: 300;
     text-transform: uppercase;
 }
 
 .searchWidget {
     background-color: #ffffff;
     border-radius: 8px;
-    border: 10px solid rgba(0, 0, 0, .3);
+    border: 10px solid rgba(51, 51, 51, .4);
     -webkit-background-clip: padding-box; /* for Safari */
     background-clip: padding-box; /* for IE9+, Firefox 4+, Opera, Chrome */
-    color: #6b6b6b;
+    color: #666666;
     text-align: center;
     width: 300px;
     position: absolute;
     top: 40px;
-    left: 40px;
+    left: 600px;
     float: left;
 }
 
@@ -244,8 +328,12 @@ body {
 
 .searchWidget .search-form {
     border: 0;
-    padding-top: 10px;
-    padding-bottom: 0;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+.searchWidget .search-giant {
+    padding: 0;
+    margin: 0;
 }
 .searchWidget .search-giant .icon-search {
     color: #808080;
@@ -264,4 +352,62 @@ body {
 
 .facet-h2{
     cursor: pointer;
+}
+
+.searchForKeywordText {
+    margin-top: 20px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.searchExamplesText {
+    font-size: 14px;
+    font-weight: 300;
+}
+
+.searchByCountryText {
+    margin: 15px;
+    font-size: 14px;
+    font-weight: 400;
+}
+.searchByCountryDropdown {
+    margin-bottom: 20px;
+}
+.searchByCountryDropdown select{
+    margin-bottom: 0;
+}
+
+.ribbon {
+    position: relative;
+    background: #0988bb;
+    opacity: 0.8;
+    color: #fff;
+    text-align: center;
+    margin: 20px -20px;
+}
+.ribbon .ribbon-content{
+    padding: 10px;
+    font-size: 17px;
+    color: #ffffff;
+    font-weight: 700;
+}
+.ribbon .ribbon-content:before, .ribbon .ribbon-content:after {
+    content: "";
+    position: absolute;
+    display: block;
+    border-style: solid;
+    border-color: #0797D0 transparent transparent transparent;
+    bottom: -10px;
+}
+.ribbon .ribbon-content:before {
+    left: 0;
+    border-width: 10px 0 0 10px;
+}
+.ribbon .ribbon-content:after {
+    right: 0;
+    border-width: 10px 10px 0 0;
+}
+
+.hero {
+    padding-bottom: 0;
 }
