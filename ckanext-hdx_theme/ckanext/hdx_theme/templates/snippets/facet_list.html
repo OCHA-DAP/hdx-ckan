@@ -38,8 +38,10 @@ within_tertiary
 
 #}
 {% set hide_empty = hide_empty or false %}
-{% set name_in_request = request.params.get(name) %}
-{% with items = items or h.get_facet_items_dict(name) %}
+{% set name_in_request = request.params.get(name) or request.params.get('_%s_more' % name) %}
+{% set view_more = request.params.get('_%s_more' % name) %}
+{% set _items, total_no_items = h.get_facet_items_dict(name) %}
+{% with items =  items or _items %}
   {% if items or not hide_empty %}
     {% if within_tertiary %}
       {% set nav_class = 'nav nav-pills nav-stacked' %}
@@ -56,7 +58,8 @@ within_tertiary
            {% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
       </h2>
       {% if items %}
-        <nav class=" {% if not name_in_request %} facet-hidden{% endif %}">
+      {% set no_items= items|count %}
+        <nav class=" {% if not name_in_request%} facet-hidden{% endif %}">
           <ul class="{{ nav_class or 'unstyled nav nav-simple nav-facet' }}">
             {% for item in items|sort(attribute='name') %}
               {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
@@ -72,11 +75,13 @@ within_tertiary
           </ul>
         </nav>
         <p class="module-footer {% if not name_in_request %} facet-hidden{% endif %}">
-          {% if h.get_param_int('_%s_limit' % name) %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show More {facet_type}').format(facet_type=title) }}</a>
-          {% else %}
-            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('Show Only Popular {facet_type}').format(facet_type=title) }}</a>
-          {% endif %}
+          {% if no_items<total_no_items and total_no_items>10 %}
+	          {% if h.get_param_int('_%s_limit' % name) %}
+	            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}{{'&'+'_%s_more' % name+'=true'}}" class="read-more">{{ _('View more {facet_type}').format(facet_type=title) }}</a>
+	          {% else %}
+	            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('View most active {facet_type}').format(facet_type=title) }}</a>
+	          {% endif %}
+	      {% endif %}
         </p>
       {% else %}
         <p class="module-content empty {% if not name_in_request %} facet-hidden{% endif %}">{{ _('There are no {facet_type} that match this search').format(facet_type=title) }}</p>

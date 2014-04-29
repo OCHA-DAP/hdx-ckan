@@ -70,5 +70,5 @@
   {% for facet in c.facet_titles %}
       {{ h.snippet('snippets/facet_list.html', title=c.facet_titles[facet], name=facet) }}
   {% endfor %}
-    {% include "group/snippets/data_themes.html" %}
+    {# include "group/snippets/data_themes.html" #}
 {% endblock %}
