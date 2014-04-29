@@ -7,7 +7,7 @@
   {% endif %}
   {% endblock %}
   <div class="container">
-    <div style="overflow: visible;">
+    <div class="first-menu">
       <div class="content">
         <div class="navbar">
           <div class="navbar-inner">
@@ -96,7 +96,7 @@
 
 
     </div>
-    <div class="content">
+    <div class="content second-menu">
 
       {% block header_site_navigation %}
       <div class="navbar">
@@ -108,7 +108,6 @@
 	        	<span class="icon-bar"></span>
 	    	</a>
 	    	#}	
-        <nav>
           <ul class="nav second-row-menu">
             {# ('organizations_index', _('Organizations')), #}
             {% block header_site_navigation_tabs %}
@@ -129,7 +128,6 @@
               </span>
             </div>
           </form>
-        </nav>
         </div>
       </div>
       {% endblock %}
