@@ -430,6 +430,9 @@ body {
 
 .facet-h2{
     cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
 }
 
 .searchForKeywordText {
@@ -489,3 +492,74 @@ body {
 .hero {
     padding-bottom: 0;
 }
+
+/* override the base class wrapper from main.debug.css */
+.wrapper {
+    border-radius: 0px;
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
+}
+.module-heading{
+  	background-color: inherit;
+  	border-top: 0px;
+  	border-bottom: 0px;
+}
+.section-border{
+  	border-bottom: 1px solid #DDDDDD;
+  	padding: 20px;
+}
+
+
+.section-border .align{
+	padding-top: 15px;
+}
+
+.module-narrow .module-heading,
+.module-narrow .module-content,
+.module-narrow .module-footer {
+	padding: 0px;
+}
+
+.module {
+    margin: 0px 0;
+}
+
+.facet-h2-title{
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.facet-url {
+  	color: #0077CC;
+  	font-family: 'Roboto', sans-serif;
+  	font-size: 12px;
+  	line-height: 20px;
+  	text-decoration: none;
+}
+.nav-simple > li, .nav-aside > li {
+    padding: 7px 10px;
+    border-bottom: none;
+}
+.nav-item > a, .nav-aside li a {
+    color: #333333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 13px;
+	font-weight: 400;
+}
+.module-footer {
+    border-top: none;
+}
+
+.nav-item.active > a:before, .nav-aside li.active a:before {
+    background-image: none;
+
+}
+
+.nav-item.active > a, .nav-aside li.active a {
+    background-color: #eeeeee;
+    color: #333333;
+    position: relative;
+}
+
+

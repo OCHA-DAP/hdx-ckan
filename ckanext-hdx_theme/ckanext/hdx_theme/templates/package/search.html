@@ -67,6 +67,7 @@
 {% endblock %}
 
 {% block secondary_content %}
+  {% include "group/snippets/facet_title.html" %}
   {% for facet in c.facet_titles %}
       {{ h.snippet('snippets/facet_list.html', title=c.facet_titles[facet], name=facet) }}
   {% endfor %}

@@ -50,15 +50,17 @@ within_tertiary
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
-    <section class="{{ wrapper_class or 'module module-narrow module-shallow' }}" onclick="$(this).find('p,nav,a[class*=action]').toggleClass('facet-hidden');">
+    <section class="{{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
       <h2 class="module-heading facet-h2">
-        <i class="icon-medium icon-filter"></i>
+      <!-- <i class="icon-medium icon-filter"></i> -->
         {% set title = title or h.get_facet_title(name) %}
         {{ title }}
-        <a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"
-           class="action
-           {% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
       </h2>
+      <div class="action align {% if not name_in_request%} facet-hidden{% endif %}">
+      	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"
+           class="action facet-url
+           	{% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
+      </div>
       {% if items %}
       {% set no_items= items|count %}
         <nav class=" {% if not name_in_request%} facet-hidden{% endif %}">
@@ -79,9 +81,9 @@ within_tertiary
         <p class="module-footer {% if not name_in_request %} facet-hidden{% endif %}">
           {% if no_items<total_no_items and total_no_items>10 %}
 	          {% if h.get_param_int('_%s_limit' % name) %}
-	            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}{{'&'+'_%s_more' % name+'=true'}}" class="read-more">{{ _('View more {facet_type}').format(facet_type=title) }}</a>
+	            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}{{'&'+'_%s_more' % name+'=true'}}" class="facet-url">{{ _('View more {facet_type}').format(facet_type=title) }}</a>
 	          {% else %}
-	            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="read-more">{{ _('View most active {facet_type}').format(facet_type=title) }}</a>
+	            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="facet-url">{{ _('View most active {facet_type}').format(facet_type=title) }}</a>
 	          {% endif %}
 	      {% endif %}
         </p>
