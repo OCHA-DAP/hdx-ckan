@@ -1,4 +1,7 @@
 import ckan.lib.helpers as h
+from ckan.common import (
+     c, request
+)
 
 downloadable_formats = {
     'csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
@@ -11,8 +14,8 @@ def is_downloadable(resource):
     return False
 
 def get_facet_items_dict(facet, limit=10, exclude_active=False):
-    facets = h.get_facet_items_dict(facet, exclude_active=exclude_active)
-    no_items = facets.__len__();
+    facets = h.get_facet_items_dict(facet, limit, exclude_active=exclude_active)
+    no_items = c.search_facets.get(facet)['items'].__len__()
     if limit:
         return (facets[:limit],no_items)
     else:
