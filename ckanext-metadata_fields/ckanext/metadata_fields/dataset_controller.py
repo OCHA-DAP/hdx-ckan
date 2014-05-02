@@ -219,7 +219,6 @@ class DatasetController(PackageController):
 	def new_resource(self, id, data=None, errors=None, error_summary=None):
 		''' FIXME: This is a temporary action to allow styling of the
 		forms. '''
-		print 'HAHAHA'
 		if request.method == 'POST' and not data:
 			save_action = request.params.get('save')
 			data = data or clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(
@@ -247,6 +246,7 @@ class DatasetController(PackageController):
 				# see if we have added any resources
 				try:
 					data_dict = get_action('package_show')(context, {'id': id})
+
 				except NotAuthorized:
 					abort(401, _('Unauthorized to update dataset'))
 				except NotFound:
@@ -296,6 +296,9 @@ class DatasetController(PackageController):
 				# go to first stage of add dataset
 				redirect(h.url_for(controller='package',
 								   action='read', id=id))
+			elif save_action == 'finish':
+				redirect(h.url_for(controller='package',
+								   action='read', id=id))
 			else:
 				# add more resources
 				redirect(h.url_for(controller='package',
@@ -318,11 +321,13 @@ class DatasetController(PackageController):
 			vars['stage'] = ['complete', 'active']
 		elif pkg_dict['state'] == 'draft-complete':
 			vars['stage'] = ['complete', 'active', 'complete']
-		#return render('package/new_resource.html', extra_vars=vars)
-
-		##Adding url for easy update
-		vars['action_url'] = h.url_for(controller='package', action='new_resource', id=vars['pkg_name'])
-		return self._finish(200, vars, content_type='json')
+		
+		if not request.is_xhr:
+			return render('package/new_resource.html', extra_vars=vars)
+		else:
+			##Adding url for easy update
+			vars['action_url'] = h.url_for(controller='package', action='new_resource', id=vars['pkg_name'])
+			return self._finish(200, vars, content_type='json')
 
 
 	def new_metadata(self, id, data=None, errors=None, error_summary=None):
@@ -342,7 +347,7 @@ class DatasetController(PackageController):
 
 			data_dict['id'] = id
 			# update the state
-			if save_action == 'finish':
+			if save_action == 'finish' or save_action == 'finish-ajax':
 				# we want this to go live when saved
 				data_dict['state'] = 'active'
 			elif save_action in ['go-resources', 'go-dataset']:
@@ -358,7 +363,7 @@ class DatasetController(PackageController):
 				return self.new_metadata(id, data, errors, error_summary)
 			except NotAuthorized:
 				abort(401, _('Unauthorized to update dataset'))
-			if save_action == 'go-resources':
+			if save_action == 'go-resources' or 'finish-ajax':
 				# we want to go back to the add resources form stage
 				redirect(h.url_for(controller='package',
 								   action='new_resource', id=id))
@@ -383,8 +388,10 @@ class DatasetController(PackageController):
 		self._setup_template_variables(context, {},
 									   package_type=package_type)
 
-		#return render('package/new_package_metadata.html', extra_vars=vars)
-		vars['action_url'] = h.url_for(controller='package', action='new_metadata', id=vars['pkg_name'])
-		return self._finish(200, vars, content_type='json')
+		if not request.is_xhr:
+			return render('package/new_package_metadata.html', extra_vars=vars)
+		else:
+			vars['action_url'] = h.url_for(controller='package', action='new_metadata', id=vars['pkg_name'])
+			return self._finish(200, vars, content_type='json')
 
 

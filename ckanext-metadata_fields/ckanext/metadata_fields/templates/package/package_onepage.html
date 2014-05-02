@@ -54,7 +54,7 @@
         $.ajax({
           type: 'POST',
           url: $('#dataset_part_2 form').attr('action'),
-          data: $('#dataset_part_2 form').serialize()+'&save=go-resources',
+          data: $('#dataset_part_2 form').serialize()+'&save=finish-ajax',
           success: function(data){
             //Point the form at correct endpoint
             console.log(data);
