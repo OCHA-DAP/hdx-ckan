@@ -1,0 +1,14 @@
+{% extends "package/package_onepage.html" %}
+
+{% block subtitle %}{{ _('Create dataset') }}{% endblock %}
+
+{% if c.userobj %}
+  {% set logged_in = true %}
+{% else %}
+  {% set logged_in = false %}
+{% endif %}
+
+
+{% block form2 %}{{ h.snippet('package/snippets/package_metadata_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name) }}{% endblock %}
+
+{% block form3 %}{% snippet 'package/snippets/resource_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, stage=stage, allow_upload=g.ofs_impl and logged_in %}{% endblock %}

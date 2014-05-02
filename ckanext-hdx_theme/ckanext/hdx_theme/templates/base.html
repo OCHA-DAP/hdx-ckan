@@ -126,8 +126,9 @@
     {%- endblock %}
 
 
-{%- block scripts2 %}
-    {% endblock -%}
+
   </body>
-  <script src="/scripts.js"></script>
+  {%- block scripts2 %}
+    <script src="/scripts.js"></script>
+  {% endblock -%}
 </html>

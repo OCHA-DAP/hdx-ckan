@@ -17,6 +17,13 @@
 			</div>
 		</div>
 	{% endblock %}
+
+  {% block stages %}
+    {# An empty stages variable will not show the stages #}
+    {# if stage %}
+      {{ h.snippet('package/snippets/stages.html', stages=stage, pkg_name=pkg_name) }}
+    {% endif #}
+  {% endblock %}
 	
 	{% block basic_fields_source %}
 	{{ form.input('source', id='field-source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.source, error=errors.source, classes=['control-full']) }}

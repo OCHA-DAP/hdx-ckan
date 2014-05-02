@@ -1,6 +1,7 @@
 import logging
 from urllib import urlencode
 import datetime
+import cgi
 
 from pylons import config
 from genshi.template import MarkupTemplate
@@ -22,7 +23,7 @@ import ckan.new_authz as new_authz
 
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
-from home import CACHE_PARAMETERS
+from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
 
@@ -40,11 +41,121 @@ clean_dict = logic.clean_dict
 parse_params = logic.parse_params
 flatten_to_string_key = logic.flatten_to_string_key
 
+CONTENT_TYPES = {
+	'text': 'text/plain;charset=utf-8',
+	'html': 'text/html;charset=utf-8',
+	'json': 'application/json;charset=utf-8',
+}
+
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
 
 class DatasetController(PackageController):
+
+	def _finish(self, status_int, response_data=None,
+				content_type='text'):
+		'''When a controller method has completed, call this method
+		to prepare the response.
+		@return response message - return this value from the controller
+								   method
+				 e.g. return self._finish(404, 'Package not found')
+		'''
+		assert(isinstance(status_int, int))
+		response.status_int = status_int
+		response_msg = ''
+		if response_data is not None:
+			response.headers['Content-Type'] = CONTENT_TYPES[content_type]
+			if content_type == 'json':
+				response_msg = h.json.dumps(response_data)
+			else:
+				response_msg = response_data
+			# Support "JSONP" callback.
+			if status_int == 200 and 'callback' in request.params and \
+				(request.method == 'GET' or
+				 c.logic_function and request.method == 'POST'):
+				# escape callback to remove '<', '&', '>' chars
+				callback = cgi.escape(request.params['callback'])
+				response_msg = self._wrap_jsonp(callback, response_msg)
+		return response_msg
+
+	def _save_new(self, context, package_type=None):
+		# The staged add dataset used the new functionality when the dataset is
+		# partially created so we need to know if we actually are updating or
+		# this is a real new.
+		is_an_update = False
+		ckan_phase = request.params.get('_ckan_phase')
+		from ckan.lib.search import SearchIndexError
+		try:
+			data_dict = clean_dict(dict_fns.unflatten(
+				tuplize_dict(parse_params(request.POST))))
+			if ckan_phase:
+				# prevent clearing of groups etc
+				context['allow_partial_update'] = True
+				# sort the tags
+				data_dict['tags'] = self._tag_string_to_list(
+					data_dict['tag_string'])
+				if data_dict.get('pkg_name'):
+					is_an_update = True
+					# This is actually an update not a save
+					data_dict['id'] = data_dict['pkg_name']
+					del data_dict['pkg_name']
+					# this is actually an edit not a save
+					pkg_dict = get_action('package_update')(context, data_dict)
+
+					if request.params['save'] == 'go-metadata':
+						# redirect to add metadata
+						url = h.url_for(controller='package',
+										action='new_metadata',
+										id=pkg_dict['name'])
+					else:
+						# redirect to add dataset resources
+						url = h.url_for(controller='package',
+										action='new_resource',
+										id=pkg_dict['name'])
+					redirect(url)
+				# Make sure we don't index this dataset
+				if request.params['save'] not in ['go-resource', 'go-metadata']:
+					data_dict['state'] = 'draft'
+				# allow the state to be changed
+				context['allow_state_change'] = True
+
+			data_dict['type'] = package_type
+			context['message'] = data_dict.get('log_message', '')
+			pkg_dict = get_action('package_create')(context, data_dict)
+
+			if ckan_phase:
+				# redirect to add dataset resources
+				url = h.url_for(controller='package',
+								action='new_metadata',
+								id=pkg_dict['name'])
+				redirect(url)
+
+			self._form_save_redirect(pkg_dict['name'], 'new', package_type=package_type)
+		except NotAuthorized:
+			abort(401, _('Unauthorized to read package %s') % '')
+		except NotFound, e:
+			abort(404, _('Dataset not found'))
+		except dict_fns.DataError:
+			abort(400, _(u'Integrity Error'))
+		except SearchIndexError, e:
+			try:
+				exc_str = unicode(repr(e.args))
+			except Exception:  # We don't like bare excepts
+				exc_str = unicode(str(e))
+			abort(500, _(u'Unable to add package to search index.') + exc_str)
+		except ValidationError, e:
+			errors = e.error_dict
+			error_summary = e.error_summary
+			if is_an_update:
+				# we need to get the state of the dataset to show the stage we
+				# are on.
+				pkg_dict = get_action('package_show')(context, data_dict)
+				data_dict['state'] = pkg_dict['state']
+				return self.edit(data_dict['id'], data_dict,
+								 errors, error_summary)
+			data_dict['state'] = 'none'
+			return self.new(data_dict, errors, error_summary)
 
 	def new(self, data=None, errors=None, error_summary=None):
 		package_type = self._guess_package_type(True)
@@ -75,11 +186,11 @@ class DatasetController(PackageController):
 		error_summary = error_summary or {}
 		# in the phased add dataset we need to know that
 		# we have already completed stage 1
-		stage = ['active']
+		stage = ['inactive']
 		if data.get('state') == 'draft':
-			stage = ['active', 'complete']
+			stage = ['inactive', 'complete']
 		elif data.get('state') == 'draft-complete':
-			stage = ['active', 'complete', 'complete']
+			stage = ['inactive', 'complete', 'complete']
 
 		# if we are creating from a group then this allows the group to be
 		# set automatically
@@ -101,171 +212,179 @@ class DatasetController(PackageController):
 		else:
 			c.form = render(self._package_form(package_type=package_type),
 							extra_vars=vars)
-		return render(self._new_template(package_type),
-					  extra_vars={'stage': stage})
-
+		#return render(self._new_template(package_type), extra_vars={'stage': stage})
+		return render(self._new_template(package_type), extra_vars={'stage': stage})
+		
 
 	def new_resource(self, id, data=None, errors=None, error_summary=None):
-        ''' FIXME: This is a temporary action to allow styling of the
-        forms. '''
-        if request.method == 'POST' and not data:
-            save_action = request.params.get('save')
-            data = data or clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(
-                request.POST))))
-            # we don't want to include save as it is part of the form
-            del data['save']
-            resource_id = data['id']
-            del data['id']
+		''' FIXME: This is a temporary action to allow styling of the
+		forms. '''
+		print 'HAHAHA'
+		if request.method == 'POST' and not data:
+			save_action = request.params.get('save')
+			data = data or clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(
+				request.POST))))
+			# we don't want to include save as it is part of the form
+			del data['save']
+			resource_id = data['id']
+			del data['id']
 
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
+			context = {'model': model, 'session': model.Session,
+					   'user': c.user or c.author}
 
-            # see if we have any data that we are trying to save
-            data_provided = False
-            for key, value in data.iteritems():
-                if value and key != 'resource_type':
-                    data_provided = True
-                    break
+			# see if we have any data that we are trying to save
+			data_provided = False
+			for key, value in data.iteritems():
+				if value and key != 'resource_type':
+					data_provided = True
+					break
 
-            if not data_provided and save_action != "go-dataset-complete":
-                if save_action == 'go-dataset':
-                    # go to final stage of adddataset
-                    redirect(h.url_for(controller='package',
-                                       action='edit', id=id))
-                # see if we have added any resources
-                try:
-                    data_dict = get_action('package_show')(context, {'id': id})
-                except NotAuthorized:
-                    abort(401, _('Unauthorized to update dataset'))
-                except NotFound:
-                    abort(404,
-                      _('The dataset {id} could not be found.').format(id=id))
-                if not len(data_dict['resources']):
-                    # no data so keep on page
-                    msg = _('You must add at least one data resource')
-                    # On new templates do not use flash message
-                    if g.legacy_templates:
-                        h.flash_error(msg)
-                        redirect(h.url_for(controller='package',
-                                           action='new_resource', id=id))
-                    else:
-                        errors = {}
-                        error_summary = {_('Error'): msg}
-                        return self.new_resource(id, data, errors, error_summary)
-                # we have a resource so let them add metadata
-                redirect(h.url_for(controller='package',
-                                   action='new_metadata', id=id))
+			if not data_provided and save_action != "go-dataset-complete":
+				if save_action == 'go-dataset':
+					# go to final stage of adddataset
+					redirect(h.url_for(controller='package',
+									   action='edit', id=id))
+				# see if we have added any resources
+				try:
+					data_dict = get_action('package_show')(context, {'id': id})
+				except NotAuthorized:
+					abort(401, _('Unauthorized to update dataset'))
+				except NotFound:
+					abort(404,
+					  _('The dataset {id} could not be found.').format(id=id))
+				if not len(data_dict['resources']):
+					# no data so keep on page
+					msg = _('You must add at least one data resource')
+					# On new templates do not use flash message
+					if g.legacy_templates:
+						h.flash_error(msg)
+						redirect(h.url_for(controller='package',
+										   action='new_resource', id=id))
+					else:
+						errors = {}
+						error_summary = {_('Error'): msg}
+						return self.new_resource(id, data, errors, error_summary)
+				# we have a resource so let them add metadata
+				redirect(h.url_for(controller='package',
+								   action='new_metadata', id=id))
 
-            data['package_id'] = id
-            try:
-                if resource_id:
-                    data['id'] = resource_id
-                    get_action('resource_update')(context, data)
-                else:
-                    get_action('resource_create')(context, data)
-            except ValidationError, e:
-                errors = e.error_dict
-                error_summary = e.error_summary
-                return self.new_resource(id, data, errors, error_summary)
-            except NotAuthorized:
-                abort(401, _('Unauthorized to create a resource'))
-            except NotFound:
-                abort(404,
-                    _('The dataset {id} could not be found.').format(id=id))
-            if save_action == 'go-metadata':
-                # go to final stage of add dataset
-                redirect(h.url_for(controller='package',
-                                   action='new_metadata', id=id))
-            elif save_action == 'go-dataset':
-                # go to first stage of add dataset
-                redirect(h.url_for(controller='package',
-                                   action='edit', id=id))
-            elif save_action == 'go-dataset-complete':
-                # go to first stage of add dataset
-                redirect(h.url_for(controller='package',
-                                   action='read', id=id))
-            else:
-                # add more resources
-                redirect(h.url_for(controller='package',
-                                   action='new_resource', id=id))
-        errors = errors or {}
-        error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'action': 'new'}
-        vars['pkg_name'] = id
-        # get resources for sidebar
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
-        try:
-            pkg_dict = get_action('package_show')(context, {'id': id})
-        except NotFound:
-            abort(404, _('The dataset {id} could not be found.').format(id=id))
-        # required for nav menu
-        vars['pkg_dict'] = pkg_dict
-        if pkg_dict['state'] == 'draft':
-            vars['stage'] = ['complete', 'active']
-        elif pkg_dict['state'] == 'draft-complete':
-            vars['stage'] = ['complete', 'active', 'complete']
-        return render('package/new_resource.html', extra_vars=vars)
+			data['package_id'] = id
+			try:
+				if resource_id:
+					data['id'] = resource_id
+					get_action('resource_update')(context, data)
+				else:
+					get_action('resource_create')(context, data)
+			except ValidationError, e:
+				errors = e.error_dict
+				error_summary = e.error_summary
+				return self.new_resource(id, data, errors, error_summary)
+			except NotAuthorized:
+				abort(401, _('Unauthorized to create a resource'))
+			except NotFound:
+				abort(404,
+					_('The dataset {id} could not be found.').format(id=id))
+			if save_action == 'go-metadata':
+				# go to final stage of add dataset
+				redirect(h.url_for(controller='package',
+								   action='new_metadata', id=id))
+			elif save_action == 'go-dataset':
+				# go to first stage of add dataset
+				redirect(h.url_for(controller='package',
+								   action='edit', id=id))
+			elif save_action == 'go-dataset-complete':
+				# go to first stage of add dataset
+				redirect(h.url_for(controller='package',
+								   action='read', id=id))
+			else:
+				# add more resources
+				redirect(h.url_for(controller='package',
+								   action='new_resource', id=id))
+		errors = errors or {}
+		error_summary = error_summary or {}
+		vars = {'data': data, 'errors': errors,
+				'error_summary': error_summary, 'action': 'new'}
+		vars['pkg_name'] = id
+		# get resources for sidebar
+		context = {'model': model, 'session': model.Session,
+				   'user': c.user or c.author}
+		try:
+			pkg_dict = get_action('package_show')(context, {'id': id})
+		except NotFound:
+			abort(404, _('The dataset {id} could not be found.').format(id=id))
+		# required for nav menu
+		vars['pkg_dict'] = pkg_dict
+		if pkg_dict['state'] == 'draft':
+			vars['stage'] = ['complete', 'active']
+		elif pkg_dict['state'] == 'draft-complete':
+			vars['stage'] = ['complete', 'active', 'complete']
+		#return render('package/new_resource.html', extra_vars=vars)
+
+		##Adding url for easy update
+		vars['action_url'] = h.url_for(controller='package', action='new_resource', id=vars['pkg_name'])
+		return self._finish(200, vars, content_type='json')
 
 
+	def new_metadata(self, id, data=None, errors=None, error_summary=None):
+		''' FIXME: This is a temporary action to allow styling of the
+		forms. '''
+		context = {'model': model, 'session': model.Session,
+				   'user': c.user or c.author}
 
-    def new_metadata(self, id, data=None, errors=None, error_summary=None):
-        ''' FIXME: This is a temporary action to allow styling of the
-        forms. '''
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
+		if request.method == 'POST' and not data:
+			save_action = request.params.get('save')
+			data = data or clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(
+				request.POST))))
+			# we don't want to include save as it is part of the form
+			del data['save']
 
-        if request.method == 'POST' and not data:
-            save_action = request.params.get('save')
-            data = data or clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(
-                request.POST))))
-            # we don't want to include save as it is part of the form
-            del data['save']
+			data_dict = get_action('package_show')(context, {'id': id})
 
-            data_dict = get_action('package_show')(context, {'id': id})
+			data_dict['id'] = id
+			# update the state
+			if save_action == 'finish':
+				# we want this to go live when saved
+				data_dict['state'] = 'active'
+			elif save_action in ['go-resources', 'go-dataset']:
+				data_dict['state'] = 'draft-complete'
+			# allow the state to be changed
+			context['allow_state_change'] = True
+			data_dict.update(data)
+			try:
+				get_action('package_update')(context, data_dict)
+			except ValidationError, e:
+				errors = e.error_dict
+				error_summary = e.error_summary
+				return self.new_metadata(id, data, errors, error_summary)
+			except NotAuthorized:
+				abort(401, _('Unauthorized to update dataset'))
+			if save_action == 'go-resources':
+				# we want to go back to the add resources form stage
+				redirect(h.url_for(controller='package',
+								   action='new_resource', id=id))
+			elif save_action == 'go-dataset':
+				# we want to go back to the add dataset stage
+				redirect(h.url_for(controller='package',
+								   action='edit', id=id))
+			elif save_action == 'go-dataset-complete':
+				# go to first stage of add dataset
+				redirect(h.url_for(controller='package',
+								   action='read', id=id))
+			redirect(h.url_for(controller='package', action='read', id=id))
 
-            data_dict['id'] = id
-            # update the state
-            if save_action == 'finish':
-                # we want this to go live when saved
-                data_dict['state'] = 'active'
-            elif save_action in ['go-resources', 'go-dataset']:
-                data_dict['state'] = 'draft-complete'
-            # allow the state to be changed
-            context['allow_state_change'] = True
-            data_dict.update(data)
-            try:
-                get_action('package_update')(context, data_dict)
-            except ValidationError, e:
-                errors = e.error_dict
-                error_summary = e.error_summary
-                return self.new_metadata(id, data, errors, error_summary)
-            except NotAuthorized:
-                abort(401, _('Unauthorized to update dataset'))
-            if save_action == 'go-resources':
-                # we want to go back to the add resources form stage
-                redirect(h.url_for(controller='package',
-                                   action='new_resource', id=id))
-            elif save_action == 'go-dataset':
-                # we want to go back to the add dataset stage
-                redirect(h.url_for(controller='package',
-                                   action='edit', id=id))
+		if not data:
+			data = get_action('package_show')(context, {'id': id})
+		errors = errors or {}
+		error_summary = error_summary or {}
+		vars = {'data': data, 'errors': errors, 'error_summary': error_summary}
+		vars['pkg_name'] = id
 
-            redirect(h.url_for(controller='package', action='read', id=id))
+		package_type = self._get_package_type(id)
+		self._setup_template_variables(context, {},
+									   package_type=package_type)
 
-        if not data:
-            data = get_action('package_show')(context, {'id': id})
-        errors = errors or {}
-        error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors, 'error_summary': error_summary}
-        vars['pkg_name'] = id
-
-        package_type = self._get_package_type(id)
-        self._setup_template_variables(context, {},
-                                       package_type=package_type)
-
-        return render('package/new_package_metadata.html', extra_vars=vars)
-
+		#return render('package/new_package_metadata.html', extra_vars=vars)
+		vars['action_url'] = h.url_for(controller='package', action='new_metadata', id=vars['pkg_name'])
+		return self._finish(200, vars, content_type='json')
 
 

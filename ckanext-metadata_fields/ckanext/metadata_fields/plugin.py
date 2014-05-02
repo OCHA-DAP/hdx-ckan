@@ -7,16 +7,28 @@ import logging
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+from routes.mapper import SubMapper
 
 import ckanext.metadata_fields.custom_validator as vd
 
 
 class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
+    plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IDatasetForm, inherit=False)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
+
+    def before_map(self, map):
+        with SubMapper(map, controller='ckanext.metadata_fields.dataset_controller:DatasetController') as m:
+            m.connect('add dataset', '/dataset/new', action='new')
+            m.connect('/dataset/{action}/{id}',
+                  requirements=dict(action='|'.join([
+                      'new_metadata',
+                      'new_resource',
+                      ])))
+        return map
         
     def is_fallback(self):
         return True

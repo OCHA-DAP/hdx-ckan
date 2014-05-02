@@ -3468,7 +3468,7 @@ msgstr "Previous"
 
 #: ckan/templates/package/snippets/package_metadata_form.html:15
 msgid "Finish"
-msgstr "Finish"
+msgstr "Submit Metadata"
 
 #: ckan/templates/package/snippets/resource_edit_form.html:12
 msgid "Update Resource"

@@ -1,0 +1,76 @@
+{% extends "package/base.html" %}
+
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content" id="dataset_part_1">
+      {% block form %}{{ c.form | safe }}{% endblock %}
+    </div>
+  </section>
+  <section class="module inactive">
+    <div class="overlay"></div>
+    <div class="module-content" id="dataset_part_2">
+      {% block form2 %}{{ c.form | safe }}{% endblock %}
+    </div>
+  </section>
+  <section class="module inactive">
+    <div class="overlay"></div>
+    <div class="module-content" id="dataset_part_3">
+      {% block form3 %}{{ c.form | safe }}{% endblock %}
+    </div>
+  </section>
+
+ {% endblock %}
+
+{% block secondary_content %}
+  
+{% endblock %}
+
+{%- block scripts2 %}
+    {{ super() }}
+  <script>
+  $('document').ready(function(){
+    $('#dataset_part_1 form').submit(function(e){
+        $.ajax({
+          type: 'POST',
+          url: $('#dataset_part_1 form').attr('action'),
+          data: $('#dataset_part_1 form').serialize()+'&save',
+          success: function(data){
+            //Point the form at correct endpoint
+            $('#dataset_part_2 form').attr('action', data['action_url'])
+            //Activate form
+            $('#dataset_part_2').parent().children(".overlay").remove();
+            $('#dataset_part_2').parent().removeClass('inactive');
+            $('html, body').animate({
+              scrollTop: $('#dataset_part_2').offset().top
+            }, 2000);
+          }
+        });
+        e.preventDefault();
+    });
+
+    $('#dataset_part_2 form').submit(function(e){
+        console.log($('#dataset_part_2 form').attr('action'));
+        $.ajax({
+          type: 'POST',
+          url: $('#dataset_part_2 form').attr('action'),
+          data: $('#dataset_part_2 form').serialize()+'&save=go-resources',
+          success: function(data){
+            //Point the form at correct endpoint
+            console.log(data);
+            $('#dataset_part_3 form').attr('action', data['action_url'])
+            //Activate form
+            $('#dataset_part_3').parent().children(".overlay").remove();
+            $('#dataset_part_3').parent().removeClass('inactive');
+            $('html, body').animate({
+              scrollTop: $('#dataset_part_3').offset().top
+            }, 2000);
+          }
+        });
+        e.preventDefault();
+    });
+  });
+  </script>
+
+{% endblock -%}
+

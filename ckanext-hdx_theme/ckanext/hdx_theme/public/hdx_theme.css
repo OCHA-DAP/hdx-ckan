@@ -489,3 +489,15 @@ body {
 .hero {
     padding-bottom: 0;
 }
+
+.inactive{
+    position: relative;
+}
+
+.inactive .overlay{
+    background: rgba(255,255,255,0.5);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+}
