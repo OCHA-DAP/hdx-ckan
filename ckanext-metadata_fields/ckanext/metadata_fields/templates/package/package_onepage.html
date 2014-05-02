@@ -2,16 +2,18 @@
 
 {% block toolbar %}
 {{super()}}
-{% snippet "snippets/thanks_for_contributing.html", show_small_message=True %}
+{% snippet "snippets/thanks_for_contributing.html" %}
 {% endblock %}
 
 {% block primary %}
 <div>
 {% block primary_content %}
-
   <section class="module">
     <div class="module-content" id="dataset_part_1">
+      <div class="package-upload-header">1. {{ _("CHOOSE COUNTRY") }}</div>
       {% block country_list %}{{super()}}{% endblock %}
+      <br>
+      <div class="package-upload-header">2. {{ _("TELL US SOME DETAILS ABOUT YOUR DATASET") }}</div>
       {% block form %}{{ c.form | safe }}{% endblock %}
     </div>
     <div id="dataset_part_2">
@@ -21,6 +23,7 @@
   <section class="module inactive">
     <div class="overlay"></div>
     <div class="module-content" id="dataset_part_3">
+      <div class="package-upload-header">3. {{ _("ADD FILES") }}</div>
       {% block form3 %}{{ c.form | safe }}{% endblock %}
     </div>
   </section>
@@ -37,26 +40,36 @@
     {{ super() }}
   <script>
   $('document').ready(function(){
+    $('#country-drop').change(function(){
+      var countries = $('#field-group').val();
+      if(!countries){
+        countries = new Array();
+      }
+      countries.push($('#country-drop').val());
+      $('#field-group').val(countries);
+    });
+
     $('#dataset_part_1 form').submit(function(e){
+      e.preventDefault();
         $.ajax({
           type: 'POST',
           url: $('#dataset_part_1 form').attr('action'),
           data: $('#dataset_part_1 form').serialize()+'&save',
           success: function(data){
             //Point the form at correct endpoint
-            $('#dataset_part_2 form').attr('action', data['action_url'])
-            //Activate form
+            $('#dataset_part_2 form').attr('action', data['action_url']);
+            /*Activate form
             $('#dataset_part_2').parent().children(".overlay").remove();
             $('#dataset_part_2').parent().removeClass('inactive');
             $('html, body').animate({
               scrollTop: $('#dataset_part_2').offset().top
-            }, 2000);
+            }, 2000);*/
+            submit_metadata();
           }
         });
-        e.preventDefault();
     });
 
-    $('#dataset_part_2 form').submit(function(e){
+    function submit_metadata(){
         console.log($('#dataset_part_2 form').attr('action'));
         $.ajax({
           type: 'POST',
@@ -74,8 +87,7 @@
             }, 2000);
           }
         });
-        e.preventDefault();
-    });
+    };
   });
   </script>
 

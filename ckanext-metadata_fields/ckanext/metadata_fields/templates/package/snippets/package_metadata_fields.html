@@ -18,11 +18,11 @@
       </div>
     {% endif %}
   {% if onepage == 0 %}
-    {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name) }}
+    {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage) }}
   {% else %}
     {% set group_name = 'groups__%s__id' % data.groups|length %}
     {% set available_groups = h.groups_available() %}
-    <select multiple id="field-group" name="{{ group_name }}" style="display:none;">
+    <select multiple id="field-group" name="{{ group_name }}" style="visibility:hidden;position:absolute;">
           <option value="-1">{{ _('Please select from below') }}</option>
           {% for grp in available_groups  %}
             <option value="{{ grp.id }}">{{ grp.display_name }}</option>

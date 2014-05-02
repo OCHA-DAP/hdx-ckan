@@ -2536,9 +2536,15 @@ msgstr ""
 msgid "Add Group"
 msgstr "Add Country"
 
+msgid "Which country or countries does the dataset best represent?"
+msgstr "Which country or countries does the dataset best represent?"
+
+msgid "Country / Countries"
+msgstr "Country / Countries"
+
 #: ckan/templates/group/index.html:20
 msgid "Search groups..."
-msgstr ""
+msgstr "Search countries..."
 
 #: ckan/templates/group/index.html:27
 msgid "There are currently no groups for this site"

@@ -11,7 +11,7 @@
 {% set onepage = 1 %}
 
 {% block country_list %}
-{{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name) }}
+{{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage) }}
 {% endblock %}
 
 
