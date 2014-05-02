@@ -1,0 +1,11 @@
+<div>
+	<div class="header-user-message header-user-message-large">
+		{{ _('Thanks for contributing - you rock.') }}
+	</div>
+	<hr class="header-user-message-hr"></hr>
+	{% if show_small_message %}
+		<div class="header-user-message header-user-message-small">
+			{{ _('In order to contribute a dataset, you first need to register or login.') }}
+		</div>
+	{% endif %}
+</div>

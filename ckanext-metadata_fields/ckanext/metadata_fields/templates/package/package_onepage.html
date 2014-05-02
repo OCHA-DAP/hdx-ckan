@@ -1,5 +1,10 @@
 {% extends "package/base.html" %}
 
+{% block toolbar %}
+{{super()}}
+{% snippet "snippets/thanks_for_contributing.html", show_small_message=True %}
+{% endblock %}
+
 {% block primary %}
 <div>
 {% block primary_content %}

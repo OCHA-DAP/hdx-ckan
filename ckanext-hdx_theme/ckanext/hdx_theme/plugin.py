@@ -18,11 +18,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/count/dataset', controller='ckanext.hdx_theme.count:CountController', action='dataset')
         map.connect('/count/country', controller='ckanext.hdx_theme.count:CountController', action='country')
         map.connect('/count/source', controller='ckanext.hdx_theme.count:CountController', action='source')
+        map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
         return map
 
     def get_helpers(self):
         from ckanext.hdx_theme import helpers as hdx_helpers
         return {
-            'is_downloadable': hdx_helpers.is_downloadable
+            'is_downloadable': hdx_helpers.is_downloadable,
+            'get_facet_items_dict':hdx_helpers.get_facet_items_dict
         }
 
