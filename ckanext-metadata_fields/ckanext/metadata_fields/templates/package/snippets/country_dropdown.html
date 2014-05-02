@@ -7,7 +7,7 @@
       {% set error = errors.groups_list %}
       <label class="control-label" for="field-group">{{ _("Add Group") }}</label>
     <div class="controls">
-        <select id="field-group" name="{{ group_name }}" data-module="autocomplete">
+        <select id="field-group" name="{{ group_name }}">
           <option value="-1">{{ _('Please select from below') }}</option>
           {% for grp in available_groups  %}
             <option value="{{ grp.id }}">{{ grp.display_name }}</option>
