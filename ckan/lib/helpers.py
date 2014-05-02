@@ -505,13 +505,12 @@ def get_facet_items_dict(facet, limit=10, exclude_active=False):
         elif not exclude_active:
             facets.append(dict(active=True, **facet_item))
     facets = sorted(facets, key=lambda item: item['count'], reverse=True)
-    no_items = facets.__len__();
     if c.search_facets_limits:
         limit = c.search_facets_limits.get(facet)
     if limit:
-        return (facets[:limit],no_items)
+        return facets[:limit]
     else:
-        return (facets,no_items)
+        return facets
 
 
 def unselected_facet_items(facet, limit=10):
