@@ -2,8 +2,10 @@
 
 {% block subtitle %}{{ _('Login') }}{% endblock %}
 
-{% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Login'), controller='user', action='login') }}</li>
+{% block toolbar %}
+	{% if contribute %}
+  		{% snippet "snippets/thanks_for_contributing.html", show_small_message=True %}
+	{% endif %}
 {% endblock %}
 
 {% block primary_content %}
