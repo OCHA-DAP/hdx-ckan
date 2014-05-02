@@ -1,9 +1,12 @@
 {% extends "package/base.html" %}
 
-
+{% block primary %}
+<div>
 {% block primary_content %}
+
   <section class="module">
     <div class="module-content" id="dataset_part_1">
+      {% block country_list %}{{super()}}{% endblock %}
       {% block form %}{{ c.form | safe }}{% endblock %}
     </div>
   </section>
@@ -21,8 +24,10 @@
   </section>
 
  {% endblock %}
+</div>
+{% endblock %}
 
-{% block secondary_content %}
+{% block secondary %}
   
 {% endblock %}
 

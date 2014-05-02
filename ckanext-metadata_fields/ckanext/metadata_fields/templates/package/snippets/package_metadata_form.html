@@ -2,6 +2,7 @@
 
 {% set data = data or {} %}
 {% set errors = errors or {} %}
+{% set onepage = onepage or 0 %}
 
 <form class="dataset-form dataset-resource-form form-horizontal" method="post" data-module="basic-form">
   {#{ h.snippet('package/snippets/stages.html', stages=['complete', 'complete', 'active'], pkg_name=pkg_name) }}
