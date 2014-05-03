@@ -36,9 +36,11 @@
     {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
   {% endblock %}
 
+	{# this was moved in the left sidebar
   {% block package_tags %}
     {% snippet "package/snippets/tags.html", tags=pkg.tags %}
   {% endblock %}
+  `#}
 
   {% block package_additional_info %}
     {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}

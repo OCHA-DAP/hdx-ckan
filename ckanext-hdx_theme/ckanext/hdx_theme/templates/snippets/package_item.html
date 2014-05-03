@@ -17,11 +17,14 @@ Example:
 {% set truncate_title = truncate_title or 80 %}
 {% set title = package.title or package.name %}
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
+{% set updated_time = package.metadata_modified or package.metadata_created%}
+{% set f_updated_time = h.render_datetime(updated_time) %}
+{% set last_user = h.get_last_modifier_user(package.id) %}
 
-<li class="{{ item_class or "dataset-item" }}">
+<li class="search-dataset {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
-    <div class="dataset-content">
-      <h3 class="dataset-heading">
+    <div class="search-dataset dataset-content">
+      <h3 class="search-dataset dataset-heading">
         {% if package.private %}
           <span class="dataset-private label label-inverse">
             <i class="icon-lock"></i>
@@ -36,6 +39,7 @@ Example:
         {% endif %}
         {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
       </h3>
+      <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
       {% if banner %}
         <span class="banner">{{ _('Popular') }}</span>
       {% endif %}
@@ -46,7 +50,7 @@ Example:
       {% endif %}
     </div>
     {% if package.resources and not hide_resources %}
-      <ul class="dataset-resources unstyled">
+      <ul class="search-dataset dataset-resources unstyled">
         {% for resource in h.dict_list_reduce(package.resources, 'format') %}
           <li>
             <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
