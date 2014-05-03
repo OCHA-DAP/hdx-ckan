@@ -555,7 +555,6 @@ body {
     
 }
 
-<<<<<<< HEAD
 .package-upload-header {
     font-family: 'Raleway', sans-serif;
     font-weight: 100;
@@ -588,7 +587,7 @@ body {
 #selected_groups input[type="checkbox"]{
     top: 0px;
 }
-=======
+
 /* override the base class wrapper from main.debug.css */
 .wrapper {
     border-radius: 0px;
@@ -862,5 +861,3 @@ span.clear { clear: left; display: block; }
 .bigger.container {
 	width: 980px;
 }
-
->>>>>>> 639eefe2882614c6ef88b1307337d13a5ebcb341
