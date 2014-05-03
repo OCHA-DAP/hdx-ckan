@@ -327,6 +327,7 @@ class DatasetController(PackageController):
 			vars['stage'] = ['complete', 'active', 'complete']
 		
 		if not request.is_xhr:
+			print vars
 			return render('package/new_resource.html', extra_vars=vars)
 		else:
 			##Adding url for easy update
