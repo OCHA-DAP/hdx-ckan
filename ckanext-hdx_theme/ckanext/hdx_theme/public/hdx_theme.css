@@ -561,3 +561,7 @@ body {
 #dataset_methodology input[type="radio"]{
     top: -1px;
 }
+
+#selected_groups input[type="checkbox"]{
+    top: 0px;
+}

@@ -54,16 +54,28 @@
   $( "#field-dataset_date" ).datepicker();
   $('document').ready(function(){
     $('#country-drop').change(function(){
-      var countries = $('#field-group').val();
-      if(!countries){
-        countries = new Array();
+      var country = $(this+'option:selected').val();
+      var country_name = $(this+'option:selected').attr('display_name');
+      if($('#'+country).length == 0){
+        var number_of_groups = $('.group_checked').length;
+        //Add country
+        $('#selected_groups').append('<span class="filtered pill">'+country_name+' <input id="field-group-'+(number_of_groups)+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked" class="group_checked"/></span>');
+        //Add country for real
+        $('#select_groups_hidden').append('<input id="'+country+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
       }
-      countries.push($('#country-drop').val());
-      $('#field-group').val(countries);
+    });
+
+    $('#selected_groups').on("click", ".pill", function(){
+      if($(this).children('input').attr('checked') == 'checked'){
+        //Uncheck hidden
+        var id = $(this).children('input').val();
+        $('#'+id).remove();
+        $(this).remove();
+      }
     });
 
     $('#onepage_submit').click(function(e){
-      if(!$('field-group').val()){
+      if(!$('.group_checked')){
         $('#select_country').prepend('<div class="error-explanation alert alert-error" id="error-country"><p>Must select a country first.</p></div>');
         $('html, body').animate({
               scrollTop: $('#select_country').offset().top
@@ -71,6 +83,11 @@
       }else{
       $('#error-explanation, .error-block, .error-country').remove();
       $('.error').removeClass('error');
+
+      //Deactivate button and add loading
+      $('#onepage_submit').attr('disabled', 'disabled');
+      $('#onepage_submit').html('<img src="/images/ajax-loader-b.gif"> Processing');
+
       e.preventDefault();
         $.ajax({
           type: 'POST',
@@ -119,7 +136,7 @@
           data: $('#dataset_part_2 form').serialize()+'&save=finish-ajax',
           success: function(data){
             //Point the form at correct endpoint
-            console.log(data);
+            $('#onepage_submit').html('Done!');
             $('#dataset_part_3 form').attr('action', data['action_url'])
             //Activate form
             $('#dataset_part_3').parent().children(".overlay").remove();
