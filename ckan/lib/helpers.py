@@ -781,6 +781,7 @@ class Page(paginate.Page):
         return re.sub(current_page_span, current_page_link, html)
 
 
+
 def render_datetime(datetime_, date_format=None, with_hours=False):
     '''Render a datetime object or timestamp string as a pretty string
     (Y-m-d H:m).
@@ -1307,7 +1308,6 @@ def user_in_org_or_group(group_id):
         .filter(model.Member.group_id == group_id) \
         .filter(model.Member.table_id == c.userobj.id)
     return len(query.all()) != 0
-
 
 def dashboard_activity_stream(user_id, filter_type=None, filter_id=None,
                               offset=0):

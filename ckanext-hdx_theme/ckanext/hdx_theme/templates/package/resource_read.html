@@ -27,11 +27,12 @@
           <ul>
             {% block resource_actions_inner %}
             {% if h.check_access('package_update', {'id':pkg.id }) %}
-              <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn', icon='wrench' %}</li>
+              <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn' %}</li>
             {% endif %}
             {% if res.url %}
               <li>
-                <a class="btn btn-primary resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}">
+                <a class="btn hdx-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}">
+                {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}
                   {% elif  res.resource_type == 'api' %}
@@ -41,6 +42,8 @@
                   {% else %}
                     <i class="icon-download"></i> {{ _('Download') }}
                   {% endif %}
+                #}
+                	<img src="/images/actions/download.png" alt=" {{ _('Download') }}" />
                 </a>
               </li>
             {% endif %}
@@ -80,6 +83,7 @@
 {% endblock %}
 
 {% block primary_content %}
+{# resource page should only show the preview accordig to https://github.com/OCHA-DAP/hdx-ckan/issues/204
   {% block resource_additional_information %}
     {% if res %}
       <section class="module">
@@ -118,10 +122,11 @@
       </section>
     {% endif %}
   {% endblock %}
+ #}
 {% endblock %}
 
 {% block secondary_content %}
-
+{# resource page should only show the preview accordig to https://github.com/OCHA-DAP/hdx-ckan/issues/204
   {% block resources_list %}
     {% snippet "package/snippets/resources.html", pkg=pkg, active=res.id %}
   {% endblock %}
@@ -129,5 +134,6 @@
   {% block resource_license %}
     {% snippet "snippets/social.html" %}
   {% endblock %}
-{% endblock %}
 
+ #}
+{% endblock %}
