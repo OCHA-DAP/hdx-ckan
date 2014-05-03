@@ -4,7 +4,7 @@
 
 {% set group_name = 'groups__%s__id' % data.groups|length %}
     {% set available_groups = h.groups_available() %}
-  <div class="control-group">
+  <div id="select_country" class="control-group">
       {% set error = errors.groups_list %}
       <p>{{ _("Which country or countries does the dataset best represent?") }}</p>
       {# <label class="control-label" for="field-group">{{ _("Add Group") }}</label> #}

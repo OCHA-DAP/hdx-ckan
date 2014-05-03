@@ -199,7 +199,7 @@ class DatasetController(PackageController):
 
 		vars = {'data': data, 'errors': errors,
 				'error_summary': error_summary,
-				'action': 'new', 'stage': stage}
+				'action': 'new', 'stage': stage, 'validation_fail':0}
 		c.errors_json = h.json.dumps(errors)
 
 		self._setup_template_variables(context, {},
@@ -212,8 +212,12 @@ class DatasetController(PackageController):
 		else:
 			c.form = render(self._package_form(package_type=package_type),
 							extra_vars=vars)
+		
+		if not request.is_xhr:
+			return render(self._new_template(package_type), extra_vars={'stage': stage})
+		else:
+			return self._finish(200, {'validation_fail':1, 'errors':vars['errors'], 'error_summary':vars['error_summary']}, content_type='json')
 		#return render(self._new_template(package_type), extra_vars={'stage': stage})
-		return render(self._new_template(package_type), extra_vars={'stage': stage})
 		
 
 	def new_resource(self, id, data=None, errors=None, error_summary=None):

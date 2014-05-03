@@ -29,6 +29,49 @@
           {% endfor %}
     </select>
   {% endif %}
+
+  {% block basic_field_date %}
+  <div class="control-group" style="display:inline-block;">
+  <label class="control-label" for="dataset_date">Date of Dataset</label>
+    <div class="controls"> 
+  <input type="text" name='dataset_date' id='field-dataset_date' label={{_('Date of Dataset')}} value='{{data.dataset_date}}' error='{{errors.dataset_date}}' class='control-full'>
+</div>
+</div>
+    {% endblock %}
+
+  {% block basic_field_methodology %}
+  <div class="control-group">
+    <div>
+  <div id="field-dataset_methodology">
+  <label class="control-label" for="methodology">Methodology</label>
+    <div class="controls ">  
+    <input type="radio" name="methodology" value="Census"> Census
+    </div>
+    <div class="controls ">  
+      <input type="radio" name="methodology" value="Sample Survey"> Sample Survey
+    </div>
+    <div class="controls ">  
+      <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data
+    </div>
+    <div class="controls ">  
+      <input type="radio" name="methodology" value="Registry"> Registry</div>
+    <div class="controls ">  
+      <input type="radio" name="methodology" value="Other"> Other
+<br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
+<br><br>
+    </div>
+  </div>
+</div>
+</div>
+  {% endblock %}
+
+  {% block basic_fields_source %}
+  {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full']) }}
+  {% endblock %}
+  
+  {% block basic_fields_caveats %}
+  {{ form.markdown('caveats', id='field-caveats', label=_('Caveats'), placeholder=_('Caveats'), value=data.caveats, error=errors.caveats) }}
+  {% endblock %}
     
     {# Replacing ajax-autocomplete with dropdown
     {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}

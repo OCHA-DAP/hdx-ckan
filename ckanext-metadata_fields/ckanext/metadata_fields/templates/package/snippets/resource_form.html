@@ -24,12 +24,4 @@
       {{ h.snippet('package/snippets/stages.html', stages=stage, pkg_name=pkg_name) }}
     {% endif #}
   {% endblock %}
-	
-	{% block basic_fields_source %}
-	{{ form.input('source', id='field-source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.source, error=errors.source, classes=['control-full']) }}
-	{% endblock %}
-	
-	{% block basic_fields_caveats %}
-	{{ form.markdown('caveats', id='field-caveats', label=_('Caveats'), placeholder=_('Caveats'), value=data.caveats, error=errors.caveats) }}
-	{% endblock %}
 {% endblock %}

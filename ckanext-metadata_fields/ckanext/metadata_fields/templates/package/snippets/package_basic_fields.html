@@ -7,6 +7,8 @@
 	{% set package_creator = username %}
 {% endif %}
 
+{% set onepage = onepage or 0 %}
+
 {% block package_basic_fields_custom %}
 	{% block package_basic_fields_custom_creator %}
 	<div class="control-group">
@@ -17,3 +19,8 @@
 	</div>
 	{% endblock %}
 {% endblock %}
+
+{# if onepage == 1 #}
+{% block form_actions %}
+{% endblock %}
+{# endif #}

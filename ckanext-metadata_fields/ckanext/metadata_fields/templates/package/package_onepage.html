@@ -16,9 +16,19 @@
       <div class="package-upload-header">2. {{ _("TELL US SOME DETAILS ABOUT YOUR DATASET") }}</div>
       {% block form %}{{ c.form | safe }}{% endblock %}
     </div>
-    <div id="dataset_part_2">
+  </div>
+    <div class="module-content graybg" id="dataset_part_2">
+      <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
       {% block form2 %}{{ c.form | safe }}{% endblock %}
     </div>
+    <div class="module-content" style="margin-top:0px;">
+    <div class="form-actions">
+      {% block cancel_button %}
+        <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
+      {% endblock %}
+      <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+    </div>
+  </div>
   </section>
   <section class="module inactive">
     <div class="overlay"></div>
@@ -38,7 +48,10 @@
 
 {%- block scripts2 %}
     {{ super() }}
+     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script>
+  $( "#field-dataset_date" ).datepicker();
   $('document').ready(function(){
     $('#country-drop').change(function(){
       var countries = $('#field-group').val();
@@ -49,24 +62,53 @@
       $('#field-group').val(countries);
     });
 
-    $('#dataset_part_1 form').submit(function(e){
+    $('#onepage_submit').click(function(e){
+      if(!$('field-group').val()){
+        $('#select_country').prepend('<div class="error-explanation alert alert-error" id="error-country"><p>Must select a country first.</p></div>');
+        $('html, body').animate({
+              scrollTop: $('#select_country').offset().top
+            }, 2000);
+      }else{
+      $('#error-explanation, .error-block, .error-country').remove();
+      $('.error').removeClass('error');
       e.preventDefault();
         $.ajax({
           type: 'POST',
           url: $('#dataset_part_1 form').attr('action'),
           data: $('#dataset_part_1 form').serialize()+'&save',
           success: function(data){
-            //Point the form at correct endpoint
-            $('#dataset_part_2 form').attr('action', data['action_url']);
+            if(data.validation_fail){
+              var print_errors = "<ul>";
+              for(var p in data['error_summary']){
+                print_errors += '<li data-filed-label="'+p+'">'+p+': '+data['error_summary'][p]+'</li>';
+              }
+              print_errors += '</ul>';
+              $('#dataset_part_1 form').prepend('<div class="error-explanation alert alert-error" id="error-explanation"><p>The form contains invalid entries:'+print_errors+'</p></div>');
+              for(var e in data['errors']){
+                var element = $('#dataset_part_1 #field-'+e);
+                if(e=='name'){
+                  $('#dataset_part_1 #field-title').parent().parent().addClass('error');
+                }
+                element.parent().append('<span class="error-block">'+data['errors'][e][0]+'</span>');
+                
+              }
+              $('html, body').animate({
+              scrollTop: $('#error-explanation').offset().top
+            }, 2000);
+            }else{
+              //Point the form at correct endpoint
+              $('#dataset_part_2 form').attr('action', data['action_url']);
             /*Activate form
             $('#dataset_part_2').parent().children(".overlay").remove();
             $('#dataset_part_2').parent().removeClass('inactive');
             $('html, body').animate({
               scrollTop: $('#dataset_part_2').offset().top
             }, 2000);*/
-            submit_metadata();
+              submit_metadata();
+            }
           }
         });
+  }
     });
 
     function submit_metadata(){

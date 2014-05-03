@@ -541,3 +541,23 @@ body {
     font-size: 16pt;
     margin-bottom: 20px;
 }
+
+.package-upload-header-sm {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 100;
+    color: #000000;
+    line-height: normal;
+    font-size: 12pt;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.graybg{
+    background: #eee;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+#dataset_methodology input[type="radio"]{
+    top: -1px;
+}

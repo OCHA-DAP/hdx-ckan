@@ -41,12 +41,18 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         
         schema.update({
                 'package_creator': [tk.get_validator('not_empty'),
-                    tk.get_converter('convert_to_extras')]
-                })
-        schema.update({
-                'groups_list': [vd.groups_not_empty]
-                })
-        
+                    tk.get_converter('convert_to_extras')],
+                'groups_list': [vd.groups_not_empty],
+            'caveats' : [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
+            'dataset_source' : [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
+            'dataset_date' : [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
+            'methodology' : [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
+            })
+
         return schema
 
 
@@ -65,7 +71,15 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema.update({
             'package_creator': [tk.get_converter('convert_from_extras'),
-                tk.get_validator('ignore_missing')]
+                tk.get_validator('ignore_missing')],
+            'caveats' : [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
+            'dataset_source' : [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
+            'dataset_date' : [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
+            'methodology' : [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
             })
         return schema
         
