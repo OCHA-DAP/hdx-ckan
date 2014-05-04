@@ -19,7 +19,8 @@
         </div>
       </div>
    {% endif %}
-	{% if not onepage_flag %} 
+
+	{% if form_style == 'edit' %} 
 		{% set group_name = 'groups__%s__id' % data.groups|length %}
 	    {% set available_groups = h.list_of_all_groups() %}
 	    <div class="control-group">
@@ -37,19 +38,15 @@
 	    </div>
 	{% endif %}
     
-  {% if onepage == 0 %}
-    {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage) }}
-  {% else %}
-  	{% if onepage_flag %}
-    <div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
+  {% if form_style != 'edit' %}
+  	<div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
           {% if data.groups %}
           {% for group in data.groups %}
           <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/>
           {% endfor %}
           {% endif %}
     </div>
-    {% endif %}
-  {% endif %}
+   {% endif %}
 
   {% block basic_field_date %}
   <div class="control-group" style="display:inline-block;">
@@ -100,6 +97,8 @@
     #}
     
   {% endblock %}
-  <input name="save" type="hidden" value="go-resource"/>
+  {% if form_style != 'edit' %}
+    <input name="save" type="hidden" value="go-resource"/>
+  {% endif %}
 </div>
 {% endblock %}

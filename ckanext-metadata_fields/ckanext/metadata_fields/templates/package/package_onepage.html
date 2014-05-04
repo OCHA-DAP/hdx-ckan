@@ -1,5 +1,7 @@
 {% extends "package/base.html" %}
 
+{% set onepage = 1 %}
+
 {% block toolbar %}
 {{super()}}
 {% snippet "snippets/thanks_for_contributing.html" %}
@@ -74,6 +76,9 @@
   <script>
   $( "#field-dataset_date" ).datepicker();
   $('document').ready(function(){
+    //Just in case of page back
+    $('option[value=-1]').attr('selected', true);
+
     $('#country-drop').change(function(){
       var country = $(this+'option:selected').val();
       var country_name = $(this+'option:selected').attr('display_name');
@@ -95,8 +100,17 @@
       }
     });
 
+    $('#field-organizations').change(function(){
+      if($(this).val() == ''){
+        $('#field-private option[value=False]').attr('selected', true);
+        $('#field-private').attr('disabled', true);
+      }else{
+        $('#field-private').removeAttr('disabled');
+      }
+    })
+
     $('#onepage_submit').click(function(e){
-      if(!$('.group_checked')){
+      if($('.group_checked').length == 0){
         $('#select_country').prepend('<div class="error-explanation alert alert-error" id="error-country"><p>Must select a country first.</p></div>');
         $('html, body').animate({
               scrollTop: $('#select_country').offset().top

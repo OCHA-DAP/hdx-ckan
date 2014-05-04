@@ -17,6 +17,8 @@ Examples:
   {{ form.input('title', label=_('Title'), value=data.title, error=errors.title) }}
 
 #}
+
+
 {% macro input(name, id='', label='', value='', placeholder='', type='text', error="", classes=[], attrs={}) %}
   {%- set extra_html = caller() if caller -%}
 
