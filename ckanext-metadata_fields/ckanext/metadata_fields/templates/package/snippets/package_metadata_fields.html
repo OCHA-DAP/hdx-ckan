@@ -1,6 +1,8 @@
 {% ckan_extends %}
 
 {% block package_metadata_fields %}
+<div class="module-content graybg" id="dataset_part_2">
+      <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
   {% block dataset_fields %}
     {% if data.groups %}
     {% set group_name = 'groups__%s__id' % data.groups|length %}
@@ -93,4 +95,6 @@
     #}
     
   {% endblock %}
+  <input name="save" type="hidden" value="go-resource"/>
+</div>
 {% endblock %}

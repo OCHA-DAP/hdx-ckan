@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block metadata_fields %}
-  {% if form_style == 'edit' %}{{ super() }}{% endif %}
+  {{ super() }}
 {% endblock %}
 
 {% block disclaimer %}
@@ -34,8 +34,3 @@
   {% endif %}
 {% endblock %}
 
-{% block form_action %}
-  {% if form_style == 'edit' %}
-    {{ super() }}
-  {% endif %}
-{% endblock %}

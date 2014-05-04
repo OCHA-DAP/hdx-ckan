@@ -116,6 +116,8 @@ class DatasetController(PackageController):
 					redirect(url)
 				# Make sure we don't index this dataset
 				if request.params['save'] not in ['go-resource', 'go-metadata']:
+					print 'Hey'
+					print request.param['save']
 					data_dict['state'] = 'draft'
 				# allow the state to be changed
 				context['allow_state_change'] = True
@@ -125,9 +127,10 @@ class DatasetController(PackageController):
 			pkg_dict = get_action('package_create')(context, data_dict)
 
 			if ckan_phase:
+				print 'World'
 				# redirect to add dataset resources
 				url = h.url_for(controller='package',
-								action='new_metadata',
+								action='new_resource',
 								id=pkg_dict['name'])
 				redirect(url)
 
@@ -210,6 +213,7 @@ class DatasetController(PackageController):
 		if hasattr(self, 'package_form'):
 			c.form = render(self.package_form, extra_vars=vars)
 		else:
+			print self._package_form(package_type=package_type)
 			c.form = render(self._package_form(package_type=package_type),
 							extra_vars=vars)
 		
@@ -327,7 +331,6 @@ class DatasetController(PackageController):
 			vars['stage'] = ['complete', 'active', 'complete']
 		
 		if not request.is_xhr:
-			print vars
 			return render('package/new_resource.html', extra_vars=vars)
 		else:
 			##Adding url for easy update

@@ -874,8 +874,10 @@ span.clear { clear: left; display: block; }
 
 .hdx-wrapper .page-header {
 	background: none;	
+    border: 0px !important;
 }
 
 .bigger.container {
 	width: 980px;
 }
+

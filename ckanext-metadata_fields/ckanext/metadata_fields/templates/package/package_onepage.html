@@ -18,6 +18,19 @@
       {% block form %}{{ c.form | safe }}{% endblock %}
     </div>
   </div>
+  <div class="module-content" style="margin-top:0px;">
+    <div class="form-actions">
+      {% block cancel_button %}
+        <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
+      {% endblock %}
+      <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+    </div>
+  </div>
+</section>
+
+
+
+  {#
     <div class="module-content graybg" id="dataset_part_2">
       <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
       {% block form2 %}{{ c.form | safe }}{% endblock %}
@@ -31,13 +44,15 @@
     </div>
   </div>
   </section>
+  #}
+  {#
   <section class="module inactive">
     <div class="overlay"></div>
     <div class="module-content" id="dataset_part_3">
       <div class="package-upload-header">3. {{ _("ADD FILES") }}</div>
       {% block form3 %}{{ c.form | safe }}{% endblock %}
     </div>
-  </section>
+  </section> #}
 
  {% endblock %}
 </div>
@@ -51,10 +66,10 @@
     {{ super() }}
      <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 <script src="/javascript/jquery.ui.datepicker.js"></script>
-<script src="/base/vendor/jquery.ui.widget.js"></script>
+<!-- <script src="/base/vendor/jquery.ui.widget.js"></script>
 <script src="/base/vendor/jquery-fileupload/jquery.iframe-transport.js"></script>
 <script src="/base/vendor/jquery-fileupload/jquery.fileupload.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.fileupload-ui.js"></script>
+<script src="/base/vendor/jquery-fileupload/jquery.fileupload-ui.js"></script>-->
 
   <script>
   $( "#field-dataset_date" ).datepicker();
@@ -90,6 +105,7 @@
       $('#error-explanation, .error-block, .error-country').remove();
       $('.error').removeClass('error');
 
+      /*
       //Deactivate button and add loading
       $('#onepage_submit').attr('disabled', 'disabled');
       $('#onepage_submit').html('<img src="/images/ajax-loader-b.gif"> Processing');
@@ -126,16 +142,16 @@
             $('#dataset_part_2').parent().removeClass('inactive');
             $('html, body').animate({
               scrollTop: $('#dataset_part_2').offset().top
-            }, 2000);*/
+            }, 2000);
               submit_metadata();
             }
           }
-        });
+        });*/
+      $('form').submit();
   }
     });
 
     function submit_metadata(){
-        console.log($('#dataset_part_2 form').attr('action'));
         $.ajax({
           type: 'POST',
           url: $('#dataset_part_2 form').attr('action'),
@@ -143,13 +159,20 @@
           success: function(data){
             //Point the form at correct endpoint
             $('#onepage_submit').html('Done!');
-            $('#dataset_part_3 form').attr('action', data['action_url'])
+            $('#dataset_part_1 form')[0].reset();
+            $('#dataset_part_2 form')[0].reset();
+            $('input[type=hidden]').remove();
+            $('.pill').remove();
+            $('option[value=-1]').attr('selected', true);
+            $('#select_groups_hidden input').remove();
+            window.location = data['action_url'];
+            /*$('#dataset_part_3 form').attr('action', data['action_url'])
             //Activate form
             $('#dataset_part_3').parent().children(".overlay").remove();
             $('#dataset_part_3').parent().removeClass('inactive');
             $('html, body').animate({
               scrollTop: $('#dataset_part_3').offset().top
-            }, 2000);
+            }, 2000);*/
           }
         });
     };
