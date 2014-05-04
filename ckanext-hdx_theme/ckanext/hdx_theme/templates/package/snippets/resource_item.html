@@ -20,20 +20,16 @@
     {% block resource_item_explore_links %}
     <a href="{{ url }}" class="btn btn-secondary">
           {% if res.can_be_previewed %}
-            <i class="icon-bar-chart"></i>
             {{ _('Preview') }}
           {% else %}
-            <i class="icon-info-sign"></i>
             {{ _('More information') }}
           {% endif %}
         </a>
-     <a href="{{ res.url }}" class="btn btn-primary resource-url-analytics" target="_blank">
+     <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics" target="_blank">
           {% if is_downloadable %}
-            <i class="icon-download"></i>
-            {{ _('Download') }}
+            <img src="/images/actions/download.png" alt=" {{ _('Download') }}" />
           {% else %}
-            <i class="icon-external-link"></i>
-            {{ _('Visit Page') }}
+          	<img src="/images/actions/external.png" alt="{{ _('Visit Page') }}" />
           {% endif %}
         </a>
       {% endblock %}
