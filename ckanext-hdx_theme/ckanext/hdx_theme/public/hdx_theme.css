@@ -471,6 +471,11 @@ body {
     font-weight: 700;
     text-transform: uppercase;
 }
+
+.ribbon .ribbon-content a, .ribbon .ribbon-content a:hover {
+    color: #ffffff;
+
+}
 .ribbon .ribbon-content:before, .ribbon .ribbon-content:after {
     content: "";
     position: absolute;
