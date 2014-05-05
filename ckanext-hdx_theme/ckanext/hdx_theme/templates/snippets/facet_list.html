@@ -50,11 +50,16 @@ within_tertiary
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
-    <section class="{{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
-      <h2 class="module-heading facet-h2">
+    <section class="search-dataset {{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
+      <h2 class="module-heading facet-h2 uppercase">
       <!-- <i class="icon-medium icon-filter"></i> -->
         {% set title = title or h.get_facet_title(name) %}
+        {% set no_total_items= 0%}
+        {% if items %}
+      		{% set no_total_items= items|count %}
+        {% endif %}
         {{ title }}
+        <div class="float-right">{{ no_total_items }}</div>
       </h2>
       <div class="action align {% if not name_in_request%} facet-hidden{% endif %}">
       	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"

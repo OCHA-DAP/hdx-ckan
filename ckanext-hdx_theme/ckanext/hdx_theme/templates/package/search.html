@@ -45,10 +45,11 @@
   </section>
 
   {% block package_search_results_api %}
+  {#
   <section class="module">
     <div class="module-content">
       <small>
-        {# set api_link = h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=3)) %}
+        {% set api_link = h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=3)) %}
         {% set api_doc_link = h.link_to(_('API Docs'), 'http://docs.ckan.org/en/{0}/api.html'.format(g.ckan_doc_version)) %}
         {% if g.dumps_url -%}
           {% set dump_link = h.link_to(_('full {format} dump').format(format=g.dumps_format), g.dumps_url) %}
@@ -59,10 +60,11 @@
           {% trans %}
             You can also access this registry using the {{ api_link }} (see {{ api_doc_link}}).
           {% endtrans %}
-        {%- endif #}
+        {% endif %}
       </small>
     </div>
   </section>
+  #}
   {% endblock %}
 {% endblock %}
 
