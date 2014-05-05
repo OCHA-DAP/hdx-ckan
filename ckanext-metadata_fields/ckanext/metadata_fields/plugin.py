@@ -9,11 +9,18 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 
 import ckanext.metadata_fields.custom_validator as vd
+import ckanext.metadata_fields.update as update
+
+def list_of_all_groups():
+    groups  = tk.get_action('group_list')(data_dict={'all_fields': True})
+    return groups
 
 
 class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IDatasetForm, inherit=False)
+    plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IActions)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -57,9 +64,11 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             })
         return schema
         
-    def edit(self, entity):
-        logging.warn("blabla");
-        pass
-
+    
+    def get_helpers(self):
+        return {'list_of_all_groups': list_of_all_groups}
+    
+    def get_actions(self):
+        return {'package_update': update.package_update}
 
 
