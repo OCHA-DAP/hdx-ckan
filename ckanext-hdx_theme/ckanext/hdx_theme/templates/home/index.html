@@ -43,15 +43,15 @@
 
   <div class="searchWidget">
     <div class="searchForKeywordText">
-      Start by searching for keyword
+      {{ _("Start by searching for keyword") }}
     </div>
     <div>
       {{ self.home_search() }}
     </div>
     <div class="searchExamplesText">
       <p>
-        e.g. <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">preparedness data for Kenya</a>
-        or <a href="{% url_for controller='package', action='search', q='world health statistics' %}">world health statistics</a>
+        {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">{{ _("preparedness data for Kenya") }}</a>
+        {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics' %}">{{ _("world health statistics") }}</a>
       </p>
 
     </div>
@@ -59,14 +59,14 @@
       <hr/>
     </div>
     <div class="searchByCountryText">
-      Alternatively, search by country
+      {{ _("Alternatively, search by country") }}
     </div>
     <div class="searchByCountryDropdown">
       {{ self.group_select() }}
     </div>
     <div class="ribbon">
       <p class="ribbon-content">
-        OR SHARE YOUR DATASET
+        {{ _("or share your dataset") }}
       </p>
     </div>
   </div>
@@ -88,7 +88,7 @@
                   <hr/>
                 </div>
                 <div class="span4 hdxTitle">
-                  THE HUMANITARIAN DATA EXCHANGE
+                  {{ _("The Humanitarian Data Exchange") }}
                 </div>
                 <div class="span1">
                   <hr/>
@@ -96,15 +96,17 @@
               </div>
               <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
                 <div class="span6 hdxPhrase">
-                  Find and share humanitarian data.
+                  {{ _("Find and share humanitarian data.") }}
                 </div>
               </div>
               <div class="row" style="margin-top: 30px; margin-bottom: 30px; height: 80px;">
                 <div class="span6 hdxDescription">
-                  The HDX (Humanitarian Data Exchange) Repository is a community-driven space that allows
-                  people to find and share global humanitarian data, including 3W and assessment information.
-                  To view this data, use the navigation options provided.
-                  To contribute to the repository, <a href="{% url_for controller='user', action='login' %}">login</a>.
+                  {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
+                        global datasets relevant to humanitarian work as well as local datasets from our
+                        three pilot locations - Colombia, Kenya and Yemen. You can also create an
+                        account and add your own data to the repository to share privately or publicly.") }}
+                  <br/>
+                  {{ _("Please have a look around and send us your feedback!") }}
                 </div>
               </div>
             </div>
@@ -130,7 +132,7 @@
               </div>
               <div class="row">
                 <div class="span2 itemName">
-                  Datasets
+                  {{ _("Datasets") }}
                 </div>
               </div>
             </div>
@@ -146,7 +148,7 @@
             </div>
             <div class="row">
               <div class="span2 itemName">
-                Countries
+                {{ _("Countries") }}
               </div>
             </div>
           </div>
@@ -162,7 +164,7 @@
             </div>
             <div class="row">
               <div class="span2 itemName">
-                Sources
+                {{ _("Sources") }}
               </div>
             </div>
           </div>
@@ -179,11 +181,11 @@
 
 {% block group_drop %}
   <div id="group_nav">
-    <div id="group_nav_text">Choose a country from the dropdown or click on the map</div>
+    <div id="group_nav_text">{{ _("Choose a country from the dropdown or click on the map") }}</div>
     <div id="group_dropdown" class="pull-right">
       {% block group_select %}
       <select id="group_select">
-        <option selected value="#"> -- Choose Country -- </option>
+        <option selected value="#">{{ _(" -- Choose Country -- ") }}</option>
         {% for group in c.group_package_stuff %}
         {% snippet 'group/snippets/group_dropdown.html', group=group, truncate_title=35 %}
         {% endfor %}

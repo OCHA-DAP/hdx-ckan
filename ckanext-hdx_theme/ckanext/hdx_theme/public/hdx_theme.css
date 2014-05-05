@@ -1,7 +1,7 @@
 body {
     background: #fff;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 1em;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
 }
 
 .masthead {
@@ -265,6 +265,7 @@ body {
 .jumbotron .hdxTextRow {
     padding-left: 65px;
     margin-right: 65px;
+    margin-bottom: 20px;
 }
 
 .jumbotron .countRow {
@@ -468,6 +469,7 @@ body {
     font-size: 17px;
     color: #ffffff;
     font-weight: 700;
+    text-transform: uppercase;
 }
 .ribbon .ribbon-content:before, .ribbon .ribbon-content:after {
     content: "";
