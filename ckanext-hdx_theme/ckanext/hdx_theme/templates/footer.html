@@ -1,32 +1,49 @@
-<footer class="site-footer">
-  <div class="container">
-    {% block footer_content %}
-      <nav class="footer-links">
-        {% block footer_nav %}
-          <ul class="unstyled">
-            {% block footer_links %}
-              <li><a href="{{ h.url_for(controller='home', action='about') }}">{{ _('About {0}').format(g.site_title) }}</a></li>
-            {% endblock %}
-          </ul>
-          <ul class="unstyled">
-            {% block footer_links_ckan %}
-              {% set api_url = 'http://docs.ckan.org/en/{0}/api.html'.format(g.ckan_doc_version) %}
-              <li><a href="{{ api_url }}">{{ _('CKAN API') }}</a></li>
-              <li><a href="http://www.okfn.org/">{{ _('Open Knowledge Foundation') }}</a></li>
-              <li><a href="http://www.opendefinition.org/okd/"><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png"></a></li>
-            {% endblock %}
-          </ul>
-        {% endblock %}
-      </nav>
-      <div class="attribution">
-        {% block footer_attribution %}
-        <p>{% trans %}<strong>Powered by</strong> <a class="hide-text ckan-footer-logo" href="http://ckan.org">CKAN</a>{% endtrans %}</p>
-        {% endblock %}
-        {% block footer_lang %}
-          {% snippet "snippets/language_selector.html" %}
-        {% endblock %}
+<footer class="new-site-footer">
+  <div class="container jumbotron">
+    <div class="maprow">
+      <div class="row creditsRow">
+        <div class="span12">
+          <div class="row creditsTextRow">
+            <div class="span2">
+              A project by:
+            </div>
+            <div class="offset4 span5">
+              Related Sites:
+            </div>
+          </div>
+          <div class="row">
+            <div class="span2">
+              <img src="/images/homepage/logo-ocha.png"/>
+            </div>
+            <div class="offset4 span2">
+              <img src="/images/homepage/logo-humanitarianresponse-tall.png"/>
+            </div>
+            <div class="span2">
+              <img src="/images/homepage/logo-reliefweb.png"/>
+            </div>
+            <div class="span2">
+              <img src="/images/homepage/logo-fts.png"/>
+            </div>
+          </div>
+        </div>
       </div>
-    {% endblock %}
+      <div class="row socialRow">
+        <div class="span12">
+          <div style="margin-top: 20px; margin-bottom: 20px;">
+
+            Stay connected with us:
+            <span style="margin-left: 20px; margin-right: 20px;">
+                <img src="/images/homepage/github.png"/>
+                <img src="/images/homepage/twitter.png"/>
+                <img src="/images/homepage/email.png"/>
+            </span>
+
+            <input type="text" class="newsletter" placeholder="Sign up for our newsletter" />
+            <input type="button" class="signup" value="Sign Up"/>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   {% block footer_debug %}
