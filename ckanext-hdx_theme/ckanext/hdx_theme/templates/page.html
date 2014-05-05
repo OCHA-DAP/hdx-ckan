@@ -28,6 +28,7 @@
           {% endblock %}
 
           {% block toolbar %}
+          	{#
             <div class="toolbar">
               {% block breadcrumb %}
                 {% if self.breadcrumb_content() | trim %}
@@ -38,9 +39,13 @@
                 {% endif %}
               {% endblock %}
             </div>
+            #}
           {% endblock %}
 
-          <div class="wrapper{% block wrapper_class %}{% endblock %}{% if self.secondary()|trim == '' %} no-nav{% endif %}">
+          <div class="hdx-wrapper wrapper{% block wrapper_class %}{% endblock %}{% if self.secondary()|trim == '' %} no-nav{% endif %}">
+          <div class="support-primary">
+          <div class="support-spacing">
+          <div class="support-secondary">
 
             {#
             The pre_primary block can be used to add content to before the
@@ -107,6 +112,9 @@
                 {% block secondary_content %}{% endblock %}
               </aside>
             {% endblock %}
+          </div>
+          </div>
+          </div>
           </div>
         {% endblock %}
       </div>
