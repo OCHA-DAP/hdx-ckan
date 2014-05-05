@@ -557,7 +557,7 @@ body {
 
 }
 
-.search-dataset.nav-item.active > a, .nav-aside li.active a {
+.search-dataset.nav-item.active > a, .search-dataset.nav-aside li.active a {
     background-color: #eeeeee;
     color: #333333;
     position: relative;
