@@ -549,6 +549,10 @@ a.info-tooltip, .info-item-name {
 	margin-right: 10px;
 }
 
+.info-wrapper.social a:hover {
+	text-decoration: none;
+}
+
 .tag-wrapper {
 	margin-right: 7px;
 	float: left;
@@ -619,6 +623,7 @@ span.clear { clear: left; display: block; }
 	background: none;
     border: none;
     box-shadow: 0 0 0 0;
+    margin-top: 10px;
 }
 
 .support-primary {
