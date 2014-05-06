@@ -494,7 +494,7 @@ body {
 }
 
 /* override the base class wrapper from main.debug.css */
-.search-dataset.wrapper {
+.wrapper {
     border-radius: 0px;
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
 }
@@ -558,7 +558,7 @@ body {
 }
 
 .search-dataset.nav-item.active > a, .search-dataset.nav-aside li.active a {
-    background-color: #eeeeee;
+    background-color: #DDDDDD;
     color: #333333;
     position: relative;
 }

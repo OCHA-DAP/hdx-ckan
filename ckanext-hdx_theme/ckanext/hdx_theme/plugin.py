@@ -24,6 +24,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         from ckanext.hdx_theme import helpers as hdx_helpers
         return {
             'is_downloadable': hdx_helpers.is_downloadable,
-            'get_last_modifier_user': hdx_helpers.get_last_modifier_user
+            'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
+            'get_filtered_params_list':hdx_helpers.get_filtered_params_list
         }
 

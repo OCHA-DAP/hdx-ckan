@@ -18,3 +18,11 @@ def get_last_modifier_user(package_id):
     act = act_list[0]
     usr_id = act.user_id
     return model.User.get(usr_id)
+
+def get_filtered_params_list(params):
+    result = []
+    for (key, value) in params.items():
+        if key not in {'q','sort'} :
+            result.append((key,value))
+    return result;
+    

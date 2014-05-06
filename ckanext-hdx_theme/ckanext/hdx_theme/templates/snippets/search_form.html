@@ -8,7 +8,13 @@
 
   {% block search_input %}
     <div class="search-input control-group {{ search_class }}">
-      <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="Search...">
+    {% if show_empty and search_in_results %}
+    	{% set p_list = h.get_filtered_params_list(show_empty) %}
+		{% for key,value in p_list %}
+			<input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
+		{% endfor %}
+    {% endif %}
+      <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
       <button type="submit" value="search">
         <i class="icon-search"></i>
         <span>{{ _('Submit') }}</span>
@@ -46,12 +52,12 @@
 
   {% block search_facets %}
     {% if facets %}
-      <p class="filter-list">
+      <p class="search-dataset filter-list">
         {% for field in facets.fields %}
           {% set search_facets_items = facets.search.get(field)['items'] %}
           <span class="facet">{{ facets.titles.get(field) }}:</span>
           {% for value in facets.fields[field] %}
-            <span class="filtered pill">
+            <span class="search-dataset filtered pill">
               {%- if facets.translated_fields and facets.translated_fields.has_key((field,value)) -%}
                 {{ facets.translated_fields[(field,value)] }}
               {%- else -%}
