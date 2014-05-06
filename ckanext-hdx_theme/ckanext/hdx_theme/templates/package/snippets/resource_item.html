@@ -3,10 +3,10 @@
 
 <li class="resource-item">
   {% block resource_item_title %}
-  <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
+  <span class="heading">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
     {{ h.popular('views', res.tracking_summary.total, min=10) }}
-  </a>
+  </span>
   {% endblock %}
   <p class="description">
     {% if res.description %}
@@ -18,20 +18,17 @@
   {% block resource_item_explore %}
     <div class="btn-group">
     {% block resource_item_explore_links %}
-    <a href="{{ url }}" class="btn btn-secondary hdx-btn">
-          {% if res.can_be_previewed %}
+	{% if res.can_be_previewed %}
+    	<a href="{{ url }}" class="btn btn-secondary hdx-btn">
             {{ _('Preview') }}
-          {% else %}
-            {{ _('More information') }}
-          {% endif %}
         </a>
-     <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics" target="_blank">
-          {% if is_downloadable %}
+	{% endif %}
+     <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics" title="{{ _('Download') }}" target="_blank">
             <img src="/images/actions/download.png" alt=" {{ _('Download') }}" />
-          {% else %}
-          	<img src="/images/actions/external.png" alt="{{ _('Visit Page') }}" />
-          {% endif %}
-        </a>
+     </a>
+     <a href="#" class="btn btn-secondary hdx-btn resource-url-analytics" target="_blank" title="{{ _('Share') }}" onclick="return false;">
+            <img src="/images/actions/share.png" alt=" {{ _('Share') }}" />
+     </a>
       {% endblock %}
   </div>
 
