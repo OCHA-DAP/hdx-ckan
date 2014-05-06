@@ -155,6 +155,18 @@ body {
     font-size: 15px;
 }
 
+.nav-tabs > li > a {
+    border-radius: 0 0 0 0;
+}
+
+.nav-tabs .hdx-tab-button {
+	color: #0099FF;
+}
+
+.nav-tabs .hdx-tab-button i {
+	display:none;
+}
+
 .navbar .nav .special-menuitem {
 	color: #1C687F;
 	font-size: 18px;
@@ -607,7 +619,7 @@ span.clear { clear: left; display: block; }
 	border-left-color: #666666;
 }
 
-.btn-group > .btn.hdx-btn {
+.btn-group > .btn.hdx-btn, .btn.hdx-btn {
     margin-left: 10px;
     padding: 2px 5px;
     border-radius: 4px;
@@ -615,7 +627,7 @@ span.clear { clear: left; display: block; }
     
 }
 
-.btn-group > .btn.hdx-btn img {
+.btn.hdx-btn img {
     height: 20px;
 }
 
