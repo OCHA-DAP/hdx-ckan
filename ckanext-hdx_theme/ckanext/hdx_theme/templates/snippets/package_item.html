@@ -19,6 +19,7 @@ Example:
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
 {% set updated_time = package.metadata_modified or package.metadata_created%}
 {% set f_updated_time = h.render_datetime(updated_time) %}
+{% set last_user = h.get_last_modifier_user(package.id) %}
 
 <li class="search-dataset {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
@@ -38,7 +39,7 @@ Example:
         {% endif %}
         {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
       </h3>
-      <div>{{ _('Updated by') }} {{package.author}}{{package.maintainer}} - {{f_updated_time}}</div>
+      <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
       {% if banner %}
         <span class="banner">{{ _('Popular') }}</span>
       {% endif %}

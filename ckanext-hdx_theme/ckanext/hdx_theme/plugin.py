@@ -23,6 +23,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def get_helpers(self):
         from ckanext.hdx_theme import helpers as hdx_helpers
         return {
-            'is_downloadable': hdx_helpers.is_downloadable
+            'is_downloadable': hdx_helpers.is_downloadable,
+            'get_last_modifier_user': hdx_helpers.get_last_modifier_user
         }
 
