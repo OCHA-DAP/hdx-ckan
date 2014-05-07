@@ -27,8 +27,10 @@
             </div>
           {% endblock %}
 
+{#
           {% block toolbar %}
             <div class="toolbar">
+              
               {% block breadcrumb %}
                 {% if self.breadcrumb_content() | trim %}
                   <ol class="breadcrumb">
@@ -37,9 +39,10 @@
                   </ol>
                 {% endif %}
               {% endblock %}
+              
             </div>
           {% endblock %}
-
+#}
           <div class="wrapper{% block wrapper_class %}{% endblock %}{% if self.secondary()|trim == '' %} no-nav{% endif %}">
 
             {#

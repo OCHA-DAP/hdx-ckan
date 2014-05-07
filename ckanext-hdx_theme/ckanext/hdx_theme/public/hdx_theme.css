@@ -431,6 +431,9 @@ body {
 
 .facet-h2{
     cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.08em;
+    font-weight: 300;
 }
 
 .searchForKeywordText {
@@ -526,5 +529,124 @@ body {
     margin-right: auto;
     width: 450px;
     
+}
+
+}
+
+/* override the base class wrapper from main.debug.css */
+.wrapper {
+    border-radius: 0px;
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
+}
+
+.search-dataset.module-heading{
+  	background-color: inherit;
+  	border-top: 0px;
+  	border-bottom: 0px;
+}
+.search-dataset.section-border{
+  	border-bottom: 1px solid #DDDDDD;
+  	padding: 20px;
+}
+
+
+.search-dataset.section-border .align{
+	padding-top: 15px;
+}
+
+.search-dataset.module-narrow .module-heading,
+.search-dataset.module-narrow .module-content,
+.search-dataset.module-narrow .module-footer {
+	padding: 0px;
+}
+
+.search-dataset.module {
+    margin: 0px 0;
+}
+
+.facet-h2-title{
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6em;
+    font-weight: 700;
+}
+
+.facet-url {
+  	color: #0077CC;
+  	font-family: 'Roboto', sans-serif;
+  	font-size: 12px;
+  	line-height: 20px;
+  	text-decoration: none;
+}
+.search-dataset.nav-simple > li, .search-dataset.nav-aside > li {
+    padding: 7px 10px;
+    border-bottom: none;
+}
+.search-dataset.nav-item > a, .search-dataset.nav-aside li a {
+    color: #333333;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+	font-weight: 400;
+}
+.search-dataset.module-footer {
+    border-top: none;
+}
+
+.search-dataset.nav-item.active > a:before, .search-dataset.nav-aside li.active a:before {
+    background-image: none;
+
+}
+
+.search-dataset.nav-item.active > a, .search-dataset.nav-aside li.active a {
+    background-color: #DDDDDD;
+    color: #333333;
+    position: relative;
+}
+
+.search-dataset.module-content:first-child {
+    padding: 25px;
+}
+
+.search-dataset.search-form .search-input.search-giant input {
+	border-radius: 14px;
+}
+
+.search-dataset.search-form h2 {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.08em;
+    font-weight: 300;
+}
+.search-dataset.search-form .search-input {
+    margin-bottom: 25px;
+}
+
+.search-dataset.search-form {
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.search-dataset.dataset-item {
+    border-bottom: 1px solid #DDDDDD;
+}
+
+.search-dataset.dataset-resources li a {
+	min-width: 50px;
+	text-align: center;
+}
+.uppercase{
+	text-transform: uppercase;
+}
+.lowercase{
+	text-transform: lowercase;
+}
+.capitalize{
+	text-transform: capitalize;
+}
+
+.search-dataset.pill {
+    background-color: #AAAAAA;
+}
+
+.float-right{
+	float:right;
 }
 
