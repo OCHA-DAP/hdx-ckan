@@ -4,11 +4,17 @@
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
 
-<form class="search-form" method="get" data-module="select-switch">
+<form class="search-dataset search-form" method="get" data-module="select-switch">
 
   {% block search_input %}
     <div class="search-input control-group {{ search_class }}">
-      <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="Search...">
+    {% if show_empty and search_in_results %}
+    	{% set p_list = h.get_filtered_params_list(show_empty) %}
+		{% for key,value in p_list %}
+			<input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
+		{% endfor %}
+    {% endif %}
+      <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
       <button type="submit" value="search">
         <i class="icon-search"></i>
         <span>{{ _('Submit') }}</span>
@@ -25,7 +31,7 @@
   {% block search_sortby %}
     {% if sorting %}
       <div class="form-select control-group control-order-by">
-        <label for="field-order-by">{{ _('Order by') }}</label>
+        <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <select id="field-order-by" name="sort">
           {% for label, value in sorting %}
             {% if label and value %}
@@ -40,18 +46,18 @@
 
   {% block search_title %}
     {% if not no_title %}
-      <h2>{% snippet 'snippets/search_result_text.html', query=query, count=count, type=type %}</h2>
+      <h2 class="uppercase">{% snippet 'snippets/search_result_text.html', query=query, count=count, type=type %}</h2>
     {% endif %}
   {% endblock %}
 
   {% block search_facets %}
     {% if facets %}
-      <p class="filter-list">
+      <p class="search-dataset filter-list">
         {% for field in facets.fields %}
           {% set search_facets_items = facets.search.get(field)['items'] %}
           <span class="facet">{{ facets.titles.get(field) }}:</span>
           {% for value in facets.fields[field] %}
-            <span class="filtered pill">
+            <span class="search-dataset filtered pill">
               {%- if facets.translated_fields and facets.translated_fields.has_key((field,value)) -%}
                 {{ facets.translated_fields[(field,value)] }}
               {%- else -%}

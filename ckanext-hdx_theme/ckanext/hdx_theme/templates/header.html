@@ -116,6 +116,7 @@
 	              ('about', _('About')),
 	              ('search', _('Data')),
 	              ('group_index', _('Contribute')),
+                ('organization', _('Organization')),
 	              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
 	              ('mailto:&#104;&#100;&#120;&#064;&#117;&#110;&#046;&#111;&#114;&#103;', _('Help')),
 	            ) }}
@@ -124,6 +125,7 @@
 	              ('about', _('About')),
 	              ('search', _('Data')),
 	              ('/contribute', _('Contribute')),
+                ('organization', _('Organization')),
 	              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
 	              ('mailto:&#104;&#100;&#120;&#064;&#117;&#110;&#046;&#111;&#114;&#103;', _('Help')),
 	            ) }}
@@ -132,7 +134,7 @@
           </ul>
           <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search' %}">
             <div id="insideMenuSearch" class="input-append">
-              <input type="text" name="q" class="search-query" placeholder="Search all datasets ...">
+              <input type="text" name="q" class="search-query" placeholder="{{ _("Search all datasets ...") }}">
               <span class="add-on">
                 <i class="icon-search"></i>
               </span>
