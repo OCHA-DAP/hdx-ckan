@@ -817,3 +817,38 @@ span.clear { clear: left; display: block; }
 	width: 980px;
 }
 
+
+
+/* Styling the primary button*/
+    .btn.btn-primary{
+        background-color: #206B82;
+        background-image: linear-gradient(to bottom, #0988bb, #0797d0);
+        background-repeat: repeat-x;
+        border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+        color: #FFFFFF;
+        font-weight: normal;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary.disabled, .btn-primary[disabled]{
+        background-color: #0797d0;
+    }
+/* END Styling the primary button */
+
+/* User Register Form */
+    .userRegisterContent .registerForm .control-label{
+        font-weight: normal;
+        font-style: italic;
+    }
+
+    .userRegisterContent .registerForm .control-label:after{
+        content: "*";
+        font-weight: normal;
+        color: red;
+    }
+
+    .userRegisterContent .page-heading{
+        font-weight: 300;
+    }
+/* END User Register Form */
