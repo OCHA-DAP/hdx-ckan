@@ -18,6 +18,11 @@
 	{% endblock %}
 {% endblock %}
 
-{% block secondary_content %}
-  {% snippet "organization/snippets/helper.html" %}
+{% block toolbar %}
+    {% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Creating an organization is easy.'),
+              explanation=_('Organizations don\'t have to be legal entities - they can be informal groups that users create to share data publicily or privately.') %}
 {% endblock %}
+
+{% block secondary %}ds{% endblock %}
+
+
