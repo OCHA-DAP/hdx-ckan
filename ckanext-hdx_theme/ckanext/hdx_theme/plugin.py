@@ -18,6 +18,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/count/dataset', controller='ckanext.hdx_theme.count:CountController', action='dataset')
         map.connect('/count/country', controller='ckanext.hdx_theme.count:CountController', action='country')
         map.connect('/count/source', controller='ckanext.hdx_theme.count:CountController', action='source')
+        map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
         map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
         return map
 
