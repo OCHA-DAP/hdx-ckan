@@ -16,7 +16,7 @@
 
 {% block content_action %}
   {% if h.check_access('package_update', {'id':pkg.id }) %}
-    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn' %}
+    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
   {% endif %}
 {% endblock %}
 
@@ -79,7 +79,7 @@
       <div class="info-wrapper">
         <div>{{ _('FOLLOWERS:') }}</div>
         <div class="followers-count">{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</div>
-        <div class="follow_button">
+        <div class="follow-button-wrapper">
           {{ h.follow_button('dataset', pkg.name) }}
           {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
           <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"   

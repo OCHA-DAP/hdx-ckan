@@ -746,11 +746,12 @@ span.clear { clear: left; display: block; }
 	border-left-color: #666666;
 }
 
-.btn-group > .btn.hdx-btn, .btn.hdx-btn {
+.btn-group > .btn.hdx-btn, .btn.hdx-btn, .follow-button-wrapper .btn {
     margin-left: 10px;
     padding: 2px 5px;
     border-radius: 4px;
     line-height: 25px;
+    font-weight: normal;
     
 }
 
@@ -809,11 +810,20 @@ span.clear { clear: left; display: block; }
     left: 717px;
 }
 
-.hdx-wrapper .primary .page-header {
+.hdx-wrapper .page-header {
 	background: none;	
 }
 
 .bigger.container {
 	width: 980px;
+}
+
+.big-message {
+	font-size: 25px;
+	font-weight: lighter;
+	text-align: center;
+	line-height: 45px;
+	padding-top: 30px;
+	padding-bottom: 50px;
 }
 
