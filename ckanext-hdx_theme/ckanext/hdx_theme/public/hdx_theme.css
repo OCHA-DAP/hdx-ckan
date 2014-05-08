@@ -862,3 +862,10 @@ span.clear { clear: left; display: block; }
         font-weight: 300;
     }
 /* END User Register Form */
+
+/* Homepage Background fix */
+    .hero-homepage {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+/* END Homepage Background fix */
