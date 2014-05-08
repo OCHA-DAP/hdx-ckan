@@ -5,18 +5,20 @@
     <tbody>
 
 {% block package_additional_info %}
+	{#
 	  {% if pkg_dict.url %}
         <tr>
           <th scope="row" class="dataset-label">{{ _('Source') }}</th>
           <td class="dataset-details" property="foaf:homepage">{{ h.link_to(pkg_dict.url, pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
         </tr>
       {% endif %}
-
+	#}
       	<tr>
-          <th scope="row" class="dataset-label">{{ _("Sources") }}</th>
+          <th scope="row" class="dataset-label">{{ _("Source") }}</th>
           <td class="dataset-details">{{ pkg_dict.sources }}</td>
       	</tr>
 
+	{#
       {% if pkg_dict.version %}
         <tr>
           <th scope="row" class="dataset-label">{{ _("Version") }}</th>
@@ -24,7 +26,7 @@
         </tr>
       {% endif %}
 
-	  {#
+	  
 	  {% if pkg_dict.package_creator %}
 		<tr>
 	      <th scope="row" class="dataset-label">{{ _("Creator") }}</th>
@@ -44,23 +46,24 @@
           </td>
       </tr>
 	  
-	  {% if pkg_dict.license_id %}
+	 
 		<tr>
 	      <th scope="row" class="dataset-label">{{ _("License") }}</th>
 	      <td class="dataset-details">
-			{% if 'license_url' in pkg_dict %}
-				<a class="info-item-name" href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
-			{% else %}
-			    <span property="dc:rights">{{ pkg_dict.license_title }}</span>
-			{% endif %}
-			{% if pkg_dict.isopen %}
-				<a href="http://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
-					<img class="open-data" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="[Open Data]" />
-				</a>
-			{% endif %}
+	      	{% if pkg_dict.license_id %}
+				{% if 'license_url' in pkg_dict %}
+					<a class="info-item-name" href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
+				{% else %}
+				    <span property="dc:rights">{{ pkg_dict.license_title }}</span>
+				{% endif %}
+				{% if pkg_dict.isopen %}
+					<a href="http://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
+						<img class="open-data" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="[Open Data]" />
+					</a>
+				{% endif %}
+	  		{% endif %}
 	      </td>
 	    </tr>
-	  {% endif %}
 	  
 	  	<tr>
 	      <th scope="row" class="dataset-label">{{ _("Date of Dataset") }}</th>
