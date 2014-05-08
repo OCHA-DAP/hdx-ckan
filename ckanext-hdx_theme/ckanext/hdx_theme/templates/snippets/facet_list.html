@@ -86,8 +86,8 @@ within_tertiary
             {% endfor %}
           </ul>
         </nav>
-        <p class="list-items module-footer {% if not name_in_request %} facet-hidden{% endif %}">
-          {% if no_items<total_no_items and total_no_items>10 %}
+        <p class="list-items search-dataset module-footer {% if not name_in_request %} facet-hidden{% endif %}">
+          {% if total_no_items>10 %}
 	          {% if h.get_param_int('_%s_limit' % name) %}
 	            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}{{'&'+'_%s_more' % name+'=true'}}" class="facet-url">{{ _('View more {facet_type}').format(facet_type=title) }}</a>
 	          {% else %}

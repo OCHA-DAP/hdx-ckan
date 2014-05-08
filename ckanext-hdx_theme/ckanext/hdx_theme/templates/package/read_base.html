@@ -50,7 +50,7 @@
   {% block secondary_help_content %}{% endblock %}
   {% block creation_information %}
   	<div class="info-wrapper">
-  		<div>{{ _('DATASET CONTRIBUTED BY:') }}</div>
+  		<div class="uppercase">{{ _('Dataset contributed by:') }}</div>
   		<div class="creation-info-author">{{ c.pkg_dict.package_creator or _('Unknown') }}</div>
   		<div class="info-secondary-data">{{ _('posted on') }} {{ h.render_datetime(pkg.metadata_created, with_hours=False) }}</div>
   	</div>
@@ -58,7 +58,7 @@
   {% block package_groups %}
     {% if pkg.groups %}
       <div class="info-wrapper">
-        <div> {{ _('COUNTRIES:') }}</div>
+        <div class="uppercase"> {{ _('Countries:') }}</div>
         <div>
 	        <ul class="info-wrapper-link-list">
 	          {% for group in pkg.groups %}
@@ -77,12 +77,17 @@
   
   {% block package_info %}
       <div class="info-wrapper">
-        <div>{{ _('FOLLOWERS:') }}</div>
+        <div class="uppercase">{{ _('Followers:') }}</div>
         <div class="followers-count">{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</div>
         <div class="follow-button-wrapper">
           {{ h.follow_button('dataset', pkg.name) }}
           {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
-          <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"   
+          {% if c.user %}
+          	{% set tooltip_placement = 'top' %}
+          {% else %}
+          	{% set tooltip_placement = 'right' %}
+          {% endif%}
+          <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="{{ tooltip_placement }}"   
           			data-toggle="tooltip" title="{{ follow_tooltip }}">{{ _("What's this?") }}</a>
         </div>
       </div>
