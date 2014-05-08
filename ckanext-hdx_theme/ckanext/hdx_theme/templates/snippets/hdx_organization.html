@@ -16,7 +16,7 @@ Example:
 
 {% with truncate=truncate or 0, url=h.url_for(controller='organization', action='read', id=organization.name) %}
     <section class="info-wrapper">
-    	<div> {{ _('ORGANIZATION:') }}</div>
+    	<div class="uppercase"> {{ _('Organisation:') }}</div>
 
 		<div> <a class="info-item-name" href="{{ url }}">{{ organization.title or organization.name }}</a></div>
       	<div class="info-secondary-data">
@@ -26,7 +26,7 @@ Example:
           {% link_for _('read more'), controller='organization', action='about', id=organization.name, class_='info-item-name' %}
         </p>
       {% else %}
-        <p class="empty">{{ _('There is no description for this organization') }}</p>
+        <p class="empty">{{ _('There is no description for this organisation') }}</p>
       {% endif %}
       	</div>
       
