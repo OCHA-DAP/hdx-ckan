@@ -19,12 +19,13 @@ Example:
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
 {% set updated_time = package.metadata_modified or package.metadata_created%}
 {% set f_updated_time = h.render_datetime(updated_time) %}
-{% set last_user = h.get_last_modifier_user(package.id) %}
+{% set rev_id = h.get_last_revision_package(package.id) %}
+{% set last_user = h.get_last_modifier_user(rev_id) %}
 
-<li class="search-dataset {{ item_class or "dataset-item" }}">
+<li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
-    <div class="search-dataset dataset-content">
-      <h3 class="search-dataset dataset-heading">
+    <div class="list-items dataset-content">
+      <h3 class="list-items dataset-heading">
         {% if package.private %}
           <span class="dataset-private label label-inverse">
             <i class="icon-lock"></i>
@@ -50,7 +51,7 @@ Example:
       {% endif %}
     </div>
     {% if package.resources and not hide_resources %}
-      <ul class="search-dataset dataset-resources unstyled">
+      <ul class="list-items dataset-resources unstyled">
         {% for resource in h.dict_list_reduce(package.resources, 'format') %}
           <li>
             <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label" data-format="{{ resource.lower() }}">{{ resource }}</a>
