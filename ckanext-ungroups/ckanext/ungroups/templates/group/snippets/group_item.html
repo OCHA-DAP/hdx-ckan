@@ -12,43 +12,58 @@ Example:
     </ul>
 #}
 {% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
-<li class="media-item">
-  {# block image %}
-    <img src="{{ group.image_url or h.url_for_static('/base/images/placeholder-group.png') }}" alt="{{ group.name }}" class="media-image">
-  {% endblock #}
-  {% block title %}
-    <h3 class="media-heading">{{ group.display_name }}</h3>
-  {% endblock %}
-  {% block description %}
-    {% if group.description %}
-      <p>{{ h.markdown_extract(group.description, extract_length=80) }}</p>
-    {% else %}
-      <p class="empty">{{ _('This group has no description') }}</p>
-    {% endif %}
+{% set f_updated_time = h.render_datetime(group.created) %}
+{% set last_rev_id = h.get_last_revision_group(group.id) %}
+{% set last_user = h.get_last_modifier_user(last_rev_id) %}
+{% set followers = h.get_group_followers(group.id) %}
+{% set members = h.get_group_members(group.id) %}
 
-    {% if group.relief_web_url %}
-      <p><a href="{{group.relief_web_url}}">{{group.display_name}} on Relief Web</a></p>
-    {% endif %}
+<li class="list-items dataset-item">
 
-    {% if group.hr_info_url %}
-    <p><a href="{{group.hr_info_url}}">{{group.display_name}} on HR.info</a></p>
-    {% endif %}
-  {% endblock %}
-  {% block datasets %}
-  {% if group.packages %}
-  {% if group.packages is number %}
-    {% set num_of_pack = group.packages %}
-    {% else %}
-    {% set num_of_pack = group.packages|length %}
-    {% endif %}
-    <strong class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</strong>
-    {% else %}
-      <span class="count">{{ _('0 Datasets') }}</span>
-    {% endif %}
-  {% endblock %}
-  <a href="{{ url }}" title="{{ _('View {name}').format(name=group.display_name) }}" class="media-view">
-    <span>{{ _('View {name}').format(name=group.display_name) }}</span>
-  </a>
+    <div class="list-items dataset-content">
+      {% block title %}
+   		 <h3 class="list-items dataset-heading">
+   		   <a href="{{ url }}" title="{{ _('View {group_name}').format(group_name=group.display_name) }}" >
+    			<span>{{ _('{group_name}').format(group_name=group.display_name) }}</span>
+  		   </a>
+   		 </h3>
+  	{% endblock %}
+      <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
+      {% block description %}
+    	{% if group.description %}
+      		<div class="list-items content">{{ h.markdown_extract(group.description, extract_length=80) }}</div>
+    	{% else %}
+      		<p class="empty">{{ _('This group has no description') }}</p>
+    	{% endif %}
+	  {% endblock %}
+	  
+	  {% block counters %}
+	  <div class="list-items counter">
+		  {% block datasets %}
+			  {% if group.packages %}
+			    {% if group.packages is number %}
+			    	{% set num_of_pack = group.packages %}
+			    {% else %}
+			    	{% set num_of_pack = group.packages|length %}
+			    {% endif %}
+			   <span class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</span>
+			   {% else %}
+			      <span class="count">{{ _('0 Datasets') }}</span>
+			   {% endif %}
+		  {% endblock %}
+		{# members are not displayed for groups
+		-
+		  {% block members %}
+		   <span class="count">{{ members }} {% if members > 1 %}Members{% else %}Member{% endif %}</span>
+		  {% endblock %}
+		#}
+		-
+		  {% block followers %}
+		   <span class="count">{{ followers }} {% if followers > 1 %}Followers{% else %}Follower{% endif %}</span>
+		  {% endblock %}
+	  </div>
+	  {% endblock %}
+    </div>
 </li>
 {% if position is divisibleby 3 %}
   <li class="clearfix js-hide"></li>

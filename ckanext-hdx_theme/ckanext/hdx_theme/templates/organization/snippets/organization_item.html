@@ -20,7 +20,6 @@ Example:
 {% set members = h.get_group_members(organization.id) %}
 
 <li class="list-items dataset-item">
-
     <div class="list-items dataset-content">
       {% block title %}
    		 <h3 class="list-items dataset-heading">
@@ -63,10 +62,6 @@ Example:
 	  </div>
 	  {% endblock %}
     </div>
-
-
-
-
 </li>
 {% if position is divisibleby 3 %}
   <li class="clearfix js-hide"></li>

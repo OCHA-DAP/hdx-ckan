@@ -8,7 +8,7 @@ Example:
     {% snippet "group/snippets/group_list.html" %}
 
 #}
-<ul class="media-grid" data-module="media-grid">
+<ul  class="list-items dataset-list unstyled" >
   {% for group in groups %}
     {% snippet "group/snippets/group_item.html", group=group, position=loop.index %}
   {% endfor %}
