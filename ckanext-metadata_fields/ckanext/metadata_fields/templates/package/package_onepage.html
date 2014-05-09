@@ -74,7 +74,7 @@
 <script src="/base/vendor/jquery-fileupload/jquery.fileupload-ui.js"></script>-->
 
   <script>
-  $( "#field-dataset_date" ).datepicker();
+  $( "#field-dataset_date, #date_range1, #date_range2").datepicker();
   $('document').ready(function(){
     //Just in case of page back
     $('option[value=-1]').attr('selected', true);
@@ -122,6 +122,14 @@
       //Add other specifics
       var other = $('#method_other').val();
       $('input[value="Other"]').val("Other - "+other);
+
+      //Create date range
+      $('#field-dataset_date').val($('#date_range1').val() +'-'+$('#date_range2').val());
+
+      //Remove extra form elements
+      $('#method_other, #date_range1, #date_range2').remove();
+      
+
       /*
       //Deactivate button and add loading
       $('#onepage_submit').attr('disabled', 'disabled');

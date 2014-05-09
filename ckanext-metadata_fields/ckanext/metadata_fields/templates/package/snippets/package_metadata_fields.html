@@ -53,7 +53,12 @@
   <div class="control-group" style="display:inline-block;">
   <label class="control-label" for="dataset_date">Date of Dataset</label>
     <div class="controls"> 
-  <input type="text" name='dataset_date' id='field-dataset_date' label={{_('Date of Dataset')}} value='{{data.dataset_date}}' error='{{errors.dataset_date}}' class='control-full'>
+  <input type="text" name='dataset_date' id='field-dataset_date' label="{{_('Date of Dataset')}}" placeholder="{{_('Date of Dataset')}}" value='{{data.dataset_date}}' error='{{errors.dataset_date}}' class='control-full'>
+</div>
+  <label class="control-label" for="dataset_date">Date Range</label>
+    <div class="controls"> 
+  <input type="text" name='date_range1' id='date_range1' label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='{{data.dataset_date}}' error='{{errors.dataset_date}}' class='control-full' style="width:95px;float:left; margin-right:2px;">
+  <input type="text" name='date_range2' id='date_range2' label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='{{data.dataset_date}}' error='{{errors.dataset_date}}' class='control-full' style="width:95px; float:left; margin-right:2px;">
 </div>
 </div>
     {% endblock %}
