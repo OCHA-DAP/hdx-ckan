@@ -18,11 +18,15 @@
       {% snippet "organization/snippets/organization_list.html", organizations=organizations %}
     </div>
   {% else %}
-    <p class="empty">
-      {{ _('You are not a member of any organizations.') }}
-      {% if h.check_access('organization_create') %}
-        {% link_for _('Create one now?'), controller='organization', action='new' %}
-      {% endif %}
-    </p>
+  	<div class="big-message">
+	    <p>
+	      {{ _('You aren\'t currently a member of any organizations.') }}
+	    </p>
+	    <p>
+	      {% if h.check_access('organization_create') %}
+	        {% link_for _('+ Add Organization'), controller='organization', action='new', class_='info-item-name' %}
+	      {% endif %}
+	    </p>
+    </div>
   {% endif %}
 {% endblock %}

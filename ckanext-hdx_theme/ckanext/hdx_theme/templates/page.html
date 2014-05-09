@@ -27,7 +27,6 @@
             </div>
           {% endblock %}
 
-        
           {% block toolbar %}
             <div class="toolbar">
               
@@ -39,7 +38,6 @@
                   </ol>
                 {% endif %}
               {% endblock %}
-              
             </div>
           {% endblock %}
 
@@ -50,9 +48,12 @@
             #}
             {% block pre_primary %}
             {% endblock %}
+            
 	          <div class="support-primary">
+            {% if self.secondary()|trim != '' %}
 	          <div class="support-spacing">
 	          <div class="support-secondary">
+	        {% endif %}
 	
 	
 	            {% block primary %}
@@ -114,8 +115,10 @@
 	              </aside>
 	            {% endblock %}
 	          </div>
+	        {% if self.secondary()|trim != '' %}
 	          </div>
 	          </div>
+	        {% endif %}
           </div>
         {% endblock %}
       </div>

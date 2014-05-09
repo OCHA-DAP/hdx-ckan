@@ -50,8 +50,8 @@ within_tertiary
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
-    <section class="search-dataset {{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
-      <h2 class="search-dataset module-heading facet-h2 uppercase">
+    <section class="list-items {{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
+      <h2 class="list-items module-heading facet-h2 uppercase">
       <!-- <i class="icon-medium icon-filter"></i> -->
         {% set title = title or h.get_facet_title(name) %}
         {% set no_total_items= 0%}
@@ -61,21 +61,21 @@ within_tertiary
         {{ title }}
         <div class="float-right">{{ no_total_items }}</div>
       </h2>
-      <div class="search-dataset action align {% if not name_in_request%} facet-hidden{% endif %}">
+      <div class="list-items action align {% if not name_in_request%} facet-hidden{% endif %}">
       	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"
-           class="search-dataset action facet-url
+           class="list-items action facet-url
            	{% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
       </div>
       {% if items %}
       {% set no_items= items|count %}
         <nav class=" {% if not name_in_request%} facet-hidden{% endif %}">
-          <ul class="search-dataset {{ nav_class or 'unstyled nav nav-simple nav-facet' }}">
+          <ul class="list-items {{ nav_class or 'unstyled nav nav-simple nav-facet' }}">
             {% for item in items|sort(attribute='name') %}
               {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
               {% set label = label_function(item) if label_function else item.display_name %}
               {% set label_truncated = h.truncate(label, 22) if not label_function else label %}
               {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
-                <li class="search-dataset {{ nav_item_class or 'nav-item' }}{% if item.active %} active{% endif %}">
+                <li class="list-items {{ nav_item_class or 'nav-item' }}{% if item.active %} active{% endif %}">
                   <a href="{{ href }}" title="{{ label if label != label_truncated else '' }}">
                     <span>{{ label_truncated }}</span>
                     {% if not item.active %}
@@ -86,8 +86,8 @@ within_tertiary
             {% endfor %}
           </ul>
         </nav>
-        <p class="search-dataset module-footer {% if not name_in_request %} facet-hidden{% endif %}">
-          {% if no_items<total_no_items and total_no_items>10 %}
+        <p class="list-items module-footer {% if not name_in_request %} facet-hidden{% endif %}">
+          {% if total_no_items>10 %}
 	          {% if h.get_param_int('_%s_limit' % name) %}
 	            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}{{'&'+'_%s_more' % name+'=true'}}" class="facet-url">{{ _('View more {facet_type}').format(facet_type=title) }}</a>
 	          {% else %}

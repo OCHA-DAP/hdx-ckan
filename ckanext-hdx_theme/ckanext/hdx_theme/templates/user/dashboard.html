@@ -15,10 +15,10 @@
     {% block page_header %}
       <header class="module-content page-header hug">
         <ul class="nav nav-tabs">
-          {{ h.build_nav_icon('user_dashboard', _('News feed')) }}
-          {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets')) }}
-          {{ h.build_nav_icon('user_dashboard_organizations', _('My Organizations')) }}
-          {{ h.build_nav_icon('user_dashboard_groups', _('My Groups')) }}
+          {{ h.build_nav_icon('user_dashboard', _('News feed'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('user_dashboard_organizations', _('My Organizations'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('user_dashboard_groups', _('My Groups'), class_='hdx-tab-button') }}
         </ul>
       </header>
     {% endblock %}

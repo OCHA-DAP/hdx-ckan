@@ -7,7 +7,7 @@ body {
 .masthead {
     background: #fff;
     color: #222;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 1.4em;
 }
 .masthead a {
@@ -594,28 +594,29 @@ body {
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
 }
 
-.search-dataset.module-heading{
+/* Styling search dataset page */
+.list-items.module-heading{
   	background-color: inherit;
   	border-top: 0px;
   	border-bottom: 0px;
 }
-.search-dataset.section-border{
+.list-items.section-border{
   	border-bottom: 1px solid #DDDDDD;
   	padding: 20px;
 }
 
 
-.search-dataset.section-border .align{
+.list-items.section-border .align{
 	padding-top: 15px;
 }
 
-.search-dataset.module-narrow .module-heading,
-.search-dataset.module-narrow .module-content,
-.search-dataset.module-narrow .module-footer {
+.list-items.module-narrow .module-heading,
+.list-items.module-narrow .module-content,
+.list-items.module-narrow .module-footer {
 	padding: 0px;
 }
 
-.search-dataset.module {
+.list-items.module {
     margin: 0px 0;
 }
 
@@ -633,60 +634,76 @@ body {
   	line-height: 20px;
   	text-decoration: none;
 }
-.search-dataset.nav-simple > li, .search-dataset.nav-aside > li {
+.list-items.nav-simple > li, .list-items.nav-aside > li {
     padding: 7px 10px;
     border-bottom: none;
 }
-.search-dataset.nav-item > a, .search-dataset.nav-aside li a {
+.list-items.nav-item > a, .list-items.nav-aside li a {
     color: #333333;
     font-family: 'Roboto', sans-serif;
     font-size: 1em;
 	font-weight: 400;
 }
-.search-dataset.module-footer {
+.list-items.module-footer {
     border-top: none;
 }
 
-.search-dataset.nav-item.active > a:before, .search-dataset.nav-aside li.active a:before {
+.list-items.nav-item.active > a:before, .list-items.nav-aside li.active a:before {
     background-image: none;
 
 }
 
-.search-dataset.nav-item.active > a, .search-dataset.nav-aside li.active a {
+.list-items.nav-item.active > a, .list-items.nav-aside li.active a {
     background-color: #DDDDDD;
     color: #333333;
     position: relative;
 }
 
-.search-dataset.module-content:first-child {
+.list-items.module-content:first-child {
     padding: 25px;
 }
 
-.search-dataset.search-form .search-input.search-giant input {
+.list-items.search-form .search-input.search-giant input {
 	border-radius: 14px;
 }
 
-.search-dataset.search-form h2 {
+.list-items.search-form h2 {
     font-family: 'Roboto', sans-serif;
     font-size: 1.08em;
     font-weight: 300;
 }
-.search-dataset.search-form .search-input {
+.list-items.search-form .search-input {
     margin-bottom: 25px;
 }
 
-.search-dataset.search-form {
+.list-items.search-form {
     border-bottom: 1px solid #DDDDDD;
 }
 
-.search-dataset.dataset-item {
+.list-items.dataset-item {
     border-bottom: 1px solid #DDDDDD;
 }
 
-.search-dataset.dataset-resources li a {
+.list-items.dataset-resources li a {
 	min-width: 50px;
 	text-align: center;
 }
+.count {
+	font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+	font-weight: 300;
+}
+.list-items.content { 
+	font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+	font-weight: 400;
+}
+
+.list-items.counter { 
+	padding-top: 10px;
+}
+/* END Styling search dataset page */
+
 .uppercase{
 	text-transform: uppercase;
 }
@@ -697,7 +714,7 @@ body {
 	text-transform: capitalize;
 }
 
-.search-dataset.pill {
+.list-items.pill {
     background-color: #AAAAAA;
 }
 
@@ -791,11 +808,12 @@ span.clear { clear: left; display: block; }
 	border-left-color: #666666;
 }
 
-.btn-group > .btn.hdx-btn, .btn.hdx-btn {
+.btn-group > .btn.hdx-btn, .btn.hdx-btn, .follow-button-wrapper .btn {
     margin-left: 10px;
     padding: 2px 5px;
     border-radius: 4px;
     line-height: 25px;
+    font-weight: normal;
     
 }
 
@@ -854,7 +872,7 @@ span.clear { clear: left; display: block; }
     left: 717px;
 }
 
-.hdx-wrapper .primary .page-header {
+.hdx-wrapper .page-header {
 	background: none;	
 }
 

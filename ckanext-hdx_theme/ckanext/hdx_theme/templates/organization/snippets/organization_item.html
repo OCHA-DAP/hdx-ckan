@@ -13,35 +13,60 @@ Example:
 #}
 
 {% set url = h.url_for(organization.type + '_read', action='read', id=organization.name) %}
-<li class="media-item">
-  {% block image %}
-    <img src="{{ organization.image_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ organization.name }}" class="media-image">
-  {% endblock %}
-  {% block title %}
-    <h3 class="media-heading">{{ organization.display_name }}</h3>
-  {% endblock %}
-  {% block description %}
-    {% if organization.description %}
-      <p>{{ h.markdown_extract(organization.description, extract_length=80) }}</p>
-    {% else %}
-      <p class="empty">{{ _('This organization has no description') }}</p>
-    {% endif %}
-  {% endblock %}
-  {% block datasets %}
-  {% if organization.packages %}
-    {% if organization.packages is number %}
-    {% set num_of_pack = organization.packages %}
-    {% else %}
-    {% set num_of_pack = organization.packages|length %}
-    {% endif %}
-    <strong class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</strong>
-    {% else %}
-      <span class="count">{{ _('0 Datasets') }}</span>
-    {% endif %}
-  {% endblock %}
-  <a href="{{ url }}" title="{{ _('View {organization_name}').format(organization_name=organization.display_name) }}" class="media-view">
-    <span>{{ _('View {organization_name}').format(organization_name=organization.display_name) }}</span>
-  </a>
+{% set f_updated_time = h.render_datetime(organization.created) %}
+{% set last_rev_id = h.get_last_revision_group(organization.id) %}
+{% set last_user = h.get_last_modifier_user(last_rev_id) %}
+{% set followers = h.get_group_followers(organization.id) %}
+{% set members = h.get_group_members(organization.id) %}
+
+<li class="list-items dataset-item">
+
+    <div class="list-items dataset-content">
+      {% block title %}
+   		 <h3 class="list-items dataset-heading">
+   		   <a href="{{ url }}" title="{{ _('View {organization_name}').format(organization_name=organization.display_name) }}" >
+    			<span>{{ _('{organization_name}').format(organization_name=organization.display_name) }}</span>
+  		   </a>
+   		 </h3>
+  	{% endblock %}
+      <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
+      {% block description %}
+    	{% if organization.description %}
+      		<div class="list-items content">{{ h.markdown_extract(organization.description, extract_length=80) }}</div>
+    	{% else %}
+      		<p class="empty">{{ _('This organization has no description') }}</p>
+    	{% endif %}
+	  {% endblock %}
+	  
+	  {% block counters %}
+	  <div class="list-items counter">
+		  {% block datasets %}
+			  {% if organization.packages %}
+			    {% if organization.packages is number %}
+			    	{% set num_of_pack = organization.packages %}
+			    {% else %}
+			    	{% set num_of_pack = organization.packages|length %}
+			    {% endif %}
+			   <span class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</span>
+			   {% else %}
+			      <span class="count">{{ _('0 Datasets') }}</span>
+			   {% endif %}
+		  {% endblock %}
+		-
+		  {% block members %}
+		   <span class="count">{{ members }} {% if members > 1 %}Members{% else %}Member{% endif %}</span>
+		  {% endblock %}
+		-
+		  {% block followers %}
+		   <span class="count">{{ followers }} {% if followers > 1 %}Followers{% else %}Follower{% endif %}</span>
+		  {% endblock %}
+	  </div>
+	  {% endblock %}
+    </div>
+
+
+
+
 </li>
 {% if position is divisibleby 3 %}
   <li class="clearfix js-hide"></li>
