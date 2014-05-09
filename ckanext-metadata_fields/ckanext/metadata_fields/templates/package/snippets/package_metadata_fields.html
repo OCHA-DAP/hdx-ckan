@@ -3,8 +3,6 @@
 {% block package_metadata_fields %}
   {% block dataset_fields %}
     {% if data.groups %}
-    {% set group_name = 'groups__%s__id' % data.groups|length %}
-    {% set available_groups = h.list_of_all_groups() %}
       <div class="control-group">
         <label class="control-label">{{ _('Groups') }}</label>
         <div class="controls">
@@ -18,23 +16,29 @@
           {% endfor %}
         </div>
       </div>
-
-      <div class="control-group">
-      <div class="controls">
-        <select id="field-group" name="{{group_name}}" data-module="autocomplete">
-          <option value="-1">{{ _('Please select from below')}}</option>
-          {% for grp in available_groups %}
-            <option value="{grp.id}">{{ grp.display_name}}</option>
-          {% endfor %}
-        </select>
-      </div>
-    </div>
-    {% endif %}
+   {% endif %}
+	{% if not onepage_flag %} 
+		{% set group_name = 'groups__%s__id' % data.groups|length %}
+	    {% set available_groups = h.list_of_all_groups() %}
+	    <div class="control-group">
+	      	{% set error = errors.groups_list %}
+		  	<label class="control-label" for="field-group">{{ _("Add Group") }}</label>
+	      <div class="controls">
+	        <select id="field-group" name="{{group_name}}" data-module="autocomplete">
+	          <option value="-1">{{ _('Please select from below')}}</option>
+	          {% for grp in available_groups %}
+	            <option value="{{grp.id}}">{{ grp.display_name}}</option>
+	          {% endfor %}
+	        </select>
+	        {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+	      </div>
+	    </div>
+	{% endif %}
+    
   {% if onepage == 0 %}
     {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage) }}
   {% else %}
-    {% set group_name = 'groups__%s__id' % data.groups|length %}
-    {% set available_groups = h.list_of_all_groups() %}
+  	{% if onepage_flag %}
     <div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
           {% if data.groups %}
           {% for group in data.groups %}
@@ -42,6 +46,7 @@
           {% endfor %}
           {% endif %}
     </div>
+    {% endif %}
   {% endif %}
 
   {% block basic_field_date %}
