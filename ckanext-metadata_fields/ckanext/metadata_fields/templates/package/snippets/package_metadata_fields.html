@@ -1,5 +1,6 @@
 {% ckan_extends %}
 
+
 {% block package_metadata_fields %}
 <div class="module-content graybg" id="dataset_part_2">
       <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
@@ -20,7 +21,7 @@
       </div>
    {% endif %}
 
-	{% if form_style == 'edit' %} 
+	{% if inheritied_form_style == 'edit' %} 
 		{% set group_name = 'groups__%s__id' % data.groups|length %}
 	    {% set available_groups = h.list_of_all_groups() %}
 	    <div class="control-group">
@@ -38,7 +39,7 @@
 	    </div>
 	{% endif %}
     
-  {% if form_style != 'edit' %}
+  {% if inheritied_form_style != 'edit' %}
   	<div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
           {% if data.groups %}
           {% for group in data.groups %}
@@ -97,7 +98,7 @@
     #}
     
   {% endblock %}
-  {% if form_style != 'edit' %}
+  {% if inheritied_form_style != 'edit' %}
     <input name="save" type="hidden" value="go-resource"/>
   {% endif %}
 </div>
