@@ -14,7 +14,7 @@
 
       	<tr>
           <th scope="row" class="dataset-label">{{ _("Sources") }}</th>
-          <td class="dataset-details">{{ pkg_dict.sources }}</td>
+          <td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
       	</tr>
 
       {% if pkg_dict.version %}
@@ -64,7 +64,7 @@
 	  
 	  	<tr>
 	      <th scope="row" class="dataset-label">{{ _("Date of Dataset") }}</th>
-	      <td class="dataset-details">{{ pkg_dict.date_of_dataset }}</td>
+	      <td class="dataset-details">{{ pkg_dict.dataset_date }}</td>
 	    </tr>
 	    <tr>
 	      <th scope="row" class="dataset-label">{{ _("Methodology") }}</th>
