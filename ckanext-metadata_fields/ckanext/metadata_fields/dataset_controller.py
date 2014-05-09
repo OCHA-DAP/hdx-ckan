@@ -116,15 +116,18 @@ class DatasetController(PackageController):
 					redirect(url)
 				# Make sure we don't index this dataset
 				if request.params['save'] not in ['go-resource', 'go-metadata']:
-					print 'Hey'
-					print request.param['save']
 					data_dict['state'] = 'draft'
 				# allow the state to be changed
 				context['allow_state_change'] = True
 
 			data_dict['type'] = package_type
 			context['message'] = data_dict.get('log_message', '')
+			print data_dict
 			pkg_dict = get_action('package_create')(context, data_dict)
+
+			#A hack to handle the metadata correctly
+			data_dict['id'] = pkg_dict['id']
+			pkg_dict = get_action('package_update')(context, data_dict)
 
 			if ckan_phase:
 				print 'World'

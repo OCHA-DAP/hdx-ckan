@@ -119,6 +119,9 @@
       $('#error-explanation, .error-block, .error-country').remove();
       $('.error').removeClass('error');
 
+      //Add other specifics
+      var other = $('#method_other').val();
+      $('input[value="Other"]').val("Other - "+other);
       /*
       //Deactivate button and add loading
       $('#onepage_submit').attr('disabled', 'disabled');
