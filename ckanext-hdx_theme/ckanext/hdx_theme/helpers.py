@@ -24,11 +24,13 @@ def get_facet_items_dict(facet, limit=10, exclude_active=False):
     else:
         return (facets,no_items)
     
-def get_last_modifier_user(rev_id):
+def get_last_modifier_user(rev_id, get_timestamp=False):
     act_list = model.Session.query(model.Activity).filter(model.Activity.revision_id == rev_id).all()
     if len(act_list)>0:
         act = act_list[0]
         usr_id = act.user_id
+        if get_timestamp:
+            return (model.User.get(usr_id), act.timestamp.isoformat())
         return model.User.get(usr_id)
     return 'hdx'
 
