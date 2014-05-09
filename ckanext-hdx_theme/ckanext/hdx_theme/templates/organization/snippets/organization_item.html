@@ -49,18 +49,18 @@ Example:
 			    {% else %}
 			    	{% set num_of_pack = organization.packages|length %}
 			    {% endif %}
-			   <span class="count">{{ num_of_pack }} {% if num_of_pack > 1 %}Datasets{% else %}Dataset{% endif %}</span>
+			   <span class="count">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</span>
 			   {% else %}
 			      <span class="count">{{ _('0 Datasets') }}</span>
 			   {% endif %}
 		  {% endblock %}
 		-
 		  {% block members %}
-		   <span class="count">{{ members }} {% if members > 1 %}Members{% else %}Member{% endif %}</span>
+		   <span class="count">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</span>
 		  {% endblock %}
 		-
 		  {% block followers %}
-		   <span class="count">{{ followers }} {% if followers > 1 %}Followers{% else %}Follower{% endif %}</span>
+		   <span class="count">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
 		  {% endblock %}
 	  </div>
 	  {% endblock %}
