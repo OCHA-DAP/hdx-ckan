@@ -10,9 +10,19 @@ import ckan.logic as logic
 from ckan.controllers.group import GroupController as gc
 from ckan.controllers.home import HomeController
 
+from ckanext.hdx_theme.country_list_hardcoded import FOCUS_COUNTRIES
+
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
 get_action = logic.get_action
+
+def filter_focus_countries(group_package_stuff):
+	focus_group_package_stuff = []
+	for grp_dict in group_package_stuff:
+		if grp_dict['display_name'] in FOCUS_COUNTRIES:
+			focus_group_package_stuff.append(grp_dict)
+				
+	return focus_group_package_stuff
 
 class SplashPageController(HomeController):
 
@@ -38,7 +48,10 @@ class SplashPageController(HomeController):
 			context['user_is_admin'] = c.userobj.sysadmin
 
 		group_package_stuff = self._action('group_list')(context, data_dict)
-		c.group_package_stuff = sorted(group_package_stuff, key=lambda k: k['title'])
+		
+		focus_group_package_stuff = filter_focus_countries(group_package_stuff)
+		
+		c.group_package_stuff = sorted(focus_group_package_stuff, key=lambda k: k['title'])
 
 		##Removing groups without geojson for the map
 		c.group_map = []
@@ -87,3 +100,4 @@ class SplashPageController(HomeController):
 	def _action(self, action_name):
 		''' select the correct group/org action '''
 		return get_action(self._replace_group_org(action_name))
+	
