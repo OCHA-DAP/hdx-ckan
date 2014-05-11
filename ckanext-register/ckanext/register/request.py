@@ -10,6 +10,9 @@ import ckan.lib.captcha as captcha
 import ckan.new_authz as new_authz
 import pylons.configuration as configuration
 import re
+import ckan.lib.navl.dictization_functions as df
+
+from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -19,6 +22,8 @@ render = base.render
 NotAuthorized = logic.NotAuthorized
 unflatten = dictization_functions.unflatten
 ValidationError = logic.ValidationError
+
+Invalid = df.Invalid
 
 
 def send_mail(name, email, org, reason = ''):
@@ -33,6 +38,31 @@ def send_mail(name, email, org, reason = ''):
     mailer.mail_recipient("HDX Registration", "vagrant@ckan.lo", "New user registration", body)
 
     return
+
+#
+def name_validator_with_changed_msg(val, context):
+    """This is just a wrapper function around the validator.name_validator function. 
+        The wrapper function just changes the message in case the name_match doesn't match.
+        The only purpose for still calling that function here is to keep the link visible and
+        in case of a ckan upgrade to still be able to raise any new Invalid exceptions
+
+    """
+    try:
+        return name_validator(val, context)
+    except Invalid as invalid:
+        if val in ['new', 'edit', 'search']:
+            raise Invalid(_('That name cannot be used'))
+    
+        if len(val) < 2:
+            raise Invalid(_('Name must be at least %s characters long') % 2)
+        if len(val) > PACKAGE_NAME_MAX_LENGTH:
+            raise Invalid(_('Name must be a maximum of %i characters long') % \
+                          PACKAGE_NAME_MAX_LENGTH)
+        if not name_match.match(val):
+            raise Invalid(_('Username should be lowercase letters and/or numbers and/or these symbols: -_'))
+        
+        raise invalid
+        
 
 class RequestController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
@@ -115,9 +145,14 @@ class RequestController(ckan.controllers.user.UserController):
         '''GET to display a form for registering a new user.
            or POST the form data to actually do the user registration.
         '''
+        
+        temp_schema = self._new_form_to_db_schema()
+        if temp_schema.has_key('name'):
+           temp_schema['name'] = [name_validator_with_changed_msg if var==name_validator else var for var in temp_schema['name'] ]
+        
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
-                   'schema': self._new_form_to_db_schema(),
+                   'schema': temp_schema,
                    'save': 'save' in request.params}
 
         try:
