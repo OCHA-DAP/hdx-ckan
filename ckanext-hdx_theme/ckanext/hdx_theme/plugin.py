@@ -1,7 +1,20 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
+import ckan.model.package as package
+import ckan.model.license as license
+import ckanext.hdx_theme.licenses as hdx_licenses
 
+def _generate_license_list():
+    package.Package._license_register = license.LicenseRegister() 
+    package.Package._license_register.licenses = [
+                                                  license.License(hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
+                                                  license.License(license.LicenseCreativeCommonsAttribution()),
+                                                  license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
+                                                  license.License(hdx_licenses.LicenseCreativeCommonsNoDerives()),
+                                                  license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
+                                                  license.License(hdx_licenses.LicenseHdxOther())
+                                                  ]
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
@@ -21,6 +34,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/count/source', controller='ckanext.hdx_theme.count:CountController', action='source')
         map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
         map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
+        
+        map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
+        
+        # this is actually a HACK to force the customization of the license list.
+        # the license list should be changed to be based on a JSON rest service
+        _generate_license_list()
+        
         return map
 
     def get_helpers(self):
@@ -42,4 +62,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         return {
             'organization_list_for_user':hdx_actions.organization_list_for_user
         }
+        
+        
 
