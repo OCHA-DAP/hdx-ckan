@@ -540,7 +540,7 @@ body {
 }
 
 .header-user-message-small {
-	font-size: 16pt;
+	font-size: 14pt;
 	margin-top: 25px;
 	margin-bottom: 60px;
 }
@@ -878,4 +878,101 @@ span.clear { clear: left; display: block; }
 
 .bigger.container {
 	width: 980px;
+}
+/* Styling create organization page*/
+.hdx-wrapper .create-org {
+    width: 100%;
+}
+.create-org h1{
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6em;
+    font-weight: 300;
+}
+.org-control{
+	width: 400px;
+	float: left;
+	min-height:70px;
+	max-height:100px;
+	padding-right:15px;
+}
+.org-control-info{
+	width: 475px;
+	float:right;
+	min-height:70px;
+	max-height:100px;
+	padding-left:20px;
+	padding-top:20px;
+
+}
+
+.org-info-label{
+	background-color: #CCCCCC;
+	color: #FFFFFF;
+	min-height: 32px;
+	max-height: 32px;
+	max-width: 425px;
+	padding-left: 10px;
+	padding-top: 5px;
+	border-radius: 5px;
+	font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+    font-size: 0.9em;
+}
+
+.org-control-info-large{
+	width: 475px;
+	float:right;
+	min-height:100px;
+	max-height:130px;
+	padding-left:20px;
+	padding-top:20px;
+
+}
+
+.org-info-label-large{
+	background-color: #CCCCCC;
+	color: #FFFFFF;
+	min-height: 70px;
+	max-height: 70px;
+	max-width: 425px;
+	padding-left: 10px;
+	padding-top: 5px;
+	border-radius: 5px;
+	font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+    font-size: 0.9em;
+    vertical-align:middle; 
+	line-height:60px
+}
+
+.org-control-container{
+	width: 920px;
+	float:left;
+}
+
+.org-control label:after{
+	content: "*";
+	color: #FF0000;
+}
+.org-control label{
+	font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+	font-style: italic;
+}
+
+.org-control textarea{
+	max-height:70px;
+}
+
+
+.create-org.form-actions{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    margin-bottom: 0;
+    margin-left: -25px;
+    margin-right: -25px;
+    padding-bottom: 0;
+    text-align: right;
+    border-top: none;
+    float:left;
 }
