@@ -52,7 +52,7 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'groups_list': [vd.groups_not_empty],
             'caveats' : [tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')],
-            'dataset_source' : [tk.get_validator('ignore_missing'),
+            'dataset_source' : [tk.get_validator('not_empty'),
                     tk.get_converter('convert_to_extras')],
             'dataset_date' : [tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')],

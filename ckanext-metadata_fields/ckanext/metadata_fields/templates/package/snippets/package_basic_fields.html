@@ -18,6 +18,15 @@
 		</div>
 	</div>
 	{% endblock %}
+
+	{% block basic_fields_source %}
+  {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full']) }}
+  {% endblock %}
+
+{% endblock %}
+
+{% block package_basic_fields_tags %}
+{# Switched this with metadata field Source #}
 {% endblock %}
 
 {# if onepage == 1 #}

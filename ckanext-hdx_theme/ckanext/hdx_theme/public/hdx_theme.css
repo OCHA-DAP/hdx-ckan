@@ -884,3 +884,7 @@ span.clear { clear: left; display: block; }
 #field-dataset_methodology input[type=radio]{
     top: -1px !important;
 }
+
+#dataset_part_2_edit .control-full .select2-container {
+width: 473px !important;
+}
