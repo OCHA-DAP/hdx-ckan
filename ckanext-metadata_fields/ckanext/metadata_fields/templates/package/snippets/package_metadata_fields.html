@@ -83,6 +83,20 @@
       <input type="radio" name="methodology" value="Other"> Other
 <br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
 <br><br>
+    <script>
+      var meth = "{{data.methodology}}";
+      if(meth.match("Other") && meth.match("Other").length > 0){
+        var other = meth.split(" - ");
+        document.getElementById('method_other').value = other[1];
+        meth = other[0]
+      }
+      var elements = document.getElementsByName("methodology");
+      for(var e in elements){
+        if(meth == elements[e].value){
+          elements[e].checked = true;
+        }
+      }
+    </script>
     </div>
   </div>
 </div>
