@@ -975,4 +975,13 @@ span.clear { clear: left; display: block; }
     text-align: right;
     border-top: none;
     float:left;
+    line-height: 75px;
+    vertical-align: top;
 }
+
+.dan {
+	background-color: #0099FF;
+	background-image: none;
+}
+/* END Styling create organization page*/
+
