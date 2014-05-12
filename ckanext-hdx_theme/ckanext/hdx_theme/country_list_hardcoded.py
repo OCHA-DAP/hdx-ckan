@@ -64,7 +64,7 @@ FOCUS_COUNTRIES = [
                 "Nicaragua",
                 "Niger",
                 "Nigeria",
-                "occupied Palestinian territory",
+                "State of Palestine",
                 "Pakistan",
                 "Papua New Guinea",
                 "Paraguay",
