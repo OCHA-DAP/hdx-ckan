@@ -19,21 +19,22 @@
     {% endif %}
   </p>
   {% block resource_item_explore %}
+  {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
     <div class="btn-group">
     {% block resource_item_explore_links %}
 	{% if res.can_be_previewed %}
-    	<a href="{{ url }}" class="btn btn-secondary hdx-btn">
+    	<a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
             {{ _('Preview') }}
         </a>
 	{% endif %}
-     <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics" title="{{ _('Download') }}" target="_blank">
+     <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
             <img src="/images/actions/download.png" alt=" {{ _('Download') }}" />
      </a>
      {% set social_div_id = 'social-' + res.id %}
      {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
      <a href="#" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="{{social_div_id}}" 
      	data-module-social_wrapper_div_id="{{ social_wrapper_div_id }}"
-     	class="btn btn-secondary hdx-btn resource-url-analytics" target="_blank" title="{{ _('Share File') }}" onclick="return false;">
+     	class="btn btn-secondary hdx-btn resource-url-analytics ga-share" target="_blank" title="{{ _('Share File') }}" onclick="return false;">
             <img src="/images/actions/share.png" alt=" {{ _('Share') }}" />
      </a>
      <div id="{{ social_wrapper_div_id }}" class="popover-wrapper"></div>
