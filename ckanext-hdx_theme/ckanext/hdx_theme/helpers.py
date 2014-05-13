@@ -8,7 +8,10 @@ import ckan.logic as logic
 import datetime
 import count
 import json
+import logging
 from webhelpers.html import escape, HTML, literal, url_escape
+
+log = logging.getLogger(__name__)
 
 downloadable_formats = {
     'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
@@ -61,8 +64,10 @@ def get_last_revision_package(package_id):
 #     pkg = pkg_list[0]
 #     return pkg.latest_related_revision.id
     activity_objects = model.activity.package_activity_list(package_id, limit=1, offset=0)
-    activity = activity_objects[0]
-    return activity.revision_id
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return activity.revision_id
+    return None
 
 
 def get_last_revision_group(group_id):
@@ -70,8 +75,10 @@ def get_last_revision_group(group_id):
 #     grp = grp_list[0]
 #     last_rev = grp.all_related_revisions[0][0]
     activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
-    activity = activity_objects[0]
-    return activity.revision_id
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return activity.revision_id
+    return None
 
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
@@ -93,4 +100,21 @@ def markdown_extract_strip(text, extract_length=190):
     result_text = h.markdown_extract(text, extract_length)
     result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '')
     return result
+
+def render_date_from_concat_str(str, separator='-'):
+    result  = ''
+    if str:
+        strdate_list    = str.split(separator)
+        for index,strdate in enumerate(strdate_list):
+            try:
+                date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
+                render_strdate  = date.strftime('%b %d, %Y');
+                result  += render_strdate
+                if index < len(strdate_list)-1:
+                    result += ' - '
+            except ValueError, e:
+                log.warning(e)
+    
+    return result
+        
 

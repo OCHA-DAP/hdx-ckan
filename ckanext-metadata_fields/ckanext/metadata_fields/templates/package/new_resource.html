@@ -20,8 +20,9 @@
 {% endblock %}
 
 {% block primary %}
-<div class="primary">
-{% block primary_content %}
+</div></div>
+<div>
+  {% block primary_content %}
   {% if pkg_dict and pkg_dict.state != 'draft' %}
     <header class="module-content">{% block form_title %}
   <div class="package-upload-header">{{ _("ADD FILES") }}</div>

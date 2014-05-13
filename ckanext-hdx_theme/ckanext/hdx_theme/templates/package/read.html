@@ -15,8 +15,10 @@
     <h1>
       {% block page_heading %}
       {{ pkg.title or pkg.name }}
-      {% if pkg.state.startswith('draft') %}
-        [{{ _('Draft') }}]
+       {% if pkg.state.startswith('draft') %}
+        <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+      {% elif pkg.state.startswith('deleted') %}
+        <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
       {% endif %}
       {% endblock %}
     </h1>
