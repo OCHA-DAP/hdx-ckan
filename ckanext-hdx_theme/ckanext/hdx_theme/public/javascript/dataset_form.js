@@ -1,3 +1,30 @@
+$('#country-drop').change(function(){
+      var country = $('#country-drop option:selected').val();
+      var country_name = $('#country-drop option:selected').attr('display_name');
+      if($('#'+country).length == 0){
+        var number_of_groups = $('.group_checked').length;
+        //Add country
+        $('#selected_groups').append('<span class="filtered pill">'+country_name+' <input id="field-group-'+(number_of_groups)+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked" class="group_checked"/></span>');
+        //Add country for real
+        if($('#selected_groups_hidden').length >0){
+          $('#select_groups_hidden').append('<input id="'+country+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
+        }
+      }
+    });
+
+    $('#selected_groups').click(function(){
+      if(event.target.className == "filtered pill"){
+        //Uncheck hidden
+        var id = event.target.children.item().value;
+        $('#'+id).remove();
+        $(event.target).remove();
+      }else if(event.target.className == "group_checked"){
+        var id = event.target.value;
+        $('#'+id).remove();
+        $(event.target).parent().remove();
+      }
+    });
+
 $( "#field-dataset_date, #date_range1, #date_range2").datepicker();
   
 $('#field-organizations').change(function(){

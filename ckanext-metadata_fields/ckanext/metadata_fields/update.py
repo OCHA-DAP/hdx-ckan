@@ -130,6 +130,7 @@ def package_update(context, data_dict):
     return output
 
 def modified_save(context, pkg, data):
+    print data
     temp_groups = data['groups']
     data['groups'] = None
     pkg = model_save.package_dict_save(data, context)
