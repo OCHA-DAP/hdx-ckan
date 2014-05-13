@@ -957,11 +957,11 @@ width: 473px !important;
 	float:left;
 }
 
-.org-control label:after{
+.org-control label:after, .dataset-required label:after{
 	content: "*";
 	color: #FF0000;
 }
-.org-control label{
+.org-control label, .dataset-form label{
 	font-family: 'Roboto',sans-serif;
     font-weight: 400;
 	font-style: italic;

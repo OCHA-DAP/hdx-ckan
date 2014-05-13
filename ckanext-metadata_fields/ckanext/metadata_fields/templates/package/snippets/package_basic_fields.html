@@ -11,7 +11,7 @@
 
 {% block package_basic_fields_custom %}
 	{% block package_basic_fields_custom_creator %}
-	<div class="control-group">
+	<div class="control-group dataset-required">
         <label class="control-label" for="field-package-creator">{{ _('Creator') }} </label>
         <div class="controls">
 			<input type="text" value="{{ package_creator }}" name="package_creator" id="field-package-creator" readonly="readonly" />
@@ -20,7 +20,7 @@
 	{% endblock %}
 
 	{% block basic_fields_source %}
-  {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full']) }}
+  {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full','dataset-required']) }}
   {% endblock %}
 
 {% endblock %}
