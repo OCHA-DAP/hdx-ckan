@@ -772,7 +772,7 @@ a.info-tooltip, .info-item-name {
 
 span.clear { clear: left; display: block; }
 
-.creation-info-author {
+.creation-info-author, .creation-info-author a {
 	font-weight: 700;
 	font-size: 1.6 em;
 	color: #0099FF;
@@ -872,7 +872,6 @@ span.clear { clear: left; display: block; }
 
 .hdx-wrapper .page-header {
 	background: none;	
-    border: 0px !important;
 }
 
 .bigger.container {
