@@ -980,10 +980,23 @@ span.clear { clear: left; display: block; }
     line-height: 75px;
     vertical-align: top;
 }
+.org-control.mandatory label:after {
+    color: #FF0000;
+    content: " *";
+}
+
+.org-control label:after {
+    content: none;
+}
+
 
 .create-org-btn {
 	background-color: #0099FF;
 	background-image: none;
+}
+
+.org-control .slug-preview {
+    visibility: hidden;
 }
 
 /* used to show DHTML tabs that were otherwise hidden by .js .tab-content from global.css */
