@@ -335,7 +335,6 @@ class PackageController(base.BaseController):
         try:
             c.pkg_dict = get_action('package_show')(context, data_dict)
             c.pkg = context['package']
-            print c.pkg_dict
         except NotFound:
             abort(404, _('Dataset not found'))
         except NotAuthorized:
