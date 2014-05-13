@@ -985,5 +985,16 @@ span.clear { clear: left; display: block; }
 	background-color: #0099FF;
 	background-image: none;
 }
+
+/* used to show DHTML tabs that were otherwise hidden by .js .tab-content from global.css */
+.js .tab-content.visible-tab-content {
+	display: block;
+	padding: 0px 20px;
+}
+
+/* used in the about page to add some padding to the tab group */
+.hdx-tabbable {
+	padding-bottom: 20px;
+}
 /* END Styling create organization page*/
 
