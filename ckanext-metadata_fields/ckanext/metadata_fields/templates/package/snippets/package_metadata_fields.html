@@ -4,39 +4,11 @@
 {% block package_metadata_fields %}
 <div class="module-content graybg" {% if inheritied_form_style == 'edit' %}id="dataset_part_2_edit"{% else %}id="dataset_part_2"{% endif %}>
       <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
+
   {% block dataset_fields %}
-    {% if data.groups %}
-      <div class="control-group">
-        <label class="control-label">{{ _('Groups') }}</label>
-        <div class="controls">
-          {% for group in data.groups %}
-            {% if group.id != '-1' %}
-            <label class="checkbox" for="field-group-{{ loop.index0 }}">
-              <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked" />
-              {{ group.title }}
-            </label>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-   {% endif %}
 
 	{% if inheritied_form_style == 'edit' %} 
-		{% set group_name = 'groups__%s__id' % data.groups|length %}
-	    {% set available_groups = h.list_of_all_groups() %}
-	    <div class="control-group">
-	      	{% set error = errors.groups_list %}
-		  	<label class="control-label" for="field-group">{{ _("Add Group") }}</label>
-	      <div class="controls">
-	        <select id="field-group" name="{{group_name}}" data-module="autocomplete">
-	          <option value="-1">{{ _('Please select from below')}}</option>
-	          {% for grp in available_groups %}
-	            <option value="{{grp.id}}">{{ grp.display_name}}</option>
-	          {% endfor %}
-	        </select>
-	        {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-	      </div>
-	    </div>
+{{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage) }}
 	{% endif %}
     
   {% if inheritied_form_style != 'edit' %}
