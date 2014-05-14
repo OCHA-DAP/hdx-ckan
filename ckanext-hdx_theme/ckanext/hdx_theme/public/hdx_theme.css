@@ -540,7 +540,7 @@ body {
 }
 
 .header-user-message-small {
-	font-size: 16pt;
+	font-size: 14pt;
 	margin-top: 25px;
 	margin-bottom: 60px;
 }
@@ -772,7 +772,7 @@ a.info-tooltip, .info-item-name {
 
 span.clear { clear: left; display: block; }
 
-.creation-info-author {
+.creation-info-author, .creation-info-author a {
 	font-weight: 700;
 	font-size: 1.6 em;
 	color: #0099FF;
@@ -842,7 +842,6 @@ span.clear { clear: left; display: block; }
 	background: url("../../../base/images/bg.png") repeat scroll 0 0 #EEEEEE;
 	position: relative;
 	right: 702px;
-	margin-right: 15px;
 }
 
 .support-secondary {
@@ -851,14 +850,13 @@ span.clear { clear: left; display: block; }
 	background-color: #FFFFFF;
 	position: relative;
 	right: 15px;
-	margin-right: 15px;
 }
 
 .hdx-wrapper .secondary {
 	/* border: 1px solid #DDDDDD;
     margin-left: 15px;
-    margin-right: 15px; 
-    width: 188px; */
+    margin-right: 15px; */ 
+    width: 223px; 
     position: relative;
     left: 717px;
     
@@ -874,7 +872,6 @@ span.clear { clear: left; display: block; }
 
 .hdx-wrapper .page-header {
 	background: none;	
-    border: 0px !important;
 }
 
 .bigger.container {
@@ -888,3 +885,133 @@ span.clear { clear: left; display: block; }
 #dataset_part_2_edit .control-full .select2-container {
 width: 473px !important;
 }
+/* Styling create organization page*/
+.hdx-wrapper .create-org {
+    width: 100%;
+}
+.create-org h1{
+    cursor: pointer;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.6em;
+    font-weight: 300;
+}
+.org-control{
+	width: 400px;
+	float: left;
+	min-height:70px;
+	max-height:100px;
+	padding-right:15px;
+}
+.org-control-info{
+	width: 475px;
+	float:right;
+	min-height:70px;
+	max-height:100px;
+	padding-left:20px;
+	padding-top:20px;
+
+}
+
+.org-info-label{
+	background-color: #CCCCCC;
+	color: #FFFFFF;
+	min-height: 32px;
+	max-height: 32px;
+	max-width: 425px;
+	padding-left: 10px;
+	padding-top: 5px;
+	border-radius: 5px;
+	font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+    font-size: 0.9em;
+}
+
+.org-control-info-large{
+	width: 475px;
+	float:right;
+	min-height:100px;
+	max-height:130px;
+	padding-left:20px;
+	padding-top:20px;
+
+}
+
+.org-info-label-large{
+	background-color: #CCCCCC;
+	color: #FFFFFF;
+	min-height: 70px;
+	max-height: 70px;
+	max-width: 425px;
+	padding-left: 10px;
+	padding-top: 5px;
+	border-radius: 5px;
+	font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+    font-size: 0.9em;
+    vertical-align:middle; 
+	line-height:60px
+}
+
+.org-control-container{
+	width: 920px;
+	float:left;
+}
+
+.org-control label:after{
+	content: "*";
+	color: #FF0000;
+}
+.org-control label{
+	font-family: 'Roboto',sans-serif;
+    font-weight: 400;
+	font-style: italic;
+}
+
+.org-control textarea{
+	max-height:70px;
+}
+
+
+.create-org.form-actions{
+	background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    margin-bottom: 0;
+    margin-left: -25px;
+    margin-right: -25px;
+    padding-bottom: 0;
+    text-align: right;
+    border-top: none;
+    float:left;
+    line-height: 75px;
+    vertical-align: top;
+}
+.org-control.mandatory label:after {
+    color: #FF0000;
+    content: " *";
+}
+
+.org-control label:after {
+    content: none;
+}
+
+
+.create-org-btn {
+	background-color: #0099FF;
+	background-image: none;
+}
+
+.org-control .slug-preview {
+    visibility: hidden;
+}
+
+/* used to show DHTML tabs that were otherwise hidden by .js .tab-content from global.css */
+.js .tab-content.visible-tab-content {
+	display: block;
+	padding: 0px 20px;
+}
+
+/* used in the about page to add some padding to the tab group */
+.hdx-tabbable {
+	padding-bottom: 20px;
+}
+/* END Styling create organization page*/
+

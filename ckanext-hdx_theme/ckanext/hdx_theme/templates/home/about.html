@@ -7,6 +7,7 @@
 {% endblock %}
 
 {% block primary %}
+  {#
   <article class="module">
     <div class="module-content">
       {% block about %}
@@ -19,6 +20,28 @@
       {% endblock %}
     </div>
   </article>
+  #}
+
+<article class="module">
+	<div class="tabbable hdx-tabbable">
+	<header class="module-content page-header">
+	<ul class="nav nav-tabs">
+		<li class="active"><a href="#tab1" data-toggle="tab" class="hdx-tab-button">{{ _('What is HDX ?') }}</a></li>
+		<li><a href="#tab2" data-toggle="tab" class="hdx-tab-button">{{ _('Data Licenses') }}</a></li>
+	</ul>
+	</header>
+	<div class="tab-content visible-tab-content">
+		<div class="tab-pane active" id="tab1">
+			{% snippet 'home/snippets/hdx_what_is.html' %}
+		</div>
+		<div class="tab-pane" id="tab2">
+			{% snippet 'home/snippets/hdx_licenses.html' %}
+		</div>
+	</div>
+	</div>
+</article>
+    
+
 {% endblock %}
 
 {% block secondary %}{% endblock %}
