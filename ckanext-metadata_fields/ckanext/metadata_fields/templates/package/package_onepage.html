@@ -4,7 +4,9 @@
 
 {% block toolbar %}
 {{super()}}
-{% snippet "snippets/thanks_for_contributing.html" %}
+{% snippet "snippets/greeting_message.html", show_small_message=False, greeting=_('Thanks for contributing - you rock.'),
+              explanation=_('In order to contribute a dataset, you first need to register or login.') %}
+
 {% endblock %}
 
 {% block primary %}
