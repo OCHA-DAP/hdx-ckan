@@ -32,7 +32,9 @@
   <div class="controls">
     <select id="field-license" name="license_id" data-module="autocomplete">
       {% for license_desc, license_id in licenses  %}
+      	{% if license_id %}
         <option value="{{ license_id }}" {% if data.get('license_id', 'notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
+        {% endif %}
       {% endfor %}
     </select>
     {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
