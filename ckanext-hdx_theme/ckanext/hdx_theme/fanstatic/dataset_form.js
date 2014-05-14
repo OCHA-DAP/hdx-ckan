@@ -69,3 +69,11 @@ $('#field-organizations').change(function(){
   }
   $("#field-dataset_date, #date_range1, #date_range2").datepicker();
     });
+
+$('#field-license').change(function(){ 
+  if($(this).val() == 'hdx-other'){
+    $('#licenses-other-define').show();
+  }else{
+    $('#licenses-other-define').hide();
+  }
+});

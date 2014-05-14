@@ -9,6 +9,34 @@
 
 {% set onepage = onepage or 0 %}
 
+{% block package_basic_fields_license %}
+<div class="control-group dataset-required">
+  {% set error = errors.license_id %}
+  <label class="control-label" for="field-license">{{ _("License") }}</label>
+  <div class="controls">
+    <select id="field-license" name="license_id" data-module="autocomplete">
+      {% for license_desc, license_id in licenses  %}
+      	{% if license_id %}
+        <option value="{{ license_id }}" {% if data.get('license_id', 'notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+    <span class="info-block info-inline">
+      <i class="icon-info-sign"></i>
+      {% trans %}
+        License definitions and additional information can be found
+        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
+      {% endtrans %}
+    </span>
+  </div>
+</div>
+<div id="licenses-other-define" {% if data.license_id != 'hdx-other' %}style="display:none;"{% endif %}>
+	{{ form.markdown('license_other', id='field-license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other) }}
+  </div>
+{% endblock %}
+
+
 {% block package_basic_fields_custom %}
 	{% block package_basic_fields_custom_creator %}
 	<!--<div class="control-group dataset-required">
