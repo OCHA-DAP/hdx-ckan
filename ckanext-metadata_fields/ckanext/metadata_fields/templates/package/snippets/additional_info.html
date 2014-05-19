@@ -80,7 +80,7 @@
 	    </tr>
 	    <tr>
 	      <th scope="row" class="dataset-label">{{ _("Caveats / Comments") }}</th>
-	      <td class="dataset-details">{{ pkg_dict.caveats }}</td>
+	      <td class="dataset-details">{{ h.render_markdown(pkg_dict.caveats) }}</td>
 	    </tr>
 
       {# for extra in h.sorted_extras(pkg_dict.extras) %}
