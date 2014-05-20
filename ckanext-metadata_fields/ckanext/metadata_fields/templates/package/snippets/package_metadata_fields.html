@@ -69,24 +69,25 @@
   <div id="field-dataset_methodology">
   <label class="control-label" for="methodology">Methodology</label>
     <div class="controls ">  
-    <input type="radio" name="methodology" value="Census"> Census
+    <input type="radio" name="methodology" value="Census"> Census</input>
     </div>
     <div class="controls ">  
-      <input type="radio" name="methodology" value="Sample Survey"> Sample Survey
+      <input type="radio" name="methodology" value="Sample Survey"> Sample Survey</input>
     </div>
     <div class="controls ">  
-      <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data
+      <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data</input>
     </div>
     <div class="controls ">  
       <input type="radio" name="methodology" value="Registry"> Registry</div>
     <div class="controls ">  
-      <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other
+      <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
 	  <br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
 	  <br><br>
+
     <script>
-      var meth = "{{ h.markdown_extract(data.methodology) }}";
+      var meth = "{{ h.markdown_extract_strip(data.methodology) }}";
       
-      if(meth.match("Other") ){
+      if(meth.length>0 && meth.match("Other") ){
         var other = meth.split(" - ");
         document.getElementById('method_other').value = other[1];
         meth = other[0];
@@ -116,6 +117,7 @@
         document.getElementById('date_range1').value = range[0];
         document.getElementById('date_range2').value = range[1];       
       }
+      
     </script>
     </div>
   </div>
