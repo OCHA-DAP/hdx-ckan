@@ -12,7 +12,8 @@ import ckan.lib.helpers as h
 import ckan.lib.base as base
 import ckan.logic as logic
 
-from ckan.common import c, _, request
+from ckan.common import c, _, request, g
+from pylons import config
 
 render = base.render
 get_action = logic.get_action

@@ -21,7 +21,9 @@ $('#field-organizations').change(function(){
 
       //Add other specifics
       var other = $('#method_other').val();
-      $('input[value="Other"]').val("Other - "+other);
+      //$('input[value="Other"]').val("Other - "+other);
+      //https://github.com/OCHA-DAP/hdx-ckan/issues/344
+      $('input[value="Other"]').val(other);
 
       //Create date range
       if($('#date_range1').val()){
