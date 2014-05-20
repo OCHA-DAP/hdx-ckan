@@ -83,9 +83,12 @@
       <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
 	  <br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
 	  <br><br>
-
+	  {% set py_meth='' %}
+	  {% if data.methodology %}
+	 	 {% set py_meth = h.markdown_extract(data.methodology) %}
+	  {% endif %}
     <script>
-      var meth = "{{ h.markdown_extract_strip(data.methodology) }}";
+      var meth = "{{ py_meth }}";
       
       if(meth.length>0 && meth.match("Other") ){
         var other = meth.split(" - ");
