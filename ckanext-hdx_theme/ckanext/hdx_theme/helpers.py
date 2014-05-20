@@ -74,7 +74,7 @@ def get_group_followers(grp_id):
 def get_group_members(grp_id):
     member_list = logic.get_action('member_list')(
             {'model': model, 'session': model.Session},
-            {'id': grp_id})
+            {'id': grp_id, 'object_type': 'user'})
     result = len(member_list)
     return result
 
