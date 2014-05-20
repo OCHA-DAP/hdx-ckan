@@ -6,6 +6,7 @@ import ckan.model as model
 import sqlalchemy
 import ckan.logic as logic
 import datetime
+from webhelpers.html import escape, HTML, literal, url_escape
 
 downloadable_formats = {
     'csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
@@ -77,4 +78,11 @@ def get_group_members(grp_id):
             {'id': grp_id, 'object_type': 'user'})
     result = len(member_list)
     return result
+
+def markdown_extract_strip(text, extract_length=190):
+    ''' return the plain text representation of markdown encoded text.  That
+    is the texted without any html tags.  If extract_length is 0 then it
+    will not be truncated.'''
+    result = h.markdown_extract(text, extract_length)
+    return result.rstrip('\n')
 

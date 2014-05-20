@@ -64,7 +64,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_last_modifier_user':hdx_helpers.get_last_modifier_user,
             'get_last_revision_group':hdx_helpers.get_last_revision_group,
             'get_group_followers':hdx_helpers.get_group_followers,
-            'get_group_members':hdx_helpers.get_group_members
+            'get_group_members':hdx_helpers.get_group_members,
+            'markdown_extract_strip':hdx_helpers.markdown_extract_strip
         }
         
     def get_actions(self):
