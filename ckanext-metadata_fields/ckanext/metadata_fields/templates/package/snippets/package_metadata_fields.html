@@ -80,22 +80,31 @@
     <div class="controls ">  
       <input type="radio" name="methodology" value="Registry"> Registry</div>
     <div class="controls ">  
-      <input type="radio" name="methodology" value="Other"> Other
-<br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
-<br><br>
+      <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other
+	  <br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
+	  <br><br>
     <script>
-      var meth = "{{data.methodology}}";
-      if(meth.match("Other")){
+      var meth = "{{ h.markdown_extract(data.methodology) }}";
+      
+      if(meth.match("Other") ){
         var other = meth.split(" - ");
         document.getElementById('method_other').value = other[1];
-        meth = other[0]
+        meth = other[0];
       }
+      
       var elements = document.getElementsByName("methodology");
+      var checkedFlag = false;
       for(var e in elements){
         if(meth == elements[e].value){
           elements[e].checked = true;
+          checkedFlag = true;
         }
       }
+      //in any other case with "Other -" or not it will select the other option
+      if(meth.length>0 && !checkedFlag){
+        document.getElementById('meth_other_radio').checked = true;
+      	document.getElementById('method_other').value = meth;
+	  }
 
       var date = "{{data.dataset_date}}";
       if(date.match("-")){
