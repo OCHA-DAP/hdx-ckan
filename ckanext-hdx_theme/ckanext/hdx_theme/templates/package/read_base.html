@@ -50,10 +50,12 @@
   {% block secondary_help_content %}{% endblock %}
   {% block creation_information %}
   	<div class="info-wrapper">
-  		<div class="uppercase">{{ _('Dataset contributed by:') }}</div>
+  		<div class="uppercase">{{ _('Contributed by:') }}</div>
   		<div class="creation-info-author">
   			{% if pkg.organization %}
-  				<a class="info-item-name" href="{{ url }}">{{ pkg.organization.title or pkg.organization.name }}</a>
+  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=pkg.organization.name) }}">
+  					{{ pkg.organization.title or pkg.organization.name }}
+  				</a>
   			{% else %}
   				{% if c.pkg_dict and c.pkg_dict.package_creator %}
   					{{ h.linked_user(c.pkg_dict.package_creator, avatar=0) }}

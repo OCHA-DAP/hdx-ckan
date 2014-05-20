@@ -69,33 +69,46 @@
   <div id="field-dataset_methodology">
   <label class="control-label" for="methodology">Methodology</label>
     <div class="controls ">  
-    <input type="radio" name="methodology" value="Census"> Census
+    <input type="radio" name="methodology" value="Census"> Census</input>
     </div>
     <div class="controls ">  
-      <input type="radio" name="methodology" value="Sample Survey"> Sample Survey
+      <input type="radio" name="methodology" value="Sample Survey"> Sample Survey</input>
     </div>
     <div class="controls ">  
-      <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data
+      <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data</input>
     </div>
     <div class="controls ">  
       <input type="radio" name="methodology" value="Registry"> Registry</div>
     <div class="controls ">  
-      <input type="radio" name="methodology" value="Other"> Other
-<br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
-<br><br>
+      <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
+	  <br><input type="text" name="method_other" id="method_other" style="width:30%; margin-left:20px;">
+	  <br><br>
+	  {% set py_meth='' %}
+	  {% if data.methodology %}
+	 	 {% set py_meth = h.markdown_extract(data.methodology) %}
+	  {% endif %}
     <script>
-      var meth = "{{data.methodology}}";
-      if(meth.match("Other")){
+      var meth = "{{ py_meth }}";
+      
+      if(meth.length>0 && meth.match("Other") ){
         var other = meth.split(" - ");
         document.getElementById('method_other').value = other[1];
-        meth = other[0]
+        meth = other[0];
       }
+      
       var elements = document.getElementsByName("methodology");
+      var checkedFlag = false;
       for(var e in elements){
         if(meth == elements[e].value){
           elements[e].checked = true;
+          checkedFlag = true;
         }
       }
+      //in any other case with "Other -" or not it will select the other option
+      if(meth.length>0 && !checkedFlag){
+        document.getElementById('meth_other_radio').checked = true;
+      	document.getElementById('method_other').value = meth;
+	  }
 
       var date = "{{data.dataset_date}}";
       if(date.match("-")){
@@ -107,6 +120,7 @@
         document.getElementById('date_range1').value = range[0];
         document.getElementById('date_range2').value = range[1];       
       }
+      
     </script>
     </div>
   </div>

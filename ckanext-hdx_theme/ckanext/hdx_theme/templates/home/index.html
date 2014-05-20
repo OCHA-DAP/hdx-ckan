@@ -189,7 +189,11 @@
       <select id="group_select">
         <option selected value="#">{{ _(" -- Choose Country -- ") }}</option>
         {% for group in c.group_package_stuff %}
-        {% snippet 'group/snippets/group_dropdown.html', group=group, truncate_title=35 %}
+        	{# replaced snippet with jinja code for faster performance (-1s on homepage) #}
+	        {% if group.type is defined %}
+				{% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
+				<option value="{{url}}">{{ group.display_name }} </option>
+			{% endif %}
         {% endfor %}
       </select>
       {% endblock %}
