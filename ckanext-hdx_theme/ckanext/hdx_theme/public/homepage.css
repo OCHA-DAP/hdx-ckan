@@ -340,7 +340,12 @@
 
     .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
         border-top-color: #006abf;
+    }
 
+    .navbar .nav li.dropdown .gravatar{
+        -webkit-border-radius: 500px;
+        -moz-border-radius: 500px;
+        border-radius: 500px;
     }
 /* END Header */
 
