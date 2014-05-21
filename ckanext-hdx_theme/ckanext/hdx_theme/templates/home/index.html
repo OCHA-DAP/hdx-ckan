@@ -238,9 +238,8 @@
 
 {% block home_search %}
   <form class="form-search" method="get" action="{% url_for controller='package', action='search' %}">
-
     <div class="input-append">
-      <input type="text" class="searchInput" placeholder="{{ _("Search HDX Repository") }}">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _("Search HDX Repository") }}">
       <button type="submit" class="button">
         <i class="icon-search"></i>
       </button>
@@ -300,7 +299,6 @@
    {{ super() }}
    <link rel="stylesheet" href="/homepage.css">
    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
-   <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
    {% resource 'hdx_theme/count.js' %}
 {% endblock %}
 
