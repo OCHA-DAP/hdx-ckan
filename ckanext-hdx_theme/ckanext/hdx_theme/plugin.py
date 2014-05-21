@@ -5,6 +5,16 @@ import ckan.model.package as package
 import ckan.model.license as license
 import ckanext.hdx_theme.licenses as hdx_licenses
 
+from beaker.cache import cache_regions
+
+cache_regions.update({
+        'hdx_memory_cache':{
+            'expire': 172800, # 2 days
+            'type':'memory',
+            'key_length': 250
+        }
+    })
+
 def _generate_license_list():
     package.Package._license_register = license.LicenseRegister() 
     package.Package._license_register.licenses = [
@@ -54,7 +64,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_last_modifier_user':hdx_helpers.get_last_modifier_user,
             'get_last_revision_group':hdx_helpers.get_last_revision_group,
             'get_group_followers':hdx_helpers.get_group_followers,
-            'get_group_members':hdx_helpers.get_group_members
+            'get_group_members':hdx_helpers.get_group_members,
+            'markdown_extract_strip':hdx_helpers.markdown_extract_strip
         }
         
     def get_actions(self):

@@ -1003,6 +1003,17 @@ width: 473px !important;
     visibility: hidden;
 }
 
+/* This is used to show a big centered message, 
+for example: in the user dashboard when the user has no organizations */
+.big-message {
+	font-size: 25px;
+	font-weight: lighter;
+	text-align: center;
+	line-height: 45px;
+	padding-top: 30px;
+	padding-bottom: 50px;
+}
+
 /* used to show DHTML tabs that were otherwise hidden by .js .tab-content from global.css */
 .js .tab-content.visible-tab-content {
 	display: block;

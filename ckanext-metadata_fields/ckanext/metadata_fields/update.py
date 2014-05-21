@@ -101,9 +101,11 @@ def package_update(context, data_dict):
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
     context_org_update['defer_commit'] = True
+    org_dict = {'id': pkg.id}
+    if 'owner_org' in data:
+        org_dict['organization_id'] = pkg.owner_org
     _get_action('package_owner_org_update')(context_org_update,
-                                            {'id': pkg.id,
-                                             'organization_id': pkg.owner_org})
+                                            org_dict)
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
