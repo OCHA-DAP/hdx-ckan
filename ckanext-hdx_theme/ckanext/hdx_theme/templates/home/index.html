@@ -28,20 +28,29 @@
             <nav class="usermenu section">
               <ul class="mainLinks">
                 {# ('organizations_index', _('Organizations')), #}
+
                 {% block header_site_navigation_tabs %}
-                {{ h.build_nav_main(
-                  ('about', _('About')),
-                  ('search', _('Data')),
-                  ('group_index', _('Contribute')),
-                  ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ('mailto:&#104;&#100;&#120;&#064;&#117;&#110;&#046;&#111;&#114;&#103;', _('Help')),
-                ) }}
+                {% if c.userobj %}
+                  {{ h.build_nav_main(
+                    ('about', _('About')),
+                    ('search', _('Data')),
+                    ('organizations_index', _('Organizations')),
+                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
+                  ) }}
+                {% else %}
+                  {{ h.build_nav_main(
+                    ('about', _('About')),
+                    ('search', _('Data')),
+                    ('organizations_index', _('Organizations')),
+                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
+                  ) }}
+                {% endif %}
                 {% endblock %}
               </ul>
               <div class="pull-right">
                 <ul class="nav nav-pills">
                   <li class="submitData">
-                    <a>
+                    <a href="{% if c.userobj %}/dataset/new{% else %}/contribute{% endif %}">
                       {{ _("Submit data") }}
                       <img src="/images/homepage-new/attachment.svg" style="width: 24px; height: 21px; margin-left: 20px;" />
                     </a>
@@ -97,8 +106,8 @@
                   </li>
                   {% else %}
                   {% block header_account_notlogged %}
-                  <li>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
-                  <li>{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
+                  <li class="newLogin">{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
+                  <li class="newLogin">{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
                   {% endblock %}
                   {% endif %}
                 </ul>

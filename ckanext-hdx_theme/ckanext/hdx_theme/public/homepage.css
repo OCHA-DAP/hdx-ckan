@@ -296,6 +296,11 @@
         top: -12px;
     }
 
+    .newHeader .content .navbar nav .pull-right li.newLogin{
+        position: relative;
+        top: -12px;
+    }
+
     .newHeader .content .navbar nav li.submitData a{
         color: #ffffff;
         text-shadow: none;
