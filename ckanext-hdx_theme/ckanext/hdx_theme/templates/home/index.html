@@ -251,209 +251,40 @@
         {% endif %}
       {% endfor %}
     </select>
+    <b class="caret"></b>
   </div>
 {% endblock %}
 
-
-{% block jumbotron %}
-
-
-
-  <div class="searchWidget">
-    <div class="searchForKeywordText">
-      {{ _("Start by searching for keyword") }}
-    </div>
-    <div>
-      {{ self.home_search() }}
-    </div>
-    <div class="searchExamplesText">
-      <p>
-        {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">{{ _("preparedness data for Kenya") }}</a>
-        {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics' %}">{{ _("world health statistics") }}</a>
-      </p>
-
-    </div>
-    <div >
-      <hr/>
-    </div>
-    <div class="searchByCountryText">
-      {{ _("Alternatively, search by country") }}
-    </div>
-    <div class="searchByCountryDropdown">
-      {{ self.group_select() }}
-    </div>
-    <div class="ribbon">
-      <p class="ribbon-content">
-        <a href="/contribute">
-          {{ _("or share your dataset") }}
-        </a>
-      </p>
-    </div>
-  </div>
-
-  <div class="jumbotron">
-    <div class="maprow">
-
+{% block footer %}
+  <footer class="newFooter">
+    <div class="container">
       <div class="row">
-        <div class="span12 col-alpha" style="height: 40px;">
-          &nbsp;
-        </div>
-      </div>
-      <div class="row">
-        <div class="span12 col-alpha">
-          <div class="row">
-            <div class="span6 hdxTextRow">
-              <div class="row" style="margin-top: 20px; margin-bottom: 30px;">
-                <div class="span1">
-                  <hr/>
-                </div>
-                <div class="span4 hdxTitle">
-                  {{ _("The Humanitarian Data Exchange") }}
-                </div>
-                <div class="span1">
-                  <hr/>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
-                <div class="span6 hdxPhrase">
-                  {{ _("Find and share humanitarian data.") }}
-                </div>
-              </div>
-              <div class="row" style="margin-top: 30px; margin-bottom: 30px; height: 80px;">
-                <div class="span6 hdxDescription">
-                  {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
-                        global datasets relevant to humanitarian work as well as local datasets from our
-                        three pilot locations - Colombia, Kenya and Yemen. You can also create an
-                        account and add your own data to the repository to share privately or publicly.") }}
-                  <br/>
-                  {{ _("Please have a look around and send us your feedback!") }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row separator">
-            <div class="span12" style="background: #F65C51; height: 10px;">
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row countRow">
-        <div class="span6 hdxTextRow ">
-          <div class="row">
-            <div class="span2">
-              <div class="row">
-                <div class="span2 itemCount">
-                  <a href="{% url_for 'search' %}"
-                     data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
-                    0
-                  </a>
-                </div>
-              </div>
-              <div class="row">
-                <div class="span2 itemName">
-                  {{ _("Datasets") }}
-                </div>
-              </div>
-            </div>
-
-          <div class="span2">
-            <div class="row">
-              <div class="span2 itemCount">
-                <a href="{% url_for 'group_index' %}"
-                   data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
-                  0
-                </a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="span2 itemName">
-                {{ _("Countries") }}
-              </div>
-            </div>
-          </div>
-
-          <div class="span2">
-            <div class="row">
-              <div class="span2 itemCount">
-                <a href="#"
-                   data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
-                  0
-                </a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="span2 itemName">
-                {{ _("Sources") }}
-              </div>
-            </div>
-          </div>
-
-        </div>
+        <div class="span12">
+          <span class="text">
+            {{ _("A project by") }}:
+          </span>
+          <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
+          <span class="text">
+            {{ _("Related Sites") }}:
+          </span>
+          <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
+          <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
+          <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
+          <span class="text">
+            {{ _("Stay connected") }}:
+          </span>
+          <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
+          <a href="mailto:ochadataproject@un.org"><img src="/images/homepage-new/email.png"/></a>
         </div>
       </div>
     </div>
 
-  </div>
-{% endblock %}
-
-
-
-{% block group_drop %}
-  <div id="group_nav">
-    <div id="group_nav_text">{{ _("Choose a country from the dropdown or click on the map") }}</div>
-    <div id="group_dropdown" class="pull-right">
-
-    </div>
-  </div>
-{% endblock %}
-
-
-
-{% block primary_content %}
-{% block home_secondary_content %}
-  <div class="module module-shallow module-narrow module-dark info box">
-            {{ self.home_search() }}
-            {# block home_tags %}
-              <div class="tags">
-                <h3>{{ _('Popular Tags') }}</h3>
-                {% set tags = h.get_facet_items_dict('tags', limit=3) %}
-                {% for tag in tags %}
-                  <a class="tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-                {% endfor %}
-              </div>
-            {% endblock #}
-          </div>
-      {% endblock %}
-
-  <div class="module module-popup">
-    <div class="module-content box">
-      {% block home_primary %}
-        <header>
-          {% if g.site_intro_text %}
-          {{ h.render_markdown(g.site_intro_text) }}
-          {% else %}
-            {% block home_primary_content %}
-              <h1 class="page-heading">{% block home_primary_heading %}{{ _("Welcome to CKAN") }}{% endblock %}</h1>
-              <p>
-              {% block home_primary_text %}
-                {% trans %}This is a nice introductory paragraph about CKAN or the site
-                in general. We don't have any copy to go here yet but soon we will
-                {% endtrans %}
-              {% endblock %}
-              </p>
-            {% endblock %}
-          {% endif %}
-        </header>
-      {% endblock %}
-
-    </div>
-  </div>
-
-{% endblock %}
-
-{% block secondary_content %}
- 
+    {% block footer_debug %}
+      {% if g.debug %}
+        {% include 'snippets/debug.html' %}
+      {% endif %}
+    {% endblock %}
+  </footer>
 {% endblock %}
 
 {% block scripts %}

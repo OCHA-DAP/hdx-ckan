@@ -157,14 +157,22 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
         color: #dddddd;
+    }
 
+    .homepage-main .rightContent .searchSelect select option{
+        color: #888888;
     }
 
     .homepage-main .rightContent .searchSelect select:focus{
-        outline: none;
-        outline-offset: 0;
+        outline: none none;
     }
 
+
+    .homepage-main .rightContent .searchSelect select:-moz-focusring {
+        color: transparent;
+        text-shadow: 0 0 0 #dddddd;
+        outline: none;
+    }
 
     .homepage-main .rightContent .searchSelect {
         width: 316px;
@@ -174,6 +182,13 @@
         /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
         border: 0;
         border-radius: 6px;
+    }
+
+    .homepage-main .rightContent .searchSelect .caret {
+        left: 280px;
+        position: relative;
+        top: -36px;
+        margin: 0;
     }
 
     .homepage-main .rightContent .form-search .input-append .button{
@@ -241,7 +256,7 @@
         display: inline;
     }
     .newHeader .content .navbar nav ul {
-        margin: 0 0 0 40px;
+        margin: 0 0 0 25px;
     }
     .newHeader .content .navbar nav li a{
         color: #000000;
@@ -273,7 +288,7 @@
         position: relative;
         top: -16px;
         width: 200px;
-        margin-right: 40px;
+        margin-right: 30px;
     }
 
     .newHeader .content .navbar nav .pull-right li.dropdown{
@@ -291,4 +306,47 @@
         margin-left: 30px;
     }
 
+    .navbar .nav li.dropdown > .dropdown-toggle .username{
+        color: #007ce0;
+        text-transform: none;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret {
+        margin-top: 11px;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #007ce0;
+    }
+
+    .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
+        border-top-color: #006abf;
+
+    }
 /* END Header */
+
+/* Footer */
+    .newFooter {
+        height: 100px;
+        vertical-align: middle;
+        padding-top: 36px;
+    }
+    .newFooter .text {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #888888;
+        text-transform: uppercase;
+        margin-left: 40px;
+        line-height: 28px;
+    }
+
+    .newFooter img{
+        height: 28px;
+        margin-left: 15px;
+        background-color: white;
+    }
+
+    .newFooter .text:first-child{
+        margin-left: 0;
+    }
+/* END Footer */
