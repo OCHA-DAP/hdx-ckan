@@ -83,6 +83,7 @@ def markdown_extract_strip(text, extract_length=190):
     ''' return the plain text representation of markdown encoded text.  That
     is the texted without any html tags.  If extract_length is 0 then it
     will not be truncated.'''
-    result = h.markdown_extract(text, extract_length)
-    return result.rstrip('\n')
+    result_text = h.markdown_extract(text, extract_length)
+    result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '')
+    return result
 
