@@ -1,0 +1,357 @@
+/* Homepage */
+    ::-webkit-input-placeholder {
+        color: #cccccc;
+        font-size: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+        color: #cccccc;
+        font-size: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+        color: #cccccc;
+        font-size: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+    }
+
+    :-ms-input-placeholder {
+        color: #cccccc;
+        font-size: 16px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+    }
+
+    @font-face {
+        font-family: 'Gotham-Bold';
+        src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+    }
+
+    @font-face {
+        font-family: 'Gotham-Light';
+        src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+    }
+
+    .homepage-main{
+        background-color: #1ebfb3;
+        background-image: url("/images/homepage-new/map.png");
+        background-size: cover;
+        font-family: 'Gotham-Bold',sans-serif;
+        font-weight: 400;
+    }
+
+    .homepage-background{
+        height: 710px;
+        background-color: rgba(30, 191, 179, 0.7);
+    }
+
+
+    .homepage-main .leftContent{
+        color: white;
+    }
+
+    .homepage-main .leftContent h1{
+        line-height: 100%;
+        font-size: 48px;
+        font-weight: 400;
+    }
+
+    .homepage-main .leftContent h3{
+        font-size: 18px;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+
+    .homepage-main .leftContent .hdxDescription{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 14px;
+        line-height: 140%;
+        font-weight: 400;
+    }
+
+    .homepage-main .blankRow{
+        height: 150px;
+    }
+
+    .homepage-main .rightContent .searchBox{
+        width: 360px;
+        height: 250px;
+        background-color: #eeeeee;
+        border-radius: 6px;
+        margin-bottom: 50px;
+    }
+
+    .homepage-main .rightContent .searchBox .firstSearch{
+        margin-top: 24px;
+    }
+
+    .homepage-main .rightContent .searchBox .firstSearch .exampleSearch{
+        font-size: 12px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        color: #888888;
+        margin-left: 22px;
+        margin-top: 5px;
+    }
+
+    .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a{
+        color: #007ce0;
+    }
+
+    .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:hover, .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:focus{
+        color: #006abf;
+        text-decoration: none;
+    }
+    .homepage-main .rightContent .searchBox .secondSearch{
+        margin-top: 24px;
+    }
+
+    .homepage-main .rightContent .searchBox .searchHeader{
+        background-color: #ffffff;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+    }
+
+    .homepage-main .rightContent .searchBox .searchContent{
+        padding-left: 22px;
+        padding-right: 22px;
+    }
+    .homepage-main .rightContent .searchBox .searchContent .form-search{
+        margin: 0;
+    }
+
+    .homepage-main .rightContent .searchBox .searchHeader p{
+        color: #007ce0;
+        font-size: 16px;
+        text-transform: uppercase;
+        line-height: 60px;
+    }
+
+    .homepage-main .rightContent .form-search .input-append .searchInput{
+        width: 246px;
+        height: 45px;
+        border-radius: 6px 0 0 6px;
+        background-color: white;
+        border: 0;
+        padding: 0 0 0 20px;
+    }
+
+    .homepage-main .rightContent .searchSelect select{
+        height: 45px;
+        background: transparent;
+        width: 336px;
+        padding-left: 16px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 16px;
+        line-height: 45px;
+        border: 0;
+        border-radius: 0;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        color: #dddddd;
+    }
+
+    .homepage-main .rightContent .searchSelect select option{
+        color: #888888;
+    }
+
+    .homepage-main .rightContent .searchSelect select:focus{
+        outline: none none;
+    }
+
+
+    .homepage-main .rightContent .searchSelect select:-moz-focusring {
+        color: transparent;
+        text-shadow: 0 0 0 #dddddd;
+        outline: none;
+    }
+
+    .homepage-main .rightContent .searchSelect {
+        width: 316px;
+        height: 45px;
+        overflow: hidden;
+        background-color: #ffffff;
+        /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
+        border: 0;
+        border-radius: 6px;
+    }
+
+    .homepage-main .rightContent .searchSelect .caret {
+        left: 280px;
+        position: relative;
+        top: -36px;
+        margin: 0;
+    }
+
+    .homepage-main .rightContent .form-search .input-append .button{
+        width: 50px;
+        height: 45px;
+        padding: 0;
+        background-color: #007ce0;
+        border: 0;
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        color: #eeeeee
+    }
+
+    .homepage-main .rightContent .form-search .input-append .button .icon-search{
+        font-size: 20px;
+        line-height: 100%;
+        text-align: right;
+        width: 20px;
+        color: #ffffff;
+    }
+
+    .homepage-main .rightContent .countRow{
+        font-family: 'Gotham-Light', sans-serif;
+        font-weight: 400;
+        color: #ffffff;
+        text-align: center;
+    }
+
+    .homepage-main .rightContent .countRow .itemCount a{
+        font-size: 60px;
+        color: #ffffff;
+        line-height: 100%;
+    }
+
+    .homepage-main .rightContent .countRow .itemCount a:focus, .homepage-main .rightContent .countRow .itemCount a:hover{
+        text-decoration: none;
+        color: #ffffff;
+    }
+
+    .homepage-main .rightContent .countRow .itemName{
+        font-size: 18px;
+        text-transform: uppercase;
+        padding-top: 20px;
+    }
+
+    .homepage-main .rightContent .countRow .hdxTextRow{
+        margin-left: 34px;
+    }
+
+    .homepage-main .rightContent .countRow .span2{
+        margin: 0;
+    }
+/* END Homepage */
+
+/* Header */
+    .newHeader {
+        height: 100px;
+    }
+
+    .newHeader .container{
+        padding-top: 34px;
+    }
+
+    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav, .newHeader .content .navbar nav ul.mainLinks, .newHeader .content .navbar nav ul.mainLinks *{
+        display: inline;
+    }
+    .newHeader .content .navbar nav ul {
+        margin: 0 0 0 25px;
+    }
+    .newHeader .content .navbar nav li a{
+        color: #000000;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 31px;
+        text-transform: uppercase;
+    }
+
+    .newHeader .content .navbar nav ul.mainLinks li a:hover, .newHeader .content .navbar nav ul.mainLinks li a:focus {
+        text-decoration: none;
+    }
+
+    .newHeader .content .navbar nav ul.mainLinks li a:after{
+        content: "|";
+        margin-left: 15px;
+        margin-right: 15px;
+    }
+
+    .newHeader .content .navbar nav ul.mainLinks li:last-child a:after{
+        content: "";
+        margin: 0;
+    }
+
+    .newHeader .content .navbar nav li.submitData{
+        background-color: #f2645a;
+        border-radius: 6px;
+        position: relative;
+        top: -16px;
+        width: 200px;
+        margin-right: 30px;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.dropdown{
+        position: relative;
+        top: -12px;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.newLogin{
+        position: relative;
+        top: -12px;
+    }
+
+    .newHeader .content .navbar nav li.submitData a{
+        color: #ffffff;
+        text-shadow: none;
+        padding: 0;
+        height: 60px;
+        line-height: 60px;
+        font-size: 14px;
+        margin-left: 30px;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .username{
+        color: #007ce0;
+        text-transform: none;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret {
+        margin-top: 11px;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #007ce0;
+    }
+
+    .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
+        border-top-color: #006abf;
+
+    }
+/* END Header */
+
+/* Footer */
+    .newFooter {
+        height: 100px;
+        vertical-align: middle;
+        padding-top: 36px;
+    }
+    .newFooter .text {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #888888;
+        text-transform: uppercase;
+        margin-left: 40px;
+        line-height: 28px;
+    }
+
+    .newFooter img{
+        height: 28px;
+        margin-left: 15px;
+        background-color: white;
+    }
+
+    .newFooter .text:first-child{
+        margin-left: 0;
+    }
+/* END Footer */
