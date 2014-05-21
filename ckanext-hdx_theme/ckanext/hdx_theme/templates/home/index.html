@@ -4,365 +4,302 @@
 
 {% block maintag %}{% endblock %}
 
-{% block content %}
-  <div role="main" class="hero-homepage">
-    <div id="content" class="container">
-      {{ self.flash() }}
-    <div class="map_block">
-        {{ self.jumbotron() }}
-    </div>
-      {# { self.group_drop() } #}
-      {# { self.map_temporary() } #}
-      {# { self.group_map() } #}
-    </div>
-  </div>
-  {#
-  <div class="main homepage">
-    <div class="container">
-      {{ self.primary_content() }}
-    </div>
-  </div>
-    #}
-{% endblock %}
+{% block header %}
 
-{% block map_temporary %}
-    {# since is temporary no need to create css class :) #}
-    <div id="map_outer" style="width:98%; height: 420px">
-      <div style="background: url('/tempmap-toremove.png') no-repeat; background-size:100% 100%; height: 400px;">
+<header class="newHeader">
+  <div class="container">
+    {# The .header-image class hides the main text and uses image replacement for the title #}
+    <hgroup class="hdxLogo">
 
-      </div>
-    </div></div>
-
-{% endblock %}
-
-
-
-{% block jumbotron %}
-
-  {% resource 'hdx_theme/count.js' %}
-
-  <div class="searchWidget">
-    <div class="searchForKeywordText">
-      {{ _("Start by searching for keyword") }}
-    </div>
-    <div>
-      {{ self.home_search() }}
-    </div>
-    <div class="searchExamplesText">
-      <p>
-        {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">{{ _("preparedness data for Kenya") }}</a>
-        {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics' %}">{{ _("world health statistics") }}</a>
-      </p>
-
-    </div>
-    <div >
-      <hr/>
-    </div>
-    <div class="searchByCountryText">
-      {{ _("Alternatively, search by country") }}
-    </div>
-    <div class="searchByCountryDropdown">
-      {{ self.group_select() }}
-    </div>
-    <div class="ribbon">
-      <p class="ribbon-content">
-        <a href="/contribute">
-          {{ _("or share your dataset") }}
-        </a>
-      </p>
-    </div>
-  </div>
-
-  <div class="jumbotron">
-    <div class="maprow">
-
-      <div class="row">
-        <div class="span12 col-alpha" style="height: 40px;">
-          &nbsp;
-        </div>
-      </div>
-      <div class="row">
-        <div class="span12 col-alpha">
-          <div class="row">
-            <div class="span6 hdxTextRow">
-              <div class="row" style="margin-top: 20px; margin-bottom: 30px;">
-                <div class="span1">
-                  <hr/>
-                </div>
-                <div class="span4 hdxTitle">
-                  {{ _("The Humanitarian Data Exchange") }}
-                </div>
-                <div class="span1">
-                  <hr/>
-                </div>
-              </div>
-              <div class="row" style="margin-top: 30px; margin-bottom: 30px;">
-                <div class="span6 hdxPhrase">
-                  {{ _("Find and share humanitarian data.") }}
-                </div>
-              </div>
-              <div class="row" style="margin-top: 30px; margin-bottom: 30px; height: 80px;">
-                <div class="span6 hdxDescription">
-                  {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
-                        global datasets relevant to humanitarian work as well as local datasets from our
-                        three pilot locations - Colombia, Kenya and Yemen. You can also create an
-                        account and add your own data to the repository to share privately or publicly.") }}
-                  <br/>
-                  {{ _("Please have a look around and send us your feedback!") }}
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row separator">
-            <div class="span12" style="background: #F65C51; height: 10px;">
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row countRow">
-        <div class="span6 hdxTextRow ">
-          <div class="row">
-            <div class="span2">
-              <div class="row">
-                <div class="span2 itemCount">
-                  <a href="{% url_for 'search' %}"
-                     data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
-                    0
-                  </a>
-                </div>
-              </div>
-              <div class="row">
-                <div class="span2 itemName">
-                  {{ _("Datasets") }}
-                </div>
-              </div>
-            </div>
-
-          <div class="span2">
-            <div class="row">
-              <div class="span2 itemCount">
-                <a href="{% url_for 'group_index' %}"
-                   data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
-                  0
-                </a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="span2 itemName">
-                {{ _("Countries") }}
-              </div>
-            </div>
-          </div>
-
-          <div class="span2">
-            <div class="row">
-              <div class="span2 itemCount">
-                <a href="#"
-                   data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
-                  0
-                </a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="span2 itemName">
-                {{ _("Sources") }}
-              </div>
-            </div>
-          </div>
-
-        </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-{% endblock %}
-
-
-
-{% block group_drop %}
-  <div id="group_nav">
-    <div id="group_nav_text">{{ _("Choose a country from the dropdown or click on the map") }}</div>
-    <div id="group_dropdown" class="pull-right">
-      {% block group_select %}
-      <select id="group_select">
-        <option selected value="#">{{ _(" -- Choose Country -- ") }}</option>
-        {% for group in c.group_package_stuff %}
-        	{# replaced snippet with jinja code for faster performance (-1s on homepage) #}
-	        {% if group.type is defined %}
-				{% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
-				<option value="{{url}}">{{ group.display_name }} </option>
-			{% endif %}
-        {% endfor %}
-      </select>
-      {% endblock %}
-    </div>
-  </div>
-{% endblock %}
-
-
-
-{% block group_map %}
-<div id="map_outer" style="width:98%; height: 420px">
-<div id="map" style="width:100%; height: 400px"></div></div>
-  <link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css">
-  
-  <script src="/map/leaflet/leaflet.js"></script>
-  <script src="/base/vendor/jquery.js"></script>
-  <script>
-  var world = [
-  {% for group in c.group_map %}
-  {# Alittle hacky for now, should go through db_to_form_schema #}
-      {% for e in group.extras %}
-        {% if e.key == 'geojson' %}
-          {{e.value|safe}}
-          {% if not loop.last %}
-          ,
-          {% endif %}
+      {% block header_logo %}
+        {% if g.site_logo %}
+          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo.jpg" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" style="height: 31px;"/></a>
+        {% else %}
+          <h1>
+            <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
+          </h1>
+          {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
         {% endif %}
-      {% endfor %}
-  {% endfor %}];
-  console.log(world)
+      {% endblock %}
+    </hgroup>
 
-  var map = L.map('map', {
-    center: [48.1642292,16.4541193],
-    maxZoom: 5,
-    minZoom: 2,
-    zoom: 2,
-    zoomControl: true
-  });
-  var groupStyle = {
-      "color": "#1b8bbb",
-      "weight": 2,
-      "opacity": 0.9
-  };
-  
-  L.tileLayer('http://129.206.74.245:8008/tms_rg.ashx?x={x}&y={y}&z={z}', {
-    attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-  }).addTo(map);
-  geo = L.geoJson(world, {style:groupStyle,onEachFeature: onEachFeature}).addTo(map);
+    <span class="content">
+      <span class="navbar">
+            <nav class="usermenu section">
+              <ul class="mainLinks">
+                {# ('organizations_index', _('Organizations')), #}
 
-  function zoomToFeature(e) {
-              window.location = e.target.feature.properties.url;
-          }
-  function pausePan(){
-    clearInterval(panning1);
-    clearInterval(panning2);
-  }
+                {% block header_site_navigation_tabs %}
+                {% if c.userobj %}
+                  {{ h.build_nav_main(
+                    ('about', _('About')),
+                    ('search', _('Data')),
+                    ('organizations_index', _('Organizations')),
+                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
+                  ) }}
+                {% else %}
+                  {{ h.build_nav_main(
+                    ('about', _('About')),
+                    ('search', _('Data')),
+                    ('organizations_index', _('Organizations')),
+                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
+                  ) }}
+                {% endif %}
+                {% endblock %}
+              </ul>
+              <div class="pull-right">
+                <ul class="nav nav-pills">
+                  <li class="submitData">
+                    <a href="{% if c.userobj %}/dataset/new{% else %}/contribute{% endif %}">
+                      {{ _("Submit data") }}
+                      <img src="/images/homepage-new/attachment.svg" style="width: 24px; height: 21px; margin-left: 20px;" />
+                    </a>
+                  </li>
+                  {% if c.userobj %}
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle special-menuitem" data-toggle="dropdown">
+                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=22) }}
+                      <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
+                      <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu" role="menu">
+                      {% block header_account_logged %}
+                      {% if c.userobj.sysadmin %}
+                      <li>
+                        <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
+                          <i class="icon-legal"></i>
+                          <span>{{ _('Sysadmin settings') }}</span>
+                        </a>
+                      </li>
+                      {% endif %}
+                      <li>
+                        <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+                          <i class="icon-user"></i>
+                          <span>{{ _('Profile') }}</span>
+                        </a>
+                      </li>
+                      <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
+                        {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
+                        <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
+                          <i class="icon-dashboard"></i>
+                          <span> {{ _('Dashboard') }} ({{ c.new_activities }})</span>
+                        </a>
+                      </li>
+                      {% block header_account_settings_link %}
+                      <li>
+                        <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
+                          <i class="icon-cog"></i>
+                          <span>{{ _('User settings') }}</span>
+                        </a>
+                      </li>
+                      {% endblock %}
+                      {% block header_account_log_out_link %}
+                      <li>
+                        <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                          <i class="icon-signout"></i>
+                          <span>{{ _('Log out') }}</span>
+                        </a>
+                      </li>
+                      {% endblock %}
+                      {% endblock %}
+                    </ul>
+                  </li>
+                  {% else %}
+                  {% block header_account_notlogged %}
+                  <li class="newLogin">{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
+                  <li class="newLogin">{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
+                  {% endblock %}
+                  {% endif %}
+                </ul>
+              </div>
+            </nav>
+      </span>
+    </span>
 
-  var panning1, panning2
-  window.reverse = false;
+  </div>
+</header>
+{% endblock %}
 
-  function pan(){
-    pos = map.getCenter();
-    if(pos.lat < -75){
-      window.reverse = true;
-    }
-    if(pos.lat > 75){
-      window.reverse = false;
-    }
-    if(window.reverse){
-      map.panBy([12, -5], {'animate': true, 'duration': .499, 'easeLinearity': 1});
-    }else{
-      map.panBy([12, 5], {'animate': true, 'duration': .499, 'easeLinearity': 1});
-    }
-  }
 
-  function pan1(){
-    pan();
-    clearInterval(window.panning2);
-    window.panning1 = setInterval(pan2,500);
-  }
-  
-  function pan2(){
-    pan();
-    clearInterval(window.panning1);
-    window.panning2 = setInterval(pan1,500);
-  }
-  
 
-  function resumePan(){
-    window.panning1 = setInterval(pan2,20)
-  }
-    
-  function onEachFeature(feature, layer) {
+{% block content %}
+<div class="homepage-main">
+  <div class="homepage-background">
+    <div class="container">
+      <div class="row blankRow">
 
-      if (feature.properties && feature.properties.name) {
-          layer.on({
-              //mouseover: pausePan,
-                //mouseout: resumePan,
-                click: zoomToFeature
-            });
-          }
-  }
-  $('document').ready(function(){
-      //resumePan();
-  });
-  </script>
+      </div>
+      <div class="row">
+        <div class="span6 leftContent">
+          <div class="row blankRow">
+          </div>
+          <div class="row">
+            <div class="span6">
+              <h1>
+                {{ _("The humanitarian data exchange") }}
+              </h1>
+              <h3>
+                {{ _("Where your data comes to life") }}
+              </h3>
+              <p class="hdxDescription">
+                {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
+                      global datasets relevant to humanitarian work as well as local datasets from our
+                      three pilot locations - Colombia, Kenya and Yemen. You can also create an
+                      account and add your own data to the repository to share privately or publicly.") }}
+                <br/>
+                {{ _("Please have a look around and send us your feedback!") }}
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <div class="offset1 span5 rightContent">
+          <div class="searchBox">
+            <div class="searchHeader searchContent">
+              <p>{{ _("Find data") }}</p>
+            </div>
+
+            <div class="searchContent firstSearch">
+              {{ self.home_search() }}
+              <div>
+                <p class="exampleSearch">
+                  {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">{{ _("preparedness data for Kenya") }}</a>
+                  {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics' %}">{{ _("world health statistics") }}</a>
+                </p>
+              </div>
+            </div>
+            <div class="searchContent secondSearch">
+              {{ self.group_select() }}
+            </div>
+          </div>
+
+          <div class="row countRow">
+            <div class="span6 hdxTextRow ">
+              <div class="row">
+                <div class="span2">
+                  <div class="row">
+                    <div class="span2 itemCount">
+                      <a href="{% url_for 'search' %}"
+                         data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
+                        0
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="span2 itemName">
+                      {{ _("Datasets") }}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="{% url_for 'group_index' %}"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
+                      0
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="span2 itemName">
+                    {{ _("Countries") }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="#"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
+                      0
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="span2 itemName">
+                    {{ _("Sources") }}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
+
 
 {% block home_search %}
-  <form class="module-content search-form" method="get" action="{% url_for controller='package', action='search' %}">
-    <div class="search-input control-group search-giant">
-      <input type="text" class="search" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}" />
-      <button type="submit">
+  <form class="form-search" method="get" action="{% url_for controller='package', action='search' %}">
+    <div class="input-append">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _("Search HDX Repository") }}">
+      <button type="submit" class="button">
         <i class="icon-search"></i>
-        <span>{{ _('Search') }}</span>
       </button>
     </div>
   </form>
 {% endblock %}
 
-{% block primary_content %}
-{% block home_secondary_content %}
-  <div class="module module-shallow module-narrow module-dark info box">
-            {{ self.home_search() }}
-            {# block home_tags %}
-              <div class="tags">
-                <h3>{{ _('Popular Tags') }}</h3>
-                {% set tags = h.get_facet_items_dict('tags', limit=3) %}
-                {% for tag in tags %}
-                  <a class="tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-                {% endfor %}
-              </div>
-            {% endblock #}
-          </div>
-      {% endblock %}
-
-  <div class="module module-popup">
-    <div class="module-content box">
-      {% block home_primary %}
-        <header>
-          {% if g.site_intro_text %}
-          {{ h.render_markdown(g.site_intro_text) }}
-          {% else %}
-            {% block home_primary_content %}
-              <h1 class="page-heading">{% block home_primary_heading %}{{ _("Welcome to CKAN") }}{% endblock %}</h1>
-              <p>
-              {% block home_primary_text %}
-                {% trans %}This is a nice introductory paragraph about CKAN or the site
-                in general. We don't have any copy to go here yet but soon we will
-                {% endtrans %}
-              {% endblock %}
-              </p>
-            {% endblock %}
-          {% endif %}
-        </header>
-      {% endblock %}
-
-    </div>
+{% block group_select %}
+  <div class="searchSelect">
+    <select id="group_select">
+      <option selected value="#">{{ _("Choose Country") }}</option>
+      {% for group in c.group_package_stuff %}
+        {# replaced snippet with jinja code for faster performance (-1s on homepage) #}
+        {% if group.type is defined %}
+          {% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
+          <option value="{{url}}">{{ group.display_name }} </option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <b class="caret"></b>
   </div>
-
 {% endblock %}
 
-{% block secondary_content %}
- 
+{% block footer %}
+  <footer class="newFooter">
+    <div class="container">
+      <div class="row">
+        <div class="span12">
+          <span class="text">
+            {{ _("A project by") }}:
+          </span>
+          <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
+          <span class="text">
+            {{ _("Related Sites") }}:
+          </span>
+          <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
+          <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
+          <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
+          <span class="text">
+            {{ _("Stay connected") }}:
+          </span>
+          <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
+          <a href="mailto:ochadataproject@un.org"><img src="/images/homepage-new/email.png"/></a>
+        </div>
+      </div>
+    </div>
+
+    {% block footer_debug %}
+      {% if g.debug %}
+        {% include 'snippets/debug.html' %}
+      {% endif %}
+    {% endblock %}
+  </footer>
 {% endblock %}
 
 {% block scripts %}
    {{ super() }}
+   <link rel="stylesheet" href="/homepage.css">
+   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+   {% resource 'hdx_theme/count.js' %}
 {% endblock %}
 
 {# Remove the toolbar. #}
