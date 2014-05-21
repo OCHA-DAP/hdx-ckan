@@ -252,6 +252,10 @@
     .homepage-main .rightContent .countRow .span2{
         margin: 0;
     }
+
+    .homepage-main .rightContent .countRow .span2:first-child{
+        margin-right: 30px;
+    }
 /* END Homepage */
 
 /* Header */
