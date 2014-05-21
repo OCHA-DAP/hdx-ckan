@@ -1,6 +1,6 @@
 /* Homepage */
     ::-webkit-input-placeholder {
-        color: #cccccc;
+        color: #d23d13;
         font-size: 16px;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
@@ -11,6 +11,7 @@
         font-size: 16px;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
+        opacity: 1;
     }
 
     ::-moz-placeholder {  /* Firefox 19+ */
@@ -18,6 +19,7 @@
         font-size: 16px;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
+        opacity: 1;
     }
 
     :-ms-input-placeholder {
@@ -141,22 +143,31 @@
         padding: 0 0 0 20px;
     }
 
+    .homepage-main .rightContent .form-search .input-append .searchInput::-webkit-input-placeholder{
+        color: #cccccc;
+    }
+
+
     .homepage-main .rightContent .searchSelect select{
         height: 45px;
         background: transparent;
         width: 336px;
         padding-left: 16px;
-        padding-top: 10px;
-        padding-bottom: 10px;
         font-size: 16px;
-        line-height: 45px;
+        /*line-height: 45px; #messes up chrome!*/
         border: 0;
         border-radius: 0;
         -webkit-appearance: none;
         -moz-appearance: none;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
-        color: #dddddd;
+        color: #cccccc;
+    }
+    @-moz-document url-prefix() {
+        .homepage-main .rightContent .searchSelect select{
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
     }
 
     .homepage-main .rightContent .searchSelect select option{
@@ -240,6 +251,10 @@
 
     .homepage-main .rightContent .countRow .span2{
         margin: 0;
+    }
+
+    .homepage-main .rightContent .countRow .span2:first-child{
+        margin-right: 30px;
     }
 /* END Homepage */
 
