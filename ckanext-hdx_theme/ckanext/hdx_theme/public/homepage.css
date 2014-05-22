@@ -162,6 +162,8 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
         color: #cccccc;
+        position: relative;
+        z-index: 3;
     }
     @-moz-document url-prefix() {
         .homepage-main .rightContent .searchSelect select{
@@ -193,6 +195,8 @@
         /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
         border: 0;
         border-radius: 6px;
+        position: relative;
+        z-index: 1;
     }
 
     .homepage-main .rightContent .searchSelect .caret {
@@ -200,6 +204,7 @@
         position: relative;
         top: -36px;
         margin: 0;
+        z-index: 2;
     }
 
     .homepage-main .rightContent .form-search .input-append .button{
