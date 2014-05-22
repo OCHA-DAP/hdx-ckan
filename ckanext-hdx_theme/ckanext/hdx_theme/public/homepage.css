@@ -369,6 +369,16 @@
         height: 28px;
         margin-left: 15px;
         background-color: white;
+        opacity: 0.5;
+
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
+    }
+
+    .newFooter img:hover, .newFooter img:focus {
+        opacity: 1;
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
     }
 
     .newFooter .text:first-child{
