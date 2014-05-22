@@ -23,19 +23,12 @@ class TestMetadataFields(tests.WsgiAppCase):
     
     @classmethod
     def setup_class(cls):
-        p.load('metadata_fields')
+#         p.load('metadata_fields')
 #         TestMetadataFields.get_app()
         search.clear()
         model.Session.remove()
         ctd.CreateTestData.create()
         
-        '''
-        There is an ugly hack here. Apparently ckan's nosetest doesn't manage to set the correct 
-        plugin (HdxMetadataFieldsPlugin) as the default package plugin. So we are forcing it here 
-        and resetting it in teardown_class
-        '''
-        cls.original_default_package_plugin = pl._default_package_plugin
-        pl._default_package_plugin = thisplugin.HdxMetadataFieldsPlugin()
       
     @classmethod
     def get_app(cls):
@@ -49,7 +42,7 @@ class TestMetadataFields(tests.WsgiAppCase):
         app = make_app(config['global_conf'], **config)
         app = webtest.TestApp(app)
         
-        p.load('metadata_fields')
+#       p.load('metadata_fields')
         
         cls.app = app;
     
@@ -58,7 +51,6 @@ class TestMetadataFields(tests.WsgiAppCase):
         model.Session.remove()
         model.repo.rebuild_db()
         p.unload('metadata_fields')
-        pl._default_package_plugin = cls.original_default_package_plugin
         
     def test_list_of_all_groups(self):
         #app     = self._get_app()
