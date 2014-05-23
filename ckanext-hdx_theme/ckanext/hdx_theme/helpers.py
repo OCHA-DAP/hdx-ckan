@@ -6,7 +6,10 @@ import ckan.model as model
 import sqlalchemy
 import ckan.logic as logic
 import datetime
+import logging
 from webhelpers.html import escape, HTML, literal, url_escape
+
+log = logging.getLogger(__name__)
 
 downloadable_formats = {
     'csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
@@ -86,4 +89,21 @@ def markdown_extract_strip(text, extract_length=190):
     result_text = h.markdown_extract(text, extract_length)
     result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '')
     return result
+
+def render_date_from_concat_str(str, separator='-'):
+    result  = ''
+    if str:
+        strdate_list    = str.split(separator)
+        for index,strdate in enumerate(strdate_list):
+            try:
+                date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
+                render_strdate  = date.strftime('%b %d, %Y');
+                result  += render_strdate
+                if index < len(strdate_list)-1:
+                    result += ' - '
+            except ValueError, e:
+                log.warning(e)
+    
+    return result
+        
 
