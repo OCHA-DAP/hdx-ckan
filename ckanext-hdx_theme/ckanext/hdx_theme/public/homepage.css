@@ -162,6 +162,8 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
         color: #cccccc;
+        position: relative;
+        z-index: 3;
     }
     @-moz-document url-prefix() {
         .homepage-main .rightContent .searchSelect select{
@@ -193,6 +195,8 @@
         /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
         border: 0;
         border-radius: 6px;
+        position: relative;
+        z-index: 1;
     }
 
     .homepage-main .rightContent .searchSelect .caret {
@@ -200,6 +204,7 @@
         position: relative;
         top: -36px;
         margin: 0;
+        z-index: 2;
     }
 
     .homepage-main .rightContent .form-search .input-append .button{
@@ -340,7 +345,12 @@
 
     .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
         border-top-color: #006abf;
+    }
 
+    .navbar .nav li.dropdown .gravatar{
+        -webkit-border-radius: 500px;
+        -moz-border-radius: 500px;
+        border-radius: 500px;
     }
 /* END Header */
 
@@ -364,6 +374,16 @@
         height: 28px;
         margin-left: 15px;
         background-color: white;
+        opacity: 0.5;
+
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
+    }
+
+    .newFooter img:hover, .newFooter img:focus {
+        opacity: 1;
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
     }
 
     .newFooter .text:first-child{
