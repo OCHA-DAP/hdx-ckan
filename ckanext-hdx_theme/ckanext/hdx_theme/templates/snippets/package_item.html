@@ -40,7 +40,17 @@ Example:
         {% endif %}
         {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
       </h3>
-      <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
+      <div>{{ _('Updated by') }}   			
+      		{% if package.organization %}
+  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name) }}">
+  					{{ package.organization.title or package.organization.name }}
+  				</a>
+  			{% else %}
+  			  	<a class="info-item-name" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
+  					{{ last_user.fullname }}
+  				</a>
+  			{% endif %} - {{f_updated_time}}</div>
+      
       {% if banner %}
         <span class="banner">{{ _('Popular') }}</span>
       {% endif %}
