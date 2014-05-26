@@ -56,7 +56,7 @@ within_tertiary
         {% set title = title or h.get_facet_title(name) %}
         {% set no_total_items= 0%}
         {% if items %}
-      		{% set no_total_items= items|count %}
+      		{% set no_total_items= total_no_items %}
         {% endif %}
         {{ title }}
         <div class="float-right">{{ no_total_items }}</div>

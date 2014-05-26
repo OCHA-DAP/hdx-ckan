@@ -6,10 +6,12 @@ import ckan.model as model
 import sqlalchemy
 import ckan.logic as logic
 import datetime
+import count
+import json
 from webhelpers.html import escape, HTML, literal, url_escape
 
 downloadable_formats = {
-    'csv', 'xls', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
+    'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
 }
 
 def is_downloadable(resource):
@@ -20,8 +22,13 @@ def is_downloadable(resource):
 
 def get_facet_items_dict(facet, limit=10, exclude_active=False):
     facets = h.get_facet_items_dict(facet, limit, exclude_active=exclude_active)
-    no_items = c.search_facets.get(facet)['items'].__len__()
-    
+    filtered_no_items = c.search_facets.get(facet)['items'].__len__()
+    total_no_items=json.loads(count.CountController.list[facet](count.CountController()))['count']
+    if filtered_no_items < 50 and filtered_no_items < total_no_items:
+        no_items=filtered_no_items
+    else:
+        no_items=total_no_items
+
     if c.search_facets_limits:
         limit = c.search_facets_limits.get(facet)
     if limit:
