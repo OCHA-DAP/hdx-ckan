@@ -61,8 +61,10 @@ def get_last_revision_package(package_id):
 #     pkg = pkg_list[0]
 #     return pkg.latest_related_revision.id
     activity_objects = model.activity.package_activity_list(package_id, limit=1, offset=0)
-    activity = activity_objects[0]
-    return activity.revision_id
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return activity.revision_id
+    return None
 
 
 def get_last_revision_group(group_id):
@@ -70,8 +72,10 @@ def get_last_revision_group(group_id):
 #     grp = grp_list[0]
 #     last_rev = grp.all_related_revisions[0][0]
     activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
-    activity = activity_objects[0]
-    return activity.revision_id
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return activity.revision_id
+    return None
 
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
