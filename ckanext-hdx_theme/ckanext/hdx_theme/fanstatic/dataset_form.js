@@ -75,6 +75,7 @@ $('#field-organizations').change(function(){
             }
           }
         });*/
-      $('form').submit();
+      $('#dataset-upload-form').submit();
+      //$('form').submit();
   }
     });
