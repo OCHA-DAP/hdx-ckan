@@ -9,7 +9,9 @@ overriding the form blocks depending on the current context
 {% endblock %}
 
 {% block custom_fields %}
+  {#
   {% if action == "edit" %}{{ super() }}{% endif %}
+  #}
 {% endblock %}
 
 {% block save_text %}

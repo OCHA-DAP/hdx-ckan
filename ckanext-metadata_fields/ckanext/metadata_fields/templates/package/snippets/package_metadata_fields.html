@@ -4,39 +4,11 @@
 {% block package_metadata_fields %}
 <div class="module-content graybg" {% if inheritied_form_style == 'edit' %}id="dataset_part_2_edit"{% else %}id="dataset_part_2"{% endif %}>
       <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
+
   {% block dataset_fields %}
-    {% if data.groups %}
-      <div class="control-group">
-        <label class="control-label">{{ _('Groups') }}</label>
-        <div class="controls">
-          {% for group in data.groups %}
-            {% if group.id != '-1' %}
-            <label class="checkbox" for="field-group-{{ loop.index0 }}">
-              <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{ loop.index0 }}__id" value="{{ group.id }}" checked="checked" />
-              {{ group.title }}
-            </label>
-            {% endif %}
-          {% endfor %}
-        </div>
-      </div>
-   {% endif %}
 
 	{% if inheritied_form_style == 'edit' %} 
-		{% set group_name = 'groups__%s__id' % data.groups|length %}
-	    {% set available_groups = h.list_of_all_groups() %}
-	    <div class="control-group">
-	      	{% set error = errors.groups_list %}
-		  	<label class="control-label" for="field-group">{{ _("Add Group") }}</label>
-	      <div class="controls">
-	        <select id="field-group" name="{{group_name}}" data-module="autocomplete">
-	          <option value="-1">{{ _('Please select from below')}}</option>
-	          {% for grp in available_groups %}
-	            <option value="{{grp.id}}">{{ grp.display_name}}</option>
-	          {% endfor %}
-	        </select>
-	        {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-	      </div>
-	    </div>
+{{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage) }}
 	{% endif %}
     
   {% if inheritied_form_style != 'edit' %}
@@ -53,13 +25,25 @@
   <div class="control-group" style="display:inline-block;">
   <label class="control-label" for="dataset_date">Date of Dataset</label>
     <div class="controls"> 
-  <input type="text" name='dataset_date' id='field-dataset_date' label="{{_('Date of Dataset')}}" placeholder="{{_('Date of Dataset')}}" value='{{data.dataset_date}}' error='{{errors.dataset_date}}' class='control-full'>
-</div>
+	  <input type="text" name='ui_dataset_date' id='field-ui_dataset_date' onkeydown="return false;"
+	  	data-module='hdx_datepicker' data-module-group='1' data-module-topic='date-field-clicked' data-module-alt_field_id='field-dataset_date'
+	  	label="{{_('Date of Dataset')}}" placeholder="{{_('Date of Dataset')}}" 
+	  	error='{{errors.dataset_date}}' class='control-full'>
+	  <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+	</div>
   <label class="control-label" for="dataset_date">Date Range</label>
     <div class="controls"> 
-  <input type="text" name='date_range1' id='date_range1' label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px;float:left; margin-right:2px;">
-  <input type="text" name='date_range2' id='date_range2' label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px; float:left; margin-right:2px;">
-</div>
+	  <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
+	    data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
+	    data-module-alt_field_id='date_range1'
+	  	label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px;float:left; margin-right:2px;">
+	  <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
+		data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
+		data-module-alt_field_id='date_range2'
+	  	label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px; float:left; margin-right:2px;">
+	  <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
+	  <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+	</div>
 </div>
     {% endblock %}
 

@@ -21,6 +21,7 @@ FOCUS_COUNTRIES = [
                 u"Cape Verde",
                 u"Central African Republic",
                 u"Chad",
+                u"Colombia",
                 u"Comoros",
                 u"Congo",
                 u"Côte d'Ivoire",
