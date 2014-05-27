@@ -39,7 +39,8 @@ this.ckan.module('reclinepreview', function (jQuery, _) {
         window.parent.ckan.pubsub.publish('data-viewer-error', msg);
       }
 
-      recline.Backend.DataProxy.timeout = 10000;
+      //setting the timeout to 30s so that we don't have preview fails for large CPS exports
+      recline.Backend.DataProxy.timeout = 30000;
       // will no be necessary any more with https://github.com/okfn/recline/pull/345
       recline.Backend.DataProxy.dataproxy_url = '//jsonpdataproxy.appspot.com';
 
