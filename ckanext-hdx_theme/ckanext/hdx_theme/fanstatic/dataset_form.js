@@ -1,5 +1,3 @@
-$( "#field-dataset_date, #date_range1, #date_range2").datepicker();
-  
 $('#field-organizations').change(function(){
       if($(this).val() == ''){
         $('#field-private option[value=False]').attr('selected', true);
@@ -26,7 +24,8 @@ $('#field-organizations').change(function(){
       $('input[value="Other"]').val(other);
 
       //Create date range
-      if($('#date_range1').val()){
+      var startDate	= $('#date_range1').val()
+      if(startDate && startDate.length>0){
 	      $('#field-dataset_date').val($('#date_range1').val() +'-'+$('#date_range2').val());
 		}
 		
@@ -76,6 +75,7 @@ $('#field-organizations').change(function(){
             }
           }
         });*/
-      $('form').submit();
+      $('#dataset-upload-form').submit();
+      //$('form').submit();
   }
     });

@@ -90,14 +90,27 @@
       }
     });
 
-    $('#selected_groups').on("click", ".pill", function(){
+    $('#selected_groups').click(function(){
+      if(event.target.className == "filtered pill"){
+        //Uncheck hidden
+        var id = event.target.children.item().value;
+        $('#'+id).remove();
+        $(event.target).remove();
+      }else if(event.target.className == "group_checked"){
+        var id = event.target.value;
+        $('#'+id).remove();
+        $(event.target).parent().remove();
+      }
+    })
+
+    /*$('#selected_groups').on("click", ".pill", function(){
       if($(this).children('input').attr('checked') == 'checked'){
         //Uncheck hidden
         var id = $(this).children('input').val();
         $('#'+id).remove();
         $(this).remove();
       }
-    });    
+    });*/    
   });
   </script>
 
