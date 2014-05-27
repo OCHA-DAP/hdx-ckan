@@ -51,7 +51,7 @@ class TestDatasetOutput(tests.WsgiAppCase):
                 apikey=testsysadmin.apikey, id=dataset_name)
         
         deleted_page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        print deleted_page.response
+        #print deleted_page.response
         assert 'Deleted' in str(deleted_page.response), 'Page needs to have deleted badge'
         
     def _getPackagePage(self, package_id, apikey=None):
