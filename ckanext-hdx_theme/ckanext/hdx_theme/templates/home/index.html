@@ -58,7 +58,7 @@
                   {% if c.userobj %}
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle special-menuitem" data-toggle="dropdown">
-                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=22) }}
+                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=29) }}
                       <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
                       <b class="caret"></b>
                     </a>
