@@ -77,41 +77,7 @@
   $('document').ready(function(){
     //Just in case of page back
     $('option[value=-1]').attr('selected', true);
-
-    $('#country-drop').change(function(){
-      var country = $(this+'option:selected').val();
-      var country_name = $(this+'option:selected').attr('display_name');
-      if($('#'+country).length == 0){
-        var number_of_groups = $('.group_checked').length;
-        //Add country
-        $('#selected_groups').append('<span class="filtered pill">'+country_name+' <input id="field-group-'+(number_of_groups)+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked" class="group_checked"/></span>');
-        //Add country for real
-        $('#select_groups_hidden').append('<input id="'+country+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
-      }
-    });
-
-    $('#selected_groups').click(function(){
-      if(event.target.className == "filtered pill"){
-        //Uncheck hidden
-        var id = event.target.children.item().value;
-        $('#'+id).remove();
-        $(event.target).remove();
-      }else if(event.target.className == "group_checked"){
-        var id = event.target.value;
-        $('#'+id).remove();
-        $(event.target).parent().remove();
-      }
-    })
-
-    /*$('#selected_groups').on("click", ".pill", function(){
-      if($(this).children('input').attr('checked') == 'checked'){
-        //Uncheck hidden
-        var id = $(this).children('input').val();
-        $('#'+id).remove();
-        $(this).remove();
-      }
-    });*/    
-  });
+     });
   </script>
 
 {% endblock -%}

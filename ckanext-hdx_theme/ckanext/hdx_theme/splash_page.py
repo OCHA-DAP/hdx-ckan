@@ -35,6 +35,7 @@ def cached_get_group_package_stuff():
 	
 	return sorted(focus_group_package_stuff, key=lambda k: k['title'])
 	
+cached_get_group_package_stuff()  
 
 class SplashPageController(HomeController):
 
