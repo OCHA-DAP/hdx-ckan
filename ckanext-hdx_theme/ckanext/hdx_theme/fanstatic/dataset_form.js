@@ -12,7 +12,7 @@ $('#country-drop').change(function(){
       }
     });
 
-    $('#selected_groups').click(function(){
+    $('#selected_groups').click(function(event){
       if(event.target.className == "filtered pill"){
         //Uncheck hidden
         var id = event.target.children.item().value;
