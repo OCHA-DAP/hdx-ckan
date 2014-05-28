@@ -40,3 +40,6 @@ node_modules/
 #Idea PyCharm - project folder
 .idea
 
+# nosetest reports
+nose_results.xml
+
