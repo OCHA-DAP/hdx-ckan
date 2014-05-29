@@ -6,6 +6,7 @@ import ckan.model as model
 import sqlalchemy
 import ckan.logic as logic
 import datetime
+import version
 import count
 import json
 import logging
@@ -116,5 +117,6 @@ def render_date_from_concat_str(str, separator='-'):
                 log.warning(e)
     
     return result
-        
 
+def hdx_version():
+    return version.hdx_version

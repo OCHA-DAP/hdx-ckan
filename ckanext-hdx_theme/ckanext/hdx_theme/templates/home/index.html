@@ -13,7 +13,7 @@
 
       {% block header_logo %}
         {% if g.site_logo %}
-          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">v0.2.2</span></span></a>
+          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
         {% else %}
           <h1>
             <a href="{{ h.url('home') }}">{{ g.site_title }}</a>

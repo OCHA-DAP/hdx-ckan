@@ -1,11 +1,11 @@
+import ckanext.hdx_theme.licenses as hdx_licenses
+from beaker.cache import cache_regions
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-
 import ckan.model.package as package
 import ckan.model.license as license
-import ckanext.hdx_theme.licenses as hdx_licenses
-
-from beaker.cache import cache_regions
+import version;
 
 cache_regions.update({
         'hdx_memory_cache':{
@@ -66,7 +66,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_group_followers':hdx_helpers.get_group_followers,
             'get_group_members':hdx_helpers.get_group_members,
             'markdown_extract_strip':hdx_helpers.markdown_extract_strip,
-            'render_date_from_concat_str':hdx_helpers.render_date_from_concat_str
+            'render_date_from_concat_str':hdx_helpers.render_date_from_concat_str,
+            'hdx_version':hdx_helpers.hdx_version
         }
         
     def get_actions(self):
