@@ -114,7 +114,7 @@
  #}
 
   {% block package_social %}
-    {% snippet "snippets/hdx_social.html" %}
+    {% snippet "snippets/hdx_social.html", title=pkg.title or pkg.name  %}
   {% endblock %}
   
   {% block package_tags %}
