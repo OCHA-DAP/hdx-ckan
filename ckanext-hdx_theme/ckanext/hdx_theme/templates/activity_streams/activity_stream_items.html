@@ -1,5 +1,6 @@
 {% set has_more_length = g.activity_list_limit|int %}
 {% set has_more = activities|length > has_more_length %}
+{% set id=c.user %}
 
 {% if activities %}
   <ul class="activity" data-module="activity-stream" data-module-more="{{ has_more }}" data-module-context="{{ controller }}" data-module-id="{{ id }}" data-module-offset="{{ offset }}">
