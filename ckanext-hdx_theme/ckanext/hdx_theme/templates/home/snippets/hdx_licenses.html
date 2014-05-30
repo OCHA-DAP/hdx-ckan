@@ -141,6 +141,23 @@
 	  
 	  <div class="accordion-group">
 	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-multiple">
+	        {% trans %}Multiple Licenses{% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-multiple" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        The dataset contains data having different licenses or terms of use.  The details of these licenses or terms of use should be listed in the file.
+	        {% endtrans %}
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
 	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-other">
 	        {% trans %}Other, see description{% endtrans %}
 	      </a>
