@@ -118,5 +118,27 @@ def render_date_from_concat_str(str, separator='-'):
     
     return result
 
+def hdx_build_nav_icon_with_message(menu_item, title, **kw):
+    htmlResult  = h.build_nav_icon(menu_item, title, **kw)
+    if 'message' not in kw:
+        return htmlResult
+    else:
+        newResult   = str(htmlResult).replace('</a>', 
+                    ' <span class="nav-short-message">{message}</span>'.format(message=kw['message']) )
+        return h.literal(newResult)
+
+def hdx_num_of_new_related_items():
+    max_days = 30;
+    count = 0;
+    now = datetime.datetime.now()
+    for related in c.pkg.related:
+        if (related.created):
+            difference  = now-related.created
+            days = difference.days
+            if days < max_days:
+                count += 1
+    return count
+        
+
 def hdx_version():
     return version.hdx_version
