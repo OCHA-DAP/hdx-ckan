@@ -47,6 +47,7 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def _modify_package_schema(self, schema):
         
         schema.update({
+                'notes': [tk.get_validator('not_empty')], #Notes == description. Makes description required
                 'package_creator': [tk.get_validator('not_empty'),
                     tk.get_converter('convert_to_extras')],
                 'groups_list': [vd.groups_not_empty],
@@ -75,8 +76,8 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(HdxMetadataFieldsPlugin, self).show_package_schema()
-
         schema.update({
+            'notes': [tk.get_validator('not_empty')], #Notes == description. Makes description required
             'package_creator': [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],
             'caveats' : [tk.get_converter('convert_from_extras'),

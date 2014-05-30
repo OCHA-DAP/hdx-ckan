@@ -11,12 +11,12 @@
 
 {% block package_basic_fields_custom %}
 	{% block package_basic_fields_custom_creator %}
-	<div class="control-group dataset-required">
+	<!--<div class="control-group dataset-required">
         <label class="control-label" for="field-package-creator">{{ _('Creator') }} </label>
-        <div class="controls">
-			<input type="text" value="{{ package_creator }}" name="package_creator" id="field-package-creator" readonly="readonly" />
-		</div>
-	</div>
+        <div class="controls">-->
+			<input type="hidden" value="{{ package_creator }}" name="package_creator" id="field-package-creator"/>
+		<!-- </div> 
+	</div> -->
 	{% endblock %}
 
 	{% block basic_fields_source %}

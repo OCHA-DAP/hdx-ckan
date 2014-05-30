@@ -138,6 +138,18 @@
 
   ga('create', 'UA-48221887-3', 'auto');
   ga('send', 'pageview');
+
+  $('.ga-download').on('click', function(){
+        ga('send','event','a','download');
+  });
+
+  $('.ga-share').on('click', function(){
+        ga('send','event','a','share');
+  });
+
+  $('.ga-preview').on('click', function(){
+        ga('send','event','a','preview');
+  });
 </script>
   {% endblock -%}
 </html>
