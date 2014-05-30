@@ -1,165 +1,169 @@
-			<p>
-				{% trans %}You can share your data on HDX under one of the following Creative Commons licenses{% endtrans %}:
-			</p>
-			<div class="accordion" id="licenses-accordion">
-			  <div class="accordion-group">
-			    <div class="accordion-heading">
-			      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by-igo">
-			        {% trans %}Creative Commons Attribution for Intergovernmental Organisations (CC BY-IGO){% endtrans %}
-			      </a>
-			    </div>
-			    <div id="collapse-cc-by-igo" class="accordion-body collapse">
-			      <div class="accordion-inner">
-			      	<p>
-			        {% trans %}
-			        Under the CC BY-IGO license, you are free to share (copy and redistribute the material in any medium or format) and or 
-			        adapt (remix, transform, and build upon the material) for any purpose, even commercially. 
-			        The licensor cannot revoke these freedoms as long as you follow the license terms. 
-			        The license terms are that you must give appropriate credit, provide a link to the license, and indicate if changes were made. 
-			        You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. 
-			        Additionally, you may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. 
-			        When the Licensor is an intergovernmental organization, disputes will be resolved by mediation and arbitration unless otherwise agreed. 
-			        {% endtrans %}
-			        </p>
-			        <p>
-			        	[ {{ _('more information') }}: 
-			        	<a href="http://creativecommons.org/licenses/by/3.0/igo/" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
-			        	<a href="http://creativecommons.org/licenses/by/3.0/igo/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
-			        </p>
-			      </div>
-			    </div>
-			  </div>
-			  
-			  <div class="accordion-group">
-			    <div class="accordion-heading">
-			      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by">
-			        {% trans %}Creative Commons Attribution (CC BY){% endtrans %}
-			      </a>
-			    </div>
-			    <div id="collapse-cc-by" class="accordion-body collapse">
-			      <div class="accordion-inner">
-			      	<p>
-			        {% trans %}
-			        Under the CC BY license, you are free to share (copy and redistribute the material in any medium or format) and or adapt 
-			        (remix, transform, and build upon the material) for any purpose, even commercially. 
-			        The licensor cannot revoke these freedoms as long as you follow the license terms. 
-			        The license terms are that you must give appropriate credit, provide a link to the license, 
-			        and indicate if changes were made. You may do so in any reasonable manner, 
-			        but not in any way that suggests the licensor endorses you or your use. Additionally, you may not apply legal 
-			        terms or technological measures that legally restrict others from doing anything the license permits. 
-			        {% endtrans %}
-			        </p>
-			        <p>
-			        	[ {{ _('more information') }}: 
-			        	<a href="http://creativecommons.org/licenses/by/4.0" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
-			       		<a href="http://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
-			        </p>
-			      </div>
-			    </div>
-			  </div>
-			  
-			  <div class="accordion-group">
-			    <div class="accordion-heading">
-			      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by-sa">
-			        {% trans %}Creative Commons Attribution-ShareAlike (CC BY-SA){% endtrans %}
-			      </a>
-			    </div>
-			    <div id="collapse-cc-by-sa" class="accordion-body collapse">
-			      <div class="accordion-inner">
-			      	<p>
-			        {% trans %}
-			        Under the CC BY-SA license, you are free to share (copy and redistribute the material in any medium or format) and or adapt 
-			        (remix, transform, and build upon the material) for any purpose, even commercially. The licensor cannot revoke these 
-			        freedoms as long as you follow the license terms. The license terms are that you must give appropriate credit, 
-			        provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, 
-			        but not in any way that suggests the licensor endorses you or your use. If you remix, transform, 
-			        or build upon the material, you must distribute your contributions under the same license as the original. 
-			        Additionally, you may not apply legal terms or technological measures that legally restrict others from 
-			        doing anything the license permits.
-			        {% endtrans %}
-			        </p>
-			        <p>
-			        	[ {{ _('more information') }}: 
-			        	<a href="http://creativecommons.org/licenses/by-sa/4.0" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
-			       		<a href="http://creativecommons.org/licenses/by-sa/4.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
-			        </p>
-			      </div>
-			    </div>
-			  </div>
-			  
-			  <div class="accordion-group">
-			    <div class="accordion-heading">
-			      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by-nd">
-			        {% trans %}Creative Commons Attribution-NoDerivatives (CC BY-ND){% endtrans %}
-			      </a>
-			    </div>
-			    <div id="collapse-cc-by-nd" class="accordion-body collapse">
-			      <div class="accordion-inner">
-			      	<p>
-			        {% trans %}
-			        Under the CC BY-ND license, you are free to share (copy and redistribute the material in any medium or format)  for any purpose, 
-			        even commercially. The licensor cannot revoke these freedoms as long as you follow the license terms. 
-			        The license terms are that you must give appropriate credit, provide a link to the license, and indicate if changes were made. 
-			        You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. 
-			        If you remix, transform, or build upon the material, you may not distribute the modified material. 
-			        Additionally, you may not apply legal terms or technological measures that legally restrict others 
-			        from doing anything the license permits.
-			        {% endtrans %}
-			        </p>
-			        <p>
-			        	[ {{ _('more information') }}: 
-			        	<a href="http://creativecommons.org/licenses/by-nd/4.0" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
-			       		<a href="http://creativecommons.org/licenses/by-nd/4.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
-			        </p>
-			      </div>
-			    </div>
-			  </div>
-			  
-			  <div class="accordion-group">
-			    <div class="accordion-heading">
-			      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc0">
-			        {% trans %}Public Domain/No restrictions (CC0){% endtrans %}
-			      </a>
-			    </div>
-			    <div id="collapse-cc0" class="accordion-body collapse">
-			      <div class="accordion-inner">
-			      	<p>
-			        {% trans %}
-			        Under the terms of this license you are free to use the material for any purpose without any restrictions.
-			        {% endtrans %}
-			        </p>
-			        <p>
-			        	[ {{ _('more information') }}: 
-			        	<a href="http://creativecommons.org/publicdomain/zero/1.0/" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
-			       		<a href="http://creativecommons.org/publicdomain/zero/1.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
-			        </p>
-			      </div>
-			    </div>
-			  </div>
-			  
-			  <div class="accordion-group">
-			    <div class="accordion-heading">
-			      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-other">
-			        {% trans %}Other, see description{% endtrans %}
-			      </a>
-			    </div>
-			    <div id="collapse-other" class="accordion-body collapse">
-			      <div class="accordion-inner">
-			      	<p>
-			        {% trans %}
-			        Any other license or terms of use which are listed in the description of the dataset, or in the metadata fields of the dataset, 
-			        or any other place in the dataset such as a specific license or terms of use file that is included as part of the dataset files.
-			        {% endtrans %}
-			        </p>
-			        <p>
-			        {% trans %}
-			        Note: If you would like us to include other license options for data shared through HDX, please send us an email with your request at
-			        {% endtrans %} 
-			        <a class="info-item-name" href="mailto:hdx@un.org">hdx@un.org</a>.
-			        </p>
-			      </div>
-			    </div>
-			  </div>
-			  
-			</div>
-			
+	<p>
+		{% trans %}You can share your data on HDX under one of the following Creative Commons licenses{% endtrans %}:
+	</p>
+	<div class="accordion" id="licenses-accordion">
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by-igo">
+	        {% trans %}Creative Commons Attribution for Intergovernmental Organisations (CC BY-IGO){% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-cc-by-igo" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        Under the CC BY-IGO license, you are free to share (copy and redistribute the material in any medium or format) and or 
+	        adapt (remix, transform, and build upon the material) for any purpose, even commercially. 
+	        The licensor cannot revoke these freedoms as long as you follow the license terms. 
+	        The license terms are that you must give appropriate credit, provide a link to the license, and indicate if changes were made. 
+	        You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. 
+	        Additionally, you may not apply legal terms or technological measures that legally restrict others from doing anything the license permits. 
+	        When the Licensor is an intergovernmental organization, disputes will be resolved by mediation and arbitration unless otherwise agreed. 
+	        {% endtrans %}
+	        </p>
+	        <p>
+	        	[ {{ _('more information') }}: 
+	        	<a href="http://creativecommons.org/licenses/by/3.0/igo/" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
+	        	<a href="http://creativecommons.org/licenses/by/3.0/igo/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by">
+	        {% trans %}Creative Commons Attribution (CC BY){% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-cc-by" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        Under the CC BY license, you are free to share (copy and redistribute the material in any medium or format) and or adapt 
+	        (remix, transform, and build upon the material) for any purpose, even commercially. 
+	        The licensor cannot revoke these freedoms as long as you follow the license terms. 
+	        The license terms are that you must give appropriate credit, provide a link to the license, 
+	        and indicate if changes were made. You may do so in any reasonable manner, 
+	        but not in any way that suggests the licensor endorses you or your use. Additionally, you may not apply legal 
+	        terms or technological measures that legally restrict others from doing anything the license permits. 
+	        {% endtrans %}
+	        </p>
+	        <p>
+	        	[ {{ _('more information') }}: 
+	        	<a href="http://creativecommons.org/licenses/by/4.0" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
+	       		<a href="http://creativecommons.org/licenses/by/4.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by-sa">
+	        {% trans %}Creative Commons Attribution-ShareAlike (CC BY-SA){% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-cc-by-sa" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        Under the CC BY-SA license, you are free to share (copy and redistribute the material in any medium or format) and or adapt 
+	        (remix, transform, and build upon the material) for any purpose, even commercially. The licensor cannot revoke these 
+	        freedoms as long as you follow the license terms. The license terms are that you must give appropriate credit, 
+	        provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, 
+	        but not in any way that suggests the licensor endorses you or your use. If you remix, transform, 
+	        or build upon the material, you must distribute your contributions under the same license as the original. 
+	        Additionally, you may not apply legal terms or technological measures that legally restrict others from 
+	        doing anything the license permits.
+	        {% endtrans %}
+	        </p>
+	        <p>
+	        	[ {{ _('more information') }}: 
+	        	<a href="http://creativecommons.org/licenses/by-sa/4.0" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
+	       		<a href="http://creativecommons.org/licenses/by-sa/4.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  {#
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc-by-nd">
+	        {% trans %}Creative Commons Attribution-NoDerivatives (CC BY-ND){% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-cc-by-nd" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        Under the CC BY-ND license, you are free to share (copy and redistribute the material in any medium or format)  for any purpose, 
+	        even commercially. The licensor cannot revoke these freedoms as long as you follow the license terms. 
+	        The license terms are that you must give appropriate credit, provide a link to the license, and indicate if changes were made. 
+	        You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. 
+	        If you remix, transform, or build upon the material, you may not distribute the modified material. 
+	        Additionally, you may not apply legal terms or technological measures that legally restrict others 
+	        from doing anything the license permits.
+	        {% endtrans %}
+	        </p>
+	        <p>
+	        	[ {{ _('more information') }}: 
+	        	<a href="http://creativecommons.org/licenses/by-nd/4.0" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
+	       		<a href="http://creativecommons.org/licenses/by-nd/4.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  #}
+	  
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-cc0">
+	        {% trans %}Public Domain/No restrictions (CC0){% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-cc0" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        Under the terms of this license you are free to use the material for any purpose without any restrictions.
+	        {% endtrans %}
+	        </p>
+	        <p>
+	        	[ {{ _('more information') }}: 
+	        	<a href="http://creativecommons.org/publicdomain/zero/1.0/" target="_blank" class="info-item-name">{{ _('deed') }}</a> | 
+	       		<a href="http://creativecommons.org/publicdomain/zero/1.0/legalcode" target="_blank" class="info-item-name">{{ _('license') }}</a>]
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	  <div class="accordion-group">
+	    <div class="accordion-heading">
+	      <a class="accordion-toggle info-item-name" data-toggle="collapse" data-parent="#licenses-accordion" href="#collapse-other">
+	        {% trans %}Other, see description{% endtrans %}
+	      </a>
+	    </div>
+	    <div id="collapse-other" class="accordion-body collapse">
+	      <div class="accordion-inner">
+	      	<p>
+	        {% trans %}
+	        Any other license or terms of use which are listed in the description of the dataset, or in the metadata fields of the dataset, 
+	        or any other place in the dataset such as a specific license or terms of use file that is included as part of the dataset files.
+	        {% endtrans %}
+	        </p>
+	      </div>
+	    </div>
+	  </div>
+	  
+	</div>
+	
+	<p>
+		<strong>{{ _('Note:') }}</strong>
+	    {% trans %}
+	    If you would like us to include other license options for data shared through HDX, please send us an email with your request at
+	    {% endtrans %} 
+	    <a class="info-item-name" href="mailto:hdx@un.org">hdx@un.org</a>.
+    </p>
+	
