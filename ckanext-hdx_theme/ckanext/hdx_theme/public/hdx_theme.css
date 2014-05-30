@@ -1026,3 +1026,18 @@ for example: in the user dashboard when the user has no organizations */
 }
 /* END Styling create organization page*/
 
+/* HDX Version display */
+    #hdxVersion{
+        display: none;
+    }
+    .logo:hover #hdxVersion{
+        display: inline;
+        color: #444444;
+        position: relative;
+        float: left;
+        font-size: 12px;
+        left: 286px;
+        top: 20px;
+        width: 0;
+    }
+/* END HDX Version display */

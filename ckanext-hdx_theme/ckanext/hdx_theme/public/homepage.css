@@ -390,3 +390,18 @@
         margin-left: 0;
     }
 /* END Footer */
+/* HDX Version display */
+    #hdxVersion{
+        display: none;
+    }
+    .logo:hover #hdxVersion{
+        display: inline;
+        color: #888888;
+        position: relative;
+        float: left;
+        font-size: 9px;
+        left: 74px;
+        top: 9px;
+        width: 0;
+    }
+/* END HDX Version display */
