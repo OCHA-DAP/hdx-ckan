@@ -1059,6 +1059,15 @@ for example: in the user dashboard when the user has no organizations */
 .hdx-tabbable {
 	padding-bottom: 20px;
 }
+
+.terms-of-service {
+	padding: 5px 40px;
+}
+
+.terms-of-service div > ol > li {
+	margin-bottom: 10px;
+}
+
 /* END Styling create organization page*/
 
 /* HDX Version display */
