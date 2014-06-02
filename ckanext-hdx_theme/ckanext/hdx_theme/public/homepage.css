@@ -148,6 +148,44 @@
     }
 
 
+    .homepage-main .rightContent .selectCountryDropdown .selectCountry {
+        width: 316px;
+        height: 45px;
+        background-color: #ffffff;
+        /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
+        border: 0;
+        border-radius: 6px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        color: #cccccc;
+        font-size: 16px;
+        padding-left: 20px;
+        display: block;
+        line-height: 45px;
+        text-align: left;
+    }
+
+    .homepage-main .rightContent .selectCountryDropdown .selectCountry .caret{
+        float: right;
+        margin-right: 10px;
+        margin-top: 18px;
+    }
+    .homepage-main .rightContent .selectCountryDropdown .selectCountry:hover{
+        text-decoration: none;
+    }
+
+    .homepage-main .rightContent .selectCountryDropdown ul li a{
+        color: #cccccc;
+        line-height: 20px;
+    }
+
+    .homepage-main .rightContent .selectCountryDropdown ul li a:hover {
+        background-color: inherit;
+        background-image: none;
+        color: #888888;
+        text-decoration: none;
+    }
+
     .homepage-main .rightContent .searchSelect select{
         height: 45px;
         background: transparent;
