@@ -21,9 +21,12 @@
 {% endblock %}
 
 {% block content_primary_nav %}
+  {% set num_of_new_related_items = h.hdx_num_of_new_related_items() %}
+  {% set num_of_new_related_items_msg = '({num} '.format(num=num_of_new_related_items) + _('New') + '!)'  %} 
   {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name, class_='hdx-tab-button') }}
   {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name, class_='hdx-tab-button') }}
-  {{ h.build_nav_icon('related_list', _('Related'), id=pkg.name, class_='hdx-tab-button') }}
+  {{ h.hdx_build_nav_icon_with_message('related_list', _('Related'), id=pkg.name, class_='hdx-tab-button', 
+  			message=num_of_new_related_items_msg if num_of_new_related_items>0 ) }}
 {% endblock %}
 
 {% block primary_content_inner %}

@@ -67,7 +67,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_group_members':hdx_helpers.get_group_members,
             'markdown_extract_strip':hdx_helpers.markdown_extract_strip,
             'render_date_from_concat_str':hdx_helpers.render_date_from_concat_str,
-            'hdx_version':hdx_helpers.hdx_version
+            'hdx_version':hdx_helpers.hdx_version,
+            'hdx_build_nav_icon_with_message':hdx_helpers.hdx_build_nav_icon_with_message,
+            'hdx_num_of_new_related_items':hdx_helpers.hdx_num_of_new_related_items
         }
         
     def get_actions(self):
