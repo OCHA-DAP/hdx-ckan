@@ -12,9 +12,8 @@ from routes.mapper import SubMapper
 import ckanext.metadata_fields.custom_validator as vd
 import ckanext.metadata_fields.update as update
 
-def list_of_all_groups():
-    groups  = tk.get_action('group_list')(data_dict={'all_fields': True})
-    return groups
+def cached_group_list():
+    return tk.get_action('cached_group_list')()
 
 
 class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -90,12 +89,13 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing')],
             })
         return schema
-        
+    
     
     def get_helpers(self):
-        return {'list_of_all_groups': list_of_all_groups}
+        return {'list_of_all_groups': cached_group_list}
     
     def get_actions(self):
         return {'package_update': update.package_update}
+        
 
 
