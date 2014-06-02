@@ -1,5 +1,11 @@
 {% extends "page.html" %}
 
+{% block flash %}
+  {# eat the flash messages so they don't remain in the session #}
+  {% set flash_messages = h.flash.pop_messages() %}
+{% endblock %}
+
+
 {% block subtitle %}{{ _("Welcome") }}{% endblock %}
 
 {% block maintag %}{% endblock %}
