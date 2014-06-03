@@ -9,6 +9,22 @@
 
 {% set onepage = onepage or 0 %}
 
+{% block package_basic_fields_countries %}
+{% if inheritied_form_style == 'edit' %} 
+{{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}
+  {% endif %}
+
+  {% if inheritied_form_style != 'edit' %}
+    <div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
+          {% if data.groups %}
+          {% for group in data.groups %}
+          <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/>
+          {% endfor %}
+          {% endif %}
+    </div>
+   {% endif %}
+{% endblock %}
+
 {% block package_basic_fields_license %}
 <div class="control-group dataset-required">
   {% set error = errors.license_id %}
