@@ -24,6 +24,7 @@ def _generate_license_list():
                                                   license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
                                                   license.License(hdx_licenses.LicenseCreativeCommonsNoDerives()),
                                                   license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
+                                                  license.License(hdx_licenses.LicenseHdxMultiple()),
                                                   license.License(hdx_licenses.LicenseHdxOther())
                                                   ]
 

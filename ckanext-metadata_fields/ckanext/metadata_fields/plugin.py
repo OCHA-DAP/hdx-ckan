@@ -58,6 +58,8 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     tk.get_converter('convert_to_extras')],
             'methodology' : [tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')],
+            'license_other' : [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
             })
 
         return schema
@@ -86,6 +88,8 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'dataset_date' : [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],
             'methodology' : [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
+            'license_other' : [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],
             })
         return schema
