@@ -11,6 +11,9 @@ import ckan.model.misc as misc
 import ckan.plugins as plugins
 import ckan.lib.plugins as lib_plugins
 import ckan.new_authz as new_authz
+import beaker.cache as bcache
+
+import ckanext.hdx_theme.caching as caching
 
 from ckan.common import _
 
@@ -77,5 +80,7 @@ def organization_list_for_user(context, data_dict):
 #        it['created']=org.created.isoformat()
     return orgs_list
 
-
+def cached_group_list(context, data_dict):
+    groups  = caching.cached_group_list()
+    return groups
     

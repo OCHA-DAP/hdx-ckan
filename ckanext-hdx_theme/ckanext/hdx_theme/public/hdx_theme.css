@@ -747,12 +747,40 @@ a.info-tooltip, .info-item-name {
 
 .info-wrapper .social-images {
 	height: 35px;
-	margin-right: 10px;
+	margin-right: 5px;
+}
+
+.social-images {
+	opacity:0.4;
+}
+
+.social-images:hover, .social-images:focus {
+	opacity:0.6;
 }
 
 .info-wrapper.social a:hover {
 	text-decoration: none;
 }
+
+.resource-social a img {
+	height: 25px;
+	vertical-align: center;
+	padding-right: 5px;
+}
+.resource-social a span {
+	font-size: 14px;
+	color: #444444;
+	vertical-align: bottom;
+	line-height: 25px;
+}
+.resource-social a:hover {
+	text-decoration:none;
+}
+
+.popover-wrapper .popover {
+	width: 140px;
+}
+
 
 .tag-wrapper {
 	margin-right: 7px;
@@ -760,7 +788,8 @@ a.info-tooltip, .info-item-name {
 }
 
 .tag-wrapper .tag, .tag-wrapper .tag:hover  {
-    background-color: #999999;
+    /* background-color: #999999; */
+    background-color: #000000;
     border: none;
     border-radius: 100px;
     box-shadow: 0 0px 0 #FFFFFF inset;
@@ -768,6 +797,12 @@ a.info-tooltip, .info-item-name {
     display: inline-block;
     margin-bottom: 4px;
     padding: 5px 10px;
+}
+.tag-wrapper .tag {
+	opacity:0.4;	
+}
+.tag-wrapper .tag:hover  {
+	opacity:0.6;	
 }
 
 span.clear { clear: left; display: block; }
@@ -1033,5 +1068,24 @@ for example: in the user dashboard when the user has no organizations */
 	margin-bottom: 10px;
 }
 
+.nav-short-message {
+	color: #d9653f;
+}
+
 /* END Styling create organization page*/
 
+/* HDX Version display */
+    #hdxVersion{
+        display: none;
+    }
+    .logo:hover #hdxVersion{
+        display: inline;
+        color: #444444;
+        position: relative;
+        float: left;
+        font-size: 12px;
+        left: 286px;
+        top: 20px;
+        width: 0;
+    }
+/* END HDX Version display */

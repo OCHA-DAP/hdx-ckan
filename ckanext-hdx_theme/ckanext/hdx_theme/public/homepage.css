@@ -148,63 +148,42 @@
     }
 
 
-    .homepage-main .rightContent .searchSelect select{
-        height: 45px;
-        background: transparent;
-        width: 336px;
-        padding-left: 16px;
-        font-size: 16px;
-        /*line-height: 45px; #messes up chrome!*/
-        border: 0;
-        border-radius: 0;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
-        color: #cccccc;
-        position: relative;
-        z-index: 3;
-    }
-    @-moz-document url-prefix() {
-        .homepage-main .rightContent .searchSelect select{
-            padding-top: 10px;
-            padding-bottom: 10px;
-        }
-    }
-
-    .homepage-main .rightContent .searchSelect select option{
-        color: #888888;
-    }
-
-    .homepage-main .rightContent .searchSelect select:focus{
-        outline: none none;
-    }
-
-
-    .homepage-main .rightContent .searchSelect select:-moz-focusring {
-        color: transparent;
-        text-shadow: 0 0 0 #dddddd;
-        outline: none;
-    }
-
-    .homepage-main .rightContent .searchSelect {
+    .homepage-main .rightContent .selectCountryDropdown .selectCountry {
         width: 316px;
         height: 45px;
-        overflow: hidden;
         background-color: #ffffff;
         /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
         border: 0;
         border-radius: 6px;
-        position: relative;
-        z-index: 1;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        color: #cccccc;
+        font-size: 16px;
+        padding-left: 20px;
+        display: block;
+        line-height: 45px;
+        text-align: left;
     }
 
-    .homepage-main .rightContent .searchSelect .caret {
-        left: 280px;
-        position: relative;
-        top: -36px;
-        margin: 0;
-        z-index: 2;
+    .homepage-main .rightContent .selectCountryDropdown .selectCountry .caret{
+        float: right;
+        margin-right: 10px;
+        margin-top: 18px;
+    }
+    .homepage-main .rightContent .selectCountryDropdown .selectCountry:hover{
+        text-decoration: none;
+    }
+
+    .homepage-main .rightContent .selectCountryDropdown ul li a{
+        color: #cccccc;
+        line-height: 20px;
+    }
+
+    .homepage-main .rightContent .selectCountryDropdown ul li a:hover {
+        background-color: inherit;
+        background-image: none;
+        color: #888888;
+        text-decoration: none;
     }
 
     .homepage-main .rightContent .form-search .input-append .button{
@@ -390,3 +369,18 @@
         margin-left: 0;
     }
 /* END Footer */
+/* HDX Version display */
+    #hdxVersion{
+        display: none;
+    }
+    .logo:hover #hdxVersion{
+        display: inline;
+        color: #888888;
+        position: relative;
+        float: left;
+        font-size: 9px;
+        left: 74px;
+        top: 9px;
+        width: 0;
+    }
+/* END HDX Version display */

@@ -25,14 +25,16 @@ $('#country-drop').change(function(){
         $('#'+id).remove();
         $(event.target).parent().remove();
       }
+      //Reset dropdown for better userability
+      $('#country-drop option[value=-1]').attr('selected', true);
     });
   
 $('#field-organizations').change(function(){
       if($(this).val() == ''){
         $('#field-private option[value=False]').attr('selected', true);
-        $('#field-private').attr('disabled', true);
+        $('#field-private').attr('readonly', true);
       }else{
-        $('#field-private').removeAttr('disabled');
+        $('#field-private').removeAttr('readonly');
       }
 });
 
@@ -67,3 +69,11 @@ $('#field-organizations').change(function(){
   }
   $("#field-dataset_date, #date_range1, #date_range2").datepicker();
     });
+
+$('#field-license').change(function(){ 
+  if($(this).val() == 'hdx-other'){
+    $('#licenses-other-define').show();
+  }else{
+    $('#licenses-other-define').hide();
+  }
+});
