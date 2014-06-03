@@ -40,6 +40,16 @@ class LicenseOtherPublicDomainNoRestrictions(DefaultLicense):
     def title(self):
         return _("Public Domain / No Restrictions")
 
+class LicenseHdxMultiple(DefaultLicense):
+#     domain_content = True
+    id = "hdx-multi"
+#     is_generic = True
+#     is_okd_compliant = True
+
+    @property
+    def title(self):
+        return _("Multiple Licenses")
+
 class LicenseHdxOther(DefaultLicense):
 #     domain_content = True
     id = "hdx-other"

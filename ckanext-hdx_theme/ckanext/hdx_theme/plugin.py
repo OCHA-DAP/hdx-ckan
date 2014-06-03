@@ -1,19 +1,20 @@
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
-
-import ckan.model.package as package
-import ckan.model.license as license
 import ckanext.hdx_theme.licenses as hdx_licenses
 
-from beaker.cache import cache_regions
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
+import ckan.model.package as package
+import ckan.model.license as license
+import version
 
-cache_regions.update({
-        'hdx_memory_cache':{
-            'expire': 172800, # 2 days
-            'type':'memory',
-            'key_length': 250
-        }
-    })
+import ckanext.hdx_theme.caching as caching
+
+
+
+def run_on_startup():
+    _generate_license_list()
+    
+    caching.cached_get_group_package_stuff()
+    
 
 def _generate_license_list():
     package.Package._license_register = license.LicenseRegister() 
@@ -23,6 +24,7 @@ def _generate_license_list():
                                                   license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
                                                   license.License(hdx_licenses.LicenseCreativeCommonsNoDerives()),
                                                   license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
+                                                  license.License(hdx_licenses.LicenseHdxMultiple()),
                                                   license.License(hdx_licenses.LicenseHdxOther())
                                                   ]
 
@@ -31,11 +33,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
-
+    plugins.implements(plugins.IGroupController, inherit=True)
+    plugins.implements(plugins.IMiddleware, inherit=True)
+    
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('fanstatic', 'hdx_theme')
+        
 
     def before_map(self, map):
         map.connect('home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
@@ -47,11 +52,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         
         map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
         
-        # this is actually a HACK to force the customization of the license list.
-        # the license list should be changed to be based on a JSON rest service
-        _generate_license_list()
-        
         return map
+    
+    def create(self, entity):
+        caching.invalidate_group_caches()
+
+    def edit(self, entity):
+        caching.invalidate_group_caches()
 
     def get_helpers(self):
         from ckanext.hdx_theme import helpers as hdx_helpers
@@ -66,14 +73,24 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_group_followers':hdx_helpers.get_group_followers,
             'get_group_members':hdx_helpers.get_group_members,
             'markdown_extract_strip':hdx_helpers.markdown_extract_strip,
-            'render_date_from_concat_str':hdx_helpers.render_date_from_concat_str
+            'render_date_from_concat_str':hdx_helpers.render_date_from_concat_str,
+            'hdx_version':hdx_helpers.hdx_version,
+            'hdx_build_nav_icon_with_message':hdx_helpers.hdx_build_nav_icon_with_message,
+            'hdx_num_of_new_related_items':hdx_helpers.hdx_num_of_new_related_items
         }
         
     def get_actions(self):
         from ckanext.hdx_theme import actions as hdx_actions
         return {
-            'organization_list_for_user':hdx_actions.organization_list_for_user
+            'organization_list_for_user':hdx_actions.organization_list_for_user, 
+            'cached_group_list': hdx_actions.cached_group_list
+            
         }
+    
+    def make_middleware(self, app, config):
+        run_on_startup()
+        return app
+
         
         
 

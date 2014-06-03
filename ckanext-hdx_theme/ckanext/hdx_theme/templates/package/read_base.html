@@ -21,9 +21,12 @@
 {% endblock %}
 
 {% block content_primary_nav %}
+  {% set num_of_new_related_items = h.hdx_num_of_new_related_items() %}
+  {% set num_of_new_related_items_msg = '({num} '.format(num=num_of_new_related_items) + _('New') + '!)'  %} 
   {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name, class_='hdx-tab-button') }}
   {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name, class_='hdx-tab-button') }}
-  {{ h.build_nav_icon('related_list', _('Related'), id=pkg.name, class_='hdx-tab-button') }}
+  {{ h.hdx_build_nav_icon_with_message('related_list', _('Related'), id=pkg.name, class_='hdx-tab-button', 
+  			message=num_of_new_related_items_msg if num_of_new_related_items>0 ) }}
 {% endblock %}
 
 {% block primary_content_inner %}
@@ -90,7 +93,7 @@
   {% block package_info %}
       <div class="info-wrapper">
         <div class="uppercase">{{ _('Followers:') }}</div>
-        <div class="followers-count">{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</div>
+        <div class="followers-count followersNumber">{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</div>
         <div class="follow-button-wrapper">
           {{ h.follow_button('dataset', pkg.name) }}
           {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
@@ -114,7 +117,7 @@
  #}
 
   {% block package_social %}
-    {% snippet "snippets/hdx_social.html" %}
+    {% snippet "snippets/hdx_social.html", title=pkg.title or pkg.name  %}
   {% endblock %}
   
   {% block package_tags %}
