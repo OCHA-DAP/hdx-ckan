@@ -120,11 +120,11 @@ def render_date_from_concat_str(str, separator='-'):
 
 def hdx_build_nav_icon_with_message(menu_item, title, **kw):
     htmlResult  = h.build_nav_icon(menu_item, title, **kw)
-    if 'message' not in kw:
+    if 'message' not in kw or not kw['message']:
         return htmlResult
     else:
         newResult   = str(htmlResult).replace('</a>', 
-                    ' <span class="nav-short-message">{message}</span>'.format(message=kw['message']) )
+                    ' <span class="nav-short-message">{message}</span></a>'.format(message=kw['message']) )
         return h.literal(newResult)
 
 def hdx_num_of_new_related_items():
