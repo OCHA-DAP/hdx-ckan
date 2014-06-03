@@ -19,6 +19,8 @@ import ckanext.metadata_fields.plugin as thisplugin
 from ckan.config.middleware import make_app
 from pylons import config
 
+import ckanext.hdx_theme.caching as caching
+
 class TestMetadataFields(tests.WsgiAppCase):
     
     @classmethod
@@ -28,6 +30,8 @@ class TestMetadataFields(tests.WsgiAppCase):
         search.clear()
         model.Session.remove()
         ctd.CreateTestData.create()
+        # Need to invalidate the caches to make sure the new data is being served
+        caching.invalidate_group_caches()
         
       
     @classmethod
@@ -65,7 +69,7 @@ class TestMetadataFields(tests.WsgiAppCase):
         assert plugin_exists is True, 'plugin metadata is not implementing ITemplateHelpers'
                 
             
-        groups  = plugin.get_helpers()['list_of_all_groups']();
+        groups  = metadataPlugin.get_helpers()['list_of_all_groups']();
         assert len(groups) > 0 , 'No groups in test data, that is not possible'
         assert not isinstance(groups[0], str), 'the function should not just return a list of group names'
         
