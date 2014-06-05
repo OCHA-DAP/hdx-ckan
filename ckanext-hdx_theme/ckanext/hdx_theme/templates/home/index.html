@@ -261,7 +261,7 @@
       <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
         {% for group in c.group_package_stuff %}
           {% if group.type is defined %}
-            {% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
+            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
               <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
             {% endif %}
         {% endfor %}
