@@ -19,7 +19,7 @@
 
       {% block header_logo %}
         {% if g.site_logo %}
-          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
+          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
         {% else %}
           <h1>
             <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
@@ -121,7 +121,7 @@
             </nav>
       </span>
     </span>
-
+    {{ self.flash() }}
   </div>
 </header>
 {% endblock %}
@@ -261,7 +261,7 @@
       <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
         {% for group in c.group_package_stuff %}
           {% if group.type is defined %}
-            {% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
+            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
               <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
             {% endif %}
         {% endfor %}
