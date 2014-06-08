@@ -946,7 +946,11 @@ width: 473px !important;
 	max-height:100px;
 	padding-left:20px;
 	padding-top:20px;
+	visibility: hidden;
+}
 
+.org-control:hover ~ .org-control-info, .org-control:hover ~ .org-control-info-large {
+	visibility: visible;
 }
 
 .org-info-label{
@@ -970,7 +974,7 @@ width: 473px !important;
 	max-height:130px;
 	padding-left:20px;
 	padding-top:20px;
-
+	visibility: hidden;
 }
 
 .org-info-label-large{
