@@ -946,7 +946,7 @@ width: 473px !important;
 	max-height:100px;
 	padding-left:20px;
 	padding-top:20px;
-	opacity: 0;
+	opacity: 0; 
 	transition: opacity 1s;
 }
 
