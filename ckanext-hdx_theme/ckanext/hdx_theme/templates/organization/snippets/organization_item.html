@@ -30,7 +30,7 @@ Example:
   		   </a>
    		 </h3>
   	{% endblock %}
-      <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
+      <div>{{ _('Updated by') }} {{ h.hdx_linked_user(last_user) }} - {{f_updated_time}}</div>
       {% block description %}
     	{% if organization.description %}
       		<div class="list-items content">{{ h.markdown_extract(organization.description, extract_length=80) }}</div>
