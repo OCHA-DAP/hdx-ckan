@@ -12,7 +12,7 @@ Example:
     </ul>
 #}
 
-{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name) %}
+{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name, sort='data_modified desc') %}
 {% set last_rev_id = h.get_last_revision_group(organization.id) %}
 {% set res = h.get_last_modifier_user(last_rev_id, get_timestamp=True) %}
 {% set last_user = res[0] %}

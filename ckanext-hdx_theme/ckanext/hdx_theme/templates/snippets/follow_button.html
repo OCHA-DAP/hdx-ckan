@@ -6,11 +6,11 @@
 {% endif %}
 
 {% if following %}
-<a href="{{ h.url_for(controller=controller, action='unfollow', id=obj_id) }}" class="btn" data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="unfollow">
+<a href="{{ h.url_for(controller=controller, action='unfollow', id=obj_id) }}" class="btn hdx-btn org-btn" data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="unfollow">
 	{{ _('Unfollow') }}
 </a>
 {% else %}
-<a href="{{ h.url_for(controller=controller, action='follow', id=obj_id) }}" class="btn" data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="follow">
+<a href="{{ h.url_for(controller=controller, action='follow', id=obj_id) }}" class="btn hdx-btn org-btn" data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="follow">
 	{{ _('Follow') }}
 </a>
 {% endif %}

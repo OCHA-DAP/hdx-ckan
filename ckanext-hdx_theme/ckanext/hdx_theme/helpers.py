@@ -174,3 +174,11 @@ def hdx_member_roles_list():
 
 def hdx_version():
     return version.hdx_version
+
+def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='value' ):
+    res = ''
+    for ex in extras :
+        if ex[key] == value_key:
+            res = ex[ret_key]
+    return res
+
