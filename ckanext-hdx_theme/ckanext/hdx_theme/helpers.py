@@ -2,15 +2,22 @@ import ckan.lib.helpers as h
 from ckan.common import (
      c, request
 )
-import ckan.model as model
 import sqlalchemy
+import ckan.model as model
+import ckan.lib.base as base
 import ckan.logic as logic
 import datetime
 import version
 import count
 import json
 import logging
+import ckan.plugins.toolkit as tk
+import re
+
+import ckanext.hdx_theme.counting_actions as counting
+
 from webhelpers.html import escape, HTML, literal, url_escape
+from ckan.common import _
 
 log = logging.getLogger(__name__)
 
@@ -94,6 +101,16 @@ def get_group_members(grp_id):
     result = len(member_list)
     return result
 
+def hdx_get_user_info(user_id):
+    context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+    try:
+        user    = tk.get_action('hdx_basic_user_info')(context,{'id':user_id})
+    except logic.NotAuthorized:
+            base.abort(401, _('Unauthorized to see organization member list'))    
+        
+    return user
+
 def markdown_extract_strip(text, extract_length=190):
     ''' return the plain text representation of markdown encoded text.  That
     is the texted without any html tags.  If extract_length is 0 then it
@@ -126,6 +143,17 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
         newResult   = str(htmlResult).replace('</a>', 
                     ' <span class="nav-short-message">{message}</span></a>'.format(message=kw['message']) )
         return h.literal(newResult)
+    
+def hdx_linked_user(user, maxlength=0):
+    response = h.linked_user(user, maxlength)
+    changed_response = re.sub(r"<img[^>]+/>","",str(response))
+    return h.literal(changed_response)
+
+def hdx_show_singular_plural(num, singular_word, plural_word):
+    if num == 1:
+        return str(num) + ' ' + singular_word
+    else:
+        return str(num) + ' ' + plural_word
 
 def hdx_num_of_new_related_items():
     max_days = 30;
@@ -138,7 +166,11 @@ def hdx_num_of_new_related_items():
             if days < max_days:
                 count += 1
     return count
-        
+
+def hdx_member_roles_list():
+    context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+    return tk.get_action('member_roles_list')(context, {})
 
 def hdx_version():
     return version.hdx_version

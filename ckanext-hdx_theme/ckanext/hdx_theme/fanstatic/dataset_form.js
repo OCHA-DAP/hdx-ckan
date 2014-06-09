@@ -1,3 +1,5 @@
+$('#field-private option[value=False]').attr('selected', true);
+
 $('#country-drop').change(function(){
       var country = $('#country-drop option:selected').val();
       var country_name = $('#country-drop option:selected').attr('display_name');

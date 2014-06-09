@@ -7,7 +7,7 @@ import ckan.model.license as license
 import version
 
 import ckanext.hdx_theme.caching as caching
-
+import ckanext.hdx_theme.auth as auth
 
 
 def run_on_startup():
@@ -32,6 +32,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IGroupController, inherit=True)
     plugins.implements(plugins.IMiddleware, inherit=True)
     
@@ -77,15 +78,26 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_build_nav_icon_with_message':hdx_helpers.hdx_build_nav_icon_with_message,
             'hdx_num_of_new_related_items':hdx_helpers.hdx_num_of_new_related_items,
             'hdx_get_extras_element':hdx_helpers.hdx_get_extras_element,
+            'hdx_get_user_info':hdx_helpers.hdx_get_user_info,
+            'hdx_linked_user':hdx_helpers.hdx_linked_user,
+            'hdx_show_singular_plural':hdx_helpers.hdx_show_singular_plural,
+            'hdx_member_roles_list':hdx_helpers.hdx_member_roles_list
+            
         }
         
     def get_actions(self):
         from ckanext.hdx_theme import actions as hdx_actions
         return {
             'organization_list_for_user':hdx_actions.organization_list_for_user, 
-            'cached_group_list': hdx_actions.cached_group_list
+            'cached_group_list': hdx_actions.cached_group_list,
+            'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
+            'member_list': hdx_actions.member_list
             
         }
+    def get_auth_functions(self):
+        return {
+                'hdx_basic_user_info': auth.hdx_basic_user_info
+                }
     
     def make_middleware(self, app, config):
         run_on_startup()

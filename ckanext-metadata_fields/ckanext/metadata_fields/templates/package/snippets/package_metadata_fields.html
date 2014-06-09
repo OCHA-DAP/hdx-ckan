@@ -1,5 +1,13 @@
 {% ckan_extends %}
 
+{% if data.title %}
+	{% set new_dataset = False %}
+{% else %}
+	{% set new_dataset = True %}
+{% endif %}
+{% if new_dataset %}
+	{% set form_field_wrapper_classes = 'dataset-form-field-wrapper field-with-info' %}
+{% endif %}
 
 {% block package_metadata_fields %}
 <div class="module-content graybg" {% if inheritied_form_style == 'edit' %}id="dataset_part_2_edit"{% else %}id="dataset_part_2"{% endif %}>
@@ -99,13 +107,29 @@
   {% endblock %}
 
 {% block package_basic_fields_tags %}
-{% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-{{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+	<div class="dataset-form-field-wrapper">
+	{% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
+	'style':'width: 370px !important;',
+	'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+	{{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+	</div>
 {% endblock %}
 
   
   {% block basic_fields_caveats %}
-  {{ form.markdown('caveats', id='field-caveats', label=_('Caveats'), placeholder=_('Caveats'), value=data.caveats, error=errors.caveats) }}
+  	<div>
+	  	<div class="{{ form_field_wrapper_classes }}">
+	  	{{ form.markdown('caveats', id='field-caveats', label=_('Caveats'), placeholder=_('Caveats'), value=data.caveats, error=errors.caveats) }}
+	  	</div>
+	  	{% if new_dataset %}
+		  	<div class="dataset-form-info-field dataset-form-info-field-height info-field">
+				{% trans %}
+				Enter any potential caveats or comments (e.g. The dataset is not complete)
+				{% endtrans %}
+			</div>
+		{% endif %}
+	</div>
+	<span class="clear">&nbsp;</span>
   {% endblock %}
     
     {# Replacing ajax-autocomplete with dropdown
