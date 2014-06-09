@@ -953,13 +953,8 @@ width: 473px !important;
 	max-height:100px;
 	padding-left:20px;
 	padding-top:20px;
-	opacity: 0; 
-	transition: opacity 1s;
 }
 
-.org-control:hover ~ .org-control-info, .org-control:hover ~ .org-control-info-large {
-	opacity: 1;
-}
 
 .org-info-label{
 	background-color: #CCCCCC;
@@ -982,8 +977,6 @@ width: 473px !important;
 	max-height:130px;
 	padding-left:20px;
 	padding-top:20px;
-	opacity: 0;
-	transition: opacity 1s;
 }
 
 .org-info-label-large{
@@ -1135,6 +1128,48 @@ width: 473px !important;
 }
 .org-nums .members-num a{
 	color: #0099FF;
+}
+
+
+.dataset-form-field-wrapper .control-full textarea {
+	height: 120px;
+}
+
+.dataset-form-field-wrapper {
+	width: 500px;
+}
+.dataset-form-field-wrapper .select2-container {
+	display: block;
+	/* Needed to replace the important coming from main.min.css */
+	width: 370px !important;
+}
+
+.field-with-info {
+	float: left;
+}
+
+.dataset-form-info-field {
+	float: right;
+	background-color: #CCCCCC;
+	width: 300px;
+	color: #FFFFFF;
+	padding: 5px 10px;
+}
+
+.dataset-form-info-field-height {
+	height: 110px;
+	margin-top: 3px;
+}
+
+.field-with-info ~ .info-field{
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover ~ .info-field{
+	opacity: 1;
+	visibility: visible;
 }
 
 /* This is used to show a big centered message, 
