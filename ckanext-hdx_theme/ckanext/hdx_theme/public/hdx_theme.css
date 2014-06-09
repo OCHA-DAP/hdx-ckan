@@ -634,6 +634,9 @@ body {
   	line-height: 20px;
   	text-decoration: none;
 }
+.search {
+    font-style: italic;
+}
 .list-items.nav-simple > li, .list-items.nav-aside > li {
     padding: 7px 10px;
     border-bottom: none;
