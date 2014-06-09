@@ -109,7 +109,29 @@
 	    	</a>
 	    	#}	
           <ul class="nav second-row-menu">
-            <li><a href="/about">{{ _('About') }}</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+                {{ _('About') }}
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu dropdown-inverse" role="menu">
+                <li>
+                  <a href="http://docs.hdx.rwlabs.org/">
+                    <span>{{ _('What is HDX?') }}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/about#tab2">
+                    <span>{{ _('Data Licenses') }}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/about#tab3">
+                    <span>{{ _('Terms of Services') }}</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
             {% block header_site_navigation_tabs %}
             <li><a href="/dataset">{{ _('Data') }}</a></li>
             {% if c.userobj %}
