@@ -1,0 +1,35 @@
+{#
+Example:
+
+  {% snippet 'organization/snippets/edit_member.html', form_url=form_url, roles=roles, role=role, modal_div_id='add-member-div', user=user %}
+
+#}
+
+{% import 'macros/form.html' as form %}
+{% resource 'hdx_theme/hdx_autocomplete.js' %}
+
+<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
+  <div id="{{ modal_div_id }}" class="modal hide hdx-modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  	<div class="modal-header">
+  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  		<h3 id="{{ modal_div_id }}-label">{{ _('Add Member') }}</h3>
+  	</div>
+  	<div class="modal-body">
+  		{% if user %}
+			<input type="hidden" name="username" value="{{ user }}" />
+			{% set format_attrs = {'disabled': true, 'style':'width: 286px;'} %}
+			{{ form.input('username', label=_('User'), value=user, classes=['control-medium'], attrs=format_attrs) }}
+		{% else %}
+	  		{% set format_attrs = {'style':'width: 300px;', 'data-module': 'hdx_autocomplete', 'data-module-source': '/api/2/util/user/autocomplete?q=?'} %}
+			{{ form.input('username', id='field-username', label=_('User'), placeholder=_('Username'), value='', error='', classes=['control-medium'], attrs=format_attrs) }}
+		{% endif %}
+		
+		{% set format_attrs = {'data-module': 'hdx_autocomplete', 'style':'width: 300px;'} %}
+		{{ form.select('role', label=_('Role'), options=roles, selected=role, error='', attrs=format_attrs) }}
+  	</div>
+  	<div class="modal-footer">
+    	<button class="btn hdx-btn hdx-submit-btn">{{ _('Submit') }}</button>
+  		<button class="btn hdx-btn" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+  	</div>
+  </div>
+</form>

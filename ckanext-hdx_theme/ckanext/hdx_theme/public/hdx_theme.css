@@ -853,6 +853,10 @@ span.clear { clear: left; display: block; }
     font-weight: normal;
     
 }
+.btn.hdx-btn.main-hdx-btn {
+	margin-left: 0px;
+    padding: 4px 12px;
+}
 
 .btn.hdx-btn img {
     height: 20px;
@@ -1031,9 +1035,18 @@ width: 473px !important;
 }
 
 
-.create-org-btn {
+.create-org-btn, .hdx-submit-btn {
 	background-color: #0099FF;
 	background-image: none;
+	color: #FFFFFF
+	
+}
+
+.hdx-submit-btn:hover {
+	background-color: #0099FF;
+	background-image: none;
+	color: #FFFFFF;
+	opacity: 0.8;
 }
 
 .org-control .slug-preview {
@@ -1145,8 +1158,59 @@ for example: in the user dashboard when the user has no organizations */
 	margin-bottom: 10px;
 }
 
+.hdx-modal.modal {
+	width: inherit;
+	top: 30%;
+	margin-left: -220px;
+}
+
+.hdx-modal .controls {
+	margin-left: 70px;
+	margin-right: 10px;
+}
+
+.hdx-modal .control-label {
+	width: 50px;
+	text-align: left;
+	margin-left: 10px;
+}
+
+.hdx-modal .modal-header {
+	border: 0px;
+	margin-left: 10px;
+}
+.hdx-modal .modal-footer {
+	border: 0px;
+	text-align: left;
+	background-color: inherit;	
+}
+
+.hdx-modal .hdx-modal-text-body {
+	font-size: 14px;
+	margin-left: 10px;
+}
+
 .nav-short-message {
 	color: #d9653f;
+}
+
+.less-visible {
+	color: #AAAAAA;
+}
+.member-item {
+	position: relative;
+}
+.member-item .dataset-heading {
+	margin: 0px;
+}
+.member-info-content {
+	margin-top: 3px;
+	margin-bottom: 6px;
+}
+.member-actions {
+	position: absolute;
+	top: 20px;
+	right: 14px;
 }
 
 /* END Styling create organization page*/
