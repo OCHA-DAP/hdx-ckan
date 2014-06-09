@@ -1106,6 +1106,14 @@ width: 473px !important;
 	line-height: 20px;
 	font-size: 12px
 }
+.btn.hdx-btn.org-edit-btn{
+	min-width: 50px;
+	max-height: 20px;
+	margin-left: 0px;
+	line-height: 20px;
+	font-size: 12px
+}
+
 .org-nums h4{
 	font-family: 'Roboto',sans-serif;
     font-weight: 300;
@@ -1113,6 +1121,26 @@ width: 473px !important;
 }
 .org-nums .members-num a{
 	color: #0099FF;
+}
+
+.float-left{
+	float:left;
+}
+
+.float-right{
+	float:right;
+}
+
+a.big-info-item-name {
+    color: #0099FF;
+    font-size: 25px;
+    line-height: 45px;
+}
+
+.list-items.dataset-item:last-of-type {
+    border-bottom: medium none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 /* This is used to show a big centered message, 
