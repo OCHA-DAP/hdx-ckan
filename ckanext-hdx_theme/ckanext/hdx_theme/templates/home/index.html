@@ -36,21 +36,10 @@
                 {# ('organizations_index', _('Organizations')), #}
 
                 {% block header_site_navigation_tabs %}
-                {% if c.userobj %}
-                  {{ h.build_nav_main(
-                    ('about', _('About')),
-                    ('search', _('Data')),
-                    ('organizations_index', _('Organizations')),
-                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ) }}
-                {% else %}
-                  {{ h.build_nav_main(
-                    ('about', _('About')),
-                    ('search', _('Data')),
-                    ('organizations_index', _('Organizations')),
-                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ) }}
-                {% endif %}
+                  <li><a href="/about">{{ _('About') }}</a></li>
+                  <li><a href="/dataset">{{ _('Data') }}</a></li>
+                  <li><a href="/organization">{{ _('Organizations') }}</a></li>
+                  <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
                 {% endblock %}
               </ul>
               <div class="pull-right">
