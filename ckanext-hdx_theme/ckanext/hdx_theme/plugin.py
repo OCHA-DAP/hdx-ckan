@@ -52,6 +52,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         
         map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
         
+        map.connect('/organization/{id}/request_membership', controller='ckanext.hdx_theme.org_controller:HDXOrgController', action='request_membership')
         return map
     
     def create(self, entity):
@@ -91,7 +92,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'organization_list_for_user':hdx_actions.organization_list_for_user, 
             'cached_group_list': hdx_actions.cached_group_list,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
-            'member_list': hdx_actions.member_list
+            'member_list': hdx_actions.member_list,
+            'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins
             
         }
     def get_auth_functions(self):
