@@ -25,7 +25,7 @@
   {% snippet 'snippets/organization_info.html', organization=c.group_dict, show_nums=true %}
   {% block organization_facets %}{% endblock %}
   {% set show_members_num = c.action != 'members' %}
-  {% snippet 'snippets/organization.html', organization=c.group_dict, show_nums=true, show_members_num=show_members_num %}
+  {% snippet 'snippets/organization.html', organization=c.group_dict, show_nums=true, show_members_num=show_members_num, user=c.user %}
 {% endblock %}
 
 {% block links %}

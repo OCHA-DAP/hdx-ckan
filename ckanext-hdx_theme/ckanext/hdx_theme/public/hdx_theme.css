@@ -1101,19 +1101,18 @@ width: 473px !important;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
-.org-nums .members-num{
-	font-weight: 300;
-	line-height: 30px;
-	color: #0099FF;
-	font-size: 30px;
-}
-
-.org-nums .followers-num {
+.org-nums .count-info-big{
 	font-weight: 300;
 	line-height: 30px;
 	color: #000000;
 	font-size: 30px;
 }
+
+.org-nums .count-info-big a{
+	color: #0099FF;
+	text-decoration: none;
+}
+
 
 .btn.hdx-btn.org-btn{
 	min-width: 100px;
