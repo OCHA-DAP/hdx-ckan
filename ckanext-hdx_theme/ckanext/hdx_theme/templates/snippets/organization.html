@@ -23,9 +23,11 @@ Example:
             <dd class="members-num">
             	{% link_for h.get_group_members(organization.id), controller='organization', action='members', id=organization.name or organization.title %}
             </dd>
+            {% if h.check_access('organization_update', {'id': organization.id}) %}
             <dd>
-            	<a href="#" class="btn hdx-btn org-btn">+ {{ _('Add Member') }}</a>
+            	<a href="{% url_for controller='organization', action='members', id=organization.name or organization.title %}#add-member" class="btn hdx-btn org-btn">+ {{ _('Add Member') }}</a>
             </dd>
+            {% endif %}
           </dl>
           <dl>
             <dt class="uppercase">{{ _('Followers') }}</dt>
