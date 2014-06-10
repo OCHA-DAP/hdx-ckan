@@ -5,7 +5,7 @@
     {% if self.content_action() | trim %}
       <div>
     	<div class="float-left">
-		  {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
+		  {% if h.check_access('organization_update', {'organization_id': c.group_dict.id}) %}
 			  {# if c.userobj.sysadmin #}
 			    {% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
 			  {# endif #}
