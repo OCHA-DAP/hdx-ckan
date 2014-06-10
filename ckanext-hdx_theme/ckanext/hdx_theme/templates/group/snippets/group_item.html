@@ -11,7 +11,7 @@ Example:
       {% endfor %}
     </ul>
 #}
-{% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
+{% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
 <li class="media-item">
   {% block image %}
     <img src="{{ group.image_url or h.url_for_static('/base/images/placeholder-group.png') }}" alt="{{ group.name }}" class="media-image">

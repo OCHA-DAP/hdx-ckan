@@ -191,7 +191,7 @@
         {% for group in c.group_package_stuff %}
         	{# replaced snippet with jinja code for faster performance (-1s on homepage) #}
 	        {% if group.type is defined %}
-				{% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
+				{% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
 				<option value="{{url}}">{{ group.display_name }} </option>
 			{% endif %}
         {% endfor %}

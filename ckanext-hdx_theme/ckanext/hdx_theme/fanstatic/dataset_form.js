@@ -1,3 +1,5 @@
+$('#field-private option[value=False]').attr('selected', true);
+
 $('#country-drop').change(function(){
       var country = $('#country-drop option:selected').val();
       var country_name = $('#country-drop option:selected').attr('display_name');
@@ -38,11 +40,17 @@ $('#field-organizations').change(function(){
       }
 });
 
-    $('#onepage_submit, #dataset_edit').click(function(e){	
+    $('#onepage_submit, #dataset_edit').click(function(e){
+      e.preventDefault();	
       if(this.id == 'onepage_submit' && $('.group_checked').length == 0){
         $('#select_country').prepend('<div class="error-explanation alert alert-error" id="error-country"><p>Must select a country first.</p></div>');
         $('html, body').animate({
               scrollTop: $('#select_country').offset().top
+            }, 2000);
+      }else if($('#field-license').val()=='hdx-other' && $('#field-license_other').val() == ''){
+        $('#field-license_other').parent().append('<div class="error-explanation alert alert-error" id="error-license"><p>Please define the terms of your license.</p></div>');
+        $('html, body').animate({
+              scrollTop: $('#field-license_other').offset().top
             }, 2000);
       }else{
       $('#error-explanation, .error-block, .error-country').remove();
