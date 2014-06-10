@@ -14,45 +14,55 @@
 
 <header class="newHeader">
   <div class="container">
-    {# The .header-image class hides the main text and uses image replacement for the title #}
-    <hgroup class="hdxLogo">
-
-      {% block header_logo %}
-        {% if g.site_logo %}
-          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
-        {% else %}
-          <h1>
-            <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
-          </h1>
-          {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
-        {% endif %}
-      {% endblock %}
-    </hgroup>
-
     <span class="content">
       <span class="navbar">
             <nav class="usermenu section">
-              <ul class="mainLinks">
-                {# ('organizations_index', _('Organizations')), #}
+              <div class="nav nav-pills">
+                {# The .header-image class hides the main text and uses image replacement for the title #}
+                <hgroup class="hdxLogo">
 
-                {% block header_site_navigation_tabs %}
-                {% if c.userobj %}
-                  {{ h.build_nav_main(
-                    ('about', _('About')),
-                    ('search', _('Data')),
-                    ('organizations_index', _('Organizations')),
-                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ) }}
-                {% else %}
-                  {{ h.build_nav_main(
-                    ('about', _('About')),
-                    ('search', _('Data')),
-                    ('organizations_index', _('Organizations')),
-                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ) }}
-                {% endif %}
-                {% endblock %}
-              </ul>
+                  {% block header_logo %}
+                    {% if g.site_logo %}
+                      <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
+                    {% else %}
+                      <h1>
+                        <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
+                      </h1>
+                      {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
+                    {% endif %}
+                  {% endblock %}
+                </hgroup>
+                <ul class="mainLinks">
+                  {% block header_site_navigation_tabs %}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+                        {{ _('About') }}
+                        <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu dropdown-inverse" role="menu">
+                        <li>
+                          <a href="http://docs.hdx.rwlabs.org/">
+                            <span>{{ _('What is HDX?') }}</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/about#tab2">
+                            <span>{{ _('Data Licenses') }}</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/about#tab3">
+                            <span>{{ _('Terms of Services') }}</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a href="/dataset">{{ _('Data') }}</a></li>
+                    <li><a href="/organization">{{ _('Organizations') }}</a></li>
+                    <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
+                  {% endblock %}
+                </ul>
+              </div>
               <div class="pull-right">
                 <ul class="nav nav-pills">
                   <li class="submitData">

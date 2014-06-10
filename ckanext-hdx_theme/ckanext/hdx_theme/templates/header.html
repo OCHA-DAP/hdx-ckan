@@ -109,27 +109,39 @@
 	    	</a>
 	    	#}	
           <ul class="nav second-row-menu">
-            {# ('organizations_index', _('Organizations')), #}
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+                {{ _('About') }}
+                <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu dropdown-inverse" role="menu">
+                <li>
+                  <a href="http://docs.hdx.rwlabs.org/">
+                    <span>{{ _('What is HDX?') }}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/about#tab2">
+                    <span>{{ _('Data Licenses') }}</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="/about#tab3">
+                    <span>{{ _('Terms of Services') }}</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
             {% block header_site_navigation_tabs %}
+            <li><a href="/dataset">{{ _('Data') }}</a></li>
             {% if c.userobj %}
-	            {{ h.build_nav_main(
-	              ('about', _('About')),
-	              ('search', _('Data')),
-	              ('/dataset/new', _('Contribute')),
-                ('organizations_index', _('Organizations')),
-	              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-	              ('http://docs.hdx.rwlabs.org/get-involved/', _('Contact')),
-	            ) }}
+              <li><a href="/dataset/new">{{ _('Contribute') }}</a></li>
             {% else %}
-	            {{ h.build_nav_main(
-	              ('about', _('About')),
-	              ('search', _('Data')),
-	              ('/contribute', _('Contribute')),
-                ('organizations_index', _('Organizations')),
-	              ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-	              ('http://docs.hdx.rwlabs.org/get-involved/', _('Contact')),
-	            ) }}
+              <li><a href="/contribute">{{ _('Contribute') }}</a></li>
             {% endif %}
+            <li><a href="/organization">{{ _('Organizations') }}</a></li>
+            <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
+            <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact') }}</a></li>
             {% endblock %}
           </ul>
           <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search' %}">
