@@ -150,7 +150,18 @@ def hdx_basic_user_info(context, data_dict):
 def _create_user_dict(user_obj, **kw):
     result = { 'display_name': user_obj.fullname or user_obj.name,
             'created': user_obj.created,
-            'name': user_obj.name}
+            'name': user_obj.name,
+            'email': user_obj.email}
     result.update(kw)
     return result
+
+def hdx_get_sys_admins(context, data_dict):
+    q = model.Session.query(model.User).filter(model.User.sysadmin==True)
+    return [{'name':m.name, 'display_name':m.fullname or m.name, 'email':m.email} for m in q.all()]
+    #return q.all();
+    
+    
+    
+    
+    
     
