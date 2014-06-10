@@ -30,8 +30,10 @@ class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         return ['organization']
 
     def _modify_group_schema(self, schema):
-        schema.update({'description':[tk.get_validator('ignore_missing')] })
-        schema.update({'org_url':[tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
+        schema.update({
+                'description':[tk.get_validator('not_empty')],
+                'org_url':[tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
+                })
         return schema
 
     def form_to_db_schema(self):
@@ -46,7 +48,7 @@ class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         # There's a bug in dictionary validation when form isn't present
         if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
             schema = super(HDXOrgFormPlugin, self).form_to_db_schema()
-            schema.update({'description':[tk.get_validator('ignore_missing')] })
+            schema.update({'description':[tk.get_validator('not_empty')] })
             schema.update({'org_url':[tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
             return schema
         else:
