@@ -120,7 +120,6 @@ def member_list(context, data_dict=None):
             return trans[capacity]
         except KeyError:
             return capacity
-
     return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity)
             for m in q.all()]
 
@@ -151,7 +150,8 @@ def _create_user_dict(user_obj, **kw):
     result = { 'display_name': user_obj.fullname or user_obj.name,
             'created': user_obj.created,
             'name': user_obj.name,
-            'email': user_obj.email}
+            'email': user_obj.email,
+            'id': user_obj.id}
     result.update(kw)
     return result
 

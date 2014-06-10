@@ -10,6 +10,7 @@ from ckan.common import c, request, _
 import ckan.lib.base as base
 import ckanext.hdx_theme.helpers as hdx_h
 import ckan.lib.mailer as mailer
+import ckan.model as model
 
 class HDXOrgController(base.BaseController):
 
@@ -30,14 +31,22 @@ class HDXOrgController(base.BaseController):
         '''
             user_email, name of user, username, organization name,  list with sys-admins emails,
         '''
-        h.flash_success(_('Message sent'))
-        msg = request.params.get('message', '')
-        user = hdx_h.hdx_get_user_info(c.user)
-        sys_admins = tk.get_action('hdx_get_sys_admins')()
-        sys_admins_with_email = (sys_admin for sys_admin in sys_admins if sys_admin['email'])
-        for sys_admin in sys_admins_with_email :
-            if sys_admin['email'] :
-                self._send_mail(user, sys_admin, id, msg)
+        try:
+            msg = request.params.get('message', '')
+            user = hdx_h.hdx_get_user_info(c.user)
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user or c.author}
+            org_admins = tk.get_action('member_list')(context,{'id':id,'capacity':'admin','object_type':'user'})
+            admins=[]
+            for admin_tuple in org_admins:
+                admin_id = admin_tuple[0]
+                admins.append(hdx_h.hdx_get_user_info(admin_id))
+            admins_with_email = (admin for admin in admins if admin['email'])
+            for admin in admins_with_email :
+                self._send_mail(user, admin, id, msg)
+            h.flash_success(_('Message sent'))
+        except:
+            h.flash_error(_('Request can not be sent. Contact an administrator'))
         h.redirect_to(controller='organization', action='read', id=id)
     
 

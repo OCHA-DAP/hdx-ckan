@@ -1195,9 +1195,13 @@ a.big-info-item-name {
 	transition: opacity 1s, visibility 1s;
 }
 
-.field-with-info:hover ~ .info-field{
+.field-with-info:hover ~ .info-field, .info-field:hover{
 	opacity: 1;
 	visibility: visible;
+}
+
+.simple-dataset-control{
+	width: 370px;
 }
 
 /* This is used to show a big centered message, 

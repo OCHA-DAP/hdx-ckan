@@ -34,8 +34,7 @@ Example:
             	<a href="{% url_for controller='organization', action='members', id=organization.name or organization.title %}#add-member" class="btn hdx-btn org-btn">+ {{ _('Add Member') }}</a>
             </dd>
             {% else %}
-            	{% if not h.user_in_org_or_group(organization.id) %}
-            	{{c}}
+            	{% if not h.user_in_org_or_group(organization.id) and h.check_access('hdx_basic_user_info') %}
             		<a href="#req-membership-div" data-toggle="modal" class="btn hdx-btn org-btn">{{ _('Request Membership') }}</a>
             		{% snippet 'organization/snippets/req_membership.html', form_url=h.url_for(controller='ckanext.hdx_theme.org_controller:HDXOrgController', 
             		action='request_membership', id=organization.name or organization.title), modal_div_id='req-membership-div' %}
