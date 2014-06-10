@@ -62,10 +62,8 @@
 			      {{ _('There are no datasets currently uploaded to your organization.') }}
 			    </p>
 			    <p>
-			      {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
-					  {% if c.userobj.sysadmin %}
-				        {% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %}
-					  {% endif %}
+			      {% if h.check_access('organization_update', {'organization_id': c.group_dict.id}) %}
+				  		{% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %}
 				  {% endif %}
 			    </p>
 		    </div>
