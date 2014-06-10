@@ -30,7 +30,7 @@ class HDXOrgController(base.BaseController):
         '''
             user_email, name of user, username, organization name,  list with sys-admins emails,
         '''
-        h.flash_success(_('Message sent'))
+       
         msg = request.params.get('message', '')
         user = hdx_h.hdx_get_user_info(c.user)
         sys_admins = tk.get_action('hdx_get_sys_admins')()
@@ -38,6 +38,7 @@ class HDXOrgController(base.BaseController):
         for sys_admin in sys_admins_with_email :
             if sys_admin['email'] :
                 self._send_mail(user, sys_admin, id, msg)
+        h.flash_success(_('Message sent'))
         h.redirect_to(controller='organization', action='read', id=id)
     
 
