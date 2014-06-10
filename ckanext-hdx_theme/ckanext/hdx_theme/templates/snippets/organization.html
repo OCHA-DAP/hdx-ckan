@@ -18,6 +18,7 @@ Example:
 
       {% if show_nums %}
         <div class="org-nums">
+          {% if show_members_num %}
           <dl>
             <dt class="uppercase">{{ _('Members') }}</dt>
             <dd class="members-num">
@@ -29,6 +30,14 @@ Example:
             </dd>
             {% endif %}
           </dl>
+          {% else %}
+          <dl>
+            <dt class="uppercase">{{ _('Datasets') }}</dt>
+            <dd class="members-num">
+            	{% link_for organization.packages|length, controller='organization', action='read', id=organization.name or organization.title %}
+            </dd>
+          </dl>
+          {% endif %}
           <dl>
             <dt class="uppercase">{{ _('Followers') }}</dt>
             <dd  class="followersNumber followers-num">{{ h.SI_number_span(organization.num_followers) }}</dd>
