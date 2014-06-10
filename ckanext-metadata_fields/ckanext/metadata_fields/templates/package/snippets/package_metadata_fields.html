@@ -15,33 +15,47 @@
 
   {% block dataset_fields %}
 
-  {% block basic_field_date %}
-  <div class="control-group" style="display:inline-block;">
-  <label class="control-label" for="dataset_date">Date of Dataset</label>
-    <div class="controls"> 
-	  <input type="text" name='ui_dataset_date' id='field-ui_dataset_date' onkeydown="return false;"
-	  	data-module='hdx_datepicker' data-module-group='1' data-module-topic='date-field-clicked' data-module-alt_field_id='field-dataset_date'
-	  	label="{{_('Date of Dataset')}}" placeholder="{{_('Date of Dataset')}}" 
-	  	error='{{errors.dataset_date}}' class='control-full'>
-	  <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+{% block basic_field_date %}
+<div>
+	<div class="{{ form_field_wrapper_classes }}">
+  	<div class="control-group" style="display:inline-block;">
+	  <label class="control-label" for="dataset_date">Date of Dataset</label>
+	    <div class="controls"> 
+		  <input type="text" name='ui_dataset_date' id='field-ui_dataset_date' onkeydown="return false;"
+		  	data-module='hdx_datepicker' data-module-group='1' data-module-topic='date-field-clicked' data-module-alt_field_id='field-dataset_date'
+		  	label="{{_('Date of Dataset')}}" placeholder="{{_('Date of Dataset')}}" 
+		  	error='{{errors.dataset_date}}' class='control-full'>
+		  <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+		</div>
+	  <label class="control-label" for="dataset_date">Date Range</label>
+	    <div class="controls"> 
+		  <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
+		    data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
+		    data-module-alt_field_id='date_range1'
+		  	label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px;float:left; margin-right:2px;">
+		  <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
+			data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
+			data-module-alt_field_id='date_range2'
+		  	label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px; float:left; margin-right:2px;">
+		  <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
+		  <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+		</div>
+	  </div>
 	</div>
-  <label class="control-label" for="dataset_date">Date Range</label>
-    <div class="controls"> 
-	  <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
-	    data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
-	    data-module-alt_field_id='date_range1'
-	  	label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px;float:left; margin-right:2px;">
-	  <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
-		data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
-		data-module-alt_field_id='date_range2'
-	  	label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:95px; float:left; margin-right:2px;">
-	  <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
-	  <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
-	</div>
-</div>
-    {% endblock %}
+	{% if new_dataset %}
+		  	<div class="dataset-form-info-field info-field">
+				{% trans %}
+				What time period does this dataset refer to ?
+				{% endtrans %}
+			</div>
+		{% endif %}
+	<span class="clear">&nbsp;</span>
+<div>
+{% endblock %}
 
   {% block basic_field_methodology %}
+<div>
+<div class="{{ form_field_wrapper_classes }}">
   <div class="control-group">
     <div>
   <div id="field-dataset_methodology">
@@ -104,15 +118,36 @@
   </div>
 </div>
 </div>
+
+</div>
+	{% if new_dataset %}
+	  	<div class="dataset-form-info-field info-field">
+			{% trans %}
+			How was this data gathered ?
+			{% endtrans %}
+		</div>
+	{% endif %}
+<span class="clear">&nbsp;</span>
+</div>
   {% endblock %}
 
 {% block package_basic_fields_tags %}
-	<div class="dataset-form-field-wrapper">
+<div>
+	<div class="{{ form_field_wrapper_classes }}">
 	{% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
 	'style':'width: 370px !important;',
 	'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
 	{{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
 	</div>
+	{% if new_dataset %}
+	  	<div class="dataset-form-info-field info-field">
+			{% trans %}
+			The system will suggest matching tags. Please use existing tags where possible.
+			{% endtrans %}
+		</div>
+	{% endif %}
+	<span class="clear">&nbsp;</span>
+</div>
 {% endblock %}
 
   
