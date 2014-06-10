@@ -745,7 +745,9 @@ body {
 	margin: 0px;
 }
 a.info-tooltip, .info-item-name {
+	line-height: 15px;
 	color: #0099FF;
+	font-size: 12px;
 }
 
 .info-wrapper .social-images {
@@ -854,6 +856,10 @@ span.clear { clear: left; display: block; }
     font-weight: normal;
     
 }
+.btn.hdx-btn.main-hdx-btn {
+	margin-left: 0px;
+    padding: 4px 12px;
+}
 
 .btn.hdx-btn img {
     height: 20px;
@@ -947,8 +953,8 @@ width: 473px !important;
 	max-height:100px;
 	padding-left:20px;
 	padding-top:20px;
-
 }
+
 
 .org-info-label{
 	background-color: #CCCCCC;
@@ -1032,13 +1038,167 @@ width: 473px !important;
 }
 
 
-.create-org-btn {
+.create-org-btn, .hdx-submit-btn {
 	background-color: #0099FF;
 	background-image: none;
+	color: #FFFFFF
+	
+}
+
+.hdx-submit-btn:hover {
+	background-color: #0099FF;
+	background-image: none;
+	color: #FFFFFF;
+	opacity: 0.8;
 }
 
 .org-control .slug-preview {
     visibility: hidden;
+}
+.org-description {
+	font-family: 'Roboto',sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+}
+.org-heading {
+	font-family: 'Roboto',sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.3;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.border-bottom{
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.org-info-wrapper{
+	margin: 0px;
+}
+
+.org-nums{
+	margin-top: 10px;
+    padding-bottom: 0;
+    padding-top: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.org-nums dl{
+	margin-bottom: 20px;
+	border-bottom: 1px solid #DDDDDD;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+}
+.org-nums dt{
+	font-weight: 300;
+}
+
+.org-nums dd{
+	font-weight: 300;
+	margin-left: 0px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.org-nums .members-num{
+	font-weight: 300;
+	line-height: 30px;
+	color: #0099FF;
+	font-size: 30px;
+}
+
+.org-nums .followers-num {
+	font-weight: 300;
+	line-height: 30px;
+	color: #000000;
+	font-size: 30px;
+}
+
+.btn.hdx-btn.org-btn{
+	min-width: 100px;
+	max-height: 20px;
+	margin-left: 0px;
+	line-height: 20px;
+	font-size: 12px
+}
+.btn.hdx-btn.org-edit-btn{
+	min-width: 50px;
+	max-height: 20px;
+	margin-left: 0px;
+	line-height: 20px;
+	font-size: 12px
+}
+
+.org-nums h4{
+	font-family: 'Roboto',sans-serif;
+    font-weight: 300;
+    color: #444444;
+}
+.org-nums .members-num a{
+	color: #0099FF;
+}
+
+.float-left{
+	float:left;
+}
+
+.float-right{
+	float:right;
+}
+
+a.big-info-item-name {
+    color: #0099FF;
+    font-size: 25px;
+    line-height: 45px;
+}
+
+.list-items.dataset-item:last-of-type {
+    border-bottom: medium none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+
+.dataset-form-field-wrapper .control-full textarea {
+	height: 120px;
+}
+
+.dataset-form-field-wrapper {
+	width: 500px;
+}
+.dataset-form-field-wrapper .select2-container {
+	display: block;
+	/* Needed to replace the important coming from main.min.css */
+	width: 370px !important;
+}
+
+.field-with-info {
+	float: left;
+}
+
+.dataset-form-info-field {
+	float: right;
+	background-color: #CCCCCC;
+	width: 300px;
+	color: #FFFFFF;
+	padding: 5px 10px;
+}
+
+.dataset-form-info-field-height {
+	height: 110px;
+	margin-top: 3px;
+}
+
+.field-with-info ~ .info-field{
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover ~ .info-field{
+	opacity: 1;
+	visibility: visible;
 }
 
 /* This is used to show a big centered message, 
@@ -1071,8 +1231,59 @@ for example: in the user dashboard when the user has no organizations */
 	margin-bottom: 10px;
 }
 
+.hdx-modal.modal {
+	width: inherit;
+	top: 30%;
+	margin-left: -220px;
+}
+
+.hdx-modal .controls {
+	margin-left: 70px;
+	margin-right: 10px;
+}
+
+.hdx-modal .control-label {
+	width: 50px;
+	text-align: left;
+	margin-left: 10px;
+}
+
+.hdx-modal .modal-header {
+	border: 0px;
+	margin-left: 10px;
+}
+.hdx-modal .modal-footer {
+	border: 0px;
+	text-align: left;
+	background-color: inherit;	
+}
+
+.hdx-modal .hdx-modal-text-body {
+	font-size: 14px;
+	margin-left: 10px;
+}
+
 .nav-short-message {
 	color: #d9653f;
+}
+
+.less-visible {
+	color: #AAAAAA;
+}
+.member-item {
+	position: relative;
+}
+.member-item .dataset-heading {
+	margin: 0px;
+}
+.member-info-content {
+	margin-top: 3px;
+	margin-bottom: 6px;
+}
+.member-actions {
+	position: absolute;
+	top: 20px;
+	right: 14px;
 }
 
 /* END Styling create organization page*/

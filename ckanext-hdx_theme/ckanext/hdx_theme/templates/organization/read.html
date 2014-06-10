@@ -1,11 +1,39 @@
 {% extends "organization/read_base.html" %}
 
+{% block page_header %}
+  <header class="module-content page-header">
+    {% if self.content_action() | trim %}
+      <div>
+    	<div class="float-left">
+		  {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
+			  {% if c.userobj.sysadmin %}
+			    {% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
+			  {% endif %}
+		  {% endif %}
+		</div>
+		<div class="float-right">
+		  {% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
+		    {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
+		  {% endif %}
+		</div>
+      </div>
+    {% endif %}
+    <span class="clear">&nbsp;</span>
+    <div>
+	    <ul class="nav nav-tabs">
+	      {% block content_primary_nav %}
+			<li class="active">
+				{% link_for _('Datasets'), controller='organization', action='read', id=c.group_dict.name, class_='hdx-tab-button' %}
+			</li>
+	      	{# h.build_nav_icon('organization_read', _('Datasets'), id=c.group_dict.name, class_='hdx-tab-button',  highlight_actions = 'read') #}
+   			{{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
+	      {% endblock %}
+	    </ul>
+    </div>
+  </header>
+{% endblock %}
+
 {% block page_primary_action %}
-  {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
-  {% if c.userobj.sysadmin %}
-    {% link_for _('Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='btn btn-primary', icon='plus-sign-alt' %}
-  {% endif %}
-  {% endif %}
 {% endblock %}
 
 {% block primary_content_inner %}
@@ -17,11 +45,30 @@
         'translated_fields': c.translated_fields,
         'remove_field': c.remove_field }
       %}
-      {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, placeholder=_('Search datasets...'), show_empty=request.params %}
+      {% set sorting = [
+        (_('Name Ascending'), 'title_string asc'),
+        (_('Name Descending'), 'title_string desc'),
+        (_('Last Modified'), 'data_modified desc') ]
+      %}
+      {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}	
+      {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
     {% endblock %}
   {% block packages_list %}
       {% if c.page.items %}
         {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
+        {% else %}
+		  	<div class="big-message">
+			    <p>
+			      {{ _('There are no datasets currently uploaded to your organization.') }}
+			    </p>
+			    <p>
+			      {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
+					  {% if c.userobj.sysadmin %}
+				        {% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %}
+					  {% endif %}
+				  {% endif %}
+			    </p>
+		    </div>
       {% endif %}
   {% endblock %}
   {% block page_pagination %}

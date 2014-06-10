@@ -2,4 +2,4 @@
 use = config:../test-core.ini.sample
 ckan.site_title = Test CKAN Site
 ckan.site_description = Testing extension
-ckan.plugins = metadata_fields
+ckan.plugins = metadata_fields hdx_theme

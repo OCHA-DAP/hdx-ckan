@@ -5,16 +5,22 @@ from pylons import config
 import sqlalchemy
 
 import ckan.lib.dictization
-import ckan.logic as logic
+import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.model.misc as misc
 import ckan.plugins as plugins
 import ckan.lib.plugins as lib_plugins
 import ckan.new_authz as new_authz
+import beaker.cache as bcache
+import ckan.model as model
+
+import ckanext.hdx_theme.caching as caching
+import ckanext.hdx_theme.counting_actions as counting
 
 from ckan.common import _
 
-_check_access = logic.check_access
+_check_access = tk.check_access
+_get_or_bust = tk.get_or_bust
 
 def organization_list_for_user(context, data_dict):
     '''Return the list of organizations that the user is a member of.
@@ -77,5 +83,74 @@ def organization_list_for_user(context, data_dict):
 #        it['created']=org.created.isoformat()
     return orgs_list
 
+def member_list(context, data_dict=None):
+    '''Return the members of a group.
 
+    Modified copy of the original ckan member_list action to also return 
+    the non-translated capacity (role)
+
+    :rtype: list of (id, type, translated capacity, capacity ) tuples
+
+    '''
+    model = context['model']
+
+    group = model.Group.get(_get_or_bust(data_dict, 'id'))
+    if not group:
+        raise NotFound
+
+    obj_type = data_dict.get('object_type', None)
+    capacity = data_dict.get('capacity', None)
+
+    # User must be able to update the group to remove a member from it
+    _check_access('group_show', context, data_dict)
+
+    q = model.Session.query(model.Member).\
+        filter(model.Member.group_id == group.id).\
+        filter(model.Member.state == "active")
+
+    if obj_type:
+        q = q.filter(model.Member.table_name == obj_type)
+    if capacity:
+        q = q.filter(model.Member.capacity == capacity)
+
+    trans = new_authz.roles_trans()
+
+    def translated_capacity(capacity):
+        try:
+            return trans[capacity]
+        except KeyError:
+            return capacity
+
+    return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity)
+            for m in q.all()]
+
+def cached_group_list(context, data_dict):
+    groups  = caching.cached_group_list()
+    return groups
+
+def hdx_basic_user_info(context, data_dict):
+    result = {}
+    
+    _check_access('hdx_basic_user_info', context, data_dict)
+    
+    model = context['model']
+    id = data_dict.get('id',None)
+    if id:
+        user_obj = model.User.get(id)
+        if user_obj is None:
+            raise NotFound
+        else:
+            ds_num  = counting.count_user_datasets(id)
+            org_num = counting.count_user_orgs(id)
+            grp_num = counting.count_user_grps(id)
+            result = _create_user_dict(user_obj, ds_num=ds_num, org_num=org_num, grp_num=grp_num )
+    
+    return result
+            
+def _create_user_dict(user_obj, **kw):
+    result = { 'display_name': user_obj.fullname or user_obj.name,
+            'created': user_obj.created,
+            'name': user_obj.name}
+    result.update(kw)
+    return result
     

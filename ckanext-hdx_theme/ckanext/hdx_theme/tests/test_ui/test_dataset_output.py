@@ -5,6 +5,7 @@ Created on May 16, 2014
 
 '''
 
+import ckan
 import ckan.tests as tests
 import webtest
 import ckan.lib.helpers as h
@@ -20,25 +21,42 @@ import unicodedata
 from ckan.config.middleware import make_app
 from pylons import config
 
-class TestDatasetOutput(tests.WsgiAppCase):
+def _get_test_app():
+    config['ckan.legacy_templates'] = False
+    app = ckan.config.middleware.make_app(config['global_conf'], **config)
+    app = webtest.TestApp(app)
+    return app
+
+def _load_plugin(plugin):
+    plugins = set(config['ckan.plugins'].strip().split())
+    plugins.add(plugin.strip())
+    config['ckan.plugins'] = ' '.join(plugins)
+
+class TestDatasetOutput(object):
     
     @classmethod
     def setup_class(cls):
-#         p.load('metadata_fields')
-#         TestMetadataFields.get_app()
+        cls.original_config = config.copy()
+        
+        _load_plugin('hdx_theme')
+        cls.app = _get_test_app()
+
         search.clear()
         model.Session.remove()
         ctd.CreateTestData.create()
+        
         
       
     @classmethod
     def teardown_class(cls):
         model.Session.remove()
         model.repo.rebuild_db()
-        p.unload('hdx_theme')
+        
+        config.clear()
+        config.update(cls.original_config)
         
     def test_deleted_badge_appears(self):
-        p.load('hdx_theme')
+#         p.load('hdx_theme')
         testsysadmin = model.User.by_name('testsysadmin')
         dataset_name = 'test-dataset'
         result = tests.call_action_api(self.app, 'package_create', name=dataset_name,

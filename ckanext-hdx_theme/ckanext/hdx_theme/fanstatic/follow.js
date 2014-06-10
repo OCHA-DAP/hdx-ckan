@@ -73,11 +73,11 @@ this.ckan.module('hdx_follow', function($, _) {
       if (options.action == 'follow') {
 				options.action = 'unfollow';
 				this.el.html(this.i18n('unfollow'));
-        next_val = next_val + 1;
+				next_val = next_val + 1;
 			} else {
 				options.action = 'follow';
 				this.el.html(this.i18n('follow'));
-        next_val = next_val - 1;
+				next_val = next_val - 1;
 			}
       followers.html(next_val);
 			sandbox.publish('follow-' + options.action + '-' + options.id);
