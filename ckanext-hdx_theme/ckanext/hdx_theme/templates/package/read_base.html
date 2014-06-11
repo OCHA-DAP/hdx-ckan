@@ -98,12 +98,9 @@
           {{ h.follow_button('dataset', pkg.name) }}
           {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
           {% if c.user %}
-          	{% set tooltip_placement = 'top' %}
-          {% else %}
-          	{% set tooltip_placement = 'right' %}
+	          <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"   
+	          			data-toggle="tooltip" title="{{ follow_tooltip }}">{{ _("What's this?") }}</a>
           {% endif%}
-          <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="{{ tooltip_placement }}"   
-          			data-toggle="tooltip" title="{{ follow_tooltip }}">{{ _("What's this?") }}</a>
         </div>
       </div>
   {% endblock %}

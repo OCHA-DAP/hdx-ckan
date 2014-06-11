@@ -8,28 +8,28 @@
   {% block basic_fields %}
     {% set attrs = {'data-module': 'slug-preview-target', 'type':'hidden'} %}
     <div class="org-control-container">
-    {{ form.input('title', label=_('Name of Organization'), id='field-title', value=data.title, error=errors.title, classes=['control-full', 'org-control', 'mandatory'], attrs=attrs) }}
+    {{ form.input('title', label=_('Name of Organization'), id='field-title', value=data.title, error=errors.title, classes=['control-full', 'org-control', 'mandatory', 'field-with-info'], attrs=attrs) }}
 
     {# Perhaps these should be moved into the controller? #}
     {% set prefix = h.url_for(controller='organization', action='read', id='') %}
     {% set domain = h.url_for(controller='organization', action='read', id='', qualified=true) %}
     {% set domain = domain|replace("http://", "")|replace("https://", "") %}
     {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<organization>'} %}
-		<div class="org-control-info">
+		<div class="org-control-info  info-field">
 			<div class="org-info-label">{{_('Be as specific as possible (i.e. don\'t just say WFP, say WFP-Colombia)')}}</div>
 		</div>
 	</div>
     {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organization'), value=data.name, error=errors.name, attrs=attrs) }}
 	
 	<div class="org-control-container">
-	    {{ form.input('org_url', label=_('URL of Organization'), id='field-image-url', type='url', placeholder=_('http://example.com/about'), value=data.image_url, error=errors.image_url, classes=['control-full','org-control']) }}
-	    <div class="org-control-info">
+	    {{ form.input('org_url', label=_('URL of Organization'), id='field-image-url', type='url', placeholder=_('http://example.com/about'), value=data.image_url, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
+	    <div class="org-control-info info-field">
 	    	<div class="org-info-label">{{_('Where can people go to find more about this organization?')}}</div>
 	    </div>
 	</div>
 	<div class="org-control-container">
-	    {{ form.textarea('description', label=_('Description of Organization'), id='field-description', value=data.description, error=errors.description, classes=['org-control', 'mandatory']) }}
-	    <div class="org-control-info-large">
+	    {{ form.textarea('description', label=_('Description of Organization'), id='field-description', value=data.description, error=errors.description, classes=['org-control', 'mandatory','field-with-info']) }}
+	    <div class="org-control-info-large  info-field">
 	    	<div class="org-info-label-large">
 	    		{{_('Brief overview of what organization is for.')}}</div>
 	    </div>

@@ -251,10 +251,15 @@
         padding-top: 34px;
     }
 
-    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav, .newHeader .content .navbar nav ul.mainLinks, .newHeader .content .navbar nav ul.mainLinks *{
+    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav, .newHeader .content .navbar nav ul.mainLinks, .newHeader .content .navbar nav ul.mainLinks li{
         display: inline;
     }
-    .newHeader .content .navbar nav ul {
+
+    .newHeader .content .navbar nav ul.mainLinks li.dropdown a:focus{
+        background-color: #ffffff;
+    }
+
+    .newHeader .content .navbar nav > ul {
         margin: 0 0 0 25px;
     }
     .newHeader .content .navbar nav li a{
@@ -270,7 +275,7 @@
         text-decoration: none;
     }
 
-    .newHeader .content .navbar nav ul.mainLinks li a:after{
+    .newHeader .content .navbar nav ul.mainLinks > li > a:after{
         content: "|";
         margin-left: 15px;
         margin-right: 15px;
