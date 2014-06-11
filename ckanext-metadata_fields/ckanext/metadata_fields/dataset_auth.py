@@ -1,6 +1,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckan.new_authz as new_authz
+from ckan.common import _
 
 def package_create(context, data_dict=None):
 	#return {'success':False, 'msg':'Testing this shit'}
