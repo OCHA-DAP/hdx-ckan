@@ -52,7 +52,7 @@
                         </li>
                       </ul>
                     </li>
-                    <li><a href="/dataset">{{ _('Data') }}</a></li>
+                    <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
                     <li><a href="/organization">{{ _('Organizations') }}</a></li>
                     <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
                   {% endblock %}
@@ -173,8 +173,8 @@
               {{ self.home_search() }}
               <div>
                 <p class="exampleSearch">
-                  {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">{{ _("preparedness data for Kenya") }}</a>
-                  {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics' %}">{{ _("world health statistics") }}</a>
+                  {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya', sort='metadata_modified desc' %}">{{ _("preparedness data for Kenya") }}</a>
+                  {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics', sort='metadata_modified desc' %}">{{ _("world health statistics") }}</a>
                 </p>
               </div>
             </div>
@@ -247,9 +247,9 @@
 
 
 {% block home_search %}
-  <form class="form-search" method="get" action="{% url_for controller='package', action='search' %}">
+  <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='data_modified desc' %}">
     <div class="input-append">
-      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _("Search HDX Repository") }}">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}">
       <button type="submit" class="button">
         <i class="icon-search"></i>
       </button>

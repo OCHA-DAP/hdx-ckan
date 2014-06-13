@@ -128,7 +128,7 @@
               </ul>
             </li>
             {% block header_site_navigation_tabs %}
-            <li><a href="/dataset">{{ _('Data') }}</a></li>
+            <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
             {% if c.userobj %}
               <li><a href="/dataset/new">{{ _('Contribute') }}</a></li>
             {% else %}
@@ -139,7 +139,7 @@
             <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact') }}</a></li>
             {% endblock %}
           </ul>
-          <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search' %}">
+          <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search'%}">
             <div id="insideMenuSearch" class="input-append">
               <input type="text" name="q" class="search-query" placeholder="{{ _("Search all datasets ...") }}">
               <span class="add-on">
