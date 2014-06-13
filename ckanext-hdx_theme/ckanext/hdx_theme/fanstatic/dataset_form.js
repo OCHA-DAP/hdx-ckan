@@ -41,7 +41,7 @@ $('#field-organizations').change(function(){
 });
 
     $('#onepage_submit, #dataset_edit').click(function(e){
-      e.preventDefault();	
+      //e.preventDefault();	
       if(this.id == 'onepage_submit' && $('.group_checked').length == 0){
         $('#select_country').prepend('<div class="error-explanation alert alert-error" id="error-country"><p>Must select a country first.</p></div>');
         $('html, body').animate({
@@ -72,11 +72,15 @@ $('#field-organizations').change(function(){
       $('#method_other, #date_range1, #date_range2').remove();
       
 
-      $('#dataset-upload-form').submit();
+      return true;
       //$('form').submit();
   }
-  $("#field-dataset_date, #date_range1, #date_range2").datepicker();
-    });
+  return false;
+});
+
+$(document).ready(function(){
+    $("#field-dataset_date, #date_range1, #date_range2").datepicker();
+});
 
 $('#field-license').change(function(){ 
   if($(this).val() == 'hdx-other'){
