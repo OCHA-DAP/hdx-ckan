@@ -28,6 +28,7 @@
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab" class="hdx-tab-button">{{ _('What is HDX ?') }}</a></li>
 		<li><a href="#tab2" data-toggle="tab" class="hdx-tab-button">{{ _('Data Licenses') }}</a></li>
+		<li><a href="#tab3" data-toggle="tab" class="hdx-tab-button">{{ _('Terms of Service') }}</a></li>
 	</ul>
 	</header>
 	<div class="tab-content visible-tab-content">
@@ -37,11 +38,27 @@
 		<div class="tab-pane" id="tab2">
 			{% snippet 'home/snippets/hdx_licenses.html' %}
 		</div>
+		<div class="tab-pane" id="tab3">
+			{% snippet 'home/snippets/hdx_terms_of_service.html' %}
+		</div>
 	</div>
 	</div>
 </article>
-    
 
 {% endblock %}
+
+{%- block scripts2 %}
+  {{ super() }}
+    <script>
+      <!-- Small script to jump on the right Bootstrap tab -->
+      $(document).ready(function() {
+          if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
+          return $('a[data-toggle="tab"]').on('shown', function(e) {
+            return location.hash = $(e.target).attr('href').substr(1);
+          });
+      });
+    </script>
+{% endblock -%}
+
 
 {% block secondary %}{% endblock %}

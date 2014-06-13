@@ -8,3 +8,34 @@
 	{{ c.group_activity_stream | safe }}
 	{% endblock %}
 {% endblock %}
+
+{% block page_header %}
+  <header class="module-content page-header">
+    {% if self.content_action() | trim %}
+      <div>
+    	<div class="float-left">
+		  {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
+			  {% if c.userobj.sysadmin %}
+			    {% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
+			  {% endif %}
+		  {% endif %}
+		</div>
+		<div class="float-right">
+		  {% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
+		    {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
+		  {% endif %}
+		</div>
+      </div>
+    {% endif %}
+    <span class="clear">&nbsp;</span>
+    <div>
+	    <ul class="nav nav-tabs">
+	      {% block content_primary_nav %}
+	      	
+	      	{{ h.build_nav_icon('organization_read', _('Datasets'), id=c.group_dict.name, class_='hdx-tab-button') }}
+   			{{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
+	      {% endblock %}
+	    </ul>
+    </div>
+  </header>
+{% endblock %}

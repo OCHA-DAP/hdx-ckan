@@ -19,16 +19,16 @@ class LicenseCreativeCommonsIntergovernmentalOrgs(DefaultLicense):
     def title(self):
         return _("Creative Commons Attribution for Intergovernmental Organisations")
     
-class LicenseCreativeCommonsNoDerives(DefaultLicense):
+#class LicenseCreativeCommonsNoDerives(DefaultLicense):
 #     domain_content = True
 #     domain_data = True
-    id = "cc-by-nd"
-    is_okd_compliant = False
-    url = "http://creativecommons.org/licenses/by-nd/3.0/legalcode"
+#    id = "cc-by-nd"
+#    is_okd_compliant = False
+#    url = "http://creativecommons.org/licenses/by-nd/3.0/legalcode"
 
-    @property
-    def title(self):
-        return _("Creative Commons Attribution-NoDerives")
+#    @property
+#    def title(self):
+#        return _("Creative Commons Attribution-NoDerives")
     
 class LicenseOtherPublicDomainNoRestrictions(DefaultLicense):
 #     domain_content = True
@@ -39,6 +39,16 @@ class LicenseOtherPublicDomainNoRestrictions(DefaultLicense):
     @property
     def title(self):
         return _("Public Domain / No Restrictions")
+
+class LicenseHdxMultiple(DefaultLicense):
+#     domain_content = True
+    id = "hdx-multi"
+#     is_generic = True
+#     is_okd_compliant = True
+
+    @property
+    def title(self):
+        return _("Multiple Licenses")
 
 class LicenseHdxOther(DefaultLicense):
 #     domain_content = True

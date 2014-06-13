@@ -12,9 +12,8 @@ from routes.mapper import SubMapper
 import ckanext.metadata_fields.custom_validator as vd
 import ckanext.metadata_fields.update as update
 
-def list_of_all_groups():
-    groups  = tk.get_action('group_list')(data_dict={'all_fields': True})
-    return groups
+def cached_group_list():
+    return tk.get_action('cached_group_list')()
 
 
 class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
@@ -47,6 +46,7 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def _modify_package_schema(self, schema):
         
         schema.update({
+                'notes': [tk.get_validator('not_empty')], #Notes == description. Makes description required
                 'package_creator': [tk.get_validator('not_empty'),
                     tk.get_converter('convert_to_extras')],
                 'groups_list': [vd.groups_not_empty],
@@ -57,6 +57,8 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'dataset_date' : [tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')],
             'methodology' : [tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
+            'license_other' : [tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')],
             })
 
@@ -75,8 +77,8 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(HdxMetadataFieldsPlugin, self).show_package_schema()
-
         schema.update({
+            'notes': [tk.get_validator('not_empty')], #Notes == description. Makes description required
             'package_creator': [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],
             'caveats' : [tk.get_converter('convert_from_extras'),
@@ -87,14 +89,17 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing')],
             'methodology' : [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],
+            'license_other' : [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
             })
         return schema
-        
+    
     
     def get_helpers(self):
-        return {'list_of_all_groups': list_of_all_groups}
+        return {'list_of_all_groups': cached_group_list}
     
     def get_actions(self):
         return {'package_update': update.package_update}
+        
 
 

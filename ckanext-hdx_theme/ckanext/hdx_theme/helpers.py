@@ -2,13 +2,24 @@ import ckan.lib.helpers as h
 from ckan.common import (
      c, request
 )
-import ckan.model as model
 import sqlalchemy
+import ckan.model as model
+import ckan.lib.base as base
 import ckan.logic as logic
 import datetime
+import version
 import count
 import json
+import logging
+import ckan.plugins.toolkit as tk
+import re
+
+import ckanext.hdx_theme.counting_actions as counting
+
 from webhelpers.html import escape, HTML, literal, url_escape
+from ckan.common import _
+
+log = logging.getLogger(__name__)
 
 downloadable_formats = {
     'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
@@ -61,8 +72,10 @@ def get_last_revision_package(package_id):
 #     pkg = pkg_list[0]
 #     return pkg.latest_related_revision.id
     activity_objects = model.activity.package_activity_list(package_id, limit=1, offset=0)
-    activity = activity_objects[0]
-    return activity.revision_id
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return activity.revision_id
+    return None
 
 
 def get_last_revision_group(group_id):
@@ -70,8 +83,10 @@ def get_last_revision_group(group_id):
 #     grp = grp_list[0]
 #     last_rev = grp.all_related_revisions[0][0]
     activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
-    activity = activity_objects[0]
-    return activity.revision_id
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return activity.revision_id
+    return None
 
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
@@ -86,6 +101,16 @@ def get_group_members(grp_id):
     result = len(member_list)
     return result
 
+def hdx_get_user_info(user_id):
+    context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+    try:
+        user    = tk.get_action('hdx_basic_user_info')(context,{'id':user_id})
+    except logic.NotAuthorized:
+            base.abort(401, _('Unauthorized to see organization member list'))    
+        
+    return user
+
 def markdown_extract_strip(text, extract_length=190):
     ''' return the plain text representation of markdown encoded text.  That
     is the texted without any html tags.  If extract_length is 0 then it
@@ -93,4 +118,67 @@ def markdown_extract_strip(text, extract_length=190):
     result_text = h.markdown_extract(text, extract_length)
     result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '')
     return result
+
+def render_date_from_concat_str(str, separator='-'):
+    result  = ''
+    if str:
+        strdate_list    = str.split(separator)
+        for index,strdate in enumerate(strdate_list):
+            try:
+                date = datetime.datetime.strptime(strdate.strip(), '%m/%d/%Y')
+                render_strdate  = date.strftime('%b %d, %Y');
+                result  += render_strdate
+                if index < len(strdate_list)-1:
+                    result += ' - '
+            except ValueError, e:
+                log.warning(e)
+    
+    return result
+
+def hdx_build_nav_icon_with_message(menu_item, title, **kw):
+    htmlResult  = h.build_nav_icon(menu_item, title, **kw)
+    if 'message' not in kw or not kw['message']:
+        return htmlResult
+    else:
+        newResult   = str(htmlResult).replace('</a>', 
+                    ' <span class="nav-short-message">{message}</span></a>'.format(message=kw['message']) )
+        return h.literal(newResult)
+    
+def hdx_linked_user(user, maxlength=0):
+    response = h.linked_user(user, maxlength)
+    changed_response = re.sub(r"<img[^>]+/>","",str(response))
+    return h.literal(changed_response)
+
+def hdx_show_singular_plural(num, singular_word, plural_word):
+    if num == 1:
+        return str(num) + ' ' + singular_word
+    else:
+        return str(num) + ' ' + plural_word
+
+def hdx_num_of_new_related_items():
+    max_days = 30;
+    count = 0;
+    now = datetime.datetime.now()
+    for related in c.pkg.related:
+        if (related.created):
+            difference  = now-related.created
+            days = difference.days
+            if days < max_days:
+                count += 1
+    return count
+
+def hdx_member_roles_list():
+    context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+    return tk.get_action('member_roles_list')(context, {})
+
+def hdx_version():
+    return version.hdx_version
+
+def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='value' ):
+    res = ''
+    for ex in extras :
+        if ex[key] == value_key:
+            res = ex[ret_key]
+    return res
 

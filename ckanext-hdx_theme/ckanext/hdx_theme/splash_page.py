@@ -11,30 +11,12 @@ import ckan.plugins.toolkit as tk
 from ckan.controllers.group import GroupController as gc
 from ckan.controllers.home import HomeController
 
-from ckanext.hdx_theme.country_list_hardcoded import FOCUS_COUNTRIES
-
-from beaker.cache import cache_regions, cache_region
+import ckanext.hdx_theme.caching as caching
 
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
 get_action = logic.get_action
 
-def filter_focus_countries(group_package_stuff):
-	focus_group_package_stuff = []
-	for grp_dict in group_package_stuff:
-		if grp_dict['display_name'] in FOCUS_COUNTRIES:
-			focus_group_package_stuff.append(grp_dict)
-				
-	return focus_group_package_stuff
-
-# Cache region is defined in plugin.py in metadata plugin
-@cache_region('hdx_memory_cache', 'focus_countries_list')
-def cached_get_group_package_stuff():
-	group_package_stuff = tk.get_action('group_list')(data_dict={'all_fields': True})
-	focus_group_package_stuff = filter_focus_countries(group_package_stuff)
-	
-	return sorted(focus_group_package_stuff, key=lambda k: k['title'])
-	
 
 class SplashPageController(HomeController):
 
@@ -61,7 +43,7 @@ class SplashPageController(HomeController):
 		
 		
 		
-		c.group_package_stuff = cached_get_group_package_stuff()
+		c.group_package_stuff = caching.cached_get_group_package_stuff()
 
 		##Removing groups without geojson for the map
 		c.group_map = []

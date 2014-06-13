@@ -1,5 +1,11 @@
 {% extends "page.html" %}
 
+{% block flash %}
+  {# eat the flash messages so they don't remain in the session #}
+  {% set flash_messages = h.flash.pop_messages() %}
+{% endblock %}
+
+
 {% block subtitle %}{{ _("Welcome") }}{% endblock %}
 
 {% block maintag %}{% endblock %}
@@ -8,45 +14,55 @@
 
 <header class="newHeader">
   <div class="container">
-    {# The .header-image class hides the main text and uses image replacement for the title #}
-    <hgroup class="hdxLogo">
-
-      {% block header_logo %}
-        {% if g.site_logo %}
-          <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" title="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/></a>
-        {% else %}
-          <h1>
-            <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
-          </h1>
-          {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
-        {% endif %}
-      {% endblock %}
-    </hgroup>
-
     <span class="content">
       <span class="navbar">
             <nav class="usermenu section">
-              <ul class="mainLinks">
-                {# ('organizations_index', _('Organizations')), #}
+              <div class="nav nav-pills">
+                {# The .header-image class hides the main text and uses image replacement for the title #}
+                <hgroup class="hdxLogo">
 
-                {% block header_site_navigation_tabs %}
-                {% if c.userobj %}
-                  {{ h.build_nav_main(
-                    ('about', _('About')),
-                    ('search', _('Data')),
-                    ('organizations_index', _('Organizations')),
-                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ) }}
-                {% else %}
-                  {{ h.build_nav_main(
-                    ('about', _('About')),
-                    ('search', _('Data')),
-                    ('organizations_index', _('Organizations')),
-                    ('http://docs.hdx.rwlabs.org/blog', _('Blog')),
-                  ) }}
-                {% endif %}
-                {% endblock %}
-              </ul>
+                  {% block header_logo %}
+                    {% if g.site_logo %}
+                      <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
+                    {% else %}
+                      <h1>
+                        <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
+                      </h1>
+                      {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
+                    {% endif %}
+                  {% endblock %}
+                </hgroup>
+                <ul class="mainLinks">
+                  {% block header_site_navigation_tabs %}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+                        {{ _('About') }}
+                        <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu dropdown-inverse" role="menu">
+                        <li>
+                          <a href="http://docs.hdx.rwlabs.org/">
+                            <span>{{ _('What is HDX?') }}</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/about#tab2">
+                            <span>{{ _('Data Licenses') }}</span>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/about#tab3">
+                            <span>{{ _('Terms of Services') }}</span>
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a href="/dataset">{{ _('Data') }}</a></li>
+                    <li><a href="/organization">{{ _('Organizations') }}</a></li>
+                    <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
+                  {% endblock %}
+                </ul>
+              </div>
               <div class="pull-right">
                 <ul class="nav nav-pills">
                   <li class="submitData">
@@ -58,7 +74,7 @@
                   {% if c.userobj %}
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle special-menuitem" data-toggle="dropdown">
-                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=22) }}
+                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=29) }}
                       <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
                       <b class="caret"></b>
                     </a>
@@ -115,7 +131,7 @@
             </nav>
       </span>
     </span>
-
+    {{ self.flash() }}
   </div>
 </header>
 {% endblock %}
@@ -145,9 +161,8 @@
                 {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
                       global datasets relevant to humanitarian work as well as local datasets from our
                       three pilot locations - Colombia, Kenya and Yemen. You can also create an
-                      account and add your own data to the repository to share privately or publicly.") }}
-                <br/>
-                {{ _("Please have a look around and send us your feedback!") }}
+                      account and add your own data to the repository to share privately or publicly. 
+                      Please have a look around and send us your feedback!") }}
               </p>
             </div>
           </div>
@@ -248,19 +263,20 @@
 {% endblock %}
 
 {% block group_select %}
-  <div class="searchSelect">
-    <select id="group_select">
-      <option selected value="#">{{ _("Choose Country") }}</option>
-      {% for group in c.group_package_stuff %}
-        {# replaced snippet with jinja code for faster performance (-1s on homepage) #}
-        {% if group.type is defined %}
-          {% set url = h.url_for(group.type + '_read', action='read', id=group.name) %}
-          <option value="{{url}}">{{ group.display_name }} </option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    <b class="caret"></b>
-  </div>
+    <div class="dropdown selectCountryDropdown">
+      <button class="dropdown-toggle selectCountry" data-toggle="dropdown">
+        {{ _("Choose Country") }}
+        <b class="caret"></b>
+      </button>
+      <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
+        {% for group in c.group_package_stuff %}
+          {% if group.type is defined %}
+            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
+              <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
 {% endblock %}
 
 {% block footer %}

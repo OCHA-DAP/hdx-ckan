@@ -130,10 +130,14 @@ def package_update(context, data_dict):
     return output
 
 def modified_save(context, pkg, data):
-    temp_groups = data['groups']
-    data['groups'] = None
-    pkg = model_save.package_dict_save(data, context)
-    data['groups'] = temp_groups
+    groups_key  = 'groups'
+    if groups_key in data:
+        temp_groups = data[groups_key]
+        data[groups_key] = None
+        pkg = model_save.package_dict_save(data, context)
+        data[groups_key] = temp_groups
+    else:
+        pkg = model_save.package_dict_save(data, context)
     package_membership_list_save(data.get("groups"), pkg, context)
     return pkg
 
