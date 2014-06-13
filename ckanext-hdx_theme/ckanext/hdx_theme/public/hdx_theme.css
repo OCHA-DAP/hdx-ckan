@@ -1312,3 +1312,13 @@ for example: in the user dashboard when the user has no organizations */
     }
 /* END HDX Version display */
 
+/* Dropdown menu colors  */
+    .navbar .dropdown .dropdown-menu {
+        margin: 0;
+    }
+    .navbar .dropdown ul.dropdown-menu > li > a:hover, .navbar .dropdown ul.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+       background-color: #007ce0;
+       color: #ffffff;
+       background-image: none;
+    }
+/* END Dropdown menu colors */
