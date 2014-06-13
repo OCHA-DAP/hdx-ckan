@@ -290,6 +290,17 @@
         display: block;
     }
 
+    /* Dropdown menu colors  */
+        .newHeader .content .navbar nav .dropdown-menu {
+            margin: 0;
+        }
+       .newHeader .content .navbar nav ul.dropdown-menu > li > a:hover, .newHeader .content .navbar nav ul.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+           background-color: #007ce0;
+           color: #ffffff;
+           background-image: none;
+       }
+    /* END Dropdown menu colors */
+
     .newHeader .content .navbar nav li.submitData{
         background-color: #f2645a;
         border-radius: 6px;
