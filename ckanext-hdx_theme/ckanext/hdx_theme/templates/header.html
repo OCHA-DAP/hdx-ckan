@@ -110,9 +110,8 @@
 	    	#}	
           <ul class="nav second-row-menu">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+              <a href="#" class="dropdown-toggle">
                 {{ _('About') }}
-                <b class="caret"></b>
               </a>
               <ul class="dropdown-menu dropdown-inverse" role="menu">
                 <li>
@@ -121,14 +120,10 @@
                   </a>
                 </li>
                 <li>
-                  <a href="/about#tab2">
-                    <span>{{ _('Data Licenses') }}</span>
-                  </a>
+                  {% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
                 </li>
                 <li>
-                  <a href="/about#tab3">
-                    <span>{{ _('Terms of Services') }}</span>
-                  </a>
+                  {% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}
                 </li>
               </ul>
             </li>

@@ -92,4 +92,14 @@ class SplashPageController(HomeController):
 	def _action(self, action_name):
 		''' select the correct group/org action '''
 		return get_action(self._replace_group_org(action_name))
-	
+
+	def about(self, page):
+		title = {'license': _('Data Licenses'),
+				 'terms': _('Terms of Service')}
+		html =  {'license': 'home/snippets/hdx_licenses.html',
+				 'terms': 'home/snippets/hdx_terms_of_service.html'}
+
+		extraVars = {'title': title.get(page), 'html': html.get(page), 'page': page}
+		return base.render('home/about2.html',  extra_vars = extraVars)
+
+

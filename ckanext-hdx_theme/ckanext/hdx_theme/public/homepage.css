@@ -286,6 +286,10 @@
         margin: 0;
     }
 
+    .newHeader .content .navbar nav ul.mainLinks li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+
     .newHeader .content .navbar nav li.submitData{
         background-color: #f2645a;
         border-radius: 6px;
