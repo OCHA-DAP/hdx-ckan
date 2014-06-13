@@ -275,10 +275,16 @@
         text-decoration: none;
     }
 
+    .newHeader .content .navbar nav ul.mainLinks > li > a{
+        margin-left: 15px;
+    }
+    .newHeader .content .navbar nav ul.mainLinks > li:first-child > a{
+        margin-left: 0;
+    }
+
     .newHeader .content .navbar nav ul.mainLinks > li > a:after{
         content: "|";
         margin-left: 15px;
-        margin-right: 15px;
     }
 
     .newHeader .content .navbar nav ul.mainLinks li:last-child a:after{
