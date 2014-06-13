@@ -71,8 +71,11 @@ $('#field-organizations').change(function(){
       //Remove extra form elements
       $('#method_other, #date_range1, #date_range2').remove();
       
-
-      return true;
+      if(this.id == 'onepage_submit'){
+        $('#dataset-upload-form').submit();
+      }else{
+        return true;
+      }
       //$('form').submit();
   }
   return false;
