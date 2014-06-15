@@ -53,6 +53,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
         
         map.connect('/organization/{id}/request_membership', controller='ckanext.hdx_theme.org_controller:HDXOrgController', action='request_membership')
+        map.connect('/organization/members/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='members')
 
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
         return map
