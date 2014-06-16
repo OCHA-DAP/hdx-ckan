@@ -1,0 +1,43 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Login') }}{% endblock %}
+
+{% block toolbar %}
+	{% if contribute %}
+  		{% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Thanks for contributing - you rock.'),
+              explanation=_('In order to contribute a dataset, you first need to register or login.') %}
+	{% endif %}
+{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1 class="page-heading">{% block page_heading %}{{ _('Login') }}{% endblock %}</h1>
+      {% block form %}
+        {% snippet "user/snippets/login_form.html", action=c.login_handler, error_summary=error_summary %}
+      {% endblock %}
+    </div>
+  </section>
+{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">{{ _('Need an Account?') }}</h2>
+    <div class="module-content">
+      <p>{% trans %}Then sign right up, it only takes a minute.{% endtrans %}</p>
+      <p class="action">
+        <a class="btn" href="{{ h.url_for(controller='user', action='register') }}">{{ _('Create an Account') }}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">{{ _('Forgotten your details?') }}</h2>
+    <div class="module-content">
+      <p>{% trans %}No problem, use our password recovery form to reset it.{% endtrans %}</p>
+      <p class="action">
+        <a class="btn" href="{{ h.url_for(controller='user', action='request_reset') }}">{{ _('Forgot your password?') }}</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}

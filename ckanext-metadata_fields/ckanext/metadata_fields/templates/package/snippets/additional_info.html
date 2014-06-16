@@ -1,0 +1,101 @@
+<section class="additional-info">
+  <h3>{{ _('Metadata') }}</h3>
+  <table class="table table-bordered table-condensed">
+   
+    <tbody>
+
+{% block package_additional_info %}
+	{#
+	  {% if pkg_dict.url %}
+        <tr>
+          <th scope="row" class="dataset-label">{{ _('Source') }}</th>
+          <td class="dataset-details" property="foaf:homepage">{{ h.link_to(pkg_dict.url, pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
+        </tr>
+      {% endif %}
+	#}
+      	<tr>
+          <th scope="row" class="dataset-label">{{ _("Source") }}</th>
+          <td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
+      	</tr>
+
+	{#
+      {% if pkg_dict.version %}
+        <tr>
+          <th scope="row" class="dataset-label">{{ _("Version") }}</th>
+          <td class="dataset-details">{{ pkg_dict.version }}</td>
+        </tr>
+      {% endif %}
+
+	  
+	  {% if pkg_dict.package_creator %}
+		<tr>
+	      <th scope="row" class="dataset-label">{{ _("Creator") }}</th>
+	      <td class="dataset-details">{{ pkg_dict.package_creator }}</td>
+	    </tr>
+	  {% endif %}
+	  #}
+	  
+	  <tr>
+          <th scope="row" class="dataset-label">{{ _("Visibility") }}</th>
+          <td class="dataset-details">
+          	{% if pkg_dict.private %}
+          		{{ _('Private') }}
+          	{% else %}
+          		{{ _('Public') }}
+          	{% endif %}
+          </td>
+      </tr>
+	  
+	 
+		<tr>
+	      <th scope="row" class="dataset-label">{{ _("License") }}</th>
+	      <td class="dataset-details">
+	      	{% if pkg_dict.license_id %}
+	      		<span property="dc:rights">{{ pkg_dict.license_title }}</span>
+	      		{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
+	      		: {{pkg_dict.license_other}}
+	      		{% endif %}
+	      		{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
+				{% if 'license_url' in pkg_dict %}
+					<a class="info-item-name" href="{{ pkg_dict.license_url }}" rel="dc:rights">{{ pkg_dict.license_title }}</a>
+				{% else %}
+				    <span property="dc:rights">{{ pkg_dict.license_title }}</span>
+				{% endif %}
+				{% if pkg_dict.isopen %}
+					<a href="http://opendefinition.org/okd/" title="{{ _('This dataset satisfies the Open Definition.') }}">
+						<img class="open-data" src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png" alt="[Open Data]" />
+					</a>
+				{% endif %}
+				#}
+				
+	  		{% endif %}
+	      </td>
+	    </tr>
+	  
+	  	<tr>
+	      <th scope="row" class="dataset-label">{{ _("Date of Dataset") }}</th>
+	      <td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row" class="dataset-label">{{ _("Methodology") }}</th>
+	      <td class="dataset-details">{{ pkg_dict.methodology }}</td>
+	    </tr>
+	    <tr>
+	      <th scope="row" class="dataset-label">{{ _("Caveats / Comments") }}</th>
+	      <td class="dataset-details">{{ h.render_markdown(pkg_dict.caveats) }}</td>
+	    </tr>
+
+      {# for extra in h.sorted_extras(pkg_dict.extras) %}
+        {% set key, value = extra %}
+        <tr rel="dc:relation" resource="_:extra{{ i }}">
+          <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+          <td class="dataset-details" property="rdf:value">{{ value }}</td>
+        </tr>
+      {% endfor #}
+
+
+{% endblock %}
+
+    </tbody>
+  </table>
+</section>

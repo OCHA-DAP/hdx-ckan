@@ -1,0 +1,10 @@
+{% ckan_extends %}
+
+{% block header_account_notlogged %}
+<li>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
+{% if h.check_access('user_create') %}
+    <li>{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
+{% else %}
+    <li>{% link_for _('Sign up'), controller='ckanext.register.request:RequestController', action='request', class_='btn' %}</li>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "package/read_base.html" %}
+
+{% set pkg = c.pkg_dict %}
+
+{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
+
+{% block primary_content_inner %}
+  {{ super() }}
+  {% block package_description %}
+    {% if pkg.private %}
+      <span class="dataset-private label label-inverse pull-right">
+        <i class="icon-lock"></i>
+        {{ _('Private') }}
+      </span>
+    {% endif %}
+    <h1>
+      {% block page_heading %}
+      {{ pkg.title or pkg.name }}
+      {% if pkg.state.startswith('draft') %}
+        [{{ _('Draft') }}]
+      {% endif %}
+      {% endblock %}
+    </h1>
+    {% block package_notes %}
+    {% if c.pkg_notes_formatted %}
+      <div class="notes embedded-content">
+        {{ c.pkg_notes_formatted }}
+      </div>
+    {% endif %}
+    {% endblock %}
+    {# FIXME why is this here? seems wrong #}
+    <span class="insert-comment-thread"></span>
+  {% endblock %}
+
+  {% block package_resources %}
+    {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+  {% endblock %}
+
+  {% block package_tags %}
+    {% snippet "package/snippets/tags.html", tags=pkg.tags %}
+  {% endblock %}
+
+  {% block package_additional_info %}
+    {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+  {% endblock %}
+
+{% endblock %}

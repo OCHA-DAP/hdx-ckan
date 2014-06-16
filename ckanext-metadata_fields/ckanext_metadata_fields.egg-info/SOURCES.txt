@@ -1,0 +1,15 @@
+setup.py
+ckanext/__init__.py
+ckanext/metadata_fields/__init__.py
+ckanext/metadata_fields/custom_validator.py
+ckanext/metadata_fields/dataset_auth.py
+ckanext/metadata_fields/dataset_controller.py
+ckanext/metadata_fields/plugin.py
+ckanext/metadata_fields/update.py
+ckanext_metadata_fields.egg-info/PKG-INFO
+ckanext_metadata_fields.egg-info/SOURCES.txt
+ckanext_metadata_fields.egg-info/dependency_links.txt
+ckanext_metadata_fields.egg-info/entry_points.txt
+ckanext_metadata_fields.egg-info/namespace_packages.txt
+ckanext_metadata_fields.egg-info/not-zip-safe
+ckanext_metadata_fields.egg-info/top_level.txt

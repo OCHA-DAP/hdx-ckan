@@ -1,0 +1,18 @@
+{% set current_url = h.full_current_url() %}
+<section class="info-wrapper social">
+		<div class="uppercase"> {{ _('Share:') }}</div>
+		<div>
+    		<a href="https://plus.google.com/share?url={{ current_url }}" target="_blank">
+    			<img class="social-images" src="/images/social/google-plus.png" />
+    		</a>
+			<a href="https://twitter.com/share?url={{ current_url }}" target="_blank">
+				<img class="social-images" src="/images/social/twitter.png" />
+			</a>
+			<a href="https://www.facebook.com/sharer.php?u={{ current_url }}" target="_blank">
+				<img class="social-images" src="/images/social/facebook.png" />
+			</a>
+			<a href="mailto:?subject={{ title }}&body={{ current_url }}" target="_blank">
+				<img class="social-images" src="/images/social/email.png" />
+			</a>
+    	</div>
+</section>

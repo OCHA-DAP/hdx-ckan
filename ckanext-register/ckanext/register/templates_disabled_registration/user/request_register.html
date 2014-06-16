@@ -1,0 +1,66 @@
+{% extends "page.html" %}
+{% import "macros/form.html" as form %}
+
+{% block subtitle %}{{ _('Request registration') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{% link_for _('Request registration'), controller='ckanext.register.request:RequestController', action='request' %}</li>
+{% endblock %}
+
+{% block primary_content %}
+  <article class="module">
+    <div class="module-content">
+      <h1 class="page-heading">{{ _('Request registration') }}</h1>
+      {% block form %}
+        <form action="" method="post" class="form-horizontal control-medium">
+
+          {{ form.errors(error_summary) }}
+          {{ form.input("fullname", id="field-name", label=_("Full Name"), placeholder="Joe Bloggs", value=data.fullname, error=errors.fullname, classes=["control-medium"]) }}
+          {{ form.input("email", id="field-email", label=_("Email"), type="email", placeholder="joe@example.com", value=data.email, error=errors.email, classes=["control-medium"]) }}
+          {{ form.input("org", id="field-org", label=_("Organisation"), placeholder="The Organisation", value=data.org, error=errors.org, classes=["control-medium"]) }}
+          {{ form.textarea('reason', id='field-reason', label=_('Reason'), value=data.reason, error=errors.reason) }}
+
+          <div class="control-group control-medium">
+            <label class="control-label" for="recaptcha_response_field">Captcha</label>
+            <div class="controls editor">
+              <style>
+                #recaptcha_widget_div * {
+                  border: 0 !important;
+                  line-height: normal !important;
+                }
+                #recaptcha_area, #recaptcha_table {
+                  width: auto !important;
+                }
+              </style>
+              <script type="text/javascript"
+                      src="http://www.google.com/recaptcha/api/challenge?k={{ capcha_api_key }}">
+              </script>
+              <noscript>
+                <iframe src="http://www.google.com/recaptcha/api/noscript?k={{ capcha_api_key }}"
+                        height="300" width="500" frameborder="0"></iframe><br>
+                <textarea name="recaptcha_challenge_field" rows="3" cols="40">
+                </textarea>
+                <input type="hidden" name="recaptcha_response_field"
+                       value="manual_challenge">
+              </noscript>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit" name="request">{{ _("Request") }}</button>
+          </div>
+        </form>
+      {% endblock %}
+    </div>
+  </article>
+{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">{{ _('How does this work?') }}</h2>
+    <div class="module-content">
+      <p>{% trans %}Enter your email into the box and we will send you
+      an email with a link to register, when this is available.{% endtrans %}</p>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "package/base.html" %}
+
+{% set onepage = 1 %}
+
+{% block toolbar %}
+{{super()}}
+{% snippet "snippets/greeting_message.html", show_small_message=False, greeting=_('Thanks for contributing - you rock.'),
+              explanation=_('In order to contribute a dataset, you first need to register or login.') %}
+
+{% endblock %}
+
+{% block primary %}
+
+<div>
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content" id="dataset_part_1">
+      <div class="package-upload-header">1. {{ _("CHOOSE COUNTRY") }}</div>
+      {% block country_list %}{{super()}}{% endblock %}
+      <br>
+      <div class="package-upload-header">2. {{ _("TELL US SOME DETAILS ABOUT YOUR DATASET") }}</div>
+      {% block form %}{{ c.form | safe }}{% endblock %}
+    </div>
+  </div>
+  <div class="module-content" style="margin-top:0px;">
+    <div class="form-actions">
+      {% block cancel_button %}
+        <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
+      {% endblock %}
+      <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+    </div>
+  </div>
+</section>
+
+
+
+  {#
+    <div class="module-content graybg" id="dataset_part_2">
+      <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
+      {% block form2 %}{{ c.form | safe }}{% endblock %}
+    </div>
+    <div class="module-content" style="margin-top:0px;">
+    <div class="form-actions">
+      {% block cancel_button %}
+        <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
+      {% endblock %}
+      <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+    </div>
+  </div>
+  </section>
+  #}
+  {#
+  <section class="module inactive">
+    <div class="overlay"></div>
+    <div class="module-content" id="dataset_part_3">
+      <div class="package-upload-header">3. {{ _("ADD FILES") }}</div>
+      {% block form3 %}{{ c.form | safe }}{% endblock %}
+    </div>
+  </section> #}
+
+ {% endblock %}
+</div>
+{% endblock %}
+
+{% block secondary %}
+  
+{% endblock %}
+
+{%- block scripts2 %}
+    {{ super() }}
+<!-- <script src="/base/vendor/jquery.ui.widget.js"></script>
+<script src="/base/vendor/jquery-fileupload/jquery.iframe-transport.js"></script>
+<script src="/base/vendor/jquery-fileupload/jquery.fileupload.js"></script>
+<script src="/base/vendor/jquery-fileupload/jquery.fileupload-ui.js"></script>-->
+
+  <script>
+  $('document').ready(function(){
+    //Just in case of page back
+    $('option[value=-1]').attr('selected', true);
+     });
+  </script>
+
+{% endblock -%}
+

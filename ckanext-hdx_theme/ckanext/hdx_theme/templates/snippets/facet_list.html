@@ -1,0 +1,103 @@
+{#
+Construct a facet module populated with links to filtered results.
+
+name
+  The field name identifying the facet field, eg. "tags"
+
+title
+  The title of the facet, eg. "Tags", or "Tag Cloud"
+
+label_function
+  Renders the human-readable label for each facet value.
+  If defined, this should be a callable that accepts a `facet_item`.
+  eg. lambda facet_item: facet_item.display_name.upper()
+  By default it displays the facet item's display name, which should
+  usually be good enough
+
+if_empty
+  A string, which if defined, and the list of possible facet items is empty,
+  is displayed in lieu of an empty list.
+
+count_label
+  A callable which accepts an integer, and returns a string.  This controls
+  how a facet-item's count is displayed.
+
+extras
+  Extra info passed into the add/remove params to make the url
+
+alternative_url
+  URL to use when building the necessary URLs, instead of the default
+  ones returned by url_for. Useful eg for dataset types.
+
+hide_empty
+  Do not show facet if there are none, Default: false.
+
+within_tertiary
+  Boolean for when a facet list should appear in the the right column of the
+  page and not the left column.
+
+#}
+{% set hide_empty = hide_empty or false %}
+{% set name_in_request = request.params.get(name) or request.params.get('_%s_more' % name) %}
+{% set view_more = request.params.get('_%s_more' % name) %}
+{% set _items_dict = h.get_facet_items_dict(name) %}
+{% set _items = _items_dict[0] %}
+{% set total_no_items = _items_dict[1] %}
+{% with items =  items or _items %}
+  {% if items or not hide_empty %}
+    {% if within_tertiary %}
+      {% set nav_class = 'nav nav-pills nav-stacked' %}
+      {% set nav_item_class = ' ' %}
+      {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
+    {% endif %}
+    <section class="list-items {{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
+      <h2 class="list-items module-heading facet-h2 uppercase">
+      <!-- <i class="icon-medium icon-filter"></i> -->
+        {% set title = title or h.get_facet_title(name) %}
+        {% set no_total_items= 0%}
+        {% if items %}
+      		{% set no_total_items= total_no_items %}
+        {% endif %}
+        {{ title }}
+        <div class="float-right">{{ no_total_items }}</div>
+      </h2>
+      <div class="list-items action align {% if not name_in_request%} facet-hidden{% endif %}">
+      	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"
+           class="list-items action facet-url
+           	{% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
+      </div>
+      {% if items %}
+      {% set no_items= items|count %}
+        <nav class=" {% if not name_in_request%} facet-hidden{% endif %}">
+          <ul class="list-items {{ nav_class or 'unstyled nav nav-simple nav-facet' }}">
+            {% for item in items|sort(attribute='name') %}
+              {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
+              {% set label = label_function(item) if label_function else item.display_name %}
+              {% set label_truncated = h.truncate(label, 22) if not label_function else label %}
+              {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
+                <li class="list-items {{ nav_item_class or 'nav-item' }}{% if item.active %} active{% endif %}">
+                  <a href="{{ href }}" title="{{ label if label != label_truncated else '' }}">
+                    <span>{{ label_truncated }}</span>
+                    {% if not item.active %}
+                    	<span class="float-right">{{ count }}</span>
+                    {% endif %}
+                  </a>
+                </li>
+            {% endfor %}
+          </ul>
+        </nav>
+        <p class="list-items module-footer {% if not name_in_request %} facet-hidden{% endif %}">
+          {% if total_no_items>10 %}
+	          {% if h.get_param_int('_%s_limit' % name) %}
+	            <a href="{{ h.remove_url_param('_%s_limit' % name, replace=0, extras=extras, alternative_url=alternative_url) }}{{'&'+'_%s_more' % name+'=true'}}" class="facet-url">{{ _('View more {facet_type}').format(facet_type=title) }}</a>
+	          {% else %}
+	            <a href="{{ h.remove_url_param('_%s_limit' % name, extras=extras, alternative_url=alternative_url) }}" class="facet-url">{{ _('View most active {facet_type}').format(facet_type=title) }}</a>
+	          {% endif %}
+	      {% endif %}
+        </p>
+      {% else %}
+        <p class="module-content empty {% if not name_in_request %} facet-hidden{% endif %}">{{ _('There are no {facet_type} that match this search').format(facet_type=title) }}</p>
+      {% endif %}
+    </section>
+  {% endif %}
+{% endwith %}

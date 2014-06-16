@@ -1,0 +1,4 @@
+
+        [ckan.plugins]
+	ungroups=ckanext.ungroups.plugin:UNIGroupFormPlugin
+	

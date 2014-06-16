@@ -1,0 +1,34 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li>{% link_for c.group_dict.display_name|truncate(35), controller='organization', action='read', id=c.group_dict.name %}</li>
+{% endblock %}
+
+
+{% block content_action %}
+  {% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
+    {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
+  {% endif %}
+{% endblock %}
+
+{% block content_primary_nav %}
+  {{ h.build_nav_icon('organization_read', _('Datasets'), id=c.group_dict.name, class_='hdx-tab-button') }}
+  {{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
+  {# h.build_nav_icon('organization_about', _('About'), id=c.group_dict.name) #}
+{% endblock %}
+
+
+{% block secondary_content %}
+  {% snippet 'snippets/organization_info.html', organization=c.group_dict, show_nums=true %}
+  {% block organization_facets %}{% endblock %}
+  {% set show_members_num = c.action != 'members' %}
+  {% snippet 'snippets/organization.html', organization=c.group_dict, show_nums=true, show_members_num=show_members_num, user=c.user %}
+{% endblock %}
+
+{% block links %}
+  {{ super() }}
+  {% include "organization/snippets/feeds.html" %}
+{% endblock %}
