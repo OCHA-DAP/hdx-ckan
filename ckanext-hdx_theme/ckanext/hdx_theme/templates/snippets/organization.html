@@ -45,7 +45,7 @@ Example:
           <dl>
             <dt class="uppercase">{{ _('Datasets') }}</dt>
             <dd class="count-info-big">
-            	{% link_for organization.packages|length, controller='organization', action='read', id=organization.name or organization.title %}
+            	{% link_for organization.package_count, controller='organization', action='read', id=organization.name or organization.title %}
             </dd>
           </dl>
           {% endif %}
