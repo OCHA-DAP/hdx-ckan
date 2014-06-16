@@ -43,11 +43,7 @@ Example:
 	  <div class="list-items counter">
 		  {% block datasets %}
 			  {% if organization.packages %}
-			    {% if organization.packages is number %}
-			    	{% set num_of_pack = organization.packages %}
-			    {% else %}
-			    	{% set num_of_pack = organization.packages|length %}
-			    {% endif %}
+			  	{% set num_of_pack = organization.package_count %}
 			   <span class="count">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</span>
 			   {% else %}
 			      <span class="count">{{ _('0 Datasets') }}</span>
