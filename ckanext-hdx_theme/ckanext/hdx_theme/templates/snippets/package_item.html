@@ -42,7 +42,7 @@ Example:
       </h3>
       <div>{{ _('Updated by') }}   			
       		{% if package.organization %}
-  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name) }}">
+  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
   					{{ package.organization.title or package.organization.name }}
   				</a>
   			{% else %}
