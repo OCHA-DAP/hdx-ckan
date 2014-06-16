@@ -9,13 +9,9 @@ import ckan
 import ckan.tests as tests
 import webtest
 import ckan.lib.helpers as h
-import ckan.plugins as p
-import ckan.lib.plugins as pl
 import ckan.lib.create_test_data as ctd
 import ckan.lib.search as search
 import ckan.model as model
-import ckan.plugins.toolkit as tk
-import ckanext.metadata_fields.plugin as thisplugin
 import unicodedata
 
 from ckan.config.middleware import make_app
