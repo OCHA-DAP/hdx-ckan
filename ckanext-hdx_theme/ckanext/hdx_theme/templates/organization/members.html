@@ -22,6 +22,7 @@
 		{% snippet 'organization/snippets/edit_member.html', form_url=h.url_for(controller='organization', action='member_new', id=c.group_dict.id), 
   			roles=roles, modal_div_id='add-member-div', authorized=authorized %}
   	{% endif %}
+  	{% snippet 'snippets/search_form.html', type='member', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.members|length, placeholder=search_text, show_empty=request.params %}
 {% endblock %}
 
 {% block primary_content_inner %}

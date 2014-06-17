@@ -100,13 +100,23 @@ def member_list(context, data_dict=None):
 
     obj_type = data_dict.get('object_type', None)
     capacity = data_dict.get('capacity', None)
+    show_user_info = data_dict.get('user_info', False)
+    q_term = data_dict.get('q', None)
 
     # User must be able to update the group to remove a member from it
     _check_access('group_show', context, data_dict)
-
-    q = model.Session.query(model.Member).\
+    
+    q = model.Session.query(model.Member, model.User).\
+        filter(model.Member.table_id==model.User.id).\
         filter(model.Member.group_id == group.id).\
         filter(model.Member.state == "active")
+    
+    if q_term and q_term != '':
+        q = q.filter(sqlalchemy.or_(
+                     model.User.fullname.ilike('%' + q_term + '%'),
+                     model.User.name.ilike('%' + q_term + '%')
+                     )
+        )
 
     if obj_type:
         q = q.filter(model.Member.table_name == obj_type)
@@ -120,8 +130,12 @@ def member_list(context, data_dict=None):
             return trans[capacity]
         except KeyError:
             return capacity
-    return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity)
-            for m in q.all()]
+    if show_user_info:
+        return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity, u.fullname if u.fullname else u.name)
+            for m,u in q.all()]
+    else:
+        return [(m.table_id, m.table_name, translated_capacity(m.capacity), m.capacity)
+            for m,u in q.all()]
 
 def cached_group_list(context, data_dict):
     groups  = caching.cached_group_list()

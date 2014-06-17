@@ -76,6 +76,7 @@ $('#field-organizations').change(function(){
       }else{
         return true;
       }
+      //$('form').submit();
   }
   return false;
 });

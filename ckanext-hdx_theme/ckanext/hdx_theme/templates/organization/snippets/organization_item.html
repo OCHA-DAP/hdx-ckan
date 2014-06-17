@@ -12,7 +12,7 @@ Example:
     </ul>
 #}
 
-{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name, sort='data_modified desc') %}
+{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc') %}
 {% set last_rev_id = h.get_last_revision_group(organization.id) %}
 {% set res = h.get_last_modifier_user(last_rev_id, get_timestamp=True) %}
 {% set last_user = res[0] %}
@@ -43,11 +43,7 @@ Example:
 	  <div class="list-items counter">
 		  {% block datasets %}
 			  {% if organization.packages %}
-			    {% if organization.packages is number %}
-			    	{% set num_of_pack = organization.packages %}
-			    {% else %}
-			    	{% set num_of_pack = organization.packages|length %}
-			    {% endif %}
+			  	{% set num_of_pack = organization.package_count %}
 			   <span class="count">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</span>
 			   {% else %}
 			      <span class="count">{{ _('0 Datasets') }}</span>
