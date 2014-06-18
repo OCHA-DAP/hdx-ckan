@@ -1,0 +1,97 @@
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+        width: 1180px;
+    }
+
+    [class*="span"]{
+        margin-left: 20px;
+    }
+
+    .row{
+        margin-left:-20px;
+    }
+
+    .span12{
+        width: 1180px;
+    }
+
+    .span11{
+        width: 1080px;
+    }
+
+    .span10{
+        width: 980px;
+    }
+
+    .span9{
+        width: 880px;
+    }
+
+    .span8{
+        width: 780px;
+    }
+    .span8{
+        width: 680px;
+    }
+
+    .span6{
+        width: 580px;
+    }
+
+    .span5{
+        width: 480px;
+    }
+
+    .span4{
+        width: 380px;
+    }
+
+    .span3{
+        width: 280px;
+    }
+
+    .span2{
+        width: 180px;
+    }
+
+    .span1{
+        width: 80px;
+    }
+
+    .offset11{
+        margin-left: 1100px;
+    }
+    .offset10{
+        margin-left: 1000px;
+    }
+    .offset9{
+        margin-left: 900px;
+    }
+    .offset8{
+        margin-left: 800px;
+    }
+    .offset7{
+        margin-left: 700px;
+    }
+    .offset6{
+        margin-left: 600px;
+    }
+    .offset5{
+        margin-left: 500px;
+    }
+    .offset4{
+        margin-left: 400px;
+    }
+    .offset3{
+        margin-left: 300px;
+    }
+    .offset2{
+        margin-left: 200px;
+    }
+    .offset1{
+        margin-left: 100px;
+    }
+/* END - Customize fixed Bootstrap layout */
