@@ -110,9 +110,8 @@
 	    	#}	
           <ul class="nav second-row-menu">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+              <a href="#" class="dropdown-toggle">
                 {{ _('About') }}
-                <b class="caret"></b>
               </a>
               <ul class="dropdown-menu dropdown-inverse" role="menu">
                 <li>
@@ -121,19 +120,15 @@
                   </a>
                 </li>
                 <li>
-                  <a href="/about#tab2">
-                    <span>{{ _('Data Licenses') }}</span>
-                  </a>
+                  {% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
                 </li>
                 <li>
-                  <a href="/about#tab3">
-                    <span>{{ _('Terms of Services') }}</span>
-                  </a>
+                  {% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}
                 </li>
               </ul>
             </li>
             {% block header_site_navigation_tabs %}
-            <li><a href="/dataset">{{ _('Data') }}</a></li>
+            <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
             {% if c.userobj %}
               <li><a href="/dataset/new">{{ _('Contribute') }}</a></li>
             {% else %}
@@ -144,7 +139,7 @@
             <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact') }}</a></li>
             {% endblock %}
           </ul>
-          <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search' %}">
+          <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search'%}">
             <div id="insideMenuSearch" class="input-append">
               <input type="text" name="q" class="search-query" placeholder="{{ _("Search all datasets ...") }}">
               <span class="add-on">

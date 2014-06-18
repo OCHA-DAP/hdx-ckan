@@ -28,6 +28,12 @@ Example:
   {% set text_query_none = _('Sorry no organizations found for "{query}"') %}
   {% set text_no_query = ungettext('{number} organization found', '{number} organizations found', count) %}
   {% set text_no_query_none = _('Sorry no organizations found') %}
+  
+{% elif type == 'member' %}
+  {% set text_query = ungettext('{number} member found for "{query}"', '{number} members found for "{query}"', count) %}
+  {% set text_query_none = _('Sorry no members found for "{query}"') %}
+  {% set text_no_query = ungettext('{number} member found', '{number} members found', count) %}
+  {% set text_no_query_none = _('Sorry no members found') %}
 {%- endif -%}
 
 {% if query %}

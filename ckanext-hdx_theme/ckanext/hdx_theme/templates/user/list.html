@@ -16,7 +16,7 @@
       <ul class="user-list">
         {% block users_list_inner %}
         {% for user in c.page.items %}
-          <li>{{ h.linked_user(user['name'], maxlength=20) }} - {{user['User']['email']}}</li>
+          <li>{{ h.linked_user(user['name'], maxlength=20) }} {% if c.userobj.sysadmin %}- {{user['User']['email']}} {% endif %} </li>
         {% endfor %}
         {% endblock %}
       </ul>

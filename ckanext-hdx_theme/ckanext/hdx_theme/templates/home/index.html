@@ -35,9 +35,8 @@
                 <ul class="mainLinks">
                   {% block header_site_navigation_tabs %}
                     <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown">
+                      <a href="#" class="dropdown-toggle">
                         {{ _('About') }}
-                        <b class="caret"></b>
                       </a>
                       <ul class="dropdown-menu dropdown-inverse" role="menu">
                         <li>
@@ -46,18 +45,14 @@
                           </a>
                         </li>
                         <li>
-                          <a href="/about#tab2">
-                            <span>{{ _('Data Licenses') }}</span>
-                          </a>
+                          {% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
                         </li>
                         <li>
-                          <a href="/about#tab3">
-                            <span>{{ _('Terms of Services') }}</span>
-                          </a>
+                          {% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}
                         </li>
                       </ul>
                     </li>
-                    <li><a href="/dataset">{{ _('Data') }}</a></li>
+                    <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
                     <li><a href="/organization">{{ _('Organizations') }}</a></li>
                     <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
                   {% endblock %}
@@ -178,8 +173,8 @@
               {{ self.home_search() }}
               <div>
                 <p class="exampleSearch">
-                  {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya' %}">{{ _("preparedness data for Kenya") }}</a>
-                  {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics' %}">{{ _("world health statistics") }}</a>
+                  {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='preparedness data for Kenya', sort='metadata_modified desc' %}">{{ _("preparedness data for Kenya") }}</a>
+                  {{ _("or") }} <a href="{% url_for controller='package', action='search', q='world health statistics', sort='metadata_modified desc' %}">{{ _("world health statistics") }}</a>
                 </p>
               </div>
             </div>
@@ -252,9 +247,9 @@
 
 
 {% block home_search %}
-  <form class="form-search" method="get" action="{% url_for controller='package', action='search' %}">
+  <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='metadata_modified desc' %}">
     <div class="input-append">
-      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _("Search HDX Repository") }}">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}">
       <button type="submit" class="button">
         <i class="icon-search"></i>
       </button>
@@ -271,7 +266,7 @@
       <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
         {% for group in c.group_package_stuff %}
           {% if group.type is defined %}
-            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
+            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
               <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
             {% endif %}
         {% endfor %}

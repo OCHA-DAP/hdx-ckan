@@ -1,5 +1,5 @@
 {% if group.type is defined %}
-	{% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='data_modified desc') %}
+	{% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
 	<option value="{{url}}">{{ group.display_name }} {#(
   {% if group.packages %}
       {{ ungettext('{num} Dataset', '{num} Datasets', group.packages).format(num=group.packages) }}
