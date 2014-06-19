@@ -327,8 +327,9 @@
     }
 
     .toolbarRow .form-search{
-        line-height: 75px;
+        line-height: 72px; /*weird form padding of 3px*/
         margin: 0;
+        padding: 0;
     }
 
     /* Style the search placeholder just for the toolbar search */
@@ -399,5 +400,4 @@
         width: 20px;
         color: #ffffff;
     }
-
 /* END Search widget style */
