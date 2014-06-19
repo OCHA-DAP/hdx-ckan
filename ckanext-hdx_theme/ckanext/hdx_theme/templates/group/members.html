@@ -17,7 +17,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for user_id, user, role in c.members %}
+      {% for user_id, user, role, role_not_translated in c.members %}
       <tr>
         <td class="media">
           {{ h.linked_user(user_id, maxlength=20) }}
