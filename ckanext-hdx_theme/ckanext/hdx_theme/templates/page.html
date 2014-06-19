@@ -28,17 +28,35 @@
             {% endblock %}
 
             {% block toolbar %}
-              <div class="toolbar">
-
-                {% block breadcrumb %}
-                  {% if self.breadcrumb_content() | trim %}
-                    <ol class="breadcrumb">
-                      {% snippet 'snippets/home_breadcrumb_item.html' %}
-                      {% block breadcrumb_content %}{% endblock %}
-                    </ol>
-                  {% endif %}
-                {% endblock %}
+              <div class="container">
+                <div class="row paddingRowHack toolbarRow">
+                  <div class="span12 paddingLeftHack paddingRightHack">
+                    <div class="pull-left">
+                      <div class="toolbar">
+                        {% block breadcrumb %}
+                          {% if self.breadcrumb_content() | trim %}
+                            <ol class="breadcrumb">
+                              {% snippet 'snippets/home_breadcrumb_item.html' %}
+                              {% block breadcrumb_content %}{% endblock %}
+                            </ol>
+                          {% endif %}
+                        {% endblock %}
+                      </div>
+                    </div>
+                    <div class="pull-right">
+                      <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='metadata_modified desc' %}">
+                        <div class="input-append">
+                          <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
+                          <button type="submit" class="button">
+                            <i class="icon-search"></i>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </div>
+
             {% endblock %}
 
             <div class="hdx-wrapper wrapper{% block wrapper_class %}{% endblock %}{% if self.secondary()|trim == '' %} no-nav{% endif %}">

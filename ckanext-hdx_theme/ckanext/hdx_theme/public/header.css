@@ -125,10 +125,6 @@
 /* END Fonts */
 
 /* Header */
-    .newHeader {
-        height: 100px;
-    }
-
     .newHeader .container .row {
         padding-top: 34px;
     }
@@ -305,3 +301,103 @@
         background-attachment: fixed;
     }
 /* END Body Background */
+
+/* Fix main content */
+    [role=main], .main {
+        padding: 0;
+        background: none;
+    }
+/* END Fix main content */
+
+/* Toolbar Row */
+    .toolbarRow{
+        background-color: #eeeeee;
+        height: 75px;
+    }
+    .toolbarRow .toolbar{
+        padding: 0;
+        margin: 0;
+
+    }
+    .toolbarRow .toolbar .breadcrumb{
+        text-transform: uppercase;
+        color: #888888;
+        font-size: 12px;
+        line-height: 75px;
+    }
+
+    .toolbarRow .form-search{
+        line-height: 75px;
+        margin: 0;
+    }
+
+    /* Style the search placeholder just for the toolbar search */
+        .toolbarRow .form-search input::-webkit-input-placeholder {
+            color: #d23d13;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+        }
+
+        .toolbarRow .form-search input:-moz-placeholder { /* Firefox 18- */
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .toolbarRow .form-search input::-moz-placeholder {  /* Firefox 19+ */
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .toolbarRow .form-search input:-ms-input-placeholder {
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+        }
+    /* END Style the search placeholder just for the toolbar search */
+
+
+/* END Toolbar Row*/
+
+/* Search widget style */
+    /*Also used on the homepage*/
+    .form-search .input-append .searchInput{
+        width: 246px;
+        height: 45px;
+        border-radius: 6px 0 0 6px;
+        background-color: white;
+        border: 0;
+        padding: 0 0 0 20px;
+    }
+
+    .form-search .input-append .searchInput::-webkit-input-placeholder{
+        color: #cccccc;
+    }
+
+    .form-search .input-append .button{
+        width: 50px;
+        height: 45px;
+        padding: 0;
+        background-color: #007ce0;
+        border: 0;
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        color: #eeeeee
+    }
+
+    .form-search .input-append .button .icon-search{
+        font-size: 20px;
+        line-height: 100%;
+        text-align: right;
+        width: 20px;
+        color: #ffffff;
+    }
+
+/* END Search widget style */
