@@ -27,5 +27,15 @@ class DisableUserRegistration(plugins.SingletonPlugin):
         map.connect('/user/register',
                     controller='ckanext.register.request:RequestController',
                     action='register')
+        map.connect('/user/logged_in', controller='ckanext.register.login:LoginController', action='logged_in')
         return map
 
+#class LoginRedirect(plugins.SingletonPlugin):
+#    plugins.implements(plugins.IConfigurer)
+#    plugins.implements(plugins.IRoutes, inherit=True)
+#    def update_config(self, config):
+#        toolkit.add_template_directory(config, 'templates')
+#
+#    def before_map(self, map):
+#        map.connect('/user/logged_in', controller='ckanext.register.login:LoginController', action='logged_in')
+#        return map

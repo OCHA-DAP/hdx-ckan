@@ -1,3 +1,4 @@
 
         [ckan.plugins]
         register=ckanext.register.plugin:DisableUserRegistration
+	
