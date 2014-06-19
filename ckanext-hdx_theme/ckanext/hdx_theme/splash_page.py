@@ -109,4 +109,3 @@ class SplashPageController(HomeController):
         extraVars = {'title': titleItem, 'html': htmlItem, 'page': page}
         return base.render('home/about2.html',  extra_vars = extraVars)
 
-

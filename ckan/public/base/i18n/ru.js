@@ -36,6 +36,10 @@
     null,
     "Спрятать"
   ],
+  "Image": [
+    null,
+    "Картинка"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Слишком коротко, должен быть хотя бы один символ"
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "Пожалуйста, подтвердите действие"
+  ],
+  "Remove": [
+    null,
+    "Удалить"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Не следовать"
+  ],
+  "Upload": [
+    null,
+    "Загрузка"
   ],
   "Upload a file": [
     null,

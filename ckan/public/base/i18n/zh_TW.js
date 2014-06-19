@@ -36,6 +36,10 @@
     null,
     "隱藏"
   ],
+  "Image": [
+    null,
+    "圖片"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "輸入的內容太短，必須至少輸入一個字元"
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "請確認活動"
+  ],
+  "Remove": [
+    null,
+    "移除"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "取消追蹤"
+  ],
+  "Upload": [
+    null,
+    "上傳"
   ],
   "Upload a file": [
     null,

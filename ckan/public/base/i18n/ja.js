@@ -36,9 +36,21 @@
     null,
     "隠す"
   ],
+  "Image": [
+    null,
+    "画像"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "1文字以上入力してください"
+  ],
+  "Link": [
+    null,
+    "リンク"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Web上のURLへリンク(APIへのリンク可)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "アクションを確認してください"
   ],
+  "Remove": [
+    null,
+    "削除"
+  ],
+  "Reorder resources": [
+    null,
+    "リソースを再整列"
+  ],
+  "Reset this": [
+    null,
+    "これを初期化"
+  ],
   "Resource uploaded": [
     null,
     "リソースがアップロードされました"
+  ],
+  "Save order": [
+    null,
+    "並び順を保存"
+  ],
+  "Saving...": [
+    null,
+    "保存中..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,17 @@
     null,
     "フォロー解除"
   ],
+  "Upload": [
+    null,
+    "アップロード"
+  ],
   "Upload a file": [
     null,
     "ファイルをアップロード"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "コンピュータ上のファイルをアップロード"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,

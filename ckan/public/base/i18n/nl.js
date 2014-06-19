@@ -36,9 +36,21 @@
     null,
     "verberg"
   ],
+  "Image": [
+    null,
+    "Afbeelding"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Uw input is te kort, hij moet uit minimaal een karakter bestaan"
+  ],
+  "Link": [
+    null,
+    "Link"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Gebruik een weblocatie (URL). Dit mag ook de URL van een API zijn."
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Bevestig de actie"
   ],
+  "Remove": [
+    null,
+    "Verwijder"
+  ],
+  "Reorder resources": [
+    null,
+    "Wijzig sortering bronnen"
+  ],
+  "Reset this": [
+    null,
+    "Reset dit"
+  ],
   "Resource uploaded": [
     null,
-    "De resource is geupload"
+    "De bron is geupload"
+  ],
+  "Save order": [
+    null,
+    "Bewaar sortering"
+  ],
+  "Saving...": [
+    null,
+    "Opslaan..."
   ],
   "Show more": [
     null,
@@ -70,7 +102,7 @@
   ],
   "There is no API data to load for this resource": [
     null,
-    "Er is geen API data om deze resource te openen"
+    "Er is geen API data om deze bron te openen"
   ],
   "URL": [
     null,
@@ -92,9 +124,21 @@
     null,
     "Ontvolgen"
   ],
+  "Upload": [
+    null,
+    "Upload"
+  ],
   "Upload a file": [
     null,
     "Upload een bestand"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Upload een bestand"
+  ],
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
+    null,
+    "Bestand wordt geupload. Als u deze pagina verlaat stopt de upload. Weet u zeker dat u de pagina wilt verlaten?"
   ],
   "show less": [
     null,

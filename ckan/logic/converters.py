@@ -1,3 +1,5 @@
+import json
+
 import ckan.model as model
 import ckan.lib.navl.dictization_functions as df
 import ckan.lib.field_types as field_types
@@ -8,10 +10,11 @@ from ckan.common import _
 def convert_to_extras(key, data, errors, context):
     extras = data.get(('extras',), [])
     if not extras:
-        data[('extras',)] = extras 
+        data[('extras',)] = extras
     extras.append({'key': key[-1], 'value': data[key]})
 
 def convert_from_extras(key, data, errors, context):
+
     def remove_from_extras(data, key):
         to_remove = []
         for data_key, data_value in data.iteritems():
@@ -168,3 +171,13 @@ def convert_group_name_or_id_to_id(group_name_or_id, context):
     if not result:
         raise df.Invalid('%s: %s' % (_('Not found'), _('Group')))
     return result.id
+
+
+def convert_to_json_if_string(value, context):
+    if isinstance(value, basestring):
+        try:
+            return json.loads(value)
+        except ValueError:
+            raise df.Invalid(_('Could not parse as valid JSON'))
+    else:
+        return value

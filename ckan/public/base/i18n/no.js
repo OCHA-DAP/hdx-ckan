@@ -10,7 +10,7 @@
   ],
   "Are you sure you want to perform this action?": [
     null,
-    "Er du sikker på at du ønsker å utføre denne handlingen?"
+    "Er du sikker på at du vil utføre denne handlingen?"
   ],
   "Cancel": [
     null,
@@ -36,9 +36,21 @@
     null,
     "Skjul"
   ],
+  "Image": [
+    null,
+    "Bilde"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "For kort, må være minst ett tegn"
+  ],
+  "Link": [
+    null,
+    "Lenke"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Lenke til en URL på internett (du kan også lenke til et API)"
   ],
   "Loading...": [
     null,
@@ -50,11 +62,31 @@
   ],
   "Please Confirm Action": [
     null,
-    "Vennligst bekreft handling"
+    "Bekreft handling"
+  ],
+  "Remove": [
+    null,
+    "Fjern"
+  ],
+  "Reorder resources": [
+    null,
+    "Forandre rekkefølge på ressurser"
+  ],
+  "Reset this": [
+    null,
+    "Tilbakestill"
   ],
   "Resource uploaded": [
     null,
     "Ressurs lastet opp"
+  ],
+  "Save order": [
+    null,
+    "Lagre rekkefølge"
+  ],
+  "Saving...": [
+    null,
+    "Lagrer..."
   ],
   "Show more": [
     null,
@@ -92,13 +124,21 @@
     null,
     "Ikke følg"
   ],
+  "Upload": [
+    null,
+    "Opplasting"
+  ],
   "Upload a file": [
     null,
     "Last opp en fil"
   ],
+  "Upload a file on your computer": [
+    null,
+    "Last opp en fil til datamaskinen din"
+  ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
-    "Du laster opp en fil. Er du sikker på at du ønsker å forlate siden og stoppe denne opplastingen?"
+    "Du laster opp en fil. Er du sikker på at du vil forlate siden og stoppe denne opplastingen?"
   ],
   "show less": [
     null,

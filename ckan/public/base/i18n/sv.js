@@ -36,9 +36,21 @@
     null,
     "Dölj"
   ],
+  "Image": [
+    null,
+    "Bild"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "För kort inmatning. Det måste vara åtminstone ett tecken"
+  ],
+  "Link": [
+    null,
+    "Länk"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Länk till en URL på internet (du kan också länka till ett API)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Vänligen Bekräfta Åtgärd"
   ],
+  "Remove": [
+    null,
+    "Ta bort"
+  ],
+  "Reorder resources": [
+    null,
+    "Ändra ordning på resurser"
+  ],
+  "Reset this": [
+    null,
+    "Återställ detta"
+  ],
   "Resource uploaded": [
     null,
     "Resursen laddades upp"
+  ],
+  "Save order": [
+    null,
+    "Spara ordning"
+  ],
+  "Saving...": [
+    null,
+    "Sparar..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,17 @@
     null,
     "Sluta följa"
   ],
+  "Upload": [
+    null,
+    "Ladda upp"
+  ],
   "Upload a file": [
     null,
     "Ladda upp en fil"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Ladda upp en fil från din dator"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,

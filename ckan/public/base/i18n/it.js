@@ -36,9 +36,21 @@
     null,
     "Nascondi"
   ],
+  "Image": [
+    null,
+    "Immagine"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Troppo breve! Il testo deve contenere almeno un carattere"
+  ],
+  "Link": [
+    null,
+    "Link"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Link a un indirizzo internet (puoi anche inserire l'URL di un API)"
   ],
   "Loading...": [
     null,
@@ -52,13 +64,33 @@
     null,
     "Confermare azione"
   ],
+  "Remove": [
+    null,
+    "Rimuovi"
+  ],
+  "Reorder resources": [
+    null,
+    "Riordina risorse"
+  ],
+  "Reset this": [
+    null,
+    "Cancella"
+  ],
   "Resource uploaded": [
     null,
     "Risorsa caricata"
   ],
+  "Save order": [
+    null,
+    "Salva ordine"
+  ],
+  "Saving...": [
+    null,
+    "Salvataggio in corso..."
+  ],
   "Show more": [
     null,
-    "Mostra altri"
+    "Mostra più"
   ],
   "Start typing…": [
     null,
@@ -92,9 +124,21 @@
     null,
     "Non seguire più"
   ],
+  "Upload": [
+    null,
+    "Carica"
+  ],
   "Upload a file": [
     null,
     "Carica un file"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Carica un file dal computer"
+  ],
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
+    null,
+    "Stai caricando un file. Sei sicuro che vuoi abbandonare questa pagina e interrompere il caricamento?"
   ],
   "show less": [
     null,

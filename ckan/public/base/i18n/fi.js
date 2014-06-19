@@ -36,9 +36,21 @@
     null,
     "Piilota"
   ],
+  "Image": [
+    null,
+    "Kuva"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Liian lyhyt, pitää olla vähintään yksi merkki"
+  ],
+  "Link": [
+    null,
+    "Linkki"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Linkki URL-osoitteeseen intterneteissä (voit myös linkittää API:in)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Vahvista toimenpide"
   ],
+  "Remove": [
+    null,
+    "Poista"
+  ],
+  "Reorder resources": [
+    null,
+    "Uudelleenjärjestä resurssit"
+  ],
+  "Reset this": [
+    null,
+    "Resetoi tämä"
+  ],
   "Resource uploaded": [
     null,
     "Resurssi on ladattu"
+  ],
+  "Save order": [
+    null,
+    "Tallenna tilaus"
+  ],
+  "Saving...": [
+    null,
+    "Tallentaa..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,21 @@
     null,
     "Lopeta seuraaminen"
   ],
+  "Upload": [
+    null,
+    "Lataa"
+  ],
   "Upload a file": [
     null,
     "Tallenna tiedosto"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Lataa tiedosto työasemalta"
+  ],
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
+    null,
+    "Olet olet parhaillaan lataamassa tiedostoa palvelimelle. Oletko varma että haluat navigoida sivukta ja keskeyttää lataamisen?"
   ],
   "show less": [
     null,

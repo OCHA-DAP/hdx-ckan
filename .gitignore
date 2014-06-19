@@ -13,17 +13,21 @@ development.ini*
 sstore/*
 data/*
 pylons_data/*
-#ckan/il8n/*/*/*.mo
+#ckan/i18n/*/*/*.mo
 
 # other
 pip-requirements-local.txt
 migrate/*
 build/*
+tmp/*
 solr_runtime/*
 fl_notes.txt
 *.ini
 .noseids
 *~
+
+# custom style
+ckan/public/base/less/custom.less
 
 # nosetest coverage output
 .coverage
@@ -31,15 +35,8 @@ htmlcov/*
 
 # CKAN
 ckan.log
-ckan_deb/
-etc/default/*.ini
+ckan_deb/DEBIAN/control
+ckan_deb/DEBIAN/prerm
 
 # node.js
 node_modules/
-
-#Idea PyCharm - project folder
-.idea
-
-# nosetest reports
-nose_results.xml
-

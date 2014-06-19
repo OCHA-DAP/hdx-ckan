@@ -16,6 +16,10 @@
     null,
     "Ikuti"
   ],
+  "Image": [
+    null,
+    "Gambar"
+  ],
   "Loading...": [
     null,
     "Memuat..."
@@ -27,6 +31,10 @@
   "Unfollow": [
     null,
     "Tidak ikuti"
+  ],
+  "Upload": [
+    null,
+    "Unggah"
   ],
   "Upload a file": [
     null,

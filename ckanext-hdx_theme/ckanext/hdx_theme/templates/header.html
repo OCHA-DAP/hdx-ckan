@@ -53,8 +53,9 @@
                         </a>
                       </li>
                       <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
-                        {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
-                        <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
+                        {# CKAN 2.2 DOES NOT LIKE THIS #}
+                        {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
+                        <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{# notifications_tooltip #}">
                           <i class="icon-dashboard"></i>
                           <span> {{ _('Dashboard') }} ({{ c.new_activities }})</span>
                         </a>

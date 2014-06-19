@@ -16,6 +16,10 @@
     null,
     "Следвай"
   ],
+  "Image": [
+    null,
+    "Изображение"
+  ],
   "Loading...": [
     null,
     "Зареждане...."
@@ -23,6 +27,10 @@
   "URL": [
     null,
     "URL"
+  ],
+  "Upload": [
+    null,
+    "Качване"
   ],
   "Upload a file": [
     null,

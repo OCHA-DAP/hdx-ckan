@@ -36,6 +36,10 @@
     null,
     "Απόκρυψη"
   ],
+  "Image": [
+    null,
+    "Εικόνα"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Δεδομένα εισόδου πολύ μικρά, πρέπει να είναι τουλάχιστον ένας χαρακτήρας"
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "Παρακαλώ Επιβεβαιώστε "
+  ],
+  "Remove": [
+    null,
+    "Αφαίρεση"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Διακοπή ακολούθησης"
+  ],
+  "Upload": [
+    null,
+    "Ανεβάστε"
   ],
   "Upload a file": [
     null,

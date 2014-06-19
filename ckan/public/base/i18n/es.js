@@ -36,9 +36,21 @@
     null,
     "Esconder"
   ],
+  "Image": [
+    null,
+    "Imagen"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Ingreso es muy corto, debe tener al menos un caracter"
+  ],
+  "Link": [
+    null,
+    "Enlace"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Enlazar a una URL de internet (también puede enlazar a una API)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Por favor confirme la acción"
   ],
+  "Remove": [
+    null,
+    "Quitar"
+  ],
+  "Reorder resources": [
+    null,
+    "Reordenar recursos"
+  ],
+  "Reset this": [
+    null,
+    "Reiniciar esto"
+  ],
   "Resource uploaded": [
     null,
     "Recurso subido"
+  ],
+  "Save order": [
+    null,
+    "Guardar orden"
+  ],
+  "Saving...": [
+    null,
+    "Guardando..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,17 @@
     null,
     "Dejar de seguir"
   ],
+  "Upload": [
+    null,
+    "Subir"
+  ],
   "Upload a file": [
     null,
     "Sube un archivo"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Subir un fichero a su PC"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,

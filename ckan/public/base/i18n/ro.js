@@ -36,6 +36,10 @@
     null,
     "Ascunde"
   ],
+  "Image": [
+    null,
+    "Imagine"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Input-ul este prea scurt, ar trebuie să fie minim un caracter"
@@ -91,6 +95,10 @@
   "Unfollow": [
     null,
     "Anulați urmărirea"
+  ],
+  "Upload": [
+    null,
+    "Încărcare"
   ],
   "Upload a file": [
     null,

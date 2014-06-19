@@ -36,9 +36,21 @@
     null,
     "Oculta"
   ],
+  "Image": [
+    null,
+    "Imatge"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "L'entrada de dades és massa curta, almenys ha de tenir un caràcter"
+  ],
+  "Link": [
+    null,
+    "Enllaç"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Enllaçar a una URL a l'Internet (també podeu enllaçar a una API)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Acció de confirmació"
   ],
+  "Remove": [
+    null,
+    "Esborra"
+  ],
+  "Reorder resources": [
+    null,
+    "Reordenar recursos"
+  ],
+  "Reset this": [
+    null,
+    "Reiniciar"
+  ],
   "Resource uploaded": [
     null,
     "El recurs s'ha carregat"
+  ],
+  "Save order": [
+    null,
+    "Desar ordre"
+  ],
+  "Saving...": [
+    null,
+    "Desant..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,17 @@
     null,
     "Deixar de seguir"
   ],
+  "Upload": [
+    null,
+    "Carregar"
+  ],
   "Upload a file": [
     null,
     "Carregar un arxiu"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Pujar un arxiu des del vostre ordinador"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
