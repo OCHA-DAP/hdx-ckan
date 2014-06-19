@@ -879,7 +879,6 @@ span.clear { clear: left; display: block; }
 	float:left;
 	width: 100%;
 	background-color: #FFFFFF;
-	overflow: hidden;
 	position: relative;
 }
 
@@ -905,7 +904,8 @@ span.clear { clear: left; display: block; }
     margin-right: 15px; */ 
     width: 223px; 
     position: relative;
-    left: 717px;
+    /*left: 717px;*/
+    color: #ffffff;
     
 } 
 
@@ -914,7 +914,7 @@ span.clear { clear: left; display: block; }
     margin-right: 15px; */
     width: 702px; 
     position: relative;
-    left: 717px;
+    /*left: 717px;*/
 }
 
 .hdx-wrapper .page-header {
