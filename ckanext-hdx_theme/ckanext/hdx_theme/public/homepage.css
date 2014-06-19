@@ -230,4 +230,47 @@
     .homepage-main .rightContent .countRow .span2:first-child{
         margin-right: 30px;
     }
+
+    .homepageHeaderFooterBackground{
+        width: 100%;
+        background-color: #ffffff;
+    }
 /* END Homepage */
+
+
+/* Footer */
+    .newFooter {
+        height: 100px;
+        vertical-align: middle;
+        padding-top: 36px;
+    }
+    .newFooter .text {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #888888;
+        text-transform: uppercase;
+        margin-left: 40px;
+        line-height: 28px;
+    }
+
+    .newFooter img{
+        height: 28px;
+        margin-left: 15px;
+        background-color: white;
+        opacity: 0.5;
+
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
+    }
+
+    .newFooter img:hover, .newFooter img:focus {
+        opacity: 1;
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
+    }
+
+    .newFooter .text:first-child{
+        margin-left: 0;
+    }
+/* END Footer */
