@@ -3,62 +3,62 @@
     .navbar-static-top .container,
     .navbar-fixed-top .container,
     .navbar-fixed-bottom .container {
-        width: 1180px;
+        width: 1170px;
     }
 
     [class*="span"]{
-        margin-left: 20px;
+        margin-left: 30px;
     }
 
     .row{
-        margin-left:-20px;
+        margin-left:-30px;
     }
 
     .span12{
-        width: 1180px;
+        width: 1170px;
     }
 
     .span11{
-        width: 1080px;
+        width: 1070px;
     }
 
     .span10{
-        width: 980px;
+        width: 970px;
     }
 
     .span9{
-        width: 880px;
+        width: 870px;
     }
 
     .span8{
-        width: 780px;
+        width: 770px;
     }
     .span8{
-        width: 680px;
+        width: 670px;
     }
 
     .span6{
-        width: 580px;
+        width: 570px;
     }
 
     .span5{
-        width: 480px;
+        width: 470px;
     }
 
     .span4{
-        width: 380px;
+        width: 370px;
     }
 
     .span3{
-        width: 280px;
+        width: 270px;
     }
 
     .span2{
-        width: 180px;
+        width: 170px;
     }
 
     .span1{
-        width: 80px;
+        width: 70px;
     }
 
     .offset11{
@@ -94,4 +94,20 @@
     .offset1{
         margin-left: 100px;
     }
+
+    .paddingRowHack{
+        margin-left: -45px;
+        margin-right: -45px;
+    }
+
+    .paddingRowHack .paddingLeftHack{
+        padding-left: 45px;
+        margin-left: 0;
+    }
+
+    .paddingRowHack .paddingRightHack{
+        padding-right: 45px;
+        margin-right: 0;
+    }
+
 /* END - Customize fixed Bootstrap layout */
