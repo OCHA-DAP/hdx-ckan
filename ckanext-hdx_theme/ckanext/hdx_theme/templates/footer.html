@@ -1,29 +1,47 @@
 <footer class="newFooter">
   <div class="container">
-    <div class="row paddingRowHack" style="background-color: #ffffff">
+    <div class="row paddingRowHack" style="background-color: rgb(54,54,54);">
       <div class="span12 paddingLeftHack paddingRightHack">
-        <span class="text">
-          {{ _("A project by") }}:
-        </span>
-        <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
-        <span class="text">
-          {{ _("Related Sites") }}:
-        </span>
-        <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
-        <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
-        <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
-        <span class="text">
-          {{ _("Stay connected") }}:
-        </span>
-        <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
-        <a href="mailto:hdx@un.org"><img src="/images/homepage-new/email.png"/></a>
+        <div class="row">
+          <div class="span6">
+            <div class="row">
+              <div class="span6">
+                <ul class="mainLinks">
+                  <li><a href="http://docs.hdx.rwlabs.org/">{{ _('About') }}</a></li>
+                  <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
+                  <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
+                  <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
+                  <li><a href="#">{{ _('Contact') }}</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="row">
+              <div class="span6">
+                <div class="titlePlusVersion">
+                  {{ _("HUMANITARIAN DATA EXCHANGE BETA") }} &nbsp; {{ h.hdx_version() }}
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="offset1 span5">
+            <div class="pull-right otherLicenseText">
+              {{ _("Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.") }}
+            </div>
+            <div class="pull-right ccIcon">
+              <img src="/images/homepage-new/email.png" style="height: 40px; margin-right: 10px;"/>
+            </div>
+          </div>
+        </div>
+
+        <div style="position: fixed; bottom: 0;">
+        {% block footer_debug %}
+          {% if g.debug %}
+            {% include 'snippets/debug.html' %}
+          {% endif %}
+        {% endblock %}
+        </div>
       </div>
     </div>
   </div>
-
-  {% block footer_debug %}
-    {% if g.debug %}
-      {% include 'snippets/debug.html' %}
-    {% endif %}
-  {% endblock %}
 </footer>

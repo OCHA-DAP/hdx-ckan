@@ -238,7 +238,7 @@
 /* END Homepage */
 
 
-/* Footer */
+/* Footer Homepage */
     .newFooter {
         height: 100px;
         vertical-align: middle;
@@ -273,4 +273,4 @@
     .newFooter .text:first-child{
         margin-left: 0;
     }
-/* END Footer */
+/* END Footer Homepage */
