@@ -1,7 +1,14 @@
 {% extends "page.html" %}
+{% block primary %}
 
+<div>
 {% block primary_content %}
-THIS IS A DUMMY PAGE
+{% snippet "snippets/greeting_message.html", show_small_message=False, greeting=_('Thanks for contributing - you rock.') %}
+
+ {% snippet "organization/snippets/mem_or_org.html" %}
+
+{% endblock %}
+
 {% endblock %}
 
 {% block secondary %}{% endblock %}

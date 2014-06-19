@@ -18,7 +18,8 @@
       {% snippet "organization/snippets/organization_list.html", organizations=organizations %}
     </div>
   {% else %}
-  	<div class="big-message">
+  {% snippet "organization/snippets/mem_or_org.html" %}
+  	{#<div class="big-message">
 	    <p>
 	      {{ _('You aren\'t currently a member of any organizations.') }}
 	    </p>
@@ -27,6 +28,6 @@
 	        {% link_for _('+ Add Organization'), controller='organization', action='new', class_='info-item-name' %}
 	      {% endif %}
 	    </p>
-    </div>
+    </div>#}
   {% endif %}
 {% endblock %}
