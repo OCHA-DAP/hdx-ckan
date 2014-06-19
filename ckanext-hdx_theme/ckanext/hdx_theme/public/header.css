@@ -1,0 +1,413 @@
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+        width: 1170px;
+    }
+
+    [class*="span"]{
+        margin-left: 30px;
+    }
+
+    .row{
+        margin-left:-30px;
+    }
+
+    .span12{
+        width: 1170px;
+    }
+
+    .span11{
+        width: 1070px;
+    }
+
+    .span10{
+        width: 970px;
+    }
+
+    .span9{
+        width: 870px;
+    }
+
+    .span8{
+        width: 770px;
+    }
+    .span8{
+        width: 670px;
+    }
+
+    .span6{
+        width: 570px;
+    }
+
+    .span5{
+        width: 470px;
+    }
+
+    .span4{
+        width: 370px;
+    }
+
+    .span3{
+        width: 270px;
+    }
+
+    .span2{
+        width: 170px;
+    }
+
+    .span1{
+        width: 70px;
+    }
+
+    .offset11{
+        margin-left: 1130px;
+    }
+    .offset10{
+        margin-left: 1030px;
+    }
+    .offset9{
+        margin-left: 930px;
+    }
+    .offset8{
+        margin-left: 830px;
+    }
+    .offset7{
+        margin-left: 730px;
+    }
+    .offset6{
+        margin-left: 630px;
+    }
+    .offset5{
+        margin-left: 530px;
+    }
+    .offset4{
+        margin-left: 430px;
+    }
+    .offset3{
+        margin-left: 330px;
+    }
+    .offset2{
+        margin-left: 230px;
+    }
+    .offset1{
+        margin-left: 130px;
+    }
+
+    .paddingRowHack{
+        margin-left: -45px;
+        margin-right: -45px;
+    }
+
+    .paddingRowHack .paddingLeftHack{
+        padding-left: 45px;
+        margin-left: 0;
+    }
+
+    .paddingRowHack .paddingRightHack{
+        padding-right: 45px;
+        margin-right: 0;
+    }
+
+/* END - Customize fixed Bootstrap layout */
+
+/* Fonts */
+    @font-face {
+        font-family: 'Gotham-Bold';
+        src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+    }
+
+    @font-face {
+        font-family: 'Gotham-Light';
+        src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+    }
+/* END Fonts */
+
+/* Header */
+    .newHeader .container .row {
+        padding-top: 34px;
+    }
+    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav{
+        display: inline;
+    }
+
+    .newHeader .content .navbar nav > ul {
+        margin: 0 0 0 25px;
+    }
+    .newHeader .content .navbar nav li a{
+        color: #000000;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 31px;
+        text-transform: uppercase;
+    }
+
+    ul.mainLinks, ul.mainLinks li{
+        display: inline;
+    }
+    ul.mainLinks li.dropdown a:focus{
+        background-color: #ffffff;
+    }
+
+    ul.mainLinks li a:hover, ul.mainLinks li a:focus {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    ul.mainLinks > li > a{
+        margin-left: 15px;
+    }
+    ul.mainLinks > li:first-child > a{
+        margin-left: 0;
+    }
+
+    ul.mainLinks > li > a:after{
+        content: "|";
+        margin-left: 15px;
+    }
+
+    ul.mainLinks li:last-child a:after{
+        content: "";
+        margin: 0;
+    }
+
+    ul.mainLinks li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+
+    /* Dropdown menu colors  */
+        .newHeader .content .navbar nav .dropdown-menu {
+            margin: 0;
+        }
+       .newHeader .content .navbar nav ul.dropdown-menu > li > a:hover, .newHeader .content .navbar nav ul.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+           background-color: #007ce0;
+           color: #ffffff;
+           background-image: none;
+       }
+    /* END Dropdown menu colors */
+
+    .newHeader .content .navbar nav li.submitData{
+        background-color: #f2645a;
+        border-radius: 6px;
+        position: relative;
+        top: -16px;
+        width: 200px;
+        margin-right: 20px;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.dropdown{
+        position: relative;
+        top: -12px;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.newLogin{
+        position: relative;
+        top: -12px;
+    }
+
+    .newHeader .content .navbar nav li.submitData a{
+        color: #ffffff;
+        text-shadow: none;
+        padding: 0;
+        height: 60px;
+        line-height: 60px;
+        font-size: 14px;
+        margin-left: 30px;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .username{
+        color: #007ce0;
+        text-transform: none;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret {
+        margin-top: 11px;
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #007ce0;
+    }
+
+    .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
+        border-top-color: #006abf;
+    }
+
+    .navbar .nav li.dropdown .gravatar{
+        -webkit-border-radius: 500px;
+        -moz-border-radius: 500px;
+        border-radius: 500px;
+    }
+/* END Header */
+
+/* HDX Version display */
+    #hdxVersion{
+        display: none;
+    }
+    .logo:hover #hdxVersion{
+        display: inline;
+        color: #888888;
+        position: relative;
+        float: left;
+        font-size: 9px;
+        left: 74px;
+        top: 9px;
+        width: 0;
+    }
+/* END HDX Version display */
+
+/* Footer */
+    .newFooter .span12 > .row {
+        vertical-align: middle;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .newFooter .mainLinks{
+        margin: 0;
+    }
+
+    .newFooter .mainLinks li a{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #ffffff;
+        text-transform: uppercase;
+    }
+
+    .newFooter .titlePlusVersion{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 10px;
+        color: #888888;
+    }
+
+    .newFooter .otherLicenseText{
+        width: 320px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #ffffff;
+    }
+
+/* END Footer */
+
+
+/* Body Background */
+    body{
+        background-color: #1ebfb3;
+        background-image: url("/images/homepage-new/map.png");
+        background-size: cover;
+        background-attachment: fixed;
+    }
+/* END Body Background */
+
+/* Fix main content */
+    [role=main], .main {
+        padding: 0;
+        background: none;
+    }
+/* END Fix main content */
+
+/* Toolbar Row */
+    .toolbarRow{
+        background-color: #eeeeee;
+        height: 75px;
+    }
+    .toolbarRow .toolbar{
+        padding: 0;
+        margin: 0;
+
+    }
+    .toolbarRow .toolbar .breadcrumb{
+        text-transform: uppercase;
+        color: #888888;
+        font-size: 12px;
+        line-height: 75px;
+    }
+
+    .toolbarRow .form-search{
+        line-height: 72px; /*weird form padding of 3px*/
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Style the search placeholder just for the toolbar search */
+        .toolbarRow .form-search input::-webkit-input-placeholder {
+            color: #d23d13;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+        }
+
+        .toolbarRow .form-search input:-moz-placeholder { /* Firefox 18- */
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .toolbarRow .form-search input::-moz-placeholder {  /* Firefox 19+ */
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .toolbarRow .form-search input:-ms-input-placeholder {
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+        }
+    /* END Style the search placeholder just for the toolbar search */
+
+
+/* END Toolbar Row*/
+
+/* Search widget style */
+    /*Also used on the homepage*/
+    .form-search .input-append .searchInput{
+        width: 246px;
+        height: 45px;
+        border-radius: 6px 0 0 6px;
+        background-color: white;
+        border: 0;
+        padding: 0 0 0 20px;
+    }
+
+    .form-search .input-append .searchInput::-webkit-input-placeholder{
+        color: #cccccc;
+    }
+
+    .form-search .input-append .button{
+        width: 50px;
+        height: 45px;
+        padding: 0;
+        background-color: #007ce0;
+        border: 0;
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        color: #eeeeee
+    }
+
+    .form-search .input-append .button .icon-search{
+        font-size: 20px;
+        line-height: 100%;
+        text-align: right;
+        width: 20px;
+        color: #ffffff;
+    }
+/* END Search widget style */
+
+/* Main Content */
+    .mainContent > .row{
+        background-color: #ffffff;
+    }
+    .mainContent .module-content {
+        padding-left: 0;
+        padding-right: 0;
+    }
+/* END Main Content */

@@ -872,7 +872,7 @@ span.clear { clear: left; display: block; }
 	background: none;
     border: none;
     box-shadow: 0 0 0 0;
-    margin-top: 10px;
+    margin: 0;
 }
 
 .support-primary {
@@ -1227,10 +1227,6 @@ for example: in the user dashboard when the user has no organizations */
 /* used in the about page to add some padding to the tab group */
 .hdx-tabbable {
 	padding-bottom: 20px;
-}
-
-.terms-of-service {
-	padding: 5px 40px;
 }
 
 .terms-of-service div > ol > li {

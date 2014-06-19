@@ -1,58 +1,47 @@
-<footer class="new-site-footer">
-  <div class="container jumbotron">
-    <div class="maprow">
-      <div class="row creditsRow">
-        <div class="span12">
-          <div class="row creditsTextRow">
-            <div class="span2">
-              {{ _("A project by:") }}
+<footer class="newFooter">
+  <div class="container">
+    <div class="row paddingRowHack" style="background-color: rgb(54,54,54);">
+      <div class="span12 paddingLeftHack paddingRightHack">
+        <div class="row">
+          <div class="span6">
+            <div class="row">
+              <div class="span6">
+                <ul class="mainLinks">
+                  <li><a href="http://docs.hdx.rwlabs.org/">{{ _('About') }}</a></li>
+                  <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
+                  <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
+                  <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
+                  <li><a href="#">{{ _('Contact') }}</a></li>
+                </ul>
+              </div>
             </div>
-            <div class="offset5 span5">
-              {{ _("Related Sites:") }}
+            <div class="row">
+              <div class="span6">
+                <div class="titlePlusVersion">
+                  {{ _("HUMANITARIAN DATA EXCHANGE BETA") }} &nbsp; {{ h.hdx_version() }}
+                </div>
+              </div>
             </div>
+
           </div>
-          <div class="row">
-            <div class="span2">
-              <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
+          <div class="offset1 span5">
+            <div class="pull-right otherLicenseText">
+              {{ _("Except where otherwise noted, content on this site is licensed under a Creative Commons Attribution 4.0 International license.") }}
             </div>
-            <div class="offset5 span5">
-              <a style="margin-right: 40px;" href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
-              <a style="margin-right: 40px;" href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
-              <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
+            <div class="pull-right ccIcon">
+              <img src="/images/homepage-new/email.png" style="height: 40px; margin-right: 10px;"/>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row socialRow">
-        <div class="span12">
-          <div style="margin-top: 20px; margin-bottom: 20px;">
 
-            {{ _("Stay connected with us:") }}
-            <span style="margin-left: 20px; margin-right: 20px;">
-                <a href="https://github.com/OCHA-DAP"><img src="/images/homepage/github.png"/></a>
-                <a href="http://www.twitter.com/humdata"><img src="/images/homepage/twitter.png"/></a>
-                <a href="mailto:hdx@un.org"><img src="/images/homepage/email.png"/></a>
-            </span>
-
-            <form style="display: inline;" action="http://unocha.us2.list-manage.com/subscribe/post?u=83487eb1105d72ff2427e4bd7&amp;id=6fd988326c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-              <input type="email" value="" name="EMAIL" class="newsletter" id="mce-EMAIL" placeholder="{{ _("Sign up for our newsletter") }}">
-              <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
-              <div style="position: absolute; left: -5000px;"><input type="text" name="b_83487eb1105d72ff2427e4bd7_6fd988326c" value=""></div>
-              <input type="submit" value="{{ _("Sign Up") }}" name="subscribe" id="mc-embedded-subscribe" class="signup">
-              <div id="mce-responses" class="clear">
-                <div class="response" id="mce-error-response" style="display:none"></div>
-                <div class="response" id="mce-success-response" style="display:none"></div>
-              </div>
-            </form>
-          </div>
+        <div>
+        {% block footer_debug %}
+          {% if g.debug %}
+            {% include 'snippets/debug.html' %}
+          {% endif %}
+        {% endblock %}
         </div>
       </div>
     </div>
   </div>
-
-  {% block footer_debug %}
-    {% if g.debug %}
-      {% include 'snippets/debug.html' %}
-    {% endif %}
-  {% endblock %}
 </footer>

@@ -29,27 +29,17 @@
         font-weight: 700;
     }
 
-    @font-face {
-        font-family: 'Gotham-Bold';
-        src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-    }
-
-    @font-face {
-        font-family: 'Gotham-Light';
-        src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-    }
-
     .homepage-main{
-        background-color: #1ebfb3;
-        background-image: url("/images/homepage-new/map.png");
-        background-size: cover;
+        /*background-color: #1ebfb3;*/
+        /*background-image: url("/images/homepage-new/map.png");*/
+        /*background-size: cover;*/
         font-family: 'Gotham-Bold',sans-serif;
         font-weight: 400;
     }
 
     .homepage-background{
         height: 710px;
-        background-color: rgba(30, 191, 179, 0.7);
+        /*background-color: rgba(30, 191, 179, 0.7);*/
     }
 
 
@@ -134,20 +124,6 @@
         line-height: 60px;
     }
 
-    .homepage-main .rightContent .form-search .input-append .searchInput{
-        width: 246px;
-        height: 45px;
-        border-radius: 6px 0 0 6px;
-        background-color: white;
-        border: 0;
-        padding: 0 0 0 20px;
-    }
-
-    .homepage-main .rightContent .form-search .input-append .searchInput::-webkit-input-placeholder{
-        color: #cccccc;
-    }
-
-
     .homepage-main .rightContent .selectCountryDropdown .selectCountry {
         width: 316px;
         height: 45px;
@@ -186,25 +162,6 @@
         text-decoration: none;
     }
 
-    .homepage-main .rightContent .form-search .input-append .button{
-        width: 50px;
-        height: 45px;
-        padding: 0;
-        background-color: #007ce0;
-        border: 0;
-        border-bottom-right-radius: 6px;
-        border-top-right-radius: 6px;
-        color: #eeeeee
-    }
-
-    .homepage-main .rightContent .form-search .input-append .button .icon-search{
-        font-size: 20px;
-        line-height: 100%;
-        text-align: right;
-        width: 20px;
-        color: #ffffff;
-    }
-
     .homepage-main .rightContent .countRow{
         font-family: 'Gotham-Light', sans-serif;
         font-weight: 400;
@@ -240,126 +197,15 @@
     .homepage-main .rightContent .countRow .span2:first-child{
         margin-right: 30px;
     }
-/* END Homepage */
 
-/* Header */
-    .newHeader {
-        height: 100px;
-    }
-
-    .newHeader .container{
-        padding-top: 34px;
-    }
-
-    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav, .newHeader .content .navbar nav ul.mainLinks, .newHeader .content .navbar nav ul.mainLinks li{
-        display: inline;
-    }
-
-    .newHeader .content .navbar nav ul.mainLinks li.dropdown a:focus{
+    .homepageHeaderFooterBackground{
+        width: 100%;
         background-color: #ffffff;
     }
+/* END Homepage */
 
-    .newHeader .content .navbar nav > ul {
-        margin: 0 0 0 25px;
-    }
-    .newHeader .content .navbar nav li a{
-        color: #000000;
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 31px;
-        text-transform: uppercase;
-    }
 
-    .newHeader .content .navbar nav ul.mainLinks li a:hover, .newHeader .content .navbar nav ul.mainLinks li a:focus {
-        text-decoration: none;
-    }
-
-    .newHeader .content .navbar nav ul.mainLinks > li > a{
-        margin-left: 15px;
-    }
-    .newHeader .content .navbar nav ul.mainLinks > li:first-child > a{
-        margin-left: 0;
-    }
-
-    .newHeader .content .navbar nav ul.mainLinks > li > a:after{
-        content: "|";
-        margin-left: 15px;
-    }
-
-    .newHeader .content .navbar nav ul.mainLinks li:last-child a:after{
-        content: "";
-        margin: 0;
-    }
-
-    .newHeader .content .navbar nav ul.mainLinks li.dropdown:hover > ul.dropdown-menu {
-        display: block;
-    }
-
-    /* Dropdown menu colors  */
-        .newHeader .content .navbar nav .dropdown-menu {
-            margin: 0;
-        }
-       .newHeader .content .navbar nav ul.dropdown-menu > li > a:hover, .newHeader .content .navbar nav ul.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
-           background-color: #007ce0;
-           color: #ffffff;
-           background-image: none;
-       }
-    /* END Dropdown menu colors */
-
-    .newHeader .content .navbar nav li.submitData{
-        background-color: #f2645a;
-        border-radius: 6px;
-        position: relative;
-        top: -16px;
-        width: 200px;
-        margin-right: 20px;
-    }
-
-    .newHeader .content .navbar nav .pull-right li.dropdown{
-        position: relative;
-        top: -12px;
-    }
-
-    .newHeader .content .navbar nav .pull-right li.newLogin{
-        position: relative;
-        top: -12px;
-    }
-
-    .newHeader .content .navbar nav li.submitData a{
-        color: #ffffff;
-        text-shadow: none;
-        padding: 0;
-        height: 60px;
-        line-height: 60px;
-        font-size: 14px;
-        margin-left: 30px;
-    }
-
-    .navbar .nav li.dropdown > .dropdown-toggle .username{
-        color: #007ce0;
-        text-transform: none;
-    }
-
-    .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret {
-        margin-top: 11px;
-        border-left: 9px solid transparent;
-        border-right: 9px solid transparent;
-        border-top: 9px solid #007ce0;
-    }
-
-    .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
-        border-top-color: #006abf;
-    }
-
-    .navbar .nav li.dropdown .gravatar{
-        -webkit-border-radius: 500px;
-        -moz-border-radius: 500px;
-        border-radius: 500px;
-    }
-/* END Header */
-
-/* Footer */
+/* Footer Homepage */
     .newFooter {
         height: 100px;
         vertical-align: middle;
@@ -394,19 +240,4 @@
     .newFooter .text:first-child{
         margin-left: 0;
     }
-/* END Footer */
-/* HDX Version display */
-    #hdxVersion{
-        display: none;
-    }
-    .logo:hover #hdxVersion{
-        display: inline;
-        color: #888888;
-        position: relative;
-        float: left;
-        font-size: 9px;
-        left: 74px;
-        top: 9px;
-        width: 0;
-    }
-/* END HDX Version display */
+/* END Footer Homepage */
