@@ -1,42 +1,68 @@
 {% block header_wrapper %}
-
-<header class="masthead">
-  {% block header_debug %}
-  {% if g.debug and not g.debug_supress_header %}
-    <div class="debug">Controller : {{ c.controller }}<br/>Action : {{ c.action }}</div>
-  {% endif %}
-  {% endblock %}
+<header class="newHeader">
   <div class="container">
-    <div class="first-menu">
-      <div class="content">
-        <div class="navbar">
-          <div class="navbar-inner">
-            <div class="container">
-              {# The .header-image class hides the main text and uses image replacement for the title #}
-              <span style="float: left;" class="{{ g.header_class }}">
+    <div class="row paddingRowHack" style="background-color: #ffffff">
+      <div class="span12 paddingLeftHack paddingRightHack">
+        <span class="content">
+          <span class="navbar">
+            <nav class="usermenu section">
+              <div class="nav nav-pills">
+                {# The .header-image class hides the main text and uses image replacement for the title #}
+                <hgroup class="hdxLogo">
 
-                {% block header_logo %}
-                  {% if g.site_logo %}
-                    <a class="logo" href="{{ h.url('home') }}"><img src="{{ h.url_for_static(g.site_logo) }}" alt="{{ g.site_title }} Logo" width="320px"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
-                  {% else %}
-                    <h1>
-                      <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
-                    </h1>
-                    {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
-                  {% endif %}
-                {% endblock %}
-
-              </span>
-              <nav style="float: right;" class="usermenu section">
-                <ul class="nav nav-pills pull-right">
+                  {% block header_logo %}
+                    {% if g.site_logo %}
+                      <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
+                    {% else %}
+                      <h1>
+                        <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
+                      </h1>
+                      {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
+                    {% endif %}
+                  {% endblock %}
+                </hgroup>
+                <ul class="mainLinks">
+                  {% block header_site_navigation_tabs %}
+                    <li class="dropdown">
+                      <a href="#" class="dropdown-toggle">
+                        {{ _('About') }}
+                      </a>
+                      <ul class="dropdown-menu dropdown-inverse" role="menu">
+                        <li>
+                          <a href="http://docs.hdx.rwlabs.org/">
+                            <span>{{ _('What is HDX?') }}</span>
+                          </a>
+                        </li>
+                        <li>
+                          {% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
+                        </li>
+                        <li>
+                          {% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}
+                        </li>
+                      </ul>
+                    </li>
+                    <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
+                    <li><a href="/organization">{{ _('Organizations') }}</a></li>
+                    <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
+                  {% endblock %}
+                </ul>
+              </div>
+              <div class="pull-right">
+                <ul class="nav nav-pills">
+                  <li class="submitData">
+                    <a href="{% if c.userobj %}/dataset/new{% else %}/contribute{% endif %}">
+                      {{ _("Submit data") }}
+                      <img src="/images/homepage-new/attachment.svg" style="width: 24px; height: 21px; margin-left: 20px;" />
+                    </a>
+                  </li>
                   {% if c.userobj %}
                   <li class="dropdown">
                     <a href="#" class="dropdown-toggle special-menuitem" data-toggle="dropdown">
-                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=22) }}
+                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=29) }}
                       <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
                       <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu" role="menu">
                       {% block header_account_logged %}
                       {% if c.userobj.sysadmin %}
                       <li>
@@ -81,89 +107,19 @@
                   </li>
                   {% else %}
                   {% block header_account_notlogged %}
-                  <li>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
-                  <li>{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
+                  <div class="newLogin">
+                    <li class="newLogin">{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
+                    <li class="newLogin">{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
+                  </div>
                   {% endblock %}
                   {% endif %}
                 </ul>
-
-              </nav>
-
-            </div>
-          </div>
-        </div>
+              </div>
+            </nav>
+          </span>
+        </span>
       </div>
-
-
-
     </div>
-    <div class="content second-menu">
-
-      {% block header_site_navigation %}
-      <div class="navbar">
-      	<div class="container">
-	      	{# This is only needed for responsive design and the corresponding bootstrap plugin is currently missing
-	      	<a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-	        	<span class="icon-bar"></span>
-	        	<span class="icon-bar"></span>
-	        	<span class="icon-bar"></span>
-	    	</a>
-	    	#}	
-          <ul class="nav second-row-menu">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle">
-                {{ _('About') }}
-              </a>
-              <ul class="dropdown-menu dropdown-inverse" role="menu">
-                <li>
-                  <a href="http://docs.hdx.rwlabs.org/">
-                    <span>{{ _('What is HDX?') }}</span>
-                  </a>
-                </li>
-                <li>
-                  {% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
-                </li>
-                <li>
-                  {% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}
-                </li>
-              </ul>
-            </li>
-            {% block header_site_navigation_tabs %}
-            <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
-            {% if c.userobj %}
-              <li><a href="/dataset/new">{{ _('Contribute') }}</a></li>
-            {% else %}
-              <li><a href="/contribute">{{ _('Contribute') }}</a></li>
-            {% endif %}
-            <li><a href="/organization">{{ _('Organizations') }}</a></li>
-            <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
-            <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact') }}</a></li>
-            {% endblock %}
-          </ul>
-          <form class="navbar-form form-search pull-right" action="{% url_for controller='package', action='search'%}">
-            <div id="insideMenuSearch" class="input-append">
-              <input type="text" name="q" class="search-query" placeholder="{{ _("Search all datasets ...") }}">
-              <span class="add-on">
-                <i class="icon-search"></i>
-              </span>
-            </div>
-          </form>
-        </div>
-      </div>
-      {% endblock %}
-
-      {# block header_site_search %}
-        <form class="section site-search simple-input" action="{% url_for controller='package', action='search' %}" method="get">
-          <div class="field">
-            <label for="field-sitewide-search">{{ _('Search Datasets') }}</label>
-            <input id="field-sitewide-search" type="text" name="q" placeholder="{{ _('Search') }}" />
-            <button class="btn-search" type="submit">{{ _('Search') }}</button>
-          </div>
-        </form>
-      {% endblock #}
-
-    </div>
-    
   </div>
 </header>
 {% endblock %}
