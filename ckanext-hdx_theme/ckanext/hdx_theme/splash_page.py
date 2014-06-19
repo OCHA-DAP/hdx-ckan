@@ -48,9 +48,12 @@ class SplashPageController(HomeController):
         ##Removing groups without geojson for the map
         c.group_map = []
         for gp in c.group_package_stuff:
-            for e in gp['extras']:
-                if e['key'] == 'geojson' and e['value']:
-                    c.group_map.append(gp)
+            '''
+                Removed check for geojson data because in the new version this information 
+                does not come from the group_list action and for now we are not using the map.
+                If we'll need this we should implement some caching functionality for this too.
+            '''
+            c.group_map.append(gp)
 
         #print c.group_package_stuff
 
