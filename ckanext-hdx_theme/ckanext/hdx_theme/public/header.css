@@ -401,3 +401,13 @@
         color: #ffffff;
     }
 /* END Search widget style */
+
+/* Main Content */
+    .mainContent > .row{
+        background-color: #ffffff;
+    }
+    .mainContent .module-content {
+        padding-left: 0;
+        padding-right: 0;
+    }
+/* END Main Content */
