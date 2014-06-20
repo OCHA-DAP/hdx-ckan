@@ -12,16 +12,6 @@
         {{ _('Private') }}
       </span>
     {% endif %}
-    <h1>
-      {% block page_heading %}
-      {{ pkg.title or pkg.name }}
-       {% if pkg.state.startswith('draft') %}
-        <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
-      {% elif pkg.state.startswith('deleted') %}
-        <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
-      {% endif %}
-      {% endblock %}
-    </h1>
     {% block package_notes %}
     {% if c.pkg_notes_formatted %}
       <div class="notes embedded-content">
@@ -46,5 +36,27 @@
   {% block package_additional_info %}
     {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
   {% endblock %}
+
+{% endblock %}
+
+{% block item_title_contrib %}
+    <div class="mTop35">
+      <h1 class="itemTitle">
+        {% block page_heading %}
+        {{ pkg.title or pkg.name }}
+         {% if pkg.state.startswith('draft') %}
+          <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+        {% elif pkg.state.startswith('deleted') %}
+          <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+        {% endif %}
+        {% endblock %}
+      </h1>
+
+      <span class="followButtonContainer pull-right">
+        {{ h.follow_button('dataset', pkg.name) }}
+        {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
+      </span>
+    </div>
+    <div class="info-secondary-data">{{ _('posted on') }} {{ h.render_datetime(pkg.metadata_created, with_hours=False) }}</div>
 
 {% endblock %}

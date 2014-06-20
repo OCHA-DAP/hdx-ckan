@@ -68,7 +68,7 @@ this.ckan.module('hdx_follow', function($, _) {
 			var sandbox = this.sandbox;
 			options.loading = false;
 			this.el.removeClass('disabled');
-      var followers = $(this.el).parent().parent().find(".followersNumber").find("span");
+      var followers = $(".followersNumber").find("span");
 			var next_val = parseInt(followers.html());
       if (options.action == 'follow') {
 				options.action = 'unfollow';

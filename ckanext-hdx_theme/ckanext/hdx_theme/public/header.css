@@ -119,6 +119,11 @@
     }
 
     @font-face {
+        font-family: 'Gotham-Book';
+        src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+    }
+
+    @font-face {
         font-family: 'Gotham-Light';
         src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
     }
@@ -418,6 +423,9 @@
 
 
 /* Common Classes */
+    .mTop45{
+        margin-top: 45px;
+    }
     .mTop35{
         margin-top: 35px;
     }
@@ -432,5 +440,70 @@
         margin-left: 30px;
         margin-right: 30px;
     }
+    .mL45{
+        margin-left: 45px;
+    }
+    .mR45{
+        margin-right: 45px;
+    }
 
+    hr{
+        margin: 0;
+    }
+    hr.dotted{
+        border-top:1px dotted #cccccc;
+        border-bottom: none;
+    }
 /* END Common Classes */
+
+
+/* Button style */
+    .btn.hdx-btn.org-btn{
+        min-width: 100px;
+        max-height: 20px;
+        margin-left: 0;
+        background-color: #007ce0;
+        background-image: none;
+        color: white;
+        text-shadow: none;
+        border: none;
+        text-transform: uppercase;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .btn.hdx-btn.ga-preview{
+        background-image: none;
+        text-shadow: none;
+        background-color: #888888;
+        color: white;
+        border: 0;
+        line-height: 35px;
+        padding: 0 20px;
+        text-transform: uppercase;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        margin-left: 10px;
+        border-radius: 4px;
+    }
+    .btn.hdx-btn.ga-share, .btn.hdx-btn.ga-download{
+        background-image: none;
+        text-shadow: none;
+        background-color: #888888;
+        color: white;
+        border: 0;
+        line-height: 35px;
+        width: 35px;
+        border-radius: 4px;
+        padding: 0;
+        margin-left: 10px;
+    }
+    .btn.hdx-btn.ga-share img, .btn.hdx-btn.ga-download img{
+        width: 14px;
+        margin-bottom: 5px;
+    }
+
+
+/* END Button style*/
