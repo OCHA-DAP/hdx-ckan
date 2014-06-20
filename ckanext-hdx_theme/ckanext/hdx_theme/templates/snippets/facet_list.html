@@ -50,7 +50,7 @@ within_tertiary
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
-    <section class="list-items {{ wrapper_class or 'module module-narrow module-shallow pTopBottom35 pR45 borderGreyBottom' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
+    <section class="list-items {{ wrapper_class or 'module module-narrow module-shallow pTopBottom35 mR45 borderGreyBottom' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
       <h2 class="list-items module-heading facet-h2 uppercase">
       <!-- <i class="icon-medium icon-filter"></i> -->
         {% set title = title or h.get_facet_title(name) %}

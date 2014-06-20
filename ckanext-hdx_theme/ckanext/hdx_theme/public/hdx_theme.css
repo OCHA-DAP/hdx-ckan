@@ -606,7 +606,7 @@ body {
 	
 	.list-items.borderGreyBottom{
         border-bottom: 1px solid #dddddd;
-        padding-right: 45px;
+        margin-right: 45px;
     }
 	
 	
