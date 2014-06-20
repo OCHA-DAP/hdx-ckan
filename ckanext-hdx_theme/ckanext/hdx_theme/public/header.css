@@ -433,4 +433,22 @@
         margin-right: 30px;
     }
 
+    .pLR45{
+        padding-left: 45px;
+        padding-right: 45px;
+    }
+
+    .pR45{
+        padding-right: 45px;
+    }
+    .pL45{
+        padding-left: 45px;
+    }
+    .pTopBottom35{
+        padding-top: 35px;
+        padding-bottom: 35px;
+    }
+
+}
+
 /* END Common Classes */
