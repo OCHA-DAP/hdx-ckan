@@ -10,6 +10,7 @@ ckanext/hdx_theme/country_list_hardcoded.py
 ckanext/hdx_theme/helpers.py
 ckanext/hdx_theme/licenses.py
 ckanext/hdx_theme/login.py
+ckanext/hdx_theme/member_controller.py
 ckanext/hdx_theme/org_controller.py
 ckanext/hdx_theme/plugin.py
 ckanext/hdx_theme/splash_page.py
@@ -17,6 +18,8 @@ ckanext/hdx_theme/version.py
 ckanext/hdx_theme/i18n/__init__.py
 ckanext/hdx_theme/i18n/check_po_files.py
 ckanext/hdx_theme/i18n/setup.py
+ckanext/hdx_theme/tests/__init__.py
+ckanext/hdx_theme/tests/hdx_test_base.py
 ckanext_hdx_theme.egg-info/PKG-INFO
 ckanext_hdx_theme.egg-info/SOURCES.txt
 ckanext_hdx_theme.egg-info/dependency_links.txt

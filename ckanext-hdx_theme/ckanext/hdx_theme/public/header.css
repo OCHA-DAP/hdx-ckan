@@ -415,3 +415,22 @@
         padding-right: 0;
     }
 /* END Main Content */
+
+
+/* Common Classes */
+    .mTop35{
+        margin-top: 35px;
+    }
+    .mTop20{
+        margin-top: 20px;
+    }
+    .mLR45{
+        margin-left: 45px;
+        margin-right: 45px;
+    }
+    .mLR30{
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+
+/* END Common Classes */
