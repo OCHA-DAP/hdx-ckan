@@ -28,14 +28,14 @@
         </a>
 	{% endif %}
      <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
-            <img src="/images/actions/download.png" alt=" {{ _('Download') }}" />
+            <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
      </a>
      {% set social_div_id = 'social-' + res.id %}
      {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
      <a href="#" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="{{social_div_id}}" 
      	data-module-social_wrapper_div_id="{{ social_wrapper_div_id }}"
      	class="btn btn-secondary hdx-btn resource-url-analytics ga-share" target="_blank" title="{{ _('Share File') }}" onclick="return false;">
-            <img src="/images/actions/share.png" alt=" {{ _('Share') }}" />
+            <img src="/images/homepage-new/share.svg" alt=" {{ _('Share') }}" />
      </a>
      <div id="{{ social_wrapper_div_id }}" class="popover-wrapper"></div>
      <div style="display:none" id="{{social_div_id}}">
