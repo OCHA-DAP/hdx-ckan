@@ -879,7 +879,6 @@ span.clear { clear: left; display: block; }
 	float:left;
 	width: 100%;
 	background-color: #FFFFFF;
-	overflow: hidden;
 	position: relative;
 }
 
@@ -903,18 +902,19 @@ span.clear { clear: left; display: block; }
 	/* border: 1px solid #DDDDDD;
     margin-left: 15px;
     margin-right: 15px; */ 
-    width: 223px; 
+    width: 300px;
     position: relative;
-    left: 717px;
+    /*left: 717px;*/
+    color: #ffffff;
     
 } 
 
 .hdx-wrapper .primary {
 	/* border: 1px solid #DDDDDD;
     margin-right: 15px; */
-    width: 702px; 
+    width: 870px;
     position: relative;
-    left: 717px;
+    /*left: 717px;*/
 }
 
 .hdx-wrapper .page-header {
