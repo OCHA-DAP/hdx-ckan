@@ -1,3 +1,6 @@
+//make sure World is always first
+$('#country-drop>option:contains(World)').insertAfter('#country-drop>option[value=-1]');
+
 $('#field-private option[value=False]').attr('selected', true);
 
 $('#country-drop').change(function(){
