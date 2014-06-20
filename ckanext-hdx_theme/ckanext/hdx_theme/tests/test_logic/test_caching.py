@@ -12,7 +12,7 @@ import ckan.model as model
 import ckan.plugins as p
 
 import ckanext.hdx_theme.caching as caching
-import ckanext.hdx_theme.plugin as plugin
+import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 num_cached_group_list_called = 0
 original_get_action = tk.get_action
@@ -23,22 +23,25 @@ original_filter_focus_countries = caching.filter_focus_countries
 num_invalidate_group_caches = 0
 original_invalidate_group_caches = caching.invalidate_group_caches
 
+
 def get_action_wrapper(func):
     def my_get_action(action_name):
         global num_cached_group_list_called
-        if action_name=='group_list':
+        if action_name == 'group_list':
             num_cached_group_list_called += 1
         return func(action_name)
-    
+
     return my_get_action
+
 
 def filter_focus_countries_wrapper(func):
     def my_filter_focus_countries(*args, **kw):
         global num_filter_focus_countries
         num_filter_focus_countries += 1
         return func(*args, **kw)
-    
+
     return my_filter_focus_countries;
+
 
 def invalidate_group_caches_wrapper(func):
     def my_invalidate_group_caches(*args, **kw):
@@ -47,18 +50,15 @@ def invalidate_group_caches_wrapper(func):
         return func(*args, **kw)
     return my_invalidate_group_caches
 
-class TestGroupsCaching(tests.WsgiAppCase):
+
+class TestGroupsCaching(hdx_test_base.HdxBaseTest):
     
     @classmethod
     def setup_class(cls):
+        super(TestGroupsCaching,cls).setup_class()
+        
         global num_cached_group_list_called
         global num_filter_focus_countries
-        
-        p.load('hdx_theme')
-        
-        search.clear()
-        model.Session.remove()
-        ctd.CreateTestData.create()
         
         tk.get_action   = get_action_wrapper(tk.get_action)
         
@@ -68,16 +68,12 @@ class TestGroupsCaching(tests.WsgiAppCase):
    
     @classmethod
     def teardown_class(cls):
-        model.Session.remove()
-        model.repo.rebuild_db()
-        
-        tk.get_action   = original_get_action
+        super(TestGroupsCaching, cls).teardown_class()
+
+        tk.get_action = original_get_action
         caching.filter_focus_countries = original_filter_focus_countries
         caching.invalidate_group_caches = original_invalidate_group_caches
-        
-        p.unload('hdx_theme')
-        
-    
+
     def test_cached_group_list(self):
         global num_cached_group_list_called
         
