@@ -20,7 +20,7 @@ Example:
 			{% set format_attrs = {'disabled': true, 'style':'width: 286px;'} %}
 			{{ form.input('username', label=_('User'), value=user, classes=['control-medium'], attrs=format_attrs) }}
 		{% else %}
-	  		{% set format_attrs = {'style':'width: 300px;', 
+	  		{% set format_attrs = {'style':'width: 286px;', 
 	  			'data-module': 'hdx_autocomplete', 'data-module-interval':'200' , 'data-module-source': '/api/2/util/user/autocomplete?q=?'} %}
 			{{ form.input('username', id='field-username', label=_('User'), placeholder=_('Username'), value='', error='', classes=['control-medium'], attrs=format_attrs) }}
 		{% endif %}
