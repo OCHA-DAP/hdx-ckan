@@ -605,7 +605,7 @@ body {
 	}
 	
 	.list-items.borderGreyBottom{
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid #888888;
         margin-right: 45px;
     }
 	
@@ -619,11 +619,11 @@ body {
 	.list-items.module-narrow .module-footer {
 		padding: 0px;
 	}
-	
+	/*
 	.list-items.module {
 	    margin: 0px 0;
 	}
-	
+	*/
 	.facet-h2-title{
 	    cursor: pointer;
 	    font-family: 'Roboto', sans-serif;
