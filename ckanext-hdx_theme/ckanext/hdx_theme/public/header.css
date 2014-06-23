@@ -473,6 +473,10 @@
         font-size: 12px;
     }
 
+    .btn.hdx-btn:hover, .btn.hdx-btn:focus{
+        opacity: 0.7;
+    }
+
     .btn.hdx-btn.ga-preview{
         background-image: none;
         text-shadow: none;
@@ -504,6 +508,26 @@
         width: 14px;
         margin-bottom: 5px;
     }
-
-
 /* END Button style*/
+
+/* Label style */
+    .label{
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        color: #FFFFFF;
+        display: inline-block;
+        margin-bottom: 4px;
+        padding: 0px 10px;
+        text-transform: uppercase;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        min-width: 0;
+    }
+/* END Label style */
+
+
+/* DropDown style */
+
+/* END DropDown style */
