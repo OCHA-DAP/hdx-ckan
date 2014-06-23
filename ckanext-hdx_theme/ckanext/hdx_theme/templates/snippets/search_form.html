@@ -3,24 +3,26 @@
 {% set placeholder = placeholder if placeholder else _('Search...') %}
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
+{% set is_display_search_input = display_search_input if display_search_input==False else True %}
 
 <form class="list-items search-form" method="get" data-module="select-switch">
-
-  {% block search_input %}
-    <div class="search-input control-group {{ search_class }}">
-    {% if show_empty and search_in_results %}
-    	{% set p_list = h.get_filtered_params_list(show_empty) %}
-		{% for key,value in p_list %}
-			<input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
-		{% endfor %}
+    {% if is_display_search_input %}
+      {% block search_input %}
+        <div class="search-input control-group {{ search_class }}">
+        {% if show_empty and search_in_results %}
+            {% set p_list = h.get_filtered_params_list(show_empty) %}
+            {% for key,value in p_list %}
+                <input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        {% endif %}
+          <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
+          <button type="submit" value="search">
+            <i class="icon-search"></i>
+            <span>{{ _('Submit') }}</span>
+          </button>
+        </div>
+      {% endblock %}
     {% endif %}
-      <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
-      <button type="submit" value="search">
-        <i class="icon-search"></i>
-        <span>{{ _('Submit') }}</span>
-      </button>
-    </div>
-  {% endblock %}
 
   {% block search_search_fields %}
     {% if fields -%}
