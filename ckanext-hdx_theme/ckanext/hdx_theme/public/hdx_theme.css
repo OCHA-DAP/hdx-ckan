@@ -443,13 +443,24 @@ body {
     display: none;
 }
 
-
-.facet-h2{
+/* Facets fonts */
+.facet-title{
     cursor: pointer;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.08em;
-    font-weight: 300;
+    font-family: 'Gotham-Black', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: #888888;
 }
+
+.facet-title-counter{
+	font-family: 'Gotham-Black', sans-serif;
+    font-weight: 400;
+    font-size: 16pt;
+    color: #ffffff;
+}
+
+/* END Facets fonts */
+
 
 .searchForKeywordText {
     margin-top: 20px;
@@ -962,13 +973,6 @@ a.big-info-item-name {
     font-size: 25px;
     line-height: 45px;
 }
-
-.list-items.dataset-item:last-of-type {
-    border-bottom: medium none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
 
 .dataset-form-field-wrapper .control-full textarea {
 	height: 120px;

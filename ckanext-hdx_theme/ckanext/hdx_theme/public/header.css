@@ -127,6 +127,10 @@
         font-family: 'Gotham-Light';
         src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
     }
+    @font-face {
+        font-family: 'Gotham-Black';
+        src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+    }
 /* END Fonts */
 
 /* Header */
