@@ -1,24 +1,37 @@
 {#
 Example:
 
-  {% snippet 'snippets/confirmation_post.html', form_url=form_url, modal_div_id='confirmation-div', header='Confirm', body="message" %}
+  {% snippet 'snippets/confirmation_post.html', form_url=form_url, modal_div_id='confirmation-div', 
+  		header='Confirm', body="message", confirm_btn_label='Confirm' %}
 
 #}
 
 {% import 'macros/form.html' as form %}
 
-<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
   <div id="{{ modal_div_id }}" class="modal hide hdx-modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+	<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
   	<div class="modal-header">
   		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-  		<h3 id="{{ modal_div_id }}-label">{{ _('Please confirm action') }}</h3>
+  		<h3 id="{{ modal_div_id }}-label">
+  			{% if header %}
+  				{{ header }}
+  			{% else %}
+  				{{ _('Please confirm action') }}
+  			{% endif %}
+  		</h3>
   	</div>
   	<div class="modal-body">
 		<div class="hdx-modal-text-body">{{ body }}</div>
   	</div>
   	<div class="modal-footer">
-    	<button class="btn hdx-btn hdx-submit-btn">{{ _('Confirm') }}</button>
+    	<button class="btn hdx-btn hdx-submit-btn">
+    		{% if header %}
+  				{{ confirm_btn_label }}
+  			{% else %}
+    			{{ _('Confirm')  }}
+    		{% endif %}
+    	</button>
   		<button class="btn hdx-btn" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
   	</div>
+	</form>
   </div>
-</form>

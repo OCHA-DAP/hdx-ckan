@@ -568,6 +568,9 @@ body {
     width: 450px;
     
 }
+.header-user-message a {
+	color: #0B0080;
+}
 
 .package-upload-header {
     font-family: 'Raleway', sans-serif;
@@ -1075,6 +1078,10 @@ for example: in the user dashboard when the user has no organizations */
 .hdx-modal .hdx-modal-text-body {
 	font-size: 14px;
 	margin-left: 10px;
+	max-width: 450px;
+}
+.hdx-modal form {
+	margin: 0px;
 }
 
 .nav-short-message {
