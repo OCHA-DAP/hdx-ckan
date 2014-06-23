@@ -690,10 +690,6 @@ body {
     border-bottom: 1px solid #DDDDDD;
 }
 
-.list-items.dataset-resources li a {
-	min-width: 50px;
-	text-align: center;
-}
 .count {
 	font-family: 'Roboto', sans-serif;
     font-size: 1em;
