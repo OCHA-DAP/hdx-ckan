@@ -3,6 +3,7 @@ import ckan.lib.helpers as h
 
 from ckan.common import _, c, g, request
 import ckan.logic as logic
+from pylons import config
 
 get_action = logic.get_action
 
