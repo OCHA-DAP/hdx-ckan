@@ -10,7 +10,7 @@
 	    margin-bottom: 60px;
 	    padding-bottom: 0;
 	}
-
+ 
 	.list-items.module-heading{
 	  	background-color: inherit;
 	  	border-top: 0px;
@@ -114,13 +114,14 @@
 	.dataset-resources {
     	margin-top: 20px;
 	}
-	
+/*	
 	.list-items.dataset-resources li a {
 		min-width: 50px;
 		text-align: center;
 		height: 20px;
 		line-height:20px;
 	}
+	*/
 	.count {
 		font-family: 'Roboto', sans-serif;
 	    font-size: 1em;
