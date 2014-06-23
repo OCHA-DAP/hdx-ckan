@@ -5,6 +5,12 @@
 	    padding-top: 0px;
 	}
 */
+	.list-items.dataset-item:last-of-type {
+	    border-bottom: none;
+	    margin-bottom: 60px;
+	    padding-bottom: 0;
+	}
+
 	.list-items.module-heading{
 	  	background-color: inherit;
 	  	border-top: 0px;
@@ -93,14 +99,27 @@
 	.list-items.search-form {
 	    border-bottom: 1px solid #DDDDDD;
 	}
-*/
+
 	.list-items.dataset-item {
-	    border-bottom: 1px solid #DDDDDD;
+	    margin-bottom: 20px;
+    	padding-bottom: 20px;
+	}
+*/	
+	.dataset-item {
+	    border-bottom: 0px;
+	    margin-bottom: 60px;
+	    padding-bottom: 0px;
+	}
+	
+	.dataset-resources {
+    	margin-top: 20px;
 	}
 	
 	.list-items.dataset-resources li a {
 		min-width: 50px;
 		text-align: center;
+		height: 20px;
+		line-height:20px;
 	}
 	.count {
 		font-family: 'Roboto', sans-serif;
@@ -116,4 +135,25 @@
 	.list-items.counter { 
 		padding-top: 10px;
 	}
+	
+	.search-form {
+    	border-bottom: 0px;
+    	margin-bottom: 35px;
+    	padding-bottom:0px;
+	}
+	
+	
+	
+	
+	/* pagination */
+	.module .pagination {
+	    border-top: 0px;
+	    height: 45px;
+	    margin-bottom: 0;
+	}
+	/* end of pagination */
+	
+
+
+	
 /* END Styling search dataset page */
