@@ -138,7 +138,8 @@ def member_list(context, data_dict=None):
             for m,u in q.all()]
 
 def cached_group_list(context, data_dict):
-    groups  = caching.cached_group_list(context)
+    #to make things simpler for caching there's no argument passed
+    groups  = caching.cached_group_list()
     return groups
 
 def hdx_basic_user_info(context, data_dict):

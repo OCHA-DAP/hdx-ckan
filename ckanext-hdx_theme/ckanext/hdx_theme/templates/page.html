@@ -89,20 +89,22 @@
                             {% endblock %}
                           #}
                           {% block primary_content %}
-                            <article class="module">
+                            <article class="module {% if self.secondary()|trim != '' %}mL45{% endif %}">
+                              {% block item_title_contrib %}
+                              {% endblock %}
                               {% block page_header %}
-                                <header class="module-content page-header">
+                                <header class="module-content page-header paddingRowHack">
                                   {% if self.content_action() | trim %}
                                     <div class="content_action">
                                       {% block content_action %}{% endblock %}
                                     </div>
                                   {% endif %}
-                                  <ul class="nav nav-tabs">
+                                  <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
                                     {% block content_primary_nav %}{% endblock %}
                                   </ul>
                                 </header>
                               {% endblock %}
-                              <div class="module-content">
+                              <div class="module-content mTop45">
                                 {% if self.page_primary_action() | trim %}
                                   <div class="page_primary_action">
                                     {% block page_primary_action %}{% endblock %}
@@ -164,7 +166,7 @@
     {% if g.tracking_enabled %}
         {% resource 'base/tracking.js' %}
     {% endif %}
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
     <script src="/mailchimp.js"></script>
