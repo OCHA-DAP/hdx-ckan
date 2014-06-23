@@ -517,12 +517,14 @@
         box-shadow: none;
         color: #FFFFFF;
         display: inline-block;
+        margin-right: 6px;
         margin-bottom: 4px;
         padding: 0px 10px;
         text-transform: uppercase;
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 600;
         font-size: 14px;
+        line-height: 20px;
         min-width: 0;
     }
 /* END Label style */
