@@ -34,14 +34,33 @@
     {% if sorting %}
       <div class="form-select control-group control-order-by">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-        <select id="field-order-by" name="sort">
-          {% for label, value in sorting %}
-            {% if label and value %}
-              <option value="{{ value }}"{% if sorting_selected == value %} selected="selected"{% endif %}>{{ label }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-        <button class="btn js-hide" type="submit">{{ _('Go') }}</button>
+        <div class="dropdown orderDropdown">
+          <button id="field-order-by" class="dropdown-toggle" data-toggle="dropdown">
+            <span class=".dropdown-toggle-text">
+              {% for label, value in sorting %}
+                  {% if sorting_selected == value %} {{ label }} {% endif %}
+              {% endfor %}
+            </span>
+            <b class="caret"></b>
+          </button>
+          <input type="hidden" name="sort" />
+          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <script>
+          $(function(){
+            $(".dropdown").on('click', 'li a', function(){
+              $(this).parents(".dropdown").find("button span").text($(this).text());
+              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
+              $(this).parents("form").submit();
+            });
+          });
+        </script>
       </div>
     {% endif %}
   {% endblock %}
