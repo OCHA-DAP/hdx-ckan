@@ -53,7 +53,7 @@
 	      	{% if pkg_dict.license_id %}
 	      		<span property="dc:rights">{{ pkg_dict.license_title }}</span>
 	      		{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
-	      		: {{pkg_dict.license_other}}
+	      		: {{h.render_markdown(pkg_dict.license_other)}}
 	      		{% endif %}
 	      		{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
 				{% if 'license_url' in pkg_dict %}
