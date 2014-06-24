@@ -611,10 +611,6 @@ body {
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
 }
 
-
-<<<<<<< HEAD
-=======
-
 .list-items.section-border .align{
 	padding-top: 15px;
 }
@@ -711,7 +707,6 @@ body {
 	padding-top: 10px;
 }
 /* END Styling search dataset page */
->>>>>>> refs/remotes/origin/arti-layout-changes
 
 .uppercase{
 	text-transform: uppercase;
