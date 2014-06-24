@@ -131,6 +131,39 @@
         font-family: 'Gotham-Black';
         src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
     }
+
+    .gothamBold12{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .gothamBold10{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 10px;
+    }
+
+    .sspRegular12{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .sspBold16{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .sspBold20{
+        font-family: 'Source Sans Pro', sans-serif;
+		font-weight: 700;
+		font-size: 20px;
+
+    }
+
+
 /* END Fonts */
 
 /* Header */
@@ -293,17 +326,11 @@
     }
 
     .newFooter .titlePlusVersion{
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 10px;
         color: #888888;
     }
 
     .newFooter .otherLicenseText{
         width: 320px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
         color: #ffffff;
     }
 
@@ -352,9 +379,9 @@
     /* Style the search placeholder just for the toolbar search */
         .toolbarRow .form-search input::-webkit-input-placeholder {
             color: #d23d13;
-            font-size: 16px;
             font-family: 'Source Sans Pro', sans-serif;
             font-weight: 700;
+            font-size: 16px;
         }
 
         .toolbarRow .form-search input:-moz-placeholder { /* Firefox 18- */
@@ -426,6 +453,7 @@
     .mainContent .module-content {
         padding-left: 0;
         padding-right: 0;
+        padding-bottom: 0;
     }
 /* END Main Content */
 
@@ -562,10 +590,7 @@
         background-color: #ffffff;
         border: none;
 
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
         color: #007ce0;
-        font-size: 16px;
 
         text-align: left;
         margin-top: -4px;
@@ -574,3 +599,125 @@
         margin-top: 6px;
     }
 /* END DropDown style */
+
+
+/* Style Dataset Item */
+    .dataset-item {
+	    border-bottom: 0;
+        margin-top: 35px;
+        margin-bottom: 60px;
+	    padding-bottom: 0;
+	}
+
+	.dataset-item .dataset-heading {
+		font-family: 'Source Sans Pro', sans-serif;
+	    font-size: 20px;
+	    font-weight: 700;
+	    margin-bottom: 8px;
+	    margin-top: 0;
+	}
+	.dataset-item .dataset-heading a {
+    	color: #000000;
+	}
+
+    .updatedNameColor, .updatedNameColor a{
+		color: #007CE0;
+	}
+
+    .list-items.search-form{
+        border-bottom: none;
+        margin: 0;
+        padding: 0;
+    }
+    .list-items.search-form h2 {
+	    font-family: 'Source Sans Pro', sans-serif;
+	    font-size: 16px;
+	    font-weight: 400;
+	}
+    .list-items.search-form .search-input.search-giant input {
+		border-radius: 14px;
+	}
+	.list-items.search-form .search-input {
+	    margin-bottom: 25px;
+	}
+
+/* END Style Dataset Item */
+
+/* Style Paging element */
+
+/* END Style Paging element */
+
+/* Pagination */
+	.module .pagination {
+		background: #eeeeee;
+	    border-top: 0;
+	    height: 45px;
+        margin-left: 0;
+        margin-right: -45px;
+        margin-bottom: 0;
+	}
+    .module .module-content .pagination{
+        /*
+           - the pagination div in the group page appears in the module-content container
+           - reverse margin left applied to container
+        */
+        margin-left: -45px;
+    }
+
+	.module .pagination li a {
+	    border-bottom: medium none;
+	    border-top: medium none;
+	    font-family: 'Gotham Book', sans-serif;
+	    font-weight: 400;
+        font-size: 16px;
+        color: #000000;
+        padding: 12px 17px 13px;
+    }
+
+	.module .pagination li.active a {
+	    border-left-width: 1px;
+	    border-right-width: 1px;
+	    background: #1ebfb3;
+        color: #ffffff;
+	}
+
+	.pagination ul > .disabled > span, .pagination ul > .disabled > a, .pagination ul > .disabled > a:hover, .pagination ul > .disabled > a:focus {
+	    background-color: #ffffff;
+	    cursor: default;
+	    color: #000000;
+	}
+	.pagination ul > li > a:hover,
+	.pagination ul > li > a:focus,
+	.pagination ul > .active > a,
+	.pagination ul > .active > span {
+		background-color: #ffffff;
+	}
+
+/* END pagination */
+
+
+/* Style default Secondary */
+    .secondary .module-heading{
+        background-color: transparent;
+        border: none;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+
+        margin: 35px 0;
+        padding: 0 0 35px;
+
+        border-bottom: 1px dotted #cccccc;
+    }
+    .secondary .module-heading i{
+        display: none;
+    }
+
+    .secondary .module-content{
+        padding: 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+
+/* END Style default Secondary */

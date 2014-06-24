@@ -667,10 +667,10 @@ body {
     position: relative;
 }
 
+/*
 .list-items.module-content:first-child {
     padding: 25px;
 }
-
 .list-items.search-form .search-input.search-giant input {
 	border-radius: 14px;
 }
@@ -687,10 +687,7 @@ body {
 .list-items.search-form {
     border-bottom: 1px solid #DDDDDD;
 }
-
-.list-items.dataset-item {
-    border-bottom: 1px solid #DDDDDD;
-}
+*/
 
 .count {
 	font-family: 'Roboto', sans-serif;
