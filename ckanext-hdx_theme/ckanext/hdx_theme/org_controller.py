@@ -1,7 +1,7 @@
 '''
 Created on Jun 10, 2014
 
-@author: Dan
+@author: Dan, alexandru-m-g
 '''
 import ckan.lib.helpers as h
 import ckan.logic as logic
@@ -16,9 +16,22 @@ import exceptions as exceptions
 
 log = logging.getLogger(__name__)
 
+def send_mail(recipients, subject, body):
+    if recipients and len(recipients) > 0:
+        log.info('\nSending email to {recipients} with subject "{subject}" with body: {body}'
+            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body))
+#         for recipient in recipients:
+#             mailer.mail_recipient(recipient['display_name'], recipient['email'],
+#                                   subject, body)
+    else:
+        h.flash_error(_('The are no recipients for this request. Contact an administrator '))
+        raise exceptions.Exception('No recipients')
+    
+
+
 class HDXReqsOrgController(base.BaseController):
 
-    def _send_mail(self, user, sys_admin, org, message = ''):
+    def _send_mail(self, user, admins, org, message=''):
         body = _('New request membership\n' \
         'Full Name: {fn}\n' \
         'Username: {username}\n' \
@@ -26,9 +39,10 @@ class HDXReqsOrgController(base.BaseController):
         'Organization: {org}\n' \
         'Message from user: {msg}\n' \
         '(This is an automated mail)' \
-        '').format(fn=user['display_name'], username=user['name'], mail=user['email'], org=org, msg=message)
-        
-        mailer.mail_recipient(sys_admin['display_name'], sys_admin['email'], _('New Request Membership'), body)
+        '').format(fn=user['display_name'], username=user['name'],
+                   mail=user['email'], org=org, msg=message)
+
+        send_mail(admins, _('New Request Membership'), body)
         return
 
     def request_membership(self, org_id):
@@ -45,15 +59,16 @@ class HDXReqsOrgController(base.BaseController):
             for admin_tuple in org_admins:
                 admin_id = admin_tuple[0]
                 admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = (admin for admin in admins if admin['email'])
-            for admin in admins_with_email :
-                self._send_mail(user, admin, org_id, msg)
+            admins_with_email = [admin for admin in admins if admin['email']]
+
+            self._send_mail(user, admins_with_email, org_id, msg)
             h.flash_success(_('Message sent'))
-        except:
-            h.flash_error(_('Request can not be sent. Contact an administrator'))
+        except exceptions.Exception, e:
+            log.error(str(e))
+            h.flash_error(_('Request can not be sent. Contact an administrator.'))
         h.redirect_to(controller='organization', action='read', id=org_id)
     
-    def _send_mail_req_editor(self, user, sys_admin, org, message = ''):
+    def _send_mail_req_editor(self, user, admins, org, message = ''):
         body = _('New request editor/admin role\n' \
         'Full Name: {fn}\n' \
         'Username: {username}\n' \
@@ -63,15 +78,14 @@ class HDXReqsOrgController(base.BaseController):
         '(This is an automated mail)' \
         '').format(fn=user['display_name'], username=user['name'], mail=user['email'], org=org, msg=message)
         
-        mailer.mail_recipient(sys_admin['display_name'], sys_admin['email'], _('New Request Membership'), body)
-        return   
+        send_mail(admins, _('New Request Membership'), body)
 
     def request_editor_for_org(self, org_id):
         '''
             user_email, name of user, username, organization name,  list with org-admins emails,
         '''
         try:
-            msg = _('Please provides me rights to submit data to this organization ')
+            msg = _('Please allow me to submit data to this organization ')
             user = hdx_h.hdx_get_user_info(c.user)
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author}
@@ -80,12 +94,14 @@ class HDXReqsOrgController(base.BaseController):
             for admin_tuple in org_admins:
                 admin_id = admin_tuple[0]
                 admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = (admin for admin in admins if admin['email'])
-            for admin in admins_with_email :
-                self._send_mail_req_editor(user, admin, org_id, msg)
+            admins_with_email = [admin for admin in admins if admin['email']]
+            
+            self._send_mail_req_editor(user, admins_with_email, org_id, msg)
             h.flash_success(_('Message sent'))
         except:
             h.flash_error(_('Request can not be sent. Contact an administrator'))
+        if 'from' in request.params:
+            h.redirect_to(request.params.get('from'))
         h.redirect_to(controller='organization', action='read', id=org_id)
 
     def request_new_organization(self):
@@ -141,7 +157,7 @@ class HDXReqsOrgController(base.BaseController):
     def _send_new_org_request(self, data):
 
         sys_admins = tk.get_action('hdx_get_sys_admins')()
-        addresses = (sys_admin['email'] for sys_admin in sys_admins if sys_admin['email'])
+        sys_admins =[sys_admin for sys_admin in sys_admins if sys_admin['email']]
 
         subject = _('New organization request:') + ' ' \
             + data['title']
@@ -155,6 +171,5 @@ class HDXReqsOrgController(base.BaseController):
         '').format(org_name=data['title'], org_description = data['description'],
                    org_url = data['org_url'], person_name = data['your_name'], person_email = data['your_email'])
 
-        log.info('\nSending email to {addresses} with subject "{subject}" with body: {body}'
-                 .format(addresses=', '.join(addresses), subject=subject, body=body))
+        send_mail(sys_admins, subject, body)
         

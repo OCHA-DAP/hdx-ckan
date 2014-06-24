@@ -22,12 +22,13 @@ class HDXPreselectOrgController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author
                    }
-        allowed_to_add_datasets = True
-        try:
-            _check_access('package_create', context)
-        except tk.NotAuthorized:
-            allowed_to_add_datasets = False
-        if allowed_to_add_datasets:
+        c.organizations_available = h.organizations_available('read')
+#         allowed_to_add_datasets = True
+#         try:
+#             _check_access('package_create', context)
+#         except tk.NotAuthorized:
+#             allowed_to_add_datasets = False
+        if c.organizations_available and len(c.organizations_available) > 0:
             am_sysadmin = new_authz.is_sysadmin(c.user)
             c.am_sysadmin = am_sysadmin
             orgs_where_editor = []
@@ -35,7 +36,7 @@ class HDXPreselectOrgController(base.BaseController):
             if not am_sysadmin:
                 orgs_where_editor = self._find_org_ids_with_permission('create_dataset')
                 orgs_where_admin = self._find_org_ids_with_permission('admin')
-            c.organizations_available = h.organizations_available('read')
+
             for org in c.organizations_available:
                 org['has_add_dataset_rights'] = True
                 if am_sysadmin:
