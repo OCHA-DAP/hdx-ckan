@@ -18,7 +18,7 @@
       {% snippet "organization/snippets/organization_list.html", organizations=organizations %}
     </div>
   {% else %}
-  {% snippet "organization/snippets/mem_or_org.html" %}
+  {% snippet "organization/snippets/mem_or_org.html", parent_route='user_dashboard_organizations' %}
   	{#<div class="big-message">
 	    <p>
 	      {{ _('You aren\'t currently a member of any organizations.') }}

@@ -22,7 +22,11 @@ class HDXPreselectOrgController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author
                    }
-        allowed_to_add_datasets = _check_access('package_create', context)
+        allowed_to_add_datasets = True
+        try:
+            _check_access('package_create', context)
+        except tk.NotAuthorized:
+            allowed_to_add_datasets = False
         if allowed_to_add_datasets:
             am_sysadmin = new_authz.is_sysadmin(c.user)
             c.am_sysadmin = am_sysadmin
