@@ -695,8 +695,21 @@
 
 /* END pagination */
 
+/* Style default Primary */
+    .primary {
+        width: 870px;
+        position: relative;
+    }
+/* END Style default Primary */
 
 /* Style default Secondary */
+    .secondary {
+        width: 255px;
+        padding-right: 45px;
+        position: relative;
+        color: #ffffff;
+    }
+
     .secondary .module-heading{
         background-color: transparent;
         border: none;
