@@ -29,7 +29,7 @@ class HDXReqsOrgController(base.BaseController):
 
     def request_membership(self, org_id):
         '''
-            user_email, name of user, username, organization name,  list with sys-admins emails,
+            user_email, name of user, username, organization name,  list with org-admins emails,
         '''
         try:
             msg = request.params.get('message', '')
@@ -48,7 +48,41 @@ class HDXReqsOrgController(base.BaseController):
         except:
             h.flash_error(_('Request can not be sent. Contact an administrator'))
         h.redirect_to(controller='organization', action='read', id=org_id)
+    
+    def _send_mail_req_editor(self, user, sys_admin, org, message = ''):
+        body = _('New request editor/admin role\n' \
+        'Full Name: {fn}\n' \
+        'Username: {username}\n' \
+        'Email: {mail}\n' \
+        'Organization: {org}\n' \
+        'Message from user: {msg}\n' \
+        '(This is an automated mail)' \
+        '').format(fn=user['display_name'], username=user['name'], mail=user['email'], org=org, msg=message)
         
+        mailer.mail_recipient(sys_admin['display_name'], sys_admin['email'], _('New Request Membership'), body)
+        return   
+
+    def request_editor_for_org(self, org_id):
+        '''
+            user_email, name of user, username, organization name,  list with org-admins emails,
+        '''
+        try:
+            msg = _('Please provides me rights to submit data to this organization ')
+            user = hdx_h.hdx_get_user_info(c.user)
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user or c.author}
+            org_admins = tk.get_action('member_list')(context,{'id':org_id,'capacity':'admin','object_type':'user'})
+            admins=[]
+            for admin_tuple in org_admins:
+                admin_id = admin_tuple[0]
+                admins.append(hdx_h.hdx_get_user_info(admin_id))
+            admins_with_email = (admin for admin in admins if admin['email'])
+            for admin in admins_with_email :
+                self._send_mail_req_editor(user, admin, org_id, msg)
+            h.flash_success(_('Message sent'))
+        except:
+            h.flash_error(_('Request can not be sent. Contact an administrator'))
+        h.redirect_to(controller='organization', action='read', id=org_id)
 
     
     
