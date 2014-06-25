@@ -35,6 +35,7 @@
         /*background-size: cover;*/
         font-family: 'Gotham-Bold',sans-serif;
         font-weight: 400;
+        padding-left: 45px;
     }
 
     .homepage-background{
@@ -199,9 +200,10 @@
     }
 
     .homepageHeaderFooterBackground{
-        width: 100%;
         background-color: #ffffff;
+        min-width: 1342px;
     }
+
 /* END Homepage */
 
 
