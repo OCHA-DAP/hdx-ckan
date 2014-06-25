@@ -336,13 +336,14 @@
 
 /* END Footer */
 
-
 /* Body Background */
     body{
         background-color: #1ebfb3;
         background-image: url("/images/homepage-new/map.png");
         background-size: cover;
         background-attachment: fixed;
+
+        min-width: 1260px;
     }
 /* END Body Background */
 
@@ -753,6 +754,7 @@
         font-weight: 400;
         font-size: 16px;
         color: #888888;
+        border: 0;
     }
 
     .module-heading .facet-title-counter{
@@ -790,6 +792,10 @@
 
     .list-items .list-items.action{
         margin-top: 5px;
+    }
+
+    .list-items.facet-items {
+        border-bottom: 1px solid #888888;
     }
 
 
