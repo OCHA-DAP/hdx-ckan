@@ -514,7 +514,9 @@
 
 
 /* Button style */
-    .btn.hdx-btn.org-btn{
+
+
+    .btn.hdx-btn.org-btn, .btn.btn-primary{
         min-width: 100px;
         max-height: 20px;
         margin-left: 0;
@@ -529,7 +531,7 @@
         font-size: 12px;
     }
 
-    .btn.hdx-btn:hover, .btn.hdx-btn:focus{
+    .btn.hdx-btn:hover, .btn.hdx-btn:focus, .btn.btn-primary:hover, .btn.btn-primary:focus{
         opacity: 0.7;
     }
 
