@@ -476,6 +476,10 @@
         margin-left: 30px;
         margin-right: 30px;
     }
+    .mTB0{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
     .pLR45{
         padding-left: 45px;
         padding-right: 45px;
@@ -643,10 +647,6 @@
 
 /* END Style Dataset Item */
 
-/* Style Paging element */
-
-/* END Style Paging element */
-
 /* Pagination */
 	.module .pagination {
 		background: #eeeeee;
@@ -696,14 +696,14 @@
 /* END pagination */
 
 /* Style default Primary */
-    .primary {
+    [role=main] .primary{
         width: 870px;
         position: relative;
     }
 /* END Style default Primary */
 
 /* Style default Secondary */
-    .secondary {
+    [role=main] .secondary {
         width: 255px;
         padding-right: 45px;
         position: relative;
@@ -722,6 +722,10 @@
 
         border-bottom: 1px dotted #cccccc;
     }
+    .secondary .pTopBottom35 .module-heading {
+        margin: 0;
+    }
+
     .secondary .module-heading i{
         display: none;
     }
@@ -733,4 +737,61 @@
         font-size: 14px;
     }
 
+    .module-footer {
+        border: 0;
+    }
 /* END Style default Secondary */
+
+/* Facets fonts */
+    .facet-hidden{
+        display: none;
+    }
+
+    .module-heading.facet-title{
+        cursor: pointer;
+        font-family: 'Gotham-Black', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #888888;
+    }
+
+    .module-heading .facet-title-counter{
+        font-family: 'Gotham-Black', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #ffffff;
+    }
+
+    .nav-facet .list-items {
+	    padding: 7px 10px;
+	    border-bottom: none;
+    }
+
+    .nav-facet .list-items a{
+        color: #ffffff;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+    }
+    .nav-facet .list-items a .float-right {
+        font-family: "Gotham Book", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+    .nav-facet .list-items a:hover{
+        background-color: inherit;
+    }
+
+    .list-items.module-narrow .module-heading,
+	.list-items.module-narrow .module-content,
+	.list-items.module-narrow .module-footer {
+		padding: 0;
+	}
+
+    .list-items .list-items.action{
+        margin-top: 5px;
+    }
+
+
+/* END Facets fonts */
+
