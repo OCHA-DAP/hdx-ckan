@@ -439,28 +439,6 @@ body {
     padding-top: 0px;
 }
 
-/* Facets fonts */
-    .facet-hidden{
-        display: none;
-    }
-
-    .facet-title{
-        cursor: pointer;
-        font-family: 'Gotham-Black', sans-serif;
-        font-weight: 400;
-        font-size: 16pt;
-        color: #888888;
-    }
-
-    .facet-title-counter{
-        font-family: 'Gotham-Black', sans-serif;
-        font-weight: 400;
-        font-size: 16pt;
-        color: #ffffff;
-    }
-/* END Facets fonts */
-
-
 .searchForKeywordText {
     margin-top: 20px;
     font-size: 14px;
@@ -614,11 +592,12 @@ body {
 	padding-top: 15px;
 }
 
-.list-items.module-narrow .module-heading,
-.list-items.module-narrow .module-content,
-.list-items.module-narrow .module-footer {
-	padding: 0px;
-}
+
+/*.list-items.module-narrow .module-heading,*/
+/*.list-items.module-narrow .module-content,*/
+/*.list-items.module-narrow .module-footer {*/
+	/*padding: 0px;*/
+/*}*/
 
 .list-items.module {
     margin: 0px 0;
@@ -641,6 +620,8 @@ body {
 .search {
     font-style: italic;
 }
+
+/* OLD Facet Styling?
 .list-items.nav-simple > li, .list-items.nav-aside > li {
     padding: 7px 10px;
     border-bottom: none;
@@ -665,7 +646,7 @@ body {
     color: #333333;
     position: relative;
 }
-
+*/
 /*
 .list-items.module-content:first-child {
     padding: 25px;
