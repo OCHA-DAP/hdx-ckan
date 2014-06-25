@@ -1,3 +1,5 @@
+{# {% snippet "organization/snippets/mem_or_org.html", parent_route='user_dashboard_organizations' %} #}
+{% set parent_route = parent_route if parent_route else 'user_dashboard_organizations' %}
 <div class="row row-fluid">
 	<div class="span6 lined"><div class="header-user-message header-user-message-med">1. {{ _("REQUEST MEMBERSHIP IN AN ORGANIZATION")}}</div>
 	<p>{{ _("There's a good chance that your organization is already a part of our database. You can find your organization and request membership. Once the admin has accepted your request, you should be able to upload datasets. Note that you have to be either an editor or admin role in order to upload datasets, so make sure to request one of those roles.")}}</p>
@@ -7,7 +9,7 @@
 	<div class="span6 lined"><div class="header-user-message header-user-message-med">2. {{ _("CREATE A NEW ORGANIZATION")}}</div>
 <p>{{ _("If you don't see your organization in our organizations list, you can request the creation of a new organization. We try to get the highest quality data in our system, so we review new org requests before they are posted to the site. Once you fill out a request form, however, we try and accept the new org request within 24 hours.")}}</p>
 <br>
-	<center><a href="/organization/new" class="btn">{{ _("Request New Organization")}}</a></center>
+	<center><a href="/organization/request_new?from={{ parent_route }}" class="btn">{{ _("Request New Organization")}}</a></center>
 </div>
 </div>
 

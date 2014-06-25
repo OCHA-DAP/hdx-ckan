@@ -172,6 +172,7 @@ def _create_user_dict(user_obj, **kw):
     return result
 
 def hdx_get_sys_admins(context, data_dict):
+    #TODO: check access that user is logged in
     q = model.Session.query(model.User).filter(model.User.sysadmin==True)
     return [{'name':m.name, 'display_name':m.fullname or m.name, 'email':m.email} for m in q.all()]
     #return q.all();

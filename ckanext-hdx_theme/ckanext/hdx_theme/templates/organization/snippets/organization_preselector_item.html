@@ -27,8 +27,8 @@ Example:
 {% if not has_add_dataset_rights %}
 	{% set confirm_delete_message = _('Looks like you\'re not an editor or an admin of this organization, so you can\'t add a dataset. Click the button below to send a request to the admin to make you an editor and close this box.') %}
 	{% snippet 'snippets/confirmation_post.html', 
-			form_url=h.url_for(controller='ckanext.hdx_theme.preselect_dsform_controller:HDXPreselectOrgController', 
-  			action='preselect'), header = _('Oops!'), confirm_btn_label = _('Send a request to the admin'),
+			form_url=h.url_for('request_editing_rights',org_id=name, from='dataset_preselect'), 
+			header = _('Oops!'), confirm_btn_label = _('Send a request to the admin'),
   			body=confirm_delete_message, modal_div_id=modal_div_id %}
  {% endif %}
  </div>

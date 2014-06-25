@@ -36,8 +36,8 @@ Example:
             {% else %}
             	{% if not h.user_in_org_or_group(organization.id) and h.check_access('hdx_basic_user_info') %}
             		<a href="#req-membership-div" data-toggle="modal" class="btn hdx-btn org-btn">{{ _('Request Membership') }}</a>
-            		{% snippet 'organization/snippets/req_membership.html', form_url=h.url_for(controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', 
-            		action='request_membership', org_id=organization.name or organization.title), modal_div_id='req-membership-div' %}
+            		{% snippet 'organization/snippets/req_membership.html', 
+            		form_url=h.url_for('request_membership', org_id=organization.name or organization.title), modal_div_id='req-membership-div' %}
             	{% endif %}
             {% endif %}
           </dl>
