@@ -18,7 +18,7 @@
 		<div class="span12 all-org-selector-wrapper paddingLeftHack paddingRightHack">
 			{% for org in c.organizations_available %}
 				{% snippet 'organization/snippets/organization_preselector_item.html', 
-				display_name = org.display_name, name = org.name, 
+				display_name = org.display_name, id = org.id, name = org.name, 
 				description = org.description, role = org.role, has_add_dataset_rights = org.has_add_dataset_rights %}
 			{% endfor %}
 		</div>
