@@ -531,7 +531,7 @@
         font-size: 12px;
     }
 
-    .btn.hdx-btn:hover, .btn.hdx-btn:focus, .btn.btn-primary:hover, .btn.btn-primary:focus{
+    .btn.hdx-btn:hover, .btn.btn-primary:hover{
         opacity: 0.7;
     }
 
