@@ -20,6 +20,10 @@
     null,
     "URL"
   ],
+  "Upload": [
+    null,
+    "Prześlij plik"
+  ],
   "Upload a file": [
     null,
     "Prześlij plik"

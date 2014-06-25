@@ -36,9 +36,21 @@
     null,
     "Skrýt"
   ],
+  "Image": [
+    null,
+    "Obrázek"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Zadaný vstup je příliš krátký, musíte zadat alespoň jeden znak"
+  ],
+  "Link": [
+    null,
+    "Odkaz"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Odkaz na internetovou URL adresu (můžete také zadat odkaz na API)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Prosím potvrďte akci"
   ],
+  "Remove": [
+    null,
+    "Odstranit"
+  ],
+  "Reorder resources": [
+    null,
+    "Změnit pořadí zdrojů"
+  ],
+  "Reset this": [
+    null,
+    "Resetovat"
+  ],
   "Resource uploaded": [
     null,
     "Zdroj nahrán"
+  ],
+  "Save order": [
+    null,
+    "Uložit pořadí"
+  ],
+  "Saving...": [
+    null,
+    "Ukládám..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,17 @@
     null,
     "Přestat sledovat"
   ],
+  "Upload": [
+    null,
+    "Nahrát"
+  ],
   "Upload a file": [
     null,
     "Nahrát soubor"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Nahrát soubor na Váš počítač"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,

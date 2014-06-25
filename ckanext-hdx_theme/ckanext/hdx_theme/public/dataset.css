@@ -1,0 +1,178 @@
+
+.creation-info-author .info-item-name{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.creation-info-author a.info-item-name:hover, .creation-info-author a.info-item-name:focus{
+    color: #cccccc;
+    text-decoration: none;
+}
+
+.info-wrapper .uppercase{
+    font-family: 'Gotham-Book', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #888888;
+}
+
+.info-wrapper .info-item-name{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.followButtonContainer{
+}
+
+.itemTitle{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    display: inline;
+    line-height: 36px;
+}
+.followButtonContainer{
+    line-height: 36px;
+}
+
+
+.info-wrapper.social img{
+
+}
+
+/* Followers Count */
+    .followers-count {
+        font-family: 'Gotham-Light', sans-serif;
+        font-weight: 400;
+        font-size: 48px;
+        line-height: normal;
+    }
+/* END Followers Count */
+
+/* hdx_social theming */
+    .info-wrapper .social-images {
+        height: 35px;
+        margin-right: 5px;
+    }
+
+    .social-images {
+        opacity:1;
+    }
+
+    .social-images:hover, .social-images:focus {
+        opacity:0.7;
+    }
+/* END hdx_social theming */
+
+/* hdx_tags theming */
+    .tag-wrapper {
+        margin-right: 7px;
+        float: left;
+    }
+
+    .tag-wrapper .tag{
+        background-color: #f2645a;
+    }
+    .tag-wrapper .tag:hover, .tag-wrapper .tag:focus {
+        background-color: #ce554d;
+        border: none;
+        box-shadow: none;
+    }
+/* END hdx_tags theming */
+
+.info-secondary-data {
+	color: #888888;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.notes.embedded-content{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+/* Style tabs */
+    .hdx-wrapper .nav-tabs > li {
+        margin-bottom: -3px;
+    }
+    .hdx-wrapper .nav-tabs > .active > a{
+        border: none;
+        border-bottom: 3px solid #f2645a;
+        color: #f2645a;
+    }
+    .hdx-wrapper .nav-tabs > li > a{
+        border: none;
+        color: #888888;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .hdx-wrapper .nav-tabs > li > a:hover {
+        color: #f2645a;
+    }
+    .page-header{
+        border-bottom: 3px solid #cccccc;
+        /*background-color: #f6f6f6;*/
+        -webkit-border-radius: 0 3px 0 0;
+        -moz-border-radius: 0 3px 0 0;
+        border-radius: 0 3px 0 0;
+    }
+/* END Style tabs*/
+
+/* Style Resources List */
+    .resource-list{
+
+    }
+
+    .resource-item{
+        margin-top:10px;
+    }
+
+    .resource-item .heading{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    .resource-item .description{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+/* END Style Resources List*/
+
+/* Style Additional Info */
+    .additional-info table, .additional-info table th, .additional-info table td, .additional-info table tr {
+        border: 0;
+        border-radius: 0 !important;
+        -webkit-border-radius: 0 !important;
+        -moz-border-radius: 0 !important;
+        vertical-align:  middle;
+    }
+    .additional-info table th {
+        padding-left: 20px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 16px;
+    }
+    .additional-info table tr{
+        height: 38px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+
+    }
+    .additional-info table tr:nth-child(odd){
+        background-color: #eeeeee;
+
+    }
+
+/* END Style Additional Info */

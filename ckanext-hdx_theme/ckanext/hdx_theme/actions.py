@@ -59,7 +59,8 @@ def organization_list_for_user(context, data_dict):
         q = model.Session.query(model.Member) \
             .filter(model.Member.table_name == 'user') \
             .filter(model.Member.capacity.in_(roles)) \
-            .filter(model.Member.table_id == user_id)
+            .filter(model.Member.table_id == user_id) \
+            .filter(model.Member.state == 'active')
 
         group_ids = []
         for row in q.all():
@@ -138,6 +139,7 @@ def member_list(context, data_dict=None):
             for m,u in q.all()]
 
 def cached_group_list(context, data_dict):
+    #to make things simpler for caching there's no argument passed
     groups  = caching.cached_group_list()
     return groups
 
@@ -170,12 +172,7 @@ def _create_user_dict(user_obj, **kw):
     return result
 
 def hdx_get_sys_admins(context, data_dict):
+    #TODO: check access that user is logged in
     q = model.Session.query(model.User).filter(model.User.sysadmin==True)
     return [{'name':m.name, 'display_name':m.fullname or m.name, 'email':m.email} for m in q.all()]
     #return q.all();
-    
-    
-    
-    
-    
-    

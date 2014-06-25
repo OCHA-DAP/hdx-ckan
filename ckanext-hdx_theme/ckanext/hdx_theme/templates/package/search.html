@@ -9,13 +9,15 @@
 
 {% block primary_content %}
   <section class="list-items module">
-    <div class="list-items module-content">
+    <div class="list-items module-content  mL45 mT35">
       {% block page_primary_action %}
-        {% if h.check_access('package_create') %}
-          <div class="list-items page_primary_action">
-            {# link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign-alt' #}
-          </div>
-        {% endif %}
+        {#
+            {% if h.check_access('package_create') %}
+              <div class="list-items page_primary_action">
+                {% link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
+              </div>
+            {% endif %}
+        #}
       {% endblock %}
       {% block form %}
         {% set facets = {
@@ -32,7 +34,7 @@
           (_('Last Modified'), 'metadata_modified desc'),
           (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
         %}
-        {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...') %}
+        {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false %}
       {% endblock %}
       {% block package_search_results_list %}
       {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
@@ -74,4 +76,9 @@
       {{ h.snippet('snippets/facet_list.html', title=c.facet_titles[facet], name=facet) }}
   {% endfor %}
     {# include "group/snippets/data_themes.html" #}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/dataset_search.css" />
 {% endblock %}

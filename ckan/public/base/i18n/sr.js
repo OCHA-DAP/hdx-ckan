@@ -12,6 +12,10 @@
     null,
     "Уређивање"
   ],
+  "Image": [
+    null,
+    "Слика"
+  ],
   "Loading...": [
     null,
     "Учитавање ..."
@@ -19,6 +23,10 @@
   "URL": [
     null,
     "URL"
+  ],
+  "Upload": [
+    null,
+    "Допреми"
   ],
   "Upload a file": [
     null,

@@ -1,7 +1,9 @@
 setup.py
 ckanext/__init__.py
 ckanext/register/__init__.py
+ckanext/register/login.py
 ckanext/register/plugin.py
+ckanext/register/request.py
 ckanext_register.egg-info/PKG-INFO
 ckanext_register.egg-info/SOURCES.txt
 ckanext_register.egg-info/dependency_links.txt

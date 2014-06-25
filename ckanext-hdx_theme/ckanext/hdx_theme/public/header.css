@@ -1,0 +1,805 @@
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+        width: 1170px;
+    }
+
+    [class*="span"]{
+        margin-left: 30px;
+    }
+
+    .row{
+        margin-left:-30px;
+    }
+
+    .span12{
+        width: 1170px;
+    }
+
+    .span11{
+        width: 1070px;
+    }
+
+    .span10{
+        width: 970px;
+    }
+
+    .span9{
+        width: 870px;
+    }
+
+    .span8{
+        width: 770px;
+    }
+    .span8{
+        width: 670px;
+    }
+
+    .span6{
+        width: 570px;
+    }
+
+    .span5{
+        width: 470px;
+    }
+
+    .span4{
+        width: 370px;
+    }
+
+    .span3{
+        width: 270px;
+    }
+
+    .span2{
+        width: 170px;
+    }
+
+    .span1{
+        width: 70px;
+    }
+
+    .offset11{
+        margin-left: 1130px;
+    }
+    .offset10{
+        margin-left: 1030px;
+    }
+    .offset9{
+        margin-left: 930px;
+    }
+    .offset8{
+        margin-left: 830px;
+    }
+    .offset7{
+        margin-left: 730px;
+    }
+    .offset6{
+        margin-left: 630px;
+    }
+    .offset5{
+        margin-left: 530px;
+    }
+    .offset4{
+        margin-left: 430px;
+    }
+    .offset3{
+        margin-left: 330px;
+    }
+    .offset2{
+        margin-left: 230px;
+    }
+    .offset1{
+        margin-left: 130px;
+    }
+
+    .paddingRowHack{
+        margin-left: -45px;
+        margin-right: -45px;
+    }
+
+    .paddingRowHack .paddingLeftHack{
+        padding-left: 45px;
+        margin-left: 0;
+    }
+
+    .paddingRowHack .paddingRightHack{
+        padding-right: 45px;
+        margin-right: 0;
+    }
+
+/* END - Customize fixed Bootstrap layout */
+
+/* Fonts */
+    @font-face {
+        font-family: 'Gotham-Bold';
+        src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+    }
+
+    @font-face {
+        font-family: 'Gotham-Book';
+        src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+    }
+
+    @font-face {
+        font-family: 'Gotham-Light';
+        src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+    }
+    @font-face {
+        font-family: 'Gotham-Black';
+        src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+    }
+
+    .gothamBold12{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .gothamBold10{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 10px;
+    }
+
+    .sspRegular12{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .sspBold16{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+    }
+
+    .sspBold20{
+        font-family: 'Source Sans Pro', sans-serif;
+		font-weight: 700;
+		font-size: 20px;
+
+    }
+
+
+/* END Fonts */
+
+/* Header */
+    .newHeader .container .row {
+        padding-top: 34px;
+    }
+    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav{
+        display: inline;
+    }
+
+    .newHeader .content .navbar nav > ul {
+        margin: 0 0 0 25px;
+    }
+    .newHeader .content .navbar nav li a{
+        color: #000000;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 31px;
+        text-transform: uppercase;
+    }
+
+    ul.mainLinks, ul.mainLinks li{
+        display: inline;
+    }
+    ul.mainLinks li.dropdown a:focus{
+        background-color: #ffffff;
+    }
+
+    ul.mainLinks li a:hover, ul.mainLinks li a:focus {
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    ul.mainLinks > li > a{
+        margin-left: 15px;
+    }
+    ul.mainLinks > li:first-child > a{
+        margin-left: 0;
+    }
+
+    ul.mainLinks > li > a:after{
+        content: "|";
+        margin-left: 15px;
+    }
+
+    ul.mainLinks li:last-child a:after{
+        content: "";
+        margin: 0;
+    }
+
+    ul.mainLinks li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+
+    /* Dropdown menu colors  */
+        .newHeader .content .navbar nav .dropdown-menu {
+            margin: 0;
+        }
+       .newHeader .content .navbar nav ul.dropdown-menu > li > a:hover, .newHeader .content .navbar nav ul.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+           background-color: #007ce0;
+           color: #ffffff;
+           background-image: none;
+       }
+    /* END Dropdown menu colors */
+
+    .newHeader .content .navbar nav li.submitData{
+        background-color: #f2645a;
+        border-radius: 6px;
+        position: relative;
+        top: -16px;
+        width: 200px;
+        margin-right: 20px;
+    }
+
+    .newHeader .content .navbar ul.nav {
+        margin: 0;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.dropdown{
+        position: relative;
+        top: -12px;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.newLogin{
+        position: relative;
+        top: -12px;
+    }
+
+    .newHeader .content .navbar nav li.submitData a{
+        color: #ffffff;
+        text-shadow: none;
+        padding: 0;
+        height: 60px;
+        line-height: 60px;
+        font-size: 14px;
+        margin-left: 30px;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .username{
+        color: #007ce0;
+        text-transform: none;
+    }
+
+    .caret{
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #007ce0;
+    }
+
+    .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret{
+        border-top: 9px solid #007ce0;
+        margin-top: 11px;
+    }
+
+    .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
+        border-top-color: #006abf;
+    }
+
+    .navbar .nav li.dropdown .gravatar{
+        -webkit-border-radius: 500px;
+        -moz-border-radius: 500px;
+        border-radius: 500px;
+    }
+/* END Header */
+
+/* HDX Version display */
+    #hdxVersion{
+        display: none;
+    }
+    .logo:hover #hdxVersion{
+        display: inline;
+        color: #888888;
+        position: relative;
+        float: left;
+        font-size: 9px;
+        left: 74px;
+        top: 9px;
+        width: 0;
+    }
+/* END HDX Version display */
+
+/* Footer */
+    .newFooter .span12 > .row {
+        vertical-align: middle;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+
+    .newFooter .mainLinks{
+        margin: 0;
+    }
+
+    .newFooter .mainLinks li a{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #ffffff;
+        text-transform: uppercase;
+    }
+
+    .newFooter .titlePlusVersion{
+        color: #888888;
+    }
+
+    .newFooter .otherLicenseText{
+        width: 320px;
+        color: #ffffff;
+    }
+
+/* END Footer */
+
+/* Body Background */
+    body{
+        background-color: #1ebfb3;
+        background-image: url("/images/homepage-new/map.png");
+        background-size: cover;
+        background-attachment: fixed;
+
+        min-width: 1260px;
+    }
+/* END Body Background */
+
+/* Fix main content */
+    [role=main], .main {
+        padding: 0;
+        background: none;
+    }
+/* END Fix main content */
+
+/* Toolbar Row */
+    .toolbarRow{
+        background-color: #eeeeee;
+        height: 75px;
+    }
+    .toolbarRow .toolbar{
+        padding: 0;
+        margin: 0;
+
+    }
+    .toolbarRow .toolbar .breadcrumb{
+        text-transform: uppercase;
+        color: #888888;
+        font-size: 12px;
+        line-height: 75px;
+    }
+
+    .toolbarRow .form-search{
+        line-height: 72px; /*weird form padding of 3px*/
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Style the search placeholder just for the toolbar search */
+        .toolbarRow .form-search input::-webkit-input-placeholder {
+            color: #d23d13;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .toolbarRow .form-search input:-moz-placeholder { /* Firefox 18- */
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .toolbarRow .form-search input::-moz-placeholder {  /* Firefox 19+ */
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+            opacity: 1;
+        }
+
+        .toolbarRow .form-search input:-ms-input-placeholder {
+            color: #cccccc;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 700;
+        }
+    /* END Style the search placeholder just for the toolbar search */
+
+
+/* END Toolbar Row*/
+
+/* Search widget style */
+    /*Also used on the homepage*/
+    .form-search .input-append .searchInput{
+        width: 246px;
+        height: 45px;
+        border-radius: 6px 0 0 6px;
+        background-color: white;
+        border: 0;
+        padding: 0 0 0 20px;
+    }
+
+    .form-search .input-append .searchInput::-webkit-input-placeholder{
+        color: #cccccc;
+    }
+
+    .form-search .input-append .button{
+        width: 50px;
+        height: 45px;
+        padding: 0;
+        background-color: #007ce0;
+        border: 0;
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        color: #eeeeee
+    }
+
+    .form-search .input-append .button .icon-search{
+        font-size: 20px;
+        line-height: 100%;
+        text-align: right;
+        width: 20px;
+        color: #ffffff;
+    }
+/* END Search widget style */
+
+/* Main Content */
+    .mainContent > .row{
+        background-color: #ffffff;
+    }
+    .mainContent .module-content {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+    }
+/* END Main Content */
+
+
+/* Common Classes */
+    .mTop45{
+        margin-top: 45px;
+    }
+    .mTop35{
+        margin-top: 35px;
+    }
+    .mTop20{
+        margin-top: 20px;
+    }
+    .mLR45{
+        margin-left: 45px;
+        margin-right: 45px;
+    }
+    .mLR30{
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+    .mTB0{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    .pLR45{
+        padding-left: 45px;
+        padding-right: 45px;
+    }
+    .pR45{
+        padding-right: 45px;
+    }
+    .pL45{
+        padding-left: 45px;
+    }
+    .pTopBottom35{
+        padding-top: 35px;
+        padding-bottom: 35px;
+    }
+
+    .mL45{
+        margin-left: 45px;
+    }
+    .mR45{
+        margin-right: 45px;
+    }
+
+    hr{
+        margin: 0;
+    }
+    hr.dotted{
+        border-top:1px dotted #cccccc;
+        border-bottom: none;
+    }
+/* END Common Classes */
+
+
+/* Button style */
+
+
+    .btn.hdx-btn.org-btn, .btn.btn-primary{
+        min-width: 100px;
+        max-height: 20px;
+        margin-left: 0;
+        background-color: #007ce0;
+        background-image: none;
+        color: white;
+        text-shadow: none;
+        border: none;
+        text-transform: uppercase;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
+
+    .btn.hdx-btn:hover, .btn.btn-primary:hover{
+        opacity: 0.7;
+    }
+
+    .btn.hdx-btn.ga-preview{
+        background-image: none;
+        text-shadow: none;
+        background-color: #888888;
+        color: white;
+        border: 0;
+        line-height: 35px;
+        padding: 0 20px;
+        text-transform: uppercase;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        margin-left: 10px;
+        border-radius: 4px;
+    }
+    .btn.hdx-btn.ga-share, .btn.hdx-btn.ga-download{
+        background-image: none;
+        text-shadow: none;
+        background-color: #888888;
+        color: white;
+        border: 0;
+        line-height: 35px;
+        width: 35px;
+        border-radius: 4px;
+        padding: 0;
+        margin-left: 10px;
+    }
+    .btn.hdx-btn.ga-share img, .btn.hdx-btn.ga-download img{
+        width: 14px;
+        margin-bottom: 5px;
+    }
+/* END Button style*/
+
+/* Label style */
+    .label{
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        color: #FFFFFF;
+        display: inline-block;
+        margin-right: 6px;
+        margin-bottom: 4px;
+        padding: 0px 10px;
+        text-transform: uppercase;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 20px;
+        min-width: 0;
+    }
+/* END Label style */
+
+
+/* Order DropDown style */
+    .orderDropdown{
+        display: inline;
+    }
+
+    .orderDropdown .dropdown-toggle{
+        background-color: #ffffff;
+        border: none;
+
+        color: #007ce0;
+
+        text-align: left;
+        margin-top: -4px;
+    }
+    .orderDropdown .dropdown-toggle .caret{
+        margin-top: 6px;
+    }
+/* END DropDown style */
+
+
+/* Style Dataset Item */
+    .dataset-item {
+	    border-bottom: 0;
+        margin-top: 35px;
+        margin-bottom: 60px;
+	    padding-bottom: 0;
+	}
+
+	.dataset-item .dataset-heading {
+		font-family: 'Source Sans Pro', sans-serif;
+	    font-size: 20px;
+	    font-weight: 700;
+	    margin-bottom: 8px;
+	    margin-top: 0;
+	}
+	.dataset-item .dataset-heading a {
+    	color: #000000;
+	}
+
+    .updatedNameColor, .updatedNameColor a{
+		color: #007CE0;
+	}
+
+    .list-items.search-form{
+        border-bottom: none;
+        margin: 0;
+        padding: 0;
+    }
+    .list-items.search-form h2 {
+	    font-family: 'Source Sans Pro', sans-serif;
+	    font-size: 16px;
+	    font-weight: 400;
+	}
+    .list-items.search-form .search-input.search-giant input {
+		border-radius: 14px;
+	}
+	.list-items.search-form .search-input {
+	    margin-bottom: 25px;
+	}
+
+/* END Style Dataset Item */
+
+/* Pagination */
+	.module .pagination {
+		background: #eeeeee;
+	    border-top: 0;
+	    height: 45px;
+        margin-left: 0;
+        margin-right: -45px;
+        margin-bottom: 0;
+	}
+    .module .module-content .pagination{
+        /*
+           - the pagination div in the group page appears in the module-content container
+           - reverse margin left applied to container
+        */
+        margin-left: -45px;
+    }
+
+	.module .pagination li a {
+	    border-bottom: medium none;
+	    border-top: medium none;
+	    font-family: 'Gotham Book', sans-serif;
+	    font-weight: 400;
+        font-size: 16px;
+        color: #000000;
+        padding: 12px 17px 13px;
+    }
+
+	.module .pagination li.active a {
+	    border-left-width: 1px;
+	    border-right-width: 1px;
+	    background: #1ebfb3;
+        color: #ffffff;
+	}
+
+	.pagination ul > .disabled > span, .pagination ul > .disabled > a, .pagination ul > .disabled > a:hover, .pagination ul > .disabled > a:focus {
+	    background-color: #ffffff;
+	    cursor: default;
+	    color: #000000;
+	}
+	.pagination ul > li > a:hover,
+	.pagination ul > li > a:focus,
+	.pagination ul > .active > a,
+	.pagination ul > .active > span {
+		background-color: #ffffff;
+	}
+
+/* END pagination */
+
+/* Style default Primary */
+    [role=main] .primary{
+        width: 870px;
+        position: relative;
+    }
+/* END Style default Primary */
+
+/* Style default Secondary */
+    [role=main] .secondary {
+        width: 255px;
+        padding-right: 45px;
+        position: relative;
+        color: #ffffff;
+    }
+
+    .secondary .module-heading{
+        background-color: transparent;
+        border: none;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+
+        margin: 35px 0;
+        padding: 0 0 35px;
+
+        border-bottom: 1px dotted #cccccc;
+    }
+    .secondary .pTopBottom35 .module-heading {
+        margin: 0;
+    }
+
+    .secondary .module-heading i{
+        display: none;
+    }
+
+    .secondary .module-content{
+        padding: 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+
+    .module-footer {
+        border: 0;
+    }
+/* END Style default Secondary */
+
+/* Facets fonts */
+    .facet-hidden{
+        display: none;
+    }
+
+    .module-heading.facet-title{
+        cursor: pointer;
+        font-family: 'Gotham-Black', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #888888;
+        border: 0;
+    }
+
+    .module-heading .facet-title-counter{
+        font-family: 'Gotham-Black', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #ffffff;
+    }
+
+    .nav-facet .list-items {
+	    padding: 7px 10px;
+	    border-bottom: none;
+    }
+
+    .nav-facet .list-items a{
+        color: #ffffff;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+    }
+    .nav-facet .list-items a .float-right {
+        font-family: "Gotham Book", sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+    .nav-facet .list-items a:hover{
+        background-color: inherit;
+    }
+
+    .list-items.module-narrow .module-heading,
+	.list-items.module-narrow .module-content,
+	.list-items.module-narrow .module-footer {
+		padding: 0;
+	}
+
+    .list-items .list-items.action{
+        margin-top: 5px;
+    }
+
+    .list-items.facet-items {
+        border-bottom: 1px solid #888888;
+    }
+
+
+/* END Facets fonts */
+

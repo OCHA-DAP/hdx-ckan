@@ -36,9 +36,21 @@
     null,
     "Skjul"
   ],
+  "Image": [
+    null,
+    "Billede"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Input er for kort, skal være mindst én karakter"
+  ],
+  "Link": [
+    null,
+    "Link"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Link til en URL på internettet (du kan også linke til et API)"
   ],
   "Loading...": [
     null,
@@ -52,9 +64,29 @@
     null,
     "Bekræft venligst handling"
   ],
+  "Remove": [
+    null,
+    "Fjern"
+  ],
+  "Reorder resources": [
+    null,
+    "Skift rækkefølge på ressourcer"
+  ],
+  "Reset this": [
+    null,
+    "Nulstil dette"
+  ],
   "Resource uploaded": [
     null,
     "Ressource uploadet"
+  ],
+  "Save order": [
+    null,
+    "Gem rækkefølge"
+  ],
+  "Saving...": [
+    null,
+    "Gemmer..."
   ],
   "Show more": [
     null,
@@ -92,9 +124,17 @@
     null,
     "Følg ikke"
   ],
+  "Upload": [
+    null,
+    "Upload"
+  ],
   "Upload a file": [
     null,
     "Upload en fil"
+  ],
+  "Upload a file on your computer": [
+    null,
+    "Upload en fil fra din computer"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,

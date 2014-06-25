@@ -36,6 +36,10 @@
     null,
     "Сховати"
   ],
+  "Image": [
+    null,
+    "Зображення"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Ввід надто короткий, має бути хоча би один символ"
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "Підтвердіть операцію"
+  ],
+  "Remove": [
+    null,
+    "Видалити"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Не стежити"
+  ],
+  "Upload": [
+    null,
+    "Вивантажити"
   ],
   "Upload a file": [
     null,

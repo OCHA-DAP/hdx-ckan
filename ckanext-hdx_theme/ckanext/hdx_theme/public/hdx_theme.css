@@ -184,8 +184,6 @@ body {
 .masthead ul.second-row-menu li.dropdown:hover > ul.dropdown-menu {
     display: block;
 }
-
-
 .masthead .content {
     position: static;
     top: 0;
@@ -441,18 +439,6 @@ body {
     padding-top: 0px;
 }
 
-.facet-hidden{
-    display: none;
-}
-
-
-.facet-h2{
-    cursor: pointer;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.08em;
-    font-weight: 300;
-}
-
 .searchForKeywordText {
     margin-top: 20px;
     font-size: 14px;
@@ -559,6 +545,9 @@ body {
     width: 450px;
     
 }
+.header-user-message a {
+	color: #0B0080;
+}
 
 .package-upload-header {
     font-family: 'Raleway', sans-serif;
@@ -599,27 +588,16 @@ body {
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0);
 }
 
-/* Styling search dataset page */
-.list-items.module-heading{
-  	background-color: inherit;
-  	border-top: 0px;
-  	border-bottom: 0px;
-}
-.list-items.section-border{
-  	border-bottom: 1px solid #DDDDDD;
-  	padding: 20px;
-}
-
-
 .list-items.section-border .align{
 	padding-top: 15px;
 }
 
-.list-items.module-narrow .module-heading,
-.list-items.module-narrow .module-content,
-.list-items.module-narrow .module-footer {
-	padding: 0px;
-}
+
+/*.list-items.module-narrow .module-heading,*/
+/*.list-items.module-narrow .module-content,*/
+/*.list-items.module-narrow .module-footer {*/
+	/*padding: 0px;*/
+/*}*/
 
 .list-items.module {
     margin: 0px 0;
@@ -642,6 +620,8 @@ body {
 .search {
     font-style: italic;
 }
+
+/* OLD Facet Styling?
 .list-items.nav-simple > li, .list-items.nav-aside > li {
     padding: 7px 10px;
     border-bottom: none;
@@ -666,11 +646,11 @@ body {
     color: #333333;
     position: relative;
 }
-
+*/
+/*
 .list-items.module-content:first-child {
     padding: 25px;
 }
-
 .list-items.search-form .search-input.search-giant input {
 	border-radius: 14px;
 }
@@ -684,18 +664,12 @@ body {
     margin-bottom: 25px;
 }
 
+/*
 .list-items.search-form {
     border-bottom: 1px solid #DDDDDD;
 }
+*/
 
-.list-items.dataset-item {
-    border-bottom: 1px solid #DDDDDD;
-}
-
-.list-items.dataset-resources li a {
-	min-width: 50px;
-	text-align: center;
-}
 .count {
 	font-family: 'Roboto', sans-serif;
     font-size: 1em;
@@ -730,21 +704,6 @@ body {
 	float:right;
 }
 
-.info-wrapper{
-	margin-left: 20px;
-	margin-right: 20px;
-	padding-bottom: 10px;
-	padding-top: 25px;
-	border-bottom: 1px solid #E7E7E7;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 300;
-	font-size: 1.08em;
-	color: #000000;
-}
-
-.info-wrapper > div {
-	padding-bottom: 15px;
-}
 .info-wrapper-link-list {
 	list-style-type: none; 
 	margin: 0px;
@@ -753,19 +712,6 @@ a.info-tooltip, .info-item-name {
 	line-height: 15px;
 	color: #0099FF;
 	font-size: 12px;
-}
-
-.info-wrapper .social-images {
-	height: 35px;
-	margin-right: 5px;
-}
-
-.social-images {
-	opacity:0.4;
-}
-
-.social-images:hover, .social-images:focus {
-	opacity:0.6;
 }
 
 .info-wrapper.social a:hover {
@@ -791,46 +737,7 @@ a.info-tooltip, .info-item-name {
 	width: 140px;
 }
 
-
-.tag-wrapper {
-	margin-right: 7px;
-	float: left;
-}
-
-.tag-wrapper .tag, .tag-wrapper .tag:hover  {
-    /* background-color: #999999; */
-    background-color: #000000;
-    border: none;
-    border-radius: 100px;
-    box-shadow: 0 0px 0 #FFFFFF inset;
-    color: #FFFFFF;
-    display: inline-block;
-    margin-bottom: 4px;
-    padding: 5px 10px;
-}
-.tag-wrapper .tag {
-	opacity:0.4;	
-}
-.tag-wrapper .tag:hover  {
-	opacity:0.6;	
-}
-
 span.clear { clear: left; display: block; }
-
-.creation-info-author, .creation-info-author a {
-	font-weight: 700;
-	font-size: 1.6 em;
-	color: #0099FF;
-}
-
-.info-secondary-data {
-	color: #666666;
-}
-
-.followers-count {
-	font-size: 2.3em;
-	line-height: normal;
-}
 
 .tooltip.in {
 	opacity: 1;
@@ -853,14 +760,6 @@ span.clear { clear: left; display: block; }
 	border-left-color: #666666;
 }
 
-.btn-group > .btn.hdx-btn, .btn.hdx-btn, .follow-button-wrapper .btn {
-    margin-left: 10px;
-    padding: 2px 5px;
-    border-radius: 4px;
-    line-height: 25px;
-    font-weight: normal;
-    
-}
 .btn.hdx-btn.main-hdx-btn {
 	margin-left: 0px;
     padding: 4px 12px;
@@ -874,14 +773,13 @@ span.clear { clear: left; display: block; }
 	background: none;
     border: none;
     box-shadow: 0 0 0 0;
-    margin-top: 10px;
+    margin: 0;
 }
 
 .support-primary {
 	float:left;
 	width: 100%;
 	background-color: #FFFFFF;
-	overflow: hidden;
 	position: relative;
 }
 
@@ -901,23 +799,6 @@ span.clear { clear: left; display: block; }
 	right: 15px;
 }
 
-.hdx-wrapper .secondary {
-	/* border: 1px solid #DDDDDD;
-    margin-left: 15px;
-    margin-right: 15px; */ 
-    width: 223px; 
-    position: relative;
-    left: 717px;
-    
-} 
-
-.hdx-wrapper .primary {
-	/* border: 1px solid #DDDDDD;
-    margin-right: 15px; */
-    width: 702px; 
-    position: relative;
-    left: 717px;
-}
 
 .hdx-wrapper .page-header {
 	background: none;	
@@ -1082,6 +963,7 @@ width: 473px !important;
 	margin: 0px;
 }
 
+/*
 .org-nums{
 	margin-top: 10px;
     padding-bottom: 0;
@@ -1089,7 +971,7 @@ width: 473px !important;
     margin-left: 15px;
     margin-right: 15px;
 }
-
+*/
 .org-nums dl{
 	margin-bottom: 20px;
 	border-bottom: 1px solid #DDDDDD;
@@ -1118,14 +1000,6 @@ width: 473px !important;
 	text-decoration: none;
 }
 
-
-.btn.hdx-btn.org-btn{
-	min-width: 100px;
-	max-height: 20px;
-	margin-left: 0px;
-	line-height: 20px;
-	font-size: 12px
-}
 .btn.hdx-btn.org-edit-btn{
 	min-width: 50px;
 	max-height: 20px;
@@ -1156,13 +1030,6 @@ a.big-info-item-name {
     font-size: 25px;
     line-height: 45px;
 }
-
-.list-items.dataset-item:last-of-type {
-    border-bottom: medium none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
 
 .dataset-form-field-wrapper .control-full textarea {
 	height: 120px;
@@ -1231,10 +1098,6 @@ for example: in the user dashboard when the user has no organizations */
 	padding-bottom: 20px;
 }
 
-.terms-of-service {
-	padding: 5px 40px;
-}
-
 .terms-of-service div > ol > li {
 	margin-bottom: 10px;
 }
@@ -1269,6 +1132,10 @@ for example: in the user dashboard when the user has no organizations */
 .hdx-modal .hdx-modal-text-body {
 	font-size: 14px;
 	margin-left: 10px;
+	max-width: 450px;
+}
+.hdx-modal form {
+	margin: 0px;
 }
 
 .nav-short-message {

@@ -3,24 +3,26 @@
 {% set placeholder = placeholder if placeholder else _('Search...') %}
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
+{% set is_display_search_input = display_search_input if display_search_input==False else True %}
 
 <form class="list-items search-form" method="get" data-module="select-switch">
-
-  {% block search_input %}
-    <div class="search-input control-group {{ search_class }}">
-    {% if show_empty and search_in_results %}
-    	{% set p_list = h.get_filtered_params_list(show_empty) %}
-		{% for key,value in p_list %}
-			<input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
-		{% endfor %}
+    {% if is_display_search_input %}
+      {% block search_input %}
+        <div class="search-input control-group {{ search_class }}">
+        {% if show_empty and search_in_results %}
+            {% set p_list = h.get_filtered_params_list(show_empty) %}
+            {% for key,value in p_list %}
+                <input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        {% endif %}
+          <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
+          <button type="submit" value="search">
+            <i class="icon-search"></i>
+            <span>{{ _('Submit') }}</span>
+          </button>
+        </div>
+      {% endblock %}
     {% endif %}
-      <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
-      <button type="submit" value="search">
-        <i class="icon-search"></i>
-        <span>{{ _('Submit') }}</span>
-      </button>
-    </div>
-  {% endblock %}
 
   {% block search_search_fields %}
     {% if fields -%}
@@ -32,14 +34,33 @@
     {% if sorting %}
       <div class="form-select control-group control-order-by">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-        <select id="field-order-by" name="sort">
-          {% for label, value in sorting %}
-            {% if label and value %}
-              <option value="{{ value }}"{% if sorting_selected == value %} selected="selected"{% endif %}>{{ label }}</option>
-            {% endif %}
-          {% endfor %}
-        </select>
-        <button class="btn js-hide" type="submit">{{ _('Go') }}</button>
+        <div class="dropdown orderDropdown">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+            <span class=".dropdown-toggle-text">
+              {% for label, value in sorting %}
+                  {% if sorting_selected == value %} {{ label }} {% endif %}
+              {% endfor %}
+            </span>
+            <b class="caret"></b>
+          </button>
+          <input type="hidden" name="sort" />
+          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <script>
+          $(function(){
+            $(".dropdown").on('click', 'li a', function(){
+              $(this).parents(".dropdown").find("button span").text($(this).text());
+              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
+              $(this).parents("form").submit();
+            });
+          });
+        </script>
       </div>
     {% endif %}
   {% endblock %}

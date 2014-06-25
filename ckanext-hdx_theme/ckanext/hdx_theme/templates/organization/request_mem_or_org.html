@@ -1,0 +1,14 @@
+{% extends "page.html" %}
+{% block primary %}
+
+<div>
+{% block primary_content %}
+{% snippet "snippets/greeting_message.html", show_small_message=False, greeting=_('Thanks for contributing - you rock.') %}
+
+ {% snippet "organization/snippets/mem_or_org.html", parent_route='dataset_preselect' %}
+
+{% endblock %}
+
+{% endblock %}
+
+{% block secondary %}{% endblock %}

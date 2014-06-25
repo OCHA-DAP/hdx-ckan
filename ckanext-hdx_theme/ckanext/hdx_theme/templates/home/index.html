@@ -10,128 +10,6 @@
 
 {% block maintag %}{% endblock %}
 
-{% block header %}
-
-<header class="newHeader">
-  <div class="container">
-    <span class="content">
-      <span class="navbar">
-            <nav class="usermenu section">
-              <div class="nav nav-pills">
-                {# The .header-image class hides the main text and uses image replacement for the title #}
-                <hgroup class="hdxLogo">
-
-                  {% block header_logo %}
-                    {% if g.site_logo %}
-                      <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px; position: relative; top: -4px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
-                    {% else %}
-                      <h1>
-                        <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
-                      </h1>
-                      {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
-                    {% endif %}
-                  {% endblock %}
-                </hgroup>
-                <ul class="mainLinks">
-                  {% block header_site_navigation_tabs %}
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle">
-                        {{ _('About') }}
-                      </a>
-                      <ul class="dropdown-menu dropdown-inverse" role="menu">
-                        <li>
-                          <a href="http://docs.hdx.rwlabs.org/">
-                            <span>{{ _('What is HDX?') }}</span>
-                          </a>
-                        </li>
-                        <li>
-                          {% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
-                        </li>
-                        <li>
-                          {% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}
-                        </li>
-                      </ul>
-                    </li>
-                    <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
-                    <li><a href="/organization">{{ _('Organizations') }}</a></li>
-                    <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
-                  {% endblock %}
-                </ul>
-              </div>
-              <div class="pull-right">
-                <ul class="nav nav-pills">
-                  <li class="submitData">
-                    <a href="{% if c.userobj %}/dataset/new{% else %}/contribute{% endif %}">
-                      {{ _("Submit data") }}
-                      <img src="/images/homepage-new/attachment.svg" style="width: 24px; height: 21px; margin-left: 20px;" />
-                    </a>
-                  </li>
-                  {% if c.userobj %}
-                  <li class="dropdown">
-                    <a href="#" class="dropdown-toggle special-menuitem" data-toggle="dropdown">
-                      {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=29) }}
-                      <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
-                      <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                      {% block header_account_logged %}
-                      {% if c.userobj.sysadmin %}
-                      <li>
-                        <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
-                          <i class="icon-legal"></i>
-                          <span>{{ _('Sysadmin settings') }}</span>
-                        </a>
-                      </li>
-                      {% endif %}
-                      <li>
-                        <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
-                          <i class="icon-user"></i>
-                          <span>{{ _('Profile') }}</span>
-                        </a>
-                      </li>
-                      <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
-                        {% set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) %}
-                        <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{{ notifications_tooltip }}">
-                          <i class="icon-dashboard"></i>
-                          <span> {{ _('Dashboard') }} ({{ c.new_activities }})</span>
-                        </a>
-                      </li>
-                      {% block header_account_settings_link %}
-                      <li>
-                        <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
-                          <i class="icon-cog"></i>
-                          <span>{{ _('User settings') }}</span>
-                        </a>
-                      </li>
-                      {% endblock %}
-                      {% block header_account_log_out_link %}
-                      <li>
-                        <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
-                          <i class="icon-signout"></i>
-                          <span>{{ _('Log out') }}</span>
-                        </a>
-                      </li>
-                      {% endblock %}
-                      {% endblock %}
-                    </ul>
-                  </li>
-                  {% else %}
-                  {% block header_account_notlogged %}
-                  <li class="newLogin">{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
-                  <li class="newLogin">{% link_for _('Sign up'), controller='user', action='register', class_='btn' %}</li>
-                  {% endblock %}
-                  {% endif %}
-                </ul>
-              </div>
-            </nav>
-      </span>
-    </span>
-    {{ self.flash() }}
-  </div>
-</header>
-{% endblock %}
-
-
 
 {% block content %}
 <div class="homepage-main">
@@ -245,6 +123,15 @@
 
 {% endblock %}
 
+{% block header %}
+  <div class="homepageHeaderFooterBackground">
+     {{ super() }}
+  </div>
+
+  <!--- DO NOT REMOVE or the warnings generated by this page will be transfered to the next page --->
+  {{ self.flash() }}
+  <!--- END DO NOT REMOVE --->
+{% endblock %}
 
 {% block home_search %}
   <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='metadata_modified desc' %}">
@@ -275,35 +162,36 @@
 {% endblock %}
 
 {% block footer %}
-  <footer class="newFooter">
-    <div class="container">
-      <div class="row">
-        <div class="span12">
-          <span class="text">
-            {{ _("A project by") }}:
-          </span>
-          <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
-          <span class="text">
-            {{ _("Related Sites") }}:
-          </span>
-          <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
-          <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
-          <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
-          <span class="text">
-            {{ _("Stay connected") }}:
-          </span>
-          <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
-          <a href="mailto:hdx@un.org"><img src="/images/homepage-new/email.png"/></a>
+  <div class="homepageHeaderFooterBackground">
+    <footer class="newFooter">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <span class="text">
+              {{ _("A project by") }}:
+            </span>
+            <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
+            <span class="text">
+              {{ _("Related Sites") }}:
+            </span>
+            <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
+            <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
+            <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
+            <span class="text">
+              {{ _("Stay connected") }}:
+            </span>
+            <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
+            <a href="mailto:hdx@un.org"><img src="/images/homepage-new/email.png"/></a>
+          </div>
         </div>
       </div>
-    </div>
-
-    {% block footer_debug %}
-      {% if g.debug %}
-        {% include 'snippets/debug.html' %}
-      {% endif %}
-    {% endblock %}
-  </footer>
+      {% block footer_debug %}
+        {% if g.debug %}
+          {% include 'snippets/debug.html' %}
+        {% endif %}
+      {% endblock %}
+    </footer>
+  </div>
 {% endblock %}
 
 {% block scripts %}

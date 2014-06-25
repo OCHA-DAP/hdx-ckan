@@ -30,7 +30,14 @@ Example:
   		   </a>
    		 </h3>
   	{% endblock %}
-      <div>{{ _('Updated by') }} {{ h.hdx_linked_user(last_user) }} - {{f_updated_time}}</div>
+      <div>
+        <span class="sspBold16">
+          {{ _('Updated by') }}
+        </span>
+        <span class="sspBold16 updatedNameColor">
+          {{ h.hdx_linked_user(last_user) }}
+        </span>
+        - {{f_updated_time}}</div>
       {% block description %}
     	{% if organization.description %}
       		<div class="list-items content">{{ h.markdown_extract(organization.description, extract_length=80) }}</div>
@@ -43,7 +50,11 @@ Example:
 	  <div class="list-items counter">
 		  {% block datasets %}
 			  {% if organization.packages %}
-			  	{% set num_of_pack = organization.package_count %}
+			    {% if organization.packages is number %}
+			    	{% set num_of_pack = organization.packages %}
+			    {% else %}
+			    	{% set num_of_pack = organization.packages|length %}
+			    {% endif %}
 			   <span class="count">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</span>
 			   {% else %}
 			      <span class="count">{{ _('0 Datasets') }}</span>

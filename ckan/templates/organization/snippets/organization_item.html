@@ -11,11 +11,10 @@ Example:
       {% endfor %}
     </ul>
 #}
-
-{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name) %}
+{% set url = h.url_for(organization.type ~ '_read', action='read', id=organization.name) %}
 <li class="media-item">
   {% block image %}
-    <img src="{{ organization.image_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ organization.name }}" class="media-image">
+    <img src="{{ organization.image_display_url or h.url_for_static('/base/images/placeholder-organization.png') }}" alt="{{ organization.name }}" class="media-image">
   {% endblock %}
   {% block title %}
     <h3 class="media-heading">{{ organization.display_name }}</h3>
@@ -23,8 +22,6 @@ Example:
   {% block description %}
     {% if organization.description %}
       <p>{{ h.markdown_extract(organization.description, extract_length=80) }}</p>
-    {% else %}
-      <p class="empty">{{ _('This organization has no description') }}</p>
     {% endif %}
   {% endblock %}
   {% block datasets %}

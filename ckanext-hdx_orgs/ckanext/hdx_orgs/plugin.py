@@ -3,7 +3,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
-class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
+class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IGroupForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)

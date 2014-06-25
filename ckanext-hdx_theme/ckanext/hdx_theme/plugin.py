@@ -52,8 +52,11 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         
         map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
         
-        map.connect('/organization/{id}/request_membership', controller='ckanext.hdx_theme.org_controller:HDXOrgController', action='request_membership')
+        map.connect('request_membership', '/organization/{org_id}/request_membership', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_membership')
+        map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_editor_for_org')
+        map.connect('/organization/request_new', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_new_organization')
         map.connect('/organization/members/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='members')
+        map.connect('dataset_preselect','/dataset/preselect', controller='ckanext.hdx_theme.preselect_dsform_controller:HDXPreselectOrgController', action='preselect')
 
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
         return map

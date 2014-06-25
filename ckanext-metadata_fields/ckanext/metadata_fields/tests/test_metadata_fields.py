@@ -7,19 +7,18 @@ Created on May 16, 2014
 
 import ckan.tests as tests
 import webtest
-import ckan.lib.helpers as h
 import ckan.plugins as p
-import ckan.lib.plugins as pl
 import ckan.lib.create_test_data as ctd
 import ckan.lib.search as search
 import ckan.model as model
-import ckan.plugins.toolkit as tk
-import ckanext.metadata_fields.plugin as thisplugin
+import logging
 
 from ckan.config.middleware import make_app
 from pylons import config
 
 import ckanext.hdx_theme.caching as caching
+
+log = logging.getLogger(__name__)
 
 class TestMetadataFields(tests.WsgiAppCase):
     
@@ -77,7 +76,12 @@ class TestMetadataFields(tests.WsgiAppCase):
         assert len(test_group_list)==1, 'Exactly one test-group group should be in the list'
         
     def test_cannot_create_dataset_wo_source(self):
-        p.load('metadata_fields')
+        try:
+            p.load('metadata_fields')
+        except Exception as e:
+            log.warn('Module already loaded')
+            log.info(str(e))
+            
         testsysadmin = model.User.by_name('testsysadmin')
         result = tests.call_action_api(self.app, 'package_create', name='test-dataset',
                 private=False, package_creator='test-creator',

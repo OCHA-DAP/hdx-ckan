@@ -16,6 +16,10 @@
     null,
     "Odoberať"
   ],
+  "Image": [
+    null,
+    "Obrázok"
+  ],
   "Loading...": [
     null,
     "Prebieha načítavanie..."
@@ -27,6 +31,10 @@
   "Unfollow": [
     null,
     "Prestať odoberať"
+  ],
+  "Upload": [
+    null,
+    "Nahrávanie"
   ],
   "Upload a file": [
     null,

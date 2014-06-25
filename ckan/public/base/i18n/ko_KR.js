@@ -36,6 +36,10 @@
     null,
     "숨기기"
   ],
+  "Image": [
+    null,
+    "이미지"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "입력값이 적습니다. 하나 이상의 character를 입력하세요."
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "작업을 승인해 주세요"
+  ],
+  "Remove": [
+    null,
+    "제거"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Unfollow"
+  ],
+  "Upload": [
+    null,
+    "업로드"
   ],
   "Upload a file": [
     null,
