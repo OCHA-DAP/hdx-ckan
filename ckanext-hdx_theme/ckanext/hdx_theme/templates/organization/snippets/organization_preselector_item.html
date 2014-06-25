@@ -1,12 +1,12 @@
 {#
 Example:
-	{% snippet 'organization/snippets/organization_preselector_item.html', name = name, description = description, role = role %}
+	{% snippet 'organization/snippets/organization_preselector_item.html', id=id, name = name, description = description, role = role %}
 	
 #}
 {% resource 'hdx_theme/hdx_clickable_div.js' %}
 {% if has_add_dataset_rights %}
 	{% set new_dataset_url = h.url_for(controller='package', 
-  			action='new', organization_id=name) %}
+  			action='new', organization_id=id) %}
 {% else %}
 	{% set modal_div_id = 'request-rights-'+name %}
 {% endif %}
