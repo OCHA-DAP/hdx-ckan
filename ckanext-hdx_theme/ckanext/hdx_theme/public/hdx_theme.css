@@ -684,6 +684,11 @@ body {
 .list-items.counter { 
 	padding-top: 10px;
 }
+
+.list-items.extra-info { 
+	font-style: italic;
+}
+
 /* END Styling search dataset page */
 
 .uppercase{

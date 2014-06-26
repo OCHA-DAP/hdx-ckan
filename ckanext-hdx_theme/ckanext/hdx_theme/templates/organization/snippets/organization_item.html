@@ -46,6 +46,12 @@ Example:
     	{% endif %}
 	  {% endblock %}
 	  
+	  {% block role %}
+	  	{% if organization.role %}
+	  		<div class="list-items extra-info">{{ _('Your role') }}: {{ organization.role }}</div>
+	  	{% endif %}
+	  {% endblock %}
+	  
 	  {% block counters %}
 	  <div class="list-items counter">
 		  {% block datasets %}
