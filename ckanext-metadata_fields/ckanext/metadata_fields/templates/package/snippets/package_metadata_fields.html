@@ -10,7 +10,8 @@
 {% endif %}
 
 {% block package_metadata_fields %}
-<div class="module-content graybg" {% if inheritied_form_style == 'edit' %}id="dataset_part_2_edit"{% else %}id="dataset_part_2"{% endif %}>
+<div class="module-content graybg paddingRowHack" {% if inheritied_form_style == 'edit' %}id="dataset_part_2_edit"{% else %}id="dataset_part_2"{% endif %}>
+<div class="paddingLeftHack paddingRightHack">
       <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
 
   {% block dataset_fields %}
@@ -176,5 +177,6 @@
   {% if inheritied_form_style != 'edit' %}
     <input name="save" type="hidden" value="go-resource"/>
   {% endif %}
+</div>
 </div>
 {% endblock %}
