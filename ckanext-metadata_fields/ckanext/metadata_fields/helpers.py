@@ -23,7 +23,7 @@ def hdx_user_org_num(user_id):
     context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author}
     try:
-        user    = tk.get_action('organization_list_for_user')(context,{'id':user_id})
+        user    = tk.get_action('organization_list_for_user')(context,{'id':user_id, 'permission': 'create_dataset'})
     except logic.NotAuthorized:
             base.abort(401, _('Unauthorized to see organization member list'))    
         
