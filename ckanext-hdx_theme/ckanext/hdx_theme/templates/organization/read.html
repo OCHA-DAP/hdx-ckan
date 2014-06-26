@@ -2,7 +2,7 @@
 
 {% block page_header %}
   <header class="module-content page-header">
-     {% set can_create_dataset = h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
+  	 {% set can_create_dataset = h.check_access('package_create', {'organization_id': c.group_dict.id, 'owner_org': c.group_dict.id}) %}
      {% set can_edit = h.check_access('organization_update', {'id': c.group_dict.id}) %}
      {% set can_actions = can_create_dataset or can_edit %}
      {% if can_actions %}
