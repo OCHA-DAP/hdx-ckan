@@ -187,9 +187,9 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
 def hdx_organizations_available_with_roles():
     organizations_available = h.organizations_available('read')
     if organizations_available and len(organizations_available) > 0:
-        am_sysadmin = new_authz.is_sysadmin(c.user)
         orgs_where_editor = []
         orgs_where_admin = []
+    am_sysadmin = new_authz.is_sysadmin(c.user)
     if not am_sysadmin:
         orgs_where_editor = set([org['id'] for org in h.organizations_available('create_dataset')])
         orgs_where_admin = set([org['id'] for org in h.organizations_available('admin')])
