@@ -77,7 +77,7 @@
                     <div class="support-primary">
                       {% if self.secondary()|trim != '' %}
                         <div class="row paddingRowHack">
-                        <div class="span12 paddingLeftHack paddingRightHack" style="background-image:url('/images/homepage-new/columnBackground.png'); background-repeat: repeat-y;">
+                        <div class="span12 paddingLeftHack paddingRightHack" style="background-image:url('/images/homepage-new/columnBackground.png'); background-repeat: repeat-y; min-height: 350px;">
                       {% endif %}
 
                       {% block primary %}
@@ -94,7 +94,7 @@
                             {% endblock %}
                           #}
                           {% block primary_content %}
-                            <article class="module {% if self.secondary()|trim != '' %}mL45{% endif %}">
+                            <article class="module {% if self.secondary()|trim != '' %}{% endif %}">
                               {% block item_title_contrib %}
                               {% endblock %}
                               {% block page_header %}
