@@ -540,10 +540,6 @@ body {
     padding-bottom: 10px;
 }
 
-.graybg .form-actions{
-    padding-bottom: 20px;
-}
-
 #dataset_methodology input[type="radio"]{
     top: -1px;
 }

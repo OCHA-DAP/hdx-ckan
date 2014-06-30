@@ -455,6 +455,7 @@
         padding-left: 0;
         padding-right: 0;
         padding-bottom: 0;
+        margin-bottom: 20px;
     }
 
     .mainContent .module:last-child{
@@ -704,8 +705,9 @@
 
 /* Style default Primary */
     [role=main] .primary{
-        width: 870px;
+        width: 825px;
         position: relative;
+        padding-left: 45px;
     }
 /* END Style default Primary */
 
