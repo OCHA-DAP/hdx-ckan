@@ -16,17 +16,6 @@
       {% block maintag %}<div role="main">{% endblock %}
         <div id="content" class="container">
           {% block main_content %}
-            {% block flash %}
-              {% set flash_messages = h.flash.pop_messages() | list %}
-              <div class="flash-messages">
-                {% for message in flash_messages %}
-                  <div class="alert fade in {{ message.category }}">
-                    {{ h.literal(message) }}
-                  </div>
-                {% endfor %}
-              </div>
-            {% endblock %}
-
             {% block toolbar %}
               <div class="container">
                 <div class="row paddingRowHack toolbarRow">
@@ -55,6 +44,22 @@
                     </div>
                   </div>
                 </div>
+              </div>
+            {% endblock %}
+            {% block flash %}
+              {% set flash_messages = h.flash.pop_messages() | list %}
+              <div class="paddingRowHack">
+                {% if flash_messages|length > 0 %}
+                <div class="flash-messages paddingLeftHack paddingRightHack">
+                  {% for message in flash_messages %}
+                    <div class="alert fade in {{ message.category }}">
+                      {{ h.literal(message) }}
+                    </div>
+                  {% endfor %}
+                  <div style="clear: both"></div>
+                </div>
+                <div style="clear: both"></div>
+                {% endif %}
               </div>
             {% endblock %}
 

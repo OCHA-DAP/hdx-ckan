@@ -804,6 +804,11 @@
         border-bottom: 1px solid #888888;
     }
 
-
 /* END Facets fonts */
 
+/* Style Bootstrap Flash messages*/
+    .flash-messages{
+        background-color: #eeeeee;
+        padding-bottom: 1px;
+    }
+/* END Style Bootstrap Flash messages*/
