@@ -108,6 +108,7 @@ class HDXReqsOrgController(base.BaseController):
         errors = {}
         error_summary = {}
         data = {'from': request.params.get('from','')}
+        from_url = ''
 
         if 'save' in request.params:
             try:
@@ -126,7 +127,7 @@ class HDXReqsOrgController(base.BaseController):
             if from_url and len(from_url) > 0:
                 h.redirect_to(from_url)
             else:
-                h.redirect_to('xxx')
+                h.redirect_to('/error')
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
