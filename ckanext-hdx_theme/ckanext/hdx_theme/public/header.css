@@ -253,7 +253,7 @@
         top: -12px;
     }
 
-    .navbar .nav > li.newLogin > a:hover{
+    .navbar .nav > li.newLogin > a.btn:hover, .navbar .nav > li.newLogin > a.btn:focus{
         background-color: #888888;
     }
 
