@@ -155,7 +155,7 @@
         border-radius: 0 !important;
         -webkit-border-radius: 0 !important;
         -moz-border-radius: 0 !important;
-        vertical-align:  middle;
+        vertical-align:  top;
     }
     .additional-info table th {
         padding-left: 20px;
@@ -168,11 +168,11 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         font-size: 14px;
-
     }
-    .additional-info table tr:nth-child(odd){
-        background-color: #eeeeee;
-
+    .additional-info td{
+        width: 70%;
     }
-
+    .additional-info th{
+        width: 30%;
+    }
 /* END Style Additional Info */
