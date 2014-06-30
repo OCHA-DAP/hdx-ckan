@@ -9,7 +9,7 @@
       <div>
 		  {% if can_create_dataset %}
 	    	<div class="float-left">
-			    {#% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %#}
+			    {% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
 			</div>
 		  {% endif %}
 		  {% if can_edit %}
@@ -51,8 +51,9 @@
         (_('Name Descending'), 'title_string desc'),
         (_('Last Modified'), 'metadata_modified desc') ]
       %}
-      {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}	
-      {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
+      {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}
+      {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}	
+      {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_option, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
     {% endblock %}
   {% block packages_list %}
       {% if c.page.items %}
@@ -60,11 +61,11 @@
         {% else %}
 		  	<div class="big-message">
 			    <p>
-			      {{ _('There are no datasets currently uploaded to your organization.') }}
+			      {{ _('There are no datasets currently uploaded to this organization.') }}
 			    </p>
 			    <p>
 			      {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
-				  		{#% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %#}
+				  		{% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %}
 				  {% endif %}
 			    </p>
 		    </div>

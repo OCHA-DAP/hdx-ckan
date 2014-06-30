@@ -11,13 +11,13 @@
   <section class="list-items module">
     <div class="list-items module-content  mL45 mT35">
       {% block page_primary_action %}
-        {#
-            {% if h.check_access('package_create') %}
+            {# if h.check_access('package_create') #}
+            {#
               <div class="list-items page_primary_action">
-                {#% link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign-alt' %#}
+                {% link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
               </div>
-            {% endif %}
-        #}
+              #}
+            {# % endif % #}
       {% endblock %}
       {% block form %}
         {% set facets = {
