@@ -1,6 +1,11 @@
 {% extends "page.html" %}
 
+{% block breadcrumb_content %}
+  <li class="active"><a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">{{ _("Submit data") }}</a></li>
+{% endblock %}
+
 {% block toolbar%}
+  {{ super() }}
 	{% set find_org_url = h.url_for(controller='organization', action='index') %}
 	{% set create_org_url = h.url_for(controller='organization', action='new') if c.am_sysadmin 
 				else h.url_for(controller='organization', action='index') %}
