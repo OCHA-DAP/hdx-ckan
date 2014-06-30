@@ -882,3 +882,7 @@
 
 /* END Style Greeting message */
 
+.content_action {
+    float: right;
+}
+
