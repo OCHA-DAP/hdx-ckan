@@ -121,11 +121,6 @@ body {
 	text-shadow: none;
     color: #000000;
 }
-.usermenu .nav > li > a:hover.btn {
-    background: none;
-    transition: none;
-    background-color: #EAEAEA;
-}
 
 
 .navbar .second-row-menu > li > a {
@@ -745,13 +740,6 @@ span.clear { clear: left; display: block; }
     border: none;
     box-shadow: 0 0 0 0;
     margin: 0;
-}
-
-.support-primary {
-	float:left;
-	width: 100%;
-	background-color: #FFFFFF;
-	position: relative;
 }
 
 .support-spacing {
