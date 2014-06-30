@@ -253,6 +253,14 @@
         top: -12px;
     }
 
+    .navbar .nav > li.newLogin > a.btn:hover, .navbar .nav > li.newLogin > a.btn:focus{
+        background-color: #888888;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.newLogin .btn{
+        color: #ffffff;
+    }
+
     .newHeader .content .navbar nav li.submitData a{
         color: #ffffff;
         text-shadow: none;
@@ -455,6 +463,7 @@
         padding-left: 0;
         padding-right: 0;
         padding-bottom: 0;
+        margin-bottom: 20px;
     }
 
     .mainContent .module:last-child{
@@ -518,39 +527,49 @@
 
 
 /* Button style */
-
-
-    .btn.hdx-btn.org-btn, .btn.btn-primary{
-        min-width: 100px;
-        /*max-height: 20px;*/
-        margin-left: 0;
-        background-color: #007ce0;
+    .btn {
         background-image: none;
-        color: white;
         text-shadow: none;
-        border: none;
         text-transform: uppercase;
         font-family: 'Gotham-Bold', sans-serif;
         font-weight: 400;
         font-size: 12px;
+        border: none;
+
+        background-color: #888888;
+        color: #ffffff;
     }
 
-    .btn.hdx-btn:hover, .btn.btn-primary:hover{
+    .btn:hover, .btn:focus, .btn.active {
+        background-color: #888888;
         opacity: 0.7;
+        box-shadow: none;
+        color: #ffffff;
+    }
+
+    .btn.hdx-btn.org-btn{
+        min-width: 100px;
+        margin-left: 0;
+        background-color: #007ce0;
+        color: white;
+    }
+
+    .btn.btn-primary{
+        background-color: #007ce0;
+        color: white;
+    }
+
+    .btn.btn-danger{
+        background-color: #f2645a;
     }
 
     .btn.hdx-btn.ga-preview{
-        background-image: none;
-        text-shadow: none;
         background-color: #888888;
         color: white;
         border: 0;
         line-height: 35px;
         padding: 0 20px;
         text-transform: uppercase;
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
         margin-left: 10px;
         border-radius: 4px;
     }
@@ -704,9 +723,19 @@
 
 /* Style default Primary */
     [role=main] .primary{
-        width: 870px;
+        width: 825px;
         position: relative;
+        padding-left: 45px;
     }
+
+    .support-primary {
+        float:left;
+        width: 100%;
+        background-color: #FFFFFF;
+        position: relative;
+        min-height: 350px;
+    }
+
 /* END Style default Primary */
 
 /* Style default Secondary */
@@ -804,6 +833,56 @@
         border-bottom: 1px solid #888888;
     }
 
-
 /* END Facets fonts */
+
+/* Style Bootstrap Flash messages*/
+    .flash-messages{
+        background-color: #eeeeee;
+        padding-bottom: 1px;
+    }
+/* END Style Bootstrap Flash messages*/
+
+/* Style Greeting message */
+    .greeting-message{
+        background-color: #eeeeee;
+        padding-top: 45px;
+        padding-bottom: 60px;
+    }
+
+    .greeting-message .header-user-message {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 100;
+        text-align: center;
+        color: #000000;
+        line-height: normal;
+    }
+
+    .greeting-message .header-user-message-large {
+        font-size: 39pt;
+        margin-bottom: 25px;
+    }
+
+    .greeting-message .header-user-message-small {
+        font-size: 14pt;
+        margin-top: 25px;
+    }
+
+    .greeting-message .header-user-message-hr {
+        background-color: #999999;
+        border: 0 none;
+        height: 1px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 450px;
+
+    }
+    .greeting-message .header-user-message a {
+        color: #0B0080;
+    }
+
+/* END Style Greeting message */
+
+.content_action {
+    float: right;
+}
 

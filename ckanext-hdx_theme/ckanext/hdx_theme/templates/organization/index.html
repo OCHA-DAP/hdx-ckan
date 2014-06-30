@@ -11,15 +11,20 @@
 {% block page_primary_action %}
   {% if h.check_access('organization_create') %}
     {% if c.userobj.sysadmin %}
-    {% link_for _('Add Organization'), controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
+    	{% link_for _('Add Organization'), controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
+    {% else %}
+   		 <a href="/organization/request_new?from=organization" class="btn btn-primary">{{ _("Request New Organization")}}</a>
+    	
     {% endif %}
+    
   {% endif %}
 {% endblock %}
 
 {% block primary_content_inner %}
       <h1 class="hide-heading">{% block page_heading %}{{ _('Organizations') }}{% endblock %}</h1>
       {% block organizations_search_form %}
-        {% snippet 'snippets/search_form.html', type='organization', query=c.q, sorting_selected=c.sort_by_selected, count=c.page.item_count, placeholder=_('Search organizations...'), show_empty=request.params %}
+        {% set sorting_option = c.sort_by_selected or 'name asc' %}
+        {% snippet 'snippets/search_form.html', type='organization', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search organizations...'), show_empty=request.params %}
       {% endblock %}
       {% block organizations_list %}
       {% if c.page.items or request.params %}

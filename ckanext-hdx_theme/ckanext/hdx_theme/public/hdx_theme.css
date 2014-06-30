@@ -121,11 +121,6 @@ body {
 	text-shadow: none;
     color: #000000;
 }
-.usermenu .nav > li > a:hover.btn {
-    background: none;
-    transition: none;
-    background-color: #EAEAEA;
-}
 
 
 .navbar .second-row-menu > li > a {
@@ -515,40 +510,6 @@ body {
     z-index: 9999;
 }
 
-.header-user-message {
-	font-family: 'Raleway', sans-serif;
-	font-weight: 100;
-	text-align: center;
-	color: #000000;
-	line-height: normal;
-}
-
-.header-user-message-large {
-	font-size: 39pt;
-	margin-top: 45px;
-	margin-bottom: 25px;
-
-}
-
-.header-user-message-small {
-	font-size: 14pt;
-	margin-top: 25px;
-	margin-bottom: 60px;
-}
-
-.header-user-message-hr {
-	background-color: #999999;
-    border: 0 none;
-    height: 1px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 450px;
-    
-}
-.header-user-message a {
-	color: #0B0080;
-}
-
 .package-upload-header {
     font-family: 'Raleway', sans-serif;
     font-weight: 100;
@@ -572,10 +533,6 @@ body {
     background: #eee;
     padding-top: 20px;
     padding-bottom: 10px;
-}
-
-.graybg .form-actions{
-    padding-bottom: 20px;
 }
 
 #dataset_methodology input[type="radio"]{
@@ -783,13 +740,6 @@ span.clear { clear: left; display: block; }
     border: none;
     box-shadow: 0 0 0 0;
     margin: 0;
-}
-
-.support-primary {
-	float:left;
-	width: 100%;
-	background-color: #FFFFFF;
-	position: relative;
 }
 
 .support-spacing {
