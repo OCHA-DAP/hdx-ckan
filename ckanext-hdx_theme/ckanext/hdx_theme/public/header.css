@@ -812,3 +812,43 @@
         padding-bottom: 1px;
     }
 /* END Style Bootstrap Flash messages*/
+
+/* Style Greeting message */
+    .greeting-message{
+        background-color: #eeeeee;
+        padding-top: 45px;
+        padding-bottom: 60px;
+    }
+
+    .greeting-message .header-user-message {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 100;
+        text-align: center;
+        color: #000000;
+        line-height: normal;
+    }
+
+    .greeting-message .header-user-message-large {
+        font-size: 39pt;
+        margin-bottom: 25px;
+    }
+
+    .greeting-message .header-user-message-small {
+        font-size: 14pt;
+        margin-top: 25px;
+    }
+
+    .greeting-message .header-user-message-hr {
+        background-color: #999999;
+        border: 0 none;
+        height: 1px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 450px;
+
+    }
+    .greeting-message .header-user-message a {
+        color: #0B0080;
+    }
+
+/* END Style Greeting message */
