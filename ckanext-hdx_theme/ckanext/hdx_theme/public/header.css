@@ -540,7 +540,7 @@
         color: #ffffff;
     }
 
-    .btn:hover, .btn:hover, .btn.active {
+    .btn:hover, .btn:focus, .btn.active {
         background-color: #888888;
         opacity: 0.7;
         box-shadow: none;
@@ -559,7 +559,8 @@
         color: white;
     }
 
-    .btn.btn-secondary, .btn.btn-secondary{
+    .btn.btn-danger{
+        background-color: #f2645a;
     }
 
     .btn.hdx-btn.ga-preview{
