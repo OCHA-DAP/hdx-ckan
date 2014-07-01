@@ -833,6 +833,12 @@
     .list-items.facet-items {
         border-bottom: 1px solid #888888;
     }
+    /* overwrite the hover the selected facets - #702*/
+    .nav-item.active > a:hover,
+	.nav-aside li.active a:hover {
+	  color: #fffff;
+	  background-color: #8ca0a6;
+	}
 
 /* END Facets fonts */
 
