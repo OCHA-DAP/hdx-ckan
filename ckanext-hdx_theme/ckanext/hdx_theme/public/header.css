@@ -524,6 +524,10 @@
         border-top:1px dotted #cccccc;
         border-bottom: none;
     }
+    .border-bottom-grey{
+    	border-top: none;
+    	border-bottom: 1px solid #dddddd;
+    }
 /* END Common Classes */
 
 
@@ -839,6 +843,15 @@
 	  color: #fffff;
 	  background-color: #8ca0a6;
 	}
+	
+	/* Followers Count */
+    .followers-count {
+        font-family: 'Gotham-Light', sans-serif;
+        font-weight: 400;
+        font-size: 48px;
+        line-height: normal;
+    }
+/* END Followers Count */
 
 /* END Facets fonts */
 

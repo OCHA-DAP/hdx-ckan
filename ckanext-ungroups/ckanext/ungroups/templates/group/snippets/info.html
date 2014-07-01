@@ -21,7 +21,7 @@
       <div class="org-nums">
         <dl>
           <dt class="uppercase">{{ _('Followers') }}</dt>
-          <dd class="followersNumber count-info-big">{{ h.SI_number_span(group.num_followers) }}</dd>
+          <dd class="followersNumber followers-count">{{ h.SI_number_span(group.num_followers) }}</dd>
           <dd> {{ h.follow_button('group', group.id) }}
                {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
 				{% if user %}
@@ -32,7 +32,7 @@
         </dl>
         <dl>
           <dt class="uppercase">{{ _('Datasets') }}</dt>
-          <dd class="count-info-big">{{ h.SI_number_span(group.packages|length) }}</dd>
+          <dd class="followers-count">{{ h.SI_number_span(group.packages|length) }}</dd>
         </dl>
       </div>
     {% endif %}
