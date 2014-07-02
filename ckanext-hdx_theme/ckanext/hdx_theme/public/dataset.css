@@ -44,15 +44,6 @@
 
 }
 
-/* Followers Count */
-    .followers-count {
-        font-family: 'Gotham-Light', sans-serif;
-        font-weight: 400;
-        font-size: 48px;
-        line-height: normal;
-    }
-/* END Followers Count */
-
 /* hdx_social theming */
     .info-wrapper .social-images {
         height: 35px;
