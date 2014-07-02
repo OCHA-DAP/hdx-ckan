@@ -137,6 +137,12 @@
         font-weight: 400;
         font-size: 12px;
     }
+    
+    .gothamBook12{
+        font-family: 'Gotham-Book', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+    }
 
     .gothamBold10{
         font-family: 'Gotham-Bold', sans-serif;
@@ -150,7 +156,7 @@
         font-size: 12px;
     }
 
-    .sspRegular12{
+    .sspRegular14{
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         font-size: 14px;
@@ -168,7 +174,22 @@
 		font-size: 20px;
 
     }
+    
+    .sspBold28{
+        font-family: 'Source Sans Pro', sans-serif;
+		font-weight: 700;
+		font-size: 28px;
 
+    }
+	.blue{
+		color: #007CE0;
+	}
+	.grey{
+		color: #888888;
+	}
+	.black{
+		color: #000000;
+	}
 
 /* END Fonts */
 
@@ -520,6 +541,12 @@
         margin-left: 45px;
     }
     .mR45{
+        margin-right: 45px;
+    }
+    .mL35{
+        margin-left: 45px;
+    }
+    .mR35{
         margin-right: 45px;
     }
 
@@ -912,3 +939,39 @@
     float: right;
 }
 
+
+/* Style tabs */
+    .hdx-wrapper .nav-tabs > li {
+        margin-bottom: -3px;
+    }
+    .hdx-wrapper .nav-tabs > .active > a{
+        border: none;
+        border-bottom: 3px solid #f2645a;
+        color: #f2645a;
+    }
+    .hdx-wrapper .nav-tabs > li > a{
+        border: none;
+        color: #888888;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    .hdx-wrapper .nav-tabs > li > a:hover {
+        color: #f2645a;
+    }
+    .page-header{
+        border-bottom: 3px solid #cccccc;
+        /*background-color: #f6f6f6;*/
+        -webkit-border-radius: 0 3px 0 0;
+        -moz-border-radius: 0 3px 0 0;
+        border-radius: 0 3px 0 0;
+    }
+/* END Style tabs*/
+
+
+/* Dashboard Style */
+
+
+/* END Dashboard Style*/

@@ -1,0 +1,111 @@
+/* Dashboard specific Style */
+.page-heading {
+    margin-bottom: 35px;
+    margin-top: 0;
+}
+
+
+#followee-filter .btn {
+	background-color: #ffffff;
+    background-image: none;
+    border: none;
+
+    text-shadow: none;
+    box-shadow: none;
+}
+
+#followee-filter .btn strong {
+    margin: 0 5px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#followee-filter .btn span {
+    font-weight: bold;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+	color: #007CE0;
+    background-color: #007CE0;
+    color: #ffffff;
+}
+
+#followee-filter .btn span.dpbold{
+    font-weight: bold;
+}
+
+#followee-filter .btn span.lblnormal{
+	line-height: 25px;
+    font-weight: normal;
+}
+
+.popover .popover-content {
+    color: #007CE0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    word-break: break-all;
+}
+
+.popover-followee .nav li a {
+    color: #007CE0;
+    border-radius: 0;
+    display: block;
+    margin: 0;
+    overflow: hidden;
+    padding: 7px 10px 7px 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.popover-followee .nav-pills > .active > a {
+    color: #ffffff;
+}
+
+a {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #007CE0;
+    text-decoration: none;
+}
+
+.activity .item p {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000000;
+    line-height: 35px;
+    margin: 5px 0 0 20px;
+}
+
+.dsb-activity-item{
+	background-color: #ffffff;
+	margin-left:90px;
+	height: 38px;
+    line-height: 38px;
+    margin-top: -8px;
+}
+
+.activity .item {
+    margin: 0 0 5px;
+    padding: 0;
+    position: relative;
+}
+
+.activity .item .date {
+	font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 300;
+    color: #888888;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+li:nth-child(odd) > div  {
+	background-color: #eeeeee;
+}
+
+/* END Dashboard specific Style*/
