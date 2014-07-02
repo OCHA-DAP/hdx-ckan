@@ -104,7 +104,7 @@ a {
     white-space: nowrap;
 }
 
-li:nth-child(odd) > div  {
+li:nth-child(odd) > div.dsb-activity-item  {
 	background-color: #eeeeee;
 }
 
