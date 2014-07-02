@@ -1104,3 +1104,9 @@ for example: in the user dashboard when the user has no organizations */
        background-image: none;
     }
 /* END Dropdown menu colors */
+
+/* Overwriting somehting strange in main.debug.css */
+.js .tab-content {
+ display: inherit !important;
+}
+/* end overwrite */
