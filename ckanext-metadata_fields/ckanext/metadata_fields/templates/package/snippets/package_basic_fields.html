@@ -20,9 +20,18 @@
 {% endif %}
 
 {% block package_basic_fields_title %}
-<div class="dataset-form-field-wrapper">
-{{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required'], attrs={'data-module': 'slug-preview-target'}) }}
+<div class="{{ form_field_wrapper_classes }}">
+{{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required', 'halfField', 'span3'], attrs={'data-module': 'slug-preview-target'}) }}
+    {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full', 'control-large','dataset-required', 'halfField', 'span3']) }}
 </div>
+  {% if new_dataset %}
+    <div class="dataset-form-info-field info-field">
+    {% trans %}
+    Who actually collected the data ?
+    {% endtrans %}
+  </div>
+{% endif %}
+<div style="clear:both;"/>
 {% endblock %}
 
 {% block package_basic_fields_description %}
@@ -101,20 +110,7 @@
 	{% endblock %}
 
 	{% block basic_fields_source %}
-		<div>
-			<div class="{{ form_field_wrapper_classes }}">
-	  		{{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full','dataset-required']) }}
-	  		</div>
-	  		{% if new_dataset %}
-		  		<div class="dataset-form-info-field info-field">
-					{% trans %}
-					Who actually collected the data ?
-					{% endtrans %}
-				</div>
-			{% endif %}
-		</div>
-		<span class="clear">&nbsp;</span>
-  	{% endblock %}
+  {% endblock %}
 
 {% endblock %}
 

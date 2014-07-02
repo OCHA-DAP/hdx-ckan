@@ -991,51 +991,6 @@ a.big-info-item-name {
     line-height: 45px;
 }
 
-.dataset-form-field-wrapper .control-full textarea {
-	height: 120px;
-}
-
-.dataset-form-field-wrapper {
-	width: 500px;
-}
-.dataset-form-field-wrapper .select2-container {
-	display: block;
-	/* Needed to replace the important coming from main.min.css */
-	width: 370px !important;
-}
-
-.field-with-info {
-	float: left;
-}
-
-.dataset-form-info-field {
-	float: right;
-	background-color: #CCCCCC;
-	width: 300px;
-	color: #FFFFFF;
-	padding: 5px 10px;
-}
-
-.dataset-form-info-field-height {
-	height: 110px;
-	margin-top: 3px;
-}
-
-.field-with-info ~ .info-field{
-	opacity: 0;
-	visibility: hidden;
-	transition: opacity 1s, visibility 1s;
-}
-
-.field-with-info:hover ~ .info-field, .info-field:hover{
-	opacity: 1;
-	visibility: visible;
-}
-
-.simple-dataset-control{
-	width: 370px;
-}
-
 /* This is used to show a big centered message, 
 for example: in the user dashboard when the user has no organizations */
 .big-message {

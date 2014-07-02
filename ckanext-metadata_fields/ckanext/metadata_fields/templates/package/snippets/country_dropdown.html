@@ -8,7 +8,8 @@
   <div id="select_country" class="control-group dataset-required">
       {% set error = errors.groups_list %}
       {% if inheritied_form_style != 'edit' %}
-      <p>{{ _("Which country or countries does the dataset best represent?") }}</p>
+      <p class="sspBold20">{{ _("Are you submitting data for the country below") }}?</p>
+      <p class="sspRegular14">{{ _("if not, which country or countries does the dataset best represent? Please select from the dropdown.") }}</p>
       {% else %}
       <label class="control-label" for="field-group">{{ _("Countries") }}</label>
       {% endif %}
@@ -28,7 +29,7 @@
   {% if data.groups %}
           {% for group in data.groups %}
             {% if group.id != '-1' %}
-          <span class="filtered pill">{{group.title}} <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/></span>
+          <span class="filtered pill">{{group.title}} <i id="field-group-{{ loop.index0 }}" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"/></span>
           {% endif %}
           {% endfor %}
     {% endif %}
