@@ -150,6 +150,12 @@
         font-size: 12px;
     }
 
+    .sspRegular12{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+
     .sspBold16{
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
