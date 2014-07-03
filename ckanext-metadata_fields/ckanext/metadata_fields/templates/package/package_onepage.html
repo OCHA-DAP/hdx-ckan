@@ -1,5 +1,7 @@
 {% extends "package/base.html" %}
 
+{% resource 'hdx_theme/hdx-datepicker.js' %}
+
 {% set onepage = 1 %}
 
 {% block toolbar %}
@@ -8,7 +10,7 @@
 
 {% block primary %}
 <div class="paddingRowHack">
-  <div class="paddingLeftHack paddingRightHack mTop45">
+  <div class="paddingLeftHack paddingRightHack mTB45">
     <div class="row">
       <div class="span5 countrySelectorDiv">
         <div class="content">
@@ -19,16 +21,6 @@
         Place map here
       </div>
     </div>
-
-
-
-    <section class="module datasetModule">
-      <div class="module-content" id="dataset_part_1">
-        <div class="package-upload-header mTop45">1. {{ _("CHOOSE COUNTRY") }}</div>
-
-      </div>
-    </section>
-
   </div>
 </div>
 
@@ -38,7 +30,7 @@
 
   <section class="module datasetModule">
     <div class="module-content" id="dataset_part_1">
-      <div class="package-upload-header mTop45">2. {{ _("TELL US SOME DETAILS ABOUT YOUR DATASET") }}</div>
+      <div class="package-upload-header mTop45 sspBold20" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
       {% block form %}{{ c.form | safe }}{% endblock %}
     </div>
     <div class="paddingLeftHack paddingRightHack" style="margin-top:0px;">
@@ -99,7 +91,6 @@
     $('option[value=-1]').attr('selected', true);
      });
   </script>
-
 {% endblock -%}
 
 {% block styles %}

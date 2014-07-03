@@ -522,6 +522,10 @@
         margin-top: 0;
         margin-bottom: 0;
     }
+    .mTB45{
+        margin-top: 45px;
+        margin-bottom: 45px;
+    }
     .pLR45{
         padding-left: 45px;
         padding-right: 45px;
@@ -668,6 +672,57 @@
     }
 /* END DropDown style */
 
+/* Style Select2 Dropdown */
+    .select2-container {
+        display: block;
+    }
+
+    .select2-container .select2-choice{
+        background-image: none;
+        border: medium none;
+        color: #888888;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        height: 44px;
+        line-height: 44px;
+        padding-left: 15px;
+        outline: none;
+    }
+
+    .select2-dropdown-open .select2-choice{
+        background-color: #ffffff;
+
+    }
+
+    .select2-dropdown-open.select2-drop-above .select2-choice{
+        background-color: #ffffff;
+        border: none;
+        background-image: none;
+    }
+
+    .select2-container .select2-choice .select2-arrow {
+        width: 31px;
+        background-color: #888888;
+        border: none;
+        background-image: none;
+        padding-top: 14px;
+        padding-left: 13px;
+    }
+
+    .select2-container .select2-choice .select2-arrow b {
+        border-left: 9px solid transparent;
+        border-right: 9px solid transparent;
+        border-top: 9px solid #ffffff;
+        display: inline;
+        background: none;
+    }
+
+    .select2-drop, .select2-drop.select2-drop-above.select2-drop-active{
+        border: none;
+    }
+
+/* END Style Select2 Dropdown */
 
 /* Style Dataset Item */
     .dataset-item {
