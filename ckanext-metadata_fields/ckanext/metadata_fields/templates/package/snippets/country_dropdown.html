@@ -8,13 +8,13 @@
   <div id="select_country" class="control-group dataset-required">
       {% set error = errors.groups_list %}
       {% if inheritied_form_style != 'edit' %}
-      <p class="sspBold20">{{ _("Are you submitting data for the country below") }}?</p>
+      <label for="country-drop" class="sspBold20">{{ _("Are you submitting data for the country below") }}?</label>
       <p class="sspRegular14">{{ _("if not, which country or countries does the dataset best represent? Please select from the dropdown.") }}</p>
       {% else %}
-      <label class="control-label" for="field-group">{{ _("Countries") }}</label>
+      <label class="control-label" for="country-drop">{{ _("Countries") }}</label>
       {% endif %}
     <div class="controls">
-        <select id="country-drop">
+        <select id="country-drop" data-module="autocomplete">
           <option value="-1">{{ _("Country / Countries") }}</option>
           {% for grp in available_groups  %}
             <option value="{{ grp.id }}" display_name="{{grp.display_name}}">{{ grp.display_name }}</option>

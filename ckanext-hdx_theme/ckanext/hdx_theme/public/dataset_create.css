@@ -8,20 +8,6 @@
 	float: left;
 }
 
-.dataset-form-info-field {
-    float: left;
-    margin-left: 30px;
-    margin-top: 35px;
-    background-color: #CCCCCC;
-	width: 300px;
-	color: #FFFFFF;
-	padding: 5px 10px;
-}
-
-.dataset-form-info-field-height {
-	height: 110px;
-	margin-top: 3px;
-}
 
 .field-with-info ~ .info-field{
 	opacity: 0;
@@ -38,29 +24,55 @@
 	width: 370px;
 }
 
-
-
 .dataset-form-field-wrapper .control-full textarea {
 	height: 120px;
 }
 
-.dataset-form-field-wrapper {
-	width: 670px;
-}
-.halfField {
-    width: 320px;
-    margin-left: 0;
-}
-.halfField:first-child{
-    margin-right: 30px;
-}
 
-.dataset-form-field-wrapper .select2-container {
-	display: block;
-	/* Needed to replace the important coming from main.min.css */
-	width: 370px !important;
-}
+/* Style Form items */
+    .dataset-form-field-wrapper {
+        width: 670px;
+    }
 
+    .dataset-form-info-field {
+        float: left;
+        margin-left: 30px;
+        margin-top: 25px;
+        background-color: #CCCCCC;
+        width: 300px;
+        color: #FFFFFF;
+        padding: 5px 10px;
+    }
+
+    .dataset-form-info-field-height {
+        height: 110px;
+    }
+
+    .halfField {
+        width: 320px;
+        margin-left: 0;
+    }
+    .halfField:first-child{
+        margin-right: 30px;
+    }
+
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .control-group .control-label {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #888888;
+        font-style: normal;
+        line-height: 20px;
+    }
+
+    .dataset-required label:after{
+        color: #f2645a
+    }
+/* END Style Form items */
 
 /* Style Country Selector */
     .countrySelectorDiv{
@@ -72,6 +84,10 @@
 
     .countrySelectorDiv .content{
         margin: 45px 40px;
+    }
+
+    .countrySelectorDiv .select2-container .select2-choice .select2-arrow {
+        background-color: #007ce0;
     }
 
     .countryMapDiv{
@@ -99,5 +115,9 @@
         cursor: pointer;
         margin-left: 20px;
 
+    }
+
+    #select_country{
+        margin-bottom: 20px;
     }
 /* END Style Country Selector */
