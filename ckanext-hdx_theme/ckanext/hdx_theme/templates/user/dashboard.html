@@ -22,7 +22,7 @@
         </ul>
       </header>
     {% endblock %}
-    <div class="module-content">
+    <div class="module-content mTop35">
       {% block primary_content_inner %}
         <div data-module="dashboard">
           {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
