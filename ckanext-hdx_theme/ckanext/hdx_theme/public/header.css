@@ -708,7 +708,6 @@
 
     .select2-container .select2-choice{
         background-image: none;
-        border: medium none;
         color: #888888;
         font-family: 'Gotham-Bold', sans-serif;
         font-weight: 400;
@@ -717,6 +716,23 @@
         line-height: 44px;
         padding-left: 15px;
         outline: none;
+        border-color: #ffffff;
+    }
+
+    .select2-container-multi .select2-choices{
+        box-shadow: none;
+        border-color: #ffffff;
+        background-image: none;
+    }
+
+    .select2-container-multi .select2-choices .select2-search-choice{
+        height: 28px;
+        line-height: 28px;
+
+    }
+
+    .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close{
+        top: 14px;
     }
 
     .select2-dropdown-open .select2-choice{
@@ -726,14 +742,12 @@
 
     .select2-dropdown-open.select2-drop-above .select2-choice{
         background-color: #ffffff;
-        border: none;
         background-image: none;
     }
 
     .select2-container .select2-choice .select2-arrow {
         width: 31px;
         background-color: #888888;
-        border: none;
         background-image: none;
         padding-top: 14px;
         padding-left: 13px;
@@ -747,9 +761,6 @@
         background: none;
     }
 
-    .select2-drop, .select2-drop.select2-drop-above.select2-drop-active{
-        border: none;
-    }
 
 /* END Style Select2 Dropdown */
 
