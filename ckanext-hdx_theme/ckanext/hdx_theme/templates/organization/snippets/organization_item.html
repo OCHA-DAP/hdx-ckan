@@ -42,7 +42,7 @@ Example:
     	{% if organization.description %}
       		<div class="list-items content">{{ h.markdown_extract(organization.description, extract_length=80) }}</div>
     	{% else %}
-      		<p class="empty">{{ _('This organization has no description') }}</p>
+      		<div class="list-items content empty">{{ _('This organization has no description') }}</div>
     	{% endif %}
 	  {% endblock %}
 	  
@@ -53,7 +53,7 @@ Example:
 	  {% endblock %}
 	  
 	  {% block counters %}
-	  <div class="list-items counter">
+	  <div class="list-items mTop20">
 		  {% block datasets %}
 			  {% if organization.packages %}
 			    {% if organization.packages is number %}
@@ -61,18 +61,25 @@ Example:
 			    {% else %}
 			    	{% set num_of_pack = organization.packages|length %}
 			    {% endif %}
-			   <span class="count">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</span>
+			   <span class="sspBold14">
+			   		 <a class="sspBold14" href="{{ h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+			   	</span>
 			   {% else %}
-			      <span class="count">{{ _('0 Datasets') }}</span>
+			      <span class="sspBold14">{{ _('0 Datasets') }}</span>
 			   {% endif %}
 		  {% endblock %}
 		-
 		  {% block members %}
-		   <span class="count">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</span>
+			  {% set group_members_url = h.url_for(controller='organization', action='members', id=organization.name or organization.title, sort='metadata_modified desc') %}
+			  {% if members == 0 %}
+			  	<span class="sspBold14">{{members}} {{ _('Members') }}</span>
+			  {% else %}
+			   	<a class="sspBold14" href="{{ group_members_url }}">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</a>
+			  {% endif %}
 		  {% endblock %}
 		-
 		  {% block followers %}
-		   <span class="count">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+		   <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
 		  {% endblock %}
 	  </div>
 	  {% endblock %}

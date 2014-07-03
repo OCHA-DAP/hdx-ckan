@@ -167,6 +167,12 @@
         font-weight: 700;
         font-size: 16px;
     }
+    
+    .sspBold14{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+    }
 
     .sspBold20{
         font-family: 'Source Sans Pro', sans-serif;
@@ -513,6 +519,9 @@
     .mTop8{
         margin-top: 8px;
     }
+    .mTop10{
+        margin-top: 10px;
+    }
     .mLR45{
         margin-left: 45px;
         margin-right: 45px;
@@ -559,12 +568,18 @@
         margin-right: 45px;
     }
     .mL35{
-        margin-left: 45px;
+        margin-left: 35px;
     }
     .mR35{
-        margin-right: 45px;
+        margin-right: 35px;
     }
 
+    .mL30{
+        margin-left: 30px;
+    }
+    .mR30{
+        margin-right: 30px;
+    }
     hr{
         margin: 0;
     }
@@ -575,6 +590,9 @@
     .border-bottom-grey{
     	border-top: none;
     	border-bottom: 1px solid #dddddd;
+    }
+    .center{
+    	text-align: center;
     }
 /* END Common Classes */
 
@@ -752,6 +770,7 @@
 	}
 	.dataset-item .dataset-heading a {
     	color: #000000;
+    	text-decoration: none;
 	}
 
     .updatedNameColor, .updatedNameColor a{
