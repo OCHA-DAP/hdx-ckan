@@ -3,7 +3,7 @@
 
 <div>
 {% block primary_content %}
-{% snippet "snippets/greeting_message.html", show_small_message=False, greeting=_('Thanks for contributing - you rock.') %}
+{% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Thanks for contributing - you rock.'), explanation=_('You don\'t currently belong to any organizations. You need to belong to an organization before you can contribute a dataset. Please choose an option below:') %}
 
  {% snippet "organization/snippets/mem_or_org.html", parent_route='dataset_preselect' %}
 
