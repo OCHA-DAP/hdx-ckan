@@ -73,6 +73,21 @@ a {
     text-decoration: none;
 }
 
+a.my-link{
+    color: #007ce0;
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+a.my-link-disabled{
+    color: #CCCCCC;
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 .activity .item p {
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
