@@ -11,13 +11,13 @@ truncate_title - The length to truncate the title to (default: 80).
 
 Example:
 
-  {% snippet 'snippets/package_list.html', packages=c.datasets %}
+  {% snippet 'snippets/package_list.html', packages=c.datasets, show_my_links=false %}
 
 #}
 {% if packages %}
   <ul class="list-items {{ list_class or 'dataset-list unstyled' }}">
     {% for package in packages %}
-      {% snippet 'snippets/package_item.html', package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title %}
+      {% snippet 'snippets/package_item.html', package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links %}
     {% endfor %}
   </ul>
 {% endif %}

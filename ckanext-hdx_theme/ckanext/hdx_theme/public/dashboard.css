@@ -65,11 +65,34 @@
     color: #ffffff;
 }
 
-a {
+a, a:hover, a:focus{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 16px;
     color: #007CE0;
+    text-decoration: none;
+}
+
+a.sspBold14, a.sspBold14:hover, a.sspBold14:focus{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: #007CE0;
+    text-decoration: none;
+}
+
+a.my-link{
+    color: #007ce0;
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    text-decoration: none;
+}
+a.my-link-disabled{
+    color: #CCCCCC;
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 14px;
+    font-weight: bold;
     text-decoration: none;
 }
 
