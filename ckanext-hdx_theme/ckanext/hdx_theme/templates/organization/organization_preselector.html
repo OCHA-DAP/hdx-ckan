@@ -10,11 +10,11 @@
 	{% set create_org_url = h.url_for(controller='organization', action='new') if c.am_sysadmin 
 				else h.url_for(controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_new_organization') %}
 	{% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Thanks for contributing - you rock.'),
-              explanation=_('First, please select the organization you will be contributing for. If you are not currently a member 
-              of the organization you\'d like to contribute to, 
-              <a href="'+find_org_url+'">find and request membership to the organization</a> 
+              explanation=_('First, please select the organisation you will be contributing for. If you are not currently a member 
+              of the organisation you\'d like to contribute to, 
+              <a href="'+find_org_url+'">find and request membership to the organisation</a> 
               or 
-              <a href="'+create_org_url+'">add a new organization</a>.') %}
+              <a href="'+create_org_url+'">add a new organisation</a>.') %}
 {% endblock %}
 
 {% block primary %}
