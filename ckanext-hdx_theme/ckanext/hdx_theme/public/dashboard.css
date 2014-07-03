@@ -65,10 +65,18 @@
     color: #ffffff;
 }
 
-a {
+a, a:hover, a:focus{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: bold;
     font-size: 16px;
+    color: #007CE0;
+    text-decoration: none;
+}
+
+a.sspBold14, a.sspBold14:hover, a.sspBold14:focus{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 14px;
     color: #007CE0;
     text-decoration: none;
 }
