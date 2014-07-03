@@ -37,7 +37,7 @@
     .dataset-form-info-field {
         float: left;
         margin-left: 30px;
-        margin-top: 25px;
+        margin-top: 65px;
         background-color: #CCCCCC;
         width: 300px;
         color: #FFFFFF;
@@ -56,8 +56,45 @@
         margin-right: 30px;
     }
 
-    .select2-container {
+    .select2-container, .control-full .select2-container {
         width: 100% !important;
+    }
+
+    .dataset-required label:after{
+        color: #f2645a
+    }
+
+    .editor textarea{
+        margin-bottom: 0;
+        border-radius: 3px;
+        border: 1px solid #ffffff;
+    }
+
+    .editor textarea:focus{
+        border-color: rgba(82, 168, 236, 0.8);
+    }
+
+    .editor .editor-info-block{
+        border: none;
+        background: none;
+    }
+
+    .editor .editor-info-block a {
+        color: #007ce0;
+    }
+
+    textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+        border-color: #ffffff;
+        box-shadow: none;
+        padding-left: 15px;
+    }
+    
+    .slug-preview{
+        width: 670px;
+    }
+
+    .control-group{
+        margin-bottom: 0;
     }
 
     .control-group .control-label {
@@ -67,10 +104,28 @@
         color: #888888;
         font-style: normal;
         line-height: 20px;
+        margin-top: 40px;
     }
 
-    .dataset-required label:after{
-        color: #f2645a
+    .control-group .controls textarea{
+        height: 120px;
+    }
+
+    .control-group .controls input[type="text"] {
+        height: 44px;
+        line-height: 14px;
+    }
+
+    .control-group .controls input[type="radio"] {
+        top: -1px;
+        height: 28px;
+    }
+
+    .control-group .controls input, .control-group .controls textarea {
+        margin: 0;
+        padding: 0 0 0 15px;
+        font-size: 14px;
+        color: #000000;
     }
 /* END Style Form items */
 
