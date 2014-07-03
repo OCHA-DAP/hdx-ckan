@@ -17,9 +17,75 @@
           {% block country_list %}{{super()}}{% endblock %}
         </div>
       </div>
-      <div class="span11 countryMapDiv">
-        Place map here
+      <div id="country-map" class="span11 countryMapDiv">
       </div>
+<!-- LEAFLET MAP -->
+<link rel="stylesheet" href="http://leafletjs.com/dist/leaflet.css">
+<script src="/map/leaflet/leaflet.js"></script>
+<style>
+
+.svg-marker {
+    -webkit-animation: hdxani 1s 1;
+    cursor:pointer;
+    background:transparent;
+    -webkit-transform: translateX(-50%) translateY(-35px);
+    height:35px;
+    width: 35px;
+    padding:0 8%;
+    white-space: nowrap;
+    color:#fff;
+    font:500 14px/20px Arial;
+    background-size:100%;
+    background-image: url("data:image/svg+xml;utf8,<svg width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><path xmlns='http://www.w3.org/2000/svg' d='M16 0c-6.627 0-12 5.373-12 12s12 20 12 20 12-13.373 12-20-5.373-12-12-12zM16 20c-4.418 0-8-3.582-8-8s3.582-8 8-8 8 3.582 8 8-3.582 8-8 8zM16 8c-2.209 0-4 1.791-4 4s1.791 4 4 4 4-1.791 4-4-1.791-4-4-4z' fill='#F2645A'/></svg>");
+}
+
+@-webkit-keyframes hdxani 
+{
+from {-webkit-transform: translateX(-50%) translateY(-100px);}
+to {-webkit-transform: translateX(-50%) translateY(-35px);}
+}
+</style>
+<script type='text/javascript'>
+ 
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position){
+      var latitude = position.coords.latitude;
+      var longitude = position.coords.longitude;
+      });
+ 
+      
+      var map = L.map('country-map')
+      var HDXIcon = L.divIcon({
+    className: 'svg-marker',
+    iconSize: [35,35],
+    iconAnchor: [15,35]
+      });
+ 
+      L.tileLayer('https://{s}.tiles.mapbox.com/v3/reliefweb.wrl_hdx/{z}/{x}/{y}.png', {
+    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>',
+      maxZoom: 5
+      }).addTo(map);
+      
+      map.locate({setView: true, maxZoom: 5});
+ 
+      function onLocationFound(e) {
+        var radius = e.accuracy / 2;
+ 
+        L.marker(e.latlng,{
+    icon: HDXIcon
+}).addTo(map);
+ 
+        //L.circle(e.latlng, radius).addTo(map);
+      }
+ 
+      map.on('locationfound', onLocationFound);
+ 
+  }else {
+      $('#country-map').html("Geolocation API is not supported in your browser. :(");
+  }
+ 
+</script>
+<!-- LEAFLET MAP -->
     </div>
   </div>
 </div>
