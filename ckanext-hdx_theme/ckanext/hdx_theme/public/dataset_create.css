@@ -127,6 +127,12 @@
         font-size: 14px;
         color: #000000;
     }
+
+    .input-prepend .add-on{
+        line-height: 44px;
+        padding: 0 15px 0 15px;
+        height: 44px;
+    }
 /* END Style Form items */
 
 /* Style Country Selector */
