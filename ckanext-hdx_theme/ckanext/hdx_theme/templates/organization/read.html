@@ -1,38 +1,43 @@
 {% extends "organization/read_base.html" %}
 
-{% block page_header %}
-  <header class="module-content page-header">
   	 {% set can_create_dataset = h.check_access('package_create', {'organization_id': c.group_dict.id, 'owner_org': c.group_dict.id}) %}
      {% set can_edit = h.check_access('organization_update', {'id': c.group_dict.id}) %}
      {% set can_actions = can_create_dataset or can_edit %}
-     {% if can_actions %}
-      <div>
-		  {% if can_create_dataset %}
-	    	<div class="float-left">
-			    {% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
-			</div>
-		  {% endif %}
-		  {% if can_edit %}
-			<div class="float-right">
-			    {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
-			</div>
-		  {% endif %}
-      </div>
-      <span class="clear">&nbsp;</span>
-     {% endif %}
 
-    <div>
-	    <ul class="nav nav-tabs">
-	      {% block content_primary_nav %}
-			<li class="active">
-				{% link_for _('Datasets'), controller='organization', action='read', id=c.group_dict.name, class_='hdx-tab-button' %}
-			</li>
-   			{{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
-	      {% endblock %}
-	    </ul>
+{% block item_title_contrib %}
+    <div class="mTop35">
+      <h1 class="itemTitle">
+        {{ c.group_dict.name }}
+      </h1>
+	  {% if can_create_dataset %}
+	      <span class="followButtonContainer pull-right">
+	        {% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
+	      </span>
+      {% endif %}
     </div>
-  </header>
+    <div class="info-secondary-data">{{ _('updated on') }} {{ h.render_datetime(c.group_dict.metadata_modified or c.group_dict.metadata_created, with_hours=False) }}</div>
+
 {% endblock %}
+
+{% block page_header %}
+	<header class="module-content page-header paddingRowHack">
+		<ul class="nav nav-tabs paddingLeftHack paddingRightHack">
+		   {% block content_primary_nav %}
+				<li class="active">
+					{% link_for _('Datasets'), controller='organization', action='read', id=c.group_dict.name, class_='hdx-tab-button' %}
+				</li>
+			   	{{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
+		   {% endblock %}
+		</ul>
+	</header>
+	{% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
+		<div class="content_action">
+			{% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
+		</div>
+  	{% endif %}
+  	<br/>
+{% endblock %}
+
 
 {% block page_primary_action %}
 {% endblock %}

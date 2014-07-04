@@ -2,6 +2,7 @@
 .page-heading {
     margin-bottom: 35px;
     margin-top: 0;
+    line-height: 20px;
 }
 
 
@@ -66,9 +67,6 @@
 }
 
 a, a:hover, a:focus{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: bold;
-    font-size: 16px;
     color: #007CE0;
     text-decoration: none;
 }
@@ -80,6 +78,15 @@ a.sspBold14, a.sspBold14:hover, a.sspBold14:focus{
     color: #007CE0;
     text-decoration: none;
 }
+
+a.sspBold16, a.sspBold16:hover, a.sspBold16:focus{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    color: #007CE0;
+    text-decoration: none;
+}
+
 
 a.my-link{
     color: #007ce0;

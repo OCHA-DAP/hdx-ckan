@@ -584,7 +584,7 @@
         margin: 0;
     }
     hr.dotted{
-        border-top:1px dotted #cccccc;
+        border-top:1px dotted #888888;
         border-bottom: none;
     }
     .border-bottom-grey{
@@ -593,6 +593,9 @@
     }
     .center{
     	text-align: center;
+    }
+    .no-transform{
+    	text-transform: none;
     }
 /* END Common Classes */
 
@@ -886,11 +889,9 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 600;
         font-size: 18px;
-
         margin: 35px 0;
         padding: 0 0 35px;
-
-        border-bottom: 1px dotted #cccccc;
+        border-bottom: 1px dotted #888888;
     }
     .secondary .pTopBottom35 .module-heading {
         margin: 0;
@@ -1067,7 +1068,12 @@
 /* END Style tabs*/
 
 
-/* Dashboard Style */
-
-
-/* END Dashboard Style*/
+/* datasets and orgs view&list */
+.itemTitle{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    display: inline;
+    line-height: 36px;
+}
+/* END STYLE datasets and orgs view&list*/
