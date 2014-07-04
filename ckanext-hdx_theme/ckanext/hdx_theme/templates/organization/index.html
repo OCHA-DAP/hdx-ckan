@@ -1,9 +1,9 @@
 {% extends "page.html" %}
 
-{% block subtitle %}{{ _('Organizations') }}{% endblock %}
+{% block subtitle %}{{ _('Organisations') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li class="active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
 {% endblock %}
 
 {% block page_header %}{% endblock %}
@@ -11,9 +11,9 @@
 {% block page_primary_action %}
   {% if h.check_access('organization_create') %}
     {% if c.userobj.sysadmin %}
-    	{% link_for _('Add Organization'), controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
+    	{% link_for _('Add Organisation'), controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
     {% else %}
-   		 <a href="/organization/request_new?from=organization" class="btn btn-primary">{{ _("Request New Organization")}}</a>
+   		 <a href="/organization/request_new?from=organization" class="btn btn-primary">{{ _("Request New Organisation")}}</a>
     	
     {% endif %}
     
@@ -21,17 +21,17 @@
 {% endblock %}
 
 {% block primary_content_inner %}
-      <h1 class="hide-heading">{% block page_heading %}{{ _('Organizations') }}{% endblock %}</h1>
+      <h1 class="hide-heading">{% block page_heading %}{{ _('Organisations') }}{% endblock %}</h1>
       {% block organizations_search_form %}
         {% set sorting_option = c.sort_by_selected or 'name asc' %}
-        {% snippet 'snippets/search_form.html', type='organization', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search organizations...'), show_empty=request.params %}
+        {% snippet 'snippets/search_form.html', type='organization', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search organisations...'), show_empty=request.params %}
       {% endblock %}
       {% block organizations_list %}
       {% if c.page.items or request.params %}
         {% snippet "organization/snippets/organization_list.html", organizations=c.page.items %}
       {% else %}
         <p class="empty">
-          {{ _('There are currently no organizations for this site') }}.
+          {{ _('There are currently no organisations for this site') }}.
           {% if h.check_access('organization_create') %}
             {% link_for _('How about creating one?'), controller='organization', action='new' %}</a>.
           {% endif %}
