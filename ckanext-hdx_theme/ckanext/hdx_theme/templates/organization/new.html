@@ -1,25 +1,25 @@
 {% extends "organization/base_form_page.html" %}
 
-{% block subtitle %}{{ _('Create an Organization') }}{% endblock %}
+{% block subtitle %}{{ _('Create an Organisation') }}{% endblock %}
 
 {% block breadcrumb_link %}
-	{{ h.nav_link(_('Create an Organization'), controller='organization', action='edit', id=c.organization.name) }}
+	{{ h.nav_link(_('Create an Organisation'), controller='organization', action='edit', id=c.organization.name) }}
 {% endblock %}
 
-{# block page_heading %}{{ _('Create an Organization') }}{% endblock #}
+{# block page_heading %}{{ _('Create an Organisation') }}{% endblock #}
 
 {# block page_header %}{% endblock #}
 
 {% block breadcrumb_content %}
 	{% block breadcrumb_content_inner %}
-  <li class="active">{% link_for _('Add Organization'), controller='organization', action='new'%}</li>
+  <li class="active">{% link_for _('Add Organisation'), controller='organization', action='new'%}</li>
 	{% endblock %}
 {% endblock %}
 
 {% block toolbar %}
     {{ super() }}
-    {% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Creating an organization is easy.'),
-              explanation=_('Organizations don\'t have to be legal entities - they can be informal groups that users create to share data publicily or privately.') %}
+    {% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Creating an organisation is easy.'),
+              explanation=_('Organisations don\'t have to be legal entities - they can be informal groups that users create to share data publicily or privately.') %}
 {% endblock %}
 
 {% block primary %}
@@ -38,7 +38,7 @@
 		    <h1 class="h1-title uppercase">
 		      {% block page_heading %}1. {{ _('Basic Details') }}{% endblock %}
 		    </h1>
-		    <p>{{ _('Tell us some basic details about your organization.') }}</p>
+		    <p>{{ _('Tell us some basic details about your organisation.') }}</p>
 		    {% block form %}
 		      {{ c.form | safe }}
 		    {% endblock %}
