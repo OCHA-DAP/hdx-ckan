@@ -1068,7 +1068,12 @@
 /* END Style tabs*/
 
 
-/* Dashboard Style */
-
-
-/* END Dashboard Style*/
+/* datasets and orgs view&list */
+.itemTitle{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    display: inline;
+    line-height: 36px;
+}
+/* END STYLE datasets and orgs view&list*/
