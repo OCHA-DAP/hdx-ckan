@@ -3,7 +3,7 @@
 {% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li>{% link_for _('Organisations'), controller='organization', action='index' %}</li>
   <li>{% link_for c.group_dict.display_name|truncate(35), controller='organization', action='read', id=c.group_dict.name %}</li>
 {% endblock %}
 
