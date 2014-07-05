@@ -681,7 +681,7 @@
 
     .select2-dropdown-open .select2-choice{
         background-color: #ffffff;
-
+        border-color: #5897fb;
     }
 
     .select2-dropdown-open.select2-drop-above .select2-choice{
@@ -810,9 +810,7 @@
         width: 100%;
         background-color: #FFFFFF;
         position: relative;
-        min-height: 350px;
     }
-
 /* END Style default Primary */
 
 /* Style default Secondary */

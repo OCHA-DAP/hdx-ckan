@@ -182,3 +182,70 @@
         margin-bottom: 20px;
     }
 /* END Style Country Selector */
+
+
+/* Style the resource type selector */
+    .radio.inline+.radio.inline {
+        margin-left: 0;
+    }
+    .dataset-form-resource-types .radio{
+        height: 140px;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #888888;
+        line-height: 140px;
+        margin: 40px 0 0;
+        padding-right: 0;
+    }
+
+    .dataset-form-resource-types label.radio{
+        background-color: #ffffff;
+        border-radius: 10px;
+        text-transform: uppercase;
+        text-align: center;
+        font-style: normal;
+        border: 4px solid #ffffff;
+    }
+    .dataset-form-resource-types label.radio.type-file{
+        width: 325px;
+    }
+
+    .dataset-form-resource-types label.radio.type-url{
+        width: 245px;
+    }
+    .dataset-form-resource-types label.radio.type-url .underExample{
+        position: relative;
+        top: -60px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 12px;
+        text-transform: none;
+        color: #999999;
+    }
+
+
+    .dataset-form-resource-types input[type="radio"]:checked + label{
+        border-color: #007ce0;
+        font-weight: 400;
+        color: #007ce0;
+    }
+
+    .dataset-form-resource-types input[type="radio"]:checked + label::after{
+        background-image: url("/images/svg/check.svg");
+        position: absolute;
+        background-position: 0 0;
+        width: 40px;
+        height: 40px;
+        top: -20px;
+        left: 305px;
+    }
+    .dataset-form-resource-types input[type="radio"]:checked + label.type-url::after{
+        left: 225px;
+    }
+
+    .explanatoryText{
+        margin-left: 6px;
+        font-size: 12px;
+    }
+/* END Style the resource type selector */

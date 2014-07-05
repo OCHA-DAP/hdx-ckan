@@ -6,7 +6,13 @@
 
 {% resource 'hdx_theme/resource_form.js' %}
 
-<form class="dataset-form dataset-resource-form form-horizontal" method="post" action="{{ action }}" data-module="basic-form resource-form">
+{% block secondary %}
+{% endblock %}
+
+<div class="paddingRowHack">
+  <div class="paddingLeftHack paddingRightHack graybg">
+    <div class="datasetModule package-upload-header mTop45 sspBold20 required" style="color: #333333">2. {{ _("Select how you'd like to share the data")}}</div>
+<form class="dataset-form dataset-resource-form datasetModule" method="post" action="{{ action }}" data-module="basic-form resource-form">
   {% block stages %}
     {# An empty stages variable will not show the stages #}
     {% if stage %}
@@ -29,35 +35,40 @@
         after the input. This enables us to style the label based on the state
         of the radio using css. eg. input[type=radio]+label {}
         #}
-        <i class="ckan-icon ckan-icon-link-file"></i>
         <input id="field-resource-type-file" type="radio" name="resource_type" checked="checked" value="file" />
-        <label class="radio inline" for="field-resource-type-file">{{ _('Link to a file') }}</label>
-        <i class="ckan-icon ckan-icon-link-plugin"></i>
+        <label class="radio inline type-file" for="field-resource-type-file">{{ _('Upload a file') }}
+          <img src="/images/svg/fileupload.svg" style="top: -10px; left: 40px; position: relative;" />
+        </label>
+        <span class="radio inline" style="margin-left: 26px; margin-right: 26px;">
+          <span class="control-label"> OR </span>
+        </span>
         <input id="field-resource-type-api" type="radio" name="resource_type" value="api" />
-        <label class="radio inline" for="field-resource-type-api">{{ _('Link to an API') }}</label>
+        <label class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+      </div>
+      <div class="controls">
+        <div class="explanatoryText">{{ _("Format: xls, json, pdf, csv, txt") }}</div>
       </div>
     </div>
     {% endblock %}
 
     {% block basic_fields_url %}
-    {{ form.input('url', id='field-url', label=_('Resource'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large']) }}
+    {{ form.input('url', id='field-url', label=_('Resource'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper']) }}
     {% endblock %}
 
     {% block basic_fields_name %}
-    {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. Population'), value=data.name, error=errors.name, classes=['control-full']) }}
+    {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. Population'), value=data.name, error=errors.name, classes=['control-full', 'dataset-form-field-wrapper']) }}
     {% endblock %}
 
     {% block basic_fields_description %}
-    {{ form.markdown('description', id='field-description', label=_('Description'), placeholder=_('Some useful notes about the data'), value=data.description, error=errors.description) }}
+    {{ form.markdown('description', id='field-description', label=_('Description'), placeholder=_('Some useful notes about the data'), value=data.description, error=errors.description, classes=['dataset-form-field-wrapper']) }}
     {% endblock %}
 
     {% block basic_fields_format %}
     {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
-    {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium'], attrs=format_attrs) %}
-    <span class="info-block info-block-small">
-      <i class="icon-info-sign"></i>
-      {{ _('This is generated automatically. You can edit if you wish') }}
-    </span>
+    {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium', 'dataset-form-field-wrapper'], attrs=format_attrs) %}
+    <div class="controls">
+      <div class="explanatoryText">{{ _('This is generated automatically. You can edit if you wish') }}</div>
+    </div>
     {% endcall %}
     {% endblock %}
   {% endblock %}
@@ -100,3 +111,6 @@
     {# endif #}
   </div>
 </form>
+
+  </div>
+</div>

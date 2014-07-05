@@ -10,14 +10,29 @@
 
 {% block form %}{% snippet 'package/snippets/resource_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, stage=stage, allow_upload=g.ofs_impl and logged_in %}{% endblock %}
 
-{% block secondary_content %}
-{% endblock %}
+{% block secondary %}{% endblock %}
 
 
 {% block scripts %}
   {{ super() }}
   {% resource 'vendor/fileupload' %}
 {% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <style>
+      .module{
+        margin-top: 0;
+      }
+
+      .module .module-content{
+        padding-top: 0;
+        margin-bottom: 0;
+      }
+    </style>
+    <link rel="stylesheet" href="/dataset_create.css" />
+{% endblock %}
+
 
 {% block primary %}
 {% if c.action != 'resource_edit' %}
