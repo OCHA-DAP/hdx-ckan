@@ -127,6 +127,12 @@
         font-family: 'Gotham-Light';
         src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
     }
+    
+    @font-face {
+        font-family: 'Gotham-Thin';
+        src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+    }
+    
     @font-face {
         font-family: 'Gotham-Black';
         src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
@@ -1005,7 +1011,7 @@
     }
 
     .greeting-message .header-user-message {
-        font-family: 'Raleway', sans-serif;
+        font-family: 'Gotham-Thin', sans-serif;
         font-weight: 100;
         text-align: center;
         color: #000000;
@@ -1013,12 +1019,12 @@
     }
 
     .greeting-message .header-user-message-large {
-        font-size: 39pt;
+        font-size: 39px;
         margin-bottom: 25px;
     }
 
     .greeting-message .header-user-message-small {
-        font-size: 14pt;
+        font-size: 20px;
         margin-top: 25px;
     }
 
