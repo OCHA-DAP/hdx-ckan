@@ -1034,7 +1034,8 @@
 /* END Style Greeting message */
 
 .content_action {
-    float: right;
+    /*float: right;*/
+    text-align: right;
 }
 
 
