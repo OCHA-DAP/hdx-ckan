@@ -1065,11 +1065,7 @@ for example: in the user dashboard when the user has no organizations */
 	margin-top: 3px;
 	margin-bottom: 6px;
 }
-.member-actions {
-	position: absolute;
-	top: 20px;
-	right: 14px;
-}
+
 
 /* END Styling create organization page*/
 

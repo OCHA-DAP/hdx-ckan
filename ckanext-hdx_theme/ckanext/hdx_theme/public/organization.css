@@ -8,3 +8,18 @@ dt.uppercase {
     font-size: 12px;
     font-weight: 400;
 }
+
+.member-actions {
+	position: absolute;
+	top: 20px;
+	right: 14px;
+	display: inline-block;
+    font-size: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.btn.hdx-btn.main-hdx-btn {
+    margin-left: 10px;
+    padding: 4px 12px;
+}
