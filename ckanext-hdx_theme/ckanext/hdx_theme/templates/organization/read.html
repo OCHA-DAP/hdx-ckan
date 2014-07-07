@@ -10,12 +10,12 @@
         {{ c.group_dict.display_name or c.group_dict.title or c.group_dict.name }}
       </h1>
       
-	  {% if can_create_dataset %}
 	      <span class="followButtonContainer pull-right">
 	      	{{ h.follow_button('group', c.group_dict.id) }}<br/><br/>
-	        {% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
+		 	{% if can_create_dataset %}
+	        	{% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
+    		{% endif %}
 	      </span>
-      {% endif %}
     </div>
     <div class="info-secondary-data">{{ _('updated on') }} {{ h.render_datetime(c.group_dict.metadata_modified or c.group_dict.metadata_created or c.group_dict.created, with_hours=False) }}</div>
 
