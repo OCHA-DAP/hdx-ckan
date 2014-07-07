@@ -20,7 +20,8 @@
 {% endif %}
 
 {% block package_basic_fields_title %}
-<div class="{{ form_field_wrapper_classes }}">
+    <div>
+<div class="{{ form_field_wrapper_classes }} field-with-info">
 {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required', 'halfField', 'span3'], attrs={'data-module': 'slug-preview-target'}) }}
     {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full', 'control-large','dataset-required', 'halfField', 'span3']) }}
 </div>
@@ -32,6 +33,7 @@
   </div>
 {% endif %}
 <div style="clear:both;"/>
+      </div>
 {% endblock %}
 
 {% block package_basic_fields_description %}
