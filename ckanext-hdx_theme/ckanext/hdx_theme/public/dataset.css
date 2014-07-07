@@ -27,7 +27,8 @@
 
 .followButtonContainer{
 }
-
+/* moved to header.css as it is used in org title */
+/*
 .itemTitle{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 700;
@@ -35,6 +36,7 @@
     display: inline;
     line-height: 36px;
 }
+*/
 .followButtonContainer{
     line-height: 36px;
 }
