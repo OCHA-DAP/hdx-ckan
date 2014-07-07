@@ -268,3 +268,11 @@
     font-size: 18px;
     color: #ffffff;
 }
+
+.nav-simple .nav-item a{
+    color: #ffffff;
+}
+
+.nav-simple .nav-item a:hover, .nav-simple .nav-item a:focus{
+    background-color: #888888;
+}
