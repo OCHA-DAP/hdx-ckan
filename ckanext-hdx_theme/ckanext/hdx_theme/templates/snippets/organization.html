@@ -69,16 +69,5 @@ Example:
           #}
         </div>
       {% endif %}
-      
-
-	  {% set org_url = h.hdx_get_extras_element(organization.extras) %}  	 
-  	  {% if org_url != '' %}
-      <div class="org-nums">
-      	<h4 class="uppercase">{{ _('More Info About') }}&nbsp;{{ organization.title or organization.name }}</h4>
-      	<div>
-      		<a class="info-item-name" href="{{ org_url}}" target="_blank">{{ organization.title or organization.name }} {{_('Website')}}</a>
-      	</div>
-      </div>
-      {% endif %}
 
 {% endwith %}

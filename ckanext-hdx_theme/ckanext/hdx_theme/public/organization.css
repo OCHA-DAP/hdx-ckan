@@ -1,0 +1,10 @@
+.list-items.facet-items:last-child {
+   	border-bottom: 0px;
+}
+
+dt.uppercase {
+    color: #888888;
+    font-family: 'Gotham-Book',sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+}

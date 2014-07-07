@@ -7,7 +7,7 @@
 {% block item_title_contrib %}
     <div class="mTop35">
       <h1 class="itemTitle">
-        {{ c.group_dict.name }}
+        {{ c.group_dict.display_name or c.group_dict.title or c.group_dict.name }}
       </h1>
       
 	  {% if can_create_dataset %}
@@ -16,7 +16,7 @@
 	      </span>
       {% endif %}
     </div>
-    <div class="info-secondary-data">{{ _('updated on') }} {{ h.render_datetime(c.group_dict.metadata_modified or c.group_dict.metadata_created, with_hours=False) }}</div>
+    <div class="info-secondary-data">{{ _('updated on') }} {{ h.render_datetime(c.group_dict.metadata_modified or c.group_dict.metadata_created or c.group_dict.created, with_hours=False) }}</div>
 
 {% endblock %}
 
@@ -37,7 +37,6 @@
 			{% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
 		</div>
   	{% endif %}
-  	<br/>
 {% endblock %}
 
 
@@ -45,6 +44,20 @@
 {% endblock %}
 
 {% block primary_content_inner %}
+	{% block package_notes %}
+	    {% if c.group_dict.description %}
+	      <div class="notes embedded-content mBottom15">
+	        {{ c.group_dict.description }}
+	        {% set org_url = h.hdx_get_extras_element(c.group_dict.extras) %}  	 
+		  	{% if org_url != '' %}
+		      	<span>
+		      		{{ _('More info') }}
+		      		<a class="info-item-name" href="http://{{ org_url}}" target="_blank">{{ c.group_dict.title or c.group_dict.name }} {{_('Website')}}</a>
+		      	</span>
+ 	        {% endif %}
+	      </div>
+	    {% endif %}
+    {% endblock %}
     {% block groups_search_form %}
       {% set facets = {
         'fields': c.fields_grouped,
@@ -61,8 +74,9 @@
       {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}
       {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}	
       {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_option, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
-    {% endblock %}
-  {% block packages_list %}
+	{% endblock %}
+
+	{% block packages_list %}
       {% if c.page.items %}
         {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
         {% else %}

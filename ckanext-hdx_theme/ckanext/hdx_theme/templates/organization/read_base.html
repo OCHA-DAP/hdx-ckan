@@ -22,13 +22,18 @@
 
 
 {% block secondary_content %}
-  {% snippet 'snippets/organization_info.html', organization=c.group_dict, show_nums=true %}
-  {% block organization_facets %}{% endblock %}
+  {# snippet 'snippets/organization_info.html', organization=c.group_dict, show_nums=true #}
   {% set show_members_num = c.action != 'members' %}
   {% snippet 'snippets/organization.html', organization=c.group_dict, show_nums=true, show_members_num=show_members_num, user=c.user %}
+  {% block organization_facets %}{% endblock %}
 {% endblock %}
 
 {% block links %}
   {{ super() }}
   {% include "organization/snippets/feeds.html" %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/organization.css" />
 {% endblock %}
