@@ -9,6 +9,7 @@
       <h1 class="itemTitle">
         {{ c.group_dict.name }}
       </h1>
+      
 	  {% if can_create_dataset %}
 	      <span class="followButtonContainer pull-right">
 	        {% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
@@ -30,7 +31,8 @@
 		   {% endblock %}
 		</ul>
 	</header>
-	{% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
+	
+	{% if can_edit %}
 		<div class="content_action">
 			{% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
 		</div>
@@ -69,7 +71,7 @@
 			      {{ _('There are no datasets currently uploaded to this organisation.') }}
 			    </p>
 			    <p>
-			      {% if h.check_access('package_create', {'organization_id': c.group_dict.id}) %}
+			      {% if h.check_access('package_create', {'organization_id': c.group_dict.id, 'owner_org': c.group_dict.id}) %}
 				  		{% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %}
 				  {% endif %}
 			    </p>

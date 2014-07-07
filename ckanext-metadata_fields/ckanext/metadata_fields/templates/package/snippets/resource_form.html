@@ -11,9 +11,9 @@
 			{% set resource_uploader = username %}
 		{% endif %}
 		<div class="control-group">
-	        <label class="control-label" for="field-uploader">{{ _('Uploader') }}</label>
-	        <div class="controls">
-				<input type="text" value="{{ username }}" name="resource_uploader" id="field-uploader" readonly="readonly" />
+      <label class="hide control-label" for="field-uploader">{{ _('Uploader') }}</label>
+      <div class="controls">
+				<input type="hidden" value="{{ username }}" name="resource_uploader" id="field-uploader" readonly="readonly" />
 			</div>
 		</div>
 	{% endblock %}
