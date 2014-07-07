@@ -170,7 +170,7 @@
         background-color: #eeeeee;
     }
 
-    .countrySelectorDiv .pill {
+    .pill {
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 600;
         font-size: 14px;
@@ -184,7 +184,7 @@
         background-color: #888888;
         border-radius: 0;
     }
-    .countrySelectorDiv .pill .icon-remove {
+    .pill .icon-remove {
         cursor: pointer;
         margin-left: 20px;
 
