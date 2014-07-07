@@ -26,12 +26,12 @@ Example:
 		</div>
 		 {% if authorized %}
 			{% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
-	          <div class="btn-group member-actions">
-	            <a class="btn hdx-btn" href="#edit-member-div-{{member.name}}" data-toggle="modal" 
+	          <div class="member-actions">
+	            <a class="btn hdx-btn main-hdx-btn" href="#edit-member-div-{{member.name}}" data-toggle="modal" 
 	            	title="{{ _('Edit') }}">
 	              {{ _('Edit') }}
 	            </a>
-	            <a class="btn hdx-btn" 
+	            <a class="btn hdx-btn main-hdx-btn" 
 	            	href="#confirm-del-member-div-{{member.name}}" 
 	            	data-toggle="modal" title="{{ _('Delete') }}">
 	            	{% block delete_button_text %}<img src="/images/actions/delete.png" alt=" {{ _('Download') }}" />{% endblock %}

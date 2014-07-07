@@ -507,6 +507,9 @@
 
 
 /* Common Classes */
+    .mTop60{
+        margin-top: 60px;
+    }
     .mTop45{
         margin-top: 45px;
     }
@@ -521,6 +524,9 @@
     }
     .mTop10{
         margin-top: 10px;
+    }
+    .mBottom15{
+        margin-bottom: 15px;
     }
     .mLR45{
         margin-left: 45px;
@@ -965,6 +971,7 @@
     .list-items.facet-items {
         border-bottom: 1px solid #888888;
     }
+    
     /* overwrite the hover the selected facets - #702*/
     .nav-item.active > a:hover,
 	.nav-aside li.active a:hover {
@@ -1074,4 +1081,33 @@
     display: inline;
     line-height: 36px;
 }
+
+a, a:hover, a:focus{
+    color: #007CE0;
+    text-decoration: none;
+}
+.notes.embedded-content{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    max-width: 700px;
+}
+
+.org-nums dl{
+	margin-bottom: 20px;
+	border-bottom: 1px solid #888888;
+	margin-bottom: 20px;
+	padding-bottom: 15px;
+}
+.org-nums dt{
+	font-weight: 300;
+}
+
+.org-nums dd{
+	font-weight: 300;
+	margin-left: 0px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
 /* END STYLE datasets and orgs view&list*/
