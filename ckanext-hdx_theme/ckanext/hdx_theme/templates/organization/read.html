@@ -12,6 +12,7 @@
       
 	  {% if can_create_dataset %}
 	      <span class="followButtonContainer pull-right">
+	      	{{ h.follow_button('group', c.group_dict.id) }}<br/><br/>
 	        {% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
 	      </span>
       {% endif %}
@@ -51,7 +52,7 @@
 	        {% set org_url = h.hdx_get_extras_element(c.group_dict.extras) %}  	 
 		  	{% if org_url != '' %}
 		      	<span>
-		      		{{ _('More info') }}
+		      		&nbsp;&nbsp;&nbsp;{{ _('More info') }}
 		      		<a class="info-item-name" href="http://{{ org_url}}" target="_blank">{{ c.group_dict.title or c.group_dict.name }} {{_('Website')}}</a>
 		      	</span>
  	        {% endif %}
