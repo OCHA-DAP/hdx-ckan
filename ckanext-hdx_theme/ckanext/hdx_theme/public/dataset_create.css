@@ -133,6 +133,18 @@
         padding: 0 15px 0 15px;
         height: 44px;
     }
+
+    .form-actions{
+        border: none;
+        padding: 0;
+        margin: 45px 0 45px 0;
+    }
+
+    .form-actions .btn{
+        height: 60px;
+        min-width: 160px;
+        margin-left: 10px;
+    }
 /* END Style Form items */
 
 /* Style Country Selector */
