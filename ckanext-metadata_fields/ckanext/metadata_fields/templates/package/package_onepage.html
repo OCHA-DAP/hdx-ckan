@@ -105,7 +105,7 @@ to {-webkit-transform: translateX(-50%) translateY(-35px);}
 </div>
       <div class="form-actions">
         {% block cancel_button %}
-          <button class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</button>
+          <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
         {% endblock %}
         <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
       </div>

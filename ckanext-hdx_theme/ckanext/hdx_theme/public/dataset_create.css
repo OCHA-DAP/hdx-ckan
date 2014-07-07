@@ -144,6 +144,8 @@
         height: 60px;
         min-width: 160px;
         margin-left: 10px;
+        line-height: 60px;
+        padding: 0;
     }
 /* END Style Form items */
 
