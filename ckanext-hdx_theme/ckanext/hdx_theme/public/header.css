@@ -516,7 +516,7 @@
 	    padding-right: 0;
 	}
 
-    .mainContent .module:last-child{
+    .mainContent .primary .module:last-child{
         margin-bottom: 0;
     }
 /* END Main Content */
@@ -945,6 +945,18 @@
         font-size: 14px;
     }
 
+    .secondary .module{
+        margin-bottom: 20px;
+    }
+
+    .secondary .nav-simple .nav-item a{
+        color: #ffffff;
+    }
+
+    .secondary .nav-simple .nav-item a:hover, .secondary .nav-simple .nav-item a:focus{
+        background-color: #888888;
+    }
+
     .module-footer {
         border: 0;
     }
@@ -1071,7 +1083,8 @@
 /* END Style Greeting message */
 
 .content_action {
-    float: right;
+    /*float: right;*/
+    text-align: right;
 }
 
 

@@ -1,0 +1,17 @@
+{% extends "package/resource_edit_base.html" %}
+
+{% block subtitle %}{{ _('Edit') }} - {{ h.resource_display_name(res) }} - {{ h.dataset_display_name(pkg) }}{% endblock %}
+
+{% block form %}
+  {% snippet 'package/snippets/resource_edit_form.html', data=data, errors=errors, error_summary=error_summary, pkg_name=pkg.name, form_action=c.form_action, allow_upload=g.ofs_impl and logged_in %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+    <link rel="stylesheet" href="/dataset_create.css" />
+    <style>
+      .datasetModule{
+        margin-left: 0;
+      }
+    </style>
+{% endblock %}
