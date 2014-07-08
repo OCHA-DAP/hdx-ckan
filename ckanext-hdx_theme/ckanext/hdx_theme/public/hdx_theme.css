@@ -1012,6 +1012,7 @@ for example: in the user dashboard when the user has no organizations */
 }
 
 .hdx-modal.modal {
+	background-color: #eee;
 	width: inherit;
 	top: 30%;
 	margin-left: -220px;

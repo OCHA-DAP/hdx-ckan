@@ -27,4 +27,4 @@ def hdx_user_org_num(user_id):
     except logic.NotAuthorized:
             base.abort(401, _('Unauthorized to see organization member list'))    
         
-    return len(user)
+    return user

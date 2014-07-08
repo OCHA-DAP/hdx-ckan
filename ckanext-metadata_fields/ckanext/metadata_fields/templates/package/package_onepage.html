@@ -95,7 +95,7 @@ to {-webkit-transform: translateX(-50%) translateY(-35px);}
   <div class="paddingLeftHack paddingRightHack">
   <section class="module datasetModule">
     <div class="module-content" id="dataset_part_1">
-      <div class="package-upload-header mTop45 sspBold20" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
+      <div class="package-upload-header mTop45 sspBold20 mBottom40" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
       {% block form %}{{ c.form | safe }}{% endblock %}
     </div>
     <div class="paddingLeftHack paddingRightHack" style="margin-top:0px;">
@@ -105,7 +105,7 @@ to {-webkit-transform: translateX(-50%) translateY(-35px);}
 </div>
       <div class="form-actions">
         {% block cancel_button %}
-          <button class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</button>
+          <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
         {% endblock %}
         <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
       </div>

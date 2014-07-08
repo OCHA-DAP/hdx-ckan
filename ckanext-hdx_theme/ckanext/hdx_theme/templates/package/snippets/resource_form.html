@@ -13,7 +13,7 @@
       <div class="paddingRowHack">
         <div class="paddingLeftHack paddingRightHack graybg">
           <div class="datasetModule">
-          <div class="datasetModule package-upload-header mTop45 sspBold20 required" style="color: #333333">2. {{ _("Select how you'd like to share the data")}}</div>
+          <div class="package-upload-header mTop45 sspBold20 required mBottom40" style="color: #333333">2. {{ _("Select how you'd like to share the data")}}</div>
             {% block stages %}
               {# An empty stages variable will not show the stages #}
               {% if stage %}
@@ -25,7 +25,7 @@
 
             <input name="id" value="{{ data.id }}" type="hidden"/>
 
-            <div class="control-group dataset-form-resource-types">
+            <div class="control-group dataset-form-resource-types mBottom40">
               {% block basic_fields %}
 
               {% block basic_fields_data %}

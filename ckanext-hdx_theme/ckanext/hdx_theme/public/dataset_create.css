@@ -37,7 +37,7 @@
     .dataset-form-info-field {
         float: left;
         margin-left: 30px;
-        margin-top: 65px;
+        margin-top: 25px;
         background-color: #CCCCCC;
         width: 300px;
         color: #FFFFFF;
@@ -94,7 +94,7 @@
     }
 
     .control-group{
-        margin-bottom: 0;
+        margin-bottom: 40px;
     }
 
     .control-group .control-label {
@@ -104,7 +104,7 @@
         color: #888888;
         font-style: normal;
         line-height: 20px;
-        margin-top: 40px;
+        /*margin-top: 40px;*/
     }
 
     .control-group .controls textarea{
@@ -144,6 +144,8 @@
         height: 60px;
         min-width: 160px;
         margin-left: 10px;
+        line-height: 60px;
+        padding: 0;
     }
 /* END Style Form items */
 
@@ -170,7 +172,7 @@
         background-color: #eeeeee;
     }
 
-    .countrySelectorDiv .pill {
+    .pill {
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 600;
         font-size: 14px;
@@ -184,7 +186,7 @@
         background-color: #888888;
         border-radius: 0;
     }
-    .countrySelectorDiv .pill .icon-remove {
+    .pill .icon-remove {
         cursor: pointer;
         margin-left: 20px;
 
@@ -197,6 +199,9 @@
 
 
 /* Style the resource type selector */
+    .dataset-resource-form .dataset-form-resource-types{
+        margin-bottom: 40px;
+    }
     .radio.inline+.radio.inline {
         margin-left: 0;
     }
@@ -261,3 +266,18 @@
         font-size: 12px;
     }
 /* END Style the resource type selector */
+
+.info-wrapper .info-item-name{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+.nav-simple .nav-item a{
+    color: #ffffff;
+}
+
+.nav-simple .nav-item a:hover, .nav-simple .nav-item a:focus{
+    background-color: #888888;
+}
