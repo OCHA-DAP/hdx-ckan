@@ -91,6 +91,11 @@
     .offset2{
         margin-left: 230px;
     }
+
+    .offset1andHalf{
+        margin-left: 180px;
+    }
+
     .offset1{
         margin-left: 130px;
     }
@@ -132,12 +137,28 @@
         src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
     }
 
+    @font-face {
+        font-family: 'Gotham-Medium';
+        src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+    }
+
     .gothamBold12{
         font-family: 'Gotham-Bold', sans-serif;
         font-weight: 400;
         font-size: 12px;
     }
-    
+    .gothamBold20{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+    }
+
+    .gothamBold30{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 20px;
+    }
+
     .gothamBook12{
         font-family: 'Gotham-Book', sans-serif;
         font-weight: 400;
@@ -507,6 +528,9 @@
 
 
 /* Common Classes */
+    .mTop80{
+        margin-top: 80px;
+    }
     .mTop45{
         margin-top: 45px;
     }
@@ -562,6 +586,11 @@
     .pTopBottom35{
         padding-top: 35px;
         padding-bottom: 35px;
+    }
+
+    .pTopBottom80{
+        padding-top: 80px;
+        padding-bottom: 80px;
     }
 
     .mL45{
