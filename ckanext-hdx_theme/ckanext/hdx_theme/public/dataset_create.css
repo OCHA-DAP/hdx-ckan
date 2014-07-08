@@ -265,6 +265,20 @@
         margin-left: 6px;
         font-size: 12px;
     }
+
+    .resource-upload-field {
+        float: left;
+        overflow: visible;
+    }
+
+    .resource-upload-field input[type="file"]{
+        border-width: 60px 20px 63px 20px;
+        top: 40px;
+        padding: 0;
+        left: 0;
+    }
+
+
 /* END Style the resource type selector */
 
 .info-wrapper .info-item-name{
