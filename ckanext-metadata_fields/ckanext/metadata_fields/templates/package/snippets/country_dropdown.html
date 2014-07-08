@@ -25,13 +25,13 @@
   </div>
 
 <div class="control-group">
-        <div id="selected_groups" class="controls">
-  {% if data.groups %}
-          {% for group in data.groups %}
-            {% if group.id != '-1' %}
-          <span class="filtered pill">{{group.title}} <i id="field-group-{{ loop.index0 }}" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"/></span>
-          {% endif %}
-          {% endfor %}
+  <div id="selected_groups" class="controls">
+    {% if data.groups %}
+      {% for group in data.groups %}
+        {% if group.id != '-1' %}
+          <span class="filtered pill">{{group.title}} <i id="field-group-{{ loop.index0 }}" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"></i></span>
+        {% endif %}
+      {% endfor %}
     {% endif %}
   </div>
-      </div>
+</div>
