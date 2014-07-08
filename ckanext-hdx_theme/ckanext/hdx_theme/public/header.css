@@ -202,6 +202,9 @@
 	.black{
 		color: #000000;
 	}
+	.whitebg{
+		background-color: #ffffff;
+	}
 
 /* END Fonts */
 
@@ -503,10 +506,17 @@
         padding-left: 0;
         padding-right: 0;
         padding-bottom: 0;
-        margin-bottom: 10px;
+        margin-bottom: 0;
     }
 
-    .mainContent .module:last-child{
+	.mainContent .module-content.mBottom10 {
+	    margin-bottom: 10px;
+	    padding-bottom: 0;
+	    padding-left: 0;
+	    padding-right: 0;
+	}
+
+    .mainContent .primary .module:last-child{
         margin-bottom: 0;
     }
 /* END Main Content */
@@ -522,6 +532,9 @@
     .mBottom40{
         margin-bottom: 40px;
     }
+    .mBottom10{
+        margin-bottom: 10px;
+    }
     .mTop35{
         margin-top: 35px;
     }
@@ -536,6 +549,9 @@
     }
     .mBottom15{
         margin-bottom: 15px;
+    }
+    .mBottom35{
+        margin-bottom: 35px;
     }
     .mLR45{
         margin-left: 45px;
@@ -564,6 +580,11 @@
     .pLR45{
         padding-left: 45px;
         padding-right: 45px;
+    }
+    
+    .pTB15{
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
     .pR45{
         padding-right: 45px;
@@ -605,6 +626,9 @@
     .border-bottom-grey{
     	border-top: none;
     	border-bottom: 1px solid #dddddd;
+    }
+    .border-grey{
+    	border: 1px solid #dddddd;
     }
     .center{
     	text-align: center;
@@ -830,7 +854,7 @@
 		background: #eeeeee;
 	    border-top: 0;
 	    height: 45px;
-        margin-left: 0;
+        margin-left: -45px;
         margin-right: -45px;
         margin-bottom: 0;
 	}
@@ -919,6 +943,18 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         font-size: 14px;
+    }
+
+    .secondary .module{
+        margin-bottom: 20px;
+    }
+
+    .secondary .nav-simple .nav-item a{
+        color: #ffffff;
+    }
+
+    .secondary .nav-simple .nav-item a:hover, .secondary .nav-simple .nav-item a:focus{
+        background-color: #888888;
     }
 
     .module-footer {
@@ -1047,7 +1083,8 @@
 /* END Style Greeting message */
 
 .content_action {
-    float: right;
+    /*float: right;*/
+    text-align: right;
 }
 
 
@@ -1117,6 +1154,13 @@ a, a:hover, a:focus{
 	margin-left: 0px;
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+.header-user-message-med {
+    font-size: 12pt;
+    margin-top: 25px;
+    margin-bottom: 35px;
+    font-weight: bold;
 }
 
 /* END STYLE datasets and orgs view&list*/
