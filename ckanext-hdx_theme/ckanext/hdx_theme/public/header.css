@@ -500,7 +500,7 @@
         margin-bottom: 20px;
     }
 
-    .mainContent .module:last-child{
+    .mainContent .primary .module:last-child{
         margin-bottom: 0;
     }
 /* END Main Content */
@@ -907,6 +907,18 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         font-size: 14px;
+    }
+
+    .secondary .module{
+        margin-bottom: 20px;
+    }
+
+    .secondary .nav-simple .nav-item a{
+        color: #ffffff;
+    }
+
+    .secondary .nav-simple .nav-item a:hover, .secondary .nav-simple .nav-item a:focus{
+        background-color: #888888;
     }
 
     .module-footer {
