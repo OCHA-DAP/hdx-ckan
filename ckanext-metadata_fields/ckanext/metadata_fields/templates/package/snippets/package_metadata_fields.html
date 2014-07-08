@@ -13,120 +13,115 @@
 {% block dataset_fields %}
 
   {% block basic_field_date %}
-  <div>
-    <div class="{{ form_field_wrapper_classes }}">
+  <div class="" style="clear:both;">
       <div class="control-group" style="float: left; width: 290px;">
         <label class="control-label" for="field-ui_dataset_date">Date of Dataset</label>
         <div class="controls">
           <input type="text" name='ui_dataset_date' id='field-ui_dataset_date' onkeydown="return false;"
             data-module='hdx_datepicker' data-module-group='1' data-module-topic='date-field-clicked' data-module-alt_field_id='field-dataset_date'
             label="{{_('Date of Dataset')}}" placeholder="{{_('Date of Dataset')}}"
-            error='{{errors.dataset_date}}' class='control-full' style="width: 270px;">
+            error='{{errors.dataset_date}}' class='control-full' style="width: 270px;"/>
           <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
         </div>
       </div>
       <div class="control-group"  style="float: left; width: 30px; margin-left: 30px; margin-right: 30px; margin-top: 40px; text-align: center;">
         <div class="control-label"> OR </div>
       </div>
-      <div class="control-group" style="float: left; width: 290px;">
+      <div class="control-group field-with-info" style="float: left; width: 290px;">
         <label class="control-label" for="ui_date_range1">Date Range</label>
         <div class="controls">
           <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
             data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
             data-module-alt_field_id='date_range1'
-            label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:120px;float:left; margin-right:12px;">
+            label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:120px;float:left; margin-right:12px;"/>
           <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
           data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
           data-module-alt_field_id='date_range2'
-            label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:120px; float:left;">
+            label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:120px; float:left;"/>
           <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
           <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
         </div>
       </div>
-    </div>
-    {% if new_dataset %}
+      {% if new_dataset %}
           <div class="dataset-form-info-field info-field">
           {% trans %}
           What time period does this dataset refer to ?
           {% endtrans %}
-        </div>
+          </div>
       {% endif %}
-  <div>
+  </div>
   {% endblock %}
 
   {% block basic_field_methodology %}
   <div>
-  <div class="{{ form_field_wrapper_classes }}">
-    <div class="control-group">
-      <div>
-    <div id="field-dataset_methodology">
-    <label class="control-label" for="methodology">Methodology</label>
-      <div class="controls ">
-      <input type="radio" name="methodology" value="Census"> Census</input>
-      </div>
-      <div class="controls ">
-        <input type="radio" name="methodology" value="Sample Survey"> Sample Survey</input>
-      </div>
-      <div class="controls ">
-        <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data</input>
-      </div>
-      <div class="controls ">
-        <input type="radio" name="methodology" value="Registry"> Registry</div>
-      <div class="controls ">
-        <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
-      <br><input type="text" name="method_other" id="method_other" style="width:650px;">
-      <br><br>
-      {% set py_meth='' %}
-      {% if data.methodology %}
-       {% set py_meth = h.markdown_extract_strip(data.methodology) %}
-      {% endif %}
-      <script>
-        var meth = "{{ py_meth }}";
+    <div class="{{ form_field_wrapper_classes }} field-with-info">
+      <div class="control-group">
+        <div id="field-dataset_methodology">
+          <label class="control-label" for="methodology">Methodology</label>
+          <div class="controls ">
+            <input type="radio" name="methodology" value="Census"> Census</input>
+          </div>
+          <div class="controls ">
+            <input type="radio" name="methodology" value="Sample Survey"> Sample Survey</input>
+          </div>
+          <div class="controls ">
+            <input type="radio" name="methodology" value="Direct Observational Data/Anecdotal Data"> Direct Observational Data/Anecdotal Data</input>
+          </div>
+          <div class="controls ">
+            <input type="radio" name="methodology" value="Registry"> Registry</div>
+          <div class="controls ">
+            <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
+          </div>
+            <br><input type="text" name="method_other" id="method_other" style="width:650px;">
+          <br><br>
+          {% set py_meth='' %}
+          {% if data.methodology %}
+           {% set py_meth = h.markdown_extract_strip(data.methodology) %}
+          {% endif %}
+          <script>
+            var meth = "{{ py_meth }}";
 
-        if(meth.length>0 && meth.match("Other") ){
-          var other = meth.split(" - ");
-          document.getElementById('method_other').value = other[1];
-          meth = other[0];
-        }
+            if(meth.length>0 && meth.match("Other") ){
+              var other = meth.split(" - ");
+              document.getElementById('method_other').value = other[1];
+              meth = other[0];
+            }
 
-        var elements = document.getElementsByName("methodology");
-        var checkedFlag = false;
-        for(var e in elements){
-          if(meth == elements[e].value){
-            elements[e].checked = true;
-            checkedFlag = true;
+            var elements = document.getElementsByName("methodology");
+            var checkedFlag = false;
+            for(var e in elements){
+              if(meth == elements[e].value){
+                elements[e].checked = true;
+                checkedFlag = true;
+              }
+            }
+            //in any other case with "Other -" or not it will select the other option
+            if(meth.length>0 && !checkedFlag){
+              document.getElementById('meth_other_radio').checked = true;
+              document.getElementById('method_other').value = meth;
           }
-        }
-        //in any other case with "Other -" or not it will select the other option
-        if(meth.length>0 && !checkedFlag){
-          document.getElementById('meth_other_radio').checked = true;
-          document.getElementById('method_other').value = meth;
-      }
 
-        var date = "{{data.dataset_date}}";
-        if(date.match("-")){
-          var range = date.split("-");
-          //Clear single date field
-          document.getElementById('field-dataset_date').value = '';
+            var date = "{{data.dataset_date}}";
+            if(date.match("-")){
+              var range = date.split("-");
+              //Clear single date field
+              document.getElementById('field-dataset_date').value = '';
 
-          //Set range
-          document.getElementById('date_range1').value = range[0];
-          document.getElementById('date_range2').value = range[1];
-        }
+              //Set range
+              document.getElementById('date_range1').value = range[0];
+              document.getElementById('date_range2').value = range[1];
+            }
 
-      </script>
+          </script>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
-
-  </div>
     {% if new_dataset %}
         <div class="dataset-form-info-field info-field">
         {% trans %}
         How was this data gathered ?
         {% endtrans %}
-      </div>
+        </div>
     {% endif %}
   </div>
   {% endblock %}
@@ -140,7 +135,7 @@
     {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
     </div>
     {% if new_dataset %}
-        <div class="dataset-form-info-field info-field">
+      <div class="dataset-form-info-field info-field">
         {% trans %}
         The system will suggest matching tags. Please use existing tags where possible.
         {% endtrans %}
@@ -160,7 +155,7 @@
 				{% trans %}
 				Enter any potential caveats or comments (e.g. The dataset is not complete)
 				{% endtrans %}
-			</div>
+			  </div>
 		{% endif %}
     </div>
     <span class="clear" />
@@ -175,6 +170,4 @@
   {% if inheritied_form_style != 'edit' %}
     <input name="save" type="hidden" value="go-resource"/>
   {% endif %}
-</div>
-</div>
 {% endblock %}
