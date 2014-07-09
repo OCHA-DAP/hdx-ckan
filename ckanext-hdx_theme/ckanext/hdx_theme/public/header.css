@@ -625,6 +625,11 @@
         padding-top: 80px;
         padding-bottom: 80px;
     }
+    
+    .pBottom80{
+        padding-top: 0;
+        padding-bottom: 80px;
+    }
 
     .mL45{
         margin-left: 45px;
