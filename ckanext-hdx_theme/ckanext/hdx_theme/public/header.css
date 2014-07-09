@@ -1120,3 +1120,12 @@
     line-height: 36px;
 }
 /* END STYLE datasets and orgs view&list*/
+
+/* Info snippet style */
+    .info-wrapper .info-item-name{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: #ffffff;
+    }
+/* END Info snippet style */
