@@ -57,6 +57,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/organization/request_new', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_new_organization')
         map.connect('/organization/members/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='members')
         map.connect('dataset_preselect','/dataset/preselect', controller='ckanext.hdx_theme.preselect_dsform_controller:HDXPreselectOrgController', action='preselect')
+        map.connect('/organization/member_new/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='member_new')
 
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
         return map
