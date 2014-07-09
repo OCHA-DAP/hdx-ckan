@@ -625,6 +625,18 @@
         padding-top: 80px;
         padding-bottom: 80px;
     }
+    
+    .pTop80{
+        padding-top: 80px;
+    }
+    
+    .pBottom80{
+        padding-bottom: 80px;
+    }
+    
+    .pBottom35{
+        padding-bottom: 35px;
+    }
 
     .mL45{
         margin-left: 45px;
@@ -1193,3 +1205,12 @@ a, a:hover, a:focus{
 }
 
 /* END STYLE datasets and orgs view&list*/
+
+/* Info snippet style */
+    .info-wrapper .info-item-name{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        color: #ffffff;
+    }
+/* END Info snippet style */

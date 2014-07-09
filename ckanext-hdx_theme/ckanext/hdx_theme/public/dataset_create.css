@@ -281,9 +281,14 @@
 
 /* END Style the resource type selector */
 
-.info-wrapper .info-item-name{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 600;
-    font-size: 18px;
-    color: #ffffff;
+.primary .page-header{
+    padding-top: 0;
+}
+
+.primary .page-header .nav-tabs  li.active a{
+    background-color: transparent;
+}
+
+.primary .page-header .nav-tabs  li a:hover{
+    background-color: transparent;
 }
