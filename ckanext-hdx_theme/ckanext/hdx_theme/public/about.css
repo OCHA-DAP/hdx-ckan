@@ -1,0 +1,81 @@
+
+.roundImages{
+    text-align: center;
+}
+
+.roundImages img{
+    height: 210px;
+}
+
+.threeSectionTitle{
+    text-align: center;
+}
+
+.white{
+    color: #ffffff;
+}
+
+.black{
+    color: #000000;
+}
+
+.center{
+    text-align: center;
+}
+
+.left {
+    text-align: left;
+}
+
+.threeSectionTitle p{
+    color: #f2645a;
+    font-family: 'Gotham-Medium', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 24px;
+}
+
+.styleNo5 p {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+}
+
+.styleNo5 p.white {
+    color: #ffffff;
+}
+
+
+.styleNo5 p a{
+    color: #f2645a;
+    font-weight: bold;
+}
+
+.whatIsHDX{
+    font-family: 'Gotham Book',sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    color: #333333;
+    line-height: 36px;
+}
+.whatIsHDX strong{
+    font-family: 'Gotham-Bold', sans-serif;
+    font-size: 36px;
+    color: #333333;
+    line-height: 36px;
+}
+.hdxAbout{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #333333;
+    line-height: 16px;
+}
+
+.systemPrinciple{
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 400;
+    font-size: 30px;
+    color: #ffffff;
+}

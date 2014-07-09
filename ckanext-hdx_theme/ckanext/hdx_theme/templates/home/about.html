@@ -7,58 +7,206 @@
 {% endblock %}
 
 {% block primary %}
-  {#
-  <article class="module">
-    <div class="module-content">
-      {% block about %}
-        {% if g.site_about %}
-          {{ h.render_markdown(g.site_about) }}
-        {% else %}
-          <h1 class="page-heading">{{ _('About') }}</h1>
-          {% snippet 'home/snippets/about_text.html' %}
-        {% endif %}
-      {% endblock %}
+  <div class="paddingRowHack">
+    <div class="paddingLeftHack paddingRightHack pTopBottom80">
+      <div class="row" style="text-align: center">
+        <div class="whatIsHDX">What is <strong>HDX?</strong></div>
+      </div>
+      <div class="row hdxAbout mTop35">
+        <div class="offset3 span6">
+          {{ _("The Humanitarian Data Exchange (HDX) project aims to make humanitarian data easy to find and use for analysis.
+          We are working on three elements that will eventually combine into an integrated data platform.") }}
+        </div>
+      </div>
+      <div class="row roundImages mTop35">
+        <div class="offset1andHalf span3">
+          <img src="/images/aboutpage/ocha_about_repository.png" />
+        </div>
+        <div class="span3">
+          <img src="/images/aboutpage/ocha_about_analytics.png" />
+        </div>
+        <div class="span3">
+          <img src="/images/aboutpage/ocha_about_repository.png" />
+        </div>
+      </div>
+      <div class="row threeSectionTitle mTop35">
+        <div class="offset1andHalf span3">
+          <p>
+            {{ _("Repository") }}
+          </p>
+        </div>
+        <div class="span3">
+          <p>
+            {{ _("Analytics") }}
+          </p>
+        </div>
+        <div class="span3">
+          <p>
+            {{ _("Standards") }}
+          </p>
+        </div>
+      </div>
+      <div class="row styleNo5 mTop35">
+        <div class="offset1andHalf span3">
+          <p>
+            {{ _("The HDX Dataset Repository, where data providers can upload their raw data spreadsheets for others to find and use.") }}
+          </p>
+        </div>
+        <div class="span3">
+          <p>
+            {{ _("HDX Analytics, a refined database of high-value data that can be compared across countries and crises, with web-based tools for analysis and visualisation.") }}
+          </p>
+        </div>
+        <div class="span3">
+          <p>
+            {{ _("Standards to help share humanitarian data through the use of a consensus ") }} <a href="#hxl">{{ _("Humanitarian Exchange Language") }}</a>.
+          </p>
+        </div>
+      </div>
+
     </div>
-  </article>
-  #}
 
-<article class="module">
-	<div class="tabbable hdx-tabbable">
-	<header class="module-content page-header">
-	<ul class="nav nav-tabs">
-		<li class="active"><a href="#tab1" data-toggle="tab" class="hdx-tab-button">{{ _('What is HDX ?') }}</a></li>
-		<li><a href="#tab2" data-toggle="tab" class="hdx-tab-button">{{ _('Data Licenses') }}</a></li>
-		<li><a href="#tab3" data-toggle="tab" class="hdx-tab-button">{{ _('Terms of Service') }}</a></li>
-	</ul>
-	</header>
-	<div class="tab-content visible-tab-content">
-		<div class="tab-pane active" id="tab1">
-			{% snippet 'home/snippets/hdx_what_is.html' %}
-		</div>
-		<div class="tab-pane" id="tab2">
-			{% snippet 'home/snippets/hdx_licenses.html' %}
-		</div>
-		<div class="tab-pane" id="tab3">
-			{% snippet 'home/snippets/hdx_terms_of_service.html' %}
-		</div>
-	</div>
-	</div>
-</article>
+    <div class="paddingLeftHack paddingRightHack pTopBottom80" style="background-color: rgb(54,54,54);">
+      <div class="row center" style="text-align: center">
+        <div class="systemPrinciple">System principles</div>
+      </div>
+      <div class="row styleNo5 mTop35">
+        <div class="center">
+          <p class="white">{{ _("We are designing the HDX system with the following principles in mind:") }}</p>
+        </div>
+      </div>
+      <div class="row mTop35">
+        <div class="offset1 span10">
+          <div class="row">
+            <div class="span5">
+              <div class="row">
+                <div class="span5">
+                  <p class="gothamBold20 white">
+                    {{ _("Aggregation, not creation") }}
+                  </p>
+                </div>
+              </div>
+              <div class="row styleNo5">
+                <div class="span5">
+                  <p class="white">
+                    {{ _("HDX will aggregate data that already exists. We are not working on primary data collection or the creation of new indicators.") }}
+                  </p>
+                </div>
+              </div>
+            </div>
 
+            <div class="span5">
+              <div class="row">
+                <div class="span5">
+                  <p class="gothamBold20 white">
+                    {{ _("Open data") }}
+                  </p>
+                </div>
+              </div>
+              <div class="row styleNo5">
+                <div class="span5">
+                  <p class="white">
+                    {{ _("HDX will provide technical support for (a) sharing any data, and (b) allowing data providers to decide not to share some data for privacy, security or ethical reasons. Terms of use for data shared through the site will be available soon.") }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mTop35">
+            <div class="span5">
+              <div class="row">
+                <div class="span5">
+                  <p class="gothamBold20 white">
+                    {{ _("Progressive data enhancement") }}
+                  </p>
+                </div>
+              </div>
+              <div class="row styleNo5">
+                <div class="span5">
+                  <p class="white">
+                    {{ _("As data moves from the crowd-sourced dataset repository into the curated CHD database, we will take it through a quality review process to ensure that it is sourced, is trusted, and can be combined with data from other sources.") }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="span5">
+              <div class="row">
+                <div class="span5">
+                  <p class="gothamBold20 white">
+                    {{ _("Open technologies") }}
+                  </p>
+                </div>
+              </div>
+              <div class="row styleNo5">
+                <div class="span5">
+                  <p class="white">
+                    {{ _("HDX will use open-source, open content, and open data as often as possible to reduce costs and in the spirit of transparency. We will use an open-source software called ") }}<a href="http://ckan.org/">{{ _("CKAN") }}</a>{{ _(" for the dataset repository. You can find all of our code on ") }}<a href="https://github.com/OCHA-DAP">{{ _("GitHub") }}</a>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="paddingLeftHack paddingRightHack pTopBottom80">
+      <div class="row center" style="text-align: center">
+        <img src="/images/aboutpage/hdx-system-diagram.png" />
+      </div>
+    </div>
+
+    <div class="paddingLeftHack paddingRightHack pTopBottom80" style="background-color: #eeeeee;">
+      <div class="row">
+        <div class="span12">
+          <div class="row">
+            <div class="offset1 span2 gothamBold30 black">
+              {{ _("Goals") }}
+            </div>
+            <div class="span9 styleNo5">
+              <p>
+                {{ _("So, how is all of this going to help you do your job better? Right now, you probably spend too much time searching for data about a humanitarian crisis. When you eventually track down the data you need, you discover that a) it is locked in documents (situation reports, diagrams, maps), or b) it is stored in temporary Dropbox accounts that few people know about, or c) it is stored on someone's laptop in an overhead baggage compartment somewhere over the Pacific.") }}
+              </p>
+              <p class="mTop35">
+                {{ _("Once you've finished making phone calls and sending emails to find the information, you realize that you often don't know the original source, when and how it was collected, and whether you have permission to reuse it.") }}
+              </p>
+              <p class="mTop35">
+                {{ _("Phase one of HDX will address these challenges directly. We will create a place where you can find humanitarian data quickly and, as far as possible, where you can find the data's original source, its collection methodology, and information about your rights to reuse it. In the future, we will keep building on this foundation to address the quality, comparability and timeliness of humanitarian data.") }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="paddingLeftHack paddingRightHack pTopBottom80">
+      <div class="row">
+        <div class="span12">
+          <div class="row">
+            <div class="offset1 span2 gothamBold30 black">
+              {{ _("Project plan") }}
+            </div>
+            <div class="span9 styleNo5">
+              <img src="/images/aboutpage/projectPlan.png" />
+              <p class="mTop35">
+                {{ _("Over 2014, phase one of the HDX project falls into two major stages: initial development and further scaling. During the year, we will launch pilot projects in ") }}<strong>Colombia, Kenya</strong>{{ _("(for Eastern Africa) and ") }}<strong>Yemen</strong>.
+              </p>
+              <p class="mTop35">
+                {{ _("The HDX project is ambitious, but it presents an excellent opportunity to change the way humanitarians share, access and use data, with positive implications for those who need assistance. We want to ensure that users are at the center of our design process, so please join the conversation on our ") }}<a href="http://docs.hdx.rwlabs.org/blog/">blog</a>{{ _(" or volunteer your skills through our ") }}<a href="#getinvolved">{{ _("get involved") }}</a>{{ _(" page. You can also read more about the ") }}<a href="#hdxteam">{{ _("HDX team") }}</a>{{ _(", our ") }}<a href="#board">{{ _("board") }}</a>{{ _(" and our amazing ") }}<a href="#supporters">{{ _("supporters") }}</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
-{%- block scripts2 %}
-  {{ super() }}
-    <script>
-      <!-- Small script to jump on the right Bootstrap tab -->
-      $(document).ready(function() {
-          if (location.hash !== '') $('a[href="' + location.hash + '"]').tab('show');
-          return $('a[data-toggle="tab"]').on('shown', function(e) {
-            return location.hash = $(e.target).attr('href').substr(1);
-          });
-      });
-    </script>
-{% endblock -%}
-
-
 {% block secondary %}{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="/about.css" />
+{% endblock %}
