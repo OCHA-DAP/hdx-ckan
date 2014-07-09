@@ -1,115 +1,143 @@
-<div class="terms-of-service">
-<h2>{{ _('OCHA HDX Terms of Service') }}</h2>
-<p>
-  {% trans %}
-  	The following are an initial draft of the basic Terms of Service for data shared 
-  	through the Humanitarian Data Exchange (HDX) platform. Let us know what you think by contacting us through 
-  {% endtrans %}
-  <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>.	
-</p>
-<div>
-	<ol>
-		<li>
-		{% trans %}
-			HDX is for the purpose of sharing humanitarian data with a global community of users. 
-			Humanitarian data is defined as: 1) any data that is used to understand the context in which a humanitarian crisis is 
-			occurring (e.g. baseline data); and 2) any data that is about the people affected by the crisis and their needs, and the 
-			response by organizations and individuals seeking to help those people in need of assistance.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			Only registered users will be able to share data through the platform. Anonymous or non-registers users of the platform 
-			will only be able to browse data that has been shared by others.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			HDX will not store personal identifying information. All data shared through the platform must be sufficiently aggregated 
-			or anonymized so as to prevent identification of individuals or other harm to affected people and the humanitarian community.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			Organizations or individuals sharing data through the platform should ensure, to the extent possible, that all data was 
-			collected in a legal, ethical and responsible manner, including: 
-		{% endtrans %}
-			<ol type="a">
-				<li>
+<div class="paddingRightHack pTopBottom80">
+  <div class="row">
+    <div class="span12">
+      <div class="row">
+        <div class="offset1 span2 gothamBold30 black">
+          {{ _('OCHA HDX Terms of Service') }}
+        </div>
+        <div class="span9 styleNo5">
+          <p>
+            {{ _("So, how is all of this going to help you do your job better? Right now, you probably spend too much time searching for data about a humanitarian crisis. When you eventually track down the data you need, you discover that a) it is locked in documents (situation reports, diagrams, maps), or b) it is stored in temporary Dropbox accounts that few people know about, or c) it is stored on someone's laptop in an overhead baggage compartment somewhere over the Pacific.") }}
+            {{ _('The following are an initial draft of the basic Terms of Service for data shared through the Humanitarian Data Exchange (HDX) platform. Let us know what you think by contacting us through')}}
+			<a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>.
+          </p>
+          
+          <ol>
+			<li>
 				{% trans %}
-					 Obtaining informed consent from individuals or communities when possible. 
+					HDX is for the purpose of sharing humanitarian data with a global community of users. 
+					Humanitarian data is defined as: 1) any data that is used to understand the context in which a humanitarian crisis is 
+					occurring (e.g. baseline data); and 2) any data that is about the people affected by the crisis and their needs, and the 
+					response by organizations and individuals seeking to help those people in need of assistance.
 				{% endtrans %}
 				</li>
 				<li>
 				{% trans %}
-					 When informed consent cannot be obtained, that data is gathered with appropriate safeguards, 
-					 including a privacy impact assessment.  
+					Only registered users will be able to share data through the platform. Anonymous or non-registers users of the platform 
+					will only be able to browse data that has been shared by others.
 				{% endtrans %}
 				</li>
 				<li>
 				{% trans %}
-					 Efforts were made to avoid duplication of data collection efforts in order to avoid an unnecessary 
-					 burden by affected individuals and communities. 
+					HDX will not store personal identifying information. All data shared through the platform must be sufficiently aggregated 
+					or anonymized so as to prevent identification of individuals or other harm to affected people and the humanitarian community.
+				{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					Organizations or individuals sharing data through the platform should ensure, to the extent possible, that all data was 
+					collected in a legal, ethical and responsible manner, including: 
+				{% endtrans %}
+					<ol type="a">
+						<li>
+						{% trans %}
+							 Obtaining informed consent from individuals or communities when possible. 
+						{% endtrans %}
+						</li>
+						<li>
+						{% trans %}
+							 When informed consent cannot be obtained, that data is gathered with appropriate safeguards, 
+							 including a privacy impact assessment.  
+						{% endtrans %}
+						</li>
+						<li>
+						{% trans %}
+							 Efforts were made to avoid duplication of data collection efforts in order to avoid an unnecessary 
+							 burden by affected individuals and communities. 
+						{% endtrans %}
+						</li>
+					</ol>
+				</li>
+				<li>
+				{% trans %}
+					Registered users have the option to share data publicly or privately through the platform. Public data can be 
+					shared under a user-selected Creative Commons license or as public domain. Private data is only shared with the 
+					HDX users who have been given access to the data by the data contributor.
+				{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					Data shared privately through the platform will never be shared by OCHA as platform administrator without consent. 
+					Private data will be held securely and regular checks will be run on the HDX system to test for breaches.
+				{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					Should a user become aware of data shared through the HDX platform that could cause harm by being shared openly, 
+					the user should contact
+				{% endtrans %}
+					<a href="mailto:hdx@un.org">hdx@un.org</a> 
+					{% trans %}immediately to request that the data be removed.{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					Users can share both curated and uncurated data through the platform. The level of data validation will be clearly 
+					indicated through the user interface.
+				{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					Data shared through the HDX platform will be held indefinitely or until such a time that the data contributor deletes it, 
+					or there is a request from a user for it to be deleted. In the latter case, the user would have to provide a convincing 
+					reason (e.g. privacy) and possibly also supporting evidence for the claim.
+				{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					If a data source becomes aware of data that has been shared through the HDX platform by a third party and disagrees 
+					with it being shared, the data source should contact
+				{% endtrans %}
+					<a href="mailto:hdx@un.org">hdx@un.org</a> 
+					{% trans %} to request that the data be removed.{% endtrans %}
+				</li>
+				<li>
+				{% trans %}
+					If OCHA as system administrator of the HDX platform becomes aware of any data that is in violation of these 
+					Terms of Service, OCHA will contact the individual or organization to notify them.
 				{% endtrans %}
 				</li>
 			</ol>
-		</li>
-		<li>
-		{% trans %}
-			Registered users have the option to share data publicly or privately through the platform. Public data can be 
-			shared under a user-selected Creative Commons license or as public domain. Private data is only shared with the 
-			HDX users who have been given access to the data by the data contributor.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			Data shared privately through the platform will never be shared by OCHA as platform administrator without consent. 
-			Private data will be held securely and regular checks will be run on the HDX system to test for breaches.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			Should a user become aware of data shared through the HDX platform that could cause harm by being shared openly, 
-			the user should contact
-		{% endtrans %}
-			<a href="mailto:hdx@un.org">hdx@un.org</a> 
-			{% trans %}immediately to request that the data be removed.{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			Users can share both curated and uncurated data through the platform. The level of data validation will be clearly 
-			indicated through the user interface.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			Data shared through the HDX platform will be held indefinitely or until such a time that the data contributor deletes it, 
-			or there is a request from a user for it to be deleted. In the latter case, the user would have to provide a convincing 
-			reason (e.g. privacy) and possibly also supporting evidence for the claim.
-		{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			If a data source becomes aware of data that has been shared through the HDX platform by a third party and disagrees 
-			with it being shared, the data source should contact
-		{% endtrans %}
-			<a href="mailto:hdx@un.org">hdx@un.org</a> 
-			{% trans %} to request that the data be removed.{% endtrans %}
-		</li>
-		<li>
-		{% trans %}
-			If OCHA as system administrator of the HDX platform becomes aware of any data that is in violation of these 
-			Terms of Service, OCHA will contact the individual or organization to notify them.
-		{% endtrans %}
-		</li>
-	</ol>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<h3>About these Terms</h3>
-<p>
-{% trans %}
-	OCHA may modify these terms or any additional terms that apply to the HDX platform to reflect changes to our services. 
-	Users should look at the terms regularly. OCHA will post notice of modifications to these terms. 
-	If you do not agree to these terms, you should discontinue use of the HDX platform.
-{% endtrans %}
-</p>
+
+
+
+<div class="paddingRightHack pBottom80">
+  <div class="row">
+    <div class="span12">
+      <div class="row">
+        <div class="offset1 span2 gothamBold30 black">
+          {{ _('About these Terms') }}
+        </div>
+        <div class="span9 styleNo5">
+          <p>
+			{% trans %}
+				OCHA may modify these terms or any additional terms that apply to the HDX platform to reflect changes to our services. 
+				Users should look at the terms regularly. OCHA will post notice of modifications to these terms. 
+				If you do not agree to these terms, you should discontinue use of the HDX platform.
+			{% endtrans %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+
+
+
+
+
