@@ -48,6 +48,8 @@ class DashboardController(uc.UserController):
 			return display_name or fullname or title or name
 
 		if (filter_type and filter_id):
+			c.group_dict = self._action('group_show')(context, {'id': filter_id})
+            filter_type = 'organization' if c.group_dict['is_organization'] else 'group' #patch for db entries
 			context = {
 				'model': model, 'session': model.Session,
 				'user': c.user or c.author, 'auth_user_obj': c.userobj,
@@ -60,7 +62,7 @@ class DashboardController(uc.UserController):
 				'dataset': 'package_show',
 				'user': 'user_show',
 				'group': 'group_show',
-				'org' : 'organization_show' #ADD BY HDX
+				'organization' : 'organization_show' #ADD BY HDX
 			}
 			action_function = logic.get_action(
 				action_functions.get(filter_type))
@@ -115,7 +117,7 @@ class DashboardController(uc.UserController):
 				'dataset': 'package_activity_list_html',
 				'user': 'user_activity_list_html',
 				'group': 'group_activity_list_html',
-				'org': 'organization_activity_list_html' #ADDED BY HDX
+				'organization': 'organization_activity_list_html' #ADDED BY HDX
 			}
 			action_function = logic.get_action(action_functions.get(filter_type))
 			return action_function(context, {'id': filter_id, 'offset': offset})
