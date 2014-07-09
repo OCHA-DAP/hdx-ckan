@@ -1,6 +1,7 @@
 setup.py
 ckanext/__init__.py
 ckanext/hdx_orgs/__init__.py
+ckanext/hdx_orgs/dashboard.py
 ckanext/hdx_orgs/plugin.py
 ckanext_hdx_orgs.egg-info/PKG-INFO
 ckanext_hdx_orgs.egg-info/SOURCES.txt
