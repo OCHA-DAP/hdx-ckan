@@ -48,13 +48,17 @@ class DashboardController(uc.UserController):
 			return display_name or fullname or title or name
 
 		if (filter_type and filter_id):
-			c.group_dict = self._action('group_show')(context, {'id': filter_id})
-            filter_type = 'organization' if c.group_dict['is_organization'] else 'group' #patch for db entries
 			context = {
 				'model': model, 'session': model.Session,
 				'user': c.user or c.author, 'auth_user_obj': c.userobj,
 				'for_view': True
 			}
+			try:
+				c.group_dict = logic.get_action('organization_show')(context, {'id': filter_id})#patch for db entries
+				if c.group_dict['is_organization']:
+					filter_type = 'organization'
+			except:
+				filter_type = filter_type
 			data_dict = {'id': filter_id}
 			followee = None
 
