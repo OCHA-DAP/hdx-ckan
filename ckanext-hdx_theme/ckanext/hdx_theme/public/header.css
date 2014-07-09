@@ -626,9 +626,16 @@
         padding-bottom: 80px;
     }
     
+    .pTop80{
+        padding-top: 80px;
+    }
+    
     .pBottom80{
-        padding-top: 0;
         padding-bottom: 80px;
+    }
+    
+    .pBottom35{
+        padding-bottom: 35px;
     }
 
     .mL45{
