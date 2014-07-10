@@ -677,6 +677,10 @@
     .no-transform{
     	text-transform: none;
     }
+    .txt-justify{
+    	text-align:justify;
+    }
+    
 /* END Common Classes */
 
 
