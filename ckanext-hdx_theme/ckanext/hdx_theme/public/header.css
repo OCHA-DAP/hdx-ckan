@@ -1091,8 +1091,8 @@
     }
 
     .greeting-message .header-user-message {
-        font-family: 'Gotham-Thin', sans-serif;
-        font-weight: 100;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 300;
         text-align: center;
         color: #000000;
         line-height: normal;
