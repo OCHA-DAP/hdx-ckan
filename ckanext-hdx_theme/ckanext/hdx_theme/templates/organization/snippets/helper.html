@@ -1,17 +1,35 @@
 <div class="module module-narrow module-shallow">
+  {% if logged_in %}
+  	<div class="mTB30">
+	    {% if is_sys_admin %}
+	    	{% link_for _('Add Organisation'), controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
+	    {% else %}
+	   		 <a href="/organization/request_new?from=organization" class="btn btn-primary">{{ _("+ Request New Organisation")}}</a>
+	    {% endif %}
+    </div>
+  {% endif %}
   <h2 class="module-heading">
     <i class="icon-info-sign"></i>
-    {{ _('What are Organizations?') }}
+    {{ _('What are Organisations?') }}
   </h2>
   <div class="module-content">
-    {% trans %}
-      <p>Organizations act like publishing departments for datasets (for
-        example, the Department of Health). This means that datasets can be
-        published by and belong to a department instead of an individual
-        user.</p>
-      <p>Within organizations, admins can assign roles and authorisation its
-        members, giving individual users the right to publish datasets from
-        that particular organisation (e.g. Office of National Statistics).</p>
-    {% endtrans %}
+    <p>
+      {% trans %}
+        In order to share data in HDX, a user needs to create an organisation. This can be a legal entity, such as WFP, or an informal group, such as the IMWG Bogota.
+      {% endtrans %}
+    </p>
+    <p>
+      {% trans %}
+        Organisations have three roles:
+      {% endtrans %}
+    </p>
+    <ul>
+    	<li>{{_('Administrators, who can add, edit and delete datasets and accept or refuse new members')}}</li>
+    	<li>{{_('Editors, who can add and edit datasets, but cannot delete datasets or manage membership')}}</li>
+    	<li>{{_('Members, who can view the organisation\'s private datasets, but cannot add new datasets or manage membership')}}</li>
+    </ul>
+    <p>
+      {{_('Users can request membership to an organisation through the organisation\'s profile page.')}}
+    </p>
   </div>
 </div>

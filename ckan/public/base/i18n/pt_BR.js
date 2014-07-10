@@ -36,6 +36,10 @@
     null,
     "Ocultar"
   ],
+  "Image": [
+    null,
+    "Imagem"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Entrada insuficiente. É necessário ao menos um caractere."
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "Favor confirmar a ação"
+  ],
+  "Remove": [
+    null,
+    "Remover"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Deixar de seguir"
+  ],
+  "Upload": [
+    null,
+    "Enviar"
   ],
   "Upload a file": [
     null,

@@ -3,6 +3,8 @@ from urllib import urlencode
 import datetime
 import cgi
 
+import helpers
+
 from pylons import config
 from genshi.template import MarkupTemplate
 from genshi.template.text import NewTextTemplate
@@ -164,6 +166,18 @@ class DatasetController(PackageController):
 			return self.new(data_dict, errors, error_summary)
 
 	def new(self, data=None, errors=None, error_summary=None):
+		#Is the user a member of any orgs? If not make them join one first
+		try:
+			user_orgs = helpers.hdx_user_org_num(c.userobj.id)
+			if len(user_orgs) == 0:
+				return render('organization/request_mem_or_org.html')
+			#If there's an org and the user is not a member of this org redirect back to org select
+				this_org = request.params['organization_id']
+				if this_org in user_orgs:
+					return render('organization/request_mem_or_org.html')
+		except:
+			return render('user/login.html', extra_vars={'contribute':True})
+
 		package_type = self._guess_package_type(True)
 
 		context = {'model': model, 'session': model.Session,

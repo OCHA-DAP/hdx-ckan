@@ -27,27 +27,24 @@ CKAN release you're upgrading to:
    checkout newer versions of the extensions at this point as well. Refer to
    the documentation for each extension.
 
-#. Update CKAN's dependencies::
+#. Update CKAN's dependencies:
 
-     pip install --upgrade -r pip-requirements.txt
+   .. versionchanged:: 2.1
+      In CKAN 2.0 and earlier the requirements file was called
+      ``pip-requirements.txt``, not ``requirements.txt`` as below.
 
-#. If you are upgrading to a new :ref:`major release <releases>` you need to
-   update your Solr schema symlink.
+   ::
 
-   When :ref:`setting up solr` you created a symlink
-   ``/etc/solr/conf/schema.xml`` linking to a CKAN Solr schema file such as
-   |virtualenv|/src/ckan/ckan/config/solr/schema-2.0.xml. This symlink
-   should be updated to point to the latest schema file in
-   |virtualenv|/src/ckan/ckan/config/solr/, if it doesn't already.
+     pip install --upgrade -r requirements.txt
 
-   For example, to update the symlink:
+#. Register any new or updated plugins:
 
-   .. parsed-literal::
+   ::
 
-     sudo rm /etc/solr/conf/schema.xml
-     sudo ln -s |virtualenv|/src/ckan/ckan/config/solr/schema-2.0.xml /etc/solr/conf/schema.xml
+     python setup.py develop
 
-   You will need to restart Jetty for the changes to take effect:
+#. If there have been changes in the Solr schema (check the :doc:`changelog`
+   to find out) you need to restart Jetty for the changes to take effect:
 
    .. parsed-literal::
 

@@ -19,6 +19,7 @@ import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.email_notifications as email_notifications
 import ckan.lib.search as search
+import ckan.lib.uploader as uploader
 
 from ckan.common import _, request
 
@@ -132,7 +133,7 @@ def related_update(context, data_dict):
     id = _get_or_bust(data_dict, "id")
 
     session = context['session']
-    schema = context.get('schema') or schema_.default_related_schema()
+    schema = context.get('schema') or schema_.default_update_related_schema()
 
     related = model.Related.get(id)
     context["related"] = related
@@ -167,12 +168,12 @@ def related_update(context, data_dict):
     activity_create_context = {
         'model': model,
         'user': context['user'],
-        'defer_commit':True,
+        'defer_commit': True,
+        'ignore_auth': True,
         'session': session
     }
 
-    _get_action('activity_create')(activity_create_context, activity_dict,
-                                   ignore_auth=True)
+    _get_action('activity_create')(activity_create_context, activity_dict)
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -207,31 +208,34 @@ def resource_update(context, data_dict):
         raise NotFound(_('Resource was not found.'))
 
     _check_access('resource_update', context, data_dict)
+    del context["resource"]
 
-    if 'schema' in context:
-        schema = context['schema']
+    package_id = resource.resource_group.package.id
+    pkg_dict = _get_action('package_show')(context, {'id': package_id})
+
+    for n, p in enumerate(pkg_dict['resources']):
+        if p['id'] == id:
+            break
     else:
-        package_plugin = lib_plugins.lookup_package_plugin(
-            resource.resource_group.package.type)
-        schema = package_plugin.update_package_schema()['resources']
+        logging.error('Could not find resource ' + id)
+        raise NotFound(_('Resource was not found.'))
 
-    data, errors = _validate(data_dict, schema, context)
-    if errors:
-        model.Session.rollback()
+    upload = uploader.ResourceUpload(data_dict)
+
+    pkg_dict['resources'][n] = data_dict
+
+    try:
+        context['defer_commit'] = True
+        context['use_cache'] = False
+        pkg_dict = _get_action('package_update')(context, pkg_dict)
+        context.pop('defer_commit')
+    except ValidationError, e:
+        errors = e.error_dict['resources'][n]
         raise ValidationError(errors)
 
-    rev = model.repo.new_revision()
-    rev.author = user
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Update object %s') % data.get("name", "")
-
-    resource = model_save.resource_dict_save(data, context)
-    if not context.get('defer_commit'):
-        model.repo.commit()
-    return model_dictize.resource_dictize(resource, context)
-
+    upload.upload(id, uploader.get_max_resource_size())
+    model.repo.commit()
+    return _get_action('resource_show')(context, {'id': id})
 
 
 def package_update(context, data_dict):
@@ -304,6 +308,11 @@ def package_update(context, data_dict):
     else:
         rev.message = _(u'REST API: Update object %s') % data.get("name")
 
+    #avoid revisioning by updating directly
+    model.Session.query(model.Package).filter_by(id=pkg.id).update(
+        {"metadata_modified": datetime.datetime.utcnow()})
+    model.Session.refresh(pkg)
+
     pkg = model_save.package_dict_save(data, context)
 
     context_org_update = context.copy()
@@ -334,6 +343,50 @@ def package_update(context, data_dict):
             else _get_action('package_show')(context, {'id': data_dict['id']})
 
     return output
+
+def package_resource_reorder(context, data_dict):
+    '''Reorder resources against datasets.  If only partial resource ids are
+    supplied then these are assumed to be first and the other resources will
+    stay in their original order
+
+    :param id: the id or name of the package to update
+    :type id: string
+    :param order: a list of resource ids in the order needed
+    :type list: list
+    '''
+
+    id = _get_or_bust(data_dict, "id")
+    order = _get_or_bust(data_dict, "order")
+    if not isinstance(order, list):
+        raise ValidationError({'order': 'Must be a list of resource'})
+
+    if len(set(order)) != len(order):
+        raise ValidationError({'order': 'Must supply unique resource_ids'})
+
+    package_dict = _get_action('package_show')(context, {'id': id})
+    existing_resources = package_dict.get('resources', [])
+    ordered_resources = []
+
+    for resource_id in order:
+        for i in range(0, len(existing_resources)):
+            if existing_resources[i]['id'] == resource_id:
+                resource = existing_resources.pop(i)
+                ordered_resources.append(resource)
+                break
+        else:
+            raise ValidationError(
+                {'order':
+                 'resource_id {id} can not be found'.format(id=resource_id)}
+            )
+
+    new_resources = ordered_resources + existing_resources
+    package_dict['resources'] = new_resources
+
+    _check_access('package_resource_reorder', context, package_dict)
+    _get_action('package_update')(context, package_dict)
+
+    return {'id': id, 'order': [resource['id'] for resource in new_resources]}
+
 
 def _update_package_relationship(relationship, comment, context):
     model = context['model']
@@ -408,7 +461,6 @@ def _group_or_org_update(context, data_dict, is_org=False):
     user = context['user']
     session = context['session']
     id = _get_or_bust(data_dict, 'id')
-    parent = context.get('parent', None)
 
     group = model.Group.get(id)
     context["group"] = group
@@ -423,6 +475,10 @@ def _group_or_org_update(context, data_dict, is_org=False):
                                                'context': context})
     except AttributeError:
         schema = group_plugin.form_to_db_schema()
+
+    upload = uploader.Upload('group', group.image_url)
+    upload.update_data_dict(data_dict, 'image_url',
+                           'image_upload', 'clear_upload')
 
     if is_org:
         _check_access('organization_update', context, data_dict)
@@ -464,23 +520,6 @@ def _group_or_org_update(context, data_dict, is_org=False):
         context['prevent_packages_update'] = True
     group = model_save.group_dict_save(data, context)
 
-    if parent:
-        parent_group = model.Group.get( parent )
-        if parent_group and not parent_group in group.get_groups(group.type):
-            # Delete all of this groups memberships
-            current = session.query(model.Member).\
-               filter(model.Member.table_id == group.id).\
-               filter(model.Member.table_name == "group").all()
-            if current:
-                log.debug('Parents of group %s deleted: %r', group.name,
-                          [membership.group.name for membership in current])
-            for c in current:
-                session.delete(c)
-            member = model.Member(group=parent_group, table_id=group.id, table_name='group')
-            session.add(member)
-            log.debug('Group %s is made child of group %s',
-                      group.name, parent_group.name)
-
     if is_org:
         plugin_type = plugins.IOrganizationController
     else:
@@ -520,16 +559,18 @@ def _group_or_org_update(context, data_dict, is_org=False):
         activity_create_context = {
             'model': model,
             'user': user,
-            'defer_commit':True,
+            'defer_commit': True,
+            'ignore_auth': True,
             'session': session
         }
-        _get_action('activity_create')(activity_create_context, activity_dict,
-                ignore_auth=True)
+        _get_action('activity_create')(activity_create_context, activity_dict)
         # TODO: Also create an activity detail recording what exactly changed
         # in the group.
 
+    upload.upload(uploader.get_max_image_size())
     if not context.get('defer_commit'):
         model.repo.commit()
+
 
     return model_dictize.group_dictize(group, context)
 
@@ -611,10 +652,11 @@ def user_update(context, data_dict):
     activity_create_context = {
         'model': model,
         'user': user,
-        'defer_commit':True,
+        'defer_commit': True,
+        'ignore_auth': True,
         'session': session
     }
-    _get_action('activity_create')(activity_create_context, activity_dict, ignore_auth=True)
+    _get_action('activity_create')(activity_create_context, activity_dict)
     # TODO: Also create an activity detail recording what exactly changed in
     # the user.
 
@@ -772,8 +814,9 @@ def term_translation_update_many(context, data_dict):
 
     context['defer_commit'] = True
 
+    action = _get_action('term_translation_update')
     for num, row in enumerate(data_dict['data']):
-        term_translation_update(context, row)
+        action(context, row)
 
     model.Session.commit()
 
@@ -1068,7 +1111,7 @@ def package_owner_org_update(context, data_dict):
             member_obj.state = 'deleted'
             member_obj.save()
 
-    # add the organization to memeber table
+    # add the organization to member table
     if org and need_update:
         member_obj = model.Member(table_id=pkg.id,
                                   table_name='package',

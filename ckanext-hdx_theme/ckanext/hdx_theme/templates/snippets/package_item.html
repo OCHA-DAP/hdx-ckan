@@ -40,16 +40,17 @@ Example:
         {% endif %}
         {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
       </h3>
-      <div>{{ _('Updated by') }}   			
-      		{% if package.organization %}
-  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
+      <div><span class="sspBold16">{{ _('Updated by') }}</span>
+        {% if package.organization %}
+  				<a class="sspBold16 updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
   					{{ package.organization.title or package.organization.name }}
   				</a>
   			{% else %}
-  			  	<a class="info-item-name" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
+          <a class="sspBold16 updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
   					{{ last_user.fullname }}
   				</a>
-  			{% endif %} - {{f_updated_time}}</div>
+  			{% endif %} - {{f_updated_time}}
+      </div>
       
       {% if banner %}
         <span class="banner">{{ _('Popular') }}</span>
@@ -68,6 +69,16 @@ Example:
           </li>
         {% endfor %}
       </ul>
+    {% endif %}
+    {% if show_my_links %}
+    <div class="mTop8">
+    	<span><a class="my-link-disabled uppercase" href="#">{{ _('Delete') }}</a>
+    	</span>
+    	<span class="mLR10">|</span>
+    	<span>
+    		{% link_for _('Edit'), controller='package', action='edit', id=package.name, class_='my-link uppercase' %}
+    	</span>
+    </div>
     {% endif %}
   {% endblock %}
 </li>

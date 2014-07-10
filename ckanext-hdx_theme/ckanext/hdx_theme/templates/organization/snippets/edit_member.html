@@ -9,7 +9,7 @@ Example:
 {% resource 'hdx_theme/hdx_autocomplete.js' %}
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
-  <div id="{{ modal_div_id }}" class="modal hide hdx-modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  <div id="{{ modal_div_id }}" class="modal hide hdx-modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
   	<div class="modal-header">
   		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
   		<h3 id="{{ modal_div_id }}-label">{{ _('Add Member') }}</h3>
@@ -20,7 +20,8 @@ Example:
 			{% set format_attrs = {'disabled': true, 'style':'width: 286px;'} %}
 			{{ form.input('username', label=_('User'), value=user, classes=['control-medium'], attrs=format_attrs) }}
 		{% else %}
-	  		{% set format_attrs = {'style':'width: 300px;', 'data-module': 'hdx_autocomplete', 'data-module-source': '/api/2/util/user/autocomplete?q=?'} %}
+	  		{% set format_attrs = {'style':'width: 300px;', 
+	  			'data-module': 'hdx_autocomplete', 'data-module-interval':'200' , 'data-module-source': '/api/2/util/user/autocomplete?q=?'} %}
 			{{ form.input('username', id='field-username', label=_('User'), placeholder=_('Username'), value='', error='', classes=['control-medium'], attrs=format_attrs) }}
 		{% endif %}
 		

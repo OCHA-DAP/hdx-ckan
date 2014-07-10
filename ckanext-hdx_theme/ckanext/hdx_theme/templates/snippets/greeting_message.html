@@ -1,13 +1,15 @@
-<div>
-	<div class="header-user-message header-user-message-large">
-		{{ greeting }}
-	</div>
-	<hr class="header-user-message-hr"></hr>
-	{% if show_small_message %}
-		<div class="header-user-message header-user-message-small">
-			{{ explanation }}
-		</div>
-		{% else %}
-		<br><br>
-	{% endif %}
+<div class="paddingRowHack">
+  <div class="greeting-message paddingLeftHack paddingRightHack">
+    <div class="header-user-message header-user-message-large">
+      {{ greeting }}
+    </div>
+    <hr class="header-user-message-hr"></hr>
+    {% if show_small_message %}
+      <div class="header-user-message header-user-message-small">
+        {{ explanation|safe }}
+      </div>
+      {% else %}
+      <br><br>
+    {% endif %}
+  </div>
 </div>

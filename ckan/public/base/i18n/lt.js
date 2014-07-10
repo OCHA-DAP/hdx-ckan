@@ -36,6 +36,10 @@
     null,
     "Paslėpti"
   ],
+  "Image": [
+    null,
+    "Paveikslėlis"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Įvestis yra per trumpa, turi būti mažiausiai vienas simbolis"
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "Prašome patvirtinti veiksmą"
+  ],
+  "Remove": [
+    null,
+    "Pašalinti"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Nebesekti"
+  ],
+  "Upload": [
+    null,
+    "Nusiųsti"
   ],
   "Upload a file": [
     null,

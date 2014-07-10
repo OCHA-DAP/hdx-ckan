@@ -27,6 +27,8 @@ class HdxMetadataFieldsPlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tk.add_template_directory(config, 'templates')
 
     def before_map(self, map):
+        map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.metadata_fields.storage_controller:FileDownloadController',
+                  action='file')
         with SubMapper(map, controller='ckanext.metadata_fields.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
             m.connect('/dataset/{action}/{id}',

@@ -1,0 +1,300 @@
+.datasetModule{
+    margin-left: 100px;
+}
+/*  */
+
+
+.field-with-info {
+	float: left;
+}
+
+
+.field-with-info ~ .info-field{
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover ~ .info-field, .info-field:hover{
+	opacity: 1;
+	visibility: visible;
+}
+
+.simple-dataset-control{
+	width: 370px;
+}
+
+.dataset-form-field-wrapper .control-full textarea {
+	height: 120px;
+}
+
+
+/* Style Form items */
+    .dataset-form-field-wrapper {
+        width: 670px;
+    }
+
+    .dataset-form-info-field {
+        float: left;
+        margin-left: 30px;
+        margin-top: 25px;
+        background-color: #CCCCCC;
+        width: 300px;
+        color: #FFFFFF;
+        padding: 5px 10px;
+    }
+
+    .dataset-form-info-field-height {
+        height: 110px;
+    }
+
+    .halfField {
+        width: 320px;
+        margin-left: 0;
+    }
+    .halfField:first-child{
+        margin-right: 30px;
+    }
+
+    .select2-container, .control-full .select2-container {
+        width: 100% !important;
+    }
+
+    .dataset-required label:after{
+        color: #f2645a
+    }
+
+    .editor textarea{
+        margin-bottom: 0;
+        border-radius: 3px;
+        border: 1px solid #ffffff;
+    }
+
+    .editor textarea:focus{
+        border-color: rgba(82, 168, 236, 0.8);
+    }
+
+    .editor .editor-info-block{
+        border: none;
+        background: none;
+    }
+
+    .editor .editor-info-block a {
+        color: #007ce0;
+    }
+
+    textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{
+        border-color: #ffffff;
+        box-shadow: none;
+        padding-left: 15px;
+    }
+    
+    .slug-preview{
+        width: 670px;
+    }
+
+    .control-group{
+        margin-bottom: 40px;
+    }
+
+    .control-group .control-label {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #888888;
+        font-style: normal;
+        line-height: 20px;
+        /*margin-top: 40px;*/
+    }
+
+    label:after {
+        content: "";
+    }
+
+    .control-group .controls textarea{
+        height: 120px;
+    }
+
+    .control-group .controls input[type="text"] {
+        height: 44px;
+        line-height: 14px;
+    }
+
+    .control-group .controls input[type="radio"] {
+        top: -1px;
+        height: 28px;
+    }
+
+    .control-group .controls input, .control-group .controls textarea {
+        margin: 0;
+        padding: 0 0 0 15px;
+        font-size: 14px;
+        color: #000000;
+    }
+
+    .input-prepend .add-on{
+        line-height: 44px;
+        padding: 0 15px 0 15px;
+        height: 44px;
+    }
+
+    .form-actions{
+        border: none;
+        padding: 0;
+        margin: 45px 0 45px 0;
+    }
+
+    .form-actions .btn{
+        height: 60px;
+        min-width: 160px;
+        margin-left: 10px;
+        line-height: 60px;
+        padding: 0;
+    }
+/* END Style Form items */
+
+/* Style Country Selector */
+    .countrySelectorDiv{
+        height: 450px;
+        width: 450px;
+        background-color: rgb(54,54,54);
+        color: #ffffff;
+    }
+
+    .countrySelectorDiv .content{
+        margin: 45px 40px;
+    }
+
+    .countrySelectorDiv .select2-container .select2-choice .select2-arrow {
+        background-color: #007ce0;
+    }
+
+    .countryMapDiv{
+        height: 450px;
+        width: 720px;
+        margin-left: 0;
+        background-color: #eeeeee;
+    }
+
+    .pill {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 14px;
+        color: #ffffff;
+        text-transform: uppercase;
+
+        padding: 5px 15px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+
+        background-color: #888888;
+        border-radius: 0;
+    }
+    .pill .icon-remove {
+        cursor: pointer;
+        margin-left: 20px;
+
+    }
+
+    #select_country{
+        margin-bottom: 20px;
+    }
+/* END Style Country Selector */
+
+
+/* Style the resource type selector */
+    .dataset-resource-form .dataset-form-resource-types{
+        margin-bottom: 40px;
+    }
+    .radio.inline+.radio.inline {
+        margin-left: 0;
+    }
+    .dataset-form-resource-types .radio{
+        height: 140px;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #888888;
+        line-height: 140px;
+        margin: 0;
+        padding-right: 0;
+    }
+
+    .dataset-form-resource-types label.radio{
+        background-color: #ffffff;
+        border-radius: 10px;
+        text-transform: uppercase;
+        text-align: center;
+        font-style: normal;
+        border: 4px solid #ffffff;
+        padding: 0;
+    }
+    .dataset-form-resource-types label.radio.type-file{
+        width: 325px;
+    }
+
+    .dataset-form-resource-types label.radio.type-url{
+        width: 245px;
+    }
+    .dataset-form-resource-types label.radio.type-url .underExample{
+        position: relative;
+        top: -60px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 12px;
+        text-transform: none;
+        color: #999999;
+    }
+
+
+    .dataset-form-resource-types input[type="radio"]:checked + label{
+        border-color: #007ce0;
+        font-weight: 400;
+        color: #007ce0;
+    }
+
+    .dataset-form-resource-types input[type="radio"]:checked + label::after{
+        background-image: url("/images/svg/check.svg");
+        position: absolute;
+        background-position: 0 0;
+        width: 40px;
+        height: 40px;
+        top: -17px;
+        left: 310px;
+    }
+    .dataset-form-resource-types input[type="radio"]:checked + label.type-url::after{
+        left: 230px;
+        top: -80px;
+    }
+
+    .explanatoryText{
+        margin-left: 6px;
+        font-size: 12px;
+    }
+
+    .resource-upload-field {
+        float: left;
+        overflow: visible;
+    }
+
+    .resource-upload-field input[type="file"]{
+        border-width: 60px 20px 63px 20px;
+        top: 0;
+        padding: 0;
+        left: 0;
+    }
+
+
+/* END Style the resource type selector */
+
+.primary .page-header{
+    padding-top: 0;
+}
+
+.primary .page-header .nav-tabs  li.active a{
+    background-color: transparent;
+}
+
+.primary .page-header .nav-tabs  li a:hover{
+    background-color: transparent;
+}

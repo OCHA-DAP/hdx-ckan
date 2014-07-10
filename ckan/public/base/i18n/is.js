@@ -36,6 +36,10 @@
     null,
     "Fela"
   ],
+  "Image": [
+    null,
+    "Mynd"
+  ],
   "Input is too short, must be at least one character": [
     null,
     "Of stutt, verður að vera í það minnsta einn stafur"
@@ -51,6 +55,10 @@
   "Please Confirm Action": [
     null,
     "Vinsamlegast staðfestu aðgerðina"
+  ],
+  "Remove": [
+    null,
+    "Fjarlægja"
   ],
   "Resource uploaded": [
     null,
@@ -91,6 +99,10 @@
   "Unfollow": [
     null,
     "Hætta að fylgjast með"
+  ],
+  "Upload": [
+    null,
+    "Hlaða inn"
   ],
   "Upload a file": [
     null,

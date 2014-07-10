@@ -50,8 +50,8 @@ within_tertiary
       {% set nav_item_class = ' ' %}
       {% set wrapper_class = 'nav-facet nav-facet-tertiary' %}
     {% endif %}
-    <section class="list-items {{ wrapper_class or 'module module-narrow module-shallow section-border' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
-      <h2 class="list-items module-heading facet-h2 uppercase">
+    <section class="list-items {{ wrapper_class or ' module-narrow module-shallow pTopBottom35 facet-items' }}" onclick="$(this).find('div[class*=action],p,nav,a[class*=action]').toggleClass('facet-hidden');">
+      <h2 class="list-items module-heading facet-title uppercase">
       <!-- <i class="icon-medium icon-filter"></i> -->
         {% set title = title or h.get_facet_title(name) %}
         {% set no_total_items= 0%}
@@ -59,7 +59,7 @@ within_tertiary
       		{% set no_total_items= total_no_items %}
         {% endif %}
         {{ title }}
-        <div class="float-right">{{ no_total_items }}</div>
+        <div class="facet-title-counter float-right">{{ no_total_items }}</div>
       </h2>
       <div class="list-items action align {% if not name_in_request%} facet-hidden{% endif %}">
       	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"

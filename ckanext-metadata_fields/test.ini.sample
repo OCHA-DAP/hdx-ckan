@@ -1,5 +1,5 @@
 [app:main]
-use = config:../test-core.ini.sample
+use = config:../hdx-test-core.ini
 ckan.site_title = Test CKAN Site
 ckan.site_description = Testing extension
 ckan.plugins = metadata_fields hdx_theme
