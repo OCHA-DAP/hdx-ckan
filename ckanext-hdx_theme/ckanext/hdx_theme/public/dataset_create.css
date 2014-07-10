@@ -107,6 +107,10 @@
         /*margin-top: 40px;*/
     }
 
+    label:after {
+        content: "";
+    }
+
     .control-group .controls textarea{
         height: 120px;
     }
