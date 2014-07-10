@@ -41,15 +41,17 @@
                   <label class="radio inline type-file" for="field-resource-type-file">{{ _('Upload a file') }}
                     <img src="/images/svg/fileupload.svg" style="top: -10px; left: 40px; position: relative;" />
                   </label>#}
-                  <span class="radio inline" style="margin-left: 26px; margin-right: 26px;">
+                  <span class="radio inline" style="margin-left: 26px; margin-right: 26px; padding: 0;">
                     <span class="control-label"> OR </span>
                   </span>
-                  <input id="field-resource-type-api" type="radio" name="resource_type" value="api" />
-                  <label class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+                  <span style="position: relative;">
+                    <input id="field-resource-type-api" type="radio" name="resource_type" value="api" style="visibility: hidden; position: absolute;" />
+                    <label class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+                  </span>
                 </div>
-                <div class="controls">
+                {#<div class="controls">
                   <div class="explanatoryText">{{ _("Format: xls, json, pdf, csv, txt") }}</div>
-                </div>
+                </div>#}
               </div>
               {% endblock %}
 
