@@ -54,7 +54,7 @@
               {% endblock %}
 
               {% block basic_fields_url %}
-              {{ form.input('url', id='field-url', label=_('Resource'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper']) }}
+              {{ form.input('url', id='field-url', label=_('Resource'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper', 'dataset-required']) }}
               {% endblock %}
 
               {% block basic_fields_name %}
@@ -62,7 +62,7 @@
               {% endblock %}
 
               {% block basic_fields_description %}
-              {{ form.markdown('description', id='field-description', label=_('Description'), placeholder=_('Some useful notes about the data'), value=data.description, error=errors.description, classes=['dataset-form-field-wrapper']) }}
+              {{ form.markdown('description', id='field-description', label=_('Note'), placeholder=_('Some useful notes about the data'), value=data.description, error=errors.description, classes=['dataset-form-field-wrapper']) }}
               {% endblock %}
 
               {% block basic_fields_format %}
