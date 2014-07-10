@@ -1,12 +1,10 @@
 {% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
 {% set url_action = 'resource_edit' if url_is_edit and can_edit else 'resource_read' %}
 {% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
-
 {% set is_downloadable = h.is_downloadable(res) %}
 {% set resource_display_name = h.resource_display_name(res) %}
 
 {% resource 'hdx_theme/bs_popover.js' %}
-
 <li class="resource-item">
   {% block resource_item_title %}
   <a class="heading" href="{{ url }}" title="{{ res.name or res.description }}">
@@ -46,25 +44,25 @@
       <div style="display:none" id="{{social_div_id}}">
         <div class="resource-social">
           <a href="https://plus.google.com/share?url={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/social/google-plus.png" />
+            <img class="social-images" src="/images/svg/google-plus_black.svg" />
             <span> Google+ </span>
           </a>
         </div>
         <div class="resource-social">
           <a href="https://twitter.com/share?url={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/svg/twitter.svg" />
+            <img class="social-images" src="/images/svg/twitter_black.svg" />
             <span> Twitter </span>
           </a>
         </div>
         <div class="resource-social" >
           <a href="https://www.facebook.com/sharer.php?u={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/svg/fb.svg" />
+            <img class="social-images" src="/images/svg/fb_black.svg" />
             <span> Facebook </span>
           </a>
         </div>
         <div class="resource-social" >
           <a href="mailto:?subject={{ resource_display_name }}&body={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/social/email.png" />
+            <img class="social-images" src="/images/svg/email_black.svg" />
             <span> {{ _('Email') }} </span>
           </a>
         </div>
