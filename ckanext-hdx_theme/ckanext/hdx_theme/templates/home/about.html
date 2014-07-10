@@ -1,10 +1,10 @@
+ 
 {% extends "page.html" %}
-
 {% block subtitle %}{{ _('About') }}{% endblock %}
-
 {% block breadcrumb_content %}
   <li class="active">{% link_for _('About'), controller='home', action='about' %}</li>
 {% endblock %}
+
 
 {% block primary %}
   <div class="paddingRowHack">
@@ -63,7 +63,6 @@
           </p>
         </div>
       </div>
-
     </div>
 
     <div class="paddingLeftHack paddingRightHack pTopBottom80" style="background-color: rgb(54,54,54);">
@@ -94,7 +93,6 @@
                 </div>
               </div>
             </div>
-
             <div class="span5">
               <div class="row">
                 <div class="span5">
@@ -129,7 +127,6 @@
                 </div>
               </div>
             </div>
-
             <div class="span5">
               <div class="row">
                 <div class="span5">
@@ -150,14 +147,11 @@
         </div>
       </div>
     </div>
-
-
     <div class="paddingLeftHack paddingRightHack pTopBottom80">
       <div class="row center" style="text-align: center">
         <img src="/images/aboutpage/hdx-system-diagram.png" />
       </div>
     </div>
-
     <div class="paddingLeftHack paddingRightHack pTopBottom80" style="background-color: #eeeeee;">
       <div class="row">
         <div class="span12">
@@ -180,7 +174,6 @@
         </div>
       </div>
     </div>
-
     <div class="paddingLeftHack paddingRightHack pTopBottom80">
       <div class="row">
         <div class="span12">
@@ -204,9 +197,10 @@
   </div>
 {% endblock %}
 
-{% block secondary %}{% endblock %}
-
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="/about.css" />
 {% endblock %}
+
+{% block secondary %}{% endblock %}
+
