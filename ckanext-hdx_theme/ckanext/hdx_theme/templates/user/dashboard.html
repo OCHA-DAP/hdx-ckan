@@ -15,7 +15,7 @@
     {% block page_header %}
       <header class="module-content page-header paddingRowHack">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
-          {{ h.build_nav_icon('user_dashboard', _('News feed'), class_='hdx-tab-button') }}
+          {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {#{{ h.build_nav_icon('user_dashboard_groups', _('My Groups'), class_='hdx-tab-button') }}#}
@@ -28,7 +28,7 @@
           {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
           <h2 class="page-heading sspBold28 black">
             {% block page_heading %}
-            {{ _('News feed') }}
+            {{ _('Newsfeed') }}
             {% endblock %}
             <small class="grey">{{ _('Activity from items that you follow') }}</small>
           </h2>
