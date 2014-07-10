@@ -599,9 +599,17 @@
         margin-top: 0;
         margin-bottom: 0;
     }
+    .mTB30{
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
     .mTB45{
         margin-top: 45px;
         margin-bottom: 45px;
+    }
+    .mTB15{
+        margin-top: 15px;
+        margin-bottom: 15px;
     }
     .pLR45{
         padding-left: 45px;
