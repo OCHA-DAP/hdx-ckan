@@ -109,13 +109,12 @@ class HDXReqsOrgController(base.BaseController):
         error_summary = {}
         data = {'from': request.params.get('from','')}
         from_url = ''
-
         if 'save' in request.params:
             try:
                 data = self._process_new_org_request()
                 self._validate_new_org_request_field(data)
                 self._send_new_org_request(data)
-                from_url = data.get('from','')
+                #from_url = data.get('from','')
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
             except logic.ValidationError, e:
@@ -124,10 +123,13 @@ class HDXReqsOrgController(base.BaseController):
             except exceptions.Exception, e:
                 log.error(str(e))
                 h.flash_error(_('Request can not be sent. Contact an administrator'))
-            if from_url and len(from_url) > 0:
-                h.redirect_to(from_url)
-            else:
-                h.redirect_to('/error')
+            
+            #Removing this because the form doesn't submit a from parameter
+            h.redirect_to('user_dashboard_organizations')
+            #if from_url and len(from_url) > 0:
+            #    h.redirect_to(from_url)
+            #else:
+            #    h.redirect_to('/error')
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
@@ -141,9 +143,9 @@ class HDXReqsOrgController(base.BaseController):
                 'description': request.params.get('description', ''), \
                 'your_email': request.params.get('your_email', ''), \
                 'your_name': request.params.get('your_name', ''), \
-                'from': request.params.get('from', '')
+                #'from': request.params.get('from', '')
                 }
-
+        print data
         return data
 
     def _validate_new_org_request_field(self, data):
