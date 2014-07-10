@@ -107,6 +107,10 @@
         /*margin-top: 40px;*/
     }
 
+    label:after {
+        content: "";
+    }
+
     .control-group .controls textarea{
         height: 120px;
     }
@@ -212,7 +216,7 @@
         font-size: 16px;
         color: #888888;
         line-height: 140px;
-        margin: 40px 0 0;
+        margin: 0;
         padding-right: 0;
     }
 
@@ -223,6 +227,7 @@
         text-align: center;
         font-style: normal;
         border: 4px solid #ffffff;
+        padding: 0;
     }
     .dataset-form-resource-types label.radio.type-file{
         width: 325px;
@@ -254,11 +259,12 @@
         background-position: 0 0;
         width: 40px;
         height: 40px;
-        top: -20px;
-        left: 305px;
+        top: -17px;
+        left: 310px;
     }
     .dataset-form-resource-types input[type="radio"]:checked + label.type-url::after{
-        left: 225px;
+        left: 230px;
+        top: -80px;
     }
 
     .explanatoryText{
@@ -273,7 +279,7 @@
 
     .resource-upload-field input[type="file"]{
         border-width: 60px 20px 63px 20px;
-        top: 40px;
+        top: 0;
         padding: 0;
         left: 0;
     }

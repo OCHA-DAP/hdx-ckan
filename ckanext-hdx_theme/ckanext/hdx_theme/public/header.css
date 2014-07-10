@@ -414,8 +414,10 @@
         background-size: cover;
         background-attachment: fixed;
 
-        min-width: 1260px;
+        min-width: 260px;
         color: #888888;
+
+        font-family: 'Source Sans Pro', sans-serif;
     }
 /* END Body Background */
 
@@ -677,6 +679,10 @@
     .no-transform{
     	text-transform: none;
     }
+    .txt-justify{
+    	text-align:justify;
+    }
+    
 /* END Common Classes */
 
 
@@ -1130,15 +1136,16 @@
 
 
 /* Style tabs */
-    .hdx-wrapper .nav-tabs > li {
+    .hdx-wrapper .page-header .nav-tabs > li {
         margin-bottom: -3px;
+        /*border-bottom: 3px solid #cccccc;*/
     }
-    .hdx-wrapper .nav-tabs > .active > a{
+    .hdx-wrapper .page-header .nav-tabs > .active > a{
         border: none;
         border-bottom: 3px solid #f2645a;
         color: #f2645a;
     }
-    .hdx-wrapper .nav-tabs > li > a{
+    .hdx-wrapper .page-header .nav-tabs > li > a{
         border: none;
         color: #888888;
         font-family: 'Gotham-Bold', sans-serif;
@@ -1147,15 +1154,20 @@
         padding-left: 30px;
         padding-right: 30px;
     }
-    .hdx-wrapper .nav-tabs > li > a:hover {
+    .hdx-wrapper .page-header .nav-tabs > li > a:hover {
         color: #f2645a;
     }
+
     .page-header{
         border-bottom: 3px solid #cccccc;
         /*background-color: #f6f6f6;*/
         -webkit-border-radius: 0 3px 0 0;
         -moz-border-radius: 0 3px 0 0;
         border-radius: 0 3px 0 0;
+    }
+
+    .page-header .nav-tabs a:hover{
+        background-color: transparent;
     }
 /* END Style tabs*/
 

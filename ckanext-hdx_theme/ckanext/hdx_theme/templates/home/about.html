@@ -1,10 +1,9 @@
 {% extends "page.html" %}
-
 {% block subtitle %}{{ _('About') }}{% endblock %}
-
 {% block breadcrumb_content %}
   <li class="active">{% link_for _('About'), controller='home', action='about' %}</li>
 {% endblock %}
+
 
 {% block primary %}
   <div class="paddingRowHack">
@@ -13,7 +12,7 @@
         <div class="whatIsHDX">What is <strong>HDX?</strong></div>
       </div>
       <div class="row hdxAbout mTop35">
-        <div class="offset3 span6">
+        <div class="offset3 span6 txt-justify">
           {{ _("The Humanitarian Data Exchange (HDX) project aims to make humanitarian data easy to find and use for analysis.
           We are working on three elements that will eventually combine into an integrated data platform.") }}
         </div>
@@ -63,7 +62,6 @@
           </p>
         </div>
       </div>
-
     </div>
 
     <div class="paddingLeftHack paddingRightHack pTopBottom80" style="background-color: rgb(54,54,54);">
@@ -94,7 +92,6 @@
                 </div>
               </div>
             </div>
-
             <div class="span5">
               <div class="row">
                 <div class="span5">
@@ -129,7 +126,6 @@
                 </div>
               </div>
             </div>
-
             <div class="span5">
               <div class="row">
                 <div class="span5">
@@ -150,14 +146,11 @@
         </div>
       </div>
     </div>
-
-
     <div class="paddingLeftHack paddingRightHack pTopBottom80">
       <div class="row center" style="text-align: center">
         <img src="/images/aboutpage/hdx-system-diagram.png" />
       </div>
     </div>
-
     <div class="paddingLeftHack paddingRightHack pTopBottom80" style="background-color: #eeeeee;">
       <div class="row">
         <div class="span12">
@@ -180,7 +173,6 @@
         </div>
       </div>
     </div>
-
     <div class="paddingLeftHack paddingRightHack pTopBottom80">
       <div class="row">
         <div class="span12">
@@ -189,7 +181,7 @@
               {{ _("Project plan") }}
             </div>
             <div class="span9 styleNo5">
-              <img src="/images/aboutpage/projectPlan.png" />
+              <img src="/images/aboutpage/projectPlan.png"  style="max-width: 97%"/>
               <p class="mTop35">
                 {{ _("Over 2014, phase one of the HDX project falls into two major stages: initial development and further scaling. During the year, we will launch pilot projects in ") }}<strong>Colombia, Kenya</strong>{{ _("(for Eastern Africa) and ") }}<strong>Yemen</strong>.
               </p>
@@ -204,9 +196,10 @@
   </div>
 {% endblock %}
 
-{% block secondary %}{% endblock %}
-
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="/about.css" />
 {% endblock %}
+
+{% block secondary %}{% endblock %}
+

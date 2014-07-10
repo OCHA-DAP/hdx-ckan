@@ -37,10 +37,12 @@
         background-position: center;
         font-family: 'Gotham-Bold',sans-serif;
         font-weight: 400;
+        min-width: 1380px;
     }
 
     .homepage-background{
         height: 710px;
+        /*min-width: 1260px;*/
     }
 
 
