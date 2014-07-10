@@ -13,7 +13,7 @@ $('#country-drop').change(function(){
           $('#selected_groups').append('<span class="filtered pill">'+country_name+' <i id="field-group-'+(number_of_groups)+'" name="groups__'+(number_of_groups)+'__id" value="'+country+'" class="group_checked icon-remove"/></span>');
           //Add country for real
           if($('#select_groups_hidden').length >0){
-            $('#select_groups_hidden').append('<input id="'+country+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
+            $('#select_groups_hidden').append('<input id="field-group-'+(number_of_groups)+'-input" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
           }
         }
       }
@@ -23,11 +23,13 @@ $('#country-drop').change(function(){
       if(event.target.className == "filtered pill"){
         //Uncheck hidden
         var id = event.target.children.item().value;
+        alert("uncheck hidden"+id);
         $('#'+id).remove();
         $(event.target).remove();
       }else if(event.target.className == "group_checked icon-remove"){
-        var id = event.target.value;
-        $('#'+id).remove();
+        //var id = event.target.value;
+    	var id = event.target.id;
+        $('#'+id+'-input').remove();
         $(event.target).parent().remove();
       }
       //Reset dropdown for better userability
