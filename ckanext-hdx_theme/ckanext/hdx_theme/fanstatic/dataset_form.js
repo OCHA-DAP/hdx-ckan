@@ -29,6 +29,7 @@ $('#country-drop').change(function(){
       }else if(event.target.className == "group_checked icon-remove"){
         //var id = event.target.value;
     	var id = event.target.id;
+    	alert(id+"---"+$('#'+id+'-input'));
         $('#'+id+'-input').remove();
         $(event.target).parent().remove();
       }
