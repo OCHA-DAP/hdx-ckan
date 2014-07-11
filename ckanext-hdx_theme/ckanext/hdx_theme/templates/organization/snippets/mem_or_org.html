@@ -5,16 +5,26 @@
 		<div class="row">
 			<div class="span6">
 				<div class="mLR15 pLR45 pTB15 whitebg border-grey">
-					<div class="header-user-message header-user-message-med mBottom35">1. {{ _("REQUEST MEMBERSHIP IN AN ORGANISATION")}}</div>
-					<p>{{ _("There's a good chance that your organisation is already a part of our database. You can find your organisation and request membership. Once the admin has accepted your request, you should be able to upload datasets. Note that you have to be either an editor or admin role in order to upload datasets, so make sure to request one of those roles.")}}</p>
+<<<<<<< HEAD
+					<p><strong>1.{{_('FIND')}}</strong> {{ _('There is a chance that your organisation already exists in HDX. If so, you can request membership as an administrator or editor. You will then be able to share data under the organisation\'s name. ')}}</p>
+=======
+          <p>
+            <strong>1. {{ _("FIND") }} - </strong> {{ _("There is a chance that your organisation already exists in HDX. If so, you can request membership as an administrator or editor. You will then be able to share data under the organisation’s name.") }}
+          </p>
+>>>>>>> refs/remotes/origin/dev
 					<br>
 					<center><a href="/organization" class="btn btn-primary">{{ _("Find Your Organisation")}}</a></center>
 				</div>
 			</div>
 			<div class="span6">
 				<div class="mLR15 pLR45 pTB15 whitebg border-grey">
-					<div class="header-user-message header-user-message-med">2. {{ _("CREATE A NEW ORGANISATION")}}</div>
-					<p>{{ _("If you don't see your organisation in our organisations list, you can request the creation of a new organisation. We try to get the highest quality data in our system, so we review new org requests before they are posted to the site. Once you fill out a request form, however, we try and accept the new org request within 24 hours.")}}</p>
+<<<<<<< HEAD
+					<p><strong>2.{{_('REQUEST')}}</strong> {{ _('If you do not see your organisation in HDX, you can create one. Tell us a few things about your organisation and we will process the request within 24 hours.')}}</p>
+=======
+          <p>
+            <strong>2. {{ _("REQUEST") }} - </strong> {{ _("If you do not see your organisation in HDX, you can create one. Tell us a few things about your organisation and we will process the request within 24 hours.") }}
+          </p>
+>>>>>>> refs/remotes/origin/dev
 					<br>
 					<center><a href="/organization/request_new?from={{ parent_route }}" class="btn btn-primary">{{ _("Request New Organisation")}}</a></center>
 				</div>
