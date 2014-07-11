@@ -362,18 +362,18 @@
 /* END Header */
 
 /* HDX Version display */
-    #hdxVersion{
-        display: none;
-    }
-    .logo:hover #hdxVersion{
-        display: inline;
+    .logo #hdxVersion{
         color: #888888;
-        position: relative;
+        position: absolute;
         float: left;
         font-size: 9px;
         left: 74px;
         top: 9px;
         width: 0;
+        display: none;
+    }
+    .logo img:hover ~ #hdxVersion{
+        display: block;
     }
 /* END HDX Version display */
 
