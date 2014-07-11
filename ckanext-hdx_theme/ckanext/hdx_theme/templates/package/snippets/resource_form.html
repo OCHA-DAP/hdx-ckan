@@ -56,7 +56,7 @@
               {% endblock %}
 
               {% block basic_fields_url %}
-              {{ form.input('url', id='field-url', label=_('Resource'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper', 'dataset-required']) }}
+              {{ form.input('url', id='field-url', label=_('File or URL'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper', 'dataset-required']) }}
               {% endblock %}
 
               {% block basic_fields_name %}
@@ -80,7 +80,7 @@
             {% block metadata_fields %}
               {% if include_metadata %}
                 {# TODO: Where do these come from, they don't exist in /package/new_package_form.html #}
-                {# {{ form.select('resource_type', id='field-type', label=_('Resource Type'), options=[{'value': 'empty', 'text': _('Select a type…')}], selected="empty", error=errors.type) }} #}
+                {# {{ form.select('resource_type', id='field-type', label=_('Resource Type'), options=[{'value': 'empty', 'text': _('Select a type')}], selected="empty", error=errors.type) }} #}
 
                 {{ form.input('last_modified', id='field-last-modified', label=_('Last Modified'), placeholder=_('eg. 2012-06-05'), value=data.last_modified, error=errors.last_modified, classes=[]) }}
 
@@ -119,4 +119,3 @@
         {# endif #}
       </div>
     </form>
-
