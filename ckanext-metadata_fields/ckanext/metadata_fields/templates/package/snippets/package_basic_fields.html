@@ -62,7 +62,7 @@
     <div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
           {% if data.groups %}
           {% for group in data.groups %}
-          <input id="field-group-{{ loop.index0 }}" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/>
+          <input id="field-group-{{group.id}}-input" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/>
           {% endfor %}
           {% endif %}
     </div>
@@ -168,10 +168,10 @@
     {% if new_dataset %}
       <div class="dataset-form-info-field info-field">
         {% trans %}
-        Which organization is contributing the data ? If the organization is not listed, you need to
+        Which organisation is contributing the data ? If the organisation is not listed, you need to
         {% endtrans %}
         <a href="{% url_for controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}">
-          {% trans %}create a new organization{% endtrans %}
+          {% trans %}create a new organisation{% endtrans %}
         </a>.
       </div>
     {% endif %}
