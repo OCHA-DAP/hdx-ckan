@@ -1234,3 +1234,8 @@ a, a:hover, a:focus{
         color: #ffffff;
     }
 /* END Info snippet style */
+
+/* FILE upload */
+.resource-upload-field input {
+    transform: none;
+/* FILE upload end*/
