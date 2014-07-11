@@ -19,7 +19,7 @@
 {% block toolbar %}
     {{ super() }}
     {% snippet "snippets/greeting_message.html", show_small_message=True, greeting=_('Creating an organisation is easy.'),
-              explanation=_('We want to be sure that data shared through HDX comes from trusted sources. Tell us a few things about your organisation and we will process the request within 24 hours. If accepted, you will become the administrator of the organisation and will be able to add datasets and accept new members.') %}
+              explanation=_('Organisations don\'t have to be legal entities - they can be informal groups that users create to share data publicily or privately.') %}
 {% endblock %}
 
 {% block primary %}
