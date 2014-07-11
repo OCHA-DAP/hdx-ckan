@@ -60,6 +60,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/organization/member_new/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='member_new')
 
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+
+        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
+
         return map
     
     def create(self, entity):
