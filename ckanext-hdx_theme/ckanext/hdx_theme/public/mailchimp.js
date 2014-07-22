@@ -29,7 +29,7 @@ function mce_preload_check(){
     }
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'http://downloads.mailchimp.com/js/jquery.form-n-validate.js';
+    script.src = 'scripts/jquery.form-n-validate.js';
     head.appendChild(script);
     try {
         var validatorLoaded=jQuery("#fake-form").validate({});
