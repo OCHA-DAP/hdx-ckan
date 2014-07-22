@@ -30,7 +30,7 @@ class CountController(base.BaseController):
         return json.dumps({'count': self._get_count('"group"', 'organization', True)})
 
     def source(self):
-        return json.dumps({'count': 20})
+        return json.dumps({'count': 46})
 
     def tag(self):
         return json.dumps({'count': self._get_count('tag', 'tag', False)})
