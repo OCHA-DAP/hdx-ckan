@@ -13,6 +13,7 @@ import ckan.lib.mailer as mailer
 import ckan.model as model
 import logging as logging
 import exceptions as exceptions
+import pylons.config as config
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +27,6 @@ def send_mail(recipients, subject, body):
     else:
         h.flash_error(_('The are no recipients for this request. Contact an administrator '))
         raise exceptions.Exception('No recipients')
-    
 
 
 class HDXReqsOrgController(base.BaseController):
@@ -158,10 +158,13 @@ class HDXReqsOrgController(base.BaseController):
             raise logic.ValidationError(errors)
 
     def _send_new_org_request(self, data):
-
-        sys_admins = tk.get_action('hdx_get_sys_admins')()
-        sys_admins =[sys_admin for sys_admin in sys_admins if sys_admin['email']]
-
+#         sys_admins = tk.get_action('hdx_get_sys_admins')()
+#         sys_admins =[sys_admin for sys_admin in sys_admins if sys_admin['email']]
+        email = config.get('hdx.orgrequest.email', None)
+        if not email:
+            email = 'hdx.feedback@gmail.com'
+        display_name = 'HDX Feedback'
+        
         subject = _('New organization request:') + ' ' \
             + data['title']
         body = _('New organization request \n' \
@@ -174,5 +177,5 @@ class HDXReqsOrgController(base.BaseController):
         '').format(org_name=data['title'], org_description = data['description'],
                    org_url = data['org_url'], person_name = data['your_name'], person_email = data['your_email'])
 
-        send_mail(sys_admins, subject, body)
+        send_mail([{'display_name': display_name, 'email': email}], subject, body)
         

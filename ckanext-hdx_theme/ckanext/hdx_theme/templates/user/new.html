@@ -27,3 +27,42 @@
     </div>
   </section>
 {% endblock %}
+
+{% block scripts2 %}
+  <style>
+  .info-field {
+ float: left;
+        margin-left: 30px;
+        margin-top: 25px;
+        background-color: #CCCCCC;
+        width: 300px;
+        color: #FFFFFF;
+        padding: 5px 10px;
+}
+
+.field-with-info .control-medium{
+  float: left;
+}
+
+
+.field-with-info > .info-field{
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover > .info-field, .info-field:hover{
+  opacity: 1;
+  visibility: visible;
+}
+  </style>
+  <script src="/scripts/latinise.js"></script>
+  <script>
+    $(document).ready(function(){
+        //Force ascii encoding
+        $('#field-username').blur(function(){
+          $(this).val($('#field-username').val().latinise());
+        });
+    });
+  </script>
+{% endblock %}
