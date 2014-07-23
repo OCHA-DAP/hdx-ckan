@@ -4,6 +4,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckan.model.package as package
 import ckan.model.license as license
+import pylons.config as config
 import version
 
 import ckanext.hdx_theme.caching as caching
@@ -11,10 +12,11 @@ import ckanext.hdx_theme.auth as auth
 
 
 def run_on_startup():
-    _generate_license_list()
-    
-    caching.cached_get_group_package_stuff()
-    
+    cache_on_startup = config.get('hdx.cache.onstartup', 'true')
+    if 'true' == cache_on_startup:
+        _generate_license_list()
+        caching.cached_get_group_package_stuff()
+
 
 def _generate_license_list():
     package.Package._license_register = license.LicenseRegister() 
