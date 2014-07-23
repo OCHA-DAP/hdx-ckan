@@ -19,11 +19,12 @@ log = logging.getLogger(__name__)
 
 def send_mail(recipients, subject, body):
     if recipients and len(recipients) > 0:
-        log.info('\nSending email to {recipients} with subject "{subject}" with body: {body}'
-            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body))
+        email_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}'\
+            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body)
+        log.info(email_info)
         for recipient in recipients:
             mailer.mail_recipient(recipient['display_name'], recipient['email'],
-                                  subject, body)
+                subject, body)
     else:
         h.flash_error(_('The are no recipients for this request. Contact an administrator '))
         raise exceptions.Exception('No recipients')
