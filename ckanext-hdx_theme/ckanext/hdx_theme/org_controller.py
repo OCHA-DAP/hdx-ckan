@@ -165,6 +165,11 @@ class HDXReqsOrgController(base.BaseController):
             email = 'hdx.feedback@gmail.com'
         display_name = 'HDX Feedback'
         
+        ckan_username = c.user
+        ckan_email = ''
+        if c.userobj:
+            ckan_email = c.userobj.email
+        
         subject = _('New organization request:') + ' ' \
             + data['title']
         body = _('New organization request \n' \
@@ -173,9 +178,12 @@ class HDXReqsOrgController(base.BaseController):
             'Organization URL: {org_url}\n' \
             'Person requesting: {person_name}\n' \
             'Person\'s email: {person_email}\n' \
+            'Person\'s ckan username: {ckan_username}\n' \
+            'Person\'s ckan email: {ckan_email}\n' \
             '(This is an automated mail)' \
         '').format(org_name=data['title'], org_description = data['description'],
-                   org_url = data['org_url'], person_name = data['your_name'], person_email = data['your_email'])
+                   org_url = data['org_url'], person_name = data['your_name'], person_email = data['your_email'],
+                   ckan_username=ckan_username, ckan_email= ckan_email)
 
         send_mail([{'display_name': display_name, 'email': email}], subject, body)
         
