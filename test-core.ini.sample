@@ -106,6 +106,9 @@ who.config_file = %(here)s/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
 
+hdx.orgrequest.email = hdx.feedback@gmail.com
+hdx.cache.onstartup = false 
+
 # Logging configuration
 [loggers]
 keys = root, ckan, sqlalchemy
