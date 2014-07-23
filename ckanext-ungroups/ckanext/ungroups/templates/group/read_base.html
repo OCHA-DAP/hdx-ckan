@@ -27,3 +27,8 @@
   {{ super() }}
   {% include "group/snippets/feeds.html" %}
 {% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/organization.css" />
+{% endblock %}
