@@ -10,6 +10,8 @@ import webtest
 import ckan.model as model
 import ckan.lib.search as search
 
+import ckan.new_tests.helpers as helpers
+
 from pylons import config
 
 
@@ -44,7 +46,7 @@ class HdxBaseTest(object):
         cls.app = _get_test_app()
 
         search.clear()
-        model.Session.remove()
+        helpers.reset_db()
         cls._create_test_data()
 
     @classmethod

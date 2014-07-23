@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 Created on Jul 23, 2014
 
@@ -19,7 +21,7 @@ original_send_mail = None
 def send_mail(recipients, subject, body):
     global mail_info
     if recipients and len(recipients) > 0:
-        mail_info = '\nSending email to {recipients} with subject "{subject}" with body: {body}' \
+        mail_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}' \
             .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body)
 
 class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
@@ -65,7 +67,39 @@ class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
         assert 'Test User' in mail_info, 'Person\'s name needs to be in the email'
         assert 'email1@testemail.com' in mail_info, 'Person\'s email needs to be in the email'
         assert 'Test description' in mail_info, 'Description needs to be in the email'
-        assert 'Test description' in mail_info, 'Description needs to be in the email'
         assert 'Test org' in mail_info, 'Org name needs to be in the email'
+        assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
+
+    def test_new_org_req_with_special_chars(self):
+        global original_send_mail
+        global mail_info
+
+        assert not mail_info, 'There should be no info yet in mail_info'
+        assert original_send_mail, 'original_send_mail should be already set'
+
+        user = model.User.by_name('tester')
+        headers = {
+            'Authorization': str(user.apikey),
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        postparams = {
+            'save': '',
+            'title': 'Org êßȘ',
+            'org_url': 'http://test.com',
+            'description': 'Description ê,ß, and Ș',
+            'your_email': 'email1@testemail.com',
+            'your_name': 'Test êßȘ'
+        }
+        offset = h.url_for(controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController',
+                           action='request_new_organization')
+        self.app.post(offset, params=postparams,
+                            extra_environ=headers)
+
+        assert mail_info, 'This needs to contain the email that will be sent'
+        assert 'tester' in mail_info, 'Ckan username needs to be in the email'
+        assert u'Test êßȘ' in mail_info, 'Person\'s name needs to be in the email'
+        assert 'email1@testemail.com' in mail_info, 'Person\'s email needs to be in the email'
+        assert u'Description ê,ß, and Ș' in mail_info, 'Description needs to be in the email'
+        assert u'Org êßȘ' in mail_info, 'Org name needs to be in the email'
         assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
 
