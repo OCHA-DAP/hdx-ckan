@@ -78,10 +78,7 @@ class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
         assert original_send_mail, 'original_send_mail should be already set'
 
         user = model.User.by_name('tester')
-        headers = {
-            'Authorization': str(user.apikey),
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        auth = {'Authorization': str(user.apikey)}
         postparams = {
             'save': '',
             'title': 'Org êßȘ',
@@ -93,7 +90,7 @@ class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
         offset = h.url_for(controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController',
                            action='request_new_organization')
         self.app.post(offset, params=postparams,
-                            extra_environ=headers)
+                            extra_environ=auth)
 
         assert mail_info, 'This needs to contain the email that will be sent'
         assert 'tester' in mail_info, 'Ckan username needs to be in the email'
