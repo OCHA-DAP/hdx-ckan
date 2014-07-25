@@ -58,4 +58,5 @@ class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationF
     def before_map(self, map):
         map.connect('user_dashboard', '/dashboard', controller='ckanext.hdx_orgs.dashboard:DashboardController', action='dashboard',
                   ckan_icon='list')
+        map.connect('organizations_index', '/organization/bulk_process/{org_id}', controller='organization', action='index')
         return map
