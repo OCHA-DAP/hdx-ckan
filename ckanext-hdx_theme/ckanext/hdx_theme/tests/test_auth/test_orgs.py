@@ -20,6 +20,10 @@ class TestOrgAuth(hdx_test_base.HdxBaseTest):
         tests.call_action_api(self.app, 'organization_create', name='test_org_a',
                               title='Test Org A',
                               apikey=user.apikey, status=403)
+        testsysadmin = model.User.by_name('testsysadmin')
+        tests.call_action_api(self.app, 'organization_create', name='test_org_a_admin',
+                              title='Test Org A Admin',
+                              apikey=testsysadmin.apikey, status=200)
         assert True
 
     def test_edit_org(self):
@@ -54,18 +58,4 @@ class TestOrgAuth(hdx_test_base.HdxBaseTest):
                               apikey=user.apikey, status=403)
         assert True, 'user shoudn\'t be allowed to add himself as a member'
 
-    def test_access_to_user_emails(self):
-        testsysadmin = model.User.by_name('testsysadmin')
-        user = model.User.by_name('tester')
-        user2 = model.User.by_name('annafan')
-        user.email = 'test@testemail.com'
-        
-        users = tests.call_action_api(self.app, 'user_list', q='tester',
-                                      apikey=testsysadmin.apikey, status=200)
-        assert len(users) == 1
-        assert users[0].get('email', None), "testsysadmin shoud be able to see user's email"
-        
-        users = tests.call_action_api(self.app, 'user_list', q='tester',
-                                      apikey=user2.apikey, status=200)
-        assert len(users) == 1
-        assert not users[0].get('email', None), "user2 shoudn't be able to see user's email"
+
