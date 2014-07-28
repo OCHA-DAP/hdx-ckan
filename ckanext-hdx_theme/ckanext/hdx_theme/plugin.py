@@ -111,7 +111,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         }
     def get_auth_functions(self):
         return {
-                'hdx_basic_user_info': auth.hdx_basic_user_info
+                'hdx_basic_user_info': auth.hdx_basic_user_info,
+                'group_member_create': auth.group_member_create
                 }
     
     def make_middleware(self, app, config):
