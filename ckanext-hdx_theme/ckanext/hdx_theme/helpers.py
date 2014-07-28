@@ -1,3 +1,4 @@
+from ckan.controllers import group
 import ckan.lib.helpers as h
 from ckan.common import (
      c, request
@@ -182,6 +183,15 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
         if ex[key] == value_key:
             res = ex[ret_key]
     return res
+
+def hdx_group_followee_list():
+
+    context = {'model': model, 'session': model.Session,
+               'user': c.user or c.author, 'auth_user_obj': c.userobj,
+               'for_view': True}
+
+    list = logic.get_action('group_followee_list')(context, {'id': c.userobj.id})
+    return list
 
 
 def hdx_organizations_available_with_roles():
