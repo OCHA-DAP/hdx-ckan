@@ -1,0 +1,76 @@
+{#
+Example:
+
+  {% snippet 'organization/snippets/edit_member.html', form_url=form_url, roles=roles, role=role, modal_div_id='add-member-div', user=user %}
+
+#}
+
+{% import 'macros/form.html' as form %}
+{% resource 'hdx_theme/hdx_autocomplete.js' %}
+
+<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
+  <div id="{{ modal_div_id }}" class="modal hide hdx-modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  	<div class="modal-header">
+  		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+  		<h3 id="{{ modal_div_id }}-label">{{ _('Add Member') }}</h3>
+  	</div>
+  	<div class="modal-body">
+      <!-- Nav tabs -->
+<ul id="add_member_tabs" class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="#existing" role="tab" data-toggle="tab"><h4>Existing User</h4></a></li>
+  <li><a href="#new" role="tab" data-toggle="tab"><h4>Invite User</h4></a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="existing">
+  		
+<div>
+  <span>
+          {{ _('If you wish to add an existing user, search for their username below.') }}
+        </span>
+</div>
+      <div class="control-group control-medium">
+        <label class="control-label" for="username">
+          {{ _('User') }}
+        </label>
+        <div class="controls">
+          {% if user %}
+            <input type="hidden" name="username" value="{{ user.name }}" />
+            <input id="username" name="username" type="text" value="{{ user.name }}"
+            disabled="True" class="control-medium">
+          {% else %}
+            <input id="username" type="text" name="username" placeholder="Username"
+            value="" class="control-medium" data-module="autocomplete"
+            data-module-source="/api/2/util/user/autocomplete?q=?">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+   <div class="tab-pane" id="new">
+      <div>
+         <span>
+          {{ _('If you wish to invite a new user, enter their email address.') }}
+        </span>
+       
+      </div>
+      <div class="control-group control-medium">
+        <label class="control-label" for="email">
+          {{ _('Email') }}
+        </label>
+        <div class="controls">
+          <input id="email" type="text" name="email" placeholder="Email address" class="control-medium" style="height: 44px; line-height: 14px; border:0px;s">
+        </div>
+      </div>
+    </div>
+</div>
+<br>
+		{% set format_attrs = {'data-module': 'hdx_autocomplete', 'style':'width: 300px;'} %}
+    {{ form.select('role', label=_('Role'), options=roles, selected=role, error='', attrs=format_attrs) }}
+  	</div>
+  	<div class="modal-footer">
+    	<button class="btn hdx-btn hdx-submit-btn">{{ _('Submit') }}</button>
+  		<button class="btn hdx-btn" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+  	</div>
+  </div>
+</form>

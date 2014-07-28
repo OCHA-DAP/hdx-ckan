@@ -31,12 +31,14 @@ Example:
    		 </h3>
   	{% endblock %}
       <div>{{ _('Updated by') }} {{ h.linked_user(last_user, avatar=0) }} - {{f_updated_time}}</div>
-      {% block description %}
-    	{% if group.description %}
+    {% block description %}
+      {#
+      {% if group.description %}
       		<div class="list-items content">{{ h.markdown_extract(group.description, extract_length=80) }}</div>
     	{% else %}
       		<p class="empty">{{ _('This group has no description') }}</p>
     	{% endif %}
+      #}
 	  {% endblock %}
 	  
 	  {% block counters %}

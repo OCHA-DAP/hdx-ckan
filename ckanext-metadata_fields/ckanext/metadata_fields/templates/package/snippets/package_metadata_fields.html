@@ -53,9 +53,9 @@
   {% endblock %}
 
   {% block basic_field_methodology %}
-  <div>
+  <div style="clear:both;">
     <div class="{{ form_field_wrapper_classes }} field-with-info">
-      <div class="control-group">
+      <div class="control-group" style="margin-bottom:10px;">
         <div id="field-dataset_methodology">
           <label class="control-label" for="methodology">Methodology</label>
           <div class="controls ">
@@ -72,8 +72,20 @@
           <div class="controls ">
             <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
           </div>
-            <br><input type="text" name="method_other" id="method_other" style="width:650px;">
-          <br><br>
+        </div>
+  </div></div>
+         <div class="control-group control-full">
+    <div class="controls editor">
+      
+    <textarea id="method_other" name="method_other" cols="20" rows="5" placeholder="Describe some other methodology..."></textarea>
+    <span class="editor-info-block">You can use <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here</span>
+  
+      
+      
+    </div>
+  </div>
+
+
           {% set py_meth='' %}
           {% if data.methodology %}
            {% set py_meth = h.markdown_extract_strip(data.methodology) %}
@@ -127,7 +139,7 @@
   {% endblock %}
 
   {% block package_basic_fields_tags %}
-  <div>
+  <div style="clear:both;">
     <div class="{{ form_field_wrapper_classes }}">
     {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
     'style':'width: 100% !important;',
@@ -146,7 +158,7 @@
 
   
   {% block basic_fields_caveats %}
-  	<div>
+  	<div style="clear:both;">
 	  	<div class="{{ form_field_wrapper_classes }}">
 	  	{{ form.markdown('caveats', id='field-caveats', label=_('Caveats'), placeholder=_('Caveats'), value=data.caveats, error=errors.caveats) }}
 	  	</div>

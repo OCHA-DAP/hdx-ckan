@@ -7,11 +7,11 @@
             <div class="row">
               <div class="span6">
                 <ul class="mainLinks">
-                  <li><a href="/about">{{ _('About') }}</a></li>
                   <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
                   <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
                   <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
                   <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact') }}</a></li>
+                  <li><a href="/about">{{ _('About') }}</a></li>
                 </ul>
               </div>
             </div>
@@ -22,24 +22,65 @@
                 </div>
               </div>
             </div>
+            <div class="row">
+              <div class="span12">
+                <div class="mailChimpForm">
+                  <span class="subscribeText">Subscribe to our mailing list.</span>
+                  <!-- Begin MailChimp Signup Form -->
+                  <div id="mc_embed_signup">
+                    <form action="//unocha.us2.list-manage.com/subscribe/post?u=83487eb1105d72ff2427e4bd7&amp;id=6fd988326c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="" _lpchecked="1">
+
+                      <div class="six columns left" style="padding-left: 0px;">
+                        <input style="width: 340px;" type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+                        <input style="height: 44px; margin-left: 20px;" type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary">
+                      </div>
+                      <div id="mce-responses" class="clear">
+                        <div class="response" id="mce-error-response" style="display:none"></div>
+                        <div class="response" id="mce-success-response" style="display:none"></div>
+                      </div>    <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                      <!--
+                      <div>
+                        <input type="text" name="b_83487eb1105d72ff2427e4bd7_6fd988326c" tabindex="-1" value="">
+                      </div>
+                      -->
+                      <div class="clear one columns left">
+                      </div>
+                    </form>
+                  </div>
+                  <!--End mc_embed_signup-->
+                </div>
+              </div>
+            </div>
 
           </div>
-          <div class="offset1 span5">
-            <div class="pull-right otherLicenseText sspRegular12">
-              {{ _("Except where otherwise noted, content on this site is licensed under a ") }}<a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>{{ _(" International license.") }}
-            </div>
+          <div class="offset2 span1">
             <div class="pull-right ccIcon">
               <img src="/images/svg/cc.svg" style="height: 40px; margin-right: 10px;"/>
+            </div>
+          </div>
+          <div class="span3">
+            <div class="otherLicenseText sspRegular12">
+              {{ _("Except where otherwise noted, content on this site is licensed under a ") }}<a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>{{ _(" International license.") }}
             </div>
           </div>
         </div>
 
         <div>
-        {% block footer_debug %}
+          {% block footer_debug %}
           {% if g.debug %}
-            {% include 'snippets/debug.html' %}
+          {% include 'snippets/debug.html' %}
           {% endif %}
-        {% endblock %}
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+    <div class="row paddingRowHack" style="background-color: #1c1c22;">
+      <div class="span12 paddingLeftHack paddingRightHack" style="height: 68px;">
+        <div style="margin-top: 20px;">
+          <a href="http://www.twitter.com/humdata" title="Twitter" class="social-icon twitter"></a>
+          <a href="https://github.com/OCHA-DAP" title="GitHub" class="social-icon github"></a>
+          <a href="mailto:hdx@un.org" title="Email Us" class="social-icon email"></a>
+          <a href="http://docs.hdx.rwlabs.org/?feed=rss2" title="Subscribe via RSS" class="social-icon rss"></a>
         </div>
       </div>
     </div>
