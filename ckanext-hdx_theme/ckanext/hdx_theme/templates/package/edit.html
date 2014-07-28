@@ -22,9 +22,31 @@
   {% snippet 'package/snippets/info.html', pkg=pkg, action='package_edit' %}
 {% endblock %}
 
+
+
+{% block page_header %}
+  <header class="module-content page-header paddingRowHack" style="width: 915px;">
+    <div class="paddingLeftHack paddingRightHack">
+      <ul class="nav nav-tabs">
+        {% block content_primary_nav %}
+          {{ h.build_nav_icon('dataset_edit', _('Edit metadata'), id=pkg.name) }}
+          {{ h.build_nav_icon('dataset_resources', _('Resources'), id=pkg.name) }}
+        {% endblock %}
+      </ul>
+    </div>
+  </header>
+{% endblock %}
+
+
 {% block primary_content %}
-  <div class="mL45">
-    {{ super() }}
+  <div class="paddingRowHack graybg">
+    <div class="paddingLeftHack paddingRightHack dataset-form-field-wrapper">
+      {{ super() }}
+    </div>
   </div>
 {% endblock %}
 
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/dataset_create.css"/>
+{% endblock %}

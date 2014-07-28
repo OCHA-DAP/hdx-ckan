@@ -22,7 +22,7 @@ Example:
           {% if show_members_num %}
           <dl>
             <dt class="uppercase">{{ _('Members') }}</dt>
-            <dd class="count-info-big">
+            <dd class="followers-count">
 	            {% if h.check_access('hdx_basic_user_info') %}
          		   	{% link_for h.get_group_members(organization.id), controller='organization', action='members', id=organization.name or organization.title %}
          		{% else %}
@@ -44,14 +44,15 @@ Example:
           {% else %}
           <dl>
             <dt class="uppercase">{{ _('Datasets') }}</dt>
-            <dd class="count-info-big">
+            <dd class="followers-count">
             	{% link_for organization.package_count, controller='organization', action='read', id=organization.name or organization.title %}
             </dd>
           </dl>
           {% endif %}
           <dl>
             <dt class="uppercase">{{ _('Followers') }}</dt>
-            <dd  class="followersNumber count-info-big">{{ h.SI_number_span(organization.num_followers) }}</dd>
+            <dd  class="followersNumber followers-count">{{ h.SI_number_span(organization.num_followers) }}</dd>
+            {#
             <dd>
             	{{ h.follow_button('group', organization.id) }}
                 {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
@@ -60,6 +61,7 @@ Example:
           			data-toggle="tooltip" title="{{ follow_tooltip }}">{{ _("What's this?") }}</a>
 				{% endif%}
             </dd>
+            #}
           </dl>
           {#
           <dl>
@@ -68,17 +70,6 @@ Example:
           </dl>
           #}
         </div>
-      {% endif %}
-      
-
-	  {% set org_url = h.hdx_get_extras_element(organization.extras) %}  	 
-  	  {% if org_url != '' %}
-      <div class="org-nums">
-      	<h4 class="uppercase">{{ _('More Info About') }}&nbsp;{{ organization.title or organization.name }}</h4>
-      	<div>
-      		<a class="info-item-name" href="{{ org_url}}" target="_blank">{{ organization.title or organization.name }} {{_('Website')}}</a>
-      	</div>
-      </div>
       {% endif %}
 
 {% endwith %}

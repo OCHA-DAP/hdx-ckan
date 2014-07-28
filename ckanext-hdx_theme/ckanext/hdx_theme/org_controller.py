@@ -13,20 +13,21 @@ import ckan.lib.mailer as mailer
 import ckan.model as model
 import logging as logging
 import exceptions as exceptions
+import pylons.config as config
 
 log = logging.getLogger(__name__)
 
 def send_mail(recipients, subject, body):
     if recipients and len(recipients) > 0:
-        log.info('\nSending email to {recipients} with subject "{subject}" with body: {body}'
-            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body))
+        email_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}'\
+            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body)
+        log.info(email_info)
         for recipient in recipients:
             mailer.mail_recipient(recipient['display_name'], recipient['email'],
-                                  subject, body)
+                subject, body)
     else:
         h.flash_error(_('The are no recipients for this request. Contact an administrator '))
         raise exceptions.Exception('No recipients')
-    
 
 
 class HDXReqsOrgController(base.BaseController):
@@ -108,13 +109,13 @@ class HDXReqsOrgController(base.BaseController):
         errors = {}
         error_summary = {}
         data = {'from': request.params.get('from','')}
-
+        from_url = ''
         if 'save' in request.params:
             try:
                 data = self._process_new_org_request()
                 self._validate_new_org_request_field(data)
                 self._send_new_org_request(data)
-                from_url = data.get('from','')
+                #from_url = data.get('from','')
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
             except logic.ValidationError, e:
@@ -123,10 +124,13 @@ class HDXReqsOrgController(base.BaseController):
             except exceptions.Exception, e:
                 log.error(str(e))
                 h.flash_error(_('Request can not be sent. Contact an administrator'))
-            if from_url and len(from_url) > 0:
-                h.redirect_to(from_url)
-            else:
-                h.redirect_to('xxx')
+            
+            #Removing this because the form doesn't submit a from parameter
+            h.redirect_to('user_dashboard_organizations')
+            #if from_url and len(from_url) > 0:
+            #    h.redirect_to(from_url)
+            #else:
+            #    h.redirect_to('/error')
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
@@ -140,9 +144,9 @@ class HDXReqsOrgController(base.BaseController):
                 'description': request.params.get('description', ''), \
                 'your_email': request.params.get('your_email', ''), \
                 'your_name': request.params.get('your_name', ''), \
-                'from': request.params.get('from', '')
+                #'from': request.params.get('from', '')
                 }
-
+        print data
         return data
 
     def _validate_new_org_request_field(self, data):
@@ -155,10 +159,18 @@ class HDXReqsOrgController(base.BaseController):
             raise logic.ValidationError(errors)
 
     def _send_new_org_request(self, data):
-
-        sys_admins = tk.get_action('hdx_get_sys_admins')()
-        sys_admins =[sys_admin for sys_admin in sys_admins if sys_admin['email']]
-
+#         sys_admins = tk.get_action('hdx_get_sys_admins')()
+#         sys_admins =[sys_admin for sys_admin in sys_admins if sys_admin['email']]
+        email = config.get('hdx.orgrequest.email', None)
+        if not email:
+            email = 'hdx.feedback@gmail.com'
+        display_name = 'HDX Feedback'
+        
+        ckan_username = c.user
+        ckan_email = ''
+        if c.userobj:
+            ckan_email = c.userobj.email
+        
         subject = _('New organization request:') + ' ' \
             + data['title']
         body = _('New organization request \n' \
@@ -167,9 +179,12 @@ class HDXReqsOrgController(base.BaseController):
             'Organization URL: {org_url}\n' \
             'Person requesting: {person_name}\n' \
             'Person\'s email: {person_email}\n' \
+            'Person\'s ckan username: {ckan_username}\n' \
+            'Person\'s ckan email: {ckan_email}\n' \
             '(This is an automated mail)' \
         '').format(org_name=data['title'], org_description = data['description'],
-                   org_url = data['org_url'], person_name = data['your_name'], person_email = data['your_email'])
+                   org_url = data['org_url'], person_name = data['your_name'], person_email = data['your_email'],
+                   ckan_username=ckan_username, ckan_email= ckan_email)
 
-        send_mail(sys_admins, subject, body)
+        send_mail([{'display_name': display_name, 'email': email}], subject, body)
         

@@ -70,5 +70,15 @@ Example:
         {% endfor %}
       </ul>
     {% endif %}
+    {% if show_my_links %}
+    <div class="mTop8">
+    	<span><a class="my-link-disabled uppercase" href="#">{{ _('Delete') }}</a>
+    	</span>
+    	<span class="mLR10">|</span>
+    	<span>
+    		{% link_for _('Edit'), controller='package', action='edit', id=package.name, class_='my-link uppercase' %}
+    	</span>
+    </div>
+    {% endif %}
   {% endblock %}
 </li>

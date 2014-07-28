@@ -1,9 +1,3 @@
-body {
-    background: #fff;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 400;
-}
-
 .masthead {
     background: #fff;
     color: #222;
@@ -120,11 +114,6 @@ body {
 	margin-top: 2px;
 	text-shadow: none;
     color: #000000;
-}
-.usermenu .nav > li > a:hover.btn {
-    background: none;
-    transition: none;
-    background-color: #EAEAEA;
 }
 
 
@@ -515,67 +504,29 @@ body {
     z-index: 9999;
 }
 
-.header-user-message {
-	font-family: 'Raleway', sans-serif;
-	font-weight: 100;
-	text-align: center;
-	color: #000000;
-	line-height: normal;
-}
+/*.package-upload-header {*/
+    /*font-family: 'Raleway', sans-serif;*/
+    /*font-weight: 100;*/
+    /*color: #000000;*/
+    /*line-height: normal;*/
+    /*font-size: 16pt;*/
+    /*margin-bottom: 20px;*/
+/*}*/
 
-.header-user-message-large {
-	font-size: 39pt;
-	margin-top: 45px;
-	margin-bottom: 25px;
-
-}
-
-.header-user-message-small {
-	font-size: 14pt;
-	margin-top: 25px;
-	margin-bottom: 60px;
-}
-
-.header-user-message-hr {
-	background-color: #999999;
-    border: 0 none;
-    height: 1px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 450px;
-    
-}
-.header-user-message a {
-	color: #0B0080;
-}
-
-.package-upload-header {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 100;
-    color: #000000;
-    line-height: normal;
-    font-size: 16pt;
-    margin-bottom: 20px;
-}
-
-.package-upload-header-sm {
-    font-family: 'Raleway', sans-serif;
-    font-weight: 100;
-    color: #000000;
-    line-height: normal;
-    font-size: 12pt;
-    margin-bottom: 20px;
-    text-align: center;
-}
+/*.package-upload-header-sm {*/
+    /*font-family: 'Raleway', sans-serif;*/
+    /*font-weight: 100;*/
+    /*color: #000000;*/
+    /*line-height: normal;*/
+    /*font-size: 12pt;*/
+    /*margin-bottom: 20px;*/
+    /*text-align: center;*/
+/*}*/
 
 .graybg{
     background: #eee;
     padding-top: 20px;
     padding-bottom: 10px;
-}
-
-.graybg .form-actions{
-    padding-bottom: 20px;
 }
 
 #dataset_methodology input[type="radio"]{
@@ -785,13 +736,6 @@ span.clear { clear: left; display: block; }
     margin: 0;
 }
 
-.support-primary {
-	float:left;
-	width: 100%;
-	background-color: #FFFFFF;
-	position: relative;
-}
-
 .support-spacing {
 	float:left;
 	width: 100%;
@@ -817,13 +761,6 @@ span.clear { clear: left; display: block; }
 	width: 980px;
 }
 
-#field-dataset_methodology input[type=radio]{
-    top: -1px !important;
-}
-
-#dataset_part_2_edit .control-full .select2-container {
-width: 473px !important;
-}
 /* Styling create organization page*/
 .hdx-wrapper .create-org {
     width: 100%;
@@ -980,7 +917,7 @@ width: 473px !important;
     margin-left: 15px;
     margin-right: 15px;
 }
-*/
+
 .org-nums dl{
 	margin-bottom: 20px;
 	border-bottom: 1px solid #DDDDDD;
@@ -997,14 +934,16 @@ width: 473px !important;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
-.org-nums .count-info-big{
+/*
+/*
+.org-nums .followers-count{
 	font-weight: 300;
 	line-height: 30px;
 	color: #000000;
 	font-size: 30px;
 }
-
-.org-nums .count-info-big a{
+*/
+.org-nums .followers-count a{
 	color: #0099FF;
 	text-decoration: none;
 }
@@ -1040,51 +979,6 @@ a.big-info-item-name {
     line-height: 45px;
 }
 
-.dataset-form-field-wrapper .control-full textarea {
-	height: 120px;
-}
-
-.dataset-form-field-wrapper {
-	width: 500px;
-}
-.dataset-form-field-wrapper .select2-container {
-	display: block;
-	/* Needed to replace the important coming from main.min.css */
-	width: 370px !important;
-}
-
-.field-with-info {
-	float: left;
-}
-
-.dataset-form-info-field {
-	float: right;
-	background-color: #CCCCCC;
-	width: 300px;
-	color: #FFFFFF;
-	padding: 5px 10px;
-}
-
-.dataset-form-info-field-height {
-	height: 110px;
-	margin-top: 3px;
-}
-
-.field-with-info ~ .info-field{
-	opacity: 0;
-	visibility: hidden;
-	transition: opacity 1s, visibility 1s;
-}
-
-.field-with-info:hover ~ .info-field, .info-field:hover{
-	opacity: 1;
-	visibility: visible;
-}
-
-.simple-dataset-control{
-	width: 370px;
-}
-
 /* This is used to show a big centered message, 
 for example: in the user dashboard when the user has no organizations */
 .big-message {
@@ -1112,9 +1006,11 @@ for example: in the user dashboard when the user has no organizations */
 }
 
 .hdx-modal.modal {
+	background-color: #eee;
 	width: inherit;
 	top: 30%;
 	margin-left: -220px;
+    color: #000;
 }
 
 .hdx-modal .controls {
@@ -1164,29 +1060,9 @@ for example: in the user dashboard when the user has no organizations */
 	margin-top: 3px;
 	margin-bottom: 6px;
 }
-.member-actions {
-	position: absolute;
-	top: 20px;
-	right: 14px;
-}
+
 
 /* END Styling create organization page*/
-
-/* HDX Version display */
-    #hdxVersion{
-        display: none;
-    }
-    .logo:hover #hdxVersion{
-        display: inline;
-        color: #444444;
-        position: relative;
-        float: left;
-        font-size: 12px;
-        left: 286px;
-        top: 20px;
-        width: 0;
-    }
-/* END HDX Version display */
 
 /* Dropdown menu colors  */
     .navbar .dropdown .dropdown-menu {

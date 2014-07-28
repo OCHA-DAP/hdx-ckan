@@ -4,6 +4,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import ckan.model.package as package
 import ckan.model.license as license
+import pylons.config as config
 import version
 
 import ckanext.hdx_theme.caching as caching
@@ -11,10 +12,11 @@ import ckanext.hdx_theme.auth as auth
 
 
 def run_on_startup():
-    _generate_license_list()
-    
-    caching.cached_get_group_package_stuff()
-    
+    cache_on_startup = config.get('hdx.cache.onstartup', 'true')
+    if 'true' == cache_on_startup:
+        _generate_license_list()
+        caching.cached_get_group_package_stuff()
+
 
 def _generate_license_list():
     package.Package._license_register = license.LicenseRegister() 
@@ -57,8 +59,12 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/organization/request_new', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_new_organization')
         map.connect('/organization/members/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='members')
         map.connect('dataset_preselect','/dataset/preselect', controller='ckanext.hdx_theme.preselect_dsform_controller:HDXPreselectOrgController', action='preselect')
+        map.connect('/organization/member_new/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='member_new')
 
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+
+        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
+
         return map
     
     def create(self, entity):

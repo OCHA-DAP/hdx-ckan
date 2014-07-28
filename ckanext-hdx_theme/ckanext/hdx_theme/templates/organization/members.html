@@ -4,7 +4,7 @@
 {% set authorized = h.check_access('organization_update', {'id': c.group_dict.id}) %}
 
 {% block breadcrumb_content %}
-  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li>{% link_for _('Organisations'), controller='organization', action='index' %}</li>
   <li>{% link_for c.group_dict.display_name|truncate(35), controller='organization', action='read', id=c.group_dict.name %}</li>
   <li class="active">{% link_for _('Members'), controller='organization', action='members', id=c.group_dict.name %}</li>
 {% endblock %}
@@ -18,9 +18,8 @@
 		{% resource 'hdx_theme/trigger_click_hash.js' %}
 		{# link_for _('+ Add Member'), controller='organization', action='member_new', id=c.group_dict.id, class_='btn hdx-btn main-hdx-btn' #}
 		<a data-module="trigger_click_hash" data-module-expected_hash="#add-member"
-	  		href="#add-member-div" data-toggle="modal" class="btn hdx-btn main-hdx-btn">+ Add Member</a>
-		{% snippet 'organization/snippets/add_member.html', form_url=h.url_for(controller='organization', action='member_new', id=c.group_dict.id), 
-  			roles=roles, modal_div_id='add-member-div', authorized=authorized %}
+	  		href="#add-member-div" data-toggle="modal" class="btn hdx-btn main-hdx-btn">{{ _('+ Add Member') }}</a>
+		{% snippet 'organization/snippets/add_member.html', form_url=h.url_for(controller='organization', action='member_new', id=c.group_dict.id), roles=roles, modal_div_id='add-member-div', authorized=authorized %}
   	{% endif %}
   	{% snippet 'snippets/search_form.html', type='member', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.members|length, placeholder=search_text, show_empty=request.params %}
 {% endblock %}

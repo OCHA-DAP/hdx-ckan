@@ -1,33 +1,33 @@
 {% extends "user/dashboard.html" %}
 
 {% block dashboard_activity_stream_context %}{% endblock %}
-
-{% block add_action_content %}
-  {% if h.check_access('organization_create') %}
-  {# if c.userobj.sysadmin #}
-    <li>{% link_for _('Add Organization'), controller='organization', action='new', class_="btn btn-primary", icon="plus-sign-alt" %}</li>
-  {# endif #}
-  {% endif %}
-{% endblock %}
+{% block add_action_content %}{% endblock %}
 
 {% block primary_content_inner %}
-  <h2 class="hide-heading">{{ _('My Organizations') }}</h2>
   {% set organizations = h.hdx_organizations_available_with_roles() %}
+    {% if organizations %}
+      <div class="pull-right">
+           <a class="btn btn-primary" href="/organization">{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
+           <a class="btn btn-primary" href="/organization/request_new">{{ _('+ Request New Organisation') }}</a>
+      </div>
+    {% endif %}
+  <h2 class="page-heading sspBold28 black">{{ _('My Organisations') }}</h2>
   {% if organizations %}
     <div class="wide">
       {% snippet "organization/snippets/organization_list.html", organizations=organizations %}
     </div>
   {% else %}
-  {% snippet "organization/snippets/mem_or_org.html", parent_route='user_dashboard_organizations' %}
-  	{#<div class="big-message">
-	    <p>
-	      {{ _('You aren\'t currently a member of any organizations.') }}
-	    </p>
-	    <p>
-	      {% if h.check_access('organization_create') %}
-	        {% link_for _('+ Add Organization'), controller='organization', action='new', class_='info-item-name' %}
-	      {% endif %}
-	    </p>
-    </div>#}
+  <div class="mL30">
+      {# snippet "organization/snippets/mem_or_org.html", parent_route='user_dashboard_organizations' #}
+      <div class="row row-fluid">
+      <h3 class="center sspRegular14"> {{ _('Thank you for becoming a registered user in HDX. If you plan on sharing data, you need to create an organisation or become an editor of an existing organisation.') }}</h3>
+      <br/>
+      <center>
+	      <a href="/organization" class="btn btn-primary">{{ _("Find Your Organisation")}}</a>
+	      <span class="mLR30">{{_("OR")}}</span>
+	      <a href="/organization/request_new" class="btn btn-primary">+{{ _("Request New Organisation")}}</a>
+      </center>
+      </div>
+  </div>
   {% endif %}
 {% endblock %}

@@ -25,17 +25,20 @@
           <div class="row">
             <div class="span6">
               <h1>
-                {{ _("The humanitarian data exchange") }}
+                {{ _("The Humanitarian") }}<br>
+                {{ _("Data Exchange") }}
               </h1>
               <h3>
                 {{ _("Where your data comes to life") }}
               </h3>
               <p class="hdxDescription">
+                {#
                 {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
                       global datasets relevant to humanitarian work as well as local datasets from our
                       three pilot locations - Colombia, Kenya and Yemen. You can also create an
                       account and add your own data to the repository to share privately or publicly. 
                       Please have a look around and send us your feedback!") }}
+                      #}
               </p>
             </div>
           </div>
@@ -197,7 +200,7 @@
 {% block scripts %}
    {{ super() }}
    <link rel="stylesheet" href="/homepage.css">
-   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
    {% resource 'hdx_theme/count.js' %}
 {% endblock %}
 

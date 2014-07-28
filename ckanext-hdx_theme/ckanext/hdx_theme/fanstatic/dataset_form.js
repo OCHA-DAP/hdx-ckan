@@ -1,7 +1,7 @@
 //make sure World is always first
 $('#country-drop>option:contains(World)').insertAfter('#country-drop>option[value=-1]');
 
-$('#field-private option[value=False]').attr('selected', true);
+//$('#field-private option[value=False]').attr('selected', true);
 
 $('#country-drop').change(function(){
       var country = $('#country-drop option:selected').val();
@@ -10,10 +10,10 @@ $('#country-drop').change(function(){
         var number_of_groups = $('.group_checked').length;
         //Add country
         if(country != '-1'){
-          $('#selected_groups').append('<span class="filtered pill">'+country_name+' <input id="field-group-'+(number_of_groups)+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked" class="group_checked"/></span>');
+          $('#selected_groups').append('<span class="filtered pill">'+country_name+' <i id="field-group-'+country+'" name="groups__'+(number_of_groups)+'__id" value="'+country+'" class="group_checked icon-remove"/></span>');
           //Add country for real
           if($('#select_groups_hidden').length >0){
-            $('#select_groups_hidden').append('<input id="'+country+'" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
+            $('#select_groups_hidden').append('<input id="field-group-'+country+'-input" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
           }
         }
       }
@@ -25,9 +25,9 @@ $('#country-drop').change(function(){
         var id = event.target.children.item().value;
         $('#'+id).remove();
         $(event.target).remove();
-      }else if(event.target.className == "group_checked"){
-        var id = event.target.value;
-        $('#'+id).remove();
+      }else if(event.target.className == "group_checked icon-remove"){
+    	var id = event.target.id;
+        $('#'+id+'-input').remove();
         $(event.target).parent().remove();
       }
       //Reset dropdown for better userability

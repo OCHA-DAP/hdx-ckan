@@ -17,8 +17,8 @@ Example:
   	<div class="modal-body">
       <!-- Nav tabs -->
 <ul id="add_member_tabs" class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#existing" role="tab" data-toggle="tab">Existing User</a></li>
-  <li><a href="#new" role="tab" data-toggle="tab">Invite User</a></li>
+  <li class="active"><a href="#existing" role="tab" data-toggle="tab"><h4>Existing User</h4></a></li>
+  <li><a href="#new" role="tab" data-toggle="tab"><h4>Invite User</h4></a></li>
 </ul>
 
 <!-- Tab panes -->
@@ -59,12 +59,12 @@ Example:
           {{ _('Email') }}
         </label>
         <div class="controls">
-          <input id="email" type="text" name="email" placeholder="Email address">
+          <input id="email" type="text" name="email" placeholder="Email address" class="control-medium" style="height: 44px; line-height: 14px; border:0px;s">
         </div>
       </div>
     </div>
 </div>
-<hr><br>
+<br>
 		{% set format_attrs = {'data-module': 'hdx_autocomplete', 'style':'width: 300px;'} %}
     {{ form.select('role', label=_('Role'), options=roles, selected=role, error='', attrs=format_attrs) }}
   	</div>

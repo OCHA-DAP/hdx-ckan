@@ -27,7 +27,8 @@
 
 .followButtonContainer{
 }
-
+/* moved to header.css as it is used in org title */
+/*
 .itemTitle{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 700;
@@ -35,6 +36,7 @@
     display: inline;
     line-height: 36px;
 }
+*/
 .followButtonContainer{
     line-height: 36px;
 }
@@ -43,15 +45,6 @@
 .info-wrapper.social img{
 
 }
-
-/* Followers Count */
-    .followers-count {
-        font-family: 'Gotham-Light', sans-serif;
-        font-weight: 400;
-        font-size: 48px;
-        line-height: normal;
-    }
-/* END Followers Count */
 
 /* hdx_social theming */
     .info-wrapper .social-images {
@@ -90,42 +83,15 @@
     font-weight: 400;
     font-size: 14px;
 }
-
+/* moved to header.css */
+/*
 .notes.embedded-content{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
     font-size: 14px;
 }
+*/
 
-/* Style tabs */
-    .hdx-wrapper .nav-tabs > li {
-        margin-bottom: -3px;
-    }
-    .hdx-wrapper .nav-tabs > .active > a{
-        border: none;
-        border-bottom: 3px solid #f2645a;
-        color: #f2645a;
-    }
-    .hdx-wrapper .nav-tabs > li > a{
-        border: none;
-        color: #888888;
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        padding-left: 30px;
-        padding-right: 30px;
-    }
-    .hdx-wrapper .nav-tabs > li > a:hover {
-        color: #f2645a;
-    }
-    .page-header{
-        border-bottom: 3px solid #cccccc;
-        /*background-color: #f6f6f6;*/
-        -webkit-border-radius: 0 3px 0 0;
-        -moz-border-radius: 0 3px 0 0;
-        border-radius: 0 3px 0 0;
-    }
-/* END Style tabs*/
 
 /* Style Resources List */
     .resource-list{
@@ -155,7 +121,7 @@
         border-radius: 0 !important;
         -webkit-border-radius: 0 !important;
         -moz-border-radius: 0 !important;
-        vertical-align:  middle;
+        vertical-align:  top;
     }
     .additional-info table th {
         padding-left: 20px;
@@ -168,11 +134,11 @@
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         font-size: 14px;
-
     }
-    .additional-info table tr:nth-child(odd){
-        background-color: #eeeeee;
-
+    .additional-info td{
+        width: 70%;
     }
-
+    .additional-info th{
+        width: 30%;
+    }
 /* END Style Additional Info */

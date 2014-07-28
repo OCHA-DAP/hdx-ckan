@@ -5,6 +5,7 @@ import ckan.lib.plugins as lib_plugins
 
 class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
+    plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IGroupForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
 
@@ -53,3 +54,8 @@ class HDXOrgFormPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationF
             return schema
         else:
             return None
+
+    def before_map(self, map):
+        map.connect('user_dashboard', '/dashboard', controller='ckanext.hdx_orgs.dashboard:DashboardController', action='dashboard',
+                  ckan_icon='list')
+        return map

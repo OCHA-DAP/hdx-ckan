@@ -16,7 +16,7 @@ overriding the form blocks depending on the current context
 	<h1 class="h1-title uppercase">
       {% block page_heading %}1. {{ _('Basic Details') }}{% endblock %}
     </h1>
-    <p>{{ _('Tell us some basic details about your organization.') }}</p>
+    <p>{{ _('Tell us some basic details about your organisation.') }}</p>
 	{{ super() }}
 	</div>
 </div>
@@ -50,7 +50,7 @@ overriding the form blocks depending on the current context
 			    {{ form.input('your_email', label=_('Your Email'), id='your-email', type='email', placeholder=_('name@example.com'), 
 			    	value=data.your_email, error=errors.your_email, classes=['control-full','org-control','field-with-info', 'mandatory']) }}
 			    <div class="org-control-info info-field">
-			    	<div class="org-info-label">{{_('This email should be related to the organization.')}}</div>
+			    	<div class="org-info-label">{{_('This email should be related to the organisation.')}}</div>
 			    </div>
 			</div>
 		</div>
@@ -63,7 +63,7 @@ overriding the form blocks depending on the current context
 	<div class="offset1 span9">
 	  <div class="create-org form-actions">
 		<button class="btn btn-primary create-org-btn" name="save" type="submit">
-			{% block save_text %}{{ _('Request New Organization') }}{% endblock %}
+			{% block save_text %}{{ _('Request New Organisation') }}{% endblock %}
 		</button>
 	  </div>
 	</div>

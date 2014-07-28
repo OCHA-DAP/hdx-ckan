@@ -30,17 +30,19 @@
     }
 
     .homepage-main{
-        /*background-color: #1ebfb3;*/
-        /*background-image: url("/images/homepage-new/map.png");*/
-        /*background-size: cover;*/
+        background-color: #1ebfb3;
+        background-image: url("/images/homepage-new/map.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        background-position: center;
         font-family: 'Gotham-Bold',sans-serif;
         font-weight: 400;
-        padding-left: 45px;
+        min-width: 1380px;
     }
 
     .homepage-background{
         height: 710px;
-        /*background-color: rgba(30, 191, 179, 0.7);*/
+        /*min-width: 1260px;*/
     }
 
 
