@@ -115,7 +115,7 @@
         {#}
         <button class="btn btn-primary" name="save" value="go-metadata" type="submit">{% block save_button_text %}{{ _('Next: Additional Info') }}{% endblock %}</button>
         {% else #}
-          <button class="btn btn-primary" name="save" value="finish" type="submit">{{ _('Add') }}</button>
+          <button class="btn btn-primary" name="save" value="finish" type="submit">{% block save_button_text2 %}{{ _('Add') }}{% endblock %}</button>
         {# endif #}
       </div>
     </form>

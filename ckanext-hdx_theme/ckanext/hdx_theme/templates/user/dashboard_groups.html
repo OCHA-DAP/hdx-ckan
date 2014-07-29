@@ -11,14 +11,14 @@
 {% endblock %}
 
 {% block primary_content_inner %}
-  <h2 class="hide-heading">{{ _('My Groups') }}</h2>
-  {% set groups = h.groups_available(am_member=True) %}
+  <h2 class="hide-heading">{{ _('My Countries') }}</h2>
+  {% set groups = h.hdx_group_followee_list() %}
   {% if groups %}
-    <div class="wide">
+    <div class="wide" style="min-height: 200px;">
       {% snippet "group/snippets/group_list.html", groups=groups %}
     </div>
   {% else %}
-    <p class="empty">
+    <p class="empty" style="min-height: 200px;">
       {{ _('You are not a member of any groups.') }}
       {# if h.check_access('group_create') %}
         {% link_for _('Create one now?'), controller='group', action='new' %}

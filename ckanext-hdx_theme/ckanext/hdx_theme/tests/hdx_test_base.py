@@ -10,6 +10,8 @@ import webtest
 import ckan.model as model
 import ckan.lib.search as search
 
+import ckan.new_tests.helpers as helpers
+
 from pylons import config
 
 
@@ -20,7 +22,7 @@ def _get_test_app():
     return app
 
 
-def _load_plugin(plugin):
+def load_plugin(plugin):
     plugins = set(config['ckan.plugins'].strip().split())
     plugins.add(plugin.strip())
     config['ckan.plugins'] = ' '.join(plugins)
@@ -34,7 +36,7 @@ class HdxBaseTest(object):
 
     @classmethod
     def _load_plugins(cls):
-        _load_plugin('hdx_theme')
+        load_plugin('hdx_theme')
 
     @classmethod
     def setup_class(cls):
@@ -44,7 +46,7 @@ class HdxBaseTest(object):
         cls.app = _get_test_app()
 
         search.clear()
-        model.Session.remove()
+        helpers.reset_db()
         cls._create_test_data()
 
     @classmethod
