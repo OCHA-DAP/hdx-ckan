@@ -191,7 +191,10 @@ def hdx_group_followee_list():
                'for_view': True}
 
     list = logic.get_action('group_followee_list')(context, {'id': c.userobj.id})
-    return list
+    #filter out the orgs
+    groups = [group for group in list if not group['is_organization']]
+
+    return groups
 
 
 def hdx_organizations_available_with_roles():
