@@ -78,7 +78,7 @@
 	    </tr>
 	    <tr>
 	      <th scope="row" class="dataset-label">{{ _("Methodology") }}</th>
-	      <td class="dataset-details">{{ pkg_dict.methodology }}</td>
+	      <td class="dataset-details">{{ h.render_markdown(pkg_dict.methodology) }}</td>
 	    </tr>
 	    <tr>
 	      <th scope="row" class="dataset-label">{{ _("Caveats / Comments") }}</th>
