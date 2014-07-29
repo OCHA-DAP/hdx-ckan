@@ -95,8 +95,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_linked_user':hdx_helpers.hdx_linked_user,
             'hdx_show_singular_plural':hdx_helpers.hdx_show_singular_plural,
             'hdx_member_roles_list':hdx_helpers.hdx_member_roles_list,
-            'hdx_organizations_available_with_roles':hdx_helpers.hdx_organizations_available_with_roles
-            
+            'hdx_organizations_available_with_roles':hdx_helpers.hdx_organizations_available_with_roles,
+            'hdx_group_followee_list':hdx_helpers.hdx_group_followee_list
         }
         
     def get_actions(self):

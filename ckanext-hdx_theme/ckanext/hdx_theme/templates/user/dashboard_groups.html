@@ -12,7 +12,7 @@
 
 {% block primary_content_inner %}
   <h2 class="hide-heading">{{ _('My Countries') }}</h2>
-  {% set groups = h.groups_available(am_member=True) %}
+  {% set groups = h.hdx_group_followee_list() %}
   {% if groups %}
     <div class="wide" style="min-height: 200px;">
       {% snippet "group/snippets/group_list.html", groups=groups %}
