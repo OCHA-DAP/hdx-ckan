@@ -1295,4 +1295,12 @@ a, a:hover, a:focus{
 /* FILE upload */
 .resource-upload-field input {
     transform: none;
+}
 /* FILE upload end*/
+
+/* Error messages position above floating elements */
+.control-full .error-block{
+    position: relative;
+    z-index: 1;
+}
+/* END Error messages position above floating elements */
