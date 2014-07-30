@@ -1,0 +1,86 @@
+#
+# This is a SAMPLE config.ini to be used with our ckan. 
+# Copy it wherever you want and name it whatever you want.
+# ( For example in could go to /etc/ckan/development.ini )
+# That copy wil be the file that you use as argument for paster, gunicorn, etc
+# Don't change this file but only its copy.
+# Please note that this file references the git stored file common-config.ini.txt
+# The path to common-config.ini.txt as well as other   
+# configurations specific to your environment must be changed 
+# in the copy of this file.
+# Enjoy!
+#
+
+[DEFAULT]
+# WARNING: *THIS SETTING MUST BE SET TO FALSE ON A PRODUCTION ENVIRONMENT*
+debug = false
+
+[server:main]
+use = egg:Paste#http
+host = 0.0.0.0
+port = 5000
+
+[app:main]
+use = egg:ckan
+use = config:/path/to/YOUR/ckan/clone/common-config-ini.txt
+## Database Settings
+sqlalchemy.url = postgresql://ckanuser:pass@localhost/ckandb
+#ckan.datastore.write_url = postgresql://ckanuser:pass@localhost/datastore
+#ckan.datastore.read_url = postgresql://ckanuser:pass@localhost/datastore
+
+## Site Settings
+ckan.site_url = http://localhost
+beaker.session.secret = DX95Ifu/ko3ddf+/Bbxdar7t4
+app_instance_uuid = {f78aac36-9623-46af-9ca5-d8e0a39b094a}
+
+## Search Settings
+ckan.site_id = default
+solr_url = http://127.0.0.1:8983/solr
+#ckan.simple_search = 1
+
+#ckan.recaptcha.publickey =
+#ckan.recaptcha.privatekey =
+
+ckan.tracking_enabled = True
+
+## Logging configuration
+[loggers]
+keys = root, ckan, ckanext
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = DEBUG
+handlers = console
+
+[logger_ckan]
+level = DEBUG
+handlers = console
+qualname = ckan
+propagate = 0
+
+[logger_ckanext]
+level = DEBUG
+handlers = console
+qualname = ckanext
+propagate = 0
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+#[handler_file]
+#class = FileHandler
+#args = ('/tmp/hdx.log','a')
+#level = DEBUG
+#formatter = generic
+
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s] %(message)s
