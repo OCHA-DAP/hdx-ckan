@@ -12,16 +12,18 @@
 
 {% block primary_content_inner %}
   <h2 class="page-heading sspBold28 black">{{ _('My Datasets') }}</h2>
-  {% if c.user_dict.datasets %}
-    {% snippet 'snippets/package_list.html', packages=c.user_dict.datasets, show_my_links=true %}
-  {% else %}
-    <p class="empty">
-      {{ _('You haven\'t created any datasets.') }}
-      {# Users must go to a country before creating a new collection so I commented out the part below.
-	      {% if h.check_access('package_create') %}
-	        {% link_for _('Create one now?'), controller='package', action='new' %}
-	      {% endif %}
-      #}
-    </p>
-  {% endif %}
+  <div style="min-height: 120px;">
+    {% if c.user_dict.datasets %}
+      {% snippet 'snippets/package_list.html', packages=c.user_dict.datasets, show_my_links=true %}
+    {% else %}
+      <p class="empty">
+        {{ _('You haven\'t created any datasets.') }}
+        {# Users must go to a country before creating a new collection so I commented out the part below.
+          {% if h.check_access('package_create') %}
+            {% link_for _('Create one now?'), controller='package', action='new' %}
+          {% endif %}
+        #}
+      </p>
+    {% endif %}
+  </div>
 {% endblock %}
