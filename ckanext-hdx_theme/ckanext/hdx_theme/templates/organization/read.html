@@ -53,7 +53,7 @@
 		  	{% if org_url != '' %}
 		      	<span>
 		      		&nbsp;&nbsp;&nbsp;{{ _('More info') }}
-		      		<a class="info-item-name" href="http://{{ org_url}}" target="_blank">{{ c.group_dict.title or c.group_dict.name }} {{_('Website')}}</a>
+		      		<a class="info-item-name" href="{{ org_url }}" target="_blank">{{ c.group_dict.title or c.group_dict.name }} {{_('Website')}}</a>
 		      	</span>
  	        {% endif %}
 	      </div>
