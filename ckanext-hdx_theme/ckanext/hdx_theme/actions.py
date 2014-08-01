@@ -16,8 +16,9 @@ import ckan.model as model
 
 import ckanext.hdx_theme.caching as caching
 import ckanext.hdx_theme.counting_actions as counting
+import ckanext.hdx_theme.util.mail as hdx_mail
 
-from ckan.common import _
+from ckan.common import c, _
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
@@ -176,3 +177,67 @@ def hdx_get_sys_admins(context, data_dict):
     q = model.Session.query(model.User).filter(model.User.sysadmin==True)
     return [{'name':m.name, 'display_name':m.fullname or m.name, 'email':m.email} for m in q.all()]
     #return q.all();
+
+
+def hdx_send_new_org_request(context, data_dict):
+    _check_access('hdx_send_new_org_request',context, data_dict)
+
+    email = config.get('hdx.orgrequest.email', None)
+    if not email:
+        email = 'hdx.feedback@gmail.com'
+    display_name = 'HDX Feedback'
+
+    ckan_username = c.user
+    ckan_email = ''
+    if c.userobj:
+        ckan_email = c.userobj.email
+
+    subject = _('New organization request:') + ' ' \
+        + data_dict['title']
+    body = _('New organization request \n' \
+        'Organization Name: {org_name}\n' \
+        'Organization Description: {org_description}\n' \
+        'Organization URL: {org_url}\n' \
+        'Person requesting: {person_name}\n' \
+        'Person\'s email: {person_email}\n' \
+        'Person\'s ckan username: {ckan_username}\n' \
+        'Person\'s ckan email: {ckan_email}\n' \
+        '(This is an automated mail)' \
+    '').format(org_name=data_dict['title'], org_description = data_dict['description'],
+               org_url = data_dict['org_url'], person_name = data_dict['your_name'], person_email = data_dict['your_email'],
+               ckan_username=ckan_username, ckan_email= ckan_email)
+
+    hdx_mail.send_mail([{'display_name': display_name, 'email': email}], subject, body)
+
+
+def hdx_send_editor_request_for_org(context, data_dict):
+    _check_access('hdx_send_editor_request_for_org',context, data_dict)
+
+    body = _('New request editor/admin role\n' \
+    'Full Name: {fn}\n' \
+    'Username: {username}\n' \
+    'Email: {mail}\n' \
+    'Organization: {org}\n' \
+    'Message from user: {msg}\n' \
+    '(This is an automated mail)' \
+    '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'], 
+               org=data_dict['organization'], msg=data_dict.get('message', ''))
+
+    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+
+
+def hdx_send_request_membership(context, data_dict):
+    _check_access('hdx_send_request_membership',context, data_dict)
+
+    body = _('New request membership\n' \
+    'Full Name: {fn}\n' \
+    'Username: {username}\n' \
+    'Email: {mail}\n' \
+    'Organization: {org}\n' \
+    'Message from user: {msg}\n' \
+    '(This is an automated mail)' \
+    '').format(fn=data_dict['display_name'], username=data_dict['name'],
+               mail=data_dict['email'], org=data_dict['organization'],
+               msg=data_dict.get('message', ''))
+
+    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)

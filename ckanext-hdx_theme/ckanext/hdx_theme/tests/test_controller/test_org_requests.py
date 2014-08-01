@@ -10,7 +10,7 @@ import logging as logging
 import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.org_controller as org_controller
+import ckanext.hdx_theme.util.mail as hdx_mail
 
 log = logging.getLogger(__name__)
 
@@ -28,13 +28,13 @@ class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
 
     def setup(self):
         global original_send_mail
-        original_send_mail = org_controller.send_mail
-        org_controller.send_mail = send_mail
+        original_send_mail = hdx_mail.send_mail
+        hdx_mail.send_mail = send_mail
 
     def teardown(self):
         global original_send_mail
         global mail_info
-        org_controller.send_mail = original_send_mail
+        hdx_mail.send_mail = original_send_mail
         mail_info = None
         original_send_mail = None
 
