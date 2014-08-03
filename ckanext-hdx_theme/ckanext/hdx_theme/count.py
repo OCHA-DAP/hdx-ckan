@@ -2,6 +2,7 @@ import json
 from ckan import model
 from ckan.lib import base
 import sqlalchemy
+import pylons.config as config
 
 
 class CountController(base.BaseController):
@@ -30,7 +31,13 @@ class CountController(base.BaseController):
         return json.dumps({'count': self._get_count('"group"', 'organization', True)})
 
     def source(self):
-        return json.dumps({'count': 46})
+        q = sqlalchemy.text('''select count(distinct(pe.value)) from package_extra pe
+                inner join package p on pe.package_id = p.id
+                where pe.key = 'dataset_source' and p.state='active'
+                and p.private=false;''')
+        result = model.Session.connection().execute(q, entity_id=id).scalar()
+        extra_src = int(config.get('hdx.homepage.extrasources', '13'))
+        return json.dumps({'count': result + extra_src})
 
     def tag(self):
         return json.dumps({'count': self._get_count('tag', 'tag', False)})
