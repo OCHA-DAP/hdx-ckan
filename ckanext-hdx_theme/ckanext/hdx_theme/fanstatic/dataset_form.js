@@ -101,7 +101,7 @@ $(document).ready(function(){
     $("#field-dataset_date, #date_range1, #date_range2").datepicker();
     // get rid of country tags is user tried to delete them and just got the error.
     if ($('div#select_country').find('span.error-block').length) {
-      $('#selected_groups').find('span.pill').trigger(click);
+      $('#selected_groups').find('span.pill').trigger('click');
     }
 });
 
