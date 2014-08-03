@@ -18,7 +18,7 @@ $('#country-drop').change(function(){
           var tagval = $(this).attr('value');
           if (country == tagval) {
             flag = 0;
-            console.log('i already got ' + tagval + ' ... Not adding it again.');
+            // console.log('i already got ' + tagval + ' ... Not adding it again.');
           }
         });
       }
@@ -101,7 +101,7 @@ $(document).ready(function(){
     $("#field-dataset_date, #date_range1, #date_range2").datepicker();
     // get rid of country tags is user tried to delete them and just got the error.
     if ($('div#select_country').find('span.error-block').length) {
-      console.log('country error detected. must be #985 :D');
+      // console.log('country error detected. must be #985 :D');
       if ($('div#select_country').find('span.error-block').html().match('issing value').length) {
         $('#selected_groups').find('span.pill').trigger('click');
       }
