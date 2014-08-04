@@ -149,3 +149,4 @@ smtp.starttls = False
 
 #hdx.orgrequest.email = hdx.feedback@gmail.com
 hdx.cache.onstartup = true
+hdx.homepage.extrasources = 13
