@@ -15,6 +15,7 @@
   <div style="min-height: 120px;">
     {% if c.user_dict.datasets %}
       {% snippet 'snippets/package_list.html', packages=c.user_dict.datasets, show_my_links=true %}
+      {{ c.page.pager() }}
     {% else %}
       <p class="empty">
         {{ _('You haven\'t created any datasets.') }}
@@ -26,4 +27,5 @@
       </p>
     {% endif %}
   </div>
+  
 {% endblock %}
