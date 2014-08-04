@@ -15,6 +15,7 @@ import ckan.lib.captcha as captcha
 import ckan.lib.mailer as mailer
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.plugins as p
+import ckan.controllers.package as package
 
 from ckan.common import _, c, g, request
 
@@ -152,3 +153,45 @@ class DashboardController(uc.UserController):
         # dashboard page.
         get_action('dashboard_mark_activities_old')(context, {})
         return render('user/dashboard.html')
+
+    def dashboard_datasets(self):
+        context = {'model': model, 'session': model.Session,'for_view': True, 
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        data_dict = {'user_obj': c.userobj}
+
+        try:
+            page = int(request.params.get('page', 1))
+        except ValueError, e:
+            abort(400, ('"page" parameter must be an integer'))
+        limit = 20
+        data_dict['limit'] = limit
+        data_dict['offset'] = (page - 1) * limit
+        c.is_sysadmin = new_authz.is_sysadmin(c.user)
+        try:
+            user_dict = get_action('hdx_user_show')(context, data_dict)
+        except NotFound:
+            abort(404, _('User not found'))
+        except NotAuthorized:
+            abort(401, _('Not authorized to see this page'))
+        c.user_dict = user_dict
+        c.is_myself = user_dict['name'] == c.user
+        c.about_formatted = h.render_markdown(user_dict['about'])
+        
+#         c.page = user_dict['total_count']
+
+        params_nopage = [(k, v) for k, v in request.params.items() if k != 'page']
+        def pager_url(q=None, page=None):
+            params = list(params_nopage)
+            params.append(('page', page))
+            url = h.url_for('user_dashboard_datasets')
+            return package.url_with_params(url, params)
+        
+        c.page = h.Page(
+            collection=[],
+            page=page,
+            url=pager_url,
+            item_count=user_dict['total_count'],
+            items_per_page=limit
+        )
+        
+        return render('user/dashboard_datasets.html')

@@ -138,4 +138,8 @@ li:nth-child(odd) > div.dsb-activity-item  {
 	background-color: #eeeeee;
 }
 
+.module:last-child {
+    margin-bottom: 0px;
+}
+
 /* END Dashboard specific Style*/
