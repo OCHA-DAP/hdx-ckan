@@ -4,6 +4,7 @@
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
 {% set is_display_search_input = display_search_input if display_search_input==False else True %}
+{% set is_dataset = ('dataset' == type) %}
 
 <form class="list-items search-form" method="get" data-module="select-switch">
     {% if is_display_search_input %}
@@ -44,7 +45,9 @@
             <b class="caret"></b>
           </button>
           <input type="hidden" name="sort" />
+          {% if is_dataset %}
           <input id="preserve-search" type="hidden" name="q" />
+          {% endif %}
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}
@@ -59,7 +62,8 @@
               $(this).parents(".dropdown").find("button span").text($(this).text());
               $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
               //add original search query if applicable
-              $("#preserve-search").val($('.searchInput').val());
+              if($("#preserve-search"))
+              	$("#preserve-search").val($('.searchInput').val());
               $(this).parents("form").submit();
             });
           });
