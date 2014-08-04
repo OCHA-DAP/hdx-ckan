@@ -56,7 +56,7 @@ class HDXOrgMemberController(org.OrganizationController):
 
 		#self._check_access('group_delete', context, {'id': id})
 		try:
-			if request.method == 'POST' and request.params['username']:
+			if request.method == 'POST':
 				data_dict = clean_dict(dict_fns.unflatten(
 					tuplize_dict(parse_params(request.params))))
 				data_dict['id'] = id
@@ -72,7 +72,6 @@ class HDXOrgMemberController(org.OrganizationController):
 					user_dict = self._action('user_invite')(context,
 							user_data_dict)
 					data_dict['username'] = user_dict['name']
-
 				c.group_dict = self._action('group_member_create')(context, data_dict)
 				self._redirect_to(controller='group', action='members', id=id)
 			else:

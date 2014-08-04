@@ -2,6 +2,8 @@ import ckan.new_authz as new_authz
 import ckan.logic as logic
 
 from ckan.lib.base import _
+from ckan.common import c
+import ckan.plugins.toolkit as tk
 
 
 def _simple_logged_in_auth(fail_message):
@@ -14,7 +16,11 @@ def _simple_logged_in_auth(fail_message):
 
 @logic.auth_sysadmins_check
 def group_member_create(context, data_dict):
-    return {'success': False, 'msg': _('Nobody can add a member to a country in HDX')}
+    group_dict = tk.get_action('group_show')(context, {'id': data_dict['id']})
+    if group_dict['is_organization']:
+        return {'success': True, 'msg': _('Nobody can add a member to a country in HDX')}
+    else:       
+        return {'success': False, 'msg': _('Nobody can add a member to a country in HDX')}
 
 
 def hdx_basic_user_info(context, data_dict):
