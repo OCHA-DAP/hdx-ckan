@@ -103,7 +103,11 @@ $(document).ready(function(){
     if ($('div#select_country').find('span.error-block').length) {
       // console.log('country error detected. must be #985 :D');
       if ($('div#select_country').find('span.error-block').html().match('issing value').length) {
-        $('#selected_groups').find('span.pill').trigger('click');
+        if ($('#selected_groups').find('span.pill').length) {
+          $('#selected_groups').find('span.pill').each(function() {
+            $(this).find('i').trigger('click');
+          });
+        }
       }
     }
 });
