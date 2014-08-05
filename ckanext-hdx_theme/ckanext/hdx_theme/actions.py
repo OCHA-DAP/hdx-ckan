@@ -16,8 +16,9 @@ import ckan.model as model
 
 import ckanext.hdx_theme.caching as caching
 import ckanext.hdx_theme.counting_actions as counting
+import ckanext.hdx_theme.util.mail as hdx_mail
 
-from ckan.common import _
+from ckan.common import c, _
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
@@ -176,3 +177,135 @@ def hdx_get_sys_admins(context, data_dict):
     q = model.Session.query(model.User).filter(model.User.sysadmin==True)
     return [{'name':m.name, 'display_name':m.fullname or m.name, 'email':m.email} for m in q.all()]
     #return q.all();
+
+
+def hdx_send_new_org_request(context, data_dict):
+    _check_access('hdx_send_new_org_request',context, data_dict)
+
+    email = config.get('hdx.orgrequest.email', None)
+    if not email:
+        email = 'hdx.feedback@gmail.com'
+    display_name = 'HDX Feedback'
+
+    ckan_username = c.user
+    ckan_email = ''
+    if c.userobj:
+        ckan_email = c.userobj.email
+
+    subject = _('New organization request:') + ' ' \
+        + data_dict['title']
+    body = _('New organization request \n' \
+        'Organization Name: {org_name}\n' \
+        'Organization Description: {org_description}\n' \
+        'Organization URL: {org_url}\n' \
+        'Person requesting: {person_name}\n' \
+        'Person\'s email: {person_email}\n' \
+        'Person\'s ckan username: {ckan_username}\n' \
+        'Person\'s ckan email: {ckan_email}\n' \
+        '(This is an automated mail)' \
+    '').format(org_name=data_dict['title'], org_description = data_dict['description'],
+               org_url = data_dict['org_url'], person_name = data_dict['your_name'], person_email = data_dict['your_email'],
+               ckan_username=ckan_username, ckan_email= ckan_email)
+
+    hdx_mail.send_mail([{'display_name': display_name, 'email': email}], subject, body)
+
+
+def hdx_send_editor_request_for_org(context, data_dict):
+    _check_access('hdx_send_editor_request_for_org',context, data_dict)
+
+    body = _('New request editor/admin role\n' \
+    'Full Name: {fn}\n' \
+    'Username: {username}\n' \
+    'Email: {mail}\n' \
+    'Organization: {org}\n' \
+    'Message from user: {msg}\n' \
+    '(This is an automated mail)' \
+    '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'], 
+               org=data_dict['organization'], msg=data_dict.get('message', ''))
+
+    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+
+
+def hdx_send_request_membership(context, data_dict):
+    _check_access('hdx_send_request_membership',context, data_dict)
+
+    body = _('New request membership\n' \
+    'Full Name: {fn}\n' \
+    'Username: {username}\n' \
+    'Email: {mail}\n' \
+    'Organization: {org}\n' \
+    'Message from user: {msg}\n' \
+    '(This is an automated mail)' \
+    '').format(fn=data_dict['display_name'], username=data_dict['name'],
+               mail=data_dict['email'], org=data_dict['organization'],
+               msg=data_dict.get('message', ''))
+
+    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+
+def hdx_user_show(context, data_dict):
+    '''Return a user account.
+
+    Either the ``id`` or the ``user_obj`` parameter must be given.
+
+    :param id: the id or name of the user (optional)
+    :type id: string
+    :param user_obj: the user dictionary of the user (optional)
+    :type user_obj: user dictionary
+
+    :rtype: dictionary
+
+    '''
+    model = context['model']
+
+    id = data_dict.get('id',None)
+    provided_user = data_dict.get('user_obj',None)
+    if id:
+        user_obj = model.User.get(id)
+        context['user_obj'] = user_obj
+        if user_obj is None:
+            raise NotFound
+    elif provided_user:
+        context['user_obj'] = user_obj = provided_user
+    else:
+        raise NotFound
+
+    _check_access('user_show',context, data_dict)
+
+    user_dict = model_dictize.user_dictize(user_obj,context)
+
+    if context.get('return_minimal'):
+        return user_dict
+
+    revisions_q = model.Session.query(model.Revision
+            ).filter_by(author=user_obj.name)
+
+    revisions_list = []
+    for revision in revisions_q.limit(20).all():
+        revision_dict = tk.get_action('revision_show')(context,{'id':revision.id})
+        revision_dict['state'] = revision.state
+        revisions_list.append(revision_dict)
+    user_dict['activity'] = revisions_list
+
+    offset = data_dict.get('offset',0)
+    limit = data_dict.get('limit',20)
+    user_dict['datasets'] = []
+    dataset_q = model.Session.query(model.Package).join(model.PackageRole
+            ).filter_by(user=user_obj, role=model.Role.ADMIN
+            ).offset(offset).limit(limit)
+
+    dataset_q_counter = model.Session.query(model.Package).join(model.PackageRole
+            ).filter_by(user=user_obj, role=model.Role.ADMIN
+            ).count()
+
+    for dataset in dataset_q:
+        try:
+            dataset_dict = tk.get_action('package_show')(context, {'id': dataset.id})
+        except tk.NotAuthorized:
+            continue
+        user_dict['datasets'].append(dataset_dict)
+
+    user_dict['num_followers'] = tk.get_action('user_follower_count')(
+            {'model': model, 'session': model.Session},
+            {'id': user_dict['id']})
+    user_dict['total_count'] = dataset_q_counter
+    return user_dict
