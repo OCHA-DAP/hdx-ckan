@@ -7,16 +7,42 @@
   <li class="active">{% link_for c.group_dict.display_name|truncate(35), controller='group', action='read', id=c.group_dict.name %}</li>
 {% endblock %}
 
-{% block content_action %}
-  {% if h.check_access('group_update', {'id': c.group_dict.id}) %}
-    {% link_for _('Edit'), controller='group', action='edit', id=c.group_dict.name, class_='btn', icon='wrench' %}
-  {% endif %}
-{% endblock %}
-
-{% block content_primary_nav %}
-  {{ h.build_nav_icon('group_read', _('Datasets'), id=c.group_dict.name) }}
-  {{ h.build_nav_icon('group_activity', _('Activity Stream'), id=c.group_dict.name, offset=0) }}
-  {#  {{ h.build_nav_icon('group_about', _('About'), id=c.group_dict.name) }} #}
+{% block page_header %}
+<div class="mTop35">
+  <h1 class="itemTitle">
+    {{ c.group_dict.display_name }}
+  </h1>
+  <span class="followButtonContainer pull-right">
+    {{ h.follow_button('group', c.group_dict.id) }}
+  </span>
+</div>
+<header class="module-content page-header paddingRowHack mBottom10">
+  <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
+    {% block content_primary_nav %}
+      {{ h.build_nav_icon('group_read', _('Datasets'), id=c.group_dict.name) }}
+      {{ h.build_nav_icon('group_activity', _('Activity Stream'), id=c.group_dict.name, offset=0) }}
+      {#  {{ h.build_nav_icon('group_about', _('About'), id=c.group_dict.name) }} #}
+    {% endblock %}
+  </ul>
+</header>
+{% if self.content_action() | trim %}
+  <div class="content_action">
+    {% block content_action %}
+      {% if h.check_access('group_update', {'id': c.group_dict.id}) %}
+        {% link_for _('Edit'), controller='group', action='edit', id=c.group_dict.name, class_='btn', icon='wrench' %}
+      {% endif %}
+    {% endblock %}
+  </div>
+{% endif %}
+<div>
+    {% if c.group_dict.description %}
+      <p>
+        {{ c.group_dict.description }}
+      </p>
+    {% else %}
+      <p class="empty">{{ _('There is no description for this group') }}</p>
+    {% endif %}
+</div>
 {% endblock %}
 
 {% block secondary_content %}

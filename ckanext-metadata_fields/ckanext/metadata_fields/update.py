@@ -5,6 +5,7 @@ Created on Apr 30, 2014
 '''
 
 import logging
+import datetime
 
 import ckan.plugins as plugins
 import ckan.logic as logic
@@ -95,7 +96,12 @@ def package_update(context, data_dict):
         rev.message = context['message']
     else:
         rev.message = _(u'REST API: Update object %s') % data.get("name")
-        
+    
+    #avoid revisioning by updating directly
+    model.Session.query(model.Package).filter_by(id=pkg.id).update(
+        {"metadata_modified": datetime.datetime.utcnow()})
+    model.Session.refresh(pkg)
+    
     pkg = modified_save(context, pkg, data)
 
     context_org_update = context.copy()

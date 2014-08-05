@@ -36,6 +36,7 @@
         %}
         {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false %}
       {% endblock %}
+
       {% block package_search_results_list %}
       {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
       {% endblock %}
@@ -82,3 +83,7 @@
   {{ super() }}
   <link rel="stylesheet" href="/dataset_search.css" />
 {% endblock %}
+
+      {% block  global_dataset_input_search%}
+		<input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
+	  {% endblock %}

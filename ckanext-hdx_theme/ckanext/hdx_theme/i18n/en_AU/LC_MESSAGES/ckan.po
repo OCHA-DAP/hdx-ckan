@@ -338,21 +338,21 @@ msgstr "Organisation has been deleted."
 
 #: ckan/controllers/group.py:582
 msgid "Group has been deleted."
-msgstr "Country has been deleted."
+msgstr "Organisation has been deleted."
 
 #: ckan/controllers/group.py:628
 #, python-format
 msgid "Unauthorized to add member to group %s"
-msgstr "Unauthorized to add member to country %s"
+msgstr "Unauthorized to add member to organisation %s"
 
 #: ckan/controllers/group.py:645
 #, python-format
 msgid "Unauthorized to delete group %s members"
-msgstr "Unauthorized to delete country %s members"
+msgstr "Unauthorized to delete organisation %s members"
 
 #: ckan/controllers/group.py:651
 msgid "Group member has been deleted."
-msgstr "Country member has been deleted."
+msgstr "Organisation member has been deleted."
 
 #: ckan/controllers/group.py:673 ckan/controllers/package.py:375
 msgid "Select two revisions before doing the comparison."
