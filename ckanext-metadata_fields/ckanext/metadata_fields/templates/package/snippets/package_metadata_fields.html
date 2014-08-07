@@ -72,18 +72,20 @@
           <div class="controls ">
             <input type="radio" name="methodology" id="meth_other_radio" value="Other"> Other</input>
           </div>
+          <!-- fix for #110 and keep them removed after fixes 844  
         </div>
   </div></div>
+  -->
 
 
-  <div class="dataset-form-field-wrapper field-with-info">
-  <div class="control-group">
-    <div class="controls editor control-full">
-    <textarea id="method_other" name="method_other" cols="20" rows="5" placeholder="Describe some other methodology..."></textarea>
-    <span class="editor-info-block">You can use <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here</span>
-    </div>
-  </div>
-</div>
+        <div class="dataset-form-field-wrapper field-with-info">
+            <div class="control-group">
+                <div class="controls editor control-full">
+                    <textarea id="method_other" name="method_other" cols="20" rows="5" placeholder="Describe some other methodology..."></textarea>
+                    <span class="editor-info-block">You can use <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank">Markdown formatting</a> here</span>
+                </div>
+            </div>
+        </div>
 {% if new_dataset %}
         <div class="dataset-form-info-field info-field">
         {% trans %}
