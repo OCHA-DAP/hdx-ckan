@@ -99,7 +99,6 @@ class HDXReqsOrgController(base.BaseController):
                 
                 tk.get_action('hdx_send_new_org_request')(context, data)
                 
-                self._send_new_org_request(data)
                 #from_url = data.get('from','')
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
