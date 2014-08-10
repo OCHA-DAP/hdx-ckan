@@ -8,8 +8,8 @@ Example:
 
 {% set member = h.hdx_get_user_info(id) %}
 
-<li class="list-items dataset-item">
-	<div class="list-items dataset-content member-item" id="mx-member-wrapper-{{member.name}}">
+<li class="list-items dataset-item" id="mx-member-item-{{member.name}}">
+	<div class="list-items dataset-content member-item">
 		<h3 class="list-items dataset-heading">
 			{{member.display_name }} 
 		</h3>
