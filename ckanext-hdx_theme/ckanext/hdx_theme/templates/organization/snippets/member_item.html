@@ -9,13 +9,13 @@ Example:
 {% set member = h.hdx_get_user_info(id) %}
 
 <li class="list-items dataset-item">
-	<div class="list-items dataset-content member-item">
+	<div class="list-items dataset-content member-item" id="mx-member-wrapper-{{member.name}}">
 		<h3 class="list-items dataset-heading">
 			{{member.display_name }} 
 		</h3>
 		<div class="member-info-content">
 			{% link_for member.name, controller='user', action='read', id=member.name, class_='info-item-name' %}
-			<span class="less-visible">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }} </span>
+			<span class="less-visible mx-member-role">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }} </span>
 		</div>
 		<div class="list-items counter">
 			<span class="count"> {{ h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) }}</span>
