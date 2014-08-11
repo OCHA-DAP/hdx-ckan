@@ -75,6 +75,23 @@
               </div>
               {% endcall %}
               {% endblock %}
+
+              {% block basic_fields_uploader %}
+    {% set username = request.environ.get('REMOTE_USER') %}
+    {% if data.resource_uploader %}
+      {% set resource_uploader = data.resource_uploader %}
+    {% else %}
+      {% set resource_uploader = username %}
+    {% endif %}
+    <div class="control-group">
+      <label class="hide control-label" for="field-uploader">{{ _('Uploader') }}</label>
+      <div class="controls">
+        <input type="hidden" value="{{ username }}" name="resource_uploader" id="field-uploader" readonly="readonly" />
+      </div>
+    </div>
+  {% endblock %}
+
+
             {% endblock %}
 
             {% block metadata_fields %}

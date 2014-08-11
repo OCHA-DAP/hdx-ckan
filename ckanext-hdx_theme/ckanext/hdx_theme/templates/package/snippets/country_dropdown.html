@@ -1,0 +1,39 @@
+{% set data = data or {} %}
+{% set errors = errors or {} %}
+{% set onepage = onepage or 0 %}
+
+{% set group_name = 'groups__%s__id' % data.groups|length %}
+
+    {% set available_groups = h.list_of_all_groups() %}
+  <div id="select_country" class="control-group dataset-required">
+      {% set error = errors.groups_list %}
+      {% if inheritied_form_style != 'edit' %}
+      <label for="country-drop" class="sspBold20">{{ _("Are you submitting data for the country below") }}?</label>
+      <p class="sspRegular14">{{ _("if not, which country or countries does the dataset best represent? Please select from the dropdown.") }}</p>
+      {% else %}
+      <label class="control-label" for="country-drop">{{ _("Countries") }}</label>
+      {% endif %}
+    <div class="controls">
+        <select id="country-drop" data-module="autocomplete">
+          <option value="-1">{{ _("Country / Countries") }}</option>
+          {% for grp in available_groups  %}
+            <option value="{{ grp.id }}" display_name="{{grp.display_name}}">{{ grp.display_name }}</option>
+          {% endfor %}
+        </select>
+        {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+      </div>
+  </div>
+
+<div class="control-group">
+  <div id="selected_groups" class="controls">
+    {% if data.groups %}
+      {% for group in data.groups %}
+        {% if group.id != '-1' %}
+          <span class="filtered pill">{{group.title}} 
+          <input id="field-group-{{ loop.index0 }}-input" type="hidden" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"></input>
+          <i id="field-group-{{ loop.index0 }}" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"></i></span>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
