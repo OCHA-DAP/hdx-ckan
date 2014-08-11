@@ -37,7 +37,6 @@ class HDXReqsOrgController(base.BaseController):
                 admins.append(hdx_h.hdx_get_user_info(admin_id))
             admins_with_email = [admin for admin in admins if admin['email']]
 
-            self._send_mail(user, admins_with_email, org_id, msg)
             data_dict = {'display_name': user['display_name'], 'name': user['name'],
                          'email': user['email'], 'organization': org_id, 
                          'message': msg, 'admins': admins_with_email}
