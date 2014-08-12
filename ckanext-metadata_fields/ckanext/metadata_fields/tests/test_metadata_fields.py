@@ -11,6 +11,8 @@ import ckan.plugins as p
 import ckan.lib.create_test_data as ctd
 import ckan.lib.search as search
 import ckan.model as model
+import ckan.logic as logic
+import ckan.lib.helpers as h
 import logging
 
 from ckan.config.middleware import make_app
@@ -90,5 +92,40 @@ class TestMetadataFields(tests.WsgiAppCase):
 #         result = tk.get_action('package_create')({'user':'testsysadmin'},{'name': 'test-dataset', 'private':False})
         
         assert 'dataset_source' in result, 'The error needs to be related to the source'
-        assert 'Missing value' in result['dataset_source'], 'The problem needs to be that the source info is missing'        
-        
+        assert 'Missing value' in result['dataset_source'], 'The problem needs to be that the source info is missing'
+
+
+    def test_related_items_owner_status(self):
+        #after edit of a related item the owner id is unchanged
+
+        #create related item
+        offset = h.url_for(controller='related',
+                           action='new', id='warandpeace')
+        data = {
+            "title": "testing_create",
+            "url": u"http://ckan.org/feed/",
+        }
+        user = model.User.by_name('tester')
+        admin = model.User.by_name('testsysadmin')
+
+        context = dict(model=model, user=user.name, session=model.Session)
+        data_dict = dict(title="testing_create",description="description",
+                         url="http://ckan.org/feed/",image_url="",type="visualization")
+        res = logic.get_action("related_create")( context, data_dict )
+
+        #edit related item
+        data_dict = dict(id=res['id'],title="testing_update",description="description",
+                         url="http://ckan.org/feed/",image_url="",type="visualization")
+
+        context = dict(model=model, user='testsysadmin', session=model.Session)
+        result = logic.get_action('related_update')(context,data_dict)
+        #Confirm related item owner status
+        assert result['owner_id'] == user.id
+
+    def _related_create(self, title, description, type, url, image_url):
+        usr = logic.get_action('get_site_user')({'model':model,'ignore_auth': True},{})
+
+        context = dict(model=model, user=usr['name'], session=model.Session)
+        data_dict = dict(title=title,description=description,
+                         url=url,image_url=image_url,type=type)
+        return logic.get_action("related_create")( context, data_dict )
