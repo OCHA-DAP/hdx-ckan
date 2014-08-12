@@ -65,8 +65,9 @@ class HDXOrgMemberController(org.OrganizationController):
 				if email:
 					user_data_dict = {
 						'email': email,
-						'group_id': data_dict['id'],
-						'role': data_dict['role']
+						'group_id': id,
+						'role': data_dict['role'],
+						'id': id #This is something staging/prod need
 					}
 					del data_dict['email']
 					user_dict = self._action('user_invite')(context,
