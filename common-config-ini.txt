@@ -148,5 +148,6 @@ smtp.starttls = False
 #smtp.mail_from =
 
 #hdx.orgrequest.email = hdx.feedback@gmail.com
+hdx.orgrequest.sendmails = false
 hdx.cache.onstartup = true
 hdx.homepage.extrasources = 13
