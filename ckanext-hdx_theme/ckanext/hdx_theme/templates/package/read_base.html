@@ -77,7 +77,7 @@
         <div>
 	        <ul class="info-wrapper-link-list">
 	          {% for group in pkg.groups %}
-	            <li>
+	            <li class='mx-country'>
 	              <a class="info-item-name" href="{{ h.url_for(controller='group', action='read', id=group.name) }}">
 	                {{ group.title or group.name }}
 	              </a>
