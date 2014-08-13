@@ -29,7 +29,7 @@ Invalid = df.Invalid
 @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
 def send_mail(name, email, org, reason = ''):
     ''' The functionality of sending emails with new user requests has been deprecated.
-        Deprecated since hdx 0.3.5
+        Deprecated since 13.08.2014 - hdx 0.3.6 
     '''
     body = 'New user registration request\n' \
            'Full Name: {fn}\n' \
@@ -74,7 +74,7 @@ class RequestController(ckan.controllers.user.UserController):
     @staticmethod
     def _validate_form(data, errors):
         ''' The functionality of sending emails with new user requests has been deprecated.
-            Deprecated since hdx 0.3.5 
+            Deprecated since 13.08.2014 - hdx 0.3.6 
         '''
         if not data['fullname']:
             errors['fullname'] = [_(u'Fullname is required!')]
