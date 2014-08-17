@@ -16,6 +16,7 @@ import ckan.plugins.toolkit as tk
 import re
 import ckan.new_authz as new_authz
 import urlparse as urlparse
+import pylons.config as config
 
 import ckanext.hdx_theme.counting_actions as counting
 
@@ -225,6 +226,7 @@ def hdx_organizations_available_with_roles():
                                 y['display_name'].lower())
     return organizations_available
 
+
 def hdx_remove_schema_and_domain_from_url(url):
     urlTuple = urlparse.urlparse(url)
 
@@ -232,3 +234,6 @@ def hdx_remove_schema_and_domain_from_url(url):
     modifiedUrl = urlparse.urlunparse(modifiedTuple)
     return modifiedUrl
 
+
+def hdx_get_ckan_config(config_name):
+    return config.get(config_name)
