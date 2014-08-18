@@ -1,0 +1,4 @@
+
+        [ckan.plugins]
+        hdx_users=ckanext.hdx_users.plugin:HDXUsersPlugin
+    

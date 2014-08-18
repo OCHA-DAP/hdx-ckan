@@ -28,7 +28,11 @@ ValidationError = logic.ValidationError
 
 
 def package_update(context, data_dict):
-    '''Update a dataset (package).
+    ''' This action needed to be modified in HDX to skip the permission
+    verifications that check if a user is allowed to add a dataset to a
+    specific group/country.
+    
+    Update a dataset (package).
 
     You must be authorized to edit the dataset and the groups that it belongs
     to.
@@ -148,6 +152,9 @@ def modified_save(context, pkg, data):
     return pkg
 
 def package_membership_list_save(group_dicts, package, context):
+    ''' Modified function from model_save that skips the permission 
+        checks for groups
+    '''
 
     allow_partial_update = context.get("allow_partial_update", False)
     if group_dicts is None and allow_partial_update:

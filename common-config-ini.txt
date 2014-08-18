@@ -148,5 +148,8 @@ smtp.starttls = False
 #smtp.mail_from =
 
 #hdx.orgrequest.email = hdx.feedback@gmail.com
+hdx.orgrequest.sendmails = false
 hdx.cache.onstartup = true
 hdx.homepage.extrasources = 13
+hdx.datapreview.url = //jsonpdataproxy.appspot.com
+hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
