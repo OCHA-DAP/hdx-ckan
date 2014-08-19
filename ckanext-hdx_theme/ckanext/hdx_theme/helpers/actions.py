@@ -14,8 +14,8 @@ import ckan.new_authz as new_authz
 import beaker.cache as bcache
 import ckan.model as model
 
-import ckanext.hdx_theme.caching as caching
-import ckanext.hdx_theme.counting_actions as counting
+import ckanext.hdx_package.helpers.caching as caching
+import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 
 from ckan.common import c, _

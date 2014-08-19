@@ -3,7 +3,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
-class HDXOrgPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
+class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IGroupForm, inherit=False)
@@ -47,7 +47,7 @@ class HDXOrgPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm)
         return schema
 
     def form_to_db_schema(self):
-        schema = super(HDXOrgPlugin, self).form_to_db_schema()
+        schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
         schema = self._modify_group_schema(schema)
         return schema
         
@@ -57,7 +57,7 @@ class HDXOrgPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm)
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
         if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
-            schema = super(HDXOrgPlugin, self).form_to_db_schema()
+            schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
             schema.update({'description':[tk.get_validator('not_empty')] })
             schema.update({'org_url':[tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
             return schema

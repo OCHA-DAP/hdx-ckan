@@ -18,7 +18,7 @@ import logging
 from ckan.config.middleware import make_app
 from pylons import config
 
-import ckanext.hdx_theme.caching as caching
+import ckanext.hdx_package.helpers.caching as caching
 
 log = logging.getLogger(__name__)
 

@@ -11,7 +11,7 @@ import ckan.lib.search as search
 import ckan.model as model
 import ckan.plugins as p
 
-import ckanext.hdx_theme.caching as caching
+import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 num_cached_group_list_called = 0

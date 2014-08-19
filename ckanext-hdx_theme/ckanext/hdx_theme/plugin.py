@@ -1,4 +1,4 @@
-import ckanext.hdx_theme.licenses as hdx_licenses
+import ckanext.hdx_package.helpers.licenses as hdx_licenses
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -7,8 +7,8 @@ import ckan.model.license as license
 import pylons.config as config
 import version
 
-import ckanext.hdx_theme.caching as caching
-import ckanext.hdx_theme.auth as auth
+import ckanext.hdx_package.helpers.caching as caching
+import ckanext.hdx_theme.helpers.auth as auth
 
 
 # def run_on_startup():
@@ -70,28 +70,28 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         from ckanext.hdx_theme.helpers import helpers as hdx_helpers
         return {
             'is_downloadable': hdx_helpers.is_downloadable,
-            'get_facet_items_dict':hdx_helpers.get_facet_items_dict,
+            'get_facet_items_dict': hdx_helpers.get_facet_items_dict,
             'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
-            'get_filtered_params_list':hdx_helpers.get_filtered_params_list,
-            'get_last_revision_package':hdx_helpers.get_last_revision_package,
-            'get_last_modifier_user':hdx_helpers.get_last_modifier_user,
-            'get_last_revision_group':hdx_helpers.get_last_revision_group,
-            'get_group_followers':hdx_helpers.get_group_followers,
-            'get_group_members':hdx_helpers.get_group_members,
-            'markdown_extract_strip':hdx_helpers.markdown_extract_strip,
-            'render_date_from_concat_str':hdx_helpers.render_date_from_concat_str,
-            'hdx_version':hdx_helpers.hdx_version,
-            'hdx_build_nav_icon_with_message':hdx_helpers.hdx_build_nav_icon_with_message,
-            'hdx_num_of_new_related_items':hdx_helpers.hdx_num_of_new_related_items,
-            'hdx_get_extras_element':hdx_helpers.hdx_get_extras_element,
-            'hdx_get_user_info':hdx_helpers.hdx_get_user_info,
-            'hdx_linked_user':hdx_helpers.hdx_linked_user,
-            'hdx_show_singular_plural':hdx_helpers.hdx_show_singular_plural,
-            'hdx_member_roles_list':hdx_helpers.hdx_member_roles_list,
-            'hdx_organizations_available_with_roles':hdx_helpers.hdx_organizations_available_with_roles,
-            'hdx_group_followee_list':hdx_helpers.hdx_group_followee_list,
-            'hdx_remove_schema_and_domain_from_url':hdx_helpers.hdx_remove_schema_and_domain_from_url,
-            'hdx_get_ckan_config':hdx_helpers.hdx_get_ckan_config
+            'get_filtered_params_list': hdx_helpers.get_filtered_params_list,
+            'get_last_revision_package': hdx_helpers.get_last_revision_package,
+            'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
+            'get_last_revision_group': hdx_helpers.get_last_revision_group,
+            'get_group_followers': hdx_helpers.get_group_followers,
+            'get_group_members': hdx_helpers.get_group_members,
+            'markdown_extract_strip': hdx_helpers.markdown_extract_strip,
+            'render_date_from_concat_str': hdx_helpers.render_date_from_concat_str,
+            'hdx_version': hdx_helpers.hdx_version,
+            'hdx_build_nav_icon_with_message': hdx_helpers.hdx_build_nav_icon_with_message,
+            'hdx_num_of_new_related_items': hdx_helpers.hdx_num_of_new_related_items,
+            'hdx_get_extras_element': hdx_helpers.hdx_get_extras_element,
+            'hdx_get_user_info': hdx_helpers.hdx_get_user_info,
+            'hdx_linked_user': hdx_helpers.hdx_linked_user,
+            'hdx_show_singular_plural': hdx_helpers.hdx_show_singular_plural,
+            'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,
+            'hdx_organizations_available_with_roles': hdx_helpers.hdx_organizations_available_with_roles,
+            'hdx_group_followee_list': hdx_helpers.hdx_group_followee_list,
+            'hdx_remove_schema_and_domain_from_url': hdx_helpers.hdx_remove_schema_and_domain_from_url,
+            'hdx_get_ckan_config': hdx_helpers.hdx_get_ckan_config
         }
         
     def get_actions(self):

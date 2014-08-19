@@ -16,7 +16,7 @@ import ckan.plugins.toolkit as tk
 import re
 import ckan.new_authz as new_authz
 
-import ckanext.hdx_theme.counting_actions as counting
+import ckanext.hdx_theme.helpers.counting_actions as counting
 
 from webhelpers.html import escape, HTML, literal, url_escape
 from ckan.common import _
