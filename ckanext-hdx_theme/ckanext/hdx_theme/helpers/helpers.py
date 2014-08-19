@@ -20,6 +20,8 @@ import ckanext.hdx_theme.helpers.counting_actions as counting
 
 from webhelpers.html import escape, HTML, literal, url_escape
 from ckan.common import _
+import urlparse as urlparse
+import pylons.config as config
 
 log = logging.getLogger(__name__)
 
