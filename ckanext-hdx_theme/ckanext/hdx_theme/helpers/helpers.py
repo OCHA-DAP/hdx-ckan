@@ -223,3 +223,13 @@ def hdx_organizations_available_with_roles():
                                 y['display_name'].lower())
     return organizations_available
 
+def hdx_remove_schema_and_domain_from_url(url):
+    urlTuple = urlparse.urlparse(url)
+
+    modifiedTuple = (('', '') + urlTuple[2:6])
+    modifiedUrl = urlparse.urlunparse(modifiedTuple)
+    return modifiedUrl
+
+
+def hdx_get_ckan_config(config_name):
+    return config.get(config_name)
