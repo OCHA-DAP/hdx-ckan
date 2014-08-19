@@ -3,8 +3,6 @@ ckanext/__init__.py
 ckanext/hdx_org_group/__init__.py
 ckanext/hdx_org_group/plugin.py
 ckanext/hdx_org_group/actions/__init__.py
-ckanext/hdx_org_group/actions/membership.py
-ckanext/hdx_org_group/actions/requests.py
 ckanext/hdx_org_group/controllers/__init__.py
 ckanext/hdx_org_group/controllers/member_controller.py
 ckanext/hdx_org_group/controllers/redirect_controller.py

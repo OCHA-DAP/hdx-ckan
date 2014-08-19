@@ -8,8 +8,10 @@ ckanext/hdx_package/controllers/__init__.py
 ckanext/hdx_package/controllers/dataset_controller.py
 ckanext/hdx_package/controllers/storage_controller.py
 ckanext/hdx_package/helpers/__init__.py
+ckanext/hdx_package/helpers/caching.py
 ckanext/hdx_package/helpers/custom_validator.py
 ckanext/hdx_package/helpers/helpers.py
+ckanext/hdx_package/helpers/licenses.py
 ckanext/hdx_package/helpers/update.py
 ckanext_hdx_package.egg-info/PKG-INFO
 ckanext_hdx_package.egg-info/SOURCES.txt
