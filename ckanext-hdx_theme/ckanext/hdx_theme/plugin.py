@@ -11,23 +11,23 @@ import ckanext.hdx_theme.caching as caching
 import ckanext.hdx_theme.auth as auth
 
 
-def run_on_startup():
-    cache_on_startup = config.get('hdx.cache.onstartup', 'true')
-    if 'true' == cache_on_startup:
-        _generate_license_list()
-        caching.cached_get_group_package_stuff()
+# def run_on_startup():
+#     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
+#     if 'true' == cache_on_startup:
+#         _generate_license_list()
+#         caching.cached_get_group_package_stuff()
 
 
-def _generate_license_list():
-    package.Package._license_register = license.LicenseRegister() 
-    package.Package._license_register.licenses = [
-                                                  license.License(hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
-                                                  license.License(license.LicenseCreativeCommonsAttribution()),
-                                                  license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
-                                                  license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
-                                                  license.License(hdx_licenses.LicenseHdxMultiple()),
-                                                  license.License(hdx_licenses.LicenseHdxOther())
-                                                  ]
+# def _generate_license_list():
+#     package.Package._license_register = license.LicenseRegister() 
+#     package.Package._license_register.licenses = [
+#                                                   license.License(hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
+#                                                   license.License(license.LicenseCreativeCommonsAttribution()),
+#                                                   license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
+#                                                   license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
+#                                                   license.License(hdx_licenses.LicenseHdxMultiple()),
+#                                                   license.License(hdx_licenses.LicenseHdxOther())
+#                                                   ]
 
 class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
@@ -50,21 +50,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('/count/dataset', controller='ckanext.hdx_theme.count:CountController', action='dataset')
         map.connect('/count/country', controller='ckanext.hdx_theme.count:CountController', action='country')
         map.connect('/count/source', controller='ckanext.hdx_theme.count:CountController', action='source')
-        map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
-        map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
+        #map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
+        #map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
         
         map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
-        
-        map.connect('request_membership', '/organization/{org_id}/request_membership', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_membership')
-        map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_editor_for_org')
-        map.connect('/organization/request_new', controller='ckanext.hdx_theme.org_controller:HDXReqsOrgController', action='request_new_organization')
-        map.connect('/organization/members/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='members')
-        map.connect('dataset_preselect','/dataset/preselect', controller='ckanext.hdx_theme.preselect_dsform_controller:HDXPreselectOrgController', action='preselect')
-        map.connect('/organization/member_new/{id}', controller='ckanext.hdx_theme.member_controller:HDXOrgMemberController', action='member_new')
-
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
 
-        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
+        #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
         return map
     
@@ -75,7 +67,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         caching.invalidate_group_caches()
 
     def get_helpers(self):
-        from ckanext.hdx_theme import helpers as hdx_helpers
+        from ckanext.hdx_theme.helpers import helpers as hdx_helpers
         return {
             'is_downloadable': hdx_helpers.is_downloadable,
             'get_facet_items_dict':hdx_helpers.get_facet_items_dict,
@@ -103,7 +95,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         }
         
     def get_actions(self):
-        from ckanext.hdx_theme import actions as hdx_actions
+        from ckanext.hdx_theme.helpers import actions as hdx_actions
         return {
             'organization_list_for_user':hdx_actions.organization_list_for_user, 
             'cached_group_list': hdx_actions.cached_group_list,
@@ -117,17 +109,17 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             
         }
     def get_auth_functions(self):
-        return {
-                'hdx_basic_user_info': auth.hdx_basic_user_info,
-                'group_member_create': auth.group_member_create,
-                'hdx_send_new_org_request': auth.hdx_send_new_org_request,
-                'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
-                'hdx_send_request_membership': auth.hdx_send_request_membership
-                }
+         return {
+                 'hdx_basic_user_info': auth.hdx_basic_user_info,
+                 'group_member_create': auth.group_member_create,
+                 'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+                 'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
+                 'hdx_send_request_membership': auth.hdx_send_request_membership
+                 }
     
-    def make_middleware(self, app, config):
-        run_on_startup()
-        return app
+    # def make_middleware(self, app, config):
+    #     run_on_startup()
+    #     return app
 
         
         

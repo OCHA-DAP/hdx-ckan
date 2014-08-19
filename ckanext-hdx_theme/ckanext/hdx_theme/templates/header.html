@@ -115,7 +115,7 @@
                   {% else %}
                   {% block header_account_notlogged %}
                     <li class="newLogin">{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</li>
-                    <li class="newLogin">{% link_for _('Sign up'), controller='ckanext.register.request:RequestController', action='register', class_='btn' %}</li>
+					<li class="newLogin"><a href="/user/register" class="btn">{{_('Sign up')}}</a></li>
                   {% endblock %}
                   {% endif %}
                 </ul>
