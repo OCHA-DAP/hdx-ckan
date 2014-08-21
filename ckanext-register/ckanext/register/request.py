@@ -26,7 +26,7 @@ ValidationError = logic.ValidationError
 
 Invalid = df.Invalid
 
-@maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
+# @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
 def send_mail(name, email, org, reason = ''):
     ''' The functionality of sending emails with new user requests has been deprecated.
         Deprecated since 13.08.2014 - hdx 0.3.6 
@@ -70,7 +70,7 @@ def name_validator_with_changed_msg(val, context):
 
 class RequestController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
-    @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
+#     @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
     @staticmethod
     def _validate_form(data, errors):
         ''' The functionality of sending emails with new user requests has been deprecated.
@@ -87,7 +87,7 @@ class RequestController(ckan.controllers.user.UserController):
         if not data['org']:
             errors['org'] = [_(u'Organisation is required!')]
 
-    @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
+#     @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
     def request(self, data=None, errors=None, error_summary=None):
         ''' The functionality of sending emails with new user requests has been deprecated.
             Deprecated since hdx 0.3.5
