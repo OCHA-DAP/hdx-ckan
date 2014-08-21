@@ -40,6 +40,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
+        toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('fanstatic', 'hdx_theme')
         
@@ -96,7 +97,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_show_singular_plural':hdx_helpers.hdx_show_singular_plural,
             'hdx_member_roles_list':hdx_helpers.hdx_member_roles_list,
             'hdx_organizations_available_with_roles':hdx_helpers.hdx_organizations_available_with_roles,
-            'hdx_group_followee_list':hdx_helpers.hdx_group_followee_list
+            'hdx_group_followee_list':hdx_helpers.hdx_group_followee_list,
+            'hdx_remove_schema_and_domain_from_url':hdx_helpers.hdx_remove_schema_and_domain_from_url,
+            'hdx_get_ckan_config':hdx_helpers.hdx_get_ckan_config
         }
         
     def get_actions(self):

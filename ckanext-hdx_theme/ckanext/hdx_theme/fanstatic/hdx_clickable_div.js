@@ -5,6 +5,7 @@ ckan.module('hdx_clickable_div', function ($, _) {
     initialize: function () {
     	jQuery.proxyAll(this, /_on/);
     	this.el.click(this._onClick);
+    	this.el.addClass("mx-init-complete");
     },
     _onClick: function() {
 		  if ( this.options.popup_id.length > 0 ) {

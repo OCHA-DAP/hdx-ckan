@@ -14,6 +14,10 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
+    #loads missing plugins
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin('register hdx_theme')
 
     def test_deleted_badge_appears(self):
 #         p.load('hdx_theme')
