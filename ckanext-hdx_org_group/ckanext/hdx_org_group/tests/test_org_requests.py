@@ -26,6 +26,10 @@ def send_mail(recipients, subject, body):
 
 class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
 
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin('hdx_org_group hdx_theme')
+
     def setup(self):
         global original_send_mail
         original_send_mail = hdx_mail.send_mail
