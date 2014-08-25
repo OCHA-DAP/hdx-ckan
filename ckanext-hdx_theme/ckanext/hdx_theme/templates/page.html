@@ -2,6 +2,12 @@
 
 {%- block page -%}
 
+  {% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/header-bs-2.3.css" />
+  {% endblock %}
+
   {#
   Override the header on a page by page basis by extending this block. If
   making sitewide header changes it is preferable to override the header.html
