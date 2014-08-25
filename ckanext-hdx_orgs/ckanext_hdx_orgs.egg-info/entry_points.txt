@@ -1,4 +1,0 @@
-
-        [ckan.plugins]
-	hdx_orgs=ckanext.hdx_orgs.plugin:HDXOrgFormPlugin
-	

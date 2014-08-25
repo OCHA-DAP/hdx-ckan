@@ -11,7 +11,7 @@ import ckan.plugins.toolkit as tk
 from ckan.controllers.group import GroupController as gc
 from ckan.controllers.home import HomeController
 
-import ckanext.hdx_theme.caching as caching
+import ckanext.hdx_package.helpers.caching as caching
 
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access

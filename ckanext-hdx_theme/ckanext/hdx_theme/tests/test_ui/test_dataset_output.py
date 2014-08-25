@@ -17,7 +17,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     #loads missing plugins
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('register hdx_theme')
+        hdx_test_base.load_plugin('hdx_users hdx_theme')
 
     def test_deleted_badge_appears(self):
 #         p.load('hdx_theme')

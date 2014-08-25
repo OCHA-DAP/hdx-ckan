@@ -1,121 +1,3 @@
-/* Customize fixed Bootstrap layout -- ugly hacking :) */
-    .container,
-    .navbar-static-top .container,
-    .navbar-fixed-top .container,
-    .navbar-fixed-bottom .container {
-        width: 1170px;
-    }
-
-    [class*="span"]{
-        margin-left: 30px;
-    }
-
-    .row{
-        margin-left:-30px;
-    }
-
-    .span12{
-        width: 1170px;
-    }
-
-    .span11{
-        width: 1070px;
-    }
-
-    .span10{
-        width: 970px;
-    }
-
-    .span9{
-        width: 870px;
-    }
-
-    .span8{
-        width: 770px;
-    }
-    .span8{
-        width: 670px;
-    }
-
-    .span6{
-        width: 570px;
-    }
-
-    .span5{
-        width: 470px;
-    }
-
-    .span4{
-        width: 370px;
-    }
-
-    .span3{
-        width: 270px;
-    }
-
-    .span2{
-        width: 170px;
-    }
-
-    .span1{
-        width: 70px;
-    }
-
-    .offset11{
-        margin-left: 1130px;
-    }
-    .offset10{
-        margin-left: 1030px;
-    }
-    .offset9{
-        margin-left: 930px;
-    }
-    .offset8{
-        margin-left: 830px;
-    }
-    .offset7{
-        margin-left: 730px;
-    }
-    .offset6{
-        margin-left: 630px;
-    }
-    .offset5{
-        margin-left: 530px;
-    }
-    .offset4{
-        margin-left: 430px;
-    }
-    .offset3{
-        margin-left: 330px;
-    }
-    .offset2{
-        margin-left: 230px;
-    }
-
-    .offset1andHalf{
-        margin-left: 180px;
-    }
-
-    .offset1{
-        margin-left: 130px;
-    }
-
-    .paddingRowHack{
-        margin-left: -45px;
-        margin-right: -45px;
-    }
-
-    .paddingRowHack .paddingLeftHack{
-        padding-left: 45px;
-        margin-left: 0;
-    }
-
-    .paddingRowHack .paddingRightHack{
-        padding-right: 45px;
-        margin-right: 0;
-    }
-
-/* END - Customize fixed Bootstrap layout */
 
 /* Fonts */
     @font-face {
@@ -482,6 +364,13 @@
     [role=main], .main {
         padding: 0;
         background: none;
+    }
+
+    .hdx-wrapper.wrapper {
+        background: none;
+        border: none;
+        box-shadow: 0 0 0 0;
+        margin: 0;
     }
 /* END Fix main content */
 
@@ -1011,27 +900,11 @@
 
 /* Style default Primary */
     [role=main] .primary{
-        width: 825px;
-        position: relative;
         padding-left: 45px;
-    }
-
-    .support-primary {
-        float:left;
-        width: 100%;
-        background-color: #FFFFFF;
-        position: relative;
     }
 /* END Style default Primary */
 
 /* Style default Secondary */
-    [role=main] .secondary {
-        width: 255px;
-        padding-right: 45px;
-        position: relative;
-        color: #ffffff;
-    }
-
     .secondary .module-heading{
         background-color: transparent;
         border: none;
@@ -1224,6 +1097,7 @@
     }
 
     .page-header{
+        background: none;
         border-bottom: 3px solid #cccccc;
         /*background-color: #f6f6f6;*/
         -webkit-border-radius: 0 3px 0 0;
