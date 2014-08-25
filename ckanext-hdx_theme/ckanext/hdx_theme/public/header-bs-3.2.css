@@ -1,0 +1,45 @@
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+        width: 1170px;
+        padding: 0;
+    }
+
+    .offset1andHalf{
+        margin-left: 180px;
+    }
+
+    .paddingRowHack{
+        margin-left: -45px;
+        margin-right: -45px;
+    }
+
+    .paddingRowHack .paddingLeftHack{
+        padding-left: 45px;
+        margin-left: 0;
+    }
+
+    .paddingRowHack .paddingRightHack{
+        padding-right: 45px;
+        margin-right: 0;
+    }
+    body{
+        line-height: 20px;
+    }
+/* END - Customize fixed Bootstrap layout */
+
+/* Style default Primary */
+    [role=main] .primary{
+        width: 100%;
+        float: none;
+    }
+
+    [role=main] .secondary{
+        margin: 0;
+        padding-right: 15px; /* mimic the left 45 padding */
+        width: 100%;
+    }
+
+/* END Style default Primary */
