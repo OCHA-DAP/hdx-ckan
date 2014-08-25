@@ -1,0 +1,166 @@
+{% extends "base-new.html" %}
+
+{%- block page -%}
+
+  {%- block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="/header.css" />
+    <link rel="stylesheet" href="/header-bs-3.2.css" />
+  {% endblock %}
+
+
+  {#
+  Override the header on a page by page basis by extending this block. If
+  making sitewide header changes it is preferable to override the header.html
+  file.
+  #}
+  {%- block header %}
+    {% include "header-new.html" %}
+  {% endblock -%}
+
+  {# The content block allows you to replace the content of the page if needed #}
+    {%- block content %}
+      {% block maintag %}<div role="main">{% endblock %}
+        <div id="content" class="container">
+          {% block main_content %}
+            {% block toolbar %}
+              <div class="container">
+                <div class="row paddingRowHack toolbarRow">
+                  <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                    <div class="pull-left">
+                      <div class="toolbar">
+                        {% block breadcrumb %}
+                          {% if self.breadcrumb_content() | trim %}
+                            <ol class="breadcrumb">
+                              {% snippet 'snippets/home_breadcrumb_item.html' %}
+                              {% block breadcrumb_content %}{% endblock %}
+                            </ol>
+                          {% endif %}
+                        {% endblock %}
+                      </div>
+                    </div>
+                    <div class="pull-right">
+                      <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='metadata_modified desc' %}">
+                        <div class="input-append">
+                          {% block  global_dataset_input_search%}
+                          	<input type="text" class="searchInput" name="q" value="" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
+                          {% endblock %}
+                          <button type="submit" class="button">
+                            <i class="icon-search"></i>
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endblock %}
+            {% block flash %}
+              {% set flash_messages = h.flash.pop_messages() | list %}
+              <div class="paddingRowHack">
+                {% if flash_messages|length > 0 %}
+                <div class="flash-messages paddingLeftHack paddingRightHack">
+                  {% for message in flash_messages %}
+                    <div class="alert fade in {{ message.category }}">
+                      {{ h.literal(message) }}
+                    </div>
+                  {% endfor %}
+                  <div style="clear: both"></div>
+                </div>
+                <div style="clear: both"></div>
+                {% endif %}
+              </div>
+            {% endblock %}
+
+            <div class="container mainContent">
+              <div class="hdx-wrapper wrapper{% block wrapper_class %}{% endblock %}{% if self.secondary()|trim == '' %} no-nav{% endif %}">
+                {#
+                The pre_primary block can be used to add content to before the
+                rendering of the main content columns of the page.
+                #}
+                {% block pre_primary %}
+                {% endblock %}
+
+                <div class="row paddingRowHack" {% if self.secondary()|trim != '' %} style="background-image:url('/images/homepage-new/columnBackground.png'); background-repeat: repeat-y; min-height: 350px;" {% endif %}>
+                  <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                    <div class="row">
+                      {% if self.secondary()|trim != '' %}
+                        <div class="col-xs-3">
+                          {% block secondary %}
+                            <div class="secondary">
+                              {% block secondary_content %}{% endblock %}
+                            </div>
+                          {% endblock %}
+                        </div>
+                      {% endif %}
+                      <div class="{% if self.secondary()|trim != '' %} col-xs-9 {% else %} col-xs-12 {% endif %}">
+                        {% block primary %}
+                          <div class="primary">
+                            {% block primary_content %}
+                              <article class="module">
+                                {% block item_title_contrib %}
+                                {% endblock %}
+
+                                {% block page_header %}
+                                  <header class="module-content page-header paddingRowHack mBottom10">
+                                    <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
+                                      {% block content_primary_nav %}{% endblock %}
+                                    </ul>
+                                  </header>
+                                  {% if self.content_action() | trim %}
+                                    <div class="content_action">
+                                        {% block content_action %}{% endblock %}
+                                    </div>
+                                  {% endif %}
+                                {% endblock %}
+                                <div class="module-content mTop45">
+                                  {% if self.page_primary_action() | trim %}
+                                    <div class="page_primary_action">
+                                      {% block page_primary_action %}{% endblock %}
+                                    </div>
+                                  {% endif %}
+                                  {% block primary_content_inner %}
+                                  {% endblock %}
+                                </div>
+                              </article>
+                            {% endblock %}
+                          </div>
+                        {% endblock %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endblock %}
+        </div>
+      </div>
+    {% endblock -%}
+
+  {#
+  Override the footer on a page by page basis by extending this block. If
+  making sitewide header changes it is preferable to override the footer.html-u
+  file.
+  #}
+  {%- block footer %}
+    {% include "footer.html" %}
+  {% endblock -%}
+{%- endblock -%}
+
+{%- block scripts %}
+  {% resource 'base/main' %}
+  {#% resource 'base/ckan' %#}
+  {% if g.tracking_enabled %}
+      {% resource 'base/tracking.js' %}
+  {% endif %}
+  <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
+  <script src="/mailchimp.js"></script>
+  {{ super() }}
+{% endblock -%}
+
+{%- block scripts2 %}
+  {{ super() }}
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+{% endblock -%}
