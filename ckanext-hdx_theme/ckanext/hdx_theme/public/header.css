@@ -225,7 +225,8 @@
         height: 60px;
         line-height: 60px;
         font-size: 14px;
-        margin: 0 0 0 30px;
+        margin: 0;
+        padding-left: 30px;
     }
 
     .navbar .nav li.dropdown > .dropdown-toggle .username{
