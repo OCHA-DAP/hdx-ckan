@@ -23,7 +23,7 @@
   {% block resource_item_explore %}
     {% if not url_is_edit %}
     {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
-    <div class="btn-group">
+    <div class="hdx-btn-group">
       {% block resource_item_explore_links %}
       {% if res.can_be_previewed %}
       <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">

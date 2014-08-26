@@ -698,6 +698,15 @@
         background-color: #f2645a;
     }
 
+
+    .resource-item .hdx-btn-group{
+        position: absolute;
+        top: 14px;
+        right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     .btn.hdx-btn.ga-preview{
         background-color: #888888;
         color: white;
@@ -1128,6 +1137,10 @@
 
     .page-header .nav-tabs a:hover{
         background-color: transparent;
+    }
+
+    .nav-tabs .hdx-tab-button i {
+        display: none; /*hide icons*/
     }
 /* END Style tabs*/
 
