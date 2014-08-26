@@ -52,8 +52,26 @@
     }
 /* END Change the default style for ul items */
 
-/* Missing styles due to removal of BS 2.3 */
+/* Missing styles due to removal of BS 2.3 + other fixes */
     .uppercase{
         text-transform: uppercase;
     }
+
+    .form-actions{
+        margin-right: 0;
+    }
 /* END Missing styles due to removal of BS 2.3 */
+
+/* Fix search widget */
+    /* Fix size due to different box-sizing */
+    .form-search .input-append .searchInput {
+        width: 266px;
+        float: left;
+    }
+    /* Fix button position */
+    .form-search .input-append .input-group-addon {
+        padding: 0;
+        border: none;
+        float: left;
+    }
+/* END Fix search widget */

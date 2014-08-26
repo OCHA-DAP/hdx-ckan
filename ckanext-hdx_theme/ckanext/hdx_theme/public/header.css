@@ -413,8 +413,8 @@
     }
 
     .toolbarRow .form-search{
-        line-height: 72px; /*weird form padding of 3px*/
-        margin: 0;
+        /*line-height: 72px; /*weird form padding of 3px*/
+        margin: 14px 0 0;
         padding: 0;
     }
 
