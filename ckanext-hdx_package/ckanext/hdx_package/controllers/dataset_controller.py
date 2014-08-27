@@ -10,7 +10,6 @@ from genshi.template import MarkupTemplate
 from genshi.template.text import NewTextTemplate
 from paste.deploy.converters import asbool
 
-
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.lib.maintain as maintain
@@ -23,7 +22,7 @@ import ckan.model as model
 import ckan.lib.datapreview as datapreview
 import ckan.lib.plugins
 import ckan.new_authz as new_authz
-from ckanext.hdx_theme.helpers import helpers as hdx_h
+
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
@@ -168,12 +167,12 @@ class DatasetController(PackageController):
 
     def contribute(self, error=None):
         self.login(error)
-        vars    = {'contribute':True}
+        vars = {'contribute':True}
         return render('user/login.html', extra_vars=vars)
 
     def preselect(self):
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
-        c.organizations_available = hdx_h.hdx_organizations_available_with_roles()
+        c.organizations_available = helpers.hdx_organizations_available_with_roles()
         if c.organizations_available and len(c.organizations_available) > 0:
             return base.render('organization/organization_preselector.html')
         else:

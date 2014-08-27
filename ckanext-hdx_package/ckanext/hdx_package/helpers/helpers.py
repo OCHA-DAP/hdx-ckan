@@ -11,6 +11,7 @@ import json
 import logging
 import ckan.plugins.toolkit as tk
 import re
+import ckan.new_authz as new_authz
 
 import ckanext.hdx_theme.helpers.counting_actions as counting
 
