@@ -83,57 +83,32 @@
                 {% block pre_primary %}
                 {% endblock %}
 
-                <div class="row paddingRowHack" {% if self.secondary()|trim != '' %} style="background-image:url('/images/homepage-new/columnBackground.png'); background-repeat: repeat-y; min-height: 350px;" {% endif %}>
+                <div class="row paddingRowHack contentBackground{% if self.secondary()|trim != '' and not secondary_right_side %} twoColumnBackground{% endif %}">
                   <div class="col-xs-12 paddingLeftHack paddingRightHack">
                     <div class="row">
-                      {% if self.secondary()|trim != '' %}
+                      {% if self.secondary()|trim != '' and not secondary_right_side %}
                         <div class="col-xs-3">
-                          {% block secondary %}
-                            <div class="secondary">
-                              {% block secondary_content %}{% endblock %}
-                            </div>
-                          {% endblock %}
+                          {{ self.secondary() }}
                         </div>
                       {% endif %}
                       <div class="{% if self.secondary()|trim != '' %} col-xs-9 {% else %} col-xs-12 {% endif %}">
-                        {% block primary %}
-                          <div class="primary">
-                            {% block primary_content %}
-                              <article class="module">
-                                {% block item_title_contrib %}
-                                {% endblock %}
-
-                                {% block page_header %}
-                                  <header class="module-content page-header paddingRowHack mBottom10">
-                                    <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
-                                      {% block content_primary_nav %}{% endblock %}
-                                    </ul>
-                                  </header>
-                                  {% if self.content_action() | trim %}
-                                    <div class="content_action">
-                                        {% block content_action %}{% endblock %}
-                                    </div>
-                                  {% endif %}
-                                {% endblock %}
-                                <div class="module-content mTop45">
-                                  {% if self.page_primary_action() | trim %}
-                                    <div class="page_primary_action">
-                                      {% block page_primary_action %}{% endblock %}
-                                    </div>
-                                  {% endif %}
-                                  {% block primary_content_inner %}
-                                  {% endblock %}
-                                </div>
-                              </article>
-                            {% endblock %}
-                          </div>
-                        {% endblock %}
+                        {{ self.primary() }}
                       </div>
+                      {% if self.secondary()|trim != '' and secondary_right_side %}
+                        <div class="col-xs-3">
+                          {{ self.secondary() }}
+                        </div>
+                      {% endif %}
                     </div>
                   </div>
                 </div>
+
+                {% block post_primary %}
+                {% endblock %}
+
               </div>
             </div>
+
           {% endblock %}
         </div>
       </div>
@@ -148,6 +123,45 @@
     {% include "footer.html" %}
   {% endblock -%}
 {%- endblock -%}
+
+{% block secondary %}
+  <div class="secondary">
+    {% block secondary_content %}{% endblock %}
+  </div>
+{% endblock %}
+
+{% block primary %}
+  <div class="primary">
+    {% block primary_content %}
+      <article class="module">
+        {% block item_title_contrib %}
+        {% endblock %}
+
+        {% block page_header %}
+          <header class="module-content page-header paddingRowHack mBottom10">
+            <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
+              {% block content_primary_nav %}{% endblock %}
+            </ul>
+          </header>
+          {% if self.content_action() | trim %}
+            <div class="content_action">
+                {% block content_action %}{% endblock %}
+            </div>
+          {% endif %}
+        {% endblock %}
+        <div class="module-content mTop45">
+          {% if self.page_primary_action() | trim %}
+            <div class="page_primary_action">
+              {% block page_primary_action %}{% endblock %}
+            </div>
+          {% endif %}
+          {% block primary_content_inner %}
+          {% endblock %}
+        </div>
+      </article>
+    {% endblock %}
+  </div>
+{% endblock %}
 
 {%- block scripts %}
   {% resource 'base/main' %}

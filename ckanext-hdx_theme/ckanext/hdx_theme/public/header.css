@@ -936,6 +936,12 @@
 /* END Style default Primary */
 
 /* Style default Secondary */
+    .twoColumnBackground{
+        background-image:url('/images/homepage-new/columnBackground.png');
+        background-repeat: repeat-y;
+        min-height: 350px;
+    }
+
     .secondary .module-heading{
         background-color: transparent;
         border: none;
