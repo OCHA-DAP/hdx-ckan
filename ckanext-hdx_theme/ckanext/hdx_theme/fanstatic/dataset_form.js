@@ -29,6 +29,7 @@ $('#country-drop').change(function(){
           $('#select_groups_hidden').append('<input id="field-group-'+country+'-input" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
         }
       }
+      $('#country-drop').select2('val', '-1'); //reset Select2 dropdown
     }
   }
 });
