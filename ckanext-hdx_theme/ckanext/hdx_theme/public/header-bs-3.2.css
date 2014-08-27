@@ -60,6 +60,10 @@
     .form-actions{
         margin-right: 0;
     }
+
+    .nav > li > a:hover, .nav > li > a:focus{
+        background: none;
+    }
 /* END Missing styles due to removal of BS 2.3 */
 
 /* Fix search widget */
