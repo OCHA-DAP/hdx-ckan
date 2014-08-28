@@ -115,6 +115,11 @@
     .newHeader .container .row {
         padding-top: 34px;
     }
+
+    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar{
+        margin: 0;
+        border: none;
+    }
     .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav{
         display: inline;
     }
@@ -129,6 +134,13 @@
         font-size: 12px;
         line-height: 31px;
         text-transform: uppercase;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .newHeader .mainLinks {
+        padding-left: 25px;
+        margin: 0;
     }
 
     ul.mainLinks, ul.mainLinks li{
@@ -213,7 +225,8 @@
         height: 60px;
         line-height: 60px;
         font-size: 14px;
-        margin-left: 30px;
+        margin: 0;
+        padding-left: 30px;
     }
 
     .navbar .nav li.dropdown > .dropdown-toggle .username{
@@ -225,6 +238,7 @@
         border-left: 9px solid transparent;
         border-right: 9px solid transparent;
         border-top: 9px solid #007ce0;
+        vertical-align: top;
     }
 
     .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret{
@@ -268,6 +282,7 @@
 
     .newFooter .mainLinks{
         margin: 0;
+        padding-left: 0;
     }
 
     .newFooter .mainLinks li a{
@@ -296,12 +311,14 @@
         line-height: 20px;
     }
     .mailChimpForm input[type="email"] {
-        height: 40px;
+        height: 44px;
         border-color: #ffffff;
         box-shadow: none;
         margin: 0;
         padding: 0 0 0 15px;
         line-height: 14px;
+        border: 0;
+        border-radius: 3px;
     }
 
     .mailChimpForm form{
@@ -391,9 +408,14 @@
         line-height: 75px;
     }
 
+    .toolbarRow .toolbar .breadcrumb > li + li::before {
+        content: "";
+        padding: 0;
+    }
+
     .toolbarRow .form-search{
-        line-height: 72px; /*weird form padding of 3px*/
-        margin: 0;
+        /*line-height: 72px; /*weird form padding of 3px*/
+        margin: 14px 0 0;
         padding: 0;
     }
 
@@ -677,6 +699,15 @@
         background-color: #f2645a;
     }
 
+
+    .resource-item .hdx-btn-group{
+        position: absolute;
+        top: 14px;
+        right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     .btn.hdx-btn.ga-preview{
         background-color: #888888;
         color: white;
@@ -905,6 +936,12 @@
 /* END Style default Primary */
 
 /* Style default Secondary */
+    .twoColumnBackground{
+        background-image:url('/images/homepage-new/columnBackground.png');
+        background-repeat: repeat-y;
+        min-height: 350px;
+    }
+
     .secondary .module-heading{
         background-color: transparent;
         border: none;
@@ -1107,6 +1144,10 @@
 
     .page-header .nav-tabs a:hover{
         background-color: transparent;
+    }
+
+    .nav-tabs .hdx-tab-button i {
+        display: none; /*hide icons*/
     }
 /* END Style tabs*/
 
