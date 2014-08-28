@@ -62,20 +62,19 @@
 {% endblock %}
 
 {% block package_basic_fields_countries %}
-  {% if inheritied_form_style == 'edit' %} 
-    {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}
+  {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}
+  {% if inheritied_form_style == 'edit' %}
     <div id="select_groups_hidden" style="visibility:hidden;position:absolute;"></div>
-    {% endif %}
-
+  {% endif %}
   {% if inheritied_form_style != 'edit' %}
     <div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
-          {% if data.groups %}
-          {% for group in data.groups %}
+      {% if data.groups %}
+        {% for group in data.groups %}
           <input id="field-group-{{group.id}}-input" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/>
-          {% endfor %}
-          {% endif %}
+        {% endfor %}
+      {% endif %}
     </div>
-   {% endif %}
+  {% endif %}
 {% endblock %}
 
 {% block package_basic_fields_tags %}
@@ -138,9 +137,11 @@
 
 {% block package_basic_fields_org %}
 {# if we have a default group then this wants remembering #}
+{#
 {% if data.group_id %}
   <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
 {% endif %}
+ #}
 
 {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
 {% set dataset_has_organization = data.owner_org or data.group_id %}
