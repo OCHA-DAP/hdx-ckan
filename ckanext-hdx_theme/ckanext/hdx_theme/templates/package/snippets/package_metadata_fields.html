@@ -80,6 +80,7 @@
 
 
   <br style="clear:both;">
+    {#
     {% if data.groups %}
       <div class="control-group">
         <label class="control-label">{{ _('Groups') }}</label>
@@ -93,14 +94,12 @@
         </div>
       </div>
     {% endif %}
-
     {% if not new_dataset %}
-    {% set group_name = 'groups__%s__id' % data.groups|length %}
-    {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
-    {{ form.input(group_name, label=_('Add Group'), id="field-group", value=data[group_name], classes=['control-medium'], attrs=group_attrs) }}
-
+      {% set group_name = 'groups__%s__id' % data.groups|length %}
+      {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
+      {{ form.input(group_name, label=_('Add Group'), id="field-group", value=data[group_name], classes=['control-medium'], attrs=group_attrs) }}
     {% endif %}
-
+    #}
 {% block basic_field_methodology %}
   <div>
     <div class="dataset-form-field-wrapper">
