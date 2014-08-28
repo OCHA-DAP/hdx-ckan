@@ -62,8 +62,8 @@
 {% endblock %}
 
 {% block package_basic_fields_countries %}
-  {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}
   {% if inheritied_form_style == 'edit' %}
+    {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}
     <div id="select_groups_hidden" style="visibility:hidden;position:absolute;"></div>
   {% endif %}
   {% if inheritied_form_style != 'edit' %}
