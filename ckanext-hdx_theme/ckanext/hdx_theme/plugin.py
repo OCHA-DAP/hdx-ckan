@@ -47,13 +47,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
     def before_map(self, map):
         map.connect('home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
-        map.connect('/count/dataset', controller='ckanext.hdx_theme.count:CountController', action='dataset')
-        map.connect('/count/country', controller='ckanext.hdx_theme.count:CountController', action='country')
-        map.connect('/count/source', controller='ckanext.hdx_theme.count:CountController', action='source')
+        map.connect('/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
+        map.connect('/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
+        map.connect('/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
         #map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
         #map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
         
-        map.connect('/count/test', controller='ckanext.hdx_theme.count:CountController', action='test')
+        map.connect('/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
