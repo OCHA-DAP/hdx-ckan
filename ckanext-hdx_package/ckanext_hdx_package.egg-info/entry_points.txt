@@ -1,0 +1,4 @@
+
+        [ckan.plugins]
+        hdx_package=ckanext.hdx_package.plugin:HDXPackagePlugin
+    

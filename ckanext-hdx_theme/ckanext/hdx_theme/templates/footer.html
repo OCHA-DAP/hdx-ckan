@@ -1,11 +1,11 @@
 <footer class="newFooter">
   <div class="container">
     <div class="row paddingRowHack" style="background-color: rgb(54,54,54);">
-      <div class="span12 paddingLeftHack paddingRightHack">
+      <div class="span12 col-xs-12 paddingLeftHack paddingRightHack">
         <div class="row">
-          <div class="span6">
+          <div class="span6 col-xs-6">
             <div class="row">
-              <div class="span6">
+              <div class="span6 col-xs-12">
                 <ul class="mainLinks">
                   <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
                   <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
@@ -16,14 +16,14 @@
               </div>
             </div>
             <div class="row">
-              <div class="span6">
+              <div class="span6 col-xs-12">
                 <div class="titlePlusVersion gothamBold10">
                   {{ _("HUMANITARIAN DATA EXCHANGE BETA") }} &nbsp; {{ h.hdx_version() }}
                 </div>
               </div>
             </div>
             <div class="row">
-              <div class="span12">
+              <div class="span12 col-xs-12">
                 <div class="mailChimpForm">
                   <span class="subscribeText">Subscribe to our mailing list.</span>
                   <!-- Begin MailChimp Signup Form -->
@@ -31,7 +31,7 @@
                     <form action="//unocha.us2.list-manage.com/subscribe/post?u=83487eb1105d72ff2427e4bd7&amp;id=6fd988326c" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate="" _lpchecked="1">
 
                       <div class="six columns left" style="padding-left: 0px;">
-                        <input style="width: 340px;" type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
+                        <input style="width: 340px; margin: 0; padding: 0;" type="email" value="" name="EMAIL" class="required email" id="mce-EMAIL">
                         <input style="height: 44px; margin-left: 20px;" type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary">
                       </div>
                       <div id="mce-responses" class="clear">
@@ -53,12 +53,12 @@
             </div>
 
           </div>
-          <div class="offset2 span1">
+          <div class="offset2 span1 col-xs-offset-2 col-xs-1">
             <div class="pull-right ccIcon">
               <img src="/images/svg/cc.svg" style="height: 40px; margin-right: 10px;"/>
             </div>
           </div>
-          <div class="span3">
+          <div class="span3 col-xs-3">
             <div class="otherLicenseText sspRegular12">
               {{ _("Except where otherwise noted, content on this site is licensed under a ") }}<a href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>{{ _(" International license.") }}
             </div>
@@ -75,7 +75,7 @@
       </div>
     </div>
     <div class="row paddingRowHack" style="background-color: #1c1c22;">
-      <div class="span12 paddingLeftHack paddingRightHack" style="height: 68px;">
+      <div class="span12 col-xs-12 paddingLeftHack paddingRightHack" style="height: 68px;">
         <div style="margin-top: 20px;">
           <a href="http://www.twitter.com/humdata" title="Twitter" class="social-icon twitter"></a>
           <a href="https://github.com/OCHA-DAP" title="GitHub" class="social-icon github"></a>

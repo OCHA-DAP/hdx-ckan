@@ -75,7 +75,8 @@ ckan.site_id = default
 #       Add ``pdf_preview`` to enable the resource preview for PDFs
 #		Add ``resource_proxy`` to enable resorce proxying and get around the
 #		same origin policy
-ckan.plugins = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
+#ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
+ckan.plugins = hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview
 
 
 ## Front-End Settings

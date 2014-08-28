@@ -1,121 +1,3 @@
-/* Customize fixed Bootstrap layout -- ugly hacking :) */
-    .container,
-    .navbar-static-top .container,
-    .navbar-fixed-top .container,
-    .navbar-fixed-bottom .container {
-        width: 1170px;
-    }
-
-    [class*="span"]{
-        margin-left: 30px;
-    }
-
-    .row{
-        margin-left:-30px;
-    }
-
-    .span12{
-        width: 1170px;
-    }
-
-    .span11{
-        width: 1070px;
-    }
-
-    .span10{
-        width: 970px;
-    }
-
-    .span9{
-        width: 870px;
-    }
-
-    .span8{
-        width: 770px;
-    }
-    .span8{
-        width: 670px;
-    }
-
-    .span6{
-        width: 570px;
-    }
-
-    .span5{
-        width: 470px;
-    }
-
-    .span4{
-        width: 370px;
-    }
-
-    .span3{
-        width: 270px;
-    }
-
-    .span2{
-        width: 170px;
-    }
-
-    .span1{
-        width: 70px;
-    }
-
-    .offset11{
-        margin-left: 1130px;
-    }
-    .offset10{
-        margin-left: 1030px;
-    }
-    .offset9{
-        margin-left: 930px;
-    }
-    .offset8{
-        margin-left: 830px;
-    }
-    .offset7{
-        margin-left: 730px;
-    }
-    .offset6{
-        margin-left: 630px;
-    }
-    .offset5{
-        margin-left: 530px;
-    }
-    .offset4{
-        margin-left: 430px;
-    }
-    .offset3{
-        margin-left: 330px;
-    }
-    .offset2{
-        margin-left: 230px;
-    }
-
-    .offset1andHalf{
-        margin-left: 180px;
-    }
-
-    .offset1{
-        margin-left: 130px;
-    }
-
-    .paddingRowHack{
-        margin-left: -45px;
-        margin-right: -45px;
-    }
-
-    .paddingRowHack .paddingLeftHack{
-        padding-left: 45px;
-        margin-left: 0;
-    }
-
-    .paddingRowHack .paddingRightHack{
-        padding-right: 45px;
-        margin-right: 0;
-    }
-
-/* END - Customize fixed Bootstrap layout */
 
 /* Fonts */
     @font-face {
@@ -233,6 +115,11 @@
     .newHeader .container .row {
         padding-top: 34px;
     }
+
+    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar{
+        margin: 0;
+        border: none;
+    }
     .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav{
         display: inline;
     }
@@ -247,6 +134,13 @@
         font-size: 12px;
         line-height: 31px;
         text-transform: uppercase;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .newHeader .mainLinks {
+        padding-left: 25px;
+        margin: 0;
     }
 
     ul.mainLinks, ul.mainLinks li{
@@ -331,7 +225,8 @@
         height: 60px;
         line-height: 60px;
         font-size: 14px;
-        margin-left: 30px;
+        margin: 0;
+        padding-left: 30px;
     }
 
     .navbar .nav li.dropdown > .dropdown-toggle .username{
@@ -343,6 +238,7 @@
         border-left: 9px solid transparent;
         border-right: 9px solid transparent;
         border-top: 9px solid #007ce0;
+        vertical-align: top;
     }
 
     .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret{
@@ -386,6 +282,7 @@
 
     .newFooter .mainLinks{
         margin: 0;
+        padding-left: 0;
     }
 
     .newFooter .mainLinks li a{
@@ -414,12 +311,14 @@
         line-height: 20px;
     }
     .mailChimpForm input[type="email"] {
-        height: 40px;
+        height: 44px;
         border-color: #ffffff;
         box-shadow: none;
         margin: 0;
         padding: 0 0 0 15px;
         line-height: 14px;
+        border: 0;
+        border-radius: 3px;
     }
 
     .mailChimpForm form{
@@ -483,6 +382,13 @@
         padding: 0;
         background: none;
     }
+
+    .hdx-wrapper.wrapper {
+        background: none;
+        border: none;
+        box-shadow: 0 0 0 0;
+        margin: 0;
+    }
 /* END Fix main content */
 
 /* Toolbar Row */
@@ -502,9 +408,14 @@
         line-height: 75px;
     }
 
+    .toolbarRow .toolbar .breadcrumb > li + li::before {
+        content: "";
+        padding: 0;
+    }
+
     .toolbarRow .form-search{
-        line-height: 72px; /*weird form padding of 3px*/
-        margin: 0;
+        /*line-height: 72px; /*weird form padding of 3px*/
+        margin: 14px 0 0;
         padding: 0;
     }
 
@@ -788,6 +699,15 @@
         background-color: #f2645a;
     }
 
+
+    .resource-item .hdx-btn-group{
+        position: absolute;
+        top: 14px;
+        right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     .btn.hdx-btn.ga-preview{
         background-color: #888888;
         color: white;
@@ -1011,25 +931,15 @@
 
 /* Style default Primary */
     [role=main] .primary{
-        width: 825px;
-        position: relative;
         padding-left: 45px;
-    }
-
-    .support-primary {
-        float:left;
-        width: 100%;
-        background-color: #FFFFFF;
-        position: relative;
     }
 /* END Style default Primary */
 
 /* Style default Secondary */
-    [role=main] .secondary {
-        width: 255px;
-        padding-right: 45px;
-        position: relative;
-        color: #ffffff;
+    .twoColumnBackground{
+        background-image:url('/images/homepage-new/columnBackground.png');
+        background-repeat: repeat-y;
+        min-height: 350px;
     }
 
     .secondary .module-heading{
@@ -1224,6 +1134,7 @@
     }
 
     .page-header{
+        background: none;
         border-bottom: 3px solid #cccccc;
         /*background-color: #f6f6f6;*/
         -webkit-border-radius: 0 3px 0 0;
@@ -1233,6 +1144,10 @@
 
     .page-header .nav-tabs a:hover{
         background-color: transparent;
+    }
+
+    .nav-tabs .hdx-tab-button i {
+        display: none; /*hide icons*/
     }
 /* END Style tabs*/
 
