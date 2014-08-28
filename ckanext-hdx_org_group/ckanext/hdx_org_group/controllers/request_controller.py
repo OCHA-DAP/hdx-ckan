@@ -9,7 +9,7 @@ import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request, _
 import ckan.lib.base as base
-import ckanext.hdx_theme.helpers as hdx_h
+import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckan.model as model
 import logging as logging
 import exceptions as exceptions
