@@ -71,7 +71,7 @@
                   <div class="row">
                     <div class="span2 itemCount">
                       <a href="{% url_for 'search' %}"
-                         data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
+                         data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
                         0
                       </a>
                     </div>
@@ -87,7 +87,7 @@
                 <div class="row">
                   <div class="span2 itemCount">
                     <a href="{% url_for 'group_index' %}"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
                       0
                     </a>
                   </div>
@@ -103,7 +103,7 @@
                 <div class="row">
                   <div class="span2 itemCount">
                     <a href="#"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
                       0
                     </a>
                   </div>

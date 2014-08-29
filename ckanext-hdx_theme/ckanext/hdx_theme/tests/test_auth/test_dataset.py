@@ -16,7 +16,7 @@ log = logging.getLogger(__name__)
 class TestDatasetAuth(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('dataset_auth hdx_theme')
+        hdx_test_base.load_plugin('hdx_package hdx_theme')
 
     def test_create_dataset_with_org(self):
         testsysadmin = model.User.by_name('testsysadmin')

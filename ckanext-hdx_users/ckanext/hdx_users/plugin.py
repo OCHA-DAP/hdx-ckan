@@ -26,7 +26,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('user_dashboard_datasets', '/dashboard/datasets', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='dashboard_datasets',
                   ckan_icon='sitemap')
         map.connect('/user/register',
-                    controller='ckanext.hdx_users.controllers.registration_controller:RegistrationController',
+                    controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
         map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='logged_in')
         return map
