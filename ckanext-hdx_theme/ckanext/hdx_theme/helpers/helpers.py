@@ -241,3 +241,9 @@ def hdx_remove_schema_and_domain_from_url(url):
 
 def hdx_get_ckan_config(config_name):
     return config.get(config_name)
+
+def get_group_name_from_list(glist, gid):
+    for group in glist:
+        if group['id'] == gid:
+            return group['title']
+    return ""
