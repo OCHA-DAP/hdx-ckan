@@ -29,7 +29,7 @@
     {% if data.groups %}
       {% for group in data.groups %}
         {% if group.id != '-1' %}
-          <span class="filtered pill">{{group.title}} 
+          <span class="filtered pill">{{ h.get_group_name_from_list(available_groups, group.id) }}
           <input id="field-group-{{ loop.index0 }}-input" type="hidden" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"></input>
           <i id="field-group-{{ loop.index0 }}" name="groups__{{loop.index0}}__id" value="{{group.id}}" class="group_checked icon-remove"></i></span>
         {% endif %}

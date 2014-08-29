@@ -248,7 +248,7 @@ class DatasetController(PackageController):
                             extra_vars=vars)
         
         if not request.is_xhr:
-            return render(self._new_template(package_type), extra_vars={'stage': stage})
+            return render(self._new_template(package_type), extra_vars={'stage': stage, 'data': data})
         else:
             return self._finish(200, {'validation_fail':1, 'errors':vars['errors'], 'error_summary':vars['error_summary']}, content_type='json')
         #return render(self._new_template(package_type), extra_vars={'stage': stage})
