@@ -1,0 +1,7 @@
+/* Override background for two column layout */
+    .contentBackground.twoColumnBackground{
+        background-image: none;
+        background-color: #ffffff;
+        min-height: auto;
+    }
+/* END Override background for two column layout */
