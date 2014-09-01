@@ -1,0 +1,10 @@
+{% extends "page-new.html" %}
+
+{% block secondary %}
+  <div style="background-color: red; height: 200px;"> </div>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% resource 'hdx_theme/css/indicator.css' %}
+{% endblock %}
