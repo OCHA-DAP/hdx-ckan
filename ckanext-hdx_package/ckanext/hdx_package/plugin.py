@@ -67,6 +67,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                       'new_metadata',
                       'new_resource',
                       ])))
+
+        map.connect('/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
         return map
         
     def is_fallback(self):
