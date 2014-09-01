@@ -55,6 +55,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         
         map.connect('/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
         map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+        map.connect('/indicator/{id}', controller='ckanext.hdx_theme.indicator:IndicatorController', action='read')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
