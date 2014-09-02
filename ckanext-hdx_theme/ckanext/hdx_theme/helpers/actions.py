@@ -315,7 +315,7 @@ def hdx_user_show(context, data_dict):
     return user_dict
 
 @logic.side_effect_free
-def hdx_cps_api_indicator_value(context, data_dict):
+def hdx_get_indicator_values(context, data_dict):
     '''
     Makes a call to the REST API that provides the indicator values
     Current param supported are: 
