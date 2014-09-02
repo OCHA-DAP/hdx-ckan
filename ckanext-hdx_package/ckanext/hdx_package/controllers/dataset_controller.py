@@ -553,8 +553,12 @@ class DatasetController(PackageController):
                 {'resource': resource, 'package': c.pkg_dict})
 
         # Is this an indicator? Load up graph data
-        if c.pkg_dict['indicator']:
-            c.pkg_dict['graph'] = '{}'
+        try:
+            if int(c.pkg_dict['indicator']):
+                c.pkg_dict['graph'] = '{}'
+        except:
+            #If there's no indicator value it isn't an indicator
+            c.pkg_dict['indicator'] = 0
 
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
@@ -565,7 +569,10 @@ class DatasetController(PackageController):
         template = template[:template.index('.') + 1] + format
 
         try:
-            return render(template, loader_class=loader)
+            if int(c.pkg_dict['indicator']):
+                return render('indicator/read.html', loader_class=loader)
+            else:
+                return render(template, loader_class=loader)
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
