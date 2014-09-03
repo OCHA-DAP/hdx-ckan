@@ -1,10 +1,12 @@
 import logging
 import datetime
+import requests
 
 from pylons import config
 import sqlalchemy
 
 import ckan.lib.dictization
+import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.model.misc as misc
@@ -22,6 +24,8 @@ from ckan.common import c, _
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
+
+log = logging.getLogger(__name__)
 
 def organization_list_for_user(context, data_dict):
     '''Return the list of organizations that the user is a member of.
@@ -309,3 +313,61 @@ def hdx_user_show(context, data_dict):
             {'id': user_dict['id']})
     user_dict['total_count'] = dataset_q_counter
     return user_dict
+
+@logic.side_effect_free
+def hdx_get_indicator_values(context, data_dict):
+    '''
+    Makes a call to the REST API that provides the indicator values
+    Current param supported are: 
+    :param it: indicator types
+    :type it: list
+    :param l: locations
+    :type l: list
+    :param s: sources
+    :type s: list
+    :param minTime: the start year
+    :type minTime: int
+    :param maxTime: the end year
+    :type maxTime: int
+    :param periodType: filter the period by another criteria
+    :type periodType: string
+    :param pageNum: for pagination - page number
+    :type pageNum: int
+    :param pageSize: for pagination - max number of items in result
+    :type pageSize: int
+    :param lang: language
+    :type lang: string
+    '''
+    endpoint = config.get('hdx.rest.indicator.endpoint') + '?'
+
+    filter_list = []
+
+    for param_name in ['it', 'l', 's', 'minTime', 'maxTime', 'periodType',
+                       'pageNum', 'pageSize', 'lang']:
+        param_values = data_dict.get(param_name, None)
+        filter_list = _add_to_filter_list(param_values, param_name, filter_list)
+
+    filter_list.sort()
+    url = endpoint + "&".join(filter_list)
+
+    return _make_rest_api_request(url)
+
+
+@bcache.cache_region('hdx_memory_cache', 'cached_make_rest_api_request')
+def _make_rest_api_request(url):
+    log.info("Requesting indicators:" + url)
+
+    response = requests.get(url)
+    return response.json()
+
+
+def _add_to_filter_list(src, param_name, filter_list):
+    if src:
+        if isinstance(src, list):
+            temp_filters = [
+                '{}={}'.format(param_name, elem) for elem in src]
+            filter_list = filter_list + temp_filters
+        else:
+            filter_list.append('{}={}'.format(param_name, src))
+            
+    return filter_list
