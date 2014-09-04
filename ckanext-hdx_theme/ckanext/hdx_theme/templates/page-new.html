@@ -176,6 +176,6 @@
 
 {%- block styles %}
   {{ super() }}
-  <link rel="stylesheet" href="/header.css" />
-  <link rel="stylesheet" href="/header-bs-3.2.css" />
+  {% resource 'hdx_theme/css/header.css' %}
+  {% resource 'hdx_theme/css/header-bs-3.2.css' %}
 {% endblock %}
