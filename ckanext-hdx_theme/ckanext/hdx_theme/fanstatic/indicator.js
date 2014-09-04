@@ -3,7 +3,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     initialize: function(){
       var CHART_COLORS = ['1ebfb3', '117be1', 'f2645a', '555555', 'ffd700'];
       var c3_chart, chart_config, data, elementId, alldata;
-      alldata = initialData.results;
+      //alldata = initialData.results;
+      alldata = this._retrieveData();
 
       elementId = '#' + $(this.el).attr('id');
 
@@ -20,8 +21,9 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           }
         }
         if (!found || (alldata.length - alldataEl + data.length < 10)){
-          if (alldata[alldataEl]['locationName'].length > 20)
-            alldata[alldataEl]['locationName'] = alldata[alldataEl]['locationName'].substring(0, 18) + '...';
+          alldata[alldataEl]['trimName'] = alldata[alldataEl]['locationName'];
+          if (alldata[alldataEl]['trimName'].length > 20)
+            alldata[alldataEl]['trimName'] = alldata[alldataEl]['trimName'].substring(0, 18) + '...';
 
           data.push(alldata[alldataEl]);
         }
@@ -38,7 +40,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         data: {
           json: data,
           keys: {
-            x: 'locationName',
+            x: 'trimName',
             value: ['value']
           },
           names: {
@@ -63,7 +65,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         tooltip: {
           format: {
             title: function (d) {
-              return '';
+              return data[d]['locationName'];
             }
           }
         },
@@ -79,6 +81,9 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     options: {
     	label: "",
       code: ""
+    },
+    _retrieveData: function (){
+
     }
   }
 });
