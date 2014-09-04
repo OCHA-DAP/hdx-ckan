@@ -1,11 +1,24 @@
 ckan.module('hdx-indicator-graph', function ($, _) {
   return {
     initialize: function(){
+      var data = [], indicatorCode;
+      indicatorCode = indicatorMapping[this.options.name];
+
+      jQuery.ajax({
+        url: "http://ckan.lo:5000/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
+        success: function(json) {
+          if (json.success)
+            data = json.result.results;
+        },
+        async:false
+      });
+
+      if (data.length > 0)
+        this.buildChart(data);
+    },
+    buildChart: function(alldata) {
       var CHART_COLORS = ['1ebfb3', '117be1', 'f2645a', '555555', 'ffd700'];
       var c3_chart, chart_config, data, elementId, alldata;
-      //alldata = initialData.results;
-      alldata = this._retrieveData();
-
       elementId = '#' + $(this.el).attr('id');
 
       //Let's select 10 data points that have different values
@@ -44,7 +57,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
             value: ['value']
           },
           names: {
-            value: 'Indicator Name '
+            value: this.options.label
           },
           type: 'bar'
         },
@@ -54,7 +67,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           },
           y: {
             label: {
-              text: this.options.label,
+              text: "Units",
               position: 'outer-middle'
             },
             tick: {
@@ -76,14 +89,10 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         }
       };
       c3_chart = c3.generate(chart_config);
-
     },
     options: {
     	label: "",
-      code: ""
-    },
-    _retrieveData: function (){
-
+      name: ""
     }
   }
 });
