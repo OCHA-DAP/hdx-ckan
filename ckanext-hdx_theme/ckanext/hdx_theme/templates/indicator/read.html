@@ -7,8 +7,9 @@
 {% endblock %}
 
 {% block secondary %}
-  <div>
+  <div class="border-right-grey">
     <h2>[activity placeholder]</h2>
+    {{ c.package_activity_stream | safe }}
   </div>
 {% endblock %}
 

@@ -5,3 +5,11 @@
         min-height: auto;
     }
 /* END Override background for two column layout */
+
+/* activity stream */
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+}
+/* END activity stream */
