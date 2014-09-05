@@ -103,6 +103,12 @@ a.my-link-disabled{
     text-decoration: none;
 }
 
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+}
+
 .activity .item p {
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
