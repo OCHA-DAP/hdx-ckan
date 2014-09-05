@@ -12,4 +12,25 @@
   padding: 0;
   list-style-type: none;
 }
+
+.activity .item {
+    margin: 0 0 5px;
+    padding: 0;
+    position: relative;
+}
+
+.activity .item p {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #000000;
+    line-height: 35px;
+    margin: 5px 0 0 20px;
+}
+
+.dsb-activity-item{
+
+}
+
+
 /* END activity stream */
