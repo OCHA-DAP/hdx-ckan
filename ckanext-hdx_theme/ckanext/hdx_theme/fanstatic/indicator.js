@@ -64,7 +64,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       });
 
       if (data.length > 0)
-        this.buildChart(data, c3_chart);
+        data = this.buildChart(data, c3_chart);
       else
         c3_chart.hide();
     },
@@ -133,6 +133,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         },
         type: 'bar'
       });
+
+      return data;
 
 //
 //      chart_config = {
