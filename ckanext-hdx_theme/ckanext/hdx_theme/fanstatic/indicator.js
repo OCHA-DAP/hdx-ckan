@@ -55,7 +55,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       };
       var c3_chart = c3.generate(chart_config);
       jQuery.ajax({
-        url: "http://ckan.lo:5000/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
+        url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
         success: function(json) {
           if (json.success)
             data = json.result.results;
