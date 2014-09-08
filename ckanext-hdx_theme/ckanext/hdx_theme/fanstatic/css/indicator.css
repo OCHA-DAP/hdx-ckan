@@ -1,0 +1,98 @@
+/* Override background for two column layout */
+    .contentBackground.twoColumnBackground{
+        background-image: none;
+        background-color: #ffffff;
+        min-height: auto;
+    }
+/* END Override background for two column layout */
+
+/* activity stream */
+
+	.wrapper-secondary{
+	        border-right: 1px solid #dddddd;
+	}
+	
+	.activity {
+	  margin: 10px 0;
+	  padding: 0;
+	  list-style-type: none;
+	}
+	
+	.activity .item {
+	    margin: 0 0 5px;
+	    padding: 0;
+	    position: relative;
+	}
+	
+	.activity .item p {
+	    font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    color: #333333;
+	    margin: 0 0 0 40px;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	}
+	.activity .item .date {
+	    font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    color: #888888;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	    white-space: nowrap;
+	}
+	
+	.dsb-activity-item{
+	    margin-bottom: 30px;
+	}
+	
+	div.dsb-activity-item p span.actor a, a:hover, a:focus {
+		font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 700;
+	    font-size: 14px;
+	    color: #007ce0;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	    text-decoration: none;
+	}
+	
+	div.dsb-activity-item p a, div.dsb-activity-item p span a, a:hover, a:focus {
+		font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 700;
+	    font-size: 14px;
+	    color: #333333;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	    text-decoration: none;
+	}
+	
+	.activity .item .actor .gravatar {
+	    left: 0px;
+	    position: absolute;
+	    top: 0;
+	}
+	.more{
+	    float: right;
+	    margin-top: -30px;
+	}
+	
+	h2 {
+	    font-family: 'Gotham Book', sans-serif;
+	    font-weight: 400;
+	    font-size: 12px;
+	    letter-spacing: 0em;
+	    opacity: 1;
+	    color: #888888;
+	}
+	.uppercase{
+		text-transform: uppercase;
+	}
+	.lowercase{
+		text-transform: lowercase;
+	}
+	.capitalize{
+		text-transform: capitalize;
+	}
+
+/* END activity stream */

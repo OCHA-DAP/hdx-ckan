@@ -32,6 +32,7 @@ Example:
             {{ _('Private') }}
           </span>
         {% endif %}
+
         {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
         {% if package.get('state', '').startswith('draft') %}
           <span class="label label-info">{{ _('Draft') }}</span>

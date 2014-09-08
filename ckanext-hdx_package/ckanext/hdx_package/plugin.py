@@ -62,11 +62,16 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
+            m.connect('/dataset/{id}.{format}', action='read')
+            m.connect('dataset_read', '/dataset/{id}', action='read',
+                  ckan_icon='sitemap')
             m.connect('/dataset/{action}/{id}',
                   requirements=dict(action='|'.join([
                       'new_metadata',
                       'new_resource',
                       ])))
+
+        map.connect('/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
         return map
         
     def is_fallback(self):
@@ -83,6 +88,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'package_creator': [tk.get_validator('not_empty'),
                     tk.get_converter('convert_to_extras')],
                 'groups_list': [vd.groups_not_empty],
+                'indicator':[tk.get_validator('ignore_missing'),
+                    tk.get_converter('convert_to_extras')],
             'caveats' : [tk.get_validator('ignore_missing'),
                     tk.get_converter('convert_to_extras')],
             'dataset_source' : [tk.get_validator('not_empty'),
@@ -113,6 +120,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema.update({
             'notes': [tk.get_validator('not_empty')], #Notes == description. Makes description required
             'package_creator': [tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')],
+            'indicator':[tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],
             'caveats' : [tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')],

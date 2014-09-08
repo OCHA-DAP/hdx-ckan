@@ -1,0 +1,39 @@
+{% extends "page-new.html" %}
+
+{% set pkg = c.pkg_dict or pkg_dict %}
+
+{% block pre_primary %}
+  {% snippet "indicator/snippets/read_pre_primary.html", pkg = pkg %}
+{% endblock %}
+
+{% block secondary %}
+  <div class="border-right-grey">
+		<h2 class="uppercase">{{_('Activity')}}</h2>
+	    <span class="more">See all</span>
+    {{ c.package_activity_stream | safe }}
+  </div>
+{% endblock %}
+
+{% block primary %}
+  <div>
+    <h2>[content placeholder]</h2>
+  </div>
+{% endblock %}
+
+{% block post_primary %}
+  <div class="row paddingRowHack whiteBackground">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <h2>[continuous browsing placeholder]</h2>
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/indicator' %}
+{% endblock %}

@@ -1,0 +1,21 @@
+  <div class="row paddingRowHack whiteBackground">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
+      <h1 class="itemTitle">
+        {{ pkg.title or pkg.name }}
+         {% if pkg.state.startswith('draft') %}
+          <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+        {% elif pkg.state.startswith('deleted') %}
+          <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+        {% endif %}
+      </h1>
+      <span class="followButtonContainer pull-right">
+        {{ h.follow_button('dataset', pkg.name) }}
+        {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
+      </span>
+    </div>
+    <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
+      <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}" data-module-name="{{ pkg.title }}">
+
+      </div>
+    </div>
+  </div>

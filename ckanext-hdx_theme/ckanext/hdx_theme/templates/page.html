@@ -4,8 +4,8 @@
 
   {% block styles %}
     {{ super() }}
-    <link rel="stylesheet" href="/header.css" />
-    <link rel="stylesheet" href="/header-bs-2.3.css" />
+    {% resource 'hdx_theme/css/header.css' %}
+    {% resource 'hdx_theme/css/header-bs-2.3.css' %}
   {% endblock %}
 
   {#
