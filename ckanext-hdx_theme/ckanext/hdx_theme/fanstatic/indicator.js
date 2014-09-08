@@ -4,7 +4,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       var data = [], indicatorCode;
       indicatorCode = indicatorMapping[this.options.name];
 
-      var CHART_COLORS = ['1ebfb3', '117be1', 'f2645a', '555555', 'ffd700'];
+      var CHART_COLORS = ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'];
       var elementId = '#' + $(this.el).attr('id');
 
       var chart_config = {
