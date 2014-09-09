@@ -3,7 +3,6 @@
 
 {% set stream_filter_type = c.dashboard_activity_stream_context.filter_type %}
 {% set stream_filter_type = stream_filter_type if stream_filter_type else controller %}
-
 {% if activities %}
   <ul class="activity" data-module="activity-stream" data-module-more="{{ has_more }}" data-module-context="{{ stream_filter_type }}" data-module-id="{{ id }}" data-module-offset="{{ offset }}">
       {% if offset > 0 %}
