@@ -19,7 +19,8 @@ this.ckan.module('hdx-resource-upload-field', function (jQuery, _, i18n) {
       form: {
         method: 'POST',
         file: 'file',
-        params: []
+        params: [],
+        checked: 'false'
       },
       i18n: {
         label: _('Upload a file'),
@@ -75,6 +76,11 @@ this.ckan.module('hdx-resource-upload-field', function (jQuery, _, i18n) {
         fail: this._onUploadFail,
         always: this._onUploadComplete
       });
+      var checked = (this.options.checked == 'False')?false:true;
+      if (checked) {
+    	  jQuery('#field-url').parent().parent().css({'opacity':0, 'height':0});
+      }
+      this.upload.find('input[type=radio]').prop('checked', checked);
     },
 
     /* Displays a loading spinner next to the input while uploading. This
