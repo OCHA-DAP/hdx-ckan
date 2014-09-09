@@ -9,8 +9,8 @@
 {% block secondary %}
   <div class="border-right-grey">
 		<h2 class="uppercase">{{_('Activity')}}</h2>
-	    <span class="more">See all</span>
-    {{ c.package_activity_stream | safe }}
+	    <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span>
+	 {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
   </div>
 {% endblock %}
 

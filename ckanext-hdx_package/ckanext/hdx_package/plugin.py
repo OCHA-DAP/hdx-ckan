@@ -141,7 +141,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {'list_of_all_groups': cached_group_list}
     
     def get_actions(self):
-        return {'package_update': update.package_update}
+        from ckanext.hdx_package.helpers import helpers as hdx_actions
+        return {
+                'package_update': update.package_update,
+                'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
+                }
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
@@ -150,7 +154,3 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def make_middleware(self, app, config):
         run_on_startup()
         return app
-
-        
-
-
