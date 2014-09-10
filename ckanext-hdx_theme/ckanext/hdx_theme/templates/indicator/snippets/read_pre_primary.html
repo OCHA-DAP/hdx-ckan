@@ -47,8 +47,13 @@
 
     </div>
     <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
-      <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}" data-module-name="{{ pkg.title }}">
-
+      <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}" data-module-name="{{ pkg.title }}" data-module-subchart="true" data-module-zoom="true">
+      </div>
+      <div>
+        <span class="pull-right">
+          <i class="glyphicon glyphicon-info-sign" title="{{ _("A very large text that I know CJ is going to send it to me by email as soon as he gets the chance. This text will explain the data that is available in the graph and the years that it refers to.") }}" data-module="bs_tooltip" data-module-placement="top"
+                data-toggle="tooltip"></i>
+        </span>
       </div>
     </div>
   </div>
