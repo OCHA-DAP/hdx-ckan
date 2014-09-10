@@ -71,7 +71,7 @@
 	.activity .item .actor .gravatar {
 	    left: 0px;
 	    position: absolute;
-	    top: 0;
+	    top: 5px;
 	}
 	.more{
 	    float: right;
@@ -94,6 +94,32 @@
 	}
 	.capitalize{
 		text-transform: capitalize;
+	}
+	
+	.notes.embedded-content {
+	    font-family: 'Source Sans Pro',sans-serif;
+	    font-size: 14px;
+	    font-weight: 400;
+	    max-width: none;
+	}
+	
+	.additional-info table, .additional-info table th, .additional-info table td, .additional-info table tr {
+	    border: 0 none;
+	    border-radius: 0 !important;
+	    vertical-align: top;
+	}
+	.additional-info table tr {
+	    font-family: 'Source Sans Pro',sans-serif;
+	    font-size: 14px;
+	    font-weight: 400;
+	    height: 38px;
+	}
+	
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  	  border-top: none;
+	}
+	.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    	border: none;
 	}
 
 /* END activity stream */

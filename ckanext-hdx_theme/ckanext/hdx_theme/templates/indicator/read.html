@@ -8,16 +8,62 @@
 
 {% block secondary %}
   <div class="border-right-grey">
-		<h2 class="uppercase">{{_('Activity')}}</h2>
-	    <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span>
-	 {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+        <h2 class="uppercase">{{_('Activity')}}</h2>
+        <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span>
+     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
   </div>
 {% endblock %}
 
 {% block primary %}
-  <div>
-    <h2>[content placeholder]</h2>
+  <div class="mL30">
+    {% block package_notes %}
+        {% if c.pkg_notes_formatted %}
+          <div class="notes embedded-content">
+            {{ c.pkg_notes_formatted }}
+          </div>
+        {% endif %}
+    {% endblock %}
   </div>
+  <div class="mL30">
+      {% block package_resources %}
+        {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+      {% endblock %}
+  </div>
+  <div class="mL30">
+    {% block package_additional_info %}
+	    {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+	    <script> 
+	      $(document).ready(function(){
+	        //Patch to fix a weird bug we can't figure out
+	        li = {"cc-by-igo":"Creative Commons Attribution for Intergovernmental Organisations",
+	              "cc-by-nd":"Creative Commons Attribution-NoDerives",
+	              "other-pd-nr":"Public Domain / No Restrictions",
+	              "hdx-multi":"Multiple Licenses",
+	              "hdx-other":"Other",
+	              "notspecified":"License Not Specified",
+	              "odc-pddl":"Open Data Commons Public Domain Dedication and License (PDDL)",
+	              "odc-odbl":"Open Data Commons Open Database License (ODbL)",
+	              "odc-by":"Open Data Commons Attribution License",
+	              "cc-zero":"Creative Commons CCZero",
+	              "cc-by":"Creative Commons Attribution",
+	              "cc-by-sa":"Creative Commons Attribution Share-Alike","gfdl":"GNU Free Documentation License",
+	              "other-open":"Other (Open)",
+	              "other-pd":"Other (Public Domain)",
+	              "other-at":"Other (Attribution)",
+	              "uk-ogl":"UK Open Government Licence (OGL)",
+	              "cc-nc":"Creative Commons Non-Commercial (Any)",
+	              "other-nc":"Other (Non-Commercial)",
+	              "other-closed":"Other (Not Open)",
+	        }
+	        var license = $('span[property="dc:rights"]').text();
+	        if($.inArray(license, Object.keys(li))){
+	          $('span[property="dc:rights"]').text(li[license]);
+	        }
+	      });
+	    </script>
+  	{% endblock %}
+  </div>
+  
 {% endblock %}
 
 {% block post_primary %}
