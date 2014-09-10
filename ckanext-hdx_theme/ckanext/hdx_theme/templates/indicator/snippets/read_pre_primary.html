@@ -10,12 +10,50 @@
       </h1>
       <span class="followButtonContainer pull-right">
         {{ h.follow_button('dataset', pkg.name) }}
-        {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
+        <a class="btn btn-inverted" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
+         data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share dataset">Share</a>
+        <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+                data-toggle="tooltip">Analyse</a>
+        <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+                data-toggle="tooltip"><i class="glyphicon glyphicon-wrench"></i></a>
       </span>
+        <div id="dataset_social_wrapper" class="popover-wrapper"></div>
+        <div style="display:none" id="dataset_social">
+          <div class="resource-social">
+            <a href="https://plus.google.com/share?url={{ request.url }}" target="_blank">
+              <img class="social-images" src="/images/svg/google-plus_black.svg" />
+              <span> Google+ </span>
+            </a>
+          </div>
+          <div class="resource-social">
+            <a href="https://twitter.com/share?url={{ request.url }}" target="_blank">
+              <img class="social-images" src="/images/svg/twitter_black.svg" />
+              <span> Twitter </span>
+            </a>
+          </div>
+          <div class="resource-social" >
+            <a href="https://www.facebook.com/sharer.php?u={{ request.url }}" target="_blank">
+              <img class="social-images" src="/images/svg/fb_black.svg" />
+              <span> Facebook </span>
+            </a>
+          </div>
+          <div class="resource-social" >
+            <a href="mailto:?subject={{ pkg.title }}&body={{ request.url }}" target="_blank">
+              <img class="social-images" src="/images/svg/email_black.svg" />
+              <span> {{ _('Email') }} </span>
+            </a>
+          </div>
+        </div>
+
     </div>
     <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
-      <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}" data-module-name="{{ pkg.title }}">
-
+      <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}" data-module-name="{{ pkg.title }}" data-module-subchart="true" data-module-zoom="true">
+      </div>
+      <div>
+        <span class="pull-right">
+          <i class="glyphicon glyphicon-info-sign" title="{{ _("A very large text that I know CJ is going to send it to me by email as soon as he gets the chance. This text will explain the data that is available in the graph and the years that it refers to.") }}" data-module="bs_tooltip" data-module-placement="top"
+                data-toggle="tooltip"></i>
+        </span>
       </div>
     </div>
   </div>
