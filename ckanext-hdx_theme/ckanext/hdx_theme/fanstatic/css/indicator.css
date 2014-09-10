@@ -96,3 +96,8 @@
 	}
 
 /* END activity stream */
+
+
+#chart-container svg > g:nth-child(3) .c3-axis-x {
+    opacity: 0 !important;
+}

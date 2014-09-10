@@ -26,9 +26,24 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           },
           type: 'bar'
         },
+        subchart: {
+          show: this.options.subchart
+        },
+        padding:{
+          bottom: 20
+        },
+        zoom: {
+          enabled: this.options.zoom
+        },
+        legend:{
+          show: false
+        },
         axis: {
           x: {
-            type: 'category'
+            type: 'category',
+            tick: {
+              rotate: 20
+            }
           },
           y: {
             label: {
@@ -53,12 +68,20 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           }
         }
       };
-      var c3_chart = c3.generate(chart_config);
+      c3_chart = c3.generate(chart_config);
+      c3_chart.internal.margin2.top=260;
       jQuery.ajax({
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
         success: function(json) {
           if (json.success)
             data = json.result.results;
+        },
+        complete: function(){
+          $('body').delay(500).queue(function(){
+            c3_chart.internal.brush.extent([0,20]).update();
+            c3_chart.internal.redrawForBrush();
+            c3_chart.internal.redrawSubchart();
+          });
         },
         async:false
       });
@@ -72,24 +95,24 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       var data, elementId;
 
       //sort data points based on value
-      alldata.sort(function (a,b){
-        return a.value - b.value;
-      });
+//      alldsata.sort(function (a,b){
+//        return a.value - b.value;
+//      });
 
-      data = [];
-      //calculate a step so that we can have ~10 points in our graph
-      var step = Math.floor(alldata.length / 10);
-      if (step === 1)
-        step = 2;
-
-      var i;
-      for (i = 0; i < alldata.length; i+= step){
-        data.push(alldata[i]);
-      }
-      //include the last value if it hasn't been included already
-      if (i - step < alldata.length-1)
-        data.push(alldata[alldata.length-1]);
-
+//      data = [];
+//      //calculate a step so that we can have ~10 points in our graph
+//      var step = Math.floor(alldata.length / 10);
+//      if (step === 1)
+//        step = 2;
+//
+//      var i;
+//      for (i = 0; i < alldata.length; i+= step){
+//        data.push(alldata[i]);
+//      }
+//      //include the last value if it hasn't been included already
+//      if (i - step < alldata.length-1)
+//        data.push(alldata[alldata.length-1]);
+      data = alldata;
       //trim names
       for (var dataEl in data){
         data[dataEl]['trimName'] = data[dataEl]['locationName'];
@@ -105,15 +128,15 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         },
         names: {
           value: this.options.label
-        },
-        type: 'bar'
+        }
       });
-
       return data;
     },
     options: {
     	label: "",
-      name: ""
+      name: "",
+      subchart: false,
+      zoom: false
     }
   }
 });
