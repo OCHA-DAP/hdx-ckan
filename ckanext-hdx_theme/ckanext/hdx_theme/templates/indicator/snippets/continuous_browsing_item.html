@@ -1,0 +1,30 @@
+{#
+ Example:
+
+  {% snippet "package/snippets/resources_list.html", count=count, name=name, links=links, more %}
+
+#}
+<div class="col-xs-2 mTB30 cb-item">
+	<div class="cb-item-count">
+		{{ count }}
+	</div>
+	<div class="cb-border-wrapper">
+		<div class="cb-item-name">
+			{{ name }}
+		</div>
+		<div class="cb-item-links">
+			<ul>
+			{% if links|length > 0 %}
+				{% for i in range(0,4) %}
+					<li><a href="{{links[i].url}}" title="{{links[i].name}}">{{ links[i].name|truncate(18,False) }}</a></li>
+				{% endfor %}
+				{% if links|length > 4 %}
+					<li><a href="#" title="{{_('+ More')}}">{{ _('+ More') }}</a></li>
+				{% endif%}
+			{% else %}
+				<li>{{ _('No items') }}</li>
+			{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>
