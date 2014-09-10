@@ -141,7 +141,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {'list_of_all_groups': cached_group_list}
     
     def get_actions(self):
-        return {'package_update': update.package_update}
+        return {'package_update': update.package_update,
+                'hdx_package_update_metadata': update.hdx_package_update_metadata}
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
