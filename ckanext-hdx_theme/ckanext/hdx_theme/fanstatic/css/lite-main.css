@@ -1832,7 +1832,7 @@ textarea {
 }
 .dataset-item:last-of-type {
   border-bottom: none;
-  margin-bottom: 0;
+  margin-bottom: 0px;
   padding-bottom: 0;
 }
 .dataset-heading {

@@ -144,7 +144,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         from ckanext.hdx_package.helpers import helpers as hdx_actions
         return {
                 'package_update': update.package_update,
-                'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
+                'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
+                'hdx_package_update_metadata': update.hdx_package_update_metadata
                 }
 
     def get_auth_functions(self):
