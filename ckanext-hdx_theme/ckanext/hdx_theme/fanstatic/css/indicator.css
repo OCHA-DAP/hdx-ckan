@@ -20,7 +20,7 @@
 	}
 	
 	.activity .item {
-	    margin: 0 0 5px;
+	    margin: 0 0 0px;
 	    padding: 0;
 	    position: relative;
 	}
@@ -45,7 +45,7 @@
 	}
 	
 	.dsb-activity-item{
-	    margin-bottom: 30px;
+	    margin-bottom: 25px;
 	}
 	
 	div.dsb-activity-item p span.actor a, a:hover, a:focus {
