@@ -49,8 +49,8 @@
 			ignoreTags: ['br', 'hr', 'img'],
 			toggle: true,
 			ellipsisText: '...',
-			moreText: 'Show more',
-			lessText: 'Show less',
+			moreText: 'More',
+			lessText: 'Less',
 			andNext: '',
 			onChange: null
 		},

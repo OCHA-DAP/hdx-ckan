@@ -177,6 +177,18 @@
 	    font-weight: bold;
 	    letter-spacing: 0.03em;
 	}
+	
+	span.is-more p{
+		margin: 0px;
+	}
+	span.is-more a.more-link,
+	.more-link {
+		background-color: transparent;
+	    border: 0;
+	    border-radius: 0;
+	    margin-left: 0px;
+	    padding: 0px;
+	}
 /* END indicator information  */
 
 /* BEGIN - continuous browsing */
