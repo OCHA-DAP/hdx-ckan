@@ -14,6 +14,7 @@ import ckan.plugins.toolkit as tk
 import re
 import ckan.new_authz as new_authz
 import ckan.lib.activity_streams as activity_streams
+import ckan.model.package as package
 
 import ckanext.hdx_theme.helpers.counting_actions as counting
 
@@ -72,6 +73,18 @@ def hdx_get_activity_list(context, data_dict):
         'offset': offset,
         }
     return _activity_list(context, activity_stream, extra_vars)
+
+
+def hdx_find_license_name(license_id, license_name):
+    if license_name == None or len(license_name) == 0 or license_name == license_id:
+        original_license_list = (
+            l.as_dict() for l in package.Package._license_register.licenses)
+        license_dict = {l['id']: l['title']
+                        for l in original_license_list}
+        if license_id in license_dict:
+            return license_dict[license_id]
+    return license_name
+
 
 #code copied from activity_streams.activity_list_to_html and modified to return only the activity list
 def _activity_list(context, activity_stream, extra_vars):
