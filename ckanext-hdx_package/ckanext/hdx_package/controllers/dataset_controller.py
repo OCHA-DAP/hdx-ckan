@@ -555,7 +555,7 @@ class DatasetController(PackageController):
                 {'resource': resource, 'package': c.pkg_dict})
 
         # Is this an indicator? Load up graph data
-        # c.pkg_dict['indicator'] = 1
+        #c.pkg_dict['indicator'] = 1
         try:
             if int(c.pkg_dict['indicator']):
                 c.pkg_dict['graph'] = '{}'
