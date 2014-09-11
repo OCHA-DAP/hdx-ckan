@@ -910,7 +910,7 @@
 	.module .pagination li a {
 	    border-bottom: medium none;
 	    border-top: medium none;
-	    font-family: 'Gotham Book', sans-serif;
+	    font-family: 'Gotham-Book', sans-serif;
 	    font-weight: 400;
         font-size: 16px;
         color: #000000;
@@ -1026,7 +1026,7 @@
         font-size: 16px;
     }
     .nav-facet .list-items a .float-right {
-        font-family: "Gotham Book", sans-serif;
+        font-family: "Gotham-Book", sans-serif;
         font-weight: 400;
         font-size: 14px;
     }
