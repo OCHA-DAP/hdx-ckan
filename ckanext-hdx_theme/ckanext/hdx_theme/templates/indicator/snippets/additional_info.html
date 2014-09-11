@@ -38,9 +38,9 @@
      
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
-    	<td class="dataset-details">
+    	<td class="dataset-details  metadata-link">
         	{% if pkg_dict.license_id %}
-				<span property="dc:rights">{{ pkg_dict.license_title }}</span>
+				<span property="dc:rights"><a href="/about/license">{{ pkg_dict.license_title }}</a></span>
 				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
 				: {{h.render_markdown(pkg_dict.license_other)}}
 				{% endif %}
