@@ -79,7 +79,7 @@
 	}
 	
 	h2 {
-	    font-family: 'Gotham Book', sans-serif;
+	    font-family: 'Gotham-Book', sans-serif;
 	    font-weight: 400;
 	    font-size: 12px;
 	    letter-spacing: 0em;
@@ -95,6 +95,9 @@
 	.capitalize{
 		text-transform: capitalize;
 	}
+/* END activity stream */
+	
+/* BEGIN indicator information */
 	
 	.notes.embedded-content {
 	    font-family: 'Source Sans Pro',sans-serif;
@@ -123,10 +126,58 @@
 	}
 	
 	.table-bordered.table-condensed.mTop20 tbody tr th.dataset-label {
-    	max-width: 175px;
+    	max-width: 200px;
+    	width: 175px
 	}
+	
+	.table-bordered.table-condensed.mTop20 tbody tr td.dataset-details{
+	   width: 100%;
+	}
+	
+	.metadata-link a, a:hover, a:focus {
+	   	font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    color: #007ce0;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	    text-decoration: none;
+	}
+	
+	.tag-wrapper {
+        margin-right: none;
+        float: left;
+    }
+        
+    .tag-wrapper .tag{
+        background-color: #f2645a;
+        font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.03em;
+	    opacity: 1;
+	    text-decoration: none;
+    }
+    
+    .tag-wrapper .tag:hover, .tag-wrapper .tag:focus {
+        background-color: #ce554d;
+        border: none;
+        box-shadow: none;
+        font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.03em;
+	    opacity: 1;
+	    text-decoration: none;
+    }
 
-/* END activity stream */
+	.resource-item .heading {
+	    color: #000000;
+	    font-size: 14px;
+	    font-weight: bold;
+	    letter-spacing: 0.03em;
+	}
+/* END indicator information  */
 
 /* BEGIN - continuous browsing */
 	.cb-row{
