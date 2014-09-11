@@ -51,7 +51,7 @@
 	      <th scope="row" class="dataset-label">{{ _("License") }}</th>
 	      <td class="dataset-details">
 	      	{% if pkg_dict.license_id %}
-	      		<span property="dc:rights">{{ pkg_dict.license_title }}</span>
+	      		<span property="dc:rights">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</span>
 	      		{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
 	      		: {{h.render_markdown(pkg_dict.license_other)}}
 	      		{% endif %}
