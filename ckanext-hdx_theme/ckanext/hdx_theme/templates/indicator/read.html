@@ -31,7 +31,7 @@
   </div>
   <div class="mL30">
     {% block package_additional_info %}
-	    {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+	    {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
 	    <script> 
 	      $(document).ready(function(){
 	        //Patch to fix a weird bug we can't figure out
@@ -69,7 +69,7 @@
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      <h2>[continuous browsing placeholder]</h2>
+      {% snippet "indicator/snippets/continuous_browsing.html" %}
     </div>
   </div>
 {% endblock %}
