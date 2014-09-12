@@ -7,10 +7,26 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       var CHART_COLORS = ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'];
       var elementId = '#' + $(this.el).attr('id');
 
+      var zoomEventNoRedraw = function(w, domain){
+        var dif = w[1] - w[0]; //number of data points shown
+
+        var MAGIC = 30; //magic number under which the country names can be displayed
+        if (dif < MAGIC){
+          c3_chart.internal.config.axis_x_tick_culling = false;
+        } else {
+          c3_chart.internal.config.axis_x_tick_culling_max =  Math.floor(data.length*MAGIC/dif);
+          c3_chart.internal.config.axis_x_tick_culling = true;
+        }
+      };
+      var zoomEvent = function (w, domain){
+        zoomEventNoRedraw(w, domain);
+        c3_chart.internal.redrawForBrush();
+      };
+
       var chart_config = {
         bindto: elementId,
         padding: {
-          top: 40
+          bottom: 20
         },
         color: {
           pattern: CHART_COLORS
@@ -27,13 +43,12 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           type: 'bar'
         },
         subchart: {
-          show: this.options.subchart
-        },
-        padding:{
-          bottom: 20
+          show: this.options.subchart,
+          onbrush: zoomEventNoRedraw
         },
         zoom: {
-          enabled: this.options.zoom
+          enabled: this.options.zoom,
+          onzoom: zoomEvent
         },
         legend:{
           show: false
@@ -68,7 +83,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           }
         }
       };
-      c3_chart = c3.generate(chart_config);
+      var c3_chart = c3.generate(chart_config);
       c3_chart.internal.margin2.top=260;
       jQuery.ajax({
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
@@ -94,24 +109,6 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     buildChart: function(alldata, c3_chart) {
       var data, elementId;
 
-      //sort data points based on value
-//      alldsata.sort(function (a,b){
-//        return a.value - b.value;
-//      });
-
-//      data = [];
-//      //calculate a step so that we can have ~10 points in our graph
-//      var step = Math.floor(alldata.length / 10);
-//      if (step === 1)
-//        step = 2;
-//
-//      var i;
-//      for (i = 0; i < alldata.length; i+= step){
-//        data.push(alldata[i]);
-//      }
-//      //include the last value if it hasn't been included already
-//      if (i - step < alldata.length-1)
-//        data.push(alldata[alldata.length-1]);
       data = alldata;
       //trim names
       for (var dataEl in data){
