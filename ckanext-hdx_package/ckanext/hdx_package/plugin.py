@@ -58,7 +58,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                   action='file')
-        map.connect('/contribute', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='contribute')
         map.connect('dataset_preselect','/dataset/preselect', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:

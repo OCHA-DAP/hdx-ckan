@@ -41,7 +41,7 @@
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      {% snippet "indicator/snippets/continuous_browsing.html", followers=c.followers %}
+      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers %}
     </div>
   </div>
 {% endblock %}
