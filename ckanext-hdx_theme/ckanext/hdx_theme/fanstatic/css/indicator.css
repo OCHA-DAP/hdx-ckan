@@ -260,6 +260,9 @@
 	.cb-item-links li {
 		margin-top: 1px;
 	}
+	.cb-item-links span {
+		color: #777777;
+	}
 	.cb-border-wrapper {
 		border-left-width: 1px; 
 		border-left-style:solid; 
@@ -267,6 +270,7 @@
 		padding-left: 15px;
 		padding-right: 15px;
 		padding-bottom: 5px;
+		height: 185px;
 	}
 	
 /* END - continuous browsing */
