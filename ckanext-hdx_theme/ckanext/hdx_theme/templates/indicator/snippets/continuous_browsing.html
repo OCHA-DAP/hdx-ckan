@@ -16,28 +16,28 @@
 				</div>
 			</div>
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Supporting Topics'), count=2, 
-				links=[{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 1'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 21'},
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 3'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Some very long name that should be truncated by the tempalte'}, 
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 5'}] %}
+				links=[{'name':'Item 1'},{'name':'Item 2'},
+				{'name':'Item 3'},{'name':'Some very long name that should be truncated by the tempalte'}, 
+				{'name':'Item 4'}] %}
 			
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Supporting Locations'), count=240, 
-				links=[{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 1'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 21'},
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 3'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Some very long name that should be truncated by the tempalte'}, 
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 5'}] %}
+				links=[{'name':'Item 1'},{'name':'Item 2'},
+				{'name':'Item 3'},{'name':'Some very long name that should be truncated by the tempalte'}, 
+				{'name':'Item 4'}] %}
 				
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Downloads'), count=1297, 
-				links=[{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 1'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 21'},
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 3'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Some very long name that should be truncated by the tempalte'}, 
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 5'}] %}
+				links=[{'name':'Item 1'},{'name':'Item 2'},
+				{'name':'Item 3'},{'name':'Some very long name that should be truncated by the tempalte'}, 
+				{'name':'Item 4'}] %}
 			
 			{% set followers_num = followers|length %}
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Follower'),_('Followers'), False), count=followers_num, 
 				links=followers %}
 			
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Contributors'), count=1, 
-				links=[{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 1'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 21'},
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 3'},{'url':'https://data.hdx.rwlabs.org/', 'name':'Some very long name that should be truncated by the tempalte'}, 
-				{'url':'https://data.hdx.rwlabs.org/', 'name':'Item 5'}] %}
+				links=[{'name':'Item 1'},{'name':'Item 2'},
+				{'name':'Item 3'},{'name':'Some very long name that should be truncated by the tempalte'}, 
+				{'name':'Item 4'}] %}
 		</div>
 	</div>
 </div>
