@@ -106,7 +106,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
-            'hdx_user_show' : hdx_actions.hdx_user_show
+            'hdx_user_show' : hdx_actions.hdx_user_show,
+            'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values
+            #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
             
         }
     def get_auth_functions(self):

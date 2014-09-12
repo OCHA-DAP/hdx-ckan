@@ -153,11 +153,17 @@ def hdx_linked_user(user, maxlength=0):
     changed_response = re.sub(r"<img[^>]+/>","",str(response))
     return h.literal(changed_response)
 
-def hdx_show_singular_plural(num, singular_word, plural_word):
+def hdx_show_singular_plural(num, singular_word, plural_word, show_number=True):
+    response = None
     if num == 1:
-        return str(num) + ' ' + singular_word
+        response = singular_word
     else:
-        return str(num) + ' ' + plural_word
+        response = plural_word
+
+    if show_number:
+        return str(num) + ' ' + response
+    else:
+        return response
 
 def hdx_num_of_new_related_items():
     max_days = 30;
@@ -226,17 +232,19 @@ def hdx_organizations_available_with_roles():
     return organizations_available
 
 def hdx_remove_schema_and_domain_from_url(url):
+    urlTuple = urlparse.urlparse(url)
     if url.endswith('/preview'):
         # this is the case when the file needs to be transformed
         # before it can be previewed
-        urlTuple = urlparse.urlparse(url)
 
         modifiedTuple = (('', '') + urlTuple[2:6])
-        modifiedUrl = urlparse.urlunparse(modifiedTuple)
-        return modifiedUrl
     else:
-        # this is for txt files, it is shown directly
-        return url
+        # this is for txt files
+        # we force https since otherwise the browser will 
+        # anyway block loading mixed active content
+        modifiedTuple = (('',) + urlTuple[1:6])
+    modifiedUrl = urlparse.urlunparse(modifiedTuple)
+    return modifiedUrl
 
 
 def hdx_get_ckan_config(config_name):

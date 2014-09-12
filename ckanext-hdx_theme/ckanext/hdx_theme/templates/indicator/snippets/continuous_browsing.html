@@ -1,0 +1,36 @@
+{#
+ Example:
+
+  {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers %}
+
+#}
+<div class="row">
+	<div class="col-xs-12 mTop60 mBottom65 paddingLeftHack paddingRightHack">
+		<div class="row cb-row">
+			<div class="col-xs-2 mTB30 cb-item">
+				<div class="cb-explore">
+				{{ _('Explore') }} <br /> 
+				{% set title=pkg.title or pkg.name %}
+				{% set url=h.url_for(controller='package', action='search', q=title) %}
+				"<a href="{{ url }}" title="{{ title }}">{{ title|truncate(38, False) }}</a>" <br />
+				{{ _('in the HDX Collection') }}
+				</div>
+			</div>
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Supporting Topics'), count=' ', 
+				links=[{'name':_('Coming soon...')}] %}
+			
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Supporting Locations'), count=' ', 
+				links=[{'name':_('Coming soon...')}] %}
+				
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Downloads'), count=' ', 
+				links=[{'name':_('Coming soon...')}] %}
+			
+			{% set followers_num = followers|length %}
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Follower'),_('Followers'), False), count=followers_num, 
+				links=followers %}
+			
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Contributors'), count=' ', 
+				links=[{'name':_('Coming soon...')}] %}
+		</div>
+	</div>
+</div>

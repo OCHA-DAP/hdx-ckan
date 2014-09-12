@@ -149,8 +149,10 @@ smtp.starttls = False
 #smtp.mail_from =
 
 #hdx.orgrequest.email = hdx.feedback@gmail.com
-hdx.orgrequest.sendmails = false
+hdx.orgrequest.sendmails = true
 hdx.cache.onstartup = true
 hdx.homepage.extrasources = 13
-hdx.datapreview.url = //jsonpdataproxy.appspot.com
+hdx.datapreview.url = //data.hdx.rwlabs.org/dataproxy
 hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
+
+hdx.rest.indicator.endpoint = https://manage.hdx.rwlabs.org/hdx/public/api2/values

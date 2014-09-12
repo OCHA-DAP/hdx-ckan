@@ -1,3 +1,4 @@
+import re
 import ckan.lib.helpers as h
 from ckan.common import (
      c, request
@@ -12,13 +13,17 @@ import logging
 import ckan.plugins.toolkit as tk
 import re
 import ckan.new_authz as new_authz
+import ckan.lib.activity_streams as activity_streams
+import ckan.model.package as package
 
 import ckanext.hdx_theme.helpers.counting_actions as counting
 
 from webhelpers.html import escape, HTML, literal, url_escape
 from ckan.common import _
 
+get_action = logic.get_action
 log = logging.getLogger(__name__)
+
 
 def hdx_user_org_num(user_id):
     context = {'model': model, 'session': model.Session,
@@ -55,3 +60,90 @@ def hdx_organizations_available_with_roles():
     organizations_available.sort(key=lambda y:
                                 y['display_name'].lower())
     return organizations_available
+
+
+def hdx_get_activity_list(context, data_dict):
+    activity_stream = get_action('package_activity_list')(context, data_dict)
+    #activity_stream = package_activity_list(context, data_dict)
+    offset = int(data_dict.get('offset', 0))
+    extra_vars = {
+        'controller': 'package',
+        'action': 'activity',
+        'id': data_dict['id'],
+        'offset': offset,
+        }
+    return _activity_list(context, activity_stream, extra_vars)
+
+
+def hdx_find_license_name(license_id, license_name):
+    if license_name == None or len(license_name) == 0 or license_name == license_id:
+        original_license_list = (
+            l.as_dict() for l in package.Package._license_register.licenses)
+        license_dict = {l['id']: l['title']
+                        for l in original_license_list}
+        if license_id in license_dict:
+            return license_dict[license_id]
+    return license_name
+
+
+#code copied from activity_streams.activity_list_to_html and modified to return only the activity list
+def _activity_list(context, activity_stream, extra_vars):
+    '''Return the given activity stream 
+
+    :param activity_stream: the activity stream to render
+    :type activity_stream: list of activity dictionaries
+    :param extra_vars: extra variables to pass to the activity stream items
+        template when rendering it
+    :type extra_vars: dictionary
+
+
+    '''
+    activity_list = [] # These are the activity stream messages.
+    for activity in activity_stream:
+        detail = None
+        activity_type = activity['activity_type']
+        # Some activity types may have details.
+        if activity_type in activity_streams.activity_stream_actions_with_detail:
+            details = logic.get_action('activity_detail_list')(context=context,
+                data_dict={'id': activity['id']})
+            # If an activity has just one activity detail then render the
+            # detail instead of the activity.
+            if len(details) == 1:
+                detail = details[0]
+                object_type = detail['object_type']
+
+                if object_type == 'PackageExtra':
+                    object_type = 'package_extra'
+
+                new_activity_type = '%s %s' % (detail['activity_type'],
+                                            object_type.lower())
+                if new_activity_type in activity_streams.activity_stream_string_functions:
+                    activity_type = new_activity_type
+
+        if not activity_type in activity_streams.activity_stream_string_functions:
+            raise NotImplementedError("No activity renderer for activity "
+                "type '%s'" % activity_type)
+
+        if activity_type in activity_streams.activity_stream_string_icons:
+            activity_icon = activity_streams.activity_stream_string_icons[activity_type]
+        else:
+            activity_icon = activity_streams.activity_stream_string_icons['undefined']
+
+        activity_msg = activity_streams.activity_stream_string_functions[activity_type](context,
+                activity)
+
+        # Get the data needed to render the message.
+        matches = re.findall('\{([^}]*)\}', activity_msg)
+        data = {}
+        for match in matches:
+            snippet = activity_streams.activity_snippet_functions[match](activity, detail)
+            data[str(match)] = snippet
+
+        activity_list.append({'msg': activity_msg,
+                              'type': activity_type.replace(' ', '-').lower(),
+                              'icon': activity_icon,
+                              'data': data,
+                              'timestamp': activity['timestamp'],
+                              'is_new': activity.get('is_new', False)})
+    extra_vars['activities'] = activity_list
+    return extra_vars   

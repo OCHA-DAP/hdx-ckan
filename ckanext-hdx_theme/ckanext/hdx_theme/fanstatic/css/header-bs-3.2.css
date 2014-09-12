@@ -79,3 +79,10 @@
         float: left;
     }
 /* END Fix search widget */
+
+
+/* Utility classes */
+    .whiteBackground{
+        background-color: #ffffff;
+    }
+/* END Utility classes */

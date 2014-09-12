@@ -547,6 +547,9 @@
     .mBottom35{
         margin-bottom: 35px;
     }
+    .mBottom65{
+        margin-bottom: 65px;
+    }
     .mLR45{
         margin-left: 45px;
         margin-right: 45px;
@@ -671,9 +674,17 @@
         font-weight: 400;
         font-size: 12px;
         border: none;
+        letter-spacing: 0;
 
         background-color: #888888;
         color: #ffffff;
+    }
+
+    .btn-inverted{
+        color: #888888;
+        background-color: #FFFFFF;
+        border: 1px solid #cccccc;
+        box-shadow: none;
     }
 
     .btn:hover, .btn:focus, .btn.active {
@@ -681,6 +692,11 @@
         opacity: 0.7;
         box-shadow: none;
         color: #ffffff;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        letter-spacing: 0;
+        background-position: inherit;
     }
 
     .btn.hdx-btn.org-btn{
@@ -901,7 +917,7 @@
 	.module .pagination li a {
 	    border-bottom: medium none;
 	    border-top: medium none;
-	    font-family: 'Gotham Book', sans-serif;
+	    font-family: 'Gotham-Book', sans-serif;
 	    font-weight: 400;
         font-size: 16px;
         color: #000000;
@@ -1017,7 +1033,7 @@
         font-size: 16px;
     }
     .nav-facet .list-items a .float-right {
-        font-family: "Gotham Book", sans-serif;
+        font-family: "Gotham-Book", sans-serif;
         font-weight: 400;
         font-size: 14px;
     }
@@ -1219,3 +1235,17 @@ a, a:hover, a:focus{
     z-index: 1;
 }
 /* END Error messages position above floating elements */
+
+/* Tooltip style */
+    .tooltip{
+        text-transform: uppercase;
+        font-size: 10px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        opacity: 1;
+    }
+    .tooltip .tooltip-inner{
+        padding: 10px 15px;
+    }
+/* END Tooltip style */

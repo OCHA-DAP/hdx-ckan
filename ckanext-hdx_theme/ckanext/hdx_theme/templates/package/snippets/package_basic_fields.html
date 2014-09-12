@@ -5,6 +5,12 @@
   {% set package_creator = username %}
 {% endif %}
 
+{% if data.indicator %}
+  {% set indicator = data.indicator %}
+{% else %}
+  {% set indicator = 0 %}
+{% endif %}
+
 {% set onepage = onepage or 0 %}
 
 {% if data.title %}
@@ -125,6 +131,7 @@
         <label class="control-label" for="field-package-creator">{{ _('Creator') }} </label>
         <div class="controls">-->
       <input type="hidden" value="{{ package_creator }}" name="package_creator" id="field-package-creator"/>
+      <input type="hidden" value="{{ indicator }}" name="indicator" id="field-indicator"/>
     <!-- </div> 
   </div> -->
   {% endblock %}
