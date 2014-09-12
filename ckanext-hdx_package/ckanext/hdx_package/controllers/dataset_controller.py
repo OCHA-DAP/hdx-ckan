@@ -167,11 +167,6 @@ class DatasetController(PackageController):
             data_dict['state'] = 'none'
             return self.new(data_dict, errors, error_summary)
 
-    def contribute(self, error=None):
-        self.login(error)
-        vars = {'contribute':True}
-        return render('user/login.html', extra_vars=vars)
-
     def preselect(self):
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
         c.organizations_available = helpers.hdx_organizations_available_with_roles()
