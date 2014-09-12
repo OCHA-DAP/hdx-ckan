@@ -576,6 +576,13 @@ class DatasetController(PackageController):
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 10 }
         c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
+        
+        followers = get_action('dataset_follower_list')({'ignore_auth': True},
+                    {'id': c.pkg_dict['id']})
+        if followers and len(followers)>0:
+            c.followers = [{'url': h.url_for(controller='user', 
+                                action='read',id=f['name']), 'name':f['fullname'] or f['name']} 
+                                for f in followers]
 
         try:
             if int(c.pkg_dict['indicator']):

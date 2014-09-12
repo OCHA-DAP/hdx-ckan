@@ -18,6 +18,7 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
+import ckanext.hdx_package.helpers.helpers as hdx_helpers
 
 def run_on_startup():
     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -135,11 +136,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing')],
             })
         return schema
-    
-    
+
     def get_helpers(self):
-        return {'list_of_all_groups': cached_group_list}
-    
+        return {'list_of_all_groups': cached_group_list,
+                'hdx_find_license_name': hdx_helpers.hdx_find_license_name}
+
     def get_actions(self):
         from ckanext.hdx_package.helpers import helpers as hdx_actions
         return {

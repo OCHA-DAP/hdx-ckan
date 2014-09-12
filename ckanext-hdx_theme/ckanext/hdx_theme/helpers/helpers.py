@@ -153,11 +153,17 @@ def hdx_linked_user(user, maxlength=0):
     changed_response = re.sub(r"<img[^>]+/>","",str(response))
     return h.literal(changed_response)
 
-def hdx_show_singular_plural(num, singular_word, plural_word):
+def hdx_show_singular_plural(num, singular_word, plural_word, show_number=True):
+    response = None
     if num == 1:
-        return str(num) + ' ' + singular_word
+        response = singular_word
     else:
-        return str(num) + ' ' + plural_word
+        response = plural_word
+
+    if show_number:
+        return str(num) + ' ' + response
+    else:
+        return response
 
 def hdx_num_of_new_related_items():
     max_days = 30;

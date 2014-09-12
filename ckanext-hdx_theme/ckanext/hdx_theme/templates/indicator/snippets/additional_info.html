@@ -42,7 +42,7 @@
         	{% if pkg_dict.license_id %}
 				<span property="dc:rights"><a href="/about/license">{{ pkg_dict.license_title }}</a></span>
 				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
-				: {{h.render_markdown(pkg_dict.license_other)}}
+				: <span data-module="hdx_show_more" style="visibility:hidden">{{h.render_markdown(pkg_dict.license_other)}}</span>
 				{% endif %}
 				
 				{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
@@ -64,11 +64,11 @@
 
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
-		<td class="dataset-details">{{ h.render_markdown(pkg_dict.methodology) }}</td>
+		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.methodology) }}</span></td>
 	</tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
-		<td class="dataset-details">{{ h.render_markdown(pkg_dict.caveats) }}</td>
+		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
 	</tr>
 
 	<tr>
