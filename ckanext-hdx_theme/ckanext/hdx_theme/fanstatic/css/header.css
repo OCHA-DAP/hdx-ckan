@@ -631,7 +631,9 @@
     .mR35{
         margin-right: 35px;
     }
-
+    .mL15{
+        margin-left: 15px;
+    }
     .mL30{
         margin-left: 30px;
     }
@@ -768,6 +770,17 @@
         font-size: 14px;
         line-height: 20px;
         min-width: 0;
+    }
+
+    .label.label-small{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 9px;
+        letter-spacing: 0.01em;
+        line-height: 15px;
+        margin-right: 0;
+        padding: 0 5px;
+        margin-bottom: 3px;
     }
 /* END Label style */
 
