@@ -94,9 +94,11 @@
         content: "|";
         margin-left: 15px;
     }
-    .dataset-item .dataset-others .label-icons img{
+    .dataset-item .dataset-others .label-icons span{
         height: 15px;
+        font-size: 15px;
+        color: #888888;
         margin-left: 15px;
-        margin-top: -1px;
+        padding-top: 3px;
     }
 /* END Dataset list */

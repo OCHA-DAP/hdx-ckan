@@ -43,7 +43,7 @@ Example:
           </div>
           <div class="dataset-actions">
             <ul>
-              {% if not package.private %}
+              {% if package.private %}
                 <li>
                   <a>Preview</a>
                 </li>
@@ -54,9 +54,9 @@ Example:
                   <a>Follow this dataset</a>
                 </li>
               {% endif %}
-              {% if package.private %}
+              {% if not package.private %}
                 <li>
-                  <a>Request data</a>&nbsp;<img src="/images/svg/lock-blue.svg" style="height: 15px; margin-top: -4px;"/>
+                  <a>Request data</a>&nbsp;<span class="icon-lock" style="font-size: 15px; color:#007ce0"></span>
                 </li>
               {% endif %}
             </ul>
@@ -83,9 +83,9 @@ Example:
                 30 Kb
               </li>
               <li class="label-icons">
-                <img src="/images/svg/location-gray.svg" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" />
-                <img src="/images/svg/visualize-gray.svg"  title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" />
-                <img src="/images/svg/fire-gray.svg"  title="{{ _("Popular") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  />
+                <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                <span class="icon-visualize" title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                <span class="icon-fire" title="{{ _("Popular") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
                 {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
                 {% if banner %}
                   <span class="banner">{{ _('Popular') }}</span>
