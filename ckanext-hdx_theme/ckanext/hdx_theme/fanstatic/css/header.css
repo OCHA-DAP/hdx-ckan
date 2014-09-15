@@ -770,6 +770,7 @@
         font-size: 14px;
         line-height: 20px;
         min-width: 0;
+        vertical-align: middle;
     }
 
     .label.label-small{
@@ -777,7 +778,7 @@
         font-weight: 400;
         font-size: 9px;
         letter-spacing: 0.01em;
-        line-height: 15px;
+        line-height: 16px;
         margin-right: 0;
         padding: 0 5px;
         margin-bottom: 3px;
