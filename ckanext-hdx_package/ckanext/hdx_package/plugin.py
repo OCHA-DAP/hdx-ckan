@@ -145,7 +145,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {
                 'package_update': update.package_update,
                 'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
-                'hdx_package_update_metadata': update.hdx_package_update_metadata
+                'hdx_package_update_metadata': update.hdx_package_update_metadata,
+                'tag_autocomplete': hdx_actions.hdx_tag_autocomplete
                 }
 
     def get_auth_functions(self):
