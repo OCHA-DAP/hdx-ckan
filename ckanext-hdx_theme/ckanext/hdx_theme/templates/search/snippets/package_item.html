@@ -1,0 +1,100 @@
+{#
+Displays a single of dataset.
+
+package        - A package to display.
+item_class     - The class name to use on the list item.
+hide_resources - If true hides the resources (default: false).
+banner         - If true displays a popular banner (default: false).
+truncate       - The length to trucate the description to (default: 180)
+truncate_title - The length to truncate the title to (default: 80).
+
+Example:
+
+  {% snippet 'snippets/package_item.html', package=c.datasets[0] %}
+
+#}
+{% set truncate = truncate or 180 %}
+{% set truncate_title = truncate_title or 80 %}
+{% set title = package.title or package.name %}
+{% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
+{% set updated_time = package.metadata_modified or package.metadata_created%}
+{% set f_updated_time = h.render_datetime(updated_time) %}
+{% set rev_id = h.get_last_revision_package(package.id) %}
+{% set last_user = h.get_last_modifier_user(rev_id) %}
+
+<li class="list-items {{ item_class or "dataset-item" }}">
+  {% block package_item_content %}
+    <div class="row list-items dataset-content mTB15">
+      <div class="col-xs-6">
+        <div class="mL15">
+          <div class="dataset-heading">
+            {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
+          </div>
+          <div class="dataset-updated">
+            {% if package.organization %}
+              <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
+                {{ package.organization.title or package.organization.name }}
+              </a>
+            {% else %}
+              <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
+                {{ last_user.fullname }}
+              </a>
+            {% endif %} - {{f_updated_time}}
+          </div>
+          <div class="dataset-actions">
+            <ul>
+              {% if not package.private %}
+                <li>
+                  <a>Preview</a>
+                </li>
+                <li>
+                  <a>Download</a>
+                </li>
+                <li>
+                  <a>Follow this dataset</a>
+                </li>
+              {% endif %}
+              {% if package.private %}
+                <li>
+                  <a>Request data</a>&nbsp;<img src="/images/svg/lock-blue.svg" style="height: 15px; margin-top: -4px;"/>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-6">
+        <div class="dataset-description">
+          {% if notes %}
+            {{ notes|urlize }}
+          {% else %}
+            <p class="empty">{{ _("This dataset has no description") }}</p>
+          {% endif %}
+        </div>
+        <div class="dataset-others">
+          {% if package.resources and not hide_resources %}
+            <ul class="list-items dataset-resources unstyled">
+              {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                <li>
+                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
+                </li>
+              {% endfor %}
+              <li class="label-size">
+                30 Kb
+              </li>
+              <li class="label-icons">
+                <img src="/images/svg/location-gray.svg" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" />
+                <img src="/images/svg/visualize-gray.svg"  title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" />
+                <img src="/images/svg/fire-gray.svg"  title="{{ _("Popular") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  />
+                {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
+                {% if banner %}
+                  <span class="banner">{{ _('Popular') }}</span>
+                {% endif %}
+              </li>
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+</li>
