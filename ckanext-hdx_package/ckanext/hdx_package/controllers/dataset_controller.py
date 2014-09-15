@@ -568,7 +568,7 @@ class DatasetController(PackageController):
 
        #changes done for indicator
        # c.package_activity_stream = get_action('package_activity_list_html')(context, {'id': c.pkg_dict['id']})
-        act_data_dict = {'id': c.pkg_dict['id'], 'limit': 10 }
+        act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7 }
         c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
         
