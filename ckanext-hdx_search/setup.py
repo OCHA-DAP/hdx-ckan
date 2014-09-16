@@ -24,7 +24,6 @@ setup(
     ],
     entry_points='''
         [ckan.plugins]
-        # Add plugins here, e.g.
-        # myplugin=ckanext.hdx_search.plugin:PluginClass
+        hdx_search=ckanext.hdx_search.plugin:HDXSearchPlugin
     ''',
 )

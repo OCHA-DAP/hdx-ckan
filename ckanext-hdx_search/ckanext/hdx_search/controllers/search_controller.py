@@ -1,32 +1,34 @@
 
 import logging
 from urllib import urlencode
-import datetime
-import cgi
+# import datetime
+# import cgi
 
-from ckanext.hdx_package.helpers import helpers
+# from ckanext.hdx_package.helpers import helpers
 
-from pylons import config
-from genshi.template import MarkupTemplate
-from genshi.template.text import NewTextTemplate
-from paste.deploy.converters import asbool
+# from pylons import config
+# from genshi.template import MarkupTemplate
+# from genshi.template.text import NewTextTemplate
+# from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.lib.maintain as maintain
-import ckan.lib.package_saver as package_saver
-import ckan.lib.i18n as i18n
-import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.lib.accept as accept
+# import ckan.lib.package_saver as package_saver
+# import ckan.lib.i18n as i18n
+# import ckan.lib.navl.dictization_functions as dict_fns
+# import ckan.lib.accept as accept
 import ckan.lib.helpers as h
 import ckan.model as model
-import ckan.lib.datapreview as datapreview
-import ckan.lib.plugins
-import ckan.new_authz as new_authz
+# import ckan.lib.datapreview as datapreview
+# import ckan.lib.plugins
+# import ckan.new_authz as new_authz
+import ckan.plugins as p
+
 
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
-from ckan.controllers.home import CACHE_PARAMETERS
+# from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
 
@@ -39,28 +41,46 @@ NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
-tuplize_dict = logic.tuplize_dict
-clean_dict = logic.clean_dict
-parse_params = logic.parse_params
-flatten_to_string_key = logic.flatten_to_string_key
+# tuplize_dict = logic.tuplize_dict
+# clean_dict = logic.clean_dict
+# parse_params = logic.parse_params
+# flatten_to_string_key = logic.flatten_to_string_key
 
-CONTENT_TYPES = {
-	'text': 'text/plain;charset=utf-8',
-	'html': 'text/html;charset=utf-8',
-	'json': 'application/json;charset=utf-8',
-}
+# CONTENT_TYPES = {
+# 	'text': 'text/plain;charset=utf-8',
+# 	'html': 'text/html;charset=utf-8',
+# 	'json': 'application/json;charset=utf-8',
+# }
 
-lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
+# lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
 
-class SearchController(PackageController):
+def _encode_params(params):
+	return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
+			for k, v in params]
+
+def url_with_params(url, params):
+    params = _encode_params(params)
+    return url + u'?' + urlencode(params)
+
+
+def search_url(params, package_type=None):
+    if not package_type or package_type == 'dataset':
+        url = h.url_for(controller='package', action='search')
+    else:
+        url = h.url_for('{0}_search'.format(package_type))
+    return url_with_params(url, params)
+
+
+class HDXSearchController(PackageController):
 
 	def package_search(self):
-		print 'HELLO'
 		#Redirect to search
-		url = h.url_for(controller='ckanext.hdx_search.search_controller',
+		params = request.params.items()
+		uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
 										action='search')
+		url = url_with_params(uri, params)
 		redirect(url)
 
 
