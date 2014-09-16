@@ -4,6 +4,8 @@ import datetime
 import cgi
 
 from ckanext.hdx_package.helpers import helpers
+#import ckanext.hdx_package.plugin.HDXPackagePlugin as hdx_package
+from ckanext.hdx_package.plugin import  HDXPackagePlugin as hdx_package
 
 from pylons import config
 from genshi.template import MarkupTemplate
@@ -164,11 +166,6 @@ class DatasetController(PackageController):
                                  errors, error_summary)
             data_dict['state'] = 'none'
             return self.new(data_dict, errors, error_summary)
-
-    def contribute(self, error=None):
-        self.login(error)
-        vars = {'contribute':True}
-        return render('user/login.html', extra_vars=vars)
 
     def preselect(self):
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
@@ -553,6 +550,7 @@ class DatasetController(PackageController):
                 {'resource': resource, 'package': c.pkg_dict})
 
         # Is this an indicator? Load up graph data
+        #c.pkg_dict['indicator'] = 1
         try:
             if int(c.pkg_dict['indicator']):
                 c.pkg_dict['graph'] = '{}'
@@ -567,6 +565,19 @@ class DatasetController(PackageController):
 
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
+
+       #changes done for indicator
+       # c.package_activity_stream = get_action('package_activity_list_html')(context, {'id': c.pkg_dict['id']})
+        act_data_dict = {'id': c.pkg_dict['id'], 'limit': 10 }
+        c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
+        c.related_count = c.pkg.related_count
+        
+        followers = get_action('dataset_follower_list')({'ignore_auth': True},
+                    {'id': c.pkg_dict['id']})
+        if followers and len(followers)>0:
+            c.followers = [{'url': h.url_for(controller='user', 
+                                action='read',id=f['name']), 'name':f['fullname'] or f['name']} 
+                                for f in followers]
 
         try:
             if int(c.pkg_dict['indicator']):

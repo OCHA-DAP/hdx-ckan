@@ -53,3 +53,8 @@ class LoginController(ckan_user.UserController):
                               action='login', came_from=came_from)
             else:
                 return self.login(error=err)
+    
+    def contribute(self, error=None):
+        self.login(error)
+        vars = {'contribute':True}
+        return base.render('user/login.html', extra_vars=vars)

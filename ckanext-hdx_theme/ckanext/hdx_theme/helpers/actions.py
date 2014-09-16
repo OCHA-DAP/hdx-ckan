@@ -2,6 +2,7 @@ import logging
 import datetime
 import requests
 
+
 from pylons import config
 import sqlalchemy
 
@@ -20,10 +21,12 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 
+
 from ckan.common import c, _
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
+
 
 log = logging.getLogger(__name__)
 
@@ -371,3 +374,4 @@ def _add_to_filter_list(src, param_name, filter_list):
             filter_list.append('{}={}'.format(param_name, src))
             
     return filter_list
+

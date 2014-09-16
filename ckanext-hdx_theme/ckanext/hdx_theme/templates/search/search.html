@@ -1,0 +1,74 @@
+{% extends "page-new.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Datasets'), controller='package', action='search', highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+  <section class="list-items module">
+    <div class="list-items module-content mT35">
+      {% block page_primary_action %}
+      {% endblock %}
+      {% block form %}
+        {% set facets = {
+          'fields': c.fields_grouped,
+          'search': c.search_facets,
+          'titles': c.facet_titles,
+          'translated_fields': c.translated_fields,
+          'remove_field': c.remove_field }
+        %}
+        {% set sorting = [
+          (_('Relevance'), 'score desc, metadata_modified desc'),
+          (_('Name Ascending'), 'title_string asc'),
+          (_('Name Descending'), 'title_string desc'),
+          (_('Last Modified'), 'metadata_modified desc'),
+          (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
+        %}
+        {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
+      {% endblock %}
+
+      {% block package_search_results_list %}
+        <div class="list-header">
+          <span class="mL15 list-header-title">
+            Datasets [no]
+          </span>
+          <span class="mL15 list-header-showall">
+            <a>Show all datasets</a>
+          </span>
+          <span class="pull-right list-header-actions">
+            ACTIONS
+          </span>
+        </div>
+      {{ h.snippet('search/snippets/package_list.html', packages=c.page.items) }}
+      {% endblock %}
+    </div>
+
+    {% block page_pagination %}
+    {{ c.page.pager(q=c.q) }}
+    {% endblock %}
+  </section>
+
+  {% block package_search_results_api %}
+  {% endblock %}
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/dataset_search.css" />
+  {% resource 'hdx_theme/search' %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+{% endblock %}
+
+{% block  global_dataset_input_search%}
+  <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
+{% endblock %}

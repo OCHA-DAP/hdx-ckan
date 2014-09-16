@@ -16,10 +16,11 @@
 	  margin: 10px 0;
 	  padding: 0;
 	  list-style-type: none;
+	  background: none;
 	}
 	
 	.activity .item {
-	    margin: 0 0 5px;
+	    margin: 0 0 0px;
 	    padding: 0;
 	    position: relative;
 	}
@@ -44,7 +45,7 @@
 	}
 	
 	.dsb-activity-item{
-	    margin-bottom: 30px;
+	    margin-bottom: 25px;
 	}
 	
 	div.dsb-activity-item p span.actor a, a:hover, a:focus {
@@ -70,7 +71,7 @@
 	.activity .item .actor .gravatar {
 	    left: 0px;
 	    position: absolute;
-	    top: 0;
+	    top: 5px;
 	}
 	.more{
 	    float: right;
@@ -78,7 +79,7 @@
 	}
 	
 	h2 {
-	    font-family: 'Gotham Book', sans-serif;
+	    font-family: 'Gotham-Book', sans-serif;
 	    font-weight: 400;
 	    font-size: 12px;
 	    letter-spacing: 0em;
@@ -94,5 +95,183 @@
 	.capitalize{
 		text-transform: capitalize;
 	}
-
 /* END activity stream */
+	
+/* BEGIN indicator information */
+	
+	.notes.embedded-content {
+	    font-family: 'Source Sans Pro',sans-serif;
+	    font-size: 14px;
+	    font-weight: 400;
+	    max-width: none;
+	}
+	
+	.additional-info table, .additional-info table th, .additional-info table td, .additional-info table tr {
+	    border: 0 none;
+	    border-radius: 0 !important;
+	    vertical-align: top;
+	}
+	.additional-info table tr {
+	    font-family: 'Source Sans Pro',sans-serif;
+	    font-size: 14px;
+	    font-weight: 400;
+	    height: 38px;
+	}
+	
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  	  border-top: none;
+	}
+	.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    	border: none;
+	}
+	
+	.table-bordered.table-condensed.mTop20 tbody tr th.dataset-label {
+    	max-width: 200px;
+    	width: 175px
+	}
+	
+	.table-bordered.table-condensed.mTop20 tbody tr td.dataset-details{
+	   width: 100%;
+	}
+	
+	.metadata-link a, a:hover, a:focus {
+	   	font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    color: #007ce0;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	    text-decoration: none;
+	}
+	
+	.tag-wrapper {
+        margin-right: 0;
+        float: left;
+    }
+        
+    .tag-wrapper .tag{
+        background-color: #f2645a;
+        font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.03em;
+	    opacity: 1;
+	    text-decoration: none;
+    }
+    
+    .tag-wrapper .tag:hover, .tag-wrapper .tag:focus {
+        background-color: #ce554d;
+        border: none;
+        box-shadow: none;
+        font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.03em;
+	    opacity: 1;
+	    text-decoration: none;
+    }
+
+	.resource-item .heading {
+	    color: #000000;
+	    font-size: 14px;
+	    font-weight: bold;
+	    letter-spacing: 0.03em;
+	}
+	
+	span.is-more p{
+		margin: 0px;
+	}
+	span.is-more a.more-link,
+	.more-link {
+		background-color: transparent;
+	    border: 0;
+	    border-radius: 0;
+	    margin-left: 0px;
+	    padding: 0px;
+	}
+/* END indicator information  */
+
+/* BEGIN - continuous browsing */
+	.cb-row{
+		background-color: #F6F6F6; 
+		background-image: url('/images/backgrounds/continuous-browsing.png');
+		background-repeat: no-repeat;
+		background-position: left bottom;
+		height: 265px;
+	}
+	.cb-explore {
+		font-family: 'Gotham-Book', sans-serif;
+		font-size: 12px;
+		color: #333333;
+		opacity: 1;
+		letter-spacing: 0em;
+		text-align: center;
+		text-transform: uppercase;
+		margin-left: 32px;
+		margin-right: 32px;
+		
+		/* This is need for vertical center alignment */
+		position: absolute;
+		top: 50%;
+		margin-top: -60px;
+	}
+	.cb-explore a, .cb-explore a:hover {
+		font-family: 'Gotham-Bold', sans-serif;
+		font-weight: 400;
+		color: #007CE0;
+		font-size: 12px;
+		letter-spacing: 0em;
+	}
+	.cb-item {
+		height: 205px;
+		padding-left: 0px;
+		padding-right: 0px;
+	}
+	.cb-item-count{
+		font-family: 'Gotham-Light', sans-serif;
+		font-size: 24px;
+		color: #333333;
+		opacity: 1;
+		letter-spacing: 0.01em;
+		text-align: center;
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.cb-item-name{
+		font-family: 'Gotham-Book', sans-serif;
+		font-size: 12px;
+		text-transform: uppercase;
+		color: #333333;
+		opacity: 1;
+		letter-spacing: 0.01em;
+		text-align: center;
+		padding-bottom: 12px;
+		padding-top: 12px;
+		height: 64px;
+	}
+	.cb-item-links, .cb-item-links a, .cb-item-links a:hover {
+		font-family: 'Source Sans Pro', sans-serif;
+		font-size: 14px;
+		color: #007CE0;
+		opacity: 1;
+		letter-spacing: 0.01em;
+		text-align: center;
+	}
+	.cb-item-links li {
+		margin-top: 1px;
+	}
+	.cb-border-wrapper {
+		border-left-width: 1px; 
+		border-left-style:solid; 
+		border-left-color: #E4E4E4;
+		padding-left: 15px;
+		padding-right: 15px;
+		padding-bottom: 5px;
+	}
+	
+/* END - continuous browsing */
+
+
+#chart-container svg > g:nth-child(3) .c3-axis-x {
+    opacity: 0 !important;
+}

@@ -8,22 +8,40 @@
 
 {% block secondary %}
   <div class="border-right-grey">
-		<h2 class="uppercase">{{_('Activity')}}</h2>
-	    <span class="more">See all</span>
-    {{ c.package_activity_stream | safe }}
+        <h2 class="uppercase">{{_('Activity')}}</h2>
+        <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span>
+     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
   </div>
 {% endblock %}
 
 {% block primary %}
-  <div>
-    <h2>[content placeholder]</h2>
+  <div class="mL30">
+    {% block package_notes %}
+        {% if c.pkg_notes_formatted %}
+          <div class="notes embedded-content">
+            {{ c.pkg_notes_formatted }}
+          </div>
+        {% endif %}
+    {% endblock %}
   </div>
+  <div class="mL30">
+      {% block package_resources %}
+        {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+      {% endblock %}
+  </div>
+  <div class="mL30">
+    {% block indicator_additional_info %}
+	    {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
+  	{% endblock %}
+  	
+  </div>
+  
 {% endblock %}
 
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      <h2>[continuous browsing placeholder]</h2>
+      {% snippet "indicator/snippets/continuous_browsing.html", followers=c.followers %}
     </div>
   </div>
 {% endblock %}
@@ -36,4 +54,8 @@
 {% block scripts %}
   {{ super() }}
   {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/jquery.more' %}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
 {% endblock %}
