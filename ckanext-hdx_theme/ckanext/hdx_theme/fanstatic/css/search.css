@@ -4,10 +4,31 @@
     }
 /* END Set page background */
 
+/* Style search widget */
+    .module-content:first-child{
+        padding-top: 0;
+    }
+
+    header.module-content.page-header{
+        margin-top: 35px;
+    }
+
+    .search-form .control-order-by{
+        margin-top: 35px;
+    }
+
+    .list-items.search-form h2 {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 700;
+        font-size: 28px;
+        color: #000000;
+        letter-spacing: 0.01em;
+    }
+/* END Style search widget */
 
 /* Dataset list */
     .dataset-item {
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid #cccccc;
         margin: 0;
     }
     .dataset-item .dataset-heading {
@@ -102,3 +123,30 @@
         padding-top: 3px;
     }
 /* END Dataset list */
+
+/* List header */
+    .list-header {
+        height: 50px;
+        background-color: #edf6fd;
+        border-bottom: 1px solid #cccccc;
+        vertical-align: middle;
+        line-height: 50px;
+    }
+
+    .list-header .list-header-title {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        color: #333333;
+        letter-spacing: 0.03em;
+    }
+
+    .list-header .list-header-showall {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #007ce0;
+        letter-spacing: 0.03em;
+    }
+
+/* END List header */

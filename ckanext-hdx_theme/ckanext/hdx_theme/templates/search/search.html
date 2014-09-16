@@ -27,10 +27,21 @@
           (_('Last Modified'), 'metadata_modified desc'),
           (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
         %}
-        {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false %}
+        {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
       {% endblock %}
 
       {% block package_search_results_list %}
+        <div class="list-header">
+          <span class="mL15 list-header-title">
+            Datasets [no]
+          </span>
+          <span class="mL15 list-header-showall">
+            <a>Show all datasets</a>
+          </span>
+          <span class="pull-right list-header-actions">
+            ACTIONS
+          </span>
+        </div>
       {{ h.snippet('search/snippets/package_list.html', packages=c.page.items) }}
       {% endblock %}
     </div>

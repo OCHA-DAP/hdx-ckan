@@ -43,7 +43,7 @@ Example:
           </div>
           <div class="dataset-actions">
             <ul>
-              {% if package.private %}
+              {% if not package.private %}
                 <li>
                   <a>Preview</a>
                 </li>
@@ -54,7 +54,7 @@ Example:
                   <a>Follow this dataset</a>
                 </li>
               {% endif %}
-              {% if not package.private %}
+              {% if package.private %}
                 <li>
                   <a>Request data</a>&nbsp;<span class="icon-lock" style="font-size: 15px; color:#007ce0"></span>
                 </li>
