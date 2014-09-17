@@ -85,8 +85,10 @@ Example:
               <li class="label-icons">
                 <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                 <span class="icon-visualize" title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                <span class="icon-fire" title="{{ _("Popular") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
-                {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
+                {% if package.tracking_summary and package.tracking_summary.recent >= 10 %}
+                  <span class="icon-fire" title="{{ _("Popular: ") }}{{ package.tracking_summary.recent }}{{ _(" views") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                {% endif %}
+
                 {% if banner %}
                   <span class="banner">{{ _('Popular') }}</span>
                 {% endif %}
