@@ -42,20 +42,23 @@
           <span class="pull-right list-header-actions">
             ACTIONS
           </span>
-        </div>
+      </div>
+      {{ h.snippet('search/snippets/indicator_list.html', packages=c.page.items) }}
       {# END MOVE #}
 
-        <div class="list-header">
-          <span class="mL15 list-header-title">
-            Datasets [{{c.dataset_counts}}]
-          </span>
-          <span class="mL15 list-header-showall">
-            <a>Show all datasets</a>
-          </span>
-          <span class="pull-right list-header-actions">
-            ACTIONS
-          </span>
-        </div>
+
+
+      <div class="list-header">
+        <span class="mL15 list-header-title">
+          Datasets [{{c.dataset_counts}}]
+        </span>
+        <span class="mL15 list-header-showall">
+          <a>Show all datasets</a>
+        </span>
+        <span class="pull-right list-header-actions">
+          ACTIONS
+        </span>
+      </div>
       {{ h.snippet('search/snippets/package_list.html', packages=c.page.items) }}
       {% endblock %}
     </div>
@@ -74,7 +77,6 @@
 
 {% block styles %}
   {{ super() }}
-  <link rel="stylesheet" href="/dataset_search.css" />
   {% resource 'hdx_theme/search' %}
 {% endblock %}
 

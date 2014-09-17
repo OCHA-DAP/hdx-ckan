@@ -7,6 +7,7 @@
 /* Style search widget */
     .module-content:first-child{
         padding-top: 0;
+        margin-bottom: 100px;
     }
 
     header.module-content.page-header{
@@ -126,6 +127,7 @@
 
 /* List header */
     .list-header {
+        margin-top: 35px;
         height: 50px;
         background-color: #edf6fd;
         border-bottom: 1px solid #cccccc;
