@@ -12,7 +12,11 @@ Example:
 
 #}
 {% set text_query = ungettext('{number} results for "{query}"', '{number} results for "{query}"', count) %}
-{% set text_query_none = _('Sorry no datasets found for "{query}"') %}
+{% if tab == "indicators" %}
+  {% set text_query_none = _('Sorry no indicators found for "{query}"') %}
+{% else %}
+  {% set text_query_none = _('Sorry no datasets found for "{query}"') %}
+{% endif %}
 {% set text_no_query = ungettext('{number} results found', '{number} results found', count) %}
 {% set text_no_query_none = _('0 results found') %}
 

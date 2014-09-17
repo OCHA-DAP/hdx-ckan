@@ -1,5 +1,5 @@
 
-import logging
+import logging, copy
 from urllib import urlencode
 # import datetime
 # import cgi
@@ -72,6 +72,15 @@ def search_url(params, package_type=None):
         url = h.url_for('{0}_search'.format(package_type))
     return url_with_params(url, params)
 
+def count_types(context, data_dict):
+	search = copy.copy(data_dict)
+	search['extras']['ext_indicator'] = 1
+	indicators = get_action('package_search')(context, search)
+	search['extras']['ext_indicator'] = 0
+	datasets = get_action('package_search')(context, search)
+	return (datasets['count'],indicators['count'])
+
+			
 
 class HDXSearchController(PackageController):
 
@@ -222,8 +231,16 @@ class HDXSearchController(PackageController):
 				'sort': sort_by,
 				'extras': search_extras
 			}
+			if 'ext_indicator' in data_dict['extras']:
+				if int(data_dict['extras']['ext_indicator']) == 1:
+					c.tab = "indicators"
+				elif int(data_dict['extras']['ext_indicator']) == 0:
+					c.tab = "datasets"
+				else:
+					c.tab = "all"
 
 			query = get_action('package_search')(context, data_dict)
+			c.dataset_counts, c.indicator_counts = count_types(context, data_dict)
 			c.sort_by_selected = query['sort']
 
 			c.page = h.Page(
