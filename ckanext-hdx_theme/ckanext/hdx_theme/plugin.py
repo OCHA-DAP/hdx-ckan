@@ -90,6 +90,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,
             'hdx_organizations_available_with_roles': hdx_helpers.hdx_organizations_available_with_roles,
             'hdx_group_followee_list': hdx_helpers.hdx_group_followee_list,
+            'hdx_follow_link': hdx_helpers.hdx_follow_link,
             'hdx_remove_schema_and_domain_from_url': hdx_helpers.hdx_remove_schema_and_domain_from_url,
             'hdx_get_ckan_config': hdx_helpers.hdx_get_ckan_config,
             'get_group_name_from_list': hdx_helpers.get_group_name_from_list
