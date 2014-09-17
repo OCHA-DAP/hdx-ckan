@@ -20,7 +20,7 @@ import ckan.model.misc as misc
 import ckanext.hdx_theme.helpers.counting_actions as counting
 
 from webhelpers.html import escape, HTML, literal, url_escape
-from ckan.common import _
+from ckan.common import _, c, request, response
 
 get_action = logic.get_action
 log = logging.getLogger(__name__)
@@ -153,7 +153,7 @@ def _activity_list(context, activity_stream, extra_vars):
     return extra_vars
 
 
-def hdx_tag_autocomplete(context, data_dict):
+def hdx_tag_autocomplete_list(context, data_dict):
     '''Return a list of tag names that contain a given string.
 
     By default only free tags (tags that don't belong to any vocabulary) are
