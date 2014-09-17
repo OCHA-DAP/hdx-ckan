@@ -6,10 +6,10 @@ from urllib import urlencode
 
 # from ckanext.hdx_package.helpers import helpers
 
-# from pylons import config
+from pylons import config
 # from genshi.template import MarkupTemplate
 # from genshi.template.text import NewTextTemplate
-# from paste.deploy.converters import asbool
+from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
@@ -88,6 +88,9 @@ class HDXSearchController(PackageController):
 		from ckan.lib.search import SearchError
 
 		package_type = self._guess_package_type()
+
+		if package_type == 'search':
+				package_type = 'dataset'
 
 		try:
 			context = {'model': model, 'user': c.user or c.author,
@@ -258,4 +261,5 @@ class HDXSearchController(PackageController):
 		self._setup_template_variables(context, {},
 									   package_type=package_type)
 
-		return render(self._search_template(package_type))
+		#return render(self._search_template(package_type))
+		return render('search/search.html')

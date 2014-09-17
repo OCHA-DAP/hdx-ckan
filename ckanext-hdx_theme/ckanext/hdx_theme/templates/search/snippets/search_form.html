@@ -107,10 +107,10 @@
       {% endif %}
       <ul class="nav nav-tabs">
         {% block content_primary_nav %}
-          {{ h.build_nav_icon('group_read', _('All'), id=id) }}
-          {{ h.build_nav_icon('group_activity', _('Indicators'), id=id, offset=0) }}
-          {{ h.build_nav_icon('group_about', _('Feature Pages'), id=id) }}
-          {{ h.build_nav_icon('group_about', _('Datasets'), id=id) }}
+          {{ h.build_nav_icon('search', _('All'), q=query) }}
+          {{ h.build_nav_icon('search', _('Indicators'), q=query, ext_indicator=1)}}
+          {# h.build_nav_icon('search', _('Feature Pages'), id=id) #}
+          {{ h.build_nav_icon('search', _('Datasets'),q=query, ext_indicator=0) }}
         {% endblock %}
       </ul>
     </header>
