@@ -203,13 +203,13 @@ def _tag_search(context, data_dict):
     # TODO: should we check for user authentication first?
     q = model.Session.query(model.Tag)
 
-    #CHANGES to initial version
-#     if 'vocabulary_id' in data_dict:
-#         # Filter by vocabulary.
-#         vocab = model.Vocabulary.get(_get_or_bust(data_dict, 'vocabulary_id'))
-#         if not vocab:
-#             raise NotFound
-#         q = q.filter(model.Tag.vocabulary_id == vocab.id)
+    if 'vocabulary_id' in data_dict:
+        # Filter by vocabulary.
+        vocab = model.Vocabulary.get(_get_or_bust(data_dict, 'vocabulary_id'))
+        if not vocab:
+            raise NotFound
+        q = q.filter(model.Tag.vocabulary_id == vocab.id)
+#CHANGES to initial version
 #     else:
 #         # If no vocabulary_name in data dict then show free tags only.
 #         q = q.filter(model.Tag.vocabulary_id == None)
