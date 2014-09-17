@@ -34,6 +34,7 @@
     [role=main] .primary{
         width: 100%;
         float: none;
+        padding-left: 0;
     }
 
     [role=main] .secondary{
@@ -50,6 +51,22 @@
         padding-left: 0;
         list-style-type: none;
     }
+
+    /* Style pagination */
+        .pagination ul {
+            line-height: 45px;
+        }
+        .pagination ul>li {
+            line-height: 20px;
+            display: inline;
+        }
+
+        .module .pagination{
+            display: block;
+            text-align: center;
+            height: 43px;
+        }
+    /* END Style pagination */
 /* END Change the default style for ul items */
 
 /* Missing styles due to removal of BS 2.3 + other fixes */

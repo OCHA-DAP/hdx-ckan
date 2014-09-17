@@ -1,0 +1,133 @@
+{% import 'macros/form.html' as form %}
+
+{% set placeholder = placeholder if placeholder else _('Search...') %}
+{% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
+{% set search_class = search_class if search_class else 'search-giant' %}
+{% set is_display_search_input = display_search_input if display_search_input==False else True %}
+{% set is_dataset = ('dataset' == type) %}
+
+<form class="list-items search-form" method="get" data-module="select-switch">
+    {% if is_display_search_input %}
+      {% block search_input %}
+        <div class="search-input control-group {{ search_class }}">
+        {% if show_empty and search_in_results %}
+            {% set p_list = h.get_filtered_params_list(show_empty) %}
+            {% for key,value in p_list %}
+                <input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
+            {% endfor %}
+        {% endif %}
+          <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
+          <button type="submit" value="search">
+            <i class="icon-search"></i>
+            <span>{{ _('Submit') }}</span>
+          </button>
+        </div>
+      {% endblock %}
+    {% endif %}
+
+  {% block search_search_fields %}
+    {% if fields -%}
+      <span>{{ form.hidden_from_list(fields=fields) }}</span>
+    {%- endif %}
+  {% endblock %}
+
+  {% block search_title %}
+    {% if not no_title %}
+      <h2 class="mTop35">{% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}</h2>
+    {% endif %}
+  {% endblock %}
+
+  {% block search_facets %}
+    {% if facets %}
+      <p class="list-items filter-list">
+        {% for field in facets.fields %}
+          {% set search_facets_items = facets.search.get(field)['items'] %}
+          <span class="facet">{{ facets.titles.get(field) }}:</span>
+          {% for value in facets.fields[field] %}
+            <span class="list-items filtered pill">
+              {%- if facets.translated_fields and facets.translated_fields.has_key((field,value)) -%}
+                {{ facets.translated_fields[(field,value)] }}
+              {%- else -%}
+                {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
+              {%- endif %}
+              <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="icon-remove"></i></a>
+            </span>
+          {% endfor %}
+        {% endfor %}
+      </p>
+    {% endif %}
+  {% endblock %}
+
+  {% block search_sortby %}
+    {% if sorting %}
+      <div class="form-select control-group control-order-by mTop10">
+        <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+        <div class="dropdown orderDropdown">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+            <span class=".dropdown-toggle-text">
+              {% for label, value in sorting %}
+                  {% if sorting_selected == value %} {{ label }} {% endif %}
+              {% endfor %}
+            </span>
+            <b class="caret"></b>
+          </button>
+          <input type="hidden" name="sort" />
+          {% if is_dataset %}
+          <input id="preserve-search" type="hidden" name="q" />
+          {% endif %}
+          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+        <script>
+          $(function(){
+            $(".dropdown").on('click', 'li a', function(){
+              $(this).parents(".dropdown").find("button span").text($(this).text());
+              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
+              //add original search query if applicable
+              if($("#preserve-search"))
+              	$("#preserve-search").val($('.searchInput').val());
+              $(this).parents("form").submit();
+            });
+          });
+        </script>
+      </div>
+    {% endif %}
+  {% endblock %}
+  {% block page_header %}
+    <header class="module-content page-header">
+      {% if self.content_action() | trim %}
+        <div class="content_action">
+          {% block content_action %}{% endblock %}
+        </div>
+      {% endif %}
+      <ul class="nav nav-tabs">
+        {% block content_primary_nav %}
+          {{ h.build_nav_icon('search', _('All'), q=query) }}
+          {{ h.build_nav_icon('search', _('Indicators'), q=query, ext_indicator=1)}}
+          {# h.build_nav_icon('search', _('Feature Pages'), id=id) #}
+          {{ h.build_nav_icon('search', _('Datasets'),q=query, ext_indicator=0) }}
+        {% endblock %}
+      </ul>
+    </header>
+  {% endblock %}
+
+
+
+</form>
+
+{% if show_empty and count == 0 %}
+  {% trans %}
+    <p class="extra">Please try another search.</p>
+  {% endtrans %}
+{% endif %}
+
+{% if error %}
+  {% trans %}
+    <p><strong>There was an error while searching.</strong> Please try again.</p>
+  {% endtrans %}
+{% endif %}
