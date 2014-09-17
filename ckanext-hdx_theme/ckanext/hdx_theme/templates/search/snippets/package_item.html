@@ -22,10 +22,6 @@ Example:
 {% set rev_id = h.get_last_revision_package(package.id) %}
 {% set last_user = h.get_last_modifier_user(rev_id) %}
 
-{% block follow_label %}
-  {{ _('Follow this dataset') }}
-{% endblock %}
-
 <li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
     <div class="row list-items dataset-content mTB15">
@@ -49,13 +45,13 @@ Example:
             <ul>
               {% if not package.private %}
                 <li>
-                  <a>Preview</a>
+                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>
                 </li>
                 <li>
-                  <a>Download</a>
+                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
                 </li>
                 <li>
-                  <a>{{ self.follow_label() }}</a>
+                  <a href="">{% block follow_label %}{{ _('Follow this dataset') }}{% endblock %}</a>
                 </li>
               {% endif %}
               {% if package.private %}
