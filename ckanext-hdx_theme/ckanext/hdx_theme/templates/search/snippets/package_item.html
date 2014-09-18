@@ -45,13 +45,13 @@ Example:
             <ul>
               {% if not package.private %}
                 <li>
-                  <a>Preview</a>
+                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>
                 </li>
                 <li>
-                  <a>Download</a>
+                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
                 </li>
                 <li>
-                  <a>Follow this dataset</a>
+                  <a href="">{% block follow_label %}{{ _('Follow this dataset') }}{% endblock %}</a>
                 </li>
               {% endif %}
               {% if package.private %}
@@ -79,18 +79,26 @@ Example:
                   <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
                 </li>
               {% endfor %}
-              <li class="label-size">
-                30 Kb
-              </li>
-              <li class="label-icons">
-                <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                <span class="icon-visualize" title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                <span class="icon-fire" title="{{ _("Popular") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
-                {{ h.popular('recent views', package.tracking_summary.recent, min=10) if package.tracking_summary }}
-                {% if banner %}
-                  <span class="banner">{{ _('Popular') }}</span>
-                {% endif %}
-              </li>
+              {% set size="32Kb" %}
+              {% if size %}
+                <li class="label-size">
+                  {{ size }}
+                </li>
+              {% endif %}
+              {% set popular = package.tracking_summary and package.tracking_summary.recent >= 10 %}
+              {% if geolocated or visualization or popular %}
+                <li class="label-icons">
+                  {% if geolocated %}
+                    <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                  {% endif %}
+                  {% if visualization %}
+                    <span class="icon-visualize" title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                  {% endif %}
+                  {% if popular %}
+                    <span class="icon-fire" title="{{ _("Popular: ") }}{{ package.tracking_summary.recent }}{{ _(" views") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                  {% endif %}
+                </li>
+              {% endif %}
             </ul>
           {% endif %}
         </div>

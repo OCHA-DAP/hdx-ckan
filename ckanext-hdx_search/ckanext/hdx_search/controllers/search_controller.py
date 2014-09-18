@@ -61,16 +61,16 @@ def _encode_params(params):
 			for k, v in params]
 
 def url_with_params(url, params):
-    params = _encode_params(params)
-    return url + u'?' + urlencode(params)
+	params = _encode_params(params)
+	return url + u'?' + urlencode(params)
 
 
 def search_url(params, package_type=None):
-    if not package_type or package_type == 'dataset':
-        url = h.url_for(controller='package', action='search')
-    else:
-        url = h.url_for('{0}_search'.format(package_type))
-    return url_with_params(url, params)
+	if not package_type or package_type == 'dataset':
+		url = h.url_for(controller='package', action='search')
+	else:
+		url = h.url_for('{0}_search'.format(package_type))
+	return url_with_params(url, params)
 
 def count_types(context, data_dict):
 	search = copy.copy(data_dict)
@@ -231,13 +231,13 @@ class HDXSearchController(PackageController):
 				'sort': sort_by,
 				'extras': search_extras
 			}
+
+			c.tab = "all"
 			if 'ext_indicator' in data_dict['extras']:
 				if int(data_dict['extras']['ext_indicator']) == 1:
 					c.tab = "indicators"
 				elif int(data_dict['extras']['ext_indicator']) == 0:
 					c.tab = "datasets"
-				else:
-					c.tab = "all"
 
 			query = get_action('package_search')(context, data_dict)
 			c.dataset_counts, c.indicator_counts = count_types(context, data_dict)
