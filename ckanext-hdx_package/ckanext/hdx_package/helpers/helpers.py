@@ -344,7 +344,8 @@ def package_create(context, data_dict):
                 package_plugin.check_data_dict(data_dict)
 
     data, errors = _validate(data_dict, schema, context)
-    data['tags'] = get_tag_vocabulary(data['tags'])
+    if 'tags' in data:
+        data['tags'] = get_tag_vocabulary(data['tags'])
     log.debug('package_create validate_errs=%r user=%s package=%s data=%r',
               errors, context.get('user'),
               data.get('name'), data_dict)
