@@ -106,7 +106,8 @@ def package_update(context, data_dict):
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
 
-    data['tags'] = helpers.get_tag_vocabulary(data['tags'])
+    if 'tags' in data['tags']:
+        data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
     pkg = modified_save(context, pkg, data)
 
