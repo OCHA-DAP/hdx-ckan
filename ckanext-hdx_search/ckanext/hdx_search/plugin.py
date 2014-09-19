@@ -7,7 +7,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
-    plugins.implements(plugins.IPackageController, inherit=False)
+    plugins.implements(plugins.IPackageController, inherit=True)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
