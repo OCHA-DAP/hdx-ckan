@@ -74,13 +74,10 @@ def search_url(params, package_type=None):
 
 def count_types(context, data_dict):
 	search = copy.copy(data_dict)
-	if search['q']:
-		search['extras']['ext_indicator'] = 1
-		indicators = get_action('package_search')(context, search)
-		search['extras']['ext_indicator'] = 0
-		datasets = get_action('package_search')(context, search)
-	else:
-		return (0,0)
+	search['extras']['ext_indicator'] = 1
+	indicators = get_action('package_search')(context, search)
+	search['extras']['ext_indicator'] = 0
+	datasets = get_action('package_search')(context, search)
 	return (datasets['count'],indicators['count'])
             
 
