@@ -424,5 +424,3 @@ def get_tag_vocabulary(tags):
                 item['vocabulary_id'] = vocabulary.id
                 #item['id'] = tag.id
     return tags
-
-    
