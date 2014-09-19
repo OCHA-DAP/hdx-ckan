@@ -24,7 +24,7 @@ import ckan.model as model
 import ckan.lib.datapreview as datapreview
 import ckan.lib.plugins
 import ckan.new_authz as new_authz
-
+import ckan.lib.dictization.model_dictize as model_dictize
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
@@ -567,7 +567,6 @@ class DatasetController(PackageController):
         template = template[:template.index('.') + 1] + format
 
        #changes done for indicator
-       # c.package_activity_stream = get_action('package_activity_list_html')(context, {'id': c.pkg_dict['id']})
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7 }
         c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
@@ -579,6 +578,12 @@ class DatasetController(PackageController):
                                 action='read',id=f['name']), 'name':f['fullname'] or f['name']} 
                                 for f in followers]
 
+        topics_obj = helpers.pkg_topics_list({'id': c.pkg_dict['id']})
+        topics = model_dictize.tag_list_dictize(topics_obj, context)
+        
+        if topics and len(topics)>0:
+            c.topics = [{'url': h.url_for(controller='package', action='search', tags=t['name']), 'name':t['name']} 
+                                for t in topics]
         try:
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)

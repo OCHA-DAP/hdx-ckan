@@ -32,6 +32,11 @@
         border-bottom: 1px solid #cccccc;
         margin: 0;
     }
+
+    .dataset-item:last-of-type{
+        border-bottom: 1px solid #cccccc;
+    }
+
     .dataset-item .dataset-heading {
         margin-bottom: 0;
         line-height: 1;
