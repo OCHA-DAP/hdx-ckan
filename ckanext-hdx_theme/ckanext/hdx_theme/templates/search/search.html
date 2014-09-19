@@ -8,6 +8,27 @@
 {% endblock %}
 
 {% block primary_content %}
+<div id="dropdown_session">
+          <div id="search_bar_content" style="height:0px;">
+            <div id="filter_container">
+              {% for facet in c.facet_titles %}
+                {{h.snippet('snippets/facet_list_new.html', title=c.facet_titles[facet], name=facet ,hide_empty=True)}}
+              {% endfor %}  
+              
+            </div>
+            {#
+            <div id="date_container">
+              <label>Date Range</label>
+              <input placeholder="Start date" type="text">
+              <input placeholder="End date" type="text">
+            </div>
+          #}
+
+          </div>
+<div id="search_filter_btn">Filter<span>-</span></div>
+          
+        </div>
+
   <section class="list-items module">
     <div class="list-items module-content mT35">
       {% block page_primary_action %}
@@ -75,14 +96,48 @@
 {% block secondary %}
 {% endblock %}
 
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+    <script src="/scripts/chosen.min.js"></script>
+  <script type="text/javascript" src="/scripts/bootstrap-multiselect.js"></script>
+<script>
+$(document).ready(function(){
+  $("#search_bar_content").slideUp(300, function() {
+          $("#search_bar_content").css('height','0px');
+          return $("#search_filter_btn span").text('+');
+        });
+
+  $('.multiselect').multiselect();
+
+  $('#dropdown_session').on('change','input', function(){
+      window.location = $(this).val();
+  });
+
+  $("#search_filter_btn").click(function() {
+      if ($("#search_filter_btn span").text() === '+') {
+        return $("#search_bar_content").slideDown(300, function() {
+          $("#search_bar_content").css('height','230px');
+          return $("#search_filter_btn span").text('-');
+        });
+      } else {
+        return $("#search_bar_content").slideUp(300, function() {
+          $("#search_bar_content").css('height','0px');
+          return $("#search_filter_btn span").text('+');
+        });
+      }
+    });
+});
+</script>
+{% endblock %}
+
 {% block styles %}
   {{ super() }}
   {% resource 'hdx_theme/search' %}
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  {% resource 'hdx_theme/bs_tooltip.js' %}
+  <link rel="stylesheet" href="/frog_search.css" />
+  <link rel="stylesheet" href="/css/chosen.min.css" />
+  <link rel="stylesheet" href="/css/bootstrap-multiselect.css" type="text/css"/>
 {% endblock %}
 
 {% block  global_dataset_input_search%}
