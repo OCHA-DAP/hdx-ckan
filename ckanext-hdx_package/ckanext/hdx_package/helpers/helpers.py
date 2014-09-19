@@ -416,12 +416,13 @@ def pkg_topics_list(data_dict):
 
 def get_tag_vocabulary(tags):
     vocabulary = model.Vocabulary.get('Topics')
-    for item in tags:
-        tag_name = item['name']
-        tag = model.Tag.by_name(name=tag_name, vocab=vocabulary)
-        if tag :
-            item['vocabulary_id'] = vocabulary.id
-            #item['id'] = tag.id
+    if vocabulary:
+        for item in tags:
+            tag_name = item['name']
+            tag = model.Tag.by_name(name=tag_name, vocab=vocabulary)
+            if tag :
+                item['vocabulary_id'] = vocabulary.id
+                #item['id'] = tag.id
     return tags
 
     
