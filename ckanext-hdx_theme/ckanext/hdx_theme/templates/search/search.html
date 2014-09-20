@@ -42,7 +42,7 @@
             <span class="pull-right list-header-actions">
             </span>
         </div>
-        {{ h.snippet('search/snippets/indicator_list.html', packages=c.page.items) }}
+        {{ h.snippet('search/snippets/indicator_list.html', packages=c.page.items, tab=c.tab) }}
       {% endif %}
 
       {% if c.tab=='all' or c.tab=='datasets' %}
