@@ -78,7 +78,8 @@ def count_types(context, data_dict):
 	indicators = get_action('package_search')(context, search)
 	search['extras']['ext_indicator'] = 0
 	datasets = get_action('package_search')(context, search)
-	return (datasets['count'],indicators['count'])
+	print indicators
+	return (datasets['count'],indicators['count'], indicators['results'][0])
             
 
 class HDXSearchController(PackageController):
@@ -231,16 +232,20 @@ class HDXSearchController(PackageController):
                 'extras': search_extras
             }
 
+
+            query = get_action('package_search')(context, data_dict)
+            c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict)
+            c.sort_by_selected = query['sort']
+
             c.tab = "all"
             if 'ext_indicator' in data_dict['extras']:
                 if int(data_dict['extras']['ext_indicator']) == 1:
                     c.tab = "indicators"
                 elif int(data_dict['extras']['ext_indicator']) == 0:
                     c.tab = "datasets"
-
-            query = get_action('package_search')(context, data_dict)
-            c.dataset_counts, c.indicator_counts = count_types(context, data_dict)
-            c.sort_by_selected = query['sort']
+            else:
+            	#For all tab, only paginate datasets
+            	data_dict['extras']['ext_indicator'] = 1
 
             c.page = h.Page(
                 collection=query['results'],

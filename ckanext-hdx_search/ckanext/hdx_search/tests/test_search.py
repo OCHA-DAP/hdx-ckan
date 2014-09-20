@@ -15,9 +15,7 @@ log = logging.getLogger(__name__)
 class TestHDXSearch(hdx_test_base.HdxBaseTest):
 
     @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_search')
-
+    
     def test_search(self):
         user = model.User.by_name('tester')
         offset = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
