@@ -62,7 +62,9 @@
     </div>
 
     {% block page_pagination %}
-    {{ c.page.pager(q=c.q) }}
+      {% if c.tab != 'all' %}
+        {{ c.page.pager(q=c.q) }}
+      {% endif %}
     {% endblock %}
   </section>
 
