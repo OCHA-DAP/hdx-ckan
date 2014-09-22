@@ -8,6 +8,13 @@
 {% endblock %}
 
 {% block primary_content %}
+{% set facets = {
+          'fields': c.fields_grouped,
+          'search': c.search_facets,
+          'titles': c.facet_titles,
+          'translated_fields': c.translated_fields,
+          'remove_field': c.remove_field }
+        %}
 <div id="dropdown_session">
           <div id="search_bar_content" style="height:0px;">
             <div id="filter_container">
@@ -34,13 +41,6 @@
       {% block page_primary_action %}
       {% endblock %}
       {% block form %}
-        {% set facets = {
-          'fields': c.fields_grouped,
-          'search': c.search_facets,
-          'titles': c.facet_titles,
-          'translated_fields': c.translated_fields,
-          'remove_field': c.remove_field }
-        %}
         {% set sorting = [
           (_('Relevance'), 'score desc, metadata_modified desc'),
           (_('Name Ascending'), 'title_string asc'),
