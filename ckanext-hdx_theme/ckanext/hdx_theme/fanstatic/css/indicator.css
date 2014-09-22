@@ -48,7 +48,7 @@
 	    margin-bottom: 25px;
 	}
 	
-	div.dsb-activity-item p span.actor a, a:hover, a:focus {
+	div.dsb-activity-item p span.actor a, div.dsb-activity-item p span.actor a:hover, div.dsb-activity-item p span.actor a:focus {
 		font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 700;
 	    font-size: 14px;
@@ -58,7 +58,7 @@
 	    text-decoration: none;
 	}
 	
-	div.dsb-activity-item p a, div.dsb-activity-item p span a, a:hover, a:focus {
+	div.dsb-activity-item p a, div.dsb-activity-item p a:hover, div.dsb-activity-item p a:focus {
 		font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 700;
 	    font-size: 14px;
@@ -134,7 +134,7 @@
 	   width: 100%;
 	}
 	
-	.metadata-link a, a:hover, a:focus {
+	.metadata-link a, .metadata-link a:hover, .metadata-link a:focus {
 	   	font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 400;
 	    font-size: 14px;
