@@ -3,21 +3,18 @@
 
 {% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
 
-{% block maintag %}<div role="main">
-{% endblock %}
-
 {% block breadcrumb_content %}
   <li class="active">{{ h.nav_link(_('Datasets'), controller='package', action='search', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block primary_content %}
 {% set facets = {
-  'fields': c.fields_grouped,
-  'search': c.search_facets,
-  'titles': c.facet_titles,
-  'translated_fields': c.translated_fields,
-  'remove_field': c.remove_field }
-%}
+          'fields': c.fields_grouped,
+          'search': c.search_facets,
+          'titles': c.facet_titles,
+          'translated_fields': c.translated_fields,
+          'remove_field': c.remove_field }
+        %}
 <div id="dropdown_session">
           <div id="search_bar_content" style="height:0px;">
             <div id="filter_container">
@@ -38,25 +35,12 @@
 <div id="search_filter_btn">Filter<span>-</span></div>
           
         </div>
+
   <section class="list-items module">
     <div class="list-items module-content mT35">
       {% block page_primary_action %}
-            {# if h.check_access('package_create') #}
-            {#
-              <div class="list-items page_primary_action">
-                {% link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
-              </div>
-              #}
-            {# % endif % #}
       {% endblock %}
       {% block form %}
-        {% set facets = {
-          'fields': c.fields_grouped,
-          'search': c.search_facets,
-          'titles': c.facet_titles,
-          'translated_fields': c.translated_fields,
-          'remove_field': c.remove_field }
-        %}
         {% set sorting = [
           (_('Relevance'), 'score desc, metadata_modified desc'),
           (_('Name Ascending'), 'title_string asc'),
@@ -64,49 +48,59 @@
           (_('Last Modified'), 'metadata_modified desc'),
           (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
         %}
-        {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false %}
+        {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
       {% endblock %}
 
       {% block package_search_results_list %}
-      {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
+      {% if c.tab=='all' or c.tab=='indicators' %}
+        <div class="list-header">
+            <span class="mL15 list-header-title">
+              Indicators [{{c.indicator_counts}}]
+            </span>
+            <span class="mL15 list-header-showall">
+              <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=1) }}">Show all indicators</a>
+            </span>
+            <span class="pull-right list-header-actions">
+            </span>
+        </div>
+        {{ h.snippet('search/snippets/indicator_list.html', packages=c.page.items, tab=c.tab) }}
+      {% endif %}
+
+      {% if c.tab=='all' or c.tab=='datasets' %}
+        <div class="list-header">
+          <span class="mL15 list-header-title">
+            Datasets [{{c.dataset_counts}}]
+          </span>
+          <span class="mL15 list-header-showall">
+            <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=0) }}">Show all datasets</a>
+          </span>
+          <span class="pull-right list-header-actions">
+          </span>
+        </div>
+        {{ h.snippet('search/snippets/package_list.html', packages=c.page.items) }}
+      {% endif %}
       {% endblock %}
     </div>
 
     {% block page_pagination %}
-    {{ c.page.pager(q=c.q) }}
+      {% if c.tab != 'all' %}
+        {{ c.page.pager(q=c.q) }}
+      {% endif %}
     {% endblock %}
   </section>
 
   {% block package_search_results_api %}
-  {#
-  <section class="module">
-    <div class="module-content">
-      <small>
-        {% set api_link = h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=3)) %}
-        {% set api_doc_link = h.link_to(_('API Docs'), 'http://docs.ckan.org/en/{0}/api.html'.format(g.ckan_doc_version)) %}
-        {% if g.dumps_url -%}
-          {% set dump_link = h.link_to(_('full {format} dump').format(format=g.dumps_format), g.dumps_url) %}
-          {% trans %}
-            You can also access this registry using the {{ api_link }} (see {{ api_doc_link }}) or download a {{ dump_link }}.
-          {% endtrans %}
-        {% else %}
-          {% trans %}
-            You can also access this registry using the {{ api_link }} (see {{ api_doc_link}}).
-          {% endtrans %}
-        {% endif %}
-      </small>
-    </div>
-  </section>
-  #}
   {% endblock %}
 {% endblock %}
 
 {% block secondary %}
-    {# include "group/snippets/data_themes.html" #}
 {% endblock %}
 
+
 {% block scripts2 %}
-  <script src="/scripts/chosen.min.js"></script>
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+    <script src="/scripts/chosen.min.js"></script>
   <script type="text/javascript" src="/scripts/bootstrap-multiselect.js"></script>
 <script>
 $(document).ready(function(){
@@ -140,12 +134,12 @@ $(document).ready(function(){
 
 {% block styles %}
   {{ super() }}
+  {% resource 'hdx_theme/search' %}
   <link rel="stylesheet" href="/frog_search.css" />
   <link rel="stylesheet" href="/css/chosen.min.css" />
   <link rel="stylesheet" href="/css/bootstrap-multiselect.css" type="text/css"/>
-
 {% endblock %}
 
-      {% block  global_dataset_input_search%}
-		<input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
-	  {% endblock %}
+{% block  global_dataset_input_search%}
+  <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
+{% endblock %}

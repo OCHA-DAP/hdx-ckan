@@ -1,0 +1,11 @@
+setup.py
+ckanext/__init__.py
+ckanext/hdx_search/__init__.py
+ckanext/hdx_search/plugin.py
+ckanext_hdx_search.egg-info/PKG-INFO
+ckanext_hdx_search.egg-info/SOURCES.txt
+ckanext_hdx_search.egg-info/dependency_links.txt
+ckanext_hdx_search.egg-info/entry_points.txt
+ckanext_hdx_search.egg-info/namespace_packages.txt
+ckanext_hdx_search.egg-info/not-zip-safe
+ckanext_hdx_search.egg-info/top_level.txt

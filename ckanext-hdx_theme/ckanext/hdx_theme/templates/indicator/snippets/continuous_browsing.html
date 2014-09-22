@@ -1,7 +1,7 @@
 {#
  Example:
 
-  {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers %}
+  {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics %}
 
 #}
 <div class="row">
@@ -16,10 +16,11 @@
 				{{ _('in the HDX Collection') }}
 				</div>
 			</div>
-			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Supporting Topics'), count=' ', 
-				links=[{'name':_('Coming soon...')}] %}
+			{% set topics_num = topics|length %}
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Supporting Topic'),_('Supporting Topics'), False), count=topics_num, 
+				links=topics %}
 			
-			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Supporting Locations'), count=' ', 
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', id="continuous_browsing_locations", name=_('Supporting Locations'), count=' ',
 				links=[{'name':_('Coming soon...')}] %}
 				
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Downloads'), count=' ', 

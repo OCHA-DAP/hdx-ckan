@@ -1,0 +1,15 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% set geolocated=true %}
+{% set visualization=true %}
+
+{% block package_item_content %}
+  {{ super() }}
+  {% if loop.index == 1 %}
+    <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}" data-module-subchart="true" data-module-zoom="true">
+    </div>
+  {% endif %}
+{% endblock %}
+
+
+
