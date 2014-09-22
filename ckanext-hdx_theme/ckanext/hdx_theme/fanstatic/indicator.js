@@ -1,11 +1,37 @@
 ckan.module('hdx-indicator-graph', function ($, _) {
   return {
     initialize: function(){
+      this.el.context.ckanModule	= this;
+      if (!this.options.click_only)
+        this._init();
+      else
+        $(this.el).click(this._onClick);
+    },
+    _onClick: function(){
+      var container = this.ckanModule.options.container;
+//      $("#"+container).slideUp(500, function (){
+//        var parent = $(this).parents(this.ckanModule.options.parent_selector);
+//        $("#"+container).remove();
+//        parent.append('<div id="' + container + '" style="max-height: 320px; position: relative;">');
+//        this.ckanModule._init();
+//      });
+//      $("#"+container).dequeue();
+      $("#"+container).slideUp(100);
+      $("#"+container).dequeue();
+      var parent = $(this).parents(this.ckanModule.options.parent_selector);
+      $("#"+container).remove();
+      parent.append('<div id="' + container + '" style="max-height: 320px; position: relative;">');
+      this.ckanModule._init();
+    },
+    _init: function(){
       var data = [], indicatorCode;
       indicatorCode = indicatorMapping[this.options.name];
 
       var CHART_COLORS = ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'];
+
       var elementId = '#' + $(this.el).attr('id');
+      if (this.options.click_only)
+        elementId = '#' + this.options.container;
 
       var zoomEventNoRedraw = function(w, domain){
         var dif = w[1] - w[0]; //number of data points shown
@@ -86,6 +112,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       var c3_chart = c3.generate(chart_config);
       c3_chart.internal.margin2.top=260;
       var continuousLocation = this.options.continuous_location;
+      var setZoomFunc = this._setZoom;
       jQuery.ajax({
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
         success: function(json) {
@@ -118,6 +145,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
             c3_chart.internal.brush.extent([0,20]).update();
             c3_chart.internal.redrawForBrush();
             c3_chart.internal.redrawSubchart();
+            $(this).dequeue();
           });
         },
         async:false
@@ -127,6 +155,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         data = this.buildChart(data, c3_chart);
       else
         c3_chart.hide();
+    },
+    _setZoom: function(){
+      c3_chart.internal.brush.extent([0,20]).update();
+      c3_chart.internal.redrawForBrush();
+      c3_chart.internal.redrawSubchart();
     },
     buildChart: function(alldata, c3_chart) {
       var data, elementId;
@@ -156,7 +189,10 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       name: "",
       subchart: false,
       zoom: false,
-      continuous_location: ""
+      continuous_location: "",
+      click_only: false,
+      container: "",
+      parent_selector: ""
     }
   }
 });

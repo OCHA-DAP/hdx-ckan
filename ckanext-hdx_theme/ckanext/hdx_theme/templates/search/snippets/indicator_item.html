@@ -11,5 +11,12 @@
   {% endif %}
 {% endblock %}
 
+{% block preview_link %}
+  <a data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}"
+     data-module-subchart="true" data-module-zoom="true" data-module-click_only="true" data-module-container="chart-container"
+     data-module-parent_selector=".dataset-item" style="cursor: pointer;">Preview</a>
+{% endblock %}
+
+
 
 
