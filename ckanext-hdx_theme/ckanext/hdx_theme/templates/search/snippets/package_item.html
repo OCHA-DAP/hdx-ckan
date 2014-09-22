@@ -79,7 +79,7 @@ Example:
                   <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
                 </li>
               {% endfor %}
-              {% set size="32Kb" %}
+              {# set size="32Kb" #}
               {% if size %}
                 <li class="label-size">
                   {{ size }}
@@ -89,7 +89,9 @@ Example:
               {% if geolocated or visualization or popular %}
                 <li class="label-icons">
                   {% if geolocated %}
+                    <!--
                     <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                    -->
                   {% endif %}
                   {% if visualization %}
                     <span class="icon-visualize" title="{{ _("Visualization") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
