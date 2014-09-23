@@ -4,11 +4,11 @@
   {% snippet "package/snippets/resources_list.html", count=count, name=name, links=links, more %}
 
 #}
-<div class="col-xs-2 mTB30 cb-item">
+<div id="{{ id }}" class="col-xs-2 mTB30 cb-item">
 	<div class="cb-item-count">
 		{{ count }} &nbsp;
 	</div>
-	<div class="cb-border-wrapper">
+	<div class="cb-border-wrapper" style="overflow: scroll;">
 		<div class="cb-item-name">
 			{{ name }} 
 		</div>
