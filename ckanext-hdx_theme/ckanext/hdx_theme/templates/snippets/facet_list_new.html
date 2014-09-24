@@ -49,27 +49,35 @@ within_tertiary
         {% if items %}
           {% set no_total_items= total_no_items %}
         {% endif %}
-  <div id="{{name}}_filter" class="filter-group">
-    <label>
-        {{ title }}</label>
-  {% if items or not hide_empty %}
-  
-                <select name="{{name}}" class="multiselect form-control" multiple="multiple">
-                  
-    {#  	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"
-           class="list-items action facet-url
-           	{% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
-            #}
-        {% for item in items|sort(attribute='name') %}
-              {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
-              {% set label = label_function(item) if label_function else item.display_name %}
-              {% set label_truncated = h.truncate(label, 22) if not label_function else label %}
-              {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
-                <option value="{{ href }}" {% if  item.active %}selected{% endif %}>{{ label_truncated }}</option>
-        {% endfor %}
-          </select>
+<div id="{{name}}_filter" class="col-xs-6">
+  <div class="row">
+    <div class="col-xs-4" >
+      <label>{{ title }}</label>
+    </div>
+    <div class="col-xs-8">
+      {% if items or not hide_empty %}
+        {% set one_active = h.one_active_item(items) %}
+        <select name="{{name}}" class="{% if one_active %}value-selected{% endif %}" data-module="autocomplete">
+          {% if not one_active %}
+            <option value="#">Any</option>
+          {% endif %}
+        {#  	<a href="{{ h.remove_url_param(name, extras=extras, alternative_url=alternative_url) }}"
+               class="list-items action facet-url
+                {% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
+                #}
+          {% for item in items|sort(attribute='name') %}
+                {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
+                {% set label = label_function(item) if label_function else item.display_name %}
+                {% set label_truncated = h.truncate(label, 22) if not label_function else label %}
+                {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
+                  <option value="{{ href }}" {% if  item.active %}selected{% endif %}>{{ label_truncated }}</option>
+          {% endfor %}
+        </select>
       {% else %}
-    <select name="{{name}}" class="multiselect form-control" disabled></select>
-  {% endif %}
+        <select name="{{name}}" class="multiselect form-control" disabled></select>
+      {% endif %}
+    </div>
+  </div>
 </div>
 {% endwith %}
+
