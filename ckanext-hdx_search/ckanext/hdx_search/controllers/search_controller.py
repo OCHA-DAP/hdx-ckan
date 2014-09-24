@@ -78,7 +78,7 @@ def count_types(context, data_dict, tab):
     indicators = get_action('package_search')(context, search)
     search['extras']['ext_indicator'] = 0
     datasets = get_action('package_search')(context, search)
-    if tab == 'all':
+    if tab == 'all' and indicators['results']:
         indicator = [indicators['results'][0]]
     else:
         indicator = None
