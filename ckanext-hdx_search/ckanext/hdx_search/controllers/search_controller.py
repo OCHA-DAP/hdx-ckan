@@ -72,16 +72,17 @@ def search_url(params, package_type=None):
         url = h.url_for('{0}_search'.format(package_type))
     return url_with_params(url, params)
 
-def count_types(context, data_dict):
-	search = copy.copy(data_dict)
-	if search['q']:
-		search['extras']['ext_indicator'] = 1
-		indicators = get_action('package_search')(context, search)
-		search['extras']['ext_indicator'] = 0
-		datasets = get_action('package_search')(context, search)
-	else:
-		return (0,0)
-	return (datasets['count'],indicators['count'])
+def count_types(context, data_dict, tab):
+    search = copy.copy(data_dict)
+    search['extras']['ext_indicator'] = 1
+    indicators = get_action('package_search')(context, search)
+    search['extras']['ext_indicator'] = 0
+    datasets = get_action('package_search')(context, search)
+    if tab == 'all':
+        indicator = [indicators['results'][0]]
+    else:
+        indicator = None
+    return (datasets['count'],indicators['count'], indicator)
             
 
 class HDXSearchController(PackageController):
@@ -117,7 +118,6 @@ class HDXSearchController(PackageController):
             page = int(request.params.get('page', 1))
         except ValueError, e:
             abort(400, ('"page" parameter must be an integer'))
-        limit = g.datasets_per_page
 
         # most search operations should reset the page counter:
         params_nopage = [(k, v) for k, v in request.params.items()
@@ -175,6 +175,12 @@ class HDXSearchController(PackageController):
             # a list of values eg {'tags':['tag1', 'tag2']}
             c.fields_grouped = {}
             search_extras = {}
+            #limit = g.datasets_per_page
+            if 'ext_indicator' in search_extras:
+                limit = 25
+            else:
+                limit = 7
+
             fq = ''
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
@@ -240,9 +246,14 @@ class HDXSearchController(PackageController):
                     c.tab = "indicators"
                 elif int(data_dict['extras']['ext_indicator']) == 0:
                     c.tab = "datasets"
+            else:
+                #For all tab, only paginate datasets
+                data_dict['extras']['ext_indicator'] = 0
+                
+
 
             query = get_action('package_search')(context, data_dict)
-            c.dataset_counts, c.indicator_counts = count_types(context, data_dict)
+            c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict, c.tab)
             c.sort_by_selected = query['sort']
 
             c.page = h.Page(

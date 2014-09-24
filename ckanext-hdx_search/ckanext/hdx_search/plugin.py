@@ -24,10 +24,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         #If indicator flag is set, search only that type
         if 'ext_indicator' in search_params['extras']:
             if int(search_params['extras']['ext_indicator']) == 1:
-                search_params['q'] = search_params['q']+' AND extras_indicator:1'
+                search_params['q'] = search_params['q']+'+extras_indicator:1'
             elif int(search_params['extras']['ext_indicator']) == 0:
-                search_params['q'] = search_params['q']+' AND extras_indicator:0'
-        print search_params
+                search_params['q'] = search_params['q']+'+extras_indicator:0'
         return search_params
 
     def after_search(self, search_results, search_params):
