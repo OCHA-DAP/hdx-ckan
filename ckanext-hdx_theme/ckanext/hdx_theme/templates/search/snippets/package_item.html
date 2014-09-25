@@ -1,4 +1,3 @@
-
 <li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
     <div class="row list-items dataset-content mTB15">
@@ -6,7 +5,7 @@
         {% block pre_icon %}
         {% endblock %}
         <span class="mL15 pull-left">
-          <div class="dataset-heading">
+          <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
             {% block title %}
               {% set truncate = truncate or 180 %}
               {% set truncate_title = truncate_title or 80 %}
@@ -61,7 +60,7 @@
         </span>
       </div>
       <div class="col-xs-6">
-        <div class="dataset-description">
+        <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
           {% block description %}
             {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
             {% if notes %}
