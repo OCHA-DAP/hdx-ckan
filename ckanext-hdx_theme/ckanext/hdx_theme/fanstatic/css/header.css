@@ -1172,6 +1172,9 @@
 
 
 /* Style tabs */
+    .hdx-wrapper .page-header .nav-tabs {
+        border-bottom: 1px solid #eeeeee;
+    }
     .hdx-wrapper .page-header .nav-tabs > li {
         margin-bottom: -3px;
         /*border-bottom: 3px solid #cccccc;*/
@@ -1196,7 +1199,7 @@
 
     .page-header{
         background: none;
-        border-bottom: 3px solid #cccccc;
+        border-bottom: 3px solid #eeeeee;
         /*background-color: #f6f6f6;*/
         -webkit-border-radius: 0 3px 0 0;
         -moz-border-radius: 0 3px 0 0;
