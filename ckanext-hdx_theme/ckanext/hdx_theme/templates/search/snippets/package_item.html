@@ -45,7 +45,9 @@
                   <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
                 </li>
                 <li>
-                  {{ h.hdx_follow_link('dataset', package.id) }}
+                  {% block follow_link %}
+                    {{ h.hdx_follow_link('dataset', package.id, "this dataset") }}
+                  {% endblock %}
                 </li>
               {% endif %}
               {% if package.private %}
