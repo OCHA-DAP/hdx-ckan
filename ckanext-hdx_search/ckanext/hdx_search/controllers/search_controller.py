@@ -202,7 +202,7 @@ class HDXSearchController(PackageController):
             if 'ext_indicator' in search_extras:
                 limit = 25
             else:
-                limit = 7
+                limit = 5
 
             fq = ''
             for (param, value) in request.params.items():
