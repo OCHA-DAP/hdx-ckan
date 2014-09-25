@@ -24,6 +24,7 @@
         font-size: 28px;
         color: #000000;
         letter-spacing: 0.01em;
+        line-height: 1;
     }
 /* END Style search widget */
 
@@ -164,3 +165,9 @@
     }
 
 /* END List header */
+
+/* Fix search spacing between tabs and results number */
+    .hdx-wrapper .page-header .nav-tabs > li > a{
+        padding-top: 0;
+    }
+/* END Fix search spacing between tabs and results number */
