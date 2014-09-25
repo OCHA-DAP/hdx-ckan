@@ -107,7 +107,7 @@ def isolate_tags(q, packages, tab):
                                         action='search')
         url = url_with_params(uri, params)
             
-        features.append({'name':s, 'display_name':s, 'url':url, 'description':'','', 'last_update':'19 Sept 2014'})
+        features.append({'name':s, 'display_name':s, 'url':url, 'description':'', 'last_update':'19 Sept 2014'})
     return (features, count)
 
 class HDXSearchController(PackageController):
