@@ -119,7 +119,7 @@ def isolate_tags(context, q, packages, tab):
     for s in selected:
         params = [('tags', s)]
         url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                        action='search', vocab_Topics=s)
+                        action='search', tags=s)
 
         features.append(
             {'name': s, 'display_name': s, 'url': url, 'description': '', 'last_update': ''})
