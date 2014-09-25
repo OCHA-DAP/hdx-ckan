@@ -146,6 +146,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
             c3_chart.internal.redrawForBrush();
             c3_chart.internal.redrawSubchart();
             $(this).dequeue();
+            $(elementId).attr("style", "max-height: 310px; position: relative;");
           });
         },
         async:false
