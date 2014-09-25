@@ -1192,6 +1192,7 @@
         font-size: 14px;
         padding-left: 30px;
         padding-right: 30px;
+        letter-spacing: 0.03em;
     }
     .hdx-wrapper .page-header .nav-tabs > li > a:hover {
         color: #f2645a;
