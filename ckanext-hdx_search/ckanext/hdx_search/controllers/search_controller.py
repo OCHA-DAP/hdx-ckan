@@ -78,12 +78,32 @@ def count_types(context, data_dict, tab):
     indicators = get_action('package_search')(context, search)
     search['extras']['ext_indicator'] = 0
     datasets = get_action('package_search')(context, search)
-    if tab == 'all':
+    if tab == 'all' and len(indicators['results'])>0:
         indicator = [indicators['results'][0]]
     else:
         indicator = None
     return (datasets['count'],indicators['count'], indicator)
+
+def isolate_tags(q, packages):
+    import difflib, random
+    tags = list()
+    featured = list()
+    for i in packages:
+        for p in i['tags']:
+            if p['name'] not in tags:
+                tags.append(p['name'])
+    if q: 
+       selected = difflib.get_close_matches(q,tags,n=3)
+    else:
+        selected = random.sample(tags, 3)
+    for s in selected:
+        params = [('q', s)]
+        uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+                                        action='search')
+        url = url_with_params(uri, params)
             
+        featured.append({'name':s, 'display_name':s, 'url':url})
+    return featured
 
 class HDXSearchController(PackageController):
 
@@ -251,8 +271,9 @@ class HDXSearchController(PackageController):
                 data_dict['extras']['ext_indicator'] = 0
                 
 
-
             query = get_action('package_search')(context, data_dict)
+            if c.tab == "all":
+                c.featured = isolate_tags(q,query['results'])
             c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict, c.tab)
             c.sort_by_selected = query['sort']
 
