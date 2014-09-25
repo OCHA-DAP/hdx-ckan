@@ -8,33 +8,37 @@
 {% endblock %}
 
 {% block primary_content %}
-{% set facets = {
-          'fields': c.fields_grouped,
-          'search': c.search_facets,
-          'titles': c.facet_titles,
-          'translated_fields': c.translated_fields,
-          'remove_field': c.remove_field }
-        %}
-<div id="dropdown_session">
-          <div id="search_bar_content" style="height:0px;">
-            <div id="filter_container">
+<div id="filter_dropdown">
+  <div class="row paddingRowHack filter_bg">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div id="search_bar_content" style="display: none;">
+          <div id="filter_container" class="mTB35 col-xs-8">
+            <div class="row">
               {% for facet in c.facet_titles %}
                 {{h.snippet('snippets/facet_list_new.html', title=c.facet_titles[facet], name=facet ,hide_empty=True)}}
-              {% endfor %}  
-              
+              {% endfor %}
             </div>
-            {#
-            <div id="date_container">
-              <label>Date Range</label>
-              <input placeholder="Start date" type="text">
-              <input placeholder="End date" type="text">
-            </div>
-          #}
-
           </div>
-<div id="search_filter_btn">Filter<span>-</span></div>
-          
+          <div id="date_container" class="mTB35 col-xs-4">
+            <div class="row controls">
+              <div class="col-xs-4">
+                <label>Date Range</label>
+              </div>
+              <div class="col-xs-4">
+                <input style="width: 100px;" placeholder="Start date" type="text" title="Coming soon" data-module="bs_tooltip">
+              </div>
+              <div class="col-xs-4">
+                <input style="width: 100px;" placeholder="End date" type="text" title="Coming soon" data-module="bs_tooltip">
+              </div>
+            </div>
+          </div>
+
         </div>
+    </div>
+  </div>
+  <div id="search_filter_btn">Filter<span>+</span></div>
+</div>
+
 
   <section class="list-items module">
     <div class="list-items module-content mT35">
@@ -47,6 +51,13 @@
           (_('Name Descending'), 'title_string desc'),
           (_('Last Modified'), 'metadata_modified desc'),
           (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
+        %}
+        {% set facets = {
+          'fields': c.fields_grouped,
+          'search': c.search_facets,
+          'titles': c.facet_titles,
+          'translated_fields': c.translated_fields,
+          'remove_field': c.remove_field }
         %}
         {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=(c.dataset_counts+c.indicator_counts), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
       {% endblock %}
@@ -104,44 +115,13 @@
 {% block scripts2 %}
   {{ super() }}
   {% resource 'hdx_theme/bs_tooltip.js' %}
-    <script src="/scripts/chosen.min.js"></script>
-  <script type="text/javascript" src="/scripts/bootstrap-multiselect.js"></script>
-<script>
-$(document).ready(function(){
-  $("#search_bar_content").slideUp(300, function() {
-          $("#search_bar_content").css('height','0px');
-          return $("#search_filter_btn span").text('+');
-        });
-
-  $('.multiselect').multiselect();
-
-  $('#dropdown_session').on('change','input', function(){
-      window.location = $(this).val();
-  });
-
-  $("#search_filter_btn").click(function() {
-      if ($("#search_filter_btn span").text() === '+') {
-        return $("#search_bar_content").slideDown(300, function() {
-          $("#search_bar_content").css('height','230px');
-          return $("#search_filter_btn span").text('-');
-        });
-      } else {
-        return $("#search_bar_content").slideUp(300, function() {
-          $("#search_bar_content").css('height','0px');
-          return $("#search_filter_btn span").text('+');
-        });
-      }
-    });
-});
-</script>
+  {% resource 'hdx_theme/filter' %}
+  {% resource 'hdx_theme/search' %}
+  <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}
 
 {% block styles %}
   {{ super() }}
-  {% resource 'hdx_theme/search' %}
-  <link rel="stylesheet" href="/frog_search.css" />
-  <link rel="stylesheet" href="/css/chosen.min.css" />
-  <link rel="stylesheet" href="/css/bootstrap-multiselect.css" type="text/css"/>
 {% endblock %}
 
 {% block  global_dataset_input_search%}

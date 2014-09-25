@@ -269,3 +269,9 @@ def hdx_follow_link(obj_type, obj_id):
                        obj_id=obj_id,
                        obj_type=obj_type)
     return ''
+
+def one_active_item(items):
+    for i in items:
+        if i['active']:
+            return True
+    return False

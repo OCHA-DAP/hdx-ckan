@@ -40,9 +40,10 @@
   {% block search_facets %}
     {% if facets %}
       <p class="list-items filter-list">
+        <span style="margin-right: 20px;">{{ _("Filters") }}:</span>
         {% for field in facets.fields %}
           {% set search_facets_items = facets.search.get(field)['items'] %}
-          <span class="facet">{{ facets.titles.get(field) }}:</span>
+          {# <span class="facet">{{ facets.titles.get(field) }}:</span>#}
           {% for value in facets.fields[field] %}
             <span class="list-items filtered pill">
               {%- if facets.translated_fields and facets.translated_fields.has_key((field,value)) -%}
@@ -50,13 +51,14 @@
               {%- else -%}
                 {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
               {%- endif %}
-              <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="icon-remove"></i></a>
+              <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="glyphicon glyphicon-remove"></i></a>
             </span>
           {% endfor %}
         {% endfor %}
       </p>
     {% endif %}
   {% endblock %}
+
 
   {% block search_sortby %}
     {% if sorting %}
