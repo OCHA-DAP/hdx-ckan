@@ -94,7 +94,7 @@ def isolate_tags(q, packages, tab):
                 tags.append(p['name'])
     
     count = len(tags)
-    if tab == 'all':
+    if tab == 'all' and count > 3:
         if q: 
            selected = difflib.get_close_matches(q,tags,n=3)
         else:
