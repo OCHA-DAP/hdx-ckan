@@ -113,16 +113,23 @@
       {% endif %}
       <ul class="nav nav-tabs">
         {% block content_primary_nav %}
-          {{ h.build_nav_icon('search', _('All'), q=query) }}
-          {{ h.build_nav_icon('search', _('Indicators'), q=query, ext_indicator=1)}}
-          {# h.build_nav_icon('search', _('Feature Pages'), id=id) #}
-          {{ h.build_nav_icon('search', _('Datasets'),q=query, ext_indicator=0) }}
+        	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
+        		<a href="{{ h.url_for('search', q=query) }}">{{_('All')}}</a>
+        	</li>
+        	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
+        		<a href="{{ h.url_for('search', q=query, ext_indicator=1) }}">{{_('Indicators')}}</a>
+        	</li>
+        	{# <li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'feature_pages' }}">
+        		<a href="{{ h.url_for('search', id=id) }}">{{_('Feature Pages')}}</a>
+        	</li> #}
+        	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
+        		<a href="{{ h.url_for('search', q=query, ext_indicator=0) }}">{{_('Datasets')}}</a>
+        	</li>
+          
         {% endblock %}
       </ul>
     </header>
   {% endblock %}
-
-
 
 </form>
 
