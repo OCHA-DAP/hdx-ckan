@@ -38,7 +38,7 @@
   {% endblock %}
 
   {% block search_facets %}
-    {% if facets %}
+    {% if facets and facets.fields %}
       <p class="list-items filter-list">
         <span style="margin-right: 20px;">{{ _("Filters") }}:</span>
         {% for field in facets.fields %}
@@ -66,7 +66,7 @@
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown">
           <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
-            <span class=".dropdown-toggle-text">
+            <span class="dropdown-toggle-text">
               {% for label, value in sorting %}
                   {% if sorting_selected == value %} {{ label }} {% endif %}
               {% endfor %}
