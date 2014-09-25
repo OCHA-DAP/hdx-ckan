@@ -100,7 +100,7 @@ def isolate_tags(q, packages, tab):
     else:
         selected = tags
     for s in selected:
-        params = [('q', s)]
+        params = [('tags', s)]
         uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
                                         action='search')
         url = url_with_params(uri, params)
