@@ -93,7 +93,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_follow_link': hdx_helpers.hdx_follow_link,
             'hdx_remove_schema_and_domain_from_url': hdx_helpers.hdx_remove_schema_and_domain_from_url,
             'hdx_get_ckan_config': hdx_helpers.hdx_get_ckan_config,
-            'get_group_name_from_list': hdx_helpers.get_group_name_from_list
+            'get_group_name_from_list': hdx_helpers.get_group_name_from_list,
+            'one_active_item': hdx_helpers.one_active_item
         }
         
     def get_actions(self):
