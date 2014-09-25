@@ -25,11 +25,14 @@
 }
 
 #search_filter_btn {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    letter-spacing: 0.03em;
     background: #007ce0;
     color: #fff;
     float: right;
     width: 80px;
-    font-family: 'Source Sans Pro', sans-serif;
     -webkit-border-radius: 0 0 5px 5px;
     -moz-border-radius: 0 0 5px 5px;
     border-radius: 0 0 5px 5px;

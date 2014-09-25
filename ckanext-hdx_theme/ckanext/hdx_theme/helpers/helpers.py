@@ -256,7 +256,7 @@ def get_group_name_from_list(glist, gid):
             return group['title']
     return ""
 
-def hdx_follow_link(obj_type, obj_id):
+def hdx_follow_link(obj_type, obj_id, extra_text):
     obj_type = obj_type.lower()
     assert obj_type in h._follow_objects
     # If the user is logged in show the follow/unfollow button
@@ -267,7 +267,8 @@ def hdx_follow_link(obj_type, obj_id):
         return h.snippet('search/snippets/follow_link.html',
                        following=following,
                        obj_id=obj_id,
-                       obj_type=obj_type)
+                       obj_type=obj_type,
+                       extra_text=extra_text)
     return ''
 
 def one_active_item(items):

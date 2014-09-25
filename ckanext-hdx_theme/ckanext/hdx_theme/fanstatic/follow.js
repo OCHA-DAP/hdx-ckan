@@ -19,6 +19,7 @@ this.ckan.module('hdx_follow', function($, _) {
 			type: null,
 			id: null,
 			loading: false,
+      extra_text: "",
 			i18n: {
 				follow: _('Follow'),
 				unfollow: _('Unfollow')
@@ -72,11 +73,11 @@ this.ckan.module('hdx_follow', function($, _) {
 			var next_val = parseInt(followers.html());
       if (options.action == 'follow') {
 				options.action = 'unfollow';
-				this.el.html(this.i18n('unfollow'));
+				this.el.html(this.i18n('unfollow') + " " + this.options.extra_text);
 				next_val = next_val + 1;
 			} else {
 				options.action = 'follow';
-				this.el.html(this.i18n('follow'));
+				this.el.html(this.i18n('follow') + " " + this.options.extra_text);
 				next_val = next_val - 1;
 			}
       followers.html(next_val);

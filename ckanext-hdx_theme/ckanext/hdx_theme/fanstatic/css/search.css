@@ -24,6 +24,7 @@
         font-size: 28px;
         color: #000000;
         letter-spacing: 0.01em;
+        line-height: 1;
     }
 /* END Style search widget */
 
@@ -80,7 +81,7 @@
     .dataset-item .dataset-actions > ul > li > a{
         text-transform: uppercase;
         font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 600;
+        font-weight: 700;
         font-size: 12px;
         color: #007ce0;
         letter-spacing: 0.01em;
@@ -128,6 +129,13 @@
         margin-left: 15px;
         padding-top: 3px;
     }
+
+    .dataset-content .pre-icon .icon {
+        color: #007ce0;
+        font-size: 20px;
+        width: 20px;
+        margin-top:3px;
+    }
 /* END Dataset list */
 
 /* List header */
@@ -157,3 +165,9 @@
     }
 
 /* END List header */
+
+/* Fix search spacing between tabs and results number */
+    .hdx-wrapper .page-header .nav-tabs > li > a{
+        padding-top: 0;
+    }
+/* END Fix search spacing between tabs and results number */
