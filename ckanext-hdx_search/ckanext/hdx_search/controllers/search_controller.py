@@ -87,7 +87,7 @@ def count_types(context, data_dict, tab):
 def isolate_tags(q, packages, tab):
     import difflib, random
     tags = list()
-    featured = list()
+    features = list()
     for i in packages:
         for p in i['tags']:
             if p['name'] not in tags:
@@ -105,8 +105,8 @@ def isolate_tags(q, packages, tab):
                                         action='search')
         url = url_with_params(uri, params)
             
-        featured.append({'name':s, 'display_name':s, 'url':url})
-    return featured
+        features.append({'name':s, 'display_name':s, 'url':url})
+    return features
 
 class HDXSearchController(PackageController):
 
@@ -269,8 +269,8 @@ class HDXSearchController(PackageController):
                     c.tab = "indicators"
                 elif int(data_dict['extras']['ext_indicator']) == 0:
                     c.tab = "datasets"
-            elif 'feature' in data_dict['extras']:
-                c.tab = "feature"
+            elif 'features' in data_dict['extras']:
+                c.tab = "features"
             else:
                 c.tab = "all"
                 #For all tab, only paginate datasets
@@ -279,21 +279,21 @@ class HDXSearchController(PackageController):
 
             query = get_action('package_search')(context, data_dict)
             if c.tab == "all":
-                c.featured = isolate_tags(q,query['results'], c.tab)
+                c.features = isolate_tags(q,query['results'], c.tab)
             c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict, c.tab)
             c.sort_by_selected = query['sort']
 
-            if c.tab == 'feature':
+            if c.tab == 'features':
                 c.page = h.Page(
-                    collection=c.feature,
+                    collection=c.features,
                     page=page,
                     url=pager_url,
-                    item_count=len(c.feature),
+                    item_count=len(c.features),
                     items_per_page=limit
                 )
                 c.facets = query['facets']
                 c.search_facets = query['search_facets']
-                c.page.items = c.feature
+                c.page.items = c.features
             else:
                 c.page = h.Page(
                     collection=query['results'],

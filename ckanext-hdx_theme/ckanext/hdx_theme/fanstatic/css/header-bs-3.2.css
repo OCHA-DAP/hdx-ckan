@@ -103,3 +103,8 @@
         background-color: #ffffff;
     }
 /* END Utility classes */
+/* Style Select2 Dropdown */
+    .select2-container .select2-choice .select2-arrow{
+        width: 42px;
+    }
+/* END Style Select2 Dropdown */

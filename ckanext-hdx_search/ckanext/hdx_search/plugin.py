@@ -16,7 +16,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {}
 
     def before_map(self, map):
-        map.connect('/search', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        map.connect('search','/search', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+        map.connect('/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='package_search')
+        return map
+    
+    def after_map(self, map):
+        map.connect('search','/search', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='package_search')
         return map
 

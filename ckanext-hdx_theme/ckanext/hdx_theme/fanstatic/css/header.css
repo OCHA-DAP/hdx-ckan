@@ -577,6 +577,10 @@
         margin-top: 30px;
         margin-bottom: 30px;
     }
+    .mTB35{
+        margin-top: 35px;
+        margin-bottom: 35px;
+    }
     .mTB45{
         margin-top: 45px;
         margin-bottom: 45px;
@@ -757,7 +761,7 @@
     }
 /* END Button style*/
 
-/* Label style */
+/* Label style (eg. tags) */
     .label{
         border: none;
         border-radius: 0;
@@ -786,6 +790,30 @@
         padding: 0 5px;
         margin-bottom: 3px;
     }
+
+    /* Pill styling - seem to be the similar to labels, but gray and with a button*/
+        .pill {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #ffffff;
+            text-transform: uppercase;
+
+            padding: 5px 15px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+
+            background-color: #888888;
+            border-radius: 0;
+        }
+
+        .pill .icon-remove, .pill .glyphicon-remove {
+            cursor: pointer;
+            margin-left: 20px;
+
+        }
+    /* END Pill styling */
+
 /* END Label style */
 
 
