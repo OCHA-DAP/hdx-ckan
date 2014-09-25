@@ -92,7 +92,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
               position: 'outer-middle'
             },
             tick: {
-              format: d3.format(',')
+              format: d3.format('s')
             }
           }
         },
