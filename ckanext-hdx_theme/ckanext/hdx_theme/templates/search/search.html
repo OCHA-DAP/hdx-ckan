@@ -81,6 +81,20 @@
         {% endif %}
       {% endif %}
 
+      {% if c.tab=='all' or c.tab=='feature' %}
+        <div class="list-header">
+          <span class="mL15 list-header-title">
+            Feature Pages [tbd]
+          </span>
+          <span class="mL15 list-header-showall">
+            <a href="{{ h.url_for(controller='package', action='search', q=c.q, feature=1) }}">{{ _("Show all feature pages") }}</a>
+          </span>
+          <span class="pull-right list-header-actions">
+          </span>
+        </div>
+        {{ h.snippet('search/snippets/feature_list.html', packages=c.featured) }}
+      {% endif %}
+
       {% if c.tab=='all' or c.tab=='datasets' %}
         <div class="list-header">
           <span class="mL15 list-header-title">

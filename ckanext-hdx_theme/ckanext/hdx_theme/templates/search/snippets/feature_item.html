@@ -1,0 +1,37 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% block init %}
+  {% set notes = "DESC" %}
+  {% set last_user = "" %}
+
+{% endblock %}
+
+{% block pre_icon %}
+  <span class="mL15 pull-left pre-icon"><i class="icon {{ loop.cycle('icon-tag', 'icon-earth') }}"></i></span>
+{% endblock %}
+
+{% block title %}
+    <a href="{{ package.url }}">{{ package.display_name }}</a>
+{% endblock %}
+
+{% block updated %}
+   <a class="updatedNameColor" href="">{{ loop.cycle('Topic Page', 'Organisation Page') }}</a> - 19 Sept 2014
+{% endblock %}
+
+{% block others %}
+{% endblock %}
+
+{% block notes %}
+{% endblock %}
+
+{% block description %}
+  Some kind of description ;)
+{% endblock %}
+
+{% block actions %}
+  <ul>
+    <li>
+      <a href="">Follow</a>
+    </li>
+  </ul>
+{% endblock %}
