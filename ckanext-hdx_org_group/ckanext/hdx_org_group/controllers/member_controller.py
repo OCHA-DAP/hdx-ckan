@@ -57,24 +57,29 @@ class HDXOrgMemberController(org.OrganizationController):
         #self._check_access('group_delete', context, {'id': id})
         try:
             if request.method == 'POST':
+
                 data_dict = clean_dict(dict_fns.unflatten(
                     tuplize_dict(parse_params(request.params))))
                 data_dict['id'] = id
-
-                email = data_dict.get('email')
-                if email:
-                    user_data_dict = {
-                        'email': email,
-                        'group_id': id,
-                        'role': data_dict['role'],
-                        'id': id  # This is something staging/prod need
-                    }
-                    del data_dict['email']
-                    user_dict = self._action('user_invite')(context,
-                                                            user_data_dict)
-                    data_dict['username'] = user_dict['name']
-                c.group_dict = self._action(
-                    'group_member_create')(context, data_dict)
+                if data_dict.get('email', '').strip() != '' or \
+                        data_dict.get('username', '').strip() != '':
+                    email = data_dict.get('email')
+                    if email:
+                        user_data_dict = {
+                            'email': email,
+                            'group_id': id,
+                            'role': data_dict['role'],
+                            'id': id  # This is something staging/prod need
+                        }
+                        del data_dict['email']
+                        user_dict = self._action('user_invite')(context,
+                                                                user_data_dict)
+                        data_dict['username'] = user_dict['name']
+                    c.group_dict = self._action(
+                        'group_member_create')(context, data_dict)
+                else:
+                    h.flash_error(_('''You need to either fill the username or
+                        the email of the person you wish to invite'''))
                 self._redirect_to(controller='group', action='members', id=id)
 
             # I think the 'else' is not used. We should consider removing it.
