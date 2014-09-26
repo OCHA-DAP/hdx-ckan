@@ -92,6 +92,8 @@ def isolate_tags(q, packages, tab):
         for p in i['tags']:
             if p['name'] not in tags:
                 tags.append(p['name'])
+    
+    count = len(tags)
     if tab == 'all':
         if q: 
            selected = difflib.get_close_matches(q,tags,n=3)
@@ -105,8 +107,8 @@ def isolate_tags(q, packages, tab):
                                         action='search')
         url = url_with_params(uri, params)
             
-        features.append({'name':s, 'display_name':s, 'url':url})
-    return features
+        features.append({'name':s, 'display_name':s, 'url':url, 'description':'','', 'last_update':'19 Sept 2014'})
+    return (features, count)
 
 class HDXSearchController(PackageController):
 
@@ -278,8 +280,8 @@ class HDXSearchController(PackageController):
                 
 
             query = get_action('package_search')(context, data_dict)
-            if c.tab == "all":
-                c.features = isolate_tags(q,query['results'], c.tab)
+            if c.tab == "all" or c.tab == 'features':
+                c.features, c.feature_counts = isolate_tags(q,query['results'], c.tab)
             c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict, c.tab)
             c.sort_by_selected = query['sort']
 
