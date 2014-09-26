@@ -75,9 +75,9 @@
             </span>
         </div>
         {% if  c.tab == 'indicators' %}
-          {{ h.snippet('search/snippets/indicator_list.html', packages=c.page.items, tab=c.tab) }}
+          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, tab=c.tab) }}
         {% else %}
-          {{ h.snippet('search/snippets/indicator_list.html', packages=c.indicator, tab=c.tab) }}
+          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.indicator, tab=c.tab) }}
         {% endif %}
       {% endif %}
 
@@ -92,7 +92,7 @@
           <span class="pull-right list-header-actions">
           </span>
         </div>
-        {{ h.snippet('search/snippets/feature_list.html', packages=c.featured) }}
+        {{ h.snippet('search/snippets/feature_list.html', query=c.q, packages=c.features) }}
       {% endif %}
 
       {% if c.tab=='all' or c.tab=='datasets' %}
@@ -106,7 +106,7 @@
           <span class="pull-right list-header-actions">
           </span>
         </div>
-        {{ h.snippet('search/snippets/package_list.html', packages=c.page.items) }}
+        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items) }}
       {% endif %}
       {% endblock %}
     </div>
@@ -131,6 +131,7 @@
   {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/filter' %}
   {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
   <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}
 

@@ -1,13 +1,9 @@
 {% extends 'search/snippets/package_item.html' %}
 
-{% block init %}
-  {% set notes = "DESC" %}
-  {% set last_user = "" %}
-
-{% endblock %}
+{% set is_org = None %}
 
 {% block pre_icon %}
-  <span class="mL15 pull-left pre-icon"><i class="icon {{ loop.cycle('icon-tag', 'icon-earth') }}"></i></span>
+  <span class="mL15 pull-left pre-icon"><i class="icon {% if is_org is none %}icon-tag{% else %}icon-earth{% endif %}"></i></span>
 {% endblock %}
 
 {% block title %}
@@ -15,7 +11,7 @@
 {% endblock %}
 
 {% block updated %}
-   <a class="updatedNameColor" href="">{{ loop.cycle('Topic Page', 'Organisation Page') }}</a> - 19 Sept 2014
+   <a class="updatedNameColor" href="">{% if is_org is none %}{{ _("Topic Page") }}{% else %}{{ _("Organisation Page") }}{% endif %}</a> - {{ package.last_update }}
 {% endblock %}
 
 {% block others %}
@@ -25,7 +21,7 @@
 {% endblock %}
 
 {% block description %}
-  Some kind of description ;)
+  {{ package.description }}
 {% endblock %}
 
 {% block actions %}

@@ -121,9 +121,9 @@
         	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
         		<a href="{{ h.url_for('search', q=query, ext_indicator=1) }}">{{_('Indicators')}}</a>
         	</li>
-        	{# <li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'feature_pages' }}">
-        		<a href="{{ h.url_for('search', id=id) }}">{{_('Feature Pages')}}</a>
-        	</li> #}
+        	<li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'feature_pages' }}">
+        		<a href="{{ h.url_for('search', q=query, feature=1) }}">{{_('Feature Pages')}}</a>
+        	</li>
         	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
         		<a href="{{ h.url_for('search', q=query, ext_indicator=0) }}">{{_('Datasets')}}</a>
         	</li>
