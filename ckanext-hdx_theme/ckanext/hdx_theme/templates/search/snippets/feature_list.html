@@ -1,7 +1,7 @@
 {% if packages %}
   <ul class="list-items {{ list_class or 'dataset-list unstyled' }}">
     {% for package in packages %}
-      {% snippet 'search/snippets/feature_item.html', package=package, loop=loop %}
+      {% snippet 'search/snippets/feature_item.html', query=query, package=package, loop=loop %}
     {% endfor %}
   </ul>
 {% endif %}
