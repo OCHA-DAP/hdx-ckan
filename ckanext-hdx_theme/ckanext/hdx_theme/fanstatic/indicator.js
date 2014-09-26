@@ -24,8 +24,9 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       this.ckanModule._init();
     },
     _init: function(){
-      var data = [], indicatorCode;
-      indicatorCode = indicatorMapping[this.options.name];
+      var data = [], indicatorCode, sourceCode;
+      indicatorCode = indicatorCodeMapping[this.options.name];
+      sourceCode = indicatorSourceMapping[this.options.name];
 
       var CHART_COLORS = ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'];
 
@@ -111,10 +112,14 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       };
       var c3_chart = c3.generate(chart_config);
       c3_chart.internal.margin2.top=260;
+
+      var urlSourceAux = "";
+      if (sourceCode != "")
+        urlSourceAux = "&s="+sourceCode;
+
       var continuousLocation = this.options.continuous_location;
-      var setZoomFunc = this._setZoom;
       jQuery.ajax({
-        url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=latest_year",
+        url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + "&periodType=latest_year",
         success: function(json) {
           if (json.success){
             data = json.result.results;
@@ -131,7 +136,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
                 locationList.append('<li><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ name +'</a></li>');
               }
               if (data.length > 4)
-                locationList.append('<li><a style="cursor: pointer;" onclick="$(this).parent().siblings().show();$(this).hide(); $(this).parents(\'.cb-border-wrapper\').animate({scrollTop: 160}, \'slow\'); ">More</a></li>');
+                locationList.append('<li><a style="cursor: pointer;" onclick="$(this).parent().siblings().show();$(this).hide(); $(this).parents(\'.cb-border-wrapper\').attr(\'style\', \'overflow-y: scroll;\'); $(this).parents(\'.cb-border-wrapper\').animate({scrollTop: 160}, \'slow\'); ">More</a></li>');
               for (var i = 5; i < data.length; i++){
                 var name = data[i]['locationName'].substring(0, 18).toLowerCase();
                 name = name.charAt(0).toUpperCase() + name.slice(1);
@@ -156,11 +161,6 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         data = this.buildChart(data, c3_chart);
       else
         c3_chart.hide();
-    },
-    _setZoom: function(){
-      c3_chart.internal.brush.extent([0,20]).update();
-      c3_chart.internal.redrawForBrush();
-      c3_chart.internal.redrawSubchart();
     },
     buildChart: function(alldata, c3_chart) {
       var data, elementId;
