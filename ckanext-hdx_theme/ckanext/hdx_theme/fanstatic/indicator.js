@@ -131,7 +131,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
                 locationList.append('<li><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ name +'</a></li>');
               }
               if (data.length > 4)
-                locationList.append('<li><a style="cursor: pointer;" onclick="$(this).parent().siblings().show();$(this).hide(); $(this).parents(\'.cb-border-wrapper\').attr(\'style\', \'overflow: scroll;\'); $(this).parents(\'.cb-border-wrapper\').animate({scrollTop: 160}, \'slow\'); ">More</a></li>');
+                locationList.append('<li><a style="cursor: pointer;" onclick="$(this).parent().siblings().show();$(this).hide(); $(this).parents(\'.cb-border-wrapper\').attr(\'style\', \'overflow-y: scroll;\'); $(this).parents(\'.cb-border-wrapper\').animate({scrollTop: 160}, \'slow\'); ">More</a></li>');
               for (var i = 5; i < data.length; i++){
                 var name = data[i]['locationName'].substring(0, 18).toLowerCase();
                 name = name.charAt(0).toUpperCase() + name.slice(1);
