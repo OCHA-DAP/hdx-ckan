@@ -92,7 +92,14 @@ def count_types(context, data_dict, tab):
 def isolate_tags(context, q, packages, tab):
     import difflib
     import random
-    all_topics = get_action('tag_list')(context, {'vocabulary_id': 'Topics'})
+    try:
+        all_topics = get_action('tag_list')(
+            context, {'vocabulary_id': 'Topics'})
+    except NotFound, e:
+        all_topics = []
+        log.error('ERROR getting vocabulary named Topics: %r' %
+                  str(e.extra_msg))
+
     tags = list()
     features = list()
     for i in packages:
