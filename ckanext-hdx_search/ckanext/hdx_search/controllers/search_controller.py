@@ -92,7 +92,14 @@ def count_types(context, data_dict, tab):
 def isolate_tags(context, q, packages, tab):
     import difflib
     import random
-    all_topics = get_action('tag_list')(context, {'vocabulary_id': 'Topics'})
+    try:
+        all_topics = get_action('tag_list')(
+            context, {'vocabulary_id': 'Topics'})
+    except NotFound, e:
+        all_topics = []
+        log.error('ERROR getting vocabulary named Topics: %r' %
+                  str(e.extra_msg))
+
     tags = list()
     features = list()
     for i in packages:
@@ -101,14 +108,14 @@ def isolate_tags(context, q, packages, tab):
                 tags.append(p['name'])
 
     count = len(tags)
-#     if tab == 'all':
+    if tab == 'all':
+        selected = tags[:3]
 #         if q:
-#            selected = difflib.get_close_matches(q,tags,n=3)
+#             selected = difflib.get_close_matches(q,tags,n=3)
 #         else:
 #             selected = random.sample(tags, 3)
-#     else:
-#         selected = tags
-    selected = tags[:3]
+    else:
+        selected = tags
     for s in selected:
         params = [('tags', s)]
         url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
