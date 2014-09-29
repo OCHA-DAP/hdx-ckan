@@ -17,6 +17,8 @@
      data-module-parent_selector=".dataset-item" style="cursor: pointer;">Preview</a>
 {% endblock %}
 
-
+{% block follow_link %}
+  {{ h.hdx_follow_link('dataset', package.id, "this indicator") }}
+{% endblock %}
 
 

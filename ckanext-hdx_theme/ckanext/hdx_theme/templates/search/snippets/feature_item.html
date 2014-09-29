@@ -1,0 +1,33 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% set is_org = None %}
+
+{% block pre_icon %}
+  <span class="mL15 pull-left pre-icon"><i class="icon {% if is_org is none %}icon-tag{% else %}icon-earth{% endif %}"></i></span>
+{% endblock %}
+
+{% block title %}
+    <a href="{{ package.url }}">{{ package.display_name }}</a>
+{% endblock %}
+
+{% block updated %}
+   <a class="updatedNameColor" href="">{% if is_org is none %}{{ _("Topic Page") }}{% else %}{{ _("Organisation Page") }}</a> - {{ package.last_update }}{% endif %}
+{% endblock %}
+
+{% block others %}
+{% endblock %}
+
+{% block notes %}
+{% endblock %}
+
+{% block description %}
+  {{ package.description }}
+{% endblock %}
+
+{% block actions %}
+  <ul>
+    <li>
+      <a href="">Follow</a>
+    </li>
+  </ul>
+{% endblock %}

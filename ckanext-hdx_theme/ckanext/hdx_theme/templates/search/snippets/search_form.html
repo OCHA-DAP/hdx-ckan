@@ -38,11 +38,12 @@
   {% endblock %}
 
   {% block search_facets %}
-    {% if facets %}
+    {% if facets and facets.fields %}
       <p class="list-items filter-list">
+        <span style="margin-right: 20px;">{{ _("Filters") }}:</span>
         {% for field in facets.fields %}
           {% set search_facets_items = facets.search.get(field)['items'] %}
-          <span class="facet">{{ facets.titles.get(field) }}:</span>
+          {# <span class="facet">{{ facets.titles.get(field) }}:</span>#}
           {% for value in facets.fields[field] %}
             <span class="list-items filtered pill">
               {%- if facets.translated_fields and facets.translated_fields.has_key((field,value)) -%}
@@ -50,7 +51,7 @@
               {%- else -%}
                 {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
               {%- endif %}
-              <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="icon-remove"></i></a>
+              <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}"><i class="glyphicon glyphicon-remove"></i></a>
             </span>
           {% endfor %}
         {% endfor %}
@@ -58,13 +59,14 @@
     {% endif %}
   {% endblock %}
 
+
   {% block search_sortby %}
     {% if sorting %}
       <div class="form-select control-group control-order-by mTop10">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown">
           <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
-            <span class=".dropdown-toggle-text">
+            <span class="dropdown-toggle-text">
               {% for label, value in sorting %}
                   {% if sorting_selected == value %} {{ label }} {% endif %}
               {% endfor %}
@@ -113,16 +115,23 @@
       {% endif %}
       <ul class="nav nav-tabs">
         {% block content_primary_nav %}
-          {{ h.build_nav_icon('search', _('All'), q=query) }}
-          {{ h.build_nav_icon('search', _('Indicators'), q=query, ext_indicator=1)}}
-          {# h.build_nav_icon('search', _('Feature Pages'), id=id) #}
-          {{ h.build_nav_icon('search', _('Datasets'),q=query, ext_indicator=0) }}
+        	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
+        		<a href="{{ h.url_for('search', q=query) }}">{{_('All')}}</a>
+        	</li>
+        	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
+        		<a href="{{ h.url_for('search', q=query, ext_indicator=1) }}">{{_('Indicators')}}</a>
+        	</li>
+        	<li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'feature_pages' }}">
+        		<a href="{{ h.url_for('search', q=query, ext_feature=1) }}">{{_('Feature Pages')}}</a>
+        	</li>
+        	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
+        		<a href="{{ h.url_for('search', q=query, ext_indicator=0) }}">{{_('Datasets')}}</a>
+        	</li>
+          
         {% endblock %}
       </ul>
     </header>
   {% endblock %}
-
-
 
 </form>
 
