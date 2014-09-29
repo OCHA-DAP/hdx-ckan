@@ -28,6 +28,7 @@ import ckan.plugins as p
 
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
+from pydoc_data.topics import topics
 # from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
@@ -84,30 +85,31 @@ def count_types(context, data_dict, tab):
         indicator = None
     return (datasets['count'],indicators['count'], indicator)
 
-def isolate_tags(q, packages, tab):
+def isolate_tags(context, q, packages, tab):
     import difflib, random
+    all_topics = get_action('tag_list')(context, {'vocabulary_id': 'Topics'})
     tags = list()
     features = list()
     for i in packages:
         for p in i['tags']:
-            if p['name'] not in tags:
+            if p['name'] in all_topics and p['name'] not in tags:
                 tags.append(p['name'])
     
     count = len(tags)
-    if tab == 'all':
-        if q: 
-           selected = difflib.get_close_matches(q,tags,n=3)
-        else:
-            selected = random.sample(tags, 3)
-    else:
-        selected = tags
+#     if tab == 'all':
+#         if q: 
+#            selected = difflib.get_close_matches(q,tags,n=3)
+#         else:
+#             selected = random.sample(tags, 3)
+#     else:
+#         selected = tags
+    selected = tags[:3]
     for s in selected:
         params = [('tags', s)]
-        uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                        action='search')
-        url = url_with_params(uri, params)
+        url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+                                        action='search', vocab_Topics=s)
             
-        features.append({'name':s, 'display_name':s, 'url':url, 'description':'','', 'last_update':'19 Sept 2014'})
+        features.append({'name':s, 'display_name':s, 'url':url, 'description':'', 'last_update':'19 Sept 2014'})
     return (features, count)
 
 class HDXSearchController(PackageController):
@@ -280,9 +282,12 @@ class HDXSearchController(PackageController):
                 
 
             query = get_action('package_search')(context, data_dict)
-            if c.tab == "all" or c.tab == 'features':
-                c.features, c.feature_counts = isolate_tags(q,query['results'], c.tab)
             c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict, c.tab)
+            if c.tab == "all" or c.tab == 'features':
+                ind_and_datasets = list(query['results'])
+                if c.indicator and c.indicator[0]:
+                    ind_and_datasets.append(c.indicator[0]);
+                c.features, c.feature_counts = isolate_tags(context, q,ind_and_datasets, c.tab)
             c.sort_by_selected = query['sort']
 
             if c.tab == 'features':
