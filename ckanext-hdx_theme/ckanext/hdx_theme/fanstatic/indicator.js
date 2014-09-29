@@ -119,7 +119,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
 
       var continuousLocation = this.options.continuous_location;
       jQuery.ajax({
-        url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + "&periodType=latest_year",
+        url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + "&periodType=LATEST_YEAR_BY_COUNTRY&sorting=VALUE_DESC",
         success: function(json) {
           if (json.success){
             data = json.result.results;
