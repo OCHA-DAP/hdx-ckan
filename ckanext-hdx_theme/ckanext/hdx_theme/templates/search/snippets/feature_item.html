@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block updated %}
-   <a class="updatedNameColor" href="">{% if is_org is none %}{{ _("Topic Page") }}{% else %}{{ _("Organisation Page") }}{% endif %}</a> - {{ package.last_update }}
+   <a class="updatedNameColor" href="">{% if is_org is none %}{{ _("Topic Page") }}{% else %}{{ _("Organisation Page") }}</a> - {{ package.last_update }}{% endif %}
 {% endblock %}
 
 {% block others %}
