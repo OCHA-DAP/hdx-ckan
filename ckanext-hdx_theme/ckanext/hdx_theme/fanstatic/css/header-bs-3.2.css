@@ -59,13 +59,23 @@
         .pagination ul>li {
             line-height: 20px;
             display: inline;
+            margin-right: -2px;
         }
 
         .module .pagination{
             display: block;
             text-align: center;
-            height: 43px;
+            height: 45px;
         }
+
+        .module .pagination li a {
+            background-color: #ffffff;
+            padding: 13px 19px 14px;
+            line-height: 45px;
+        }
+
+/* END Pagination */
+
     /* END Style pagination */
 /* END Change the default style for ul items */
 
