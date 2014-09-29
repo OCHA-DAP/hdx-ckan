@@ -909,6 +909,7 @@
         border-top: 9px solid #ffffff;
         display: inline;
         background: none;
+        background-image: none !important;
     }
 
 

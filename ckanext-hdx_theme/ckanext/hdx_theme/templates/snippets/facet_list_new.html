@@ -57,7 +57,7 @@ within_tertiary
     <div class="col-xs-8">
       {% if items or not hide_empty %}
         {% set one_active = h.one_active_item(items) %}
-        <select name="{{name}}" class="{% if one_active %}value-selected{% endif %}" data-module="autocomplete">
+        <select name="{{name}}" class="{% if one_active %}value-selected{% endif %}" data-module="autocomplete" style="width: 230px;">
           {% if not one_active %}
             <option value="#">Any</option>
           {% endif %}
@@ -74,7 +74,7 @@ within_tertiary
           {% endfor %}
         </select>
       {% else %}
-        <select name="{{name}}" class="multiselect form-control" disabled></select>
+        <select name="{{name}}" class="" disabled data-module="autocomplete" style="width: 230px;"></select>
       {% endif %}
     </div>
   </div>
