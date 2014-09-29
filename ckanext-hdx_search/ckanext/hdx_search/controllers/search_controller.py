@@ -280,7 +280,7 @@ class HDXSearchController(PackageController):
                     c.tab = "indicators"
                 elif int(data_dict['extras']['ext_indicator']) == 0:
                     c.tab = "datasets"
-            elif 'features' in data_dict['extras']:
+            elif 'ext_feature' in data_dict['extras']:
                 c.tab = "features"
             else:
                 c.tab = "all"
