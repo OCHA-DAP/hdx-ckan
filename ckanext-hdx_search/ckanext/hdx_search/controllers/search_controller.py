@@ -1,5 +1,6 @@
 
-import logging, copy
+import logging
+import copy
 from urllib import urlencode
 # import datetime
 # import cgi
@@ -24,7 +25,6 @@ import ckan.model as model
 # import ckan.lib.plugins
 # import ckan.new_authz as new_authz
 import ckan.plugins as p
-
 
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
@@ -57,9 +57,11 @@ get_action = logic.get_action
 
 from ckan.controllers.package import PackageController
 
+
 def _encode_params(params):
     return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
             for k, v in params]
+
 
 def url_with_params(url, params):
     params = _encode_params(params)
@@ -73,20 +75,23 @@ def search_url(params, package_type=None):
         url = h.url_for('{0}_search'.format(package_type))
     return url_with_params(url, params)
 
+
 def count_types(context, data_dict, tab):
     search = copy.copy(data_dict)
     search['extras']['ext_indicator'] = 1
     indicators = get_action('package_search')(context, search)
     search['extras']['ext_indicator'] = 0
     datasets = get_action('package_search')(context, search)
-    if tab == 'all' and len(indicators['results'])>0:
+    if tab == 'all' and len(indicators['results']) > 0:
         indicator = [indicators['results'][0]]
     else:
         indicator = None
-    return (datasets['count'],indicators['count'], indicator)
+    return (datasets['count'], indicators['count'], indicator)
+
 
 def isolate_tags(context, q, packages, tab):
-    import difflib, random
+    import difflib
+    import random
     all_topics = get_action('tag_list')(context, {'vocabulary_id': 'Topics'})
     tags = list()
     features = list()
@@ -94,10 +99,10 @@ def isolate_tags(context, q, packages, tab):
         for p in i['tags']:
             if p['name'] in all_topics and p['name'] not in tags:
                 tags.append(p['name'])
-    
+
     count = len(tags)
 #     if tab == 'all':
-#         if q: 
+#         if q:
 #            selected = difflib.get_close_matches(q,tags,n=3)
 #         else:
 #             selected = random.sample(tags, 3)
@@ -107,21 +112,22 @@ def isolate_tags(context, q, packages, tab):
     for s in selected:
         params = [('tags', s)]
         url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                        action='search', vocab_Topics=s)
-            
-        features.append({'name':s, 'display_name':s, 'url':url, 'description':'', 'last_update':'19 Sept 2014'})
+                        action='search', vocab_Topics=s)
+
+        features.append(
+            {'name': s, 'display_name': s, 'url': url, 'description': '', 'last_update': ''})
     return (features, count)
+
 
 class HDXSearchController(PackageController):
 
     def package_search(self):
-        #Redirect to search
+        # Redirect to search
         params = request.params.items()
         uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                        action='search')
+                        action='search')
         url = url_with_params(uri, params)
         redirect(url)
-
 
     def search(self):
         from ckan.lib.search import SearchError
@@ -129,7 +135,7 @@ class HDXSearchController(PackageController):
         package_type = self._guess_package_type()
 
         if package_type == 'search':
-                package_type = 'dataset'
+            package_type = 'dataset'
 
         try:
             context = {'model': model, 'user': c.user or c.author,
@@ -149,6 +155,7 @@ class HDXSearchController(PackageController):
         # most search operations should reset the page counter:
         params_nopage = [(k, v) for k, v in request.params.items()
                          if k != 'page']
+
         def drill_down_url(alternative_url=None, **by):
             return h.add_url_param(alternative_url=alternative_url,
                                    controller='package', action='search',
@@ -158,7 +165,7 @@ class HDXSearchController(PackageController):
 
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
-                                  controller='package', action='search')
+                                      controller='package', action='search')
 
         c.remove_field = remove_field
 
@@ -238,12 +245,12 @@ class HDXSearchController(PackageController):
             facets = OrderedDict()
 
             default_facet_titles = {
-                    'organization': _('Organizations'),
-                    'groups': _('Groups'),
-                    'tags': _('Tags'),
-                    'res_format': _('Formats'),
-                    'license_id': _('Licenses'),
-                    }
+                'organization': _('Organizations'),
+                'groups': _('Groups'),
+                'tags': _('Tags'),
+                'res_format': _('Formats'),
+                'license_id': _('Licenses'),
+            }
 
             for facet in g.facets:
                 if facet in default_facet_titles:
@@ -277,17 +284,18 @@ class HDXSearchController(PackageController):
                 c.tab = "features"
             else:
                 c.tab = "all"
-                #For all tab, only paginate datasets
+                # For all tab, only paginate datasets
                 data_dict['extras']['ext_indicator'] = 0
-                
 
             query = get_action('package_search')(context, data_dict)
-            c.dataset_counts, c.indicator_counts, c.indicator = count_types(context, data_dict, c.tab)
+            c.dataset_counts, c.indicator_counts, c.indicator = count_types(
+                context, data_dict, c.tab)
             if c.tab == "all" or c.tab == 'features':
                 ind_and_datasets = list(query['results'])
                 if c.indicator and c.indicator[0]:
-                    ind_and_datasets.append(c.indicator[0]);
-                c.features, c.feature_counts = isolate_tags(context, q,ind_and_datasets, c.tab)
+                    ind_and_datasets.append(c.indicator[0])
+                c.features, c.feature_counts = isolate_tags(
+                    context, q, ind_and_datasets, c.tab)
             c.sort_by_selected = query['sort']
 
             if c.tab == 'features':
@@ -327,16 +335,15 @@ class HDXSearchController(PackageController):
                 abort(400, _('Parameter "{parameter_name}" is not '
                              'an integer').format(
                                  parameter_name='_%s_limit' % facet
-                             ))
+                ))
             c.search_facets_limits[facet] = limit
 
         maintain.deprecate_context_item(
-          'facets',
-          'Use `c.search_facets` instead.')
+            'facets',
+            'Use `c.search_facets` instead.')
 
         self._setup_template_variables(context, {},
                                        package_type=package_type)
 
-        #return render(self._search_template(package_type))
+        # return render(self._search_template(package_type))
         return render('search/search.html')
-        
