@@ -108,14 +108,14 @@ def isolate_tags(context, q, packages, tab):
                 tags.append(p['name'])
 
     count = len(tags)
-#     if tab == 'all':
+    if tab == 'all':
+        selected = tags[:3]
 #         if q:
-#            selected = difflib.get_close_matches(q,tags,n=3)
+#             selected = difflib.get_close_matches(q,tags,n=3)
 #         else:
 #             selected = random.sample(tags, 3)
-#     else:
-#         selected = tags
-    selected = tags[:3]
+    else:
+        selected = tags
     for s in selected:
         params = [('tags', s)]
         url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
