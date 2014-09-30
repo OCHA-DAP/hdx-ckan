@@ -150,7 +150,7 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
     
 def hdx_linked_user(user, maxlength=0):
     response = h.linked_user(user, maxlength)
-    changed_response = re.sub(r"<img[^>]+/>","",str(response))
+    changed_response = re.sub(r"<img[^>]+/>","", response)
     return h.literal(changed_response)
 
 def hdx_show_singular_plural(num, singular_word, plural_word, show_number=True):
