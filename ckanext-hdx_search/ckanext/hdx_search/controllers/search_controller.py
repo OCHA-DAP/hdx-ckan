@@ -225,10 +225,6 @@ class HDXSearchController(PackageController):
             c.fields_grouped = {}
             search_extras = {}
             #limit = g.datasets_per_page
-            if 'ext_indicator' in search_extras:
-                limit = 25
-            else:
-                limit = 5
 
             fq = ''
             for (param, value) in request.params.items():
@@ -243,6 +239,12 @@ class HDXSearchController(PackageController):
                             c.fields_grouped[param].append(value)
                     else:
                         search_extras[param] = value
+
+            if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
+                limit = 25
+            else:
+                limit = 5
+
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
