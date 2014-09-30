@@ -89,7 +89,7 @@ def count_types(context, data_dict, tab):
     return (datasets['count'], indicators['count'], indicator)
 
 
-def isolate_tags(context, q, packages, tab):
+def isolate_features(context, q, packages, tab):
     import difflib
     import random
     try:
@@ -100,30 +100,38 @@ def isolate_tags(context, q, packages, tab):
         log.error('ERROR getting vocabulary named Topics: %r' %
                   str(e.extra_msg))
 
+    extract = dict()
     tags = list()
     features = list()
     for i in packages:
+        if 'organization' in i and i['organization']['name'] not in tags:
+            tags.append(i['organization']['name'])
+            extract[i['organization']['name']] = {'name': i['organization']['name'], 'display_name': i['organization']['title'], 'url': h.url_for(controller='organization',
+                        action='read', id=i['organization']['id']), 'description': i['organization']['description'], 'last_update': i['organization']['revision_timestamp'], 'is_org':True}
+        
         for p in i['tags']:
             if p['name'] in all_topics and p['name'] not in tags:
                 tags.append(p['name'])
+                extract[p['name']] = {'name': p['name'], 'display_name': p['name'], 'url': h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+                        action='search', vocab_Topics=p['name']), 'description': '', 'last_update': ''}
+        
+        for g in i['groups']:
+            if g['name'] not in tags:
+                tags.append(g['name'])
+                extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'], 'url': h.url_for( controller='group',
+                        action='read', id=g['id']), 'description': g['description'], 'last_update': '', 'is_org':False}
 
-    count = len(tags)
-    if tab == 'all':
-        selected = tags[:3]
-#         if q:
-#             selected = difflib.get_close_matches(q,tags,n=3)
-#         else:
-#             selected = random.sample(tags, 3)
+
+    if tab == 'all' and len(tags) > 3:
+         if q:
+             selected = difflib.get_close_matches(q,tags,cutoff=0.1,n=3)
+         else:
+             selected = random.sample(tags, 3)
     else:
         selected = tags
     for s in selected:
-        params = [('tags', s)]
-        url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                        action='search', vocab_Topics=s)
-
-        features.append(
-            {'name': s, 'display_name': s, 'url': url, 'description': '', 'last_update': ''})
-    return (features, count)
+        features.append(extract[s])
+    return features
 
 
 class HDXSearchController(PackageController):
@@ -301,7 +309,7 @@ class HDXSearchController(PackageController):
                 ind_and_datasets = list(query['results'])
                 if c.indicator and c.indicator[0]:
                     ind_and_datasets.append(c.indicator[0])
-                c.features, c.feature_counts = isolate_tags(
+                c.features = isolate_features(
                     context, q, ind_and_datasets, c.tab)
             c.sort_by_selected = query['sort']
 

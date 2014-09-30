@@ -1,6 +1,6 @@
 {% extends 'search/snippets/package_item.html' %}
 
-{% set is_org = None %}
+{% set is_org = package.is_org or None %}
 
 {% block pre_icon %}
   <span class="mL15 pull-left pre-icon"><i class="icon {% if is_org is none %}icon-tag{% else %}icon-earth{% endif %}"></i></span>
