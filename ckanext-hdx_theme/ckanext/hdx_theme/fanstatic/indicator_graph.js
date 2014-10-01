@@ -94,6 +94,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           format: {
             title: function (d) {
               return data[d]['locationName'];
+            },
+            value: function (value, ratio, id, idx){
+              var format = d3.format('s');
+              var year = data[idx]['time'].substring(0,4);
+              return format(value) + " (" + year + ")";
             }
           }
         },
