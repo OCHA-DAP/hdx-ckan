@@ -104,7 +104,7 @@ def isolate_features(context, q, packages, tab):
     tags = list()
     features = list()
     for i in packages:
-        if 'organization' in i and i['organization']['name'] not in tags:
+        if 'organization' in i and i['organization'] and i['organization']['name'] not in tags:
             tags.append(i['organization']['name'])
             extract[i['organization']['name']] = {'name': i['organization']['name'], 'display_name': i['organization']['title'], 'url': h.url_for(controller='organization',
                         action='read', id=i['organization']['id']), 'description': i['organization']['description'], 'last_update': i['organization']['revision_timestamp'], 'is_org':True}
