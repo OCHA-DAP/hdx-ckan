@@ -92,13 +92,13 @@ def count_types(context, data_dict, tab):
 def isolate_features(context, q, packages, tab):
     import difflib
     import random
-    try:
-        all_topics = get_action('tag_list')(
-            context, {'vocabulary_id': 'Topics'})
-    except NotFound, e:
-        all_topics = []
-        log.error('ERROR getting vocabulary named Topics: %r' %
-                  str(e.extra_msg))
+    #try:
+    #    all_topics = get_action('tag_list')(
+    #        context, {'vocabulary_id': 'Topics'})
+    #except NotFound, e:
+    #    all_topics = []
+    #    log.error('ERROR getting vocabulary named Topics: %r' %
+    #              str(e.extra_msg))
 
     extract = dict()
     tags = list()
@@ -110,7 +110,7 @@ def isolate_features(context, q, packages, tab):
                         action='read', id=i['organization']['id']), 'description': i['organization']['description'], 'last_update': i['organization']['revision_timestamp'], 'is_org':True}
         
         for p in i['tags']:
-            if p['name'] in all_topics and p['name'] not in tags:
+            if p['vocabulary_id'] and p['name'] not in tags:
                 tags.append(p['name'])
                 extract[p['name']] = {'name': p['name'], 'display_name': p['name'], 'url': h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
                         action='search', vocab_Topics=p['name']), 'description': '', 'last_update': ''}
