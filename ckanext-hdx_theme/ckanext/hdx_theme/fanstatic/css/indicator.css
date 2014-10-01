@@ -275,6 +275,18 @@
 	
 /* END - continuous browsing */
 
+/* Graph options */
+    .graphOptionsRow{
+        margin-left: -45px;
+        margin-right: -15px;
+    }
+    .graphOptions{
+        background-color: #eeeeee;
+        height: 330px;
+        overflow-y: scroll;
+    }
+/* END Graph options */
+
 
 #chart-container svg > g:nth-child(3) .c3-axis-x {
     opacity: 0 !important;
