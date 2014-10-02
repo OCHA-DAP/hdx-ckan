@@ -1,7 +1,7 @@
 {#
  Example:
 
-  {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics %}
+  {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls %}
 
 #}
 <div class="row">
@@ -30,8 +30,8 @@
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Follower'),_('Followers'), False), count=followers_num, 
 				links=followers %}
 			
-			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Contributors'), count=' ', 
-				links=[{'name':_('Coming soon...')}] %}
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Related Websites'), count=' ', 
+				links=related_urls %}
 		</div>
 	</div>
 </div>

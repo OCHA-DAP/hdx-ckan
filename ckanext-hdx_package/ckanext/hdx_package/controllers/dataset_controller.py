@@ -584,13 +584,16 @@ class DatasetController(PackageController):
             c.followers = [{'url': h.url_for(controller='user',
                                              action='read', id=f['name']), 'name':f['fullname'] or f['name']}
                            for f in followers]
-
+        # topics
         topics_obj = helpers.pkg_topics_list({'id': c.pkg_dict['id']})
         topics = model_dictize.tag_list_dictize(topics_obj, context)
 
         if topics and len(topics) > 0:
             c.topics = [{'url': h.url_for(controller='package', action='search', vocab_Topics=t['name']), 'name':t['name']}
                         for t in topics]
+        # related websites
+        c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
+            'url': 'http://www.unocha.org', 'name': 'UNOCHA'}, {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'}, {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
         try:
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
