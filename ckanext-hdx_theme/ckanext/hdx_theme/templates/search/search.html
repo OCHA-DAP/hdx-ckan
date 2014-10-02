@@ -59,7 +59,7 @@
           'translated_fields': c.translated_fields,
           'remove_field': c.remove_field }
         %}
-        {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=(c.dataset_counts+c.indicator_counts), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
+        {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
       {% endblock %}
 
       {% block package_search_results_list %}
