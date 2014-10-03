@@ -275,6 +275,48 @@
 	
 /* END - continuous browsing */
 
+/* Graph options */
+    .graphOptionsRow{
+        margin-left: -45px;
+        margin-right: -15px;
+    }
+    .graphOptions{
+        background-color: #eeeeee;
+        height: 330px;
+        overflow-y: scroll;
+    }
+/* END Graph options */
+
+/* Side panel Locations */
+    #showOptions {
+        font-weight: bold;
+    }
+    #sidePanelCountries li input{
+        position: static;
+    }
+    #sidePanelCountries li label:after{
+        content: "";
+    }
+    #sidePanelCountries li label{
+        font-weight: normal;
+    }
+
+    #sidePanelCountries .locationCheckbox {
+        margin-right: 10px;
+        margin-left: 20px;
+    }
+    #sidePanelCountries .locationCheckbox~label {
+        color: #000000;
+    }
+    #sidePanelCountries .locationCheckbox[value="*ALL*"] {
+        margin-left: 0;
+    }
+    #sidePanelCountries .locationCheckbox[value="*ALL*"]~label {
+        color: #000000;
+        font-weight: bold;
+
+    }
+/* END Side panel Locations */
 
 #chart-container svg > g:nth-child(3) .c3-axis-x {
     opacity: 0 !important;
