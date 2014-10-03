@@ -107,3 +107,36 @@ class HDXOrgMemberController(org.OrganizationController):
         except ValidationError, e:
             h.flash_error(e.error_summary)
         self._redirect_to(controller='group', action='members', id=id)
+        
+    def member_delete(self, id):
+        ''' This is a modified version of the member_delete from the 
+            ckan group controller. 
+            The changes are: ( if you modify this function please add below)
+            - flash msg changed to reflect it's an org member ( not group member )
+            - the delete confirmation is done with js ( DHTML )
+        '''
+        if 'cancel' in request.params:
+            self._redirect_to(controller='group', action='members', id=id)
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+
+        try:
+            self._check_access('group_member_delete', context, {'id': id})
+        except NotAuthorized:
+            abort(401, _('Unauthorized to delete group %s members') % '')
+
+        try:
+            user_id = request.params.get('user')
+            if request.method == 'POST':
+                self._action('group_member_delete')(context, {'id': id, 'user_id': user_id})
+                h.flash_notice(_('Organization member has been deleted.')) #modified by HDX
+                self._redirect_to(controller='group', action='members', id=id)
+            c.user_dict = self._action('user_show')(context, {'id': user_id})
+            c.user_id = user_id
+            c.group_id = id
+        except NotAuthorized:
+            abort(401, _('Unauthorized to delete group %s') % '')
+        except NotFound:
+            abort(404, _('Group not found'))
+        self._redirect_to(controller='group', action='members', id=id) #modified by HDX
