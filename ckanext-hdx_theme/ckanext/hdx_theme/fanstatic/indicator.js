@@ -119,11 +119,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
 
       var continuousLocation = this.options.continuous_location;
       jQuery.ajax({
-<<<<<<< HEAD
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + "&periodType=LATEST_YEAR_BY_COUNTRY&sorting=VALUE_DESC",
-=======
-        url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + "&periodType=LATEST_YEAR",
->>>>>>> refs/remotes/origin/prod-local
         success: function(json) {
           if (json.success){
             data = json.result.results;
