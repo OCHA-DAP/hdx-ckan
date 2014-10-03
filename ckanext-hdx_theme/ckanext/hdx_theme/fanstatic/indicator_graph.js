@@ -21,6 +21,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     dataCallbacks: [],
     elementId: null,
     view_port_reset: true,
+    _last_datapoints_div: null,
     _onClick: function(){
       /**
        * Click Only callback
@@ -203,6 +204,14 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _zoomEventNoRedraw: function(w, domain){
       var dif = w[1] - w[0]; //number of data points shown
 
+      if (this._last_datapoints_div != null && this._last_datapoints_div != dif && dif > 20){
+        this.view_port_reset = false;
+      }
+
+      if (this._last_datapoints_div != dif){
+        this._last_datapoints_div = dif;
+      }
+
       var MAGIC = 30; //magic number under which the country names can be displayed
       var c3_chart = this.c3_chart;
       if (dif < MAGIC){
@@ -215,7 +224,6 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     //Callback for the zoom event with additional redraw
     _zoomEvent: function (w, domain){
       this._zoomEventNoRedraw(w, domain);
-      this.view_port_reset = false;
       this.c3_chart.internal.redrawForBrush();
     },
     //Setup the chart config
