@@ -252,10 +252,9 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
         extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
                               'url': h.url_for(controller='organization', action='read', id=o['name']), 'description': o['description'], 'last_update': '', 'feature_type': 'organization', 'count': o['count']}
 
-    for p in facets['tags']['items']:
-        if p['name'] in all_topics:
-            tags.append(p['name'])
-            extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
+    for p in facets['vocab_Topics']['items']:
+        tags.append(p['name'])
+        extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
                                   'url': h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '', 'feature_type': 'topic', 'count': p['count']}
 
     for g in facets['groups']['items']:
@@ -460,8 +459,6 @@ class HDXSearchController(PackageController):
                     context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
 
             c.sort_by_selected = query['sort']
-
-            print pager_url
 
             if c.tab == 'features':
                 c.page = h.Page(

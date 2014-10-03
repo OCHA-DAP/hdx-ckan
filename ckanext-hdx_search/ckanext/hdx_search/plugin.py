@@ -31,6 +31,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return map
 
     def before_search(self, search_params):
+        if 'vocab_Topics' not in search_params['facet.field']:
+            search_params['facet.field'].append('vocab_Topics')
+
         # If indicator flag is set, search only that type
         if 'ext_indicator' in search_params['extras']:
             if int(search_params['extras']['ext_indicator']) == 1:
