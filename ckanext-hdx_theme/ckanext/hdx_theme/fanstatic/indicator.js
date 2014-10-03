@@ -1,8 +1,8 @@
 $(document).ready(function() {
   $("#showOptions").on("click", function (){
-    const showOptionsText = 'Show options';
-    const hideOptionsText = 'Hide options';
-    if ($(this).text == showOptionsText)
+    const showOptionsText = 'Select countries';
+    const hideOptionsText = 'Hide select countries';
+    if ($(this).text() == showOptionsText)
       $(this).text(hideOptionsText);
     else
       $(this).text(showOptionsText);
