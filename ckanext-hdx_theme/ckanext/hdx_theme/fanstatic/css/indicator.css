@@ -288,6 +288,9 @@
 /* END Graph options */
 
 /* Side panel Locations */
+    #showOptions {
+        font-weight: bold;
+    }
     #sidePanelCountries li input{
         position: static;
     }
