@@ -15,9 +15,12 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         $(this.el).click(this._onClick);
     },
     c3_chart: null,
+    filteredLocations: null,
+    graphData: [],
     data: [],
     dataCallbacks: [],
     elementId: null,
+    view_port_reset: true,
     _onClick: function(){
       /**
        * Click Only callback
@@ -51,10 +54,19 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       c3_chart.internal.margin2.top=260;
 
       /**
-       * Callbacks
+       * Priority Callbacks - that need to setup data for the rest
+       */
+      this.dataCallbacks.push($.proxy(this._callback_trim_names, this)); //Trim the names
+      this.dataCallbacks.push($.proxy(this._callback_process_data, this)); //Process the data for the graph
+
+      /**
+       * Regular Callbacks
        */
       //setup side_panel onclick function to resize the chart
-      this._setupSidePanelCallback();
+      if (this.options.side_panel != "") {
+        this._sidePanelResizeCallback();
+        this.dataCallbacks.push($.proxy(this._callback_sidepanel, this));
+      }
       //Continuous location callback;
       if (this.options.continuous_location != "")
         this.dataCallbacks.push($.proxy(this._callback_location, this));
@@ -67,36 +79,90 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       jQuery.ajax({
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + "&periodType=LATEST_YEAR_BY_COUNTRY&sorting=VALUE_DESC",
         success: $.proxy(this._data_ajax_success, this),
-        complete: $.proxy(this._data_ajax_complete, this),
+//        complete: $.proxy(this._data_ajax_complete, this),
         async:false
       });
       //build the chart
       if (this.data.length > 0)
-        this.data = this.buildChart(this.data, c3_chart);
+        this.buildChart();
       else
         c3_chart.hide();
+    },
+    //Filter the newly loaded data to show just the selected locations
+    _callback_process_data: function(){
+      //Check if the filtered Locations were not initialized before
+      if (this.filteredLocations === null){
+        this.filteredLocations = {};
+        for (var i = 0; i < this.data.length; i++){
+          this.filteredLocations[this.data[i]['locationCode']] = true;
+        }
+      }
+      this.graphData = [];
+      for (var i = 0; i < this.data.length; i++){
+        if (this.filteredLocations[this.data[i]['locationCode']])
+          this.graphData.push(this.data[i]);
+      }
     },
     //Callback for data load success - we update the data field and run all the callbacks
     _data_ajax_success: function(json) {
       if (json.success){
         this.data = json.result.results;
-        var data = this.data;
+
         //Call all callbacks that new data was loaded
         for (var i = 0; i < this.dataCallbacks.length; i++){
           this.dataCallbacks[i]();
         }
       }
     },
-    //Callback for data load complete - we set the initial viewport for the graph
-    _data_ajax_complete: function(){
+    //Callback for data load complete - we reset the initial viewport for the graph
+    _set_view_port_size: function(){
       var c3_chart = this.c3_chart;
-      $('body').delay(500).queue(function(){
-        c3_chart.internal.brush.extent([0,20]).update();
-        c3_chart.internal.redrawForBrush();
-        c3_chart.internal.redrawSubchart();
-        $(this).dequeue();
-        $(this.elementId).attr("style", "max-height: 310px; position: relative;");
-      });
+      var graphData = this.graphData;
+      var end = graphData.length > 20 || graphData.length == 0 ? 20 : graphData.length;
+      c3_chart.internal.brush.extent([0,end]).update();
+      c3_chart.internal.redrawForBrush();
+      c3_chart.internal.redrawSubchart();
+      $(this.elementId).attr("style", "max-height: 310px; position: relative;");
+    },
+    _callback_trim_names: function () {
+      var data = this.data;
+      //trim names
+      for (var dataEl in data){
+        data[dataEl]['trimName'] = data[dataEl]['locationName'];
+        if (data[dataEl]['trimName'].length > 15)
+          data[dataEl]['trimName'] = data[dataEl]['trimName'].substring(0, 15) + '...';
+      }
+    },
+    //Callback for the setup of the side panel locations
+    _callback_sidepanel: function (){
+      var data = this.data.slice(0); //make copy of array
+      data.sort(function(a, b){return a['locationName'].localeCompare(b['locationName'])});
+      data.unshift({'locationName': "Countries", 'locationCode': "*ALL*"});
+      var container = $("#"+this.options.side_panel_locations);
+      for (var i = 0; i < data.length; i++){
+        var name = data[i]['locationName'];
+        var code = data[i]['locationCode'];
+        var id = "sidePanelLocation" + i;
+        container.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' checked type='checkbox'/><label for='" + id + "'>" + name + "</label></li>");
+        var element = $("#"+id);
+        element.data("ckanModule", this);
+      }
+      $("#"+this.options.side_panel_locations + " li input").on("click", this._callback_location_click);
+    },
+    _callback_location_click: function (){
+      var code = $(this).attr('value');
+      var module = $(this).data("ckanModule");
+
+      if (code === "*ALL*"){
+        for (var code in module.filteredLocations)
+          module.filteredLocations[code] = this.checked;
+        $("#"+module.options.side_panel_locations + " li input").prop('checked', this.checked);
+      }
+      else
+        module.filteredLocations[code] = this.checked;
+
+      module._callback_process_data();//adjust the new data
+      module.buildChart();
     },
     //Callback to setup the continuous location widget
     _callback_location: function (){
@@ -112,28 +178,26 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         for (var i = 0; i <= 4; i++){
           var name = data[i]['locationName'].substring(0, 18).toLowerCase();
           name = name.charAt(0).toUpperCase() + name.slice(1);
-          locationList.append('<li><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ name +'</a></li>');
+          locationList.append('<li><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ data[i]['trimName'] +'</a></li>');
         }
         if (data.length > 4)
           locationList.append('<li><a style="cursor: pointer;" onclick="$(this).parent().siblings().show();$(this).hide(); $(this).parents(\'.cb-border-wrapper\').attr(\'style\', \'overflow-y: scroll;\'); $(this).parents(\'.cb-border-wrapper\').animate({scrollTop: 160}, \'slow\'); ">More</a></li>');
         for (var i = 5; i < data.length; i++){
           var name = data[i]['locationName'].substring(0, 18).toLowerCase();
           name = name.charAt(0).toUpperCase() + name.slice(1);
-          locationList.append('<li style="display: none"><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ name +'</a></li>');
+          locationList.append('<li style="display: none"><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ data[i]['trimName'] +'</a></li>');
         }
       }
     },
     //Callback for the sidepanel show/hide trigger - resizes the chart
-    _setupSidePanelCallback: function (){
-      if (this.options.side_panel != ""){
-        var showPanel = $("#"+this.options.side_panel);
-        showPanel.bind("click", $.proxy(function (){
-          var c3_chart = this.c3_chart;
-          c3_chart.resize();
-          c3_chart.internal.redrawForBrush();
-          c3_chart.internal.redrawSubchart();
-        }, this));
-      }
+    _sidePanelResizeCallback: function (){
+      var showPanel = $("#"+this.options.side_panel);
+      showPanel.bind("click", $.proxy(function (){
+        var c3_chart = this.c3_chart;
+        c3_chart.resize();
+        c3_chart.internal.redrawForBrush();
+        c3_chart.internal.redrawSubchart();
+      }, this));
     },
     //Callback for the zoom event, but trigger no redraw
     _zoomEventNoRedraw: function(w, domain){
@@ -151,6 +215,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     //Callback for the zoom event with additional redraw
     _zoomEvent: function (w, domain){
       this._zoomEventNoRedraw(w, domain);
+      this.view_port_reset = false;
       this.c3_chart.internal.redrawForBrush();
     },
     //Setup the chart config
@@ -164,7 +229,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
         },
         data: {
-          json: this.data,
+          json: this.graphData,
           keys: {
             x: 'trimName',
             value: ['value']
@@ -224,25 +289,27 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     //Builds the chart when the data is available
     buildChart: function () {
       var data;
-      data = this.data;
-      //trim names
-      for (var dataEl in data){
-        data[dataEl]['trimName'] = data[dataEl]['locationName'];
-        if (data[dataEl]['trimName'].length > 15)
-          data[dataEl]['trimName'] = data[dataEl]['trimName'].substring(0, 15) + '...';
-      }
+      data = this.graphData;
 
-      this.c3_chart.load({
-        json: data,
-        keys: {
-          x: 'trimName',
-          value: ['value']
-        },
-        names: {
-          value: this.options.label
-        }
-      });
-      return data;
+      if (this.view_port_reset){
+        this._set_view_port_size();
+      }
+      if (data.length > 0){
+        this.c3_chart.load({
+          json: data,
+          keys: {
+            x: 'trimName',
+            value: ['value']
+          },
+          names: {
+            value: this.options.label
+          }
+        });
+      }
+      else{
+        this.c3_chart.unload();
+        this.view_port_reset = true;
+      }
     },
     //default module options
     options: {
@@ -254,7 +321,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       click_only: false,
       container: "",
       parent_selector: "",
-      side_panel: ""
+      side_panel: "",
+      side_panel_locations: ""
     }
   }
 });

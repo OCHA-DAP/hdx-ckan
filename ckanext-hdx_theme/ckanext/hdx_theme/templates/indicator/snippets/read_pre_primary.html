@@ -41,11 +41,7 @@
           </div>
           <div class="row graphOptionsRow">
             <div class="col-xs-12 paddingLeftHack graphOptions">
-              <div>Countries:</div>
-              <ul>
-                <li><label>
-                  <input type="checkbox"/>SDASD
-                </label></li>
+              <ul id="sidePanelCountries">
               </ul>
             </div>
           </div>
@@ -103,7 +99,8 @@
 
           <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}"
                data-module-name="{{ pkg.title }}" data-module-subchart="true"
-               data-module-continuous_location="continuous_browsing_locations" data-module-side_panel="showOptions">
+               data-module-continuous_location="continuous_browsing_locations"
+               data-module-side_panel="showOptions" data-module-side_panel_locations="sidePanelCountries">
           </div>
         </div>
       </div>
