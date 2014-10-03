@@ -76,12 +76,15 @@
         $$.clipId = "c3-" + (+new Date()) + '-clip',
         $$.clipIdForXAxis = $$.clipId + '-xaxis',
         $$.clipIdForYAxis = $$.clipId + '-yaxis',
+        $$.clipIdForGrid = $$.clipId + '-grid',
         $$.clipPath = $$.getClipPath($$.clipId),
         $$.clipPathForXAxis = $$.getClipPath($$.clipIdForXAxis),
         $$.clipPathForYAxis = $$.getClipPath($$.clipIdForYAxis);
+        $$.clipPathForGrid = $$.getClipPath($$.clipIdForGrid),
 
         $$.dragStart = null;
         $$.dragging = false;
+        $$.flowing = false;
         $$.cancelClick = false;
         $$.mouseover = false;
         $$.transiting = false;
@@ -104,6 +107,8 @@
 
         $$.hiddenTargetIds = [];
         $$.hiddenLegendIds = [];
+        $$.focusedTargetIds = [];
+        $$.defocusedTargetIds = [];
 
         $$.xOrient = config.axis_rotated ? "left" : "bottom";
         $$.yOrient = config.axis_rotated ? "bottom" : "left";
@@ -132,7 +137,7 @@
 
     c3_chart_internal_fn.initWithData = function (data) {
         var $$ = this, d3 = $$.d3, config = $$.config;
-        var main, binding = true;
+        var defs, main, binding = true;
 
         if ($$.initPie) { $$.initPie(); }
         if ($$.initBrush) { $$.initBrush(); }
@@ -192,10 +197,11 @@
             .on('mouseleave', function () { return config.onmouseout.call($$); });
 
         // Define defs
-        $$.defs = $$.svg.append("defs");
-        $$.defs.append("clipPath").attr("id", $$.clipId).append("rect");
-        $$.defs.append("clipPath").attr("id", $$.clipIdForXAxis).append("rect");
-        $$.defs.append("clipPath").attr("id", $$.clipIdForYAxis).append("rect");
+        defs = $$.svg.append("defs");
+        $$.clipChart = $$.appendClip(defs, $$.clipId);
+        $$.clipXAxis = $$.appendClip(defs, $$.clipIdForXAxis);
+        $$.clipYAxis = $$.appendClip(defs, $$.clipIdForYAxis);
+        $$.clipGrid = $$.appendClip(defs, $$.clipIdForGrid);
         $$.updateSvgSize();
 
         // Define regions
@@ -224,6 +230,9 @@
             .attr("clip-path", $$.clipPath)
             .attr('class', CLASS.chart);
 
+        // Grid lines
+        if (config.grid_lines_front) { $$.initGridLines(); }
+
         // Cover whole with rects for events
         $$.initEventRect();
 
@@ -250,9 +259,7 @@
             .on("dblclick.zoom", null);
 
         // Set default extent if defined
-        if (config.axis_x_default) {
-            $$.brush.extent(isFunction(config.axis_x_default) ? config.axis_x_default($$.getXDomain()) : config.axis_x_default);
-        }
+        if (config.axis_x_extent) { $$.brush.extent($$.getDefaultExtent()); }
 
         // Add Axis
         $$.initAxis();
@@ -263,6 +270,7 @@
         // Draw with targets
         if (binding) {
             $$.updateDimension();
+            $$.config.oninit.call($$);
             $$.redraw({
                 withTransform: true,
                 withUpdateXDomain: true,
@@ -371,6 +379,9 @@
         // for arc
         $$.arcWidth = $$.width - ($$.isLegendRight ? legendWidth + 10 : 0);
         $$.arcHeight = $$.height - ($$.isLegendRight ? 0 : 10);
+        if ($$.hasType('gauge')) {
+            $$.arcHeight += $$.height - $$.getGaugeLabelHeight();
+        }
         if ($$.updateRadius) { $$.updateRadius(); }
 
         if ($$.isLegendRight && hasArc) {
@@ -407,7 +418,7 @@
     c3_chart_internal_fn.redraw = function (options, transitions) {
         var $$ = this, main = $$.main, d3 = $$.d3, config = $$.config;
         var areaIndices = $$.getShapeIndices($$.isAreaType), barIndices = $$.getShapeIndices($$.isBarType), lineIndices = $$.getShapeIndices($$.isLineType);
-        var withY, withSubchart, withTransition, withTransitionForExit, withTransitionForAxis, withTransform, withUpdateXDomain, withUpdateOrgXDomain, withLegend;
+        var withY, withSubchart, withTransition, withTransitionForExit, withTransitionForAxis, withTransform, withUpdateXDomain, withUpdateOrgXDomain, withTrimXDomain, withLegend;
         var hideAxis = $$.hasArcType();
         var drawArea, drawBar, drawLine, xForText, yForText;
         var duration, durationForExit, durationForAxis;
@@ -424,6 +435,7 @@
         withTransform = getOption(options, "withTransform", false);
         withUpdateXDomain = getOption(options, "withUpdateXDomain", false);
         withUpdateOrgXDomain = getOption(options, "withUpdateOrgXDomain", false);
+        withTrimXDomain = getOption(options, "withTrimXDomain", true);
         withLegend = getOption(options, "withLegend", false);
         withTransitionForExit = getOption(options, "withTransitionForExit", withTransition);
         withTransitionForAxis = getOption(options, "withTransitionForAxis", withTransition);
@@ -445,10 +457,10 @@
         }
 
         if (targetsToShow.length) {
-            $$.updateXDomain(targetsToShow, withUpdateXDomain, withUpdateOrgXDomain);
+            $$.updateXDomain(targetsToShow, withUpdateXDomain, withUpdateOrgXDomain, withTrimXDomain);
             // update axis tick values according to options
             if (!config.axis_x_tick_values && (config.axis_x_tick_fit || config.axis_x_tick_count)) {
-                tickValues = $$.generateTickValues($$.mapTargetsToUniqueXs(targetsToShow), config.axis_x_tick_count);
+                tickValues = $$.generateTickValues($$.mapTargetsToUniqueXs(targetsToShow), config.axis_x_tick_count, $$.isTimeSeries());
                 $$.xAxis.tickValues(tickValues);
                 $$.subXAxis.tickValues(tickValues);
             }
@@ -459,6 +471,15 @@
 
         $$.y.domain($$.getYDomain(targetsToShow, 'y'));
         $$.y2.domain($$.getYDomain(targetsToShow, 'y2'));
+
+        if (!config.axis_y_tick_values && config.axis_y_tick_count) {
+            tickValues = $$.generateTickValues($$.y.domain(), config.axis_y_tick_count);
+            $$.yAxis.tickValues(tickValues);
+        }
+        if (!config.axis_y2_tick_values && config.axis_y2_tick_count) {
+            tickValues = $$.generateTickValues($$.y2.domain(), config.axis_y2_tick_count);
+            $$.y2Axis.tickValues(tickValues);
+        }
 
         // axes
         $$.redrawAxis(transitions, hideAxis);
@@ -495,8 +516,8 @@
         drawArea = $$.generateDrawArea ? $$.generateDrawArea(areaIndices, false) : undefined;
         drawBar = $$.generateDrawBar ? $$.generateDrawBar(barIndices) : undefined;
         drawLine = $$.generateDrawLine ? $$.generateDrawLine(lineIndices, false) : undefined;
-        xForText = $$.generateXYForText(barIndices, true);
-        yForText = $$.generateXYForText(barIndices, false);
+        xForText = $$.generateXYForText(areaIndices, barIndices, lineIndices, true);
+        yForText = $$.generateXYForText(areaIndices, barIndices, lineIndices, false);
 
         // Update sub domain
         $$.subY.domain($$.y.domain());
@@ -549,8 +570,8 @@
             .selectAll('circle')
             .remove();
 
-        // event rect
-        if (config.interaction_enabled) {
+        // event rects will redrawn when flow called
+        if (config.interaction_enabled && !options.flow) {
             $$.redrawEventRect();
         }
 
@@ -668,8 +689,7 @@
         return d.value !== null && this.withoutFadeIn[d.id] ? 1 : 0;
     };
     c3_chart_internal_fn.opacityForCircle = function (d) {
-        var $$ = this;
-        return isValue(d.value) ? $$.isScatterType(d) ? 0.5 : 1 : 0;
+        return isValue(d.value) ? this.isScatterType(d) ? 0.5 : 1 : 0;
     };
     c3_chart_internal_fn.opacityForText = function () {
         return this.hasDataLabel() ? 1 : 0;
@@ -727,7 +747,7 @@
     c3_chart_internal_fn.updateSvgSize = function () {
         var $$ = this;
         $$.svg.attr('width', $$.currentWidth).attr('height', $$.currentHeight);
-        $$.svg.select('#' + $$.clipId).select('rect')
+        $$.svg.selectAll(['#' + $$.clipId, '#' + $$.clipIdForGrid]).select('rect')
             .attr('width', $$.width)
             .attr('height', $$.height);
         $$.svg.select('#' + $$.clipIdForXAxis).select('rect')
@@ -774,6 +794,7 @@
                         if (selection.node().parentNode) {
                             window.clearInterval(interval);
                             $$.updateDimension();
+                            $$.config.oninit.call($$);
                             $$.redraw({
                                 withTransform: true,
                                 withUpdateXDomain: true,
@@ -874,11 +895,13 @@
             onmouseout: function () {},
             onresize: function () {},
             onresized: function () {},
+            oninit: function () {},
             transition_duration: 350,
             data_x: undefined,
             data_xs: {},
             data_xFormat: '%Y-%m-%d',
             data_xLocaltime: true,
+            data_xSort: true,
             data_idConverter: function (id) { return id; },
             data_names: {},
             data_classes: {},
@@ -945,11 +968,11 @@
             axis_x_tick_values: null,
             axis_x_tick_rotate: undefined,
             axis_x_tick_outer: true,
-            axis_x_max: null,
-            axis_x_min: null,
+            axis_x_max: undefined,
+            axis_x_min: undefined,
             axis_x_padding: {},
             axis_x_height: undefined,
-            axis_x_default: undefined,
+            axis_x_extent: undefined,
             axis_x_label: {},
             axis_y_show: true,
             axis_y_max: undefined,
@@ -958,8 +981,10 @@
             axis_y_label: {},
             axis_y_tick_format: undefined,
             axis_y_tick_outer: true,
-            axis_y_padding: undefined,
-            axis_y_ticks: 10,
+            axis_y_tick_values: null,
+            axis_y_tick_count: undefined,
+            axis_y_padding: {},
+            axis_y_default: undefined,
             axis_y2_show: false,
             axis_y2_max: undefined,
             axis_y2_min: undefined,
@@ -967,8 +992,10 @@
             axis_y2_label: {},
             axis_y2_tick_format: undefined,
             axis_y2_tick_outer: true,
-            axis_y2_padding: undefined,
-            axis_y2_ticks: 10,
+            axis_y2_tick_values: null,
+            axis_y2_tick_count: undefined,
+            axis_y2_padding: {},
+            axis_y2_default: undefined,
             // grid
             grid_x_show: false,
             grid_x_type: 'tick',
@@ -979,13 +1006,14 @@
             grid_y_lines: [],
             grid_y_ticks: 10,
             grid_focus_show: true,
+            grid_lines_front: true,
             // point - point of each data
             point_show: true,
             point_r: 2.5,
             point_focus_expand_enabled: true,
             point_focus_expand_r: undefined,
             point_select_r: undefined,
-            line_connect_null: false,
+            line_connectNull: false,
             // bar
             bar_width: undefined,
             bar_width_ratio: 0.6,
@@ -997,7 +1025,6 @@
             pie_label_show: true,
             pie_label_format: undefined,
             pie_label_threshold: 0.05,
-            pie_sort: true,
             pie_expand: true,
             // gauge
             gauge_label_show: true,
@@ -1012,7 +1039,6 @@
             donut_label_format: undefined,
             donut_label_threshold: 0.05,
             donut_width: undefined,
-            donut_sort: true,
             donut_expand: true,
             donut_title: "",
             // region - region to change style
@@ -1131,18 +1157,22 @@
         $$.subYMax = config.axis_rotated ? $$.width2 : 1;
         // update scales
         $$.x = $$.getX($$.xMin, $$.xMax, forInit ? undefined : $$.x.orgDomain(), function () { return $$.xAxis.tickOffset(); });
-        $$.y = $$.getY($$.yMin, $$.yMax, forInit ? undefined : $$.y.domain());
-        $$.y2 = $$.getY($$.yMin, $$.yMax, forInit ? undefined : $$.y2.domain());
+        $$.y = $$.getY($$.yMin, $$.yMax, forInit ? config.axis_y_default : $$.y.domain());
+        $$.y2 = $$.getY($$.yMin, $$.yMax, forInit ? config.axis_y2_default : $$.y2.domain());
         $$.subX = $$.getX($$.xMin, $$.xMax, $$.orgXDomain, function (d) { return d % 1 ? 0 : $$.subXAxis.tickOffset(); });
-        $$.subY = $$.getY($$.subYMin, $$.subYMax, forInit ? undefined : $$.subY.domain());
-        $$.subY2 = $$.getY($$.subYMin, $$.subYMax, forInit ? undefined : $$.subY2.domain());
+        $$.subY = $$.getY($$.subYMin, $$.subYMax, forInit ? config.axis_y_default : $$.subY.domain());
+        $$.subY2 = $$.getY($$.subYMin, $$.subYMax, forInit ? config.axis_y2_default : $$.subY2.domain());
         // update axes
         $$.xAxisTickFormat = $$.getXAxisTickFormat();
-        $$.xAxisTickValues = config.axis_x_tick_values ? config.axis_x_tick_values : (forInit ? undefined : $$.xAxis.tickValues());
-        $$.xAxis = $$.getXAxis($$.x, $$.xOrient, $$.xAxisTickFormat, $$.xAxisTickValues);
-        $$.subXAxis = $$.getXAxis($$.subX, $$.subXOrient, $$.xAxisTickFormat, $$.xAxisTickValues);
-        $$.yAxis = $$.getYAxis($$.y, $$.yOrient, config.axis_y_tick_format, config.axis_y_ticks);
-        $$.y2Axis = $$.getYAxis($$.y2, $$.y2Orient, config.axis_y2_tick_format, config.axis_y2_ticks);
+        $$.xAxisTickValues = $$.getXAxisTickValues();
+        $$.yAxisTickValues = $$.getYAxisTickValues();
+        $$.y2AxisTickValues = $$.getY2AxisTickValues();
+
+        $$.xAxis = $$.getXAxis($$.x, $$.xOrient, $$.xAxisTickFormat, $$.xAxisTickValues, config.axis_x_tick_outer);
+        $$.subXAxis = $$.getXAxis($$.subX, $$.subXOrient, $$.xAxisTickFormat, $$.xAxisTickValues, config.axis_x_tick_outer);
+        $$.yAxis = $$.getYAxis($$.y, $$.yOrient, config.axis_y_tick_format, $$.yAxisTickValues, config.axis_y_tick_outer);
+        $$.y2Axis = $$.getYAxis($$.y2, $$.y2Orient, config.axis_y2_tick_format, $$.y2AxisTickValues, config.axis_y2_tick_outer);
+
         // Set initialized scales to brush and zoom
         if (!forInit) {
             if ($$.brush) { $$.brush.scale($$.subX); }
@@ -1230,11 +1260,22 @@
         if (yTargets.length === 0) { // use current domain if target of axisId is none
             return axisId === 'y2' ? $$.y2.domain() : $$.y.domain();
         }
+        if (isNaN(yDomainMin)) { // set minimum to zero when not number
+            yDomainMin = 0;
+        }
+        if (isNaN(yDomainMax)) { // set maximum to have same value as yDomainMin
+            yDomainMax = yDomainMin;
+        }
         if (yDomainMin === yDomainMax) {
             yDomainMin < 0 ? yDomainMax = 0 : yDomainMin = 0;
         }
         isAllPositive = yDomainMin >= 0 && yDomainMax >= 0;
         isAllNegative = yDomainMin <= 0 && yDomainMax <= 0;
+
+        // Cancel zerobased if axis_*_min / axis_*_max specified
+        if ((isValue(yMin) && isAllPositive) || (isValue(yMax) && isAllNegative)) {
+            isZeroBased = false;
+        }
 
         // Bar/Area chart should be 0-based if all positive|negative
         if (isZeroBased) {
@@ -1262,11 +1303,11 @@
             padding_top += lengths[1];
             padding_bottom += lengths[0];
         }
-        if (axisId === 'y' && config.axis_y_padding) {
+        if (axisId === 'y' && notEmpty(config.axis_y_padding)) {
             padding_top = $$.getAxisPadding(config.axis_y_padding, 'top', padding, domainLength);
             padding_bottom = $$.getAxisPadding(config.axis_y_padding, 'bottom', padding, domainLength);
         }
-        if (axisId === 'y2' && config.axis_y2_padding) {
+        if (axisId === 'y2' && notEmpty(config.axis_y2_padding)) {
             padding_top = $$.getAxisPadding(config.axis_y2_padding, 'top', padding, domainLength);
             padding_bottom = $$.getAxisPadding(config.axis_y2_padding, 'bottom', padding, domainLength);
         }
@@ -1279,23 +1320,23 @@
     };
     c3_chart_internal_fn.getXDomainMin = function (targets) {
         var $$ = this, config = $$.config;
-        return config.axis_x_min ?
+        return isDefined(config.axis_x_min) ?
             ($$.isTimeSeries() ? this.parseDate(config.axis_x_min) : config.axis_x_min) :
         $$.d3.min(targets, function (t) { return $$.d3.min(t.values, function (v) { return v.x; }); });
     };
     c3_chart_internal_fn.getXDomainMax = function (targets) {
         var $$ = this, config = $$.config;
-        return config.axis_x_max ?
+        return isDefined(config.axis_x_max) ?
             ($$.isTimeSeries() ? this.parseDate(config.axis_x_max) : config.axis_x_max) :
         $$.d3.max(targets, function (t) { return $$.d3.max(t.values, function (v) { return v.x; }); });
     };
-    c3_chart_internal_fn.getXDomainPadding = function (targets) {
+    c3_chart_internal_fn.getXDomainPadding = function (domain) {
         var $$ = this, config = $$.config,
-            edgeX = this.getEdgeX(targets), diff = edgeX[1] - edgeX[0],
+            diff = domain[1] - domain[0],
             maxDataCount, padding, paddingLeft, paddingRight;
         if ($$.isCategorized()) {
             padding = 0;
-        } else if ($$.hasType('bar', targets)) {
+        } else if ($$.hasType('bar')) {
             maxDataCount = $$.getMaxDataCount();
             padding = maxDataCount > 1 ? (diff / (maxDataCount - 1)) / 2 : 0.5;
         } else {
@@ -1315,12 +1356,17 @@
         var $$ = this,
             xDomain = [$$.getXDomainMin(targets), $$.getXDomainMax(targets)],
             firstX = xDomain[0], lastX = xDomain[1],
-            padding = $$.getXDomainPadding(targets),
+            padding = $$.getXDomainPadding(xDomain),
             min = 0, max = 0;
         // show center of x domain if min and max are the same
         if ((firstX - lastX) === 0 && !$$.isCategorized()) {
-            firstX = $$.isTimeSeries() ? new Date(firstX.getTime() * 0.5) : -0.5;
-            lastX = $$.isTimeSeries() ? new Date(lastX.getTime() * 1.5) : 0.5;
+            if ($$.isTimeSeries()) {
+                firstX = new Date(firstX.getTime() * 0.5);
+                lastX = new Date(lastX.getTime() * 1.5);
+            } else {
+                firstX = firstX === 0 ? 1 : (firstX * 0.5);
+                lastX = lastX === 0 ? -1 : (lastX * 1.5);
+            }
         }
         if (firstX || firstX === 0) {
             min = $$.isTimeSeries() ? new Date(firstX.getTime() - padding.left) : firstX - padding.left;
@@ -1330,8 +1376,9 @@
         }
         return [min, max];
     };
-    c3_chart_internal_fn.updateXDomain = function (targets, withUpdateXDomain, withUpdateOrgXDomain, domain) {
+    c3_chart_internal_fn.updateXDomain = function (targets, withUpdateXDomain, withUpdateOrgXDomain, withTrim, domain) {
         var $$ = this, config = $$.config;
+
         if (withUpdateOrgXDomain) {
             $$.x.domain(domain ? domain : $$.d3.extent($$.getXDomain(targets)));
             $$.orgXDomain = $$.x.domain();
@@ -1343,7 +1390,23 @@
             $$.x.domain(domain ? domain : (!$$.brush || $$.brush.empty()) ? $$.orgXDomain : $$.brush.extent());
             if (config.zoom_enabled) { $$.zoom.scale($$.x).updateScaleExtent(); }
         }
+
+        // Trim domain when too big by zoom mousemove event
+        if (withTrim) { $$.x.domain($$.trimXDomain($$.x.orgDomain())); }
+
         return $$.x.domain();
+    };
+    c3_chart_internal_fn.trimXDomain = function (domain) {
+        var $$ = this;
+        if (domain[0] <= $$.orgXDomain[0]) {
+            domain[1] = +domain[1] + ($$.orgXDomain[0] - domain[0]);
+            domain[0] = $$.orgXDomain[0];
+        }
+        if ($$.orgXDomain[1] <= domain[1]) {
+            domain[0] = +domain[0] - (domain[1] - $$.orgXDomain[1]);
+            domain[1] = $$.orgXDomain[1];
+        }
+        return domain;
     };
 
     c3_chart_internal_fn.isX = function (key) {
@@ -1366,6 +1429,11 @@
             }
         });
         return xValues;
+    };
+    c3_chart_internal_fn.getIndexByX = function (x) {
+        var $$ = this,
+            data = $$.filterByX($$.data.targets, x);
+        return data.length ? data[0].index : null;
     };
     c3_chart_internal_fn.getXValue = function (id, i) {
         var $$ = this;
@@ -1390,8 +1458,7 @@
         return this.d3.set(Object.keys(xs).map(function (id) { return xs[id]; })).size() > 1;
     };
     c3_chart_internal_fn.isMultipleX = function () {
-        var $$ = this, config = $$.config;
-        return notEmpty(config.data_xs) && $$.hasMultipleX(config.data_xs);
+        return notEmpty(this.config.data_xs) || !this.config.data_xSort || this.hasType('scatter');
     };
     c3_chart_internal_fn.addName = function (data) {
         var $$ = this, name;
@@ -1471,12 +1538,11 @@
         return maxTarget;
     };
     c3_chart_internal_fn.getEdgeX = function (targets) {
-        var target = this.getMaxDataCountTarget(targets), firstData, lastData;
-        if (!target) {
-            return [0, 0];
-        }
-        firstData = target.values[0], lastData = target.values[target.values.length - 1];
-        return [firstData.x, lastData.x];
+        var $$ = this;
+        return !targets.length ? [0, 0] : [
+            $$.d3.min(targets, function (t) { return t.values[0].x; }),
+            $$.d3.max(targets, function (t) { return t.values[t.values.length - 1].x; })
+        ];
     };
     c3_chart_internal_fn.mapToIds = function (targets) {
         return targets.map(function (d) { return d.id; });
@@ -1571,7 +1637,7 @@
         } // TODO: accept name array for order
         return targets;
     };
-    c3_chart_internal_fn.filterSameX = function (targets, x) {
+    c3_chart_internal_fn.filterByX = function (targets, x) {
         return this.d3.merge(targets.map(function (t) { return t.values; })).filter(function (v) { return v.x - x === 0; });
     };
     c3_chart_internal_fn.filterRemoveNull = function (data) {
@@ -1618,42 +1684,12 @@
         return sames;
     };
 
-    c3_chart_internal_fn.findClosestOfValues = function (values, pos, _min, _max) { // MEMO: values must be sorted by x
-        var $$ = this,
-            min = _min ? _min : 0,
-            max = _max ? _max : values.length - 1,
-            med = Math.floor((max - min) / 2) + min,
-            value = values[med],
-            diff = $$.x(value.x) - pos[$$.config.axis_rotated ? 1 : 0],
-            candidates;
-
-        // Update range for search
-        diff > 0 ? max = med : min = med;
-
-        // if candidates are two closest min and max, stop recursive call
-        if ((max - min) === 1 || (min === 0 && max === 0)) {
-
-            // Get candidates that has same min and max index
-            candidates = [];
-            if (values[min].x || values[min].x === 0) {
-                candidates = candidates.concat($$.findSameXOfValues(values, min));
-            }
-            if (values[max].x || values[max].x === 0) {
-                candidates = candidates.concat($$.findSameXOfValues(values, max));
-            }
-
-            // Determine the closest and return
-            return $$.findClosest(candidates, pos);
-        }
-
-        return $$.findClosestOfValues(values, pos, min, max);
-    };
     c3_chart_internal_fn.findClosestFromTargets = function (targets, pos) {
         var $$ = this, candidates;
 
         // map to array of closest points of each target
         candidates = targets.map(function (target) {
-            return $$.findClosestOfValues(target.values, pos);
+            return $$.findClosest(target.values, pos);
         });
 
         // decide closest point and return
@@ -1684,23 +1720,31 @@
             var d;
             if (type === 'json') {
                 d = $$.convertJsonToData(JSON.parse(data.response), keys);
+            } else if (type === 'tsv') {
+                d = $$.convertTsvToData(data.response);
             } else {
                 d = $$.convertCsvToData(data.response);
             }
             done.call($$, d);
         });
     };
-    c3_chart_internal_fn.convertCsvToData = function (csv) {
-        var d3 = this.d3, rows = d3.csv.parseRows(csv), d;
+    c3_chart_internal_fn.convertXsvToData = function (xsv, parser) {
+        var rows = parser.parseRows(xsv), d;
         if (rows.length === 1) {
             d = [{}];
             rows[0].forEach(function (id) {
                 d[0][id] = null;
             });
         } else {
-            d = d3.csv.parse(csv);
+            d = parser.parse(xsv);
         }
         return d;
+    };
+    c3_chart_internal_fn.convertCsvToData = function (csv) {
+        return this.convertXsvToData(csv, this.d3.csv);
+    };
+    c3_chart_internal_fn.convertTsvToData = function (tsv) {
+        return this.convertXsvToData(tsv, this.d3.tsv);
     };
     c3_chart_internal_fn.convertJsonToData = function (json, keys) {
         var $$ = this,
@@ -1827,11 +1871,13 @@
         targets.forEach(function (t) {
             var i;
             // sort values by its x
-            t.values = t.values.sort(function (v1, v2) {
-                var x1 = v1.x || v1.x === 0 ? v1.x : Infinity,
-                    x2 = v2.x || v2.x === 0 ? v2.x : Infinity;
-                return x1 - x2;
-            });
+            if (config.data_xSort) {
+                t.values = t.values.sort(function (v1, v2) {
+                    var x1 = v1.x || v1.x === 0 ? v1.x : Infinity,
+                        x2 = v2.x || v2.x === 0 ? v2.x : Infinity;
+                    return x1 - x2;
+                });
+            }
             // indexing each value
             i = 0;
             t.values.forEach(function (v) {
@@ -2013,11 +2059,25 @@
                 rectW = function (d) {
                     var prevX = $$.getPrevX(d.index), nextX = $$.getNextX(d.index), dx = $$.data.xs[d.id][d.index],
                         w = ($$.x(nextX ? nextX : dx) - $$.x(prevX ? prevX : dx)) / 2;
-                    return w < 0 ? 0 : w;
+
+                    // if there this is a single data point make the eventRect full width (or height)
+                    if (prevX === null && nextX === null) {
+                        return config.axis_rotated ? $$.height : $$.width;
+                    }
+                    else {
+                        return w < 0 ? 0 : w;
+                    }
                 };
                 rectX = function (d) {
-                    var prevX = $$.getPrevX(d.index), dx = $$.data.xs[d.id][d.index];
-                    return ($$.x(dx) + $$.x(prevX ? prevX : dx)) / 2;
+                    var prevX = $$.getPrevX(d.index), nextX = $$.getNextX(d.index), dx = $$.data.xs[d.id][d.index];
+                    
+                    // if there this is a single data point position the eventRect at 0
+                    if (prevX === null && nextX === null) {
+                        return 0;
+                    }
+                    else {
+                        return ($$.x(dx) + $$.x(prevX ? prevX : dx)) / 2;
+                    }
                 };
             } else {
                 rectW = $$.getEventRectWidth();
@@ -2046,7 +2106,7 @@
             .on('mouseover', function (d) {
                 var index = d.index, selectedData, newData;
 
-                if ($$.dragging) { return; } // do nothing if dragging
+                if ($$.dragging || $$.flowing) { return; } // do nothing while dragging/flowing
                 if ($$.hasArcType()) { return; }
 
                 selectedData = $$.data.targets.map(function (t) {
@@ -2067,8 +2127,8 @@
                 selectedData = newData.concat(selectedData); // Add remained
 
                 // Expand shapes for selection
-                if (config.point_focus_expand_enabled) { $$.expandCircles(index); }
-                $$.expandBars(index);
+                if (config.point_focus_expand_enabled) { $$.expandCircles(index, null, true); }
+                $$.expandBars(index, null, true);
 
                 // Call event handler
                 $$.main.selectAll('.' + CLASS.shape + '-' + index).each(function (d) {
@@ -2081,7 +2141,7 @@
                 $$.hideXGridFocus();
                 $$.hideTooltip();
                 // Undo expanded shapes
-                $$.unexpandCircles(index);
+                $$.unexpandCircles();
                 $$.unexpandBars();
                 // Call event handler
                 $$.main.selectAll('.' + CLASS.shape + '-' + index).each(function (d) {
@@ -2092,8 +2152,12 @@
                 var selectedData, index = d.index,
                     eventRect = $$.svg.select('.' + CLASS.eventRect + '-' + index);
 
-                if ($$.dragging) { return; } // do nothing when dragging
+                if ($$.dragging || $$.flowing) { return; } // do nothing while dragging/flowing
                 if ($$.hasArcType()) { return; }
+
+                if ($$.isStepType(d) && d3.mouse(this)[0] < $$.x($$.getXValue(d.id, index))) {
+                    index -= 1;
+                }
 
                 // Show tooltip
                 selectedData = $$.filterTargetsToShow($$.data.targets).map(function (t) {
@@ -2120,7 +2184,7 @@
                             $$.hideTooltip();
                             if (!config.data_selection_grouped) {
                                 $$.unexpandCircles(index);
-                                $$.unexpandBars();
+                                $$.unexpandBars(index);
                             }
                         }
                     })
@@ -2139,8 +2203,8 @@
                         if (!config.tooltip_grouped) {
                             $$.showTooltip([d], d3.mouse(this));
                             $$.showXGridFocus([d]);
-                            if (config.point_focus_expand_enabled) { $$.expandCircles(index, d.id); }
-                            $$.expandBars(index, d.id);
+                            if (config.point_focus_expand_enabled) { $$.expandCircles(index, d.id, true); }
+                            $$.expandBars(index, d.id, true);
                         }
                     });
             })
@@ -2151,8 +2215,14 @@
                     $$.cancelClick = false;
                     return;
                 }
+                if ($$.isStepType(d) && d3.mouse(this)[0] < $$.x($$.getXValue(d.id, index))) {
+                    index -= 1;
+                }
                 $$.main.selectAll('.' + CLASS.shape + '-' + index).each(function (d) {
-                    $$.toggleShape(this, d, index);
+                    if (config.data_selection_grouped || $$.isWithinShape(this, d)) {
+                        $$.toggleShape(this, d, index);
+                        $$.config.data_onclick.call($$.api, d, this);
+                    }
                 });
             })
             .call(
@@ -2193,7 +2263,7 @@
                 if ($$.isScatterType(closest)) {
                     sameXData = [closest];
                 } else {
-                    sameXData = $$.filterSameX(targetsToShow, closest.x);
+                    sameXData = $$.filterByX(targetsToShow, closest.x);
                 }
 
                 // show tooltip when cursor is close to some point
@@ -2204,8 +2274,7 @@
 
                 // expand points
                 if (config.point_focus_expand_enabled) {
-                    $$.unexpandCircles();
-                    $$.expandCircles(closest.index, closest.id);
+                    $$.expandCircles(closest.index, closest.id, true);
                 }
 
                 // Show xgrid focus line
@@ -2238,7 +2307,10 @@
                 // select if selection enabled
                 if ($$.dist(closest, mouse) < 100 && $$.toggleShape) {
                     $$.main.select('.' + CLASS.circles + $$.getTargetSelectorSuffix(closest.id)).select('.' + CLASS.circle + '-' + closest.index).each(function () {
-                        $$.toggleShape(this, closest, closest.index);
+                        if (config.data_selection_grouped || $$.isWithinShape(this, closest)) {
+                            $$.toggleShape(this, closest, closest.index);
+                            $$.config.data_onclick.call($$.api, closest, this);
+                        }
                     });
                 }
             })
@@ -2250,6 +2322,19 @@
             )
             .on("dblclick.zoom", null);
     };
+    c3_chart_internal_fn.dispatchEvent = function (type, index, mouse) {
+        var $$ = this,
+            selector = '.' + CLASS.eventRect + (!$$.isMultipleX() ? '-' + index : ''),
+            eventRect = $$.main.select(selector).node(),
+            box = eventRect.getBoundingClientRect(),
+            x = box.left + (mouse ? mouse[0] : 0),
+            y = box.top + (mouse ? mouse[1] : 0),
+            event = document.createEvent("MouseEvents");
+
+        event.initMouseEvent(type, true, true, window, 0, x, y, x, y,
+                             false, false, false, false, 0, null);
+        eventRect.dispatchEvent(event);
+    };
 
     c3_chart_internal_fn.getCurrentWidth = function () {
         var $$ = this, config = $$.config;
@@ -2258,7 +2343,7 @@
     c3_chart_internal_fn.getCurrentHeight = function () {
         var $$ = this, config = $$.config,
             h = config.size_height ? config.size_height : $$.getParentHeight();
-        return h > 0 ? h : 320;
+        return h > 0 ? h : 320 / ($$.hasType('gauge') ? 2 : 1);
     };
     c3_chart_internal_fn.getCurrentPaddingTop = function () {
         var config = this.config;
@@ -2401,6 +2486,19 @@
             return offset;
         };
     };
+    c3_chart_internal_fn.isWithinShape = function (that, d) {
+        var $$ = this,
+            shape = $$.d3.select(that), isWithin;
+        if (that.nodeName === 'circle') {
+            // circle is hidden in step chart, so treat as within the click area
+            isWithin = $$.isStepType(d) ? true : $$.isWithinCircle(that, $$.pointSelectR(d) * 1.5);
+        }
+        else if (that.nodeName === 'path') {
+            isWithin = shape.classed(CLASS.bar) ? $$.isWithinBar(that) : true;
+        }
+        return isWithin;
+    };
+
 
     c3_chart_internal_fn.getInterpolate = function (d) {
         var $$ = this;
@@ -2418,10 +2516,11 @@
             classChartLine = $$.classChartLine.bind($$),
             classLines = $$.classLines.bind($$),
             classAreas = $$.classAreas.bind($$),
-            classCircles = $$.classCircles.bind($$);
+            classCircles = $$.classCircles.bind($$),
+            classFocus = $$.classFocus.bind($$);
         mainLineUpdate = $$.main.select('.' + CLASS.chartLines).selectAll('.' + CLASS.chartLine)
             .data(targets)
-            .attr('class', classChartLine);
+            .attr('class', function (d) { return classChartLine(d) + classFocus(d); });
         mainLineEnter = mainLineUpdate.enter().append('g')
             .attr('class', classChartLine)
             .style('opacity', 0)
@@ -2471,17 +2570,17 @@
     c3_chart_internal_fn.generateDrawLine = function (lineIndices, isSub) {
         var $$ = this, config = $$.config,
             line = $$.d3.svg.line(),
-            getPoint = $$.generateGetLinePoint(lineIndices, isSub),
+            getPoints = $$.generateGetLinePoints(lineIndices, isSub),
             yScaleGetter = isSub ? $$.getSubYScale : $$.getYScale,
             xValue = function (d) { return (isSub ? $$.subxx : $$.xx).call($$, d); },
             yValue = function (d, i) {
-                return config.data_groups.length > 0 ? getPoint(d, i)[0][1] : yScaleGetter.call($$, d.id)(d.value);
+                return config.data_groups.length > 0 ? getPoints(d, i)[0][1] : yScaleGetter.call($$, d.id)(d.value);
             };
 
         line = config.axis_rotated ? line.x(yValue).y(xValue) : line.x(xValue).y(yValue);
-        if (!config.line_connect_null) { line = line.defined(function (d) { return d.value != null; }); }
+        if (!config.line_connectNull) { line = line.defined(function (d) { return d.value != null; }); }
         return function (d) {
-            var data = config.line_connect_null ? $$.filterRemoveNull(d.values) : d.values,
+            var data = config.line_connectNull ? $$.filterRemoveNull(d.values) : d.values,
                 x = isSub ? $$.x : $$.subX, y = yScaleGetter.call($$, d.id), x0 = 0, y0 = 0, path;
             if ($$.isLineType(d)) {
                 if (config.data_regions[d.id]) {
@@ -2499,7 +2598,7 @@
             return path ? path : "M 0 0";
         };
     };
-    c3_chart_internal_fn.generateGetLinePoint = function (lineIndices, isSub) { // partial duplication of generateGetBarPoints
+    c3_chart_internal_fn.generateGetLinePoints = function (lineIndices, isSub) { // partial duplication of generateGetBarPoints
         var $$ = this, config = $$.config,
             lineTargetsNum = lineIndices.__max__ + 1,
             x = $$.getShapeX(0, lineTargetsNum, lineIndices, !!isSub),
@@ -2516,7 +2615,10 @@
             }
             // 1 point that marks the line position
             return [
-                [posX, posY - (y0 - offset)]
+                [posX, posY - (y0 - offset)],
+                [posX, posY - (y0 - offset)], // needed for compatibility
+                [posX, posY - (y0 - offset)], // needed for compatibility
+                [posX, posY - (y0 - offset)]  // needed for compatibility
             ];
         };
     };
@@ -2625,23 +2727,23 @@
     };
     c3_chart_internal_fn.generateDrawArea = function (areaIndices, isSub) {
         var $$ = this, config = $$.config, area = $$.d3.svg.area(),
-            getPoint = $$.generateGetAreaPoint(areaIndices, isSub),
+            getPoints = $$.generateGetAreaPoints(areaIndices, isSub),
             yScaleGetter = isSub ? $$.getSubYScale : $$.getYScale,
             xValue = function (d) { return (isSub ? $$.subxx : $$.xx).call($$, d); },
             value0 = function (d, i) {
-                return config.data_groups.length > 0 ? getPoint(d, i)[0][1] : yScaleGetter.call($$, d.id)(0);
+                return config.data_groups.length > 0 ? getPoints(d, i)[0][1] : yScaleGetter.call($$, d.id)(0);
             },
             value1 = function (d, i) {
-                return config.data_groups.length > 0 ? getPoint(d, i)[1][1] : yScaleGetter.call($$, d.id)(d.value);
+                return config.data_groups.length > 0 ? getPoints(d, i)[1][1] : yScaleGetter.call($$, d.id)(d.value);
             };
 
         area = config.axis_rotated ? area.x0(value0).x1(value1).y(xValue) : area.x(xValue).y0(value0).y1(value1);
-        if (!config.line_connect_null) {
+        if (!config.line_connectNull) {
             area = area.defined(function (d) { return d.value !== null; });
         }
 
         return function (d) {
-            var data = config.line_connect_null ? $$.filterRemoveNull(d.values) : d.values, x0 = 0, y0 = 0, path;
+            var data = config.line_connectNull ? $$.filterRemoveNull(d.values) : d.values, x0 = 0, y0 = 0, path;
             if ($$.isAreaType(d)) {
                 path = area.interpolate($$.getInterpolate(d))(data);
             } else {
@@ -2655,7 +2757,7 @@
         };
     };
 
-    c3_chart_internal_fn.generateGetAreaPoint = function (areaIndices, isSub) { // partial duplication of generateGetBarPoints
+    c3_chart_internal_fn.generateGetAreaPoints = function (areaIndices, isSub) { // partial duplication of generateGetBarPoints
         var $$ = this, config = $$.config,
             areaTargetsNum = areaIndices.__max__ + 1,
             x = $$.getShapeX(0, areaTargetsNum, areaIndices, !!isSub),
@@ -2673,7 +2775,9 @@
             // 1 point that marks the area position
             return [
                 [posX, offset],
-                [posX, posY - (y0 - offset)]
+                [posX, posY - (y0 - offset)],
+                [posX, posY - (y0 - offset)], // needed for compatibility
+                [posX, offset] // needed for compatibility
             ];
         };
     };
@@ -2707,16 +2811,17 @@
     };
     c3_chart_internal_fn.circleY = function (d, i) {
         var $$ = this,
-            lineIndices = $$.getShapeIndices($$.isLineType), getPoint = $$.generateGetLinePoint(lineIndices);
-        return $$.config.data_groups.length > 0 ? getPoint(d, i)[0][1] : $$.getYScale(d.id)(d.value);
+            lineIndices = $$.getShapeIndices($$.isLineType), getPoints = $$.generateGetLinePoints(lineIndices);
+        return $$.config.data_groups.length > 0 ? getPoints(d, i)[0][1] : $$.getYScale(d.id)(d.value);
     };
     c3_chart_internal_fn.getCircles = function (i, id) {
         var $$ = this;
         return (id ? $$.main.selectAll('.' + CLASS.circles + $$.getTargetSelectorSuffix(id)) : $$.main).selectAll('.' + CLASS.circle + (isValue(i) ? '-' + i : ''));
     };
-    c3_chart_internal_fn.expandCircles = function (i, id) {
+    c3_chart_internal_fn.expandCircles = function (i, id, reset) {
         var $$ = this,
             r = $$.pointExpandedR.bind($$);
+        if (reset) { $$.unexpandCircles(); }
         $$.getCircles(i, id)
             .classed(CLASS.EXPANDED, true)
             .attr('r', r);
@@ -2757,10 +2862,11 @@
         var $$ = this, config = $$.config,
             mainBarUpdate, mainBarEnter,
             classChartBar = $$.classChartBar.bind($$),
-            classBars = $$.classBars.bind($$);
+            classBars = $$.classBars.bind($$),
+            classFocus = $$.classFocus.bind($$);
         mainBarUpdate = $$.main.select('.' + CLASS.chartBars).selectAll('.' + CLASS.chartBar)
             .data(targets)
-            .attr('class', classChartBar);
+            .attr('class', function (d) { return classChartBar(d) + classFocus(d); });
         mainBarEnter = mainBarUpdate.enter().append('g')
             .attr('class', classChartBar)
             .style('opacity', 0)
@@ -2805,8 +2911,9 @@
         var $$ = this;
         return $$.main.selectAll('.' + CLASS.bar + (isValue(i) ? '-' + i : ''));
     };
-    c3_chart_internal_fn.expandBars = function (i) {
+    c3_chart_internal_fn.expandBars = function (i, id, reset) {
         var $$ = this;
+        if (reset) { $$.unexpandBars(); }
         $$.getBars(i).classed(CLASS.EXPANDED, true);
     };
     c3_chart_internal_fn.unexpandBars = function (i) {
@@ -2835,8 +2942,9 @@
     };
     c3_chart_internal_fn.generateGetBarPoints = function (barIndices, isSub) {
         var $$ = this,
+            axis = isSub ? $$.subXAxis : $$.xAxis,
             barTargetsNum = barIndices.__max__ + 1,
-            barW = $$.getBarW($$.xAxis, barTargetsNum),
+            barW = $$.getBarW(axis, barTargetsNum),
             barX = $$.getShapeX(barW, barTargetsNum, barIndices, !!isSub),
             barY = $$.getShapeY(!!isSub),
             barOffset = $$.getShapeOffset($$.isBarType, barIndices, !!isSub),
@@ -2858,11 +2966,12 @@
             ];
         };
     };
-    c3_chart_internal_fn.isWithinBar = function (_this) {
+    c3_chart_internal_fn.isWithinBar = function (that) {
         var d3 = this.d3,
-            mouse = d3.mouse(_this), box = _this.getBoundingClientRect(),
-            seg0 = _this.pathSegList.getItem(0), seg1 = _this.pathSegList.getItem(1),
-            x = seg0.x, y = Math.min(seg0.y, seg1.y), w = box.width, h = box.height, offset = 2,
+            mouse = d3.mouse(that), box = that.getBoundingClientRect(),
+            seg0 = that.pathSegList.getItem(0), seg1 = that.pathSegList.getItem(1),
+            x = Math.min(seg0.x, seg1.x), y = Math.min(seg0.y, seg1.y),
+            w = box.width, h = box.height, offset = 2,
             sx = x - offset, ex = x + w + offset, sy = y + h + offset, ey = y - offset;
         return sx < mouse[0] && mouse[0] < ex && ey < mouse[1] && mouse[1] < sy;
     };
@@ -2876,10 +2985,11 @@
     c3_chart_internal_fn.updateTargetsForText = function (targets) {
         var $$ = this, mainTextUpdate, mainTextEnter,
             classChartText = $$.classChartText.bind($$),
-            classTexts = $$.classTexts.bind($$);
+            classTexts = $$.classTexts.bind($$),
+            classFocus = $$.classFocus.bind($$);
         mainTextUpdate = $$.main.select('.' + CLASS.chartTexts).selectAll('.' + CLASS.chartText)
             .data(targets)
-            .attr('class', classChartText);
+            .attr('class', function (d) { return classChartText(d) + classFocus(d); });
         mainTextEnter = mainTextUpdate.enter().append('g')
             .attr('class', classChartText)
             .style('opacity', 0)
@@ -2916,21 +3026,24 @@
                          .style("fill-opacity", opacityForText));
     };
     c3_chart_internal_fn.getTextRect = function (text, cls) {
-        var rect;
-        this.d3.select('body').selectAll('.dummy')
+        var svg = this.d3.select('body').append("svg").style('visibility', 'hidden'), rect;
+        svg.selectAll('.dummy')
             .data([text])
           .enter().append('text')
             .classed(cls ? cls : "", true)
             .text(text)
-          .each(function () { rect = this.getBoundingClientRect(); })
-            .remove();
+          .each(function () { rect = this.getBoundingClientRect(); });
+        svg.remove();
         return rect;
     };
-    c3_chart_internal_fn.generateXYForText = function (barIndices, forX) {
+    c3_chart_internal_fn.generateXYForText = function (areaIndices, barIndices, lineIndices, forX) {
         var $$ = this,
-            getPoints = $$.generateGetBarPoints(barIndices, false),
+            getAreaPoints = $$.generateGetAreaPoints(barIndices, false),
+            getBarPoints = $$.generateGetBarPoints(barIndices, false),
+            getLinePoints = $$.generateGetLinePoints(lineIndices, false),
             getter = forX ? $$.getXForText : $$.getYForText;
         return function (d, i) {
+            var getPoints = $$.isAreaType(d) ? getAreaPoints : $$.isBarType(d) ? getBarPoints : getLinePoints;
             return getter.call($$, getPoints(d, i), d, this);
         };
     };
@@ -2943,7 +3056,7 @@
         } else {
             xPos = $$.hasType('bar') ? (points[2][0] + points[0][0]) / 2 : points[0][0];
         }
-        return xPos > $$.width ? $$.width - box.width : xPos;
+        return d.value !== null ? xPos : xPos > $$.width ? $$.width - box.width : xPos;
     };
     c3_chart_internal_fn.getYForText = function (points, d, textElement) {
         var $$ = this,
@@ -2953,7 +3066,7 @@
         } else {
             yPos = points[2][1] + (d.value < 0 ? box.height : $$.isBarType(d) ? -3 : -6);
         }
-        return yPos < box.height ? box.height : yPos;
+        return d.value !== null ? yPos : yPos < box.height ? box.height : yPos;
     };
 
     c3_chart_internal_fn.setTargetType = function (targetIds, type) {
@@ -3041,7 +3154,7 @@
     c3_chart_internal_fn.initGrid = function () {
         var $$ = this, config = $$.config, d3 = $$.d3;
         $$.grid = $$.main.append('g')
-            .attr("clip-path", $$.clipPath)
+            .attr("clip-path", $$.clipPathForGrid)
             .attr('class', CLASS.grid);
         if (config.grid_x_show) {
             $$.grid.append("g").attr("class", CLASS.xgrids);
@@ -3049,8 +3162,6 @@
         if (config.grid_y_show) {
             $$.grid.append('g').attr('class', CLASS.ygrids);
         }
-        $$.grid.append('g').attr("class", CLASS.xgridLines);
-        $$.grid.append('g').attr('class', CLASS.ygridLines);
         if (config.grid_focus_show) {
             $$.grid.append('g')
                 .attr("class", CLASS.xgridFocus)
@@ -3058,9 +3169,17 @@
                 .attr('class', CLASS.xgridFocus);
         }
         $$.xgrid = d3.selectAll([]);
+        if (!config.grid_lines_front) { $$.initGridLines(); }
+    };
+    c3_chart_internal_fn.initGridLines = function () {
+        var $$ = this, d3 = $$.d3;
+        $$.gridLines = $$.main.append('g')
+            .attr("clip-path", $$.clipPathForGrid)
+            .attr('class', CLASS.grid + ' ' + CLASS.gridLines);
+        $$.gridLines.append('g').attr("class", CLASS.xgridLines);
+        $$.gridLines.append('g').attr('class', CLASS.ygridLines);
         $$.xgridLines = d3.selectAll([]);
     };
-
     c3_chart_internal_fn.updateXGrid = function (withoutUpdate) {
         var $$ = this, config = $$.config, d3 = $$.d3,
             xgridData = $$.generateGridData(config.grid_x_type, $$.x),
@@ -3106,6 +3225,10 @@
     c3_chart_internal_fn.redrawGrid = function (duration, withY) {
         var $$ = this, main = $$.main, config = $$.config,
             xgridLine, ygridLine, yv;
+
+        // hide if arc type
+        $$.grid.style('visibility', $$.hasArcType() ? 'hidden' : 'visible');
+
         main.select('line.' + CLASS.xgridFocus).style("visibility", "hidden");
         if (config.grid_x_show) {
             $$.updateXGrid();
@@ -3114,7 +3237,7 @@
             .data(config.grid_x_lines);
         // enter
         xgridLine = $$.xgridLines.enter().append('g')
-            .attr("class", function (d) { return CLASS.xgridLine + (d.class ? ' ' + d.class : ''); });
+            .attr("class", function (d) { return CLASS.xgridLine + (d['class'] ? ' ' + d['class'] : ''); });
         xgridLine.append('line')
             .style("opacity", 0);
         xgridLine.append('text')
@@ -3139,7 +3262,7 @@
                 .data(config.grid_y_lines);
             // enter
             ygridLine = $$.ygridLines.enter().append('g')
-                .attr("class", function (d) { return CLASS.ygridLine + (d.class ? ' ' + d.class : ''); });
+                .attr("class", function (d) { return CLASS.ygridLine + (d['class'] ? ' ' + d['class'] : ''); });
             ygridLine.append('line')
                 .style("opacity", 0);
             ygridLine.append('text')
@@ -3232,7 +3355,7 @@
         return params ? function (line) {
             var found = false;
             [].concat(params).forEach(function (param) {
-                if ((('value' in param && line.value === params.value) || ('class' in param && line.class === params.class))) {
+                if ((('value' in param && line.value === params.value) || ('class' in param && line['class'] === params['class']))) {
                     found = true;
                 }
             });
@@ -3370,6 +3493,7 @@
             top: $$.isLegendTop ? $$.getCurrentPaddingTop() + config.legend_inset_y + 5.5 : $$.currentHeight - legendHeight - $$.getCurrentPaddingBottom() - config.legend_inset_y,
             left: $$.isLegendLeft ? $$.getCurrentPaddingLeft() + config.legend_inset_x + 0.5 : $$.currentWidth - legendWidth - $$.getCurrentPaddingRight() - config.legend_inset_x + 0.5
         };
+
         $$.margin3 = {
             top: $$.isLegendRight ? 0 : $$.isLegendInset ? insetLegendPosition.top : $$.currentHeight - legendHeight,
             right: NaN,
@@ -3415,17 +3539,17 @@
         var $$ = this;
         return legendItem.classed(CLASS.legendItemHidden) ? $$.legendOpacityForHidden : 0.3;
     };
-    c3_chart_internal_fn.toggleFocusLegend = function (id, focus) {
+    c3_chart_internal_fn.toggleFocusLegend = function (targetIds, focus) {
         var $$ = this;
+        targetIds = $$.mapToTargetIds(targetIds);
         $$.legend.selectAll('.' + CLASS.legendItem)
+            .classed(CLASS.legendItemFocused, function (id) {
+                return targetIds.indexOf(id) >= 0 && focus;
+            })
             .transition().duration(100)
-            .style('opacity', function (_id) {
-                var This = $$.d3.select(this);
-                if (id && _id !== id) {
-                    return focus ? $$.opacityForUnfocusedLegend(This) : $$.opacityForLegend(This);
-                } else {
-                    return focus ? $$.opacityForLegend(This) : $$.opacityForUnfocusedLegend(This);
-                }
+            .style('opacity', function (id) {
+                var opacity = targetIds.indexOf(id) >= 0 && focus ? $$.opacityForLegend : $$.opacityForUnfocusedLegend;
+                return opacity.call($$, $$.d3.select(this));
             });
     };
     c3_chart_internal_fn.revertLegend = function () {
@@ -3460,7 +3584,7 @@
     c3_chart_internal_fn.updateLegend = function (targetIds, options, transitions) {
         var $$ = this, config = $$.config;
         var xForLegend, xForLegendText, xForLegendRect, yForLegend, yForLegendText, yForLegendRect;
-        var paddingTop = 4, paddingRight = 36, maxWidth = 0, maxHeight = 0, posMin = 10;
+        var paddingTop = 4, paddingRight = 10, maxWidth = 0, maxHeight = 0, posMin = 10, tileWidth = 15;
         var l, totalLength = 0, offsets = {}, widths = {}, heights = {}, margins = [0], steps = {}, step = 0;
         var withTransition, withTransitionForTransform;
         var hasFocused = $$.legend.selectAll('.' + CLASS.legendItemFocused).size();
@@ -3470,10 +3594,11 @@
         withTransition = getOption(options, "withTransition", true);
         withTransitionForTransform = getOption(options, "withTransitionForTransform", true);
 
-        function updatePositions(textElement, id, reset) {
-            var box = $$.getTextRect(textElement.textContent, CLASS.legendItem),
-                itemWidth = Math.ceil((box.width + paddingRight) / 10) * 10,
-                itemHeight = Math.ceil((box.height + paddingTop) / 10) * 10,
+        function updatePositions(textElement, id, index) {
+            var reset = index === 0, isLast = index === targetIds.length - 1,
+                box = $$.getTextRect(textElement.textContent, CLASS.legendItem),
+                itemWidth = box.width + tileWidth + (isLast && !$$.isLegendRight ? 0 : paddingRight),
+                itemHeight = box.height + paddingTop,
                 itemLength = $$.isLegendRight || $$.isLegendInset ? itemHeight : itemWidth,
                 areaLength = $$.isLegendRight || $$.isLegendInset ? $$.getLegendHeight() : $$.getLegendWidth(),
                 margin, maxLength;
@@ -3542,8 +3667,8 @@
         }
         xForLegendText = function (id, i) { return xForLegend(id, i) + 14; };
         yForLegendText = function (id, i) { return yForLegend(id, i) + 9; };
-        xForLegendRect = function (id, i) { return xForLegend(id, i) - 4; };
-        yForLegendRect = function (id, i) { return yForLegend(id, i) - 7; };
+        xForLegendRect = function (id, i) { return xForLegend(id, i); };
+        yForLegendRect = function (id, i) { return yForLegend(id, i) - 5; };
 
         // Define g for legend area
         l = $$.legend.selectAll('.' + CLASS.legendItem)
@@ -3553,11 +3678,21 @@
             .style('visibility', function (id) { return $$.isLegendToShow(id) ? 'visible' : 'hidden'; })
             .style('cursor', 'pointer')
             .on('click', function (id) {
-                config.legend_item_onclick ? config.legend_item_onclick.call($$, id) : $$.api.toggle(id);
+                if (config.legend_item_onclick) {
+                    config.legend_item_onclick.call($$, id);
+                } else {
+                    if ($$.d3.event.altKey) {
+                        $$.api.hide();
+                        $$.api.show(id);
+                    } else {
+                        $$.api.toggle(id);
+                        $$.isTargetToShow(id) ? $$.api.focus(id) : $$.api.revert();
+                    }
+                }
             })
             .on('mouseover', function (id) {
                 $$.d3.select(this).classed(CLASS.legendItemFocused, true);
-                if (!$$.transiting) {
+                if (!$$.transiting && $$.isTargetToShow(id)) {
                     $$.api.focus(id);
                 }
                 if (config.legend_item_onmouseover) {
@@ -3575,7 +3710,7 @@
             });
         l.append('text')
             .text(function (id) { return isDefined(config.data_names[id]) ? config.data_names[id] : id; })
-            .each(function (id, i) { updatePositions(this, id, i === 0); })
+            .each(function (id, i) { updatePositions(this, id, i); })
             .style("pointer-events", "none")
             .attr('x', $$.isLegendRight || $$.isLegendInset ? xForLegendText : -200)
             .attr('y', $$.isLegendRight || $$.isLegendInset ? -200 : yForLegendText);
@@ -3604,7 +3739,7 @@
         texts = $$.legend.selectAll('text')
             .data(targetIds)
             .text(function (id) { return isDefined(config.data_names[id]) ? config.data_names[id] : id; }) // MEMO: needed for update
-            .each(function (id, i) { updatePositions(this, id, i === 0); });
+            .each(function (id, i) { updatePositions(this, id, i); });
         (withTransition ? texts.transition() : texts)
             .attr('x', xForLegendText)
             .attr('y', yForLegendText);
@@ -3681,9 +3816,14 @@
             .attr("transform", config.axis_rotated ? "" : "rotate(-90)")
             .style("text-anchor", $$.textAnchorForY2AxisLabel.bind($$));
     };
-    c3_chart_internal_fn.getXAxis = function (scale, orient, tickFormat, tickValues) {
+    c3_chart_internal_fn.getXAxis = function (scale, orient, tickFormat, tickValues, withOuterTick) {
         var $$ = this, config = $$.config,
-            axis = c3_axis($$.d3, $$.isCategorized()).scale(scale).orient(orient);
+            axisParams = {isCategory: $$.isCategorized(), withOuterTick: withOuterTick},
+            axis = c3_axis($$.d3, axisParams).scale(scale).orient(orient);
+
+        if ($$.isTimeSeries() && tickValues) {
+            tickValues = tickValues.map(function (v) { return $$.parseDate(v); });
+        }
 
         // Set tick
         axis.tickFormat(tickFormat).tickValues(tickValues);
@@ -3695,7 +3835,8 @@
         } else {
             // TODO: move this to c3_axis
             axis.tickOffset = function () {
-                var edgeX = $$.getEdgeX($$.data.targets), diff = $$.x(edgeX[1]) - $$.x(edgeX[0]),
+                var scale = this.scale(),
+                    edgeX = $$.getEdgeX($$.data.targets), diff = scale(edgeX[1]) - scale(edgeX[0]),
                     base = diff ? diff : (config.axis_rotated ? $$.height : $$.width);
                 return (base / $$.getMaxDataCount()) / 2;
             };
@@ -3703,8 +3844,9 @@
 
         return axis;
     };
-    c3_chart_internal_fn.getYAxis = function (scale, orient, tickFormat, ticks) {
-        return c3_axis(this.d3).scale(scale).orient(orient).tickFormat(tickFormat).ticks(ticks);
+    c3_chart_internal_fn.getYAxis = function (scale, orient, tickFormat, tickValues, withOuterTick) {
+        var axisParams = {withOuterTick: withOuterTick};
+        return c3_axis(this.d3, axisParams).scale(scale).orient(orient).tickFormat(tickFormat).tickValues(tickValues);
     };
     c3_chart_internal_fn.getAxisId = function (id) {
         var config = this.config;
@@ -3723,6 +3865,18 @@
             }
         }
         return isFunction(format) ? function (v) { return format.call($$, v); } : format;
+    };
+    c3_chart_internal_fn.getAxisTickValues = function (tickValues, axis) {
+        return tickValues ? tickValues : axis ? axis.tickValues() : undefined;
+    };
+    c3_chart_internal_fn.getXAxisTickValues = function () {
+        return this.getAxisTickValues(this.config.axis_x_tick_values, this.xAxis);
+    };
+    c3_chart_internal_fn.getYAxisTickValues = function () {
+        return this.getAxisTickValues(this.config.axis_y_tick_values, this.yAxis);
+    };
+    c3_chart_internal_fn.getY2AxisTickValues = function () {
+        return this.getAxisTickValues(this.config.axis_y2_tick_values, this.y2Axis);
     };
     c3_chart_internal_fn.getAxisLabelOptionByAxisId = function (axisId) {
         var $$ = this, config = $$.config, option;
@@ -3873,11 +4027,11 @@
         return 10 * Math.sin(Math.PI * (r / 180));
     };
     c3_chart_internal_fn.yForRotatedTickText = function (r) {
-        return 11.5 - 2.5 * (r / 15);
+        return 11.5 - 2.5 * (r / 15) * (r > 0 ? 1 : -1);
     };
     c3_chart_internal_fn.rotateTickText = function (axis, transition, rotate) {
         axis.selectAll('.tick text')
-            .style("text-anchor", "start");
+            .style("text-anchor", rotate > 0 ? "start" : "end");
         transition.selectAll('.tick text')
             .attr("y", this.yForRotatedTickText(rotate))
             .attr("x", this.xForRotatedTickText(rotate))
@@ -3891,15 +4045,15 @@
             targetsToShow = $$.filterTargetsToShow($$.data.targets);
             if (id === 'y') {
                 scale = $$.y.copy().domain($$.getYDomain(targetsToShow, 'y'));
-                axis = $$.getYAxis(scale, $$.yOrient, config.axis_y_tick_format, config.axis_y_ticks);
+                axis = $$.getYAxis(scale, $$.yOrient, config.axis_y_tick_format, $$.getYAxisTickValues());
             } else if (id === 'y2') {
                 scale = $$.y2.copy().domain($$.getYDomain(targetsToShow, 'y2'));
-                axis = $$.getYAxis(scale, $$.y2Orient, config.axis_y2_tick_format, config.axis_y2_ticks);
+                axis = $$.getYAxis(scale, $$.y2Orient, config.axis_y2_tick_format, $$.getY2AxisTickValues());
             } else {
                 scale = $$.x.copy().domain($$.getXDomain(targetsToShow));
-                axis = $$.getXAxis(scale, $$.xOrient, $$.getXAxisTickFormat(), config.axis_x_tick_values ? config.axis_x_tick_values : $$.xAxis.tickValues());
+                axis = $$.getXAxis(scale, $$.xOrient, $$.getXAxisTickFormat(), $$.getXAxisTickValues());
             }
-            $$.main.append("g").call(axis).each(function () {
+            $$.d3.select('body').append("g").style('visibility', 'hidden').call(axis).each(function () {
                 $$.d3.select(this).selectAll('text').each(function () {
                     var box = this.getBoundingClientRect();
                     if (maxWidth < box.width) { maxWidth = box.width; }
@@ -3937,31 +4091,30 @@
         return isValue(padding[key]) ? padding[key] * ratio : defaultValue;
     };
 
-    c3_chart_internal_fn.generateTickValues = function (xs, tickCount) {
-        var $$ = this;
-        var tickValues = xs, targetCount, start, end, count, interval, i, tickValue;
+    c3_chart_internal_fn.generateTickValues = function (values, tickCount, forTimeSeries) {
+        var tickValues = values, targetCount, start, end, count, interval, i, tickValue;
         if (tickCount) {
             targetCount = isFunction(tickCount) ? tickCount() : tickCount;
-            // compute ticks according to $$.config.axis_x_tick_count
+            // compute ticks according to tickCount
             if (targetCount === 1) {
-                tickValues = [xs[0]];
+                tickValues = [values[0]];
             } else if (targetCount === 2) {
-                tickValues = [xs[0], xs[xs.length - 1]];
+                tickValues = [values[0], values[values.length - 1]];
             } else if (targetCount > 2) {
                 count = targetCount - 2;
-                start = xs[0];
-                end = xs[xs.length - 1];
+                start = values[0];
+                end = values[values.length - 1];
                 interval = (end - start) / (count + 1);
-                // re-construct uniqueXs
+                // re-construct unique values
                 tickValues = [start];
                 for (i = 0; i < count; i++) {
                     tickValue = +start + interval * (i + 1);
-                    tickValues.push($$.isTimeSeries() ? new Date(tickValue) : tickValue);
+                    tickValues.push(forTimeSeries ? new Date(tickValue) : tickValue);
                 }
                 tickValues.push(end);
             }
         }
-        if (!$$.isTimeSeries()) { tickValues = tickValues.sort(function (a, b) { return a - b; }); }
+        if (!forTimeSeries) { tickValues = tickValues.sort(function (a, b) { return a - b; }); }
         return tickValues;
     };
     c3_chart_internal_fn.generateAxisTransitions = function (duration) {
@@ -3988,6 +4141,9 @@
     c3_chart_internal_fn.getClipPath = function (id) {
         var isIE9 = window.navigator.appVersion.toLowerCase().indexOf("msie 9.") >= 0;
         return "url(" + (isIE9 ? "" : document.URL.split('#')[0]) + "#" + id + ")";
+    };
+    c3_chart_internal_fn.appendClip = function (parent, id) {
+        return parent.append("clipPath").attr("id", id).append("rect");
     };
     c3_chart_internal_fn.getAxisClipX = function (forHorizontal) {
         // axis line width + padding for left
@@ -4043,7 +4199,7 @@
         $$.pie = d3.layout.pie().value(function (d) {
             return d.values.reduce(function (a, b) { return a + b.value; }, 0);
         });
-        if (!config.data_order || !config.pie_sort || !config.donut_sort) {
+        if (!config.data_order) {
             $$.pie.sort(null);
         }
     };
@@ -4066,8 +4222,9 @@
 
     c3_chart_internal_fn.updateAngle = function (d) {
         var $$ = this, config = $$.config,
-            found = false, index = 0;
-        $$.pie($$.filterTargetsToShow($$.data.targets)).sort($$.descByStartAngle).forEach(function (t) {
+            found = false, index = 0,
+            gMin = config.gauge_min, gMax = config.gauge_max, gTic, gValue;
+        $$.pie($$.filterTargetsToShow($$.data.targets)).forEach(function (t) {
             if (! found && t.data.id === d.data.id) {
                 found = true;
                 d = t;
@@ -4079,11 +4236,10 @@
             d.endAngle = d.startAngle;
         }
         if ($$.isGaugeType(d.data)) {
-            var gMin = config.gauge_min, gMax = config.gauge_max,
-                gF = Math.abs(gMin) + gMax,
-                aTic = (Math.PI) / gF;
-            d.startAngle = (-1 * (Math.PI / 2)) + (aTic * Math.abs(gMin));
-            d.endAngle = d.startAngle + (aTic * ((d.value > gMax) ? gMax : d.value));
+            gTic = (Math.PI) / (gMax - gMin);
+            gValue = d.value < gMin ? 0 : d.value < gMax ? d.value - gMin : (gMax - gMin);
+            d.startAngle = -1 * (Math.PI / 2);
+            d.endAngle = d.startAngle + gTic * gValue;
         }
         return found ? d : null;
     };
@@ -4158,13 +4314,25 @@
         return format ? format(value, ratio) : $$.defaultArcValueFormat(value, ratio);
     };
 
-    c3_chart_internal_fn.expandArc = function (id, withoutFadeOut) {
-        var $$ = this,
-            target = $$.svg.selectAll('.' + CLASS.chartArc + $$.selectorTarget(id)),
-            noneTargets = $$.svg.selectAll('.' + CLASS.arc).filter(function (data) { return data.data.id !== id; });
+    c3_chart_internal_fn.expandArc = function (targetIds) {
+        var $$ = this, interval;
 
-        if ($$.shouldExpand(id)) {
-            target.selectAll('path')
+        // MEMO: avoid to cancel transition
+        if ($$.transiting) {
+            interval = window.setInterval(function () {
+                if (!$$.transiting) {
+                    window.clearInterval(interval);
+                    $$.expandArc(targetIds);
+                }
+            }, 10);
+            return;
+        }
+
+        targetIds = $$.mapToTargetIds(targetIds);
+
+        $$.svg.selectAll($$.selectorTargets(targetIds, '.' + CLASS.chartArc)).each(function (d) {
+            if (! $$.shouldExpand(d.data.id)) { return; }
+            $$.d3.select(this).selectAll('path')
                 .transition().duration(50)
                 .attr("d", $$.svgArcExpanded)
                 .transition().duration(100)
@@ -4174,16 +4342,17 @@
                         // callback here
                     }
                 });
-        }
-        if (!withoutFadeOut) {
-            noneTargets.style("opacity", 0.3);
-        }
+        });
     };
 
-    c3_chart_internal_fn.unexpandArc = function (id) {
-        var $$ = this,
-            target = $$.svg.selectAll('.' + CLASS.chartArc + $$.selectorTarget(id));
-        target.selectAll('path.' + CLASS.arc)
+    c3_chart_internal_fn.unexpandArc = function (targetIds) {
+        var $$ = this;
+
+        if ($$.transiting) { return; }
+
+        targetIds = $$.mapToTargetIds(targetIds);
+
+        $$.svg.selectAll($$.selectorTargets(targetIds, '.' + CLASS.chartArc)).selectAll('path')
             .transition().duration(50)
             .attr("d", $$.svgArc);
         $$.svg.selectAll('.' + CLASS.arc)
@@ -4228,18 +4397,15 @@
         return $$.hasType('donut') ? $$.config.donut_title : "";
     };
 
-    c3_chart_internal_fn.descByStartAngle = function (a, b) {
-        return a.startAngle - b.startAngle;
-    };
-
     c3_chart_internal_fn.updateTargetsForArc = function (targets) {
         var $$ = this, main = $$.main,
             mainPieUpdate, mainPieEnter,
             classChartArc = $$.classChartArc.bind($$),
-            classArcs = $$.classArcs.bind($$);
+            classArcs = $$.classArcs.bind($$),
+            classFocus = $$.classFocus.bind($$);
         mainPieUpdate = main.select('.' + CLASS.chartArcs).selectAll('.' + CLASS.chartArc)
             .data($$.pie(targets))
-            .attr("class", classChartArc);
+            .attr("class", function (d) { return classChartArc(d) + classFocus(d.data); });
         mainPieEnter = mainPieUpdate.enter().append("g")
             .attr("class", classChartArc);
         mainPieEnter.append('g')
@@ -4312,13 +4478,10 @@
                 $$.config.data_onmouseout(arcData, this);
             })
             .on('click', function (d, i) {
-                var updated, arcData;
-                if (!$$.toggleShape) {
-                    return;
-                }
-                updated = $$.updateAngle(d);
-                arcData = $$.convertToArcData(updated);
-                $$.toggleShape(this, arcData, i); // onclick called in toogleShape()
+                var updated = $$.updateAngle(d),
+                    arcData = $$.convertToArcData(updated);
+                if ($$.toggleShape) { $$.toggleShape(this, arcData, i); }
+                $$.config.data_onclick.call($$.api, arcData, this);
             });
         mainArc
             .attr("transform", function (d) { return !$$.isGaugeType(d.data) && withTransform ? "scale(0)" : ""; })
@@ -4364,12 +4527,8 @@
         main.select('.' + CLASS.chartArcsTitle)
             .style("opacity", $$.hasType('donut') || $$.hasType('gauge') ? 1 : 0);
 
-    };
-    c3_chart_internal_fn.initGauge = function () {
-        var $$ = this, config = $$.config, arcs = $$.arcs;
         if ($$.hasType('gauge')) {
-            arcs.append('path')
-                .attr("class", CLASS.chartArcsBackground)
+            $$.arcs.select('.' + CLASS.chartArcsBackground)
                 .attr("d", function () {
                     var d = {
                         data: [{value: config.gauge_max}],
@@ -4378,37 +4537,54 @@
                     };
                     return $$.getArc(d, true, true);
                 });
-            arcs.append("text")
+            $$.arcs.select('.' + CLASS.chartArcsGaugeUnit)
                 .attr("dy", ".75em")
-                .attr("class", CLASS.chartArcsGaugeUnit)
-                .style("text-anchor", "middle")
-                .style("pointer-events", "none")
                 .text(config.gauge_label_show ? config.gauge_units : '');
-            arcs.append("text")
+            $$.arcs.select('.' + CLASS.chartArcsGaugeMin)
                 .attr("dx", -1 * ($$.innerRadius + (($$.radius - $$.innerRadius) / 2)) + "px")
                 .attr("dy", "1.2em")
-                .attr("class", CLASS.chartArcsGaugeMin)
-                .style("text-anchor", "middle")
-                .style("pointer-events", "none")
                 .text(config.gauge_label_show ? config.gauge_min : '');
-            arcs.append("text")
+            $$.arcs.select('.' + CLASS.chartArcsGaugeMax)
                 .attr("dx", $$.innerRadius + (($$.radius - $$.innerRadius) / 2) + "px")
                 .attr("dy", "1.2em")
-                .attr("class", CLASS.chartArcsGaugeMax)
-                .style("text-anchor", "middle")
-                .style("pointer-events", "none")
                 .text(config.gauge_label_show ? config.gauge_max : '');
         }
+    };
+    c3_chart_internal_fn.initGauge = function () {
+        var arcs = this.arcs;
+        if (this.hasType('gauge')) {
+            arcs.append('path')
+                .attr("class", CLASS.chartArcsBackground);
+            arcs.append("text")
+                .attr("class", CLASS.chartArcsGaugeUnit)
+                .style("text-anchor", "middle")
+                .style("pointer-events", "none");
+            arcs.append("text")
+                .attr("class", CLASS.chartArcsGaugeMin)
+                .style("text-anchor", "middle")
+                .style("pointer-events", "none");
+            arcs.append("text")
+                .attr("class", CLASS.chartArcsGaugeMax)
+                .style("text-anchor", "middle")
+                .style("pointer-events", "none");
+        }
+    };
+    c3_chart_internal_fn.getGaugeLabelHeight = function () {
+        return this.config.gauge_label_show ? 20 : 0;
     };
 
     c3_chart_internal_fn.initRegion = function () {
         var $$ = this;
-        $$.main.append('g')
+        $$.region = $$.main.append('g')
             .attr("clip-path", $$.clipPath)
             .attr("class", CLASS.regions);
     };
     c3_chart_internal_fn.redrawRegion = function (duration) {
         var $$ = this, config = $$.config;
+
+        // hide if arc type
+        $$.region.style('visibility', $$.hasArcType() ? 'hidden' : 'visible');
+
         $$.mainRegion = $$.main.select('.' + CLASS.regions).selectAll('.' + CLASS.region)
             .data(config.regions);
         $$.mainRegion.enter().append('g')
@@ -4519,7 +4695,7 @@
                     _y = box.y;
                     _w = box.width;
                     _h = box.height;
-                    toggle = $$.toggleBar;
+                    toggle = $$.togglePath;
                     isWithin = !(maxX < _x || _x + _w < minX) && !(maxY < _y || _y + _h < minY);
                 } else {
                     // line/area selection not supported yet
@@ -4590,57 +4766,50 @@
     c3_chart_internal_fn.togglePoint = function (selected, target, d, i) {
         selected ? this.selectPoint(target, d, i) : this.unselectPoint(target, d, i);
     };
-    c3_chart_internal_fn.selectBar = function (target, d) {
+    c3_chart_internal_fn.selectPath = function (target, d) {
         var $$ = this;
         $$.config.data_onselected.call($$, d, target.node());
         target.transition().duration(100)
             .style("fill", function () { return $$.d3.rgb($$.color(d)).brighter(0.75); });
     };
-    c3_chart_internal_fn.unselectBar = function (target, d) {
+    c3_chart_internal_fn.unselectPath = function (target, d) {
         var $$ = this;
         $$.config.data_onunselected.call($$, d, target.node());
         target.transition().duration(100)
             .style("fill", function () { return $$.color(d); });
     };
-    c3_chart_internal_fn.toggleBar = function (selected, target, d, i) {
-        selected ? this.selectBar(target, d, i) : this.unselectBar(target, d, i);
+    c3_chart_internal_fn.togglePath = function (selected, target, d, i) {
+        selected ? this.selectPath(target, d, i) : this.unselectPath(target, d, i);
     };
-    c3_chart_internal_fn.toggleArc = function (selected, target, d, i) {
-        this.toggleBar(selected, target, d.data, i);
-    };
-    c3_chart_internal_fn.getToggle = function (that) {
-        var $$ = this;
-        // path selection not supported yet
-        return that.nodeName === 'circle' ? $$.togglePoint : ($$.d3.select(that).classed(CLASS.bar) ? $$.toggleBar : $$.toggleArc);
+    c3_chart_internal_fn.getToggle = function (that, d) {
+        var $$ = this, toggle;
+        if (that.nodeName === 'circle') {
+            if ($$.isStepType(d)) {
+                // circle is hidden in step chart, so treat as within the click area
+                toggle = function () {}; // TODO: how to select step chart?
+            } else {
+                toggle = $$.togglePoint;
+            }
+        }
+        else if (that.nodeName === 'path') {
+            toggle = $$.togglePath;
+        }
+        return toggle;
     };
     c3_chart_internal_fn.toggleShape = function (that, d, i) {
         var $$ = this, d3 = $$.d3, config = $$.config,
-            shape = d3.select(that), isSelected = shape.classed(CLASS.SELECTED), isWithin, toggle;
-        if (that.nodeName === 'circle') {
-            isWithin = $$.isWithinCircle(that, $$.pointSelectR(d) * 1.5);
-            toggle = $$.togglePoint;
-        }
-        else if (that.nodeName === 'path') {
-            if (shape.classed(CLASS.bar)) {
-                isWithin = $$.isWithinBar(that);
-                toggle = $$.toggleBar;
-            } else { // would be arc
-                isWithin = true;
-                toggle = $$.toggleArc;
+            shape = d3.select(that), isSelected = shape.classed(CLASS.SELECTED),
+            toggle = $$.getToggle(that, d).bind($$);
+
+        if (config.data_selection_enabled && config.data_selection_isselectable(d)) {
+            if (!config.data_selection_multiple) {
+                $$.main.selectAll('.' + CLASS.shapes + (config.data_selection_grouped ? $$.getTargetSelectorSuffix(d.id) : "")).selectAll('.' + CLASS.shape).each(function (d, i) {
+                    var shape = d3.select(this);
+                    if (shape.classed(CLASS.SELECTED)) { toggle(false, shape.classed(CLASS.SELECTED, false), d, i); }
+                });
             }
-        }
-        if (config.data_selection_grouped || isWithin) {
-            if (config.data_selection_enabled && config.data_selection_isselectable(d)) {
-                if (!config.data_selection_multiple) {
-                    $$.main.selectAll('.' + CLASS.shapes + (config.data_selection_grouped ? $$.getTargetSelectorSuffix(d.id) : "")).selectAll('.' + CLASS.shape).each(function (d, i) {
-                        var shape = d3.select(this);
-                        if (shape.classed(CLASS.SELECTED)) { toggle.call($$, false, shape.classed(CLASS.SELECTED, false), d, i); }
-                    });
-                }
-                shape.classed(CLASS.SELECTED, !isSelected);
-                toggle.call($$, !isSelected, shape, d, i);
-            }
-            $$.config.data_onclick.call($$.api, d, that);
+            shape.classed(CLASS.SELECTED, !isSelected);
+            toggle(!isSelected, shape, d, i);
         }
     };
 
@@ -4827,14 +4996,31 @@
         $$.context.attr("transform", $$.getTranslate('context'));
         subXAxis.attr("transform", $$.getTranslate('subx'));
     };
+    c3_chart_internal_fn.getDefaultExtent = function () {
+        var $$ = this, config = $$.config,
+            extent = isFunction(config.axis_x_extent) ? config.axis_x_extent($$.getXDomain($$.data.targets)) : config.axis_x_extent;
+        if ($$.isTimeSeries()) {
+            extent = [$$.parseDate(extent[0]), $$.parseDate(extent[1])];
+        }
+        return extent;
+    };
 
     c3_chart_internal_fn.initZoom = function () {
-        var $$ = this, d3 = $$.d3, config = $$.config;
+        var $$ = this, d3 = $$.d3, config = $$.config,
+            prevZoomTranslate, wheeled = false;
         $$.zoom = d3.behavior.zoom()
             .on("zoomstart", function () {
                 $$.zoom.altDomain = d3.event.sourceEvent.altKey ? $$.x.orgDomain() : null;
             })
-            .on("zoom", function () { $$.redrawForZoom.call($$); });
+            .on("zoom", function () {
+                // prevZoomTranslate is needed for the fix of unexpected zoom.translate after remaining zoom
+                if (prevZoomTranslate && wheeled) {
+                    $$.zoom.translate(prevZoomTranslate);
+                }
+                $$.redrawForZoom.call($$);
+                prevZoomTranslate = $$.zoom.translate();
+                wheeled = d3.event.sourceEvent.type === 'wheel';
+            });
         $$.zoom.scale = function (scale) {
             return config.axis_rotated ? this.y(scale) : this.x(scale);
         };
@@ -5009,6 +5195,7 @@
         zoomRect: 'c3-zoom-rect',
         brush: 'c3-brush',
         focused: 'c3-focused',
+        defocused: 'c3-defocused',
         region: 'c3-region',
         regions: 'c3-regions',
         tooltip: 'c3-tooltip',
@@ -5030,6 +5217,7 @@
         texts: 'c3-texts',
         gaugeValue: 'c3-gauge-value',
         grid: 'c3-grid',
+        gridLines: 'c3-grid-lines',
         xgrid: 'c3-xgrid',
         xgrids: 'c3-xgrids',
         xgridLine: 'c3-xgrid-line',
@@ -5103,7 +5291,7 @@
         return this.classShapes(d) + this.generateClass(CLASS.areas, d.id);
     };
     c3_chart_internal_fn.classRegion = function (d, i) {
-        return this.generateClass(CLASS.region, i) + ' ' + ('class' in d ? d.class : '');
+        return this.generateClass(CLASS.region, i) + ' ' + ('class' in d ? d['class'] : '');
     };
     c3_chart_internal_fn.classEvent = function (d) {
         return this.generateClass(CLASS.eventRect, d.index);
@@ -5115,6 +5303,15 @@
             additionalClass = ' ' + CLASS.target + '-' + additionalClassSuffix;
         }
         return $$.generateClass(CLASS.target, id) + additionalClass;
+    };
+    c3_chart_internal_fn.classFocus = function (d) {
+        return this.classFocused(d) + this.classDefocused(d);
+    };
+    c3_chart_internal_fn.classFocused = function (d) {
+        return ' ' + (this.focusedTargetIds.indexOf(d.id) >= 0 ? CLASS.focused : '');
+    };
+    c3_chart_internal_fn.classDefocused = function (d) {
+        return ' ' + (this.defocusedTargetIds.indexOf(d.id) >= 0 ? CLASS.defocused : '');
     };
     c3_chart_internal_fn.classChartText = function (d) {
         return CLASS.chartText + this.classTarget(d.id);
@@ -5131,12 +5328,13 @@
     c3_chart_internal_fn.getTargetSelectorSuffix = function (targetId) {
         return targetId || targetId === 0 ? '-' + (targetId.replace ? targetId.replace(/([^a-zA-Z0-9-_])/g, '-') : targetId) : '';
     };
-    c3_chart_internal_fn.selectorTarget = function (id) {
-        return '.' + CLASS.target + this.getTargetSelectorSuffix(id);
+    c3_chart_internal_fn.selectorTarget = function (id, prefix) {
+        return (prefix || '') + '.' + CLASS.target + this.getTargetSelectorSuffix(id);
     };
-    c3_chart_internal_fn.selectorTargets = function (ids) {
+    c3_chart_internal_fn.selectorTargets = function (ids, prefix) {
         var $$ = this;
-        return ids.length ? ids.map(function (id) { return $$.selectorTarget(id); }) : null;
+        ids = ids || [];
+        return ids.length ? ids.map(function (id) { return $$.selectorTarget(id, prefix); }) : null;
     };
     c3_chart_internal_fn.selectorLegend = function (id) {
         return '.' + CLASS.legendItem + this.getTargetSelectorSuffix(id);
@@ -5193,67 +5391,75 @@
             return {x: minX, y: minY, width: box.width, height: box.height};
         };
 
-    c3_chart_fn.focus = function (targetId) {
-        var $$ = this.internal,
-            candidates = $$.svg.selectAll($$.selectorTarget(targetId)),
-            candidatesForNoneArc = candidates.filter($$.isNoneArc.bind($$)),
-            candidatesForArc = candidates.filter($$.isArc.bind($$));
-        function focus(targets) {
-            $$.filterTargetsToShow(targets).transition().duration(100).style('opacity', 1);
-        }
+    c3_chart_fn.focus = function (targetIds) {
+        var $$ = this.internal, candidates;
+
+        targetIds = $$.mapToTargetIds(targetIds);
+        candidates = $$.svg.selectAll($$.selectorTargets(targetIds.filter($$.isTargetToShow, $$))),
+
         this.revert();
         this.defocus();
-        focus(candidatesForNoneArc.classed(CLASS.focused, true));
-        focus(candidatesForArc);
+        candidates.classed(CLASS.focused, true).classed(CLASS.defocused, false);
         if ($$.hasArcType()) {
-            $$.expandArc(targetId, true);
+            $$.expandArc(targetIds);
         }
-        $$.toggleFocusLegend(targetId, true);
+        $$.toggleFocusLegend(targetIds, true);
+
+        $$.focusedTargetIds = targetIds;
+        $$.defocusedTargetIds = $$.defocusedTargetIds.filter(function (id) {
+            return targetIds.indexOf(id) < 0;
+        });
     };
 
-    c3_chart_fn.defocus = function (targetId) {
-        var $$ = this.internal,
-            candidates = $$.svg.selectAll($$.selectorTarget(targetId)),
-            candidatesForNoneArc = candidates.filter($$.isNoneArc.bind($$)),
-            candidatesForArc = candidates.filter($$.isArc.bind($$));
-        function defocus(targets) {
-            $$.filterTargetsToShow(targets).transition().duration(100).style('opacity', 0.3);
-        }
+    c3_chart_fn.defocus = function (targetIds) {
+        var $$ = this.internal, candidates;
+
+        targetIds = $$.mapToTargetIds(targetIds);
+        candidates = $$.svg.selectAll($$.selectorTargets(targetIds.filter($$.isTargetToShow, $$))),
+
         this.revert();
-        defocus(candidatesForNoneArc.classed(CLASS.focused, false));
-        defocus(candidatesForArc);
+        candidates.classed(CLASS.focused, false).classed(CLASS.defocused, true);
         if ($$.hasArcType()) {
-            $$.unexpandArc(targetId);
+            $$.unexpandArc(targetIds);
         }
-        $$.toggleFocusLegend(targetId, false);
+        $$.toggleFocusLegend(targetIds, false);
+
+        $$.focusedTargetIds = $$.focusedTargetIds.filter(function (id) {
+            return targetIds.indexOf(id) < 0;
+        });
+        $$.defocusedTargetIds = targetIds;
     };
 
-    c3_chart_fn.revert = function (targetId) {
-        var $$ = this.internal,
-            candidates = $$.svg.selectAll($$.selectorTarget(targetId)),
-            candidatesForNoneArc = candidates.filter($$.isNoneArc.bind($$)),
-            candidatesForArc = candidates.filter($$.isArc.bind($$));
-        function revert(targets) {
-            $$.filterTargetsToShow(targets).transition().duration(100).style('opacity', 1);
-        }
-        revert(candidatesForNoneArc.classed(CLASS.focused, false));
-        revert(candidatesForArc);
+    c3_chart_fn.revert = function (targetIds) {
+        var $$ = this.internal, candidates;
+
+        targetIds = $$.mapToTargetIds(targetIds);
+        candidates = $$.svg.selectAll($$.selectorTargets(targetIds)); // should be for all targets
+
+        candidates.classed(CLASS.focused, false).classed(CLASS.defocused, false);
         if ($$.hasArcType()) {
-            $$.unexpandArc(targetId);
+            $$.unexpandArc(targetIds);
         }
         $$.revertLegend();
+
+        $$.focusedTargetIds = [];
+        $$.defocusedTargetIds = [];
     };
 
     c3_chart_fn.show = function (targetIds, options) {
-        var $$ = this.internal;
+        var $$ = this.internal, targets;
 
         targetIds = $$.mapToTargetIds(targetIds);
         options = options || {};
 
         $$.removeHiddenTargetIds(targetIds);
-        $$.svg.selectAll($$.selectorTargets(targetIds))
-            .transition()
-            .style('opacity', 1);
+        targets = $$.svg.selectAll($$.selectorTargets(targetIds));
+
+        targets.transition()
+            .style('opacity', 1, 'important')
+            .call($$.endall, function () {
+                targets.style('opacity', null).style('opacity', 1);
+            });
 
         if (options.withLegend) {
             $$.showLegend(targetIds);
@@ -5263,15 +5469,19 @@
     };
 
     c3_chart_fn.hide = function (targetIds, options) {
-        var $$ = this.internal;
+        var $$ = this.internal, targets;
 
         targetIds = $$.mapToTargetIds(targetIds);
         options = options || {};
 
         $$.addHiddenTargetIds(targetIds);
-        $$.svg.selectAll($$.selectorTargets(targetIds))
-            .transition()
-            .style('opacity', 0);
+        targets = $$.svg.selectAll($$.selectorTargets(targetIds));
+
+        targets.transition()
+            .style('opacity', 0, 'important')
+            .call($$.endall, function () {
+                targets.style('opacity', null).style('opacity', 0);
+            });
 
         if (options.withLegend) {
             $$.hideLegend(targetIds);
@@ -5454,12 +5664,12 @@
                 diff = 1;
             }
             domain = [baseValue.x - diff, baseValue.x];
-            $$.updateXDomain(null, true, true, domain);
+            $$.updateXDomain(null, true, true, false, domain);
         } else if (orgDataCount === 1) {
             if ($$.isTimeSeries()) {
                 diff = (baseTarget.values[baseTarget.values.length - 1].x - baseValue.x) / 2;
                 domain = [new Date(+baseValue.x - diff), new Date(+baseValue.x + diff)];
-                $$.updateXDomain(null, true, true, domain);
+                $$.updateXDomain(null, true, true, false, domain);
             }
         }
 
@@ -5477,6 +5687,7 @@
             },
             withLegend: true,
             withTransition: orgDataCount > 1,
+            withTrimXDomain: false
         });
     };
 
@@ -5515,6 +5726,9 @@
                 mainArea = $$.mainArea || d3.selectAll([]),
                 mainCircle = $$.mainCircle || d3.selectAll([]);
 
+            // set flag
+            $$.flowing = true;
+
             // remove head data after rendered
             $$.data.targets.forEach(function (d) {
                 d.values.splice(0, flowLength);
@@ -5549,6 +5763,10 @@
             }
             scaleX = (diffDomain(orgDomain) / diffDomain(domain));
             transform = 'translate(' + translateX + ',0) scale(' + scaleX + ',1)';
+
+            // hide tooltip
+            $$.hideXGridFocus();
+            $$.hideTooltip();
 
             d3.transition().ease('linear').duration(durationForFlow).each(function () {
                 wait.add($$.axes.x.transition().call($$.xAxis));
@@ -5612,10 +5830,15 @@
                 mainRegion.select('rect').filter($$.isRegionOnX)
                     .attr("x", $$.regionX.bind($$))
                     .attr("width", $$.regionWidth.bind($$));
-                $$.updateEventRect();
+
+                if (config.interaction_enabled) {
+                    $$.redrawEventRect();
+                }
 
                 // callback for end of flow
                 done();
+
+                $$.flowing = false;
             });
         };
     };
@@ -5633,7 +5856,7 @@
         if (! config.data_selection_enabled) { return; }
         $$.main.selectAll('.' + CLASS.shapes).selectAll('.' + CLASS.shape).each(function (d, i) {
             var shape = d3.select(this), id = d.data ? d.data.id : d.id,
-                toggle = $$.getToggle(this).bind($$),
+                toggle = $$.getToggle(this, d).bind($$),
                 isTargetId = config.data_selection_grouped || !ids || ids.indexOf(id) >= 0,
                 isTargetIndex = !indices || indices.indexOf(i) >= 0,
                 isSelected = shape.classed(CLASS.SELECTED);
@@ -5657,7 +5880,7 @@
         if (! config.data_selection_enabled) { return; }
         $$.main.selectAll('.' + CLASS.shapes).selectAll('.' + CLASS.shape).each(function (d, i) {
             var shape = d3.select(this), id = d.data ? d.data.id : d.id,
-                toggle = $$.getToggle(this).bind($$),
+                toggle = $$.getToggle(this, d).bind($$),
                 isTargetId = config.data_selection_grouped || !ids || ids.indexOf(id) >= 0,
                 isTargetIndex = !indices || indices.indexOf(i) >= 0,
                 isSelected = shape.classed(CLASS.SELECTED);
@@ -5760,10 +5983,10 @@
 
         config.regions = config.regions.filter(function (region) {
             var found = false;
-            if (!region.class) {
+            if (!region['class']) {
                 return true;
             }
-            region.class.split(' ').forEach(function (c) {
+            region['class'].split(' ').forEach(function (c) {
                 if (classes.indexOf(c) >= 0) { found = true; }
             });
             return !found;
@@ -5772,14 +5995,13 @@
         return config.regions;
     };
 
-    c3_chart_fn.data = function () {};
-    c3_chart_fn.data.get = function (targetId) {
-        var target = this.data.getAsTarget(targetId);
-        return isDefined(target) ? target.values.map(function (d) { return d.value; }) : undefined;
+    c3_chart_fn.data = function (targetId) {
+        var targets = this.internal.data.targets.filter(function (t) { return t.id === targetId; });
+        return targets.length > 0 ? targets[0] : null;
     };
-    c3_chart_fn.data.getAsTarget = function (targetId) {
-        var targets = this.data.targets.filter(function (t) { return t.id === targetId; });
-        return targets.length > 0 ? targets[0] : undefined;
+    c3_chart_fn.data.values = function (targetId) {
+        var target = this.data(targetId);
+        return target ? target.values.map(function (d) { return d.value; }) : null;
     };
     c3_chart_fn.data.names = function (names) {
         var $$ = this.internal, config = $$.config;
@@ -5861,6 +6083,12 @@
                 config.axis_y_max = config.axis_y2_max = max;
             }
             $$.redraw({withUpdateOrgXDomain: true, withUpdateXDomain: true});
+        } else {
+            return {
+                x: config.axis_x_max,
+                y: config.axis_y_max,
+                y2: config.axis_y2_max
+            };
         }
     };
     c3_chart_fn.axis.min = function (min) {
@@ -5874,12 +6102,23 @@
                 config.axis_y_min = config.axis_y2_min = min;
             }
             $$.redraw({withUpdateOrgXDomain: true, withUpdateXDomain: true});
+        } else {
+            return {
+                x: config.axis_x_min,
+                y: config.axis_y_min,
+                y2: config.axis_y2_min
+            };
         }
     };
     c3_chart_fn.axis.range = function (range) {
         if (arguments.length) {
             if (isDefined(range.max)) { this.axis.max(range.max); }
             if (isDefined(range.min)) { this.axis.min(range.min); }
+        } else {
+            return {
+                max: this.axis.max(),
+                min: this.axis.min()
+            };
         }
     };
 
@@ -5915,13 +6154,52 @@
         window.onresize = null;
     };
 
+    c3_chart_fn.tooltip = function () {};
+    c3_chart_fn.tooltip.show = function (args) {
+        var $$ = this.internal, index, mouse;
+
+        // determine mouse position on the chart
+        if (args.mouse) {
+            mouse = args.mouse;
+        }
+
+        // determine focus data
+        if (args.data) {
+            if ($$.isMultipleX()) {
+                // if multiple xs, target point will be determined by mouse
+                mouse = [$$.x(args.data.x), $$.getYScale(args.data.id)(args.data.value)];
+                index = null;
+            } else {
+                // TODO: when tooltip_grouped = false
+                index = isValue(args.data.index) ? args.data.index : $$.getIndexByX(args.data.x);
+            }
+        }
+        else if (typeof args.x !== 'undefined') {
+            index = $$.getIndexByX(args.x);
+        }
+        else if (typeof args.index !== 'undefined') {
+            index = args.index;
+        }
+
+        // emulate mouse events to show
+        $$.dispatchEvent('mouseover', index, mouse);
+        $$.dispatchEvent('mousemove', index, mouse);
+    };
+    c3_chart_fn.tooltip.hide = function () {
+        // TODO: get target data by checking the state of focus
+        this.internal.dispatchEvent('mouseout', 0);
+    };
+
     // Features:
     // 1. category axis
     // 2. ceil values of translate/x/y to int for half pixel antialiasing
-    function c3_axis(d3, isCategory) {
-        var scale = d3.scale.linear(), orient = "bottom", innerTickSize = 6, outerTickSize = 6, tickPadding = 3, tickValues = null, tickFormat, tickArguments;
+    function c3_axis(d3, params) {
+        var scale = d3.scale.linear(), orient = "bottom", innerTickSize = 6, outerTickSize, tickPadding = 3, tickValues = null, tickFormat, tickArguments;
 
         var tickOffset = 0, tickCulling = true, tickCentered;
+
+        params = params || {};
+        outerTickSize = params.withOuterTick ? 6 : 0;
 
         function axisX(selection, x) {
             selection.attr("transform", function (d) {
@@ -5953,7 +6231,7 @@
         }
         function copyScale() {
             var newScale = scale.copy(), domain;
-            if (isCategory) {
+            if (params.isCategory) {
                 domain = scale.domain();
                 newScale.domain([domain[0], domain[1] - 1]);
             }
@@ -5973,7 +6251,7 @@
                     // MEMO: No exit transition. The reason is this transition affects max tick width calculation because old tick will be included in the ticks.
                     tickExit = tick.exit().remove(),
                     tickUpdate = d3.transition(tick).style("opacity", 1),
-                    tickTransform, tickX;
+                    tickTransform, tickX, tickY;
 
                 var range = scale.rangeExtent ? scale.rangeExtent() : scaleExtent(scale.range()),
                     path = g.selectAll(".domain").data([ 0 ]),
@@ -5987,9 +6265,10 @@
                     textEnter = tickEnter.select("text"),
                     textUpdate = tickUpdate.select("text");
 
-                if (isCategory) {
+                if (params.isCategory) {
                     tickOffset = Math.ceil((scale1(1) - scale1(0)) / 2);
                     tickX = tickCentered ? 0 : tickOffset;
+                    tickY = tickCentered ? tickOffset : 0;
                 } else {
                     tickOffset = tickX = 0;
                 }
@@ -6027,7 +6306,7 @@
                         tickTransform = axisY;
                         lineEnter.attr("x2", -innerTickSize);
                         textEnter.attr("x", -(Math.max(innerTickSize, 0) + tickPadding));
-                        lineUpdate.attr("x2", -innerTickSize).attr("y2", 0);
+                        lineUpdate.attr("x2", -innerTickSize).attr("y1", tickY).attr("y2", tickY);
                         textUpdate.attr("x", -(Math.max(innerTickSize, 0) + tickPadding)).attr("y", tickOffset);
                         text.attr("dy", ".32em").style("text-anchor", "end");
                         pathUpdate.attr("d", "M" + -outerTickSize + "," + range[0] + "H0V" + range[1] + "H" + -outerTickSize);

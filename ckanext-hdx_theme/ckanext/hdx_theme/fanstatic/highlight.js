@@ -1,8 +1,3 @@
-$(document).ready(function() {
-  $(".toHighlight").highlight("Population");
-});
-
-
 "use strict";
 
 ckan.module('highlight', function ($, _) {
