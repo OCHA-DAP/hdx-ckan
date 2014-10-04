@@ -103,7 +103,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _callback_process_data: function(){
       //Check if the filtered Locations were not initialized before
       if (this.filteredLocations === null){
-        this.filteredLocations = {};
+        this.filteredLocations = {"*ALL*": true};
         for (var i = 0; i < this.data.length; i++){
           this.filteredLocations[this.data[i]['locationCode']] = true;
         }
@@ -155,7 +155,10 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         var name = data[i]['locationName'];
         var code = data[i]['locationCode'];
         var id = "sidePanelLocation" + i;
-        locationContainer.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' checked type='checkbox'/><label for='" + id + "'>" + name + "</label></li>");
+        var checked = "";
+        if (this.filteredLocations[code])
+          checked = "checked";
+        locationContainer.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' " + checked + " type='checkbox'/><label for='" + id + "'>" + name + "</label></li>");
         var element = $("#"+id);
         element.data("ckanModule", this);
       }
