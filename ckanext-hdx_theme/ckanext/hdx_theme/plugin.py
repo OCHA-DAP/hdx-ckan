@@ -94,7 +94,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_remove_schema_and_domain_from_url': hdx_helpers.hdx_remove_schema_and_domain_from_url,
             'hdx_get_ckan_config': hdx_helpers.hdx_get_ckan_config,
             'get_group_name_from_list': hdx_helpers.get_group_name_from_list,
-            'one_active_item': hdx_helpers.one_active_item
+            'one_active_item': hdx_helpers.one_active_item,
+            'hdx_follow_button': hdx_helpers.hdx_follow_button
         }
         
     def get_actions(self):

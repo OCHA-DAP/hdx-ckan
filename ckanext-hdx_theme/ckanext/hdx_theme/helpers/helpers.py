@@ -276,3 +276,36 @@ def one_active_item(items):
         if i['active']:
             return True
     return False
+
+def hdx_follow_button(obj_type, obj_id, **kw):
+    ''' This is a modified version of the ckan core follow_button() helper
+    It returns a simple link for a bootstrap dropdown menu
+    
+    Return a follow button for the given object type and id.
+
+    If the user is not logged in return an empty string instead.
+
+    :param obj_type: the type of the object to be followed when the follow
+        button is clicked, e.g. 'user' or 'dataset'
+    :type obj_type: string
+    :param obj_id: the id of the object to be followed when the follow button
+        is clicked
+    :type obj_id: string
+
+    :returns: a follow button as an HTML snippet
+    :rtype: string
+
+    '''
+    obj_type = obj_type.lower()
+    assert obj_type in h._follow_objects
+    # If the user is logged in show the follow/unfollow button
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        action = 'am_following_%s' % obj_type
+        following = logic.get_action(action)(context, {'id': obj_id})
+        return h.snippet('snippets/hdx_follow_button.html',
+                       following=following,
+                       obj_id=obj_id,
+                       obj_type=obj_type,
+                       params = kw)
+    return ''
