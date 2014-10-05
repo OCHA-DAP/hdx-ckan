@@ -28,6 +28,7 @@ log = logging.getLogger(__name__)
 downloadable_formats = {
     'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
 }
+                    
 
 def is_downloadable(resource):
     format = resource.get('format', 'data').lower()
@@ -90,6 +91,13 @@ def get_last_revision_group(group_id):
     if len(activity_objects)>0 :
         activity = activity_objects[0]
         return activity.revision_id
+    return None
+
+def get_last_revision_timestamp_group(group_id):
+    activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return h.render_datetime(activity.timestamp)
     return None
 
 def get_group_followers(grp_id):
@@ -276,3 +284,11 @@ def one_active_item(items):
         if i['active']:
             return True
     return False
+
+def feature_count(features):
+    count = 0
+    for name in features:
+        facet = h.get_facet_items_dict(name)
+        for f in facet:
+            count += f['count']
+    return count

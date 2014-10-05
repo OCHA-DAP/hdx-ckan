@@ -14,9 +14,9 @@
     <a class="updatedNameColor" href="">
    	{% if f_type == 'organization' %} {{ _('Organisation Page') }} -
    	{% elif f_type == 'country' %} {{ _('Country Page') }} -
-   		{% else %} {{ _('Topic Page') }}
-		   	</a>{{ package.last_update }}
-   		{% endif %}
+   	{% else %} {{ _('Topic Page') }}
+   	{% endif %}
+      </a>{{ h.get_last_revision_timestamp_group(package.name) }}
 {% endblock %}
 
 {% block others %}
