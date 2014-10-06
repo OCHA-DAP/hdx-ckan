@@ -290,6 +290,8 @@
 /* Side panel Locations */
     #showOptions {
         font-weight: bold;
+        margin-left: 20px;
+        line-height: 45px;
     }
     #sidePanelCountries li input{
         position: static;
@@ -317,6 +319,15 @@
 
     }
 /* END Side panel Locations */
+
+.select2-container .select2-choice{
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+.select2-container .select2-choice .select2-arrow{
+    border-radius: 0;
+}
 
 #chart-container svg > g:nth-child(3) .c3-axis-x {
     opacity: 0 !important;
