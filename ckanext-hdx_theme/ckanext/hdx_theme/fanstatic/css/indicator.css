@@ -375,3 +375,15 @@
 }
 
 /* END - Actions */
+
+/* Dataset specific styles */
+.dataset-res-wraper section.resources {
+	margin-top: inherit;
+}
+
+.dataset-notes.notes p {
+	margin-top: 10px;
+	margin-bottom: 0px;
+}
+
+/* END - Dataset specific styles */
