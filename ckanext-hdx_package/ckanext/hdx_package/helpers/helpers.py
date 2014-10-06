@@ -1,7 +1,7 @@
 import re
 import ckan.lib.helpers as h
 from ckan.common import (
-     c, request
+    c, request
 )
 import sqlalchemy
 import ckan.model as model
@@ -35,15 +35,18 @@ NotFound = logic.NotFound
 ValidationError = logic.ValidationError
 _get_action = logic.get_action
 
+
 def hdx_user_org_num(user_id):
     context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
+               'user': c.user or c.author}
     try:
-        user    = tk.get_action('organization_list_for_user')(context,{'id':user_id, 'permission': 'create_dataset'})
+        user = tk.get_action('organization_list_for_user')(
+            context, {'id': user_id, 'permission': 'create_dataset'})
     except logic.NotAuthorized:
-            base.abort(401, _('Unauthorized to see organization member list'))    
-        
+        base.abort(401, _('Unauthorized to see organization member list'))
+
     return user
+
 
 def hdx_organizations_available_with_roles():
     organizations_available = h.organizations_available('read')
@@ -52,8 +55,10 @@ def hdx_organizations_available_with_roles():
         orgs_where_admin = []
     am_sysadmin = new_authz.is_sysadmin(c.user)
     if not am_sysadmin:
-        orgs_where_editor = set([org['id'] for org in h.organizations_available('create_dataset')])
-        orgs_where_admin = set([org['id'] for org in h.organizations_available('admin')])
+        orgs_where_editor = set(
+            [org['id'] for org in h.organizations_available('create_dataset')])
+        orgs_where_admin = set([org['id']
+                                for org in h.organizations_available('admin')])
 
     for org in organizations_available:
         org['has_add_dataset_rights'] = True
@@ -68,7 +73,7 @@ def hdx_organizations_available_with_roles():
             org['has_add_dataset_rights'] = False
 
     organizations_available.sort(key=lambda y:
-                                y['display_name'].lower())
+                                 y['display_name'].lower())
     return organizations_available
 
 
@@ -81,7 +86,7 @@ def hdx_get_activity_list(context, data_dict):
         'action': 'activity',
         'id': data_dict['id'],
         'offset': offset,
-        }
+    }
     return _activity_list(context, activity_stream, extra_vars)
 
 
@@ -96,7 +101,8 @@ def hdx_find_license_name(license_id, license_name):
     return license_name
 
 
-#code copied from activity_streams.activity_list_to_html and modified to return only the activity list
+# code copied from activity_streams.activity_list_to_html and modified to
+# return only the activity list
 def _activity_list(context, activity_stream, extra_vars):
     '''Return the given activity stream 
 
@@ -108,14 +114,14 @@ def _activity_list(context, activity_stream, extra_vars):
 
 
     '''
-    activity_list = [] # These are the activity stream messages.
+    activity_list = []  # These are the activity stream messages.
     for activity in activity_stream:
         detail = None
         activity_type = activity['activity_type']
         # Some activity types may have details.
         if activity_type in activity_streams.activity_stream_actions_with_detail:
             details = logic.get_action('activity_detail_list')(context=context,
-                data_dict={'id': activity['id']})
+                                                               data_dict={'id': activity['id']})
             # If an activity has just one activity detail then render the
             # detail instead of the activity.
             if len(details) == 1:
@@ -126,27 +132,30 @@ def _activity_list(context, activity_stream, extra_vars):
                     object_type = 'package_extra'
 
                 new_activity_type = '%s %s' % (detail['activity_type'],
-                                            object_type.lower())
+                                               object_type.lower())
                 if new_activity_type in activity_streams.activity_stream_string_functions:
                     activity_type = new_activity_type
 
         if not activity_type in activity_streams.activity_stream_string_functions:
             raise NotImplementedError("No activity renderer for activity "
-                "type '%s'" % activity_type)
+                                      "type '%s'" % activity_type)
 
         if activity_type in activity_streams.activity_stream_string_icons:
-            activity_icon = activity_streams.activity_stream_string_icons[activity_type]
+            activity_icon = activity_streams.activity_stream_string_icons[
+                activity_type]
         else:
-            activity_icon = activity_streams.activity_stream_string_icons['undefined']
+            activity_icon = activity_streams.activity_stream_string_icons[
+                'undefined']
 
         activity_msg = activity_streams.activity_stream_string_functions[activity_type](context,
-                activity)
+                                                                                        activity)
 
         # Get the data needed to render the message.
         matches = re.findall('\{([^}]*)\}', activity_msg)
         data = {}
         for match in matches:
-            snippet = activity_streams.activity_snippet_functions[match](activity, detail)
+            snippet = activity_streams.activity_snippet_functions[
+                match](activity, detail)
             data[str(match)] = snippet
 
         activity_list.append({'msg': activity_msg,
@@ -188,15 +197,17 @@ def hdx_tag_autocomplete_list(context, data_dict):
         return [tag.name for tag in matching_tags]
     else:
         return []
-   
-#code copied from get.py line 1748 
+
+# code copied from get.py line 1748
+
+
 def _tag_search(context, data_dict):
     model = context['model']
 
     terms = data_dict.get('query') or data_dict.get('q') or []
     if isinstance(terms, basestring):
         terms = [terms]
-    terms = [ t.strip() for t in terms if t.strip() ]
+    terms = [t.strip() for t in terms if t.strip()]
 
     if 'fields' in data_dict:
         log.warning('"fields" parameter is deprecated.  '
@@ -215,12 +226,12 @@ def _tag_search(context, data_dict):
         if not vocab:
             raise NotFound
         q = q.filter(model.Tag.vocabulary_id == vocab.id)
-#CHANGES to initial version
+# CHANGES to initial version
 #     else:
-#         # If no vocabulary_name in data dict then show free tags only.
+# If no vocabulary_name in data dict then show free tags only.
 #         q = q.filter(model.Tag.vocabulary_id == None)
-#         # If we're searching free tags, limit results to tags that are
-#         # currently applied to a package.
+# If we're searching free tags, limit results to tags that are
+# currently applied to a package.
 #         q = q.distinct().join(model.Tag.package_tags)
 
     for field, value in fields.items():
@@ -231,7 +242,8 @@ def _tag_search(context, data_dict):
         return [], 0
 
     for term in terms:
-        escaped_term = misc.escape_sql_like_special_characters(term, escape='\\')
+        escaped_term = misc.escape_sql_like_special_characters(
+            term, escape='\\')
         q = q.filter(model.Tag.name.ilike('%' + escaped_term + '%'))
 
     count = q.count()
@@ -239,6 +251,7 @@ def _tag_search(context, data_dict):
     q = q.limit(limit)
     tags = q.all()
     return tags, count
+
 
 def package_create(context, data_dict):
     '''Create a new dataset (package).
@@ -390,9 +403,9 @@ def package_create(context, data_dict):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    ## need to let rest api create
+    # need to let rest api create
     context["package"] = pkg
-    ## this is added so that the rest controller can make a new location
+    # this is added so that the rest controller can make a new location
     context["id"] = pkg.id
     log.debug('Created object %s' % pkg.name)
 
@@ -402,10 +415,9 @@ def package_create(context, data_dict):
     return_id_only = context.get('return_id_only', False)
 
     output = context['id'] if return_id_only \
-            else _get_action('package_show')(context, {'id':context['id']})
+        else _get_action('package_show')(context, {'id': context['id']})
 
     return output
-
 
 
 def pkg_topics_list(data_dict):
@@ -414,13 +426,14 @@ def pkg_topics_list(data_dict):
     topics = pkg.get_tags(vocab=vocabulary)
     return topics
 
+
 def get_tag_vocabulary(tags):
-    vocabulary = model.Vocabulary.get('Topics')
-    if vocabulary:
-        for item in tags:
-            tag_name = item['name']
-            tag = model.Tag.by_name(name=tag_name, vocab=vocabulary)
-            if tag :
+    for item in tags:
+        tag_name = item['name'].lower()
+        vocabulary = model.Vocabulary.get('Topics')
+        if vocabulary:
+            topic = model.Tag.by_name(name=tag_name, vocab=vocabulary)
+            if topic:
                 item['vocabulary_id'] = vocabulary.id
-                #item['id'] = tag.id
+        item['name'] = tag_name
     return tags
