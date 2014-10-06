@@ -423,7 +423,9 @@ def package_create(context, data_dict):
 def pkg_topics_list(data_dict):
     pkg = model.Package.get(data_dict['id'])
     vocabulary = model.Vocabulary.get('Topics')
-    topics = pkg.get_tags(vocab=vocabulary)
+    topics = []
+    if vocabulary:
+        topics = pkg.get_tags(vocab=vocabulary)
     return topics
 
 
