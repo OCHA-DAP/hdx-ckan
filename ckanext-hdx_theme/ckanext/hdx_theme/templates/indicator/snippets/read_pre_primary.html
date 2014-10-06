@@ -28,10 +28,10 @@
                     </span>
                     <b class="caret"></b>
                   </button>
-                  <ul class="dropdown-menu dropdown-inverse" role="menu" aria-labelledby="location-dd" style="max-height: 241px; overflow-y: auto;">
+                  <ul id="optionDropDown" class="dropdown-menu dropdown-inverse" role="menu" aria-labelledby="location-dd" style="max-height: 241px; overflow-y: auto;">
                     <li><a tabindex="-1" val="soon">TIME (coming soon)</a> </li>
-                    <li><a tabindex="-1" val="location">{{ _("Location") }}</a> </li>
-                    <li><a tabindex="-1" val="sort">{{ _("Sort order") }}</a> </li>
+                    <li><a tabindex="-1" val="sidePanelCountries">{{ _("Location") }}</a> </li>
+                    <li><a tabindex="-1" val="sidePanelSortOrder">{{ _("Sort order") }}</a> </li>
                   </ul>
                 </div>
               </div>
@@ -42,6 +42,8 @@
           </div>
           <div class="row graphOptionsRow">
             <div class="col-xs-12 paddingLeftHack graphOptions">
+              <ul id="sidePanelSortOrder" style="display: none;">
+              </ul>
               <ul id="sidePanelCountries">
               </ul>
             </div>
@@ -94,7 +96,9 @@
           <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}"
                data-module-name="{{ pkg.title }}" data-module-subchart="true"
                data-module-continuous_location="continuous_browsing_locations"
-               data-module-side_panel="showOptions" data-module-side_panel_locations="sidePanelCountries">
+               data-module-side_panel="showOptions"
+               data-module-side_panel_locations="sidePanelCountries"
+               data-module-side_panel_sortorder="sidePanelSortOrder">
           </div>
         </div>
       </div>
