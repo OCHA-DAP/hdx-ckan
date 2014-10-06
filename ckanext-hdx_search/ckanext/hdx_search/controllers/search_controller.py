@@ -195,13 +195,9 @@ def package_search(context, data_dict):
                 if group:
                     new_facet_dict['display_name'] = group.display_name
                     new_facet_dict['description'] = group.description
-                    if hasattr(group, 'revision_timestamp'):
-                        new_facet_dict[
-                            'last_update'] = group.revision_timestamp
                 else:
                     new_facet_dict['display_name'] = key_
                     new_facet_dict['description'] = ''
-                    new_facet_dict['last_update'] = ''
             elif key == 'license_id':
                 license = model.Package.get_license_register().get(key_)
                 if license:
@@ -228,8 +224,8 @@ def package_search(context, data_dict):
     return search_results
 
 
-def sort_features(q, features):
-    return sorted(features, key=lambda x: x['count'])
+def sort_features(features):
+    return sorted(features, key=lambda x: x['count'], reverse=True)
 
 
 def isolate_features(context, facets, q, tab, skip=0, limit=25):
@@ -250,7 +246,7 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
     for o in facets['organization']['items']:
         tags.append(o['name'])
         extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
-                              'url': h.url_for(controller='organization', action='read', id=o['name']), 'description': o['description'], 'last_update': '', 'feature_type': 'organization', 'count': o['count']}
+                              'url': h.url_for(controller='organization', action='read', id=o['name']), 'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
 
     for p in facets['vocab_Topics']['items']:
         tags.append(p['name'])
@@ -260,7 +256,7 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
     for g in facets['groups']['items']:
         tags.append(g['name'])
         extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
-                              'url': h.url_for(controller='group', action='read', id=g['name']), 'description': g['description'], 'last_update': '', 'feature_type': 'country', 'count': g['count']}
+                              'url': h.url_for(controller='group', action='read', id=g['name']), 'description': g['description'], 'feature_type': 'country', 'count': g['count']}
 
     if tab == 'all' and len(tags) > 3:
         if q:
@@ -272,7 +268,7 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
     for s in selected:
         features.append(extract[s])
     if tab == 'features':
-        feature_list = sort_features(q, features)
+        feature_list = sort_features(features)
         return (feature_list[skip:skip + limit], len(features))
     return features
 

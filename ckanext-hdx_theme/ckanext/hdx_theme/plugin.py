@@ -95,7 +95,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_ckan_config': hdx_helpers.hdx_get_ckan_config,
             'get_group_name_from_list': hdx_helpers.get_group_name_from_list,
             'one_active_item': hdx_helpers.one_active_item,
-            'hdx_follow_button': hdx_helpers.hdx_follow_button
+            'hdx_follow_button': hdx_helpers.hdx_follow_button,
+            'get_last_revision_timestamp_group': hdx_helpers.get_last_revision_timestamp_group,
+            'feature_count': hdx_helpers.feature_count
         }
         
     def get_actions(self):
