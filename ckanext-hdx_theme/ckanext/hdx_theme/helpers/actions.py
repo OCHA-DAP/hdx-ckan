@@ -346,7 +346,7 @@ def hdx_get_indicator_values(context, data_dict):
     filter_list = []
 
     for param_name in ['it', 'l', 's', 'minTime', 'maxTime', 'periodType',
-                       'pageNum', 'pageSize', 'lang']:
+                       'pageNum', 'pageSize', 'lang', 'sorting']:
         param_values = data_dict.get(param_name, None)
         filter_list = _add_to_filter_list(param_values, param_name, filter_list)
 
