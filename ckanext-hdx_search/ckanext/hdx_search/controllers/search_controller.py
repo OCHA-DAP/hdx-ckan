@@ -224,8 +224,8 @@ def package_search(context, data_dict):
     return search_results
 
 
-def sort_features(q, features):
-    return sorted(features, key=lambda x: x['count'])
+def sort_features(features):
+    return sorted(features, key=lambda x: x['count'], reverse=True)
 
 
 def isolate_features(context, facets, q, tab, skip=0, limit=25):
@@ -268,7 +268,7 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
     for s in selected:
         features.append(extract[s])
     if tab == 'features':
-        feature_list = sort_features(q, features)
+        feature_list = sort_features(features)
         return (feature_list[skip:skip + limit], len(features))
     return features
 
