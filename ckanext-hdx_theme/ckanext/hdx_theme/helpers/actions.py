@@ -355,6 +355,37 @@ def hdx_get_indicator_values(context, data_dict):
 
     return _make_rest_api_request(url)
 
+@logic.side_effect_free
+def hdx_get_indicator_available_periods(context, data_dict):
+    '''
+    Makes a call to the REST API that provides the indicator values
+    Current param supported are: 
+    :param it: indicator types
+    :type it: list
+    :param l: locations
+    :type l: list
+    :param s: sources
+    :type s: list
+    :param minTime: the start year
+    :type minTime: int
+    :param maxTime: the end year
+    :type maxTime: int
+    '''
+    
+    
+    endpoint = config.get('hdx.rest.indicator.endpoint.facets') + "/available-periods" + '?'
+
+    filter_list = []
+
+    for param_name in ['it', 'l', 's', 'minTime', 'maxTime']:
+        param_values = data_dict.get(param_name, None)
+        filter_list = _add_to_filter_list(param_values, param_name, filter_list)
+
+    filter_list.sort()
+    url = endpoint + "&".join(filter_list)
+
+    return _make_rest_api_request(url)
+
 
 @bcache.cache_region('hdx_memory_cache', 'cached_make_rest_api_request')
 def _make_rest_api_request(url):
