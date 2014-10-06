@@ -25,8 +25,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _sort_order_values:{
       VALUE_DESC: "Value descending",
       VALUE_ASC: "Value ascending",
-      ALPH_AZ: "Alphabet A-Z",
-      ALPH_ZA: "Alphabet Z-A"
+      COUNTRY_ASC: "Alphabet A-Z",
+      COUNTRY_DESC: "Alphabet Z-A"
     },
     _sort_order: "VALUE_DESC",
     _onClick: function(){
