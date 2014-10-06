@@ -18,7 +18,7 @@
 			</div>
 			{% set topics_num = topics|length %}
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Supporting Topic'),_('Supporting Topics'), False), count=topics_num, 
-				links=topics %}
+				links=topics, upper=True %}
 			
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', id="continuous_browsing_locations", name=_('Supporting Locations'), count=' ',
 				links=[{'name':_('Coming soon...')}] %}
