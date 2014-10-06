@@ -3,6 +3,10 @@
 {% set placeholder = placeholder if placeholder else _('Search...') %}
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
+
+{% if tab == 'features' %}
+  {% set count = h.feature_count(['vocab_Topics','groups','organizations'])%}
+{% endif %}
 {% set is_display_search_input = display_search_input if display_search_input==False else True %}
 {% set is_dataset = ('dataset' == type) %}
 
