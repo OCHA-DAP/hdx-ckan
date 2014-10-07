@@ -87,6 +87,7 @@ def count_types(context, data_dict, tab):
     dataset_no = total - indicator_no
     if tab == 'all' and len(result['results']) > 0 \
         and result['results'][0] \
+        and 'indicator' in result['results'][0] \
         and result['results'][0]['indicator'] == '1':
         indicator = [result['results'][0]]
     else:
