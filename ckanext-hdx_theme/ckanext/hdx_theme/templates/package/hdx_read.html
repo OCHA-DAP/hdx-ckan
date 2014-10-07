@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="row mBottom15">
-            <div class="col-xs-12">
+            <div class="col-xs-9">
               <span class="pull-left">
                 {% if c.pkg_notes_formatted %}
 		          <div class="notes embedded-content dataset-notes">
@@ -27,12 +27,12 @@
 		          </div>
 		        {% endif %}
               </span>
-              
+           </div>
+           <div class="col-xs-3">
 		      <div class="indicator-actions followButtonContainer pull-right">
 		      	{% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg %}
 		      </div>
-      
-            </div>
+           </div>
           </div>
       
     </div>
