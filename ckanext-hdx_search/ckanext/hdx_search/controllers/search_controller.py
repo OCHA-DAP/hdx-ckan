@@ -64,16 +64,38 @@ def search_url(params, package_type=None):
 
 
 def count_types(context, data_dict, tab):
-    search = copy.copy(data_dict)
-    search['extras']['ext_indicator'] = 1
-    indicators = get_action('package_search')(context, search)
-    search['extras']['ext_indicator'] = 0
-    datasets = get_action('package_search')(context, search)
-    if tab == 'all' and len(indicators['results']) > 0:
-        indicator = [indicators['results'][0]]
+    facet_fields = data_dict.get('facet.field', [])
+    facet_fields.append('extras_indicator')
+    search = {
+                'q': data_dict.get('q', None),
+                'fq': data_dict.get('fq', None),
+                'facet.field': facet_fields,
+                'facet.limit': 1000,
+                'rows': 10,
+                'sort': 'extras_indicator desc',
+            }
+    if tab == 'indicators':
+        search['extras'] = {'ext_indicator': 1}
+    elif tab == 'datasets':
+        search['extras'] = {'ext_indicator': 0}
+    result = get_action('package_search')(context, search)
+    total = result['count']
+    if '1' in result['facets']['extras_indicator']:
+        indicator_no = result['facets']['extras_indicator']['1']
+    else:
+        indicator_no = 0
+    dataset_no = total - indicator_no
+    if tab == 'all' and len(result['results']) > 0 \
+        and result['results'][0] \
+        and result['results'][0]['indicator'] == '1':
+        indicator = [result['results'][0]]
     else:
         indicator = None
-    return (datasets['count'], indicators['count'], indicator)
+        
+    facets = result['facets']
+    search_facets = result['search_facets']  
+    return (dataset_no, indicator_no, indicator, facets, search_facets)
+
 
 
 def package_search(context, data_dict):
@@ -443,8 +465,8 @@ class HDXSearchController(PackageController):
                 data_dict['extras']['ext_indicator'] = 0
 
             query = package_search(context, data_dict)
-            c.dataset_counts, c.indicator_counts, c.indicator = count_types(
-                context, data_dict, c.tab)
+            c.dataset_counts, c.indicator_counts, c.indicator, c.facets, c.search_facets = \
+                count_types( context, data_dict, c.tab)
             c.count = c.dataset_counts + c.indicator_counts
             if c.tab == "all":
                 c.features = isolate_features(
@@ -464,8 +486,8 @@ class HDXSearchController(PackageController):
                     item_count=c.count,
                     items_per_page=limit
                 )
-                c.facets = query['facets']
-                c.search_facets = query['search_facets']
+#                 c.facets = query['facets']
+#                 c.search_facets = query['search_facets']
                 c.page.items = c.features
             else:
                 c.page = h.Page(
@@ -475,8 +497,8 @@ class HDXSearchController(PackageController):
                     item_count=query['count'],
                     items_per_page=limit
                 )
-                c.facets = query['facets']
-                c.search_facets = query['search_facets']
+#                 c.facets = query['facets']
+#                 c.search_facets = query['search_facets']
                 c.page.items = query['results']
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
@@ -488,7 +510,7 @@ class HDXSearchController(PackageController):
         for facet in c.search_facets.keys():
             try:
                 limit = int(request.params.get('_%s_limit' % facet,
-                                               g.facets_default_number))
+                                               1000))
             except ValueError:
                 abort(400, _('Parameter "{parameter_name}" is not '
                              'an integer').format(
