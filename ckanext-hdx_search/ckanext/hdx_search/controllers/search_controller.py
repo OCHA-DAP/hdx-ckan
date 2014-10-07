@@ -70,6 +70,7 @@ def count_types(context, data_dict, tab):
                 'q': data_dict.get('q', None),
                 'fq': data_dict.get('fq', None),
                 'facet.field': facet_fields,
+                'facet.limit': 1000,
                 'rows': 10,
                 'sort': 'extras_indicator desc',
             }
