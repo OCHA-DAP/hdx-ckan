@@ -29,8 +29,6 @@ _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
 
 
-
-
 def package_update(context, data_dict):
     '''Update a dataset (package).
 

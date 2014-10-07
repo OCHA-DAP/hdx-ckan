@@ -1,9 +1,9 @@
 {% extends 'search/snippets/package_item.html' %}
 
-{% set is_org = None %}
+{% set f_type = package.feature_type or None %}
 
 {% block pre_icon %}
-  <span class="mL15 pull-left pre-icon"><i class="icon {% if is_org is none %}icon-tag{% else %}icon-earth{% endif %}"></i></span>
+  <span class="mL15 pull-left pre-icon"><i class="icon {% if f_type == 'topic' %}icon-tag{% elif f_type == 'organization' %}icon-earth{% else %}icon-location{% endif %}"></i></span>
 {% endblock %}
 
 {% block title %}
@@ -11,7 +11,12 @@
 {% endblock %}
 
 {% block updated %}
-   <a class="updatedNameColor" href="">{% if is_org is none %}{{ _("Topic Page") }}{% else %}{{ _("Organisation Page") }}</a> - {{ package.last_update }}{% endif %}
+    <a class="updatedNameColor" href="">
+   	{% if f_type == 'organization' %} {{ _('Organisation Page') }} -
+   	{% elif f_type == 'country' %} {{ _('Country Page') }} -
+   	{% else %} {{ _('Topic Page') }}
+   	{% endif %}
+      </a>{{ h.get_last_revision_timestamp_group(package.name) }}
 {% endblock %}
 
 {% block others %}

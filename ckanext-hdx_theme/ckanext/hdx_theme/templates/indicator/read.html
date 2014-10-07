@@ -41,7 +41,7 @@
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics %}
+      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls %}
     </div>
   </div>
 {% endblock %}
@@ -58,4 +58,5 @@
   {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/bs_popover.js' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/hdx_autocomplete.js' %}
 {% endblock %}

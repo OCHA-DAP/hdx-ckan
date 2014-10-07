@@ -275,7 +275,114 @@
 	
 /* END - continuous browsing */
 
+/* Graph options */
+    .graphOptionsRow{
+        margin-left: -45px;
+        margin-right: -15px;
+    }
+    .graphOptions{
+        background-color: #eeeeee;
+        height: 330px;
+        overflow-y: scroll;
+    }
+/* END Graph options */
+
+/* Side panel Locations */
+    #showOptions {
+        font-weight: bold;
+        margin-left: 20px;
+        line-height: 45px;
+    }
+    #sidePanelCountries li input{
+        position: static;
+    }
+    #sidePanelCountries li label:after{
+        content: "";
+    }
+    #sidePanelCountries li label{
+        font-weight: normal;
+    }
+
+    #sidePanelCountries .locationCheckbox {
+        margin-right: 10px;
+        margin-left: 20px;
+    }
+    #sidePanelCountries .locationCheckbox~label {
+        color: #000000;
+    }
+    #sidePanelCountries .locationCheckbox[value="*ALL*"] {
+        margin-left: 0;
+    }
+    #sidePanelCountries .locationCheckbox[value="*ALL*"]~label {
+        color: #000000;
+        font-weight: bold;
+
+    }
+/* END Side panel Locations */
+
+.select2-container .select2-choice{
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+.select2-container .select2-choice .select2-arrow{
+    border-radius: 0;
+}
 
 #chart-container svg > g:nth-child(3) .c3-axis-x {
     opacity: 0 !important;
 }
+
+
+/* Actions */
+.indicator-actions {
+	margin-top: 10px;
+}
+.indicator-actions .dropdown-menu {
+	right: 10px;
+}
+.indicator-actions .dropdown-menu li span {
+	color: #333;
+	padding: 3px 20px;
+}
+.indicator-actions .caret {
+/*     border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid; */
+    display: inline-block;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    width: 0;
+}
+.indicator-actions .dropdown-toggle, .indicator-actions.open .dropdown-toggle {
+    background-color: #ffffff;
+    border: medium none;
+    color: #007ce0;
+    margin-top: -2px;
+    text-align: left;
+    box-shadow: none;
+}
+
+.dropdown-menu .social-item {
+	line-height: 30px;
+}
+
+.dropdown-menu .social-link.first-link {
+	margin-left: 17px;
+}
+
+.dropdown-menu .social-link {
+	display: inline;
+	padding: 3px;
+}
+.dropdown-menu .social-link:hover {
+	background-color: transparent;
+	opacity: 0.8;
+}
+
+.dropdown-menu .social-link .social-images {
+	height: 20px;
+}
+
+/* END - Actions */

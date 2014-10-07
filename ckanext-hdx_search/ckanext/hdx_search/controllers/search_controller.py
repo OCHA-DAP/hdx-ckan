@@ -2,34 +2,33 @@
 import logging
 import copy
 from urllib import urlencode
-# import datetime
-# import cgi
-
-# from ckanext.hdx_package.helpers import helpers
 
 from pylons import config
-# from genshi.template import MarkupTemplate
-# from genshi.template.text import NewTextTemplate
 from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.lib.maintain as maintain
-# import ckan.lib.package_saver as package_saver
-# import ckan.lib.i18n as i18n
-# import ckan.lib.navl.dictization_functions as dict_fns
-# import ckan.lib.accept as accept
+import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
-# import ckan.lib.datapreview as datapreview
-# import ckan.lib.plugins
-# import ckan.new_authz as new_authz
+import ckan.lib.search as search
+import sqlalchemy
 import ckan.plugins as p
+_validate = dict_fns.validate
+_check_access = logic.check_access
 
+_select = sqlalchemy.sql.select
+_aliased = sqlalchemy.orm.aliased
+_or_ = sqlalchemy.or_
+_and_ = sqlalchemy.and_
+_func = sqlalchemy.func
+_desc = sqlalchemy.desc
+_case = sqlalchemy.case
+_text = sqlalchemy.text
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from pydoc_data.topics import topics
-# from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
 
@@ -42,18 +41,6 @@ NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
-# tuplize_dict = logic.tuplize_dict
-# clean_dict = logic.clean_dict
-# parse_params = logic.parse_params
-# flatten_to_string_key = logic.flatten_to_string_key
-
-# CONTENT_TYPES = {
-#     'text': 'text/plain;charset=utf-8',
-#     'html': 'text/html;charset=utf-8',
-#     'json': 'application/json;charset=utf-8',
-# }
-
-# lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
 
@@ -89,9 +76,162 @@ def count_types(context, data_dict, tab):
     return (datasets['count'], indicators['count'], indicator)
 
 
-def isolate_tags(context, q, packages, tab):
+def package_search(context, data_dict):
+    '''
+    EDITTED VERSION GETS MORE INFO FROM FACETS
+    '''
+    # sometimes context['schema'] is None
+    schema = (context.get('schema') or
+              logic.schema.default_package_search_schema())
+    data_dict, errors = _validate(data_dict, schema, context)
+    # put the extras back into the data_dict so that the search can
+    # report needless parameters
+    data_dict.update(data_dict.get('__extras', {}))
+    data_dict.pop('__extras', None)
+    if errors:
+        raise ValidationError(errors)
+
+    model = context['model']
+    session = context['session']
+
+    _check_access('package_search', context, data_dict)
+
+    # Move ext_ params to extras and remove them from the root of the search
+    # params, so they don't cause and error
+    data_dict['extras'] = data_dict.get('extras', {})
+    for key in [key for key in data_dict.keys() if key.startswith('ext_')]:
+        data_dict['extras'][key] = data_dict.pop(key)
+
+    # check if some extension needs to modify the search params
+    for item in p.PluginImplementations(p.IPackageController):
+        data_dict = item.before_search(data_dict)
+
+    # the extension may have decided that it is not necessary to perform
+    # the query
+    abort = data_dict.get('abort_search', False)
+
+    if data_dict.get('sort') in (None, 'rank'):
+        data_dict['sort'] = 'score desc, metadata_modified desc'
+
+    results = []
+    if not abort:
+        data_source = 'data_dict' if data_dict.get('use_default_schema',
+                                                   False) else 'validated_data_dict'
+        # return a list of package ids
+        data_dict['fl'] = 'id {0}'.format(data_source)
+
+        # If this query hasn't come from a controller that has set this flag
+        # then we should remove any mention of capacity from the fq and
+        # instead set it to only retrieve public datasets
+        fq = data_dict.get('fq', '')
+        if not context.get('ignore_capacity_check', False):
+            fq = ' '.join(p for p in fq.split(' ')
+                          if not 'capacity:' in p)
+            data_dict['fq'] = fq + ' capacity:"public"'
+
+        # Pop these ones as Solr does not need them
+        extras = data_dict.pop('extras', None)
+
+        query = search.query_for(model.Package)
+        query.run(data_dict)
+
+        # Add them back so extensions can use them on after_search
+        data_dict['extras'] = extras
+
+        for package in query.results:
+            # get the package object
+            package, package_dict = package['id'], package.get(data_source)
+            pkg_query = session.query(model.PackageRevision)\
+                .filter(model.PackageRevision.id == package)\
+                .filter(_and_(
+                    model.PackageRevision.state == u'active',
+                    model.PackageRevision.current == True
+                ))
+            pkg = pkg_query.first()
+
+            # if the index has got a package that is not in ckan then
+            # ignore it.
+            if not pkg:
+                log.warning(
+                    'package %s in index but not in database' % package)
+                continue
+            # use data in search index if there
+            if package_dict:
+                # the package_dict still needs translating when being viewed
+                package_dict = json.loads(package_dict)
+                if context.get('for_view'):
+                    for item in p.PluginImplementations(p.IPackageController):
+                        package_dict = item.before_view(package_dict)
+                results.append(package_dict)
+            else:
+                results.append(model_dictize.package_dictize(pkg, context))
+
+        count = query.count
+        facets = query.facets
+    else:
+        count = 0
+        facets = {}
+        results = []
+
+    search_results = {
+        'count': count,
+        'facets': facets,
+        'results': results,
+        'sort': data_dict['sort']
+    }
+
+    # Transform facets into a more useful data structure.
+    restructured_facets = {}
+    for key, value in facets.items():
+        restructured_facets[key] = {
+            'title': key,
+            'items': []
+        }
+        for key_, value_ in value.items():
+            new_facet_dict = {}
+            new_facet_dict['name'] = key_
+            if key in ('groups', 'organization'):
+                group = model.Group.get(key_)
+                if group:
+                    new_facet_dict['display_name'] = group.display_name
+                    new_facet_dict['description'] = group.description
+                else:
+                    new_facet_dict['display_name'] = key_
+                    new_facet_dict['description'] = ''
+            elif key == 'license_id':
+                license = model.Package.get_license_register().get(key_)
+                if license:
+                    new_facet_dict['display_name'] = license.title
+                else:
+                    new_facet_dict['display_name'] = key_
+            else:
+                new_facet_dict['display_name'] = key_
+            new_facet_dict['count'] = value_
+            restructured_facets[key]['items'].append(new_facet_dict)
+    search_results['search_facets'] = restructured_facets
+
+    # check if some extension needs to modify the search results
+    for item in p.PluginImplementations(p.IPackageController):
+        search_results = item.after_search(search_results, data_dict)
+
+    # After extensions have had a chance to modify the facets, sort them by
+    # display name.
+    for facet in search_results['search_facets']:
+        search_results['search_facets'][facet]['items'] = sorted(
+            search_results['search_facets'][facet]['items'],
+            key=lambda facet: facet['display_name'], reverse=True)
+
+    return search_results
+
+
+def sort_features(features):
+    return sorted(features, key=lambda x: x['count'], reverse=True)
+
+
+def isolate_features(context, facets, q, tab, skip=0, limit=25):
     import difflib
     import random
+
     try:
         all_topics = get_action('tag_list')(
             context, {'vocabulary_id': 'Topics'})
@@ -100,30 +240,37 @@ def isolate_tags(context, q, packages, tab):
         log.error('ERROR getting vocabulary named Topics: %r' %
                   str(e.extra_msg))
 
+    extract = dict()
     tags = list()
     features = list()
-    for i in packages:
-        for p in i['tags']:
-            if p['name'] in all_topics and p['name'] not in tags:
-                tags.append(p['name'])
+    for o in facets['organization']['items']:
+        tags.append(o['name'])
+        extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
+                              'url': h.url_for(controller='organization', action='read', id=o['name']), 'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
 
-    count = len(tags)
-    if tab == 'all':
-        selected = tags[:3]
-#         if q:
-#             selected = difflib.get_close_matches(q,tags,n=3)
-#         else:
-#             selected = random.sample(tags, 3)
+    for p in facets['vocab_Topics']['items']:
+        tags.append(p['name'])
+        extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
+                                  'url': h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '', 'feature_type': 'topic', 'count': p['count']}
+
+    for g in facets['groups']['items']:
+        tags.append(g['name'])
+        extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
+                              'url': h.url_for(controller='group', action='read', id=g['name']), 'description': g['description'], 'feature_type': 'country', 'count': g['count']}
+
+    if tab == 'all' and len(tags) > 3:
+        if q:
+            selected = difflib.get_close_matches(q, tags, cutoff=0.1, n=3)
+        else:
+            selected = random.sample(tags, 3)
     else:
         selected = tags
     for s in selected:
-        params = [('tags', s)]
-        url = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                        action='search', vocab_Topics=s)
-
-        features.append(
-            {'name': s, 'display_name': s, 'url': url, 'description': '', 'last_update': ''})
-    return (features, count)
+        features.append(extract[s])
+    if tab == 'features':
+        feature_list = sort_features(features)
+        return (feature_list[skip:skip + limit], len(features))
+    return features
 
 
 class HDXSearchController(PackageController):
@@ -217,10 +364,6 @@ class HDXSearchController(PackageController):
             c.fields_grouped = {}
             search_extras = {}
             #limit = g.datasets_per_page
-            if 'ext_indicator' in search_extras:
-                limit = 25
-            else:
-                limit = 5
 
             fq = ''
             for (param, value) in request.params.items():
@@ -235,6 +378,11 @@ class HDXSearchController(PackageController):
                             c.fields_grouped[param].append(value)
                     else:
                         search_extras[param] = value
+
+            if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
+                limit = 25
+            else:
+                limit = 5
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
@@ -294,15 +442,18 @@ class HDXSearchController(PackageController):
                 # For all tab, only paginate datasets
                 data_dict['extras']['ext_indicator'] = 0
 
-            query = get_action('package_search')(context, data_dict)
+            query = package_search(context, data_dict)
             c.dataset_counts, c.indicator_counts, c.indicator = count_types(
                 context, data_dict, c.tab)
-            if c.tab == "all" or c.tab == 'features':
-                ind_and_datasets = list(query['results'])
-                if c.indicator and c.indicator[0]:
-                    ind_and_datasets.append(c.indicator[0])
-                c.features, c.feature_counts = isolate_tags(
-                    context, q, ind_and_datasets, c.tab)
+            c.count = c.dataset_counts + c.indicator_counts
+            if c.tab == "all":
+                c.features = isolate_features(
+                    context, query['search_facets'], q, c.tab)
+
+            if c.tab == 'features':
+                c.features, c.count = isolate_features(
+                    context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
+
             c.sort_by_selected = query['sort']
 
             if c.tab == 'features':
@@ -310,7 +461,7 @@ class HDXSearchController(PackageController):
                     collection=c.features,
                     page=page,
                     url=pager_url,
-                    item_count=len(c.features),
+                    item_count=c.count,
                     items_per_page=limit
                 )
                 c.facets = query['facets']
