@@ -598,7 +598,7 @@ class DatasetController(PackageController):
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
             else:
-                return render(template, loader_class=loader)
+                return render('package/hdx_read.html', loader_class=loader)
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
