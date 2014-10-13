@@ -9,11 +9,21 @@
 		<th scope="row" class="dataset-label">{{ _('Source') }}</th>
 		<td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
 	</tr>
+	
+	<tr>
+		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
+		<td class="dataset-details metadata-link">
+		{% if pkg_dict.owner_org %}
+			<a href="{{ h.url_for(controller='group', action='read', id=pkg_dict.owner_org) }}">
+	            	{{ pkg_dict.owner_org }}
+	        </a>
+	    {% endif %}
+		</td>
+    </tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Date of Dataset') }}</th>
 		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
     </tr>
-
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link">
