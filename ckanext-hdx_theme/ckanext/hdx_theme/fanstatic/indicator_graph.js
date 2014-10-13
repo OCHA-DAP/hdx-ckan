@@ -362,11 +362,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         tooltip: {
           format: {
             title: $.proxy(function (d) {
-              return this.data[d]['locationName'];
+              return this.graphData[d]['locationName'];
             }, this),
             value: $.proxy(function (value, ratio, id, idx){
               var format = d3.format('s');
-              var year = this.data[idx]['time'].substring(0,4);
+              var year = this.graphData[idx]['time'].substring(0,4);
               return format(value) + " (" + year + ")";
             }, this)
           }
