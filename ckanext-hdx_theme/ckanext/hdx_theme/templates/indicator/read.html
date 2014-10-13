@@ -9,8 +9,13 @@
 {% block secondary %}
   <div class="border-right-grey">
 		<h2 class="uppercase">{{_('Activity')}}</h2>
-	    <span class="more">See all</span>
+	    {# <span class="more">See all</span> #}
     {{ c.package_activity_stream | safe }}
+    {%
+      set follow = h.follow_button('dataset', pkg.name)
+    %}
+    {{follow}}
+    <span class="more"></span>
   </div>
 {% endblock %}
 
