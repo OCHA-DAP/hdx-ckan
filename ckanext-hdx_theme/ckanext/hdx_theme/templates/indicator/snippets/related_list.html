@@ -1,0 +1,10 @@
+  {% block related_list %}
+    {% if pkg.related %}
+      {% snippet "related/snippets/related_list.html", related_items=pkg.related, pkg_id=pkg.name %}
+    {% endif %}
+  {% endblock %}
+  {# block form_actions %}
+    <div class="form-actions">
+      {% link_for _('Add Related Item'), controller='related', action='new', id=pkg.name, class_='btn btn-primary' %}
+    </div>
+  {% endblock #}
