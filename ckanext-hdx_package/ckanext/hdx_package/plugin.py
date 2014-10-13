@@ -18,6 +18,7 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
+import ckanext.hdx_package.helpers.helpers as hdx_helpers
 
 def run_on_startup():
     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -57,7 +58,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                   action='file')
-        map.connect('/contribute', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='contribute')
         map.connect('dataset_preselect','/dataset/preselect', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
@@ -135,13 +135,20 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 tk.get_validator('ignore_missing')],
             })
         return schema
-    
-    
+
     def get_helpers(self):
-        return {'list_of_all_groups': cached_group_list}
-    
+        return {'list_of_all_groups': cached_group_list,
+                'hdx_find_license_name': hdx_helpers.hdx_find_license_name}
+
     def get_actions(self):
-        return {'package_update': update.package_update}
+        from ckanext.hdx_package.helpers import helpers as hdx_actions
+        return {
+                'package_update': update.package_update,
+                'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
+                'hdx_package_update_metadata': update.hdx_package_update_metadata,
+                'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
+                'package_create': hdx_actions.package_create
+                }
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
@@ -150,7 +157,3 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def make_middleware(self, app, config):
         run_on_startup()
         return app
-
-        
-
-

@@ -16,6 +16,8 @@ import ckan.lib.dictization.model_save as model_save
 import ckan.lib.navl.dictization_functions
 import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
+import ckan.model as model
+from ckanext.hdx_package.helpers import helpers
 
 from ckan.common import _
 
@@ -25,6 +27,8 @@ _check_access = logic.check_access
 _get_action = logic.get_action
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
+
+
 
 
 def package_update(context, data_dict):
@@ -96,12 +100,15 @@ def package_update(context, data_dict):
         rev.message = context['message']
     else:
         rev.message = _(u'REST API: Update object %s') % data.get("name")
-    
-    #avoid revisioning by updating directly
+
+    # avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
-    
+
+    if 'tags' in data:
+        data['tags'] = helpers.get_tag_vocabulary(data['tags'])
+
     pkg = modified_save(context, pkg, data)
 
     context_org_update = context.copy()
@@ -131,12 +138,13 @@ def package_update(context, data_dict):
     # we could update the dataset so we should still be able to read it.
     context['ignore_auth'] = True
     output = data_dict['id'] if return_id_only \
-            else _get_action('package_show')(context, {'id': data_dict['id']})
+        else _get_action('package_show')(context, {'id': data_dict['id']})
 
     return output
 
+
 def modified_save(context, pkg, data):
-    groups_key  = 'groups'
+    groups_key = 'groups'
     if groups_key in data:
         temp_groups = data[groups_key]
         data[groups_key] = None
@@ -146,6 +154,7 @@ def modified_save(context, pkg, data):
         pkg = model_save.package_dict_save(data, context)
     package_membership_list_save(data.get("groups"), pkg, context)
     return pkg
+
 
 def package_membership_list_save(group_dicts, package, context):
 
@@ -160,12 +169,12 @@ def package_membership_list_save(group_dicts, package, context):
     user = context.get('user')
 
     members = session.query(model.Member) \
-            .filter(model.Member.table_id == package.id) \
-            .filter(model.Member.capacity != 'organization')
+        .filter(model.Member.table_id == package.id) \
+        .filter(model.Member.capacity != 'organization')
 
     group_member = dict((member.group, member)
-                         for member in
-                         members)
+                        for member in
+                        members)
     groups = set()
     for group_dict in group_dicts or []:
         id = group_dict.get("id")
@@ -180,7 +189,7 @@ def package_membership_list_save(group_dicts, package, context):
         if group:
             groups.add(group)
 
-    ## need to flush so we can get out the package id
+    # need to flush so we can get out the package id
     model.Session.flush()
 
     # Remove any groups we are no longer in
@@ -188,7 +197,7 @@ def package_membership_list_save(group_dicts, package, context):
         member_obj = group_member[group]
         if member_obj and member_obj.state == 'deleted':
             continue
-        
+
         member_obj.capacity = capacity
         member_obj.state = 'deleted'
         session.add(member_obj)
@@ -208,5 +217,27 @@ def package_membership_list_save(group_dicts, package, context):
                                       group=group,
                                       capacity=capacity,
                                       group_id=group.id,
-                                      state = 'active')
+                                      state='active')
         session.add(member_obj)
+
+
+def hdx_package_update_metadata(context, data_dict):
+    '''
+    With the default package_update action from core ckan you need to supply the entire package 
+    as a parameter, you can't supply just the modified field (or if you do, alot of fields get deleted).
+    As specified in the documentation one should first load the package via package_show() and this 
+    is what this function does.
+    '''
+
+    allowed_fields = ['indicator', 'package_creator', 'methodology',
+                      'dataset_source', 'dataset_date', 'license_other',
+                      'license_title', 'caveats', 'name', 'title']
+
+    package = _get_action('package_show')(context, data_dict)
+    for key, value in data_dict.iteritems():
+        if key in allowed_fields:
+            package[key] = value
+    if not package['notes']:
+        package['notes'] = ' '
+    package = _get_action('package_update')(context, package)
+    return package

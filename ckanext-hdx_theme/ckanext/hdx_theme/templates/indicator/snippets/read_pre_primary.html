@@ -1,21 +1,113 @@
   <div class="row paddingRowHack whiteBackground">
-    <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
-      <h1 class="itemTitle">
-        {{ pkg.title or pkg.name }}
-         {% if pkg.state.startswith('draft') %}
-          <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
-        {% elif pkg.state.startswith('deleted') %}
-          <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
-        {% endif %}
-      </h1>
-      <span class="followButtonContainer pull-right">
-        {{ h.follow_button('dataset', pkg.name) }}
-        {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
-      </span>
-    </div>
-    <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
-      <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}" data-module-name="{{ pkg.title }}">
 
+
+
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div class="row">
+        <div class="col-xs-12 mTop35">
+          <h1 class="itemTitle">
+            {{ pkg.title or pkg.name }}
+             {% if pkg.state.startswith('draft') %}
+              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+            {% elif pkg.state.startswith('deleted') %}
+              <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+            {% endif %}
+          </h1>
+        </div>
+      </div>
+      <div class="row mTop20">
+        <div id="optionsContent" class="col-xs-3 hidden">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="pull-left">
+                <label for="field-order-by" class="uppercase">{{ _('Options') }}</label>
+                <div class="dropdown orderDropdown">
+                  <button id="location-dd" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+                    <span class="dropdown-toggle-text">
+                      Location
+                    </span>
+                    <b class="caret"></b>
+                  </button>
+                  <ul class="dropdown-menu dropdown-inverse" role="menu" aria-labelledby="location-dd" style="max-height: 241px; overflow-y: auto;">
+                    <li><a tabindex="-1" val="soon">TIME (coming soon)</a> </li>
+                    <li><a tabindex="-1" val="location">{{ _("Location") }}</a> </li>
+                    <li><a tabindex="-1" val="sort">{{ _("Sort order") }}</a> </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pull-right">
+                <i class="glyphicon glyphicon-remove" onclick="$('#showOptions').click(); return false;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="row graphOptionsRow">
+            <div class="col-xs-12 paddingLeftHack graphOptions">
+              <ul id="sidePanelCountries">
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div id="graphContent" class="col-xs-12">
+          <div class="row mBottom15">
+            <div class="col-xs-12">
+              <span class="pull-left">
+                <a href="#" onclick="return false;">Latest for all</a>
+                <a id="showOptions" href="#" onclick="">{{ _("Select countries") }}</a>
+              </span>
+              <span class="followButtonContainer pull-right">
+                {{ h.follow_button('dataset', pkg.name) }}
+                {% if h.check_access('package_update', {'id':pkg.id }) %}
+                  {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
+                {% endif %}
+
+                <a class="btn btn-inverted" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
+                 data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share dataset">Share</a>
+                <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+                        data-toggle="tooltip">Analyse</a>
+                <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+                        data-toggle="tooltip"><i class="glyphicon glyphicon-wrench"></i></a>
+              </span>
+              <div id="dataset_social_wrapper" class="popover-wrapper"></div>
+              <div style="display:none" id="dataset_social">
+                <div class="resource-social">
+                  <a href="https://plus.google.com/share?url={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/google-plus_black.svg" />
+                    <span> Google+ </span>
+                  </a>
+                </div>
+                <div class="resource-social">
+                  <a href="https://twitter.com/share?url={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/twitter_black.svg" />
+                    <span> Twitter </span>
+                  </a>
+                </div>
+                <div class="resource-social" >
+                  <a href="https://www.facebook.com/sharer.php?u={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/fb_black.svg" />
+                    <span> Facebook </span>
+                  </a>
+                </div>
+                <div class="resource-social" >
+                  <a href="mailto:?subject={{ pkg.title }}&body={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/email_black.svg" />
+                    <span> {{ _('Email') }} </span>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}"
+               data-module-name="{{ pkg.title }}" data-module-subchart="true"
+               data-module-continuous_location="continuous_browsing_locations"
+               data-module-side_panel="showOptions" data-module-side_panel_locations="sidePanelCountries">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
       </div>
     </div>
   </div>

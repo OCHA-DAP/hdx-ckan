@@ -1,4 +1,3 @@
-
 /* Fonts */
     @font-face {
         font-family: 'Gotham-Bold';
@@ -547,6 +546,12 @@
     .mBottom35{
         margin-bottom: 35px;
     }
+    .mBottom65{
+        margin-bottom: 65px;
+    }
+    .mBottom100{
+        margin-bottom: 100px;
+    }
     .mLR45{
         margin-left: 45px;
         margin-right: 45px;
@@ -570,6 +575,10 @@
     .mTB30{
         margin-top: 30px;
         margin-bottom: 30px;
+    }
+    .mTB35{
+        margin-top: 35px;
+        margin-bottom: 35px;
     }
     .mTB45{
         margin-top: 45px;
@@ -628,7 +637,9 @@
     .mR35{
         margin-right: 35px;
     }
-
+    .mL15{
+        margin-left: 15px;
+    }
     .mL30{
         margin-left: 30px;
     }
@@ -671,9 +682,17 @@
         font-weight: 400;
         font-size: 12px;
         border: none;
+        letter-spacing: 0;
 
         background-color: #888888;
         color: #ffffff;
+    }
+
+    .btn-inverted{
+        color: #888888;
+        background-color: #FFFFFF;
+        border: 1px solid #cccccc;
+        box-shadow: none;
     }
 
     .btn:hover, .btn:focus, .btn.active {
@@ -681,6 +700,11 @@
         opacity: 0.7;
         box-shadow: none;
         color: #ffffff;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        letter-spacing: 0;
+        background-position: inherit;
     }
 
     .btn.hdx-btn.org-btn{
@@ -736,7 +760,7 @@
     }
 /* END Button style*/
 
-/* Label style */
+/* Label style (eg. tags) */
     .label{
         border: none;
         border-radius: 0;
@@ -752,11 +776,63 @@
         font-size: 14px;
         line-height: 20px;
         min-width: 0;
+        vertical-align: middle;
     }
+
+    .label.label-small{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 9px;
+        letter-spacing: 0.01em;
+        line-height: 16px;
+        margin-right: 0;
+        padding: 0 5px;
+        margin-bottom: 3px;
+    }
+
+    /* Pill styling - seem to be the similar to labels, but gray and with a button*/
+        .pill {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            color: #ffffff;
+            text-transform: uppercase;
+
+            padding: 5px 15px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+
+            background-color: #888888;
+            border-radius: 0;
+        }
+
+        .pill .icon-remove, .pill .glyphicon-remove {
+            cursor: pointer;
+            margin-left: 20px;
+
+        }
+    /* END Pill styling */
+
 /* END Label style */
 
 
 /* Order DropDown style */
+    .control-order-by label {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #888888;
+        letter-spacing: 0.03em;
+    }
+
+    .control-order-by .orderDropdown .dropdown-toggle-text{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #007ce0;
+        letter-spacing: 0.03em;
+    }
+
     .orderDropdown{
         display: inline;
     }
@@ -833,6 +909,7 @@
         border-top: 9px solid #ffffff;
         display: inline;
         background: none;
+        background-image: none !important;
     }
 
 
@@ -901,7 +978,7 @@
 	.module .pagination li a {
 	    border-bottom: medium none;
 	    border-top: medium none;
-	    font-family: 'Gotham Book', sans-serif;
+	    font-family: 'Gotham-Book', sans-serif;
 	    font-weight: 400;
         font-size: 16px;
         color: #000000;
@@ -1017,7 +1094,7 @@
         font-size: 16px;
     }
     .nav-facet .list-items a .float-right {
-        font-family: "Gotham Book", sans-serif;
+        font-family: "Gotham-Book", sans-serif;
         font-weight: 400;
         font-size: 14px;
     }
@@ -1042,7 +1119,7 @@
     /* overwrite the hover the selected facets - #702*/
     .nav-item.active > a:hover,
 	.nav-aside li.active a:hover {
-	  color: #fffff;
+	  color: #ffffff;
 	  background-color: #8ca0a6;
 	}
 	
@@ -1111,6 +1188,9 @@
 
 
 /* Style tabs */
+    .hdx-wrapper .page-header .nav-tabs {
+        border-bottom: 1px solid #eeeeee;
+    }
     .hdx-wrapper .page-header .nav-tabs > li {
         margin-bottom: -3px;
         /*border-bottom: 3px solid #cccccc;*/
@@ -1128,6 +1208,7 @@
         font-size: 14px;
         padding-left: 30px;
         padding-right: 30px;
+        letter-spacing: 0.03em;
     }
     .hdx-wrapper .page-header .nav-tabs > li > a:hover {
         color: #f2645a;
@@ -1135,7 +1216,7 @@
 
     .page-header{
         background: none;
-        border-bottom: 3px solid #cccccc;
+        border-bottom: 3px solid #eeeeee;
         /*background-color: #f6f6f6;*/
         -webkit-border-radius: 0 3px 0 0;
         -moz-border-radius: 0 3px 0 0;
@@ -1219,3 +1300,23 @@ a, a:hover, a:focus{
     z-index: 1;
 }
 /* END Error messages position above floating elements */
+
+/* Tooltip style */
+    .tooltip{
+        text-transform: uppercase;
+        font-size: 10px;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+        opacity: 1;
+    }
+    .tooltip .tooltip-inner{
+        padding: 10px 15px;
+    }
+/* END Tooltip style */
+
+/* Highlight Style */
+    .highlight{
+        font-weight: bold;
+    }
+/* END Highlight Style */

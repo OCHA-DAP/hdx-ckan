@@ -17,6 +17,8 @@ pages = [
         'action': 'register', 'usertype': None},
     {'controller': 'user',
         'action': 'login', 'usertype': None},
+    {'controller': 'ckanext.hdx_users.controllers.login_controller:LoginController',
+        'action': 'contribute', 'usertype': None},
     {'controller': 'package',
         'action': 'search', 'usertype': 'all'},
     {'controller': 'group',

@@ -1,0 +1,38 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% set f_type = package.feature_type or None %}
+
+{% block pre_icon %}
+  <span class="mL15 pull-left pre-icon"><i class="icon {% if f_type == 'topic' %}icon-tag{% elif f_type == 'organization' %}icon-earth{% else %}icon-location{% endif %}"></i></span>
+{% endblock %}
+
+{% block title %}
+    <a href="{{ package.url }}">{{ package.display_name }}</a>
+{% endblock %}
+
+{% block updated %}
+    <a class="updatedNameColor" href="">
+   	{% if f_type == 'organization' %} {{ _('Organisation Page') }} -
+   	{% elif f_type == 'country' %} {{ _('Country Page') }} -
+   	{% else %} {{ _('Topic Page') }}
+   	{% endif %}
+      </a>{{ h.get_last_revision_timestamp_group(package.name) }}
+{% endblock %}
+
+{% block others %}
+{% endblock %}
+
+{% block notes %}
+{% endblock %}
+
+{% block description %}
+  {{ package.description }}
+{% endblock %}
+
+{% block actions %}
+  <ul>
+    <li>
+      <a href="">Follow</a>
+    </li>
+  </ul>
+{% endblock %}

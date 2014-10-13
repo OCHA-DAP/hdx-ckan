@@ -90,9 +90,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_member_roles_list': hdx_helpers.hdx_member_roles_list,
             'hdx_organizations_available_with_roles': hdx_helpers.hdx_organizations_available_with_roles,
             'hdx_group_followee_list': hdx_helpers.hdx_group_followee_list,
+            'hdx_follow_link': hdx_helpers.hdx_follow_link,
             'hdx_remove_schema_and_domain_from_url': hdx_helpers.hdx_remove_schema_and_domain_from_url,
             'hdx_get_ckan_config': hdx_helpers.hdx_get_ckan_config,
-            'get_group_name_from_list': hdx_helpers.get_group_name_from_list
+            'get_group_name_from_list': hdx_helpers.get_group_name_from_list,
+            'one_active_item': hdx_helpers.one_active_item,
+            'get_last_revision_timestamp_group': hdx_helpers.get_last_revision_timestamp_group,
+            'feature_count': hdx_helpers.feature_count,
+            'follow_status': hdx_helpers.follow_status
         }
         
     def get_actions(self):
@@ -108,6 +113,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             'hdx_user_show' : hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values
+            #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
             
         }
     def get_auth_functions(self):

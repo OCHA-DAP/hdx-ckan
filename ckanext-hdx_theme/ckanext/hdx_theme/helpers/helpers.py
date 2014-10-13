@@ -28,6 +28,7 @@ log = logging.getLogger(__name__)
 downloadable_formats = {
     'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
 }
+                    
 
 def is_downloadable(resource):
     format = resource.get('format', 'data').lower()
@@ -92,6 +93,13 @@ def get_last_revision_group(group_id):
         return activity.revision_id
     return None
 
+def get_last_revision_timestamp_group(group_id):
+    activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
+    if len(activity_objects)>0 :
+        activity = activity_objects[0]
+        return h.render_datetime(activity.timestamp)
+    return None
+
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
             {'model': model, 'session': model.Session},
@@ -150,14 +158,20 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
     
 def hdx_linked_user(user, maxlength=0):
     response = h.linked_user(user, maxlength)
-    changed_response = re.sub(r"<img[^>]+/>","",str(response))
+    changed_response = re.sub(r"<img[^>]+/>","", response)
     return h.literal(changed_response)
 
-def hdx_show_singular_plural(num, singular_word, plural_word):
+def hdx_show_singular_plural(num, singular_word, plural_word, show_number=True):
+    response = None
     if num == 1:
-        return str(num) + ' ' + singular_word
+        response = singular_word
     else:
-        return str(num) + ' ' + plural_word
+        response = plural_word
+
+    if show_number:
+        return str(num) + ' ' + response
+    else:
+        return response
 
 def hdx_num_of_new_related_items():
     max_days = 30;
@@ -249,3 +263,43 @@ def get_group_name_from_list(glist, gid):
         if group['id'] == gid:
             return group['title']
     return ""
+
+def hdx_follow_link(obj_type, obj_id, extra_text):
+    obj_type = obj_type.lower()
+    assert obj_type in h._follow_objects
+    # If the user is logged in show the follow/unfollow button
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        action = 'am_following_%s' % obj_type
+        following = logic.get_action(action)(context, {'id': obj_id})
+        return h.snippet('search/snippets/follow_link.html',
+                       following=following,
+                       obj_id=obj_id,
+                       obj_type=obj_type,
+                       extra_text=extra_text)
+    return ''
+
+def follow_status(obj_type, obj_id):
+    obj_type = obj_type.lower()
+    assert obj_type in h._follow_objects
+    # If the user is logged in show the follow/unfollow button
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        action = 'am_following_%s' % obj_type
+        following = logic.get_action(action)(context, {'id': obj_id})
+        return following
+    return False
+
+def one_active_item(items):
+    for i in items:
+        if i['active']:
+            return True
+    return False
+
+def feature_count(features):
+    count = 0
+    for name in features:
+        facet = h.get_facet_items_dict(name)
+        for f in facet:
+            count += f['count']
+    return count

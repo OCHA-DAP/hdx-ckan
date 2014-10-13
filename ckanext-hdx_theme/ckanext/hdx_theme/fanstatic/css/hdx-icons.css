@@ -1,0 +1,82 @@
+@font-face {
+	font-family: 'hdx-icons';
+	src:url('fonts/hdx-icons.eot?yo7abu');
+	src:url('fonts/hdx-icons.eot?#iefixyo7abu') format('embedded-opentype'),
+		url('fonts/hdx-icons.woff?yo7abu') format('woff'),
+		url('fonts/hdx-icons.ttf?yo7abu') format('truetype'),
+		url('fonts/hdx-icons.svg?yo7abu#hdx-icons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+	font-family: 'hdx-icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fight:before {
+	content: "\e600";
+}
+.icon-twitter:before {
+	content: "\e601";
+}
+.icon-download:before {
+	content: "\e602";
+}
+.icon-spanner:before {
+	content: "\e603";
+}
+.icon-location:before {
+	content: "\e604";
+}
+.icon-mail:before {
+	content: "\e605";
+}
+.icon-check:before {
+	content: "\e606";
+}
+.icon-earth:before {
+	content: "\e607";
+}
+.icon-share:before {
+	content: "\e608";
+}
+.icon-lock:before {
+	content: "\e60a";
+}
+.icon-expand:before {
+	content: "\e60b";
+}
+.icon-tag:before {
+	content: "\e60c";
+}
+.icon-gplus:before {
+	content: "\e60d";
+}
+.icon-search:before {
+	content: "\e60e";
+}
+.icon-cc:before {
+	content: "\e60f";
+}
+.icon-visualize:before {
+	content: "\e610";
+}
+.icon-fb:before {
+	content: "\e611";
+}
+.icon-fileupload:before {
+	content: "\e612";
+}
+.icon-fire:before {
+	content: "\e613";
+}

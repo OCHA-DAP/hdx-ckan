@@ -4,6 +4,8 @@ import datetime
 import cgi
 
 from ckanext.hdx_package.helpers import helpers
+#import ckanext.hdx_package.plugin.HDXPackagePlugin as hdx_package
+from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
 
 from pylons import config
 from genshi.template import MarkupTemplate
@@ -22,7 +24,7 @@ import ckan.model as model
 import ckan.lib.datapreview as datapreview
 import ckan.lib.plugins
 import ckan.new_authz as new_authz
-
+import ckan.lib.dictization.model_dictize as model_dictize
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
@@ -52,6 +54,7 @@ CONTENT_TYPES = {
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
+
 
 class DatasetController(PackageController):
 
@@ -127,7 +130,7 @@ class DatasetController(PackageController):
             print data_dict
             pkg_dict = get_action('package_create')(context, data_dict)
 
-            #A hack to handle the metadata correctly
+            # A hack to handle the metadata correctly
             data_dict['id'] = pkg_dict['id']
             pkg_dict = get_action('package_update')(context, data_dict)
 
@@ -139,7 +142,8 @@ class DatasetController(PackageController):
                                 id=pkg_dict['name'])
                 redirect(url)
 
-            self._form_save_redirect(pkg_dict['name'], 'new', package_type=package_type)
+            self._form_save_redirect(
+                pkg_dict['name'], 'new', package_type=package_type)
         except NotAuthorized:
             abort(401, _('Unauthorized to read package %s') % '')
         except NotFound, e:
@@ -165,11 +169,6 @@ class DatasetController(PackageController):
             data_dict['state'] = 'none'
             return self.new(data_dict, errors, error_summary)
 
-    def contribute(self, error=None):
-        self.login(error)
-        vars = {'contribute':True}
-        return render('user/login.html', extra_vars=vars)
-
     def preselect(self):
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
         c.organizations_available = helpers.hdx_organizations_available_with_roles()
@@ -179,17 +178,18 @@ class DatasetController(PackageController):
             return base.render('organization/request_mem_or_org.html')
 
     def new(self, data=None, errors=None, error_summary=None):
-        #Is the user a member of any orgs? If not make them join one first
+        # Is the user a member of any orgs? If not make them join one first
         try:
             user_orgs = helpers.hdx_user_org_num(c.userobj.id)
             if len(user_orgs) == 0:
                 return render('organization/request_mem_or_org.html')
-            #If there's an org and the user is not a member of this org redirect back to org select
+            # If there's an org and the user is not a member of this org
+            # redirect back to org select
                 this_org = request.params['organization_id']
                 if this_org in user_orgs:
                     return render('organization/request_mem_or_org.html')
         except:
-            return render('user/login.html', extra_vars={'contribute':True})
+            return render('user/login.html', extra_vars={'contribute': True})
 
         package_type = self._guess_package_type(True)
 
@@ -232,7 +232,7 @@ class DatasetController(PackageController):
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary,
-                'action': 'new', 'stage': stage, 'validation_fail':0}
+                'action': 'new', 'stage': stage, 'validation_fail': 0}
         c.errors_json = h.json.dumps(errors)
 
         self._setup_template_variables(context, {},
@@ -246,13 +246,13 @@ class DatasetController(PackageController):
             print self._package_form(package_type=package_type)
             c.form = render(self._package_form(package_type=package_type),
                             extra_vars=vars)
-        
+
         if not request.is_xhr:
             return render(self._new_template(package_type), extra_vars={'stage': stage, 'data': data})
         else:
-            return self._finish(200, {'validation_fail':1, 'errors':vars['errors'], 'error_summary':vars['error_summary']}, content_type='json')
-        #return render(self._new_template(package_type), extra_vars={'stage': stage})
-        
+            return self._finish(200, {'validation_fail': 1, 'errors': vars['errors'], 'error_summary': vars['error_summary']}, content_type='json')
+        # return render(self._new_template(package_type), extra_vars={'stage':
+        # stage})
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
@@ -289,7 +289,7 @@ class DatasetController(PackageController):
                     abort(401, _('Unauthorized to update dataset'))
                 except NotFound:
                     abort(404,
-                      _('The dataset {id} could not be found.').format(id=id))
+                          _('The dataset {id} could not be found.').format(id=id))
                 if not len(data_dict['resources']):
                     # no data so keep on page
                     msg = _('You must add at least one data resource')
@@ -321,7 +321,7 @@ class DatasetController(PackageController):
                 abort(401, _('Unauthorized to create a resource'))
             except NotFound:
                 abort(404,
-                    _('The dataset {id} could not be found.').format(id=id))
+                      _('The dataset {id} could not be found.').format(id=id))
             if save_action == 'go-metadata':
                 # go to final stage of add dataset
                 redirect(h.url_for(controller='package',
@@ -359,14 +359,14 @@ class DatasetController(PackageController):
             vars['stage'] = ['complete', 'active']
         elif pkg_dict['state'] == 'draft-complete':
             vars['stage'] = ['complete', 'active', 'complete']
-        
+
         if not request.is_xhr:
             return render('package/new_resource.html', extra_vars=vars)
         else:
-            ##Adding url for easy update
-            vars['action_url'] = h.url_for(controller='package', action='new_resource', id=vars['pkg_name'])
+            # Adding url for easy update
+            vars['action_url'] = h.url_for(
+                controller='package', action='new_resource', id=vars['pkg_name'])
             return self._finish(200, vars, content_type='json')
-
 
     def new_metadata(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
@@ -429,9 +429,9 @@ class DatasetController(PackageController):
         if not request.is_xhr:
             return render('package/new_package_metadata.html', extra_vars=vars)
         else:
-            vars['action_url'] = h.url_for(controller='package', action='new_metadata', id=vars['pkg_name'])
+            vars['action_url'] = h.url_for(
+                controller='package', action='new_metadata', id=vars['pkg_name'])
             return self._finish(200, vars, content_type='json')
-
 
     def resource_edit(self, id, resource_id, data=None, errors=None,
                       error_summary=None):
@@ -468,15 +468,18 @@ class DatasetController(PackageController):
         pkg_dict = get_action('package_show')(context, {'id': id})
         if pkg_dict['state'].startswith('draft'):
             # dataset has not yet been fully created
-            resource_dict = get_action('resource_show')(context, {'id': resource_id})
-            fields = ['url', 'resource_type', 'format', 'name', 'description', 'id']
+            resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
+            fields = [
+                'url', 'resource_type', 'format', 'name', 'description', 'id']
             data = {}
             for field in fields:
                 data[field] = resource_dict[field]
             return self.new_resource(id, data=data)
         # resource is fully created
         try:
-            resource_dict = get_action('resource_show')(context, {'id': resource_id})
+            resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
         except NotFound:
             abort(404, _('Resource not found'))
         c.pkg_dict = pkg_dict
@@ -553,11 +556,12 @@ class DatasetController(PackageController):
                 {'resource': resource, 'package': c.pkg_dict})
 
         # Is this an indicator? Load up graph data
+        #c.pkg_dict['indicator'] = 1
         try:
             if int(c.pkg_dict['indicator']):
                 c.pkg_dict['graph'] = '{}'
         except:
-            #If there's no indicator value it isn't an indicator
+            # If there's no indicator value it isn't an indicator
             c.pkg_dict['indicator'] = 0
 
         self._setup_template_variables(context, {'id': id},
@@ -568,6 +572,28 @@ class DatasetController(PackageController):
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
 
+       # changes done for indicator
+        act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
+        c.hdx_activities = get_action(
+            'hdx_get_activity_list')(context, act_data_dict)
+        c.related_count = c.pkg.related_count
+
+        followers = get_action('dataset_follower_list')({'ignore_auth': True},
+                                                        {'id': c.pkg_dict['id']})
+        if followers and len(followers) > 0:
+            c.followers = [{'url': h.url_for(controller='user',
+                                             action='read', id=f['name']), 'name':f['fullname'] or f['name']}
+                           for f in followers]
+        # topics
+        topics_obj = helpers.pkg_topics_list({'id': c.pkg_dict['id']})
+        topics = model_dictize.tag_list_dictize(topics_obj, context)
+
+        if topics and len(topics) > 0:
+            c.topics = [{'url': h.url_for(controller='package', action='search', vocab_Topics=t['name']), 'name':t['name']}
+                        for t in topics]
+        # related websites
+        c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
+            'url': 'http://www.unocha.org', 'name': 'UNOCHA'}, {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'}, {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
         try:
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
@@ -576,8 +602,7 @@ class DatasetController(PackageController):
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
-                    package_type=package_type, format=format, file=template))
+                        package_type=package_type, format=format, file=template))
             abort(404, msg)
 
         assert False, "We should never get here"
-
