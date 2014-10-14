@@ -37,12 +37,14 @@
               {% if not package.private %}
                 <li>
                   {% block preview_link %}
-                    <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>
+                    {#<a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>#}
                   {% endblock %}
                 </li>
+                {#
                 <li>
-                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
+                  <a  class="link-separator" href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
                 </li>
+                #}
                 <li>
                   {% block follow_link %}
                     {{ h.hdx_follow_link('dataset', package.id, "this dataset") }}
