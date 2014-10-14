@@ -3,9 +3,11 @@
 					Action <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu" role="menu" aria-labelledby="actions-menu">
-					<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('CHANGE STYLE (comming soon)') }}</a></li>
-					<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('SHARE THIS VIEW (coming soon)') }}</a></li>
-					<li role="presentation" class="divider"></li>
+					{% if is_indicator %}
+						<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('CHANGE STYLE (comming soon)') }}</a></li>
+						<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('SHARE THIS VIEW (coming soon)') }}</a></li>
+						<li role="presentation" class="divider"></li>
+					{% endif %}
 					<li role="presentation">{{ h.hdx_follow_button('dataset', pkg.name, role='menuitem', tabindex='-1', class='uppercase') }}</li>
 					<li role="presentation"><span class="uppercase" role="menuitem" tabindex="-1">{{ _('Share This Data') }}:</span></li>
 					<li role="presentation" class="social-item">
@@ -23,7 +25,9 @@
 			            </a>
 					</li>
 					<li role="presentation" class="divider"></li>
-					<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('ANALYZE (coming soon)') }}</a></li>
+					{% if is_indicator %}
+						<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('ANALYZE (coming soon)') }}</a></li>
+					{% endif %}
 					{% if h.check_access('package_update', {'id':pkg.id }) %}
 					<li role="presentation"><a role="menuitem" tabindex="-1" href="{{ h.url_for(controller='package', action='edit', id=pkg.name) }}" class="uppercase">{{ _('Edit') }}</a></li>
 					{% endif %}
