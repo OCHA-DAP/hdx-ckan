@@ -32,6 +32,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _period_type: "LATEST_YEAR_BY_COUNTRY",
     _period_type_default: "LATEST_YEAR_BY_COUNTRY",
     _continuous_location_initialize: true,
+    _chart_initialized: false,
     _onClick: function(){
       /**
        * Click Only callback
@@ -55,13 +56,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         this.elementId = '#' + this.options.container;
       var elementId = this.elementId;
 
+      //Loading icon + text
+      $(this.elementId).append('<div style="height: 310px; text-align: center; padding-top: 140px;"><img src="/base/images/loading-spinner.gif" />Loading sample data from this indicator . . . </div>');
+
       //init year filter dropdown
       this._init_year_filter_dropdown();
-      //init chart with no data yet
-      var chart_config = this._build_chart_config(elementId, this);
-      this.c3_chart = c3.generate(chart_config);
-      var c3_chart = this.c3_chart;
-      c3_chart.internal.margin2.top=260;
 
       /**
        * Priority Callbacks - that need to setup data for the rest
@@ -138,15 +137,10 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       //get the data synchronously from the server
       jQuery.ajax({
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + periodTypeAux + "&sorting="+this._sort_order,
-        success: $.proxy(this._data_ajax_success, this),
+        success: $.proxy(this._data_ajax_success, this)
 //        complete: $.proxy(this._data_ajax_complete, this),
-        async:false
+//        async:false
       });
-      //build the chart
-      if (this.data.length > 0)
-        this.buildChart();
-      else
-        this.c3_chart.hide();
     },
     //Filter the newly loaded data to show just the selected locations
     _callback_process_data: function(){
@@ -165,6 +159,16 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     },
     //Callback for data load success - we update the data field and run all the callbacks
     _data_ajax_success: function(json) {
+
+      if (!this._chart_initialized){
+        //init chart with no data yet
+        var chart_config = this._build_chart_config(this.elementId, this);
+        this.c3_chart = c3.generate(chart_config);
+        var c3_chart = this.c3_chart;
+        c3_chart.internal.margin2.top=260;
+        this._chart_initialized = true;
+      }
+
       if (json.success){
         this.data = json.result.results;
 
@@ -173,6 +177,12 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           this.dataCallbacks[i]();
         }
       }
+      //build the chart
+      if (this.data.length > 0)
+        this.buildChart();
+      else
+        this.c3_chart.hide();
+
     },
     //Callback for data load complete - we reset the initial viewport for the graph
     _set_view_port_size: function(){
