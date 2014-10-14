@@ -180,6 +180,7 @@
 	
 	span.is-more p{
 		margin: 0px;
+		display: inline;
 	}
 	span.is-more a.more-link,
 	.more-link {

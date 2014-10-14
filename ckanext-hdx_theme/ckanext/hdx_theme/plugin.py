@@ -97,7 +97,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'one_active_item': hdx_helpers.one_active_item,
             'hdx_follow_button': hdx_helpers.hdx_follow_button,
             'get_last_revision_timestamp_group': hdx_helpers.get_last_revision_timestamp_group,
-            'feature_count': hdx_helpers.feature_count
+            'feature_count': hdx_helpers.feature_count,
+            'follow_status': hdx_helpers.follow_status
         }
         
     def get_actions(self):

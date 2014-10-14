@@ -31,8 +31,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return map
 
     def before_search(self, search_params):
-        if 'facet.field' in search_params and \
-            'vocab_Topics' not in search_params['facet.field']:
+        if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
             search_params['facet.field'].append('vocab_Topics')
 
         # If indicator flag is set, search only that type

@@ -29,7 +29,6 @@
                     <b class="caret"></b>
                   </button>
                   <ul id="optionDropDown" class="dropdown-menu dropdown-inverse" role="menu" aria-labelledby="location-dd" style="max-height: 241px; overflow-y: auto;">
-                    <li><a tabindex="-1" val="soon">TIME (coming soon)</a> </li>
                     <li><a tabindex="-1" val="sidePanelCountries">{{ _("Location") }}</a> </li>
                     <li><a tabindex="-1" val="sidePanelSortOrder">{{ _("Sort order") }}</a> </li>
                   </ul>
@@ -60,7 +59,7 @@
               </span>
               
 		      <div class="indicator-actions followButtonContainer pull-right">
-		      	{% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg %}
+		      	{% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True %}
 		      </div>
       
             </div>

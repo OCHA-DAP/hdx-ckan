@@ -128,7 +128,7 @@ def markdown_extract_strip(text, extract_length=190):
     is the texted without any html tags.  If extract_length is 0 then it
     will not be truncated.'''
     result_text = h.markdown_extract(text, extract_length)
-    result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '')
+    result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '').replace('"',"&quot;")
     return result
 
 def render_date_from_concat_str(str, separator='-'):
@@ -278,6 +278,17 @@ def hdx_follow_link(obj_type, obj_id, extra_text):
                        obj_type=obj_type,
                        extra_text=extra_text)
     return ''
+
+def follow_status(obj_type, obj_id):
+    obj_type = obj_type.lower()
+    assert obj_type in h._follow_objects
+    # If the user is logged in show the follow/unfollow button
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        action = 'am_following_%s' % obj_type
+        following = logic.get_action(action)(context, {'id': obj_id})
+        return following
+    return False
 
 def one_active_item(items):
     for i in items:
