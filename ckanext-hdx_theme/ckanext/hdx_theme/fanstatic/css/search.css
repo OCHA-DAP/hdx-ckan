@@ -88,10 +88,16 @@
 
     }
     .dataset-item .dataset-actions > ul > li > a::after{
-        content: "|";
         margin-left: 7px;
         margin-right: 4px;
     }
+    .dataset-item .dataset-actions > ul > li > a.link-separator::before{
+        content: "|";
+        margin-left: 7px;
+        margin-right: 4px;
+    
+    }
+    
     .dataset-item .dataset-actions > ul > li:last-child > a::after{
         content: "";
         margin: 0;

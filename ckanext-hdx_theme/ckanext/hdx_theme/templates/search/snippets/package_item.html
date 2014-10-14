@@ -41,7 +41,7 @@
                   {% endblock %}
                 </li>
                 <li>
-                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
+                  <a  class="link-separator" href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
                 </li>
                 <li>
                   {% block follow_link %}
