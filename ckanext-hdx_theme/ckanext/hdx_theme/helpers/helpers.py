@@ -128,7 +128,7 @@ def markdown_extract_strip(text, extract_length=190):
     is the texted without any html tags.  If extract_length is 0 then it
     will not be truncated.'''
     result_text = h.markdown_extract(text, extract_length)
-    result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '')
+    result = result_text.rstrip('\n').replace('\n', ' ').replace('\r', '').replace('"',"&quot;")
     return result
 
 def render_date_from_concat_str(str, separator='-'):
