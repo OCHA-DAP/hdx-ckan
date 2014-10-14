@@ -125,6 +125,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       indicatorCode = indicatorCodeMapping[this.options.name];
       sourceCode = indicatorSourceMapping[this.options.name];
 
+
+      if (this._chart_initialized) {
+        $(this.elementId).parent().append('<div id="' + this.elementId.slice(1) + "Loading" + '" style="position: absolute; top: 50px;"><img src="/base/images/loading-spinner.gif" /></div>');
+      }
+
       //
       var periodTypeAux = "&periodType=" + this._period_type;
       if (this._period_type != this._period_type_default)
@@ -202,6 +207,13 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         if (data[dataEl]['trimName'].length > 15)
           data[dataEl]['trimName'] = data[dataEl]['trimName'].substring(0, 15) + '...';
       }
+      //build the chart
+      if (this.data.length > 0)
+        this.buildChart();
+      else
+        this.c3_chart.hide();
+
+      $(this.elementId+"Loading").remove();
     },
     //Callback for the setup of the side panel locations
     _callback_sidepanel: function (){
