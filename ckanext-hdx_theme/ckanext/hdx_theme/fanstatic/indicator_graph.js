@@ -31,6 +31,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _sort_order: "VALUE_DESC",
     _period_type: "LATEST_YEAR_BY_COUNTRY",
     _period_type_default: "LATEST_YEAR_BY_COUNTRY",
+    _continuous_location_initialize: true,
     _onClick: function(){
       /**
        * Click Only callback
@@ -252,14 +253,14 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _callback_location: function (){
       var continuousLocation = this.options.continuous_location;
       var data = this.data;
-      if (continuousLocation != ""){
+      if (continuousLocation != "" && this._continuous_location_initialize){
         $("#"+continuousLocation+" .cb-item-count").html(data.length);
         var locationList = $("#" + continuousLocation + " .cb-item-links ul");
         locationList.children().remove();
         if (data.length > 0)
           locationList.html("");
 
-        for (var i = 0; i <= 4; i++){
+        for (var i = 0; i <= 4 && i < data.length; i++){
           var name = data[i]['locationName'].substring(0, 18).toLowerCase();
           name = name.charAt(0).toUpperCase() + name.slice(1);
           locationList.append('<li><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ data[i]['trimName'] +'</a></li>');
@@ -271,6 +272,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           name = name.charAt(0).toUpperCase() + name.slice(1);
           locationList.append('<li style="display: none"><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ data[i]['trimName'] +'</a></li>');
         }
+        this._continuous_location_initialize = false;
       }
     },
     //Callback for the sidepanel show/hide trigger - resizes the chart
