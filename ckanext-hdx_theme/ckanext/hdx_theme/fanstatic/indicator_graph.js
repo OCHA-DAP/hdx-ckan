@@ -31,6 +31,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _sort_order: "VALUE_DESC",
     _period_type: "LATEST_YEAR_BY_COUNTRY",
     _period_type_default: "LATEST_YEAR_BY_COUNTRY",
+    _continuous_location_initialize: true,
+    _chart_initialized: false,
     _onClick: function(){
       /**
        * Click Only callback
@@ -54,13 +56,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         this.elementId = '#' + this.options.container;
       var elementId = this.elementId;
 
+      //Loading icon + text
+      $(this.elementId).append('<div style="height: 310px; text-align: center; padding-top: 140px;"><img src="/base/images/loading-spinner.gif" />Loading sample data from this indicator . . . </div>');
+
       //init year filter dropdown
       this._init_year_filter_dropdown();
-      //init chart with no data yet
-      var chart_config = this._build_chart_config(elementId, this);
-      this.c3_chart = c3.generate(chart_config);
-      var c3_chart = this.c3_chart;
-      c3_chart.internal.margin2.top=260;
 
       /**
        * Priority Callbacks - that need to setup data for the rest
@@ -125,6 +125,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       indicatorCode = indicatorCodeMapping[this.options.name];
       sourceCode = indicatorSourceMapping[this.options.name];
 
+
+      if (this._chart_initialized) {
+        $(this.elementId).parent().append('<div id="' + this.elementId.slice(1) + "Loading" + '" style="position: absolute; top: 50px;"><img src="/base/images/loading-spinner.gif" /></div>');
+      }
+
       //
       var periodTypeAux = "&periodType=" + this._period_type;
       if (this._period_type != this._period_type_default)
@@ -137,15 +142,10 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       //get the data synchronously from the server
       jQuery.ajax({
         url: "/api/action/hdx_get_indicator_values?it=" + indicatorCode + urlSourceAux + periodTypeAux + "&sorting="+this._sort_order,
-        success: $.proxy(this._data_ajax_success, this),
+        success: $.proxy(this._data_ajax_success, this)
 //        complete: $.proxy(this._data_ajax_complete, this),
-        async:false
+//        async:false
       });
-      //build the chart
-      if (this.data.length > 0)
-        this.buildChart();
-      else
-        this.c3_chart.hide();
     },
     //Filter the newly loaded data to show just the selected locations
     _callback_process_data: function(){
@@ -164,6 +164,16 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     },
     //Callback for data load success - we update the data field and run all the callbacks
     _data_ajax_success: function(json) {
+
+      if (!this._chart_initialized){
+        //init chart with no data yet
+        var chart_config = this._build_chart_config(this.elementId, this);
+        this.c3_chart = c3.generate(chart_config);
+        var c3_chart = this.c3_chart;
+        c3_chart.internal.margin2.top=260;
+        this._chart_initialized = true;
+      }
+
       if (json.success){
         this.data = json.result.results;
 
@@ -172,6 +182,12 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           this.dataCallbacks[i]();
         }
       }
+      //build the chart
+      if (this.data.length > 0)
+        this.buildChart();
+      else
+        this.c3_chart.hide();
+
     },
     //Callback for data load complete - we reset the initial viewport for the graph
     _set_view_port_size: function(){
@@ -191,6 +207,13 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         if (data[dataEl]['trimName'].length > 15)
           data[dataEl]['trimName'] = data[dataEl]['trimName'].substring(0, 15) + '...';
       }
+      //build the chart
+      if (this.data.length > 0)
+        this.buildChart();
+      else
+        this.c3_chart.hide();
+
+      $(this.elementId+"Loading").remove();
     },
     //Callback for the setup of the side panel locations
     _callback_sidepanel: function (){
@@ -252,14 +275,14 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _callback_location: function (){
       var continuousLocation = this.options.continuous_location;
       var data = this.data;
-      if (continuousLocation != ""){
+      if (continuousLocation != "" && this._continuous_location_initialize){
         $("#"+continuousLocation+" .cb-item-count").html(data.length);
         var locationList = $("#" + continuousLocation + " .cb-item-links ul");
         locationList.children().remove();
         if (data.length > 0)
           locationList.html("");
 
-        for (var i = 0; i <= 4; i++){
+        for (var i = 0; i <= 4 && i < data.length; i++){
           var name = data[i]['locationName'].substring(0, 18).toLowerCase();
           name = name.charAt(0).toUpperCase() + name.slice(1);
           locationList.append('<li><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ data[i]['trimName'] +'</a></li>');
@@ -271,6 +294,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           name = name.charAt(0).toUpperCase() + name.slice(1);
           locationList.append('<li style="display: none"><a href="/group/'+data[i]['locationCode'].toLowerCase()+'" title="'+data[i]['locationName']+'">'+ data[i]['trimName'] +'</a></li>');
         }
+        this._continuous_location_initialize = false;
       }
     },
     //Callback for the sidepanel show/hide trigger - resizes the chart
