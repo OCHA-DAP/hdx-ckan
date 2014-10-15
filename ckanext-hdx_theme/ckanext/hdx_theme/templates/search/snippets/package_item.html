@@ -33,16 +33,18 @@
           </div>
           <div class="dataset-actions">
             {% block actions %}
-            <ul>
+            <ul class="hdx-bs3">
               {% if not package.private %}
                 <li>
                   {% block preview_link %}
-                    <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>
+                    {#<a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>#}
                   {% endblock %}
                 </li>
+                {#
                 <li>
-                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
+                  <a  class="link-separator" href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
                 </li>
+                #}
                 <li>
                   {% block follow_link %}
                     {{ h.hdx_follow_link('dataset', package.id, "this dataset") }}
@@ -73,7 +75,7 @@
         <div class="dataset-others">
           {% block others %}
             {% if package.resources and not hide_resources %}
-              <ul class="list-items dataset-resources unstyled">
+              <ul class="hdx-bs3 list-items dataset-resources unstyled">
                 {% for resource in h.dict_list_reduce(package.resources, 'format') %}
                   <li>
                     <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>

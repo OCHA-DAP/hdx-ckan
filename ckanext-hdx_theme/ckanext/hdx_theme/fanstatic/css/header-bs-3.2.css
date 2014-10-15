@@ -47,7 +47,7 @@
 /* END Style default Primary */
 
 /* Change the default style for ul items */
-    ul {
+    ul.hdx-bs3 {
         padding-left: 0;
         list-style-type: none;
     }
