@@ -135,7 +135,6 @@ def hdx_get_user_info(user_id):
         user = tk.get_action('hdx_basic_user_info')(context, {'id': user_id})
     except logic.NotAuthorized:
         base.abort(401, _('Unauthorized to see organization member list'))
-    print user
     return user
 
 
