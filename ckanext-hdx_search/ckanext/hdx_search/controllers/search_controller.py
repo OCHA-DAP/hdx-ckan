@@ -88,18 +88,11 @@ def count_types(context, data_dict, tab):
     else:
         indicator_no = 0
     dataset_no = total - indicator_no
-    if tab == 'all' and len(result['results']) > 0:
-        sort = data_dict.get('sort', None)
-        search = {
-                'q': data_dict.get('q', None)+' indicator:1',
-                'fq': data_dict.get('fq', None),
-                'facet.field': facet_fields,
-                'facet.limit': 1000,
-                'rows': 1,
-                'sort': sort,
-            }
-        result2 = get_action('package_search')(context, search)
-        indicator = [result2['results'][0]]
+    if tab == 'all' and len(result['results']) > 0 \
+        and result['results'][0] \
+        and 'indicator' in result['results'][0] \
+        and result['results'][0]['indicator'] == '1':
+        indicator = [result['results'][0]]
     else:
         indicator = None
         

@@ -606,7 +606,7 @@ class DatasetController(PackageController):
         assert False, "We should never get here"
 
     def _resource_preview(self, data_dict):
-        if 'filetype' not in data_dict['resource'] or not data_dict['resource']['filetype']:
+        if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:
             return False
         return bool(datapreview.res_format(data_dict['resource'])
                     in datapreview.direct() + datapreview.loadable()
