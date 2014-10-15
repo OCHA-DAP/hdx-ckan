@@ -59,55 +59,69 @@
           'translated_fields': c.translated_fields,
           'remove_field': c.remove_field }
         %}
-        {% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
+        {% block search_form_snippet scoped %}
+        	{% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
+        {% endblock %}
       {% endblock %}
 
       {% block package_search_results_list %}
-      {% if c.tab=='all' or c.tab=='indicators' %}
-        <div class="list-header">
-            <span class="mL15 list-header-title">
-              Indicators [{{c.indicator_counts}}]
-            </span>
-            <span class="mL15 list-header-showall">
-              <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=1) }}">Show all indicators</a>
-            </span>
-            <span class="pull-right list-header-actions">
-            </span>
-        </div>
-        {% if  c.tab == 'indicators' %}
-          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, tab=c.tab) }}
-        {% else %}
-          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.indicator, tab=c.tab) }}
-        {% endif %}
-      {% endif %}
-
-      {% if c.tab=='all' or c.tab=='features' %}
-        <div class="list-header">
-          <span class="mL15 list-header-title">
-            Feature Pages
-          </span>
-          <span class="mL15 list-header-showall">
-            <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_feature=1) }}">{{ _("Show all feature pages") }}</a>
-          </span>
-          <span class="pull-right list-header-actions">
-          </span>
-        </div>
-        {{ h.snippet('search/snippets/feature_list.html', query=c.q, packages=c.features) }}
-      {% endif %}
-
-      {% if c.tab=='all' or c.tab=='datasets' %}
-        <div class="list-header">
-          <span class="mL15 list-header-title">
-            Datasets [{{c.dataset_counts}}]
-          </span>
-          <span class="mL15 list-header-showall">
-            <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=0) }}">Show all datasets</a>
-          </span>
-          <span class="pull-right list-header-actions">
-          </span>
-        </div>
-        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items) }}
-      {% endif %}
+      	{% block package_search_results_indicators %}
+	      {% if c.tab=='all' or c.tab=='indicators' %}
+	        <div class="list-header">
+	            <span class="mL15 list-header-title">
+	              Indicators [{{c.indicator_counts}}]
+	            </span>
+	            {% if c.tab=='all' %}
+		            <span class="mL15 list-header-showall">
+		              <a href="{{ h.url_for('search', q=c.q, ext_indicator=1) }}">Show all indicators</a>
+		            </span>
+	            {% endif %}
+	            <span class="pull-right list-header-actions">
+	            </span>
+	        </div>
+	        {% if  c.tab == 'indicators' %}
+	          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, tab=c.tab) }}
+	        {% else %}
+	          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.indicator, tab=c.tab) }}
+	        {% endif %}
+	      {% endif %}
+		{% endblock  %}
+		{% block package_search_results_features %}
+	      {% if c.tab=='all' or c.tab=='features' %}
+	        <div class="list-header">
+	          <span class="mL15 list-header-title">
+	            Feature Pages
+	          </span>
+	          {% if c.tab=='all' %}
+		          <span class="mL15 list-header-showall">
+		            <a href="{{ h.url_for('search', q=c.q, ext_feature=1) }}">{{ _("Show all feature pages") }}</a>
+		          </span>
+		      {% endif %}
+	          <span class="pull-right list-header-actions">
+	          </span>
+	        </div>
+	        {{ h.snippet('search/snippets/feature_list.html', query=c.q, packages=c.features) }}
+	      {% endif %}
+	 	{% endblock %}
+	 	
+	 	
+		{% block package_search_results_datasets %}
+	      {% if c.tab=='all' or c.tab=='datasets' %}
+	        <div class="list-header">
+	          <span class="mL15 list-header-title">
+	            Datasets [{{c.dataset_counts}}]
+	          </span>
+	          {% if c.tab=='all' %}
+		          <span class="mL15 list-header-showall">
+		            <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=0) }}">Show all datasets</a>
+		          </span>
+		      {% endif %}
+	          <span class="pull-right list-header-actions">
+	          </span>
+	        </div>
+	        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items) }}
+	      {% endif %}
+	  	{% endblock %}
       {% endblock %}
     </div>
 

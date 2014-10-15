@@ -42,6 +42,9 @@ ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
 
+SMALL_NUM_OF_ITEMS = 5
+LARGE_NUM_OF_ITEMS = 25
+
 from ckan.controllers.package import PackageController
 
 
@@ -54,13 +57,6 @@ def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
 
-
-def search_url(params, package_type=None):
-    if not package_type or package_type == 'dataset':
-        url = h.url_for(controller='package', action='search')
-    else:
-        url = h.url_for('{0}_search'.format(package_type))
-    return url_with_params(url, params)
 
 
 def count_types(context, data_dict, tab):
@@ -364,7 +360,7 @@ class HDXSearchController(PackageController):
             if fields:
                 sort_string = ', '.join('%s %s' % f for f in fields)
                 params.append(('sort', sort_string))
-            return search_url(params, package_type)
+            return self._search_url(params, package_type)
 
         c.sort_by = _sort_by
         if sort_by is None:
@@ -376,7 +372,7 @@ class HDXSearchController(PackageController):
         def pager_url(q=None, page=None):
             params = list(params_nopage)
             params.append(('page', page))
-            return search_url(params, package_type)
+            return self._search_url(params, package_type)
 
         c.search_url_params = urlencode(_encode_params(params_nopage))
 
@@ -402,10 +398,7 @@ class HDXSearchController(PackageController):
                     else:
                         search_extras[param] = value
 
-            if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
-                limit = 25
-            else:
-                limit = 5
+            limit = self._allowed_num_of_items(search_extras)
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
@@ -460,10 +453,8 @@ class HDXSearchController(PackageController):
                     c.tab = "datasets"
             elif 'ext_feature' in data_dict['extras']:
                 c.tab = "features"
-            else:
-                c.tab = "all"
-                # For all tab, only paginate datasets
-                data_dict['extras']['ext_indicator'] = 0
+            
+            self._decide_adding_dataset_criteria(data_dict)
 
             query = package_search(context, data_dict)
             c.dataset_counts, c.indicator_counts, c.indicator, c.facets, c.search_facets = \
@@ -527,4 +518,25 @@ class HDXSearchController(PackageController):
                                        package_type=package_type)
 
         # return render(self._search_template(package_type))
+        return self._search_template()
+
+    def _decide_adding_dataset_criteria(self, data_dict):
+        # For all tab, only paginate datasets
+        if c.tab == "all":
+            data_dict['extras']['ext_indicator'] = 0
+
+    def _allowed_num_of_items(self, search_extras):
+        if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
+            return LARGE_NUM_OF_ITEMS
+        else:
+            return SMALL_NUM_OF_ITEMS
+
+    def _search_template(self):
         return render('search/search.html')
+
+    def _search_url(self, params, package_type=None):
+        if not package_type or package_type == 'dataset':
+            url = h.url_for('search')
+        else:
+            url = h.url_for('{0}_search'.format(package_type))
+        return url_with_params(url, params)
