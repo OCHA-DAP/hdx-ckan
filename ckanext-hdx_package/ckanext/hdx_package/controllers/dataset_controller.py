@@ -551,7 +551,7 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
-        print c.pkg_dict['resources']
+        print c.pkg.related
 
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
