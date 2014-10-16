@@ -127,7 +127,6 @@ class DatasetController(PackageController):
 
             data_dict['type'] = package_type
             context['message'] = data_dict.get('log_message', '')
-            print data_dict
             pkg_dict = get_action('package_create')(context, data_dict)
 
             # A hack to handle the metadata correctly
@@ -135,7 +134,6 @@ class DatasetController(PackageController):
             pkg_dict = get_action('package_update')(context, data_dict)
 
             if ckan_phase:
-                print 'World'
                 # redirect to add dataset resources
                 url = h.url_for(controller='package',
                                 action='new_resource',
@@ -243,7 +241,6 @@ class DatasetController(PackageController):
         if hasattr(self, 'package_form'):
             c.form = render(self.package_form, extra_vars=vars)
         else:
-            print self._package_form(package_type=package_type)
             c.form = render(self._package_form(package_type=package_type),
                             extra_vars=vars)
 
@@ -554,6 +551,7 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
+        print c.pkg.related
 
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
@@ -606,3 +604,11 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    def _resource_preview(self, data_dict):
+        if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:
+            return False
+        return bool(datapreview.res_format(data_dict['resource'])
+                    in datapreview.direct() + datapreview.loadable()
+                    or datapreview.get_preview_plugin(
+                        data_dict, return_first=True))

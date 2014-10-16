@@ -1305,6 +1305,7 @@ def user_autocomplete(context, data_dict):
 
     user_list = []
     for user in query.all():
+        print user
         result_dict = {}
         for k in ['id', 'name', 'fullname']:
                 result_dict[k] = getattr(user,k)

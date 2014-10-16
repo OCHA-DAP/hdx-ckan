@@ -2,6 +2,25 @@
 
 {% set pkg = c.pkg_dict %}
 
+{% block secondary %}
+{% if c.pkg.related %}
+<div class="border-right-grey">
+  <h2 class="uppercase">{{_('Gallery')}}</h2>
+  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg %}
+
+</div>
+{% endif %}
+  <div class="border-right-grey">
+        <h2 class="uppercase">{{_('Activity')}}</h2>
+        {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
+     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     <br>
+    {% if h.follow_status('dataset', pkg.name) %}
+      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> 
+    {% endif %}
+  </div>
+{% endblock %}
+
 {% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 {% block primary_content_inner %}
   {{ super() }}
