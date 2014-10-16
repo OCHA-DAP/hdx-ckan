@@ -66,13 +66,16 @@ def search_url(params, package_type=None):
 def count_types(context, data_dict, tab):
     facet_fields = data_dict.get('facet.field', [])
     facet_fields.append('extras_indicator')
+    sort = data_dict.get('sort', None)
+    if not sort:
+        sort = 'score desc'
     search = {
                 'q': data_dict.get('q', None),
                 'fq': data_dict.get('fq', None),
                 'facet.field': facet_fields,
                 'facet.limit': 1000,
                 'rows': 10,
-                'sort': 'extras_indicator desc',
+                'sort': 'extras_indicator desc, ' + sort,
             }
     if tab == 'indicators':
         search['extras'] = {'ext_indicator': 1}

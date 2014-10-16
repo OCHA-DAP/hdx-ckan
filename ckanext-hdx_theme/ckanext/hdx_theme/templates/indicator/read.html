@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block secondary %}
-{% if pkg.related %}
+{% if c.pkg.related %}
 <div class="border-right-grey">
   <h2 class="uppercase">{{_('Gallery')}}</h2>
-  {% snippet "indicator/snippets/related_list.html", pkg=pkg %}
+  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg %}
 
 </div>
 {% endif %}
@@ -21,8 +21,6 @@
      <br>
     {% if h.follow_status('dataset', pkg.name) %}
       <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> 
-    {% else %}
-      <span class="more">Follow for more</span>
     {% endif %}
   </div>
 {% endblock %}
