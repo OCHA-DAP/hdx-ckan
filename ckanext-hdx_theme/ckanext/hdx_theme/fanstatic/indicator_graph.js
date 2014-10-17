@@ -21,6 +21,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     dataCallbacks: [],
     elementId: null,
     view_port_reset: true,
+    view_port_start:0,
+    view_port_stop: 19,
     _last_datapoints_div: null,
     _sort_order_values:{
       VALUE_DESC: "Value descending",
@@ -171,7 +173,6 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         this.c3_chart = c3.generate(chart_config);
         var c3_chart = this.c3_chart;
         c3_chart.internal.margin2.top=260;
-        this._chart_initialized = true;
       }
 
       if (json.success){
@@ -188,6 +189,32 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       else
         this.c3_chart.hide();
 
+      if (!this._chart_initialized){
+        $(this.elementId).find("svg > g:eq(1) rect[class='background']").attr("style", "cursor: crosshair;");
+        this._set_view_port_bar_color();
+
+        $(this.elementId).find('g.resize rect').each(function (){
+          $(this).attr("x", "-10");
+          $(this).attr("y", "20");
+          $(this).attr("rx", "3");
+          $(this).attr("ry", "3");
+          $(this).attr("width", "20");
+          $(this).attr("height", "20");
+          $(this).attr("style", "fill: #ffffff; stroke: #cccccc;");
+        });
+
+        $(this.elementId).find('g.resize').each(function (){
+          var rect = d3.select(this).append("rect");
+          rect.attr("x", "-4").attr("width", "1").attr("height", "10").attr("y", "25").attr("style", "fill: #888888;");
+          rect = d3.select(this).append("rect");
+          rect.attr("x", "0").attr("width", "1").attr("height", "10").attr("y", "25").attr("style", "fill: #888888;");
+          rect = d3.select(this).append("rect");
+          rect.attr("x", "4").attr("width", "1").attr("height", "10").attr("y", "25").attr("style", "fill: #888888;");
+        });
+
+        this._chart_initialized = true;
+      }
+
     },
     //Callback for data load complete - we reset the initial viewport for the graph
     _set_view_port_size: function(){
@@ -198,6 +225,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       c3_chart.internal.redrawForBrush();
       c3_chart.internal.redrawSubchart();
       $(this.elementId).attr("style", "max-height: 310px; position: relative;");
+      this._zoomEventNoRedraw([0,end]);
     },
     _callback_trim_names: function () {
       var data = this.data;
@@ -254,8 +282,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       var module = $(this).data("ckanModule");
 
       if (code === "*ALL*"){
-        for (var code in module.filteredLocations)
-          module.filteredLocations[code] = this.checked;
+        for (var icode in module.filteredLocations)
+          module.filteredLocations[icode] = this.checked;
         $("#"+module.options.side_panel_locations + " li input").prop('checked', this.checked);
       }
       else
@@ -263,6 +291,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
 
       module._callback_process_data();//adjust the new data
       module.buildChart();
+      module._set_view_port_bar_color();
     },
     _callback_sortorder_click: function(){
       var order = $(this).attr('value');
@@ -307,10 +336,25 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         c3_chart.internal.redrawSubchart();
       }, this));
     },
+    //Color the bars in the subgraph for the current scope
+    _set_view_port_bar_color: function (){
+      $(this.elementId).find("svg > g:eq(1) g.c3-chart-bar.c3-target.c3-target-value path.c3-shape.c3-bar").attr("style", "stroke: none; fill: #cccccc; opacity: 1;");
+      for (var i = this.view_port_start; i <= this.view_port_stop; i++){
+        $(this.elementId).find("svg > g:eq(1) g.c3-chart-bar.c3-target.c3-target-value path.c3-shape.c3-bar-"+i).attr("style", "stroke: none; fill: #1ebfb3; opacity: 1;");
+      }
+    },
     //Callback for the zoom event, but trigger no redraw
     _zoomEventNoRedraw: function(w, domain){
-      var dif = w[1] - w[0]; //number of data points shown
 
+      var dif = w[1] - w[0]; //number of data points shown
+      var start = Math.round(w[0]), stop = Math.round(w[1] - 1);
+
+      if (start != this.view_port_start || stop != this.view_port_stop) {
+        this.view_port_start = start;
+        this.view_port_stop = stop;
+
+        this._set_view_port_bar_color();
+      }
       if (this._last_datapoints_div != null && this._last_datapoints_div != dif && dif > 20){
         this.view_port_reset = false;
       }
@@ -415,7 +459,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       }
       else {
         this.c3_chart.internal.config.subchart_show = false;
-        subchart.attr("style", "visibility: hidden;");
+        subchart.attr("style", "visibility: hidden !important;");
       }
 
       if (this.c3_chart.internal.config.subchart_show != prevSubchartShow){
@@ -437,6 +481,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
             value: this.options.label
           }
         });
+
       }
       else{
         this.c3_chart.unload();
