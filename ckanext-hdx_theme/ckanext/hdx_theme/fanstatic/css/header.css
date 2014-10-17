@@ -1320,3 +1320,18 @@ a, a:hover, a:focus{
         font-weight: bold;
     }
 /* END Highlight Style */
+
+/* Style indicator graph */
+    rect.extent{
+        stroke: #1ebfb3;
+        stroke-width: 1px;
+    }
+
+    rect.background{
+        opacity: 0.05;
+    }
+
+    g.c3-chart g.c3-chart-bars g.c3-chart-bar.c3-target.c3-target-value[style="opacity: 1;"] path.c3-shape.c3-bar {
+        /*fill: #cccccc !important;*/
+    }
+/* END Style indicator graph */
