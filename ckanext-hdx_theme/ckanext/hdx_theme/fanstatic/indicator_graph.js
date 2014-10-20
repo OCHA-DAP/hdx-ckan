@@ -111,7 +111,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
           var item = data[i];
           container.append("<option value='" + item + "'>" + item + "</option>");
         }
-        container.append("<option disabled value='disabled'>Download the data for more</option>");
+        container.append("<option disabled value='disabled'>Download the data below for more dates</option>");
       }
       container.data("ckanModule", this);
       container.on("change", function(){
