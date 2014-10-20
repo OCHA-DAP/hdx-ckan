@@ -286,6 +286,14 @@
         height: 330px;
         overflow-y: scroll;
     }
+
+    .graphOptions ul{
+        padding-left: 0;
+    }
+
+    .graphOptions li{
+        list-style: none;
+    }
 /* END Graph options */
 
 /* Side panel Locations */
