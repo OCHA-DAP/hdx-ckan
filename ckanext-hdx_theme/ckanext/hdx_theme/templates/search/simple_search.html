@@ -24,7 +24,7 @@
 	      <span class="pull-right list-header-actions">
 	      </span>
 	    </div>
-	    {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items) }}
+	    {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, show_preview_on_first=False) }}
 	{% endif %}
 {% endblock %}
 
