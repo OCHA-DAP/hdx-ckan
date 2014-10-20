@@ -401,6 +401,8 @@ class HDXSearchController(PackageController):
                     else:
                         search_extras[param] = value
 
+            self._set_filters_are_selected_flag()
+
             limit = self._allowed_num_of_items(search_extras)
 
             context = {'model': model, 'session': model.Session,
@@ -543,3 +545,9 @@ class HDXSearchController(PackageController):
         else:
             url = h.url_for('{0}_search'.format(package_type))
         return url_with_params(url, params)
+    
+    def _set_filters_are_selected_flag(self):
+        if len(c.fields_grouped) > 0 :
+            c.filters_are_selected = True
+        else:
+            c.filters_are_selected = False

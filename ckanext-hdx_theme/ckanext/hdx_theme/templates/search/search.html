@@ -11,7 +11,7 @@
 <div id="filter_dropdown">
   <div class="row paddingRowHack filter_bg">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-        <div id="search_bar_content" style="display: none;">
+        <div id="search_bar_content" style="display: none;" data-module-show="{{ c.filters_are_selected }}"> 
           <div id="filter_container" class="mTB35 col-xs-8">
             <div class="row">
               {% for facet in c.facet_titles %}
