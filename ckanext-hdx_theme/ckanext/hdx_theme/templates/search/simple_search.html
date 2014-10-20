@@ -6,7 +6,14 @@
 
 {% block package_search_results_indicators %}
 	{% if c.tab=='indicators' %}
-		{{ super() }}
+        <div class="list-header">
+            <span class="mL15 list-header-title">
+              Indicators [{{c.indicator_counts}}]
+            </span>
+            <span class="pull-right list-header-actions">
+            </span>
+        </div>
+        {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, tab=c.tab, show_preview_on_first=False) }}
 	{% endif %}
 {% endblock %}
 
