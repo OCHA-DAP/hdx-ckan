@@ -336,7 +336,10 @@
 
 
 /* Actions */
-.indicator-actions {
+.indicator-actions a.btn.hdx-btn {
+	margin-right: 12px;
+}
+/* .indicator-actions {
 	margin-top: 10px;
 }
 .indicator-actions .dropdown-menu {
@@ -347,9 +350,9 @@
 	padding: 3px 20px;
 }
 .indicator-actions .caret {
-/*     border-left: 4px solid transparent;
+    border-left: 4px solid transparent;
     border-right: 4px solid transparent;
-    border-top: 4px solid; */
+    border-top: 4px solid;
     display: inline-block;
     height: 0;
     margin-left: 2px;
@@ -385,7 +388,7 @@
 .dropdown-menu .social-link .social-images {
 	height: 20px;
 }
-
+ */
 /* END - Actions */
 
 /* Dataset specific styles */
@@ -396,6 +399,16 @@
 .dataset-notes.notes p {
 	margin-top: 10px;
 	margin-bottom: 0px;
+}
+
+.dataset-notes.notes {
+	width: 600px;
+}
+
+.align-bottom-right {
+	position:absolute;
+	bottom: 0px;
+	right: 0px;
 }
 
 /* END - Dataset specific styles */
