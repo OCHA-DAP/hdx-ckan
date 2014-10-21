@@ -71,7 +71,7 @@
 	            <span class="mL15 list-header-title">
 	              Indicators [{{c.indicator_counts}}]
 	            </span>
-	            {% if c.tab=='all' %}
+	            {% if c.tab=='all' and c.indicator %}
 		            <span class="mL15 list-header-showall">
 		              <a href="{{ h.url_for('search', q=c.q, ext_indicator=1) }}">Show all indicators</a>
 		            </span>
@@ -92,7 +92,7 @@
 	          <span class="mL15 list-header-title">
 	            Feature Pages
 	          </span>
-	          {% if c.tab=='all' %}
+	          {% if c.tab=='all' and c.features %}
 		          <span class="mL15 list-header-showall">
 		            <a href="{{ h.url_for('search', q=c.q, ext_feature=1) }}">{{ _("Show all feature pages") }}</a>
 		          </span>
@@ -111,7 +111,7 @@
 	          <span class="mL15 list-header-title">
 	            Datasets [{{c.dataset_counts}}]
 	          </span>
-	          {% if c.tab=='all' %}
+	          {% if c.tab=='all' and c.page.items %}
 		          <span class="mL15 list-header-showall">
 		            <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=0) }}">Show all datasets</a>
 		          </span>
