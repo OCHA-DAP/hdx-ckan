@@ -37,6 +37,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _chart_initialized: false,
     _onClick: function(){
       /**
+       * Reset Module state
+       */
+      this.ckanModule._chart_initialized = false;
+
+      /**
        * Click Only callback
        */
       var container = this.ckanModule.options.container;
