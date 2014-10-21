@@ -339,11 +339,7 @@ class HDXSearchController(PackageController):
 
         c.drill_down_url = drill_down_url
 
-        def remove_field(key, value=None, replace=None):
-            return h.remove_url_param(key, value=value, replace=replace,
-                                      controller='package', action='search')
-
-        c.remove_field = remove_field
+        self._set_remove_field_function()
 
         sort_by = request.params.get('sort', None)
         params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
@@ -400,6 +396,8 @@ class HDXSearchController(PackageController):
                             c.fields_grouped[param].append(value)
                     else:
                         search_extras[param] = value
+
+            self._set_filters_are_selected_flag()
 
             limit = self._allowed_num_of_items(search_extras)
 
@@ -543,3 +541,16 @@ class HDXSearchController(PackageController):
         else:
             url = h.url_for('{0}_search'.format(package_type))
         return url_with_params(url, params)
+    
+    def _set_filters_are_selected_flag(self):
+        if len(c.fields_grouped) > 0 :
+            c.filters_are_selected = True
+        else:
+            c.filters_are_selected = False
+            
+    def _set_remove_field_function(self):
+        def remove_field(key, value=None, replace=None):
+            return h.remove_url_param(key, value=value, replace=replace,
+                                      controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
+
+        c.remove_field = remove_field
