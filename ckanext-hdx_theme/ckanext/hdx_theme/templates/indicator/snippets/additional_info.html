@@ -14,8 +14,9 @@
 		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
 		<td class="dataset-details metadata-link">
 		{% if pkg_dict.owner_org %}
-			<a href="{{ h.url_for(controller='group', action='read', id=pkg_dict.owner_org) }}">
-	            	{{ pkg_dict.owner_org }}
+		{% set org_id = pkg_dict.organization.name or pkg_dict.owner_org %}
+			<a href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
+	            	{{ pkg_dict.organization.title }}
 	        </a>
 	    {% endif %}
 		</td>
@@ -30,7 +31,7 @@
 			{% for grp in pkg_dict.groups %}
 				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">
 	            	{{ grp['title'] or grp['name'] }}
-	            </a>
+	            </a>&nbsp;&nbsp;
   			{% endfor %}
 		</td>
     </tr>
