@@ -56,7 +56,9 @@ def get_facet_items_dict(facet, limit=1000, exclude_active=False):
         return (facets, no_items)
 
 
-def get_last_modifier_user(rev_id, get_timestamp=False):
+# def get_last_modifier_user(rev_id, get_timestamp=False):
+def get_last_modifier_user(group_id, get_timestamp=False):
+    rev_id = get_last_revision_group(group_id)
     act_list = model.Session.query(model.Activity).filter(
         model.Activity.revision_id == rev_id).all()
     if act_list and len(act_list) > 0:
