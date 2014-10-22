@@ -16,6 +16,8 @@ import ckan.lib.dictization.model_save as model_save
 import ckan.lib.navl.dictization_functions
 import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
+import ckan.model as model
+from ckanext.hdx_package.helpers import helpers
 
 from ckan.common import _
 
@@ -101,6 +103,9 @@ def package_update(context, data_dict):
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
+
+    if 'tags' in data:
+        data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
     pkg = modified_save(context, pkg, data)
 

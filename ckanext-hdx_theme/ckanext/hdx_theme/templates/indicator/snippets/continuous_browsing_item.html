@@ -4,7 +4,7 @@
   {% snippet "package/snippets/resources_list.html", count=count, name=name, links=links, more %}
 
 #}
-<div class="col-xs-2 mTB30 cb-item">
+<div id="{{ id }}" class="col-xs-2 mTB30 cb-item">
 	<div class="cb-item-count">
 		{{ count }} &nbsp;
 	</div>
@@ -13,21 +13,22 @@
 			{{ name }} 
 		</div>
 		<div class="cb-item-links">
-			<ul>
+			<ul class="hdx-bs3">
 			{% if links|length > 0 %}
 				{% set upper_limit = 4 if links|length >= 4 else links|length %}
+				{% set uppercase = 'uppercase' if upper else '' %}
 				{% for i in range(0,upper_limit) %}
 					{% if links[i].url %}
-					<li><a href="{{links[i].url}}" title="{{links[i].name}}">{{ links[i].name|truncate(18,False) }}</a></li>
+					<li><a href="{{links[i].url}}" title="{{links[i].name}}" class="{{uppercase}}">{{ links[i].name|truncate(18,True) }}</a></li>
 					{% else %}
-					<li><span data-toggle="tooltip" data-module-placement="bottom" data-module="bs_tooltip" data-original-title="Coming soon...">{{ links[i].name|truncate(18,False) }}</span></li>
+					<li><span data-toggle="tooltip" data-module-placement="bottom" data-module="bs_tooltip" data-original-title="Coming soon..." class="{{uppercase}}">{{ links[i].name|truncate(18,True) }}</span></li>
 					{% endif %}
 				{% endfor %}
 				{% if links|length > 4 %}
 					<li><span data-toggle="tooltip" data-module-placement="bottom" data-module="bs_tooltip" data-original-title="Coming soon...">{{ _('+ More') }}</span></li>
 				{% endif%}
 			{% else %}
-				<li>{{ _('No items') }}</li>
+				<li><span>{{ _('No items') }}</span></li>
 			{% endif %}
 			</ul>
 		</div>

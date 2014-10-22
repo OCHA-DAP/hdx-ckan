@@ -9,18 +9,29 @@
 		<th scope="row" class="dataset-label">{{ _('Source') }}</th>
 		<td class="dataset-details">{{ pkg_dict.dataset_source }}</td>
 	</tr>
+	
+	<tr>
+		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
+		<td class="dataset-details metadata-link">
+		{% if pkg_dict.owner_org %}
+		{% set org_id = pkg_dict.organization.name or pkg_dict.owner_org %}
+			<a href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
+	            	{{ pkg_dict.organization.title }}
+	        </a>
+	    {% endif %}
+		</td>
+    </tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Date of Dataset') }}</th>
 		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
     </tr>
-
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link">
 			{% for grp in pkg_dict.groups %}
 				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">
 	            	{{ grp['title'] or grp['name'] }}
-	            </a>
+	            </a>&nbsp;&nbsp;
   			{% endfor %}
 		</td>
     </tr>
@@ -40,9 +51,9 @@
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">
         	{% if pkg_dict.license_id %}
-				<span property="dc:rights"><a href="/about/license">{{ pkg_dict.license_title }}</a></span>
+				<span property="dc:rights"><a href="/about/license">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
 				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
-				: <span data-module="hdx_show_more" style="visibility:hidden">{{h.render_markdown(pkg_dict.license_other)}}</span>
+				: <span data-module="hdx_show_more" style="visibility:hidden"><span>{{h.render_markdown(pkg_dict.license_other)}}</span></span>
 				{% endif %}
 				
 				{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
@@ -64,11 +75,11 @@
 
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
-		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.methodology) }}</span></td>
+		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><span>{{ h.render_markdown(pkg_dict.methodology) }}</span></span></td>
 	</tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
-		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
+		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><span>{{ h.render_markdown(pkg_dict.caveats) }}</span></span></td>
 	</tr>
 
 	<tr>

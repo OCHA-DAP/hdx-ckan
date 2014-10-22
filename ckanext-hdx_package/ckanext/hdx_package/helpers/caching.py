@@ -12,7 +12,7 @@ import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 
 bcache.cache_regions.update({
         'hdx_memory_cache':{
-            'expire': 172800, # 2 days
+            'expire': 86400, # 1 days
             'type':'memory',
             'key_length': 250
         }
