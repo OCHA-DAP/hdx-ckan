@@ -46,7 +46,8 @@
 	
 	.dsb-activity-item{
 	    margin-bottom: 25px;
-	}
+        word-wrap: break-word;
+    	}
 	
 	div.dsb-activity-item p span.actor a, div.dsb-activity-item p span.actor a:hover, div.dsb-activity-item p span.actor a:focus {
 		font-family: 'Source Sans Pro', sans-serif;
