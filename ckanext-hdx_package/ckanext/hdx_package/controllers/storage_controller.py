@@ -54,9 +54,13 @@ class FileDownloadController(storage.StorageController):
         connection = engine.connect()
         query = connection.execute("""SELECT * from resource where url= %s""", (url,))
         res = query.fetchone()
-        resource = model.Resource.get(res['id'])
-        if resource is None:
+        if not res:
             raise logic.NotFound
+        resource = model.Resource()
+        for k in res.keys():
+            setattr(resource,k,res[k])
+        #print resource
+        #resource = model.Resource.get(res['id'])
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
