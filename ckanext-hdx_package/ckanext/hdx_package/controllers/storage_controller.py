@@ -56,12 +56,12 @@ class FileDownloadController(storage.StorageController):
         res = query.fetchone()
         if not res:
             raise logic.NotFound
+        
+        # We need this as a resource object to check access so create a dummy obj and trick CKAN
         resource = model.Resource()
         for k in res.keys():
             setattr(resource,k,res[k])
-        #print resource
-        #resource = model.Resource.get(res['id'])
-
+        
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj, 'resource':resource}
