@@ -1,34 +1,41 @@
-				<label class="uppercase">{{ _('Select') }} </label>
-				<button class="btn btn-default dropdown-toggle" type="button" id="actions-menu" data-toggle="dropdown">
-					Action <span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" role="menu" aria-labelledby="actions-menu">
-					{% if is_indicator %}
-						<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('CHANGE STYLE (coming soon)') }}</a></li>
-						<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('SHARE THIS VIEW (coming soon)') }}</a></li>
-						<li role="presentation" class="divider"></li>
-					{% endif %}
-					<li role="presentation">{{ h.hdx_follow_button('dataset', pkg.name, role='menuitem', tabindex='-1', class='uppercase') }}</li>
-					<li role="presentation"><span class="uppercase" role="menuitem" tabindex="-1">{{ _('Share This Data') }}:</span></li>
-					<li role="presentation" class="social-item">
-						<a class="social-link first-link" href="https://plus.google.com/share?url={{ request.url }}" target="_blank">
-			              <img class="social-images" src="/images/svg/google-plus_black.svg" />
-			            </a>
-			            <a class="social-link" href="https://twitter.com/share?url={{ request.url }}" target="_blank">
-			              <img class="social-images" src="/images/svg/twitter_black.svg" />
-			            </a>
-			            <a class="social-link" href="https://www.facebook.com/sharer.php?u={{ request.url }}" target="_blank">
-			              <img class="social-images" src="/images/svg/fb_black.svg" />
-			            </a>
-			            <a class="social-link" href="mailto:?subject={{ pkg.title }}&body={{ request.url }}" target="_blank">
-			              <img class="social-images" src="/images/svg/email_black.svg" />
-			            </a>
-					</li>
-					<li role="presentation" class="divider"></li>
-					{% if is_indicator %}
-						<li class="disabled" role="presentation"><a role="menuitem" tabindex="-1" href="#">{{ _('ANALYZE (coming soon)') }}</a></li>
-					{% endif %}
-					{% if h.check_access('package_update', {'id':pkg.id }) %}
-					<li role="presentation"><a role="menuitem" tabindex="-1" href="{{ h.url_for(controller='package', action='edit', id=pkg.name) }}" class="uppercase">{{ _('Edit') }}</a></li>
-					{% endif %}
-				</ul>
+			<span class="{{ classes }}">
+				<a class="btn hdx-btn org-btn" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
+                 data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share dataset">Share</a>
+                {{ h.follow_button('dataset', pkg.name) }}
+                {% if h.check_access('package_update', {'id':pkg.id }) %}
+                  {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
+                {% endif %}
+                {#  
+                <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+                        data-toggle="tooltip">Analyse</a>
+                <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+                        data-toggle="tooltip"><i class="glyphicon glyphicon-wrench"></i></a>
+                #}
+            </span>
+              <div id="dataset_social_wrapper" class="popover-wrapper"></div>
+              <div style="display:none" id="dataset_social">
+                <div class="resource-social">
+                  <a href="https://plus.google.com/share?url={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/google-plus_black.svg" />
+                    <span> Google+ </span>
+                  </a>
+                </div>
+                <div class="resource-social">
+                  <a href="https://twitter.com/share?url={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/twitter_black.svg" />
+                    <span> Twitter </span>
+                  </a>
+                </div>
+                <div class="resource-social" >
+                  <a href="https://www.facebook.com/sharer.php?u={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/fb_black.svg" />
+                    <span> Facebook </span>
+                  </a>
+                </div>
+                <div class="resource-social" >
+                  <a href="mailto:?subject={{ pkg.title }}&body={{ request.url }}" target="_blank">
+                    <img class="social-images" src="/images/svg/email_black.svg" />
+                    <span> {{ _('Email') }} </span>
+                  </a>
+                </div>
+              </div>
