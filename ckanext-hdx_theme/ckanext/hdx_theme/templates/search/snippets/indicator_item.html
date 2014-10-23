@@ -5,7 +5,7 @@
 
 {% block package_item_content %}
   {{ super() }}
-  {% if loop.index == 1 %}
+  {% if show_preview_on_first and loop.index == 1 %}
     <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}" data-module-subchart="true">
     </div>
   {% endif %}

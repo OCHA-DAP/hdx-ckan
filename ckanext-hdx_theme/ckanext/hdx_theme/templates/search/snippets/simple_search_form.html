@@ -1,5 +1,9 @@
 {% extends "search/snippets/search_form.html" %}
 
+{% block search_title %}
+	  <h2 class="mTop35">{{ _('All Data') }}</h2>
+{% endblock %}
+
 {% block content_primary_nav %}
 	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
 		<a href="{{ h.url_for('simple_search', q=query) }}">{{_('All')}}</a>
