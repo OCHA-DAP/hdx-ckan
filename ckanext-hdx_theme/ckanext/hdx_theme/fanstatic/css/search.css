@@ -177,3 +177,17 @@
         padding-top: 0;
     }
 /* END Fix search spacing between tabs and results number */
+
+
+/* Show full text on hover over select2 options */
+.select2-results .select2-result-label:hover {
+    max-height: inherit;
+    overflow: inherit;
+}
+.select2-results .select2-result-label {
+    max-height: 2em;
+    overflow: hidden;
+}
+
+
+/* END - Show full text on hover over select2 options */
