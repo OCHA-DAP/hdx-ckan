@@ -175,7 +175,8 @@ class RelatedController(base.BaseController):
                     data['id'] = related_id
                 else:
                     data['dataset_id'] = id
-                data['owner_id'] = c.userobj.id
+                    ## FIXED INDENT BUG HDX HACK
+                    data['owner_id'] = c.userobj.id
 
                 related = logic.get_action(action_name)(context, data)
 

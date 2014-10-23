@@ -1,0 +1,9 @@
+{% if packages %}
+  <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+    {% for package in packages %}
+      {% snippet 'search/snippets/feature_item.html', query=query, package=package, loop=loop %}
+    {% endfor %}
+  </ul>
+{% endif %}
+
+

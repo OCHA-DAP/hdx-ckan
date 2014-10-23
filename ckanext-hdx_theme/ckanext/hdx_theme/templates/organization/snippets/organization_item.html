@@ -21,7 +21,7 @@ Example:
 {% set followers = h.get_group_followers(organization.id) %}
 {% set members = h.get_group_members(organization.id) %}
 
-<li class="list-items dataset-item">
+<li class="list-items dataset-item" id="mx-org-item-{{organization.name}}">
     <div class="list-items dataset-content">
       {% block title %}
    		 <h3 class="list-items dataset-heading">

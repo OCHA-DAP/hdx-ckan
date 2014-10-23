@@ -30,14 +30,14 @@ ckan.datapusher.url = http://datapusher.ckan.org/
 ## Solr support
 solr_url = http://127.0.0.1:8983/solr
 
-ckan.auth.user_create_organizations = true
-ckan.auth.user_create_groups = true
+ckan.auth.user_create_organizations = false
+ckan.auth.user_create_groups = false
 ckan.auth.create_user_via_api = false
 ckan.auth.create_user_via_web = true
 ckan.auth.create_dataset_if_not_in_organization = true
 ckan.auth.anon_create_dataset = false
-ckan.auth.user_delete_groups=true
-ckan.auth.user_delete_organizations=true
+ckan.auth.user_delete_groups=false
+ckan.auth.user_delete_organizations=false
 ckan.auth.create_unowned_dataset=true
 
 ckan.cache_validation_enabled = True
@@ -105,6 +105,9 @@ beaker.session.secret = This_is_a_secret_or_is_it
 who.config_file = %(here)s/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
+
+hdx.orgrequest.email = hdx.feedback@gmail.com
+hdx.cache.onstartup = false 
 
 # Logging configuration
 [loggers]

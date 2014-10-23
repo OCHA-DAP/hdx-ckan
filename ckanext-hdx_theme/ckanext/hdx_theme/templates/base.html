@@ -70,8 +70,6 @@
     {%- block styles %}
       {% resource g.main_css[6:] %}
       <link rel="stylesheet" href="/hdx_theme.css" />
-      <link rel="stylesheet" href="/header.css" />
-
     {% endblock %}
 
     {% block head_extras %}
@@ -89,7 +87,7 @@
   </head>
 
   {# Allows custom attributes to be added to the <body> tag #}
-  <body{% block bodytag %} data-site-root="{{ h.url('/', locale='default', qualified=true) }}" data-locale-root="{{ h.url('/', qualified=true) }}" data-api-root="{{ g.api_url }}"{% endblock %}>
+  <body{% block bodytag %} data-site-root="{{ h.url('/', locale='default', qualified=false) }}" data-locale-root="{{ h.url('/', qualified=false) }}" data-api-root="{{ g.api_url }}"{% endblock %}>
 
     {#
     The page block allows you to add content to the page. Most of the time it is
@@ -133,26 +131,6 @@
   </body>
   {%- block scripts2 %}
     <script src="/scripts.js"></script>
-    <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-48221887-3', 'auto');
-  ga('send', 'pageview');
-
-  $('.ga-download').on('click', function(){
-        ga('send','event','a','download');
-  });
-
-  $('.ga-share').on('click', function(){
-        ga('send','event','a','share');
-  });
-
-  $('.ga-preview').on('click', function(){
-        ga('send','event','a','preview');
-  });
-</script>
+    <script src="/google-analytics.js"></script>
   {% endblock -%}
 </html>

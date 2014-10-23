@@ -71,7 +71,7 @@
                   <div class="row">
                     <div class="span2 itemCount">
                       <a href="{% url_for 'search' %}"
-                         data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='dataset' %}">
+                         data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
                         0
                       </a>
                     </div>
@@ -87,7 +87,7 @@
                 <div class="row">
                   <div class="span2 itemCount">
                     <a href="{% url_for 'group_index' %}"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='country' %}">
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
                       0
                     </a>
                   </div>
@@ -103,7 +103,7 @@
                 <div class="row">
                   <div class="span2 itemCount">
                     <a href="#"
-                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.count:CountController', action='source' %}">
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
                       0
                     </a>
                   </div>
@@ -137,7 +137,7 @@
 {% endblock %}
 
 {% block home_search %}
-  <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='metadata_modified desc' %}">
+  <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
     <div class="input-append">
       <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}">
       <button type="submit" class="button">
@@ -200,7 +200,7 @@
 {% block scripts %}
    {{ super() }}
    <link rel="stylesheet" href="/homepage.css">
-   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
    {% resource 'hdx_theme/count.js' %}
 {% endblock %}
 

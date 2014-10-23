@@ -103,6 +103,12 @@ a.my-link-disabled{
     text-decoration: none;
 }
 
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+}
+
 .activity .item p {
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;
@@ -136,6 +142,10 @@ a.my-link-disabled{
 
 li:nth-child(odd) > div.dsb-activity-item  {
 	background-color: #eeeeee;
+}
+
+.module:last-child {
+    margin-bottom: 0px;
 }
 
 /* END Dashboard specific Style*/

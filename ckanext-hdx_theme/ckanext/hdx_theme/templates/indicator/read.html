@@ -1,0 +1,73 @@
+{% extends "page-new.html" %}
+
+{% set pkg = c.pkg_dict or pkg_dict %}
+
+{% block pre_primary %}
+  {% snippet "indicator/snippets/read_pre_primary.html", pkg = pkg %}
+{% endblock %}
+
+{% block secondary %}
+{% if c.pkg.related %}
+<div class="border-right-grey">
+  <h2 class="uppercase">{{_('Gallery')}}</h2>
+  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg %}
+
+</div>
+{% endif %}
+  <div class="border-right-grey">
+        <h2 class="uppercase">{{_('Activity')}}</h2>
+        {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
+     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     <br>
+    {% if h.follow_status('dataset', pkg.name) %}
+      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> 
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block primary %}
+  <div class="mL30">
+    {% block package_notes %}
+        {% if c.pkg_notes_formatted %}
+          <div class="notes embedded-content">
+            {{ c.pkg_notes_formatted }}
+          </div>
+        {% endif %}
+    {% endblock %}
+  </div>
+  <div class="mL30">
+      {% block package_resources %}
+        {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+      {% endblock %}
+  </div>
+  <div class="mL30">
+    {% block indicator_additional_info %}
+	    {% snippet "indicator/snippets/additional_info.html", pkg_dict=pkg %}
+  	{% endblock %}
+  	
+  </div>
+  
+{% endblock %}
+
+{% block post_primary %}
+  <div class="row paddingRowHack whiteBackground">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls %}
+    </div>
+  </div>
+{% endblock %}
+
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/jquery.more' %}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/hdx_autocomplete.js' %}
+{% endblock %}

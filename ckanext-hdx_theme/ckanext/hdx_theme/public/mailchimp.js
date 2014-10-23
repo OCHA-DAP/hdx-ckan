@@ -29,7 +29,7 @@ function mce_preload_check(){
     }
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = 'http://downloads.mailchimp.com/js/jquery.form-n-validate.js';
+    script.src = '/scripts/jquery.form-n-validate.js';
     head.appendChild(script);
     try {
         var validatorLoaded=jQuery("#fake-form").validate({});
@@ -44,7 +44,7 @@ function mce_init_form(){
       var options = { errorClass: 'mce_inline_error', errorElement: 'div', onkeyup: function(){}, onfocusout:function(){}, onblur:function(){}  };
       var mce_validator = $("#mc-embedded-subscribe-form").validate(options);
       $("#mc-embedded-subscribe-form").unbind('submit');//remove the validator so we can get into beforeSubmit on the ajaxform, which then calls the validator
-      options = { url: 'http://unocha.us2.list-manage.com/subscribe/post-json?u=83487eb1105d72ff2427e4bd7&id=6fd988326c&c=?', type: 'GET', dataType: 'json', contentType: "application/json; charset=utf-8",
+      options = { url: '//unocha.us2.list-manage.com/subscribe/post-json?u=83487eb1105d72ff2427e4bd7&id=6fd988326c&c=?', type: 'GET', dataType: 'json', contentType: "application/json; charset=utf-8",
                     beforeSubmit: function(){
                         $('#mce_tmp_error_msg').remove();
                         $('.datefield','#mc_embed_signup').each(

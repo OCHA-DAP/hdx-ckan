@@ -1,0 +1,53 @@
+{% extends "indicator/read.html" %}
+
+{% block pre_primary %}
+<div class="row paddingRowHack whiteBackground">
+
+
+
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div class="row">
+        <div class="col-xs-12 mTop35">
+          <h1 class="itemTitle">
+            {{ pkg.title or pkg.name }}
+             {% if pkg.state.startswith('draft') %}
+              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+            {% elif pkg.state.startswith('deleted') %}
+              <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+            {% endif %}
+          </h1>
+        </div>
+      </div>
+      <div class="row mBottom15">
+            <div class="col-xs-9">
+              <span class="pull-left">
+                {% if c.pkg_notes_formatted %}
+		          <div class="notes embedded-content dataset-notes">
+		            {{ c.pkg_notes_formatted }}
+		          </div>
+		        {% endif %}
+              </span>
+           </div>
+           <div class="col-xs-3">
+		      <div class="indicator-actions followButtonContainer pull-right">
+		      	{% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False %}
+		      </div>
+           </div>
+          </div>
+      
+    </div>
+    <div class="col-xs-12">
+      <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block package_notes %}
+{% endblock %}
+
+{% block package_resources %}
+	<div class="dataset-res-wraper">
+	{{ super() }}
+	</div>
+{% endblock %}

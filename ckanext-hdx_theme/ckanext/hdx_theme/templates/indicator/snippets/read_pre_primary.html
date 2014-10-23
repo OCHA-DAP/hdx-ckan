@@ -1,0 +1,84 @@
+  <div class="row paddingRowHack whiteBackground">
+
+
+
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div class="row">
+        <div class="col-xs-12 mTop35">
+          <h1 class="itemTitle">
+            {{ pkg.title or pkg.name }}
+             {% if pkg.state.startswith('draft') %}
+              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+            {% elif pkg.state.startswith('deleted') %}
+              <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+            {% endif %}
+          </h1>
+        </div>
+      </div>
+      <div class="row mTop20">
+        <div id="optionsContent" class="col-xs-3 hidden">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="pull-left">
+                <label for="field-order-by" class="uppercase">{{ _('Options') }}</label>
+                <div class="dropdown orderDropdown">
+                  <button id="location-dd" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+                    <span class="dropdown-toggle-text">
+                      Location
+                    </span>
+                    <b class="caret"></b>
+                  </button>
+                  <ul id="optionDropDown" class="dropdown-menu dropdown-inverse" role="menu" aria-labelledby="location-dd" style="max-height: 241px; overflow-y: auto;">
+                    <li><a tabindex="-1" val="sidePanelCountries">{{ _("Location") }}</a> </li>
+                    <li><a tabindex="-1" val="sidePanelSortOrder">{{ _("Sort order") }}</a> </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="pull-right">
+                <i class="glyphicon glyphicon-remove" onclick="$('#showOptions').click(); return false;"></i>
+              </div>
+            </div>
+          </div>
+          <div class="row graphOptionsRow">
+            <div class="col-xs-12 paddingLeftHack graphOptions">
+              <ul id="sidePanelSortOrder" style="display: none;">
+              </ul>
+              <ul id="sidePanelCountries">
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div id="graphContent" class="col-xs-12">
+          <div class="row mBottom15">
+            <div class="col-xs-12">
+              <span class="pull-left">
+                <select id="periodDropDown" data-module="hdx_autocomplete" style="width:160px;" class="pull-left">
+                  <option value="LATEST_YEAR_BY_COUNTRY">{{ _("Latest for all") }}</option>
+                </select>
+                <a id="showOptions" href="#" onclick="">{{ _("Select countries") }}</a>
+              </span>
+              
+		      <div class="indicator-actions followButtonContainer pull-right">
+		      	{% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True %}
+		      </div>
+      
+            </div>
+          </div>
+
+          <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ pkg.title }}"
+               data-module-name="{{ pkg.title }}" data-module-subchart="true"
+               data-module-continuous_location="continuous_browsing_locations"
+               data-module-side_panel="showOptions"
+               data-module-side_panel_locations="sidePanelCountries"
+               data-module-side_panel_sortorder="sidePanelSortOrder"
+               data-module-side_panel_years="periodDropDown"
+              >
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
+      </div>
+    </div>
+  </div>

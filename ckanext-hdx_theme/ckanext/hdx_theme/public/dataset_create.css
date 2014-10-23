@@ -176,26 +176,6 @@
         background-color: #eeeeee;
     }
 
-    .pill {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        color: #ffffff;
-        text-transform: uppercase;
-
-        padding: 5px 15px;
-        margin-right: 20px;
-        margin-bottom: 20px;
-
-        background-color: #888888;
-        border-radius: 0;
-    }
-    .pill .icon-remove {
-        cursor: pointer;
-        margin-left: 20px;
-
-    }
-
     #select_country{
         margin-bottom: 20px;
     }

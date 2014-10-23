@@ -1,0 +1,18 @@
+{% extends "search/snippets/search_form.html" %}
+
+{% block search_title %}
+	  <h2 class="mTop35">{{ _('All Data') }}</h2>
+{% endblock %}
+
+{% block content_primary_nav %}
+	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
+		<a href="{{ h.url_for('simple_search', q=query) }}">{{_('All')}}</a>
+	</li>
+	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
+		<a href="{{ h.url_for('simple_search', q=query, ext_indicator=1) }}">{{_('Indicators')}}</a>
+	</li>
+	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
+		<a href="{{ h.url_for('simple_search', q=query, ext_indicator=0) }}">{{_('Datasets')}}</a>
+	</li>
+  
+{% endblock %}

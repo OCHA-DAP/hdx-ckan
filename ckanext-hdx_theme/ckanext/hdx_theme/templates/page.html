@@ -2,6 +2,12 @@
 
 {%- block page -%}
 
+  {% block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/css/header.css' %}
+    {% resource 'hdx_theme/css/header-bs-2.3.css' %}
+  {% endblock %}
+
   {#
   Override the header on a page by page basis by extending this block. If
   making sitewide header changes it is preferable to override the header.html
@@ -33,9 +39,11 @@
                       </div>
                     </div>
                     <div class="pull-right">
-                      <form class="form-search" method="get" action="{% url_for controller='package', action='search', sort='metadata_modified desc' %}">
+                      <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
                         <div class="input-append">
-                          <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all datasets') }}">
+                          {% block  global_dataset_input_search%}
+                          	<input type="text" class="searchInput" name="q" value="" autocomplete="off" placeholder="{{ _('Search all data') }}">
+                          {% endblock %}
                           <button type="submit" class="button">
                             <i class="icon-search"></i>
                           </button>
@@ -172,9 +180,9 @@
     {% if g.tracking_enabled %}
         {% resource 'base/tracking.js' %}
     {% endif %}
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
     <script src="/mailchimp.js"></script>
     {{ super() }}
 {% endblock -%}

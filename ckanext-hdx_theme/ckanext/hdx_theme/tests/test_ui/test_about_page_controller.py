@@ -6,6 +6,11 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
 class TestAboutPageController(hdx_test_base.HdxBaseTest):
+    
+    #loads missing plugins
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin('hdx_users hdx_theme')
 
     def test_resulting_page(self):
         testsysadmin = model.User.by_name('testsysadmin')

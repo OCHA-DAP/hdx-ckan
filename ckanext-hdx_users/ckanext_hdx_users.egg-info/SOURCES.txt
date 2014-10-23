@@ -1,0 +1,17 @@
+setup.py
+ckanext/__init__.py
+ckanext/hdx_users/__init__.py
+ckanext/hdx_users/plugin.py
+ckanext/hdx_users/actions/__init__.py
+ckanext/hdx_users/actions/misc.py
+ckanext/hdx_users/controllers/__init__.py
+ckanext/hdx_users/controllers/dashboard_controller.py
+ckanext/hdx_users/controllers/login_controller.py
+ckanext/hdx_users/controllers/registration_controller.py
+ckanext_hdx_users.egg-info/PKG-INFO
+ckanext_hdx_users.egg-info/SOURCES.txt
+ckanext_hdx_users.egg-info/dependency_links.txt
+ckanext_hdx_users.egg-info/entry_points.txt
+ckanext_hdx_users.egg-info/namespace_packages.txt
+ckanext_hdx_users.egg-info/not-zip-safe
+ckanext_hdx_users.egg-info/top_level.txt

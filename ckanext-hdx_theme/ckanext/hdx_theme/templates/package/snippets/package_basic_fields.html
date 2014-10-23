@@ -1,7 +1,45 @@
+{% set username = request.environ.get('REMOTE_USER') %}
+{% if data.package_creator %}
+  {% set package_creator = data.package_creator %}
+{% else %}
+  {% set package_creator = username %}
+{% endif %}
+
+{% if data.indicator %}
+  {% set indicator = data.indicator %}
+{% else %}
+  {% set indicator = 0 %}
+{% endif %}
+
+{% set onepage = onepage or 0 %}
+
+{% if data.title %}
+  {% set new_dataset = False %}
+{% else %}
+  {% set new_dataset = True %}
+{% endif %}
+
+{% if new_dataset %}
+  {% set form_field_wrapper_classes = 'dataset-form-field-wrapper field-with-info' %}
+{% endif %}
+
 {% import 'macros/form.html' as form %}
 
 {% block package_basic_fields_title %}
-{{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required'], attrs={'data-module': 'slug-preview-target'}) }}
+    <div>
+<div class="{{ form_field_wrapper_classes }} field-with-info">
+{{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required', 'halfField', 'span3'], attrs={'data-module': 'slug-preview-target'}) }}
+    {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full', 'control-large','dataset-required', 'halfField', 'span3']) }}
+</div>
+  {% if new_dataset %}
+    <div class="dataset-form-info-field info-field">
+    {% trans %}
+    Who actually collected the data ?
+    {% endtrans %}
+  </div>
+{% endif %}
+<div style="clear:both;"/>
+      </div>
 {% endblock %}
 
 {% block package_basic_fields_url %}
@@ -13,47 +51,104 @@
 {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
 {% endblock %}
 
-{% block package_basic_fields_custom %}
-{% endblock %}
 
 {% block package_basic_fields_description %}
-{{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['dataset-required']) }}
+  <div>
+    <div class="{{ form_field_wrapper_classes }}">
+      {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['dataset-required']) }}
+    </div>
+    {% if new_dataset %}
+      <div class="dataset-form-info-field dataset-form-info-field-height info-field">
+        {% trans %}
+        What type of data is included in this dataset ? For example, "This data is about an assessment in x region"
+        {% endtrans %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block package_basic_fields_countries %}
+  {% if inheritied_form_style == 'edit' %}
+    {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}
+    <div id="select_groups_hidden" style="visibility:hidden;position:absolute;"></div>
+  {% endif %}
+  {% if inheritied_form_style != 'edit' %}
+    <div id="select_groups_hidden" style="visibility:hidden;position:absolute;">
+      {% if data.groups %}
+        {% for group in data.groups %}
+          <input id="field-group-{{group.id}}-input" type="checkbox" name="groups__{{loop.index0}}__id" value="{{group.id}}" checked="checked" class="group_checked"/>
+        {% endfor %}
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block package_basic_fields_tags %}
-{% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-{{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+  {# Switched this with metadata field Source #}
 {% endblock %}
 
+{# if onepage == 1 #}
+{% block form_actions %}
+{% endblock %}
+{# endif #}
+
 {% block package_basic_fields_license %}
-<div class="control-group dataset-required">
-  {% set error = errors.license_id %}
-  <label class="control-label" for="field-license">{{ _("License") }}</label>
-  <div class="controls">
-    <select id="field-license" name="license_id" data-module="autocomplete">
-      {% for license_desc, license_id in licenses  %}
-      	{% if license_id %}
-        <option value="{{ license_id }}" {% if data.get('license_id', 'notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
-        {% endif %}
-      {% endfor %}
-    </select>
-    {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
-    <span class="info-block info-inline">
-      <i class="icon-info-sign"></i>
-      {% trans %}
-        License definitions and additional information can be found
-        at <a href="http://opendefinition.org/licenses/">opendefinition.org</a>
-      {% endtrans %}
-    </span>
+<div>
+  <div class="{{ form_field_wrapper_classes }}">
+    <div class="control-group dataset-required ">
+      {% set error = errors.license_id %}
+      <label class="control-label" for="field-license">{{ _("License") }}</label>
+      <div class="controls" id="mx-dataset-license">
+        <select id="field-license" name="license_id" data-module="autocomplete">
+          {% for license_desc, license_id in licenses  %}
+            {% if license_id %}
+            <option value="{{ license_id }}" {% if data.get('license_id', 'notspecified') == license_id %}selected="selected"{% endif %}>{{ license_desc }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+        {% if error %}<span class="error-block">{{ error }}</span>{% endif %}
+
+      </div>
+    </div>
+    <div id="licenses-other-define" {% if data.license_id != 'hdx-other' %}style="display:none;"{% endif %}>
+      {{ form.markdown('license_other', id='field-license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other) }}
+    </div>
   </div>
+  {% if new_dataset %}
+    <div class="dataset-form-info-field info-field">
+      {% trans %}
+      What are the Terms of Use for this dataset ? How can others re-use it ?
+      {% endtrans %}
+    </div>
+  {% endif %}
 </div>
 {% endblock %}
 
+
+{% block package_basic_fields_custom %}
+  {% block package_basic_fields_custom_creator %}
+  <!--<div class="control-group dataset-required">
+        <label class="control-label" for="field-package-creator">{{ _('Creator') }} </label>
+        <div class="controls">-->
+      <input type="hidden" value="{{ package_creator }}" name="package_creator" id="field-package-creator"/>
+      <input type="hidden" value="{{ indicator }}" name="indicator" id="field-indicator"/>
+    <!-- </div> 
+  </div> -->
+  {% endblock %}
+
+  {% block basic_fields_source %}
+  {% endblock %}
+
+{% endblock %}
+
+
 {% block package_basic_fields_org %}
 {# if we have a default group then this wants remembering #}
+{#
 {% if data.group_id %}
   <input type="hidden" name="groups__0__id" value="{{ data.group_id }}" />
 {% endif %}
+ #}
 
 {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
 {% set dataset_has_organization = data.owner_org or data.group_id %}
@@ -70,42 +165,55 @@
 {% endif %}
 
 {% if show_organizations_selector %}
-  {% set existing_org = data.owner_org %}
-<div class="control-group dataset-required">
-  <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
-  <div class="controls">
-    <select id="field-organizations" name="owner_org" data-module="autocomplete">
-      <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('No organization') }}</option>
-      {% for organization in organizations_available %}
-        {# get out first org from users list only if there is not an existing org #}
-        {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and organization.id == organizations_available[0].id) %}
-        <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.title }}</option>
-      {% endfor %}
-    </select>
-  </div>
-</div>
+    {% set existing_org = data.owner_org or data.organization_id %}
+    <div class="{{ form_field_wrapper_classes }}">
+      <div class="control-group dataset-required">
+        <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
+        <div class="controls" id="mx-dataset-organisation">
+          <select id="field-organizations" name="owner_org" data-module="autocomplete">
+            {# <option value="" {% if not selected_org and data.id %} selected="selected" {% endif %}>{{ _('No organization') }}</option> s#}
+            {% for organization in organizations_available %}
+              {# get out first org from users list only if there is not an existing org #}
+              {% set selected_org = (existing_org and existing_org == organization.id) or (not existing_org and not data.id and organization.id == organizations_available[0].id) %}
+              <option value="{{ organization.id }}" {% if selected_org %} selected="selected" {% endif %}>{{ organization.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+    </div>
+    {% if new_dataset %}
+      <div class="dataset-form-info-field info-field">
+        {% trans %}
+        Which organisation is contributing the data ? If the organisation is not listed, you need to
+        {% endtrans %}
+        <a href="{% url_for controller='organization', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}">
+          {% trans %}create a new organisation{% endtrans %}
+        </a>.
+      </div>
+    {% endif %}
 {% endif %}
 
 {% if show_visibility_selector %}
-  {% block package_metadata_fields_visibility %}
-    <div class="control-group dataset-required">
-      <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
-      <div class="controls">
-        <select id="field-private" name="private">
-          {% for option in [(true, _('Private')), (false, _('Public'))] %}
-          <option value="{{ option[0] }}" {% if option[0] == data.private %}selected="selected"{% endif %}>{{ option[1] }}</option>
-          {% endfor %}
-        </select>
+    {% block package_metadata_fields_visibility %}
+      <div class="{{ form_field_wrapper_classes }}">
+        <div class="control-group dataset-required">
+          <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
+          <div class="controls" id="mx-dataset-visibility">
+            <select id="field-private" name="private" class="simple-dataset-control" data-module="autocomplete">
+              {% for option in [(true, _('Private')), (false, _('Public'))] %}
+              <option value="{{ option[0] }}" {% if option[0] == data.private %}selected="selected"{% endif %}>{{ option[1] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
-  {% endblock %}
+    {% endblock %}
 {% endif %}
 
 {% if show_organizations_selector and show_visibility_selector %}
-  </div>
+    </div>
 {% endif %}
 
 {% endblock %}
 
-{% block package_basic_fields_countries %}
-{% endblock %}
+
