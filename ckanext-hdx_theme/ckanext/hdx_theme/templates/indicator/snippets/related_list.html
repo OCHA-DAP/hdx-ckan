@@ -20,7 +20,7 @@
       {% snippet "related/snippets/related_list.html", related_items=pkg.related, pkg_id=pkg.name %}
        {% if user %}
        <br>
-      <span class="more">{% link_for _('Add another.'), controller='related', action='new', id=pkg.name %}</span>
+      <span class="more">{% link_for _('ADD MORE'), controller='related', action='new', id=pkg.name, class_='btn btn-primary' %}</span>
       {% endif %}
     {% else %}
     There are no gallery items for this {% if pkg.indicator == 1%}indicator{% else %}dataset{% endif %}  {% if user %}
