@@ -58,9 +58,7 @@
                 <a id="showOptions" href="#" onclick="">{{ _("Select countries") }}</a>
               </span>
               
-		      <div class="indicator-actions followButtonContainer pull-right">
-		      	{% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True %}
-		      </div>
+		     {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True, classes='indicator-actions followButtonContainer pull-right' %}
       
             </div>
           </div>
