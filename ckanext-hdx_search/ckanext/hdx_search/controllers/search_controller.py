@@ -91,7 +91,7 @@ def count_types(context, data_dict, tab):
         indicator = [result['results'][0]]
     else:
         indicator = None
-        
+
     facets = result['facets']
     search_facets = result['search_facets']  
     return (dataset_no, indicator_no, indicator, facets, search_facets)
@@ -374,6 +374,7 @@ class HDXSearchController(PackageController):
             return self._search_url(params, package_type)
 
         c.search_url_params = urlencode(_encode_params(params_nopage))
+        self._set_other_links()
 
         try:
             c.fields = []
@@ -554,3 +555,27 @@ class HDXSearchController(PackageController):
                                       controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
 
         c.remove_field = remove_field
+    
+    def _get_named_route(self):
+        return 'search'
+    
+    def _set_other_links(self):
+        named_route = self._get_named_route()
+        params = { k:v for k, v in request.params.items() 
+                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format'] }
+        
+        c.other_links = {}
+        c.other_links['all'] = h.url_for(named_route, **params)
+        params_copy = params.copy()
+        params_copy['ext_indicator'] = 1
+        c.other_links['indicators'] = h.url_for(named_route, **params_copy)
+        params_copy['ext_indicator'] = 0
+        c.other_links['datasets'] = h.url_for(named_route, **params_copy)
+
+        params_copy = params.copy()
+        params_copy['ext_feature'] = 1
+        c.other_links['features'] = h.url_for(named_route, **params_copy)
+
+        c.other_links['params'] = params
+        c.other_links['params_nosort'] = { k:v for k,v in params.items() if k != 'sort' }
+
