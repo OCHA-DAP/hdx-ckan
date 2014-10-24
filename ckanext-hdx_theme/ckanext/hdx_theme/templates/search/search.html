@@ -159,8 +159,8 @@
 {% endblock %}
 
 {% block  global_dataset_input_search%}
-	{% if c.other_links and c.other_links.params %}
-  		{% for key,value in  c.other_links.params.items() %}
+	{% if c.other_links and c.other_links.params_noq %}
+  		{% for key,value in  c.other_links.params_noq.items() %}
   			<input type="hidden" name="{{ key }}" value="{{ value }}" />
   		{% endfor %}
   	{% endif %}

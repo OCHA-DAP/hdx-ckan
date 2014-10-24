@@ -87,8 +87,8 @@
           {% if is_dataset %}
           <input id="preserve-search" type="hidden" name="q" />
           {% endif %}
-          {% if other_links and other_links.params_nosort %}
-		  	{% for key,value in  other_links.params_nosort.items() %}
+          {% if other_links and other_links.params_nosort_noq %}
+		  	{% for key,value in  other_links.params_nosort_noq.items() %}
 		  		<input type="hidden" name="{{ key }}" value="{{ value }}" />
 		  	{% endfor %}
 		  {% endif %}

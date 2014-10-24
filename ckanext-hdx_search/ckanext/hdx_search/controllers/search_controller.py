@@ -576,6 +576,9 @@ class HDXSearchController(PackageController):
         params_copy['ext_feature'] = 1
         c.other_links['features'] = h.url_for(named_route, **params_copy)
 
-        c.other_links['params'] = params
-        c.other_links['params_nosort'] = { k:v for k,v in params.items() if k != 'sort' }
+#         c.other_links['params'] = params
+        c.other_links['params_noq'] = { k:v for k,v in params.items() 
+                                              if k != 'q' }
+        c.other_links['params_nosort_noq'] = { k:v for k,v in params.items() 
+                                              if k not in ['sort', 'q'] }
 
