@@ -38,3 +38,6 @@ class HDXSimpleSearchController(search_controller.HDXSearchController):
                                       controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search')
 
         c.remove_field = remove_field
+    
+    def _get_named_route(self):
+        return 'simple_search'
