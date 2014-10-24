@@ -29,9 +29,10 @@
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link">
 			{% for grp in pkg_dict.groups %}
-				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}" class="pR7">
+				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}" class="pL5">
 	            	{{ grp['title'] or grp['name'] }}
 	            </a>
+	            {% if not loop.last %},{% endif %}
   			{% endfor %}
 		</td>
     </tr>
