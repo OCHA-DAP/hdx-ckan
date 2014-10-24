@@ -17,8 +17,7 @@
             {% block updated %}
               {% set updated_time = package.metadata_modified or package.metadata_created%}
               {% set f_updated_time = h.render_datetime(updated_time) %}
-              {% set rev_id = h.get_last_revision_package(package.id) %}
-              {% set last_user = h.get_last_modifier_user(rev_id) %}
+              {% set last_user = h.get_last_modifier_user(p_id=package.id) %}
 
               {% if package.organization %}
                 <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
