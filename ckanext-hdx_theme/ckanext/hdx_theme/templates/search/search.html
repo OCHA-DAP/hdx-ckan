@@ -73,7 +73,7 @@
 	            <span class="mL15 list-header-title">
 	              Indicators [{{c.indicator_counts}}]
 	            </span>
-	            {% if c.tab=='all' %}
+	            {% if c.tab=='all' and c.indicator %}
 		            <span class="mL15 list-header-showall">
 		              <a href="{{ c.other_links.indicators }}">Show all indicators</a>
 		            </span>
@@ -94,7 +94,7 @@
 	          <span class="mL15 list-header-title">
 	            Feature Pages
 	          </span>
-	          {% if c.tab=='all' %}
+	          {% if c.tab=='all' and c.features %}
 		          <span class="mL15 list-header-showall">
 		            <a href="{{ c.other_links.features }}">{{ _("Show all feature pages") }}</a>
 		          </span>
@@ -113,7 +113,7 @@
 	          <span class="mL15 list-header-title">
 	            Datasets [{{c.dataset_counts}}]
 	          </span>
-	          {% if c.tab=='all' %}
+	          {% if c.tab=='all' and c.page.items %}
 		          <span class="mL15 list-header-showall">
 		            <a href="{{ c.other_links.datasets }}">Show all datasets</a>
 		          </span>
