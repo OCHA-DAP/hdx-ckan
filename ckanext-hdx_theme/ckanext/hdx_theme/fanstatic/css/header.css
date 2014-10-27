@@ -256,6 +256,12 @@
     }
 /* END Header */
 
+/* Default link style */
+    a, a:hover, a:focus {
+        color: #007ce0;
+    }
+/* END Default link style */
+
 /* HDX Version display */
     .logo #hdxVersion{
         color: #888888;
@@ -1344,6 +1350,8 @@ a, a:hover, a:focus{
         /*fill: #cccccc !important;*/
     }
 /* END Style indicator graph */
+
+
 
 /* Style Show-more */
 /span.is-more a.more-link, .more-link {
