@@ -384,3 +384,30 @@ def hdx_follow_button(obj_type, obj_id, **kw):
                          obj_type=obj_type,
                          params=kw)
     return ''
+
+def hdx_add_url_param(alternative_url=None, controller=None, action=None,
+                  extras=None, new_params=None, unwanted_keys = []):
+    '''
+    MODIFIED CKAN HELPER THAT ALLOWS REMOVING SOME PARAMS
+    
+    Adds extra parameters to existing ones
+
+    controller action & extras (dict) are used to create the base url
+    via url_for(controller=controller, action=action, **extras)
+    controller & action default to the current ones
+
+    This can be overriden providing an alternative_url, which will be used
+    instead.
+    '''
+
+    params_nopage = [(k, v) for k, v in request.params.items() 
+                     if k != 'page' and k not in unwanted_keys]
+    params = set(params_nopage)
+    if new_params:
+        params |= set(new_params.items())
+    if alternative_url:
+        return h._url_with_params(alternative_url, params)
+    return h._create_url_with_params(params=params, controller=controller,
+                                   action=action, extras=extras)
+    
+    

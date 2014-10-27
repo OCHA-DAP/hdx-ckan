@@ -308,6 +308,8 @@ class HDXSearchController(PackageController):
     def search(self):
         from ckan.lib.search import SearchError
 
+        params_to_skip = ['_show_filters']
+
         package_type = self._guess_package_type()
 
         if package_type == 'search':
@@ -330,7 +332,7 @@ class HDXSearchController(PackageController):
 
         # most search operations should reset the page counter:
         params_nopage = [(k, v) for k, v in request.params.items()
-                         if k != 'page']
+                         if k != 'page' and k not in params_to_skip]
 
         def drill_down_url(alternative_url=None, **by):
             return h.add_url_param(alternative_url=alternative_url,
@@ -544,7 +546,8 @@ class HDXSearchController(PackageController):
         return url_with_params(url, params)
     
     def _set_filters_are_selected_flag(self):
-        if len(c.fields_grouped) > 0 :
+        if len(c.fields_grouped) > 0 \
+            and ( '_show_filters' not in request.params or request.params['_show_filters'] != 'false') :
             c.filters_are_selected = True
         else:
             c.filters_are_selected = False
