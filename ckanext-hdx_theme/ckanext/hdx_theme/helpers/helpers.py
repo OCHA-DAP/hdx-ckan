@@ -63,7 +63,7 @@ def get_last_modifier_user(g_id=None, p_id=None, get_timestamp=False):
     if p_id is not None:
         activity_objects = model.activity.package_activity_list(
             p_id, limit=1, offset=0)
-    if activity_objects is not None:
+    if activity_objects:
         user = activity_objects[0].user_id
         t_stamp = activity_objects[0].timestamp
         if get_timestamp:
@@ -74,8 +74,8 @@ def get_last_modifier_user(g_id=None, p_id=None, get_timestamp=False):
     user = model.Session.query(model.User).filter(
         model.User.name == 'hdx').first()
     if get_timestamp:
-        return (model.User.get(user), datetime.datetime.now().isoformat())
-    return model.User.get(user)
+        return (user, datetime.datetime.now().isoformat())
+    return user
 
 
 def get_filtered_params_list(params):
