@@ -60,7 +60,9 @@
           'remove_field': c.remove_field }
         %}
         {% block search_form_snippet scoped %}
-        	{% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name %}
+        	{% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, 
+        			count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, 
+        			placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name, other_links=c.other_links %}
         {% endblock %}
       {% endblock %}
 
@@ -71,9 +73,9 @@
 	            <span class="mL15 list-header-title">
 	              Indicators [{{c.indicator_counts}}]
 	            </span>
-	            {% if c.tab=='all' %}
+	            {% if c.tab=='all' and c.indicator %}
 		            <span class="mL15 list-header-showall">
-		              <a href="{{ h.url_for('search', q=c.q, ext_indicator=1) }}">Show all indicators</a>
+		              <a href="{{ c.other_links.indicators }}">Show all indicators</a>
 		            </span>
 	            {% endif %}
 	            <span class="pull-right list-header-actions">
@@ -92,9 +94,9 @@
 	          <span class="mL15 list-header-title">
 	            Feature Pages
 	          </span>
-	          {% if c.tab=='all' %}
+	          {% if c.tab=='all' and c.features %}
 		          <span class="mL15 list-header-showall">
-		            <a href="{{ h.url_for('search', q=c.q, ext_feature=1) }}">{{ _("Show all feature pages") }}</a>
+		            <a href="{{ c.other_links.features }}">{{ _("Show all feature pages") }}</a>
 		          </span>
 		      {% endif %}
 	          <span class="pull-right list-header-actions">
@@ -111,9 +113,9 @@
 	          <span class="mL15 list-header-title">
 	            Datasets [{{c.dataset_counts}}]
 	          </span>
-	          {% if c.tab=='all' %}
+	          {% if c.tab=='all' and c.page.items %}
 		          <span class="mL15 list-header-showall">
-		            <a href="{{ h.url_for(controller='package', action='search', q=c.q, ext_indicator=0) }}">Show all datasets</a>
+		            <a href="{{ c.other_links.datasets }}">Show all datasets</a>
 		          </span>
 		      {% endif %}
 	          <span class="pull-right list-header-actions">
@@ -146,6 +148,9 @@
   {% resource 'hdx_theme/filter' %}
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.more' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  
   <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}
 
@@ -154,5 +159,10 @@
 {% endblock %}
 
 {% block  global_dataset_input_search%}
+	{% if c.other_links and c.other_links.params_noq %}
+  		{% for key,value in  c.other_links.params_noq.items() %}
+  			<input type="hidden" name="{{ key }}" value="{{ value }}" />
+  		{% endfor %}
+  	{% endif %}
   <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all data') }}">
 {% endblock %}
