@@ -97,24 +97,24 @@ class TestMetadataFields(tests.WsgiAppCase):
         assert 'Missing value' in result['dataset_source'], 'The problem needs to be that the source info is missing'
 
 
-    def test_private_is_private(self):
-        try:
-            p.load('hdx_package')
-        except Exception as e:
-            log.warn('Module already loaded')
-            log.info(str(e))
+    # def test_private_is_private(self):
+    #     try:
+    #         p.load('hdx_package')
+    #     except Exception as e:
+    #         log.warn('Module already loaded')
+    #         log.info(str(e))
     
-        tester = model.User.by_name('tester')
-        tests.call_action_api(self.app, 'organization_create',
-                                        name='test_org_2',
-                                        apikey=tester.apikey)
+    #     tester = model.User.by_name('tester')
+    #     tests.call_action_api(self.app, 'organization_create',
+    #                                     name='test_org_2',
+    #                                     apikey=tester.apikey)
 
-        tests.call_action_api(self.app, 'package_create', name='test-dataset-private',
-                private=True, owner_org='test_org_2',package_creator='test-creator', dataset_source='test',
-                resources=[{'url':'text_upload_file.txt'}], apikey=tester.apikey, status=409)
-        ds = tests.call_action_api(self.app, 'package_show', id='test-dataset-private', apikey=tester.apikey, status=409)
-        r =  requests.get(ds['resources'][0]['url'])
-        assert r.text == 'Hello World'
+    #     tests.call_action_api(self.app, 'package_create', name='test-dataset-private',
+    #             private=True, owner_org='test_org_2',package_creator='test-creator', dataset_source='test',
+    #             resources=[{'url':'text_upload_file.txt'}], apikey=tester.apikey, status=409)
+    #     ds = tests.call_action_api(self.app, 'package_show', id='test-dataset-private', apikey=tester.apikey, status=409)
+    #     r =  requests.get(ds['resources'][0]['url'])
+    #     assert r.text == 'Hello World'
 
     def test_related_items_owner_status(self):
         #after edit of a related item the owner id is unchanged
