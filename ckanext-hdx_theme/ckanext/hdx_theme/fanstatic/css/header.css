@@ -1344,3 +1344,13 @@ a, a:hover, a:focus{
         /*fill: #cccccc !important;*/
     }
 /* END Style indicator graph */
+
+/* Style Show-more */
+/span.is-more a.more-link, .more-link {
+    background-color: transparent;
+    border: 0 none;
+    border-radius: 0;
+    margin-left: 0;
+    padding: 0;
+}
+/* END Style Show-more */
