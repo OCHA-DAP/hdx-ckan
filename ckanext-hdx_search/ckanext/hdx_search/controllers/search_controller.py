@@ -565,7 +565,7 @@ class HDXSearchController(PackageController):
     def _set_other_links(self):
         named_route = self._get_named_route()
         params = { k:v for k, v in request.params.items() 
-                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format'] }
+                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format', '_show_filters'] }
         
         c.other_links = {}
         c.other_links['all'] = h.url_for(named_route, **params)
@@ -581,7 +581,7 @@ class HDXSearchController(PackageController):
 
 #         c.other_links['params'] = params
         c.other_links['params_noq'] = { k:v for k,v in params.items() 
-                                              if k != 'q' }
+                                              if k not in ['q', '_show_filters'] }
         c.other_links['params_nosort_noq'] = { k:v for k,v in params.items() 
                                               if k not in ['sort', 'q'] }
 
