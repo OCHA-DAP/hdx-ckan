@@ -285,9 +285,13 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         var code = data[i]['locationCode'];
         var id = "sidePanelLocation" + i;
         var checked = "";
+        var fullname = name;
+        if (name.length > 28){
+          name = name.substring(0, 25) + "...";
+        }
         if (this.filteredLocations[code])
           checked = "checked";
-        locationContainer.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' " + checked + " type='checkbox'/><label for='" + id + "'>" + name + "</label></li>");
+        locationContainer.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' " + checked + " type='checkbox' /><label for='" + id + "' title='" + fullname + "'>" + name + "</label></li>");
         var element = $("#"+id);
         element.data("ckanModule", this);
       }
