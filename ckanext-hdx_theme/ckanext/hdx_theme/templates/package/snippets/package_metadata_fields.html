@@ -145,7 +145,7 @@
 
           {% set py_meth='' %}
           {% if data.methodology %}
-           {% set py_meth = h.markdown_extract_strip(data.methodology) %}
+           {% set py_meth = h.markdown_extract_strip(data.methodology, false) %}
           {% endif %}
           <script>
             var meth = "{{ py_meth }}";

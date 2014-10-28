@@ -308,6 +308,8 @@ class HDXSearchController(PackageController):
     def search(self):
         from ckan.lib.search import SearchError
 
+        params_to_skip = ['_show_filters']
+
         package_type = self._guess_package_type()
 
         if package_type == 'search':
@@ -330,7 +332,7 @@ class HDXSearchController(PackageController):
 
         # most search operations should reset the page counter:
         params_nopage = [(k, v) for k, v in request.params.items()
-                         if k != 'page']
+                         if k != 'page' and k not in params_to_skip]
 
         def drill_down_url(alternative_url=None, **by):
             return h.add_url_param(alternative_url=alternative_url,
@@ -544,7 +546,8 @@ class HDXSearchController(PackageController):
         return url_with_params(url, params)
     
     def _set_filters_are_selected_flag(self):
-        if len(c.fields_grouped) > 0 :
+        if len(c.fields_grouped) > 0 \
+            and ( '_show_filters' not in request.params or request.params['_show_filters'] != 'false') :
             c.filters_are_selected = True
         else:
             c.filters_are_selected = False
@@ -562,7 +565,7 @@ class HDXSearchController(PackageController):
     def _set_other_links(self):
         named_route = self._get_named_route()
         params = { k:v for k, v in request.params.items() 
-                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format'] }
+                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format', '_show_filters'] }
         
         c.other_links = {}
         c.other_links['all'] = h.url_for(named_route, **params)
@@ -578,7 +581,7 @@ class HDXSearchController(PackageController):
 
 #         c.other_links['params'] = params
         c.other_links['params_noq'] = { k:v for k,v in params.items() 
-                                              if k != 'q' }
+                                              if k not in ['q', '_show_filters'] }
         c.other_links['params_nosort_noq'] = { k:v for k,v in params.items() 
                                               if k not in ['sort', 'q'] }
 

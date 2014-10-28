@@ -66,7 +66,7 @@ within_tertiary
                 {% if not name_in_request %} facet-hidden{% endif %}">{{ _('Clear All') }}</a>
                 #}
           {% for item in items|sort(attribute='name') %}
-                {% set href = h.remove_url_param(name, item.name, extras=extras, alternative_url=alternative_url) if item.active else h.add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url) %}
+                {% set href = h.hdx_add_url_param(new_params={name: item.name}, extras=extras, alternative_url=alternative_url, unwanted_keys=['_show_filters']) %}
                 {% set label = label_function(item) if label_function else item.display_name %}
                 {% set label_truncated = h.truncate(label, 22) if not label_function else label %}
                 {% set count = count_label(item['count']) if count_label else ('%d' % item['count']) %}
