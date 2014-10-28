@@ -4,9 +4,6 @@
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
 
-{% if tab == 'features' %}
-  {% set count = h.feature_count(['vocab_Topics','groups','organizations'])%}
-{% endif %}
 {% set is_display_search_input = display_search_input if display_search_input==False else True %}
 {% set is_dataset = ('dataset' == type) %}
 
@@ -37,7 +34,8 @@
 
   {% block search_title %}
     {% if not no_title %}
-      <h2 class="mTop35">{% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}</h2>
+      <h2 class="mTop35">
+        {% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}</h2>
     {% endif %}
   {% endblock %}
 

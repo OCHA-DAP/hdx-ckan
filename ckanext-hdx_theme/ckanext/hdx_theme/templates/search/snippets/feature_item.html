@@ -31,8 +31,10 @@
 
 {% block actions %}
   <ul class="hdx-bs3">
-    <li>
-      <a href="">Follow</a>
-    </li>
+     {% block follow_link %}
+     {% if f_type == 'organization' or f_type == 'group' %}
+                    {{ h.hdx_follow_link('group', package.name, "") }}
+     {% endif %} 
+     {% endblock %}
   </ul>
 {% endblock %}
