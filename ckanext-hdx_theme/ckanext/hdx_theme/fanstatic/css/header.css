@@ -546,6 +546,9 @@
     .mBottom35{
         margin-bottom: 35px;
     }
+    .mBottom20{
+        margin-bottom: 20px;
+    }
     .mBottom65{
         margin-bottom: 65px;
     }
@@ -599,6 +602,12 @@
     }
     .pR45{
         padding-right: 45px;
+    }
+    .pR7{
+        padding-right: 7px;
+    }
+    .pL5{
+        padding-left: 5px;
     }
     .pL45{
         padding-left: 45px;
@@ -1335,3 +1344,13 @@ a, a:hover, a:focus{
         /*fill: #cccccc !important;*/
     }
 /* END Style indicator graph */
+
+/* Style Show-more */
+/span.is-more a.more-link, .more-link {
+    background-color: transparent;
+    border: 0 none;
+    border-radius: 0;
+    margin-left: 0;
+    padding: 0;
+}
+/* END Style Show-more */

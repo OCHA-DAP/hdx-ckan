@@ -70,7 +70,7 @@
                 <div class="span2">
                   <div class="row">
                     <div class="span2 itemCount">
-                      <a href="{% url_for 'search' %}"
+                      <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
                          data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
                         0
                       </a>

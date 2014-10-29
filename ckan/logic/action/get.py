@@ -347,7 +347,7 @@ def _group_or_org_list(context, data_dict, is_org=False):
         sort = 'packages desc'
 
     sort_info = _unpick_search(sort,
-                               allowed_fields=['name', 'packages'],
+                               allowed_fields=['name', 'packages', 'title'],
                                total=1)
 
     all_fields = data_dict.get('all_fields', None)

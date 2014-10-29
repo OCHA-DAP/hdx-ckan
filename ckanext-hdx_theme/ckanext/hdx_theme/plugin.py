@@ -19,7 +19,7 @@ import ckanext.hdx_theme.helpers.auth as auth
 
 
 # def _generate_license_list():
-#     package.Package._license_register = license.LicenseRegister() 
+#     package.Package._license_register = license.LicenseRegister()
 #     package.Package._license_register.licenses = [
 #                                                   license.License(hdx_licenses.LicenseCreativeCommonsIntergovernmentalOrgs()),
 #                                                   license.License(license.LicenseCreativeCommonsAttribution()),
@@ -37,29 +37,34 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IGroupController, inherit=True)
     plugins.implements(plugins.IMiddleware, inherit=True)
-    
+
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
         toolkit.add_resource('fanstatic', 'hdx_theme')
-        
 
     def before_map(self, map):
-        map.connect('home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
-        map.connect('/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
-        map.connect('/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
-        map.connect('/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
+        map.connect(
+            'home', '/', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='index')
+        map.connect(
+            '/count/dataset', controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset')
+        map.connect(
+            '/count/country', controller='ckanext.hdx_theme.helpers.count:CountController', action='country')
+        map.connect(
+            '/count/source', controller='ckanext.hdx_theme.helpers.count:CountController', action='source')
         #map.connect('/user/logged_in', controller='ckanext.hdx_theme.login:LoginController', action='logged_in')
         #map.connect('/contribute', controller='ckanext.hdx_theme.login:LoginController', action='contribute')
-        
-        map.connect('/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
-        map.connect('/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+
+        map.connect(
+            '/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
+        map.connect(
+            '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
         return map
-    
+
     def create(self, entity):
         caching.invalidate_group_caches()
 
@@ -74,7 +79,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
             'get_filtered_params_list': hdx_helpers.get_filtered_params_list,
             'get_last_revision_package': hdx_helpers.get_last_revision_package,
-            'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
             'get_last_revision_group': hdx_helpers.get_last_revision_group,
             'get_group_followers': hdx_helpers.get_group_followers,
             'get_group_members': hdx_helpers.get_group_members,
@@ -98,13 +102,15 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_follow_button': hdx_helpers.hdx_follow_button,
             'get_last_revision_timestamp_group': hdx_helpers.get_last_revision_timestamp_group,
             'feature_count': hdx_helpers.feature_count,
-            'follow_status': hdx_helpers.follow_status
+            'follow_status': hdx_helpers.follow_status,
+            'shorten': hdx_helpers.shorten,
+            'hdx_add_url_param': hdx_helpers.hdx_add_url_param
         }
-        
+
     def get_actions(self):
         from ckanext.hdx_theme.helpers import actions as hdx_actions
         return {
-            'organization_list_for_user':hdx_actions.organization_list_for_user, 
+            'organization_list_for_user': hdx_actions.organization_list_for_user,
             'cached_group_list': hdx_actions.cached_group_list,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
@@ -112,25 +118,22 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
-            'hdx_user_show' : hdx_actions.hdx_user_show,
+            'hdx_user_show': hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values,
             'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
-            
+
         }
+
     def get_auth_functions(self):
-         return {
-                 'hdx_basic_user_info': auth.hdx_basic_user_info,
-                 'group_member_create': auth.group_member_create,
-                 'hdx_send_new_org_request': auth.hdx_send_new_org_request,
-                 'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
-                 'hdx_send_request_membership': auth.hdx_send_request_membership
-                 }
-    
+        return {
+            'hdx_basic_user_info': auth.hdx_basic_user_info,
+            'group_member_create': auth.group_member_create,
+            'hdx_send_new_org_request': auth.hdx_send_new_org_request,
+            'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
+            'hdx_send_request_membership': auth.hdx_send_request_membership
+        }
+
     # def make_middleware(self, app, config):
     #     run_on_startup()
     #     return app
-
-        
-        
-

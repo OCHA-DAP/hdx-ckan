@@ -4,9 +4,6 @@
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
 
-{% if tab == 'features' %}
-  {% set count = h.feature_count(['vocab_Topics','groups','organizations'])%}
-{% endif %}
 {% set is_display_search_input = display_search_input if display_search_input==False else True %}
 {% set is_dataset = ('dataset' == type) %}
 
@@ -37,7 +34,8 @@
 
   {% block search_title %}
     {% if not no_title %}
-      <h2 class="mTop35">{% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}</h2>
+      <h2 class="mTop35">
+        {% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}</h2>
     {% endif %}
   {% endblock %}
 
@@ -87,6 +85,11 @@
           {% if is_dataset %}
           <input id="preserve-search" type="hidden" name="q" />
           {% endif %}
+          {% if other_links and other_links.params_nosort_noq %}
+		  	{% for key,value in  other_links.params_nosort_noq.items() %}
+		  		<input type="hidden" name="{{ key }}" value="{{ value }}" />
+		  	{% endfor %}
+		  {% endif %}
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}
@@ -120,16 +123,16 @@
       <ul class="nav nav-tabs">
         {% block content_primary_nav %}
         	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
-        		<a href="{{ h.url_for('search', q=query) }}">{{_('All')}}</a>
+        		<a href="{{ other_links.all }}">{{_('All')}}</a>
         	</li>
         	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
-        		<a href="{{ h.url_for('search', q=query, ext_indicator=1) }}">{{_('Indicators')}}</a>
+        		<a href="{{ other_links.indicators }}">{{_('Indicators')}}</a>
         	</li>
         	<li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'features' }}">
-        		<a href="{{ h.url_for('search', q=query, ext_feature=1) }}">{{_('Feature Pages')}}</a>
+        		<a href="{{ other_links.features }}">{{_('Feature Pages')}}</a>
         	</li>
         	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
-        		<a href="{{ h.url_for('search', q=query, ext_indicator=0) }}">{{_('Datasets')}}</a>
+        		<a href="{{ other_links.datasets }}">{{_('Datasets')}}</a>
         	</li>
           
         {% endblock %}
