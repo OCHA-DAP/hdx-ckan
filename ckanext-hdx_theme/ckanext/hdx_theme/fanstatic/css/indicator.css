@@ -8,8 +8,14 @@
 
 /* activity stream */
 
+    .wrapper-primary{
+        border-left: 1px solid #dddddd;
+        margin-left: -1px;
+        padding-bottom: 45px;
+    }
 	.wrapper-secondary{
-	        border-right: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+        padding-bottom: 45px;
 	}
 	
 	.activity {

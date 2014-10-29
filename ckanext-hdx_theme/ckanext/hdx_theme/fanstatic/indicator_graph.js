@@ -12,7 +12,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       if (!this.options.click_only)
         this._init();
       else
-        $(this.el).click(this._onClick);
+        $(this.el).click(this._onClickPreview);
     },
     c3_chart: null,
     filteredLocations: null,
@@ -35,7 +35,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
     _period_type_default: "LATEST_YEAR_BY_COUNTRY",
     _continuous_location_initialize: true,
     _chart_initialized: false,
-    _onClick: function(){
+    _onClickPreview: function(){
       /**
        * Reset Module state
        */
@@ -45,13 +45,38 @@ ckan.module('hdx-indicator-graph', function ($, _) {
        * Click Only callback
        */
       var container = this.ckanModule.options.container;
-      const cont = $("#" + container);
-      cont.slideUp(100);
-      cont.dequeue();
+      var cont = $("#" + container);
+      if (cont.length > 0){
+        $(cont.context.previewLink).trigger("click", $.proxy(this.ckanModule._onClickPreviewGenerate, this));
+      }
+      else{
+        $.proxy(this.ckanModule._onClickPreviewGenerate, this)();
+      }
+    },
+    _onClickPreviewGenerate: function (){
+      var container = this.ckanModule.options.container;
       var parent = $(this).parents(this.ckanModule.options.parent_selector);
-      cont.remove();
       parent.append('<div id="' + container + '" style="max-height: 320px; position: relative;">');
+      var cont = $("#" + container);
+      cont.context.previewLink = this;
       this.ckanModule._init();
+      $(this).text("Hide preview");
+      $(this).unbind("click");
+
+      $(this).click(this.ckanModule._onClickHidePreview);
+    },
+    _onClickHidePreview: function (context, callback){
+      $(this).text("Preview");
+      $(this).unbind("click");
+      $(this).click(this.ckanModule._onClickPreview);
+
+      var container = $("#"+this.ckanModule.options.container);
+      container.slideUp(300, function (){
+        container.remove();
+        if (callback){
+          callback();
+        }
+      });
     },
     _init: function(){
       /**
@@ -260,9 +285,13 @@ ckan.module('hdx-indicator-graph', function ($, _) {
         var code = data[i]['locationCode'];
         var id = "sidePanelLocation" + i;
         var checked = "";
+        var fullname = name;
+        if (name.length > 28){
+          name = name.substring(0, 25) + "...";
+        }
         if (this.filteredLocations[code])
           checked = "checked";
-        locationContainer.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' " + checked + " type='checkbox'/><label for='" + id + "'>" + name + "</label></li>");
+        locationContainer.append("<li><input id='" + id + "' value='" + code + "' class='locationCheckbox' " + checked + " type='checkbox' /><label for='" + id + "' title='" + fullname + "'>" + name + "</label></li>");
         var element = $("#"+id);
         element.data("ckanModule", this);
       }
