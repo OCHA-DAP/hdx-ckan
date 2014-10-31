@@ -73,10 +73,10 @@ def count_types(context, data_dict, tab):
                 'rows': 10,
                 'sort': 'extras_indicator desc, ' + sort,
             }
-    if tab == 'indicators':
-        search['extras'] = {'ext_indicator': 1}
-    elif tab == 'datasets':
-        search['extras'] = {'ext_indicator': 0}
+#     if tab == 'indicators':
+#         search['extras'] = {'ext_indicator': 1}
+#     elif tab == 'datasets':
+#         search['extras'] = {'ext_indicator': 0}
     result = get_action('package_search')(context, search)
     total = result['count']
     if '1' in result['facets']['extras_indicator']:
@@ -93,7 +93,7 @@ def count_types(context, data_dict, tab):
         indicator = None
 
     facets = result['facets']
-    search_facets = result['search_facets']  
+    search_facets = result['search_facets']
     return (dataset_no, indicator_no, indicator, facets, search_facets)
 
 
@@ -297,14 +297,6 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
 
 class HDXSearchController(PackageController):
 
-    def package_search(self):
-        # Redirect to search
-        params = request.params.items()
-        uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                        action='search')
-        url = url_with_params(uri, params)
-        redirect(url)
-
     def search(self):
         from ckan.lib.search import SearchError
 
@@ -461,41 +453,55 @@ class HDXSearchController(PackageController):
             self._decide_adding_dataset_criteria(data_dict)
 
             query = package_search(context, data_dict)
+            
             c.dataset_counts, c.indicator_counts, c.indicator, c.facets, c.search_facets = \
                 count_types( context, data_dict, c.tab)
             c.count = c.dataset_counts + c.indicator_counts
             if c.tab == "all":
                 c.features = isolate_features(
                     context, query['search_facets'], q, c.tab)
-
-            if c.tab == 'features':
-                c.features, c.count = isolate_features(
-                    context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
-
-            c.sort_by_selected = query['sort']
-
-            if c.tab == 'features':
-                c.page = h.Page(
-                    collection=c.features,
-                    page=page,
-                    url=pager_url,
-                    item_count=c.count,
-                    items_per_page=limit
-                )
-#                 c.facets = query['facets']
-#                 c.search_facets = query['search_facets']
-                c.page.items = c.features
             else:
-                c.page = h.Page(
-                    collection=query['results'],
-                    page=page,
-                    url=pager_url,
-                    item_count=query['count'],
-                    items_per_page=limit
-                )
-#                 c.facets = query['facets']
-#                 c.search_facets = query['search_facets']
-                c.page.items = query['results']
+                c.facets = query['facets']
+                c.search_facets = query['search_facets']
+
+#             if c.tab == 'features':
+#                 c.features, c.count = isolate_features(
+#                     context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
+
+
+
+#             if c.tab == 'features':
+#                 c.page = h.Page(
+#                     collection=c.features,
+#                     page=page,
+#                     url=pager_url,
+#                     item_count=c.count,
+#                     items_per_page=limit
+#                 )
+# #                 c.facets = query['facets']
+# #                 c.search_facets = query['search_facets']
+#                 c.page.items = c.features
+#             else:
+#                 c.page = h.Page(
+#                     collection=query['results'],
+#                     page=page,
+#                     url=pager_url,
+#                     item_count=query['count'],
+#                     items_per_page=limit
+#                 )
+# #                 c.facets = query['facets']
+# #                 c.search_facets = query['search_facets']
+#                 c.page.items = query['results']
+
+            c.page = h.Page(
+                collection=query['results'],
+                page=page,
+                url=pager_url,
+                item_count=query['count'],
+                items_per_page=limit
+            )
+            c.page.items = query['results']
+            c.sort_by_selected = query['sort']
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
             c.query_error = True
