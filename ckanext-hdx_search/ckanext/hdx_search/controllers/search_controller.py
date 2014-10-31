@@ -59,7 +59,11 @@ def url_with_params(url, params):
 
 
 
-def count_types(context, data_dict, tab):
+def search_for_all(context, data_dict):
+    '''This search is independent of the tab in which the user
+       currently is.
+       The result is used for finding counts for datasets, indicators and totals
+    '''
     facet_fields = data_dict.get('facet.field', [])
     facet_fields.append('extras_indicator')
     sort = data_dict.get('sort', None)
@@ -73,29 +77,37 @@ def count_types(context, data_dict, tab):
                 'rows': 10,
                 'sort': 'extras_indicator desc, ' + sort,
             }
-    if tab == 'indicators':
-        search['extras'] = {'ext_indicator': 1}
-    elif tab == 'datasets':
-        search['extras'] = {'ext_indicator': 0}
+#     if tab == 'indicators':
+#         search['extras'] = {'ext_indicator': 1}
+#     elif tab == 'datasets':
+#         search['extras'] = {'ext_indicator': 0}
     result = get_action('package_search')(context, search)
+    return result
+
+
+def extract_counts(result):
+    ''' Extracts the counts from a search_for_all() result '''
+
     total = result['count']
     if '1' in result['facets']['extras_indicator']:
         indicator_no = result['facets']['extras_indicator']['1']
     else:
         indicator_no = 0
     dataset_no = total - indicator_no
-    if tab == 'all' and len(result['results']) > 0 \
+    return (dataset_no, indicator_no)
+
+
+def extract_one_indicator(result):
+    ''' Extracts the first indicator from a search_for_all() result '''
+
+    if len(result['results']) > 0 \
         and result['results'][0] \
         and 'indicator' in result['results'][0] \
         and result['results'][0]['indicator'] == '1':
         indicator = [result['results'][0]]
     else:
         indicator = None
-
-    facets = result['facets']
-    search_facets = result['search_facets']  
-    return (dataset_no, indicator_no, indicator, facets, search_facets)
-
+    return indicator
 
 
 def package_search(context, data_dict):
@@ -297,14 +309,6 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
 
 class HDXSearchController(PackageController):
 
-    def package_search(self):
-        # Redirect to search
-        params = request.params.items()
-        uri = h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                        action='search')
-        url = url_with_params(uri, params)
-        redirect(url)
-
     def search(self):
         from ckan.lib.search import SearchError
 
@@ -439,63 +443,10 @@ class HDXSearchController(PackageController):
 
             c.facet_titles = facets
 
-            data_dict = {
-                'q': q,
-                'fq': fq.strip(),
-                'facet.field': facets.keys(),
-                'rows': limit,
-                'start': (page - 1) * limit,
-                'sort': sort_by,
-                'extras': search_extras
-            }
+            self._which_tab_is_selected(search_extras)
+            self._performing_search(q, fq, facets, limit, page, sort_by,
+                                    search_extras, pager_url, context)
 
-            c.tab = "all"
-            if 'ext_indicator' in data_dict['extras']:
-                if int(data_dict['extras']['ext_indicator']) == 1:
-                    c.tab = "indicators"
-                elif int(data_dict['extras']['ext_indicator']) == 0:
-                    c.tab = "datasets"
-            elif 'ext_feature' in data_dict['extras']:
-                c.tab = "features"
-            
-            self._decide_adding_dataset_criteria(data_dict)
-
-            query = package_search(context, data_dict)
-            c.dataset_counts, c.indicator_counts, c.indicator, c.facets, c.search_facets = \
-                count_types( context, data_dict, c.tab)
-            c.count = c.dataset_counts + c.indicator_counts
-            if c.tab == "all":
-                c.features = isolate_features(
-                    context, query['search_facets'], q, c.tab)
-
-            if c.tab == 'features':
-                c.features, c.count = isolate_features(
-                    context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
-
-            c.sort_by_selected = query['sort']
-
-            if c.tab == 'features':
-                c.page = h.Page(
-                    collection=c.features,
-                    page=page,
-                    url=pager_url,
-                    item_count=c.count,
-                    items_per_page=limit
-                )
-#                 c.facets = query['facets']
-#                 c.search_facets = query['search_facets']
-                c.page.items = c.features
-            else:
-                c.page = h.Page(
-                    collection=query['results'],
-                    page=page,
-                    url=pager_url,
-                    item_count=query['count'],
-                    items_per_page=limit
-                )
-#                 c.facets = query['facets']
-#                 c.search_facets = query['search_facets']
-                c.page.items = query['results']
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
             c.query_error = True
@@ -523,6 +474,85 @@ class HDXSearchController(PackageController):
 
         # return render(self._search_template(package_type))
         return self._search_template()
+
+    def _which_tab_is_selected(self, search_extras):
+        c.tab = "all"
+        if 'ext_indicator' in search_extras:
+            if int(search_extras['ext_indicator']) == 1:
+                c.tab = "indicators"
+            elif int(search_extras['ext_indicator']) == 0:
+                c.tab = "datasets"
+        elif 'ext_feature' in search_extras:
+            c.tab = "features"
+
+    def _performing_search(self, q, fq, facets, limit, page, sort_by,
+                           search_extras, pager_url, context):
+        data_dict = {
+            'q': q,
+            'fq': fq.strip(),
+            'facet.field': facets.keys(),
+            'rows': limit,
+            'start': (page - 1) * limit,
+            'sort': sort_by,
+            'extras': search_extras
+            }
+
+        self._decide_adding_dataset_criteria(data_dict)
+
+        query = package_search(context, data_dict)
+
+        all_result = search_for_all(context, data_dict)
+        c.dataset_counts, c.indicator_counts = extract_counts(all_result)
+
+        c.count = c.dataset_counts + c.indicator_counts
+        if c.tab == "all":
+            #c.features = isolate_features(
+            #     context, query['search_facets'], q, c.tab)
+            c.indicator = extract_one_indicator(all_result)
+            c.facets = all_result['facets']
+            c.search_facets = all_result['search_facets']
+        else:
+            c.facets = query['facets']
+            c.search_facets = query['search_facets']
+
+#             if c.tab == 'features':
+#                 c.features, c.count = isolate_features(
+#                     context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
+
+
+
+#             if c.tab == 'features':
+#                 c.page = h.Page(
+#                     collection=c.features,
+#                     page=page,
+#                     url=pager_url,
+#                     item_count=c.count,
+#                     items_per_page=limit
+#                 )
+# #                 c.facets = query['facets']
+# #                 c.search_facets = query['search_facets']
+#                 c.page.items = c.features
+#             else:
+#                 c.page = h.Page(
+#                     collection=query['results'],
+#                     page=page,
+#                     url=pager_url,
+#                     item_count=query['count'],
+#                     items_per_page=limit
+#                 )
+# #                 c.facets = query['facets']
+# #                 c.search_facets = query['search_facets']
+#                 c.page.items = query['results']
+
+        c.page = h.Page(
+            collection=query['results'],
+            page=page,
+            url=pager_url,
+            item_count=query['count'],
+            items_per_page=limit
+        )
+        c.page.items = query['results']
+        c.sort_by_selected = query['sort']
 
     def _decide_adding_dataset_criteria(self, data_dict):
         # For all tab, only paginate datasets

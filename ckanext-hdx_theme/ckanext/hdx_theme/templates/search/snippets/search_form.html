@@ -61,7 +61,6 @@
     {% endif %}
   {% endblock %}
 
-
   {% block search_sortby %}
     {% if sorting %}
       <div class="form-select control-group control-order-by mTop10">
@@ -123,17 +122,19 @@
       <ul class="nav nav-tabs">
         {% block content_primary_nav %}
         	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
-        		<a href="{{ other_links.all }}">{{_('All')}}</a>
+        		<a href="{{ other_links.all }}">{{_('All')}} [{{indicator_counts + dataset_counts}}]</a>
         	</li>
         	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
-        		<a href="{{ other_links.indicators }}">{{_('Indicators')}}</a>
+        		<a href="{{ other_links.indicators }}">{{_('Indicators')}} [{{indicator_counts}}]</a>
         	</li>
-        	<li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'features' }}">
-        		<a href="{{ other_links.features }}">{{_('Feature Pages')}}</a>
-        	</li>
+        	
         	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
-        		<a href="{{ other_links.datasets }}">{{_('Datasets')}}</a>
+        		<a href="{{ other_links.datasets }}">{{_('Datasets')}} [{{dataset_counts}}]</a>
         	</li>
+        	
+        	{# <li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'features' }}">
+        		<a href="{{ other_links.features }}">{{_('Feature Pages')}}</a>
+        	</li> #}
           
         {% endblock %}
       </ul>

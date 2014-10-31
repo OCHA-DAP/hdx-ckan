@@ -62,13 +62,14 @@
         {% block search_form_snippet scoped %}
         	{% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, 
         			count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, 
-        			placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name, other_links=c.other_links %}
+        			placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name, other_links=c.other_links,
+        			indicator_counts = c.indicator_counts, dataset_counts = c.dataset_counts %}
         {% endblock %}
       {% endblock %}
 
       {% block package_search_results_list %}
       	{% block package_search_results_indicators %}
-	      {% if c.tab=='all' or c.tab=='indicators' %}
+	      {% if c.tab=='all' %}
 	        <div class="list-header">
 	            <span class="mL15 list-header-title">
 	              Indicators [{{c.indicator_counts}}]
@@ -81,6 +82,8 @@
 	            <span class="pull-right list-header-actions">
 	            </span>
 	        </div>
+	      {% endif %}
+	      {% if c.tab=='all' or c.tab=='indicators' %}
 	        {% if  c.tab == 'indicators' %}
 	          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, tab=c.tab, show_preview_on_first=True) }}
 	        {% else %}
@@ -88,6 +91,8 @@
 	        {% endif %}
 	      {% endif %}
 		{% endblock  %}
+		
+		{#
 		{% block package_search_results_features %}
 	      {% if c.tab=='all' or c.tab=='features' %}
 	        <div class="list-header">
@@ -105,10 +110,11 @@
 	        {{ h.snippet('search/snippets/feature_list.html', query=c.q, packages=c.features) }}
 	      {% endif %}
 	 	{% endblock %}
+	 	#}
 	 	
 	 	
 		{% block package_search_results_datasets %}
-	      {% if c.tab=='all' or c.tab=='datasets' %}
+	      {% if c.tab=='all' %}
 	        <div class="list-header">
 	          <span class="mL15 list-header-title">
 	            Datasets [{{c.dataset_counts}}]
@@ -121,6 +127,8 @@
 	          <span class="pull-right list-header-actions">
 	          </span>
 	        </div>
+	      {% endif %}
+	      {% if c.tab=='all' or c.tab=='datasets' %}
 	        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items) }}
 	      {% endif %}
 	  	{% endblock %}
