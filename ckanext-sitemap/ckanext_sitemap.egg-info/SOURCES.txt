@@ -1,0 +1,16 @@
+setup.cfg
+setup.py
+ckanext/__init__.py
+ckanext/sitemap/__init__.py
+ckanext/sitemap/controller.py
+ckanext/sitemap/plugin.py
+ckanext/sitemap/tests/__init__.py
+ckanext/sitemap/tests/test_sitemap.py
+ckanext/sitemap/tests/testdata.py
+ckanext_sitemap.egg-info/PKG-INFO
+ckanext_sitemap.egg-info/SOURCES.txt
+ckanext_sitemap.egg-info/dependency_links.txt
+ckanext_sitemap.egg-info/entry_points.txt
+ckanext_sitemap.egg-info/namespace_packages.txt
+ckanext_sitemap.egg-info/not-zip-safe
+ckanext_sitemap.egg-info/top_level.txt

@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: ckanext-sitemap
+Version: 0.1
+Summary: Sitemap extension for CKAN
+Home-page: https://github.com/locusf/ckanext-sitemap
+Author: Aleksi Suomalainen
+Author-email: aleksi.suomalainen@nomovok.com
+License: AGPL
+Description: 	
+Platform: UNKNOWN
