@@ -5,16 +5,18 @@
 
 {% block package_item_content %}
   {{ super() }}
-  {% if show_preview_on_first and loop.index == 1 %}
-    <div id="chart-container" data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}" data-module-subchart="true">
-    </div>
-  {% endif %}
 {% endblock %}
 
 {% block preview_link %}
   <a data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}"
-     data-module-subchart="true" data-module-click_only="true" data-module-container="chart-container"
-     data-module-parent_selector=".dataset-item" style="cursor: pointer;">Preview</a>
+     data-module-subchart="true" data-module-click_only="true"
+      {% if show_preview_on_first and loop.index == 1 %}
+        data-module-click_only_show="true"
+      {% endif %}
+     data-module-container="chart-container"
+     data-module-parent_selector=".dataset-item" style="cursor: pointer;">
+      Preview
+  </a>
 {% endblock %}
 
 {% block follow_link %}

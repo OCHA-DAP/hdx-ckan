@@ -11,8 +11,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
        */
       if (!this.options.click_only)
         this._init();
-      else
+      else{
         $(this.el).click(this._onClickPreview);
+        if (this.options.click_only_show)
+          $(this.el).click();
+      }
     },
     c3_chart: null,
     filteredLocations: null,
@@ -568,6 +571,7 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       zoom: false,
       continuous_location: "",
       click_only: false,
+      click_only_show: false,
       container: "",
       parent_selector: "",
       side_panel: "",
