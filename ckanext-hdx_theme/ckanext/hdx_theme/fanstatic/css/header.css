@@ -1370,12 +1370,22 @@ span.is-more a.more-link, .more-link {
 
 /* Feedback Button */
     #feedback-button {
-        padding: 0;
-        float: right;
-        line-height: 60px;
-        margin-top: -15px;
+        background-color: #888888;
+        color: #ffffff;
+        text-shadow: none;
+        border-radius: 20px;
+        margin-top: 10px;
         margin-left: 15px;
-        font-size: 25px;
-        color: #888888;
+
+        padding: 10px 15px 10px;
+        text-decoration: none;
+
+
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 31px;
+        text-transform: uppercase;
+        margin-bottom: 0;
     }
 /* END Feedback Button */
