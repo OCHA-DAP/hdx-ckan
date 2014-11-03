@@ -189,8 +189,6 @@
     .newHeader .content .navbar nav li.submitData{
         background-color: #f2645a;
         border-radius: 6px;
-        position: relative;
-        top: -16px;
         width: 200px;
         margin-right: 20px;
     }
@@ -199,14 +197,17 @@
         margin: 0;
     }
 
-    .newHeader .content .navbar nav .pull-right li.dropdown{
+    .newHeader .content .navbar .pull-right {
         position: relative;
-        top: -12px;
+        top: -15px;
+    }
+
+    .newHeader .content .navbar nav .pull-right li.dropdown{
+        margin-top: 5px;
     }
 
     .newHeader .content .navbar nav .pull-right li.newLogin{
-        position: relative;
-        top: -12px;
+        margin-top: 5px;
     }
 
     .navbar .nav > li.newLogin > a.btn:hover, .navbar .nav > li.newLogin > a.btn:focus{
@@ -255,6 +256,12 @@
         border-radius: 500px;
     }
 /* END Header */
+
+/* Default link style */
+    a, a:hover, a:focus {
+        color: #007ce0;
+    }
+/* END Default link style */
 
 /* HDX Version display */
     .logo #hdxVersion{
@@ -532,6 +539,9 @@
         margin-top: 35px;
     }
     .mTop20{
+        margin-top: 20px;
+    }
+    .mTop15{
         margin-top: 20px;
     }
     .mTop8{
@@ -1345,8 +1355,10 @@ a, a:hover, a:focus{
     }
 /* END Style indicator graph */
 
+
+
 /* Style Show-more */
-/span.is-more a.more-link, .more-link {
+span.is-more a.more-link, .more-link {
     background-color: transparent;
     border: 0 none;
     border-radius: 0;
@@ -1354,3 +1366,14 @@ a, a:hover, a:focus{
     padding: 0;
 }
 /* END Style Show-more */
+
+
+/* Feedback Button */
+    #feedback-button {
+        line-height: 60px;
+        padding: 0;
+        margin-right: 15px;
+        font-size: 25px;
+        color: #888888;
+    }
+/* END Feedback Button */

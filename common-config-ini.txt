@@ -29,7 +29,7 @@ beaker.session.key = ckan
 #!app_instance_uuid = {0b55a427-a808-470f-a341-37abcd46ba1}
 
 # repoze.who config
-who.config_file = %(here)s/who.ini
+who.config_file = %(here)s/ckan/config/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
 

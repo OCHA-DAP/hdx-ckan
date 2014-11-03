@@ -20,6 +20,21 @@
       <span class="empty">{{ _('No description for this resource') }}</span>
     {% endif %}
   </p>
+  
+	{% block resource_item_edit %}
+		{% if url_is_edit and can_edit %}
+   			<div class="hdx-btn-group">
+	   			<a class="btn hdx-btn main-hdx-btn" title="Edit" href="{{ url }}">{{ _('Edit') }}</a>
+	            {% if res.id and h.check_access('resource_delete', {'id': res.id})  %}
+	            	{% set locale = h.dump_json({'content': _('Are you sure you want to delete this resource?')}) %}
+					<a class="btn hdx-btn main-hdx-btn" title="Delete" href="{% url_for controller='package', action='resource_delete', resource_id=res.id, id=pkg.name %}" data-module="confirm-action" data-module-i18n="{{ locale }}">
+						<img alt="{{ _('Delete Resource') }}" src="/images/actions/delete.png"></img>
+					</a>
+	            {% endif %}
+   			</div>
+  		{% endif %}
+  	{% endblock %}
+  	
   {% block resource_item_explore %}
     {% if not url_is_edit %}
     {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
