@@ -1,0 +1,117 @@
+{% import 'macros/form.html' as form %}
+
+{% if type == 'org' %}
+  {% set action_url = h.url_for('organization_pages_edit', id=id, page='/' + page) %}
+  {% set cancel_url = h.url_for('organization_pages', id=id, page='') %}
+  {% set slug_prefix = cancel_url ~ '/' %}
+  {% set slug_domain = h.url_for('organization_pages', id=id, page='', qualified=true) %}
+  {% set hide_field_order = true %}
+{% elif type == 'group' %}
+  {% set action_url = h.url_for('group_pages_edit', id=id, page='/' + page) %}
+  {% set cancel_url = h.url_for('group_pages', id=id, page='') %}
+  {% set slug_prefix = cancel_url ~ '/' %}
+  {% set slug_domain = h.url_for('group_pages', id=id, page='', qualified=true) %}
+  {% set hide_field_order = true %}
+{% else %}
+  {% set action_url = h.url_for('pages_edit', page='/' + page) %}
+  {% set cancel_url = h.url_for('pages_show', page='') %}
+  {% set slug_prefix = cancel_url ~ '/' %}
+  {% set slug_domain = h.url_for('pages_show', page='', qualified=true) %}
+{% endif %}
+
+{% set data = data or {} %}
+{% set errors = errors or {} %}
+
+{% if not page %}
+  <h1>{{ _('Add page') }}</h1>
+{% else %}
+  <h1>{{ _('Edit page') }}</h1>
+{% endif %}
+
+<form class="form-horizontal" method="post" action="{{ action_url }}" data-module="basic-form">
+
+  {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. Page Title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
+
+  {% set domain = slug_domain|replace("http://", "")|replace("https://", "") %}
+  {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain~'/', 'data-module-placeholder': '<page>'} %}
+  {{ form.prepend('name', id='field-name', label=_('URL'), prepend=slug_prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, attrs=attrs) }}
+
+  {#{{ form.input('name', id='field-name', label=_('Name'), placeholder=_('my-name'), value=data.name, error=errors.name, classes=['control-full']) }}#}
+
+  <div class="control-group">
+    <label for="field-private" class="control-label">{{ _('Visibility') }}</label>
+    <div class="controls">
+      <select id="field-private" name="private">
+        {% for option in [(true, _('Private')), (false, _('Public'))] %}
+        <option value="{{ option[0] }}" {% if option[0] == data.private %}selected="selected"{% endif %}>{{ option[1] }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+
+  {% if not hide_field_order %}
+    <div class="control-group">
+      <label for="field-order" class="control-label">{{ _('Menu Order') }}</label>
+      <div class="controls">
+        <select id="field-order" name="order">
+          {% for option in [('',''), ('1','1'), ('2', '2'), ('3', '3') , ('4', '4')] %}
+          <option value="{{ option[0] }}" {% if option[0] == data.order %}selected="selected"{% endif %}>{{ option[1] }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+  {% endif %}
+{# data.content #}
+
+<style>
+
+input {
+  vertical-align: -2px !important;
+  }
+</style>
+
+    <script>
+      $(document).ready(function(){
+        $('#search').blur(function(){
+            var q = $('#search').val();
+            //Grab datasets through API
+            $.ajax({url:"/api/3/action/package_search?q="+q}).done(function(data){
+              r = data.result.results
+              var setlist = '';
+              for(d in r){
+                console.log(r[d])
+                setlist += '<div style="height:35px !important;"><label><input type="checkbox" value="'+r[d]['id']+'"><a href="/dataset/'+r[d]['name']+'" target="new">'+r[d]['title']+'</a></label></div>';
+              }
+
+              $('#setlist input:checkbox:not(:checked)').parent().parent().remove();
+              $('#setlist').append(setlist);
+
+          });
+        });
+      });
+    </script>
+  {{ form.input('search', id='search', label=_('Search for Datasets'), placeholder=_('eg. ebola'), classes=['control-full', 'control-large']) }}
+
+  <div id="setlist" class="well"></div>
+
+  {{ form.markdown('content', id='field-content', label=_('Content'), placeholder=_('My content'), value=data.content, error=errors.content) }}
+
+  <div class="form-actions">
+    {% if not page %}
+      <a class="btn pull-left" href="{{ cancel_url }}">{{ _('Cancel') }}</a>
+      <button class="btn btn-primary" name="save" value="save" type="submit">{{ _('Add') }}</button>
+    {% else %}
+
+      {% block delete_button %}
+        {% if h.check_access('ckanext_pages_delete', {'id': data.id})  %}
+          {% set locale = h.dump_json({'content': _('Are you sure you want to delete this Page?')}) %}
+          <a class="btn btn-danger pull-left" href="{% url_for 'pages_delete', page='/' + data.name %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+        {% endif %}
+      {% endblock %}
+
+      <button class="btn btn-primary" name="save" value="save" type="submit">{{ _('Save') }}</button>
+    {% endif %}
+  </div>
+
+</form>

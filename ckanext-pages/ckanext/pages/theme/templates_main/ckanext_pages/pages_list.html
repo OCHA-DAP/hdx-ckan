@@ -1,0 +1,12 @@
+{% extends 'ckanext_pages/edit_base.html' %} 
+
+{% block page_primary_action %}
+  {% if h.check_access('ckanext_pages_update', {}) %}
+    {% link_for _('Add page'), controller='ckanext.pages.controller:PagesController', action='pages_edit', page='', class_='btn btn-primary', icon='plus-sign-alt' %}
+  {% endif %}
+{% endblock %}
+
+{% block primary_content_inner %}
+  <h1 class="hide-heading">{{ _('Pages') }}</h1>
+  {% snippet 'ckanext_pages/snippets/pages_list.html', pages=c.pages_dict %}
+{% endblock %}

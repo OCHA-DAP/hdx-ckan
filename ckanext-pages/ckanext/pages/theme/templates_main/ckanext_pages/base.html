@@ -1,0 +1,17 @@
+{% extends 'page.html' %}
+
+{% block page_header %}{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      {{ _('What are Pages?') }}
+    </h2>
+    <div class="module-content">
+      {% trans %}
+        <p>Pages are are simple way to add extra pages to your ckan instance. You can assign an order to them.</p>
+      {% endtrans %}
+    </div>
+  </div>
+{% endblock %}

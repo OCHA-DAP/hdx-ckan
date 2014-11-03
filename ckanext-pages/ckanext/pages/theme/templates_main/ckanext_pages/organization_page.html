@@ -1,0 +1,13 @@
+{% extends 'organization/read_base.html' %}
+
+{% block subtitle %}{{ _('Pages') }} - {{ c.group_dict.display_name }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% link_for _('Edit page'), controller='ckanext.pages.controller:PagesController', action='org_edit', id=c.group_dict.name, page='/' + c.page.name, class_='btn btn-primary pull-right', icon='edit' %}
+  <h1 class="page-heading">{{ c.page.title }}</h1>
+  {% if c.page.content %}
+    {{ h.render_markdown(c.page.content) }}
+  {% else %}
+    <p class="empty">{{ _('This page currently has no content') }}</p>
+  {% endif %}
+{% endblock %}

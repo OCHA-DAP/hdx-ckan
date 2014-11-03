@@ -1,0 +1,10 @@
+{% ckan_extends %}
+
+{% block header_account_logged %}
+  <li>
+    <a href="{{ h.url_for(controller='ckanext.pages.controller:PagesController', action='pages_show', page='') }}" title="{{ _('Pages') }}">
+      <i class="icon-file"></i>
+    </a>
+  </li>
+  {{ super() }}
+{% endblock %}
