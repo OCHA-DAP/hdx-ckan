@@ -1370,9 +1370,11 @@ span.is-more a.more-link, .more-link {
 
 /* Feedback Button */
     #feedback-button {
-        line-height: 60px;
         padding: 0;
-        margin-right: 15px;
+        float: right;
+        line-height: 60px;
+        margin-top: -15px;
+        margin-left: 15px;
         font-size: 25px;
         color: #888888;
     }
