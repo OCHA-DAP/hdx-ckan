@@ -1,7 +1,0 @@
-{% extends 'group/read_base.html' %}
-
-{% block subtitle %}{{ _('Pages') }} - {{ c.group_dict.display_name }}{% endblock %}
-
-{% block primary_content_inner %}
-  {% snippet 'ckanext_pages/base_form.html', type='group', id=c.group_dict.name, page=page, data=data, errors=errors %}
-{% endblock %}
