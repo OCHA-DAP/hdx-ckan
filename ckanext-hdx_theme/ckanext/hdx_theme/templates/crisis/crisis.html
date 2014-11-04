@@ -4,5 +4,35 @@
 {% block subtitle %}{{ _("Ebola crisis page") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  TEST 
+  <li class="active">{{ h.nav_link(_('Ebola'), controller='ckanext.hdx_crisis.controllers.crisis_controller:CrisisController', 
+  						action='show', highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+	{% block package_search_results_list %}
+        <div class="list-header">
+          <span class="mL15 list-header-title">
+            Datasets [{{c.items | count}}]
+          </span>
+          <span class="mL15 list-header-showall">
+            <a href="{{ c.other_links.show_more }}">Show all datasets</a>
+          </span>
+
+        </div>
+        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.items) }}
+	{% endblock %}
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.more' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  
+  <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}
