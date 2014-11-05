@@ -84,7 +84,7 @@
                           {{ self.secondary() }}
                         </div>
                       {% endif %}
-                      <div class="{% if self.secondary()|trim != '' %} col-xs-9 {% else %} col-xs-12 {% endif %}">
+                      <div class="{% if self.secondary()|trim != '' %} col-xs-9 wrapper-primary{% else %} col-xs-12 {% endif %}">
                         {{ self.primary() }}
                       </div>
                       {% if self.secondary()|trim != '' and secondary_right_side %}

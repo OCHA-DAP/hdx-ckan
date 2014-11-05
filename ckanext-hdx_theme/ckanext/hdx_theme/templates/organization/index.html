@@ -21,7 +21,7 @@
 {% block primary_content_inner %}
       <h1 class="hide-heading">{% block page_heading %}{{ _('Organisations') }}{% endblock %}</h1>
       {% block organizations_search_form %}
-        {% set sorting_option = c.sort_by_selected or 'name asc' %}
+        {% set sorting_option = c.sort_by_selected or 'title asc' %}
         {% snippet 'snippets/search_form.html', type='organization', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search organisations...'), show_empty=request.params %}
       {% endblock %}
       {% block organizations_list %}

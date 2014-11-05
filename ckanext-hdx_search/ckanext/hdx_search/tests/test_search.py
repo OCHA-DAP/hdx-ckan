@@ -8,6 +8,7 @@ Created on September 18, 2014
 import logging as logging
 import ckan.lib.helpers as h
 import ckan.model as model
+import ckan.plugins as p
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
@@ -18,7 +19,11 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_search hdx_theme')
+        try:
+            hdx_test_base.load_plugin('hdx_search hdx_org_group hdx_theme')
+        except Exception as e:
+            log.warn('Module already loaded')
+            log.info(str(e))
 
     def test_search(self):
         user = model.User.by_name('tester')
@@ -56,6 +61,7 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
 
     def test_package_search(self):
         import ckanext.hdx_search.controllers.search_controller as search
+        import ckanext.hdx_search.actions.actions as hdx_actions
         user = model.User.by_name('hdx')
         data_dict = {
                 'q': '',
@@ -68,5 +74,17 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
             }
         context = {'model': model, 'session': model.Session,
                        'user': user, 'for_view': True, 'auth_user_obj': user}
-        s = search.package_search(context, data_dict)
+        s = hdx_actions.package_search(context, data_dict)
         assert len(s['results']) > 0
+
+#     def test_new_sort_org(self):
+#         org = h.url_for(
+#             controller='organization', action='list')
+#         response = self.app.get(org, params={'sort':'title+asc'})
+#         assert '200' in response.status
+# 
+#     def test_new_sort_grp(self):
+#         grp = h.url_for(
+#             controller='group', action='list')
+#         response = self.app.get(grp, params={'sort':'title+asc'})
+#         assert '200' in response.status

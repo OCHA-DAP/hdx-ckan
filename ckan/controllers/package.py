@@ -148,7 +148,7 @@ class PackageController(base.BaseController):
 
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
-                                  controller='package', action='search')
+                                      controller='package', action='search')
 
         c.remove_field = remove_field
 
@@ -222,12 +222,12 @@ class PackageController(base.BaseController):
             facets = OrderedDict()
 
             default_facet_titles = {
-                    'organization': _('Organizations'),
-                    'groups': _('Groups'),
-                    'tags': _('Tags'),
-                    'res_format': _('Formats'),
-                    'license_id': _('Licenses'),
-                    }
+                'organization': _('Organizations'),
+                'groups': _('Groups'),
+                'tags': _('Tags'),
+                'res_format': _('Formats'),
+                'license_id': _('Licenses'),
+            }
 
             for facet in g.facets:
                 if facet in default_facet_titles:
@@ -279,12 +279,12 @@ class PackageController(base.BaseController):
                 abort(400, _('Parameter "{parameter_name}" is not '
                              'an integer').format(
                                  parameter_name='_%s_limit' % facet
-                             ))
+                ))
             c.search_facets_limits[facet] = limit
 
         maintain.deprecate_context_item(
-          'facets',
-          'Use `c.search_facets` instead.')
+            'facets',
+            'Use `c.search_facets` instead.')
 
         self._setup_template_variables(context, {},
                                        package_type=package_type)
@@ -402,7 +402,7 @@ class PackageController(base.BaseController):
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
-                    package_type=package_type, format=format, file=template))
+                        package_type=package_type, format=format, file=template))
             abort(404, msg)
 
         assert False, "We should never get here"
@@ -581,15 +581,18 @@ class PackageController(base.BaseController):
         pkg_dict = get_action('package_show')(context, {'id': id})
         if pkg_dict['state'].startswith('draft'):
             # dataset has not yet been fully created
-            resource_dict = get_action('resource_show')(context, {'id': resource_id})
-            fields = ['url', 'resource_type', 'format', 'name', 'description', 'id']
+            resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
+            fields = [
+                'url', 'resource_type', 'format', 'name', 'description', 'id']
             data = {}
             for field in fields:
                 data[field] = resource_dict[field]
             return self.new_resource(id, data=data)
         # resource is fully created
         try:
-            resource_dict = get_action('resource_show')(context, {'id': resource_id})
+            resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
         except NotFound:
             abort(404, _('Resource not found'))
         c.pkg_dict = pkg_dict
@@ -627,7 +630,7 @@ class PackageController(base.BaseController):
             data_provided = False
             for key, value in data.iteritems():
                 if ((value or isinstance(value, cgi.FieldStorage))
-                    and key != 'resource_type'):
+                        and key != 'resource_type'):
                     data_provided = True
                     break
 
@@ -643,7 +646,7 @@ class PackageController(base.BaseController):
                     abort(401, _('Unauthorized to update dataset'))
                 except NotFound:
                     abort(404,
-                      _('The dataset {id} could not be found.').format(id=id))
+                          _('The dataset {id} could not be found.').format(id=id))
                 if not len(data_dict['resources']):
                     # no data so keep on page
                     msg = _('You must add at least one data resource')
@@ -675,7 +678,7 @@ class PackageController(base.BaseController):
                 abort(401, _('Unauthorized to create a resource'))
             except NotFound:
                 abort(404,
-                    _('The dataset {id} could not be found.').format(id=id))
+                      _('The dataset {id} could not be found.').format(id=id))
             if save_action == 'go-metadata':
                 # go to final stage of add dataset
                 redirect(h.url_for(controller='package',
@@ -962,7 +965,8 @@ class PackageController(base.BaseController):
                                 id=pkg_dict['name'])
                 redirect(url)
 
-            self._form_save_redirect(pkg_dict['name'], 'new', package_type=package_type)
+            self._form_save_redirect(
+                pkg_dict['name'], 'new', package_type=package_type)
         except NotAuthorized:
             abort(401, _('Unauthorized to read package %s') % '')
         except NotFound, e:
@@ -1013,7 +1017,8 @@ class PackageController(base.BaseController):
             c.pkg = context['package']
             c.pkg_dict = pkg
 
-            self._form_save_redirect(pkg['name'], 'edit', package_type=package_type)
+            self._form_save_redirect(
+                pkg['name'], 'edit', package_type=package_type)
         except NotAuthorized:
             abort(401, _('Unauthorized to read package %s') % id)
         except NotFound, e:
@@ -1045,7 +1050,8 @@ class PackageController(base.BaseController):
             url = url.replace('<NAME>', pkgname)
         else:
             if package_type is None or package_type == 'dataset':
-                url = h.url_for(controller='package', action='read', id=pkgname)
+                url = h.url_for(
+                    controller='package', action='read', id=pkgname)
             else:
                 url = h.url_for('{0}_read'.format(package_type), id=pkgname)
         redirect(url)
@@ -1088,7 +1094,8 @@ class PackageController(base.BaseController):
     def resource_delete(self, id, resource_id):
 
         if 'cancel' in request.params:
-            h.redirect_to(controller='package', action='resource_edit', resource_id=resource_id, id=id)
+            h.redirect_to(
+                controller='package', action='resource_edit', resource_id=resource_id, id=id)
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
@@ -1103,7 +1110,8 @@ class PackageController(base.BaseController):
                 get_action('resource_delete')(context, {'id': resource_id})
                 h.flash_notice(_('Resource has been deleted.'))
                 h.redirect_to(controller='package', action='read', id=id)
-            c.resource_dict = get_action('resource_show')(context, {'id': resource_id})
+            c.resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
             c.pkg_id = id
         except NotAuthorized:
             abort(401, _('Unauthorized to delete resource %s') % '')
@@ -1196,7 +1204,8 @@ class PackageController(base.BaseController):
             c.package['isopen'] = False
 
         # TODO: find a nicer way of doing this
-        c.datastore_api = '%s/api/action' % config.get('ckan.site_url', '').rstrip('/')
+        c.datastore_api = '%s/api/action' % config.get(
+            'ckan.site_url', '').rstrip('/')
 
         c.related_count = c.pkg.related_count
 
@@ -1231,11 +1240,12 @@ class PackageController(base.BaseController):
             filepath = upload.get_path(rsc['id'])
             fileapp = paste.fileapp.FileApp(filepath)
             try:
-               status, headers, app_iter = request.call_application(fileapp)
+                status, headers, app_iter = request.call_application(fileapp)
             except OSError:
-               abort(404, _('Resource data not found'))
+                abort(404, _('Resource data not found'))
             response.headers.update(dict(headers))
-            content_type, content_enc = mimetypes.guess_type(rsc.get('url',''))
+            content_type, content_enc = mimetypes.guess_type(
+                rsc.get('url', ''))
             response.headers['Content-Type'] = content_type
             response.status = status
             return app_iter
@@ -1256,7 +1266,7 @@ class PackageController(base.BaseController):
                 package_dict['title']))
         except ValidationError as e:
             error_message = (e.extra_msg or e.message or e.error_summary
-                    or e.error_dict)
+                             or e.error_dict)
             h.flash_error(error_message)
         except NotAuthorized as e:
             h.flash_error(e.extra_msg)
@@ -1275,7 +1285,7 @@ class PackageController(base.BaseController):
                 package_dict['title']))
         except ValidationError as e:
             error_message = (e.extra_msg or e.message or e.error_summary
-                    or e.error_dict)
+                             or e.error_dict)
             h.flash_error(error_message)
         except (NotFound, NotAuthorized) as e:
             error_message = e.extra_msg or e.message
@@ -1292,7 +1302,7 @@ class PackageController(base.BaseController):
             c.pkg_dict = get_action('package_show')(context, data_dict)
             c.pkg = context['package']
             c.followers = get_action('dataset_follower_list')(context,
-                    {'id': c.pkg_dict['id']})
+                                                              {'id': c.pkg_dict['id']})
 
             c.related_count = c.pkg.related_count
         except NotFound:
@@ -1343,19 +1353,17 @@ class PackageController(base.BaseController):
             redirect(h.url_for(controller='package',
                                action='groups', id=id))
 
-
-
         context['is_member'] = True
         users_groups = get_action('group_list_authz')(context, data_dict)
 
         pkg_group_ids = set(group['id'] for group
-                         in c.pkg_dict.get('groups', []))
+                            in c.pkg_dict.get('groups', []))
         user_group_ids = set(group['id'] for group
-                          in users_groups)
+                             in users_groups)
 
         c.group_dropdown = [[group['id'], group['display_name']]
-                           for group in users_groups if
-                           group['id'] not in pkg_group_ids]
+                            for group in users_groups if
+                            group['id'] not in pkg_group_ids]
 
         for group in c.pkg_dict.get('groups', []):
             group['user_member'] = (group['id'] in user_group_ids)
@@ -1373,8 +1381,8 @@ class PackageController(base.BaseController):
             c.pkg_dict = get_action('package_show')(context, data_dict)
             c.pkg = context['package']
             c.package_activity_stream = get_action(
-                    'package_activity_list_html')(context,
-                            {'id': c.pkg_dict['id']})
+                'package_activity_list_html')(context,
+                                              {'id': c.pkg_dict['id']})
             c.related_count = c.pkg.related_count
         except NotFound:
             abort(404, _('Dataset not found'))
@@ -1445,7 +1453,8 @@ class PackageController(base.BaseController):
         # for data api url - see http://trac.ckan.org/ticket/2639
         # fix by relocating this to url attribute which is the default location
         if 'dataset' in recline_state and 'elasticsearch_url' in recline_state['dataset']:
-            recline_state['dataset']['url'] = recline_state['dataset']['elasticsearch_url']
+            recline_state['dataset']['url'] = recline_state[
+                'dataset']['elasticsearch_url']
 
         # Ensure only the currentView is available
         # default to grid view if none specified

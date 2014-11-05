@@ -350,7 +350,10 @@ def shorten(url):
     r = requests.post("https://www.googleapis.com/urlshortener/v1/url", data=json.dumps({'longUrl':url}), headers={'content-type':'application/json'})
     item = r.json()
 
-    return item['id']
+    try:
+        return item['id']
+    except:
+        return url
 
 def hdx_follow_button(obj_type, obj_id, **kw):
     ''' This is a modified version of the ckan core follow_button() helper

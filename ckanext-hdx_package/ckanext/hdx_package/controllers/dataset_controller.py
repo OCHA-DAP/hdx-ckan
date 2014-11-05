@@ -612,3 +612,33 @@ class DatasetController(PackageController):
                     in datapreview.direct() + datapreview.loadable()
                     or datapreview.get_preview_plugin(
                         data_dict, return_first=True))
+
+# copy from package.py:1094
+    def resource_delete(self, id, resource_id):
+
+        if 'cancel' in request.params:
+            h.redirect_to(
+                controller='package', action='resource_edit', resource_id=resource_id, id=id)
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        try:
+            check_access('package_delete', context, {'id': id})
+        except NotAuthorized:
+            abort(401, _('Unauthorized to delete package %s') % '')
+
+        try:
+            if request.method == 'POST':
+                get_action('resource_delete')(context, {'id': resource_id})
+                h.flash_notice(_('Resource has been deleted.'))
+                h.redirect_to(controller='package', action='resources',
+                              id=id)
+            c.resource_dict = get_action('resource_show')(
+                context, {'id': resource_id})
+            c.pkg_id = id
+        except NotAuthorized:
+            abort(401, _('Unauthorized to delete resource %s') % '')
+        except NotFound:
+            abort(404, _('Resource not found'))
+        return render('package/confirm_delete_resource.html')

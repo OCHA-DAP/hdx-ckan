@@ -29,7 +29,7 @@ beaker.session.key = ckan
 #!app_instance_uuid = {0b55a427-a808-470f-a341-37abcd46ba1}
 
 # repoze.who config
-who.config_file = %(here)s/who.ini
+who.config_file = %(here)s/ckan/config/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
 
@@ -76,7 +76,7 @@ ckan.site_id = default
 #		Add ``resource_proxy`` to enable resorce proxying and get around the
 #		same origin policy
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
-ckan.plugins = hdx_search hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview
+ckan.plugins = hdx_search sitemap hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview
 
 
 ## Front-End Settings

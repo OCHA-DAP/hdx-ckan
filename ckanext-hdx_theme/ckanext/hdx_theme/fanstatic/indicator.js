@@ -19,5 +19,8 @@ $(document).ready(function() {
     container.parent().find("ul").hide();
     container.show();
     $("#location-dd").find("span").text($(this).text());
-  })
+  });
+
+  setUpResourcesTracking();
+  setUpShareTracking();
 });
