@@ -1,0 +1,31 @@
+#ebola-map {
+  height: 400px;
+}
+
+
+.item-info {
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    padding: 30px 0;
+    margin-top: -1px;
+    color: #333333;
+}
+
+.item-info .item-info-title{
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.item-info .item-info-number {
+    font-size: 80px;
+    line-height: 1;
+    color: #888888;
+}
+
+.item-info .item-info-extra{
+    margin-top: 10px;
+}
+.item-info .item-info-extra-title {
+    text-transform: uppercase;
+    font-weight: bold;
+}
