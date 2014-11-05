@@ -9,6 +9,145 @@
 {% endblock %}
 
 {% block primary_content %}
+  <div class="row paddingRowHack" style="position: relative;">
+    <div id="ebola-map">
+    </div>
+    <div style="height:80px; background-color: rgba(255, 255, 255, 0.4); position: absolute; top: 320px; width: 100%;">
+      <span class="mL45" style="color: black; line-height: 80px; font-weight: bold; font-size: 30px;"> West Africa: Ebola outbreak </span>
+      <span class="mR45 pull-right" style="color: black; line-height: 80px; font-weight: bold; font-size: 30px;">
+        <a class="btn hdx-btn org-btn" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
+           data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share dataset">Share</a>
+        <div id="dataset_social_wrapper" class="popover-wrapper"></div>
+        <div style="display:none" id="dataset_social">
+          <div class="resource-social">
+            <a href="https://plus.google.com/share?url={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/google-plus_black.svg" />
+              <span> Google+ </span>
+            </a>
+          </div>
+          <div class="resource-social">
+            <a href="https://twitter.com/share?url={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/twitter_black.svg" />
+              <span> Twitter </span>
+            </a>
+          </div>
+          <div class="resource-social" >
+            <a href="https://www.facebook.com/sharer.php?u={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/fb_black.svg" />
+              <span> Facebook </span>
+            </a>
+          </div>
+          <div class="resource-social" >
+            <a href="mailto:?subject=n&body={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/email_black.svg" />
+              <span> {{ _('Email') }} </span>
+            </a>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="row mTop35">
+    <div class="col-xs-4">
+      <div class="item-info">
+        <div class="row">
+          <div class="col-xs-12 item-info-title">
+            Cumulative Cases
+          </div>
+          <div class="col-xs-12 item-info-number">
+            10,141
+          </div>
+          <div class="col-xs-12 item-info-extra">
+            <span class="item-info-extra-title">HDX Repository - </span><a href="">Source</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="item-info">
+        <div class="row">
+          <div class="col-xs-12 item-info-title">
+            Deaths
+          </div>
+          <div class="col-xs-12 item-info-number">
+            4,900
+          </div>
+          <div class="col-xs-12 item-info-extra">
+            <span class="item-info-extra-title">Source Name - </span><a href="">Source</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="item-info">
+        <div class="row">
+          <div class="col-xs-12 item-info-title">
+            Contries Affected
+          </div>
+          <div class="col-xs-12 item-info-number">
+            6
+          </div>
+          <div class="col-xs-12 item-info-extra">
+            <span class="item-info-extra-title">Source Name - </span><a href="">Source</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="item-info">
+        <div class="row">
+          <div class="col-xs-12 item-info-title">
+            Health Facilities Available
+          </div>
+          <div class="col-xs-12 item-info-number">
+            24
+          </div>
+          <div class="col-xs-12 item-info-extra">
+            <span class="item-info-extra-title">Source Name - </span><a href="">Source</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="item-info">
+        <div class="row">
+          <div class="col-xs-12 item-info-title">
+            Beds Available
+          </div>
+          <div class="col-xs-12 item-info-number">
+            126
+          </div>
+          <div class="col-xs-12 item-info-extra">
+            <span class="item-info-extra-title">Source Name - </span><a href="">Source</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-4">
+      <div class="item-info">
+        <div class="row">
+          <div class="col-xs-12 item-info-title">
+            Funding Requested
+          </div>
+          <div class="col-xs-12 item-info-number">
+            $988m
+          </div>
+          <div class="col-xs-12 item-info-extra">
+            <span class="item-info-extra-title">Source Name - </span><a href="">Source</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
 	{% block package_search_results_list %}
         <div class="list-header">
           <span class="mL15 list-header-title">
@@ -33,6 +172,13 @@
   {% resource 'hdx_theme/jquery.highlight' %}
   {% resource 'hdx_theme/jquery.more' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
-  
+
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/leaflet' %}
+  {% resource 'hdx_theme/crisis-page' %}
+  {% resource 'hdx_theme/search' %}
+
+
+
   <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}
