@@ -22,7 +22,8 @@
       (_('Name Descending'), 'title_string desc'),
       (_('Last Modified'), 'metadata_modified desc') ]
     %}
-    {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=c.sort_by_selected, count=c.page.item_count, facets=facets, placeholder=_('Search datasets...'), show_empty=request.params %}
+    {% set sorting_selected = c.sort_by_selected if c.sort_by_selected else 'metadata_modified desc' %}
+    {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_selected, count=c.page.item_count, facets=facets, placeholder=_('Search datasets...'), show_empty=request.params %}
   {% endblock %}
   
   {% block packages_list %}
