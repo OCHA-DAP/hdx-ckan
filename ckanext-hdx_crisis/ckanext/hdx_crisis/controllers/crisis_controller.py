@@ -90,7 +90,7 @@ class CrisisController(base.BaseController):
                     if 'datastore_active' in r and r['datastore_active'] \
                             and r['name'] == resource_name:
                         return r['id']
-            re
+            return None
         except:
             log.warning('No dataset with id ' + dataset_id)
             return None
