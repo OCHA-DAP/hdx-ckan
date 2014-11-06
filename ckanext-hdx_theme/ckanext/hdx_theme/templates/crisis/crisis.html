@@ -57,7 +57,7 @@
                 {{ item.title }}
               </div>
               <div class="col-xs-12 item-info-number">
-                {{ item.value }}
+                <span title="{{ item.notes }}">{{ item.value }}</span>
               </div>
               <div class="col-xs-12 item-info-extra">
                 <div class="row">
@@ -68,7 +68,7 @@
                 <div class="row">
                   <div class="col-xs-12">
                     <span class="item-info-source-title"><a href="{{ item.source_link }}">{{ item.source }}</a></span> - <span class="item-info-source-date">{{ item.latest_date }}</span>
-                     -- {{ item.notes }} -- {{ item.explore }}
+                     --  -- {{ item.explore }}
                   </div>
                 </div>
               </div>
@@ -110,7 +110,7 @@
             Deaths
           </div>
           <div class="col-xs-12 item-info-number">
-            4,900
+            <span title="">4,900</span>
           </div>
           <div class="col-xs-12 item-info-extra">
             <div class="row">
