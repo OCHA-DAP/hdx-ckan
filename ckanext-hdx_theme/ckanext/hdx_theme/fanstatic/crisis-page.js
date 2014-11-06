@@ -3,10 +3,10 @@ $(document).ready(function() {
 
   L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
     attribution: '<a class="mR45" href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>',
-    maxZoom: 5
+    maxZoom: 10
   }).addTo(map);
 
-  map.setView([9, 0], 13);
+  map.setView([9, 0], 5);
 
 
   //http://ckan.lo:5000/api/3/action/group_show?id=afg
