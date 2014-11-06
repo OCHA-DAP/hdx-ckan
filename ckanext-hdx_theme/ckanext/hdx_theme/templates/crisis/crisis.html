@@ -48,6 +48,27 @@
     </div>
   </div>
   <div class="row mTop35">
+    {% block top_line_figures %}
+      {% for item in c.top_line_items %}
+        <div class="col-xs-4">
+          <div class="item-info">
+            <div class="row">
+              <div class="col-xs-12 item-info-title">
+                {{ item.title }}
+              </div>
+              <div class="col-xs-12 item-info-number">
+                {{ item.value }}
+              </div>
+              <div class="col-xs-12 item-info-extra">
+                <span class="item-info-extra-title">{{ item.source }} - </span><a href="{{ item.source_link }}">Source</a>
+                {{ item.latest_date }} -- {{ item.notes }} -- {{ item.explore }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endblock %}
+
     <div class="col-xs-4">
       <div class="item-info">
         <div class="row">
@@ -150,13 +171,6 @@
 
 <section class="list-items module">
     <div class="list-items module-content mT35">
-	{% block top_line_figures %}
-		<ul>
-		{% for item in c.top_line_items %}
-			<li>{{ item.title }} -- {{ item.value }} -- {{ item.latest_date }}-- {{ item.source }} -- {{ item.source_link }} -- {{ item.notes }} -- {{ item.explore }}</li>
-		{% endfor %}
-		</ul>
-	{% endblock %}
 	{% block package_search_results_list %}
         <div class="list-header">
           <span class="mL15 list-header-title">
