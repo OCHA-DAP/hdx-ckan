@@ -572,11 +572,11 @@ msgstr "Oldest"
 
 #: ckan/controllers/related.py:91
 msgid "The requested related item was not found"
-msgstr "The requested related item was not found"
+msgstr "The requested gallery item was not found"
 
 #: ckan/controllers/related.py:144 ckan/controllers/related.py:220
 msgid "Related item not found"
-msgstr "Related item not found"
+msgstr "Gallery item not found"
 
 #: ckan/controllers/related.py:154 ckan/logic/auth/get.py:10
 #: ckan/logic/auth/get.py:242
@@ -589,20 +589,20 @@ msgstr "Package not found"
 
 #: ckan/controllers/related.py:179
 msgid "Related item was successfully created"
-msgstr "Related item was successfully created"
+msgstr "Gallery item was successfully created"
 
 #: ckan/controllers/related.py:181
 msgid "Related item was successfully updated"
-msgstr "Related item was successfully updated"
+msgstr "Gallery item was successfully updated"
 
 #: ckan/controllers/related.py:212
 msgid "Related item has been deleted."
-msgstr "Related item has been deleted."
+msgstr "Gallery item has been deleted."
 
 #: ckan/controllers/related.py:218
 #, python-format
 msgid "Unauthorized to delete related item %s"
-msgstr "Unauthorized to delete related item %s"
+msgstr "Unauthorized to delete gallery item %s"
 
 #: ckan/controllers/related.py:228 ckan/templates/package/search.html:51
 #: ckan/templates_legacy/js_strings.html:16
@@ -891,7 +891,7 @@ msgstr ""
 
 #: ckan/lib/activity_streams.py:129
 msgid "{actor} deleted the related item {related_item}"
-msgstr "{actor} deleted the related item {related_item}"
+msgstr "{actor} deleted the gallery item {related_item}"
 
 #: ckan/lib/activity_streams.py:132
 msgid "{actor} started following {dataset}"
@@ -1256,7 +1256,7 @@ msgstr "Date format incorrect"
 #: ckan/logic/validators.py:192 ckan/templates/package/read_base.html:26
 #: ckan/templates/snippets/related.html:2
 msgid "Related"
-msgstr "Related"
+msgstr "Gallery"
 
 #: ckan/logic/validators.py:202
 msgid "That group name or ID does not exist."
@@ -1581,11 +1581,11 @@ msgstr "User %s not authorized to add dataset to this organization"
 
 #: ckan/logic/auth/create.py:51
 msgid "You must be a sysadmin to create a featured related item"
-msgstr "You must be a sysadmin to create a featured related item"
+msgstr "You must be a sysadmin to create a featured gallery item"
 
 #: ckan/logic/auth/create.py:55
 msgid "You must be logged in to add a related item"
-msgstr "You must be logged in to add a related item"
+msgstr "You must be logged in to add a gallery item"
 
 #: ckan/logic/auth/create.py:79
 #, python-format
@@ -1641,7 +1641,7 @@ msgstr "User %s not authorized to delete file %s"
 
 #: ckan/logic/auth/delete.py:44 ckan/logic/auth/delete.py:58
 msgid "Only the owner can delete a related item"
-msgstr "Only the owner can delete a related item"
+msgstr "Only the owner can delete a gallery item"
 
 #: ckan/logic/auth/delete.py:70
 #, python-format
@@ -1724,11 +1724,11 @@ msgstr "User %s not authorized to edit organisation %s"
 
 #: ckan/logic/auth/update.py:128 ckan/logic/auth/update.py:134
 msgid "Only the owner can update a related item"
-msgstr "Only the owner can update a related item"
+msgstr "Only the owner can update a gallery item"
 
 #: ckan/logic/auth/update.py:139
 msgid "You must be a sysadmin to change a related item's featured field."
-msgstr "You must be a sysadmin to change a related item's featured field."
+msgstr "You must be a sysadmin to change a gallery item's featured field."
 
 #: ckan/logic/auth/update.py:156
 #, python-format
@@ -3191,15 +3191,15 @@ msgstr ""
 
 #: ckan/templates/package/related_list.html:6
 msgid "Related Media for {dataset}"
-msgstr "Related Media for {dataset}"
+msgstr "Gallery Media for {dataset}"
 
 #: ckan/templates/package/related_list.html:11
 msgid "No related items"
-msgstr "No related items"
+msgstr "No gallery items"
 
 #: ckan/templates/package/related_list.html:16
 msgid "Add Related Item"
-msgstr "Add Related Item"
+msgstr "Add Gallery Item"
 
 #: ckan/templates/package/resource_edit.html:16
 msgid "View resource"
@@ -3604,11 +3604,11 @@ msgstr "Additional data"
 
 #: ckan/templates/related/base_form_page.html:12
 msgid "Related Form"
-msgstr "Related Form"
+msgstr "Gallery Form"
 
 #: ckan/templates/related/base_form_page.html:20
 msgid "What are related items?"
-msgstr "What are related items?"
+msgstr "What are gallery items?"
 
 #: ckan/templates/related/base_form_page.html:22
 msgid ""
@@ -3617,10 +3617,7 @@ msgid ""
 "pictograph or bar chart, an app using all or part of the data or even a "
 "news story that references this dataset.</p> "
 msgstr ""
-" <p>Related Media is any app, article, visualisation or idea related to "
-"this dataset.</p> <p>For example, it could be a custom visualisation, "
-"pictograph or bar chart, an app using all or part of the data or even a "
-"news story that references this dataset.</p> "
+" <p>Gallery items include any app, article, visualisation or idea related to this dataset. This is an opportunity to share any content that references this dataset with other HDX users.</p>"
 
 #: ckan/templates/related/confirm_delete.html:11
 msgid "Are you sure you want to delete related item - {name}?"
@@ -3641,12 +3638,12 @@ msgid ""
 "<strong>%(item_count)s</strong> related items found</p> "
 msgstr ""
 " <p>Showing items <strong>%(first)s - %(last)s</strong> of "
-"<strong>%(item_count)s</strong> related items found</p> "
+"<strong>%(item_count)s</strong> gallery items found</p> "
 
 #: ckan/templates/related/dashboard.html:25
 #, python-format
 msgid " <p><strong>%(item_count)s</strong> related items found</p> "
-msgstr " <p><strong>%(item_count)s</strong> related items found</p> "
+msgstr " <p><strong>%(item_count)s</strong> gallery items found</p> "
 
 #: ckan/templates/related/dashboard.html:29
 msgid "There have been no apps submitted yet."
@@ -3699,31 +3696,31 @@ msgstr "Apply"
 
 #: ckan/templates/related/edit.html:3
 msgid "Edit related item"
-msgstr "Edit related item"
+msgstr "Edit gallery item"
 
 #: ckan/templates/related/edit.html:6
 msgid "Edit Related"
-msgstr "Edit Related"
+msgstr "Edit Gallery"
 
 #: ckan/templates/related/edit.html:8
 msgid "Edit Related Item"
-msgstr "Edit Related Item"
+msgstr "Edit Gallery Item"
 
 #: ckan/templates/related/new.html:3
 msgid "Create a related item"
-msgstr "Create a related item"
+msgstr "Create a gallery item"
 
 #: ckan/templates/related/new.html:5
 msgid "Create Related"
-msgstr "Create Related"
+msgstr "Create Gallery"
 
 #: ckan/templates/related/new.html:7
 msgid "Create Related Item"
-msgstr "Create Related Item"
+msgstr "Create Gallery Item"
 
 #: ckan/templates/related/snippets/related_form.html:18
 msgid "My Related Item"
-msgstr "My Related Item"
+msgstr "My Gallery Item"
 
 #: ckan/templates/related/snippets/related_form.html:19
 msgid "http://example.com/"
@@ -3743,7 +3740,7 @@ msgstr "Type"
 
 #: ckan/templates/related/snippets/related_form.html:28
 msgid "Are you sure you want to delete this related item?"
-msgstr "Are you sure you want to delete this related item?"
+msgstr "Are you sure you want to delete this gallery item?"
 
 #: ckan/templates/related/snippets/related_item.html:16
 msgid "Go to {related_item_type}"
@@ -3887,7 +3884,7 @@ msgid ""
 "No apps, ideas, news stories or images have been related to this dataset "
 "yet."
 msgstr ""
-"No apps, ideas, news stories or images have been related to this "
+"No apps, ideas, news stories or images have been added to this "
 "dataset yet."
 
 #: ckan/templates/snippets/related.html:18
