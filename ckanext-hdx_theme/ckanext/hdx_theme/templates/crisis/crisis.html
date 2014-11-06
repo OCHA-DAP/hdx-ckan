@@ -148,10 +148,19 @@
 
   </div>
 
+<section class="list-items module">
+    <div class="list-items module-content mT35">
+	{% block top_line_figures %}
+		<ul>
+		{% for item in c.top_line_items %}
+			<li>{{ item.title }} -- {{ item.value }} -- {{ item.latest_date }}-- {{ item.source }} -- {{ item.source_link }} -- {{ item.notes }} -- {{ item.explore }}</li>
+		{% endfor %}
+		</ul>
+	{% endblock %}
 	{% block package_search_results_list %}
         <div class="list-header">
           <span class="mL15 list-header-title">
-            Datasets [{{c.items | count}}]
+            Datasets [{{c.item_count}}]
           </span>
           <span class="mL15 list-header-showall">
             <a href="{{ c.other_links.show_more }}">Show all datasets</a>
@@ -160,6 +169,11 @@
         </div>
         {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.items) }}
 	{% endblock %}
+	</div>
+	{% block page_pagination %}
+        {{ c.page.pager(q=c.q) }}
+    {% endblock %}
+</section>
 {% endblock %}
 
 {% block secondary %}
