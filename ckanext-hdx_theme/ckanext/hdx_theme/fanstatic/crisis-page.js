@@ -13,8 +13,7 @@ $(document).ready(function() {
   var countries = [
     'lbr',
     'sle',
-    'gin',
-    'nga'
+    'gin'
   ];
   $.each(countries, function (idx, val){
     var url = "/api/3/action/group_show?id=";
