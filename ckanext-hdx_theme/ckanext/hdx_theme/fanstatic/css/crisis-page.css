@@ -29,3 +29,10 @@
     text-transform: uppercase;
     font-weight: bold;
 }
+
+/* Dataset search results on crisis page */
+.crisis-list-header.list-header {
+	background-color: inherit;
+}
+
+/* END -  Dataset search results on crisis page */
