@@ -47,7 +47,7 @@
       </span>
     </div>
   </div>
-  <div class="row mTop35">
+  <div class="row mTop70">
     {% block top_line_figures %}
       {% for item in c.top_line_items %}
         <div class="col-xs-4">
@@ -60,8 +60,17 @@
                 {{ item.value }}
               </div>
               <div class="col-xs-12 item-info-extra">
-                <span class="item-info-extra-title">{{ item.source }} - </span><a href="{{ item.source_link }}">Source</a>
-                {{ item.latest_date }} -- {{ item.notes }} -- {{ item.explore }}
+                <div class="row">
+                  <div class="col-xs-12">
+                    <span class="item-info-source-title-text">Source title</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12">
+                    <span class="item-info-source-title"><a href="{{ item.source_link }}">{{ item.source }}</a></span> - <span class="item-info-source-date">{{ item.latest_date }}</span>
+                     -- {{ item.notes }} -- {{ item.explore }}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
