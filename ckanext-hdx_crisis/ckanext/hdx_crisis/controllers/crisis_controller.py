@@ -70,20 +70,29 @@ class CrisisController(base.BaseController):
         return render('crisis/crisis.html')
 
     def _get_top_line_items(self, context, datastore_resource_id):
+        modified_context = dict(context)
+        modified_context['ignore_auth'] = True
         result = get_action('datastore_search')(
-            context, {'resource_id': datastore_resource_id})
+            modified_context, {'resource_id': datastore_resource_id})
         if 'records' in result:
             for r in result['records']:
                 d = dt.datetime.strptime(
                     r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
-                r[u'latest_date'] = dt.datetime.strftime(d, '%d-%b-%Y')
+                r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
+                int_value = int(r[u'value'])
+                if int_value == r[u'value']:
+                    r[u'value'] = '{:,}'.format(int_value)
+                else:
+                    r[u'value'] = '{:,}'.format(r[u'value'])
             return result['records']
         return []
 
     def _get_datastore_resource_id(self, context, dataset_id, resource_name):
         try:
+            modified_context = dict(context)
+            modified_context['ignore_auth'] = True
             dataset = get_action('package_show')(
-                context, {'id': dataset_id})
+                modified_context, {'id': dataset_id})
 
             if 'resources' in dataset:
                 for r in dataset['resources']:
