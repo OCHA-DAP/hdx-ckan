@@ -94,6 +94,8 @@ class FileDownloadController(storage.StorageController):
             filepath = file_url[len("file://"):]
             headers = {
                 # 'Content-Disposition':'attachment; filename="%s"' % label,
+                'Pragma': 'no-cache',
+                'Cache-Control': 'no-cache',
                 'Content-Type': metadata.get('_format', 'text/plain')}
             fapp = FileApp(filepath, headers=None, **headers)
             return fapp(request.environ, self.start_response)
