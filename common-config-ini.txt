@@ -158,5 +158,5 @@ hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 hdx.rest.indicator.endpoint = https://manage.hdx.rwlabs.org/hdx/public/api2/values
 hdx.rest.indicator.endpoint.facets = https://manage.hdx.rwlabs.org/hdx/public/api2
 
-hdx.crisis.ebola_dataset = ebola-crisis-dataset
-hdx.crisis.ebola_resource_title = top_line_figures_for_ebola.csv
+hdx.crisis.ebola_dataset = topline-ebola-outbreak-figures
+hdx.crisis.ebola_resource_title = topline-ebola-outbreak-figures.csv
