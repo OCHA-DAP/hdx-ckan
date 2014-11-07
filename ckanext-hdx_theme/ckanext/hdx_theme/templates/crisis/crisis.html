@@ -62,13 +62,14 @@
               <div class="col-xs-12 item-info-extra">
                 <div class="row">
                   <div class="col-xs-12">
-                    <span class="item-info-source-title-text">Source title</span>
+                    <span class="item-info-source-title-text">{{ item.source }}</span>
                   </div>
                 </div>
                 <div class="row">
                   <div class="col-xs-12">
-                    <span class="item-info-source-title"><a href="{{ item.source_link }}">{{ item.source }}</a></span> - <span class="item-info-source-date">{{ item.latest_date }}</span>
-                     --  -- {{ item.explore }}
+                    <span class="item-info-source-title"><a href="{{ item.source_link }}">Data</a></span> -
+                    <span class="item-info-source-title"><a href="{{ item.explore }}">Explore</a></span> -
+                    <span class="item-info-source-date">{{ item.latest_date }}</span>
                   </div>
                 </div>
               </div>
@@ -77,159 +78,6 @@
         </div>
       {% endfor %}
     {% endblock %}
-
-    <div class="col-xs-4">
-      <div class="item-info">
-        <div class="row">
-          <div class="col-xs-12 item-info-title">
-            Cumulative Cases
-          </div>
-          <div class="col-xs-12 item-info-number">
-            10,141
-          </div>
-          <div class="col-xs-12 item-info-extra">
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title-text">Source title</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title"><a href="">HDX Repository</a></span> - <span class="item-info-source-date">Jun 06, 2014</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-4">
-      <div class="item-info">
-        <div class="row">
-          <div class="col-xs-12 item-info-title">
-            Deaths
-          </div>
-          <div class="col-xs-12 item-info-number">
-            <span title="">4,900</span>
-          </div>
-          <div class="col-xs-12 item-info-extra">
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title-text">Source title</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title"><a href="">HDX Repository</a></span> - <span class="item-info-source-date">Jun 06, 2014</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-4">
-      <div class="item-info">
-        <div class="row">
-          <div class="col-xs-12 item-info-title">
-            Contries Affected
-          </div>
-          <div class="col-xs-12 item-info-number">
-            6
-          </div>
-          <div class="col-xs-12 item-info-extra">
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title-text">Source title</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title"><a href="">HDX Repository</a></span> - <span class="item-info-source-date">Jun 06, 2014</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-4">
-      <div class="item-info">
-        <div class="row">
-          <div class="col-xs-12 item-info-title">
-            Health Facilities Available
-          </div>
-          <div class="col-xs-12 item-info-number">
-            24
-          </div>
-          <div class="col-xs-12 item-info-extra">
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title-text">Source title</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title"><a href="">HDX Repository</a></span> - <span class="item-info-source-date">Jun 06, 2014</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-4">
-      <div class="item-info">
-        <div class="row">
-          <div class="col-xs-12 item-info-title">
-            Beds Available
-          </div>
-          <div class="col-xs-12 item-info-number">
-            126
-          </div>
-          <div class="col-xs-12 item-info-extra">
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title-text">Source title</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title"><a href="">HDX Repository</a></span> - <span class="item-info-source-date">Jun 06, 2014</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-xs-4">
-      <div class="item-info">
-        <div class="row">
-          <div class="col-xs-12 item-info-title">
-            Funding Requested
-          </div>
-          <div class="col-xs-12 item-info-number">
-            $988m
-          </div>
-          <div class="col-xs-12 item-info-extra">
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title-text">Source title</span>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <span class="item-info-source-title"><a href="">HDX Repository</a></span> - <span class="item-info-source-date">Jun 06, 2014</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-
   </div>
 
 <section class="list-items module">
