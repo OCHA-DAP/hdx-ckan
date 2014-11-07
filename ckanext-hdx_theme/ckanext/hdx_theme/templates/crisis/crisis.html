@@ -67,8 +67,12 @@
                 </div>
                 <div class="row">
                   <div class="col-xs-12">
-                    <span class="item-info-source-title"><a href="{{ item.source_link }}">Data</a></span> -
-                    <span class="item-info-source-title"><a href="{{ item.explore }}">Explore</a></span> -
+                  	{% if item.source_link %}
+                    	<span class="item-info-source-title"><a href="{{ item.source_link }}">Data</a></span> -
+                    {% endif %}
+                    {% if item.explore %}
+                    	<span class="item-info-source-title"><a href="{{ item.explore }}">Explore</a></span> -
+                    {% endif %}
                     <span class="item-info-source-date">{{ item.latest_date }}</span>
                   </div>
                 </div>
