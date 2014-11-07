@@ -66,8 +66,15 @@ class FileDownloadController(storage.StorageController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj, 'resource':resource}
         data_dict = {'id': resource.id}
-
-        logic.check_access('resource_show', context, data_dict)
+        try:
+            logic.check_access('resource_show', context, data_dict)
+        except logic.NotAuthorized:
+            r = request.environ['pylons.pylons'].response
+            r.headers['Pragma'] = 'no-cache'
+            r.headers['Cache-Control'] = 'no-cache'
+            r.unicode_body = 'Not authorized to read file ' + resource.id
+            r.status = 403
+            return r
 
         exists = self.ofs.exists(BUCKET, label)
         if not exists:
