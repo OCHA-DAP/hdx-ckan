@@ -37,6 +37,17 @@ key_prefix = config.get('ckan.storage.key_prefix', 'file/')
 _eq_re = re.compile(r"^(.*)(=[0-9]*)$")
 
 
+def generate_response(http_status, unicode_body, no_cache=True):
+    r = request.environ['pylons.pylons'].response
+    if no_cache:
+        r.headers['Pragma'] = 'no-cache'
+        r.headers['Cache-Control'] = 'no-cache'
+
+    r.unicode_body = unicode_body
+    r.status = http_status
+    return r
+
+
 class FileDownloadController(storage.StorageController):
     _ofs_impl = None
 
@@ -55,13 +66,15 @@ class FileDownloadController(storage.StorageController):
         query = connection.execute("""SELECT * from resource where url= %s""", (url,))
         res = query.fetchone()
         if not res:
-            raise logic.NotFound
-        
+#             raise logic.NotFound
+            r = generate_response(404, u'File not found')
+            return r
+
         # We need this as a resource object to check access so create a dummy obj and trick CKAN
         resource = model.Resource()
         for k in res.keys():
             setattr(resource,k,res[k])
-        
+
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj, 'resource':resource}
@@ -69,11 +82,7 @@ class FileDownloadController(storage.StorageController):
         try:
             logic.check_access('resource_show', context, data_dict)
         except logic.NotAuthorized:
-            r = request.environ['pylons.pylons'].response
-            r.headers['Pragma'] = 'no-cache'
-            r.headers['Cache-Control'] = 'no-cache'
-            r.unicode_body = 'Not authorized to read file ' + resource.id
-            r.status = 403
+            r = generate_response(403, u'Not authorized to read file ' + resource.id)
             return r
 
         exists = self.ofs.exists(BUCKET, label)
@@ -86,7 +95,9 @@ class FileDownloadController(storage.StorageController):
                 file_url = h.url_for('storage_file', label=label)
                 h.redirect_to(file_url)
             else:
-                abort(404)
+#                 abort(404)
+                r = generate_response(404, u'File not found')
+                return r
 
         file_url = self.ofs.get_url(BUCKET, label)
         if file_url.startswith("file://") or file_url.endswith('xlsx'):
