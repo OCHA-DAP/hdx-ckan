@@ -19,13 +19,14 @@
     color: #333333;
 }
 
-.item-info .item-info-title{
+.item-info-title{
     font-family: 'Gotham-Bold', sans-serif;
     font-weight: 400;
     font-size: 16px;
     letter-spacing: 0.01em;
     margin-bottom: 40px;
     text-transform: capitalize;
+    color: #333333;
 }
 
 .item-info .item-info-number {
@@ -65,6 +66,7 @@
     line-height: 100px;
     text-transform: capitalize;
 }
+
 /* Dataset search results on crisis page */
 .crisis-list-header.list-header {
 	background-color: inherit;
