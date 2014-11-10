@@ -103,7 +103,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_last_revision_timestamp_group': hdx_helpers.get_last_revision_timestamp_group,
             'feature_count': hdx_helpers.feature_count,
             'follow_status': hdx_helpers.follow_status,
-            'shorten': hdx_helpers.shorten,
             'hdx_add_url_param': hdx_helpers.hdx_add_url_param
         }
 

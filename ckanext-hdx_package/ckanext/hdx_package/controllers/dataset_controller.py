@@ -613,6 +613,20 @@ class DatasetController(PackageController):
                     or datapreview.get_preview_plugin(
                         data_dict, return_first=True))
 
+    def shorten(self):
+        import requests
+        params = request.params.items()
+        url = params[0][1]
+        r = requests.post("https://www.googleapis.com/urlshortener/v1/url", data=json.dumps({'longUrl':url}), headers={'content-type':'application/json'})
+        item = r.json()
+
+        try:
+            short = item['id']
+        except:
+            short = url
+        return self._finish(200, {'url':short}, content_type='json')
+
+
 # copy from package.py:1094
     def resource_delete(self, id, resource_id):
 
