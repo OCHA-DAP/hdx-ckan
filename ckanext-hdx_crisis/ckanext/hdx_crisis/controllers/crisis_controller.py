@@ -19,6 +19,7 @@ render = base.render
 get_action = logic.get_action
 c = common.c
 request = common.request
+_ = common._
 
 log = logging.getLogger(__name__)
 
@@ -69,21 +70,34 @@ class CrisisController(base.BaseController):
 
         return render('crisis/crisis.html')
 
+    def _format_results(self, result):
+        for r in result['records']:
+            d = dt.datetime.strptime(r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
+            r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
+
+            modified_value = r[u'value']
+            if r[u'units'] == 'ratio':
+                modified_value *= 100.0
+            elif r[u'units'] == 'million':
+                modified_value /= 1000000.0
+
+            int_value = int(modified_value)
+            if int_value == modified_value:
+                r[u'formatted_value'] = '{:,}'.format(int_value)
+            else:
+                if r[u'units'] == 'ratio':
+                    r[u'formatted_value'] = '{:,.1f}%'.format(modified_value)
+                elif r[u'units'] == 'million':
+                    r[u'formatted_value'] = '{:,.1f} '.format(modified_value)
+                    r[u'formatted_value'] += ' ' + _('million')
+
     def _get_top_line_items(self, context, datastore_resource_id):
         modified_context = dict(context)
         modified_context['ignore_auth'] = True
         result = get_action('datastore_search')(
             modified_context, {'resource_id': datastore_resource_id})
         if 'records' in result:
-            for r in result['records']:
-                d = dt.datetime.strptime(
-                    r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
-                r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
-                int_value = int(r[u'value'])
-                if int_value == r[u'value']:
-                    r[u'value'] = '{:,}'.format(int_value)
-                else:
-                    r[u'value'] = '{:,}'.format(r[u'value'])
+            self._format_results(result)
             return result['records']
         return []
 
