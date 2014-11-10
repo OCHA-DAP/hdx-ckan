@@ -6,11 +6,6 @@ Created on Sep 9, 2014
 
 # -*- coding: utf-8 -*-
 
-'''
-Created on Jul 23, 2014
-
-@author: alexandru-m-g
-'''
 import logging as logging
 import ckan.plugins.toolkit as tk
 import ckan.tests as tests

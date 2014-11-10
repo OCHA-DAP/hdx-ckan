@@ -145,6 +145,8 @@ class GroupController(base.BaseController):
         sort_by = c.sort_by_selected = request.params.get('sort')
         if sort_by:
             data_dict['sort'] = sort_by
+        else:
+            data_dict['sort'] = 'title asc'
         try:
             self._check_access('site_read', context)
         except NotAuthorized:

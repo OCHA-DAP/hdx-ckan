@@ -1,0 +1,72 @@
+#ebola-map {
+  height: 450px;
+}
+
+.ebola-map-title {
+    height:100px;
+    background-color: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    top: 350px;
+    width: 100%;
+}
+
+
+.item-info {
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    padding: 40px 0;
+    margin-top: -1px;
+    color: #333333;
+}
+
+.item-info .item-info-title{
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    margin-bottom: 40px;
+}
+
+.item-info .item-info-number {
+    font-family: 'Gotham-Light', sans-serif;
+    font-size: 74px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin-bottom: 34px;
+}
+
+.item-info-source-title-text{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0.01em;
+}
+
+.item-info .item-info-source-title{
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.01em;
+}
+.item-info .item-info-source-date {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.01em;
+    color: #888888;
+}
+
+.crisisTitle{
+    color: #000000;
+    margin-top: 80px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 0.01em;
+    line-height: 100px;
+
+}
+/* Dataset search results on crisis page */
+.crisis-list-header.list-header {
+	background-color: inherit;
+}
+
+/* END -  Dataset search results on crisis page */

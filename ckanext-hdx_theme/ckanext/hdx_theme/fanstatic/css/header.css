@@ -503,7 +503,7 @@
         padding-left: 0;
         padding-right: 0;
         padding-bottom: 0;
-        margin-bottom: 0;
+        /*margin-bottom: 0;*/
     }
 
 	.mainContent .module-content.mBottom10 {
@@ -522,6 +522,9 @@
 /* Common Classes */
     .mTop60{
         margin-top: 60px;
+    }
+    .mTop70{
+        margin-top: 70px;
     }
     .mTop80{
         margin-top: 80px;
