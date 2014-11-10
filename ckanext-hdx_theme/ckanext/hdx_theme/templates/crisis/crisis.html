@@ -83,8 +83,16 @@
       {% endfor %}
     {% endblock %}
   </div>
+  <div class="mTop110 row mBottom40">
+    <div class="col-xs-12 item-info-title">
+      Week by Week Spread of Ebola in West Africa
+    </div>
+    <div class="col-xs-12">
+      <div id="ebola_graph"></div>
+    </div>
+  </div>
 
-<section class="list-items module">
+<section class="list-items module mTop110">
     <div class="list-items module-content mT35">
 	{% block package_search_results_list %}
         <div class="list-header crisis-list-header">
@@ -117,6 +125,7 @@
   {% resource 'hdx_theme/hdx_show_more.js' %}
 
   {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/d3' %}
   {% resource 'hdx_theme/leaflet' %}
   {% resource 'hdx_theme/crisis-page' %}
   {% resource 'hdx_theme/search' %}
