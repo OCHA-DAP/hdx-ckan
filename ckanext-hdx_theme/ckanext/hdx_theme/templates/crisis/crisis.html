@@ -9,10 +9,87 @@
 {% endblock %}
 
 {% block primary_content %}
+  <div class="row paddingRowHack" style="position: relative;">
+    <div id="ebola-map">
+    </div>
+    <div class="ebola-map-title">
+      <span class="mL45 crisisTitle"> West Africa: Ebola outbreak </span>
+      <span class="mR45 pull-right" style="color: black; line-height: 80px; font-weight: bold; font-size: 30px;">
+        <a class="btn hdx-btn org-btn" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
+           data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share page">Share</a>
+        <div id="dataset_social_wrapper" class="popover-wrapper"></div>
+        <div style="display:none" id="dataset_social">
+          <div class="resource-social">
+            <a href="https://plus.google.com/share?url={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/google-plus_black.svg" />
+              <span> Google+ </span>
+            </a>
+          </div>
+          <div class="resource-social">
+            <a href="https://twitter.com/share?url={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/twitter_black.svg" />
+              <span> Twitter </span>
+            </a>
+          </div>
+          <div class="resource-social" >
+            <a href="https://www.facebook.com/sharer.php?u={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/fb_black.svg" />
+              <span> Facebook </span>
+            </a>
+          </div>
+          <div class="resource-social" >
+            <a href="mailto:?subject=n&body={{ url }}" target="_blank">
+              <img class="social-images" src="/images/svg/email_black.svg" />
+              <span> {{ _('Email') }} </span>
+            </a>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="row mTop70">
+    {% block top_line_figures %}
+      {% for item in c.top_line_items %}
+        <div class="col-xs-4">
+          <div class="item-info">
+            <div class="row">
+              <div class="col-xs-12 item-info-title">
+                {{ item.title }}
+              </div>
+              <div class="col-xs-12 item-info-number">
+                <span title="{{ item.notes }}">{{ item.value }}</span>
+              </div>
+              <div class="col-xs-12 item-info-extra">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <span class="item-info-source-title-text">{{ item.source }}</span>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-xs-12">
+                  	{% if item.source_link %}
+                    	<span class="item-info-source-title"><a href="{{ item.source_link }}">Data</a></span> -
+                    {% endif %}
+                    {% if item.explore %}
+                    	<span class="item-info-source-title"><a href="{{ item.explore }}">Explore</a></span> -
+                    {% endif %}
+                    <span class="item-info-source-date">{{ item.latest_date }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endblock %}
+  </div>
+
+<section class="list-items module">
+    <div class="list-items module-content mT35">
 	{% block package_search_results_list %}
-        <div class="list-header">
+        <div class="list-header crisis-list-header">
           <span class="mL15 list-header-title">
-            Datasets [{{c.items | count}}]
+            Datasets [{{c.item_count}}]
           </span>
           <span class="mL15 list-header-showall">
             <a href="{{ c.other_links.show_more }}">Show all datasets</a>
@@ -21,6 +98,11 @@
         </div>
         {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.items) }}
 	{% endblock %}
+	</div>
+	{% block page_pagination %}
+        {{ c.page.pager(q=c.q) }}
+    {% endblock %}
+</section>
 {% endblock %}
 
 {% block secondary %}
@@ -33,6 +115,13 @@
   {% resource 'hdx_theme/jquery.highlight' %}
   {% resource 'hdx_theme/jquery.more' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
-  
+
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/leaflet' %}
+  {% resource 'hdx_theme/crisis-page' %}
+  {% resource 'hdx_theme/search' %}
+
+
+
   <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}
