@@ -4,10 +4,11 @@ Created on Nov 3, 2014
 @author: alexandru-m-g
 '''
 
+import logging
 import datetime as dt
+import decimal
 
 import pylons.config as config
-import logging
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -20,6 +21,8 @@ get_action = logic.get_action
 c = common.c
 request = common.request
 _ = common._
+
+Decimal = decimal.Decimal
 
 log = logging.getLogger(__name__)
 
@@ -70,6 +73,11 @@ class CrisisController(base.BaseController):
 
         return render('crisis/crisis.html')
 
+    def _get_decimal_value(self, value):
+        decimal_value = Decimal(str(value)).quantize(
+            Decimal('.1'), rounding=decimal.ROUND_HALF_UP)
+        return decimal_value
+
     def _format_results(self, result):
         for r in result['records']:
             d = dt.datetime.strptime(r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
@@ -86,9 +94,11 @@ class CrisisController(base.BaseController):
                 r[u'formatted_value'] = '{:,}'.format(int_value)
             else:
                 if r[u'units'] == 'ratio':
-                    r[u'formatted_value'] = '{:,.1f}%'.format(modified_value)
+                    r[u'formatted_value'] = '{:,.1f}%'.format(
+                        self._get_decimal_value(modified_value))
                 elif r[u'units'] == 'million':
-                    r[u'formatted_value'] = '{:,.1f} '.format(modified_value)
+                    r[u'formatted_value'] = '{:,.1f} '.format(
+                        self._get_decimal_value(modified_value))
                     r[u'formatted_value'] += ' ' + _('million')
 
     def _get_top_line_items(self, context, datastore_resource_id):
