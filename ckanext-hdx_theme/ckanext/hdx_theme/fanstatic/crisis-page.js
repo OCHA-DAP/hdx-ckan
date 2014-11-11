@@ -1,7 +1,7 @@
 $(document).ready(function() {
   map = L.map('ebola-map', null, { zoomControl:false });
 
-  L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+  L.tileLayer($('#crisis-map-url-div').text(), {
     maxZoom: 10
   }).addTo(map);
 
