@@ -1,12 +1,12 @@
 #ebola-map {
-  height: 450px;
+  height: 350px;
 }
 
 .ebola-map-title {
-    height:100px;
+    height:50px;
     background-color: rgba(255, 255, 255, 0.4);
     position: absolute;
-    top: 350px;
+    top: 300px;
     width: 100%;
 }
 
@@ -61,12 +61,18 @@
     font-weight: bold;
     font-size: 28px;
     letter-spacing: 0.01em;
-    line-height: 100px;
+    line-height: 50px;
     text-transform: capitalize;
 }
 /* Dataset search results on crisis page */
 .crisis-list-header.list-header {
 	background-color: inherit;
 }
-
 /* END -  Dataset search results on crisis page */
+
+/* Position Leaflet copyright div on top right*/
+.leaflet-control-attribution.leaflet-control{
+    position: relative;
+    top: -335px;
+    left: 4px;
+}
