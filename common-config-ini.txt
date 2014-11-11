@@ -76,7 +76,7 @@ ckan.site_id = default
 #		Add ``resource_proxy`` to enable resorce proxying and get around the
 #		same origin policy
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
-ckan.plugins = hdx_search sitemap hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview
+ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
 
 ## Front-End Settings
@@ -157,3 +157,6 @@ hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 
 hdx.rest.indicator.endpoint = https://manage.hdx.rwlabs.org/hdx/public/api2/values
 hdx.rest.indicator.endpoint.facets = https://manage.hdx.rwlabs.org/hdx/public/api2
+
+hdx.crisis.ebola_dataset = topline-ebola-outbreak-figures
+hdx.crisis.ebola_resource_title = topline-ebola-outbreak-figures.csv

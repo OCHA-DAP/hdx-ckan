@@ -554,6 +554,10 @@
 	/*padding: 0px;*/
 /*}*/
 
+.module-content {
+  margin-bottom: 20px !important;
+}
+
 .list-items.module {
     margin: 0px 0;
 }
