@@ -2,7 +2,6 @@ $(document).ready(function() {
   map = L.map('ebola-map', null, { zoomControl:false });
 
   L.tileLayer($('#crisis-map-url-div').text(), {
-    attribution: '<a class="mR45" href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>',
     maxZoom: 10
   }).addTo(map);
 
