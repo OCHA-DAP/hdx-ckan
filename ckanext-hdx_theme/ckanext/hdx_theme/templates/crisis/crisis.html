@@ -10,6 +10,7 @@
 
 {% block primary_content %}
   <div class="row paddingRowHack" style="position: relative;">
+  	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
     <div id="ebola-map">
     </div>
     <div class="ebola-map-title">
