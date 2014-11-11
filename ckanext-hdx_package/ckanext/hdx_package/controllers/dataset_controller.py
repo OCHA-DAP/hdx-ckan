@@ -576,6 +576,12 @@ class DatasetController(PackageController):
             'hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
 
+        #count the number of resource downloads
+        c.downloads_count = 0
+        for resource in c.pkg_dict['resources']:
+            if resource['tracking_summary']:
+                c.downloads_count += resource['tracking_summary']['total']
+
         followers = get_action('dataset_follower_list')({'ignore_auth': True},
                                                         {'id': c.pkg_dict['id']})
         if followers and len(followers) > 0:
