@@ -1,0 +1,26 @@
+#ebola_graph{
+    width:100%;
+    min-height:300px;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.grid .tick line {
+    fill: none;
+    stroke:#aaa;
+    shape-rendering: crispEdges;
+    stroke-dasharray: 3,3; 
+}
+
+text {
+    font:10px sans-serif
+}
+
+.linelabels {
+    font:12px sans-serif;
+}
