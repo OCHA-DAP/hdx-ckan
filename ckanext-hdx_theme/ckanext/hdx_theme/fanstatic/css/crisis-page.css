@@ -35,6 +35,14 @@
     margin-bottom: 34px;
 }
 
+.item-info .item-info-number span.small {
+    font-family: 'Gotham-Light', sans-serif;
+    font-size: 37px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin-bottom: 34px;
+}
+
 .item-info-source-title-text{
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 14px;

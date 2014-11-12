@@ -94,12 +94,12 @@ class CrisisController(base.BaseController):
                 r[u'formatted_value'] = '{:,}'.format(int_value)
             else:
                 if r[u'units'] == 'ratio':
-                    r[u'formatted_value'] = '{:,.1f}%'.format(
+                    r[u'formatted_value'] = '{:,.1f}'.format(
                         self._get_decimal_value(modified_value))
                 elif r[u'units'] == 'million':
-                    r[u'formatted_value'] = '{:,.1f} '.format(
+                    r[u'formatted_value'] = '{:,.1f}'.format(
                         self._get_decimal_value(modified_value))
-                    r[u'formatted_value'] += ' ' + _('million')
+                    #r[u'formatted_value'] += ' ' + _('million')
 
     def _get_top_line_items(self, context, datastore_resource_id):
         modified_context = dict(context)
