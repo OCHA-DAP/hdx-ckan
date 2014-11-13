@@ -64,26 +64,26 @@ function drawDistricts(map){
   var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
 
   var layers = {
-    newCases: {
-      name: 'New Cases in the last 4 weeks',
-      threshold: [1, 25, 50, 200],
-      values: newCases
-    },
+//    newCases: {
+//      name: 'New Cases in the last 4 weeks',
+//      threshold: [1, 25, 50, 200],
+//      values: newCases
+//    },
     totalDeaths: {
-      name: 'Total Deaths',
+      name: 'Cumulative Deaths from Ebola',
       threshold: [1, 50, 100, 500],
       values: totalDeaths
     },
     totalCases: {
-      name: 'Total Cases',
+      name: 'Cumulative Cases of Ebola',
       threshold: [1, 100, 300, 800],
       values: totalCases
     },
-    newCasesPerArea:{
-      name: 'New Cases in the last 4 weeks per 1000 Sq. km',
-      threshold: [1, 10, 50, 250],
-      values: newCasesPerArea
-    },
+//    newCasesPerArea:{
+//      name: 'New Cases in the last 4 weeks per 1000 Sq. km',
+//      threshold: [1, 10, 50, 250],
+//      values: newCasesPerArea
+//    },
     totalCasesPerArea: {
       name: 'Total Cases per 1000 Sq. km',
       threshold: [1, 50, 100, 500],
@@ -94,11 +94,11 @@ function drawDistricts(map){
       threshold: [1, 25, 50, 200],
       values: totalDeathsPerArea
     },
-    newCasesPerPop:{
-      name: 'New Cases in the last 4 weeks per 100,000 people',
-      threshold: [0.1, 10, 25, 50],
-      values: newCasesPerPop
-    },
+//    newCasesPerPop:{
+//      name: 'New Cases in the last 4 weeks per 100,000 people',
+//      threshold: [0.1, 10, 25, 50],
+//      values: newCasesPerPop
+//    },
 
     totalCasesPerPop:{
       name: 'Total Cases per 100,000 people',
@@ -215,8 +215,8 @@ function drawDistricts(map){
         }
     });
     var extraLayers = {
-        'Ebola Medical Centres': medicalCentresLayer,
-        'SBTF Medical Centres': SBTFMedicalCentresLayer
+        'Ebola Treatment Centres (ETCs)': medicalCentresLayer
+//        ,'SBTF Medical Centres': SBTFMedicalCentresLayer
     };
 
     var info;

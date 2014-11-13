@@ -102,3 +102,10 @@
     margin-right: 8px;
     opacity: 0.7;
 }
+.leaflet-container input[type=radio], .leaflet-container input[type=checkbox] {
+    top: 0;
+}
+
+.leaflet-container label::after {
+    content: "";
+}
