@@ -87,6 +87,7 @@
     font: 'Source Sans Pro';
     margin: 0 0 5px;
     color: white;
+    font-weight: bold;
 }
 
 .map-info.legend {
