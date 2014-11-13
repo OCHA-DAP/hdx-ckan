@@ -59,7 +59,16 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         except Exception, e:
             assert '403' in e.args[0], 'Not Authorized for guest'
 
-        # Testing access to the private dataset
+        # Testing access to the private resource API
+        tests.call_action_api(self.app, 'resource_show', id=resource['id'],
+                              status=403)
+        tests.call_action_api(self.app, 'resource_show', id=resource['id'],
+                              apikey=tester.apikey, status=403)
+
+        tests.call_action_api(self.app, 'resource_show', id=resource[
+                              'id'], apikey=testsysadmin.apikey, status=200)
+
+        # Testing access to the private dataset API
         tests.call_action_api(self.app, 'package_show', id='test_private_dataset_1',
                               status=403)
         tests.call_action_api(self.app, 'package_show', id='test_private_dataset_1',
