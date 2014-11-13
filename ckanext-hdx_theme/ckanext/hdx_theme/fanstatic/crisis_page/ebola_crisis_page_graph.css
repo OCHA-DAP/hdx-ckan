@@ -3,24 +3,24 @@
     min-height:300px;
 }
 
-.axis path,
-.axis line {
+#ebola_graph .axis path,
+#ebola_graph .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
 
-.grid .tick line {
+#ebola_graph .grid .tick line {
     fill: none;
     stroke:#aaa;
     shape-rendering: crispEdges;
     stroke-dasharray: 3,3; 
 }
 
-text {
+#ebola_graph text {
     font:10px sans-serif
 }
 
-.linelabels {
-    font:12px sans-serif;
+#ebola_graph .linelabels {
+    font:16px sans-serif;
 }

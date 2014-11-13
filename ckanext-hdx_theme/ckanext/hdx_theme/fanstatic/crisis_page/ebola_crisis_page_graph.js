@@ -89,7 +89,8 @@ function generateLineChart(id,data){
         });        
         
     var deathColor = d3.scale.ordinal()
-          .range(["#B71C1C","#E53935","#EF9A9A","#FFEBEE"]);        
+          //.range(["#B71C1C","#E53935","#EF9A9A","#FFEBEE"]);
+            .range(["#f2645a","#F58A83","#F8B1AC","#FBD8D5"]);
   
     var seriesCaseArr = [], series = {};
         varNames.forEach(function (name) {
@@ -103,9 +104,10 @@ function generateLineChart(id,data){
         });        
 
     var caseColor = d3.scale.ordinal()
-          .range(["#1A237E","#3949AB","#7986CB","#E8EAF6"]); 
+          //.range(["#1A237E","#3949AB","#7986CB","#E8EAF6"])
+          .range(["#007ce0","#4CA3E9","#7FBDEF","#CCE4F8"]);
 
-    var margin = {top: 20, right: 120, bottom: 25, left: 50},
+    var margin = {top: 20, right: 150, bottom: 25, left: 50},
         width = $(id).width() - margin.left - margin.right,
         height = $(id).height() - margin.top - margin.bottom;
 
@@ -307,16 +309,16 @@ function generateLineChart(id,data){
         .attr("class", "line")
         .attr("d", caseLine)
         .attr("fill","none")
-        .attr("stroke","steelblue")
-        .attr("stroke-width","1px");
+        .attr("stroke","#007ce0")
+        .attr("stroke-width","2px");
 
     svg.append("path")
         .datum(data)
         .attr("class", "line deathline")
         .attr("d", deathLine)
         .attr("fill","none")
-        .attr("stroke","red")
-        .attr("stroke-width","1px");
+        .attr("stroke","#f2645a")
+        .attr("stroke-width","2px");
 
     var selection = svg.selectAll(".seriesdeath")
           .data(seriesDeathArr)
