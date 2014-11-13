@@ -85,12 +85,12 @@ function drawDistricts(map){
 //      values: newCasesPerArea
 //    },
     totalCasesPerArea: {
-      name: 'Total Cases per 1000 Sq. km',
+      name: 'Cumulative Cases per 1000 Sq. km',
       threshold: [1, 50, 100, 500],
       values: totalCasesPerArea
     },
     totalDeathsPerArea: {
-      name: 'Total Deaths per 1000 Sq. km',
+      name: 'Cumulative Deaths per 1000 Sq. km',
       threshold: [1, 25, 50, 200],
       values: totalDeathsPerArea
     },
@@ -101,12 +101,12 @@ function drawDistricts(map){
 //    },
 
     totalCasesPerPop:{
-      name: 'Total Cases per 100,000 people',
+      name: 'Cumulative Cases per 100,000 people',
       threshold: [0.1, 25, 50, 100],
       values: totalCasesPerPop
     },
     totalDeathsPerPop:{
-      name: 'Total Deaths per 100,000 people',
+      name: 'Cumulative Deaths per 100,000 people',
       threshold: [0.1, 20, 40, 80],
       values: totalDeathsPerPop
     }
