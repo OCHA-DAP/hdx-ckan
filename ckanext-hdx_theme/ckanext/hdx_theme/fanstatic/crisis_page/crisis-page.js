@@ -136,29 +136,29 @@ function drawDistricts(map){
   var medicalCentresStyle = function(feature){
       if(feature.properties.Status == "Functional"){
           return   {radius: 5,
-                  fillColor: "#A3C990",
+                  fillColor: "#1ebfb3",
                   color: "#000",
                   weight: 1,
-                  opacity: 1,
-                  fillOpacity: 1};
+                  opacity: 0.8,
+                  fillOpacity: 0.8};
               }
       else {
           return   {radius: 5,
-                  fillColor: "#738ffe",
+                  fillColor: "#007ce0",
                   color: "#000",
                   weight: 1,
-                  opacity: 1,
-                  fillOpacity: 1};
+                  opacity: 0.8,
+                  fillOpacity: 0.8};
               }
   };
 
   var SBTFMedicalCentresStyle = function(){
       return   {radius: 5,
-                  fillColor: "#91a7ff",
+                  fillColor: "#007ce0",
                   color: "#000",
                   weight: 1,
-                  opacity: 1,
-                  fillOpacity: 1};
+                  opacity: 0.8,
+                  fillOpacity: 0.8};
   };
 
     var medicalCentresLayer = L.geoJson(medicalCentres, {
@@ -170,12 +170,28 @@ function drawDistricts(map){
           (function (layer, properties) {
             // Create a mouseover event
             layer.on("mouseover", function (e) {
+              if (!L.Browser.ie && !L.Browser.opera) {
+                layer.bringToFront();
+              }
+              var name = feature.properties["Centre Name"];
+              if (name == null)
+                name = "";
+              var type = feature.properties["Type1"];
+              if (type == null)
+                type = "";
+              var status = feature.properties["Status"];
+              if (status == null)
+                status = "";
+              var organisation = feature.properties["Primary Organisation"];
+              if (organisation == null)
+                organisation = "";
+
               var message = '<h4>Ebola Medical Centers</h4>' +
                             '<table>' +
-                            '<tr><td style="text-align: right;">Center Name: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Centre Name"] + '</b><td></tr>' +
-                            '<tr><td style="text-align: right;">Type: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Type1"] + '</b><td></tr>' +
-                            '<tr><td style="text-align: right;">Status: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Status"] + '</b><td></tr>' +
-                            '<tr><td style="text-align: right;">Organisation: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Primary Organisation"] + '</b><td></tr>' +
+                            '<tr><td style="text-align: right;">Center Name: </td><td>&nbsp;&nbsp; <b>' + name + '</b><td></tr>' +
+                            '<tr><td style="text-align: right;">Type: </td><td>&nbsp;&nbsp; <b>' + type + '</b><td></tr>' +
+                            '<tr><td style="text-align: right;">Status: </td><td>&nbsp;&nbsp; <b>' + status + '</b><td></tr>' +
+                            '<tr><td style="text-align: right;">Organisation: </td><td>&nbsp;&nbsp; <b>' + organisation + '</b><td></tr>' +
                             '</table>';
               info.showOtherMessage(message);
             });
@@ -188,32 +204,32 @@ function drawDistricts(map){
         }
     });
 
-    var SBTFMedicalCentresLayer = L.geoJson(SBTFMedicalCentres, {
-        pointToLayer: function (feature, latlng) {
-            return L.circleMarker(latlng,SBTFMedicalCentresStyle());
-        },
-        onEachFeature: function (feature, layer) {
-//            layer.bindPopup("Centre ID: "+feature.properties["Centre ID"]+"<br />Centre Name: "+feature.properties["Center"]+"<br />Type: "+feature.properties["Type"]+"<br />Activity: "+feature.properties["Activity"]+"<br />Org: "+feature.properties["Org"]);
-          (function (layer, properties) {
-            // Create a mouseover event
-            layer.on("mouseover", function (e) {
-              var message = '<h4>Ebola Medical Centers</h4>' +
-                            '<table>' +
-                            '<tr><td style="text-align: right;">Center Name: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Centre"] + '</b><td></tr>' +
-                            '<tr><td style="text-align: right;">Type: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Type"] + '</b><td></tr>' +
-                            '<tr><td style="text-align: right;">Status: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Activity"] + '</b><td></tr>' +
-                            '<tr><td style="text-align: right;">Organisation: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Org"] + '</b><td></tr>' +
-                            '</table>';
-              info.showOtherMessage(message);
-            });
-            layer.on("mouseout", function (e) {
-              // Start by reverting the style back
-              layer.setStyle(layer.defaultOptions.style({properties: properties}));
-              info.update();
-            });
-          })(layer, feature.properties);
-        }
-    });
+//    var SBTFMedicalCentresLayer = L.geoJson(SBTFMedicalCentres, {
+//        pointToLayer: function (feature, latlng) {
+//            return L.circleMarker(latlng,SBTFMedicalCentresStyle());
+//        },
+//        onEachFeature: function (feature, layer) {
+////            layer.bindPopup("Centre ID: "+feature.properties["Centre ID"]+"<br />Centre Name: "+feature.properties["Center"]+"<br />Type: "+feature.properties["Type"]+"<br />Activity: "+feature.properties["Activity"]+"<br />Org: "+feature.properties["Org"]);
+//          (function (layer, properties) {
+//            // Create a mouseover event
+//            layer.on("mouseover", function (e) {
+//              var message = '<h4>Ebola Medical Centers</h4>' +
+//                            '<table>' +
+//                            '<tr><td style="text-align: right;">Center Name: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Centre"] + '</b><td></tr>' +
+//                            '<tr><td style="text-align: right;">Type: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Type"] + '</b><td></tr>' +
+//                            '<tr><td style="text-align: right;">Status: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Activity"] + '</b><td></tr>' +
+//                            '<tr><td style="text-align: right;">Organisation: </td><td>&nbsp;&nbsp; <b>' + feature.properties["Org"] + '</b><td></tr>' +
+//                            '</table>';
+//              info.showOtherMessage(message);
+//            });
+//            layer.on("mouseout", function (e) {
+//              // Start by reverting the style back
+//              layer.setStyle(layer.defaultOptions.style({properties: properties}));
+//              info.update();
+//            });
+//          })(layer, feature.properties);
+//        }
+//    });
     var extraLayers = {
         'Ebola Treatment Centres (ETCs)': medicalCentresLayer
 //        ,'SBTF Medical Centres': SBTFMedicalCentresLayer
@@ -228,7 +244,7 @@ function drawDistricts(map){
         onEachFeature: function (feature, layer) {
           var pcoderef = feature.properties.PCODE_REF;
           var nameref = feature.properties.NAME_REF;
-          layer.bindPopup("<b>" + nameref + " ("+ pcoderef+")</b><br />" + val['name'] + ": "+val['values'][pcoderef]);
+//          layer.bindPopup("<b>" + nameref + " ("+ pcoderef+")</b><br />" + val['name'] + ": "+val['values'][pcoderef]);
 
           (function(layer, properties) {
             // Create a mouseover event
