@@ -5,8 +5,8 @@ Created on Nov 12, 2014
 '''
 
 
-def test_strings_in_text(text, search_strings,
-                         begin_str=None, end_str=None):
+def are_strings_in_text(text, search_strings,
+                        begin_str=None, end_str=None):
 
     start = 0
     end = len(text)
