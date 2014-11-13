@@ -235,8 +235,13 @@ function drawDistricts(map){
             layer.on("mouseover", function (e) {
               // Change the style to the highlighted version
 
-              if (layer.defaultOptions.style != undefined) {
-                var currentStyle = layer.defaultOptions.style({properties: properties});
+              var styleFunction;
+              if (layer.defaultOptions == null)
+                styleFunction = layer._options.style;
+              else
+                styleFunction = layer.defaultOptions.style;
+              if (styleFunction != undefined) {
+                var currentStyle = styleFunction({properties: properties});
                 currentStyle['fillOpacity'] = 1;
                 currentStyle['opacity'] = 1;
                 currentStyle['color'] = '#888888';
@@ -255,7 +260,12 @@ function drawDistricts(map){
             // Create a mouseout event that undoes the mouseover changes
             layer.on("mouseout", function (e) {
               // Start by reverting the style back
-              layer.setStyle(layer.defaultOptions.style({properties: properties}));
+              var styleFunction;
+              if (layer.defaultOptions == null)
+                styleFunction = layer._options.style;
+              else
+                styleFunction = layer.defaultOptions.style;
+              layer.setStyle(styleFunction({properties: properties}));
               info.update();
             });
             // Close the "anonymous" wrapper function, and call it while passing
