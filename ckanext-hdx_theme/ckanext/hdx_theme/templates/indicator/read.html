@@ -2,6 +2,16 @@
 
 {% set pkg = c.pkg_dict or pkg_dict %}
 
+{% block breadcrumb_content %}
+	{% block breadcrum_parent_item %}
+	  <li>{{ h.nav_link(_('Indicators'), 
+	  	controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search', ext_indicator=1) }}</li>
+	{% endblock %}
+  <li class="active">{{ h.nav_link( pkg.title, 
+  	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
+	
+{% endblock %}
+
 {% block pre_primary %}
   {% snippet "indicator/snippets/read_pre_primary.html", pkg = pkg %}
 {% endblock %}
@@ -50,7 +60,7 @@
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls %}
+      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
     </div>
   </div>
 {% endblock %}

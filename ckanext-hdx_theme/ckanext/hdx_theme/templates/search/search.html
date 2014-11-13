@@ -4,7 +4,7 @@
 {% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Datasets'), controller='package', action='search', highlight_actions = 'new index') }}</li>
+  <li class="active">{{ h.nav_link(_('Search'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block primary_content %}
