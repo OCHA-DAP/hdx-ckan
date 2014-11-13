@@ -121,13 +121,20 @@
         letter-spacing: 0.01em;
         margin-left: 5px;
     }
-    .dataset-item .dataset-others li.label-icons {
+    /* .dataset-item .dataset-others li.label-icons {
 
     }
     .dataset-item .dataset-others li.label-icons::before {
         content: "|";
         margin-left: 15px;
+    } */
+    
+    .dataset-item .dataset-others ul.dataset-resources li + li.label-icons:before {
+    	content: "|";
+        margin-left: 15px;
     }
+    
+    
     .dataset-item .dataset-others .label-icons span{
         height: 15px;
         font-size: 15px;

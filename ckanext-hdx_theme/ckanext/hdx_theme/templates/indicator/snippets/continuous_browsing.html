@@ -23,11 +23,11 @@
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', id="continuous_browsing_locations", name=_('Supporting Locations'), count=' ',
 				links=[{'name':_('Coming soon...')}] %}
 				
-			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Downloads'), count=' ', 
-				links=[{'name':_('Coming soon...')}] %}
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Downloads'), count=downloads_count,
+				links=[{'name': ' '}] %}
 			
 			{% set followers_num = followers|length %}
-			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Follower'),_('Followers'), False), count=followers_num, 
+			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Follower'),_('Followers'), False), count=followers_num,
 				links=followers %}
 			
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Related Websites'), count=' ', 

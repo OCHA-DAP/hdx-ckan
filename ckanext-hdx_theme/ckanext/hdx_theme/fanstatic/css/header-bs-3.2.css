@@ -68,6 +68,10 @@
             height: 45px;
         }
 
+        .module .pagination ul{
+            overflow: hidden;
+        }
+
         .module .pagination li a {
             background-color: #ffffff;
             padding: 13px 19px 14px;
