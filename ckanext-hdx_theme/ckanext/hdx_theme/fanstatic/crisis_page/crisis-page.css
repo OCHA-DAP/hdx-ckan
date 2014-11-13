@@ -13,7 +13,7 @@
 .item-info {
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
-    padding: 40px 0;
+    padding: 20px 0;
     margin-top: -1px;
     color: #333333;
 }
@@ -23,7 +23,7 @@
     font-weight: 400;
     font-size: 16px;
     letter-spacing: 0.01em;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     color: #333333;
 }
 
@@ -32,7 +32,16 @@
     font-size: 74px;
     line-height: 1;
     letter-spacing: 0.01em;
-    margin-bottom: 34px;
+    margin-bottom: 20px;
+}
+
+.item-info .item-info-number span.small {
+    font-family: 'Gotham-Light', sans-serif;
+    font-size: 37px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+    margin-left: -15px;
 }
 
 .item-info-source-title-text{
@@ -66,7 +75,7 @@
 }
 /* Dataset search results on crisis page */
 .crisis-list-header.list-header {
-	background-color: inherit;
+	/*background-color: inherit; */
 }
 /* END -  Dataset search results on crisis page */
 

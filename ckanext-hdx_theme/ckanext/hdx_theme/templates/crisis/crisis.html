@@ -60,6 +60,13 @@
               </div>
               <div class="col-xs-12 item-info-number">
                 <span title="{{ item.notes }}">{{ item.formatted_value }}</span>
+                {% if item.units == 'million' %}
+            		<span class="small">{{ _('million') }} </span>
+            	{% endif %}
+            	{% if item.units == 'ratio' %}
+            		<span class="small">%</span>
+            	{% endif %}
+            	
               </div>
               <div class="col-xs-12 item-info-extra">
                 <div class="row">
@@ -86,7 +93,7 @@
     {% endblock %}
   </div>
 
-  <div class="row mTop110 mBottom110">
+  <div class="row mTop25">
     <div class="col-xs-12 item-info-title">
       Week by Week Spread of Ebola in West Africa
     </div>
