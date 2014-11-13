@@ -120,3 +120,11 @@ $('#field-license').change(function(){
     $('#licenses-other-define').hide();
   }
 });
+
+$('#field-dataset_methodology').change(function(){ 
+  if($('#meth_other_radio').is(':checked')){
+    $('#method_other').parent().show();
+  }else{
+    $('#method_other').parent().hide();
+  }
+});
