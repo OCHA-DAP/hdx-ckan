@@ -245,7 +245,10 @@ function drawDistricts(map){
           var pcoderef = feature.properties.PCODE_REF;
           var nameref = feature.properties.NAME_REF;
 //          layer.bindPopup("<b>" + nameref + " ("+ pcoderef+")</b><br />" + val['name'] + ": "+val['values'][pcoderef]);
-
+          // no longer implementing the click function on the layers for now
+//          layer.on('click', function (){
+//            window.location.href="/group/" + feature.properties.CNTRY_CODE.toLowerCase() + "?sort=metadata_modified+desc"
+//          });
           (function(layer, properties) {
             // Create a mouseover event
             layer.on("mouseover", function (e) {
