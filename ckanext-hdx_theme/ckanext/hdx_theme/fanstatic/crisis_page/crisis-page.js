@@ -333,11 +333,11 @@ function drawDistricts(map){
     legend.update = function (){
       var threshold = layers[this._layer]['threshold'];
 
-      this._div.innerHTML = '<i style="background: white"></i> 0&ndash;' + threshold[0] + '<br>';
+      this._div.innerHTML = '<div><i style="background: white"></i> 0&ndash;' + threshold[0] + '</div>';
       for (var i = 0; i < threshold.length; i++) {
         this._div.innerHTML +=
-            '<i style="background:' + color[i+1] + '"></i> ' +
-            threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '<br>' : '+');
+            '<div><i style="background:' + color[i+1] + '"></i> ' +
+            threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '</div>' : '+</div>');
       }
     };
     legend.updateLayer = function (layer){

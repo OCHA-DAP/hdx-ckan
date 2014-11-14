@@ -100,7 +100,7 @@
 }
 
 .map-info.legend {
-    line-height: 18px;
+    line-height: 18pt;
     color: white;
     z-index: 0;
     position: relative;
