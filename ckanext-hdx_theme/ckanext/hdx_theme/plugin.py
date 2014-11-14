@@ -83,6 +83,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_group_followers': hdx_helpers.get_group_followers,
             'get_group_members': hdx_helpers.get_group_members,
             'markdown_extract_strip': hdx_helpers.markdown_extract_strip,
+            'render_markdown_strip': hdx_helpers.render_markdown_strip,
             'render_date_from_concat_str': hdx_helpers.render_date_from_concat_str,
             'hdx_version': hdx_helpers.hdx_version,
             'hdx_build_nav_icon_with_message': hdx_helpers.hdx_build_nav_icon_with_message,
