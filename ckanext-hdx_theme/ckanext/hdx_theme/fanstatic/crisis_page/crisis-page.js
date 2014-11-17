@@ -1,6 +1,6 @@
 $(document).ready(function() {
   map = L.map('ebola-map', { attributionControl: false });
-
+  map.scrollWheelZoom.disable();
   L.tileLayer($('#crisis-map-url-div').text(), {
     attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     maxZoom: 10
