@@ -153,6 +153,15 @@ def markdown_extract_strip(text, extract_length=190):
         '\n', ' ').replace('\r', '').replace('"', "&quot;")
     return result
 
+def render_markdown_strip(text, extract_length=190):
+    ''' return the plain text representation of markdown encoded text.  That
+    is the texted without any html tags.  If extract_length is 0 then it
+    will not be truncated.'''
+    result_text = h.render_markdown(text, extract_length)
+    result = result_text.rstrip('\n').replace(
+        '\n', ' ').replace('\r', '').replace('"', "&quot;")
+    return result
+
 
 def render_date_from_concat_str(str, separator='-'):
     result = ''

@@ -1,6 +1,6 @@
 $(document).ready(function() {
   map = L.map('ebola-map', { attributionControl: false });
-
+  map.scrollWheelZoom.disable();
   L.tileLayer($('#crisis-map-url-div').text(), {
     attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     maxZoom: 10
@@ -245,7 +245,10 @@ function drawDistricts(map){
           var pcoderef = feature.properties.PCODE_REF;
           var nameref = feature.properties.NAME_REF;
 //          layer.bindPopup("<b>" + nameref + " ("+ pcoderef+")</b><br />" + val['name'] + ": "+val['values'][pcoderef]);
-
+          // no longer implementing the click function on the layers for now
+//          layer.on('click', function (){
+//            window.location.href="/group/" + feature.properties.CNTRY_CODE.toLowerCase() + "?sort=metadata_modified+desc"
+//          });
           (function(layer, properties) {
             // Create a mouseover event
             layer.on("mouseover", function (e) {
@@ -333,11 +336,11 @@ function drawDistricts(map){
     legend.update = function (){
       var threshold = layers[this._layer]['threshold'];
 
-      this._div.innerHTML = '<i style="background: white"></i> 0&ndash;' + threshold[0] + '<br>';
+      this._div.innerHTML = '<div><i style="background: white"></i> 0&ndash;' + threshold[0] + '</div>';
       for (var i = 0; i < threshold.length; i++) {
         this._div.innerHTML +=
-            '<i style="background:' + color[i+1] + '"></i> ' +
-            threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '<br>' : '+');
+            '<div><i style="background:' + color[i+1] + '"></i> ' +
+            threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '</div>' : '+</div>');
       }
     };
     legend.updateLayer = function (layer){

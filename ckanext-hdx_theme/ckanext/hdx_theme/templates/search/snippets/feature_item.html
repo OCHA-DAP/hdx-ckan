@@ -32,9 +32,9 @@
 {% block actions %}
   <ul class="hdx-bs3">
      {% block follow_link %}
-     {% if f_type == 'organization' or f_type == 'group' %}
+     {# if f_type == 'organization' or f_type == 'group' %}
                     {{ h.hdx_follow_link('group', package.name, "") }}
-     {% endif %} 
+     {% endif #} 
      {% endblock %}
   </ul>
 {% endblock %}
