@@ -54,7 +54,8 @@ class CrisisController(base.BaseController):
         query = get_action("package_search")(context, data_dict)
 
         def pager_url(q=None, page=None):
-            return h.url_for('show_crisis', page=page)
+            url = h.url_for('show_crisis', page=page) + '#datasets-section'
+            return url
 
         c.page = h.Page(
             collection=query['results'],
