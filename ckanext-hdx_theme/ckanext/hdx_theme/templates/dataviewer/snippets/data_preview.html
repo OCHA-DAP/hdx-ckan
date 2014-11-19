@@ -3,7 +3,7 @@
     {# images can be embedded directly #}
     <img src="{{ resource_url }}"></img>
   {% else %}
-    <div class="data-viewer-error js-hide">
+    <div class="data-viewer-error js-hide" style="min-height: 120px;">
       <p class="text-error">
         <i class="icon-info-sign"></i>
         {{ _('This resource can not be previewed at the moment.') }}
