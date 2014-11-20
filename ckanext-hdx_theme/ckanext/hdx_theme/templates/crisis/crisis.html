@@ -86,6 +86,9 @@
                   </div>
                 </div>
               </div>
+              {% if item.sparklines_json %}
+              <div style="display:none" class="sparklines-json">{{ item.sparklines_json }}</div>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -110,7 +113,7 @@
             Datasets [{{c.item_count}}]
           </span>
           <span class="mL15 list-header-showall">
-            <a href="{{ c.other_links.show_more }}">Show all datasets</a>
+            <a id="datasets-section" href="{{ c.other_links.show_more }}">Show all datasets</a>
           </span>
 
         </div>
