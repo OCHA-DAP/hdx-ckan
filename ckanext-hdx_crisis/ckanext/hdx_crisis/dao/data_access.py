@@ -97,68 +97,72 @@ class CrisisDataAccess():
 
 class EbolaCrisisDataAccess(CrisisDataAccess):
 
+    CUMULATIVE_CASES = 'Cumulative Cases of Ebola'
+    CUMULATIVE_DEATHS = 'Cumulative Deaths from Ebola'
+    APPEAL_COVERAGE = 'Appeal Coverage'
+
     def __init__(self):
         self.resources_dict = {
             'top-line-numbers': {
                 'dataset': 'topline-ebola-outbreak-figures',
                 'resource': 'topline-ebola-outbreak-figures.csv'
             },
-            'Cumulative Cases of Ebola': {
+            EbolaCrisisDataAccess.CUMULATIVE_CASES: {
                 'dataset': 'ebola-cases-2014',
                 'resource': 'ebola-data-db-format.csv',
             },
-            'Appeal Coverage': {
+            EbolaCrisisDataAccess.APPEAL_COVERAGE: {
                 'dataset': 'fts-ebola-coverage',
                 'resource': 'fts-ebola-coverage.csv',
             }
         }
-        self.resources_dict['Cumulative Cases of Ebola']['sql'] = ('SELECT "Indicator", "Date", sum(value) AS value '
-                                                                   'FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" '
-                                                                   'WHERE "Indicator" IN (\'Cumulative number of confirmed, probable and suspected Ebola deaths\','
-                                                                   '\'Cumulative number of confirmed, probable and suspected Ebola cases\') '
-                                                                   'GROUP BY "Indicator", "Date" '
-                                                                   'ORDER BY "Indicator", "Date" desc ')
+        self.resources_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES]['sql'] = ('SELECT "Indicator", "Date", sum(value) AS value '
+                                                                              'FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" '
+                                                                              'WHERE "Indicator" IN (\'Cumulative number of confirmed, probable and suspected Ebola deaths\','
+                                                                              '\'Cumulative number of confirmed, probable and suspected Ebola cases\') '
+                                                                              'GROUP BY "Indicator", "Date" '
+                                                                              'ORDER BY "Indicator", "Date" desc ')
 
-        self.resources_dict['Appeal Coverage'][
+        self.resources_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
             'sql'] = 'SELECT "Date", "Value" FROM "93b92803-f9fa-45f4-bf72-73a8ab1d8922" ORDER BY "Date" desc;'
 
     def _process_appeal_coverage(self):
         sparklines = self.results_dict[
-            'Appeal Coverage']['sparklines']
+            EbolaCrisisDataAccess.APPEAL_COVERAGE]['sparklines']
 
         coverage_sparklines = [
             {'date': item['Date'], 'value': item['Value']} for item in sparklines]
 
-        self.results_dict['Appeal Coverage'][
+        self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
             'sparklines'] = coverage_sparklines
 
-        self.results_dict['Appeal Coverage'][
+        self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
             'value'] = coverage_sparklines[0]['value']
-        self.results_dict['Appeal Coverage'][
+        self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
             'latest_date'] = coverage_sparklines[0]['date']
 
     def _process_cases_and_deaths(self):
         sparklines = self.results_dict[
-            'Cumulative Cases of Ebola']['sparklines']
+            EbolaCrisisDataAccess.CUMULATIVE_CASES]['sparklines']
 
         cases_sparklines = [
             {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola cases']
         deaths_sparklines = [
             {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola deaths']
 
-        self.results_dict['Cumulative Cases of Ebola'][
+        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
             'sparklines'] = cases_sparklines
-        self.results_dict['Cumulative Deaths from Ebola'][
+        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
             'sparklines'] = deaths_sparklines
 
-        self.results_dict['Cumulative Cases of Ebola'][
+        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
             'value'] = cases_sparklines[0]['value']
-        self.results_dict['Cumulative Cases of Ebola'][
+        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
             'latest_date'] = cases_sparklines[0]['date']
 
-        self.results_dict['Cumulative Deaths from Ebola'][
+        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
             'value'] = deaths_sparklines[0]['value']
-        self.results_dict['Cumulative Deaths from Ebola'][
+        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
             'latest_date'] = deaths_sparklines[0]['date']
 
     def _post_process(self):
