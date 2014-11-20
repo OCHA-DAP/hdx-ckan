@@ -7,14 +7,15 @@ Created on Nov 3, 2014
 import logging
 import datetime as dt
 import decimal
-
-import pylons.config as config
+import json
 
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.helpers as h
+
+import ckanext.hdx_crisis.dao.data_access as data_access
 
 render = base.render
 get_action = logic.get_action
@@ -35,11 +36,10 @@ class CrisisController(base.BaseController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        datastore_resource_id = self._get_datastore_resource_id(
-            context, config.get('hdx.crisis.ebola_dataset', None), config.get('hdx.crisis.ebola_resource_title', None))
-        if datastore_resource_id:
-            c.top_line_items = self._get_top_line_items(
-                context, datastore_resource_id)
+        crisis_data_access = data_access.EbolaCrisisDataAccess()
+        crisis_data_access.fetch_data(context)
+        c.top_line_items = crisis_data_access.get_top_line_items()
+        self._format_results(c.top_line_items)
 
         limit = 25
         c.q = u'ebola'
@@ -79,8 +79,11 @@ class CrisisController(base.BaseController):
             Decimal('.1'), rounding=decimal.ROUND_HALF_UP)
         return decimal_value
 
-    def _format_results(self, result):
-        for r in result['records']:
+    def _format_results(self, records):
+        for r in records:
+            if 'sparklines' in r:
+                r['sparklines_json'] = json.dumps(r['sparklines'])
+
             d = dt.datetime.strptime(r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
             r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
 
@@ -101,30 +104,3 @@ class CrisisController(base.BaseController):
                     r[u'formatted_value'] = '{:,.1f}'.format(
                         self._get_decimal_value(modified_value))
                     #r[u'formatted_value'] += ' ' + _('million')
-
-    def _get_top_line_items(self, context, datastore_resource_id):
-        modified_context = dict(context)
-        modified_context['ignore_auth'] = True
-        result = get_action('datastore_search')(
-            modified_context, {'resource_id': datastore_resource_id})
-        if 'records' in result:
-            self._format_results(result)
-            return result['records']
-        return []
-
-    def _get_datastore_resource_id(self, context, dataset_id, resource_name):
-        try:
-            modified_context = dict(context)
-            modified_context['ignore_auth'] = True
-            dataset = get_action('package_show')(
-                modified_context, {'id': dataset_id})
-
-            if 'resources' in dataset:
-                for r in dataset['resources']:
-                    if 'datastore_active' in r and r['datastore_active'] \
-                            and r['name'] == resource_name:
-                        return r['id']
-            return None
-        except:
-            log.warning('No dataset with id ' + dataset_id)
-            return None

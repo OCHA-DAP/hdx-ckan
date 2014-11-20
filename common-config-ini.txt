@@ -159,5 +159,3 @@ hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.rest.indicator.endpoint = https://manage.hdx.rwlabs.org/hdx/public/api2/values
 hdx.rest.indicator.endpoint.facets = https://manage.hdx.rwlabs.org/hdx/public/api2
 
-hdx.crisis.ebola_dataset = topline-ebola-outbreak-figures
-hdx.crisis.ebola_resource_title = topline-ebola-outbreak-figures.csv
