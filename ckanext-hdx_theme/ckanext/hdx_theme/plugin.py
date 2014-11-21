@@ -104,7 +104,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'get_last_revision_timestamp_group': hdx_helpers.get_last_revision_timestamp_group,
             'feature_count': hdx_helpers.feature_count,
             'follow_status': hdx_helpers.follow_status,
-            'hdx_add_url_param': hdx_helpers.hdx_add_url_param
+            'hdx_add_url_param': hdx_helpers.hdx_add_url_param,
+            'methodology_bk_compat': hdx_helpers.methodology_bk_compat
         }
 
     def get_actions(self):
