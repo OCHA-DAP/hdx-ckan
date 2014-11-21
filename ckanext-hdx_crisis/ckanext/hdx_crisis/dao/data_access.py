@@ -67,12 +67,12 @@ class CrisisDataAccess():
             data_dict['sql'] = sql
         action_name = 'datastore_search_sql' if sql else 'datastore_search'
 
-        try:
+        if datastore_resource_id:
             result = get_action(action_name)(
                 modified_context, data_dict)
             if 'records' in result:
                 return result['records']
-        except logic.ValidationError, e:
+        else:
             log.error(
                 'Problem with resource (maybe it does not exist): ' + datastore_resource_id)
         return []
