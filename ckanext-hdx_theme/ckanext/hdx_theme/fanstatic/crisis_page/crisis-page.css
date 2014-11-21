@@ -26,7 +26,9 @@
     margin-bottom: 20px;
     color: #333333;
 }
-
+.item-info .item-info-extra {
+    margin-top: 20px;
+}
 .item-info .item-info-number {
     font-family: 'Gotham-Light', sans-serif;
     font-size: 74px;
@@ -118,4 +120,12 @@
 
 .leaflet-container label::after {
     content: "";
+}
+
+
+.sparkline {
+    width: 240px;
+    height: 80px;
+    font-family: "Source Sans Pro", sans-serif;
+    position: relative;
 }

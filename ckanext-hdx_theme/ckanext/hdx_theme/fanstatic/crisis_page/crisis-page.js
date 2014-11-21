@@ -10,7 +10,51 @@ $(document).ready(function() {
   map.setView([8, -8], 6);
 
   drawDistricts(map);
+  c3Sparklines();
 });
+
+function c3Sparklines(){
+  $('.sparkline').each(function() {
+    var th = $(this),
+    data = JSON.parse(th.text());
+    th.text("");
+    th.attr("style", "");
+
+    var chart = c3.generate({
+      bindto: this,
+      point: {
+        show: false
+      },
+      legend:{
+        show: false
+      },
+      color: {
+          pattern: ['#007ce0']
+      },
+      data: {
+        json: data,
+        keys: {
+          x: 'date',
+          value: ['value']
+        },
+        x: 'x',
+        xFormat: '%Y-%m-%dT%H:%M:%S'
+      },
+      axis: {
+        x: {
+          show: false,
+          type: 'timeseries',
+          tick: {
+            format: '%Y-%m-%d'
+          }
+        },
+        y: {
+          show: false
+        }
+      }
+    });
+    });
+}
 
 function drawDistricts(map){
   var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
