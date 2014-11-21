@@ -122,9 +122,9 @@ $('#field-license').change(function(){
 });
 
 $('#field-dataset_methodology').change(function(){ 
-  if($('#meth_other_radio').is(':checked')){
-    $('#method_other').parent().show();
+  if($('#field-dataset_methodology').val() == 'Other'){
+    $('#methodology-other-define').show();
   }else{
-    $('#method_other').parent().hide();
+    $('#methodology-other-define').hide();
   }
 });

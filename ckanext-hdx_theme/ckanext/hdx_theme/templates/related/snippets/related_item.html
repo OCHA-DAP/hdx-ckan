@@ -20,7 +20,7 @@ Example:
   {% if related.description %}
     <div class="prose">{{ h.render_markdown(related.description) }}</div>
   {% endif %}
-  <a class="media-view" href="{{ related.url }}" target="_blank" title="{{ tooltip }}">
+  <a class="media-view" href="{{ related.url }}" target="new" title="{{ tooltip }}">
     <span>{{ tooltip }}</span>
     <span class="banner">
       {%- if related.type == 'application' -%}
