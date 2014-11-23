@@ -81,7 +81,10 @@ def get_packages():
 
 def get_organization():
     organization = {'name': 'hdx-test-org',
-                    'title': 'Hdx Test Org', 'users': [{'name': 'testsysadmin'}]}
+                    'title': 'Hdx Test Org',
+                    'org_url': 'http://test-org.test',
+                    'description': 'This is a test organization',
+                    'users': [{'name': 'testsysadmin'}]}
     return organization
 
 

@@ -45,9 +45,7 @@
             <b class="caret"></b>
           </button>
           <input type="hidden" name="sort" />
-          {% if is_dataset %}
-          <input id="preserve-search" type="hidden" name="q" />
-          {% endif %}
+
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}

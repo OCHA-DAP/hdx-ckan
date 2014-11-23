@@ -32,7 +32,7 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         search_strings = [
             '/dataset?ext_indicator=1', 'Test Indicator 1', 'test_indicator_1']
 
-        hdx_test_util.test_strings_in_text(
+        hdx_test_util.are_strings_in_text(
             page, search_strings, begin_str, end_str)
 
     def test_breadcrumb_on_dataset_page(self):
@@ -46,5 +46,5 @@ class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         search_strings = [
             '/dataset?ext_indicator=0', 'Test Dataset 1', 'test_dataset_1']
 
-        hdx_test_util.test_strings_in_text(
+        hdx_test_util.are_strings_in_text(
             page, search_strings, begin_str, end_str)

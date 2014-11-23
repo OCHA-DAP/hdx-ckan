@@ -10,7 +10,6 @@
     width: 100%;
 }
 
-
 .item-info {
     border-top: 1px solid #cccccc;
     border-bottom: 1px solid #cccccc;
@@ -27,7 +26,9 @@
     margin-bottom: 20px;
     color: #333333;
 }
-
+.item-info .item-info-extra {
+    margin-top: 20px;
+}
 .item-info .item-info-number {
     font-family: 'Gotham-Light', sans-serif;
     font-size: 74px;
@@ -76,13 +77,55 @@
 }
 /* Dataset search results on crisis page */
 .crisis-list-header.list-header {
-	background-color: inherit;
+	/*background-color: inherit; */
 }
 /* END -  Dataset search results on crisis page */
 
-/* Position Leaflet copyright div on top right*/
-.leaflet-control-attribution.leaflet-control{
+.leaflet-bottom{
+    bottom: 50px;
+}
+
+.map-info {
+    padding: 6px 8px;
+    font: 14px/16px 'Source Sans Pro';
+    color: white;
+    background: #333333;
+    background: rgba(51,51,51,0.5);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.map-info h4 {
+    font: 'Source Sans Pro';
+    margin: 0 0 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.map-info.legend {
+    line-height: 14pt;
+    color: white;
+    z-index: 0;
     position: relative;
-    top: -335px;
-    left: 4px;
+}
+.map-info.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+.leaflet-container input[type=radio], .leaflet-container input[type=checkbox] {
+    top: 0;
+}
+
+.leaflet-container label::after {
+    content: "";
+}
+
+
+.sparkline {
+    width: 240px;
+    height: 80px;
+    font-family: "Source Sans Pro", sans-serif;
+    position: relative;
 }
