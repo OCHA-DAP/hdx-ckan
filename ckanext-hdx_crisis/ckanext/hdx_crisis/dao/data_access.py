@@ -67,10 +67,14 @@ class CrisisDataAccess():
             data_dict['sql'] = sql
         action_name = 'datastore_search_sql' if sql else 'datastore_search'
 
-        result = get_action(action_name)(
-            modified_context, data_dict)
-        if 'records' in result:
-            return result['records']
+        if datastore_resource_id:
+            result = get_action(action_name)(
+                modified_context, data_dict)
+            if 'records' in result:
+                return result['records']
+        else:
+            log.error(
+                'Resource id is None ')
         return []
 
     def _post_process(self):
@@ -88,9 +92,16 @@ class CrisisDataAccess():
             if title != 'top-line-numbers':
                 res_id = self._find_datastore_resource_id(
                     context, res_dict['dataset'], res_dict['resource'])
+                if not res_id:
+                    log.error(
+                        'Problem with resource (maybe it does not exist): ' + res_dict['dataset'] + " and " + res_dict['resource'])
                 sparkline_items = self._fetch_items_from_datastore(
                     context, res_id, True, res_dict.get('sql', None))
-                self.results_dict[title]['sparklines'] = sparkline_items
+                if title in self.results_dict:
+                    self.results_dict[title]['sparklines'] = sparkline_items
+                else:
+                    log.error(
+                        "{} is not in the results dict: {}".format(title, str(self.results_dict)))
 
         self._post_process()
 

@@ -7,7 +7,7 @@
 	  <li>{{ h.nav_link(_('Indicators'), 
 	  	controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search', ext_indicator=1) }}</li>
 	{% endblock %}
-  <li class="active">{{ h.nav_link( pkg.title |truncate(30), 
+  <li class="active">{{ h.nav_link( pkg.title|truncate(120), 
   	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
 	
 {% endblock %}
