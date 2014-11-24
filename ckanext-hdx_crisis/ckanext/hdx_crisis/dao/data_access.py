@@ -74,7 +74,7 @@ class CrisisDataAccess():
                 return result['records']
         else:
             log.error(
-                'Problem with resource (maybe it does not exist): ' + datastore_resource_id)
+                'Resource id is None ')
         return []
 
     def _post_process(self):
@@ -92,6 +92,9 @@ class CrisisDataAccess():
             if title != 'top-line-numbers':
                 res_id = self._find_datastore_resource_id(
                     context, res_dict['dataset'], res_dict['resource'])
+                if not res_id:
+                    log.error(
+                        'Problem with resource (maybe it does not exist): ' + res_dict['dataset'] + " and " + res_dict['resource'])
                 sparkline_items = self._fetch_items_from_datastore(
                     context, res_id, True, res_dict.get('sql', None))
                 self.results_dict[title]['sparklines'] = sparkline_items
