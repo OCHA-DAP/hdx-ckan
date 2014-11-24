@@ -90,6 +90,8 @@ class CrisisDataAccess():
 
         for title, res_dict in self.resources_dict.iteritems():
             if title != 'top-line-numbers':
+                log.info("Fetching data for dataset:{} and resource: {} ".format(
+                    res_dict['dataset'], res_dict['resource']))
                 res_id = self._find_datastore_resource_id(
                     context, res_dict['dataset'], res_dict['resource'])
                 if not res_id:
