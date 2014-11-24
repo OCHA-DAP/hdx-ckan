@@ -16,6 +16,25 @@
 
 {% block package_metadata_fields %}
 
+{% block package_basic_fields_tags %}
+  <div style="clear:both;">
+    <div class="{{ form_field_wrapper_classes }}">
+    {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
+    'style':'width: 100% !important;',
+    'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+    {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
+    </div>
+    {% if new_dataset %}
+      <div class="dataset-form-info-field info-field">
+        {% trans %}
+        The system will suggest matching tags. Please use existing tags where possible.
+        {% endtrans %}
+      </div>
+    {% endif %}
+  </div>
+  {% endblock %}
+
+
 {% block package_metadata_author %}
 <br style="clear:both;">
 {{ form.input('author', label=_('Author'), id='field-author', placeholder=_('Joe Bloggs'), value=data.author, error=errors.author, classes=['control-medium']) }}
@@ -171,23 +190,6 @@
   <br style="clear:both;">
   {% endblock %}
 
-{% block package_basic_fields_tags %}
-  <div style="clear:both;">
-    <div class="{{ form_field_wrapper_classes }}">
-    {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
-    'style':'width: 100% !important;',
-    'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
-    {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full'], attrs=tag_attrs) }}
-    </div>
-    {% if new_dataset %}
-      <div class="dataset-form-info-field info-field">
-        {% trans %}
-        The system will suggest matching tags. Please use existing tags where possible.
-        {% endtrans %}
-      </div>
-    {% endif %}
-  </div>
-  {% endblock %}
 
   
   {% block basic_fields_caveats %}
