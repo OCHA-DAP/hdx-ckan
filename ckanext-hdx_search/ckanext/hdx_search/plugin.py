@@ -36,7 +36,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return map
 
     def before_search(self, search_params):
-        search_params['q'] = convert_country(search_params['q'])
+        #search_params['q'] = convert_country(search_params['q'])
         if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
             search_params['facet.field'].append('vocab_Topics')
 
