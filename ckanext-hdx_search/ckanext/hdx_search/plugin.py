@@ -47,7 +47,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             elif int(search_params['extras']['ext_indicator']) == 0:
                 search_params['fq'] = search_params[
                     'fq'] + ' -extras_indicator:1'
-        print search_params
         return search_params
 
     def after_search(self, search_results, search_params):
