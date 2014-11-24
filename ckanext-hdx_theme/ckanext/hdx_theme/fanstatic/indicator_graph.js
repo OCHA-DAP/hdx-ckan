@@ -168,7 +168,8 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       //
       var periodTypeAux = "&periodType=" + this._period_type;
       if (this._period_type != this._period_type_default)
-        periodTypeAux = "&minTime="+ this._period_type +"&maxTime=" + this._period_type;
+        periodTypeAux = "&minTime="+ this._period_type +"&maxTime=" + this._period_type + 
+        			"&periodType=" + this._period_type_default;
 
       //prepare source aux for url
       var urlSourceAux = "";
