@@ -97,7 +97,7 @@ class CrisisDataAccess():
                         'Problem with resource (maybe it does not exist): ' + res_dict['dataset'] + " and " + res_dict['resource'])
                 sparkline_items = self._fetch_items_from_datastore(
                     context, res_id, True, res_dict.get('sql', None))
-                if "asd" in self.results_dict:
+                if title in self.results_dict:
                     self.results_dict[title]['sparklines'] = sparkline_items
                 else:
                     log.error(
