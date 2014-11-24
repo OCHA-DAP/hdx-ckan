@@ -11,7 +11,7 @@
 {% block primary_content %}
   <div class="row paddingRowHack" style="position: relative;">
   	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
-    <div id="ebola-map">
+    <div id="ebola-map" style="position: relative; z-index: 0;">
     </div>
     <div class="ebola-map-title">
       <span class="mL45 crisisTitle"> West Africa: Ebola outbreak </span>
@@ -68,6 +68,11 @@
             	{% endif %}
             	
               </div>
+              <div class="col-xs-12">
+                {% if item.sparklines_json %}
+                <div style="display: none;" class="sparkline">{{ item.sparklines_json }}</div>
+                {% endif %}
+              </div>
               <div class="col-xs-12 item-info-extra">
                 <div class="row">
                   <div class="col-xs-12">
@@ -77,10 +82,10 @@
                 <div class="row">
                   <div class="col-xs-12">
                   	{% if item.source_link %}
-                    	<span class="item-info-source-title"><a href="{{ item.source_link }}">Data</a></span> -
+                    	<span class="item-info-source-title"><a href="{{ item.source_link }}" target="new">Data</a></span> -
                     {% endif %}
                     {% if item.explore %}
-                    	<span class="item-info-source-title"><a href="{{ item.explore }}">Explore</a></span> -
+                    	<span class="item-info-source-title"><a href="{{ item.explore }}" target="new">Explore</a></span> -
                     {% endif %}
                     <span class="item-info-source-date">{{ item.latest_date }}</span>
                   </div>
@@ -110,7 +115,7 @@
             Datasets [{{c.item_count}}]
           </span>
           <span class="mL15 list-header-showall">
-            <a href="{{ c.other_links.show_more }}">Show all datasets</a>
+            <a id="datasets-section" href="{{ c.other_links.show_more }}">Show all datasets</a>
           </span>
 
         </div>
@@ -136,6 +141,7 @@
 
   {% resource 'hdx_theme/bs_popover.js' %}
   {% resource 'hdx_theme/d3' %}
+  {% resource 'hdx_theme/c3' %}
   {% resource 'hdx_theme/leaflet' %}
   {% resource 'hdx_theme/crisis-page' %}
   {% resource 'hdx_theme/search' %}

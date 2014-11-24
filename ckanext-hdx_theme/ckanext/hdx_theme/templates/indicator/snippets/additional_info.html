@@ -29,11 +29,8 @@
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link">
 			{% for grp in pkg_dict.groups %}
-				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}" class="pL5">
-	            	{{ grp['title'] or grp['name'] }}
-	            </a>
-	            {% if not loop.last %},{% endif %}
-  			{% endfor %}
+				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %},&nbsp;{% endif %}
+			{% endfor %}
 		</td>
     </tr>
     <tr>
@@ -76,7 +73,8 @@
 
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
-		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><span>{{ h.render_markdown(pkg_dict.methodology) }}</span></span></td>
+		{% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
+	      <td class="dataset-details">{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</td>
 	</tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
