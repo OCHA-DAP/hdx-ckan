@@ -1,8 +1,13 @@
-import logging
+import logging, re
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
+def convert_country(q):
+    for c in tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True}):
+        if re.findall(c['display_name'].lower(),q.lower()):
+            q += ' '+c['name']
+    return q
 
 class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -31,6 +36,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return map
 
     def before_search(self, search_params):
+        search_params['q'] = convert_country(search_params['q'])
         if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
             search_params['facet.field'].append('vocab_Topics')
 
@@ -41,6 +47,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             elif int(search_params['extras']['ext_indicator']) == 0:
                 search_params['fq'] = search_params[
                     'fq'] + ' -extras_indicator:1'
+        print search_params
         return search_params
 
     def after_search(self, search_results, search_params):
