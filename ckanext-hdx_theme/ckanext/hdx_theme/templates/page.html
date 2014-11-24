@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 
 {%- block page -%}
-
-  {% block styles %}
-    {{ super() }}
-    {% resource 'hdx_theme/css/header.css' %}
-    {% resource 'hdx_theme/css/header-bs-2.3.css' %}
-  {% endblock %}
-
   {#
   Override the header on a page by page basis by extending this block. If
   making sitewide header changes it is preferable to override the header.html
@@ -173,6 +166,12 @@
     {% include "footer.html" %}
   {% endblock -%}
 {%- endblock -%}
+
+{% block styles %}
+  {{ super() }}
+  {% resource 'hdx_theme/css/header.css' %}
+  {% resource 'hdx_theme/css/header-bs-2.3.css' %}
+{% endblock %}
 
 {%- block scripts %}
     {% resource 'base/main' %}
