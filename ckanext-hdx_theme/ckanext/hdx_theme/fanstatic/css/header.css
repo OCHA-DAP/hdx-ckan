@@ -376,7 +376,8 @@
         background-size: cover;
         background-attachment: fixed;
 
-        min-width: 260px;
+
+        min-width: 1260px;
         color: #888888;
 
         font-family: 'Source Sans Pro', sans-serif;
