@@ -1,6 +1,9 @@
 import sys
 import logging
 
+import string
+import random
+
 import ckan.plugins as p
 import ckanext.datastore.logic.action as action
 import ckanext.datastore.logic.auth as auth
@@ -155,15 +158,19 @@ class DatastorePlugin(p.SingletonPlugin):
         read_connection = db._get_engine(
             {'connection_url': self.read_url}).connect()
 
-        drop_foo_sql = u'DROP TABLE IF EXISTS _foo'
+        # create a nice random table name
+        chars = string.uppercase + string.lowercase
+        table_name = '_'.join(random.choice(chars) for _ in range(9))
+        
+        drop_foo_sql = u'DROP TABLE IF EXISTS ' + table_name
 
         write_connection.execute(drop_foo_sql)
 
         try:
             try:
-                write_connection.execute(u'CREATE TABLE _foo ()')
+                write_connection.execute(u'CREATE TEMP TABLE ' + table_name + ' ()')
                 for privilege in ['INSERT', 'UPDATE', 'DELETE']:
-                    test_privilege_sql = u"SELECT has_table_privilege('_foo', '{privilege}')"
+                    test_privilege_sql = u"SELECT has_table_privilege('" + table_name + "', '{privilege}')"
                     sql = test_privilege_sql.format(privilege=privilege)
                     have_privilege = read_connection.execute(sql).first()[0]
                     if have_privilege:
