@@ -168,20 +168,20 @@ def methodology_bk_compat(meth, other, render=True):
     standard_meths = ["Census","Sample Survey","Direct Observational Data/Anecdotal Data","Registry","Other"]
     if meth in standard_meths and meth != "Other":
         if render:
-            return (h.render_markdown(meth), None)
+            return (meth, None)
         else:
-            return (h.markdown_extract(meth), None)
+            return (meth, None)
     elif other:
         if render:
             return ("Other", h.render_markdown(other))
         else:
-            return ("Other", h.markdown_extract(other))
+            return ("Other", other)
     else:
         meth =  meth.split('Other - ')
         if render:
             return ("Other", h.render_markdown(meth[0]))
         else:
-            return ("Other", h.markdown_extract(meth[0]))
+            return ("Other", meth[0])
 
 
 def render_date_from_concat_str(str, separator='-'):
