@@ -50,14 +50,16 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
             # The file doesn't really exist
             assert '404' in e.args[0], 'File not found'
         try:
-            self.app.get(
+            result = self.app.get(
                 dwld_url, extra_environ={'Authorization': str(tester.apikey)})
+            assert '403 Access Denied' in str(result)
         except Exception, e:
-            assert '403' in e.args[0], 'Not Authorized for other user'
+            assert False
         try:
-            self.app.get(dwld_url)
+            result = self.app.get(dwld_url)
+            assert '403 Access Denied' in str(result)
         except Exception, e:
-            assert '403' in e.args[0], 'Not Authorized for guest'
+            assert False
 
         # Testing access to the private resource API
         tests.call_action_api(self.app, 'resource_show', id=resource['id'],

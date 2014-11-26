@@ -37,11 +37,15 @@ key_prefix = config.get('ckan.storage.key_prefix', 'file/')
 _eq_re = re.compile(r"^(.*)(=[0-9]*)$")
 
 
-def generate_response(http_status, unicode_body, no_cache=True):
+def generate_response(http_status, unicode_body, no_cache=True, other_headers=None):
     r = request.environ['pylons.pylons'].response
     if no_cache:
         r.headers['Pragma'] = 'no-cache'
         r.headers['Cache-Control'] = 'no-cache'
+
+    if other_headers:
+        for key, value in other_headers.iteritems():
+            r.headers[key] = value
 
     r.unicode_body = unicode_body
     r.status = http_status
@@ -59,30 +63,36 @@ class FileDownloadController(storage.StorageController):
 
     def file(self, label):
         from sqlalchemy.engine import create_engine
-        #from label find resource id
-        url = config.get('ckan.site_url', '') +'/storage/f/'+ urllib.quote(label)
+        # from label find resource id
+        url = config.get('ckan.site_url', '') + \
+            '/storage/f/' + urllib.quote(label)
         engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
         connection = engine.connect()
-        query = connection.execute("""SELECT * from resource where url= %s""", (url,))
+        query = connection.execute(
+            """SELECT * from resource where url= %s""", (url,))
         res = query.fetchone()
         if not res:
-#             raise logic.NotFound
+            #             raise logic.NotFound
             r = generate_response(404, u'File not found')
             return r
 
-        # We need this as a resource object to check access so create a dummy obj and trick CKAN
+        # We need this as a resource object to check access so create a dummy
+        # obj and trick CKAN
         resource = model.Resource()
         for k in res.keys():
-            setattr(resource,k,res[k])
+            setattr(resource, k, res[k])
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj, 'resource':resource}
+                   'auth_user_obj': c.userobj, 'resource': resource}
         data_dict = {'id': resource.id}
         try:
             logic.check_access('resource_show', context, data_dict)
         except logic.NotAuthorized:
-            r = generate_response(403, u'Not authorized to read file ' + resource.id)
+            redirect_url = h.url_for(controller='user', action='login',
+                                     came_from=url)
+            r = generate_response(303, u'Not authorized to read file ' + resource.id,
+                                  other_headers={'Location': redirect_url, 'X-CKAN-Error': '403 Access Denied'})
             return r
 
         exists = self.ofs.exists(BUCKET, label)
@@ -95,7 +105,7 @@ class FileDownloadController(storage.StorageController):
                 file_url = h.url_for('storage_file', label=label)
                 h.redirect_to(file_url)
             else:
-#                 abort(404)
+                #                 abort(404)
                 r = generate_response(404, u'File not found')
                 return r
 
@@ -112,7 +122,6 @@ class FileDownloadController(storage.StorageController):
             return fapp(request.environ, self.start_response)
         else:
             h.redirect_to(file_url.encode('ascii', 'ignore'))
-
 
 
 def create_pairtree_marker(folder):
@@ -132,18 +141,18 @@ def create_pairtree_marker(folder):
 
 
 def get_ofs():
-        """Return a configured instance of the appropriate OFS driver.
-        """
-        storage_backend = config['ofs.impl']
-        kw = {}
-        for k, v in config.items():
-            if not k.startswith('ofs.') or k == 'ofs.impl':
-                continue
-            kw[k[4:]] = v
+    """Return a configured instance of the appropriate OFS driver.
+    """
+    storage_backend = config['ofs.impl']
+    kw = {}
+    for k, v in config.items():
+        if not k.startswith('ofs.') or k == 'ofs.impl':
+            continue
+        kw[k[4:]] = v
 
-        # Make sure we have created the marker file to avoid pairtree issues
-        if storage_backend == 'pairtree' and 'storage_dir' in kw:
-            create_pairtree_marker(kw['storage_dir'])
+    # Make sure we have created the marker file to avoid pairtree issues
+    if storage_backend == 'pairtree' and 'storage_dir' in kw:
+        create_pairtree_marker(kw['storage_dir'])
 
-        ofs = get_impl(storage_backend)(**kw)
-        return ofs
+    ofs = get_impl(storage_backend)(**kw)
+    return ofs
