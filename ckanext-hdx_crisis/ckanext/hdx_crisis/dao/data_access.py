@@ -28,6 +28,10 @@ log = logging.getLogger(__name__)
 
 class CrisisDataAccess():
 
+    UNIQUE_ID_COL = 'code'
+    SPARKLINES_FIELD = 'sparklines'
+    SORT_FIELD = '_id'
+
     def __init__(self, resources_dict):
         self.resources_dict = resources_dict
 
@@ -56,7 +60,8 @@ class CrisisDataAccess():
 
         return None
 
-    def _fetch_items_from_datastore(self, context, datastore_resource_id, ignore_auth=False, sql=None):
+    def _fetch_items_from_datastore(self, context, datastore_resource_id,
+                                    ignore_auth=False, sql=None, sort=None):
         modified_context = context
         if ignore_auth:
             modified_context = dict(context)
@@ -65,6 +70,8 @@ class CrisisDataAccess():
         data_dict = {'resource_id': datastore_resource_id}
         if sql:
             data_dict['sql'] = sql
+        if sort:
+            data_dict['sort'] = sort
         action_name = 'datastore_search_sql' if sql else 'datastore_search'
 
         if datastore_resource_id:
@@ -85,34 +92,39 @@ class CrisisDataAccess():
         datastore_resource_id = self._find_datastore_resource_id(
             context, top_line_info['dataset'], top_line_info['resource'])
         self.results = self._fetch_items_from_datastore(
-            context, datastore_resource_id, True, top_line_info.get('sql', None))
-        self.results_dict = {item['title']: item for item in self.results}
+            context, datastore_resource_id, True,
+            top_line_info.get('sql', None), CrisisDataAccess.SORT_FIELD)
+        self.results_dict = {
+            item[CrisisDataAccess.UNIQUE_ID_COL]: item for item in self.results
+            if CrisisDataAccess.UNIQUE_ID_COL in item}
 
-        for title, res_dict in self.resources_dict.iteritems():
-            if title != 'top-line-numbers':
+        for code, res_dict in self.resources_dict.iteritems():
+            if code != 'top-line-numbers':
                 log.info("Fetching data for dataset:{} and resource: {} ".format(
                     res_dict['dataset'], res_dict['resource']))
                 res_id = self._find_datastore_resource_id(
                     context, res_dict['dataset'], res_dict['resource'])
                 if not res_id:
                     log.error(
-                        'Problem with resource (maybe it does not exist): ' + res_dict['dataset'] + " and " + res_dict['resource'])
+                        'Problem with resource (maybe it does not exist): ' +
+                        res_dict['dataset'] + " and " + res_dict['resource'])
                 sparkline_items = self._fetch_items_from_datastore(
                     context, res_id, True, res_dict.get('sql', None))
-                if title in self.results_dict:
-                    self.results_dict[title]['sparklines'] = sparkline_items
+                if code in self.results_dict:
+                    self.results_dict[code][
+                        CrisisDataAccess.SPARKLINES_FIELD] = sparkline_items
                 else:
                     log.error(
-                        "{} is not in the results dict: {}".format(title, str(self.results_dict)))
+                        "{} is not in the results dict".format(code))
 
         self._post_process()
 
 
 class EbolaCrisisDataAccess(CrisisDataAccess):
 
-    CUMULATIVE_CASES = 'Cumulative Cases of Ebola'
-    CUMULATIVE_DEATHS = 'Cumulative Deaths from Ebola'
-    APPEAL_COVERAGE = 'Appeal Coverage'
+    CUMULATIVE_CASES = 'tot_case_evd'
+    CUMULATIVE_DEATHS = 'tot_death_evd'
+    APPEAL_COVERAGE = 'plan_coverage'
 
     def __init__(self):
         self.resources_dict = {
@@ -127,6 +139,7 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
             EbolaCrisisDataAccess.APPEAL_COVERAGE: {
                 'dataset': 'fts-ebola-coverage',
                 'resource': 'fts-ebola-coverage.csv',
+                'sql': 'SELECT "Date", "Value" FROM "93b92803-f9fa-45f4-bf72-73a8ab1d8922" ORDER BY "Date" desc;'
             }
         }
         self.resources_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES]['sql'] = ('SELECT "Indicator", "Date", sum(value) AS value '
@@ -136,47 +149,53 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
                                                                               'GROUP BY "Indicator", "Date" '
                                                                               'ORDER BY "Indicator", "Date" desc ')
 
-        self.resources_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-            'sql'] = 'SELECT "Date", "Value" FROM "93b92803-f9fa-45f4-bf72-73a8ab1d8922" ORDER BY "Date" desc;'
-
     def _process_appeal_coverage(self):
-        sparklines = self.results_dict[
-            EbolaCrisisDataAccess.APPEAL_COVERAGE]['sparklines']
+        if CrisisDataAccess.SPARKLINES_FIELD in self.results_dict.get(EbolaCrisisDataAccess.APPEAL_COVERAGE, {}):
+            sparklines = self.results_dict[
+                EbolaCrisisDataAccess.APPEAL_COVERAGE][CrisisDataAccess.SPARKLINES_FIELD]
 
-        coverage_sparklines = [
-            {'date': item['Date'], 'value': item['Value']} for item in sparklines]
+            coverage_sparklines = [
+                {'date': item['Date'], 'value': item['Value']} for item in sparklines]
 
-        self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-            'sparklines'] = coverage_sparklines
+            self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                CrisisDataAccess.SPARKLINES_FIELD] = coverage_sparklines
 
-        self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-            'value'] = coverage_sparklines[0]['value']
-        self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-            'latest_date'] = coverage_sparklines[0]['date']
+            self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                'value'] = coverage_sparklines[0]['value']
+            self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                'latest_date'] = coverage_sparklines[0]['date']
+        else:
+            log.error('Could not find {} field in results for {}'.format(
+                CrisisDataAccess.SPARKLINES_FIELD, EbolaCrisisDataAccess.APPEAL_COVERAGE))
 
     def _process_cases_and_deaths(self):
-        sparklines = self.results_dict[
-            EbolaCrisisDataAccess.CUMULATIVE_CASES]['sparklines']
+        if CrisisDataAccess.SPARKLINES_FIELD in self.results_dict.get(
+                EbolaCrisisDataAccess.CUMULATIVE_CASES, {}):
+            sparklines = self.results_dict[
+                EbolaCrisisDataAccess.CUMULATIVE_CASES][CrisisDataAccess.SPARKLINES_FIELD]
 
-        cases_sparklines = [
-            {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola cases']
-        deaths_sparklines = [
-            {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola deaths']
+            cases_sparklines = [
+                {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola cases']
+            deaths_sparklines = [
+                {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola deaths']
 
-        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
-            'sparklines'] = cases_sparklines
-        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
-            'sparklines'] = deaths_sparklines
+            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                CrisisDataAccess.SPARKLINES_FIELD] = cases_sparklines
+            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                CrisisDataAccess.SPARKLINES_FIELD] = deaths_sparklines
 
-        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
-            'value'] = cases_sparklines[0]['value']
-        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
-            'latest_date'] = cases_sparklines[0]['date']
+            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                'value'] = cases_sparklines[0]['value']
+            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                'latest_date'] = cases_sparklines[0]['date']
 
-        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
-            'value'] = deaths_sparklines[0]['value']
-        self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
-            'latest_date'] = deaths_sparklines[0]['date']
+            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                'value'] = deaths_sparklines[0]['value']
+            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                'latest_date'] = deaths_sparklines[0]['date']
+        else:
+            log.error('Could not find {} field in results for {}'.format(
+                CrisisDataAccess.SPARKLINES_FIELD, EbolaCrisisDataAccess.CUMULATIVE_CASES))
 
     def _post_process(self):
         self._process_appeal_coverage()
