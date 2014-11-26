@@ -162,6 +162,27 @@ def render_markdown_strip(text, extract_length=190):
         '\n', ' ').replace('\r', '').replace('"', "&quot;")
     return result
 
+def methodology_bk_compat(meth, other, render=True):
+    if not meth and not other:
+        return (None, None)
+    standard_meths = ["Census","Sample Survey","Direct Observational Data/Anecdotal Data","Registry","Other"]
+    if meth in standard_meths and meth != "Other":
+        if render:
+            return (meth, None)
+        else:
+            return (meth, None)
+    elif other:
+        if render:
+            return ("Other", h.render_markdown(other))
+        else:
+            return ("Other", other)
+    else:
+        meth =  meth.split('Other - ')
+        if render:
+            return ("Other", h.render_markdown(meth[0]))
+        else:
+            return ("Other", meth[0])
+
 
 def render_date_from_concat_str(str, separator='-'):
     result = ''
