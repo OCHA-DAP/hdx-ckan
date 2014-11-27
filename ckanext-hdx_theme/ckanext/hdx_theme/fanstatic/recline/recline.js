@@ -5529,6 +5529,10 @@ my.QueryEditor = Backbone.View.extend({
     e.preventDefault();
     var query = this.el.find('.text-query input').val();
     this.model.set({q: query});
+    var input = $(".recline-query-editor input");
+    input.focus();
+    input.val(input.val());//set carret at end of text
+
   },
   render: function() {
     var tmplData = this.model.toJSON();
