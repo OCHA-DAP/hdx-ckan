@@ -59,13 +59,16 @@ $('#field-organizations').change(function(){
 });
 
 $('#onepage_submit, #dataset_edit').click(function(e){
+  $(this).attr('disabled', true);
   //e.preventDefault();	
   if(this.id == 'onepage_submit' && $('.group_checked').length == 0){
+    $(this).removeAttr('disabled');
     $('#select_country').prepend('<div class="error-explanation alert alert-error" id="error-country"><p>Must select a country first.</p></div>');
     $('html, body').animate({
           scrollTop: $('#select_country').offset().top
         }, 2000);
   }else if($('#field-license').val()=='hdx-other' && $('#field-license_other').val() == ''){
+    $(this).removeAttr('disabled');
     $('#field-license_other').parent().append('<div class="error-explanation alert alert-error" id="error-license"><p>Please define the terms of your license.</p></div>');
     $('html, body').animate({
           scrollTop: $('#field-license_other').offset().top
