@@ -42,3 +42,11 @@ function setUpShareTracking(){
     ga('send', 'event', 'dataset', 'share', dTitle);
   });
 }
+
+function setUpGalleryTracking() {
+  $("li.related-item.media-item a.media-view").on('click', function (){
+    var rTitle = $(this).parent().find(".media-heading").text().trim();
+    var dTitle = $(".itemTitle").text().trim();
+    ga('send', 'event', 'gallery', 'click', rTitle + " (" + dTitle +")");
+  });
+}
