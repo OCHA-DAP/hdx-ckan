@@ -37,15 +37,50 @@
 
 {% block package_metadata_author %}
 <br style="clear:both;">
-{{ form.input('author', label=_('Author'), id='field-author', placeholder=_('Joe Bloggs'), value=data.author, error=errors.author, classes=['control-medium']) }}
-{{ form.input('author_email', label=_('Author Email'), id='field-author-email', placeholder=_('joe@example.com'), value=data.author_email, error=errors.author_email, classes=['control-medium']) }}
+{{ form.hidden('author', value=data.author) }}
+{{ form.hidden('author_email', value=data.author_email) }}
 {% endblock %}
 
 {% block package_metadata_fields_maintainer %}
-<br style="clear:both;">
-{{ form.input('maintainer', label=_('Maintainer'), id='field-maintainer', placeholder=_('Joe Bloggs'), value=data.maintainer, error=errors.maintainer, classes=['control-medium']) }}
+{% set maintainer = data.maintainer or userobj.name %}
+{% set maintainer_email = data.maintainer_email or userobj.email %}
 
-{{ form.input('maintainer_email', label=_('Maintainer Email'), id='field-maintainer-email', placeholder=_('joe@example.com'), value=data.maintainer_email, error=errors.maintainer_email, classes=['control-medium']) }}
+<div style="clear:both;">
+    <div class="{{ form_field_wrapper_classes }}">
+      {% resource 'hdx_theme/hdx_autocomplete.js' %}
+      <div class="control-group control-medium">
+          <label class="control-label" for="field-maintainer">Maintainer</label>
+    <div class="controls ">
+      
+           <input id="field-maintainer" type="text" name="maintainer" value="{{maintainer}}" placeholder="Joe Bloggs" data-module="hdx_autocomplete"
+            data-module-source="/api/2/util/user/autocomplete?q=?">
+    </div>
+  </div>
+        </div>
+    {% if new_dataset %}
+      <div class="dataset-form-info-field info-field">
+        {% trans %}
+        The maintainer is the user who is responsible for maintaining the sharing of these data on the HDX repository. This user can be changed later.
+        {% endtrans %}
+      </div>
+    {% endif %}
+  </div>
+
+<div style="clear:both;">
+    <div class="{{ form_field_wrapper_classes }}">
+      
+{{ form.input('maintainer_email', label=_('Maintainer Email'), id='field-maintainer-email', placeholder=_('joe@example.com'), value=maintainer_email, error=errors.maintainer_email, classes=['control-medium']) }}
+    </div>
+    {% if new_dataset %}
+      <div class="dataset-form-info-field info-field">
+        {% trans %}
+        This field will be publicly visible if the dataset's visibility is set to "public". It is not a required field.
+        {% endtrans %}
+      </div>
+    {% endif %}
+  </div>
+
+
 {% endblock %}
 
 {% block package_metadata_fields_custom %}

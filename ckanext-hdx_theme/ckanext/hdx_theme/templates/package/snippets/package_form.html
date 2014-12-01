@@ -18,7 +18,7 @@ then itself be extended to add/remove blocks of functionality. #}
   {% endblock %}
 
   {% block metadata_fields %}
-    {% snippet 'package/snippets/package_metadata_fields.html', data=data, errors=errors, inheritied_form_style = form_style %}
+    {% snippet 'package/snippets/package_metadata_fields.html', data=data, errors=errors, userobj = c.userobj, inheritied_form_style = form_style %}
   {% endblock %}
 
   {% block form_actions %}
