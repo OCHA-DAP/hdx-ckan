@@ -60,6 +60,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                     action='file')
+        map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
+                    action='perma_file')
         map.connect('dataset_preselect', '/dataset/preselect',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
@@ -109,7 +111,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology': [tk.get_validator('ignore_missing'),
                             tk.get_converter('convert_to_extras')],
             'methodology_other': [tk.get_validator('ignore_missing'),
-                              tk.get_converter('convert_to_extras')],
+                                  tk.get_converter('convert_to_extras')],
             'license_other': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
         })
@@ -144,7 +146,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology': [tk.get_converter('convert_from_extras'),
                             tk.get_validator('ignore_missing')],
             'methodology_other': [tk.get_converter('convert_from_extras'),
-                              tk.get_validator('ignore_missing')],
+                                  tk.get_validator('ignore_missing')],
             'license_other': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_missing')],
         })

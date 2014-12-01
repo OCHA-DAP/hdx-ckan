@@ -549,6 +549,14 @@ class DatasetController(PackageController):
 
         # can the resources be previewed?
         for resource in c.pkg_dict['resources']:
+            domain = config.get('ckan.site_url', '')
+            if domain and domain in resource.get('url', ''):
+                perma_link = h.url_for(
+                    'perma_storage_file', id=id, resource_id=resource['id'])
+                resource['perma_link'] = perma_link
+            else:
+                resource['perma_link'] = resource.get('url', '')
+
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
         print c.pkg.related
@@ -576,7 +584,7 @@ class DatasetController(PackageController):
             'hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
 
-        #count the number of resource downloads
+        # count the number of resource downloads
         c.downloads_count = 0
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
@@ -623,14 +631,15 @@ class DatasetController(PackageController):
         import requests
         params = request.params.items()
         url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url", data=json.dumps({'longUrl':url}), headers={'content-type':'application/json'})
+        r = requests.post("https://www.googleapis.com/urlshortener/v1/url",
+                          data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
         item = r.json()
 
         try:
             short = item['id']
         except:
             short = url
-        return self._finish(200, {'url':short}, content_type='json')
+        return self._finish(200, {'url': short}, content_type='json')
 
 
 # copy from package.py:1094
