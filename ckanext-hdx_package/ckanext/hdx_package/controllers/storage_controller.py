@@ -61,24 +61,11 @@ class FileDownloadController(storage.StorageController):
             FileDownloadController._ofs_impl = get_ofs()
         return FileDownloadController._ofs_impl
 
-    def file(self, label):
-        from sqlalchemy.engine import create_engine
-        # from label find resource id
-        url = config.get('ckan.site_url', '') + \
-            '/storage/f/' + urllib.quote(label)
-        engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
-        connection = engine.connect()
-        query = connection.execute(
-            """SELECT * from resource where url= %s""", (url,))
-        res = query.fetchone()
-        if not res:
-            #             raise logic.NotFound
-            r = generate_response(404, u'File not found')
-            return r
-
+    def _download_file(self, res, label):
         # We need this as a resource object to check access so create a dummy
         # obj and trick CKAN
         resource = model.Resource()
+
         for k in res.keys():
             setattr(resource, k, res[k])
 
@@ -118,10 +105,55 @@ class FileDownloadController(storage.StorageController):
                 'Pragma': 'no-cache',
                 'Cache-Control': 'no-cache',
                 'Content-Type': metadata.get('_format', 'text/plain')}
+            if resource.name:
+                headers[
+                    'Content-Disposition'] = 'inline; filename={}'.format(resource.name)
             fapp = FileApp(filepath, headers=None, **headers)
             return fapp(request.environ, self.start_response)
         else:
             h.redirect_to(file_url.encode('ascii', 'ignore'))
+
+    def file(self, label):
+        from sqlalchemy.engine import create_engine
+        # from label find resource id
+        url = config.get('ckan.site_url', '') + \
+            '/storage/f/' + urllib.quote(label)
+        engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
+        connection = engine.connect()
+        query = connection.execute(
+            """SELECT * from resource where url= %s""", (url,))
+        res = query.fetchone()
+        if not res:
+            #             raise logic.NotFound
+            r = generate_response(404, u'File not found')
+            return r
+
+        return self._download_file(label)
+
+    def perma_file(self, id, resource_id):
+        from sqlalchemy.engine import create_engine
+        # from label find resource id
+        engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
+        connection = engine.connect()
+        query = connection.execute(
+            """SELECT * from resource where id= %s""", (resource_id,))
+        res = query.fetchone()
+        if not res:
+            #             raise logic.NotFound
+            r = generate_response(404, u'File not found')
+            return r
+        else:
+            label = self._get_label_from_resource(res)
+
+        return self._download_file(res, label)
+
+    def _get_label_from_resource(self, resource):
+        prefix = '/storage/f/'
+        url = resource.url
+        index = url.find(prefix)
+        label = url[index + len(prefix):]
+        uq_label = urllib.unquote(label)
+        return uq_label
 
 
 def create_pairtree_marker(folder):

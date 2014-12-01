@@ -59,7 +59,9 @@ $('#field-organizations').change(function(){
 });
 
 $('#onepage_submit, #dataset_edit').click(function(e){
-  $(this).attr('disabled', true);
+  if(this.id == 'onepage_submit'){
+     $(this).attr('disabled', true);
+  }
   //e.preventDefault();	
   if(this.id == 'onepage_submit' && $('.group_checked').length == 0){
     $(this).removeAttr('disabled');

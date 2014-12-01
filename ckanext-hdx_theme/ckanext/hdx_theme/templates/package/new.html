@@ -15,6 +15,6 @@
 {% endblock %}
 
 
-{% block form2 %}{{ h.snippet('package/snippets/package_metadata_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, onepage_flag=True) }}{% endblock %}
+{% block form2 %}{{ h.snippet('package/snippets/package_metadata_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, onepage_flag=True, userobj=c.userobj) }}{% endblock %}
 
 {% block form3 %}{% snippet 'package/snippets/resource_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, stage=stage, allow_upload=g.ofs_impl and logged_in %}{% endblock %}
