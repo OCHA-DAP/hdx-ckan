@@ -24,7 +24,6 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         hdx_test_base.load_plugin('hdx_package hdx_theme')
 
     def test_hdx_access_to_private_resource(self):
-        global package, resource, organization
 
         config['ofs.impl'] = 'pairtree'
         config['ofs.storage_dir'] = '/tmp'
@@ -41,7 +40,7 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         dwld_url = h.url_for(controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                              action='file', label='test_folder/hdx_test.csv')
 
-        # Testing access to private resource
+        # Testing access to private resource on old url
         try:
             self.app.get(
                 dwld_url,
@@ -57,6 +56,29 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
             assert False
         try:
             result = self.app.get(dwld_url)
+            assert '403 Access Denied' in str(result)
+        except Exception, e:
+            assert False
+
+        perma_link = h.url_for(controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
+                               action='perma_file', id='test_private_dataset_1', resource_id=resource['id'])
+
+        # Testing access to private resource on perma_link
+        try:
+            self.app.get(
+                perma_link,
+                extra_environ={'Authorization': str(testsysadmin.apikey)})
+        except Exception, e:
+            # The file doesn't really exist
+            assert '404' in e.args[0], 'File not found'
+        try:
+            result = self.app.get(
+                perma_link, extra_environ={'Authorization': str(tester.apikey)})
+            assert '403 Access Denied' in str(result)
+        except Exception, e:
+            assert False
+        try:
+            result = self.app.get(perma_link)
             assert '403 Access Denied' in str(result)
         except Exception, e:
             assert False
