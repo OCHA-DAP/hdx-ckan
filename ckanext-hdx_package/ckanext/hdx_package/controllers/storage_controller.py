@@ -77,7 +77,7 @@ class FileDownloadController(storage.StorageController):
             logic.check_access('resource_show', context, data_dict)
         except logic.NotAuthorized:
             redirect_url = h.url_for(controller='user', action='login',
-                                     came_from=url)
+                                     came_from=resource.url)
             r = generate_response(303, u'Not authorized to read file ' + resource.id,
                                   other_headers={'Location': redirect_url, 'X-CKAN-Error': '403 Access Denied'})
             return r
@@ -128,7 +128,7 @@ class FileDownloadController(storage.StorageController):
             r = generate_response(404, u'File not found')
             return r
 
-        return self._download_file(label)
+        return self._download_file(res, label)
 
     def perma_file(self, id, resource_id):
         from sqlalchemy.engine import create_engine
