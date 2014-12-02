@@ -40,8 +40,17 @@ class CrisisController(base.BaseController):
         formatter = formatters.TopLineItemsFormatter(c.top_line_items)
         formatter.format_results()
 
+        search_term = u'ebola'
+
+        self._generate_dataset_results(context, search_term)
+
+        self._generate_other_links(search_term)
+
+        return render('crisis/crisis.html')
+
+    def _generate_dataset_results(self, context, search_term):
         limit = 25
-        c.q = u'ebola'
+        c.q = search_term
 
         page = int(request.params.get('page', 1))
         data_dict = {'sort': u'metadata_modified desc',
@@ -66,9 +75,8 @@ class CrisisController(base.BaseController):
         c.items = query['results']
         c.item_count = query['count']
 
+    def _generate_other_links(self, search_term):
         c.other_links = {}
         c.other_links['show_more'] = h.url_for(
-            "search", **{'q': u'ebola', 'sort': u'metadata_modified desc',
+            "search", **{'q': search_term, 'sort': u'metadata_modified desc',
                          'ext_indicator': '0'})
-
-        return render('crisis/crisis.html')
