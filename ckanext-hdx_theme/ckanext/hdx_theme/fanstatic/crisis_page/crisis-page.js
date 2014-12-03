@@ -38,18 +38,23 @@ function c3Sparklines(){
           value: ['value']
         },
         x: 'x',
-        xFormat: '%Y-%m-%dT%H:%M:%S'
+        xFormat: '%b %d, %Y' //'%Y-%m-%dT%H:%M:%S'
       },
       axis: {
         x: {
           show: false,
           type: 'timeseries',
           tick: {
-            format: '%Y-%m-%d'
+            format: '%b %d, %Y'
           }
         },
         y: {
           show: false
+        }
+      },
+      tooltip: {
+        format: {
+          value: d3.format(",")
         }
       }
     });

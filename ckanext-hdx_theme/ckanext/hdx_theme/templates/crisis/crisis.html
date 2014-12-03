@@ -68,11 +68,11 @@
             	{% endif %}
             	
               </div>
-              <div class="col-xs-12">
-                {% if item.sparklines_json %}
-                <div style="display: none;" class="sparkline">{{ item.sparklines_json }}</div>
-                {% endif %}
-              </div>
+              {% if item.sparklines_json %}
+                <div class="col-xs-12">
+                  <div style="display: none;" class="sparkline">{{ item.sparklines_json }}</div>
+                </div>
+              {% endif %}
               <div class="col-xs-12 item-info-extra">
                 <div class="row">
                   <div class="col-xs-12">
