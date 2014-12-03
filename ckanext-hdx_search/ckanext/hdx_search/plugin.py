@@ -36,12 +36,14 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return map
 
     def before_search(self, search_params):
+        #Do not allow a sort without a sort directions
         if 'sort' in search_params:
             parts = search_params['sort'].split(' ')
             try:
                 parts[1]
             except:
                 search_params['sort'] = parts[0]+' desc'
+
         #search_params['q'] = convert_country(search_params['q'])
         if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
             search_params['facet.field'].append('vocab_Topics')
