@@ -75,8 +75,11 @@ class TopLineItemsFormatter:
                     lambda t: unit_getter(r), level=1)
                 r['sparklines_json'] = json.dumps(r['sparklines'])
 
-            d = dt.datetime.strptime(date_getter(r), '%Y-%m-%dT%H:%M:%S')
-            date_setter(r, dt.datetime.strftime(d, '%b %d, %Y'))
+            try:
+                d = dt.datetime.strptime(date_getter(r), '%Y-%m-%dT%H:%M:%S')
+                date_setter(r, dt.datetime.strftime(d, '%b %d, %Y'))
+            except TypeError, e:
+                log.error('Problem reading date: ' + str(e))
 
             if level == 0 or unit_getter(r) == 'ratio':
                 modified_value = value_getter(r)
