@@ -66,29 +66,30 @@ class TopLineItemsFormatter:
                              top_line_date_set, top_line_value_get,
                              top_line_value_set, top_line_unit_get)
 
-    def _format_results(self, records, date_getter, date_setter, value_getter, value_setter, unit_getter):
+    def _format_results(self, records, date_getter, date_setter, value_getter, value_setter, unit_getter, level=0):
         for r in records:
             if 'sparklines' in r:
                 self._format_results(
                     r['sparklines'], spark_line_date_get, spark_line_date_set,
                     spark_line_value_get, spark_line_value_set,
-                    lambda t: unit_getter(r))
+                    lambda t: unit_getter(r), level=1)
                 r['sparklines_json'] = json.dumps(r['sparklines'])
 
             d = dt.datetime.strptime(date_getter(r), '%Y-%m-%dT%H:%M:%S')
             date_setter(r, dt.datetime.strftime(d, '%b %d, %Y'))
 
-            modified_value = value_getter(r)
-            if unit_getter(r) == 'ratio':
-                modified_value *= 100.0
-            elif unit_getter(r) == 'million':
-                modified_value /= 1000000.0
+            if level == 0 or unit_getter(r) == 'ratio':
+                modified_value = value_getter(r)
+                if unit_getter(r) == 'ratio':
+                    modified_value *= 100.0
+                elif unit_getter(r) == 'million':
+                    modified_value /= 1000000.0
 
-            int_value = int(modified_value)
-            if int_value == modified_value:
-                formatted_value = '{:,}'.format(int_value)
-            else:
-                formatted_value = '{:,.1f}'.format(
-                    self._get_decimal_value(modified_value))
+                int_value = int(modified_value)
+                if int_value == modified_value:
+                    formatted_value = '{:,}'.format(int_value)
+                else:
+                    formatted_value = '{:,.1f}'.format(
+                        self._get_decimal_value(modified_value))
 
-            value_setter(r, formatted_value)
+                value_setter(r, formatted_value)
