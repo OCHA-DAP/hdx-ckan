@@ -212,6 +212,11 @@ ckan.module('hdx-indicator-graph', function ($, _) {
       if (json.success){
         this.data = json.result.results;
 
+        //#1595 - fix not active until datateam will clean the data
+//        var unitName = this.data[0].unitName;
+//        if (unitName){
+//          this.c3_chart.axis.labels({y: unitName});
+//        }
         //Call all callbacks that new data was loaded
         for (var i = 0; i < this.dataCallbacks.length; i++){
           this.dataCallbacks[i]();
