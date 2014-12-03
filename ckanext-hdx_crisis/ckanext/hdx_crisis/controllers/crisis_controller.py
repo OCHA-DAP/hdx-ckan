@@ -84,8 +84,12 @@ class CrisisController(base.BaseController):
             if 'sparklines' in r:
                 r['sparklines_json'] = json.dumps(r['sparklines'])
 
-            d = dt.datetime.strptime(r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
-            r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
+            try:
+                d = dt.datetime.strptime(
+                    r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
+                r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
+            except TypeError, e:
+                log.error('Problem reading date: ' + str(e))
 
             modified_value = r[u'value']
             if r[u'units'] == 'ratio':
