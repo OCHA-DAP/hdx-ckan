@@ -37,10 +37,10 @@ class CountryController(controllers.CrisisController):
         formatter = formatters.TopLineItemsFormatter(c.top_line_items)
         formatter.format_results()
 
-        search_term = u'colombia'
+        search_params = {u'groups': u'col'}
 
-        self._generate_dataset_results(context, search_term)
+        self._generate_dataset_results(context, search_params)
 
-        self._generate_other_links(search_term)
+        self._generate_other_links(search_params)
 
         return render('country/country.html')
