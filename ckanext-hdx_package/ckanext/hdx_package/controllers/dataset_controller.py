@@ -251,6 +251,34 @@ class DatasetController(PackageController):
         # return render(self._new_template(package_type), extra_vars={'stage':
         # stage})
 
+    def _get_perma_link(self, dataset_id, resource_id):
+        perma_link = h.url_for(
+            'perma_storage_file', id=dataset_id, resource_id=resource_id)
+        if '://' not in perma_link:
+            perma_link = config.get(
+                'ckan.site_url', '') + perma_link
+        return perma_link
+
+    def _update_or_create_resource(self, context, data, dataset_id, resource_id):
+        if resource_id:
+            data['id'] = resource_id
+            # Added by HDX - adding perma_link
+            if 'resource_type' in data and u'file.upload' == data['resource_type']:
+                data['perma_link'] = self._get_perma_link(
+                    dataset_id, resource_id)
+
+            get_action('resource_update')(context, data)
+        else:
+            result_dict = get_action('resource_create')(context, data)
+
+            # Added by HDX - adding perma_link
+            # Now that we have a resource id we want to add the
+            # perma_link url to the resource
+            if 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
+                result_dict['perma_link'] = self._get_perma_link(
+                    dataset_id, result_dict['id'])
+                get_action('resource_update')(context, result_dict)
+
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
         forms. '''
@@ -305,11 +333,8 @@ class DatasetController(PackageController):
 
             data['package_id'] = id
             try:
-                if resource_id:
-                    data['id'] = resource_id
-                    get_action('resource_update')(context, data)
-                else:
-                    get_action('resource_create')(context, data)
+                self._update_or_create_resource(context, data, id, resource_id)
+
             except ValidationError, e:
                 errors = e.error_dict
                 error_summary = e.error_summary
@@ -444,11 +469,7 @@ class DatasetController(PackageController):
 
             data['package_id'] = id
             try:
-                if resource_id:
-                    data['id'] = resource_id
-                    get_action('resource_update')(context, data)
-                else:
-                    get_action('resource_create')(context, data)
+                self._update_or_create_resource(context, data, id, resource_id)
             except ValidationError, e:
                 errors = e.error_dict
                 error_summary = e.error_summary
@@ -494,6 +515,14 @@ class DatasetController(PackageController):
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
         return render('package/resource_edit.html', extra_vars=vars)
+
+    def _create_perma_link_if_needed(self, dataset_id, resource):
+        if 'perma_link' not in resource and resource.get('resource_type', '') == 'file.upload':
+            domain = config.get('ckan.site_url', '')
+            if domain and domain in resource.get('url', ''):
+                perma_link = h.url_for(
+                    'perma_storage_file', id=dataset_id, resource_id=resource['id'])
+                resource['perma_link'] = perma_link
 
     def read(self, id, format='html'):
         if not format == 'html':
@@ -547,8 +576,11 @@ class DatasetController(PackageController):
         c.current_package_id = c.pkg.id
         c.related_count = c.pkg.related_count
 
-        # can the resources be previewed?
         for resource in c.pkg_dict['resources']:
+            # create permalink if needed
+            self._create_perma_link_if_needed(id, resource)
+
+            # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
         print c.pkg.related
@@ -576,7 +608,7 @@ class DatasetController(PackageController):
             'hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
 
-        #count the number of resource downloads
+        # count the number of resource downloads
         c.downloads_count = 0
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
@@ -623,14 +655,15 @@ class DatasetController(PackageController):
         import requests
         params = request.params.items()
         url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url", data=json.dumps({'longUrl':url}), headers={'content-type':'application/json'})
+        r = requests.post("https://www.googleapis.com/urlshortener/v1/url",
+                          data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
         item = r.json()
 
         try:
             short = item['id']
         except:
             short = url
-        return self._finish(200, {'url':short}, content_type='json')
+        return self._finish(200, {'url': short}, content_type='json')
 
 
 # copy from package.py:1094

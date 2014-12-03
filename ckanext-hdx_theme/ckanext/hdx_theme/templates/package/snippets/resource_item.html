@@ -45,7 +45,7 @@
         {{ _('Preview') }}
       </a>
       {% endif %}
-      <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
+      <a href="{{ res.perma_link if res.perma_link else res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
         <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
       </a>
       {% set social_div_id = 'social-' + res.id %}

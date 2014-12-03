@@ -92,34 +92,39 @@ class CrisisDataAccess():
         datastore_resource_id = self._find_datastore_resource_id(
             context, top_line_info['dataset'], top_line_info['resource'])
         self.results = self._fetch_items_from_datastore(
-            context, datastore_resource_id, True, top_line_info.get('sql', None))
-        self.results_dict = {item['title']: item for item in self.results}
+            context, datastore_resource_id, True,
+            top_line_info.get('sql', None), CrisisDataAccess.SORT_FIELD)
+        self.results_dict = {
+            item[CrisisDataAccess.UNIQUE_ID_COL]: item for item in self.results
+            if CrisisDataAccess.UNIQUE_ID_COL in item}
 
-        for title, res_dict in self.resources_dict.iteritems():
-            if title != 'top-line-numbers':
+        for code, res_dict in self.resources_dict.iteritems():
+            if code != 'top-line-numbers':
                 log.info("Fetching data for dataset:{} and resource: {} ".format(
                     res_dict['dataset'], res_dict['resource']))
                 res_id = self._find_datastore_resource_id(
                     context, res_dict['dataset'], res_dict['resource'])
                 if not res_id:
                     log.error(
-                        'Problem with resource (maybe it does not exist): ' + res_dict['dataset'] + " and " + res_dict['resource'])
+                        'Problem with resource (maybe it does not exist): ' +
+                        res_dict['dataset'] + " and " + res_dict['resource'])
                 sparkline_items = self._fetch_items_from_datastore(
                     context, res_id, True, res_dict.get('sql', None))
-                if title in self.results_dict:
-                    self.results_dict[title]['sparklines'] = sparkline_items
+                if code in self.results_dict:
+                    self.results_dict[code][
+                        CrisisDataAccess.SPARKLINES_FIELD] = sparkline_items
                 else:
                     log.error(
-                        "{} is not in the results dict: {}".format(title, str(self.results_dict)))
+                        "{} is not in the results dict".format(code))
 
         self._post_process()
 
 
 class EbolaCrisisDataAccess(CrisisDataAccess):
 
-    CUMULATIVE_CASES = 'Cumulative Cases of Ebola'
-    CUMULATIVE_DEATHS = 'Cumulative Deaths from Ebola'
-    APPEAL_COVERAGE = 'Appeal Coverage'
+    CUMULATIVE_CASES = 'tot_case_evd'
+    CUMULATIVE_DEATHS = 'tot_death_evd'
+    APPEAL_COVERAGE = 'plan_coverage'
 
     def __init__(self):
         self.resources_dict = {

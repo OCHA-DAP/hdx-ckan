@@ -278,3 +278,14 @@
 .primary .page-header .nav-tabs  li a:hover{
     background-color: transparent;
 }
+
+/* Fix loading icon */
+    .resource-upload-field.loading {
+        padding: 0;
+    }
+    .resource-upload-field.loading label.radio.inline.type-file {
+        background: url("../../../base/images/loading-spinner.gif") no-repeat center right 20px;
+        background-color: white;
+        background-size: 20px 20px;
+    }
+/* END Fix loading icon */

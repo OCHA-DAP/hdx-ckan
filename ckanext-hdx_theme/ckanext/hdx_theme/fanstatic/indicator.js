@@ -23,4 +23,5 @@ $(document).ready(function() {
 
   setUpResourcesTracking();
   setUpShareTracking();
+  setUpGalleryTracking();
 });
