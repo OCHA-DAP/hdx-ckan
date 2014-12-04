@@ -46,7 +46,7 @@ class CrisisController(base.BaseController):
 
         self._generate_other_links(search_term)
 
-        return render('crisis/crisis.html')
+        return render('crisis/crisis-ebola.html')
 
     def _generate_dataset_results(self, context, search_term):
         limit = 25
