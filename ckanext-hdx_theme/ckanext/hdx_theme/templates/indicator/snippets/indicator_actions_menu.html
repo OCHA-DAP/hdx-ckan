@@ -23,7 +23,7 @@ $(document).ready(function(){
     {% if h.check_access('package_update', {'id':pkg.id }) %}
       {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
     {% endif %}
-    {% if (h.check_access('package_delete', {'id':package.id }) )and (not package.get('state', '').startswith('deleted')) %}
+    {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
     	{% snippet 'snippets/delete_dataset.html', pkg=pkg, button=True %}
     {% endif %}
     {#  
