@@ -1,0 +1,23 @@
+#crisis-map {
+  height: 350px;
+}
+
+.crisis-map-title {
+    height:50px;
+    background-color: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    top: 300px;
+    width: 100%;
+}
+
+.crisisTitle{
+    color: #000000;
+    margin-top: 80px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 0.01em;
+    line-height: 50px;
+    text-transform: capitalize;
+}
+

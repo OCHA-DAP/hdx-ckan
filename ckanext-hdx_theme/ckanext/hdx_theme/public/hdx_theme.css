@@ -849,6 +849,7 @@ span.clear { clear: left; display: block; }
 
 .org-control textarea{
 	max-height:70px;
+    margin-bottom: 0;
 }
 
 
