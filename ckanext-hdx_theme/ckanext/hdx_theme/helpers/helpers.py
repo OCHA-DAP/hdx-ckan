@@ -153,6 +153,7 @@ def markdown_extract_strip(text, extract_length=190):
         '\n', ' ').replace('\r', '').replace('"', "&quot;")
     return result
 
+
 def render_markdown_strip(text, extract_length=190):
     ''' return the plain text representation of markdown encoded text.  That
     is the texted without any html tags.  If extract_length is 0 then it
@@ -162,10 +163,12 @@ def render_markdown_strip(text, extract_length=190):
         '\n', ' ').replace('\r', '').replace('"', "&quot;")
     return result
 
+
 def methodology_bk_compat(meth, other, render=True):
     if not meth and not other:
         return (None, None)
-    standard_meths = ["Census","Sample Survey","Direct Observational Data/Anecdotal Data","Registry","Other"]
+    standard_meths = ["Census", "Sample Survey",
+                      "Direct Observational Data/Anecdotal Data", "Registry", "Other"]
     if meth in standard_meths and meth != "Other":
         if render:
             return (meth, None)
@@ -177,7 +180,7 @@ def methodology_bk_compat(meth, other, render=True):
         else:
             return ("Other", other)
     else:
-        meth =  meth.split('Other - ')
+        meth = meth.split('Other - ')
         if render:
             return ("Other", h.render_markdown(meth[0]))
         else:
@@ -409,11 +412,12 @@ def hdx_follow_button(obj_type, obj_id, **kw):
                          params=kw)
     return ''
 
+
 def hdx_add_url_param(alternative_url=None, controller=None, action=None,
-                  extras=None, new_params=None, unwanted_keys = []):
+                      extras=None, new_params=None, unwanted_keys=[]):
     '''
     MODIFIED CKAN HELPER THAT ALLOWS REMOVING SOME PARAMS
-    
+
     Adds extra parameters to existing ones
 
     controller action & extras (dict) are used to create the base url
@@ -424,7 +428,7 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
     instead.
     '''
 
-    params_nopage = [(k, v) for k, v in request.params.items() 
+    params_nopage = [(k, v) for k, v in request.params.items()
                      if k != 'page' and k not in unwanted_keys]
     params = set(params_nopage)
     if new_params:
@@ -432,6 +436,9 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
     if alternative_url:
         return h._url_with_params(alternative_url, params)
     return h._create_url_with_params(params=params, controller=controller,
-                                   action=action, extras=extras)
-    
-    
+                                     action=action, extras=extras)
+
+
+def count_public_datasets_for_group(datasets_list):
+    a = len([i for i in datasets_list if i['private'] == False])
+    return a
