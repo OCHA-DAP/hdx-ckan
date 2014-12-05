@@ -37,13 +37,30 @@
     	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
   		<td class="dataset-details">
   			{% if pkg_dict.private %}
-  				{{ _('Private') }}
+  				<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
+  				<div id="private_block"><span id="visibility">{{ _('Private') }}</span> - <a onClick="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;">{{ _('make it public') }}</a></div>
 		  	{% else %}
-		  		{{ _('Public') }}
+		  		<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
+		  		<div id="private_block"><span id="visibility">{{ _('Public') }}</span> - <a onClick="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;">{{ _('make it private') }}</a></div>
 		  	{% endif %}
   		</td>
 	</tr>
-
+	<script>
+		function toggleVis(){
+			$('#private_loading').show();
+			$('#private_block').hide();
+			  $.ajax({
+  				url: '{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}',
+  				}).done(function(e) {
+  					if(e.success){
+  						$('#visibility').html(e.status);
+	  					$('#visibility_change').html(e.text);
+	  					$('#private_loading').hide();
+	  					$('#private_block').show();
+	  				}
+				});
+			}
+	</script>
      
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
