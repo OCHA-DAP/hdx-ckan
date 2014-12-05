@@ -28,7 +28,7 @@
 	    </div>
 	</div>
 	<div class="org-control-container">
-	    {{ form.textarea('description', label=_('Description of Organisation'), id='field-description', value=data.description, error=errors.description, classes=['org-control', 'mandatory','field-with-info']) }}
+	    {{ form.markdown('description', id='field-description', label=_('Description of Organisation'), value=data.description, error=errors.description, classes=['org-control', 'mandatory','field-with-info']) }}
 	    <div class="org-control-info-large  info-field">
 	    	<div class="org-info-label-large">
 	    		{{_('Brief overview of what organisation is for.')}}</div>
