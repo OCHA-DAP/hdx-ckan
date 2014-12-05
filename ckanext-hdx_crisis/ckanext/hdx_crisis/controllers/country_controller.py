@@ -39,7 +39,8 @@ class CountryController(controllers.CrisisController):
 
         search_params = {u'groups': u'col'}
 
-        self._generate_dataset_results(context, search_params)
+        self._generate_dataset_results(
+            context, search_params, action_alias='show_country')
 
         self._generate_other_links(search_params)
 

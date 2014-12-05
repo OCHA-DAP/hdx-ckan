@@ -48,7 +48,7 @@ class CrisisController(base.BaseController):
 
         return render('crisis/crisis-ebola.html')
 
-    def _generate_dataset_results(self, context, search_params):
+    def _generate_dataset_results(self, context, search_params, action_alias='show_crisis'):
         limit = 25
 
         page = int(request.params.get('page', 1))
@@ -69,7 +69,7 @@ class CrisisController(base.BaseController):
         query = get_action("package_search")(context, data_dict)
 
         def pager_url(q=None, page=None):
-            url = h.url_for('show_crisis', page=page) + '#datasets-section'
+            url = h.url_for(action_alias, page=page) + '#datasets-section'
             return url
 
         c.page = h.Page(
