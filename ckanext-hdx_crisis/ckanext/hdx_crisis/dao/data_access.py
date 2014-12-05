@@ -48,8 +48,7 @@ class CrisisDataAccess():
 
             if 'resources' in dataset:
                 for r in dataset['resources']:
-                    if 'datastore_active' in r and r['datastore_active'] \
-                            and r['name'] == resource_id:
+                    if r['name'] == resource_id:
                         return r['id']
             return None
         except:
@@ -75,10 +74,13 @@ class CrisisDataAccess():
         action_name = 'datastore_search_sql' if sql else 'datastore_search'
 
         if datastore_resource_id:
-            result = get_action(action_name)(
-                modified_context, data_dict)
-            if 'records' in result:
-                return result['records']
+            try:
+                result = get_action(action_name)(
+                    modified_context, data_dict)
+                if 'records' in result:
+                    return result['records']
+            except logic.NotFound, e:
+                log.error(str(e))
         else:
             log.error(
                 'Resource id is None ')
