@@ -35,6 +35,14 @@
 	    </div>
     </div>
 
+  <div class="org-control-container">
+    {% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}
+      {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
+      </div>
+  </div>
+
   {% endblock %}
 
   {% block custom_fields %}

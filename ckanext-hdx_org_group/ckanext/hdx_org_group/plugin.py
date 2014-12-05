@@ -43,6 +43,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         schema.update({
                 'description':[tk.get_validator('not_empty')],
                 'org_url':[tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
+                'fts_id': [tk.get_validator('ignore_missing'),
+                          tk.get_converter('convert_to_extras')],
                 })
         return schema
 
@@ -60,6 +62,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
             schema.update({'description':[tk.get_validator('not_empty')] })
             schema.update({'org_url':[tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'fts_id':[tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
             return schema
         else:
             return None
