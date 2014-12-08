@@ -10,7 +10,7 @@ import ckan.lib.base as base
 import ckan.model as model
 import ckan.common as common
 
-import ckanext.hdx_crisis.dao.data_access as data_access
+import ckanext.hdx_crisis.dao.country_data_access as country_data_access
 import ckanext.hdx_crisis.formatters.top_line_items_formatter as formatters
 
 
@@ -30,7 +30,7 @@ class CountryController(controllers.CrisisController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        crisis_data_access = data_access.EbolaCrisisDataAccess()
+        crisis_data_access = country_data_access.ColombiaCrisisDataAccess()
         crisis_data_access.fetch_data(context)
         c.top_line_items = crisis_data_access.get_top_line_items()
 

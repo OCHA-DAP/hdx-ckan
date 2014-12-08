@@ -37,7 +37,7 @@ class CrisisController(base.BaseController):
         crisis_data_access.fetch_data(context)
         c.top_line_items = crisis_data_access.get_top_line_items()
 
-        formatter = formatters.TopLineItemsFormatter(c.top_line_items)
+        formatter = formatters.TopLineItemsWithDateFormatter(c.top_line_items)
         formatter.format_results()
 
         search_params = {'q': u'ebola'}

@@ -61,3 +61,16 @@
 .leaflet-container label::after {
     content: "";
 }
+
+.crisis-top-line-value {
+	white-space: nowrap;
+}
+
+.crisis-top-line-value-prefix {
+	font-family: 'Gotham-Light', sans-serif;
+    font-size: 37px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+    margin-right: -15px;
+}

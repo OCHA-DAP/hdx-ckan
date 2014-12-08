@@ -1,0 +1,33 @@
+{#
+Embeds a organization within the sidebar of a page.
+
+organization    - The organization dict.
+truncate - A max length for the organization description. If not provided the description
+           will be full length.
+has_context_title - Boolean for whether to display a module-heading for when
+                    this snippet appears within a non-organization template
+                    (e.g. dataset page sidebar)
+
+Example:
+
+    {{ h.snippet('crisis/snippets/top_line_value.html', value=item.formatted_value, unit=item.units, notes=item.notes) }}
+
+#}
+<div class="crisis-top-line-value">
+	<span class="crisis-top-line-value-prefix">
+		{% if unit in ('dollars', 'dollars_million') %}
+				$
+		{% endif %}
+	</span>
+	<span title="{{ notes }}">
+		{{ value }}
+	</span>
+	
+	{% if unit in ('million', 'dollars_million') %}
+		<span class="small"> {{ _('million') }} </span>
+	{% elif unit == 'ratio' %}
+		<span class="small">%</span>
+	{% elif unit == 'per100k' %}
+		<span class="small"> {{ _('per 100k') }} </span>
+	{% endif %}
+</div>
