@@ -14,10 +14,12 @@ Example:
 
 #}
 <div class="crisis-top-line-value">
-	<span title="{{ notes }}">
+	<span class="crisis-top-line-value-prefix">
 		{% if unit in ('dollars', 'dollars_million') %}
-			$
+				$
 		{% endif %}
+	</span>
+	<span title="{{ notes }}">
 		{{ value }}
 	</span>
 	
