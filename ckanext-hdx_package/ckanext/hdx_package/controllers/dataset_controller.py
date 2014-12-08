@@ -55,6 +55,11 @@ lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
 
+def clone_dict(old_dict):
+    data = dict()
+    for k, v in old_dict.iteritems():
+        data[k] = v
+    return data
 
 class DatasetController(PackageController):
 
@@ -583,8 +588,7 @@ class DatasetController(PackageController):
             # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
-        print c.pkg.related
-
+        
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
         try:
@@ -665,6 +669,35 @@ class DatasetController(PackageController):
             short = url
         return self._finish(200, {'url': short}, content_type='json')
 
+    def visibility(self, id):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+        try:
+            c.pkg_dict = get_action('package_show')(context, {'id': id})
+
+        except NotAuthorized:
+            return self._finish(401, {'success': False, 'message':'Not authorized to do this.'}, content_type='json')
+        except NotFound:
+            return self._finish(404, {'success': False, 'message':'No such dataset found.'}, content_type='json')
+
+        if c.pkg_dict['private']:
+            if c.pkg_dict['organization'] is None:
+                return self._finish(200, {'success': False, 'message': 'Datasets that do not belong to an organization cannot be private.'}, content_type='json')
+            text = 'make it private'
+            status = 'Public'
+            data_dict = clone_dict(c.pkg_dict)
+            data_dict['private'] = False
+        else:
+            text= 'make it public'
+            status = 'Private'
+            data_dict = clone_dict(c.pkg_dict)
+            data_dict['private'] = True
+        #try:
+        pkg_dict = get_action('package_update')(context, data_dict)
+        #except:
+        #   return self._finish(500, {'success': False, 'message':'Oops! We can't do this right now. Something went wrong.'}, content_type='json') 
+        return self._finish(200, {'success': True, 'status':status, 'text':text}, content_type='json')        
 
 # copy from package.py:1094
     def resource_delete(self, id, resource_id):

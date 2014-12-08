@@ -1,20 +1,13 @@
 {% extends "page-new.html" %}
 {% import 'macros/form.html' as form %}
 
-{% block subtitle %}{{ _("Ebola crisis page") }}{% endblock %}
-
-{% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Ebola'), controller='ckanext.hdx_crisis.controllers.crisis_controller:CrisisController', 
-  						action='show', highlight_actions = 'new index') }}</li>
-{% endblock %}
-
 {% block primary_content %}
   <div class="row paddingRowHack" style="position: relative;">
   	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
-    <div id="ebola-map" style="position: relative; z-index: 0;">
+    <div id="crisis-map" style="position: relative; z-index: 0;">
     </div>
-    <div class="ebola-map-title">
-      <span class="mL45 crisisTitle"> West Africa: Ebola outbreak </span>
+    <div class="crisis-map-title">
+      <span class="mL45 crisisTitle"> {% block crisis_title %} Crisis title {% endblock %}</span>
       <span class="mR45 pull-right" style="line-height: 50px;">
         <a class="btn hdx-btn org-btn" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
            data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share page">Share</a>
@@ -49,63 +42,9 @@
     </div>
   </div>
 
-  <div class="row mTop25">
-    {% block top_line_figures %}
-      {% for item in c.top_line_items %}
-        <div class="col-xs-4">
-          <div class="item-info">
-            <div class="row">
-              <div class="col-xs-12 item-info-title">
-                {{ item.title }}
-              </div>
-              <div class="col-xs-12 item-info-number">
-                <span title="{{ item.notes }}">{{ item.formatted_value }}</span>
-                {% if item.units == 'million' %}
-            		<span class="small">{{ _('million') }} </span>
-            	{% endif %}
-            	{% if item.units == 'ratio' %}
-            		<span class="small">%</span>
-            	{% endif %}
-            	
-              </div>
-              <div class="col-xs-12">
-                {% if item.sparklines_json %}
-                <div style="display: none;" class="sparkline">{{ item.sparklines_json }}</div>
-                {% endif %}
-              </div>
-              <div class="col-xs-12 item-info-extra">
-                <div class="row">
-                  <div class="col-xs-12">
-                    <span class="item-info-source-title-text">{{ item.source }}</span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-xs-12">
-                  	{% if item.source_link %}
-                    	<span class="item-info-source-title"><a href="{{ item.source_link }}" target="new">Data</a></span> -
-                    {% endif %}
-                    {% if item.explore %}
-                    	<span class="item-info-source-title"><a href="{{ item.explore }}" target="new">Explore</a></span> -
-                    {% endif %}
-                    <span class="item-info-source-date">{{ item.latest_date }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    {% endblock %}
-  </div>
+  {% block crisis_data %}
 
-  <div class="row mTop25">
-    <div class="col-xs-12 item-info-title">
-      Week by Week Spread of Ebola in West Africa
-    </div>
-    <div class="col-xs-12">
-      <div id="ebola_graph"></div>
-    </div>
-  </div>
+  {% endblock %}
 
 <section class="list-items module">
     <div class="list-items module-content mT35">
@@ -136,17 +75,15 @@
   {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/jquery.highlight' %}
-  {% resource 'hdx_theme/jquery.more' %}
+  {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
 
   {% resource 'hdx_theme/bs_popover.js' %}
   {% resource 'hdx_theme/d3' %}
   {% resource 'hdx_theme/c3' %}
   {% resource 'hdx_theme/leaflet' %}
-  {% resource 'hdx_theme/crisis-page' %}
   {% resource 'hdx_theme/search' %}
-
-
+  {% resource 'hdx_theme/crisis-base' %}
 
   <script src="/base/javascript/modules/autocomplete.js"></script>
 {% endblock %}

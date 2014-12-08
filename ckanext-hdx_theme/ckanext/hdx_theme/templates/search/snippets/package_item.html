@@ -65,7 +65,7 @@
           {% block description %}
             {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
             {% if notes %}
-            	<span data-module="hdx_show_more" style="visibility:hidden"><span>{{ notes|urlize }}</span></span> 
+            	<span data-module="hdx_show_more" style="visibility:hidden"><div>{{ notes|urlize }}</div></span>
             {% else %}
               <p class="empty">{{ _("This dataset has no description") }}</p>
             {% endif %}
