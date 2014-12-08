@@ -20,14 +20,7 @@
                 {{ item.title }}
               </div>
               <div class="col-xs-12 item-info-number">
-                <span title="{{ item.notes }}">{{ item.formatted_value }}</span>
-                {% if item.units == 'million' %}
-            		<span class="small">{{ _('million') }} </span>
-            	{% endif %}
-            	{% if item.units == 'ratio' %}
-            		<span class="small">%</span>
-            	{% endif %}
-
+              	{{ h.snippet('crisis/snippets/top_line_value.html', value=item.formatted_value, unit=item.units, notes=item.notes) }}
               </div>
               {% if item.sparklines_json %}
                 <div class="col-xs-12">

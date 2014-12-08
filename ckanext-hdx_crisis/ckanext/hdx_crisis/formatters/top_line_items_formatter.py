@@ -55,9 +55,14 @@ class TopLineItemsFormatter:
     def __init__(self, top_line_items):
         self.top_line_items = top_line_items
 
-    def _get_decimal_value(self, value):
+    def _round_up_1_decimal_value(self, value):
         decimal_value = Decimal(str(value)).quantize(
             Decimal('.1'), rounding=decimal.ROUND_HALF_UP)
+        return decimal_value
+
+    def _round_up_decimal_value(self, value):
+        decimal_value = Decimal(str(value)).quantize(
+            Decimal('1.'), rounding=decimal.ROUND_HALF_UP)
         return decimal_value
 
     def format_results(self):
@@ -66,7 +71,8 @@ class TopLineItemsFormatter:
                              top_line_date_set, top_line_value_get,
                              top_line_value_set, top_line_unit_get)
 
-    def _format_results(self, records, date_getter, date_setter, value_getter, value_setter, unit_getter, level=0):
+    def _format_results(self, records, date_getter, date_setter, value_getter,
+                        value_setter, unit_getter, level=0):
         for r in records:
             if 'sparklines' in r:
                 self._format_results(
@@ -75,24 +81,63 @@ class TopLineItemsFormatter:
                     lambda t: unit_getter(r), level=1)
                 r['sparklines_json'] = json.dumps(r['sparklines'])
 
-            try:
-                d = dt.datetime.strptime(date_getter(r), '%Y-%m-%dT%H:%M:%S')
-                date_setter(r, dt.datetime.strftime(d, '%b %d, %Y'))
-            except TypeError, e:
-                log.error('Problem reading date: ' + str(e))
+            self._format_date(r, date_getter, date_setter)
 
             if level == 0 or unit_getter(r) == 'ratio':
                 modified_value = value_getter(r)
                 if unit_getter(r) == 'ratio':
-                    modified_value *= 100.0
-                elif unit_getter(r) == 'million':
-                    modified_value /= 1000000.0
+                    modified_value = self._format_ratio(modified_value)
+                elif unit_getter(r) == 'per100k':
+                    modified_value = self._format_per100k(modified_value)
+                elif unit_getter(r) in ('million', 'dollars_million'):
+                    modified_value = self._format_million(modified_value)
+                elif unit_getter(r) == 'count':
+                    modified_value = self._format_decimal_number(
+                        modified_value)
+                elif unit_getter(r) == 'dollars':
+                    modified_value = self._round_up_decimal_value(
+                        modified_value)
+                    modified_value = self._format_decimal_number(
+                        modified_value)
 
-                int_value = int(modified_value)
-                if int_value == modified_value:
-                    formatted_value = '{:,}'.format(int_value)
-                else:
-                    formatted_value = '{:,.1f}'.format(
-                        self._get_decimal_value(modified_value))
+                value_setter(r, modified_value)
 
-                value_setter(r, formatted_value)
+    def _format_ratio(self, original_value):
+        modified_value = original_value * 100.0
+
+        formatted_value = self._format_decimal_number(modified_value)
+        return formatted_value
+
+    def _format_per100k(self, original_value):
+        modified_value = original_value * 100000.0
+
+        formatted_value = self._format_decimal_number(modified_value)
+        return formatted_value
+
+    def _format_million(self, original_value):
+        modified_value = original_value / 1000000.0
+
+        formatted_value = self._format_decimal_number(modified_value)
+        return formatted_value
+
+    def _format_decimal_number(self, value):
+        int_value = int(value)
+        if int_value == value:
+            formatted_value = '{:,}'.format(int_value)
+        else:
+            formatted_value = '{:,.1f}'.format(
+                self._round_up_1_decimal_value(value))
+        return formatted_value
+
+    def _format_date(self, r, date_getter, date_setter):
+        pass
+
+
+class TopLineItemsWithDateFormatter (TopLineItemsFormatter):
+
+    def _format_date(self, r, date_getter, date_setter):
+        try:
+            d = dt.datetime.strptime(date_getter(r), '%Y-%m-%dT%H:%M:%S')
+            date_setter(r, dt.datetime.strftime(d, '%b %d, %Y'))
+        except Exception, e:
+            log.error('Problem reading date: ' + str(e))
