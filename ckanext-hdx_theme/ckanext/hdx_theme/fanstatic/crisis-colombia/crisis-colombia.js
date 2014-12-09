@@ -10,9 +10,125 @@ $(document).ready(function() {
   map.setView([5, -70], 5);
 
   drawDistricts(map);
+  drawGraph1();
+  drawGraph2();
 });
 
+function spawnGraph1(jsondata, id, dateName, valueName){
+  var graph = c3.generate({
+    bindto: id,
+    color: {
+      pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+    },
+    padding: {
+      bottom: 20,
+      right: 20
+    },
 
+    data: {
+      json: jsondata,
+      keys: {
+        x: dateName,
+        value: [valueName]
+      },
+      names: {
+        value: "Names"
+      },
+      type: 'area'
+    },
+    legend:{
+      show: false
+    },
+    axis: {
+      x: {
+        tick: {
+          rotate: 20,
+          culling: false
+        }
+      },
+      y: {
+        label: {
+          text: "Units",
+          position: 'outer-middle'
+        }
+      }
+    }
+  });
+}
+
+function drawGraph1() {
+  var sql = 'SELECT "Ano", "IDPs_historico" FROM "6b0175c6-1209-42ed-9026-8bbaca7ea310"';
+
+  var data = encodeURIComponent(JSON.stringify({sql: sql}));
+
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: '/api/3/action/datastore_search_sql',
+    data: data,
+    success: function(data) {
+      spawnGraph1(data.result.records, "#graph1", "Ano", "IDPs_historico");
+    }
+  });
+}
+
+function drawGraph2() {
+  var sql = 'SELECT "Fecha", "Nomero de personas con limitaciones de acceso o movilidad" FROM "9e69d499-0b2b-4da6-9c61-10e453a57504"';
+
+  var data = encodeURIComponent(JSON.stringify({sql: sql}));
+
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: '/api/3/action/datastore_search_sql',
+    data: data,
+    success: function(data) {
+      var graph = c3.generate({
+        bindto: "#graph2",
+        padding: {
+          bottom: 20,
+          right: 20
+        },
+        color: {
+          pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+        },
+        data: {
+          json: data.result.records,
+          xFormat: '%Y-%m-%dT%H:%M:%S',
+          keys: {
+            x: "Fecha",
+            value: ["Nomero de personas con limitaciones de acceso o movilidad"]
+          },
+          names: {
+            value: "Names"
+          },
+          type: 'area'
+        },
+        legend:{
+          show: false
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+              rotate: 30,
+              culling: false,
+              format: '%b %d, %Y'
+            }
+          },
+          y: {
+            label: {
+              text: "Units",
+              position: 'outer-middle'
+            }
+          }
+        }
+      });
+    }
+  });
+
+
+}
 
 function drawDistricts(map){
   var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
