@@ -31,7 +31,7 @@
     line-height: 1;
     letter-spacing: 0.01em;
     margin-bottom: 10px;
-    margin-left: -15px;
+    margin-left: -10px;
 }
 
 .item-info-source-title-text{
@@ -53,3 +53,11 @@
     color: #888888;
 }
 
+.crisis-top-line-value-prefix {
+	font-family: 'Gotham-Light', sans-serif;
+    font-size: 37px;
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin-bottom: 20px;
+    margin-right: -10px;
+}
