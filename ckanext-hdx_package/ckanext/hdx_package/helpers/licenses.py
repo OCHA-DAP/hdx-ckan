@@ -60,4 +60,33 @@ class LicenseHdxOther(DefaultLicense):
     def title(self):
         return _("Other")
 
-  
+
+class LicenseHdxOpenDatabaseLicense(DefaultLicense):
+#     domain_content = True
+    id = "hdx-odc-odbl"
+#     is_generic = True
+#     is_okd_compliant = True
+
+    @property
+    def title(self):
+        return _("Open Database License (ODC-ODbL)")
+
+class LicenseHdxOpenDataCommonsAttributionLicense(DefaultLicense):
+#     domain_content = True
+    id = "hdx-odc-by"
+#     is_generic = True
+#     is_okd_compliant = True
+
+    @property
+    def title(self):
+        return _("Open Data Commons Attribution License (ODC-BY)")
+
+class LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense(DefaultLicense):
+#     domain_content = True
+    id = "hdx-pddl"
+#     is_generic = True
+#     is_okd_compliant = True
+
+    @property
+    def title(self):
+        return _("Open Data Commons Public Domain Dedication and License (PDDL)")
