@@ -3,7 +3,7 @@ $(document).ready(function() {
   map.scrollWheelZoom.disable();
   L.tileLayer($('#crisis-map-url-div').text(), {
     attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-    maxZoom: 10
+    maxZoom: 7
   }).addTo(map);
 
   L.control.attribution({position: 'topright'}).addTo(map);
@@ -132,11 +132,14 @@ function drawGraph2() {
 
 function drawDistricts(map){
   var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
+//  var color = ["#fcdcd2","#fabdae", "#f48272", "#f1635a", "#c06c5f"];
 
   var layers = {
     totalIDPs: {
       name: 'Number of IDPs per 100,000 inhabitants in 2013',
-      threshold: [1, 50, 100, 500],
+//      threshold: [1, 10, 100, 500],
+//      threshold: [10, 100, 500, 1000],
+      threshold: [100, 500, 1000, 2000],
       values: totalIDPs
     }
   };
