@@ -15,45 +15,7 @@ $(document).ready(function() {
 });
 
 function spawnGraph1(jsondata, id, dateName, valueName){
-  var graph = c3.generate({
-    bindto: id,
-    color: {
-      pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
-    },
-    padding: {
-      bottom: 20,
-      right: 20
-    },
 
-    data: {
-      json: jsondata,
-      keys: {
-        x: dateName,
-        value: [valueName]
-      },
-      names: {
-        value: "Names"
-      },
-      type: 'area'
-    },
-    legend:{
-      show: false
-    },
-    axis: {
-      x: {
-        tick: {
-          rotate: 20,
-          culling: false
-        }
-      },
-      y: {
-        label: {
-          text: "Units",
-          position: 'outer-middle'
-        }
-      }
-    }
-  });
 }
 
 function drawGraph1() {
@@ -67,7 +29,45 @@ function drawGraph1() {
     url: '/api/3/action/datastore_search_sql',
     data: data,
     success: function(data) {
-      spawnGraph1(data.result.records, "#graph1", "Ano", "IDPs_historico");
+      var graph = c3.generate({
+        bindto: "#graph1",
+        color: {
+          pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+        },
+        padding: {
+          bottom: 20,
+          right: 20
+        },
+
+        data: {
+          json: data.result.records,
+          keys: {
+            x: "Ano",
+            value: ["IDPs_historico"]
+          },
+          names: {
+            "IDPs_historico": "Number of internal displaced people in Colombia"
+          },
+          type: 'area'
+        },
+        legend:{
+          show: false
+        },
+        axis: {
+          x: {
+            tick: {
+              rotate: 20,
+              culling: false
+            }
+          },
+          y: {
+            label: {
+              text: "Persons",
+              position: 'outer-middle'
+            }
+          }
+        }
+      });
     }
   });
 }
@@ -100,7 +100,7 @@ function drawGraph2() {
             value: ["Nomero de personas con limitaciones de acceso o movilidad"]
           },
           names: {
-            value: "Names"
+            "Nomero de personas con limitaciones de acceso o movilidad": "Number of people with access constraints"
           },
           type: 'area'
         },
@@ -118,11 +118,12 @@ function drawGraph2() {
           },
           y: {
             label: {
-              text: "Units",
+              text: "Persons",
               position: 'outer-middle'
             }
           }
         }
+
       });
     }
   });
@@ -131,7 +132,7 @@ function drawGraph2() {
 }
 
 function drawDistricts(map){
-  var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
+  var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
 //  var color = ["#fcdcd2","#fabdae", "#f48272", "#f1635a", "#c06c5f"];
 
   var layers = {
@@ -234,7 +235,7 @@ function drawDistricts(map){
       '<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
       '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + layers[this._layer]['values'][props.PCODE] + '</b><td></tr>' +
       '</table>'
-      : 'Hover over a country/district');
+      : 'No data available');
   };
   info.showOtherMessage = function (message){
     this._div.innerHTML = message;
@@ -261,7 +262,7 @@ function drawDistricts(map){
   legend.update = function (){
     var threshold = layers[this._layer]['threshold'];
 
-    this._div.innerHTML = '<div><i style="background: white"></i> 0&ndash;' + threshold[0] + '</div>';
+    this._div.innerHTML = '<div><i style="background: ' + color[0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
     for (var i = 0; i < threshold.length; i++) {
       this._div.innerHTML +=
         '<div><i style="background:' + color[i+1] + '"></i> ' +
