@@ -46,7 +46,7 @@ function drawGraph1() {
             value: ["IDPs_historico"]
           },
           names: {
-            "IDPs_historico": "Number of internal displaced people in Colombia"
+            "IDPs_historico": "Number of Internal Displaced People in Colombia"
           },
           type: 'area'
         },
@@ -100,7 +100,7 @@ function drawGraph2() {
             value: ["Nomero de personas con limitaciones de acceso o movilidad"]
           },
           names: {
-            "Nomero de personas con limitaciones de acceso o movilidad": "Number of people with access constraints"
+            "Nomero de personas con limitaciones de acceso o movilidad": "Number of People with Access Constraints"
           },
           type: 'area'
         },
