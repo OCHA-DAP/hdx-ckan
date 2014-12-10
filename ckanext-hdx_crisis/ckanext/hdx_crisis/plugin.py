@@ -16,6 +16,6 @@ class HDXCrisisPlugin(plugins.SingletonPlugin):
     def before_map(self, map):
         map.connect('show_crisis', '/ebola',
                     controller='ckanext.hdx_crisis.controllers.crisis_controller:CrisisController', action='show')
-        map.connect('show_country', '/colombia',
+        map.connect('show_country', '/group/col',
                     controller='ckanext.hdx_crisis.controllers.country_controller:CountryController', action='show')
         return map
