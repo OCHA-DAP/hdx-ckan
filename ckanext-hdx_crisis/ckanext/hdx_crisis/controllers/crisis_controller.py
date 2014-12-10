@@ -51,8 +51,10 @@ class CrisisController(base.BaseController):
     def _generate_dataset_results(self, context, search_params, action_alias='show_crisis'):
         limit = 25
 
+        sort_option = request.params.get('sort', None)
+
         page = int(request.params.get('page', 1))
-        data_dict = {'sort': u'metadata_modified desc',
+        data_dict = {'sort': sort_option if sort_option else u'metadata_modified desc',
                      'rows': limit,
                      'start': (page - 1) * limit
                      }
@@ -69,7 +71,11 @@ class CrisisController(base.BaseController):
         query = get_action("package_search")(context, data_dict)
 
         def pager_url(q=None, page=None):
-            url = h.url_for(action_alias, page=page) + '#datasets-section'
+            if sort_option:
+                url = h.url_for(
+                    action_alias, page=page, sort=sort_option) + '#datasets-section'
+            else:
+                url = h.url_for(action_alias, page=page) + '#datasets-section'
             return url
 
         c.page = h.Page(
@@ -84,7 +90,9 @@ class CrisisController(base.BaseController):
 
     def _generate_other_links(self, search_params):
         c.other_links = {}
-        show_more_params = {'sort': u'metadata_modified desc',
+        sort_option = request.params.get('sort', None)
+
+        show_more_params = {'sort': sort_option if sort_option else u'metadata_modified desc',
                             'ext_indicator': '0'}
         show_more_params.update(search_params)
         c.other_links['show_more'] = h.url_for(
