@@ -131,7 +131,7 @@ function drawGraph2() {
 }
 
 function drawDistricts(map){
-  var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
+  var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
 //  var color = ["#fcdcd2","#fabdae", "#f48272", "#f1635a", "#c06c5f"];
 
   var layers = {
@@ -234,7 +234,7 @@ function drawDistricts(map){
       '<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
       '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + layers[this._layer]['values'][props.PCODE] + '</b><td></tr>' +
       '</table>'
-      : 'Hover over a country/district');
+      : 'Hover over a district/municipality in Colombia');
   };
   info.showOtherMessage = function (message){
     this._div.innerHTML = message;
@@ -261,7 +261,7 @@ function drawDistricts(map){
   legend.update = function (){
     var threshold = layers[this._layer]['threshold'];
 
-    this._div.innerHTML = '<div><i style="background: white"></i> 0&ndash;' + threshold[0] + '</div>';
+    this._div.innerHTML = '<div><i style="background: ' + color[0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
     for (var i = 0; i < threshold.length; i++) {
       this._div.innerHTML +=
         '<div><i style="background:' + color[i+1] + '"></i> ' +
