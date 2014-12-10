@@ -235,7 +235,7 @@ function drawDistricts(map){
       '<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
       '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + layers[this._layer]['values'][props.PCODE] + '</b><td></tr>' +
       '</table>'
-      : 'Hover over a district/municipality in Colombia');
+      : 'No data available');
   };
   info.showOtherMessage = function (message){
     this._div.innerHTML = message;
