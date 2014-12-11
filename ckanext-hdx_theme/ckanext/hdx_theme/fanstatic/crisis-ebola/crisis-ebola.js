@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  map = L.map('ebola-map', { attributionControl: false });
+  map = L.map('crisis-map', { attributionControl: false });
   map.scrollWheelZoom.disable();
   L.tileLayer($('#crisis-map-url-div').text(), {
     attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
@@ -7,7 +7,7 @@ $(document).ready(function() {
   }).addTo(map);
 
   L.control.attribution({position: 'topright'}).addTo(map);
-  map.setView([8, -8], 6);
+  map.setView([9, -8], 5);
 
   drawDistricts(map);
   c3Sparklines();
@@ -38,18 +38,23 @@ function c3Sparklines(){
           value: ['value']
         },
         x: 'x',
-        xFormat: '%Y-%m-%dT%H:%M:%S'
+        xFormat: '%b %d, %Y' //'%Y-%m-%dT%H:%M:%S'
       },
       axis: {
         x: {
           show: false,
           type: 'timeseries',
           tick: {
-            format: '%Y-%m-%d'
+            format: '%b %d, %Y'
           }
         },
         y: {
           show: false
+        }
+      },
+      tooltip: {
+        format: {
+          value: d3.format(",")
         }
       }
     });
@@ -60,15 +65,15 @@ function drawDistricts(map){
   var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
 
   var layers = {
-    totalDeaths: {
-      name: 'Cumulative Deaths from Ebola',
-      threshold: [1, 50, 100, 500],
-      values: totalDeaths
-    },
     totalCases: {
       name: 'Cumulative Cases of Ebola',
       threshold: [1, 100, 300, 800],
       values: totalCases
+    },
+    totalDeaths: {
+      name: 'Cumulative Deaths from Ebola',
+      threshold: [1, 50, 100, 500],
+      values: totalDeaths
     },
     totalCasesPerArea: {
       name: 'Cumulative Cases per 1000 Sq. km',
@@ -303,7 +308,7 @@ function drawDistricts(map){
   });
 
 
-  var defaultLayer = layers['totalDeaths']['name'];
+  var defaultLayer = layers['totalCases']['name'];
   map.addLayer(regularLayers[defaultLayer]);
   info.updateLayer(defaultLayer);
   legend.updateLayer(defaultLayer);

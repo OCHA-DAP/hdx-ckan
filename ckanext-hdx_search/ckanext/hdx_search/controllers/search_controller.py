@@ -219,7 +219,6 @@ class HDXSearchController(PackageController):
             return self._search_url(params, package_type)
 
         c.sort_by = _sort_by
-        print sort_by
         if not sort_by:
             c.sort_by_fields = []
         else:
