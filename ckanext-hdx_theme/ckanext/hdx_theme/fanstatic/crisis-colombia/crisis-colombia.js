@@ -46,7 +46,7 @@ function drawGraph1() {
             value: ["Persons"]
           },
           names: {
-            "Persons": "Number of Internal Displaced People in Colombia"
+            "Persons": "Number of Internally Displaced People"
           },
           type: 'bar'
         },
@@ -113,7 +113,7 @@ function drawGraph2() {
             tick: {
               rotate: 30,
               culling: false,
-              format: '%b %d, %Y'
+              format: '%b %Y'
             }
           },
           y: {
