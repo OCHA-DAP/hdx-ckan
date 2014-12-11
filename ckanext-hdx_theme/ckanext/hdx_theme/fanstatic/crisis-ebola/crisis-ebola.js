@@ -7,7 +7,7 @@ $(document).ready(function() {
   }).addTo(map);
 
   L.control.attribution({position: 'topright'}).addTo(map);
-  map.setView([8, -8], 6);
+  map.setView([9, -8], 5);
 
   drawDistricts(map);
   c3Sparklines();
@@ -65,15 +65,15 @@ function drawDistricts(map){
   var color = ["none","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
 
   var layers = {
-    totalDeaths: {
-      name: 'Cumulative Deaths from Ebola',
-      threshold: [1, 50, 100, 500],
-      values: totalDeaths
-    },
     totalCases: {
       name: 'Cumulative Cases of Ebola',
       threshold: [1, 100, 300, 800],
       values: totalCases
+    },
+    totalDeaths: {
+      name: 'Cumulative Deaths from Ebola',
+      threshold: [1, 50, 100, 500],
+      values: totalDeaths
     },
     totalCasesPerArea: {
       name: 'Cumulative Cases per 1000 Sq. km',
@@ -308,7 +308,7 @@ function drawDistricts(map){
   });
 
 
-  var defaultLayer = layers['totalDeaths']['name'];
+  var defaultLayer = layers['totalCases']['name'];
   map.addLayer(regularLayers[defaultLayer]);
   info.updateLayer(defaultLayer);
   legend.updateLayer(defaultLayer);
