@@ -113,7 +113,7 @@ function drawGraph2() {
             tick: {
               rotate: 30,
               culling: false,
-              format: '%b %d, %Y'
+              format: '%b %Y'
             }
           },
           y: {
