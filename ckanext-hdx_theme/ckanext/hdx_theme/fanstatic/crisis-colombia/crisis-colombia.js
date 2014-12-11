@@ -19,7 +19,7 @@ function spawnGraph1(jsondata, id, dateName, valueName){
 }
 
 function drawGraph1() {
-  var sql = 'SELECT "Ano", "IDPs_historico" FROM "6b0175c6-1209-42ed-9026-8bbaca7ea310"';
+  var sql = 'SELECT "Year", "Persons" FROM "6b0175c6-1209-42ed-9026-8bbaca7ea310"';
 
   var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
@@ -42,13 +42,13 @@ function drawGraph1() {
         data: {
           json: data.result.records,
           keys: {
-            x: "Ano",
-            value: ["IDPs_historico"]
+            x: "Year",
+            value: ["Persons"]
           },
           names: {
-            "IDPs_historico": "Number of Internal Displaced People in Colombia"
+            "Persons": "Number of Internal Displaced People in Colombia"
           },
-          type: 'area'
+//          type: 'area'
         },
         legend:{
           show: false
@@ -73,7 +73,7 @@ function drawGraph1() {
 }
 
 function drawGraph2() {
-  var sql = 'SELECT "Fecha", "Nomero de personas con limitaciones de acceso o movilidad" FROM "9e69d499-0b2b-4da6-9c61-10e453a57504"';
+  var sql = 'SELECT "Date", "Persons" FROM "9e69d499-0b2b-4da6-9c61-10e453a57504"';
 
   var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
@@ -96,13 +96,13 @@ function drawGraph2() {
           json: data.result.records,
           xFormat: '%Y-%m-%dT%H:%M:%S',
           keys: {
-            x: "Fecha",
-            value: ["Nomero de personas con limitaciones de acceso o movilidad"]
+            x: "Date",
+            value: ["Persons"]
           },
           names: {
-            "Nomero de personas con limitaciones de acceso o movilidad": "Number of People with Access Constraints"
+            "Persons": "Number of People with Access Constraints"
           },
-          type: 'area'
+//          type: 'area'
         },
         legend:{
           show: false
