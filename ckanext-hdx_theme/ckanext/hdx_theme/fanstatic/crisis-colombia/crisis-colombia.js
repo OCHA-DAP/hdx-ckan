@@ -46,7 +46,7 @@ function drawGraph1() {
             value: ["Persons"]
           },
           names: {
-            "Persons": "Number of Internal Displaced People in Colombia"
+            "Persons": "Number of Internally Displaced People"
           },
           type: 'bar'
         },
