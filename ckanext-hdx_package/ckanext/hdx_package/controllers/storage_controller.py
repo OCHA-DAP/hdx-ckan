@@ -106,8 +106,9 @@ class FileDownloadController(storage.StorageController):
                 'Cache-Control': 'no-cache',
                 'Content-Type': metadata.get('_format', 'text/plain')}
             if resource.name:
+                res_name = resource.name.replace('"', '_')
                 headers[
-                    'Content-Disposition'] = 'inline; filename={}'.format(resource.name)
+                    'Content-Disposition'] = 'inline; filename="{}"'.format(res_name)
             fapp = FileApp(filepath, headers=None, **headers)
             return fapp(request.environ, self.start_response)
         else:

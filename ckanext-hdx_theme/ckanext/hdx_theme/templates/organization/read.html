@@ -48,8 +48,8 @@
 	{% block package_notes %}
 	    {% if c.group_dict.description %}
 	      <div class="notes embedded-content mBottom15">
-	        {{ c.group_dict.description }}
-	        {% set org_url = h.hdx_get_extras_element(c.group_dict.extras) %}  	 
+          {{ h.render_markdown(c.group_dict.description) }}
+	        {% set org_url = h.hdx_get_extras_element(c.group_dict.extras) %}
 		  	{% if org_url != '' %}
 		      	<span>
 		      		&nbsp;&nbsp;&nbsp;{{ _('More info') }}

@@ -80,7 +80,7 @@
         	{% if pkg_dict.license_id %}
 				<span property="dc:rights"><a href="/about/license">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
 				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
-				: <span data-module="hdx_show_more" style="visibility:hidden"><span>{{h.render_markdown(pkg_dict.license_other)}}</span></span>
+				: <span data-module="hdx_show_more" style="visibility:hidden"><div>{{h.render_markdown(pkg_dict.license_other)}}</div></span>
 				{% endif %}
 				
 				{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
@@ -103,11 +103,11 @@
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
 		{% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
-	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><span>{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</span></span></td>
+	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><div>{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</div></span></td>
 	</tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
-		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><span>{{ h.render_markdown(pkg_dict.caveats) }}</span></span></td>
+		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><div>{{ h.render_markdown(pkg_dict.caveats) }}</div></span></td>
 	</tr>
 
 	<tr>

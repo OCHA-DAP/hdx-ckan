@@ -5,9 +5,6 @@ Created on Nov 3, 2014
 '''
 
 import logging
-import datetime as dt
-import decimal
-import json
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -16,6 +13,7 @@ import ckan.common as common
 import ckan.lib.helpers as h
 
 import ckanext.hdx_crisis.dao.data_access as data_access
+import ckanext.hdx_crisis.formatters.top_line_items_formatter as formatters
 
 render = base.render
 get_action = logic.get_action
@@ -23,7 +21,6 @@ c = common.c
 request = common.request
 _ = common._
 
-Decimal = decimal.Decimal
 
 log = logging.getLogger(__name__)
 
@@ -39,22 +36,46 @@ class CrisisController(base.BaseController):
         crisis_data_access = data_access.EbolaCrisisDataAccess()
         crisis_data_access.fetch_data(context)
         c.top_line_items = crisis_data_access.get_top_line_items()
-        self._format_results(c.top_line_items)
 
+        formatter = formatters.TopLineItemsWithDateFormatter(c.top_line_items)
+        formatter.format_results()
+
+        search_params = {'q': u'ebola'}
+
+        self._generate_dataset_results(context, search_params)
+
+        self._generate_other_links(search_params)
+
+        return render('crisis/crisis-ebola.html')
+
+    def _generate_dataset_results(self, context, search_params, action_alias='show_crisis'):
         limit = 25
-        c.q = u'ebola'
+
+        sort_option = request.params.get('sort', None)
 
         page = int(request.params.get('page', 1))
-        data_dict = {'sort': u'metadata_modified desc',
-                     'fq': '+dataset_type:dataset',
+        data_dict = {'sort': sort_option if sort_option else u'metadata_modified desc',
                      'rows': limit,
-                     'q': c.q,
                      'start': (page - 1) * limit
                      }
+
+        search_param_list = [
+            key + ":" + value for key, value in search_params.iteritems() if key != 'q']
+        if 'q' in search_params:
+            data_dict['q'] = search_params['q']
+            c.q = search_params['q']
+        if search_param_list:
+            data_dict['fq'] = " ".join(
+                search_param_list) + ' +dataset_type:dataset'
+
         query = get_action("package_search")(context, data_dict)
 
         def pager_url(q=None, page=None):
-            url = h.url_for('show_crisis', page=page) + '#datasets-section'
+            if sort_option:
+                url = h.url_for(
+                    action_alias, page=page, sort=sort_option) + '#datasets-section'
+            else:
+                url = h.url_for(action_alias, page=page) + '#datasets-section'
             return url
 
         c.page = h.Page(
@@ -67,40 +88,12 @@ class CrisisController(base.BaseController):
         c.items = query['results']
         c.item_count = query['count']
 
+    def _generate_other_links(self, search_params):
         c.other_links = {}
+        sort_option = request.params.get('sort', None)
+
+        show_more_params = {'sort': sort_option if sort_option else u'metadata_modified desc',
+                            'ext_indicator': '0'}
+        show_more_params.update(search_params)
         c.other_links['show_more'] = h.url_for(
-            "search", **{'q': u'ebola', 'sort': u'metadata_modified desc',
-                         'ext_indicator': '0'})
-
-        return render('crisis/crisis.html')
-
-    def _get_decimal_value(self, value):
-        decimal_value = Decimal(str(value)).quantize(
-            Decimal('.1'), rounding=decimal.ROUND_HALF_UP)
-        return decimal_value
-
-    def _format_results(self, records):
-        for r in records:
-            if 'sparklines' in r:
-                r['sparklines_json'] = json.dumps(r['sparklines'])
-
-            d = dt.datetime.strptime(r[u'latest_date'], '%Y-%m-%dT%H:%M:%S')
-            r[u'latest_date'] = dt.datetime.strftime(d, '%b %d, %Y')
-
-            modified_value = r[u'value']
-            if r[u'units'] == 'ratio':
-                modified_value *= 100.0
-            elif r[u'units'] == 'million':
-                modified_value /= 1000000.0
-
-            int_value = int(modified_value)
-            if int_value == modified_value:
-                r[u'formatted_value'] = '{:,}'.format(int_value)
-            else:
-                if r[u'units'] == 'ratio':
-                    r[u'formatted_value'] = '{:,.1f}'.format(
-                        self._get_decimal_value(modified_value))
-                elif r[u'units'] == 'million':
-                    r[u'formatted_value'] = '{:,.1f}'.format(
-                        self._get_decimal_value(modified_value))
-                    #r[u'formatted_value'] += ' ' + _('million')
+            "search", **show_more_params)

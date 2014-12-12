@@ -79,7 +79,7 @@
 	    <tr>
 	      <th scope="row" class="dataset-label">{{ _("Methodology") }}</th>
 	      {% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
-	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><span>{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</span></span></td>
+	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><div>{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</div></span></td>
 	    </tr>
 	    <tr>
 	      <th scope="row" class="dataset-label">{{ _("Caveats / Comments") }}</th>

@@ -1,0 +1,68 @@
+#crisis-map {
+  height: 350px;
+}
+
+.crisis-map-title {
+    height:50px;
+    background-color: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    top: 300px;
+    width: 100%;
+}
+
+.crisisTitle{
+    color: #000000;
+    margin-top: 80px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 0.01em;
+    line-height: 50px;
+    text-transform: capitalize;
+}
+
+.leaflet-bottom{
+    bottom: 50px;
+}
+
+.map-info {
+    padding: 6px 8px;
+    font: 14px/16px 'Source Sans Pro';
+    color: white;
+    background: #333333;
+    background: rgba(51,51,51,0.5);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.map-info h4 {
+    font: 'Source Sans Pro';
+    margin: 0 0 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.map-info.legend {
+    line-height: 14pt;
+    color: white;
+    z-index: 0;
+    position: relative;
+}
+.map-info.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
+}
+.leaflet-container input[type=radio], .leaflet-container input[type=checkbox] {
+    top: 0;
+}
+
+.leaflet-container label::after {
+    content: "";
+}
+
+.crisis-top-line-value {
+	white-space: nowrap;
+}
+

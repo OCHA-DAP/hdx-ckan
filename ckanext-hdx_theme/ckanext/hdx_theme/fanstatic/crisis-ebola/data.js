@@ -387,3 +387,15 @@ var totalDeathsPerPop = {"GIN001001":"8.3",
 "SLE0401":"38.3",
 "SLE0402":"10.6"
 };
+
+
+//Mali data
+//Kayes - 2305999pp
+totalCases["MLI001"] = "1";
+totalCasesPerPop["MLI001"] = "0.043";
+totalCasesPerArea["MLI001"] = "0";
+
+//Kayes - 2094000pp
+totalCases["MLI009"] = "7";
+totalCasesPerPop["MLI009"] = "0.35";
+totalCasesPerArea["MLI009"] = "1";

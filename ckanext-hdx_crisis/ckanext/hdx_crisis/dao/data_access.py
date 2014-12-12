@@ -48,8 +48,7 @@ class CrisisDataAccess():
 
             if 'resources' in dataset:
                 for r in dataset['resources']:
-                    if 'datastore_active' in r and r['datastore_active'] \
-                            and r['name'] == resource_id:
+                    if r['name'] == resource_id:
                         return r['id']
             return None
         except:
@@ -75,10 +74,13 @@ class CrisisDataAccess():
         action_name = 'datastore_search_sql' if sql else 'datastore_search'
 
         if datastore_resource_id:
-            result = get_action(action_name)(
-                modified_context, data_dict)
-            if 'records' in result:
-                return result['records']
+            try:
+                result = get_action(action_name)(
+                    modified_context, data_dict)
+                if 'records' in result:
+                    return result['records']
+            except logic.NotFound, e:
+                log.error(str(e))
         else:
             log.error(
                 'Resource id is None ')
@@ -157,13 +159,17 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
             coverage_sparklines = [
                 {'date': item['Date'], 'value': item['Value']} for item in sparklines]
 
-            self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-                CrisisDataAccess.SPARKLINES_FIELD] = coverage_sparklines
+            if coverage_sparklines:
+                self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                    CrisisDataAccess.SPARKLINES_FIELD] = coverage_sparklines
 
-            self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-                'value'] = coverage_sparklines[0]['value']
-            self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
-                'latest_date'] = coverage_sparklines[0]['date']
+                self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                    'value'] = coverage_sparklines[0]['value']
+                self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                    'latest_date'] = coverage_sparklines[0]['date']
+            else:
+                self.results_dict[EbolaCrisisDataAccess.APPEAL_COVERAGE][
+                    CrisisDataAccess.SPARKLINES_FIELD] = []
         else:
             log.error('Could not find {} field in results for {}'.format(
                 CrisisDataAccess.SPARKLINES_FIELD, EbolaCrisisDataAccess.APPEAL_COVERAGE))
@@ -179,20 +185,31 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
             deaths_sparklines = [
                 {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola deaths']
 
-            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
-                CrisisDataAccess.SPARKLINES_FIELD] = cases_sparklines
-            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
-                CrisisDataAccess.SPARKLINES_FIELD] = deaths_sparklines
+            if cases_sparklines:
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                    CrisisDataAccess.SPARKLINES_FIELD] = cases_sparklines
 
-            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
-                'value'] = cases_sparklines[0]['value']
-            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
-                'latest_date'] = cases_sparklines[0]['date']
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                    'value'] = cases_sparklines[0]['value']
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                    'latest_date'] = cases_sparklines[0]['date']
+            else:
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][
+                    CrisisDataAccess.SPARKLINES_FIELD] = []
+                log.warn('There is no data in the cases_sparklines')
 
-            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
-                'value'] = deaths_sparklines[0]['value']
-            self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
-                'latest_date'] = deaths_sparklines[0]['date']
+            if deaths_sparklines:
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                    CrisisDataAccess.SPARKLINES_FIELD] = deaths_sparklines
+
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                    'value'] = deaths_sparklines[0]['value']
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                    'latest_date'] = deaths_sparklines[0]['date']
+            else:
+                self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_DEATHS][
+                    CrisisDataAccess.SPARKLINES_FIELD] = []
+                log.warn('There is no data in the deaths_sparklines')
         else:
             log.error('Could not find {} field in results for {}'.format(
                 CrisisDataAccess.SPARKLINES_FIELD, EbolaCrisisDataAccess.CUMULATIVE_CASES))
