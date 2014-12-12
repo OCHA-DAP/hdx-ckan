@@ -29,6 +29,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
         map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='logged_in')
+        map.connect('/user/reset', controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='request_reset')
         map.connect('/contribute', controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='contribute')
 
         return map

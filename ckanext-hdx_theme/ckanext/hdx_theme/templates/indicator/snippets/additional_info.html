@@ -33,6 +33,7 @@
 			{% endfor %}
 		</td>
     </tr>
+    {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
   		<td class="dataset-details">
@@ -61,7 +62,18 @@
 				});
 			}
 	</script>
-     
+	{% else %}
+		<tr>
+    	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
+  		<td class="dataset-details">
+  			{% if pkg_dict.private %}
+  				<div id="private_block"><span id="visibility">{{ _('Private') }}</span></div>
+		  	{% else %}
+		  		<div id="private_block"><span id="visibility">{{ _('Public') }}</span></div>
+		  	{% endif %}
+  		</td>
+	</tr>
+    {% endif %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">

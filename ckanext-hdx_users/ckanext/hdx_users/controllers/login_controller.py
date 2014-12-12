@@ -4,14 +4,56 @@ import dateutil
 import ckan.controllers.user as ckan_user
 import ckan.lib.helpers as h
 import ckan.lib.base as base
+import ckan.lib.mailer as mailer
 from ckan.common import _, c, g, request
 import ckan.logic as logic
 from pylons import config
+import ckan.model as model
+
+render = base.render
 
 get_action = logic.get_action
-
+NotAuthorized = logic.NotAuthorized
+NotFound = logic.NotFound
+check_access = logic.check_access
 
 class LoginController(ckan_user.UserController):
+
+    def request_reset(self):
+        context = {'model': model, 'session': model.Session, 'user': c.user,
+                   'auth_user_obj': c.userobj}
+        data_dict = {'id': request.params.get('user')}
+        try:
+            check_access('request_reset', context)
+        except NotAuthorized:
+            abort(401, _('Unauthorized to request reset password.'))
+
+        if request.method == 'POST':
+            id = request.params.get('user')
+
+            context = {'model': model,
+                       'user': c.user}
+
+            data_dict = {'id': id}
+            user_obj = None
+            try:
+                user_dict = get_action('user_show')(context, data_dict)
+                user_obj = context['user_obj']
+            except NotFound:
+                h.flash_error(_('No such user: %s') % id)
+
+            print user_obj
+            if user_obj:
+                try:
+                    mailer.send_reset_link(user_obj)
+                    h.flash_success(_('Please check your inbox for '
+                                    'a reset code.'))
+                    h.redirect_to(controller='user',
+                              action='login', came_from=None)
+                except mailer.MailerException, e:
+                    h.flash_error(_('Could not send reset link: %s') %
+                                  unicode(e))
+        return render('user/request_reset.html')
 
     def logged_in(self):
         # redirect if needed
@@ -58,3 +100,4 @@ class LoginController(ckan_user.UserController):
         self.login(error)
         vars = {'contribute': True}
         return base.render('user/login.html', extra_vars=vars)
+

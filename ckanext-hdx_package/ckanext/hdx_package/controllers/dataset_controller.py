@@ -728,3 +728,29 @@ class DatasetController(PackageController):
         except NotFound:
             abort(404, _('Resource not found'))
         return render('package/confirm_delete_resource.html')
+
+
+    def delete(self, id):
+
+        if 'cancel' in request.params:
+            h.redirect_to(controller='package', action='edit', id=id)
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        try:
+            check_access('package_delete', context, {'id': id})
+        except NotAuthorized:
+            abort(401, _('Unauthorized to delete package %s') % '')
+
+        try:
+            if request.method == 'POST':
+                get_action('package_delete')(context, {'id': id})
+                h.flash_notice(_('Dataset has been deleted.'))
+                h.redirect_to(controller='user', action='dashboard')
+            c.pkg_dict = get_action('package_show')(context, {'id': id})
+        except NotAuthorized:
+            abort(401, _('Unauthorized to delete package %s') % '')
+        except NotFound:
+            abort(404, _('Dataset not found'))
+        return render('package/confirm_delete.html')
