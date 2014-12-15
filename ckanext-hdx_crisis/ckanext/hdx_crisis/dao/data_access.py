@@ -100,6 +100,10 @@ class CrisisDataAccess():
             item[CrisisDataAccess.UNIQUE_ID_COL]: item for item in self.results
             if CrisisDataAccess.UNIQUE_ID_COL in item}
 
+        for it in self.results:
+            if 'source_link' in it and it['source_link']:
+                it['source_link'] = it['source_link'].strip()
+
         for code, res_dict in self.resources_dict.iteritems():
             if code != 'top-line-numbers':
                 log.info("Fetching data for dataset:{} and resource: {} ".format(
