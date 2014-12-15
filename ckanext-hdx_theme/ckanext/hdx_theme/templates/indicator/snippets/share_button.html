@@ -1,0 +1,48 @@
+{% set url = request.url %}
+<script>
+$(document).ready(function(){
+  $('#share').click(function(){
+    $.ajax({
+      url: "{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}",
+      data:{'url':"{{h.full_current_url()}}" },
+      type: 'POST'
+    }).done(function(msg){
+      $('.resource-social a').each(function(){
+          var link = $(this).attr('href');
+          $(this).attr('href', link.replace("XXXX", msg['url']));
+      });
+    });
+  });
+});
+</script>
+
+<a class="btn hdx-btn org-btn" id="share" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
+   data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share dataset">Share</a>
+{# DON'T CHANGE THE XXXX IT'S A PLACEHOLDER THE JS NEEDS #}
+<div id="dataset_social_wrapper" class="popover-wrapper"></div>
+<div style="display:none" id="dataset_social">
+	<div class="resource-social">
+	  <a href="https://plus.google.com/share?url=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/google-plus_black.svg" />
+	    <span> Google+ </span>
+	  </a>
+	</div>
+	<div class="resource-social">
+	  <a href="https://twitter.com/share?url=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/twitter_black.svg" />
+	    <span> Twitter </span>
+	  </a>
+	</div>
+	<div class="resource-social" >
+	  <a href="https://www.facebook.com/sharer.php?u=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/fb_black.svg" />
+	    <span> Facebook </span>
+	  </a>
+	</div>
+	<div class="resource-social" >
+	  <a href="mailto:?subject={{ title }}&body=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/email_black.svg" />
+	    <span> {{ _('Email') }} </span>
+	  </a>
+	</div>
+</div>
