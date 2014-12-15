@@ -54,8 +54,8 @@
               {{ self.home_search() }}
               <div>
                 <p class="exampleSearch">
-                  {{ _("e.g.") }} <a href="{% url_for controller='package', action='search', q='Colombia', sort='metadata_modified desc' %}">{{ _("Colombia") }}</a>
-                  {{ _("or") }} <a href="{% url_for controller='package', action='search', q='Ebola', sort='metadata_modified desc' %}">{{ _("Ebola") }}</a>
+                  {{ _("e.g.") }} <a href="{% url_for 'search', q='Colombia', sort='metadata_modified desc' %}">{{ _("Colombia") }}</a>
+                  {{ _("or") }} <a href="{% url_for 'search', q='Ebola', sort='metadata_modified desc' %}">{{ _("Ebola") }}</a>
                 </p>
               </div>
             </div>
