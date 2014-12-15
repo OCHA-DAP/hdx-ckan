@@ -1,0 +1,20 @@
+{#
+Displays a sidebard module with information for given resource
+
+res    - The respource dict
+
+Example:
+
+  {% snippet "package/snippets/resource_info.html", res=res %}
+
+#}
+
+<section class="module module-narrow">
+  <h2 class="module-heading"><i class="icon-sitemap"></i> {{ res.name or res.id }}</h2>
+  <div class="nums">
+    <dl>
+      <dt>{{ _('Format') }}</dt>
+      <dd>{{ res.format }}</dd>
+    </dl>
+  </div>
+</section>

@@ -1,0 +1,123 @@
+{% set can_edit = h.check_access('package_update', {'id':pkg.id }) %}
+{% set url_action = 'resource_edit' if url_is_edit and can_edit else 'resource_read' %}
+{% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
+{% set is_downloadable = h.is_downloadable(res) %}
+{% set resource_display_name = h.resource_display_name(res) %}
+
+{% resource 'hdx_theme/bs_popover.js' %}
+<li class="resource-item">
+  {% block resource_item_title %}
+  <a class="heading" {% if url_is_edit and can_edit %} href="{{ url }}" {% endif %} title="{{ res.name or res.description }}">
+    {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
+    {{ h.popular('views', res.tracking_summary.total, min=10) }}
+  </a>
+  {% endblock %}
+
+  <p class="description">
+    {% if res.description %}
+      {{ h.markdown_extract(res.description, extract_length=80) }}
+    {% else %}
+      <span class="empty">{{ _('No description for this resource') }}</span>
+    {% endif %}
+  </p>
+  
+	{% block resource_item_edit %}
+		{% if url_is_edit and can_edit %}
+   			<div class="hdx-btn-group">
+	   			<a class="btn hdx-btn main-hdx-btn" title="Edit" href="{{ url }}">{{ _('Edit') }}</a>
+	            {% if res.id and h.check_access('resource_delete', {'id': res.id})  %}
+	            	{% set locale = h.dump_json({'content': _('Are you sure you want to delete this resource?')}) %}
+					<a class="btn hdx-btn main-hdx-btn" title="Delete" href="{% url_for controller='package', action='resource_delete', resource_id=res.id, id=pkg.name %}" data-module="confirm-action" data-module-i18n="{{ locale }}">
+						<img alt="{{ _('Delete Resource') }}" src="/images/actions/delete.png">
+					</a>
+	            {% endif %}
+   			</div>
+  		{% endif %}
+  	{% endblock %}
+  	
+  {% block resource_item_explore %}
+    {% if not url_is_edit %}
+    {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
+    <div class="hdx-btn-group">
+      {% block resource_item_explore_links %}
+      {% if res.can_be_previewed %}
+      <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
+        {{ _('Preview') }}
+      </a>
+      {% endif %}
+      <a href="{{ res.perma_link if res.perma_link else res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
+        <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
+      </a>
+      {% set social_div_id = 'social-' + res.id %}
+      {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
+      <a href="#" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="{{social_div_id}}"
+         data-module-social_wrapper_div_id="{{ social_wrapper_div_id }}"
+         class="btn btn-secondary hdx-btn resource-url-analytics ga-share" target="_blank" title="{{ _('Share File') }}" onclick="return false;">
+        <img src="/images/homepage-new/share.svg" alt=" {{ _('Share') }}" />
+      </a>
+      <div id="{{ social_wrapper_div_id }}" class="popover-wrapper"></div>
+      <div style="display:none" id="{{social_div_id}}">
+        <div class="resource-social">
+          <a href="https://plus.google.com/share?url={{ res.url }}" target="_blank">
+            <img class="social-images" src="/images/svg/google-plus_black.svg" />
+            <span> Google+ </span>
+          </a>
+        </div>
+        <div class="resource-social">
+          <a href="https://twitter.com/share?url={{ res.url }}" target="_blank">
+            <img class="social-images" src="/images/svg/twitter_black.svg" />
+            <span> Twitter </span>
+          </a>
+        </div>
+        <div class="resource-social" >
+          <a href="https://www.facebook.com/sharer.php?u={{ res.url }}" target="_blank">
+            <img class="social-images" src="/images/svg/fb_black.svg" />
+            <span> Facebook </span>
+          </a>
+        </div>
+        <div class="resource-social" >
+          <a href="mailto:?subject={{ resource_display_name }}&body={{ res.url }}" target="_blank">
+            <img class="social-images" src="/images/svg/email_black.svg" />
+            <span> {{ _('Email') }} </span>
+          </a>
+        </div>
+      </div>
+      {% endblock %}
+    </div>
+
+    {# <div class="dropdown btn-group">
+    <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <i class="icon-share-alt"></i>
+      {{ _('Explore') }}
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+      {% block resource_item_explore_links %}
+      <li>
+        <a href="{{ url }}">
+          {% if res.can_be_previewed %}
+          <i class="icon-bar-chart"></i>
+          {{ _('Preview') }}
+          {% else %}
+          <i class="icon-info-sign"></i>
+          {{ _('More information') }}
+          {% endif %}
+        </a>
+      </li>
+      <li>
+        <a href="{{ res.url }}" class="resource-url-analytics" target="_blank">
+          {% if res.can_be_previewed %}
+          <i class="icon-download"></i>
+          {{ _('Download') }}
+          {% else %}
+          <i class="icon-external-link"></i>
+          {{ _('Go to resource') }}
+          {% endif %}
+        </a>
+      </li>
+      {% endblock %}
+    </ul>
+  </div> #}
+  {% endif %}
+  {% endblock %}
+</li>
