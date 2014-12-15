@@ -1402,3 +1402,10 @@ span.is-more a.more-link, .more-link {
         margin-bottom: 0;
     }
 /* END Feedback Button */
+
+/* Fix action buttons in the resource preview page */
+.module-resource .actions {
+    top: 0;
+    right: 0;
+}
+/* END Fix action buttons in the resource preview page */
