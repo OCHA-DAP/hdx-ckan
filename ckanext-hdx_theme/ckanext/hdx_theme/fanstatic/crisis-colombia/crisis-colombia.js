@@ -56,8 +56,8 @@ function drawGraph1() {
         axis: {
           x: {
             tick: {
-              rotate: 20,
-              culling: false
+              rotate: 20
+              //culling: false
             }
           },
           y: {
@@ -113,7 +113,7 @@ function drawGraph2() {
             type: 'timeseries',
             tick: {
               rotate: 30,
-              culling: false,
+              //culling: false,
               format: '%b %Y'
             }
           },
