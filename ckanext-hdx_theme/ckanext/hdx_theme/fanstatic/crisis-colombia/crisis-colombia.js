@@ -68,6 +68,7 @@ function drawGraph1() {
           }
         }
       });
+      $("#graph1").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/idps-data-by-year"; });;
     }
   });
 }
@@ -125,6 +126,7 @@ function drawGraph2() {
         }
 
       });
+      $("#graph2").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/restricciones-de-acceso"; });;
     }
   });
 
