@@ -27,12 +27,13 @@
     </tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
-		<td class="dataset-details metadata-link">
+		<td class="dataset-details metadata-link mx-country">
 			{% for grp in pkg_dict.groups %}
 				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %},&nbsp;{% endif %}
 			{% endfor %}
 		</td>
     </tr>
+    {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
   		<td class="dataset-details">
@@ -61,7 +62,18 @@
 				});
 			}
 	</script>
-     
+	{% else %}
+		<tr>
+    	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
+  		<td class="dataset-details">
+  			{% if pkg_dict.private %}
+  				<div id="private_block"><span id="visibility">{{ _('Private') }}</span></div>
+		  	{% else %}
+		  		<div id="private_block"><span id="visibility">{{ _('Public') }}</span></div>
+		  	{% endif %}
+  		</td>
+	</tr>
+    {% endif %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">
