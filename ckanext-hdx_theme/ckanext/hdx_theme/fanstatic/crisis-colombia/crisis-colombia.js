@@ -282,8 +282,7 @@ function drawDistricts(map){
   };
   legend.addTo(map);
 
-  L.control.layers(regularLayers).addTo(map);
-
+  //L.control.layers(regularLayers).addTo(map);
 
   map.on('baselayerchange', function (eventLayer) {
     info.updateLayer(eventLayer.name);
