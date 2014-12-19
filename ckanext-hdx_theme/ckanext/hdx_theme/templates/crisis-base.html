@@ -9,35 +9,7 @@
     <div class="crisis-map-title">
       <span class="mL45 crisisTitle"> {% block crisis_title %} Crisis title {% endblock %}</span>
       <span class="mR45 pull-right" style="line-height: 50px;">
-        <a class="btn hdx-btn org-btn" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="dataset_social"
-           data-module-social_wrapper_div_id="dataset_social_wrapper" title="Share page">Share</a>
-        <div id="dataset_social_wrapper" class="popover-wrapper"></div>
-        <div style="display:none" id="dataset_social">
-          <div class="resource-social">
-            <a href="https://plus.google.com/share?url={{ url }}" target="_blank">
-              <img class="social-images" src="/images/svg/google-plus_black.svg" />
-              <span> Google+ </span>
-            </a>
-          </div>
-          <div class="resource-social">
-            <a href="https://twitter.com/share?url={{ url }}" target="_blank">
-              <img class="social-images" src="/images/svg/twitter_black.svg" />
-              <span> Twitter </span>
-            </a>
-          </div>
-          <div class="resource-social" >
-            <a href="https://www.facebook.com/sharer.php?u={{ url }}" target="_blank">
-              <img class="social-images" src="/images/svg/fb_black.svg" />
-              <span> Facebook </span>
-            </a>
-          </div>
-          <div class="resource-social" >
-            <a href="mailto:?subject=n&body={{ url }}" target="_blank">
-              <img class="social-images" src="/images/svg/email_black.svg" />
-              <span> {{ _('Email') }} </span>
-            </a>
-          </div>
-        </div>
+        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
       </span>
     </div>
   </div>
