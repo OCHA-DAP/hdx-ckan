@@ -548,7 +548,7 @@ def user_email_validator(key, data, errors, context):
     email = data[key]
 
     from validate_email import validate_email
-    if not validate_email(email, verify=True):
+    if not validate_email(email, check_mx=True, verify=False):
         raise Invalid(_('Email address is not valid'))
     
     if not isinstance(email, basestring):

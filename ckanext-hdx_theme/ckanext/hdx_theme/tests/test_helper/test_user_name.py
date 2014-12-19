@@ -25,17 +25,17 @@ class TestUserNames(hdx_test_base.HdxBaseTest):
 
     def _users_create(self, apikey):
         u1 = tests.call_action_api(self.app, 'user_create', name='johnfoo', fullname='Simple user',
-                                   email='johnfoo@t.t', password='abcd',
+                                   email='example@example.com', password='abcd',
                                    apikey=apikey, status=200)
         u2 = tests.call_action_api(self.app, 'user_create', name='adambar', fullname='Test user â',
-                                   email='johnfoo@t.t', password='abcd',
+                                   email='example1@example.com', password='abcd',
                                    apikey=apikey, status=200)
         u3 = tests.call_action_api(self.app, 'user_create', name='frenchuser', fullname='Test ùûüÿ€àâæçéèêëïîôœ',
-                                   email='johnfoo@t.t', password='abcd',
+                                   email='example2@example.com', password='abcd',
                                    apikey=apikey, status=200)
 
         u4 = tests.call_action_api(self.app, 'user_create', name='romanianuser', fullname='Test user ăâîşșţț„”«»“”',
-                                   email='johnfoo@t.t', password='abcd',
+                                   email='example3@example.com', password='abcd',
                                    apikey=apikey, status=200)
 
         return [u1, u2, u3, u4]
