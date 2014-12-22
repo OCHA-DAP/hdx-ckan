@@ -28,7 +28,7 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         cls._get_action('user_create')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
             {'name': 'johnfoo', 'fullname': 'John Foo',
-             'email': 'johnfoo@t.t', 'password': 'abcd'})
+             'email': 'example@example.com', 'password': 'abcd'})
 
     @classmethod
     def _get_action(cls, action_name):
@@ -46,8 +46,8 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
 
-        assert 'johnfoo@t.t' in str(result.response)
-        assert 'johnfoo@t.t' in str(profile_result.response)
+        assert 'example@example.com' in str(result.response)
+        assert 'example@example.com' in str(profile_result.response)
 
         user = model.User.by_name('tester')
         result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
@@ -55,17 +55,17 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         profile_result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
             'NFKD', user.apikey).encode('ascii', 'ignore')})
 
-        assert 'johnfoo@t.t' not in str(
+        assert 'example@example.com' not in str(
             result.response), 'emails should not be visible for normal users'
-        assert 'johnfoo@t.t' not in str(
+        assert 'example@example.com' not in str(
             profile_result.response), 'emails should not be visible for normal users'
 
         result = self.app.get(url)
         profile_result = self.app.get(profile_url)
 
-        assert 'johnfoo@t.t' not in str(
+        assert 'example@example.com' not in str(
             result.response), 'emails should not be visible for guests'
-        assert 'johnfoo@t.t' not in str(
+        assert 'example@example.com' not in str(
             profile_result.response), 'emails should not be visible for guests'
 
     def test_email_access_by_api(self):
