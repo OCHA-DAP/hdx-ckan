@@ -62,6 +62,13 @@
     margin-left: 45px;
     color: #333333;
 }
+
+.graph-title span {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+}
+
 .crisis-top-line-value-prefix {
 	font-family: 'Gotham-Light', sans-serif;
     font-size: 37px;

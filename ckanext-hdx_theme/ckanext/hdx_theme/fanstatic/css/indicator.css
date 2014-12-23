@@ -352,7 +352,7 @@
 
 /* Actions */
 .indicator-actions a.btn.hdx-btn {
-	margin-right: 12px;
+	margin-left: 12px;
 }
 /* .indicator-actions {
 	margin-top: 10px;
@@ -418,12 +418,6 @@
 
 .dataset-notes.notes {
 	width: 600px;
-}
-
-.align-bottom-right {
-	position:absolute;
-	bottom: 0px;
-	right: 0px;
 }
 
 /* END - Dataset specific styles */

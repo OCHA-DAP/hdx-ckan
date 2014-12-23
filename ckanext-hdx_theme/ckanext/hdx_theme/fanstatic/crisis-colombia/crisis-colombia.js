@@ -56,8 +56,8 @@ function drawGraph1() {
         axis: {
           x: {
             tick: {
-              rotate: 20,
-              culling: false
+              rotate: 20
+              //culling: false
             }
           },
           y: {
@@ -68,6 +68,7 @@ function drawGraph1() {
           }
         }
       });
+      $("#graph1").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/idps-data-by-year"; });;
     }
   });
 }
@@ -112,7 +113,7 @@ function drawGraph2() {
             type: 'timeseries',
             tick: {
               rotate: 30,
-              culling: false,
+              //culling: false,
               format: '%b %Y'
             }
           },
@@ -125,6 +126,7 @@ function drawGraph2() {
         }
 
       });
+      $("#graph2").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/restricciones-de-acceso"; });;
     }
   });
 
@@ -282,8 +284,7 @@ function drawDistricts(map){
   };
   legend.addTo(map);
 
-  L.control.layers(regularLayers).addTo(map);
-
+  //L.control.layers(regularLayers).addTo(map);
 
   map.on('baselayerchange', function (eventLayer) {
     info.updateLayer(eventLayer.name);

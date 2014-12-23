@@ -1,0 +1,60 @@
+{% set url = target_url or h.full_current_url() %}
+{% set dataset_social_wrapper = dataset_social_wrapper or "dataset_social_wrapper" %}
+{% set dataset_social = dataset_social or "dataset_social" %}
+{% set class = class or "btn hdx-btn org-btn" %}
+{% set button_id = button_id or "share" %}
+
+<script>
+$(document).ready(function(){
+  $('#{{ button_id }}').click(function(){
+    $.ajax({
+      url: "{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}",
+      data:{'url':"{{ url }}" },
+      type: 'POST'
+    }).done(function(msg){
+      $('.resource-social a').each(function(){
+          var link = $(this).attr('href');
+          $(this).attr('href', link.replace("XXXX", msg['url']));
+      });
+    });
+    return false;
+  });
+});
+</script>
+
+<a href="#" class="{{ class }}" id="{{ button_id }}" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="{{ dataset_social }}"
+   data-module-social_wrapper_div_id="{{ dataset_social_wrapper }}" title="Share dataset" onclick="return false;">
+  {% if icon %}
+    <img src="/images/homepage-new/share.svg" alt="Share" />
+  {% else %}
+    Share
+  {% endif %}
+</a>
+{# DON'T CHANGE THE XXXX IT'S A PLACEHOLDER THE JS NEEDS #}
+<span id="{{ dataset_social_wrapper }}" class="popover-wrapper"></span>
+<div style="display:none" id="{{ dataset_social }}">
+	<div class="resource-social">
+	  <a href="https://plus.google.com/share?url=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/google-plus_black.svg" />
+	    <span> Google+ </span>
+	  </a>
+	</div>
+	<div class="resource-social">
+	  <a href="https://twitter.com/share?url=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/twitter_black.svg" />
+	    <span> Twitter </span>
+	  </a>
+	</div>
+	<div class="resource-social" >
+	  <a href="https://www.facebook.com/sharer.php?u=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/fb_black.svg" />
+	    <span> Facebook </span>
+	  </a>
+	</div>
+	<div class="resource-social" >
+	  <a href="mailto:?subject={{ title }}&body=XXXX" target="_blank">
+	    <img class="social-images" src="/images/svg/email_black.svg" />
+	    <span> {{ _('Email') }} </span>
+	  </a>
+	</div>
+</div>

@@ -45,43 +45,22 @@
         {{ _('Preview') }}
       </a>
       {% endif %}
-      <a href="{{ res.perma_link if res.perma_link else res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
+
+      {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
+      <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
         <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
       </a>
+
+      {% set button_id = 'social-btn-' + res.id %}
       {% set social_div_id = 'social-' + res.id %}
       {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
-      <a href="#" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="{{social_div_id}}"
-         data-module-social_wrapper_div_id="{{ social_wrapper_div_id }}"
-         class="btn btn-secondary hdx-btn resource-url-analytics ga-share" target="_blank" title="{{ _('Share File') }}" onclick="return false;">
-        <img src="/images/homepage-new/share.svg" alt=" {{ _('Share') }}" />
-      </a>
-      <div id="{{ social_wrapper_div_id }}" class="popover-wrapper"></div>
-      <div style="display:none" id="{{social_div_id}}">
-        <div class="resource-social">
-          <a href="https://plus.google.com/share?url={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/svg/google-plus_black.svg" />
-            <span> Google+ </span>
-          </a>
-        </div>
-        <div class="resource-social">
-          <a href="https://twitter.com/share?url={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/svg/twitter_black.svg" />
-            <span> Twitter </span>
-          </a>
-        </div>
-        <div class="resource-social" >
-          <a href="https://www.facebook.com/sharer.php?u={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/svg/fb_black.svg" />
-            <span> Facebook </span>
-          </a>
-        </div>
-        <div class="resource-social" >
-          <a href="mailto:?subject={{ resource_display_name }}&body={{ res.url }}" target="_blank">
-            <img class="social-images" src="/images/svg/email_black.svg" />
-            <span> {{ _('Email') }} </span>
-          </a>
-        </div>
-      </div>
+
+
+      {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
+          target_url=resource_dwd_url,
+          icon=true,
+          class="btn btn-secondary hdx-btn resource-url-analytics ga-share", button_id=button_id %}
+
       {% endblock %}
     </div>
 
