@@ -1,0 +1,99 @@
+.topSection {
+
+    background-color: #333333;
+    background-image: url('/images/backgrounds/pixels.png');
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 100% auto;
+
+    height: 260px;
+}
+
+.topSection .browse-illustration{
+    height: 260px;
+    margin-right: -45px;
+}
+
+.topSection .sectionContent{
+    padding-left: 45px;
+}
+
+.topSection .sectionTitle{
+    font-family: "Gotham-Book", sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+.topSection .sectionTitle .sectionTitleBold{
+    font-family: "Gotham-Bold", sans-serif;
+}
+
+
+.topSection .sectionDescription{
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+.topSection .sectionDescription a{
+    font-weight: 700;
+    font-size: 16px;
+    color: #f2645a;
+}
+
+.topSection .sectionDemo a {
+    text-transform: uppercase;
+    font-family: "Gotham-Bold", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    background: none;
+    box-shadow: none;
+}
+
+.topSection .sectionDemo .demoButton{
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    padding: 8px 10px;
+    margin-right: 20px;
+}
+
+.browseSection{
+    height: 40px;
+    line-height: 40px;
+    background-color: #f2645a;
+
+}
+
+.browseSection .browseBy {
+    text-transform: uppercase;
+    font-family: "Gotham-Book", sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+}
+
+.browseSection .browseItem {
+    margin-left: 55px;
+    font-family: "Gotham-Bold", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    padding: 12px 20px;
+}
+
+.browseSection .browseItem:hover, .browseSection .browseItem.active{
+    color: #f2645a;
+    background-color: #ffffff;
+
+}
