@@ -36,8 +36,10 @@ def _generate_license_list():
         license.License(license.LicenseCreativeCommonsAttribution()),
         license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
         license.License(hdx_licenses.LicenseHdxOpenDatabaseLicense()),
-        license.License(hdx_licenses.LicenseHdxOpenDataCommonsAttributionLicense()),
-        license.License(hdx_licenses.LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense()),
+        license.License(
+            hdx_licenses.LicenseHdxOpenDataCommonsAttributionLicense()),
+        license.License(
+            hdx_licenses.LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense()),
         license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
         license.License(hdx_licenses.LicenseHdxMultiple()),
         license.License(hdx_licenses.LicenseHdxOther())
@@ -71,7 +73,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('shorten_url', '/package/tools/shorten',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
-        
+
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
             m.connect(
@@ -167,6 +169,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_update': update.package_update,
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
             'hdx_package_update_metadata': update.hdx_package_update_metadata,
+            'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create
         }
