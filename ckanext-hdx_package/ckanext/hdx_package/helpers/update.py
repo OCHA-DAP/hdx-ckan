@@ -239,3 +239,20 @@ def hdx_package_update_metadata(context, data_dict):
         package['notes'] = ' '
     package = _get_action('package_update')(context, package)
     return package
+
+
+def hdx_resource_update_metadata(context, data_dict):
+    '''
+    With the default resource_update action from core ckan you need to supply the entire resource dict 
+    as a parameter and you can't supply just a modified field .
+    This function first loads the resource via resource_show() and then modifies the respective dict. 
+    '''
+    allowed_fields = ['last_data_update_date']
+
+    resource = _get_action('resource_show')(context, data_dict)
+    for key, value in data_dict.iteritems():
+        if key in allowed_fields:
+            resource[key] = value
+    resource = _get_action('resource_update')(context, resource)
+
+    return resource
