@@ -233,8 +233,7 @@ def hdx_package_update_metadata(context, data_dict):
 
     package = _get_action('package_show')(context, data_dict)
     for key, value in data_dict.iteritems():
-        if key in allowed_fields:
-            package[key] = value
+        package[key] = value
     if not package['notes']:
         package['notes'] = ' '
     package = _get_action('package_update')(context, package)
