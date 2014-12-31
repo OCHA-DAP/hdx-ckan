@@ -251,8 +251,7 @@ def hdx_resource_update_metadata(context, data_dict):
 
     resource = _get_action('resource_show')(context, data_dict)
     for key, value in data_dict.iteritems():
-        if key in allowed_fields:
-            resource[key] = value
+        resource[key] = value
     resource = _get_action('resource_update')(context, resource)
 
     return resource
