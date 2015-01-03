@@ -229,11 +229,15 @@ def hdx_package_update_metadata(context, data_dict):
 
     allowed_fields = ['indicator', 'package_creator', 'methodology',
                       'dataset_source', 'dataset_date', 'license_other',
-                      'license_title', 'caveats', 'name', 'title']
+                      'license_title', 'caveats', 'name', 'title',
+                      'last_metadata_update_date', 'dataset_source_code', 'dataset_source',
+                      'indicator_type', 'indicator_type_code', 'dataset_summary',
+                      'methodology', 'more_info', 'terms_of_use',
+                      'validation_notes_and_comments', 'last_data_update_date']
 
     package = _get_action('package_show')(context, data_dict)
     for key, value in data_dict.iteritems():
-        if key != 'id':
+        if key in allowed_fields:
             package[key] = value
     if not package['notes']:
         package['notes'] = ' '
@@ -251,7 +255,8 @@ def hdx_resource_update_metadata(context, data_dict):
 
     resource = _get_action('resource_show')(context, data_dict)
     for key, value in data_dict.iteritems():
-        resource[key] = value
+        if key in allowed_fields:
+            resource[key] = value
     resource = _get_action('resource_update')(context, resource)
 
     return resource
