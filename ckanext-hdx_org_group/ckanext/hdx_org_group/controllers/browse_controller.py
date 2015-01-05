@@ -3,6 +3,7 @@ Created on Dec 22, 2014
 
 @author: alexandru-m-g
 '''
+import json
 
 import logging
 
@@ -23,7 +24,7 @@ log = logging.getLogger(__name__)
 class BrowseController(base.BaseController):
 
     def index(self):
-        c.countries = self.get_countries()
+        c.countries = json.dumps(self.get_countries())
         c.organizations = self.get_organizations()
         c.topics = self.get_topics()
 
