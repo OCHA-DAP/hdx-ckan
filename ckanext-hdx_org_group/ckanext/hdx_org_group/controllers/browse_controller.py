@@ -27,6 +27,7 @@ class BrowseController(base.BaseController):
         c.countries = json.dumps(self.get_countries())
         c.organizations = self.get_organizations()
         c.topics = self.get_topics()
+        c.topic_icons = self.get_topic_icons()
 
         return base.render('browse/browse.html')
 
@@ -114,3 +115,22 @@ class BrowseController(base.BaseController):
             return result['facets']['groups']
         else:
             return {}
+
+
+    def get_topic_icons(self):
+
+        #icons reference can be found in humanitarian_icons.css
+        ret = {
+            u'economy': 'topic-icon-activity_financing',
+            u'education': 'topic-icon-cluster_education',
+            u'emergency telecommunications': 'topic-icon-cluster_emergency_telecommunications',
+            u'food and nutrition': 'topic-icon-cluster_food_security',
+            u'gender': 'icon-fight',
+            u'health': 'topic-icon-cluster_health',
+            u'humanitarian funding': 'topic-icon-activity_fund',
+            u'humanitarian profile': 'topic-icon-activity_humanitarian_programme_cycle',
+            u'logistics': 'topic-icon-cluster_logistics',
+            u'population': 'topic-icon-people_affected_population',
+            u'water sanitation and hygiene': 'topic-icon-wash_sanitation'
+        }
+        return ret

@@ -177,11 +177,6 @@
     color: #fff;
 }
 
-#optionsGroup{
-    padding-top: 40px;
-    padding-bottom: 15px;
-}
-
 #title {
     font-family: 'Gotham-Bold', sans-serif;
     font-weight: 400;
@@ -219,7 +214,7 @@
 #map {
     width: 100%;
     height: 580px;
-    margin: 0 0 50px 0;
+    margin: 0;
 }
 .marker-container {
     position: relative;
@@ -292,4 +287,46 @@
 
 #locationSection {
     background-color: #ffffff;
+}
+
+.topic-icon{
+    font-size: 45px;
+    color: #007ce0;
+    height: 45px;
+    width: 45px;
+}
+
+.topic-text{
+    height: 45px;
+    position: relative;
+    display: table;
+}
+
+.topic-text p, .topic-text span{
+    display: table-cell;
+    vertical-align: middle;
+
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #000000;
+    letter-spacing: 0.01em;
+}
+
+.topic-text span a{
+    color: #000000;
+}
+
+.item-info {
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    margin-top: -1px;
+    color: #333333;
+}
+
+.list-header{
+    margin-top: 45px;
 }
