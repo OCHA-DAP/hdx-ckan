@@ -1340,7 +1340,9 @@ a, a:hover, a:focus{
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         letter-spacing: 0.01em;
-        opacity: 1;
+
+        /*don't override opacity globally it will cancel the fade effect*/
+        /*opacity: 1;*/
     }
     .tooltip .tooltip-inner{
         padding: 10px 15px;

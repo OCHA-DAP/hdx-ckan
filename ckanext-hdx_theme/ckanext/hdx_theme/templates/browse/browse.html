@@ -1,6 +1,9 @@
 {% extends "page-new.html" %}
 
 {% block primary_content %}
+<div id="datasetCounts" style="display: none;">
+    {{ c.countries }}
+</div>
 <div class="row paddingRowHack topSection" style="position: relative;">
 	<div class="paddingLeftHack paddingRightHack col-xs-12">
 		<div class="row">
@@ -53,15 +56,16 @@
     </div>
   </div>
 
-<div id="topicsSection"></div>
+<div id="topicsSection">
+</div>
 <div id="organisationsSection">
-<div>
-            <h2>
-              {{ _("Organizations") }}
-            </h2>
-            <span class="pull-right list-header-actions">
-            </span>
-        </div>
+    <div>
+        <h2>
+          {{ _("Organizations") }}
+        </h2>
+        <span class="pull-right list-header-actions">
+    </span>
+    </div>
       <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
     {% for organization in c.organizations %}
         {% snippet 'browse/snippets/org_item.html', organization=organization %}
