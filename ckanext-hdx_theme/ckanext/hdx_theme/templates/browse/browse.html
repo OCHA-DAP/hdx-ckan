@@ -36,10 +36,23 @@
 	</div>
 </div>
 
-<div id="locationSection">
+  <div id="locationSection" class="row paddingRowHack">
+    <div id="optionsGroup" class="col-xs-12 paddingLeftHack paddingRightHack">
+      <span id="title">Location</span>
+      <span id="browse_options">
+        <a id="option_map" class="selected">MAP</a><span>|</span><a id="option_az">ALPHABET A-Z</a>
+      </span>
+    </div>
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div id="map" style="height: 580px; position: relative;">
+      </div>
+    </div>
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div id="country_list" class="row" style="display: none;">
+      </div>
+    </div>
+  </div>
 
-
-</div>
 <div id="topicsSection"></div>
 <div id="organisationsSection">
 <div>
@@ -63,6 +76,9 @@
 
 {% block scripts2 %}
   {{ super() }}
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet' />
+  {% resource 'hdx_theme/leaflet' %}
   {% resource 'hdx_theme/browse' %}
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/jquery.expander' %}
