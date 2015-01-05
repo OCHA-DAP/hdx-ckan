@@ -38,7 +38,8 @@ function prepareCountryList() {
             displayIndicators = country.indicator_count;
 
           var item = $("<div class='country-item'></div>").appendTo(one_char_box);
-          var line = $("<a data-code='" + country_id.toLowerCase() + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayIndicators + "</div><div class='marker-label'>indicators</div></div><div class='line-break'></div><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
+          var countryIdLower = country_id.toLowerCase();
+          var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayIndicators + "</div><div class='marker-label'>indicators</div></div><div class='line-break'></div><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
         }
       }
     }
