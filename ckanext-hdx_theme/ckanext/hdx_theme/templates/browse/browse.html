@@ -41,10 +41,17 @@
 
   <div id="locationSection" class="row paddingRowHack">
     <div id="optionsGroup" class="col-xs-12 paddingLeftHack paddingRightHack">
-      <span id="title">Location</span>
-      <span id="browse_options">
-        <a id="option_map" class="selected">MAP</a><span>|</span><a id="option_az">ALPHABET A-Z</a>
-      </span>
+      <div class="list-header crisis-list-header">
+          <span class="mL15 list-header-title">
+            Location
+          </span>
+          <span id="browse_options" class="mL15">
+            <a id="option_map" class="selected">MAP</a><span>|</span><a id="option_az">ALPHABET A-Z</a>
+          </span>
+      </div>
+
+{#      <span id="title">Location</span>#}
+
     </div>
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
       <div id="map" style="height: 580px; position: relative;">
@@ -56,21 +63,47 @@
     </div>
   </div>
 
-<div id="topicsSection">
-</div>
-<div id="organisationsSection">
-    <div>
-        <h2>
-          {{ _("Organizations") }}
-        </h2>
-        <span class="pull-right list-header-actions">
-    </span>
+<div id="topicsSection" class="row">
+    <div class="col-xs-12">
+        <div class="list-header crisis-list-header">
+            <span class="mL15 list-header-title">
+            Topics [{{c.topics | length}}]
+            </span>
+        </div>
     </div>
-      <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
-    {% for organization in c.organizations %}
-        {% snippet 'browse/snippets/org_item.html', organization=organization %}
+    {% for topic in c.topics %}
+        <div class="col-xs-3">
+            <div class="item-info">
+              <div class="topic-text">
+                <a href="/search?sort=metadata_modified+desc&tags={{ topic }}">
+                <span>
+                  <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic] }}"></i>
+                </span>
+                <span>
+                  {{ topic }}
+                </span>
+                </a>
+              </div>
+
+            </div>
+        </div>
     {% endfor %}
-  </ul>
+</div>
+<div id="organisationsSection" class="row">
+    <div class="col-xs-12">
+        <div class="list-header crisis-list-header">
+            <span class="mL15 list-header-title">
+            Organisations [{{c.organizations | length}}]
+            </span>
+        </div>
+    </div>
+    <div class="col-xs-12">
+      <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+        {% for organization in c.organizations %}
+            {% snippet 'browse/snippets/org_item.html', organization=organization %}
+        {% endfor %}
+      </ul>
+    </div>
 </div>
 {% endblock %}
 
