@@ -89,7 +89,7 @@
         </div>
     {% endfor %}
 </div>
-
+<section class="list-items module">
 <div id="organisationsSection">
   {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 <div>
@@ -115,7 +115,7 @@
   {% block page_pagination %}
     {{ c.organizations.pager() }}
   {% endblock %}
-
+</section>
 {% endblock %}
 
 {% block secondary %}
