@@ -89,22 +89,33 @@
         </div>
     {% endfor %}
 </div>
-<div id="organisationsSection" class="row">
-    <div class="col-xs-12">
-        <div class="list-header crisis-list-header">
-            <span class="mL15 list-header-title">
-            Organisations [{{c.organizations | length}}]
+
+<div id="organisationsSection">
+  {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
+<div>
+            <h2>
+              {{ _("Organizations") }}
+            </h2>
+            <span class="pull-right list-header-actions">
+              <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
             </span>
         </div>
-    </div>
-    <div class="col-xs-12">
       <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
-        {% for organization in c.organizations %}
-            {% snippet 'browse/snippets/org_item.html', organization=organization %}
-        {% endfor %}
-      </ul>
-    </div>
+    {% for organization in c.organizations %}
+        {% snippet 'browse/snippets/org_item.html', organization=organization %}
+    {% endfor %}
+  </ul>
 </div>
+  {% block page_pagination %}
+    {{ c.organizations.pager() }}
+  {% endblock %}
+
 {% endblock %}
 
 {% block secondary %}

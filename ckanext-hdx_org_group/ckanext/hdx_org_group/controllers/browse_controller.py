@@ -87,7 +87,7 @@ class BrowseController(base.BaseController):
             items_per_page=20
         )
 
-        return all_orgs
+        return c.page
 
     def get_topics(self):
         context = {'model': model, 'session': model.Session,
