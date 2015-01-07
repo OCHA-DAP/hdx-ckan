@@ -233,7 +233,8 @@ def hdx_package_update_metadata(context, data_dict):
                       'last_metadata_update_date', 'dataset_source_code', 'dataset_source',
                       'indicator_type', 'indicator_type_code', 'dataset_summary',
                       'methodology', 'more_info', 'terms_of_use',
-                      'validation_notes_and_comments', 'last_data_update_date']
+                      'validation_notes_and_comments', 'last_data_update_date',
+                      'groups']
 
     package = _get_action('package_show')(context, data_dict)
     for key, value in data_dict.iteritems():
