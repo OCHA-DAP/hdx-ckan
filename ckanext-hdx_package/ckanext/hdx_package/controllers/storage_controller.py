@@ -41,7 +41,7 @@ def generate_response(http_status, unicode_body, no_cache=True, other_headers=No
     r = request.environ['pylons.pylons'].response
     if no_cache:
         r.headers['Pragma'] = 'no-cache'
-        r.headers['Cache-Control'] = 'no-cache'
+        r.headers['Cache-Control'] = 'max-age=0, no-store, no-cache'
 
     if other_headers:
         for key, value in other_headers.iteritems():
@@ -103,7 +103,7 @@ class FileDownloadController(storage.StorageController):
             headers = {
                 # 'Content-Disposition':'attachment; filename="%s"' % label,
                 'Pragma': 'no-cache',
-                'Cache-Control': 'no-cache',
+                'Cache-Control': 'max-age=0, no-store, no-cache',
                 'Content-Type': metadata.get('_format', 'text/plain')}
             if resource.name:
                 res_name = resource.name.replace('"', '_')
