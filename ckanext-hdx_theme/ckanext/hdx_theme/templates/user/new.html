@@ -18,8 +18,8 @@
 {% endblock %}
 
 {% block secondary_content %}
-  <section class="module module-narrow module-shallow">
-    <h2 class="module-heading">{{ _('Thank you!') }}</h2>
+  <section class="module module-narrow module-shallow pBottom35">
+    <h2 class="module-heading mBottom35">{{ _('Thank you!') }}</h2>
     <div class="module-content">
       <p>{{ _('Thank you for joining the HDX Community.') }}</p>
       <p>{{ _('Please fill in your details to the right to create an account.') }}</p>
@@ -29,33 +29,8 @@
 {% endblock %}
 
 {% block scripts2 %}
-  <style>
-  .info-field {
- float: left;
-        margin-left: 30px;
-        margin-top: 25px;
-        background-color: #CCCCCC;
-        width: 300px;
-        color: #FFFFFF;
-        padding: 5px 10px;
-}
-
-.field-with-info .control-medium{
-  float: left;
-}
-
-
-.field-with-info > .info-field{
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 1s, visibility 1s;
-}
-
-.field-with-info:hover > .info-field, .field-with-info > .info-field.info-field-focus, .info-field:hover {
-  opacity: 1;
-  visibility: visible;
-}
-  </style>
+  {% resource 'hdx_theme/login' %}
+  {{ super() }}
   <script src="/scripts/latinise.js"></script>
   <script>
     $(document).ready(function(){

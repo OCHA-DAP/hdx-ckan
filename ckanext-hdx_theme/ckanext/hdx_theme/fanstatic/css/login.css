@@ -1,0 +1,44 @@
+.secondary h2.module-heading {
+	  margin-bottom: 0px;
+	  border: none;
+	  padding-bottom: 5px;
+}
+
+.secondary h2.module-heading.mBottom35 {
+	  margin-bottom: 35px;
+	  border: none;
+	  padding-bottom: 5px;
+}
+
+.border-bottom-grey{
+	border-color: -moz-use-text-color -moz-use-text-color #888888;
+	border-image: none;
+	border-style: none none dotted;
+	border-width: medium medium 1px;
+}
+
+.info-field {
+	 float: left;
+     margin-left: 30px;
+     margin-top: 25px;
+     background-color: #CCCCCC;
+     width: 300px;
+     color: #FFFFFF;
+     padding: 5px 10px;
+}
+
+.field-with-info .control-medium{
+	float: left;
+}
+
+
+.field-with-info > .info-field{
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover > .info-field, .field-with-info > .info-field.info-field-focus, .info-field:hover {
+  opacity: 1;
+  visibility: visible;
+}
