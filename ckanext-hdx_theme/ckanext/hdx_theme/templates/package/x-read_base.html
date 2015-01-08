@@ -1,0 +1,133 @@
+{% extends "package/base.html" %}
+
+{% block title %}{{ pkg.title or pkg.name }} - HDX{% endblock %}
+
+{% block links -%}
+    {{ super() }}
+    <link rel="alternate" type="application/rdf+xml" href="{{ h.url_for(controller='package', action='read', id=pkg.id, format='rdf', qualified=True) }}"/>
+{% endblock -%}
+
+{% block head_extras -%}
+  {{ super() }}
+  {% set description = h.markdown_extract(pkg.notes, extract_length=200)|forceescape %}
+  <meta property="og:title" content="{{ h.dataset_display_name(pkg) }} - {{ g.site_title }}">
+  <meta property="og:description" content="{{ description|forceescape }}">
+{% endblock -%}
+
+{% block content_action %}
+  {% if h.check_access('package_update', {'id':pkg.id }) %}
+    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
+  {% endif %}
+{% endblock %}
+
+{% block content_primary_nav %}
+  {% set num_of_new_related_items = h.hdx_num_of_new_related_items() %}
+  {% set num_of_new_related_items_msg = '({num} '.format(num=num_of_new_related_items) + _('New') + '!)'  %}
+  {#% set num_of_new_related_items_msg = '({num}'.format(num=num_of_new_related_items) + ')'  %#}
+  {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name, class_='hdx-tab-button') }}
+  {{ h.build_nav_icon('dataset_activity', _('Activity Stream'), id=pkg.name, class_='hdx-tab-button') }}
+  {{ h.hdx_build_nav_icon_with_message('related_list', _('Related'), id=pkg.name, class_='hdx-tab-button', 
+  			message=num_of_new_related_items_msg if num_of_new_related_items>0 ) }}
+{% endblock %}
+
+{% block primary_content_inner %}
+    {% block package_revision_info %}
+      {% if c.pkg_revision_id %}
+        <div class="module info alert alert-info">
+          <p class="module-content">
+            {% set timestamp = h.render_datetime(c.pkg_revision_timestamp, with_hours=True) %}
+            {% set url = h.url(controller='package', action='read', id=pkg.name) %}
+
+            {% if c.pkg_revision_not_latest %}
+              {% trans timestamp=timestamp, url=url %}This is an old revision of this dataset, as edited at {{ timestamp }}. It may differ significantly from the <a href="{{ url }}">current revision</a>.{% endtrans %}
+            {% else %}
+              {% trans timestamp=timestamp %}This is the current revision of this dataset, as edited at {{ timestamp }}.{% endtrans %}
+            {% endif %}
+          </p>
+        </div>
+      {% endif %}
+    {% endblock %}
+{% endblock %}
+
+{% block secondary_content %}
+{% resource 'hdx_theme/bs_tooltip.js' %}
+  {% block secondary_help_content %}{% endblock %}
+  {% block creation_information %}
+  	<div class="info-wrapper mTop35">
+  		<div class="creation-info-author">
+  			{% if pkg.organization %}
+  				<a class="info-item-name" href="{{ h.url_for(controller='organization', action='read', id=pkg.organization.name) }}">
+  					{{ pkg.organization.title or pkg.organization.name }}
+  				</a>
+  			{% else %}
+  				{% if c.pkg_dict and c.pkg_dict.package_creator %}
+  					{{ h.linked_user(c.pkg_dict.package_creator, avatar=0) }}
+  				{% else %}
+  					{{ _('Unknown') }}
+  				{% endif %}
+  			{% endif %}
+  		</div>
+      <hr class="mTop35 dotted"/>
+  	</div>
+  {% endblock %}
+  {% block package_groups %}
+    {% if pkg.groups %}
+      <div class="info-wrapper mTop20">
+        <div class="uppercase"> {{ _('Countries:') }}</div>
+        <div>
+	        <ul class="info-wrapper-link-list">
+	          {% for group in pkg.groups %}
+	            <li class='mx-country'>
+	              <a class="info-item-name" href="{{ h.url_for(controller='group', action='read', id=group.name) }}">
+	                {{ group.title or group.name }}
+	              </a>
+	            </li>
+	          {% endfor %}
+	        </ul>
+        </div>
+      </div>
+    {% endif %}
+  {% endblock %}
+  
+  
+  {% block package_info %}
+      <div class="info-wrapper mTop35">
+        <div class="uppercase">{{ _('Followers:') }}</div>
+        <div class="followers-count followersNumber">{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</div>
+      </div>
+  {% endblock %}
+
+ {# removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/300
+  {% block package_organization %}
+    {% if pkg.organization %}
+      {% snippet "snippets/hdx_organization.html", organization=pkg.organization, has_context_title=true %}
+    {% endif %}
+  {% endblock %}
+ #}
+
+  {% block package_social %}
+    {% snippet "snippets/hdx_social.html", title=pkg.title or pkg.name  %}
+    <hr class="mTop20 dotted"/>
+  {% endblock %}
+  
+  {% block package_tags %}
+    {% snippet "package/snippets/hdx_tags.html", tags=pkg.tags %}
+  {% endblock %}
+
+	{# this was moved to the main content section
+  {% block package_license %}
+    {% snippet "snippets/license.html", pkg_dict=pkg %}
+  {% endblock %}
+  	#}
+
+  {# block other_sidebar_links %}
+    {% snippet "snippets/other_sidebar_links.html", pkg_dict=pkg %}
+  {% endblock #}
+
+{% endblock %}
+
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/dataset.css" />
+{% endblock %}
