@@ -117,8 +117,9 @@
   {% if new_dataset %}
     <div class="dataset-form-info-field info-field">
       {% trans %}
-      What are the Terms of Use for this dataset ? How can others re-use it ?
+      What are the Terms of Use for this dataset ? How can others re-use it? 
       {% endtrans %}
+      {% link_for _('Read More.'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}
     </div>
   {% endif %}
 </div>

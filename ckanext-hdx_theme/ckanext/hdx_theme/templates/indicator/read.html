@@ -2,6 +2,8 @@
 
 {% set pkg = c.pkg_dict or pkg_dict %}
 
+{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
+
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
 	  <li>{{ h.nav_link(_('Indicators'), 

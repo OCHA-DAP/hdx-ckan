@@ -1,0 +1,81 @@
+{% extends "package/read_base.html" %}
+
+{% set pkg = c.pkg_dict %}
+
+{% block secondary %}
+{% if c.pkg.related %}
+<div class="border-right-grey">
+  <h2 class="uppercase">{{_('Gallery')}}</h2>
+  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj  %}
+
+</div>
+{% endif %}
+  <div class="border-right-grey">
+        <h2 class="uppercase">{{_('Activity')}}</h2>
+        {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
+     {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
+     <br>
+    {% if h.follow_status('dataset', pkg.name) %}
+      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> 
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
+{% block primary_content_inner %}
+  {{ super() }}
+  {% block package_description %}
+    {% if pkg.private %}
+      <span class="dataset-private label label-inverse pull-right">
+        <i class="icon-lock"></i>
+        {{ _('Private') }}
+      </span>
+    {% endif %}
+    {% block package_notes %}
+    {% if c.pkg_notes_formatted %}
+      <div class="notes embedded-content">
+        {{ c.pkg_notes_formatted }}
+      </div>
+    {% endif %}
+    {% endblock %}
+    {# FIXME why is this here? seems wrong #}
+    <span class="insert-comment-thread"></span>
+  {% endblock %}
+
+  {% block package_resources %}
+    {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+  {% endblock %}
+
+	{# this was moved in the left sidebar
+  {% block package_tags %}
+    {% snippet "package/snippets/tags.html", tags=pkg.tags %}
+  {% endblock %}
+  `#}
+
+  {% block package_additional_info %}
+    {% snippet "package/snippets/additional_info.html", pkg_dict=pkg %}
+  {% endblock %}
+
+{% endblock %}
+
+{% block item_title_contrib %}
+    <div class="mTop35">
+      <h1 class="itemTitle">
+        {% block page_heading %}
+        {{ pkg.title or pkg.name }}
+         {% if pkg.state.startswith('draft') %}
+          <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+        {% elif pkg.state.startswith('deleted') %}
+          <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+        {% endif %}
+        {% endblock %}
+      </h1>
+
+      <span class="followButtonContainer pull-right">
+        {{ h.follow_button('dataset', pkg.name) }}
+        {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
+      </span>
+    </div>
+    <div class="info-secondary-data">{{ _('posted on') }} {{ h.render_datetime(pkg.metadata_created, with_hours=False) }}</div>
+
+{% endblock %}
