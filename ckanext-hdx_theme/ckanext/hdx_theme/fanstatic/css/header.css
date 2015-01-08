@@ -1475,3 +1475,13 @@ span.is-more a.more-link, .more-link {
     right: 0;
 }
 /* END Fix action buttons in the resource preview page */
+
+/* Login form fix for #2022 */
+    .form-horizontal.login-form .control-label{
+        width:130px;
+    }
+
+    .form-horizontal.login-form .controls{
+        margin-left:140px;
+    }
+/* END Login form fix for #2022 */
