@@ -117,7 +117,7 @@ function drawDistricts(map){
   }
 
   var medicalCentresStyle = function(feature){
-    if(feature.properties.Status == "Functional"){
+    if(feature.properties.Status == "Open"){
       return   {radius: 5,
         fillColor: "#1ebfb3",
         color: "#000",
@@ -147,16 +147,16 @@ function drawDistricts(map){
           if (!L.Browser.ie && !L.Browser.opera) {
             layer.bringToFront();
           }
-          var name = feature.properties["Centre Name"];
+          var name = feature.properties["ECF_Name"];
           if (name == null)
             name = "";
-          var type = feature.properties["Type1"];
+          var type = feature.properties["Type"];
           if (type == null)
             type = "";
           var status = feature.properties["Status"];
           if (status == null)
             status = "";
-          var organisation = feature.properties["Primary Organisation"];
+          var organisation = feature.properties["Partner"];
           if (organisation == null)
             organisation = "";
 
