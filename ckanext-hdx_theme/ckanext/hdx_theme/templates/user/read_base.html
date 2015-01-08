@@ -27,8 +27,8 @@
     <div class="border-bottom-grey">
       <div class="image">{{ h.linked_gravatar(user.email_hash, 190) }}</div>
       <h1 class="heading">{{ user.display_name }}</h1>
-      {% if c.about_formatted %}
-        {{ c.about_formatted }}
+      {% if c.user_dict['about'] %}
+        {{ c.user_dict['about'] }}
       {% else %}
         <p class="empty">
           {% if c.is_myself %}
