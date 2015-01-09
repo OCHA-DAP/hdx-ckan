@@ -74,10 +74,10 @@ class BrowseController(base.BaseController):
             if sort_option:
                 url = h.url_for(
                     'browse_list', page=page, sort=sort_option) + \
-                    '#organizations-section'
+                    '#organizationsSection'
             else:
                 url = h.url_for('browse_list', page=page) + \
-                    '#organizations-section'
+                    '#organizationsSection'
             return url
 
         c.page = h.Page(
