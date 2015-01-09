@@ -1,0 +1,5 @@
+
+        [ckan.plugins]
+        hdx_pages=ckanext.pages.plugin:PagesPlugin
+
+	
