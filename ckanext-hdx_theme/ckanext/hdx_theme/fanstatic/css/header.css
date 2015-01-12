@@ -111,69 +111,231 @@
 /* END Fonts */
 
 /* Header */
-    .newHeader .container .row {
-        padding-top: 34px;
+    .newHeader .header-user-box, .newHeader .header-user-box > span > a {
+        line-height: 25px;
+        font-family: 'Gotham-Bold', sans-serif;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #eeeeee;
+    }
+    .newHeader .header-user-box > span > a:focus{
+
+    }
+    .newHeader .header-user-box .header-user-name {
+        color: #f2645a;
     }
 
-    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar{
-        margin: 0;
-        border: none;
-    }
-    .newHeader .content, .newHeader .hdxLogo, .newHeader .content .navbar nav{
-        display: inline;
+    .newHeader .header-nav-border {
+        border-bottom: 3px solid #cccccc;
     }
 
-    .newHeader .content .navbar nav > ul {
-        margin: 0 0 0 25px;
+    .newHeader .header-nav{
+        height: 55px;
     }
-    .newHeader .content .navbar nav li a{
-        color: #000000;
+
+    /* HEADER Search Widget  */
+        .newHeader .header-nav .header-nav-search {
+            margin-left: 50px;
+            height: 55px;
+            width: 350px;
+            border-bottom: 3px solid #888888;
+            margin-bottom: -3px;
+        }
+
+        .newHeader .header-nav .header-nav-search .header-search-form {
+            margin: 0;
+            padding: 0;
+        }
+        .newHeader .header-nav .header-nav-search .header-search-form .input-prepend {
+            margin: 0;
+        }
+
+        .newHeader .header-nav .header-nav-search .header-search-form .icon-search {
+            font-size: 20px;
+            line-height: 28px;
+            margin: 0 20px;
+        }
+
+        .newHeader .header-nav .header-nav-search .header-search-form input, .newHeader .header-nav .header-nav-search .header-search-form input:focus {
+            border: none;
+            text-shadow: none;
+            box-shadow: none;
+            transition: none;
+            width: 290px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            margin: 0;
+            padding: 0;
+            line-height: 28px;
+            height: 28px;
+            outline: none;
+            color: #000000;
+        }
+
+        /* Style the search placeholder just for the toolbar search */
+            .newHeader .header-nav .header-nav-search .header-search-form input::-webkit-input-placeholder {
+                color: #dadada;
+                font-family: 'Source Sans Pro', sans-serif;
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 28px;
+            }
+
+            .newHeader .header-nav .header-nav-search .header-search-form input:-moz-placeholder { /* Firefox 18- */
+                color: #dadada;
+                font-family: 'Source Sans Pro', sans-serif;
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 28px;
+                opacity: 1;
+            }
+
+            .newHeader .header-nav .header-nav-search .header-search-form input::-moz-placeholder {  /* Firefox 19+ */
+                color: #dadada;
+                font-family: 'Source Sans Pro', sans-serif;
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 28px;
+                opacity: 1;
+            }
+
+            .newHeader .header-nav .header-nav-search .header-search-form input:-ms-input-placeholder {
+                color: #dadada;
+                font-family: 'Source Sans Pro', sans-serif;
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 28px;
+            }
+        /* END Style the search placeholder just for the toolbar search */
+    /* END HEADER Search Widget  */
+
+    /* Middle align all items on the header-nav */
+        .newHeader .header-nav > span{
+            height: 55px;
+            display: table;
+            position: relative;
+            float: left;
+        }
+        .newHeader .header-nav .pull-right{
+            float: right;
+        }
+        .newHeader .header-nav > span > span{
+            display: table-cell;
+            vertical-align: middle;
+        }
+    /* END Middle align all items on the header-nav */
+
+    /* HDX Version display */
+        .hdxLogo {
+            position: relative;
+
+        }
+        .logo #hdxVersion{
+            color: #888888;
+            position: absolute;
+            float: left;
+            font-size: 10px;
+            left: 99px;
+            top: 27px;
+            width: 0;
+            display: none;
+            line-height: 22px;
+        }
+
+        .logo img:hover ~ #hdxVersion{
+            display: block;
+        }
+    /* END HDX Version display */
+
+
+    /*Submit Data Button*/
+    .newHeader .submitData{
+        background-color: #f2645a;
+        border-radius: 6px;
+        display: inline-block;
+        padding: 10px 30px;
+
+        color: #ffffff;
         font-family: 'Gotham-Bold', sans-serif;
         font-weight: 400;
-        font-size: 12px;
-        line-height: 31px;
+        font-size: 14px;
         text-transform: uppercase;
-        margin-top: 0;
-        margin-bottom: 0;
     }
 
-    .newHeader .mainLinks {
-        padding-left: 25px;
-        margin: 0;
-    }
+    /* Feedback Button */
+        #feedback-button {
+            background-color: #888888;
+            color: #ffffff;
+            text-shadow: none;
+            border-radius: 20px;
+            margin-top: 10px;
+            /*margin-left: 15px;*/
 
-    ul.mainLinks, ul.mainLinks li{
-        display: inline;
-    }
-    ul.mainLinks li.dropdown a:focus{
-        background-color: #ffffff;
-    }
+            padding: 10px 15px 10px;
+            text-decoration: none;
 
-    ul.mainLinks li a:hover, ul.mainLinks li a:focus {
-        text-decoration: none;
-        cursor: pointer;
-    }
 
-    ul.mainLinks > li > a{
-        margin-left: 15px;
-    }
-    ul.mainLinks > li:first-child > a{
-        margin-left: 0;
-    }
+            font-family: 'Gotham-Bold', sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 31px;
+            text-transform: uppercase;
+            margin-bottom: 0;
+        }
+    /* END Feedback Button */
 
-    ul.mainLinks > li > a:after{
-        content: "|";
-        margin-left: 15px;
-    }
+    /* Style links inside header-nav, main navigation links */
+        ul.mainLinks {
+            padding-left: 25px;
+            margin: 0;
+        }
 
-    ul.mainLinks li:last-child a:after{
-        content: "";
-        margin: 0;
-    }
+        ul.mainLinks, ul.mainLinks li{
+            display: inline;
+        }
+        ul.mainLinks li a{
+            color: #333333;
+            letter-spacing: 0.03em;
+            font-family: 'Gotham-Bold', sans-serif;
+            font-weight: 400;
+            font-size: 12px;
+            line-height: 31px;
+            text-transform: uppercase;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
 
-    ul.mainLinks li.dropdown:hover > ul.dropdown-menu {
-        display: block;
-    }
+        ul.mainLinks li.dropdown a:focus{
+            background-color: #ffffff;
+        }
+
+        ul.mainLinks li a:hover, ul.mainLinks li a:focus {
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        ul.mainLinks > li > a{
+            margin-left: 15px;
+        }
+        ul.mainLinks > li:first-child > a{
+            margin-left: 0;
+        }
+
+        ul.mainLinks > li > a:after{
+            content: "|";
+            margin-left: 15px;
+        }
+
+        ul.mainLinks li:last-child a:after{
+            content: "";
+            margin: 0;
+        }
+
+        ul.mainLinks li.dropdown:hover > ul.dropdown-menu {
+            display: block;
+        }
+    /* END Style links inside header-nav, main navigation links */
 
     /* Dropdown menu colors  */
         .newHeader .content .navbar nav .dropdown-menu {
@@ -185,76 +347,6 @@
            background-image: none;
        }
     /* END Dropdown menu colors */
-
-    .newHeader .content .navbar nav li.submitData{
-        background-color: #f2645a;
-        border-radius: 6px;
-        width: 200px;
-        margin-right: 20px;
-    }
-
-    .newHeader .content .navbar ul.nav {
-        margin: 0;
-    }
-
-    .newHeader .content .navbar .pull-right {
-        position: relative;
-        top: -15px;
-    }
-
-    .newHeader .content .navbar nav .pull-right li.dropdown{
-        margin-top: 5px;
-    }
-
-    .newHeader .content .navbar nav .pull-right li.newLogin{
-        margin-top: 5px;
-    }
-
-    .navbar .nav > li.newLogin > a.btn:hover, .navbar .nav > li.newLogin > a.btn:focus{
-        background-color: #888888;
-    }
-
-    .newHeader .content .navbar nav .pull-right li.newLogin .btn{
-        color: #ffffff;
-    }
-
-    .newHeader .content .navbar nav li.submitData a{
-        color: #ffffff;
-        text-shadow: none;
-        padding: 0;
-        height: 60px;
-        line-height: 60px;
-        font-size: 14px;
-        margin: 0;
-        padding-left: 30px;
-    }
-
-    .navbar .nav li.dropdown > .dropdown-toggle .username{
-        color: #007ce0;
-        text-transform: none;
-    }
-
-    .caret{
-        border-left: 9px solid transparent;
-        border-right: 9px solid transparent;
-        border-top: 9px solid #007ce0;
-        vertical-align: top;
-    }
-
-    .navbar .nav li.dropdown > .dropdown-toggle .caret, .homepage-main .caret{
-        border-top: 9px solid #007ce0;
-        margin-top: 11px;
-    }
-
-    .navbar .nav li.dropdown > a:focus .caret, .navbar .nav li.dropdown > a:hover .caret {
-        border-top-color: #006abf;
-    }
-
-    .navbar .nav li.dropdown .gravatar{
-        -webkit-border-radius: 500px;
-        -moz-border-radius: 500px;
-        border-radius: 500px;
-    }
 /* END Header */
 
 /* Default link style */
@@ -263,21 +355,13 @@
     }
 /* END Default link style */
 
-/* HDX Version display */
-    .logo #hdxVersion{
-        color: #888888;
-        position: absolute;
-        float: left;
-        font-size: 10px;
-        left: 99px;
-        top: 11px;
-        width: 0;
-        display: none;
-    }
-    .logo img:hover ~ #hdxVersion{
-        display: block;
-    }
-/* END HDX Version display */
+
+.caret{
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid #007ce0;
+    vertical-align: top;
+}
 
 /* Footer */
     .newFooter .span12 > .row {
@@ -401,7 +485,7 @@
 /* Toolbar Row */
     .toolbarRow{
         background-color: #eeeeee;
-        height: 75px;
+        height: 20px;
     }
     .toolbarRow .toolbar{
         padding: 0;
@@ -412,7 +496,7 @@
         text-transform: uppercase;
         color: #888888;
         font-size: 12px;
-        line-height: 75px;
+        line-height: 20px;
     }
 
     .toolbarRow .toolbar .breadcrumb > li + li::before {
@@ -671,6 +755,9 @@
     }
     .mL15{
         margin-left: 15px;
+    }
+    .mR15{
+        margin-right: 15px;
     }
     .mL30{
         margin-left: 30px;
@@ -1340,7 +1427,9 @@ a, a:hover, a:focus{
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 400;
         letter-spacing: 0.01em;
-        opacity: 1;
+
+        /*don't override opacity globally it will cancel the fade effect*/
+        /*opacity: 1;*/
     }
     .tooltip .tooltip-inner{
         padding: 10px 15px;
@@ -1380,32 +1469,19 @@ span.is-more a.more-link, .more-link {
 }
 /* END Style Show-more */
 
-
-/* Feedback Button */
-    #feedback-button {
-        background-color: #888888;
-        color: #ffffff;
-        text-shadow: none;
-        border-radius: 20px;
-        margin-top: 10px;
-        margin-left: 15px;
-
-        padding: 10px 15px 10px;
-        text-decoration: none;
-
-
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        line-height: 31px;
-        text-transform: uppercase;
-        margin-bottom: 0;
-    }
-/* END Feedback Button */
-
 /* Fix action buttons in the resource preview page */
 .module-resource .actions {
     top: 0;
     right: 0;
 }
 /* END Fix action buttons in the resource preview page */
+
+/* Login form fix for #2022 */
+    .form-horizontal.login-form .control-label{
+        width:130px;
+    }
+
+    .form-horizontal.login-form .controls{
+        margin-left:140px;
+    }
+/* END Login form fix for #2022 */

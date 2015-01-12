@@ -122,3 +122,9 @@
         width: 42px;
     }
 /* END Style Select2 Dropdown */
+
+/* Fix header styles */
+    .newHeader .header-nav .header-nav-search{
+        height: 58px;
+    }
+/* END Fix header styles */

@@ -139,7 +139,7 @@
 {% block home_search %}
   <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
     <div class="input-append">
-      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Collection') }}">
       <button type="submit" class="button">
         <i class="icon-search"></i>
       </button>
@@ -162,39 +162,6 @@
         {% endfor %}
       </ul>
     </div>
-{% endblock %}
-
-{% block footer %}
-  <div class="homepageHeaderFooterBackground">
-    <footer class="newFooter">
-      <div class="container">
-        <div class="row">
-          <div class="span12">
-            <span class="text">
-              {{ _("A project by") }}:
-            </span>
-            <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
-            <span class="text">
-              {{ _("Related Sites") }}:
-            </span>
-            <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
-            <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
-            <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
-            <span class="text">
-              {{ _("Stay connected") }}:
-            </span>
-            <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
-            <a href="mailto:hdx@un.org"><img src="/images/homepage-new/email.png"/></a>
-          </div>
-        </div>
-      </div>
-      {% block footer_debug %}
-        {% if g.debug %}
-          {% include 'snippets/debug.html' %}
-        {% endif %}
-      {% endblock %}
-    </footer>
-  </div>
 {% endblock %}
 
 {% block scripts %}

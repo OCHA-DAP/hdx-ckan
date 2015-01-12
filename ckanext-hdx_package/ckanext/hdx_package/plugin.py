@@ -36,8 +36,10 @@ def _generate_license_list():
         license.License(license.LicenseCreativeCommonsAttribution()),
         license.License(license.LicenseCreativeCommonsAttributionShareAlike()),
         license.License(hdx_licenses.LicenseHdxOpenDatabaseLicense()),
-        license.License(hdx_licenses.LicenseHdxOpenDataCommonsAttributionLicense()),
-        license.License(hdx_licenses.LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense()),
+        license.License(
+            hdx_licenses.LicenseHdxOpenDataCommonsAttributionLicense()),
+        license.License(
+            hdx_licenses.LicenseHdxOpenDataCommonsPublicdomainDedicationAndLicense()),
         license.License(hdx_licenses.LicenseOtherPublicDomainNoRestrictions()),
         license.License(hdx_licenses.LicenseHdxMultiple()),
         license.License(hdx_licenses.LicenseHdxOther())
@@ -71,7 +73,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('shorten_url', '/package/tools/shorten',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
-        
+
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
             m.connect(
@@ -107,6 +109,26 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'groups_list': [vd.groups_not_empty],
             'indicator': [tk.get_validator('ignore_missing'),
                           tk.get_converter('convert_to_extras')],
+            'last_data_update_date': [tk.get_validator('ignore_missing'),
+                                      tk.get_converter('convert_to_extras')],
+            'last_metadata_update_date': [tk.get_validator('ignore_missing'),
+                                          tk.get_converter('convert_to_extras')],
+            'dataset_source_code': [tk.get_validator('ignore_missing'),
+                                    tk.get_converter('convert_to_extras')],
+            'indicator_type': [tk.get_validator('ignore_missing'),
+                               tk.get_converter('convert_to_extras')],
+            'indicator_type_code': [tk.get_validator('ignore_missing'),
+                                    tk.get_converter('convert_to_extras')],
+            'dataset_summary': [tk.get_validator('ignore_missing'),
+                                tk.get_converter('convert_to_extras')],
+            'methodology': [tk.get_validator('ignore_missing'),
+                            tk.get_converter('convert_to_extras')],
+            'more_info': [tk.get_validator('ignore_missing'),
+                          tk.get_converter('convert_to_extras')],
+            'terms_of_use': [tk.get_validator('ignore_missing'),
+                             tk.get_converter('convert_to_extras')],
+            'validation_notes_and_comments': [tk.get_validator('ignore_missing'),
+                                              tk.get_converter('convert_to_extras')],
             'caveats': [tk.get_validator('ignore_missing'),
                         tk.get_converter('convert_to_extras')],
             'dataset_source': [tk.get_validator('not_empty'),
@@ -142,6 +164,26 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                 tk.get_validator('ignore_missing')],
             'indicator': [tk.get_converter('convert_from_extras'),
                           tk.get_validator('ignore_missing')],
+            'last_data_update_date': [tk.get_converter('convert_from_extras'),
+                                      tk.get_validator('ignore_missing')],
+            'last_metadata_update_date': [tk.get_converter('convert_from_extras'),
+                                          tk.get_validator('ignore_missing')],
+            'dataset_source_code': [tk.get_converter('convert_from_extras'),
+                                    tk.get_validator('ignore_missing')],
+            'indicator_type': [tk.get_converter('convert_from_extras'),
+                               tk.get_validator('ignore_missing')],
+            'indicator_type_code': [tk.get_converter('convert_from_extras'),
+                                    tk.get_validator('ignore_missing')],
+            'dataset_summary': [tk.get_converter('convert_from_extras'),
+                                tk.get_validator('ignore_missing')],
+            'methodology': [tk.get_converter('convert_from_extras'),
+                            tk.get_validator('ignore_missing')],
+            'more_info': [tk.get_converter('convert_from_extras'),
+                          tk.get_validator('ignore_missing')],
+            'terms_of_use': [tk.get_converter('convert_from_extras'),
+                             tk.get_validator('ignore_missing')],
+            'validation_notes_and_comments': [tk.get_converter('convert_from_extras'),
+                                              tk.get_validator('ignore_missing')],
             'caveats': [tk.get_converter('convert_from_extras'),
                         tk.get_validator('ignore_missing')],
             'dataset_source': [tk.get_converter('convert_from_extras'),
@@ -167,6 +209,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_update': update.package_update,
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
             'hdx_package_update_metadata': update.hdx_package_update_metadata,
+            'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create
         }

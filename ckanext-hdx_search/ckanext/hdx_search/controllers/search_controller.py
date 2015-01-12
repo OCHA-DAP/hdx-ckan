@@ -1,5 +1,6 @@
 
 import logging
+import datetime
 import copy
 from urllib import urlencode
 
@@ -48,6 +49,7 @@ LARGE_NUM_OF_ITEMS = 25
 from ckan.controllers.package import PackageController
 import ckanext.hdx_search.actions.actions as hdx_actions
 
+
 def _encode_params(params):
     return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
             for k, v in params]
@@ -56,7 +58,6 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
-
 
 
 def search_for_all(context, data_dict):
@@ -70,13 +71,13 @@ def search_for_all(context, data_dict):
     if not sort:
         sort = 'score desc'
     search = {
-                'q': data_dict.get('q', None),
-                'fq': data_dict.get('fq', None),
-                'facet.field': facet_fields,
-                'facet.limit': 1000,
-                'rows': 10,
-                'sort': 'extras_indicator desc, ' + sort,
-            }
+        'q': data_dict.get('q', None),
+        'fq': data_dict.get('fq', None),
+        'facet.field': facet_fields,
+        'facet.limit': 1000,
+        'rows': 10,
+        'sort': 'extras_indicator desc, ' + sort,
+    }
 #     if tab == 'indicators':
 #         search['extras'] = {'ext_indicator': 1}
 #     elif tab == 'datasets':
@@ -101,13 +102,14 @@ def extract_one_indicator(result):
     ''' Extracts the first indicator from a search_for_all() result '''
 
     if len(result['results']) > 0 \
-        and result['results'][0] \
-        and 'indicator' in result['results'][0] \
-        and result['results'][0]['indicator'] == '1':
+            and result['results'][0] \
+            and 'indicator' in result['results'][0] \
+            and result['results'][0]['indicator'] == '1':
         indicator = [result['results'][0]]
     else:
         indicator = None
     return indicator
+
 
 def sort_features(features):
     return sorted(features, key=lambda x: x['count'], reverse=True)
@@ -136,7 +138,7 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
     for p in facets['vocab_Topics']['items']:
         tags.append(p['name'])
         extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
-                                  'url': h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '', 'feature_type': 'topic', 'count': p['count']}
+                              'url': h.url_for(controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '', 'feature_type': 'topic', 'count': p['count']}
 
     for g in facets['groups']['items']:
         tags.append(g['name'])
@@ -346,18 +348,26 @@ class HDXSearchController(PackageController):
             'start': (page - 1) * limit,
             'sort': sort_by,
             'extras': search_extras
-            }
+        }
 
         self._decide_adding_dataset_criteria(data_dict)
 
         query = hdx_actions.package_search(context, data_dict)
 
+        if not query.get('results', None):
+            log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
+                str(data_dict), str(query), datetime.datetime.now()))
+
         all_result = search_for_all(context, data_dict)
         c.dataset_counts, c.indicator_counts = extract_counts(all_result)
 
         c.count = c.dataset_counts + c.indicator_counts
+        if not c.count:
+            log.warn('Dataset counts are zero for data_dict: {}. all_results dict is: {}. Query time {}'.format(
+                str(data_dict), str(query), datetime.datetime.now()))
+
         if c.tab == "all":
-            #c.features = isolate_features(
+            # c.features = isolate_features(
             #     context, query['search_facets'], q, c.tab)
             c.indicator = extract_one_indicator(all_result)
             c.facets = all_result['facets']
@@ -368,8 +378,7 @@ class HDXSearchController(PackageController):
 
 #             if c.tab == 'features':
 #                 c.features, c.count = isolate_features(
-#                     context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
-
+# context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
 
 
 #             if c.tab == 'features':
@@ -380,8 +389,8 @@ class HDXSearchController(PackageController):
 #                     item_count=c.count,
 #                     items_per_page=limit
 #                 )
-# #                 c.facets = query['facets']
-# #                 c.search_facets = query['search_facets']
+# c.facets = query['facets']
+# c.search_facets = query['search_facets']
 #                 c.page.items = c.features
 #             else:
 #                 c.page = h.Page(
@@ -391,8 +400,8 @@ class HDXSearchController(PackageController):
 #                     item_count=query['count'],
 #                     items_per_page=limit
 #                 )
-# #                 c.facets = query['facets']
-# #                 c.search_facets = query['search_facets']
+# c.facets = query['facets']
+# c.search_facets = query['search_facets']
 #                 c.page.items = query['results']
 
         c.page = h.Page(
@@ -425,29 +434,29 @@ class HDXSearchController(PackageController):
         else:
             url = h.url_for('{0}_search'.format(package_type))
         return url_with_params(url, params)
-    
+
     def _set_filters_are_selected_flag(self):
         if len(c.fields_grouped) > 0 \
-            and ( '_show_filters' not in request.params or request.params['_show_filters'] != 'false') :
+                and ('_show_filters' not in request.params or request.params['_show_filters'] != 'false'):
             c.filters_are_selected = True
         else:
             c.filters_are_selected = False
-            
+
     def _set_remove_field_function(self):
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
                                       controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
 
         c.remove_field = remove_field
-    
+
     def _get_named_route(self):
         return 'search'
-    
+
     def _set_other_links(self):
         named_route = self._get_named_route()
-        params = { k:v for k, v in request.params.items() 
-                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format', '_show_filters'] }
-        
+        params = {k: v for k, v in request.params.items()
+                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format', '_show_filters']}
+
         c.other_links = {}
         c.other_links['all'] = h.url_for(named_route, **params)
         params_copy = params.copy()
@@ -461,8 +470,7 @@ class HDXSearchController(PackageController):
         c.other_links['features'] = h.url_for(named_route, **params_copy)
 
 #         c.other_links['params'] = params
-        c.other_links['params_noq'] = { k:v for k,v in params.items() 
-                                              if k not in ['q', '_show_filters'] }
-        c.other_links['params_nosort_noq'] = { k:v for k,v in params.items() 
-                                              if k not in ['sort', 'q'] }
-
+        c.other_links['params_noq'] = {k: v for k, v in params.items()
+                                       if k not in ['q', '_show_filters']}
+        c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
+                                              if k not in ['sort', 'q']}
