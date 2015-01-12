@@ -246,12 +246,20 @@ def hdx_package_update_metadata(context, data_dict):
                       'groups']
 
     package = _get_action('package_show')(context, data_dict)
+    num_of_groups_in_req = len(data_dict.get('groups',[]))
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
             package[key] = value
     if not package['notes']:
         package['notes'] = ' '
     package = _get_action('package_update')(context, package)
+    num_of_groups_after_update = len(package.get('groups',[]))
+
+    if num_of_groups_in_req != num_of_groups_after_update:
+        log.warn('Number of groups in request is {} but only {} are in the db'.
+                 format(num_of_groups_in_req, num_of_groups_after_update))
+
+
     return package
 
 
