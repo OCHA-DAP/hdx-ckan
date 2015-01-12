@@ -93,8 +93,7 @@
     <div class="col-xs-12">
         <div class="list-header crisis-list-header">
             <span class="mL15 list-header-title">
-            {{ _("Organizations") }}
-            </span>
+            {{ _("Organizations") }} [{{c.organization_count}}]</span> <a href="/organizationss">Show All Organizations</a>
              {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
   <script>
           $(document).ready(function(){
