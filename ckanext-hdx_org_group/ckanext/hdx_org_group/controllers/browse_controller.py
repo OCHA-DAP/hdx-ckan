@@ -25,7 +25,7 @@ class BrowseController(base.BaseController):
 
     def index(self):
         c.countries = json.dumps(self.get_countries())
-        c.organizations = self.get_organizations()
+        c.organizations, c.organization_count = self.get_organizations()
         c.topics = self.get_topics()
         c.topic_icons = self.get_topic_icons()
 
@@ -87,7 +87,7 @@ class BrowseController(base.BaseController):
             items_per_page=20
         )
 
-        return c.page
+        return (c.page, len(all_orgs))
 
     def get_topics(self):
         context = {'model': model, 'session': model.Session,
