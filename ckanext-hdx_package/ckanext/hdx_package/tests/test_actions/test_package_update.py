@@ -44,6 +44,19 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
 
+    def test_hdx_package_delete_redirect(self):
+        global package
+        testsysadmin = model.User.by_name('testsysadmin')
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'nouser'}
+        self._get_action('package_create')(context, package)
+        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+                             action='delete', id=package['name'])
+        result = self.app.post(
+                test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        assert '302' in str(result)
+
     def test_hdx_package_update_metadata(self):
         global package
 

@@ -86,6 +86,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'new_metadata',
                           'new_resource',
                           'visibility',
+                          'delete',
                       ])))
 
         map.connect(
