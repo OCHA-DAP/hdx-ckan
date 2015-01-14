@@ -203,12 +203,12 @@
     cursor: pointer;
     margin-top: 1px;
     display: inline-block;
+    font-weight: bold;
 }
 #browse_options a:hover,
 #browse_options a.selected {
     text-decoration: none;
     color: #007ce0;
-    font-weight: bold;
 }
 #browse_options a#option_map {
     width: 28px;
