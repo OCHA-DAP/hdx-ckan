@@ -13,6 +13,8 @@ import ckan.common as common
 import ckan.logic as logic
 import ckan.lib.helpers as h
 
+import ckanext.hdx_org_group.helpers.organization_helper as helper
+
 c = common.c
 request = common.request
 get_action = logic.get_action
@@ -69,6 +71,8 @@ class BrowseController(base.BaseController):
         }
 
         all_orgs = get_action('organization_list')(context, data_dict)
+
+        all_orgs  = helper.sort_results_case_insensitive(all_orgs, sort_option)
 
         def pager_url(q=None, page=None):
             if sort_option:

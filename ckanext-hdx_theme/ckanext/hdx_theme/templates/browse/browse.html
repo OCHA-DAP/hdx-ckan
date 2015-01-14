@@ -94,7 +94,7 @@
         <div class="list-header crisis-list-header">
             <span class="mL15 list-header-title">
             {{ _("Organizations") }} [{{c.organization_count}}]</span> <a href="/organizationss">Show All Organizations</a>
-             {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
+             {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
   <script>
           $(document).ready(function(){
             $(".dropdown").on('click', 'li a', function(){
