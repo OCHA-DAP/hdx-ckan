@@ -70,7 +70,6 @@ class HDXOrgMemberController(org.OrganizationController):
                         user_dict = model.User.by_email(email)
                         if user_dict:
                             #Add user
-                            print user_dict
                             data_dict['username'] = user_dict[0].name
                         else:
                             user_data_dict = {
@@ -83,7 +82,7 @@ class HDXOrgMemberController(org.OrganizationController):
                             user_dict = self._action('user_invite')(context,
                                                                 user_data_dict)
                             data_dict['username'] = user_dict['name']
-                        c.group_dict = self._action(
+                    c.group_dict = self._action(
                         'group_member_create')(context, data_dict)
                 else:
                     h.flash_error(_('''You need to either fill the username or
