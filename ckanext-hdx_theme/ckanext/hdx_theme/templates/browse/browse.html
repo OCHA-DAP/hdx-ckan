@@ -30,13 +30,16 @@
 	    </div>
 	</div>
 </div>
-<div class="row paddingRowHack browseSection" style="position: relative;">
+<div id="browseByMenuAnchor"></div>
+<div class="browseSectionHeight">
+<div id="browseByMenu" class="row paddingRowHack browseSection browseSectionHeight">
 	<div class="col-xs-12 paddingLeftHack paddingRightHack">
 	    <span class="browseBy">Browse by:</span>
-	    <a href="#locationSection" class="browseItem">Location</a>
-	    <a href="#topicsSection" class="browseItem">Topics</a>
-	    <a href="#organisationsSection" class="browseItem">Organisations</a>
+	    <a id="locationSectionMenuItem" onclick="scrollTo('#locationSection');" class="browseItem">Location</a>
+	    <a id="topicsSectionMenuItem" onclick="scrollTo('#topicsSection');" class="browseItem">Topics</a>
+	    <a id="organisationsSectionMenuItem" onclick="scrollTo('#organisationsSection');" class="browseItem">Organisations</a>
 	</div>
+</div>
 </div>
 
   <div id="locationSection" class="row paddingRowHack">

@@ -64,11 +64,13 @@
     margin-right: 20px;
 }
 
-.browseSection{
+.browseSectionHeight{
     height: 40px;
+}
+
+.browseSection{
     line-height: 40px;
     background-color: #f2645a;
-
 }
 
 .browseSection .browseBy {
@@ -94,6 +96,17 @@
     color: #f2645a;
     background-color: #ffffff;
 
+}
+
+#browseByMenu {
+    position: relative;
+}
+
+#browseByMenu.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    width: 1260px;
 }
 
 .organization-heading{
