@@ -77,10 +77,10 @@
               <div class="topic-text">
                 <a href="/search?sort=metadata_modified+desc&_show_filters=false&tags={{ topic }}">
                 <span>
-                  <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic] }}"></i>
+                  <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic]['icon'] }}"></i>
                 </span>
                 <span>
-                  {{ topic }}
+                  {{ c.topic_icons[topic]['title'] }}
                 </span>
                 </a>
               </div>
