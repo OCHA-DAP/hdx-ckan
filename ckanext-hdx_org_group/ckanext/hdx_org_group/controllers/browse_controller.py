@@ -138,7 +138,7 @@ class BrowseController(base.BaseController):
                 'title': 'Food and Nutrition'
             },
             u'gender': {
-                'icon': 'icon-fight',
+                'icon': 'topics-icon-gender.png',
                 'title': 'Gender'
             },
             u'health': {

@@ -77,7 +77,11 @@
               <div class="topic-text">
                 <a href="/search?sort=metadata_modified+desc&_show_filters=false&tags={{ topic }}">
                 <span>
+                {% if topic == "gender" %}
+					<img class="mL15 mR15 topic-icon" src="/images/topics-icon-gender.png" />
+                {% else %}
                   <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic]['icon'] }}"></i>
+                {% endif %}
                 </span>
                 <span>
                   {{ c.topic_icons[topic]['title'] }}
