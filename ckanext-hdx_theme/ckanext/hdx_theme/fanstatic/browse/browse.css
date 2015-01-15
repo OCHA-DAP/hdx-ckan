@@ -57,6 +57,22 @@
     box-shadow: none;
 }
 
+.topSection .sectionDemo .visTexts{
+    text-transform: uppercase;
+    font-family: "Gotham-Bold", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    background: none;
+    box-shadow: none;
+}
+.topSection .sectionDemo .visTexts a{
+    color: #f2645a;
+}
+
+
 .topSection .sectionDemo .demoButton{
     border: 2px solid #ffffff;
     border-radius: 5px;
