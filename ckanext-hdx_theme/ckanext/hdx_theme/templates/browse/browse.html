@@ -35,7 +35,7 @@
 	    <span class="browseBy">Browse by:</span>
 	    <a href="#locationSection" class="browseItem">Location</a>
 	    <a href="#topicsSection" class="browseItem">Topics</a>
-	    <a href="#organizationsSection" class="browseItem">Organizations</a>
+	    <a href="#organizationsSection" class="browseItem">Organisations</a>
 	</div>
 </div>
 
@@ -89,11 +89,13 @@
         </div>
     {% endfor %}
 </div>
-<div id="organizationsSection" class="row list-items module">
+<div id="organizationsSection" class="row list-items module" style="margin-right:-10px; margin-left:-10px;">
     <div class="col-xs-12">
         <div class="list-header crisis-list-header">
             <span class="mL15 list-header-title">
-            {{ _("Organizations") }} [{{c.organization_count}}]</span> <a href="/organizationss">Show All Organizations</a>
+            {{ _("Organisations") }} [{{c.organization_count}}]</span>
+            <span class="mL15 list-header-showall"><a href="/organization">Show All Organisations</a>
+            </span>
              {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
   <script>
           $(document).ready(function(){
@@ -107,7 +109,7 @@
   <div class="form-select control-group control-order-by pull-right">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown">
-          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background:#edf6fd; height:50px;">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background:#edf6fd; margin-top:2px; height:40px;">
             <span class="dropdown-toggle-text">
               Name Ascending
             </span>
