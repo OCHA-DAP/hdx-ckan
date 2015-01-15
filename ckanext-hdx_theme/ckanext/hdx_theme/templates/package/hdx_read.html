@@ -18,7 +18,7 @@
              {% if pkg.state.startswith('draft') %}
               <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
             {% elif pkg.state.startswith('deleted') %}
-              <span style="vertical-align: middle;" class="label label-important">{{ _('Deleted') }}</span>
+              <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
             {% endif %}
           </h1>
         </div>
