@@ -10,6 +10,7 @@ import logging as logging
 import ckan.plugins.toolkit as tk
 import ckan.tests as tests
 import ckan.model as model
+import ckan.lib.helpers as h
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 log = logging.getLogger(__name__)
@@ -43,6 +44,32 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
+
+    def test_hdx_package_delete_redirect(self):
+        package = {
+          "package_creator": "test function",
+          "private": False,
+          "dataset_date": "01/01/1960-12/31/2012",
+          "indicator": "1",
+          "caveats": "These are the caveats",
+          "license_other": "TEST OTHER LICENSE",
+          "methodology": "This is a test methodology",
+          "dataset_source": "World Bank",
+          "license_id": "hdx-other",
+          "name": "test_activity_2",
+          "notes": "This is a test activity",
+          "title": "Test Activity 2",
+        }
+        testsysadmin = model.User.by_name('testsysadmin')
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'nouser'}
+        self._get_action('package_create')(context, package)
+        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+                             action='delete', id=package['name'])
+        result = self.app.post(
+                test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        assert '302' in str(result)
 
     def test_hdx_package_update_metadata(self):
         global package

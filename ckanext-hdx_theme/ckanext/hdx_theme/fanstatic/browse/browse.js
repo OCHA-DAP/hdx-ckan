@@ -200,7 +200,7 @@ function browse_by_menu() {
   }
 
   //order the sections last to first !!!
-  var sections = ['organisationsSection','topicsSection' , 'locationSection'];
+  var sections = ['organizationsSection','topicsSection' , 'locationSection'];
   var found = false;
   for (var i in sections){
     var section = sections[i];

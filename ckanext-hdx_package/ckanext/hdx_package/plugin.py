@@ -73,6 +73,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('shorten_url', '/package/tools/shorten',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
+        map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
+                  action='edit')
+        
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
@@ -86,6 +89,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'new_metadata',
                           'new_resource',
                           'visibility',
+                          'delete',
                       ])))
 
         map.connect(
