@@ -227,22 +227,40 @@ def hdx_package_update_metadata(context, data_dict):
     is what this function does.
     '''
 
-    allowed_fields = ['indicator', 'package_creator', 'methodology',
-                      'dataset_source', 'dataset_date', 'license_other',
-                      'license_title', 'caveats', 'name', 'title',
-                      'last_metadata_update_date', 'dataset_source_code', 'dataset_source',
-                      'indicator_type', 'indicator_type_code', 'dataset_summary',
-                      'methodology', 'more_info', 'terms_of_use',
-                      'validation_notes_and_comments', 'last_data_update_date',
+    # allowed_fields = ['indicator', 'package_creator', 'methodology',
+    #                   'dataset_source', 'dataset_date', 'license_other',
+    #                   'license_title', 'caveats', 'name', 'title',
+    #                   'last_metadata_update_date', 'dataset_source_code', 'dataset_source',
+    #                   'indicator_type', 'indicator_type_code', 'dataset_summary',
+    #                   'methodology', 'more_info', 'terms_of_use',
+    #                   'validation_notes_and_comments', 'last_data_update_date',
+    #                   'groups']
+
+    allowed_fields = ['indicator', 'package_creator',
+                      'dataset_date',
+                      'name', 'title',
+                      'last_metadata_update_date',
+                      'indicator_type', 'indicator_type_code',
+                      'more_info',
+                      'last_data_update_date',
                       'groups']
 
     package = _get_action('package_show')(context, data_dict)
+    requested_groups = [el.get('id','') for el in data_dict.get('groups',[])]
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
             package[key] = value
     if not package['notes']:
         package['notes'] = ' '
     package = _get_action('package_update')(context, package)
+    db_groups = [el.get('name','') for el in package.get('groups',[]) ]
+
+    if len(requested_groups) != len(db_groups):
+        not_saved_groups = set(requested_groups) - set(db_groups)
+        log.warn('Indicator: {} - num of groups in request is {} but only {} are in the db. Difference: {}'.
+                 format(package.get('name','unknown'),len(requested_groups), len(db_groups), ", ".join(not_saved_groups)))
+
+
     return package
 
 
