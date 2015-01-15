@@ -13,6 +13,8 @@ import ckan.common as common
 import ckan.logic as logic
 import ckan.lib.helpers as h
 
+import ckanext.hdx_org_group.helpers.organization_helper as helper
+
 c = common.c
 request = common.request
 get_action = logic.get_action
@@ -25,7 +27,7 @@ class BrowseController(base.BaseController):
 
     def index(self):
         c.countries = json.dumps(self.get_countries())
-        c.organizations = self.get_organizations()
+        c.organizations, c.organization_count = self.get_organizations()
         c.topics = self.get_topics()
         c.topic_icons = self.get_topic_icons()
 
@@ -70,14 +72,16 @@ class BrowseController(base.BaseController):
 
         all_orgs = get_action('organization_list')(context, data_dict)
 
+        all_orgs  = helper.sort_results_case_insensitive(all_orgs, sort_option)
+
         def pager_url(q=None, page=None):
             if sort_option:
                 url = h.url_for(
                     'browse_list', page=page, sort=sort_option) + \
-                    '#organizations-section'
+                    '#organizationsSection'
             else:
                 url = h.url_for('browse_list', page=page) + \
-                    '#organizations-section'
+                    '#organizationsSection'
             return url
 
         c.page = h.Page(
@@ -87,7 +91,7 @@ class BrowseController(base.BaseController):
             items_per_page=20
         )
 
-        return c.page
+        return (c.page, len(all_orgs))
 
     def get_topics(self):
         context = {'model': model, 'session': model.Session,

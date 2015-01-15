@@ -21,7 +21,7 @@
 {% endblock %}
 
 {% block secondary_content %}
-  <section class="module module-narrow module-shallow">
+  <section class="module module-narrow module-shallow border-bottom-grey pBottom35">
     <h2 class="module-heading">{{ _('Need an Account?') }}</h2>
     <div class="module-content">
       <p>{% trans %}Then sign right up, it only takes a minute.{% endtrans %}</p>
@@ -41,3 +41,9 @@
     </div>
   </section>
 {% endblock %}
+
+{% block scripts2 %}
+  {% resource 'hdx_theme/login' %}
+  {{ super() }}
+{% endblock %}
+

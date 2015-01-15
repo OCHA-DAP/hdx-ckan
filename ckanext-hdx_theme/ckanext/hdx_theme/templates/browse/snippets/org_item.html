@@ -55,7 +55,11 @@
         <div class="dataset-description">
           {% block description %}
             {% if organization.description %}
-          <div class="list-items content">{{ h.markdown_extract(organization.description, extract_length=400) }}</div>
+          <div class="list-items content">{% set notes = h.markdown_extract(organization.description, extract_length=400) %}
+            {% if notes %}
+              <span data-module="hdx_show_more" style="visibility:hidden"><div>{{ notes|urlize }}</div></span>
+            {% endif %}
+          </div>
       {% else %}
           <div class="list-items content empty">{{ _('This organization has no description') }}</div>
       {% endif %}

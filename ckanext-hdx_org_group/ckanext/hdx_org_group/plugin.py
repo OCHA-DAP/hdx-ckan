@@ -70,6 +70,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def before_map(self, map):
         map.connect('organization_bulk_process', '/organization/bulk_process/{org_id}', controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
         map.connect('organization_bulk_process_no_id', '/organization/bulk_process', controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
+        map.connect('organizations_index', '/organization', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='index')
         map.connect('request_membership', '/organization/{org_id}/request_membership', controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
         map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights', controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_editor_for_org')
         map.connect('/organization/request_new', controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')

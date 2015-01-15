@@ -18,8 +18,8 @@
       'remove_field': c.remove_field }
     %}
     {% set sorting = [
-      (_('Name Ascending'), 'title_string asc'),
-      (_('Name Descending'), 'title_string desc'),
+      (_('Name Ascending'), 'title_case_insensitive asc'),
+      (_('Name Descending'), 'title_case_insensitive desc'),
       (_('Last Modified'), 'metadata_modified desc') ]
     %}
     {% set sorting_selected = c.sort_by_selected if c.sort_by_selected else 'metadata_modified desc' %}

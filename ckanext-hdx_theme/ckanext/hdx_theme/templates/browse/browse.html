@@ -101,23 +101,42 @@
         </div>
     {% endfor %}
 </div>
-<section class="list-items module">
-<div id="organisationsSection">
-  {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
-<div>
-            <h2>
-              {{ _("Organizations") }}
-            </h2>
-            <span class="pull-right list-header-actions">
-              <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+<div id="organizationsSection" class="row list-items module">
+    <div class="col-xs-12">
+        <div class="list-header crisis-list-header">
+            <span class="mL15 list-header-title">
+            {{ _("Organizations") }} [{{c.organization_count}}]</span> <a href="/organizationss">Show All Organizations</a>
+             {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+  <script>
+          $(document).ready(function(){
+            $(".dropdown").on('click', 'li a', function(){
+              $(this).parents(".dropdown").find("button span").text($(this).text());
+              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
+                window.location = '/browse?sort='+$(this).attr("val")+'#organizationsSection';
+              });
+          });
+        </script>
+  <div class="form-select control-group control-order-by pull-right">
+        <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+        <div class="dropdown orderDropdown">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background:#edf6fd; height:50px;">
+            <span class="dropdown-toggle-text">
+              Name Ascending
+            </span>
+            <b class="caret" style="margin-top: 20px;"></b>
+          </button>
+          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}
                 <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
               {% endif %}
             {% endfor %}
           </ul>
-            </span>
+      </div>
+    </div>
         </div>
+<div>
+ 
       <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
     {% for organization in c.organizations %}
         {% snippet 'browse/snippets/org_item.html', organization=organization %}
@@ -127,7 +146,7 @@
   {% block page_pagination %}
     {{ c.organizations.pager() }}
   {% endblock %}
-</section>
+</div>
 {% endblock %}
 
 {% block secondary %}

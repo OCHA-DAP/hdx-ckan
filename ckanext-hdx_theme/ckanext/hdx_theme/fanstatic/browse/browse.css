@@ -303,6 +303,11 @@
     color: #999999;
 }
 
+/* hide line for top items */
+#country_list .col-md-2 .char-box:first-child{
+    border-top: none;
+}
+
 #locationSection {
     background-color: #ffffff;
 }
@@ -347,4 +352,8 @@
 
 .list-header{
     margin-top: 45px;
+}
+
+.tooltip .tooltip-inner{
+    padding: 0;
 }
