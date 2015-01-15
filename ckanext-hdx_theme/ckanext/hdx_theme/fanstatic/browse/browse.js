@@ -182,7 +182,50 @@ function prepareCount() {
   }
 }
 
+function scrollTo(anchor){
+  $('html, body').animate({
+    scrollTop: $(anchor).offset().top - 40
+  }, 700);
+}
+
+function browse_by_menu() {
+  var window_top = $(window).scrollTop();
+  var browseByMenuAnchor = $('#browseByMenuAnchor');
+  var browseByMenu = $('#browseByMenu');
+  var div_top = browseByMenuAnchor.offset().top;
+  if (window_top > div_top) {
+    browseByMenu.addClass('stick');
+  } else {
+    browseByMenu.removeClass('stick');
+  }
+
+  //order the sections last to first !!!
+  var sections = ['organisationsSection','topicsSection' , 'locationSection'];
+  var found = false;
+  for (var i in sections){
+    var section = sections[i];
+    var section_menu_item = $("#" + section + "MenuItem");
+    if (found){
+      section_menu_item.removeClass("active");
+    }
+    else{
+      var section_top = $("#" + section).offset().top;
+      if (window_top > section_top - 80){
+        found = true;
+        section_menu_item.addClass("active");
+      }
+      else{
+        section_menu_item.removeClass("active");
+      }
+    }
+  }
+}
+
 (function() {
+  //fixed page menu
+  $(window).scroll(browse_by_menu);
+  browse_by_menu();
+
   prepareCount();
   prepareMap();
   prepareCountryList();

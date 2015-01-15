@@ -125,16 +125,49 @@ class BrowseController(base.BaseController):
 
         #icons reference can be found in humanitarian_icons.css
         ret = {
-            u'economy': 'topic-icon-activity_financing',
-            u'education': 'topic-icon-cluster_education',
-            u'emergency telecommunications': 'topic-icon-cluster_emergency_telecommunications',
-            u'food and nutrition': 'topic-icon-cluster_food_security',
-            u'gender': 'icon-fight',
-            u'health': 'topic-icon-cluster_health',
-            u'humanitarian funding': 'topic-icon-activity_fund',
-            u'humanitarian profile': 'topic-icon-activity_humanitarian_programme_cycle',
-            u'logistics': 'topic-icon-cluster_logistics',
-            u'population': 'topic-icon-people_affected_population',
-            u'water sanitation and hygiene': 'topic-icon-wash_sanitation'
+            u'economy': {
+                'icon': 'topic-icon-activity_financing',
+                'title': 'Economy'
+            },
+            u'education': {
+                'icon': 'topic-icon-cluster_education',
+                'title': 'Education'
+            },
+            u'emergency telecommunications': {
+                'icon': 'topic-icon-cluster_emergency_telecommunications',
+                'title': 'Emergency Telecommunications'
+            },
+            u'food and nutrition': {
+                'icon': 'topic-icon-cluster_food_security',
+                'title': 'Food and Nutrition'
+            },
+            u'gender': {
+                'icon': 'topics-icon-gender.png',
+                'title': 'Gender'
+            },
+            u'health': {
+                'icon': 'topic-icon-cluster_health',
+                'title': 'Health'
+            },
+            u'humanitarian funding': {
+                'icon': 'topic-icon-activity_fund',
+                'title': 'Humanitarian Funding'
+            },
+            u'humanitarian profile': {
+                'icon': 'topic-icon-activity_humanitarian_programme_cycle',
+                'title': 'Humanitarian Profile'
+            },
+            u'logistics': {
+                'icon': 'topic-icon-cluster_logistics',
+                'title': 'Logistics'
+            },
+            u'population': {
+                'icon': 'topic-icon-people_affected_population',
+                'title': 'Population'
+            },
+            u'water sanitation and hygiene': {
+                'icon': 'topic-icon-wash_sanitation',
+                'title': 'Water Sanitation and Hygiene'
+            }
         }
         return ret
