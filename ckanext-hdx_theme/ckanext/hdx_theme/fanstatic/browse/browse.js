@@ -56,7 +56,7 @@ function prepareMap(){
   var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref;
   //mapID = 'yumiendo.ijchbik8';
   openURL = function(url) {
-    return window.open(url, '_blank').focus();
+    return window.open(url, '_self').focus();
   };
   closeTooltip = window.setTimeout(function() {
     return map.closePopup();
@@ -173,7 +173,7 @@ function prepareCount() {
 
   for (var i in data){
     var item = data[i];
-    var code = item.id.toUpperCase();
+    var code = item.name.toUpperCase();
     var newItem = {};
     newItem.title = item.title;
     newItem.dataset_count = item.dataset_count;
