@@ -103,7 +103,7 @@ function drawGraph2() {
           names: {
             "Persons": "Number of People with Access Constraints"
           },
-          type: 'area'
+          type: 'bar'
         },
         legend:{
           show: false
