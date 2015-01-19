@@ -56,7 +56,8 @@ class CrisisController(base.BaseController):
         page = int(request.params.get('page', 1))
         data_dict = {'sort': sort_option if sort_option else u'metadata_modified desc',
                      'rows': limit,
-                     'start': (page - 1) * limit
+                     'start': (page - 1) * limit,
+                     'ext_indicator': u'0'
                      }
 
         search_param_list = [
@@ -64,7 +65,7 @@ class CrisisController(base.BaseController):
         if 'q' in search_params:
             data_dict['q'] = search_params['q']
             c.q = search_params['q']
-        if search_param_list:
+        if search_param_list != None:
             data_dict['fq'] = " ".join(
                 search_param_list) + ' +dataset_type:dataset'
 
