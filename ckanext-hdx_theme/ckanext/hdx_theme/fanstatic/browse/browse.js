@@ -173,7 +173,7 @@ function prepareCount() {
 
   for (var i in data){
     var item = data[i];
-    var code = item.id.toUpperCase();
+    var code = item.name.toUpperCase();
     var newItem = {};
     newItem.title = item.title;
     newItem.dataset_count = item.dataset_count;
