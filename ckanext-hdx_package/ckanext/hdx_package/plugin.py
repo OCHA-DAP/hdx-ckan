@@ -73,6 +73,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('shorten_url', '/package/tools/shorten',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
+        map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
+                  action='edit')
+        
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
@@ -86,6 +89,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'new_metadata',
                           'new_resource',
                           'visibility',
+                          'delete',
                       ])))
 
         map.connect(
@@ -121,8 +125,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                     tk.get_converter('convert_to_extras')],
             'dataset_summary': [tk.get_validator('ignore_missing'),
                                 tk.get_converter('convert_to_extras')],
-            'methodology': [tk.get_validator('ignore_missing'),
-                            tk.get_converter('convert_to_extras')],
             'more_info': [tk.get_validator('ignore_missing'),
                           tk.get_converter('convert_to_extras')],
             'terms_of_use': [tk.get_validator('ignore_missing'),
@@ -176,8 +178,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                     tk.get_validator('ignore_missing')],
             'dataset_summary': [tk.get_converter('convert_from_extras'),
                                 tk.get_validator('ignore_missing')],
-            'methodology': [tk.get_converter('convert_from_extras'),
-                            tk.get_validator('ignore_missing')],
             'more_info': [tk.get_converter('convert_from_extras'),
                           tk.get_validator('ignore_missing')],
             'terms_of_use': [tk.get_converter('convert_from_extras'),

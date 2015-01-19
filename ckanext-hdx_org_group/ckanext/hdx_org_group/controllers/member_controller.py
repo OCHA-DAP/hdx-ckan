@@ -64,17 +64,24 @@ class HDXOrgMemberController(org.OrganizationController):
                 if data_dict.get('email', '').strip() != '' or \
                         data_dict.get('username', '').strip() != '':
                     email = data_dict.get('email')
+                    #Check if email is used
                     if email:
-                        user_data_dict = {
-                            'email': email,
-                            'group_id': id,
-                            'role': data_dict['role'],
-                            'id': id  # This is something staging/prod need
-                        }
-                        del data_dict['email']
-                        user_dict = self._action('user_invite')(context,
+                        #Check if email is used
+                        user_dict = model.User.by_email(email)
+                        if user_dict:
+                            #Add user
+                            data_dict['username'] = user_dict[0].name
+                        else:
+                            user_data_dict = {
+                                'email': email,
+                                'group_id': id,
+                                'role': data_dict['role'],
+                                'id': id  # This is something staging/prod need
+                            }
+                            del data_dict['email']
+                            user_dict = self._action('user_invite')(context,
                                                                 user_data_dict)
-                        data_dict['username'] = user_dict['name']
+                            data_dict['username'] = user_dict['name']
                     c.group_dict = self._action(
                         'group_member_create')(context, data_dict)
                 else:

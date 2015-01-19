@@ -125,12 +125,21 @@
         color: #f2645a;
     }
 
+
     .newHeader .header-nav-border {
+        background-color: #ffffff;
+    }
+
+    .newHeader .header-nav-border > div {
         border-bottom: 3px solid #cccccc;
     }
 
     .newHeader .header-nav{
         height: 55px;
+    }
+
+    .header-user-bg{
+        background-color: #333333;
     }
 
     /* HEADER Search Widget  */

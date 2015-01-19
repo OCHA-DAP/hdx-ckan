@@ -11,17 +11,25 @@
                 <div class="sectionTitle mTop45">
                   <span class="sectionTitleBold">HDX</span> Collection
                 </div>
-                <div class="sectionDescription mTop20">
-                  The Humanitarian Data Exchange (HDX) project aims to make humanitarian data easy to find
-                  and use for analysis. We are working on three elements that will eventually combine into
-                  an integrated data platform.
-                </div>
-                <div class="sectionDescription mTop20">
-                  Learn more about <a href="#">Humanitarian Exchange Language</a> and <a href="#">Common
-                  Hummanitarian Dataset</a>.
-                </div>
+		        <div class="sectionDescription mTop20">
+		          The Humanitarian Data Exchange has two categories of data – curated indicators and
+		          user-contributed datasets. We curate about 130 indicators, ensuring they are comparable
+		          across countries and have gone through a quality control process. We call this group of
+		          indicators the
+		          <a href="https://data.hdx.rwlabs.org/dataset?sort=metadata_modified+desc&ext_indicator=1">
+		            Common Hummanitarian Dataset
+		          </a>. <br/>
+		          We also have datasets that organizations have shared. You can explore the entire HDX
+		          Collection below by location, topic or organization.
+		        </div>
                 <div class="sectionDemo mTop20">
-                  <a class="btn demoButton" href="#">Watch demo</a> <a class="btn visButton" href="#">Show me a cool visualisation</a>
+                  <!-- Initial look --
+                  <a class="btn demoButton" href="#">Watch demo</a>
+                  <a class="btn visButton" href="#">Show me a cool visualisation</a>
+                  -->
+
+                  <a class="btn demoButton" href="/dataset/mobile_cellular_subscriptions_per_100_inhabitants">Show me a cool visualisation</a>
+                  <span class="visTexts">TAKE A LOOK AT OUR <a href="/ebola">EBOLA</a> & <a href="/group/col">COLOMBIA</a> PAGES</span>
                 </div>
             </div>
 			<div class="col-xs-4">
@@ -30,13 +38,16 @@
 	    </div>
 	</div>
 </div>
-<div class="row paddingRowHack browseSection" style="position: relative;">
+<div id="browseByMenuAnchor"></div>
+<div class="browseSectionHeight">
+<div id="browseByMenu" class="row paddingRowHack browseSection browseSectionHeight">
 	<div class="col-xs-12 paddingLeftHack paddingRightHack">
 	    <span class="browseBy">Browse by:</span>
-	    <a href="#locationSection" class="browseItem">Location</a>
-	    <a href="#topicsSection" class="browseItem">Topics</a>
-	    <a href="#organizationsSection" class="browseItem">Organizations</a>
+	    <a id="locationSectionMenuItem" onclick="scrollTo('#locationSection');" class="browseItem">Location</a>
+	    <a id="topicsSectionMenuItem" onclick="scrollTo('#topicsSection');" class="browseItem">Topics</a>
+	    <a id="organizationsSectionMenuItem" onclick="scrollTo('#organizationsSection');" class="browseItem">Organisations</a>
 	</div>
+</div>
 </div>
 
   <div id="locationSection" class="row paddingRowHack">
@@ -77,10 +88,14 @@
               <div class="topic-text">
                 <a href="/search?sort=metadata_modified+desc&_show_filters=false&tags={{ topic }}">
                 <span>
-                  <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic] }}"></i>
+                {% if topic == "gender" %}
+					<img class="mL15 mR15 topic-icon" src="/images/topics-icon-gender.png" />
+                {% else %}
+                  <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic]['icon'] }}"></i>
+                {% endif %}
                 </span>
                 <span>
-                  {{ topic }}
+                  {{ c.topic_icons[topic]['title'] }}
                 </span>
                 </a>
               </div>
@@ -89,11 +104,13 @@
         </div>
     {% endfor %}
 </div>
-<div id="organizationsSection" class="row list-items module">
-    <div class="col-xs-12">
+<div id="organizationsSection" class="row list-items module paddingRowHack">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
         <div class="list-header crisis-list-header">
             <span class="mL15 list-header-title">
-            {{ _("Organizations") }} [{{c.organization_count}}]</span> <a href="/organizationss">Show All Organizations</a>
+            {{ _("Organisations") }} [{{c.organization_count}}]</span>
+            <span class="mL15 list-header-showall"><a href="/organization">Show All Organisations</a>
+            </span>
              {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
   <script>
           $(document).ready(function(){
@@ -107,7 +124,7 @@
   <div class="form-select control-group control-order-by pull-right">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown">
-          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background:#edf6fd; height:50px;">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background:#edf6fd; margin-top:2px; height:40px;">
             <span class="dropdown-toggle-text">
               Name Ascending
             </span>
