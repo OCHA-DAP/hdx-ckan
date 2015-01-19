@@ -105,30 +105,26 @@
     {% endfor %}
 </div>
 <div id="organizationsSection" class="row list-items module paddingRowHack">
-    <div class="col-xs-12 paddingLeftHack paddingRightHack">
-        <div class="list-header crisis-list-header">
-            <span class="mL15 list-header-title">
-            {{ _("Organisations") }} [{{c.organization_count}}]</span>
-            <span class="mL15 list-header-showall"><a href="/organization">Show All Organisations</a>
-            </span>
-             {% set sorting = [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
-  <script>
-          $(document).ready(function(){
-            $(".dropdown").on('click', 'li a', function(){
-              $(this).parents(".dropdown").find("button span").text($(this).text());
-              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
-                window.location = '/browse?sort='+$(this).attr("val")+'#organizationsSection';
-              });
-          });
-        </script>
-  <div class="form-select control-group control-order-by pull-right">
+  <div class="col-xs-12 paddingLeftHack paddingRightHack">
+    <div class="list-header crisis-list-header">
+        <span class="mL15 list-header-title">
+        {{ _("Organisations") }} [{{c.organization_count}}]</span>
+	    <span class="mL15 list-header-showall"><a href="/organization">Show All Organisations</a>
+	    </span>
+      {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+      {% set sort_param = request.params.get('sort') %}
+      {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+
+      <div class="form-select control-group control-order-by pull-right">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown">
-          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background:#edf6fd; margin-top:2px; height:40px;">
-            <span class="dropdown-toggle-text">
-              Name Ascending
-            </span>
-            <b class="caret" style="margin-top: 20px;"></b>
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+	        <span class="dropdown-toggle-text">
+              {% for label, value in sorting %}
+                {% if sorting_selected == value %} {{ label }} {% endif %}
+              {% endfor %}
+	        </span>
+            <b class="caret"></b>
           </button>
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
@@ -137,10 +133,10 @@
               {% endif %}
             {% endfor %}
           </ul>
+        </div>
       </div>
     </div>
-        </div>
-<div>
+    <div>
  
       <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
     {% for organization in c.organizations %}
