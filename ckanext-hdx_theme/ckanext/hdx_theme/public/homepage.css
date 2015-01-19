@@ -37,7 +37,7 @@
         background-position: center;
         font-family: 'Gotham-Bold',sans-serif;
         font-weight: 400;
-        overflow: hidden;
+        /*overflow: hidden;*/
         /*min-width: 1380px;*/
     }
 
@@ -194,13 +194,20 @@
         margin-left: 34px;
     }
 
-    .homepage-main .rightContent .countRow .span2{
-        margin: 0;
-    }
+    /* Ugly split for count items*/
 
-    .homepage-main .rightContent .countRow .span2:first-child{
-        margin-right: 30px;
-    }
+        .homepage-main .rightContent .countRow .span6{
+            width: 510px;
+        }
+
+        .homepage-main .rightContent .countRow .span2{
+            margin: 0;
+        }
+
+        .homepage-main .rightContent .countRow .span2:first-child{
+            margin-right: 30px;
+        }
+    /**/
 
     .homepageHeaderFooterBackground{
         background-color: #ffffff;
