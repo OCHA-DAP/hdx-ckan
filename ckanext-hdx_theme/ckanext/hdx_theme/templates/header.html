@@ -1,7 +1,8 @@
 {% block header_wrapper %}
 <header class="newHeader">
+<div class="homepage-header-user-bg">
   <div class="container">
-    <div class="row paddingRowHack" style="background-color: #333333">
+    <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
         <div class="header-user-box pull-right">
           {% if c.userobj %}
@@ -68,8 +69,12 @@
         </div>
       </div>
     </div>
-    <div class="row paddingRowHack" style="background-color: #ffffff;">
-      <div class="span12 paddingLeftHack paddingRightHack header-nav-border">
+  </div>
+</div>
+<div class="homepage-header-nav-border">
+  <div class="container">
+    <div class="row paddingRowHack header-nav-border">
+      <div class="span12 paddingLeftHack paddingRightHack">
         <div class="header-nav">
           {# The .header-image class hides the main text and uses image replacement for the title #}
           <span>
@@ -132,5 +137,6 @@
       </div>
     </div>
   </div>
+</div>
 </header>
 {% endblock %}
