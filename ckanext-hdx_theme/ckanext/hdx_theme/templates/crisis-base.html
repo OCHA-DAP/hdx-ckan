@@ -18,7 +18,8 @@
 
   {% endblock %}
 
-<section class="list-items module">
+  {% block package_search_results %}
+  <section class="list-items module">
     <div class="list-items module-content mT35">
 	{% block package_search_results_list %}
         <div class="list-header crisis-list-header">
@@ -36,7 +37,8 @@
 	{% block page_pagination %}
         {{ c.page.pager(q=c.q) }}
     {% endblock %}
-</section>
+  </section>
+  {% endblock %}
 {% endblock %}
 
 {% block secondary %}
