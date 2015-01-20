@@ -373,3 +373,11 @@
 .tooltip .tooltip-inner{
     padding: 0;
 }
+
+#field-order-by{
+    background-color: transparent;
+}
+
+.caret {
+    vertical-align: baseline;
+}
