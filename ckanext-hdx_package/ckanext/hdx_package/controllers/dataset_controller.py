@@ -699,6 +699,7 @@ class DatasetController(PackageController):
         #   return self._finish(500, {'success': False, 'message':'Oops! We can't do this right now. Something went wrong.'}, content_type='json') 
         return self._finish(200, {'success': True, 'status':status, 'text':text}, content_type='json')        
 
+
 # copy from package.py:1094
     def resource_delete(self, id, resource_id):
 
@@ -747,7 +748,7 @@ class DatasetController(PackageController):
             if request.method == 'POST':
                 get_action('package_delete')(context, {'id': id})
                 h.flash_notice(_('Dataset has been deleted.'))
-                h.redirect_to(controller='user', action='dashboard')
+                h.redirect_to(controller='user', action='dashboard_datasets')
             c.pkg_dict = get_action('package_show')(context, {'id': id})
         except NotAuthorized:
             abort(401, _('Unauthorized to delete package %s') % '')

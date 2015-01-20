@@ -1,0 +1,166 @@
+{% extends "page-new.html" %}
+
+{% block primary_content %}
+<div id="datasetCounts" style="display: none;">
+    {{ c.countries }}
+</div>
+<div class="row paddingRowHack topSection" style="position: relative;">
+	<div class="paddingLeftHack paddingRightHack col-xs-12">
+		<div class="row">
+			<div class="col-xs-8 sectionContent">
+                <div class="sectionTitle mTop45">
+                  <span class="sectionTitleBold">HDX</span> Collection
+                </div>
+		        <div class="sectionDescription mTop20">
+		          The Humanitarian Data Exchange has two categories of data – curated indicators and
+		          user-contributed datasets. We curate about 130 indicators, ensuring they are comparable
+		          across countries and have gone through a quality control process. We call this group of
+		          indicators the
+		          <a href="https://data.hdx.rwlabs.org/dataset?sort=metadata_modified+desc&ext_indicator=1">
+		            Common Hummanitarian Dataset
+		          </a>. <br/>
+		          We also have datasets that organizations have shared. You can explore the entire HDX
+		          Collection below by location, topic or organization.
+		        </div>
+                <div class="sectionDemo mTop20">
+                  <!-- Initial look --
+                  <a class="btn demoButton" href="#">Watch demo</a>
+                  <a class="btn visButton" href="#">Show me a cool visualisation</a>
+                  -->
+
+                  <a class="btn demoButton" href="/dataset/mobile_cellular_subscriptions_per_100_inhabitants">Show me a cool visualisation</a>
+                  <span class="visTexts">TAKE A LOOK AT OUR <a href="/ebola">EBOLA</a> & <a href="/group/col">COLOMBIA</a> PAGES</span>
+                </div>
+            </div>
+			<div class="col-xs-4">
+				<img class="pull-right browse-illustration" src="/images/backgrounds/browse_illustration.png" />
+            </div>
+	    </div>
+	</div>
+</div>
+<div id="browseByMenuAnchor"></div>
+<div class="browseSectionHeight">
+<div id="browseByMenu" class="row paddingRowHack browseSection browseSectionHeight">
+	<div class="col-xs-12 paddingLeftHack paddingRightHack">
+	    <span class="browseBy">Browse by:</span>
+	    <a id="locationSectionMenuItem" onclick="scrollTo('#locationSection');" class="browseItem">Location</a>
+	    <a id="topicsSectionMenuItem" onclick="scrollTo('#topicsSection');" class="browseItem">Topics</a>
+	    <a id="organizationsSectionMenuItem" onclick="scrollTo('#organizationsSection');" class="browseItem">Organisations</a>
+	</div>
+</div>
+</div>
+
+  <div id="locationSection" class="row paddingRowHack">
+    <div id="optionsGroup" class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div class="list-header crisis-list-header">
+          <span class="mL15 list-header-title">
+            Location
+          </span>
+          <span id="browse_options" class="mL15">
+            <a id="option_map" class="selected">MAP</a><span>|</span><a id="option_az">ALPHABET A-Z</a>
+          </span>
+      </div>
+
+{#      <span id="title">Location</span>#}
+
+    </div>
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div id="map" style="height: 580px; position: relative;">
+      </div>
+    </div>
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div id="country_list" class="row" style="display: none;">
+      </div>
+    </div>
+  </div>
+
+<div id="topicsSection" class="row">
+    <div class="col-xs-12">
+        <div class="list-header crisis-list-header">
+            <span class="mL15 list-header-title">
+            Topics [{{c.topics | length}}]
+            </span>
+        </div>
+    </div>
+    {% for topic in c.topics %}
+        <div class="col-xs-3">
+            <div class="item-info">
+              <div class="topic-text">
+                <a href="/search?sort=metadata_modified+desc&_show_filters=false&vocab_Topics={{ topic }}">
+                <span>
+                {% if topic == "gender" %}
+					<img class="mL15 mR15 topic-icon" src="/images/topics-icon-gender.png" />
+                {% else %}
+                  <i class="mL15 mR15 topic-icon {{ c.topic_icons[topic]['icon'] }}"></i>
+                {% endif %}
+                </span>
+                <span>
+                  {{ c.topic_icons[topic]['title'] }}
+                </span>
+                </a>
+              </div>
+
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div id="organizationsSection" class="row list-items module paddingRowHack">
+  <div class="col-xs-12 paddingLeftHack paddingRightHack">
+    <div class="list-header crisis-list-header">
+        <span class="mL15 list-header-title">
+        {{ _("Organisations") }} [{{c.organization_count}}]</span>
+	    <span class="mL15 list-header-showall"><a href="/organization">Show All Organisations</a>
+	    </span>
+      {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+      {% set sort_param = request.params.get('sort') %}
+      {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+
+      <div class="form-select control-group control-order-by pull-right">
+        <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+        <div class="dropdown orderDropdown">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+	        <span class="dropdown-toggle-text">
+              {% for label, value in sorting %}
+                {% if sorting_selected == value %} {{ label }} {% endif %}
+              {% endfor %}
+	        </span>
+            <b class="caret"></b>
+          </button>
+          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div>
+ 
+      <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+    {% for organization in c.organizations %}
+        {% snippet 'browse/snippets/org_item.html', organization=organization %}
+    {% endfor %}
+  </ul>
+</div>
+  {% block page_pagination %}
+    {{ c.organizations.pager() }}
+  {% endblock %}
+</div>
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+
+{% block scripts2 %}
+  {{ super() }}
+  <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet' />
+  {% resource 'hdx_theme/leaflet' %}
+  {% resource 'hdx_theme/browse' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+{% endblock %}

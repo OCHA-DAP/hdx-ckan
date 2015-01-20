@@ -8,7 +8,7 @@
   file.
   #}
   {%- block header %}
-    {% include "header-new.html" %}
+    {% include "header.html" %}
   {% endblock -%}
 
   {# The content block allows you to replace the content of the page if needed #}
@@ -32,20 +32,20 @@
                         {% endblock %}
                       </div>
                     </div>
-                    <div class="pull-right">
-                      <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
-                        <div class="input-append input-group">
-                          {% block  global_dataset_input_search%}
-                          	<input type="text" class="searchInput" name="q" value="" autocomplete="off" placeholder="{{ _('Search all data') }}">
-                          {% endblock %}
-                          <span class="input-group-addon">
-                            <button type="submit" class="button">
-                              <i class="icon-search glyphicon glyphicon-search"></i>
-                            </button>
-                          </span>
-                        </div>
-                      </form>
-                    </div>
+{#                    <div class="pull-right">#}
+{#                      <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">#}
+{#                        <div class="input-append input-group">#}
+{#                          {% block  global_dataset_input_search%}#}
+{#                          	<input type="text" class="searchInput" name="q" value="" autocomplete="off" placeholder="{{ _('Search all data') }}">#}
+{#                          {% endblock %}#}
+{#                          <span class="input-group-addon">#}
+{#                            <button type="submit" class="button">#}
+{#                              <i class="icon-search glyphicon glyphicon-search"></i>#}
+{#                            </button>#}
+{#                          </span>#}
+{#                        </div>#}
+{#                      </form>#}
+{#                    </div>#}
                   </div>
                 </div>
               </div>

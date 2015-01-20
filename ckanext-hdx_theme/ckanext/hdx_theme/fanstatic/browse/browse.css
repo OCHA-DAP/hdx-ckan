@@ -1,0 +1,383 @@
+.topSection {
+    background-color: #333333;
+    background-image: url('/images/backgrounds/pixels.png');
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 100% auto;
+    height: 260px;
+}
+
+.topSection .browse-illustration{
+    height: 260px;
+    margin-right: -45px;
+}
+
+.topSection .sectionContent{
+    padding-left: 45px;
+}
+
+.topSection .sectionTitle{
+    font-family: "Gotham-Book", sans-serif;
+    font-weight: 400;
+    font-size: 36px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+.topSection .sectionTitle .sectionTitleBold{
+    font-family: "Gotham-Bold", sans-serif;
+}
+
+
+.topSection .sectionDescription{
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+.topSection .sectionDescription a{
+    font-weight: 700;
+    font-size: 16px;
+    color: #f2645a;
+}
+
+.topSection .sectionDemo a {
+    text-transform: uppercase;
+    font-family: "Gotham-Bold", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    background: none;
+    box-shadow: none;
+}
+
+.topSection .sectionDemo .visTexts{
+    text-transform: uppercase;
+    font-family: "Gotham-Bold", sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    line-height: 1;
+    background: none;
+    box-shadow: none;
+}
+.topSection .sectionDemo .visTexts a{
+    color: #f2645a;
+}
+
+
+.topSection .sectionDemo .demoButton{
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    padding: 8px 10px;
+    margin-right: 20px;
+}
+
+.browseSectionHeight{
+    height: 40px;
+}
+
+.browseSection{
+    line-height: 40px;
+    background-color: #f2645a;
+}
+
+.browseSection .browseBy {
+    text-transform: uppercase;
+    font-family: "Gotham-Book", sans-serif;
+    font-weight: 400;
+    font-size: 10px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+}
+
+.browseSection .browseItem {
+    margin-left: 55px;
+    font-family: "Gotham-Bold", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: #ffffff;
+    letter-spacing: 0.03em;
+    padding: 12px 20px;
+}
+
+.browseSection .browseItem:hover, .browseSection .browseItem.active{
+    color: #f2645a;
+    background-color: #ffffff;
+
+}
+
+#browseByMenu {
+    position: relative;
+}
+
+#browseByMenu.stick {
+    position: fixed;
+    top: 0;
+    z-index: 10000;
+    width: 1260px;
+}
+
+.organization-heading{
+    text-decoration: none;
+    font-size: 18px;
+    margin-top: -5px;
+    margin-bottom: -5px;
+    font-weight: bold;
+}
+
+.leaflet-container .leaflet-top-pane {
+    pointer-events: none;
+}
+.leaflet-container .leaflet-popup-pane {
+    z-index: 10;
+}
+.leaflet-container .leaflet-popup-close-button {
+    display: none;
+}
+.leaflet-container .leaflet-popup-content {
+    padding: 0 0 0 0 !important;
+}
+.leaflet-container .leaflet-popup-content-wrapper {
+    pointer-events: none;
+    background: #333;
+    color: #fff;
+    font-size: 16px;
+    line-height: 24px;
+}
+.leaflet-container .leaflet-popup-tip-container {
+    width: 16px;
+    height: 8px;
+}
+.leaflet-container .leaflet-popup-tip {
+    margin-top: -9px;
+    margin-left: -5px;
+    border: none;
+    border-top: 10px solid #333;
+    box-shadow: none;
+    background: transparent;
+    width: 17px;
+    height: 17px;
+    padding: 1px;
+}
+.leaflet-container .leaflet-bottom.leaflet-right .map-legend .swatch {
+    width: 20px;
+    height: 20px;
+    float: left;
+    margin-right: 10px;
+}
+.leaflet-container .leaflet-bottom.leaflet-right .leaflet-control-attribution.leaflet-control {
+    display: none;
+}
+.leaflet-container.map-selection .leaflet-bar.leaflet-control {
+    margin-left: 45px;
+}
+.leaflet-container.map-selection .leaflet-bar.leaflet-control.leaflet-control-zoom {
+    margin-top: 30px;
+}
+.leaflet-container path {
+    -webkit-transition: fill 200ms;
+    transition: fill 200ms;
+}
+.leaflet-container .marker-container {
+    position: relative;
+    width: 60px;
+    height: 40px;
+    padding: 0 !important;
+    margin: 20px;
+}
+.leaflet-container .marker-container .marker-number {
+    font-family: 'Gotham-Light', sans-serif !important;
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: 400;
+    text-align: center;
+    padding: 0 0 5px 0;
+    color: #fff;
+}
+.leaflet-container .marker-container .marker-label {
+    font-family: 'Source Sans Pro', sans-serif !important;
+    font-size: 10px !important;
+    line-height: 10px !important;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+}
+
+#title {
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    color: #000000;
+    font-size: 16px;
+    line-height: 16px;
+    margin-right: 20px;
+}
+#browse_options {
+    line-height: 16px;
+    font-size: 14px;
+}
+#browse_options span {
+    margin: 0 10px;
+}
+#browse_options a {
+    color: #000;
+    cursor: pointer;
+    margin-top: 1px;
+    display: inline-block;
+    font-weight: bold;
+}
+#browse_options a:hover,
+#browse_options a.selected {
+    text-decoration: none;
+    color: #007ce0;
+}
+#browse_options a#option_map {
+    width: 28px;
+}
+#browse_options a#option_az {
+    width: 100px;
+}
+#map {
+    width: 100%;
+    height: 580px;
+    margin: 0;
+}
+.marker-container {
+    position: relative;
+    width: 140px !important;
+    height: 75px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.marker-container .line-break {
+    position: absolute;
+    background: #fff;
+    width: 1px;
+    height: 42px;
+    left: 70px;
+    top: 12px;
+}
+.marker-container .marker-box {
+    width: 70px;
+    height: 75px;
+    float: left;
+}
+.marker-container .marker-box .marker-number {
+    font-family: 'Gotham-Light', sans-serif;
+    font-size: 30px;
+    line-height: 30px;
+    font-weight: 400;
+    text-align: center;
+    padding: 0;
+    margin: 15px auto 5px auto;
+}
+.marker-container .marker-box .marker-label {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 10px;
+    line-height: 10px;
+    text-transform: uppercase;
+    text-align: center;
+    color: #fff;
+}
+#country_list .char-box {
+    border-top: 1px solid #007ce0;
+    margin: 0 0 38px 0;
+}
+#country_list .char-box .char-label {
+    font-family: 'Gotham-Bold', sans-serif;
+    color: #007ce0;
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 400;
+    margin: 15px 0 15px 0;
+}
+#country_list .char-box .country-item a {
+    color: #000;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+}
+#country_list .char-box .country-item a:hover {
+    color: #007ce0;
+    text-decoration: none;
+}
+#country_list .char-box .country-item.inactive a {
+    color: #999999;
+}
+#country_list .char-box .country-item.inactive a:hover {
+    color: #999999;
+}
+
+/* hide line for top items */
+#country_list .col-md-2 .char-box:first-child{
+    border-top: none;
+}
+
+#locationSection {
+    background-color: #ffffff;
+}
+
+.topic-icon{
+    font-size: 45px;
+    color: #007ce0;
+    height: 45px;
+    width: 45px;
+}
+
+.topic-text{
+    height: 45px;
+    position: relative;
+    display: table;
+}
+
+.topic-text p, .topic-text span{
+    display: table-cell;
+    vertical-align: middle;
+
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #000000;
+    letter-spacing: 0.01em;
+}
+
+.topic-text span a{
+    color: #000000;
+}
+
+.item-info {
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+    padding-top: 15px;
+    padding-bottom: 15px;
+
+    margin-top: -1px;
+    color: #333333;
+}
+
+.list-header{
+    margin-top: 25px;
+}
+
+.tooltip .tooltip-inner{
+    padding: 0;
+}
+
+#field-order-by{
+    background-color: transparent;
+}
+
+.caret {
+    vertical-align: baseline;
+}

@@ -1,0 +1,173 @@
+'''
+Created on Dec 22, 2014
+
+@author: alexandru-m-g
+'''
+import json
+
+import logging
+
+import ckan.lib.base as base
+import ckan.model as model
+import ckan.common as common
+import ckan.logic as logic
+import ckan.lib.helpers as h
+
+import ckanext.hdx_org_group.helpers.organization_helper as helper
+
+c = common.c
+request = common.request
+get_action = logic.get_action
+NotFound = logic.NotFound
+
+log = logging.getLogger(__name__)
+
+
+class BrowseController(base.BaseController):
+
+    def index(self):
+        c.countries = json.dumps(self.get_countries())
+        c.organizations, c.organization_count = self.get_organizations()
+        c.topics = self.get_topics()
+        c.topic_icons = self.get_topic_icons()
+
+        return base.render('browse/browse.html')
+
+    def get_countries(self):
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+        dataset_count_dict = self._get_dataset_counts(context, 'dataset')
+        indicator_count_dict = self._get_dataset_counts(context, 'indicator')
+
+        all_countries = get_action('cached_group_list')()
+
+        all_countries_world_1st = []
+        for country in all_countries:
+            code = country['name']
+
+            if code == 'world':
+                all_countries_world_1st.insert(0, country)
+            else:
+                all_countries_world_1st.append(country)
+
+            country['dataset_count'] = dataset_count_dict.get(code, None)
+            country['indicator_count'] = indicator_count_dict.get(code, None)
+
+        return all_countries_world_1st
+
+    def get_organizations(self):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+
+        sort_option = c.sort_by_selected = request.params.get(
+            'sort', 'title asc')
+
+        data_dict = {
+            'all_fields': True,
+            'sort': sort_option
+        }
+
+        all_orgs = get_action('organization_list')(context, data_dict)
+
+        all_orgs  = helper.sort_results_case_insensitive(all_orgs, sort_option)
+
+        def pager_url(q=None, page=None):
+            if sort_option:
+                url = h.url_for(
+                    'browse_list', page=page, sort=sort_option) + \
+                    '#organizationsSection'
+            else:
+                url = h.url_for('browse_list', page=page) + \
+                    '#organizationsSection'
+            return url
+
+        c.page = h.Page(
+            collection=all_orgs,
+            page=request.params.get('page', 1),
+            url=pager_url,
+            items_per_page=20
+        )
+
+        return (c.page, len(all_orgs))
+
+    def get_topics(self):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+        try:
+            all_topics = get_action('tag_list')(
+                context, {'vocabulary_id': 'Topics'})
+        except NotFound, e:
+            all_topics = []
+            log.error('ERROR getting vocabulary named Topics: %r' %
+                      str(e.extra_msg))
+        return all_topics
+
+    def _get_dataset_counts(self, context, package_type):
+        search = {
+            'q': None,
+            'fq': '+extras_indicator: 1' if package_type == 'indicator' else '-extras_indicator: 1',
+            'facet.field': ['groups'],
+            'facet.limit': 1000,
+            'rows': 1,
+        }
+        result = get_action('package_search')(context, search)
+        if 'facets' in result and 'groups' in result['facets']:
+            return result['facets']['groups']
+        else:
+            return {}
+
+
+    def get_topic_icons(self):
+
+        #icons reference can be found in humanitarian_icons.css
+        ret = {
+            u'economy': {
+                'icon': 'topic-icon-activity_financing',
+                'title': 'Economy'
+            },
+            u'education': {
+                'icon': 'topic-icon-cluster_education',
+                'title': 'Education'
+            },
+            u'emergency telecommunications': {
+                'icon': 'topic-icon-cluster_emergency_telecommunications',
+                'title': 'Emergency Telecommunications'
+            },
+            u'food and nutrition': {
+                'icon': 'topic-icon-cluster_food_security',
+                'title': 'Food and Nutrition'
+            },
+            u'gender': {
+                'icon': 'topics-icon-gender.png',
+                'title': 'Gender'
+            },
+            u'health': {
+                'icon': 'topic-icon-cluster_health',
+                'title': 'Health'
+            },
+            u'humanitarian funding': {
+                'icon': 'topic-icon-activity_fund',
+                'title': 'Humanitarian Funding'
+            },
+            u'humanitarian profile': {
+                'icon': 'topic-icon-activity_humanitarian_programme_cycle',
+                'title': 'Humanitarian Profile'
+            },
+            u'logistics': {
+                'icon': 'topic-icon-cluster_logistics',
+                'title': 'Logistics'
+            },
+            u'population': {
+                'icon': 'topic-icon-people_affected_population',
+                'title': 'Population'
+            },
+            u'water sanitation and hygiene': {
+                'icon': 'topic-icon-wash_sanitation',
+                'title': 'Water Sanitation and Hygiene'
+            }
+        }
+        return ret

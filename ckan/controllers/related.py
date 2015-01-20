@@ -185,10 +185,8 @@ class RelatedController(base.BaseController):
                 else:
                     h.flash_success(_("Related item was successfully updated"))
 
-                #h.redirect_to(
-                #    controller='related', action='list', id=c.pkg_dict['name'])
                 h.redirect_to(
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='read', id=c.pkg_dict['name'])
+                    controller='related', action='list', id=c.pkg_dict['name'])
             except df.DataError:
                 base.abort(400, _(u'Integrity Error'))
             except logic.ValidationError, e:

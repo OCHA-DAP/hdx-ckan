@@ -32,7 +32,7 @@ class HDXOrgMemberController(org.OrganizationController):
 
         q = c.q = request.params.get('q', '')
         sort = request.params.get('sort', '')
-        reverse = True if sort == u'name desc' else False
+        reverse = True if sort == u'title desc' else False
 
         c.sort_by_selected = sort
 
@@ -64,17 +64,24 @@ class HDXOrgMemberController(org.OrganizationController):
                 if data_dict.get('email', '').strip() != '' or \
                         data_dict.get('username', '').strip() != '':
                     email = data_dict.get('email')
+                    #Check if email is used
                     if email:
-                        user_data_dict = {
-                            'email': email,
-                            'group_id': id,
-                            'role': data_dict['role'],
-                            'id': id  # This is something staging/prod need
-                        }
-                        del data_dict['email']
-                        user_dict = self._action('user_invite')(context,
+                        #Check if email is used
+                        user_dict = model.User.by_email(email)
+                        if user_dict:
+                            #Add user
+                            data_dict['username'] = user_dict[0].name
+                        else:
+                            user_data_dict = {
+                                'email': email,
+                                'group_id': id,
+                                'role': data_dict['role'],
+                                'id': id  # This is something staging/prod need
+                            }
+                            del data_dict['email']
+                            user_dict = self._action('user_invite')(context,
                                                                 user_data_dict)
-                        data_dict['username'] = user_dict['name']
+                            data_dict['username'] = user_dict['name']
                     c.group_dict = self._action(
                         'group_member_create')(context, data_dict)
                 else:
@@ -107,7 +114,7 @@ class HDXOrgMemberController(org.OrganizationController):
         except ValidationError, e:
             h.flash_error(e.error_summary)
         self._redirect_to(controller='group', action='members', id=id)
-        
+
     def member_delete(self, id):
         ''' This is a modified version of the member_delete from the 
             ckan group controller. 
@@ -129,8 +136,10 @@ class HDXOrgMemberController(org.OrganizationController):
         try:
             user_id = request.params.get('user')
             if request.method == 'POST':
-                self._action('group_member_delete')(context, {'id': id, 'user_id': user_id})
-                h.flash_notice(_('Organization member has been deleted.')) #modified by HDX
+                self._action('group_member_delete')(
+                    context, {'id': id, 'user_id': user_id})
+                # modified by HDX
+                h.flash_notice(_('Organization member has been deleted.'))
                 self._redirect_to(controller='group', action='members', id=id)
             c.user_dict = self._action('user_show')(context, {'id': user_id})
             c.user_id = user_id
@@ -139,4 +148,5 @@ class HDXOrgMemberController(org.OrganizationController):
             abort(401, _('Unauthorized to delete group %s') % '')
         except NotFound:
             abort(404, _('Group not found'))
-        self._redirect_to(controller='group', action='members', id=id) #modified by HDX
+        # modified by HDX
+        self._redirect_to(controller='group', action='members', id=id)

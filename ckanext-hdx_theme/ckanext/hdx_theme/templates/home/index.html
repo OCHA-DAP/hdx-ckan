@@ -136,34 +136,6 @@
   <!--- END DO NOT REMOVE --->
 {% endblock %}
 
-{% block home_search %}
-  <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
-    <div class="input-append">
-      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Repository') }}">
-      <button type="submit" class="button">
-        <i class="icon-search"></i>
-      </button>
-    </div>
-  </form>
-{% endblock %}
-
-{% block group_select %}
-    <div class="dropdown selectCountryDropdown">
-      <button class="dropdown-toggle selectCountry" data-toggle="dropdown">
-        {{ _("Choose Country") }}
-        <b class="caret"></b>
-      </button>
-      <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
-        {% for group in c.group_package_stuff %}
-          {% if group.type is defined %}
-            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
-              <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
-            {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-{% endblock %}
-
 {% block footer %}
   <div class="homepageHeaderFooterBackground">
     <footer class="newFooter">
@@ -195,6 +167,35 @@
       {% endblock %}
     </footer>
   </div>
+{% endblock %}
+
+
+{% block home_search %}
+  <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
+    <div class="input-append">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Collection') }}">
+      <button type="submit" class="button">
+        <i class="icon-search"></i>
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block group_select %}
+    <div class="dropdown selectCountryDropdown">
+      <button class="dropdown-toggle selectCountry" data-toggle="dropdown">
+        {{ _("Choose Country") }}
+        <b class="caret"></b>
+      </button>
+      <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
+        {% for group in c.group_package_stuff %}
+          {% if group.type is defined %}
+            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
+              <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
 {% endblock %}
 
 {% block scripts %}

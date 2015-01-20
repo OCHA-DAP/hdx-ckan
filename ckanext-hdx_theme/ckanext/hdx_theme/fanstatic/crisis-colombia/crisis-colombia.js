@@ -48,7 +48,7 @@ function drawGraph1() {
           names: {
             "Persons": "Number of Internally Displaced People"
           },
-          type: 'bar'
+          type: 'area'
         },
         legend:{
           show: false
