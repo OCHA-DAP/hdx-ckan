@@ -159,11 +159,9 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
     return features
 
 def convert_country(q, country_names, countries):
-    print country_names
     for c in country_names:
         if c in q.lower():
             q += ' '+countries[c]
-    print q
     return q
 
 def build_country_dict(countries):
