@@ -1,78 +1,37 @@
 {% extends "crisis-base.html" %}
 
-{% block subtitle %}{{ _("Colombia") }}{% endblock %}
-{% block crisis_title %} {{ _("Colombia") }} {% endblock %}
+{% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
+{% block crisis_title %} {{ c.group_dict.display_name }} {% endblock %}
 {% block breadcrumb_content %}
-  <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
-  <li class="active">{{ h.nav_link(_('Colombia'), controller='ckanext.hdx_crisis.controllers.country_controller:CountryController',
-  						action='show', highlight_actions = 'new index') }}</li>
+    <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
+    <li class="active">{% link_for c.group_dict.display_name, controller='group', action='read', id=c.group_dict.name %}</li>
 {% endblock %}
 
 {% block crisis_data %}
-  <div class="row mTop25">
-    <div class="col-xs-5">
-      <div class="row">
-        {% block top_line_figures %}
-          {% for item in c.top_line_items %}
-            <div class="col-xs-12">
-              <div class="item-info">
-                <div class="row">
-                  <div class="col-xs-6">
-                    <div class="row">
-                      <div class="col-xs-12 item-info-title">
-                        {{ item.title }}
-                      </div>
-                      <div class="col-xs-12 item-info-extra">
-                        <div class="row">
-                          <div class="col-xs-12">
-                            <span class="item-info-source-title-text">{{ item.source }}</span> -
-                            {% if item.source_link %}
-                              <span class="item-info-source-title"><a href="{{ item.source_link }}" target="new">Data</a></span> -
-                            {% endif %}
-                            {% if item.explore %}
-                              <span class="item-info-source-title"><a href="{{ item.explore }}" target="new">Explore</a></span> -
-                            {% endif %}
-                            <span class="item-info-source-date">{{ item.latest_date }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xs-6">
-                    <div class="row">
-                      <div class="col-xs-12 item-info-number text-right">
-                      	{{ h.snippet('crisis/snippets/top_line_value.html', value=item.formatted_value, unit=item.units, notes=item.notes) }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          {% endfor %}
-        {% endblock %}
-      </div>
-    </div>
-    <div class="col-xs-7">
-      <div class="row">
-        <div class="col-xs-12 graph-title">
-          Number of Internally Displaced People <span>OCHA - <a href="/dataset/idps-data-by-year">Data</a></span>
-        </div>
+    <div class="row">
         <div class="col-xs-12">
-          <div id="graph1"></div>
+            Visualisations Section
         </div>
-        <div class="col-xs-12 graph-title">
-          Number of People with Access Constraints <span>OCHA - <a href="/dataset/restricciones-de-acceso">Data</a></span>
-        </div>
-        <div class="col-xs-12">
-          <div id="graph2"></div>
-        </div>
-      </div>
     </div>
 
-  </div>
+    <div class="row">
+        <div class="col-xs-12">
+            Activity + Resources Section
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            Continuous Browsing Section
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block package_search_results %}
 {% endblock %}
 
 {% block scripts2 %}
-  {{ super() }}
-  {% resource 'hdx_theme/crisis-colombia' %}
+    {{ super() }}
+    {% resource 'hdx_theme/country' %}
 {% endblock %}
