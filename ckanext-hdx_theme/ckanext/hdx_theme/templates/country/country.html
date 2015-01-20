@@ -8,6 +8,12 @@
 {% endblock %}
 
 {% block crisis_data %}
+    <div id="countryMapPolygon">
+        {% if (c.group_dict.extras|length) > 0 %}
+            {{ c.group_dict.extras[0].value | safe }}
+        {% endif %}
+    </div>
+
     <div class="row">
         <div class="col-xs-12">
             Visualisations Section
