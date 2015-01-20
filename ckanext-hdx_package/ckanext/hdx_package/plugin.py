@@ -19,6 +19,7 @@ import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
+import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 
 
 def run_on_startup():
@@ -58,6 +59,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
+    plugins.implements(plugins.IResourceController, inherit=True)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -213,6 +215,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create
         }
+
+    def before_show(self, resource_dict):
+        '''
+            This is run before a resource is displayed.
+            We use it to show the correct tracking summary
+        '''
+        tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
+        return resource_dict
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
