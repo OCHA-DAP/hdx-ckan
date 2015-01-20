@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block crisis_data %}
-    <div id="countryMapPolygon">
+    <div id="countryMapPolygon" style="display: none;">
         {% if (c.group_dict.extras|length) > 0 %}
             {{ c.group_dict.extras[0].value | safe }}
         {% endif %}
