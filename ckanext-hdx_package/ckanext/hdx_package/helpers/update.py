@@ -238,7 +238,6 @@ def hdx_package_update_metadata(context, data_dict):
 
     allowed_fields = ['indicator', 'package_creator',
                       'dataset_date',
-                      'name', 'title',
                       'last_metadata_update_date',
                       'indicator_type', 'indicator_type_code',
                       'more_info',
@@ -246,7 +245,7 @@ def hdx_package_update_metadata(context, data_dict):
                       'groups']
 
     package = _get_action('package_show')(context, data_dict)
-    requested_groups = [el.get('id','') for el in data_dict.get('groups',[])]
+    requested_groups = [el.get('id', el.get('name', '')) for el in data_dict.get('groups',[])]
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
             package[key] = value
