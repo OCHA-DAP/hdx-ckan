@@ -56,7 +56,7 @@ function prepareMap(){
   var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref;
   //mapID = 'yumiendo.ijchbik8';
   openURL = function(url) {
-    return window.open(url, '_blank').focus();
+    return window.open(url, '_self').focus();
   };
   closeTooltip = window.setTimeout(function() {
     return map.closePopup();
@@ -173,7 +173,7 @@ function prepareCount() {
 
   for (var i in data){
     var item = data[i];
-    var code = item.id.toUpperCase();
+    var code = item.name.toUpperCase();
     var newItem = {};
     newItem.title = item.title;
     newItem.dataset_count = item.dataset_count;
@@ -221,6 +221,13 @@ function browse_by_menu() {
   }
 }
 
+function initSortingWidget() {
+  $(".dropdown").on('click', 'li a', function(){
+    $(this).parents(".dropdown").find("button span").text($(this).text());
+    $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
+      window.location = '/browse?sort='+$(this).attr("val")+'#organizationsSection';
+  });
+}
 (function() {
   //fixed page menu
   $(window).scroll(browse_by_menu);
@@ -229,5 +236,7 @@ function browse_by_menu() {
   prepareCount();
   prepareMap();
   prepareCountryList();
+
+  initSortingWidget();
 }).call(this);
 

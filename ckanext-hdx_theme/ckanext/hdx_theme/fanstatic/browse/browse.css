@@ -367,9 +367,17 @@
 }
 
 .list-header{
-    margin-top: 45px;
+    margin-top: 25px;
 }
 
 .tooltip .tooltip-inner{
     padding: 0;
+}
+
+#field-order-by{
+    background-color: transparent;
+}
+
+.caret {
+    vertical-align: baseline;
 }

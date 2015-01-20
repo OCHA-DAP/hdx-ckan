@@ -30,14 +30,14 @@
     }
 
     .homepage-main{
-        /*background-color: #1ebfb3;*/
-        /*background-image: url("/images/homepage-new/map.png");*/
-        /*background-size: auto 100%;*/
-        /*background-repeat: no-repeat;*/
-        /*background-position: center;*/
+        background-color: #1ebfb3;
+        background-image: url("/images/homepage-new/map.png");
+        background-size: auto 100%;
+        background-repeat: no-repeat;
+        background-position: center;
         font-family: 'Gotham-Bold',sans-serif;
         font-weight: 400;
-        overflow: hidden;
+        /*overflow: hidden;*/
         /*min-width: 1380px;*/
     }
 
@@ -194,23 +194,53 @@
         margin-left: 34px;
     }
 
-    .homepage-main .rightContent .countRow .span2{
-        margin: 0;
-    }
+    /* Ugly split for count items*/
 
-    .homepage-main .rightContent .countRow .span2:first-child{
-        margin-right: 30px;
-    }
+        .homepage-main .rightContent .countRow .span6{
+            width: 510px;
+        }
+
+        .homepage-main .rightContent .countRow .span2{
+            margin: 0;
+        }
+
+        .homepage-main .rightContent .countRow .span2:first-child{
+            margin-right: 30px;
+        }
+    /**/
 
     .homepageHeaderFooterBackground{
-        /*background-color: #ffffff;*/
+        background-color: #ffffff;
         /*min-width: 1382px;*/
     }
 
 /* END Homepage */
 
+/* Header Homepage */
+    .header-nav-search{
+        visibility: hidden;
+    }
+
+    .homepage-header-user-bg{
+        background-color: #333333;
+    }
+
+    .homepage-header-nav-border{
+        background-color: #ffffff;
+        border-bottom: 3px solid #cccccc;
+    }
+    .homepage-header-nav-border > div{
+        margin-bottom: -3px;
+    }
+
+/* END Header Homepage */
 
 /* Footer Homepage */
+    /* Set page background to white - on large screens footer was to short - green was showing :) */
+    body{
+        background-color: #ffffff;
+    }
+
     .newFooter {
         height: 100px;
         vertical-align: middle;

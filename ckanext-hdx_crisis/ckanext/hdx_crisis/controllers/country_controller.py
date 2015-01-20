@@ -44,4 +44,4 @@ class CountryController(controllers.CrisisController):
 
         self._generate_other_links(search_params)
 
-        return render('country/country.html')
+        return render('country/colombia.html')
