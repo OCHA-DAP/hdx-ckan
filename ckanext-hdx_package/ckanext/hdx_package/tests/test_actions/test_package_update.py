@@ -82,32 +82,32 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # This is a copy of the hack done in dataset_controller
         self._get_action('package_update')(context, package)
 
-        modified_fields = {'id': 'test_activity_1', 'name': 'test_activity_1_modified',
+        modified_fields = {'id': 'test_activity_1',
+                           # 'name': 'test_activity_1_modified',
                            'indicator': '2',
-                           'title': "Modified Test Activity 1",
-                           'dataset_source': 'Modified source',
+                           # 'title': "Modified Test Activity 1",
+                           # 'dataset_source': 'Modified source',
                            'last_metadata_update_date': 'last_metadata_update_date test',
                            'last_data_update_date': 'last_data_update_date test',
                            'dataset_date': '11/02/2014-11/20/2014',
-                           'dataset_source': 'dataset_source test',
-                           'dataset_source_code': 'dataset_source_code test',
+                           # 'dataset_source_code': 'dataset_source_code test',
                            'indicator_type': 'indicator_type test',
                            'indicator_type_code': 'indicator_type_code test',
-                           'dataset_summary': 'dataset_summary test',
-                           'methodology': 'methodology test',
+                           # 'dataset_summary': 'dataset_summary test',
+                           # 'methodology': 'methodology test',
                            'more_info': 'more_info test',
-                           'terms_of_use': 'terms_of_use test',
-                           'validation_notes_and_comments': 'validation_notes_and_comments test'
+                           # 'terms_of_use': 'terms_of_use test',
                            }
 
         self._get_action('hdx_package_update_metadata')(
             context, modified_fields)
 
-        tests.call_action_api(self.app, 'package_show', id='test_activity_1',
-                              apikey=testsysadmin.apikey, status=404)
-        modified_package = tests.call_action_api(self.app, 'package_show', id='test_activity_1_modified',
+        # tests.call_action_api(self.app, 'package_show', id='test_activity_1',
+        #                       apikey=testsysadmin.apikey, status=404)
+        # modified_package = tests.call_action_api(self.app, 'package_show', id='test_activity_1_modified',
+        #                                          apikey=testsysadmin.apikey, status=200)
+        modified_package = tests.call_action_api(self.app, 'package_show', id='test_activity_1',
                                                  apikey=testsysadmin.apikey, status=200)
-
         modified_fields.pop('id')
 
         # Checking that all fields in the modified_package come either
