@@ -237,9 +237,9 @@
 
 /* Footer Homepage */
     /* Set page background to white - on large screens footer was to short - green was showing :) */
-    body{
-        background-color: #ffffff;
-    }
+    /*body{*/
+        /*background-color: #ffffff;*/
+    /*}*/
 
     .newFooter {
         height: 100px;
