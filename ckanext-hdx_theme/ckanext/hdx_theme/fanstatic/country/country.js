@@ -9,14 +9,15 @@ function drawMap() {
     L.control.attribution({position: 'topright'}).addTo(map);
     map.setView([0, 0], 1);
 
-    var rawdata = $("#countryMapPolygon").text();
+    var countryMapPolygon = $("#countryMapPolygon");
+    var rawData = countryMapPolygon.text();
+    countryMapPolygon.text("");
     try{
-        var data = JSON.parse(rawdata);
+        var data = JSON.parse(rawData);
     } catch (err) {
         console.log("Error parsing json - set default map");
         return;
     }
-    console.log(data);
     if (data.geometry == null){
         console.log("Set default map");
         return;
