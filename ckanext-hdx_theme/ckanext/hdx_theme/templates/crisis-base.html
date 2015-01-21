@@ -8,9 +8,11 @@
     </div>
     <div class="crisis-map-title">
       <span class="mL45 crisisTitle"> {% block crisis_title %} Crisis title {% endblock %}</span>
-      <span class="mR45 pull-right" style="line-height: 50px;">
-        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
-      </span>
+        {% block crisis_actions %}
+            <span class="mR45 pull-right" style="line-height: 50px;">
+            {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+            </span>
+        {% endblock %}
     </div>
   </div>
 

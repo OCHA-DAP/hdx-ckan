@@ -2,6 +2,14 @@
 
 {% block subtitle %}{{ _("Colombia") }}{% endblock %}
 {% block crisis_title %} {{ _("Colombia") }} {% endblock %}
+{% block crisis_actions %}
+    <span class="mR45 pull-right" style="line-height: 50px;">
+        <span class="followButtonContainer">
+            {{ h.follow_button('group', 'col') }}
+        </span>
+        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+    </span>
+{% endblock %}
 {% block breadcrumb_content %}
   <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
   <li class="active">{{ h.nav_link(_('Colombia'), controller='ckanext.hdx_crisis.controllers.country_controller:CountryController',

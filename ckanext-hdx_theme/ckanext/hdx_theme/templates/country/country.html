@@ -1,6 +1,17 @@
 {% extends "crisis-base.html" %}
 
-{% block subtitle %}{{ c.group_dict.display_name }}{% endblock %}
+{% block subtitle %}
+    {{ c.group_dict.display_name }}
+{% endblock %}
+{% block crisis_actions %}
+    <span class="mR45 pull-right" style="line-height: 50px;">
+        <span class="followButtonContainer">
+            {{ h.follow_button('group', c.group_dict.id) }}
+        </span>
+        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+    </span>
+{% endblock %}
+
 {% block crisis_title %} {{ c.group_dict.display_name }} {% endblock %}
 {% block breadcrumb_content %}
     <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
