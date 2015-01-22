@@ -85,9 +85,7 @@ class CountryController(group.GroupController):
         sorted_top_line_data = sorted(top_line_data,
                                       key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
 
-        top_line_data_dict = sorted_top_line_data
-        #[ {el['indicatorTypeCode']:el} for el in top_line_data ]
-        c.top_line_data_dict = top_line_data_dict
+        c.top_line_data_list = sorted_top_line_data
 
         chart_results = self._get_chart_data(upper_case_id)
         chart_data = chart_results.get('results', [])
@@ -119,9 +117,12 @@ class CountryController(group.GroupController):
                 else:
                     newel = {
                         'title': el.get('unitName'),
+                        'code': ind_type,
                         'data': [val]
                     }
                     chart_data_dict[ind_type] = newel
+
+
 
         # for code in chart_data_dict.keys():
         #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
@@ -129,7 +130,14 @@ class CountryController(group.GroupController):
         for code in chart_data_dict.keys():
             chart_data_dict[code]['data'] = json.dumps(chart_data_dict[code]['data'])
 
-        c.chart_data_dict = chart_data_dict
+        chart_data_list = []
+        for code in indicators_4_charts:
+            if code in chart_data_dict and len(chart_data_list) < 5:
+                chart_data_list.append(chart_data_dict[code])
+
+        c.chart_data_list = chart_data_list
+
+        # c.chart_data_dict = chart_data_dict
 
     def _get_chart_data(self, country_id):
         data_dict = {
