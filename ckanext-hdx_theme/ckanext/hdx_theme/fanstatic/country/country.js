@@ -91,6 +91,58 @@ function drawMap() {
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]]);
 }
 
+function buildGraphs() {
+    $(".topline-charts").each(function (index){
+        var element = $(this);
+        var dataRaw = element.find(".data").text();
+        var data = JSON.parse(dataRaw);
+        var chartEl = element.find(".chart-item")[0];
+
+        var graph = c3.generate({
+            bindto: chartEl,
+            color: {
+                pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+            },
+            padding: {
+                bottom: 20,
+                right: 20
+            },
+            data: {
+                json: data,
+                xFormat: '%Y-%m-%d',
+                keys: {
+                    x: "date",
+                    value: ["value"]
+                },
+                names: {
+                    "value": "Value"
+                },
+                type: 'bar'
+            },
+            legend:{
+                show: false
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    tick: {
+                        rotate: 30,
+                        //culling: false,
+                        format: '%b %Y'
+                    }
+                },
+                y: {
+                    label: {
+                        text: "Value",
+                        position: 'outer-middle'
+                    }
+                }
+            }
+        });
+    });
+}
+
 $(document).ready(function() {
     drawMap();
+    buildGraphs();
 });

@@ -49,8 +49,27 @@
             </div>
         </div>
 
+        {% for key,val in c.chart_data_dict.iteritems() %}
+            <div class="col-xs-4">
+                <div class="row topline-charts">
+                    <div class="col-xs-12 mTop35 mBottom35 topline-title">
+                        {{ key }} - {{ val.title }}
+                    </div>
+                    <div class="data hidden">
+                        {{ val.data | safe }}
+                    </div>
+                    <div class="col-xs-12">
+                        <div class="chart-item"></div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
     </div>
 
+    <div>
+        {{ c.chart_data_dict }}
+    </div>
     <div class="row">
         <div class="col-xs-12">
             Activity + Resources Section
