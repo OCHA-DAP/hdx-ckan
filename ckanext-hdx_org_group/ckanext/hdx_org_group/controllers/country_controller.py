@@ -69,10 +69,13 @@ class CountryController(group.GroupController):
         upper_case_id = country_id.upper()
         top_line_results = self._get_top_line_num(upper_case_id)
         top_line_data = top_line_results.get('results', [])
-
         if not top_line_data:
             log.warn('No top line numbers found for country: {}'.format(country_id))
-        top_line_data_dict = top_line_data#[ {el['indicatorTypeCode']:el} for el in top_line_data ]
+
+        sorted_top_line_data = sorted(top_line_data,
+                                      key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
+
+        top_line_data_dict = sorted_top_line_data#[ {el['indicatorTypeCode']:el} for el in top_line_data ]
         c.top_line_data_dict = top_line_data_dict
 
 
