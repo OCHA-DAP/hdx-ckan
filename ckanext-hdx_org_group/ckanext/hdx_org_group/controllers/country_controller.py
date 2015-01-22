@@ -116,7 +116,12 @@ class CountryController(group.GroupController):
                     chart_data_dict[ind_type]['data'].append(val);
                 else:
                     newel = {
-                        'title': el.get('unitName'),
+                        'title': el.get('indicatorTypeName'),
+                        'sourceName': el.get('sourceName'),
+                        'sourceCode': el.get('sourceCode'),
+                        'lastDate': el.get('time'),
+                        'lastValue': el.get('value'),
+                        'unit': el.get('unitName'),
                         'code': ind_type,
                         'data': [val]
                     }

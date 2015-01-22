@@ -97,6 +97,11 @@ function buildGraphs() {
         var dataEl = element.find(".data");
         var dataRaw = dataEl.text();
         dataEl.remove();
+
+        var unitEl = element.find(".unit-name")
+        var unitName = unitEl.text();
+        unitEl.remove();
+
         var data = JSON.parse(dataRaw);
         var chartEl = element.find(".chart-item")[0];
 
@@ -116,7 +121,7 @@ function buildGraphs() {
                     value: ["value"]
                 },
                 names: {
-                    "value": "Value"
+                    "value": unitName
                 },
                 type: 'bar'
             },
@@ -134,7 +139,7 @@ function buildGraphs() {
                 },
                 y: {
                     label: {
-                        text: "Value",
+                        text: unitName,
                         position: 'outer-middle'
                     }
                 }
