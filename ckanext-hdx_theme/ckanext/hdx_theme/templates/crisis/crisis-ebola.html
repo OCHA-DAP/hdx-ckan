@@ -19,11 +19,11 @@
               <div class="col-xs-12 item-info-title">
                 {{ item.title }}
               </div>
-              <div class="col-xs-12 item-info-number">
+              <div class="col-xs-8 item-info-number">
               	{{ h.snippet('crisis/snippets/top_line_value.html', value=item.formatted_value, unit=item.units, notes=item.notes) }}
               </div>
               {% if item.sparklines_json %}
-                <div class="col-xs-12">
+                <div class="col-xs-4">
                   <div style="display: none;" class="sparkline">{{ item.sparklines_json }}</div>
                 </div>
               {% endif %}
