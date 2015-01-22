@@ -53,7 +53,23 @@
 
     <div class="row">
         <div class="col-xs-12">
-            Activity + Resources Section
+			<div class="row">
+        		<div class="col-xs-3">
+        			<div class="row">
+        				<div class="col-xs-12">
+							<h2 class="uppercase">{{_('Activity')}}</h2>
+						    {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_group_activities['activities'], offset = c.hdx_group_activities['offset'] %}
+						    <br>
+						    {% if h.follow_status('group', c.group_dict.id) %}
+						      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> 
+						    {% endif %}
+						</div>
+					</div>
+	        	</div>
+	        	<div class="col-xs-9">
+	        	 	Datasets
+	        	</div>
+    		</div>
         </div>
     </div>
 
@@ -71,4 +87,5 @@
 {% block scripts2 %}
     {{ super() }}
     {% resource 'hdx_theme/country' %}
+	{% resource 'hdx_theme/activity-stream' %}
 {% endblock %}
