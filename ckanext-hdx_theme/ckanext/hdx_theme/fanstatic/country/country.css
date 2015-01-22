@@ -33,3 +33,10 @@
     }
 
 /* END Style topline numbers table*/
+
+/* Topline Charts styles */
+    .topline-charts .chart-item{
+        height: 270px;
+        max-height: 270px;
+    }
+/* END Topline Charts styles */

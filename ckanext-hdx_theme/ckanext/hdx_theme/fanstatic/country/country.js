@@ -94,14 +94,16 @@ function drawMap() {
 function buildGraphs() {
     $(".topline-charts").each(function (index){
         var element = $(this);
-        var dataRaw = element.find(".data").text();
+        var dataEl = element.find(".data");
+        var dataRaw = dataEl.text();
+        dataEl.remove();
         var data = JSON.parse(dataRaw);
         var chartEl = element.find(".chart-item")[0];
 
         var graph = c3.generate({
             bindto: chartEl,
             color: {
-                pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+                pattern: [['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'][index%5]]
             },
             padding: {
                 bottom: 20,
