@@ -38,11 +38,19 @@ indicators_4_top_line = ['PSP120', 'PSP090', 'PSE220', 'PSE030',
                          'CG300']
 # http://localhost:8080/public/api2/values?it=PSP120&l=CHN&periodType=LATEST_YEAR
 
+
 class CountryController(group.GroupController):
 
     def read(self, id):
         self.get_country(id)
         self.get_dataset_results(c.group_dict.get('name', id))
+
+        # activity stream
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'for_view': True}
+        country_uuid = c.group_dict.get('id', id)
+        self.get_activity_stream(context, country_uuid)
 
         return render('country/country.html')
 
@@ -73,11 +81,13 @@ class CountryController(group.GroupController):
 
         if not top_line_data:
             log.warn('No top line numbers found for country: {}'.format(country_id))
-        top_line_data_dict = top_line_data#[ {el['indicatorTypeCode']:el} for el in top_line_data ]
-        c.top_line_data_dict = top_line_data_dict
 
+        sorted_top_line_data = sorted(top_line_data,
+                                      key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
 
-        chart_results =  self._get_chart_data(upper_case_id)
+        c.top_line_data_list = sorted_top_line_data
+
+        chart_results = self._get_chart_data(upper_case_id)
         chart_data = chart_results.get('results', [])
         if not chart_data:
             log.warn('No chart data found for country: {}'.format(country_id))
@@ -107,9 +117,12 @@ class CountryController(group.GroupController):
                 else:
                     newel = {
                         'title': el.get('unitName'),
+                        'code': ind_type,
                         'data': [val]
                     }
                     chart_data_dict[ind_type] = newel
+
+
 
         # for code in chart_data_dict.keys():
         #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
@@ -117,8 +130,14 @@ class CountryController(group.GroupController):
         for code in chart_data_dict.keys():
             chart_data_dict[code]['data'] = json.dumps(chart_data_dict[code]['data'])
 
-        c.chart_data_dict = chart_data_dict
+        chart_data_list = []
+        for code in indicators_4_charts:
+            if code in chart_data_dict and len(chart_data_list) < 5:
+                chart_data_list.append(chart_data_dict[code])
 
+        c.chart_data_list = chart_data_list
+
+        # c.chart_data_dict = chart_data_dict
 
     def _get_chart_data(self, country_id):
         data_dict = {
@@ -138,7 +157,7 @@ class CountryController(group.GroupController):
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
 
-
-    def get_activity_stream(self):
-        pass
-
+    def get_activity_stream(self, context, country_id):
+        act_data_dict = {'id': country_id, 'limit': 7}
+        c.hdx_group_activities = get_action(
+            'hdx_get_group_activity_list')(context, act_data_dict)
