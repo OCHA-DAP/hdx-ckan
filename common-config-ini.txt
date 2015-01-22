@@ -119,7 +119,7 @@ ckan.feeds.author_link =
 # Local file storage:
 ofs.impl = pairtree
 ofs.storage_dir = /opt/www/data
-ckan.storage_path = /opt/www/data/
+ckan.storage_path = /opt/www/data
 ckan.max_resource_size = 10
 ckan.max_image_size = 2
 
@@ -135,7 +135,7 @@ ckan.max_image_size = 2
 #ckan.activity_streams_enabled = true
 #ckan.activity_list_limit = 31
 #ckan.activity_streams_email_notifications = true
-# ckan.email_notifications_since = 2 days
+#ckan.email_notifications_since = 2 days
 
 
 ## Email settings
@@ -156,6 +156,6 @@ hdx.datapreview.url = //data.hdx.rwlabs.org/dataproxy
 hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 
-hdx.rest.indicator.endpoint = https://manage.hdx.rwlabs.org/hdx/public/api2/values
-hdx.rest.indicator.endpoint.facets = https://manage.hdx.rwlabs.org/hdx/public/api2
+hdx.rest.indicator.endpoint = https://test-manage.hdx.rwlabs.org/public/api2/values
+hdx.rest.indicator.endpoint.facets = https://test-manage.hdx.rwlabs.org/public/api2
 
