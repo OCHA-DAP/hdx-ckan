@@ -155,7 +155,3 @@ hdx.homepage.extrasources = 13
 hdx.datapreview.url = //data.hdx.rwlabs.org/dataproxy
 hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
-
-hdx.rest.indicator.endpoint = https://test-manage.hdx.rwlabs.org/public/api2/values
-hdx.rest.indicator.endpoint.facets = https://test-manage.hdx.rwlabs.org/public/api2
-

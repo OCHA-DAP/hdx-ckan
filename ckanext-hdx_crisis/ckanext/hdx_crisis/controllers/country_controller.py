@@ -44,11 +44,4 @@ class CountryController(controllers.CrisisController):
 
         self._generate_other_links(search_params)
 
-        self._generate_country_activity_stream()
-
         return render('country/colombia.html')
-
-    def _generate_country_activity_stream(self, ):
-        act_data_dict = {'id': c.group_dict['id'], 'limit': 7}
-        c.hdx_activities = get_action(
-            'hdx_get_activity_list')(context, act_data_dict)
