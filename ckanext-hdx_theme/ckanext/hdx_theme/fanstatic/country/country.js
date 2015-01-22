@@ -106,8 +106,7 @@ function buildGraphs() {
                 pattern: [['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'][index%5]]
             },
             padding: {
-                bottom: 20,
-                right: 20
+                bottom: 10
             },
             data: {
                 json: data,

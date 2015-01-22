@@ -38,5 +38,6 @@
     .topline-charts .chart-item{
         height: 270px;
         max-height: 270px;
+        margin-left: -20px;
     }
 /* END Topline Charts styles */
