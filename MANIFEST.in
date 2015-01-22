@@ -15,3 +15,9 @@ prune .git
 include CHANGELOG.txt
 include ckan/migration/migrate.cfg
 recursive-include ckan_deb *
+
+recursive-include ckanext-hdx_search/ckanext/hdx_search/hdx-solr *
+recursive-include ckanext-hdx_search/ckanext/hdx_search/solr *
+recursive-include ckanext-hdx_theme/ckanext/hdx_theme/templates *
+recursive-include ckanext-hdx_theme/ckanext/hdx_theme/public *
+recursive-include ckanext-hdx_theme/ckanext/hdx_theme/fanstatic *
