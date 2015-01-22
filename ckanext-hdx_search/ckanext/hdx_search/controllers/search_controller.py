@@ -158,30 +158,11 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
         return (feature_list[skip:skip + limit], len(features))
     return features
 
-def convert_country(q, country_names, countries):
-    for c in country_names:
-        if c in q.lower():
-            q += ' '+countries[c]
-    return q
-
-def build_country_dict(countries):
-    country_names = list()
-    country_dict = dict()
-    for c in countries:
-        country_names.append(c['display_name'].lower())
-        country_dict[c['display_name'].lower()] = c['name']
-    return (country_names, country_dict)
-
 class HDXSearchController(PackageController):
 
     def search(self):
         from ckan.lib.search import SearchError
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'with_private': False}
 
-        data_dict = {'all_fields': True}
-        country_names, countries = build_country_dict(get_action('group_list')(context, data_dict))
         params_to_skip = ['_show_filters']
 
         package_type = self._guess_package_type()
@@ -198,7 +179,6 @@ class HDXSearchController(PackageController):
 
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', u'')
-        q = convert_country(q, country_names, countries)
         c.query_error = False
         try:
             page = int(request.params.get('page', 1))
@@ -473,7 +453,8 @@ class HDXSearchController(PackageController):
     def _set_other_links(self):
         named_route = self._get_named_route()
         params = {k: v for k, v in request.params.items()
-                  if k in ['sort', 'q', 'organization', 'tags', 'license_id', 'groups', 'res_format', '_show_filters']}
+                  if k in ['sort', 'q', 'organization', 'tags',
+                           'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters']}
 
         c.other_links = {}
         c.other_links['all'] = h.url_for(named_route, **params)
