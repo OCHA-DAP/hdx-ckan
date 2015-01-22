@@ -3,6 +3,7 @@ Created on Jan 13, 2015
 
 @author: alexandru-m-g
 '''
+import json
 
 import logging
 import datetime as dt
@@ -72,6 +73,7 @@ class CountryController(group.GroupController):
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
 
+
     def get_dataset_results(self, country_id):
         upper_case_id = country_id.upper()
         top_line_results = self._get_top_line_num(upper_case_id)
@@ -90,19 +92,39 @@ class CountryController(group.GroupController):
             log.warn('No chart data found for country: {}'.format(country_id))
         chart_data_dict = {}
 
+        # for el in chart_data:
+        #     ind_type = el.get('indicatorTypeCode', None)
+        #     if ind_type:
+        #         d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
+        #         el['datetime'] = d
+        #         if ind_type in chart_data_dict:
+        #             chart_data_dict[ind_type].append(el)
+        #         else:
+        #             chart_data_dict[ind_type] = [el]
+
         for el in chart_data:
             ind_type = el.get('indicatorTypeCode', None)
             if ind_type:
-                d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
-                el['datetime'] = d
+                # d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
+                val = {
+                    'date': el.get('time'),
+                    'value': el.get('value')
+                }
+
                 if ind_type in chart_data_dict:
-                    chart_data_dict[ind_type].append(el)
+                    chart_data_dict[ind_type]['data'].append(val);
                 else:
-                    chart_data_dict[ind_type] = [el]
+                    newel = {
+                        'title': el.get('unitName'),
+                        'data': [val]
+                    }
+                    chart_data_dict[ind_type] = newel
+
+        # for code in chart_data_dict.keys():
+        #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
 
         for code in chart_data_dict.keys():
-            chart_data_dict[code] = sorted(
-                chart_data_dict[code], key=lambda x: x.get('datetime', None))
+            chart_data_dict[code]['data'] = json.dumps(chart_data_dict[code]['data'])
 
         c.chart_data_dict = chart_data_dict
 
