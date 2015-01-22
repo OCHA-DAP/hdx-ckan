@@ -79,6 +79,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
         map.connect('/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
 
+        map.connect('browse_list', '/browse', controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
         map.connect('country_read', '/country/{id}', controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='read')
 
         return map

@@ -26,9 +26,29 @@
     </div>
 
     <div class="row">
-        <div class="col-xs-12">
-            Visualisations Section
+        <div class="col-xs-4">
+            <div class="row topline-numbers">
+                <div class="col-xs-12 mTop35 mBottom35 topline-title">
+                    Country Overview
+                </div>
+
+                <div class="col-xs-12">
+                    <table>
+                        {% for value in c.top_line_data_dict %}
+                            <tr class="indicator">
+                                <td class="name">
+                                    {{ value.indicatorTypeName }}
+                                </td>
+                                <td class="value">
+                                    {{ value.value }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <div class="row">
