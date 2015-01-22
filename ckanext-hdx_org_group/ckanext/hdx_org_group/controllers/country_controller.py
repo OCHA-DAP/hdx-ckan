@@ -72,7 +72,7 @@ class CountryController(group.GroupController):
 
         if not top_line_data:
             log.warn('No top line numbers found for country: {}'.format(country_id))
-        top_line_data_dict = [ {el['indicatorTypeCode']:el} for el in top_line_data ]
+        top_line_data_dict = top_line_data#[ {el['indicatorTypeCode']:el} for el in top_line_data ]
         c.top_line_data_dict = top_line_data_dict
 
 
