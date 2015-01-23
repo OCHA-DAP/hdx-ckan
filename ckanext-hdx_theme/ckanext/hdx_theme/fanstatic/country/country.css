@@ -1,0 +1,35 @@
+/* Style topline numbers table*/
+    .topline-title{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #333333;
+        letter-spacing: 0.01em;
+    }
+    .topline-numbers table {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: 0.01em;
+
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .topline-numbers table td{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .topline-numbers table tr {
+        height: 38px;
+    }
+    .topline-numbers table tr:nth-child(odd){
+        background-color: #F6F6F6;
+    }
+
+    .topline-numbers table .value{
+        font-weight: 700;
+        text-align: right;
+    }
+
+/* END Style topline numbers table*/
