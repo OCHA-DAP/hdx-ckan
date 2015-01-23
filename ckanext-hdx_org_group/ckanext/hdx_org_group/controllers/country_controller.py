@@ -208,7 +208,7 @@ class CountryController(group.GroupController):
         return site_list
 
     def _get_followers(self, group_id):
-        followers = get_action('group_follower_list')({}, {'id': group_id})
+        followers = get_action('group_follower_list')({'ignore_auth': True}, {'id': group_id})
         followers_list = [
             {
                 'name': f['display_name'],
