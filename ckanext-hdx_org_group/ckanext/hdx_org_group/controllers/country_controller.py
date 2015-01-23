@@ -13,6 +13,7 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.controllers.group as group
+import ckan.lib.helpers as h
 
 render = base.render
 abort = base.abort
@@ -51,6 +52,7 @@ class CountryController(group.GroupController):
                    'for_view': True}
         country_uuid = c.group_dict.get('id', id)
         self.get_activity_stream(context, country_uuid)
+        self.get_cont_browsing(c.group_dict)
 
         return render('country/country.html')
 
@@ -115,7 +117,7 @@ class CountryController(group.GroupController):
                 }
 
                 if ind_type in chart_data_dict:
-                    chart_data_dict[ind_type]['data'].append(val);
+                    chart_data_dict[ind_type]['data'].append(val)
 
                     last_date = dt.datetime.strptime(chart_data_dict[ind_type]['lastDate'], '%Y-%m-%d')
                     curr_date = dt.datetime.strptime(el_time, '%Y-%m-%d')
@@ -178,3 +180,50 @@ class CountryController(group.GroupController):
         act_data_dict = {'id': country_id, 'limit': 7}
         c.hdx_group_activities = get_action(
             'hdx_get_group_activity_list')(context, act_data_dict)
+
+    def get_cont_browsing(self, group_dict):
+        cont_browsing_dict = {
+            'websites': self._process_websites(group_dict),
+            'followers': self._get_followers(group_dict['id']),
+            'topics': self._get_topics(group_dict['name'])
+
+        }
+        return cont_browsing_dict
+
+    def _process_websites(self, group_dict):
+        if 'extras' in group_dict:
+            extras_dict = {el['key']: el['value']
+                            for el in group_dict['extras'] if el['state'] == u'active'}
+
+            site_list = []
+            if 'relief_web_url' in extras_dict:
+                site_list.append({'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
+            site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
+            if 'hr_info_url' in extras_dict:
+                site_list.append({'name': _('HumanitarianResponse'), 'url': extras_dict['hr_info_url']})
+            site_list.append(
+                {'name': _('OCHA Financial Tracking Service'), 'url': 'http://fts.unocha.org/'}
+            )
+
+        return site_list
+
+    def _get_followers(self, group_id):
+        followers = get_action('group_follower_list')({'ignore_auth': True}, {'id': group_id})
+        followers_list = [
+            {
+                'name': f['display_name'],
+                'url': h.url_for(controller='user', action='read', id=f['name'])
+            } for f in followers
+        ]
+
+        return followers_list
+
+    def _get_topics(self, group_id):
+        topic_list = [
+            {
+                'name': 'DummyTopic'+str(i),
+                'url': h.url_for(controller='package', action='search', vocab_Topics='DummyTopic'+str(i))
+            } for i in range(1,16)
+        ]
+
+        return topic_list
