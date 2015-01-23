@@ -40,7 +40,7 @@
                                     {{ value.indicatorTypeName }}
                                 </td>
                                 <td class="value">
-                                    {{ value.value }}
+                                    <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ value.unitName }}">{{ value.value }}</span>
                                 </td>
                             </tr>
                         {% endfor %}
@@ -56,7 +56,7 @@
                         {{ val.title }}
                     </div>
                     <div class="col-xs-12 mTop10 mBottom10">
-                        <span class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate }}</span></span>
+                        <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
                     </div>
                     <div class="data hidden">
                         {{ val.data | safe }}
@@ -67,8 +67,8 @@
                     <div class="col-xs-12">
                         <div class="chart-item"></div>
                     </div>
-                    <div class="col-xs-12">
-                        {{ val.sourceName }} - Data
+                    <div class="col-xs-12 source-name">
+                        {{ val.sourceName }} - <a href="{{ val.datasetLink }}">Data</a> - {{ val.datasetUpdateDate }}
                     </div>
 
                 </div>

@@ -107,23 +107,35 @@ class CountryController(group.GroupController):
             ind_type = el.get('indicatorTypeCode', None)
             if ind_type:
                 # d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
+                el_time = el.get('time')
+                el_value = el.get('value')
                 val = {
-                    'date': el.get('time'),
-                    'value': el.get('value')
+                    'date': el_time,
+                    'value': el_value
                 }
 
                 if ind_type in chart_data_dict:
                     chart_data_dict[ind_type]['data'].append(val);
+
+                    last_date = dt.datetime.strptime(chart_data_dict[ind_type]['lastDate'], '%Y-%m-%d')
+                    curr_date = dt.datetime.strptime(el_time, '%Y-%m-%d')
+
+                    if last_date < curr_date:
+                        chart_data_dict[ind_type]['lastDate'] = el_time
+                        chart_data_dict[ind_type]['lastValue'] = el_value
+
                 else:
                     newel = {
                         'title': el.get('indicatorTypeName'),
                         'sourceName': el.get('sourceName'),
                         'sourceCode': el.get('sourceCode'),
-                        'lastDate': el.get('time'),
-                        'lastValue': el.get('value'),
+                        'lastDate': el_time,
+                        'lastValue': el_value,
                         'unit': el.get('unitName'),
                         'code': ind_type,
-                        'data': [val]
+                        'data': [val],
+                        'datasetLink': '/todo/changeme',
+                        'datasetUpdateDate': 'Jun 21, 1985'
                     }
                     chart_data_dict[ind_type] = newel
 

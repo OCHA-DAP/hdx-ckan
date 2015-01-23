@@ -56,4 +56,12 @@
     .topline-charts .last-value .last-date{
         font-size: 10px;
     }
+
+    .topline-charts .source-name{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.01em;
+        line-height: 18px;
+        color: #000000;
+    }
 /* END Topline Charts styles */
