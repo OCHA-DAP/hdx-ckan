@@ -52,7 +52,7 @@ class CountryController(group.GroupController):
                    'for_view': True}
         country_uuid = c.group_dict.get('id', id)
         self.get_activity_stream(context, country_uuid)
-        self.get_cont_browsing(c.group_dict)
+        c.cont_browsing = self.get_cont_browsing(c.group_dict)
 
         return render('country/country.html')
 
