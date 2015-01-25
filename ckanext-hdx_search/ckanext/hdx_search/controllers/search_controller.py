@@ -158,7 +158,6 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
         return (feature_list[skip:skip + limit], len(features))
     return features
 
-
 class HDXSearchController(PackageController):
 
     def search(self):

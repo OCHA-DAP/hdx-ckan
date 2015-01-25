@@ -145,6 +145,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                   tk.get_converter('convert_to_extras')],
             'license_other': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
+            'solr_additions': [tk.get_validator('ignore_missing'),
+                              tk.get_converter('convert_to_extras')],
+            'subnational': [tk.get_validator('ignore_missing'),
+                              tk.get_converter('convert_to_extras')],
         })
 
         return schema
@@ -197,6 +201,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology_other': [tk.get_converter('convert_from_extras'),
                                   tk.get_validator('ignore_missing')],
             'license_other': [tk.get_converter('convert_from_extras'),
+                              tk.get_validator('ignore_missing')],
+            'solr_additions': [tk.get_converter('convert_from_extras'),
+                              tk.get_validator('ignore_missing')],
+            'subnational': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_missing')],
         })
         return schema
