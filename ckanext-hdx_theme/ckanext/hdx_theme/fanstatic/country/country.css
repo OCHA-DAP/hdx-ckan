@@ -65,3 +65,9 @@
         color: #000000;
     }
 /* END Topline Charts styles */
+
+/* Dataset result list styles */
+    .country-dataset-results .search-form .control-order-by{
+        margin-top: 0px;
+    }
+/* END - Dataset result list styles */

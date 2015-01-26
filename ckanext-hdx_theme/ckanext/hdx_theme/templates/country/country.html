@@ -80,7 +80,10 @@
     <div class="row">
         <div class="col-xs-12">
 			<div class="row">
-        		<div class="col-xs-3">
+                <div class="col-xs-12">
+                    <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
+                </div>
+        		<div class="col-xs-3 wrapper-secondary">
         			<div class="row">
         				<div class="col-xs-12">
 							<h2 class="uppercase">{{_('Activity')}}</h2>
@@ -92,8 +95,12 @@
 						</div>
 					</div>
 	        	</div>
-	        	<div class="col-xs-9">
-	        	 	Datasets
+	        	<div class="col-xs-9 wrapper-primary country-dataset-results">
+                    <h3 id="datasets-section" class="uppercase">{{ _('Datasets and Indicators') }} |
+                        <a href="{{ c.other_links.advanced_search }}">{{ _('Advanced Search') }}</a>
+                    </h3>
+                    {% snippet 'search/snippets/search_results_wrapper.html',
+                        tracking_enabled=g.tracking_enabled, my_c=c %}
 	        	</div>
     		</div>
         </div>
@@ -112,5 +119,7 @@
 
 {% block scripts2 %}
     {{ super() }}
+    {% resource 'hdx_theme/activity-stream' %}
     {% resource 'hdx_theme/country' %}
+    {% resource 'hdx_theme/hdx_show_more.js' %}
 {% endblock %}
