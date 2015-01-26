@@ -1,0 +1,49 @@
+{#
+Wrapper for the list of datasets displayed in search results.
+This snippet contains the details around the list itself. It calls indicator_list.html or package_list.html
+
+packages       - A list of packages to display.
+
+
+Example:
+
+  {% snippet 'search/snippets/search_results_wrapper_with_facets.html', tracking_enabled=g.tracking_enabled, my_c=c,
+
+   %}
+
+#}
+{% extends 'search/snippets/search_results_wrapper.html' %}
+
+      {% block form %}
+        {% set sorting = [
+          (_('Relevance'), 'score desc, metadata_modified desc'),
+          (_('Name Ascending'), 'title_case_insensitive asc'),
+          (_('Name Descending'), 'title_case_insensitive desc'),
+          (_('Last Modified'), 'metadata_modified desc'),
+          (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
+        %}
+        {% set facets = {
+          'fields': my_c.fields_grouped,
+          'search': my_c.search_facets,
+          'titles': my_c.facet_titles,
+          'translated_fields': my_c.translated_fields,
+          'remove_field': my_c.remove_field }
+        %}
+        {% block search_form_snippet scoped %}
+            {% snippet 'search/snippets/search_form.html', type='dataset', query=my_c.q, sorting=sorting, tab=my_c.tab, sorting_selected=my_c.sort_by_selected,
+                    count=(my_c.count), facets=facets, show_empty=request.params, error=my_c.query_error, search_in_results=true,
+                    placeholder=_('Search within found datasets...'), display_search_input=false, id=my_c.group_dict.name, other_links=my_c.other_links,
+                    indicator_counts = my_c.indicator_counts, dataset_counts = my_c.dataset_counts %}
+        {% endblock %}
+      {% endblock %}
+
+
+        {% block package_search_results_indicator_snippet %}
+            {% if my_c.tab=='all' or my_c.tab=='indicators' %}
+                {% if  my_c.tab == 'indicators' %}
+                    {{ h.snippet('search/snippets/indicator_list.html', query=my_c.q, packages=my_c.page.items, tab=my_c.tab, show_preview_on_first=True) }}
+                {% else %}
+                    {{ h.snippet('search/snippets/indicator_list.html', query=my_c.q, packages=my_c.indicator, tab=my_c.tab, show_preview_on_first=True) }}
+                {% endif %}
+            {% endif %}
+        {% endblock %}
