@@ -33,15 +33,32 @@ OrderedDict = collections.OrderedDict
 
 group_type = 'group'
 
-indicators_4_charts = ['PVH140', 'PVN010', 'PVW010', 'PVF020',
-                       'PSE160', 'PCX051', 'PVE130', 'PCX060',
-                       'RW002', 'PVE110', 'PVN050', 'PVN070',
-                       'PVW040']
-# http://localhost:8080/public/api2/values?it=PSP120&it=PSP090&l=CHN&sorting=INDICATOR_TYPE_ASC
+indicators_4_charts_list = [
+    ('PVH140', 'mdgs'),
+    ('PVN010', 'fao-foodsec'),
+    ('PVW010', 'mdgs'),
+    ('PVF020', 'faostat3'),
+    ('PSE160', 'data.undp.org'),
+    ('PCX051', 'mdgs'),
+    ('PVE130', 'mdgs'),
+    ('PCX060', 'mdgs'),
+    ('RW002', 'RW'),
+    ('PVE110', 'data.undp.org'),
+    ('PVN050', 'mdgs'),
+    ('PVN070', 'mdgs'),
+    ('PVW040', 'mdgs')
+]
 
-indicators_4_top_line = ['PSP120', 'PSP090', 'PSE220', 'PSE030',
-                         'CG300']
-# http://localhost:8080/public/api2/values?it=PSP120&l=CHN&periodType=LATEST_YEAR
+indicators_4_charts = [el[0] for el in indicators_4_charts_list ]
+
+indicators_4_top_line_list =[
+    ('PSP120', 'world-bank'),
+    ('PSP090', 'world-bank'),
+    ('PSE220', 'data.undp.org'),
+    ('PSE030', 'world-bank'),
+    ('CG300', 'world-bank')
+]
+indicators_4_top_line = [el[0] for el in indicators_4_top_line_list ]
 
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
@@ -168,7 +185,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         data_dict = {
             'sorting': 'INDICATOR_TYPE_ASC',
             'l': country_id,
-            'it': indicators_4_charts
+            'it': indicators_4_charts,
+            's': [el[1] for el in indicators_4_charts_list]
         }
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
@@ -177,7 +195,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         data_dict = {
             'periodType': 'LATEST_YEAR',
             'l': country_id,
-            'it': indicators_4_top_line
+            'it': indicators_4_top_line,
+            's': [el[1] for el in indicators_4_top_line_list]
         }
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
