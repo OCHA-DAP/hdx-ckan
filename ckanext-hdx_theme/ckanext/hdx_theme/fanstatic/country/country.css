@@ -70,4 +70,9 @@
     .country-dataset-results .search-form .control-order-by{
         margin-top: 0px;
     }
+
+    .country-dataset-results .module .pagination{
+        margin-left: 0px;
+        margin-right: 0px;
+    }
 /* END - Dataset result list styles */
