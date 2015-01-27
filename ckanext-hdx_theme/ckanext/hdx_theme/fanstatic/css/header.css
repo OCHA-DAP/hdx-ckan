@@ -164,13 +164,20 @@
             line-height: 28px;
             margin: 0 20px;
         }
+        .newHeader .header-nav .header-nav-search .header-search-form .filter-icon {
+            color: #007CE0;
+            font-size: 20px;
+            visibility: hidden;
+            margin-right: 20px;
+            cursor: pointer;
+        }
 
         .newHeader .header-nav .header-nav-search .header-search-form input, .newHeader .header-nav .header-nav-search .header-search-form input:focus {
             border: none;
             text-shadow: none;
             box-shadow: none;
             transition: none;
-            width: 290px;
+            width: 250px;
             font-family: 'Source Sans Pro', sans-serif;
             font-weight: 400;
             font-size: 18px;

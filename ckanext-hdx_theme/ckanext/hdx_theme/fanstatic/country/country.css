@@ -33,3 +33,41 @@
     }
 
 /* END Style topline numbers table*/
+
+/* Topline Charts styles */
+    .topline-charts .topline-title {
+        /* Some indicators have long names which expand on two rows
+           causing the graphs to mis-align; this fixes it
+        */
+        height: 40px;
+    }
+    .topline-charts .chart-item{
+        height: 270px;
+        max-height: 270px;
+        margin-left: -20px;
+    }
+    .topline-charts .last-value{
+        font-family: 'Gotham-Book', sans-serif;
+        font-weight: 400;
+        font-size: 24px;
+        color: #333333;
+        letter-spacing: 0.01em;
+    }
+    .topline-charts .last-value .last-date{
+        font-size: 10px;
+    }
+
+    .topline-charts .source-name{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.01em;
+        line-height: 18px;
+        color: #000000;
+    }
+/* END Topline Charts styles */
+
+/* Dataset result list styles */
+    .country-dataset-results .search-form .control-order-by{
+        margin-top: 0px;
+    }
+/* END - Dataset result list styles */

@@ -13,6 +13,9 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.controllers.group as group
+import ckan.lib.helpers as h
+
+import ckanext.hdx_search.controllers.search_controller as search_controller
 
 render = base.render
 abort = base.abort
@@ -39,18 +42,20 @@ indicators_4_top_line = ['PSP120', 'PSP090', 'PSE220', 'PSE030',
 # http://localhost:8080/public/api2/values?it=PSP120&l=CHN&periodType=LATEST_YEAR
 
 
-class CountryController(group.GroupController):
+class CountryController(group.GroupController, search_controller.HDXSearchController):
 
     def read(self, id):
         self.get_country(id)
-        self.get_dataset_results(c.group_dict.get('name', id))
 
-        # activity stream
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'for_view': True}
         country_uuid = c.group_dict.get('id', id)
-        self.get_activity_stream(context, country_uuid)
+        country_code = c.group_dict.get('name', id)
+
+
+        self.get_dataset_results(country_code)
+        self.get_activity_stream(country_uuid)
+        c.cont_browsing = self.get_cont_browsing(c.group_dict)
+
+        self.get_dataset_search_results(country_code)
 
         return render('country/country.html')
 
@@ -107,18 +112,35 @@ class CountryController(group.GroupController):
             ind_type = el.get('indicatorTypeCode', None)
             if ind_type:
                 # d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
+                el_time = el.get('time')
+                el_value = el.get('value')
                 val = {
-                    'date': el.get('time'),
-                    'value': el.get('value')
+                    'date': el_time,
+                    'value': el_value
                 }
 
                 if ind_type in chart_data_dict:
-                    chart_data_dict[ind_type]['data'].append(val);
+                    chart_data_dict[ind_type]['data'].append(val)
+
+                    last_date = dt.datetime.strptime(chart_data_dict[ind_type]['lastDate'], '%Y-%m-%d')
+                    curr_date = dt.datetime.strptime(el_time, '%Y-%m-%d')
+
+                    if last_date < curr_date:
+                        chart_data_dict[ind_type]['lastDate'] = el_time
+                        chart_data_dict[ind_type]['lastValue'] = el_value
+
                 else:
                     newel = {
-                        'title': el.get('unitName'),
+                        'title': el.get('indicatorTypeName'),
+                        'sourceName': el.get('sourceName'),
+                        'sourceCode': el.get('sourceCode'),
+                        'lastDate': el_time,
+                        'lastValue': el_value,
+                        'unit': el.get('unitName'),
                         'code': ind_type,
-                        'data': [val]
+                        'data': [val],
+                        'datasetLink': '/todo/changeme',
+                        'datasetUpdateDate': 'Jun 21, 1985'
                     }
                     chart_data_dict[ind_type] = newel
 
@@ -157,7 +179,95 @@ class CountryController(group.GroupController):
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
 
-    def get_activity_stream(self, context, country_id):
+    def get_activity_stream(self, country_id):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'for_view': True}
         act_data_dict = {'id': country_id, 'limit': 7}
         c.hdx_group_activities = get_action(
             'hdx_get_group_activity_list')(context, act_data_dict)
+
+    def get_cont_browsing(self, group_dict):
+        cont_browsing_dict = {
+            'websites': self._process_websites(group_dict),
+            'followers': self._get_followers(group_dict['id']),
+            'topics': self._get_topics(group_dict['name'])
+
+        }
+        return cont_browsing_dict
+
+    def _process_websites(self, group_dict):
+        if 'extras' in group_dict:
+            extras_dict = {el['key']: el['value']
+                            for el in group_dict['extras'] if el['state'] == u'active'}
+
+            site_list = []
+            if 'relief_web_url' in extras_dict:
+                site_list.append({'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
+            site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
+            if 'hr_info_url' in extras_dict:
+                site_list.append({'name': _('HumanitarianResponse'), 'url': extras_dict['hr_info_url']})
+            site_list.append(
+                {'name': _('OCHA Financial Tracking Service'), 'url': 'http://fts.unocha.org/'}
+            )
+
+        return site_list
+
+    def _get_followers(self, country_id):
+        followers = get_action('group_follower_list')({'ignore_auth': True}, {'id': country_id})
+        followers_list = [
+            {
+                'name': f['display_name'],
+                'url': h.url_for(controller='user', action='read', id=f['name'])
+            } for f in followers
+        ]
+
+        return followers_list
+
+    def _get_topics(self, country_id):
+        topic_list = [
+            {
+                'name': 'DummyTopic'+str(i),
+                'url': h.url_for(controller='package', action='search', vocab_Topics='DummyTopic'+str(i))
+            } for i in range(1,16)
+        ]
+
+        return topic_list
+
+
+    def get_dataset_search_results(self, country_code):
+        fq = u'groups:"{}" +dataset_type:dataset'.format(country_code)
+        facets = ['vocab_Topics']
+        suffix = '#datasets-section'
+
+        search_extras = {}
+        ext_indicator = request.params.get('ext_indicator', None)
+        if ext_indicator:
+            search_extras['ext_indicator'] = ext_indicator
+
+        limit = self._allowed_num_of_items(search_extras)
+        page = self._page_number()
+        params_nopage = {k:v for k, v in request.params.items() if k != 'page' }
+
+        sort_by = request.params.get('sort', None)
+
+        def pager_url(q=None, page=None):
+            params = params_nopage
+            params['page']=page
+            return h.url_for('country_read', id=country_code, **params) + suffix
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+
+        self._set_other_links(suffix=suffix, other_params_dict={'id':country_code})
+        self._which_tab_is_selected(search_extras)
+        self._performing_search('', fq, facets, limit, page, sort_by,
+                                    search_extras, pager_url, context)
+
+    def _set_other_links(self, suffix='', other_params_dict=None):
+        super(CountryController,self)._set_other_links(suffix=suffix, other_params_dict=other_params_dict)
+        c.other_links['advanced_search'] = h.url_for('search', groups=other_params_dict['id'])
+
+    def _get_named_route(self):
+        return 'country_read'
