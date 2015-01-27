@@ -4,6 +4,7 @@ Created on Jan 13, 2015
 @author: alexandru-m-g
 '''
 import json
+import collections
 
 import logging
 import datetime as dt
@@ -28,18 +29,36 @@ _ = common._
 
 
 log = logging.getLogger(__name__)
+OrderedDict = collections.OrderedDict
 
 group_type = 'group'
 
-indicators_4_charts = ['PVH140', 'PVN010', 'PVW010', 'PVF020',
-                       'PSE160', 'PCX051', 'PVE130', 'PCX060',
-                       'RW002', 'PVE110', 'PVN050', 'PVN070',
-                       'PVW040']
-# http://localhost:8080/public/api2/values?it=PSP120&it=PSP090&l=CHN&sorting=INDICATOR_TYPE_ASC
+indicators_4_charts_list = [
+    ('PVH140', 'mdgs'),
+    ('PVN010', 'fao-foodsec'),
+    ('PVW010', 'mdgs'),
+    ('PVF020', 'faostat3'),
+    ('PSE160', 'data.undp.org'),
+    ('PCX051', 'mdgs'),
+    ('PVE130', 'mdgs'),
+    ('PCX060', 'mdgs'),
+    ('RW002', 'RW'),
+    ('PVE110', 'data.undp.org'),
+    ('PVN050', 'mdgs'),
+    ('PVN070', 'mdgs'),
+    ('PVW040', 'mdgs')
+]
 
-indicators_4_top_line = ['PSP120', 'PSP090', 'PSE220', 'PSE030',
-                         'CG300']
-# http://localhost:8080/public/api2/values?it=PSP120&l=CHN&periodType=LATEST_YEAR
+indicators_4_charts = [el[0] for el in indicators_4_charts_list ]
+
+indicators_4_top_line_list =[
+    ('PSP120', 'world-bank'),
+    ('PSP090', 'world-bank'),
+    ('PSE220', 'data.undp.org'),
+    ('PSE030', 'world-bank'),
+    ('CG300', 'world-bank')
+]
+indicators_4_top_line = [el[0] for el in indicators_4_top_line_list ]
 
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
@@ -53,9 +72,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         self.get_dataset_results(country_code)
         self.get_activity_stream(country_uuid)
-        c.cont_browsing = self.get_cont_browsing(c.group_dict)
 
-        self.get_dataset_search_results(country_code)
+        (query, all_results) = self.get_dataset_search_results(country_code)
+        vocab_topics_dict = all_results.get('facets',{}).get('vocab_Topics',{})
+        c.cont_browsing = self.get_cont_browsing(c.group_dict, vocab_topics_dict)
 
         return render('country/country.html')
 
@@ -165,7 +185,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         data_dict = {
             'sorting': 'INDICATOR_TYPE_ASC',
             'l': country_id,
-            'it': indicators_4_charts
+            'it': indicators_4_charts,
+            's': [el[1] for el in indicators_4_charts_list]
         }
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
@@ -174,7 +195,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         data_dict = {
             'periodType': 'LATEST_YEAR',
             'l': country_id,
-            'it': indicators_4_top_line
+            'it': indicators_4_top_line,
+            's': [el[1] for el in indicators_4_top_line_list]
         }
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
@@ -187,11 +209,11 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         c.hdx_group_activities = get_action(
             'hdx_get_group_activity_list')(context, act_data_dict)
 
-    def get_cont_browsing(self, group_dict):
+    def get_cont_browsing(self, group_dict, vocab_topics_dict):
         cont_browsing_dict = {
             'websites': self._process_websites(group_dict),
             'followers': self._get_followers(group_dict['id']),
-            'topics': self._get_topics(group_dict['name'])
+            'topics': self._get_topics(vocab_topics_dict)
 
         }
         return cont_browsing_dict
@@ -224,12 +246,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         return followers_list
 
-    def _get_topics(self, country_id):
+    def _get_topics(self, vocab_topics_dict):
+        topics_by_freq = OrderedDict(sorted(vocab_topics_dict.items(), key=lambda x: x[1]))
         topic_list = [
             {
-                'name': 'DummyTopic'+str(i),
-                'url': h.url_for(controller='package', action='search', vocab_Topics='DummyTopic'+str(i))
-            } for i in range(1,16)
+                'name': topic,
+                'url': h.url_for(controller='package', action='search', vocab_Topics=topic)
+            } for topic in topics_by_freq.keys()
         ]
 
         return topic_list
@@ -262,8 +285,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         self._set_other_links(suffix=suffix, other_params_dict={'id':country_code})
         self._which_tab_is_selected(search_extras)
-        self._performing_search('', fq, facets, limit, page, sort_by,
+        (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
                                     search_extras, pager_url, context)
+
+        return query, all_results
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         super(CountryController,self)._set_other_links(suffix=suffix, other_params_dict=other_params_dict)

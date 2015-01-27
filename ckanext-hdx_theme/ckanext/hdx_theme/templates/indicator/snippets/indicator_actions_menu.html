@@ -1,7 +1,9 @@
 {% set url = request.url %}
 
+{% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
+
 <span class="{{ classes }}">
-  {% snippet 'indicator/snippets/share_button.html', title=pkg.title %}
+  {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title %}
   {{ h.follow_button('dataset', pkg.name) }}
   {% if h.check_access('package_update', {'id':pkg.id }) %}
     {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
