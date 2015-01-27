@@ -411,6 +411,8 @@ class HDXSearchController(PackageController):
         c.page.items = query['results']
         c.sort_by_selected = query['sort']
 
+        return query, all_result
+
     def _decide_adding_dataset_criteria(self, data_dict):
         # For all tab, only paginate datasets
         if c.tab == "all":
