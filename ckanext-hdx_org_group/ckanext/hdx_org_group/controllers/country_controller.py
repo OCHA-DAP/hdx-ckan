@@ -49,6 +49,8 @@ indicators_4_charts_list = [
     ('PVW040', 'mdgs')
 ]
 
+
+
 indicators_4_charts = [el[0] for el in indicators_4_charts_list ]
 
 indicators_4_top_line_list =[
@@ -185,18 +187,20 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         data_dict = {
             'sorting': 'INDICATOR_TYPE_ASC',
             'l': country_id,
-            'it': indicators_4_charts,
-            's': [el[1] for el in indicators_4_charts_list]
+            # 'it': indicators_4_charts,
+            # 's': [el[1] for el in indicators_4_charts_list]
+            'ds': [el[0] + '___' + el[1] for el in indicators_4_charts_list]
         }
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
 
     def _get_top_line_num(self, country_id):
         data_dict = {
-            'periodType': 'LATEST_YEAR',
+            'periodType': 'LATEST_YEAR_BY_COUNTRY',
             'l': country_id,
-            'it': indicators_4_top_line,
-            's': [el[1] for el in indicators_4_top_line_list]
+            # 'it': indicators_4_top_line,
+            # 's': [el[1] for el in indicators_4_top_line_list]
+            'ds': [el[0] + '___' + el[1] for el in indicators_4_top_line_list]
         }
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
