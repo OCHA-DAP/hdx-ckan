@@ -62,7 +62,7 @@
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
+      {% snippet "indicator/snippets/continuous_browsing.html", type="dataset", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
     </div>
   </div>
 {% endblock %}
