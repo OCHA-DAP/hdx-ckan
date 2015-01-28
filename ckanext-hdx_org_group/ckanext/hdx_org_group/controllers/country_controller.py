@@ -193,7 +193,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
     def _get_top_line_num(self, country_id):
         data_dict = {
-            'periodType': 'LATEST_YEAR',
+            'periodType': 'LATEST_YEAR_BY_COUNTRY',
             'l': country_id,
             'it': indicators_4_top_line,
             's': [el[1] for el in indicators_4_top_line_list]
