@@ -67,6 +67,27 @@
   </div>
 {% endblock %}
 
+{% block basic_fields_subnational %}
+    <div style="clear:both;">
+    <div class="{{ form_field_wrapper_classes }}">
+    <div class="control-group">
+      <label class="control-label" for="field-subnational" style="display: inline-block;">{{ _("Dataset contains sub-national data:") }}</label>
+     <div class="controls" style="display:inline-block">
+          <input type="checkbox" checked name="subnational" id="field-subnational" value="{{data.subnational}}" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+      </div>
+    </div>
+      </div>
+      {% if new_dataset %}
+        <div class="dataset-form-info-field dataset-form-info-field-height info-field" style="height:60px;">
+        {% trans %}
+        Leave this box checked if the values in your dataset apply to one or more locations (e.g. district, province, city) within a country.
+        {% endtrans %}
+        </div>
+    {% endif %}
+    </div>
+    <span class="clear" /></span>
+  {% endblock %}
+
 {% block package_basic_fields_countries %}
   {% if inheritied_form_style == 'edit' %}
     {{ h.snippet('package/snippets/country_dropdown.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, onepage=onepage, inheritied_form_style=inheritied_form_style) }}

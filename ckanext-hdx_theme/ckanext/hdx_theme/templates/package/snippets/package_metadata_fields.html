@@ -241,28 +241,6 @@
     {% endif %}
     </div>
    {% endblock %}
-
-    {% block basic_fields_subnational %}
-    <div style="clear:both;">
-    <div class="{{ form_field_wrapper_classes }}">
-    <div class="control-group">
-      <label class="control-label" for="field-subnational">{{ _("Data Features:") }}</label>
-      <label for="field-subnational" style="margin-left:10px; display: inline-block;">{{ _("Subnational regions included") }}</label>
-      <div class="controls" style="display:inline-block">
-          <input type="checkbox" name="subnational" id="field-subnational" value="{{data.subnational}}" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
-      </div>
-    </div>
-      </div>
-      {% if new_dataset %}
-        <div class="dataset-form-info-field dataset-form-info-field-height info-field">
-        {% trans %}
-        Does this data contain subnational regions?
-        {% endtrans %}
-        </div>
-    {% endif %}
-    </div>
-    <span class="clear" /></span>
-  {% endblock %}
     
     {# Replacing ajax-autocomplete with dropdown
     {% set group_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/group/autocomplete?q=?', 'data-module-key': 'id', 'data-module-label': 'title'} %}
