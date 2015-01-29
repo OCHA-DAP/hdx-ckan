@@ -1,0 +1,24 @@
+{#
+Wrapper for the list of datasets displayed in search results.
+This snippet contains the details around the list itself. It calls indicator_list.html or package_list.html
+
+packages       - A list of packages to display.
+
+
+Example:
+
+  {% snippet 'search/snippets/simple_search_results_wrapper_with_facets.html', tracking_enabled=g.tracking_enabled, my_c=c,
+
+   %}
+
+#}
+{% extends 'search/snippets/search_results_wrapper.html' %}
+
+{% block search_form_snippet %}
+	{% snippet 'search/snippets/search_form.html', type='dataset', query=my_c.q, sorting=sorting, tab=my_c.tab, sorting_selected=my_c.sort_by_selected,
+			count=(my_c.count), facets=facets, show_empty=request.params, error=my_c.query_error, search_in_results=true,
+			placeholder=_('Search within found datasets...'), display_search_input=false, id=my_c.group_dict.name, other_links=my_c.other_links,
+			indicator_counts = my_c.indicator_counts, dataset_counts = my_c.dataset_counts, title_text=_('All Data') %}
+{% endblock %}
+
+
