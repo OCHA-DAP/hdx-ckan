@@ -33,10 +33,15 @@
   {% endblock %}
 
   {% block search_title %}
-    {% if not no_title %}
-      <h2 class="mTop35">
-        {% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}</h2>
-    {% endif %}
+      {% if not no_title %}
+          <h2 class="mTop35">
+              {% if title_text %}
+                  {{ title_text }}
+              {% else %}
+                  {% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}
+              {% endif %}
+          </h2>
+      {% endif  %}
   {% endblock %}
 
   {% block search_facets %}

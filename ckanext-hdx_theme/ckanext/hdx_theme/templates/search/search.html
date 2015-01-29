@@ -39,9 +39,10 @@
 {#  <div id="search_filter_btn">Filter<span>+</span></div>#}
 </div>
 
-
-    {% snippet 'search/snippets/search_results_wrapper_with_facets.html',
+    {% block search_results_wrapper %}
+        {% snippet 'search/snippets/search_results_wrapper_for_search_page.html',
                         tracking_enabled=g.tracking_enabled, my_c=c %}
+    {% endblock %}
 
   {% block package_search_results_api %}
   {% endblock %}

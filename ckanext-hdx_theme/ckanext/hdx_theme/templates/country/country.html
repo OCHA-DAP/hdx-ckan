@@ -96,9 +96,14 @@
 					</div>
 	        	</div>
 	        	<div class="col-xs-9 wrapper-primary country-dataset-results">
-                    <h3 id="datasets-section" class="uppercase">{{ _('Datasets and Indicators') }} |
-                        <a href="{{ c.other_links.advanced_search }}">{{ _('Advanced Search') }}</a>
-                    </h3>
+                    <div class="mTop20">
+                        <span id="datasets-section" class="mL15 uppercase dataset-section-title">
+                            {{ _('Datasets and Indicators') }}
+                        </span>
+                        <span class="mL15 advanced-search-link">
+                            <a href="{{ c.other_links.advanced_search }}">{{ _('Advanced Search') }}</a>
+                        </span>
+                    </div>
                     {% snippet 'search/snippets/search_results_wrapper.html',
                         tracking_enabled=g.tracking_enabled, my_c=c %}
 	        	</div>
