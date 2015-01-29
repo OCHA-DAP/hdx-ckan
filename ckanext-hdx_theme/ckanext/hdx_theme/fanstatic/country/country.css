@@ -67,6 +67,17 @@
 /* END Topline Charts styles */
 
 /* Dataset result list styles */
+    .country-dataset-results .dataset-section-title {
+        font-weight: 500;
+        font-size: 18px;
+        color: #888;
+    }
+    .country-dataset-results .advanced-search-link {
+        font-weight: 400;
+        font-size: 12px;
+        color: #007CE0;
+    }
+
     .country-dataset-results .search-form .control-order-by{
         margin-top: 0px;
     }
