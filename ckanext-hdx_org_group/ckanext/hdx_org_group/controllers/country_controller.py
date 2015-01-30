@@ -172,17 +172,47 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         # for code in chart_data_dict.keys():
         #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
 
-        for code in chart_data_dict.keys():
-            chart_data_dict[code]['data'] = json.dumps(chart_data_dict[code]['data'])
-
         chart_data_list = []
         for code in indicators_4_charts:
             if code in chart_data_dict and len(chart_data_list) < 5:
                 chart_data_list.append(chart_data_dict[code])
 
+        chart_extra_dict = self._get_indicator_info_4_charts(chart_data_list)
+
+        for chart in chart_data_list:
+            code = chart['code']
+            chart_extra = chart_extra_dict.get(code, None)
+            chart['data'] = json.dumps(chart['data'])
+            if chart_extra:
+                chart['datasetLink'] = chart_extra.get('datasetLink')
+                chart['datasetUpdateDate'] = chart_extra.get('datasetUpdateDate')
+
+
         c.chart_data_list = chart_data_list
 
         # c.chart_data_dict = chart_data_dict
+
+    def _get_indicator_info_4_charts(self, chart_data_list):
+        result = {}
+        fq = '+extras_indicator_type_code:('
+        fq += ' OR '.join(['"{}"'.format(chart['code']) for chart in chart_data_list])
+        fq +=')'
+        data_dict = {
+            'rows': 20,
+            'start': 0,
+            'ext_indicator': u'1',
+            'fq': fq + ' +dataset_type:dataset'
+        }
+        query = get_action("package_search")({}, data_dict)
+        if 'results' in query:
+            for dataset in query['results']:
+                date_parts = dataset.get('metadata_modified', '').split('T')
+                if date_parts:
+                    result[dataset['indicator_type_code']] = {
+                        'datasetUpdateDate': dt.datetime.strptime(date_parts[0], '%Y-%m-%d').strftime('%b %d, %Y'),
+                        'datasetLink': h.url_for(controller='package', action='read', id=dataset['name'])
+                    }
+        return result
 
     def _get_chart_data(self, country_id):
         data_dict = {
