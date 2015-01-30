@@ -24,16 +24,16 @@ $('#country-drop').change(function(){
       }
       if (flag) {
         $('#selected_groups').append('<span class="filtered pill">'+country_name+' <i id="field-group-'+country+'" name="groups__'+(number_of_groups)+'__id" value="'+country+'" class="group_checked icon-remove"/></span>');
-        //Add to solr_additions
-        var additions = $('#field-solr_additions').val();
-        if(!additions){
-          additions = {'countries':[]};
-        }else{
-          additions = JSON.parse(additions);
-        }
-        additions['countries'].push(country_name);
-        $('#field-solr_additions').val(JSON.stringify(additions));
-        //Add country for real
+        // //Add to solr_additions
+        // var additions = $('#field-solr_additions').val();
+        // if(!additions){
+        //   additions = {'countries':[]};
+        // }else{
+        //   additions = JSON.parse(additions);
+        // }
+        // additions['countries'].push(country_name);
+        // $('#field-solr_additions').val(JSON.stringify(additions));
+        // //Add country for real
         if($('#select_groups_hidden').length >0){
           $('#select_groups_hidden').append('<input id="field-group-'+country+'-input" type="checkbox" name="groups__'+(number_of_groups)+'__id" value="'+country+'" checked="checked"/>');
         }
@@ -57,15 +57,15 @@ $('#selected_groups').click(function(event){
     var country = event.target.parentNode.innerText.toLowerCase().trim();
   }
   //Remove from solr
-  var additions = JSON.parse($('#field-solr_additions').val());
-  var countries = []
-  for(c in additions['countries']){
-    if(additions['countries'][c].toLowerCase() != country){
-        countries.push(additions['countries'][c]);
-    }
-  }
-  additions['countries'] = countries;
-  $('#field-solr_additions').val(JSON.stringify(additions));
+  // var additions = JSON.parse($('#field-solr_additions').val());
+  // var countries = []
+  // for(c in additions['countries']){
+  //   if(additions['countries'][c].toLowerCase() != country){
+  //       countries.push(additions['countries'][c]);
+  //   }
+  // }
+  // additions['countries'] = countries;
+  // $('#field-solr_additions').val(JSON.stringify(additions));
   //Reset dropdown for better userability
   $('#country-drop option[value=-1]').attr('selected', true);
 });

@@ -92,8 +92,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'new_resource',
                           'visibility',
                           'delete',
+                          'edit',
                       ])))
-
+        
         map.connect(
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
         return map
