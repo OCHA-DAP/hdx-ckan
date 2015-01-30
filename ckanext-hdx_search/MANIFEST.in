@@ -1,0 +1,2 @@
+recursive-include ckanext/hdx_search/hdx-solr *
+recursive-include ckanext/hdx_search/solr *
