@@ -73,7 +73,7 @@
     <div class="control-group">
       <label class="control-label" for="field-subnational" style="display: inline-block;">{{ _("Dataset contains sub-national data:") }}</label>
      <div class="controls" style="display:inline-block">
-          <input type="checkbox" checked name="subnational" id="field-subnational" value="{{data.subnational}}" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+          <input type="checkbox" {% if data.subnational %}checked{% endif%} name="subnational" id="field-subnational" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
       </div>
     </div>
       </div>
