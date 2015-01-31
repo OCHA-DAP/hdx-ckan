@@ -87,3 +87,9 @@
         margin-right: 0px;
     }
 /* END - Dataset result list styles */
+
+/* Adapting continuous browsing */
+    .country-cb .cb-explore{
+        margin-top: -10px;
+    }
+/* END - Adapting continuous browsing */
