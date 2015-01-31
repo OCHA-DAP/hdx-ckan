@@ -52,7 +52,7 @@ indicators_4_charts_list = [
 
 
 
-indicators_4_charts = [el[0] for el in indicators_4_charts_list ]
+indicators_4_charts = [el[0] for el in indicators_4_charts_list]
 
 indicators_4_top_line_list =[
     ('PSP120', 'world-bank'),
@@ -61,17 +61,16 @@ indicators_4_top_line_list =[
     ('PSE030', 'world-bank'),
     ('CG300', 'world-bank')
 ]
-indicators_4_top_line = [el[0] for el in indicators_4_top_line_list ]
+indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 
 class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
 
-    def read(self, id):
+    def country_read(self, id):
         self.get_country(id)
 
         country_uuid = c.group_dict.get('id', id)
         country_code = c.group_dict.get('name', id)
-
 
         self.get_dataset_results(country_code)
         self.get_activity_stream(country_uuid)
@@ -100,7 +99,6 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             abort(404, _('Group not found'))
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
-
 
     def get_dataset_results(self, country_id):
         upper_case_id = country_id.upper()
@@ -196,7 +194,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         result = {}
         fq = '+extras_indicator_type_code:('
         fq += ' OR '.join(['"{}"'.format(chart['code']) for chart in chart_data_list])
-        fq +=')'
+        fq += ')'
         data_dict = {
             'rows': 20,
             'start': 0,
@@ -254,11 +252,11 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         return cont_browsing_dict
 
     def _process_websites(self, group_dict):
+        site_list = []
         if 'extras' in group_dict:
             extras_dict = {el['key']: el['value']
                             for el in group_dict['extras'] if el['state'] == u'active'}
 
-            site_list = []
             if 'relief_web_url' in extras_dict:
                 site_list.append({'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
             site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
