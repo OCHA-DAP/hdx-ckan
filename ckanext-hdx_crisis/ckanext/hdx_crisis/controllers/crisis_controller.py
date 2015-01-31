@@ -11,9 +11,8 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.helpers as h
-
 import ckanext.hdx_crisis.dao.data_access as data_access
-import ckanext.hdx_crisis.formatters.top_line_items_formatter as formatters
+import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 render = base.render
 get_action = logic.get_action

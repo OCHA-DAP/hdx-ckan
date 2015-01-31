@@ -16,8 +16,8 @@ import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.helpers as h
 
-import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
+import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 render = base.render
 abort = base.abort
@@ -110,6 +110,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         sorted_top_line_data = sorted(top_line_data,
                                       key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
+        for el in sorted_top_line_data:
+            el['formatted_value'] = formatters.format_decimal_number(el['value'], 2)
 
         c.top_line_data_list = sorted_top_line_data
 
