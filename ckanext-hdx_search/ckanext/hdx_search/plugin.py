@@ -3,6 +3,8 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
+import ckanext.hdx_search.actions.actions as actions
+
 def convert_country(q):
     for c in tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True}):
         if re.findall(c['display_name'].lower(),q.lower()):
@@ -14,6 +16,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IPackageController, inherit=True)
+    plugins.implements(plugins.IActions)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -62,3 +65,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
     def before_view(self, pkg_dict):
         return pkg_dict
+
+    def get_actions(self):
+        return {
+            'populate_related_items_count': actions.populate_related_items_count
+        }

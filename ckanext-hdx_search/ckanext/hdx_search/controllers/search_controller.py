@@ -58,7 +58,6 @@ def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
 
-
 def search_for_all(context, data_dict):
     '''This search is independent of the tab in which the user
        currently is.
@@ -399,6 +398,8 @@ class HDXSearchController(PackageController):
 # c.facets = query['facets']
 # c.search_facets = query['search_facets']
 #                 c.page.items = query['results']
+
+        get_action('populate_related_items_count')(context, {'pkg_dict_list':query['results']})
 
         c.page = h.Page(
             collection=query['results'],

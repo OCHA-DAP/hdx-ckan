@@ -187,3 +187,11 @@ def package_search(context, data_dict):
             key=lambda facet: facet['display_name'], reverse=True)
 
     return search_results
+
+
+def populate_related_items_count(context, data_dict):
+    pkg_dict_list = data_dict.get('pkg_dict_list', {})
+    for pkg_dict in pkg_dict_list:
+        pkg = model.Package.get(pkg_dict['id'])
+        rel_items = get_action('related_list')(context, {'id': pkg_dict['id']})
+        pkg_dict['related_count'] = len(rel_items)

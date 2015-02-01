@@ -87,7 +87,8 @@
                   </li>
                 {% endif %}
                 {% set popular = package.tracking_summary and package.tracking_summary.recent >= 10 %}
-                {% if geolocated or visualization or popular %}
+                {% set has_related_items = package.related_count and package.related_count > 0 %}
+                {% if geolocated or visualization or popular or has_related_items or package.subnational %}
                   <li class="label-icons">
                     {% if geolocated %}
                       <!--
@@ -96,6 +97,13 @@
                     {% endif %}
                     {% if visualization %}
                       <span class="icon-visualize" title="{{ _("Comparable Indicator") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                      <span class="icon-quality_checked" title="{{ _("Quality Checked") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >Q</span>
+                    {% endif %}
+                    {% if has_related_items %}
+                      <span class="icon-subnational" title="{{ _("Gallery Item") }}{{ package.tracking_summary.recent }}{{ _(" views") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  >{{ package.related_count }}</span>
+                    {% endif %}
+                    {% if package.subnational %}
+                      <span class="icon-subnational" title="{{ _("Sub-national Data") }}{{ package.tracking_summary.recent }}{{ _(" views") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  >SN</span>
                     {% endif %}
                     {% if popular %}
                       <span class="icon-fire" title="{{ _("Popular: ") }}{{ package.tracking_summary.recent }}{{ _(" views") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
