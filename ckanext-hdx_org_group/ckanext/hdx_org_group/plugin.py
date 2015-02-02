@@ -3,6 +3,8 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
+import ckanext.hdx_org_group.helpers
+
 
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -29,7 +31,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def get_actions(self):
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_actions
         return {
-            'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list
+            'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
+            'hdx_light_group_show': hdx_org_actions.hdx_light_group_show
         }
 
     # def get_auth_functions(self):

@@ -67,6 +67,7 @@ indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
 
     def country_read(self, id):
+
         self.get_country(id)
 
         country_uuid = c.group_dict.get('id', id)
@@ -79,7 +80,9 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         vocab_topics_dict = all_results.get('facets',{}).get('vocab_Topics',{})
         c.cont_browsing = self.get_cont_browsing(c.group_dict, vocab_topics_dict)
 
-        return render('country/country.html')
+        result = render('country/country.html')
+
+        return result
 
     def get_country(self, id):
         if group_type != self.group_type:
@@ -93,8 +96,9 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         try:
             context['include_datasets'] = False
-            c.group_dict = self._action('group_show')(context, data_dict)
-            c.group = context['group']
+            c.group_dict = self._action('hdx_light_group_show')(context, data_dict)
+            # c.group = context['group']
+
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
@@ -107,7 +111,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         if not top_line_data:
             log.warn('No top line numbers found for country: {}'.format(country_id))
-
+            top_line_data = []
         sorted_top_line_data = sorted(top_line_data,
                                       key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
         for el in sorted_top_line_data:
@@ -119,6 +123,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         chart_data = chart_results.get('results', [])
         if not chart_data:
             log.warn('No chart data found for country: {}'.format(country_id))
+            chart_data = []
         chart_data_dict = {}
 
         # for el in chart_data:
@@ -236,11 +241,11 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
 
-    def get_activity_stream(self, country_id):
+    def get_activity_stream(self, country_uuid):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'for_view': True}
-        act_data_dict = {'id': country_id, 'limit': 7}
+        act_data_dict = {'id': country_uuid, 'group_uuid': country_uuid, 'limit': 7}
         c.hdx_group_activities = get_action(
             'hdx_get_group_activity_list')(context, act_data_dict)
 
@@ -303,7 +308,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         if ext_indicator:
             search_extras['ext_indicator'] = ext_indicator
 
-        limit = self._allowed_num_of_items(search_extras)
+        #limit = self._allowed_num_of_items(search_extras)
+        limit = 8
         page = self._page_number()
         params_nopage = {k:v for k, v in request.params.items() if k != 'page' }
 
