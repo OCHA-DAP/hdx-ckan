@@ -7,6 +7,7 @@ Created on Sep 9, 2014
 # -*- coding: utf-8 -*-
 
 import logging as logging
+import json
 import ckan.plugins.toolkit as tk
 import ckan.tests as tests
 import ckan.model as model
@@ -70,6 +71,17 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         result = self.app.post(
                 test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert '302' in str(result)
+
+    def test_hdx_solr_additions(self):
+        testsysadmin = model.User.by_name('testsysadmin')
+        tests.call_action_api(self.app, 'group_create', name="col",title="Colombia",apikey=testsysadmin.apikey, status=200)
+        p = tests.call_action_api(self.app, 'package_create', package_creator="test function", name="test_activity_12",dataset_source= "World Bank",notes="This is a test activity",title= "Test Activity 1",indicator= 1,groups= [{"name": "col"}],apikey=testsysadmin.apikey, status=200)
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'nouser'}
+        s = self._get_action('package_show')(context, {"id":p["id"]})
+        assert json.loads(s['solr_additions'])['countries'] == ['Colombia']
+
+
 
     def test_hdx_package_update_metadata(self):
         global package

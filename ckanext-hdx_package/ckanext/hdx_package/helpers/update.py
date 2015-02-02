@@ -36,7 +36,10 @@ def build_additions(groups):
     countries = []
     for g in groups:
         try:
-            countries.append(group_codes[g['id']])
+            if 'id' in g:
+                countries.append(group_codes[g['id']])
+            else:
+                countries.append(group_codes[g['name']]) #API will hit this
         except:
             pass
     return json.dumps({'countries':countries})
