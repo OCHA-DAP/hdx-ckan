@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'hdx-icons';
-	src:url('fonts/hdx-icons.eot?l5p36t');
-	src:url('fonts/hdx-icons.eot?#iefixl5p36t') format('embedded-opentype'),
-		url('fonts/hdx-icons.woff?l5p36t') format('woff'),
-		url('fonts/hdx-icons.ttf?l5p36t') format('truetype'),
-		url('fonts/hdx-icons.svg?l5p36t#hdx-icons') format('svg');
+	src:url('fonts/hdx-icons.eot?jxdc2r');
+	src:url('fonts/hdx-icons.eot?#iefixjxdc2r') format('embedded-opentype'),
+		url('fonts/hdx-icons.woff?jxdc2r') format('woff'),
+		url('fonts/hdx-icons.ttf?jxdc2r') format('truetype'),
+		url('fonts/hdx-icons.svg?jxdc2r#hdx-icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,87 +23,99 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.icon-close_filter_button:before {
+.icon-fight:before {
 	content: "\e600";
 }
 
-.icon-open_filter_button:before {
+.icon-gallery:before {
 	content: "\e601";
 }
 
-.icon-cc:before {
+.icon-gplus:before {
 	content: "\e602";
 }
 
-.icon-check:before {
+.icon-quality_checked:before {
 	content: "\e603";
 }
 
-.icon-download:before {
+.icon-subnational:before {
 	content: "\e604";
 }
 
-.icon-earth:before {
+.icon-cc:before {
 	content: "\e605";
 }
 
-.icon-expand:before {
+.icon-check:before {
 	content: "\e606";
 }
 
-.icon-fb:before {
+.icon-close_filter_button:before {
 	content: "\e607";
 }
 
-.icon-fileupload:before {
+.icon-download:before {
 	content: "\e608";
 }
 
-.icon-fire:before {
+.icon-earth:before {
 	content: "\e609";
 }
 
-.icon-gplus:before {
+.icon-expand:before {
 	content: "\e60a";
 }
 
-.icon-fight:before {
+.icon-fb:before {
 	content: "\e60b";
 }
 
-.icon-location:before {
+.icon-fileupload:before {
 	content: "\e60c";
 }
 
-.icon-lock:before {
+.icon-fire:before {
 	content: "\e60d";
 }
 
-.icon-mail:before {
+.icon-location:before {
 	content: "\e60e";
 }
 
-.icon-search:before {
+.icon-lock:before {
 	content: "\e60f";
 }
 
-.icon-share:before {
+.icon-mail-01:before {
 	content: "\e610";
 }
 
-.icon-spanner:before {
+.icon-open_filter_button:before {
 	content: "\e611";
 }
 
-.icon-tag:before {
+.icon-search:before {
 	content: "\e612";
 }
 
-.icon-twitter:before {
+.icon-share:before {
 	content: "\e613";
 }
 
-.icon-visualize:before {
+.icon-spanner:before {
 	content: "\e614";
+}
+
+.icon-tag:before {
+	content: "\e615";
+}
+
+.icon-twitter:before {
+	content: "\e616";
+}
+
+.icon-visualize:before {
+	content: "\e617";
 }
 
