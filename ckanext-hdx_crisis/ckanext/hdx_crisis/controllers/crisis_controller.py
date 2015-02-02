@@ -78,6 +78,8 @@ class CrisisController(base.BaseController):
                 url = h.url_for(action_alias, page=page) + '#datasets-section'
             return url
 
+        get_action('populate_related_items_count')(context, {'pkg_dict_list':query['results']})
+
         c.page = h.Page(
             collection=query['results'],
             page=page,
