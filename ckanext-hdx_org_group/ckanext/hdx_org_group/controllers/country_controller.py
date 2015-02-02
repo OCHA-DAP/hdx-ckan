@@ -15,9 +15,12 @@ import ckan.model as model
 import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.helpers as h
+import ckan.lib.dictization as d
 
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+
+import cProfile
 
 render = base.render
 abort = base.abort
@@ -67,6 +70,9 @@ indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
 
     def country_read(self, id):
+        pr = cProfile.Profile()
+        pr.enable()
+
         self.get_country(id)
 
         country_uuid = c.group_dict.get('id', id)
@@ -78,6 +84,9 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         (query, all_results) = self.get_dataset_search_results(country_code)
         vocab_topics_dict = all_results.get('facets',{}).get('vocab_Topics',{})
         c.cont_browsing = self.get_cont_browsing(c.group_dict, vocab_topics_dict)
+
+        pr.disable()
+        pr.print_stats('cumtime')
 
         return render('country/country.html')
 
@@ -93,12 +102,34 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         try:
             context['include_datasets'] = False
-            c.group_dict = self._action('group_show')(context, data_dict)
-            c.group = context['group']
+            c.group_dict = self.fetch_country_info(context, id) #self._action('group_show')(context, data_dict)
+            # c.group = context['group']
+
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
+
+    def fetch_country_info(self, context, id):
+        group_dict = {}
+        group = model.Group.get(id)
+        group_dict['group'] = group
+        group_dict['id'] = group.id
+        group_dict['name'] = group.name
+        group_dict['display_name'] = group_dict['title'] = group.title
+
+
+        result_list = []
+        for name, extra in group._extras.iteritems():
+            dictized = d.table_dictize(extra, context)
+            if not extra.state == 'active':
+                continue
+            value = dictized["value"]
+            result_list.append(dictized)
+
+        group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
+        return group_dict
+
 
     def get_dataset_results(self, country_id):
         upper_case_id = country_id.upper()
