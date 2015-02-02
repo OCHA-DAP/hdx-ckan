@@ -9,9 +9,8 @@ import logging
 import ckan.lib.base as base
 import ckan.model as model
 import ckan.common as common
-
 import ckanext.hdx_crisis.dao.country_data_access as country_data_access
-import ckanext.hdx_crisis.formatters.top_line_items_formatter as formatters
+import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 
 render = base.render
@@ -44,4 +43,4 @@ class CountryController(controllers.CrisisController):
 
         self._generate_other_links(search_params)
 
-        return render('country/country.html')
+        return render('country/colombia.html')

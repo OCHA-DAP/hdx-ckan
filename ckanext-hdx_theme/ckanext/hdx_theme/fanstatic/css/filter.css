@@ -25,24 +25,7 @@
 }
 
 #search_filter_btn {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 400;
-    font-size: 12px;
-    letter-spacing: 0.03em;
-    background: #007ce0;
-    color: #fff;
-    float: right;
-    width: 80px;
-    -webkit-border-radius: 0 0 5px 5px;
-    -moz-border-radius: 0 0 5px 5px;
-    border-radius: 0 0 5px 5px;
-    padding: 3px 20px;
-    cursor: pointer;
-}
-#search_filter_btn span {
-    width: 5px;
-    display: inline-block;
-    margin: 0 0 0 4px;
+    visibility: visible;
 }
 
 .controls input[type="text"] {

@@ -19,6 +19,7 @@ import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
+import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 
 
 def run_on_startup():
@@ -58,6 +59,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
+    plugins.implements(plugins.IResourceController, inherit=True)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -90,10 +92,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'new_resource',
                           'visibility',
                           'delete',
+                          'edit',
                       ])))
-
+        
         map.connect(
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
+        
+        map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
         return map
 
     def is_fallback(self):
@@ -142,6 +147,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'methodology_other': [tk.get_validator('ignore_missing'),
                                   tk.get_converter('convert_to_extras')],
             'license_other': [tk.get_validator('ignore_missing'),
+                              tk.get_converter('convert_to_extras')],
+            'solr_additions': [tk.get_validator('ignore_missing'),
+                              tk.get_converter('convert_to_extras')],
+            'subnational': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
         })
 
@@ -196,6 +205,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                   tk.get_validator('ignore_missing')],
             'license_other': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_missing')],
+            'solr_additions': [tk.get_converter('convert_from_extras'),
+                              tk.get_validator('ignore_missing')],
+            'subnational': [tk.get_converter('convert_from_extras'),
+                              tk.get_validator('ignore_missing')],
         })
         return schema
 
@@ -213,6 +226,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create
         }
+
+    def before_show(self, resource_dict):
+        '''
+            This is run before a resource is displayed.
+            We use it to show the correct tracking summary
+        '''
+        tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
+        return resource_dict
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,

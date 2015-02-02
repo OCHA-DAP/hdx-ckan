@@ -50,20 +50,35 @@ def top_line_unit_get(r):
     return r[u'units']
 
 
+def round_up_x_decimal_value(value, x):
+    zeroes_str = (x-1)*'0'
+    decimal_format = '.' + zeroes_str + '1'
+    decimal_value = Decimal(str(value)).quantize(
+        Decimal(decimal_format), rounding=decimal.ROUND_HALF_UP)
+    return decimal_value
+
+
+def round_up_decimal_value(value):
+    decimal_value = Decimal(str(value)).quantize(
+        Decimal('1.'), rounding=decimal.ROUND_HALF_UP)
+    return decimal_value
+
+def format_decimal_number(value, places=1):
+    places_format = '{}f'.format(places)
+    format = '{:,.' + places_format + '}'
+    int_value = int(value)
+    if int_value == value:
+        formatted_value = '{:,}'.format(int_value)
+    else:
+        formatted_value = format.format(
+            round_up_x_decimal_value(value, places))
+    return formatted_value
+
+
 class TopLineItemsFormatter:
 
     def __init__(self, top_line_items):
         self.top_line_items = top_line_items
-
-    def _round_up_1_decimal_value(self, value):
-        decimal_value = Decimal(str(value)).quantize(
-            Decimal('.1'), rounding=decimal.ROUND_HALF_UP)
-        return decimal_value
-
-    def _round_up_decimal_value(self, value):
-        decimal_value = Decimal(str(value)).quantize(
-            Decimal('1.'), rounding=decimal.ROUND_HALF_UP)
-        return decimal_value
 
     def format_results(self):
 
@@ -95,7 +110,7 @@ class TopLineItemsFormatter:
                     modified_value = self._format_decimal_number(
                         modified_value)
                 elif unit_getter(r) == 'dollars':
-                    modified_value = self._round_up_decimal_value(
+                    modified_value = round_up_decimal_value(
                         modified_value)
                     modified_value = self._format_decimal_number(
                         modified_value)
@@ -121,13 +136,7 @@ class TopLineItemsFormatter:
         return formatted_value
 
     def _format_decimal_number(self, value):
-        int_value = int(value)
-        if int_value == value:
-            formatted_value = '{:,}'.format(int_value)
-        else:
-            formatted_value = '{:,.1f}'.format(
-                self._round_up_1_decimal_value(value))
-        return formatted_value
+        return format_decimal_number(value)
 
     def _format_date(self, r, date_getter, date_setter):
         pass

@@ -8,9 +8,10 @@
     {% if organizations %}
       <div class="pull-right">
            <a class="btn btn-primary" href="/organization">{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
-           <a class="btn btn-primary" href="/organization/request_new">{{ _('+ Request New Organisation') }}</a>
-      </div>
+           <a class="btn btn-primary" href="/organization/request_new">{{ _('+ Request New Organisation') }}</a><br/> <br/>
+           {% snippet "snippets/help_box.html", links=[{'url':'https://www.youtube.com/watch?v=Ge9PnJ41dAs','text':'Request a New Organisation'},{'url':'https://www.youtube.com/watch?v=_erT3dxC-ec','text':'Join an Organisation'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
     {% endif %}
+      </div>
   <h2 class="page-heading sspBold28 black">{{ _('My Organisations') }}</h2>
   <div style="min-height: 120px;">
     {% if organizations %}

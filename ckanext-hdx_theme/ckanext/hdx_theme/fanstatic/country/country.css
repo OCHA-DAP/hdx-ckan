@@ -1,0 +1,95 @@
+/* Style topline numbers table*/
+    .topline-title{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #333333;
+        letter-spacing: 0.01em;
+    }
+    .topline-numbers table {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #000000;
+        letter-spacing: 0.01em;
+
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .topline-numbers table td{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .topline-numbers table tr {
+        height: 38px;
+    }
+    .topline-numbers table tr:nth-child(odd){
+        background-color: #F6F6F6;
+    }
+
+    .topline-numbers table .value{
+        font-weight: 700;
+        text-align: right;
+    }
+
+/* END Style topline numbers table*/
+
+/* Topline Charts styles */
+    .topline-charts .topline-title {
+        /* Some indicators have long names which expand on two rows
+           causing the graphs to mis-align; this fixes it
+        */
+        height: 40px;
+    }
+    .topline-charts .chart-item{
+        height: 270px;
+        max-height: 270px;
+        margin-left: -20px;
+    }
+    .topline-charts .last-value{
+        font-family: 'Gotham-Book', sans-serif;
+        font-weight: 400;
+        font-size: 24px;
+        color: #333333;
+        letter-spacing: 0.01em;
+    }
+    .topline-charts .last-value .last-date{
+        font-size: 10px;
+    }
+
+    .topline-charts .source-name{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.01em;
+        line-height: 18px;
+        color: #000000;
+    }
+/* END Topline Charts styles */
+
+/* Dataset result list styles */
+    .country-dataset-results .dataset-section-title {
+        font-weight: 500;
+        font-size: 18px;
+        color: #888;
+    }
+    .country-dataset-results .advanced-search-link {
+        font-weight: 400;
+        font-size: 12px;
+        color: #007CE0;
+    }
+
+    .country-dataset-results .search-form .control-order-by{
+        margin-top: 0px;
+    }
+
+    .country-dataset-results .module .pagination{
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+/* END - Dataset result list styles */
+
+/* Adapting continuous browsing */
+    .country-cb .cb-explore{
+        margin-top: -10px;
+    }
+/* END - Adapting continuous browsing */

@@ -106,7 +106,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'follow_status': hdx_helpers.follow_status,
             'hdx_add_url_param': hdx_helpers.hdx_add_url_param,
             'methodology_bk_compat': hdx_helpers.methodology_bk_compat,
-            'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group
+            'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
+            'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
         }
 
     def get_actions(self):

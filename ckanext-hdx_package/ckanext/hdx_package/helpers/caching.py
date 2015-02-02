@@ -6,6 +6,7 @@ Created on Jun 2, 2014
 
 import ckan.plugins.toolkit as tk
 import beaker.cache as bcache
+import unicodedata
 
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 
@@ -19,10 +20,13 @@ bcache.cache_regions.update({
     })
 
 
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+
 @bcache.cache_region('hdx_memory_cache', 'cached_grp_list')
 def cached_group_list():
     groups  = tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True})
-    return groups
+    return sorted(groups, key=lambda k: strip_accents(k['display_name']))
 
 
 def invalidate_cached_group_list():

@@ -6,6 +6,7 @@ Created on Apr 30, 2014
 
 import logging
 import datetime
+import json
 
 import ckan.plugins as plugins
 import ckan.logic as logic
@@ -28,6 +29,20 @@ _get_action = logic.get_action
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
 
+
+group_codes = {"yem": "Yemen", "rom": "Romania", "bvt": "Bouvet Island", "mnp": "Northern Mariana Islands", "lso": "Lesotho", "tkl": "Tokelau", "tkm": "Turkmenistan", "alb": "Albania", "ita": "Italy", "tto": "Trinidad And Tobago", "nld": "Netherlands", "world": "World", "tcd": "Chad", "reu": "Reunion", "mne": "Montenegro", "mng": "Mongolia", "bfa": "Burkina Faso", "nga": "Nigeria", "zmb": "Zambia", "gmb": "Gambia", "hrv": "Croatia (Local Name: Hrvatska)", "gtm": "Guatemala", "lka": "Sri Lanka", "aus": "Australia", "jam": "Jamaica", "pcn": "Pitcairn", "aut": "Austria", "sgp": "Singapore", "dji": "Djibouti", "vct": "Saint Vincent And The Grenadines", "mwi": "Malawi", "fin": "Finland", "uga": "Uganda", "moz": "Mozambique", "bih": "Bosnia And Herzegowina", "tjk": "Tajikistan", "pse": "State of Palestine", "lca": "Saint Lucia", "svn": "Slovenia", "ssd": "South Sudan", "geo": "Georgia", "nor": "Norway", "mhl": "Marshall Islands", "pak": "Pakistan", "png": "Papua New Guinea", "guf": "French Guiana", "umi": "U.S. Minor Islands", "nfk": "Norfolk Island", "zwe": "Zimbabwe", "gum": "Guam", "gbr": "United Kingdom", "guy": "Guyana", "cri": "Costa Rica", "cmr": "Cameroon", "shn": "St. Helena", "kwt": "Kuwait", "mtq": "Martinique", "wsm": "Samoa", "mda": "Moldova, Republic Of", "mdg": "Madagascar", "hti": "Haiti", "aze": "Azerbajan", "qat": "Qatar", "mar": "Morocco", "are": "United Arab Emirates", "arg": "Argentina", "sen": "Senegal", "btn": "Bhutan", "mdv": "Maldives", "arm": "Armenia", "tmp": "East Timor", "est": "Estonia", "mus": "Mauritius", "esp": "Spain", "lux": "Luxemburg", "irq": "Iraq", "bdi": "Burundi", "smr": "San Marino", "per": "Peru", "blr": "Belarus", "irl": "Ireland", "sur": "Suriname", "irn": "Iran (Islamic Republic Of)", "abw": "Aruba", "stp": "Sao Tome And Principe", "tca": "Turks And Caicos Islands", "ner": "Niger", "esh": "Western Sahara", "plw": "Palau", "ken": "Kenya", "jor": "Jordan", "spm": "St. Pierre And Miquelon", "tur": "Turkey", "omn": "Oman", "tuv": "Tuvalu", "mmr": "Myanmar", "bwa": "Botswana", "ecu": "Ecuador", "tun": "Tunisia", "swe": "Sweden", "rus": "Russia", "hkg": "Hong Kong", "asm": "American Samoa", "dza": "Algeria", "atg": "Antigua And Barbuda", "bgd": "Bangladesh", "ltu": "Lithuania", "ata": "Antartica", "isr": "Israel", "caf": "Central African Republic", "idn": "Indonesia", "bgr": "Bulgaria", "bol": "Bolivia (Plurinational State of)", "cod": "Democratic Republic of the Congo", "cog": "Congo", "isl": "Iceland", "glp": "Guadeloupe", "tha": "Thailand", "eth": "Ethiopia", "com": "Comoros", "col": "Colombia", "wlf": "Wallis And Futuna Islands", "sjm": "Svalbard And Jan Mayen Islands", "cxr": "Christmas Island", "can": "Canada", "zaf": "South Africa", "fro": "Faroe Islands", "sgs": "South Georgia And South S.S.", "som": "Somalia", "uzb": "Uzbekistan", "ukr": "Ukraine", "vir": "Virgin Islands (U.S.)", "brn": "Brunei Darussalam", "pol": "Poland", "tgo": "Togo", "dnk": "Denmark", "brb": "Barbados", "bra": "Brazil", "fra": "France", "mkd": "Macedonia", "che": "Switzerland", "usa": "United States", "chl": "Chile", "msr": "Montserrat", "chn": "China", "mex": "Mexico", "swz": "Swaziland", "ton": "Tonga", "gib": "Gibraltar", "rwa": "Rwanda", "gin": "Guinea", "kor": "Korea, Republic Of", "vat": "Holy See (Vatican City State)", "cub": "Cuba", "mco": "Monaco", "atf": "French Southern Territories", "cyp": "Cyprus", "hun": "Hungary", "kgz": "Kyrgyzstan", "fji": "Fiji", "ven": "Venezuela", "ncl": "New Caledonia", "bmu": "Bermuda", "hmd": "Heard And Mc Donald Islands", "sdn": "Sudan", "gab": "Gabon", "cym": "Cayman Islands", "svk": "Slovakia (Slovak Republic)", "dma": "Dominica", "gnq": "Equatorial Guinea", "ben": "Benin", "bel": "Belgium", "slv": "El Salvador", "mli": "Mali", "deu": "Germany", "gnb": "Guinea-Bissau", "flk": "Falkland Islands (Malvinas)", "lva": "Latvia", "civ": "C\u00f4te d'Ivoire", "mlt": "Malta", "sle": "Sierra Leone", "aia": "Anguilla", "eri": "Eritrea", "slb": "Solomon Islands", "nzl": "New Zealand", "and": "Andorra", "lbr": "Liberia", "jpn": "Japan", "lby": "Libya", "mys": "Malaysia", "pri": "Puerto Rico", "myt": "Mayotte", "prk": "Democratic People's Republic of Korea", "ant": "Netherlands Antilles", "prt": "Portugal", "khm": "Cambodia", "ind": "India", "bhs": "Bahamas", "bhr": "Bahrain", "pry": "Paraguay", "sau": "Saudi Arabia", "cze": "Czech Republic", "lie": "Liechtenstein", "fxx": "France, Metropolitan", "afg": "Afghanistan", "vut": "Vanuatu", "vgb": "Virgin Islands (British)", "nam": "Namibia", "grd": "Grenada", "nru": "Nauru", "grc": "Greece", "twn": "Taiwan, Province Of China", "grl": "Greenland", "lbn": "Lebanon", "srb": "Serbia", "pan": "Panama", "syc": "Seychelles", "npl": "Nepal", "lao": "Lao People\'s Democratic Republic", "phl": "Philippines", "kir": "Kiribati", "vnm": "Viet Nam", "iot": "British Indian Ocean Territory", "syr": "Syrian Arab Republic", "mac": "Macau", "kaz": "Kazakhstan", "cok": "Cook Islands", "pyf": "French Polynesia", "niu": "Niue", "ago": "Angola", "egy": "Egypt", "hnd": "Honduras", "dom": "Dominican Republic", "mrt": "Mauritania", "blz": "Belize", "nic": "Nicaragua", "fsm": "Micronesia, Federated States Of", "kna": "Saint Kitts And Nevis", "gha": "Ghana", "cck": "Cocos (Keeling) Islands", "ury": "Uruguay", "cpv": "Cape Verde", "tza": "United Republic of Tanzania"}
+
+def build_additions(groups):
+    countries = []
+    for g in groups:
+        try:
+            if 'id' in g:
+                countries.append(group_codes[g['id']])
+            else:
+                countries.append(group_codes[g['name']]) #API will hit this
+        except:
+            pass
+    return json.dumps({'countries':countries})
 
 def package_update(context, data_dict):
     '''Update a dataset (package).
@@ -59,6 +74,8 @@ def package_update(context, data_dict):
         raise NotFound(_('Package was not found.'))
     context["package"] = pkg
     data_dict["id"] = pkg.id
+    if 'groups' in data_dict:
+        data_dict['solr_additions'] = build_additions(data_dict['groups'])
 
     _check_access('package_update', context, data_dict)
 
