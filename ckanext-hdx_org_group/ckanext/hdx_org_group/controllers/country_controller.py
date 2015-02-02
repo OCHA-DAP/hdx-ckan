@@ -107,7 +107,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         if not top_line_data:
             log.warn('No top line numbers found for country: {}'.format(country_id))
-
+            top_line_data = []
         sorted_top_line_data = sorted(top_line_data,
                                       key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
         for el in sorted_top_line_data:
@@ -119,6 +119,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         chart_data = chart_results.get('results', [])
         if not chart_data:
             log.warn('No chart data found for country: {}'.format(country_id))
+            chart_data = []
         chart_data_dict = {}
 
         # for el in chart_data:
@@ -303,7 +304,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         if ext_indicator:
             search_extras['ext_indicator'] = ext_indicator
 
-        limit = self._allowed_num_of_items(search_extras)
+        #limit = self._allowed_num_of_items(search_extras)
+        limit = 8
         page = self._page_number()
         params_nopage = {k:v for k, v in request.params.items() if k != 'page' }
 
