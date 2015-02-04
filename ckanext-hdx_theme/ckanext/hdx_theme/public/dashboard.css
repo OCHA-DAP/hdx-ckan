@@ -45,7 +45,7 @@
 .popover .popover-content {
     color: #007CE0;
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 700;
+    font-weight: normal;
     font-size: 16px;
     line-height: 20px;
     word-break: break-all;

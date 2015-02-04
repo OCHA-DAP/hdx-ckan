@@ -68,7 +68,7 @@
 {% endblock %}
 
 {% block basic_fields_subnational %}
-    <div style="clear:both;">
+    <div class="subnational_info_align" style="clear:both;">
     <div class="{{ form_field_wrapper_classes }}">
     <div class="control-group">
       <label class="control-label" for="field-subnational" style="display: inline-block;">{{ _("Dataset contains sub-national data:") }}</label>
@@ -82,7 +82,7 @@
     </div>
       </div>
       {% if new_dataset %}
-        <div class="dataset-form-info-field dataset-form-info-field-height info-field" style="height:60px;">
+        <div class="dataset-form-info-field dataset-form-info-field-height info-field">
         {% trans %}
         Leave this box checked if the values in your dataset apply to one or more locations (e.g. district, province, city) within a country.
         {% endtrans %}
