@@ -761,99 +761,99 @@ class DatasetController(PackageController):
         return render('package/confirm_delete.html')
 
 
-# class HDXApiController(ApiController):
+class HDXApiController(ApiController):
 
-#     def package_create(self):
-#         context = {'model': model, 'session': model.Session, 'user': c.user,
-#                    'api_version': 3, 'auth_user_obj': c.userobj}
-#         log.debug('create: %s' % (context))
-#         try:
-#             request_data = self._get_request_data()
-#             data_dict = {}
-#             data_dict.update(request_data)
-#         except ValueError, inst:
-#             return self._finish_bad_request(
-#                 _('JSON Error: %s') % inst)
+    def package_create(self):
+        context = {'model': model, 'session': model.Session, 'user': c.user,
+                   'api_version': 3, 'auth_user_obj': c.userobj}
+        log.debug('create: %s' % (context))
+        try:
+            request_data = self._get_request_data()
+            data_dict = {}
+            data_dict.update(request_data)
+        except ValueError, inst:
+            return self._finish_bad_request(
+                _('JSON Error: %s') % inst)
 
-#         try:
-#             response_data = self.package_create_rest(context, data_dict)
-#             location = None
-#             return self._finish_ok(response_data,
-#                                    resource_location=location)
-#         except NotAuthorized, e:
-#             extra_msg = e.extra_msg
-#             return self._finish_not_authz(extra_msg)
-#         except NotFound, e:
-#             extra_msg = e.extra_msg
-#             return self._finish_not_found(extra_msg)
-#         except ValidationError, e:
-#             # CS: nasty_string ignore
-#             log.error('Validation error: %r' % str(e.error_dict))
-#             return self._finish(409, e.error_dict, content_type='json')
-#         except DataError, e:
-#             log.error('Format incorrect: %s - %s' % (e.error, request_data))
-#             error_dict = {
-#                 'success': False,
-#                 'error': {'__type': 'Integrity Error',
-#                                     'message': e.error,
-#                                     'data': request_data}}
-#             return self._finish(400, error_dict, content_type='json')
-#         except search.SearchIndexError:
-#             log.error('Unable to add package to search index: %s' %
-#                       request_data)
-#             return self._finish(500,
-#                                 _(u'Unable to add package to search index') %
-#                                 request_data)
-#         except:
-#             model.Session.rollback()
-#             raise
+        try:
+            response_data = self.package_create_rest(context, data_dict)
+            location = None
+            return self._finish_ok(response_data,
+                                   resource_location=location)
+        except NotAuthorized, e:
+            extra_msg = e.extra_msg
+            return self._finish_not_authz(extra_msg)
+        except NotFound, e:
+            extra_msg = e.extra_msg
+            return self._finish_not_found(extra_msg)
+        except ValidationError, e:
+            # CS: nasty_string ignore
+            log.error('Validation error: %r' % str(e.error_dict))
+            return self._finish(409, e.error_dict, content_type='json')
+        except DataError, e:
+            log.error('Format incorrect: %s - %s' % (e.error, request_data))
+            error_dict = {
+                'success': False,
+                'error': {'__type': 'Integrity Error',
+                                    'message': e.error,
+                                    'data': request_data}}
+            return self._finish(400, error_dict, content_type='json')
+        except search.SearchIndexError:
+            log.error('Unable to add package to search index: %s' %
+                      request_data)
+            return self._finish(500,
+                                _(u'Unable to add package to search index') %
+                                request_data)
+        except:
+            model.Session.rollback()
+            raise
 
-#     def request_wrapper(self, context, data_dict=None, result=None):
-#         user = context['user']
+    def request_wrapper(self, context, data_dict=None, result=None):
+        user = context['user']
 
-#         if new_authz.auth_is_anon_user(context):
-#             check1 = new_authz.check_config_permission('anon_create_dataset')
-#         else:
-#             check1 = new_authz.check_config_permission('create_dataset_if_not_in_organization') \
-#                 or new_authz.check_config_permission('create_unowned_dataset') \
-#                 or new_authz.has_user_permission_for_some_org(user, 'create_dataset')
+        if new_authz.auth_is_anon_user(context):
+            check1 = new_authz.check_config_permission('anon_create_dataset')
+        else:
+            check1 = new_authz.check_config_permission('create_dataset_if_not_in_organization') \
+                or new_authz.check_config_permission('create_unowned_dataset') \
+                or new_authz.has_user_permission_for_some_org(user, 'create_dataset')
 
-#         if not check1:
-#             return {'success': False, 'msg': _('User %s not authorized to create packages') % user}
+        if not check1:
+            return {'success': False, 'msg': _('User %s not authorized to create packages') % user}
 
-#         check2 = _check_group_auth(context,data_dict)
-#         if not check2:
-#             return {'success': False, 'msg': _('User %s not authorized to edit these groups') % user}
+        check2 = _check_group_auth(context,data_dict)
+        if not check2:
+            return {'success': False, 'msg': _('User %s not authorized to edit these groups') % user}
 
-#         user = context['user']
-#         if user in (model.PSEUDO_USER__VISITOR, ''):
-#             return {'success': False, 'msg': _('Valid API key needed to create a package')}
+        user = context['user']
+        if user in (model.PSEUDO_USER__VISITOR, ''):
+            return {'success': False, 'msg': _('Valid API key needed to create a package')}
 
-#         # If an organization is given are we able to add a dataset to it?
-#         data_dict = data_dict or {}
-#         org_id = data_dict.get('owner_org')
-#         if org_id and not new_authz.has_user_permission_for_group_or_org(
-#                 org_id, user, 'create_dataset'):
-#             return {'success': False, 'msg': _('User %s not authorized to add dataset to this organization') % user}
-#         return {'success': True, 'result':result}
+        # If an organization is given are we able to add a dataset to it?
+        data_dict = data_dict or {}
+        org_id = data_dict.get('owner_org')
+        if org_id and not new_authz.has_user_permission_for_group_or_org(
+                org_id, user, 'create_dataset'):
+            return {'success': False, 'msg': _('User %s not authorized to add dataset to this organization') % user}
+        return {'success': True, 'result':result}
 
-#     def convert_groups(self, groups):
-#         countries = []
-#         for g in groups:
-#             countries.append(g['id'])
-#         return countries
+    def convert_groups(self, groups):
+        countries = []
+        for g in groups:
+            countries.append(g['id'])
+        return countries
     
-#     def package_create_rest(self, context, data_dict):
-#         import ckan.lib.dictization.model_save as model_save
+    def package_create_rest(self, context, data_dict):
+        import ckan.lib.dictization.model_save as model_save
 
-#         check_access('package_create_rest', context, data_dict)
-#         dictized_package = model_save.package_api_to_dict(data_dict, context)
-#         dictized_after = get_action('package_create')(context, dictized_package)
-#         ## Update
-#         dictized_package['groups'] = self.convert_groups(dictized_package['groups'])
-#         dictized_after = get_action('package_update')(context, dictized_package)
-#         pkg = context['package']
-#         package_dict = model_dictize.package_to_api(pkg, context)
+        check_access('package_create_rest', context, data_dict)
+        dictized_package = model_save.package_api_to_dict(data_dict, context)
+        dictized_after = get_action('package_create')(context, dictized_package)
+        ## Update
+        dictized_package['groups'] = self.convert_groups(dictized_package['groups'])
+        dictized_after = get_action('package_update')(context, dictized_package)
+        pkg = context['package']
+        package_dict = model_dictize.package_to_api(pkg, context)
 
-#         data_dict['id'] = pkg.id
-#         return self.request_wrapper(context, package_dict, dictized_after)
+        data_dict['id'] = pkg.id
+        return self.request_wrapper(context, package_dict, dictized_after)

@@ -79,6 +79,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
         s = self._get_action('package_show')(context, {"id":p["id"]})
+        print s
         assert json.loads(s['solr_additions'])['countries'] == ['Colombia']
 
 

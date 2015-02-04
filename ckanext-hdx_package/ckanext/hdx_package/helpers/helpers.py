@@ -20,7 +20,7 @@ import ckan.lib.plugins as lib_plugins
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckan.lib.dictization.model_save as model_save
 import ckan.plugins as plugins
-import ckanext.hdx_package.helpers.update as hdx_update
+import update as hdx_update
 
 from ckan.logic.action.create import _validate
 
@@ -360,6 +360,9 @@ def package_create(context, data_dict):
     data, errors = _validate(data_dict, schema, context)
     if 'tags' in data:
         data['tags'] = get_tag_vocabulary(data['tags'])
+    # if 'groups' in data:
+    #     data['solr_additions'] = hdx_update.build_additions(data['groups'])
+
     log.debug('package_create validate_errs=%r user=%s package=%s data=%r',
               errors, context.get('user'),
               data.get('name'), data_dict)
@@ -381,10 +384,7 @@ def package_create(context, data_dict):
         if user_obj:
             admins = [user_obj]
             data['creator_user_id'] = user_obj.id
-
-    if 'groups' in data_dict:
-        data['solr_additions'] = hdx_update.build_additions(data_dict['groups'])
-
+        
     pkg = model_save.package_dict_save(data, context)
 
     model.setup_default_user_roles(pkg, admins)

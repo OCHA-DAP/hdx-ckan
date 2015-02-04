@@ -98,7 +98,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect(
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
         
-        #map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
+        map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
         return map
 
     def is_fallback(self):
