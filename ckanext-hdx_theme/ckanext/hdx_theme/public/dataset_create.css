@@ -20,6 +20,11 @@
 	visibility: visible;
 }
 
+.subnational_info_align .dataset-form-info-field{
+    height:60px;
+    margin-top:-3px;
+}
+
 .simple-dataset-control{
 	width: 370px;
 }

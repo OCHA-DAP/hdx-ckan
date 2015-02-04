@@ -20,6 +20,7 @@ import ckan.lib.plugins as lib_plugins
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckan.lib.dictization.model_save as model_save
 import ckan.plugins as plugins
+import ckanext.hdx_package.helpers as helpers_module
 
 from ckan.logic.action.create import _validate
 
@@ -380,6 +381,9 @@ def package_create(context, data_dict):
         if user_obj:
             admins = [user_obj]
             data['creator_user_id'] = user_obj.id
+
+    if 'groups' in data_dict:
+        data['solr_additions'] = helpers_module.update.build_additions(data_dict['groups'])
 
     pkg = model_save.package_dict_save(data, context)
 
