@@ -7,31 +7,53 @@
 <div class="row">
 	<div class="col-xs-12 mTop15 mBottom65 paddingLeftHack paddingRightHack">
 		<div class="row cb-row">
+			{% if type == "group" %}
+			<div class="col-xs-4 mTB30 cb-item">
+				<div class="cb-explore">
+					{{ _('Explore') }}
+				{% set title=pkg.title or pkg.name %}
+				{% set url=h.url_for(controller='package', action='search', q=title) %}
+				"<a href="{{ url }}" title="{{ title }}">{{ title|truncate(38, False) }}</a>"
+				{{ _('in the HDX Collection') }}
+			</div>
+		</div>
+			{% else %}
 			<div class="col-xs-2 mTB30 cb-item">
 				<div class="cb-explore">
-				{{ _('Explore') }} <br /> 
+				{{ _('Explore') }} <br />
 				{% set title=pkg.title or pkg.name %}
 				{% set url=h.url_for(controller='package', action='search', q=title) %}
 				"<a href="{{ url }}" title="{{ title }}">{{ title|truncate(38, False) }}</a>" <br />
 				{{ _('in the HDX Collection') }}
 				</div>
 			</div>
+			{% endif %}
 			{% set topics_num = topics|length %}
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Supporting Topic'),_('Supporting Topics'), False), count=topics_num, 
 				links=topics, upper=True %}
 			
+			{% if type == "dataset" %}
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', id="continuous_browsing_locations", name=_('Supporting Locations'), count=' ',
 				links=[{'name':_('Coming soon...')}] %}
 				
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Downloads'), count=downloads_count,
 				links=[{'name': ' '}] %}
-			
+			{% endif %}
+
 			{% set followers_num = followers|length %}
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=h.hdx_show_singular_plural(followers_num,_('Follower'),_('Followers'), False), count=followers_num,
 				links=followers %}
 			
 			{% snippet 'indicator/snippets/continuous_browsing_item.html', name=_('Related Websites'), count=' ', 
 				links=related_urls %}
+
+			{% if type == "group" %}
+			<div class="col-xs-2 mTB30 cb-item">
+				<div class="cb-explore">
+					{# CREATES MARGINE TO CENTER THE CONTENT BETTER #}
+				</div>
+			</div>
+			{% endif %}
 		</div>
 	</div>
 </div>

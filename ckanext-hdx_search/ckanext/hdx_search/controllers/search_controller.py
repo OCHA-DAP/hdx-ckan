@@ -1,6 +1,6 @@
 import logging
 import datetime
-import copy
+import sqlalchemy
 from urllib import urlencode
 
 from pylons import config
@@ -12,9 +12,13 @@ import ckan.lib.maintain as maintain
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
-import ckan.lib.search as search
-import sqlalchemy
 import ckan.plugins as p
+
+from ckan.common import OrderedDict, _, json, request, c, g, response
+
+from ckan.controllers.package import PackageController
+import ckanext.hdx_search.actions.actions as hdx_actions
+
 _validate = dict_fns.validate
 _check_access = logic.check_access
 
@@ -27,8 +31,6 @@ _desc = sqlalchemy.desc
 _case = sqlalchemy.case
 _text = sqlalchemy.text
 
-from ckan.common import OrderedDict, _, json, request, c, g, response
-from pydoc_data.topics import topics
 
 log = logging.getLogger(__name__)
 
@@ -45,8 +47,7 @@ get_action = logic.get_action
 SMALL_NUM_OF_ITEMS = 5
 LARGE_NUM_OF_ITEMS = 25
 
-from ckan.controllers.package import PackageController
-import ckanext.hdx_search.actions.actions as hdx_actions
+
 
 
 def _encode_params(params):
@@ -57,7 +58,6 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
-
 
 def search_for_all(context, data_dict):
     '''This search is independent of the tab in which the user
@@ -113,8 +113,11 @@ def extract_one_indicator(result):
 def sort_features(features):
     return sorted(features, key=lambda x: x['count'], reverse=True)
 
-
+@maintain.deprecated('Showing features in search results has been deprecated')
 def isolate_features(context, facets, q, tab, skip=0, limit=25):
+    ''' Showing features in search results has been deprecated.
+        Deprecated since 25.01.2015 - hdx 0.6.5
+    '''
     import difflib
     import random
 
@@ -158,13 +161,10 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
         return (feature_list[skip:skip + limit], len(features))
     return features
 
-
 class HDXSearchController(PackageController):
 
     def search(self):
         from ckan.lib.search import SearchError
-
-        params_to_skip = ['_show_filters']
 
         package_type = self._guess_package_type()
 
@@ -181,21 +181,18 @@ class HDXSearchController(PackageController):
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', u'')
         c.query_error = False
-        try:
-            page = int(request.params.get('page', 1))
-        except ValueError, e:
-            abort(400, ('"page" parameter must be an integer'))
 
-        # most search operations should reset the page counter:
-        params_nopage = [(k, v) for k, v in request.params.items()
-                         if k != 'page' and k not in params_to_skip]
+        page = self._page_number()
 
-        def drill_down_url(alternative_url=None, **by):
-            return h.add_url_param(alternative_url=alternative_url,
-                                   controller='package', action='search',
-                                   new_params=by)
+        params_nopage = self._params_nopage()
 
-        c.drill_down_url = drill_down_url
+        # Commenting below parts as it doesn't seem to be used
+        # def drill_down_url(alternative_url=None, **by):
+        #     return h.add_url_param(alternative_url=alternative_url,
+        #                            controller='package', action='search',
+        #                            new_params=by)
+        #
+        # c.drill_down_url = drill_down_url
 
         self._set_remove_field_function()
 
@@ -296,7 +293,7 @@ class HDXSearchController(PackageController):
             c.facet_titles = facets
 
             self._which_tab_is_selected(search_extras)
-            self._performing_search(q, fq, facets, limit, page, sort_by,
+            self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
                                     search_extras, pager_url, context)
 
         except SearchError, se:
@@ -337,12 +334,12 @@ class HDXSearchController(PackageController):
         elif 'ext_feature' in search_extras:
             c.tab = "features"
 
-    def _performing_search(self, q, fq, facets, limit, page, sort_by,
+    def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):
         data_dict = {
             'q': q,
             'fq': fq.strip(),
-            'facet.field': facets.keys(),
+            'facet.field': facet_keys,
             'rows': limit,
             'start': (page - 1) * limit,
             'sort': sort_by,
@@ -403,6 +400,8 @@ class HDXSearchController(PackageController):
 # c.search_facets = query['search_facets']
 #                 c.page.items = query['results']
 
+        get_action('populate_related_items_count')(context, {'pkg_dict_list':query['results']})
+
         c.page = h.Page(
             collection=query['results'],
             page=page,
@@ -412,6 +411,8 @@ class HDXSearchController(PackageController):
         )
         c.page.items = query['results']
         c.sort_by_selected = query['sort']
+
+        return query, all_result
 
     def _decide_adding_dataset_criteria(self, data_dict):
         # For all tab, only paginate datasets
@@ -451,26 +452,41 @@ class HDXSearchController(PackageController):
     def _get_named_route(self):
         return 'search'
 
-    def _set_other_links(self):
+    def _page_number(self):
+        try:
+            return int(request.params.get('page', 1))
+        except ValueError, e:
+            abort(400, ('"page" parameter must be an integer'))
+
+    def _params_nopage(self):
+        params_to_skip = ['_show_filters']
+        # most search operations should reset the page counter:
+        return [(k, v) for k, v in request.params.items()
+                         if k != 'page' and k not in params_to_skip]
+
+    def _set_other_links(self, suffix='', other_params_dict=None):
         named_route = self._get_named_route()
         params = {k: v for k, v in request.params.items()
                   if k in ['sort', 'q', 'organization', 'tags',
                            'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters']}
 
+        if other_params_dict:
+            params.update(other_params_dict)
+
         c.other_links = {}
-        c.other_links['all'] = h.url_for(named_route, **params)
+        c.other_links['all'] = h.url_for(named_route, **params) + suffix
         params_copy = params.copy()
         params_copy['ext_indicator'] = 1
-        c.other_links['indicators'] = h.url_for(named_route, **params_copy)
+        c.other_links['indicators'] = h.url_for(named_route, **params_copy) + suffix
         params_copy['ext_indicator'] = 0
-        c.other_links['datasets'] = h.url_for(named_route, **params_copy)
+        c.other_links['datasets'] = h.url_for(named_route, **params_copy) + suffix
 
         params_copy = params.copy()
         params_copy['ext_feature'] = 1
-        c.other_links['features'] = h.url_for(named_route, **params_copy)
+        c.other_links['features'] = h.url_for(named_route, **params_copy) + suffix
 
 #         c.other_links['params'] = params
         c.other_links['params_noq'] = {k: v for k, v in params.items()
-                                       if k not in ['q', '_show_filters']}
+                                       if k not in ['q', '_show_filters', 'id']}
         c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
-                                              if k not in ['sort', 'q']}
+                                              if k not in ['sort', 'q', 'id']}

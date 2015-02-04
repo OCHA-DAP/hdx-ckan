@@ -9,6 +9,13 @@
   {% link_for _('Add new resource'), controller='package', action='new_resource', id=c.pkg_dict.name, class_='btn btn-primary', icon='plus' %}
 {% endblock %}
 
+{% block content_action %}
+<div class="pull-right" style="margin-right:-30px; margin-left:40px;">
+  {% snippet "snippets/help_box.html", links=[{'url':http://docs.hdx.rwlabs.org/screencasts#submitting-data','text':'Submitting Data'},{'url':'http://docs.hdx.rwlabs.org/screencasts#updating-a-resource','text':'Update Resource'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
+  </div>
+  {{ super() }}
+{% endblock %}
+
 {% block primary_content_inner %}
   {% if pkg.resources %}
     <ul class="resource-list"{% if has_reorder %} data-module="resource-reorder" data-module-id="{{ pkg.id }}"{% endif %}>

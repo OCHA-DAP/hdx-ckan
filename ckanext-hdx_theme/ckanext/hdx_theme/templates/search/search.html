@@ -36,111 +36,13 @@
         </div>
     </div>
   </div>
-  <div id="search_filter_btn">Filter<span>+</span></div>
+{#  <div id="search_filter_btn">Filter<span>+</span></div>#}
 </div>
 
-
-  <section class="list-items module">
-    <div class="list-items module-content mT35">
-      {% block page_primary_action %}
-      {% endblock %}
-      {% block form %}
-        {% set sorting = [
-          (_('Relevance'), 'score desc, metadata_modified desc'),
-          (_('Name Ascending'), 'title_case_insensitive asc'),
-          (_('Name Descending'), 'title_case_insensitive desc'),
-          (_('Last Modified'), 'metadata_modified desc'),
-          (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
-        %}
-        {% set facets = {
-          'fields': c.fields_grouped,
-          'search': c.search_facets,
-          'titles': c.facet_titles,
-          'translated_fields': c.translated_fields,
-          'remove_field': c.remove_field }
-        %}
-        {% block search_form_snippet scoped %}
-        	{% snippet 'search/snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, tab=c.tab, sorting_selected=c.sort_by_selected, 
-        			count=(c.count), facets=facets, show_empty=request.params, error=c.query_error, search_in_results=true, 
-        			placeholder=_('Search within found datasets...'), display_search_input=false, id=c.group_dict.name, other_links=c.other_links,
-        			indicator_counts = c.indicator_counts, dataset_counts = c.dataset_counts %}
-        {% endblock %}
-      {% endblock %}
-
-      {% block package_search_results_list %}
-      	{% block package_search_results_indicators %}
-	      {% if c.tab=='all' %}
-	        <div class="list-header">
-	            <span class="mL15 list-header-title">
-	              Indicators [{{c.indicator_counts}}]
-	            </span>
-	            {% if c.tab=='all' and c.indicator %}
-		            <span class="mL15 list-header-showall">
-		              <a href="{{ c.other_links.indicators }}">Show all indicators</a>
-		            </span>
-	            {% endif %}
-	            <span class="pull-right list-header-actions">
-	            </span>
-	        </div>
-	      {% endif %}
-	      {% if c.tab=='all' or c.tab=='indicators' %}
-	        {% if  c.tab == 'indicators' %}
-	          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.page.items, tab=c.tab, show_preview_on_first=True) }}
-	        {% else %}
-	          {{ h.snippet('search/snippets/indicator_list.html', query=c.q, packages=c.indicator, tab=c.tab, show_preview_on_first=True) }}
-	        {% endif %}
-	      {% endif %}
-		{% endblock  %}
-		
-		{#
-		{% block package_search_results_features %}
-	      {% if c.tab=='all' or c.tab=='features' %}
-	        <div class="list-header">
-	          <span class="mL15 list-header-title">
-	            Feature Pages
-	          </span>
-	          {% if c.tab=='all' and c.features %}
-		          <span class="mL15 list-header-showall">
-		            <a href="{{ c.other_links.features }}">{{ _("Show all feature pages") }}</a>
-		          </span>
-		      {% endif %}
-	          <span class="pull-right list-header-actions">
-	          </span>
-	        </div>
-	        {{ h.snippet('search/snippets/feature_list.html', query=c.q, packages=c.features) }}
-	      {% endif %}
-	 	{% endblock %}
-	 	#}
-	 	
-	 	
-		{% block package_search_results_datasets %}
-	      {% if c.tab=='all' %}
-	        <div class="list-header">
-	          <span class="mL15 list-header-title">
-	            Datasets [{{c.dataset_counts}}]
-	          </span>
-	          {% if c.tab=='all' and c.page.items %}
-		          <span class="mL15 list-header-showall">
-		            <a href="{{ c.other_links.datasets }}">Show all datasets</a>
-		          </span>
-		      {% endif %}
-	          <span class="pull-right list-header-actions">
-	          </span>
-	        </div>
-	      {% endif %}
-	      {% if c.tab=='all' or c.tab=='datasets' %}
-	        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items) }}
-	      {% endif %}
-	  	{% endblock %}
-      {% endblock %}
-    </div>
-
-    {% block page_pagination %}
-      {% if c.tab != 'all' %}
-        {{ c.page.pager(q=c.q) }}
-      {% endif %}
+    {% block search_results_wrapper %}
+        {% snippet 'search/snippets/search_results_wrapper_for_search_page.html',
+                        tracking_enabled=g.tracking_enabled, my_c=c %}
     {% endblock %}
-  </section>
 
   {% block package_search_results_api %}
   {% endblock %}

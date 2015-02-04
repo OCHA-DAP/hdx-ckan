@@ -19,12 +19,12 @@
 {% endblock %}
 
 {% block secondary %}
-<div class="border-right-grey">
+<div>
   <h2 class="uppercase">{{_('Gallery')}}</h2>
   {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj %}
 
 </div>
-  <div class="border-right-grey">
+  <div>
         <h2 class="uppercase">{{_('Activity')}}</h2>
         {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
      {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_activities['activities'], offset = c.hdx_activities['offset'] %}
@@ -62,7 +62,7 @@
 {% block post_primary %}
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      {% snippet "indicator/snippets/continuous_browsing.html", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
+      {% snippet "indicator/snippets/continuous_browsing.html", type="dataset", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
     </div>
   </div>
 {% endblock %}
@@ -75,6 +75,7 @@
 {% block scripts %}
   {{ super() }}
   {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/activity-stream' %}
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/bs_popover.js' %}

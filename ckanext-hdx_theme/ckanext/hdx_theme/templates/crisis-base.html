@@ -8,9 +8,11 @@
     </div>
     <div class="crisis-map-title">
       <span class="mL45 crisisTitle"> {% block crisis_title %} Crisis title {% endblock %}</span>
-      <span class="mR45 pull-right" style="line-height: 50px;">
-        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
-      </span>
+        {% block crisis_actions %}
+            <span class="mR45 pull-right" style="line-height: 50px;">
+            {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+            </span>
+        {% endblock %}
     </div>
   </div>
 
@@ -18,7 +20,8 @@
 
   {% endblock %}
 
-<section class="list-items module">
+  {% block package_search_results %}
+  <section class="list-items module">
     <div class="list-items module-content mT35">
 	{% block package_search_results_list %}
         <div class="list-header crisis-list-header">
@@ -36,7 +39,8 @@
 	{% block page_pagination %}
         {{ c.page.pager(q=c.q) }}
     {% endblock %}
-</section>
+  </section>
+  {% endblock %}
 {% endblock %}
 
 {% block secondary %}
