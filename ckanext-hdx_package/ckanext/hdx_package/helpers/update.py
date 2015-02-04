@@ -18,7 +18,7 @@ import ckan.lib.navl.dictization_functions
 import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
 import ckan.model as model
-from ckanext.hdx_package.helpers import helpers
+import ckanext.hdx_package.helpers.helpers as helpers
 
 from ckan.common import _
 
