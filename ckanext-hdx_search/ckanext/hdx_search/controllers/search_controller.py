@@ -1,6 +1,6 @@
 import logging
 import datetime
-import copy
+import sqlalchemy
 from urllib import urlencode
 
 from pylons import config
@@ -12,9 +12,13 @@ import ckan.lib.maintain as maintain
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
-import ckan.lib.search as search
-import sqlalchemy
 import ckan.plugins as p
+
+from ckan.common import OrderedDict, _, json, request, c, g, response
+
+from ckan.controllers.package import PackageController
+import ckanext.hdx_search.actions.actions as hdx_actions
+
 _validate = dict_fns.validate
 _check_access = logic.check_access
 
@@ -27,8 +31,6 @@ _desc = sqlalchemy.desc
 _case = sqlalchemy.case
 _text = sqlalchemy.text
 
-from ckan.common import OrderedDict, _, json, request, c, g, response
-from pydoc_data.topics import topics
 
 log = logging.getLogger(__name__)
 
@@ -45,8 +47,7 @@ get_action = logic.get_action
 SMALL_NUM_OF_ITEMS = 5
 LARGE_NUM_OF_ITEMS = 25
 
-from ckan.controllers.package import PackageController
-import ckanext.hdx_search.actions.actions as hdx_actions
+
 
 
 def _encode_params(params):

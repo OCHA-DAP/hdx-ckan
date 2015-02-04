@@ -6,7 +6,7 @@
 		background-position: left bottom;
 		height: 265px;
 	}
-	.cb-explore {
+	.cb-row .cb-explore {
 		font-family: 'Gotham-Book', sans-serif;
 		font-size: 12px;
 		color: #333333;
@@ -22,19 +22,19 @@
 		top: 50%;
 		margin-top: -60px;
 	}
-	.cb-explore a, .cb-explore a:hover {
+	.cb-row .cb-explore a, .cb-row .cb-explore a:hover {
 		font-family: 'Gotham-Bold', sans-serif;
 		font-weight: 400;
 		color: #007CE0;
 		font-size: 12px;
 		letter-spacing: 0em;
 	}
-	.cb-item {
+	.cb-row .cb-item {
 		height: 205px;
 		padding-left: 0px;
 		padding-right: 0px;
 	}
-	.cb-item-count{
+	.cb-row .cb-item-count{
 		font-family: 'Gotham-Light', sans-serif;
 		font-size: 24px;
 		color: #333333;
@@ -44,7 +44,7 @@
 		padding-left: 15px;
 		padding-right: 15px;
 	}
-	.cb-item-name{
+	.cb-row .cb-item-name{
 		font-family: 'Gotham-Book', sans-serif;
 		font-size: 12px;
 		text-transform: uppercase;
@@ -56,7 +56,7 @@
 		padding-top: 12px;
 		height: 64px;
 	}
-	.cb-item-links, .cb-item-links a, .cb-item-links a:hover {
+	.cb-row .cb-item-links, .cb-row .cb-item-links a, .cb-row .cb-item-links a:hover {
 		font-family: 'Source Sans Pro', sans-serif;
 		font-size: 14px;
 		color: #007CE0;
@@ -64,13 +64,13 @@
 		letter-spacing: 0.01em;
 		text-align: center;
 	}
-	.cb-item-links li {
+	.cb-row .cb-item-links li {
 		margin-top: 1px;
 	}
-	.cb-item-links span {
+	.cb-row .cb-item-links span {
 		color: #777777;
 	}
-	.cb-border-wrapper {
+	.cb-row .cb-border-wrapper {
 		border-left-width: 1px;
 		border-left-style:solid;
 		border-left-color: #E4E4E4;
