@@ -43,6 +43,19 @@
                                     <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
                                 </td>
                             </tr>
+                            <tr class="extra-info">
+                                <td colspan="2">
+                                    <span>
+                                        {{ value.sourceName }}
+                                        {%  if value.datasetLink %}
+                                            - <a href="{{ value.datasetLink }}">Data</a>
+                                        {% endif %}
+                                        {%  if value.datasetUpdateDate %}
+                                            - {{ value.datasetUpdateDate }}
+                                        {% endif %}
+                                    </span>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </table>
                 </div>
