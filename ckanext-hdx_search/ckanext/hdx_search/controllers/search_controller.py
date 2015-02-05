@@ -366,6 +366,7 @@ class HDXSearchController(PackageController):
             # c.features = isolate_features(
             #     context, query['search_facets'], q, c.tab)
             c.indicator = extract_one_indicator(all_result)
+            get_action('populate_related_items_count')(context, {'pkg_dict_list':c.indicator})
             c.facets = all_result['facets']
             c.search_facets = all_result['search_facets']
         else:
