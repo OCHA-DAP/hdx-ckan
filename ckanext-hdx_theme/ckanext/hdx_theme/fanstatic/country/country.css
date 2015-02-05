@@ -20,16 +20,32 @@
         padding-left: 20px;
         padding-right: 20px;
     }
-    .topline-numbers table tr {
-        height: 38px;
+    .topline-numbers table td.name{
+        width: 65%;
     }
-    .topline-numbers table tr:nth-child(odd){
+    .topline-numbers table td.value{
+        width: 35%;
+        font-weight: 700;
+        text-align: right;
+    }
+    .topline-numbers table tr.indicator {
+        height: 31px;
+        vertical-align: bottom;
+    }
+    .topline-numbers table tr.extra-info {
+        height: 30px;
+        vertical-align: top;
+    }
+    .topline-numbers table tr:nth-child(4n+1), .topline-numbers table tr:nth-child(4n+2){
         background-color: #F6F6F6;
     }
 
-    .topline-numbers table .value{
-        font-weight: 700;
-        text-align: right;
+    .topline-numbers .extra-info span {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.01em;
+        line-height: 18px;
+        color: #000000;
     }
 
 /* END Style topline numbers table*/

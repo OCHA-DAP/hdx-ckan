@@ -460,7 +460,7 @@ def hdx_resource_preview(resource, package):
     data_dict = {'resource': resource, 'package': package}
 
     if datapreview.get_preview_plugin(data_dict, return_first=True):
-        url = url_for(controller='package', action='resource_datapreview',
+        url = h.url_for(controller='package', action='resource_datapreview',
                       resource_id=resource['id'], id=package['id'], qualified=True)
     elif format_lower in datapreview.direct():
         directly = True

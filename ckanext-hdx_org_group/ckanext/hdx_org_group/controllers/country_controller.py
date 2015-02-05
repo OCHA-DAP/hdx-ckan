@@ -119,6 +119,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         c.top_line_data_list = sorted_top_line_data
 
+        top_line_ind_codes = [el['indicatorTypeCode'] for el in sorted_top_line_data]
+
         chart_results = self._get_chart_data(upper_case_id)
         chart_data = chart_results.get('results', [])
         if not chart_data:
@@ -166,9 +168,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                         'lastValue': el_value,
                         'unit': el.get('unitName'),
                         'code': ind_type,
-                        'data': [val],
-                        'datasetLink': '/todo/changeme',
-                        'datasetUpdateDate': 'Jun 21, 1985'
+                        'data': [val]
                     }
                     chart_data_dict[ind_type] = newel
 
@@ -182,11 +182,12 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             if code in chart_data_dict and len(chart_data_list) < 5:
                 chart_data_list.append(chart_data_dict[code])
 
-        chart_extra_dict = self._get_indicator_info_4_charts(chart_data_list)
+        chart_ind_codes = [chart['code'] for chart in chart_data_list]
+        indic_extra_dict = self._get_indicator_info(top_line_ind_codes + chart_ind_codes)
 
         for chart in chart_data_list:
             code = chart['code']
-            chart_extra = chart_extra_dict.get(code, None)
+            chart_extra = indic_extra_dict.get(code, None)
             chart['data'] = json.dumps(chart['data'])
             if chart_extra:
                 chart['datasetLink'] = chart_extra.get('datasetLink')
@@ -195,15 +196,22 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         c.chart_data_list = chart_data_list
 
-        # c.chart_data_dict = chart_data_dict
+        # updating the top line info with links and dates
+        for el in sorted_top_line_data:
+            top_line_extra = indic_extra_dict.get(el['indicatorTypeCode'], None)
+            if top_line_extra:
+                el['datasetLink'] = top_line_extra.get('datasetLink')
+                el['datasetUpdateDate'] = top_line_extra.get('datasetUpdateDate')
 
-    def _get_indicator_info_4_charts(self, chart_data_list):
+
+
+    def _get_indicator_info(self, indic_code_list):
         result = {}
         fq = '+extras_indicator_type_code:('
-        fq += ' OR '.join(['"{}"'.format(chart['code']) for chart in chart_data_list])
+        fq += ' OR '.join(['"{}"'.format(code) for code in indic_code_list])
         fq += ')'
         data_dict = {
-            'rows': 20,
+            'rows': 25,
             'start': 0,
             'ext_indicator': u'1',
             'fq': fq + ' +dataset_type:dataset'
