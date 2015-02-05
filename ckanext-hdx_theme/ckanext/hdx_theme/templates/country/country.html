@@ -81,7 +81,13 @@
                         <div class="chart-item"></div>
                     </div>
                     <div class="col-xs-12 source-name">
-                        {{ val.sourceName }} - <a href="{{ val.datasetLink }}">Data</a> - {{ val.datasetUpdateDate }}
+                        {{ val.sourceName }}
+                        {%  if val.datasetLink %}
+                            - <a href="{{ val.datasetLink }}">Data</a>
+                        {% endif %}
+                        {%  if val.datasetUpdateDate %}
+                            - {{ val.datasetUpdateDate }}
+                        {% endif %}
                     </div>
 
                 </div>
