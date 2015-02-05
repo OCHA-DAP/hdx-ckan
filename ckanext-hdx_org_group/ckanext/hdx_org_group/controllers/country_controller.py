@@ -168,9 +168,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                         'lastValue': el_value,
                         'unit': el.get('unitName'),
                         'code': ind_type,
-                        'data': [val],
-                        'datasetLink': '/todo/changeme',
-                        'datasetUpdateDate': 'Jun 21, 1985'
+                        'data': [val]
                     }
                     chart_data_dict[ind_type] = newel
 
