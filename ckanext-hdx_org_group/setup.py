@@ -25,5 +25,6 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_org_group=ckanext.hdx_org_group.plugin:HDXOrgGroupPlugin
+        hdx_group=ckanext.hdx_org_group.plugin:HDXGroupPlugin
     ''',
 )
