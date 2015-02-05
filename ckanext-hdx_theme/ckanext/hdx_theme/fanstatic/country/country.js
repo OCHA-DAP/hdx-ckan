@@ -3,7 +3,7 @@ function drawMap() {
     map.scrollWheelZoom.disable();
     L.tileLayer($('#crisis-map-url-div').text(), {
         attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxZoom: 7
+        maxZoom: 4
     }).addTo(map);
 
     L.control.attribution({position: 'topright'}).addTo(map);
