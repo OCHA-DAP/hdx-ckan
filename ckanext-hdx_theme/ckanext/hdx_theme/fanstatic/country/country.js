@@ -1,9 +1,11 @@
 function drawMap() {
+    var maxZoomValue = 4;
     var map = L.map('crisis-map', { attributionControl: false });
     map.scrollWheelZoom.disable();
     L.tileLayer($('#crisis-map-url-div').text(), {
         attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxZoom: 7
+        minZoom: 0,
+        maxZoom: maxZoomValue
     }).addTo(map);
 
     L.control.attribution({position: 'topright'}).addTo(map);
@@ -75,7 +77,7 @@ function drawMap() {
 
     var latitude = minLat + (maxLat-minLat)/2;
     var longitude = minLng + (maxLng-minLng)/2;
-    var zoom = 16;
+    var zoom = maxZoomValue;
 
     console.log(latitude);
     console.log(longitude);
@@ -86,9 +88,11 @@ function drawMap() {
       }
     }).addTo(map);
 
-    map.setView([latitude, longitude], zoom);
+    //map.setView([latitude, longitude], zoom);
     console.log([[minLat, minLng], [maxLat, maxLng]]);
-    map.fitBounds([[minLat, minLng], [maxLat, maxLng]]);
+    map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
+        maxZoom: maxZoomValue
+    });
 }
 
 function buildGraphs() {

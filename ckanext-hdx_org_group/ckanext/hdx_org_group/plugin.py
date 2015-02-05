@@ -106,35 +106,20 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
         map.connect(
             'country_read', '/group/{id}', controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+        map.connect(
+            'wfp_read', '/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController', action='read')
 
         return map
 
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
-    plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IGroupForm, inherit=False)
-    plugins.implements(plugins.ITemplateHelpers, inherit=False)
 
-    num_times_new_template_called = 0
-    num_times_read_template_called = 0
-    num_times_edit_template_called = 0
-    num_times_search_template_called = 0
-    num_times_history_template_called = 0
-    num_times_package_form_called = 0
-    num_times_check_data_dict_called = 0
-    num_times_setup_template_variables_called = 0
-
-    def update_config(self, config):
-        tk.add_template_directory(config, 'templates')
-
-    def get_helpers(self):
-        return {}
+    def group_types(self):
+        return ['']
 
     def is_fallback(self):
         return True
-
-    def group_types(self):
-        return []
 
     def _modify_group_schema(self, schema):
         schema.update({'language_code': [
