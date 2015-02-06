@@ -30,7 +30,7 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
 
     def read(self):
 
-        vars = {
+        template_data = {
             'data': {
                 'message' : 'Test message'
             },
@@ -38,6 +38,6 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
             'error_summary': None,
         }
 
-        result = render('organization/custom/wfp.html', extra_vars=vars)
+        result = render('organization/custom/wfp.html', extra_vars=template_data)
 
         return result
