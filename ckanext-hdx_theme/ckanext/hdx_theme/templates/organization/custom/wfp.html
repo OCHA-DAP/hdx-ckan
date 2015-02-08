@@ -1,5 +1,46 @@
 {% extends "page-new.html" %}
 
 {% block primary_content %}
-    {{ data.message }}    ASD ASD ASD ASD
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            Org title section
+        </div>
+    </div>
+
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Global Operations Data") }}</div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            Content
+        </div>
+    </div>
+
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Interactive Data") }}</div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            Content
+        </div>
+    </div>
+
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Data & Activity") }}</div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            Content
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/organization-wfp' %}
 {% endblock %}
