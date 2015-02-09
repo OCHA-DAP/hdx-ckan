@@ -54,3 +54,11 @@
   margin-bottom: 20px;
   margin-left: -15px;
 }
+.topline .sparkline {
+  position: relative;
+  width: 103px;
+  height: 74px;
+}
+.topline .topline-value {
+  white-space: nowrap;
+}
