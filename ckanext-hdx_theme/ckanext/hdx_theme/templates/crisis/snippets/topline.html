@@ -1,0 +1,48 @@
+{#
+Creates a topline number with or without the sparkline
+
+Example:
+    {{ h.snippet('crisis/snippets/topline.html', title=item.title, value=item.formatted_value, unit=item.units,
+                    notes=item.notes, sparkline_json=item.sparklines_json, source=item.source,
+                    source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
+
+#}
+
+<div class="topline">
+    <div class="row">
+        <div class="col-xs-12 indicator-title">
+            {{ title }}
+        </div>
+        {% if sparkline_json %}
+            <div class="col-xs-8 indicator-value">
+                {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
+            </div>
+            <div class="col-xs-4">
+                <div style="display: none;" class="sparkline">{{ sparkline_json }}</div>
+            </div>
+        {% else %}
+            <div class="col-xs-12 indicator-value">
+                {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
+            </div>
+        {% endif %}
+        <div class="col-xs-12 mTop10">
+            <div class="row">
+                <div class="col-xs-12">
+                    <span class="source-title">{{ source }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    {% if source_link %}
+                    <span><a class="source-link" href="{{ source_link }}" target="new">Data</a></span> -
+                    {% endif %}
+                    {% if explore %}
+                    <span><a class="source-link" href="{{ explore }}" target="new">Explore</a></span> -
+                    {% endif %}
+                    <span class="source-date">{{ latest_date }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

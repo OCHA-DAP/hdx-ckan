@@ -1,0 +1,56 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ *
+ */
+
+@import "variables";
+@import "mixins";
+
+
+.topline {
+  border-top: 1px solid @lightGrayColor;
+  border-bottom: 1px solid @lightGrayColor;
+  padding: 20px 0;
+  margin-top: -1px;
+  color: @darkGrayColor;
+
+  .indicator-title {
+    .gothamBoldFont;
+    .letter-spacing;
+    margin-bottom: 10px;
+    color: @darkGrayColor;
+  }
+
+  .indicator-value {
+    .gothamLightFont(74px);
+    .letter-spacing;
+    line-height: 1;
+  }
+
+  .source-title {
+    .sourceSansProFont(400, 14px);
+    .letter-spacing;
+    color: @darkGrayColor;
+  }
+
+  .source-link {
+    .sourceSansProFont(400, 12px);
+    .letter-spacing;
+  }
+
+  .source-date {
+    .sourceSansProFont(400, 12px);
+    .letter-spacing;
+    color: @grayColor;
+  }
+
+  .small{
+    .gothamLightFont(37px);
+    .letter-spacing;
+    line-height: 1;
+
+    margin-bottom: 20px;
+    margin-left: -15px;
+  }
+}

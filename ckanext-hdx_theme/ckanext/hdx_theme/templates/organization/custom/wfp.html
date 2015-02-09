@@ -3,16 +3,47 @@
 {% block primary_content %}
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            Org title section
+            <div class="row">
+                <div class="col-xs-6">
+                    <span>wfp icon</span>
+                    <span>{{ _("WFP - World Food Programme") }}</span>
+                </div>
+                <div class="col-xs-6">
+                    <span>
+                        {{ _("The World Food Programme is the world's largest humanitarian agency fighting hunger worldwide. Founded in 1961, WFP is part of the United Nations system and is voluntarily funded.") }}
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack mTop10 mBottom10">
             <div class="org-section-title">{{ _("Global Operations Data") }}</div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            Content
+            <div class="row">
+                <div class="col-xs-3">
+                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
+                    notes="no ideea", source="WHO Organization",
+                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
+                </div>
+                <div class="col-xs-3">
+                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
+                    notes="no ideea", source="WHO Organization",
+                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
+                </div>
+                <div class="col-xs-3">
+                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
+                    notes="no ideea", source="WHO Organization",
+                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
+                </div>
+                <div class="col-xs-3">
+                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
+                    notes="no ideea", source="WHO Organization",
+                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
+                </div>
+            </div>
         </div>
     </div>
 
