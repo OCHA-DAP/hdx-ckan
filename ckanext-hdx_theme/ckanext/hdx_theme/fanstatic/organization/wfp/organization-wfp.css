@@ -59,6 +59,14 @@
   margin-bottom: 20px;
   margin-left: -15px;
 }
+.topline .sparkline {
+  position: relative;
+  width: 103px;
+  height: 74px;
+}
+.topline .topline-value {
+  white-space: nowrap;
+}
 .org-section-title {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
