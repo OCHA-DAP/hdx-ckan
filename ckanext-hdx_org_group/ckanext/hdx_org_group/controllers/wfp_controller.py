@@ -29,17 +29,17 @@ _ = common._
 
 log = logging.getLogger(__name__)
 
+
 class WfpController(simple_search_controller.HDXSimpleSearchController):
 
-    def read(self):
+    def org_read(self):
 
         top_line_items = self.get_top_line_numbers()
         dataset_results = self.get_dataset_search_results('wfp')
 
-
         template_data = {
             'data': {
-                'message' : 'Test message',
+                'message': 'Test message',
                 'top_line_items': top_line_items,
                 'dataset_results': dataset_results
             },
@@ -47,12 +47,9 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
             'error_summary': None,
             }
 
-
-
         result = render('organization/custom/wfp.html', extra_vars=template_data)
 
         return result
-
 
     def get_top_line_numbers(self):
         context = {'model': model, 'session': model.Session,
@@ -83,26 +80,32 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
         if ext_indicator:
             search_extras['ext_indicator'] = ext_indicator
 
-        #limit = self._allowed_num_of_items(search_extras)
+        # limit = self._allowed_num_of_items(search_extras)
         limit = 8
         page = self._page_number()
-        params_nopage = {k:v for k, v in request.params.items() if k != 'page' }
+        params_nopage = {k: v for k, v in request.params.items() if k != 'page'}
 
         sort_by = request.params.get('sort', None)
 
         def pager_url(q=None, page=None):
             params = params_nopage
-            params['page']=page
-            return h.url_for('wfp_read', id=org_code, **params) + suffix
+            params['page'] = page
+            return h.url_for('wfp_read', **params) + suffix
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        self._set_other_links(suffix=suffix, other_params_dict={'id':org_code})
+        self._set_other_links(suffix=suffix, other_params_dict={'id': org_code})
         self._which_tab_is_selected(search_extras)
         (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
-                                    search_extras, pager_url, context)
+                                                       search_extras, pager_url, context)
 
         return query, all_results
 
+    def _set_other_links(self, suffix='', other_params_dict=None):
+        super(WfpController, self)._set_other_links(suffix=suffix, other_params_dict=other_params_dict)
+        c.other_links['advanced_search'] = h.url_for('search', organization=other_params_dict['id'])
+
+    def _get_named_route(self):
+        return 'wfp_read'

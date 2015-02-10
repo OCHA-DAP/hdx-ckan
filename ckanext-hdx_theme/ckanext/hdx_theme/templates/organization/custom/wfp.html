@@ -32,7 +32,7 @@
                     <div class="col-xs-3">
                         {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.value,
                         unit="aaa",
-                        notes=top_line_item.notes, source=top_line_item.source,
+                        notes=top_line_item.notes, source=None,
                         source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
                     </div>
                 {% endfor %}
@@ -50,7 +50,7 @@
     </div>
 
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Data & Activity") }}</div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
