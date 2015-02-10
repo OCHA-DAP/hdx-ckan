@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block primary_content_inner %}
-  <h2 class="hide-heading">{{ _('My Countries') }}</h2>
+  <h2 class="hide-heading">{{ _('My Locations') }}</h2>
   {% set groups = h.hdx_group_followee_list() %}
   {% if groups %}
     <div class="wide" style="min-height: 200px;">
@@ -19,7 +19,7 @@
     </div>
   {% else %}
     <p class="empty" style="min-height: 200px;">
-      {{ _('You are not following any countries.') }}
+      {{ _('You are not following any locations.') }}
       {# if h.check_access('group_create') %}
         {% link_for _('Create one now?'), controller='group', action='new' %}
       {% endif #}

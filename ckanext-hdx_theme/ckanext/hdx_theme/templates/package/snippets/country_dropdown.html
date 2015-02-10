@@ -8,14 +8,14 @@
   <div id="select_country" class="control-group dataset-required">
       {% set error = errors.groups_list %}
       {% if inheritied_form_style != 'edit' %}
-      <label for="country-drop" class="sspBold20">{{ _("Are you submitting data for the country below") }}?</label>
-      <p class="sspRegular14">{{ _("if not, which country or countries does the dataset best represent? Please select from the dropdown.") }}</p>
+      <label for="country-drop" class="sspBold20">{{ _("Are you submitting data for the location below") }}?</label>
+      <p class="sspRegular14">{{ _("if not, which location or locations does the dataset best represent? Please select from the dropdown.") }}</p>
       {% else %}
-      <label class="control-label" for="country-drop">{{ _("Countries") }}</label>
+      <label class="control-label" for="country-drop">{{ _("Locations") }}</label>
       {% endif %}
     <div class="controls" id="mx-dataset-country">
         <select id="country-drop" data-module="autocomplete">
-          <option value="-1">{{ _("Country / Countries") }}</option>
+          <option value="-1">{{ _("Location / Locations") }}</option>
           {% for grp in available_groups  %}
             <option value="{{ grp.id }}" display_name="{{grp.display_name}}">{{ grp.display_name }}</option>
           {% endfor %}

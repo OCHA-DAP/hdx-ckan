@@ -20,7 +20,7 @@
       <h1 class="hide-heading">{{ _('Groups') }}</h1>
       {% block groups_search_form %}
         {% set sorting_option = c.sort_by_selected or 'title asc' %}
-        {% snippet 'snippets/search_form.html', type='group', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search groups...'), show_empty=request.params %}
+        {% snippet 'snippets/search_form.html', type='group', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search locations...'), show_empty=request.params %}
       {% endblock %}
       {% block groups_list %}
       {% if c.page.items or request.params %}
