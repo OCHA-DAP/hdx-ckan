@@ -61,7 +61,8 @@
             <div class="org-section-title">{{ _("Data & Activity") }}</div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            Content
+            {% snippet 'search/snippets/search_results_wrapper.html',
+                        tracking_enabled=g.tracking_enabled, my_c=c %}
         </div>
     </div>
 
@@ -74,4 +75,5 @@
 {% block scripts2 %}
   {{ super() }}
   {% resource 'hdx_theme/organization-wfp' %}
+  {% resource 'hdx_theme/search' %}
 {% endblock %}
