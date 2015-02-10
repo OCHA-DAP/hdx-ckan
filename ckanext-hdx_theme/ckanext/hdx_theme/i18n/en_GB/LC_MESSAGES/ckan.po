@@ -239,7 +239,7 @@ msgstr "Request params must be in form of a json encoded dictionary."
 #: ckan/controllers/group.py:659 ckan/controllers/group.py:690
 #: ckan/controllers/group.py:749 ckan/controllers/group.py:830
 msgid "Group not found"
-msgstr "Country not found"
+msgstr "Location not found"
 
 #: ckan/controllers/feed.py:285 ckan/controllers/feed.py:287
 #: ckan/controllers/feed.py:437 ckan/controllers/feed.py:439
@@ -251,7 +251,7 @@ msgstr "\"page\" parameter must be a positive integer"
 #: ckan/controllers/group.py:530 ckan/controllers/group.py:832
 #, python-format
 msgid "Unauthorized to read group %s"
-msgstr "Unauthorized to read country %s"
+msgstr "Unauthorized to read location %s"
 
 #: ckan/controllers/group.py:282 ckan/controllers/home.py:69
 #: ckan/controllers/package.py:218 ckan/lib/helpers.py:545
@@ -268,7 +268,7 @@ msgstr "Unauthorized to read country %s"
 #: ckan/templates_legacy/package/search.html:26
 #: ckan/templates_legacy/revision/read.html:64
 msgid "Groups"
-msgstr "Countries"
+msgstr "Locations"
 
 #: ckan/controllers/group.py:283 ckan/controllers/home.py:70
 #: ckan/controllers/package.py:219 ckan/lib/helpers.py:546
@@ -307,7 +307,7 @@ msgstr ""
 
 #: ckan/controllers/group.py:419
 msgid "Unauthorized to create a group"
-msgstr "Unauthorized to create a country"
+msgstr "Unauthorized to create a location"
 
 #: ckan/controllers/group.py:465 ckan/controllers/package.py:759
 #, python-format
@@ -330,7 +330,7 @@ msgstr "User %r not authorized to edit %s authorizations"
 #: ckan/controllers/group.py:601 ckan/controllers/group.py:657
 #, python-format
 msgid "Unauthorized to delete group %s"
-msgstr "Unauthorized to delete country %s"
+msgstr "Unauthorized to delete location %s"
 
 #: ckan/controllers/group.py:580
 msgid "Organization has been deleted."
@@ -338,21 +338,21 @@ msgstr "Organisation has been deleted."
 
 #: ckan/controllers/group.py:582
 msgid "Group has been deleted."
-msgstr "Country has been deleted."
+msgstr "Location has been deleted."
 
 #: ckan/controllers/group.py:628
 #, python-format
 msgid "Unauthorized to add member to group %s"
-msgstr "Unauthorized to add member to country %s"
+msgstr "Unauthorized to add member to location %s"
 
 #: ckan/controllers/group.py:645
 #, python-format
 msgid "Unauthorized to delete group %s members"
-msgstr "Unauthorized to delete country %s members"
+msgstr "Unauthorized to delete location %s members"
 
 #: ckan/controllers/group.py:651
 msgid "Group member has been deleted."
-msgstr "Country member has been deleted."
+msgstr "Location member has been deleted."
 
 #: ckan/controllers/group.py:673 ckan/controllers/package.py:375
 msgid "Select two revisions before doing the comparison."
@@ -365,11 +365,11 @@ msgstr "User %r not authorized to edit %r"
 
 #: ckan/controllers/group.py:699
 msgid "CKAN Group Revision History"
-msgstr "CKAN Country Revision History"
+msgstr "CKAN Location Revision History"
 
 #: ckan/controllers/group.py:702
 msgid "Recent changes to CKAN Group: "
-msgstr "Recent changes to CKAN Country: "
+msgstr "Recent changes to CKAN Location: "
 
 #: ckan/controllers/group.py:723 ckan/controllers/package.py:425
 msgid "Log message: "
@@ -377,7 +377,7 @@ msgstr "Log message: "
 
 #: ckan/controllers/group.py:752
 msgid "Unauthorized to read group {group_id}"
-msgstr "Unauthorized to read country {group_id}"
+msgstr "Unauthorized to read location {group_id}"
 
 #: ckan/controllers/group.py:772 ckan/controllers/package.py:1190
 #: ckan/controllers/user.py:632
@@ -811,7 +811,7 @@ msgstr "{actor} added the tag {tag} to the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:67
 msgid "{actor} updated the group {group}"
-msgstr "{actor} updated the country {group}"
+msgstr "{actor} updated the location {group}"
 
 #: ckan/lib/activity_streams.py:70
 msgid "{actor} updated the organization {organization}"
@@ -843,7 +843,7 @@ msgstr ""
 
 #: ckan/lib/activity_streams.py:92
 msgid "{actor} deleted the group {group}"
-msgstr "{actor} deleted the country {group}"
+msgstr "{actor} deleted the location {group}"
 
 #: ckan/lib/activity_streams.py:95
 msgid "{actor} deleted the organization {organization}"
@@ -863,7 +863,7 @@ msgstr "{actor} deleted the resource {resource} from the collection {dataset}"
 
 #: ckan/lib/activity_streams.py:108
 msgid "{actor} created the group {group}"
-msgstr "{actor} created the country {group}"
+msgstr "{actor} created the location {group}"
 
 #: ckan/lib/activity_streams.py:111
 msgid "{actor} created the organization {organization}"
@@ -1227,7 +1227,7 @@ msgstr "Collection"
 #: ckanext/stats/templates/ckanext/stats/index.html:113
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:82
 msgid "Group"
-msgstr "Country"
+msgstr "Location"
 
 #: ckan/logic/validators.py:28
 msgid "A organization must be supplied"
@@ -1260,7 +1260,7 @@ msgstr "Related"
 
 #: ckan/logic/validators.py:202
 msgid "That group name or ID does not exist."
-msgstr "That country name or ID does not exist."
+msgstr "That location name or ID does not exist."
 
 #: ckan/logic/validators.py:216
 msgid "Activity type"
@@ -1320,7 +1320,7 @@ msgstr "Duplicate key \"%s\""
 
 #: ckan/logic/validators.py:356
 msgid "Group name already exists in database"
-msgstr "Country name already exists in database"
+msgstr "Location name already exists in database"
 
 #: ckan/logic/validators.py:362
 #, python-format
@@ -1430,7 +1430,7 @@ msgstr "REST API: Create member object %s"
 
 #: ckan/logic/action/create.py:644
 msgid "Trying to create an organization as a group"
-msgstr "Trying to create an organisation as a country"
+msgstr "Trying to create an organisation as a location"
 
 #: ckan/logic/action/create.py:727
 msgid "You must supply a package id or name (parameter \"package\")."
@@ -1472,7 +1472,7 @@ msgstr ""
 
 #: ckan/logic/action/create.py:1199 ckan/logic/action/create.py:1207
 msgid "You must be logged in to follow a group."
-msgstr "You must be logged in to follow a country."
+msgstr "You must be logged in to follow a location."
 
 #: ckan/logic/action/delete.py:43
 #, python-format
@@ -1572,7 +1572,7 @@ msgstr "User %s not authorized to create packages"
 #: ckan/logic/auth/create.py:22 ckan/logic/auth/update.py:39
 #, python-format
 msgid "User %s not authorized to edit these groups"
-msgstr "User %s not authorized to edit these countries"
+msgstr "User %s not authorized to edit these locations"
 
 #: ckan/logic/auth/create.py:29
 #, python-format
@@ -1595,7 +1595,7 @@ msgstr "User %s not authorized to edit these packages"
 #: ckan/logic/auth/create.py:90
 #, python-format
 msgid "User %s not authorized to create groups"
-msgstr "User %s not authorized to create countries"
+msgstr "User %s not authorized to create locations"
 
 #: ckan/logic/auth/create.py:100
 #, python-format
@@ -1609,7 +1609,7 @@ msgstr "User %s not authorized to create users"
 
 #: ckan/logic/auth/create.py:143
 msgid "Group was not found."
-msgstr "Country was not found."
+msgstr "Location was not found."
 
 #: ckan/logic/auth/create.py:163
 msgid "Valid API key needed to create a package"
@@ -1617,7 +1617,7 @@ msgstr "Valid API key needed to create a package"
 
 #: ckan/logic/auth/create.py:171
 msgid "Valid API key needed to create a group"
-msgstr "Valid API key needed to create a country"
+msgstr "Valid API key needed to create a location"
 
 #: ckan/logic/auth/create.py:191
 #, python-format
@@ -1651,12 +1651,12 @@ msgstr "User %s not authorized to delete relationship %s"
 #: ckan/logic/auth/delete.py:79
 #, python-format
 msgid "User %s not authorized to delete groups"
-msgstr "User %s not authorized to delete countries"
+msgstr "User %s not authorized to delete locations"
 
 #: ckan/logic/auth/delete.py:83
 #, python-format
 msgid "User %s not authorized to delete group %s"
-msgstr "User %s not authorized to delete country %s"
+msgstr "User %s not authorized to delete location %s"
 
 #: ckan/logic/auth/delete.py:92
 #, python-format
@@ -1715,7 +1715,7 @@ msgstr "User %s not authorized to change state of package %s"
 #: ckan/logic/auth/update.py:104
 #, python-format
 msgid "User %s not authorized to edit group %s"
-msgstr "User %s not authorized to edit country %s"
+msgstr "User %s not authorized to edit location %s"
 
 #: ckan/logic/auth/update.py:117
 #, python-format
@@ -1733,12 +1733,12 @@ msgstr "You must be a sysadmin to change a related item's featured field."
 #: ckan/logic/auth/update.py:156
 #, python-format
 msgid "User %s not authorized to change state of group %s"
-msgstr "User %s not authorized to change state of country %s"
+msgstr "User %s not authorized to change state of location %s"
 
 #: ckan/logic/auth/update.py:173
 #, python-format
 msgid "User %s not authorized to edit permissions of group %s"
-msgstr "User %s not authorized to edit permissions of country %s"
+msgstr "User %s not authorized to edit permissions of location %s"
 
 #: ckan/logic/auth/update.py:199
 msgid "Have to be logged in to edit user"
@@ -1770,7 +1770,7 @@ msgstr "Valid API key needed to edit a package"
 
 #: ckan/logic/auth/update.py:271
 msgid "Valid API key needed to edit a group"
-msgstr "Valid API key needed to edit a country"
+msgstr "Valid API key needed to edit a location"
 
 #: ckan/model/license.py:177
 msgid "License Not Specified"
@@ -2425,7 +2425,7 @@ msgstr "Select"
 #: ckan/templates/snippets/group.html:24
 #: ckan/templates/snippets/group_item.html:18
 msgid "There is no description for this group"
-msgstr "There is no description for this country"
+msgstr "There is no description for this location"
 
 #: ckan/templates/group/activity_stream.html:3
 #: ckan/templates/group/activity_stream.html:6
@@ -2454,11 +2454,11 @@ msgstr "Administrators"
 #: ckan/templates/group/base_form_page.html:7
 #: ckan/templates_legacy/group/layout.html:32
 msgid "Add a Group"
-msgstr "Add a Country"
+msgstr "Add a Location"
 
 #: ckan/templates/group/base_form_page.html:11
 msgid "Group Form"
-msgstr "Country Form"
+msgstr "Location Form"
 
 #: ckan/templates/group/confirm_delete.html:3
 #: ckan/templates/group/confirm_delete.html:15
@@ -2479,7 +2479,7 @@ msgstr "Confirm Delete"
 
 #: ckan/templates/group/confirm_delete.html:11
 msgid "Are you sure you want to delete group - {name}?"
-msgstr "Are you sure you want to delete country - {name}?"
+msgstr "Are you sure you want to delete location - {name}?"
 
 #: ckan/templates/group/confirm_delete_member.html:11
 #: ckan/templates/organization/confirm_delete_member.html:11
@@ -2488,7 +2488,7 @@ msgstr "Are you sure you want to delete member - {name}?"
 
 #: ckan/templates/group/edit.html:11 ckan/templates/group/edit.html:14
 msgid "Edit Group"
-msgstr "Edit Country"
+msgstr "Edit Location"
 
 #: ckan/templates/group/edit_base.html:14
 msgid "View group"
@@ -2527,14 +2527,14 @@ msgstr "History"
 #: ckan/templates/group/index.html:3 ckan/templates_legacy/group/index.html:6
 #: ckan/templates_legacy/group/index.html:7
 msgid "Groups of Datasets"
-msgstr "Countries of Collections"
+msgstr "Locations of Collections"
 
 #: ckan/templates/group/index.html:13
 #: ckan/templates/package/snippets/package_metadata_fields.html:40
 #: ckan/templates/user/dashboard_groups.html:7
 #: ckan/templates_legacy/js_strings.html:16
 msgid "Add Group"
-msgstr "Add Country"
+msgstr "Add Location"
 
 #: ckan/templates/group/index.html:20
 msgid "Search groups..."
@@ -2542,7 +2542,7 @@ msgstr ""
 
 #: ckan/templates/group/index.html:27
 msgid "There are currently no groups for this site"
-msgstr "There are currently no countries for this site"
+msgstr "There are currently no locations for this site"
 
 #: ckan/templates/group/index.html:29 ckan/templates/organization/index.html:29
 msgid "How about creating one?"
@@ -2637,15 +2637,15 @@ msgstr ""
 
 #: ckan/templates/group/new.html:3 ckan/templates/group/new.html:7
 msgid "Create a Group"
-msgstr "Create a Country"
+msgstr "Create a Location"
 
 #: ckan/templates/group/new.html:5 ckan/templates/group/new_group_form.html:19
 msgid "Create Group"
-msgstr "Create Country"
+msgstr "Create Location"
 
 #: ckan/templates/group/new_group_form.html:17
 msgid "Update Group"
-msgstr "Update Country"
+msgstr "Update Location"
 
 #: ckan/templates/group/read.html:6 ckan/templates/organization/read.html:5
 #: ckan/templates/package/search.html:16
@@ -2662,7 +2662,7 @@ msgstr ""
 #: ckan/templates/group/snippets/feeds.html:3
 #: ckan/templates/organization/snippets/feeds.html:3
 msgid "Datasets in group: {group}"
-msgstr "Collections in country: {group}"
+msgstr "Collections in location: {group}"
 
 #: ckan/templates/group/snippets/feeds.html:4
 #: ckan/templates/organization/snippets/feeds.html:4
@@ -2682,11 +2682,11 @@ msgstr "Title"
 
 #: ckan/templates/group/snippets/group_form.html:10
 msgid "My Group"
-msgstr "My Country"
+msgstr "My Location"
 
 #: ckan/templates/group/snippets/group_form.html:18
 msgid "my-group"
-msgstr "my-country"
+msgstr "my-location"
 
 #: ckan/templates/group/snippets/group_form.html:20
 #: ckan/templates/organization/snippets/organization_form.html:20
@@ -2703,7 +2703,7 @@ msgstr "Description"
 
 #: ckan/templates/group/snippets/group_form.html:20
 msgid "A little information about my group..."
-msgstr "A little information about my country..."
+msgstr "A little information about my location..."
 
 #: ckan/templates/group/snippets/group_form.html:22
 #: ckan/templates/organization/snippets/organization_form.html:22
@@ -2719,15 +2719,15 @@ msgstr "http://example.com/my-image.jpg"
 
 #: ckan/templates/group/snippets/group_form.html:75
 msgid "Are you sure you want to delete this Group?"
-msgstr "Are you sure you want to delete this Country?"
+msgstr "Are you sure you want to delete this Location?"
 
 #: ckan/templates/group/snippets/group_form.html:79
 msgid "Save Group"
-msgstr "Save Country"
+msgstr "Save Location"
 
 #: ckan/templates/group/snippets/group_item.html:26
 msgid "This group has no description"
-msgstr "This country has no description"
+msgstr "This location has no description"
 
 #: ckan/templates/group/snippets/group_item.html:31
 #: ckan/templates/organization/snippets/organization_item.html:32
@@ -2748,7 +2748,7 @@ msgstr "View {name}"
 
 #: ckan/templates/group/snippets/helper.html:4
 msgid "What are Groups?"
-msgstr "What are Countries?"
+msgstr "What are Locations?"
 
 #: ckan/templates/group/snippets/helper.html:7
 msgid ""
@@ -2758,10 +2758,10 @@ msgid ""
 "Datasets can be part of a group, but do not belong to the group for "
 "editing or authorisation purposes.</p> "
 msgstr ""
-" <p>Countries allow you to group together collections under a community "
+" <p>Locations allow you to group together collections under a community "
 "(for example, Civil Liberty data) or topic (e.g. Transport, Health, "
 "Environment) to make it easier for users to browse collections by theme. "
-"Collections can be part of a country, but do not belong to the country "
+"Collections can be part of a location, but do not belong to the location "
 "for editing or authorisation purposes.</p> "
 
 #: ckan/templates/group/snippets/history_revisions.html:10
@@ -3953,22 +3953,22 @@ msgstr "Sorry no collections found"
 #: ckan/templates/snippets/search_result_text.html:21
 msgid "{number} group found for \"{query}\""
 msgid_plural "{number} groups found for \"{query}\""
-msgstr[0] "{number} country found for \"{query}\""
-msgstr[1] "{number} countries found for \"{query}\""
+msgstr[0] "{number} location found for \"{query}\""
+msgstr[1] "{number} locations found for \"{query}\""
 
 #: ckan/templates/snippets/search_result_text.html:22
 msgid "Sorry no groups found for \"{query}\""
-msgstr "Sorry no countries found for \"{query}\""
+msgstr "Sorry no locations found for \"{query}\""
 
 #: ckan/templates/snippets/search_result_text.html:23
 msgid "{number} group found"
 msgid_plural "{number} groups found"
-msgstr[0] "{number} country found"
-msgstr[1] "{number} countries found"
+msgstr[0] "{number} location found"
+msgstr[1] "{number} locations found"
 
 #: ckan/templates/snippets/search_result_text.html:24
 msgid "Sorry no groups found"
-msgstr "Sorry no countries found"
+msgstr "Sorry no locations found"
 
 #: ckan/templates/snippets/search_result_text.html:27
 msgid "{number} organization found for \"{query}\""
@@ -4223,7 +4223,7 @@ msgstr "Why Sign Up?"
 
 #: ckan/templates/user/new.html:24
 msgid "Create datasets, groups and other exciting things"
-msgstr "Create collections, countries and other exciting things"
+msgstr "Create collections, locations and other exciting things"
 
 #: ckan/templates/user/new_user_form.html:6
 msgid "Full Name"
@@ -4711,7 +4711,7 @@ msgstr "Edit:"
 #: ckan/templates_legacy/group/edit_form.html:17
 #: ckan/templates_legacy/group/new_group_form.html:114
 msgid "There are no datasets currently in this group."
-msgstr "There are no collections currently in this country."
+msgstr "There are no collections currently in this location."
 
 #: ckan/templates_legacy/group/history.html:5
 #: ckan/templates_legacy/group/history.html:6
@@ -4735,11 +4735,11 @@ msgstr "Compare »"
 
 #: ckan/templates_legacy/group/history.html:54
 msgid "Group History"
-msgstr "Country History"
+msgstr "Location History"
 
 #: ckan/templates_legacy/group/index.html:11
 msgid "What Are Groups?"
-msgstr "What Are Countries?"
+msgstr "What Are Locations?"
 
 #: ckan/templates_legacy/group/index.html:12
 msgid ""
@@ -4763,16 +4763,16 @@ msgstr "Existing Collection..."
 
 #: ckan/templates_legacy/group/layout.html:29
 msgid "List Groups"
-msgstr "List Countries"
+msgstr "List Locations"
 
 #: ckan/templates_legacy/group/layout.html:35
 msgid "Login to Add a Group"
-msgstr "Login to Add a Country"
+msgstr "Login to Add a Location"
 
 #: ckan/templates_legacy/group/new.html:5
 #: ckan/templates_legacy/group/new.html:6
 msgid "Add A Group"
-msgstr "Add A Country"
+msgstr "Add A Location"
 
 #: ckan/templates_legacy/group/new_group_form.html:13
 #: ckan/templates_legacy/package/form.html:7
@@ -4803,7 +4803,7 @@ msgstr "Image URL:"
 
 #: ckan/templates_legacy/group/new_group_form.html:50
 msgid "The URL for the image that is associated with this group."
-msgstr "The URL for the image that is associated with this country."
+msgstr "The URL for the image that is associated with this location."
 
 #: ckan/templates_legacy/group/new_group_form.html:57
 #: ckan/templates_legacy/package/new_package_form.html:271
@@ -4909,7 +4909,7 @@ msgid ""
 " is an openly editable open data catalogue, in the style of Wikipedia. "
 "The UK Government uses CKAN to run [2:data.gov.uk], which currently lists"
 " 8,000 government datasets. Official public data from most European "
-"countries is listed in a CKAN catalogue at [3:publicdata.eu]. There is a "
+"locations is listed in a CKAN catalogue at [3:publicdata.eu]. There is a "
 "comprehensive list of catalogues like these around the world at "
 "[4:datacatalogs.org], which is itself powered by CKAN."
 msgstr ""
@@ -4917,7 +4917,7 @@ msgstr ""
 " is an openly editable open data catalogue, in the style of Wikipedia. "
 "The UK Government uses CKAN to run [2:data.gov.uk], which currently lists"
 " 8,000 government datasets. Official public data from most European "
-"countries is listed in a CKAN catalogue at [3:publicdata.eu]. There is a "
+"locations is listed in a CKAN catalogue at [3:publicdata.eu]. There is a "
 "comprehensive list of catalogues like these around the world at "
 "[4:datacatalogs.org], which is itself powered by CKAN."
 
@@ -5245,7 +5245,7 @@ msgstr "Add to:"
 
 #: ckan/templates_legacy/package/new_package_form.html:112
 msgid "Cannot add any groups."
-msgstr "Cannot add any countries."
+msgstr "Cannot add any locations."
 
 #: ckan/templates_legacy/package/new_package_form.html:122
 msgid ""
@@ -5444,8 +5444,8 @@ msgid "(settings)"
 msgstr "(settings)"
 
 #: ckan/templates_legacy/package/read_core.html:83
-msgid "Country"
-msgstr "Country"
+msgid "Location"
+msgstr "Location"
 
 #: ckan/templates_legacy/package/read_core.html:93
 msgid "Harvest Source"
@@ -5764,7 +5764,7 @@ msgstr "Follow another user"
 
 #: ckan/templates_legacy/user/dashboard.html:30
 msgid "Create a group or a tag"
-msgstr "Create a country or a tag"
+msgstr "Create a location or a tag"
 
 #: ckan/templates_legacy/user/dashboard.html:31
 msgid "Or simply browse the repository"
@@ -6040,8 +6040,8 @@ msgid "custom text"
 msgstr "custom text"
 
 #: ckanext/example_idatasetform/templates/package/snippets/package_metadata_fields.html:13
-msgid "Country Code"
-msgstr "Country Code"
+msgid "Location Code"
+msgstr "Location Code"
 
 #: ckanext/reclinepreview/theme/public/vendor/slickgrid/2.0.1/MIT-LICENSE.txt:1
 msgid ""
@@ -6198,11 +6198,11 @@ msgstr "No edited collections"
 #: ckanext/stats/templates/ckanext/stats/index.html:182
 #: ckanext/stats/templates_legacy/ckanext/stats/index.html:80
 msgid "Largest Groups"
-msgstr "Largest Countries"
+msgstr "Largest Locations"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:127
 msgid "No groups"
-msgstr "No countries"
+msgstr "No locations"
 
 #: ckanext/stats/templates/ckanext/stats/index.html:132
 #: ckanext/stats/templates/ckanext/stats/index.html:183
@@ -6255,11 +6255,11 @@ msgstr "Collection Leaderboard"
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:18
 msgid ""
 "Choose a dataset attribute and find out which categories in that area "
-"have the most datasets. E.g. tags, groups, license, res_format, country."
+"have the most datasets. E.g. tags, groups, license, res_format, location."
 msgstr ""
 "Choose a collection attribute and find out which categories in that area "
-"have the most collections. E.g. tags, countries, license, res_format, "
-"country."
+"have the most collections. E.g. tags, locations, license, res_format, "
+"location."
 
 #: ckanext/stats/templates_legacy/ckanext/stats/leaderboard.html:20
 msgid "Choose area"
