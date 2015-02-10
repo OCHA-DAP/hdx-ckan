@@ -7,7 +7,38 @@
 @import "../../base/mixins";
 @import "../../crisis/topline";
 
+.intro-section{
+  padding-top: 50px;
+  padding-bottom: 30px;
+
+  background-color: @extraLightGrayColor;
+
+  .org-icon{
+    margin-top: -15px; //
+    height: 60px;
+    margin-right: 20px;
+  }
+
+  .org-title{
+    width: 470px;
+
+    .gothamBoldFont(48px);
+    color: @wfpBlueColor;
+    line-height: 1;
+  }
+
+  .org-description{
+    .sourceSansProFont(400, 17px);
+    line-height: 30px;
+  }
+
+}
+
+
 .org-section-title{
+  margin-top: 30px;
+  margin-bottom: 30px;
+
   .gothamBookFont(28px);
   color: @grayColor;
   text-transform: uppercase;
