@@ -14,6 +14,8 @@ import ckan.common as common
 import ckan.lib.helpers as h
 
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
+import ckanext.hdx_crisis.dao.data_access as data_access
+import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 render = base.render
 abort = base.abort
@@ -31,14 +33,14 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
 
     def read(self):
 
-        top_line_numbers = self.get_top_line_numbers()
+        top_line_items = self.get_top_line_numbers()
         dataset_results = self.get_dataset_search_results('wfp')
 
 
         template_data = {
             'data': {
                 'message' : 'Test message',
-                'top_line_numbers': top_line_numbers,
+                'top_line_items': top_line_items,
                 'dataset_results': dataset_results
             },
             'errors': None,
@@ -53,7 +55,23 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
 
 
     def get_top_line_numbers(self):
-        return None
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+        top_line_src_dict = {
+            'top-line-numbers': {
+                'dataset': 'wfp-topline-figures',
+                'resource': 'wfp-topline-figures.csv'
+            }
+        }
+        datastore_access = data_access.CrisisDataAccess(top_line_src_dict)
+        datastore_access.fetch_data(context)
+        top_line_items = datastore_access.get_top_line_items()
+
+        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
+        formatter.format_results()
+
+        return top_line_items
 
     def get_dataset_search_results(self, org_code):
         fq = u'organization:"{}" +dataset_type:dataset'.format(org_code)

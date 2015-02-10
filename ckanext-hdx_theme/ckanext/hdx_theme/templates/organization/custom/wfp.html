@@ -23,26 +23,14 @@
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
+                {% for top_line_item in data.top_line_items %}
+                    <div class="col-xs-3">
+                        {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.value,
+                        unit="aaa",
+                        notes=top_line_item.notes, source=top_line_item.source,
+                        source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
