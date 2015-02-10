@@ -1,48 +1,41 @@
 {% extends "page-new.html" %}
 
 {% block primary_content %}
-    <div class="row paddingRowHack whiteBackground">
+    <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 <div class="col-xs-6">
-                    <span>wfp icon</span>
-                    <span>{{ _("WFP - World Food Programme") }}</span>
+                    <div class="pull-left"><img class="org-icon" src="images/icons/wfp-icon.svg" /></div>
+                    <div class="pull-left org-title">{{ _("WFP - World Food Programme") }}</div>
                 </div>
                 <div class="col-xs-6">
-                    <span>
+                    <span class="org-description">
                         {{ _("The World Food Programme is the world's largest humanitarian agency fighting hunger worldwide. Founded in 1961, WFP is part of the United Nations system and is voluntarily funded.") }}
                     </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 mTop20">
+                    Follow | Request | Visit
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack mTop10 mBottom10">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Global Operations Data") }}</div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
-                <div class="col-xs-3">
-                    {{ h.snippet('crisis/snippets/topline.html', title="Countries of Operation", value=82, unit="million",
-                    notes="no ideea", source="WHO Organization",
-                    source_link="a", explore="a", latest_date="21 Jun 2015") }}
-                </div>
+                {% for top_line_item in data.top_line_items %}
+                    <div class="col-xs-3">
+                        {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.value,
+                        unit="aaa",
+                        notes=top_line_item.notes, source=None,
+                        source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -57,7 +50,7 @@
     </div>
 
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Data & Activity") }}</div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -74,6 +67,9 @@
 
 {% block scripts2 %}
   {{ super() }}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/organization-wfp' %}
   {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
 {% endblock %}

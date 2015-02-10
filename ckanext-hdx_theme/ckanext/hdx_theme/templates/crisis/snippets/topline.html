@@ -26,11 +26,13 @@ Example:
             </div>
         {% endif %}
         <div class="col-xs-12 mTop10">
-            <div class="row">
-                <div class="col-xs-12">
-                    <span class="source-title">{{ source }}</span>
+            {% if source %}
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span class="source-title">{{ source }}</span>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
             <div class="row">
                 <div class="col-xs-12">
                     {% if source_link %}
