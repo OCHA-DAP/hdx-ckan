@@ -1,4 +1,4 @@
-{% extends "crisis-base.html" %}
+{% extends "crisis/crisis-base.html" %}
 
 {% block subtitle %}{{ _("Colombia") }}{% endblock %}
 {% block crisis_title %} {{ _("Colombia") }} {% endblock %}
@@ -23,38 +23,11 @@
         {% block top_line_figures %}
           {% for item in c.top_line_items %}
             <div class="col-xs-12">
-              <div class="item-info">
-                <div class="row">
-                  <div class="col-xs-6">
-                    <div class="row">
-                      <div class="col-xs-12 item-info-title">
-                        {{ item.title }}
-                      </div>
-                      <div class="col-xs-12 item-info-extra">
-                        <div class="row">
-                          <div class="col-xs-12">
-                            <span class="item-info-source-title-text">{{ item.source }}</span> -
-                            {% if item.source_link %}
-                              <span class="item-info-source-title"><a href="{{ item.source_link }}" target="new">Data</a></span> -
-                            {% endif %}
-                            {% if item.explore %}
-                              <span class="item-info-source-title"><a href="{{ item.explore }}" target="new">Explore</a></span> -
-                            {% endif %}
-                            <span class="item-info-source-date">{{ item.latest_date }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xs-6">
-                    <div class="row">
-                      <div class="col-xs-12 item-info-number text-right">
-                      	{{ h.snippet('crisis/snippets/top_line_value.html', value=item.formatted_value, unit=item.units, notes=item.notes) }}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
+                notes=item.notes, source=item.source,
+                source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
+
+
             </div>
           {% endfor %}
         {% endblock %}

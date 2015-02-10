@@ -3,11 +3,6 @@
  * Please edit the LESS files
  *
  */
-/*
- *  --- AUTO-GENERATED ---
- * Please edit the LESS files
- *
- */
 .topline {
   border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
@@ -66,17 +61,4 @@
 }
 .topline .topline-value {
   white-space: nowrap;
-}
-.org-section-title {
-  font-family: 'Gotham-Book', sans-serif;
-  font-weight: 400;
-  font-size: 28px;
-  color: #888888;
-  text-transform: uppercase;
-}
-.org-section-dropdown {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: #0088ff;
 }
