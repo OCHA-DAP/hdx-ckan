@@ -1,24 +1,29 @@
 {% extends "page-new.html" %}
 
 {% block primary_content %}
-    <div class="row paddingRowHack whiteBackground">
+    <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 <div class="col-xs-6">
-                    <span>wfp icon</span>
-                    <span>{{ _("WFP - World Food Programme") }}</span>
+                    <div class="pull-left"><img class="org-icon" src="images/icons/wfp-icon.svg" /></div>
+                    <div class="pull-left org-title">{{ _("WFP - World Food Programme") }}</div>
                 </div>
                 <div class="col-xs-6">
-                    <span>
+                    <span class="org-description">
                         {{ _("The World Food Programme is the world's largest humanitarian agency fighting hunger worldwide. Founded in 1961, WFP is part of the United Nations system and is voluntarily funded.") }}
                     </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 mTop20">
+                    Follow | Request | Visit
                 </div>
             </div>
         </div>
     </div>
 
     <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack mTop10 mBottom10">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Global Operations Data") }}</div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">

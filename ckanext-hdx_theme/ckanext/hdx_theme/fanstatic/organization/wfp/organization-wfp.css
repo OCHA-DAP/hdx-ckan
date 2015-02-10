@@ -67,7 +67,33 @@
 .topline .topline-value {
   white-space: nowrap;
 }
+.intro-section {
+  padding-top: 50px;
+  padding-bottom: 30px;
+  background-color: #efefef;
+}
+.intro-section .org-icon {
+  margin-top: -15px;
+  height: 60px;
+  margin-right: 20px;
+}
+.intro-section .org-title {
+  width: 470px;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 48px;
+  color: #0088ff;
+  line-height: 1;
+}
+.intro-section .org-description {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 30px;
+}
 .org-section-title {
+  margin-top: 30px;
+  margin-bottom: 30px;
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 28px;
