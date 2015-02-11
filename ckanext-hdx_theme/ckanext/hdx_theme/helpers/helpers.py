@@ -38,6 +38,12 @@ def is_downloadable(resource):
         return True
     return False
 
+def is_not_zipped(res):
+    url = res.get('url', 'zip').strip().lower() #Default to zip so preview doesn't show if there is no url
+    if re.search(r'zip$',url) or re.search(r'rar$',url):
+        return False
+    return True
+
 
 def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
