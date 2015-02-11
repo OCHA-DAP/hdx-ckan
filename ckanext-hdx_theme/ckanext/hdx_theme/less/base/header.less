@@ -1,0 +1,269 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+@import "variables";
+@import "base";
+@import "mixins";
+
+@hdxLogoUrl: "@{imagePath}/homepage-new/logo-beta.png";
+
+@headerNavHeight: 55px;
+@headerNavBorderHeight: 3px;
+@headerNavBackgroundColor: @whiteColor;
+@headerNavBorderColor: @lightGrayColor;
+@headerNavSearchBorderColor: @grayColor;
+@headerUserBackgroundColor: @darkGrayColor;
+
+@searchPlaceholderColor: #dadada;
+@searchTextColor: @blackColor;
+
+@toolbarBackgroundColor: @extraLightGrayColor;
+@toolbarHeight: 20px;
+
+@mainLinksColor: @darkGrayColor;
+
+.newHeader{
+  .header-user-box, .header-user-box > span > a {
+    .gothamBoldFont(12px);
+    .uppercase;
+    line-height: 25px;
+    color: @extraLightGrayColor;
+  }
+
+  .header-user-name {
+    color: @orangeColor;
+  }
+
+  .header-nav-bg{
+    background-color: @headerNavBackgroundColor;
+  }
+
+  .header-nav-border {
+    border-bottom: @headerNavBorderHeight solid @headerNavBorderColor;
+  }
+
+  .header-nav {
+    height: @headerNavHeight;
+
+    .table-valign{
+      height: @headerNavHeight;
+    }
+  }
+
+  .header-user-bg{
+    background-color: @headerUserBackgroundColor;
+  }
+
+  .submitData{
+    /*Submit Data Button*/
+    background-color: @orangeColor;
+    border-radius: 6px;
+    display: inline-block;
+    padding: 10px 30px;
+
+    .gothamBoldFont(14px);
+    color: @whiteColor;
+    .uppercase;
+  }
+
+  #feedback-button{
+    /* Feedback Button */
+    background-color: @grayColor;
+    border-radius: 20px;
+    padding: 10px 15px 10px;
+
+    .gothamBoldFont(12px);
+    line-height: 31px;
+    .uppercase;
+    color: @whiteColor;
+    text-shadow: none;
+    text-decoration: none;
+  }
+
+  .dropdown-menu{
+    margin: 0;
+
+    >li {
+      >a:hover, >a:focus{
+        color: @whiteColor;
+        background-color: @blueColor;
+        background-image: none;
+      }
+    }
+  }
+}
+
+/* HEADER Search Widget  */
+.header-nav-search {
+  height: @headerNavHeight;
+  margin-left: 50px;
+  width: 350px;
+
+  border-bottom: @headerNavBorderHeight solid @headerNavSearchBorderColor;
+  margin-bottom: -@headerNavBorderHeight;
+
+  .header-search-form{
+    margin: 0;
+    padding: 0;
+
+    .input-prepend{
+      margin: 0;
+    }
+
+    .icon-search{
+      margin: 0 20px;
+
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    .filter-icon{
+      margin-right: 20px;
+      visibility: hidden;
+
+      color: @blueColor;
+      font-size: 20px;
+
+      cursor: pointer;
+    }
+
+    input, input:focus {
+      border: none;
+      text-shadow: none;
+      box-shadow: none;
+      transition: none;
+      width: 250px;
+      margin: 0;
+      padding: 0;
+      height: 28px;
+      background: transparent;
+
+      .sourceSansProFont(400, 18px);
+      line-height: 28px;
+      outline: none;
+      color: @searchTextColor;
+    }
+
+    .searchPlaceholderStyle(){
+      color: @searchPlaceholderColor;
+      .sourceSansProFont(400, 18px);
+      line-height: 28px;
+    }
+
+    input::-webkit-input-placeholder, input:-ms-input-placeholder{
+      .searchPlaceholderStyle;
+    }
+
+    input:-moz-placeholder, input::-moz-placeholder{ //Firefox
+      .searchPlaceholderStyle;
+      opacity: 1;
+    }
+  }
+}
+
+//FIX THIS
+.newHeader .header-nav .header-nav-search .header-search-form input::-webkit-input-placeholder {
+  color: @searchPlaceholderColor;
+  .sourceSansProFont(400, 18px);
+  line-height: 28px;
+}
+
+/* HDX Version display */
+  .hdxLogo {
+    position: relative;
+  }
+  .logo {
+    #hdxVersion{
+      color: #888888;
+      position: absolute;
+      float: left;
+      font-size: 10px;
+      left: 99px;
+      top: 27px;
+      width: 0;
+      display: none;
+      line-height: 22px;
+    }
+    .logo-img:hover ~ #hdxVersion{
+      display: block;
+    }
+
+    .logo-img {
+      height: 31px;
+      content:url(@hdxLogoUrl);
+    }
+  }
+
+
+
+
+/* END HDX Version display */
+
+
+/* Style links inside header-nav, main navigation links */
+.mainLinks {
+  padding-left: 25px;
+  margin: 0;
+  display: inline;
+  >li {
+    display: inline;
+
+    >a {
+      margin-left: 15px;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      .gothamBoldFont(12px);
+      color: @mainLinksColor;
+      .letter-spacing-3;
+      line-height: 31px;
+      .uppercase;
+    }
+
+    >a:after{
+      content: "|";
+      margin-left: 15px;
+    }
+
+    >a:focus {
+      text-decoration: none;
+      cursor: pointer;
+    }
+  }
+
+  >li:first-child > a {
+    margin-left: 0;
+  }
+
+  >li:last-child > a:after {
+    content: "";
+    margin: 0;
+  }
+}
+
+/* Style breadcrumbs */
+.toolbarRow{
+  background-color: @toolbarBackgroundColor;
+  height: @toolbarHeight;
+
+  .toolbar{
+    margin: 0;
+    padding: 0;
+
+    .breadcrumb{
+      .sourceSansProFont(400, 12px);
+      color: @grayColor;
+      line-height: @toolbarHeight;
+      .uppercase;
+      > li {
+        text-shadow: none;
+      }
+      > li + li::before {
+        content: "";
+        padding: 0;
+      }
+    }
+  }
+}
+/* END Style breadcrumbs */
