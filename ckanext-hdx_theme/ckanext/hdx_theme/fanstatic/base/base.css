@@ -1,0 +1,9 @@
+/* Body Background */
+body {
+  background-size: cover;
+  background: #1ebfb3 url("/images/homepage-new/map.png") fixed;
+  min-width: 1260px;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+/* END Body Background */
