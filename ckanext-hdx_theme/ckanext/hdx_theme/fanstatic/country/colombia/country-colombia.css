@@ -1,58 +1,3 @@
-.item-info {
-    border-top: 1px solid #cccccc;
-    border-bottom: 1px solid #cccccc;
-    padding: 20px 0;
-    margin-top: -1px;
-    color: #333333;
-}
-
-.item-info-title{
-    font-family: 'Gotham-Bold', sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    letter-spacing: 0.01em;
-    /*margin-bottom: 10px;*/
-    color: #333333;
-}
-.item-info .item-info-extra {
-    /*margin-top: 10px;*/
-}
-.item-info .item-info-number {
-    font-family: 'Gotham-Light', sans-serif;
-    font-size: 47px;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    /*margin-bottom: 10px;*/
-}
-
-.item-info .item-info-number span.small {
-    font-family: 'Gotham-Light', sans-serif;
-    font-size: 25px;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    margin-bottom: 10px;
-    margin-left: -10px;
-}
-
-.item-info-source-title-text{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0.01em;
-}
-
-.item-info .item-info-source-title{
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.01em;
-}
-.item-info .item-info-source-date {
-    font-family: 'Source Sans Pro', sans-serif;
-    font-size: 12px;
-    letter-spacing: 0.01em;
-    color: #888888;
-}
-
 .graph-title{
     font-family: 'Gotham-Bold', sans-serif;
     font-weight: 400;
@@ -67,13 +12,4 @@
     font-family: 'Source Sans Pro', sans-serif;
     font-size: 12px;
     line-height: 18px;
-}
-
-.crisis-top-line-value-prefix {
-	font-family: 'Gotham-Light', sans-serif;
-    font-size: 37px;
-    line-height: 1;
-    letter-spacing: 0.01em;
-    margin-bottom: 20px;
-    margin-right: -10px;
 }

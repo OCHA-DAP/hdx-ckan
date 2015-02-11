@@ -115,7 +115,11 @@
 		<td class="dataset-details">
 			{% for tag in pkg_dict.tags %}
 	    		<div class="tag-wrapper">
-	      			<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+	    			{% if tag.vocabulary_id %}
+	      				<a class="label tag" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+	      			{% else %}	
+	      				<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+	      			{% endif %}
 	    		</div>
 	  		{% endfor %}
 		</td>
