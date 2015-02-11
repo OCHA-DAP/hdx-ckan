@@ -245,8 +245,13 @@ body {
   display: block;
 }
 .logo .logo-img {
+  background-image: url("/images/homepage-new/logo-beta.png");
+  background-repeat: no-repeat;
+  background-size: 126px 31px;
+  width: 126px;
   height: 31px;
-  content: url("/images/homepage-new/logo-beta.png");
+  min-width: 126px;
+  min-height: 31px;
 }
 /* END HDX Version display */
 /* Style links inside header-nav, main navigation links */

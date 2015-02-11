@@ -81,7 +81,7 @@
             <span class="hdxLogo table-valign-content">
               {% block header_logo %}
                 {% if g.site_logo %}
-                  <a class="logo" href="{{ h.url('home') }}"><img class="logo-img" alt="{{ g.site_title }} Logo" /><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
+                  <a class="logo" href="{{ h.url('home') }}"><div class="logo-img" alt="{{ g.site_title }} Logo" ></div><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
                 {% else %}
                   <h1>
                     <a href="{{ h.url('home') }}">{{ g.site_title }}</a>

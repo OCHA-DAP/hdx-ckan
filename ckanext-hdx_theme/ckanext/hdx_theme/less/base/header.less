@@ -189,9 +189,16 @@
       display: block;
     }
 
+    @logoImageHeight: 31px;
+    @logoImageWidth: 126px;
     .logo-img {
-      height: 31px;
-      content:url(@hdxLogoUrl);
+      background-image: url(@hdxLogoUrl);
+      background-repeat: no-repeat;
+      background-size: @logoImageWidth @logoImageHeight;
+      width: @logoImageWidth;
+      height: @logoImageHeight;
+      min-width: @logoImageWidth;
+      min-height: @logoImageHeight;
     }
   }
 
