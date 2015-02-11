@@ -269,8 +269,11 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
     for ex in extras:
         if ex[key] == value_key:
             res = ex[ret_key]
+    print value_key +' : '+res
     return res
 
+def load_json(obj, **kw):
+    return json.loads(obj, **kw)
 
 def hdx_group_followee_list():
 
