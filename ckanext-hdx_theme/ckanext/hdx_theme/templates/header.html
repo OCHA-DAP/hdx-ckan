@@ -73,15 +73,15 @@
 </div>
 <div class="homepage-header-nav-border">
   <div class="container">
-    <div class="row paddingRowHack header-nav-border">
-      <div class="span12 paddingLeftHack paddingRightHack">
+    <div class="row paddingRowHack header-nav-bg">
+      <div class="span12 paddingLeftHack paddingRightHack header-nav-border">
         <div class="header-nav">
           {# The .header-image class hides the main text and uses image replacement for the title #}
-          <span>
-            <span class="hdxLogo">
+          <span class="table-valign pull-left">
+            <span class="hdxLogo table-valign-content">
               {% block header_logo %}
                 {% if g.site_logo %}
-                  <a class="logo" href="{{ h.url('home') }}"><img src="/images/homepage-new/logo-beta.png" alt="{{ g.site_title }} Logo" style="height: 31px;"/><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
+                  <a class="logo" href="{{ h.url('home') }}"><img class="logo-img" alt="{{ g.site_title }} Logo" /><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
                 {% else %}
                   <h1>
                     <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
@@ -91,8 +91,8 @@
               {% endblock %}
             </span>
           </span>
-          <span class="header-nav-search">
-            <span>
+          <span class="header-nav-search table-valign pull-left">
+            <span class="table-valign-content">
               <div class="">
                 <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
                   <div class="input-prepend input-append">
@@ -105,28 +105,26 @@
               </div>
             </span>
           </span>
-          <span>
-            <span>
+          <span class="table-valign pull-left">
+            <span class="table-valign-content">
               <ul class="mainLinks">
                 {% block header_site_navigation_tabs %}
                   <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
                   <li><a href="/browse">{{ _('Browse') }}</a></li>
-    {#                    <li><a href="/group">{{ _('Countries')}}</a></li>#}
                   <li><a href="/ebola">{{ _('Crises') }}</a></li>
-    {#                    <li><a href="/organization">{{ _('Organizations') }}</a></li>#}
                 {% endblock %}
               </ul>
             </span>
           </span>
-          <span class="mL30">
-            <span>
+          <span class="mL30 table-valign pull-left">
+            <span class="table-valign-content">
               <a id="feedback-button" href="http://docs.hdx.rwlabs.org/get-involved/" title="Send feedback to hdx.feedback@gmail.com.">
                 Feedback
               </a>
             </span>
           </span>
-          <span class="mL45 pull-right">
-            <span>
+          <span class="mL45 table-valign pull-right">
+            <span class="table-valign-content">
               <a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">
                 <div class="submitData">
                   {{ _("Share data") }}

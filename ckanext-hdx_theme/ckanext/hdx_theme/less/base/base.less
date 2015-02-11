@@ -1,0 +1,14 @@
+@import "variables";
+
+@bodyBackgroundColor: @greenColor;
+@bodyBackgroundUrl: "@{imagePath}/homepage-new/map.png";
+
+/* Body Background */
+    body {
+      background-size: cover;
+      background: @bodyBackgroundColor url(@bodyBackgroundUrl) fixed;
+      min-width: 1260px;
+      color: @grayColor;
+      font-family: @sourceSansProFont;
+    }
+/* END Body Background */

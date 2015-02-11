@@ -3,6 +3,14 @@
  * Please edit the LESS files
  *
  */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
 .topline {
   border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
