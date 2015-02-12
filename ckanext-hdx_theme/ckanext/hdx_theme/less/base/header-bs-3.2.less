@@ -1,9 +1,12 @@
+//header.css overrides needed because BS 3.2 has border-box for box-sizing
+@import "variables";
+
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
     .container,
     .navbar-static-top .container,
     .navbar-fixed-top .container,
     .navbar-fixed-bottom .container {
-        width: 1170px;
+        width: @containerSize;
         padding: 0;
     }
 
@@ -12,17 +15,17 @@
     }
 
     .paddingRowHack{
-        margin-left: -45px;
-        margin-right: -45px;
+        margin-left: -@containerMarginSize;
+        margin-right: -@containerMarginSize;
     }
 
     .paddingRowHack .paddingLeftHack{
-        padding-left: 45px;
+        padding-left: @containerMarginSize;
         margin-left: 0;
     }
 
     .paddingRowHack .paddingRightHack{
-        padding-right: 45px;
+        padding-right: @containerMarginSize;
         margin-right: 0;
     }
     body{
@@ -54,7 +57,7 @@
 
     /* Style pagination */
         .pagination ul {
-            line-height: 45px;
+            line-height: @containerMarginSize;
         }
         .pagination ul>li {
             line-height: 20px;
@@ -65,7 +68,7 @@
         .module .pagination{
             display: block;
             text-align: center;
-            height: 45px;
+            height: @containerMarginSize;
         }
 
         .module .pagination ul{
@@ -128,3 +131,4 @@
         height: 58px;
     }
 /* END Fix header styles */
+
