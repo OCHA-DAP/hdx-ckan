@@ -2,6 +2,7 @@
 {% set url_action = 'resource_edit' if url_is_edit and can_edit else 'resource_read' %}
 {% set url = h.url_for(controller='package', action=url_action, id=pkg.name, resource_id=res.id) %}
 {% set is_downloadable = h.is_downloadable(res) %}
+{% set is_not_zipped = h.is_not_zipped(res) %}
 {% set resource_display_name = h.resource_display_name(res) %}
 
 {% resource 'hdx_theme/bs_popover.js' %}
@@ -40,7 +41,7 @@
     {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
     <div class="hdx-btn-group">
       {% block resource_item_explore_links %}
-      {% if res.can_be_previewed %}
+      {% if res.can_be_previewed and is_not_zipped %}
       <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
         {{ _('Preview') }}
       </a>

@@ -75,6 +75,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         from ckanext.hdx_theme.helpers import helpers as hdx_helpers
         return {
             'is_downloadable': hdx_helpers.is_downloadable,
+            'is_not_zipped': hdx_helpers.is_not_zipped,
             'get_facet_items_dict': hdx_helpers.get_facet_items_dict,
             'get_last_modifier_user': hdx_helpers.get_last_modifier_user,
             'get_filtered_params_list': hdx_helpers.get_filtered_params_list,
