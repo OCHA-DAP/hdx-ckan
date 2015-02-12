@@ -471,6 +471,17 @@ ul.hdx-bs3 {
   height: 58px;
 }
 /* END Fix header styles */
+/* Left - right layout */
+.section-right {
+  border-left: 1px solid #eeeeee;
+}
+.section-right .section-right-data-wrapper {
+  margin-left: 35px;
+}
+.section-left .section-left-data-wrapper {
+  margin-right: 35px;
+}
+/* END - Left - right layout */
 .intro-section {
   padding-top: 50px;
   padding-bottom: 30px;
@@ -510,3 +521,5 @@ ul.hdx-bs3 {
   font-size: 20px;
   color: #0088ff;
 }
+/* Dataset section */
+/* END - Dataset section */
