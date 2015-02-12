@@ -37,7 +37,7 @@
                 {% for top_line_item in data.top_line_items %}
                     <div class="col-xs-3">
                         {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.value,
-                        unit="aaa",
+                        unit="top_line_item.units",
                         notes=top_line_item.notes, source=None,
                         source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
                     </div>
@@ -59,9 +59,19 @@
         <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Data & Activity") }}</div>
         </div>
+        <div>
+
+        </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            {% snippet 'search/snippets/search_results_wrapper.html',
-                        tracking_enabled=g.tracking_enabled, my_c=c %}
+            <div class="row">
+                <div class="col-xs-3">
+                     {% snippet 'search/snippets/search_facets.html', facets=data.dataset_results.facets %}
+                </div>
+                <div class="col-xs-9">
+                    {% snippet 'search/snippets/search_results_wrapper.html',
+                            tracking_enabled=g.tracking_enabled, my_c=c %}
+                </div>
+            </div>
         </div>
     </div>
 
