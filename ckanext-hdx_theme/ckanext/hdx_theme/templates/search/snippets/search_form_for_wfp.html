@@ -6,3 +6,9 @@
   	{% endif %}
   {% endblock %}
   
+  {% block content_primary_nav %}
+        	{{ super() }}
+        	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'activities' }}">
+        		<a href="{{ other_links.activities }}">{{_('Activity')}}</a>
+        	</li>
+  {% endblock %}
