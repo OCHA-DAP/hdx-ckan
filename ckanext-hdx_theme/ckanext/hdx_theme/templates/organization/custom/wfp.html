@@ -36,8 +36,8 @@
             <div class="row">
                 {% for top_line_item in data.top_line_items %}
                     <div class="col-xs-3">
-                        {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.value,
-                        unit="top_line_item.units",
+                        {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
+                        unit=top_line_item.units,
                         notes=top_line_item.notes, source=None,
                         source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
                     </div>
