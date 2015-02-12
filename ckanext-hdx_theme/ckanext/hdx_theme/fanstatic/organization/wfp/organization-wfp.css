@@ -245,7 +245,7 @@ body {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage-new/logo-beta.png");
+  background-image: url("/images/homepage-new/logo-beta-inverted.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;
