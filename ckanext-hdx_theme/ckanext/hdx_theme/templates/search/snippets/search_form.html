@@ -140,6 +140,11 @@
         	{# <li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'features' }}">
         		<a href="{{ other_links.features }}">{{_('Feature Pages')}}</a>
         	</li> #}
+        	{% if tab == 'activities' %}
+	        	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'activities' }}">
+	        		<a href="{{ other_links.activities }}">{{_('Activity')}}</a>
+	        	</li>
+        	{% endif %}
           
         {% endblock %}
       </ul>

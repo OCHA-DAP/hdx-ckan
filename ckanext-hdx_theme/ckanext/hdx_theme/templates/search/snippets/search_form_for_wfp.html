@@ -1,0 +1,8 @@
+{% extends 'search/snippets/search_form.html' %}
+
+  {% block search_sortby %}
+  	{% if not tab == 'activities' %} 
+  		{{ super() }}
+  	{% endif %}
+  {% endblock %}
+  

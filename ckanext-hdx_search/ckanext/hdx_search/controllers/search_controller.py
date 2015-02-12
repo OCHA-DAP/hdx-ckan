@@ -48,8 +48,6 @@ SMALL_NUM_OF_ITEMS = 5
 LARGE_NUM_OF_ITEMS = 25
 
 
-
-
 def _encode_params(params):
     return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
             for k, v in params]
@@ -58,6 +56,7 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
+
 
 def search_for_all(context, data_dict):
     '''This search is independent of the tab in which the user
@@ -113,6 +112,7 @@ def extract_one_indicator(result):
 def sort_features(features):
     return sorted(features, key=lambda x: x['count'], reverse=True)
 
+
 @maintain.deprecated('Showing features in search results has been deprecated')
 def isolate_features(context, facets, q, tab, skip=0, limit=25):
     ''' Showing features in search results has been deprecated.
@@ -160,6 +160,7 @@ def isolate_features(context, facets, q, tab, skip=0, limit=25):
         feature_list = sort_features(features)
         return (feature_list[skip:skip + limit], len(features))
     return features
+
 
 class HDXSearchController(PackageController):
 
@@ -325,14 +326,16 @@ class HDXSearchController(PackageController):
         return self._search_template()
 
     def _which_tab_is_selected(self, search_extras):
-        c.tab = "all"
+        c.tab = 'all'
         if 'ext_indicator' in search_extras:
             if int(search_extras['ext_indicator']) == 1:
-                c.tab = "indicators"
+                c.tab = 'indicators'
             elif int(search_extras['ext_indicator']) == 0:
-                c.tab = "datasets"
+                c.tab = 'datasets'
         elif 'ext_feature' in search_extras:
-            c.tab = "features"
+            c.tab = 'features'
+        elif 'ext_activities' in search_extras:
+            c.tab = 'activities'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):
@@ -367,7 +370,8 @@ class HDXSearchController(PackageController):
             #     context, query['search_facets'], q, c.tab)
             c.indicator = extract_one_indicator(all_result)
             if c.indicator:
-                get_action('populate_related_items_count')(context, {'pkg_dict_list': c.indicator})
+                get_action('populate_related_items_count')(
+                    context, {'pkg_dict_list': c.indicator})
             c.facets = all_result['facets']
             c.search_facets = all_result['search_facets']
         else:
@@ -402,7 +406,8 @@ class HDXSearchController(PackageController):
 # c.search_facets = query['search_facets']
 #                 c.page.items = query['results']
 
-        get_action('populate_related_items_count')(context, {'pkg_dict_list':query['results']})
+        get_action('populate_related_items_count')(
+            context, {'pkg_dict_list': query['results']})
 
         c.page = h.Page(
             collection=query['results'],
@@ -464,7 +469,7 @@ class HDXSearchController(PackageController):
         params_to_skip = ['_show_filters']
         # most search operations should reset the page counter:
         return [(k, v) for k, v in request.params.items()
-                         if k != 'page' and k not in params_to_skip]
+                if k != 'page' and k not in params_to_skip]
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         named_route = self._get_named_route()
@@ -479,13 +484,21 @@ class HDXSearchController(PackageController):
         c.other_links['all'] = h.url_for(named_route, **params) + suffix
         params_copy = params.copy()
         params_copy['ext_indicator'] = 1
-        c.other_links['indicators'] = h.url_for(named_route, **params_copy) + suffix
+        c.other_links['indicators'] = h.url_for(
+            named_route, **params_copy) + suffix
         params_copy['ext_indicator'] = 0
-        c.other_links['datasets'] = h.url_for(named_route, **params_copy) + suffix
+        c.other_links['datasets'] = h.url_for(
+            named_route, **params_copy) + suffix
 
         params_copy = params.copy()
         params_copy['ext_feature'] = 1
-        c.other_links['features'] = h.url_for(named_route, **params_copy) + suffix
+        c.other_links['features'] = h.url_for(
+            named_route, **params_copy) + suffix
+
+        params_copy = params.copy()
+        params_copy['ext_activities'] = 1
+        c.other_links['activities'] = h.url_for(
+            named_route, **params_copy) + suffix
 
 #         c.other_links['params'] = params
         c.other_links['params_noq'] = {k: v for k, v in params.items()
