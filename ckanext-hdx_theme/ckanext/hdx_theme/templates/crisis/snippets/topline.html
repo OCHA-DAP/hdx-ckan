@@ -1,6 +1,9 @@
 {#
 Creates a topline number with or without the sparkline
 
+Depends on:
+    - crisis/topline.css
+
 Example:
     {{ h.snippet('crisis/snippets/topline.html', title=item.title, value=item.formatted_value, unit=item.units,
                     notes=item.notes, sparkline_json=item.sparklines_json, source=item.source,

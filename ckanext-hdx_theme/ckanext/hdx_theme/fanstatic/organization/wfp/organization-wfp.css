@@ -95,6 +95,51 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 /* END Body Background */
+/* Alter page-header style - used with nav-tabs */
+.page-header {
+  background: none;
+  border-bottom: 3px solid #eeeeee;
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
+}
+.page-header .nav-tabs {
+  margin-bottom: -3px;
+}
+/* END Alter page-header style */
+.nav-tabs {
+  border-bottom: 3px solid #eeeeee;
+}
+.nav-tabs > li {
+  margin-bottom: -3px;
+}
+.nav-tabs > li > a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  padding-left: 30px;
+  padding-right: 30px;
+  letter-spacing: 0.03em;
+  color: #888888;
+  border: none;
+}
+.nav-tabs > li > a:hover {
+  color: #0088ff;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  border: none;
+  border-bottom: 3px solid #0088ff;
+  color: #0088ff;
+}
+.nav-tabs .hdx-tab-button {
+  color: #007ce0;
+}
+.nav-tabs .hdx-tab-button i {
+  display: none;
+}
+/* END Style tabs*/
 .newHeader .header-user-box,
 .newHeader .header-user-box > span > a {
   font-family: 'Gotham-Bold', sans-serif;
@@ -245,7 +290,7 @@ body {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage-new/logo-beta.png");
+  background-image: url("/images/homepage-new/logo-beta-inverted.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;
@@ -315,17 +360,117 @@ body {
   padding: 0;
 }
 /* END Style breadcrumbs */
-/* Left - right layout */
-.section-right {
-  border-left: 1px solid #eeeeee;
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+.container,
+.navbar-static-top .container,
+.navbar-fixed-top .container,
+.navbar-fixed-bottom .container {
+  width: 1170px;
+  padding: 0;
 }
-.section-right .section-right-data-wrapper {
-  margin-left: 35px;
+.offset1andHalf {
+  margin-left: 180px;
 }
-.section-left .section-left-data-wrapper {
-  margin-right: 35px;
+.paddingRowHack {
+  margin-left: -45px;
+  margin-right: -45px;
 }
-/* END - Left - right layout */
+.paddingRowHack .paddingLeftHack {
+  padding-left: 45px;
+  margin-left: 0;
+}
+.paddingRowHack .paddingRightHack {
+  padding-right: 45px;
+  margin-right: 0;
+}
+body {
+  line-height: 20px;
+}
+/* END - Customize fixed Bootstrap layout */
+/* Style default Primary */
+[role=main] .primary {
+  width: 100%;
+  float: none;
+  padding-left: 0;
+}
+[role=main] .secondary {
+  margin: 0;
+  padding-right: 15px;
+  /* mimic the left 45 padding */
+  width: 100%;
+  color: #ffffff;
+}
+/* END Style default Primary */
+/* Change the default style for ul items */
+ul.hdx-bs3 {
+  padding-left: 0;
+  list-style-type: none;
+}
+/* Style pagination */
+.pagination ul {
+  line-height: 45px;
+}
+.pagination ul > li {
+  line-height: 20px;
+  display: inline;
+  margin-right: -2px;
+}
+.module .pagination {
+  display: block;
+  text-align: center;
+  height: 45px;
+}
+.module .pagination ul {
+  overflow: hidden;
+}
+.module .pagination li a {
+  background-color: #ffffff;
+  padding: 13px 19px 14px;
+  line-height: 45px;
+}
+/* END Pagination */
+/* END Style pagination */
+/* END Change the default style for ul items */
+/* Missing styles due to removal of BS 2.3 + other fixes */
+.uppercase {
+  text-transform: uppercase;
+}
+.form-actions {
+  margin-right: 0;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background: none;
+}
+/* END Missing styles due to removal of BS 2.3 */
+/* Fix search widget */
+/* Fix size due to different box-sizing */
+.form-search .input-append .searchInput {
+  width: 266px;
+  float: left;
+}
+/* Fix button position */
+.form-search .input-append .input-group-addon {
+  padding: 0;
+  border: none;
+  float: left;
+}
+/* END Fix search widget */
+/* Utility classes */
+.whiteBackground {
+  background-color: #ffffff;
+}
+/* END Utility classes */
+/* Style Select2 Dropdown */
+.select2-container .select2-choice .select2-arrow {
+  width: 42px;
+}
+/* END Style Select2 Dropdown */
+/* Fix header styles */
+.newHeader .header-nav .header-nav-search {
+  height: 58px;
+}
+/* END Fix header styles */
 .intro-section {
   padding-top: 50px;
   padding-bottom: 30px;
@@ -365,5 +510,3 @@ body {
   font-size: 20px;
   color: #0088ff;
 }
-/* Dataset section */
-/* END - Dataset section */
