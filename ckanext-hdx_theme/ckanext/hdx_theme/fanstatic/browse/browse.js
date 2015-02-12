@@ -120,7 +120,7 @@ function prepareMap(){
     center: [20, 0],
     zoom: 2,
     minZoom: 2,
-    maxZoom: 7,
+    maxZoom: 4,
     tileLayer: {
       continuousWorld: false,
       noWrap: false
