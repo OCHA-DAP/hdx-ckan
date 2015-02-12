@@ -221,7 +221,10 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             'ext_indicator': u'1',
             'fq': fq + ' +dataset_type:dataset'
         }
-        query = get_action("package_search")({}, data_dict)
+        try:
+            query = get_action("package_search")({}, data_dict)
+        except:
+            abort(404, _('Query produced no results'))
         if 'results' in query:
             for dataset in query['results']:
                 date_parts = dataset.get('metadata_modified', '').split('T')

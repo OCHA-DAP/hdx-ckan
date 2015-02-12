@@ -15,6 +15,8 @@ get_action = logic.get_action
 check_access = logic.check_access
 _get_or_bust = logic.get_or_bust
 
+NotFound = logic.NotFound
+
 
 def sort_results_case_insensitive(results, sort_by):
     if results:
@@ -57,6 +59,8 @@ def hdx_light_group_show(context, data_dict):
     id = _get_or_bust(data_dict, "id")
     group_dict = {}
     group = model.Group.get(id)
+    if not group:
+        raise NotFound
     group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
