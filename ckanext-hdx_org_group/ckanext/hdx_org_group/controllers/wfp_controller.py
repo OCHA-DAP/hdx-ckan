@@ -57,7 +57,8 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
                 'dataset_results': {
                     'facets': facets
                 },
-                'activities': activities
+                'activities': activities,
+                "request_params": request.params
             },
             'errors': None,
             'error_summary': None,
@@ -103,7 +104,7 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
         req_params = {}
         accepted_params = ['sort', 'q', 'organization', 'tags',
                            'vocab_Topics', 'license_id', 'groups',
-                           'res_format', '_show_filters']
+                           'res_format', '_show_filters', 'ext_indicator']
         for k, v in params.items():
             if k in accepted_params:
                 if k in req_params:
@@ -213,7 +214,7 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': org_code})
         self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
+        (query, all_results) = self._performing_search(req_params.get('q',''), fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
         return query, all_results
