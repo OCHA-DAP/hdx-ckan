@@ -2,9 +2,10 @@
 
 
 {% block breadcrumb_content %}
-    <li><a>Orgs</a></li>
-    <li class="active"><a>WFP edit</a></li>
+  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li class="active"><a>{{ _("WFP - World Food Programme") }}</a></li>
 {% endblock %}
+
 
 {% block primary_content %}
     <div class="row paddingRowHack intro-section">

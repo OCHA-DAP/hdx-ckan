@@ -11,6 +11,19 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 /* END Body Background */
+/* Default link style */
+a,
+a:hover,
+a:focus {
+  color: #007ce0;
+}
+/* END Default link style */
+.caret {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #007ce0;
+  vertical-align: top;
+}
 .table-valign {
   display: table;
   position: relative;
@@ -64,6 +77,116 @@ body {
   display: none;
 }
 /* END Style tabs*/
+/* Button style */
+.btn {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  background-image: none;
+  text-shadow: none;
+  border: none;
+  background-color: #888888;
+  color: #ffffff;
+}
+.btn:hover,
+.btn:focus,
+.btn.active {
+  background-color: #888888;
+  opacity: 0.7;
+  box-shadow: none;
+  color: #ffffff;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0;
+  background-position: inherit;
+}
+.btn.hdx-btn.org-btn {
+  min-width: 100px;
+  margin-left: 0;
+  background-color: #007ce0;
+  color: #ffffff;
+}
+.btn-inverted {
+  color: #888888;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  box-shadow: none;
+}
+.btn-primary {
+  background-color: #007ce0;
+  color: #ffffff;
+}
+.btn-danger {
+  background-color: #f2645a;
+}
+.resource-item .hdx-btn-group {
+  position: absolute;
+  top: 14px;
+  right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn.hdx-btn.ga-preview {
+  background-color: #888888;
+  color: white;
+  border: 0;
+  line-height: 35px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  margin-left: 10px;
+  border-radius: 4px;
+}
+.btn.hdx-btn.ga-share,
+.btn.hdx-btn.ga-download {
+  background-image: none;
+  text-shadow: none;
+  background-color: #888888;
+  color: white;
+  border: 0;
+  line-height: 35px;
+  width: 35px;
+  border-radius: 4px;
+  padding: 0;
+  margin-left: 10px;
+}
+.btn.hdx-btn.ga-share img,
+.btn.hdx-btn.ga-download img {
+  width: 14px;
+  margin-bottom: 5px;
+}
+/* END Button style*/
+/* Order DropDown style */
+.control-order-by label {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.03em;
+}
+.control-order-by .orderDropdown {
+  display: inline;
+}
+.control-order-by .orderDropdown .dropdown-toggle {
+  background-color: #ffffff;
+  border: none;
+  color: #007ce0;
+  text-align: left;
+  margin-top: -4px;
+}
+.control-order-by .orderDropdown .dropdown-toggle .caret {
+  margin-top: 6px;
+}
+.control-order-by .orderDropdown .dropdown-toggle-text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #007ce0;
+  letter-spacing: 0.03em;
+}
+/* END DropDown style */
 .newHeader .header-user-box,
 .newHeader .header-user-box > span > a {
   font-family: 'Gotham-Bold', sans-serif;
