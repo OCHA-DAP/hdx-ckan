@@ -51,7 +51,8 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
                 'top_line_items': top_line_items,
                 'dataset_results': {
                     'facets': facets
-                }
+                },
+                "request_params": request.params
             },
             'errors': None,
             'error_summary': None,
@@ -191,7 +192,7 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
 
         self._set_other_links(suffix=suffix, other_params_dict={'id': org_code})
         self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
+        (query, all_results) = self._performing_search(req_params.get('q',''), fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
         return query, all_results
