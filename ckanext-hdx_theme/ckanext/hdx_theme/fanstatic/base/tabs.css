@@ -1,0 +1,53 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* Alter page-header style - used with nav-tabs */
+.page-header {
+  background: none;
+  border-bottom: 3px solid #eeeeee;
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
+}
+.page-header .nav-tabs {
+  margin-bottom: -3px;
+}
+/* END Alter page-header style */
+.nav-tabs {
+  border-bottom: 3px solid #eeeeee;
+}
+.nav-tabs > li {
+  margin-bottom: -3px;
+}
+.nav-tabs > li > a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  padding-left: 30px;
+  padding-right: 30px;
+  letter-spacing: 0.03em;
+  color: #888888;
+  border: none;
+}
+.nav-tabs > li > a:hover {
+  color: #f2645a;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  border: none;
+  border-bottom: 3px solid #f2645a;
+  color: #f2645a;
+}
+.nav-tabs .hdx-tab-button {
+  color: #007ce0;
+}
+.nav-tabs .hdx-tab-button i {
+  display: none;
+}
+/* END Style tabs*/
