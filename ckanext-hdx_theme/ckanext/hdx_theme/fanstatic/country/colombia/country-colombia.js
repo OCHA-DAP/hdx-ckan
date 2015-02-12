@@ -1,8 +1,12 @@
 $(document).ready(function() {
   map = L.map('crisis-map', { attributionControl: false });
   map.scrollWheelZoom.disable();
-  L.tileLayer($('#crisis-map-url-div').text(), {
-    attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
+  L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+    maxZoom: 7
+  }).addTo(map);
+
+  L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
     maxZoom: 7
   }).addTo(map);
 

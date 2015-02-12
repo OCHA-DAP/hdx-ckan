@@ -1,6 +1,8 @@
 {% extends "page-new.html" %}
 
 {% block primary_content %}
+<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+<div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
 <div id="datasetCounts" style="display: none;">
     {{ c.countries }}
 </div>
