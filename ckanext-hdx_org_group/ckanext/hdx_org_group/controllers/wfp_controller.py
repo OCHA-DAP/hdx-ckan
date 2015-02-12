@@ -100,7 +100,7 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
         req_params = {}
         accepted_params = ['sort', 'q', 'organization', 'tags',
                            'vocab_Topics', 'license_id', 'groups',
-                           'res_format', '_show_filters']
+                           'res_format', '_show_filters', 'ext_indicator']
         for k, v in params.items():
             if k in accepted_params:
                 if k in req_params:
