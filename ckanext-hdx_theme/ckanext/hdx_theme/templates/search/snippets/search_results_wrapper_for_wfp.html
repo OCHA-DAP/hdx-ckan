@@ -7,7 +7,7 @@ packages       - A list of packages to display.
 
 Example:
 
-  {% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=c,
+  {% snippet 'search/snippets/search_results_wrapper_for_wfp.html', tracking_enabled=g.tracking_enabled, my_c=c,
 
    %}
 
@@ -39,8 +39,7 @@ Example:
               {{ h.snippet('search/snippets/indicator_list.html',
                         query=my_c.q, packages=my_c.page.items, show_preview_on_first=False) }}
           {% elif my_c.tab=='activities' %}
-              {{ h.snippet('search/snippets/indicator_list.html',
-                        query=my_c.q, packages=my_c.page.items, show_preview_on_first=False) }}
+          	  {{ h.snippet('indicator/snippets/activity_stream_items.html', activities = data.activities['activities'], offset = data.activities['offset']) }}
           {% endif %}
       {% endblock %}
 

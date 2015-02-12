@@ -46,7 +46,10 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
 
         facets = self.get_facet_information(
             tab_results, all_results, tab, req_params)
-
+        if tab == 'activities':
+            activities = self.get_activity_stream('wfp')
+        else:
+            activities = None
         template_data = {
             'data': {
                 'message': 'Test message',
@@ -54,6 +57,7 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
                 'dataset_results': {
                     'facets': facets
                 },
+                'activities': activities,
                 "request_params": request.params
             },
             'errors': None,
@@ -223,3 +227,14 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
 
     def _get_named_route(self):
         return 'wfp_read'
+
+    def get_activity_stream(self, country_uuid):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'for_view': True}
+        # 'group_uuid': country_uuid,
+        act_data_dict = {
+            'id': country_uuid, 'limit': 7, 'group_type': 'organization'}
+        result = get_action(
+            'hdx_get_group_activity_list')(context, act_data_dict)
+        return result
