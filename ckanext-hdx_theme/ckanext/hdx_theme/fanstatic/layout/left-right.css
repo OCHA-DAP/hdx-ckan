@@ -1,0 +1,11 @@
+/* Left - right layout */
+.section-right {
+  border-left: 1px solid #eeeeee;
+}
+.section-right .section-right-data-wrapper {
+  margin-left: 35px;
+}
+.section-left .section-left-data-wrapper {
+  margin-right: 35px;
+}
+/* END - Left - right layout */

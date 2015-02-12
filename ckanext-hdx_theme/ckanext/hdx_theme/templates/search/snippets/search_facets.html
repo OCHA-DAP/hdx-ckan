@@ -6,71 +6,88 @@ Example:
   {% snippet 'search/snippets/search_facets.html', facets=facets  %}
 
 #}
-
-<div class="row">
-    <div class="col-xs-12">
-        <span class="facet-section-title">{{ _('Filter Data By') }} :</span>
-    </div>
-</div>
-
-{% for title, facet_values in facets.iteritems() %}
-    {% set expanded_class = 'in' if facet_values.is_used else '' %}
+<section class="facet-section">
     <div class="row">
-        <div class="col-xs-10">
-            <a data-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
-                <span class="facet-item-title">{{ title }} </span>
-            </a>
-
-        </div>
-        <div class="col-xs-1">
-            <a data-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
-                <span>{{ facet_values.count }}</span>
-            </a>
+        <div class="col-xs-12">
+            <div class="facet-section-title">
+                <span>{{ _('Filter Data By') }} :</span>
+            </div>
         </div>
     </div>
-    <div class="collapse {{ expanded_class }}" id="collapse-{{ facet_values.code }}">
-        {% if facet_values.is_used %}
-            <div class="row">
-                <div class="col-xs-12">
-                    <a href="{{ facet_values.clear_link }}">
-                        <span class="facet-clear">{{ _('Clear all') }}</span>
+
+<div class="facet-section-body">
+    {% for title, facet_values in facets.iteritems() %}
+        {% set expanded_class = 'in' if facet_values.is_used else '' %}
+        <div class="row facet-wrapper">
+            <div class="col-xs-9">
+                <div class="facet-name uppercase">
+                    <a data-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
+                        <span>{{ title }} </span>
+                    </a>
+                </div>
+
+            </div>
+            <div class="col-xs-3">
+                <div class="facet-count">
+                    <a data-toggle="collapse" href="#collapse-{{ facet_values.code }}" aria-controls="collapse-{{ facet_values.code }}">
+                        <span>{{ facet_values.count }}</span>
                     </a>
                 </div>
             </div>
-        {% endif %}
-        {% for item in facet_values.value_items %}
-            {% if item.is_used %}
-                <div class="row selected">
-                    <div class="col-xs-10">
-                        <a href="{{ item.remove_link }}">
-                            <span class="facet-item-name">
-                                {{ item.display_name }}
-                            </span>
-                        </a>
-                    </div>
-                    <div class="col-xs-1">
-                        <a href="{{ item.remove_link }}">
-                            <span class="facet-item-remove">X</span>
-                        </a>
-                    </div>
-                </div>
-            {% else %}
+        </div>
+        <div class="collapse {{ expanded_class }}" id="collapse-{{ facet_values.code }}">
+            {% if facet_values.is_used %}
                 <div class="row">
-                    <div class="col-xs-10">
-                        <a href="{{ item.filter_link }}">
-                            <span class="facet-item-name">
-                                {{ item.display_name }}
-                            </span>
-                        </a>
-                    </div>
-                    <div class="col-xs-1">
-                        <a href="{{ item.filter_link }}">
-                            <span class="facet-item-count">{{ item.count }}</span>
-                        </a>
+                    <div class="col-xs-12">
+                        <div class="facet-clear">
+                            <a href="{{ facet_values.clear_link }}">
+                                <span>{{ _('Clear all') }}</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             {% endif %}
-        {% endfor %}
-    </div>
+            {% for item in facet_values.value_items %}
+                {% if item.is_used %}
+                    <div class="row facet-item-wrapper selected">
+                        <div class="col-xs-9">
+                            <div class="facet-item-name">
+                                <a title="{{ item.display_name }}" href="{{ item.filter_link }}">
+                                    <span> {{ item.display_name | truncate(20, True) }} </span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <div class="facet-item-remove">
+                                <a href="{{ item.remove_link }}">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row facet-item-wrapper">
+                        <div class="col-xs-9">
+                            <div class="facet-item-name">
+                                <a title="{{ item.display_name }}" href="{{ item.filter_link }}">
+                                    <span> {{ item.display_name | truncate(20, True) }} </span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+                            <div class="facet-item-count">
+                                <a href="{{ item.filter_link }}">
+                                    <span>{{ item.count }}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
 
-{% endfor %}
+    {% endfor %}
+</div>
+</section>
+
+{% resource 'hdx_theme/search-facets' %}
