@@ -1,8 +1,25 @@
 {% extends 'search/snippets/search_form.html' %}
-
+  {% set req_params = show_empty %}
   {% block search_sortby %}
   	{% if not tab == 'activities' %} 
   		{{ super() }}
   	{% endif %}
+  {% endblock %}
+
+  {% block before_results %}
+      <form method="get" action="#datasets-section" >
+          <div class="input-group">
+              <input name="q" type="text" class="form-control" placeholder="Search for..." value="{{ req_params.get('q', '') }}" />
+          <span class="input-group-btn">
+            <button class="btn icon-search" type="submit"></button>
+          </span>
+
+          </div>
+          {% for key,value in req_params.iteritems()  %}
+              {% if key != 'q' %}
+                  <input type="hidden" name="{{ key }}" value="{{ value }}" />
+              {% endif %}
+          {% endfor %}
+      </form>
   {% endblock %}
   

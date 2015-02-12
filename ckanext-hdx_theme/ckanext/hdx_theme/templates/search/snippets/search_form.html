@@ -153,6 +153,9 @@
 
 </form>
 
+{% block before_results %}
+{% endblock %}
+
 {% if show_empty and count == 0 %}
   {% trans %}
     <p class="extra">Please try another search.</p>
