@@ -45,28 +45,14 @@ ul.hdx-bs3 {
   list-style-type: none;
 }
 /* Style pagination */
-.pagination ul {
-  line-height: 45px;
-}
-.pagination ul > li {
-  line-height: 20px;
-  display: inline;
-  margin-right: -2px;
-}
-.module .pagination {
+.pagination {
   display: block;
   text-align: center;
   height: 45px;
 }
-.module .pagination ul {
-  overflow: hidden;
-}
-.module .pagination li a {
-  background-color: #ffffff;
+.pagination li a {
   padding: 13px 19px 14px;
-  line-height: 45px;
 }
-/* END Pagination */
 /* END Style pagination */
 /* END Change the default style for ul items */
 /* Missing styles due to removal of BS 2.3 + other fixes */
