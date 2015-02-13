@@ -98,14 +98,15 @@ body {
 /* Default link style */
 a,
 a:hover,
-a:focus {
-  color: #007ce0;
+a:focus,
+.dataset-heading a {
+  color: #0088ff;
 }
 /* END Default link style */
 .caret {
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
-  border-top: 9px solid #007ce0;
+  border-top: 9px solid #0088ff;
   vertical-align: top;
 }
 /* Alter page-header style - used with nav-tabs */
@@ -634,7 +635,6 @@ ul.hdx-bs3 {
   background-color: #eeeeee;
 }
 .intro-section .org-icon {
-  margin-top: -15px;
   height: 60px;
   margin-right: 20px;
 }
@@ -667,5 +667,12 @@ ul.hdx-bs3 {
   font-size: 20px;
   color: #0088ff;
 }
-/* Dataset section */
-/* END - Dataset section */
+.btn.hdx-btn.org-btn {
+  color: #888888;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  box-shadow: none;
+}
+.module-content .page-header {
+  margin-top: 0;
+}

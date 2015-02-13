@@ -10,7 +10,8 @@ body {
 /* Default link style */
 a,
 a:hover,
-a:focus {
+a:focus,
+.dataset-heading a {
   color: #007ce0;
 }
 /* END Default link style */
