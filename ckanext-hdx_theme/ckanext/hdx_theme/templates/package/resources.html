@@ -32,6 +32,9 @@
 
 {% block scripts %}
   {{ super() }}
+  {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
   {% if has_reorder %}
     {% resource 'vendor/reorder' %}
   {% endif %}

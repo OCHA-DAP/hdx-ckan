@@ -6,6 +6,7 @@
 {% set resource_display_name = h.resource_display_name(res) %}
 
 {% resource 'hdx_theme/bs_popover.js' %}
+
 <li class="resource-item">
   {% block resource_item_title %}
   <a class="heading" {% if url_is_edit and can_edit %} href="{{ url }}" {% endif %} title="{{ res.name or res.description }}">
@@ -14,13 +15,13 @@
   </a>
   {% endblock %}
 
-  <p class="description">
+  <div class="description">
     {% if res.description %}
-      {{ h.markdown_extract(res.description, extract_length=80) }}
+      <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ res.description }}</div></span>
     {% else %}
       <span class="empty">{{ _('No description for this resource') }}</span>
     {% endif %}
-  </p>
+  </div>
   
 	{% block resource_item_edit %}
 		{% if url_is_edit and can_edit %}
