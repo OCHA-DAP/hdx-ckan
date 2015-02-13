@@ -64,6 +64,7 @@ a:focus,
   color: #000000;
   padding: 12px 17px 13px;
   background-color: #ffffff;
+  border: none;
 }
 .pagination li.active a,
 .module .pagination li.active a {
