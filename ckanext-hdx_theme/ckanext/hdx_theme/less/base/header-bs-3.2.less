@@ -6,12 +6,8 @@
     .navbar-static-top .container,
     .navbar-fixed-top .container,
     .navbar-fixed-bottom .container {
-        width: @containerSize;
+        width: @containerRealSize;
         padding: 0;
-    }
-
-    .offset1andHalf{
-        margin-left: 180px;
     }
 
     .paddingRowHack{
@@ -42,7 +38,7 @@
 
     [role=main] .secondary{
         margin: 0;
-        padding-right: 15px; /* mimic the left 45 padding */
+        padding-right: @gutterSmallSize; /* mimic the left 45 padding */
         width: 100%;
         color: #ffffff;
     }

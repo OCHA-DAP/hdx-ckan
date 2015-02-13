@@ -2,144 +2,89 @@
 @import "mixins";
 
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
-    .container,
-    .navbar-static-top .container,
-    .navbar-fixed-top .container,
-    .navbar-fixed-bottom .container {
-        width: 1170px;
-        padding: 0;
+  .container,
+  .navbar-static-top .container,
+  .navbar-fixed-top .container,
+  .navbar-fixed-bottom .container {
+    width: @containerRealSize;
+    padding: 0;
+  }
+
+  [class*="span"]{
+    margin-left: @gutterSize;
+  }
+
+  .row{
+    margin-left:-@gutterSize;
+  }
+
+  /* Generate span1->span12 classes */
+    @generateSpanIterations: 12;
+    .generateSpan (@index) when (@index > 0) {
+      .span@{index} {
+        width: (@containerSize/12)*@index - @gutterSize;
+      }
+      .generateSpan(@index - 1);
     }
 
-    [class*="span"]{
-        margin-left: 30px;
+    // end the loop when index is 0
+    .generateSpan (0) {}
+
+    // "call" the loopingClass the first time with highest value
+    .generateSpan (@generateSpanIterations);
+  /* END Generate span1->span12 classes */
+
+  /* Generate offset1->offset11 classes */
+    @generateOffsetIterations: 11;
+    .generateOffset (@index) when (@index > 0) {
+      .offset@{index} {
+        margin-left: (@containerSize/12)*@index + @gutterSize;
+      }
+      .generateOffset(@index - 1);
     }
 
-    .row{
-        margin-left:-30px;
-    }
+    // end the loop when index is 0
+    .generateOffset (0) {}
 
-    .span12{
-        width: 1170px;
-    }
+    // "call" the loopingClass the first time with highest value
+    .generateOffset (@generateOffsetIterations);
+  /* END Generate offset1->offset11 classes */
 
-    .span11{
-        width: 1070px;
-    }
+  .paddingRowHack{
+    margin-left: -@containerMarginSize;
+    margin-right: -@containerMarginSize;
+  }
 
-    .span10{
-        width: 970px;
-    }
+  .paddingRowHack .paddingLeftHack{
+    padding-left: @containerMarginSize;
+    margin-left: 0;
+  }
 
-    .span9{
-        width: 870px;
-    }
-
-    .span8{
-        width: 770px;
-    }
-    .span8{
-        width: 670px;
-    }
-
-    .span6{
-        width: 570px;
-    }
-
-    .span5{
-        width: 470px;
-    }
-
-    .span4{
-        width: 370px;
-    }
-
-    .span3{
-        width: 270px;
-    }
-
-    .span2{
-        width: 170px;
-    }
-
-    .span1{
-        width: 70px;
-    }
-
-    .offset11{
-        margin-left: 1130px;
-    }
-    .offset10{
-        margin-left: 1030px;
-    }
-    .offset9{
-        margin-left: 930px;
-    }
-    .offset8{
-        margin-left: 830px;
-    }
-    .offset7{
-        margin-left: 730px;
-    }
-    .offset6{
-        margin-left: 630px;
-    }
-    .offset5{
-        margin-left: 530px;
-    }
-    .offset4{
-        margin-left: 430px;
-    }
-    .offset3{
-        margin-left: 330px;
-    }
-    .offset2{
-        margin-left: 230px;
-    }
-
-    .offset1andHalf{
-        margin-left: 180px;
-    }
-
-    .offset1{
-        margin-left: 130px;
-    }
-
-    .paddingRowHack{
-        margin-left: -@containerMarginSize;
-        margin-right: -@containerMarginSize;
-    }
-
-    .paddingRowHack .paddingLeftHack{
-        padding-left: @containerMarginSize;
-        margin-left: 0;
-    }
-
-    .paddingRowHack .paddingRightHack{
-        padding-right: @containerMarginSize;
-        margin-right: 0;
-    }
-
+  .paddingRowHack .paddingRightHack{
+    padding-right: @containerMarginSize;
+    margin-right: 0;
+  }
 /* END - Customize fixed Bootstrap layout */
 
 /* Style default Primary */
-    [role=main] .primary{
-        width: 825px;
-        position: relative;
-    }
+  [role=main] .primary{
+    width: 825px;
+    position: relative;
+  }
 
-    .support-primary {
-        float:left;
-        width: 100%;
-        background-color: #FFFFFF;
-        position: relative;
-    }
+  .support-primary {
+    float:left;
+    width: 100%;
+    background-color: #FFFFFF;
+    position: relative;
+  }
 /* END Style default Primary */
 
 /* Style default Secondary */
-    [role=main] .secondary {
-        width: 255px;
-        padding-right: @containerMarginSize;
-        position: relative;
-        color: #ffffff;
-    }
+  [role=main] .secondary {
+    width: 255px;
+    padding-right: @containerMarginSize;
+    position: relative;
+    color: #ffffff;
+  }
 /* END Style default Secondary */
