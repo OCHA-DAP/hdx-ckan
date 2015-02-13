@@ -4,6 +4,8 @@
 {% block primary_content %}
   <div class="row paddingRowHack" style="position: relative;">
   	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
+    <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+    <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
     <div id="crisis-map" style="position: relative; z-index: 0;">
     </div>
     <div class="crisis-map-title">
