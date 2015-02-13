@@ -656,6 +656,31 @@ ul.hdx-bs3 {
   outline: none;
 }
 /* END - Search box */
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+.hdx-modal .modal-header {
+  background-color: #eeeeee;
+  font-family: 'Gotham-Book', sans-serif;
+}
+.hdx-modal .modal-body {
+  font-family: 'Gotham-Book', sans-serif;
+}
+.hdx-modal .modal-footer {
+  background-color: #eeeeee;
+  border-style: none;
+}
+.hdx-modal label {
+  font-size: 14px;
+}
+.hdx-modal .modal-submit {
+  background-color: #ffffff;
+  color: #888888;
+}
+.hdx-modal .modal-cancel {
+  background-color: #888888;
+}
 .intro-section {
   padding-top: 50px;
   padding-bottom: 30px;

@@ -24,7 +24,12 @@
             <div class="row">
                 <div class="col-xs-12 mTop20">
                     {{ h.follow_button('group', 'wfp') }}
-                    <a href="{{ data.links.request_membership }}" class="btn btn-inverted">{{ _("Request Membership") }}</a>
+                    <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
+                        {{ _("Request Membership") }}
+                    </a>
+                        {% snippet 'organization/snippets/req_membership_new.html',
+                            modal_div_id='req-membership-div', modal_div_class='fade',
+                            form_action=data.links.request_membership %}
                     <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
 
                     <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
