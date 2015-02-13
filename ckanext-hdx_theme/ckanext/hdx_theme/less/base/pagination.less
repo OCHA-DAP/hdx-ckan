@@ -1,0 +1,36 @@
+@import "variables";
+@import "mixins";
+
+.pagination, .module .pagination {
+  background: @extraLightGrayColor;
+  border-top: none;
+  height: @paginationItemSize;
+  margin-left: -@containerMarginSize;
+  margin-right: -@containerMarginSize;
+  margin-bottom: 0;
+
+  ul {
+    line-height: @paginationItemSize;
+    overflow: hidden;
+    border-radius: 0;
+  }
+
+  li {
+    display: inline;
+
+    a, a:hover, a:focus {
+      .gothamBookFont(16px);
+      color: @blackColor;
+      padding: 12px 17px 13px; //magic numbers? :)
+      background-color: @whiteColor;
+    }
+
+    &.active a {
+      background-color: @paginationActiveBackground;
+      color: @whiteColor;
+    }
+    &.disabled a{
+      cursor: default;
+    }
+  }
+}
