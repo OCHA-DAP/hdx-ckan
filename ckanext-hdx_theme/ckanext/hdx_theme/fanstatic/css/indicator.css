@@ -14,6 +14,7 @@
 	    font-size: 14px;
 	    font-weight: 400;
 	    max-width: none;
+	    text-align:justify;
 	}
 	
 	.additional-info table, .additional-info table th, .additional-info table td, .additional-info table tr {
@@ -41,6 +42,7 @@
 	}
 	
 	.table-bordered.table-condensed.mTop20 tbody tr td.dataset-details{
+	   text-align:justify;
 	   width: 100%;
 	}
 	
@@ -239,5 +241,12 @@
 .dataset-notes.notes {
 	width: 600px;
 }
+
+/* Style Resources List */
+.resource-item .description{
+	text-align: justify;
+	max-width: 580px;
+}
+/* END Style Resources List*/
 
 /* END - Dataset specific styles */
