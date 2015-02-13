@@ -17,18 +17,18 @@
                 </div>
                 <div class="col-xs-6">
                     <span class="org-description">
-                        {{ _("The World Food Programme is the world's largest humanitarian agency fighting hunger worldwide. Founded in 1961, WFP is part of the United Nations system and is voluntarily funded.") }}
+                        {{ data.org_info.description }}
                     </span>
                 </div>
             </div>
             <div class="row">
                 <div class="col-xs-12 mTop20">
                     {{ h.follow_button('group', 'wfp') }}
-                    <a href="#" class="btn btn-inverted">{{ _("Request Membership") }}</a>
-                    <a href="#" class="btn btn-inverted">{{ _("Visit Website") }}</a>
+                    <a href="{{ data.links.request_membership }}" class="btn btn-inverted">{{ _("Request Membership") }}</a>
+                    <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
 
-                    <a href="#" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
-                    <a href="#" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
+                    <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
+                    <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
                 </div>
             </div>
         </div>

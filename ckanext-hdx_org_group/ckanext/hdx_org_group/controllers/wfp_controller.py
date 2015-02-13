@@ -16,6 +16,7 @@ import ckan.lib.helpers as h
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckan.controllers.organization as org
 
 render = base.render
 abort = base.abort
@@ -32,33 +33,41 @@ log = logging.getLogger(__name__)
 suffix = '#datasets-section'
 
 
-class WfpController(simple_search_controller.HDXSimpleSearchController):
+class WfpController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
 
     def org_read(self):
+        org_id = 'wfp'
+
+        org_info = self.get_org(org_id)
 
         top_line_items = self.get_top_line_numbers()
 
         req_params = self.process_req_params(request.params)
 
         tab_results, all_results = self.get_dataset_search_results(
-            'wfp', request.params)
+            org_id, request.params)
         tab = self.get_tab_name()
 
         facets = self.get_facet_information(
             tab_results, all_results, tab, req_params)
         if tab == 'activities':
-            activities = self.get_activity_stream('wfp')
+            activities = self.get_activity_stream(org_info.get('id', org_id))
         else:
             activities = None
         template_data = {
             'data': {
-                'message': 'Test message',
+                'org_info': org_info,
                 'top_line_items': top_line_items,
                 'dataset_results': {
                     'facets': facets
                 },
+                'links': {
+                    'edit': h.url_for('organization_edit', id=org_id),
+                    'members': h.url_for('organization_members', id=org_id),
+                    'request_membership': h.url_for('request_membership', org_id=org_id)
+                },
                 'activities': activities,
-                "request_params": request.params
+                'request_params': request.params
             },
             'errors': None,
             'error_summary': None,
@@ -68,6 +77,38 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
             'organization/custom/wfp.html', extra_vars=template_data)
 
         return result
+
+    def get_org(self, org_id):
+        group_type = 'organization'
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'schema': self._db_to_form_schema(group_type=group_type),
+                   'for_view': True}
+        data_dict = {'id': org_id}
+
+        try:
+            context['include_datasets'] = False
+            result = get_action(
+                'hdx_light_group_show')(context, data_dict)
+
+            org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
+
+            org_dict = {
+                'id': result['id'],
+                'display_name': result.get('display_name', ''),
+                'description': result['group'].description,
+                'link': org_url[0] if len(org_url) == 1 else None
+            }
+
+            return org_dict
+
+        except NotFound:
+            abort(404, _('Org not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read org %s') % id)
+
+        return {}
 
     def get_top_line_numbers(self):
         context = {'model': model, 'session': model.Session,
@@ -228,13 +269,13 @@ class WfpController(simple_search_controller.HDXSimpleSearchController):
     def _get_named_route(self):
         return 'wfp_read'
 
-    def get_activity_stream(self, country_uuid):
+    def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'for_view': True}
         # 'group_uuid': country_uuid,
         act_data_dict = {
-            'id': country_uuid, 'limit': 7, 'group_type': 'organization'}
+            'id': org_uuid, 'group_uuid': org_uuid, 'limit': 7, 'group_type': 'organization'}
         result = get_action(
             'hdx_get_group_activity_list')(context, act_data_dict)
         return result
