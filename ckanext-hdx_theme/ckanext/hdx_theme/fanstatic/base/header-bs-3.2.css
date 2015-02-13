@@ -1,0 +1,111 @@
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+.container,
+.navbar-static-top .container,
+.navbar-fixed-top .container,
+.navbar-fixed-bottom .container {
+  width: 1170px;
+  padding: 0;
+}
+.offset1andHalf {
+  margin-left: 180px;
+}
+.paddingRowHack {
+  margin-left: -45px;
+  margin-right: -45px;
+}
+.paddingRowHack .paddingLeftHack {
+  padding-left: 45px;
+  margin-left: 0;
+}
+.paddingRowHack .paddingRightHack {
+  padding-right: 45px;
+  margin-right: 0;
+}
+body {
+  line-height: 20px;
+}
+/* END - Customize fixed Bootstrap layout */
+/* Style default Primary */
+[role=main] .primary {
+  width: 100%;
+  float: none;
+  padding-left: 0;
+}
+[role=main] .secondary {
+  margin: 0;
+  padding-right: 15px;
+  /* mimic the left 45 padding */
+  width: 100%;
+  color: #ffffff;
+}
+/* END Style default Primary */
+/* Change the default style for ul items */
+ul.hdx-bs3 {
+  padding-left: 0;
+  list-style-type: none;
+}
+/* Style pagination */
+.pagination ul {
+  line-height: 45px;
+}
+.pagination ul > li {
+  line-height: 20px;
+  display: inline;
+  margin-right: -2px;
+}
+.module .pagination {
+  display: block;
+  text-align: center;
+  height: 45px;
+}
+.module .pagination ul {
+  overflow: hidden;
+}
+.module .pagination li a {
+  background-color: #ffffff;
+  padding: 13px 19px 14px;
+  line-height: 45px;
+}
+/* END Pagination */
+/* END Style pagination */
+/* END Change the default style for ul items */
+/* Missing styles due to removal of BS 2.3 + other fixes */
+.uppercase {
+  text-transform: uppercase;
+}
+.form-actions {
+  margin-right: 0;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background: none;
+}
+/* END Missing styles due to removal of BS 2.3 */
+/* Fix search widget */
+/* Fix size due to different box-sizing */
+.form-search .input-append .searchInput {
+  width: 266px;
+  float: left;
+}
+/* Fix button position */
+.form-search .input-append .input-group-addon {
+  padding: 0;
+  border: none;
+  float: left;
+}
+/* END Fix search widget */
+/* Utility classes */
+.whiteBackground {
+  background-color: #ffffff;
+}
+/* END Utility classes */
+/* Style Select2 Dropdown */
+.select2-container .select2-choice .select2-arrow {
+  width: 42px;
+}
+/* END Style Select2 Dropdown */
+/* Fix header styles */
+.newHeader .header-nav .header-nav-search {
+  height: 58px;
+}
+/* END Fix header styles */

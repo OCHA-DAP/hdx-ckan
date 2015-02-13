@@ -6,10 +6,12 @@
 @import "base";
 @import "mixins";
 
+@import "tabs"; //used in a lot of places
+
 @hdxLogoUrl: "@{imagePath}/homepage-new/logo-beta.png";
 
 @headerNavHeight: 55px;
-@headerNavBorderHeight: 3px;
+@headerNavBorderHeight: @navBorderHeight;
 @headerNavBackgroundColor: @whiteColor;
 @headerNavBorderColor: @lightGrayColor;
 @headerNavSearchBorderColor: @grayColor;

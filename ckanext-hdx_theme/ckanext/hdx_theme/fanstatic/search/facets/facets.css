@@ -1,0 +1,84 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+/* Facet groups */
+.facet-section-title {
+  margin-bottom: 15px;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  line-height: 14px;
+  color: #888888;
+}
+.facet-wrapper {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top-color: #eeeeee;
+  border-top-width: 1px;
+  border-top-style: solid;
+}
+.facet-section-body .facet-wrapper:first-of-type {
+  margin-top: 0px;
+}
+.facet-name {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.facet-name a,
+.facet-name a:hover,
+.facet-name a:focus {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0em;
+  line-height: 20px;
+  color: #888888;
+}
+.facet-count {
+  text-align: right;
+}
+.facet-count a {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 28px;
+  color: #0088ff;
+  letter-spacing: 0em;
+}
+/* END - Facet groups */
+/* Facet values */
+.facet-item-wrapper {
+  margin-top: 5px;
+}
+.facet-item-wrapper.selected {
+  border: 1px solid #cccccc;
+  border-radius: 8px;
+}
+.facet-item-name a {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 13px;
+  letter-spacing: 0em;
+  color: #888888;
+}
+.facet-item-count,
+.facet-item-remove {
+  text-align: right;
+}
+.facet-item-count {
+  padding-right: 2px;
+}
+.facet-item-count a,
+.facet-item-remove a {
+  font-family: 'Gotham-Book', sans-serif;
+  letter-spacing: 0em;
+  color: #0088ff;
+}
+.facet-item-count a {
+  font-size: 14px;
+}
+.facet-item-remove a {
+  font-size: 10px;
+}
+/* END - Facet values */

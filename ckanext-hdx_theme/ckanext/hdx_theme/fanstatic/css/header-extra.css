@@ -993,48 +993,6 @@
 
 
 /* Style tabs */
-    .hdx-wrapper .page-header .nav-tabs {
-        border-bottom: 1px solid #eeeeee;
-    }
-    .hdx-wrapper .page-header .nav-tabs > li {
-        margin-bottom: -3px;
-        /*border-bottom: 3px solid #cccccc;*/
-    }
-    .hdx-wrapper .page-header .nav-tabs > .active > a{
-        border: none;
-        border-bottom: 3px solid #f2645a;
-        color: #f2645a;
-    }
-    .hdx-wrapper .page-header .nav-tabs > li > a{
-        border: none;
-        color: #888888;
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        padding-left: 30px;
-        padding-right: 30px;
-        letter-spacing: 0.03em;
-    }
-    .hdx-wrapper .page-header .nav-tabs > li > a:hover {
-        color: #f2645a;
-    }
-
-    .page-header{
-        background: none;
-        border-bottom: 3px solid #eeeeee;
-        /*background-color: #f6f6f6;*/
-        -webkit-border-radius: 0 3px 0 0;
-        -moz-border-radius: 0 3px 0 0;
-        border-radius: 0 3px 0 0;
-    }
-
-    .page-header .nav-tabs a:hover{
-        background-color: transparent;
-    }
-
-    .nav-tabs .hdx-tab-button i {
-        display: none; /*hide icons*/
-    }
 /* END Style tabs*/
 
 

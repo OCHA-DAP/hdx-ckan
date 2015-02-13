@@ -10,14 +10,6 @@
         margin-bottom: 100px;
     }
 
-    header.module-content.page-header{
-        margin-top: 35px;
-    }
-
-    .search-form .control-order-by{
-        margin-top: 35px;
-    }
-
     .list-items.search-form h2 {
         font-family: 'Source Sans Pro', sans-serif;
         font-weight: 700;
@@ -25,6 +17,8 @@
         color: #000000;
         letter-spacing: 0.01em;
         line-height: 1;
+
+        margin: 35px 0;
     }
 /* END Style search widget */
 

@@ -276,14 +276,6 @@
     padding-top: 0;
 }
 
-.primary .page-header .nav-tabs  li.active a{
-    background-color: transparent;
-}
-
-.primary .page-header .nav-tabs  li a:hover{
-    background-color: transparent;
-}
-
 /* Fix loading icon */
     .resource-upload-field.loading {
         padding: 0;
