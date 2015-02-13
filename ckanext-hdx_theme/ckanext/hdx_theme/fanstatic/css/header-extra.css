@@ -110,19 +110,7 @@
 
 /* END Fonts */
 
-/* Default link style */
-    a, a:hover, a:focus {
-        color: #007ce0;
-    }
-/* END Default link style */
 
-
-.caret{
-    border-left: 9px solid transparent;
-    border-right: 9px solid transparent;
-    border-top: 9px solid #007ce0;
-    vertical-align: top;
-}
 
 /* Footer */
     .newFooter .span12 > .row {
@@ -477,94 +465,6 @@
     
 /* END Common Classes */
 
-
-/* Button style */
-    .btn {
-        background-image: none;
-        text-shadow: none;
-        text-transform: uppercase;
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        border: none;
-        letter-spacing: 0;
-
-        background-color: #888888;
-        color: #ffffff;
-    }
-
-    .btn-inverted{
-        color: #888888;
-        background-color: #FFFFFF;
-        border: 1px solid #cccccc;
-        box-shadow: none;
-    }
-
-    .btn:hover, .btn:focus, .btn.active {
-        background-color: #888888;
-        opacity: 0.7;
-        box-shadow: none;
-        color: #ffffff;
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        letter-spacing: 0;
-        background-position: inherit;
-    }
-
-    .btn.hdx-btn.org-btn{
-        min-width: 100px;
-        margin-left: 0;
-        background-color: #007ce0;
-        color: white;
-    }
-
-    .btn.btn-primary{
-        background-color: #007ce0;
-        color: white;
-    }
-
-    .btn.btn-danger{
-        background-color: #f2645a;
-    }
-
-
-    .resource-item .hdx-btn-group{
-        position: absolute;
-        top: 14px;
-        right: 10px;
-        display: inline-block;
-        vertical-align: middle;
-    }
-
-    .btn.hdx-btn.ga-preview{
-        background-color: #888888;
-        color: white;
-        border: 0;
-        line-height: 35px;
-        padding: 0 20px;
-        text-transform: uppercase;
-        margin-left: 10px;
-        border-radius: 4px;
-    }
-    .btn.hdx-btn.ga-share, .btn.hdx-btn.ga-download{
-        background-image: none;
-        text-shadow: none;
-        background-color: #888888;
-        color: white;
-        border: 0;
-        line-height: 35px;
-        width: 35px;
-        border-radius: 4px;
-        padding: 0;
-        margin-left: 10px;
-    }
-    .btn.hdx-btn.ga-share img, .btn.hdx-btn.ga-download img{
-        width: 14px;
-        margin-bottom: 5px;
-    }
-/* END Button style*/
-
 /* Label style (eg. tags) */
     .label{
         border: none;
@@ -619,42 +519,6 @@
     /* END Pill styling */
 
 /* END Label style */
-
-
-/* Order DropDown style */
-    .control-order-by label {
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        color: #888888;
-        letter-spacing: 0.03em;
-    }
-
-    .control-order-by .orderDropdown .dropdown-toggle-text{
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        color: #007ce0;
-        letter-spacing: 0.03em;
-    }
-
-    .orderDropdown{
-        display: inline;
-    }
-
-    .orderDropdown .dropdown-toggle{
-        background-color: #ffffff;
-        border: none;
-
-        color: #007ce0;
-
-        text-align: left;
-        margin-top: -4px;
-    }
-    .orderDropdown .dropdown-toggle .caret{
-        margin-top: 6px;
-    }
-/* END DropDown style */
 
 /* Style Select2 Dropdown */
     .select2-container {
@@ -735,10 +599,10 @@
 	    margin-bottom: 8px;
 	    margin-top: 0;
 	}
-	.dataset-item .dataset-heading a {
-    	color: #007CE0;
-    	text-decoration: none;
-	}
+	/*.dataset-item .dataset-heading a {*/
+    	/*color: #007CE0;*/
+    	/*text-decoration: none;*/
+	/*}*/
 
     .updatedNameColor, .updatedNameColor a{
 		color: #007CE0;
