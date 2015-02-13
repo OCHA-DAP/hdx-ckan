@@ -20,6 +20,7 @@
 .row {
   margin-left: -30px;
 }
+/* Generate span1->span12 classes */
 .span12 {
   width: 1170px;
 }
@@ -35,7 +36,7 @@
 .span8 {
   width: 770px;
 }
-.span8 {
+.span7 {
   width: 670px;
 }
 .span6 {
@@ -56,6 +57,8 @@
 .span1 {
   width: 70px;
 }
+/* END Generate span1->span12 classes */
+/* Generate offset1->offset11 classes */
 .offset11 {
   margin-left: 1130px;
 }
@@ -86,12 +89,10 @@
 .offset2 {
   margin-left: 230px;
 }
-.offset1andHalf {
-  margin-left: 180px;
-}
 .offset1 {
   margin-left: 130px;
 }
+/* END Generate offset1->offset11 classes */
 .paddingRowHack {
   margin-left: -45px;
   margin-right: -45px;

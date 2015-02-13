@@ -140,6 +140,7 @@ a:focus,
   color: #000000;
   padding: 12px 17px 13px;
   background-color: #ffffff;
+  border: none;
 }
 .pagination li.active a,
 .module .pagination li.active a {
@@ -525,6 +526,9 @@ a:focus,
   padding: 0;
 }
 /* END Style breadcrumbs */
+.offset1andHalf {
+  margin-left: 180px;
+}
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
 .container,
 .navbar-static-top .container,
@@ -532,9 +536,6 @@ a:focus,
 .navbar-fixed-bottom .container {
   width: 1170px;
   padding: 0;
-}
-.offset1andHalf {
-  margin-left: 180px;
 }
 .paddingRowHack {
   margin-left: -45px;
@@ -577,7 +578,9 @@ ul.hdx-bs3 {
   text-align: center;
   height: 45px;
 }
-.pagination li a {
+.pagination li a,
+.pagination li a:hover,
+.pagination li a:focus {
   padding: 13px 19px 14px;
 }
 /* END Style pagination */
@@ -625,12 +628,12 @@ ul.hdx-bs3 {
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;
+  padding-left: 45px;
 }
-.section-right .section-right-data-wrapper {
-  margin-left: 35px;
-}
-.section-left .section-left-data-wrapper {
-  margin-right: 35px;
+.section-left {
+  border-right: 1px solid #eeeeee;
+  margin-right: -1px;
+  padding-right: 45px;
 }
 /* END - Left - right layout */
 /*

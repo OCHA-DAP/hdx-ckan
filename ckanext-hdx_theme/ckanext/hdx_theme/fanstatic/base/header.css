@@ -64,6 +64,7 @@ a:focus,
   color: #000000;
   padding: 12px 17px 13px;
   background-color: #ffffff;
+  border: none;
 }
 .pagination li.active a,
 .module .pagination li.active a {
@@ -449,3 +450,6 @@ a:focus,
   padding: 0;
 }
 /* END Style breadcrumbs */
+.offset1andHalf {
+  margin-left: 180px;
+}
