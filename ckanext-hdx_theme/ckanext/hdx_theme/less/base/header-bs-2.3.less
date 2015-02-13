@@ -1,3 +1,6 @@
+@import "variables";
+@import "mixins";
+
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
     .container,
     .navbar-static-top .container,
@@ -102,17 +105,17 @@
     }
 
     .paddingRowHack{
-        margin-left: -45px;
-        margin-right: -45px;
+        margin-left: -@containerMarginSize;
+        margin-right: -@containerMarginSize;
     }
 
     .paddingRowHack .paddingLeftHack{
-        padding-left: 45px;
+        padding-left: @containerMarginSize;
         margin-left: 0;
     }
 
     .paddingRowHack .paddingRightHack{
-        padding-right: 45px;
+        padding-right: @containerMarginSize;
         margin-right: 0;
     }
 
@@ -135,7 +138,7 @@
 /* Style default Secondary */
     [role=main] .secondary {
         width: 255px;
-        padding-right: 45px;
+        padding-right: @containerMarginSize;
         position: relative;
         color: #ffffff;
     }

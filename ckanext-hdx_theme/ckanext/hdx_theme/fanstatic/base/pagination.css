@@ -1,0 +1,49 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.pagination,
+.module .pagination {
+  background: #eeeeee;
+  border-top: none;
+  height: 45px;
+  margin-left: -45px;
+  margin-right: -45px;
+  margin-bottom: 0;
+}
+.pagination ul,
+.module .pagination ul {
+  line-height: 45px;
+  overflow: hidden;
+  border-radius: 0;
+}
+.pagination li,
+.module .pagination li {
+  display: inline;
+}
+.pagination li a,
+.module .pagination li a,
+.pagination li a:hover,
+.module .pagination li a:hover,
+.pagination li a:focus,
+.module .pagination li a:focus {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+  padding: 12px 17px 13px;
+  background-color: #ffffff;
+}
+.pagination li.active a,
+.module .pagination li.active a {
+  background-color: #1ebfb3;
+  color: #ffffff;
+}
+.pagination li.disabled a,
+.module .pagination li.disabled a {
+  cursor: default;
+}
