@@ -1,0 +1,36 @@
+@import "variables";
+@import "mixins";
+
+@orderByDropdownColor: @blueColor;
+
+/* Order DropDown style */
+.control-order-by {
+  label {
+    .gothamBoldFont(12px);
+    color: @grayColor;
+    .letter-spacing-3;
+  }
+
+  .orderDropdown {
+    display: inline;
+
+    .dropdown-toggle {
+      background-color: @whiteColor;
+      border: none;
+      color: @orderByDropdownColor;
+      text-align: left;
+      margin-top: -4px;
+
+      .caret {
+        margin-top: 6px;
+      }
+    }
+
+    .dropdown-toggle-text {
+      .gothamBoldFont(14px);
+      color: @orderByDropdownColor;
+      .letter-spacing-3;
+    }
+  }
+}
+/* END DropDown style */

@@ -2,16 +2,17 @@
 
 
 {% block breadcrumb_content %}
-    <li><a>Orgs</a></li>
-    <li class="active"><a>WFP edit</a></li>
+  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li class="active"><a>{{ _("WFP - World Food Programme") }}</a></li>
 {% endblock %}
+
 
 {% block primary_content %}
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 <div class="col-xs-6">
-                    <div class="pull-left"><img class="org-icon" src="images/icons/wfp-icon.svg" /></div>
+                    <div class="pull-left"><img class="org-icon" src="/images/icons/wfp-icon.svg" /></div>
                     <div class="pull-left org-title">{{ _("WFP - World Food Programme") }}</div>
                 </div>
                 <div class="col-xs-6">
@@ -22,7 +23,12 @@
             </div>
             <div class="row">
                 <div class="col-xs-12 mTop20">
-                    Follow | Request | Visit
+                    {{ h.follow_button('group', 'wfp') }}
+                    <a href="#" class="btn btn-inverted">{{ _("Request Membership") }}</a>
+                    <a href="#" class="btn btn-inverted">{{ _("Visit Website") }}</a>
+
+                    <a href="#" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
+                    <a href="#" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
                 </div>
             </div>
         </div>
@@ -46,14 +52,14 @@
         </div>
     </div>
 
-    <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Interactive Data") }}</div>
-        </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            Content
-        </div>
-    </div>
+    <!--<div class="row paddingRowHack whiteBackground">-->
+        <!--<div class="col-xs-12 paddingLeftHack paddingRightHack">-->
+            <!--<div class="org-section-title">{{ _("Interactive Data") }}</div>-->
+        <!--</div>-->
+        <!--<div class="col-xs-12 paddingLeftHack paddingRightHack">-->
+            <!--Content-->
+        <!--</div>-->
+    <!--</div>-->
 
     <div class="row paddingRowHack whiteBackground">
         <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -92,4 +98,5 @@
   {% resource 'hdx_theme/organization-wfp' %}
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/search-facets' %}
 {% endblock %}

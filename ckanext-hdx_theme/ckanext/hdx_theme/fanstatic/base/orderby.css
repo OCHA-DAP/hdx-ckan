@@ -1,0 +1,37 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* Order DropDown style */
+.control-order-by label {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.03em;
+}
+.control-order-by .orderDropdown {
+  display: inline;
+}
+.control-order-by .orderDropdown .dropdown-toggle {
+  background-color: #ffffff;
+  border: none;
+  color: #007ce0;
+  text-align: left;
+  margin-top: -4px;
+}
+.control-order-by .orderDropdown .dropdown-toggle .caret {
+  margin-top: 6px;
+}
+.control-order-by .orderDropdown .dropdown-toggle-text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #007ce0;
+  letter-spacing: 0.03em;
+}
+/* END DropDown style */

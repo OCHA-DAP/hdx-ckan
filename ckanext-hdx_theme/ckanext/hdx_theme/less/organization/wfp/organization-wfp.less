@@ -8,11 +8,12 @@
 @import "../../base/header";
 @import "../../base/header-bs-3.2";
 
+@import "../../layout/left-right";
+@import "../../search/widget/search-box";
+
 //override vars for the WFP Page
 @import "variables-wfp";
 
-@import "../../layout/left-right";
-@import "../../search/widget/search-box";
 
 .intro-section{
   padding-top: 50px;
@@ -21,7 +22,7 @@
   background-color: @extraLightGrayColor;
 
   .org-icon{
-    margin-top: -15px; //
+//    margin-top: -15px; //
     height: 60px;
     margin-right: 20px;
   }
@@ -56,6 +57,11 @@
   color: @wfpBlueColor;
 }
 
-/* Dataset section */
+//Override follow button style
+.btn.hdx-btn.org-btn{
+  .btn-inverted;
+}
 
-/* END - Dataset section */
+.module-content .page-header {
+  margin-top: 0;
+}
