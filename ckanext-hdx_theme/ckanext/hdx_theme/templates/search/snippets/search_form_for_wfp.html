@@ -8,18 +8,15 @@
 
   {% block before_results %}
       <form method="get" action="#datasets-section" >
-          <div class="input-group">
-              <input name="q" type="text" class="form-control" placeholder="Search for..." value="{{ req_params.get('q', '') }}" />
-          <span class="input-group-btn">
-            <button class="btn icon-search" type="submit"></button>
-          </span>
+      {% snippet "search/snippets/search_box.html", q=req_params.get('q', ''), placeholder='Search for...',
+            input_name='q' %}
 
-          </div>
           {% for key,value in req_params.iteritems()  %}
               {% if key != 'q' %}
                   <input type="hidden" name="{{ key }}" value="{{ value }}" />
               {% endif %}
           {% endfor %}
+           <button style="visibility: hidden; position: absolute" type="submit"></button>
       </form>
   {% endblock %}
   
