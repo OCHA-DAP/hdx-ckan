@@ -9,5 +9,5 @@ Example:
 
 <div class="search-box-wrapper">
     <input name="{{ input_name }}" type="text" placeholder="{{ placeholder }}" value="{{ q }}" />
-      <span class="icon-search"></span>
+      <span class="icon-search cursor-pointer" onclick="$(this).closest('form').submit()"></span>
 </div>

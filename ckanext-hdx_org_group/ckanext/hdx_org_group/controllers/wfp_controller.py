@@ -6,6 +6,7 @@ Created on Jan 13, 2015
 
 
 import logging
+import collections
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -16,6 +17,7 @@ import ckan.lib.helpers as h
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 import ckan.controllers.organization as org
 
 render = base.render
@@ -47,6 +49,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         tab_results, all_results = self.get_dataset_search_results(
             org_id, request.params)
         tab = self.get_tab_name()
+        query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
         facets = self.get_facet_information(
             tab_results, all_results, tab, req_params)
@@ -58,15 +61,16 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
             'data': {
                 'org_info': org_info,
                 'top_line_items': top_line_items,
-                'dataset_results': {
-                    'facets': facets
+                'search_results': {
+                    'facets': facets,
+                    'activities': activities,
+                    'query_placeholder': query_placeholder
                 },
                 'links': {
                     'edit': h.url_for('organization_edit', id=org_id),
                     'members': h.url_for('organization_members', id=org_id),
                     'request_membership': h.url_for('request_membership', org_id=org_id)
                 },
-                'activities': activities,
                 'request_params': request.params
             },
             'errors': None,
@@ -157,7 +161,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
     def get_facet_information(self, tab_results, all_results, tab, req_params):
         search_facets = None
-        result_facets = {}
+        result_facets = collections.OrderedDict()
         if tab == 'indicators' or tab == 'datasets':
             search_facets = tab_results['search_facets']
         else:
@@ -279,3 +283,22 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         result = get_action(
             'hdx_get_group_activity_list')(context, act_data_dict)
         return result
+
+    def generate_query_placeholder(self, tab, dataset_count, indicator_count):
+        static_prefix = _('Search')
+        static_suffix = '...'
+        body = ''
+
+        if tab== 'all':
+            body = hdx_helpers.hdx_show_singular_plural(dataset_count+indicator_count,
+                                                        _('indicator / dataset'),
+                                                        _('indicators & datasets'), True)
+        elif tab == 'indicators':
+            body = hdx_helpers.hdx_show_singular_plural(indicator_count, _('indicator'), _('indicators'), True)
+        elif tab == 'datasets':
+            body = hdx_helpers.hdx_show_singular_plural(dataset_count, _('dataset'), _('datasets'), True)
+        else:
+            return ''
+
+        response = static_prefix + " " + body + " " + static_suffix
+        return response

@@ -10,7 +10,7 @@
 
   {% block before_results %}
       <form method="get" action="#datasets-section" >
-      {% snippet "search/snippets/search_box.html", q=req_params.get('q', ''), placeholder='Search for...',
+      {% snippet "search/snippets/search_box.html", q=req_params.get('q', ''), placeholder=query_placeholder,
             input_name='q' %}
 
           {% for key,value in req_params.iteritems()  %}
