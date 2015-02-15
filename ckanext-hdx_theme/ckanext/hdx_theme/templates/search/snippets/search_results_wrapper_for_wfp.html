@@ -28,7 +28,8 @@ Example:
                     tab=my_c.tab, sorting_selected=my_c.sort_by_selected,
                     count=(my_c.count), show_empty=request.params, error=my_c.query_error, search_in_results=true,
                     placeholder=_('Search within found datasets...'), display_search_input=false, id=my_c.group_dict.name, other_links=my_c.other_links,
-                    indicator_counts = my_c.indicator_counts, dataset_counts = my_c.dataset_counts %}
+                    indicator_counts = my_c.indicator_counts, dataset_counts = my_c.dataset_counts,
+                    query_placeholder=search_results.query_placeholder %}
         {% endblock %}
       {% endblock %}
 
@@ -39,7 +40,7 @@ Example:
               {{ h.snippet('search/snippets/indicator_list.html',
                         query=my_c.q, packages=my_c.page.items, show_preview_on_first=False) }}
           {% elif my_c.tab=='activities' %}
-          	  {{ h.snippet('indicator/snippets/activity_stream_items.html', activities = data.activities['activities'], offset = data.activities['offset']) }}
+          	  {{ h.snippet('indicator/snippets/activity_stream_items.html', activities = search_results.activities['activities'], offset = search_results.activities['offset']) }}
           {% endif %}
       {% endblock %}
 

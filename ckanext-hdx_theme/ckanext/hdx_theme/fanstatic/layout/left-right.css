@@ -1,11 +1,11 @@
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;
+  padding-left: 45px;
 }
-.section-right .section-right-data-wrapper {
-  margin-left: 35px;
-}
-.section-left .section-left-data-wrapper {
-  margin-right: 35px;
+.section-left {
+  border-right: 1px solid #eeeeee;
+  margin-right: -1px;
+  padding-right: 45px;
 }
 /* END - Left - right layout */
