@@ -62,10 +62,11 @@ a:focus,
   font-weight: 400;
   font-size: 16px;
   color: #000000;
-  padding: 12px 17px 13px;
   background-color: #ffffff;
   border: none;
   margin-left: -2px;
+  display: inline-block;
+  width: 45px;
 }
 .pagination li.active a,
 .module .pagination li.active a {
