@@ -15,7 +15,8 @@
 		<td class="dataset-details metadata-link">
 		{% if pkg_dict.owner_org %}
 		{% set org_id = pkg_dict.organization.name or pkg_dict.owner_org %}
-			<a href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
+			<a class="mx-ga-dimension-organization"
+               href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
 	            	{{ pkg_dict.organization.title }}
 	        </a>
 	    {% endif %}
