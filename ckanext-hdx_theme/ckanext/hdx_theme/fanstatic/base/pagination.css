@@ -38,6 +38,7 @@
   padding: 12px 17px 13px;
   background-color: #ffffff;
   border: none;
+  margin-left: -2px;
 }
 .pagination li.active a,
 .module .pagination li.active a {
