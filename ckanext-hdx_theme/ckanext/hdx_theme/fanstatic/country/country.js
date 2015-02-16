@@ -107,12 +107,16 @@ function buildGraphs() {
         var dataRaw = dataEl.text();
         dataEl.remove();
 
-        var unitEl = element.find(".unit-name")
+        var unitEl = element.find(".unit-name");
         var unitName = unitEl.text();
         unitEl.remove();
 
         var data = JSON.parse(dataRaw);
         var chartEl = element.find(".chart-item")[0];
+
+        var chartType = 'bar';
+        if (data.length > 4)
+            chartType = 'area';
 
         var graph = c3.generate({
             bindto: chartEl,
@@ -133,7 +137,7 @@ function buildGraphs() {
                 names: {
                     "value": unitName
                 },
-                type: 'bar'
+                type: chartType
             },
             legend:{
                 show: false
