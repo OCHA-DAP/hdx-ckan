@@ -57,6 +57,10 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
             activities = self.get_activity_stream(org_info.get('id', org_id))
         else:
             activities = None
+
+        allow_basic_user_info = self.check_access('hdx_basic_user_info')
+        allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
+
         template_data = {
             'data': {
                 'org_info': org_info,
@@ -71,7 +75,12 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                     'members': h.url_for('organization_members', id=org_id),
                     'request_membership': h.url_for('request_membership', org_id=org_id)
                 },
-                'request_params': request.params
+                'request_params': request.params,
+                'permissions': {
+                    'edit': self.check_access('organization_update', {'id': org_info['id']}),
+                    'view_members': allow_basic_user_info,
+                    'request_membership': allow_req_membership
+                }
             },
             'errors': None,
             'error_summary': None,
@@ -302,3 +311,14 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         response = static_prefix + " " + body + " " + static_suffix
         return response
+
+    def check_access(self, action_name, data_dict={}):
+        context = {'model': model,
+               'user': c.user or c.author}
+        try:
+            result = logic.check_access(action_name, context, data_dict)
+        except logic.NotAuthorized:
+            result = False
+
+        return result
+

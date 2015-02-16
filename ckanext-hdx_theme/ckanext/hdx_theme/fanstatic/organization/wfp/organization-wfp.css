@@ -114,8 +114,6 @@ a:focus,
   background: #eeeeee;
   border-top: none;
   height: 45px;
-  margin-left: -45px;
-  margin-right: -45px;
   margin-bottom: 0;
 }
 .pagination ul,
@@ -138,9 +136,12 @@ a:focus,
   font-weight: 400;
   font-size: 16px;
   color: #000000;
-  padding: 12px 17px 13px;
   background-color: #ffffff;
   border: none;
+  margin-left: -2px;
+  display: inline-block;
+  width: 45px;
+  padding: 0;
 }
 .pagination li.active a,
 .module .pagination li.active a {
@@ -189,9 +190,6 @@ a:focus,
   border-bottom: 3px solid #0088ff;
   color: #0088ff;
 }
-.nav-tabs .hdx-tab-button {
-  color: #007ce0;
-}
 .nav-tabs .hdx-tab-button i {
   display: none;
 }
@@ -233,6 +231,12 @@ a:focus,
   background-color: #ffffff;
   border: 1px solid #cccccc;
   box-shadow: none;
+}
+.btn-inverted:hover,
+.btn-inverted:focus {
+  background-color: #ffffff;
+  opacity: 0.7;
+  color: #888888;
 }
 .btn-primary {
   background-color: #007ce0;
@@ -578,11 +582,6 @@ ul.hdx-bs3 {
   text-align: center;
   height: 45px;
 }
-.pagination li a,
-.pagination li a:hover,
-.pagination li a:focus {
-  padding: 13px 19px 14px;
-}
 /* END Style pagination */
 /* END Change the default style for ul items */
 /* Missing styles due to removal of BS 2.3 + other fixes */
@@ -727,6 +726,12 @@ ul.hdx-bs3 {
   background-color: #ffffff;
   border: 1px solid #cccccc;
   box-shadow: none;
+}
+.btn.hdx-btn.org-btn:hover,
+.btn.hdx-btn.org-btn:focus {
+  background-color: #ffffff;
+  opacity: 0.7;
+  color: #888888;
 }
 .page-header {
   margin-top: 0;

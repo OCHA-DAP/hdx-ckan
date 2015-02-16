@@ -5,8 +5,6 @@
   background: @extraLightGrayColor;
   border-top: none;
   height: @paginationItemSize;
-  margin-left: -@containerMarginSize;
-  margin-right: -@containerMarginSize;
   margin-bottom: 0;
 
   ul {
@@ -21,9 +19,12 @@
     a, a:hover, a:focus {
       .gothamBookFont(16px);
       color: @blackColor;
-      padding: 12px 17px 13px; //magic numbers? :)
       background-color: @whiteColor;
       border: none;
+      margin-left: -2px;
+      display: inline-block;
+      width: 45px;
+      padding: 0;
     }
 
     &.active a {

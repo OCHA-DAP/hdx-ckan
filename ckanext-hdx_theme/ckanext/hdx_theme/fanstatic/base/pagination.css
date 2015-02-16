@@ -11,8 +11,6 @@
   background: #eeeeee;
   border-top: none;
   height: 45px;
-  margin-left: -45px;
-  margin-right: -45px;
   margin-bottom: 0;
 }
 .pagination ul,
@@ -35,9 +33,12 @@
   font-weight: 400;
   font-size: 16px;
   color: #000000;
-  padding: 12px 17px 13px;
   background-color: #ffffff;
   border: none;
+  margin-left: -2px;
+  display: inline-block;
+  width: 45px;
+  padding: 0;
 }
 .pagination li.active a,
 .module .pagination li.active a {

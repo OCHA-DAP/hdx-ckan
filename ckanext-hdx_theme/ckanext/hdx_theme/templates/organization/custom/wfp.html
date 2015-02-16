@@ -24,16 +24,22 @@
             <div class="row">
                 <div class="col-xs-12 mTop20">
                     {{ h.follow_button('group', 'wfp') }}
-                    <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
-                        {{ _("Request Membership") }}
-                    </a>
+                	{% if data.permissions.request_membership %}
+                        <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
+                            {{ _("Request Membership") }}
+                        </a>
                         {% snippet 'organization/snippets/req_membership_new.html',
                             modal_div_id='req-membership-div', modal_div_class='fade',
                             form_action=data.links.request_membership %}
+                	{% endif %}
                     <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
 
-                    <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
-                    <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
+                    {% if data.permissions.edit %}
+                        <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
+                    {% endif %}
+                    {% if data.permissions.view_members %}
+                        <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

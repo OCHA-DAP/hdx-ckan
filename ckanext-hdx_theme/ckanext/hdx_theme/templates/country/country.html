@@ -40,7 +40,7 @@
                                     {{ value.indicatorTypeName }}
                                 </td>
                                 <td class="value">
-                                    <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
+                                    <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="left" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
                                 </td>
                             </tr>
                             <tr class="extra-info">
@@ -69,7 +69,7 @@
                         {{ val.title }}
                     </div>
                     <div class="col-xs-12 mTop10 mBottom10">
-                        <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
+                        <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
                     </div>
                     <div class="data hidden">
                         {{ val.data | safe }}
