@@ -43,5 +43,11 @@ Example:
           	  {{ h.snippet('indicator/snippets/activity_stream_items.html', activities = search_results.activities['activities'], offset = search_results.activities['offset']) }}
           {% endif %}
       {% endblock %}
+      
+    {% block page_pagination %}
+    	{% if not my_c.tab=='activities' %}
+        	{{ super() }}
+        {% endif %}
+    {% endblock %}
 
 
