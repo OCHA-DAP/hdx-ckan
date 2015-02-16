@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-xs-12 mTop20">
                     {{ h.follow_button('group', 'wfp') }}
-                	{% if not h.user_in_org_or_group(organization.id) and h.check_access('hdx_basic_user_info') %}
+                	{% if not h.user_in_org_or_group(data.org_info.id) and h.check_access('hdx_basic_user_info') %}
                         <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
                             {{ _("Request Membership") }}
                         </a>
