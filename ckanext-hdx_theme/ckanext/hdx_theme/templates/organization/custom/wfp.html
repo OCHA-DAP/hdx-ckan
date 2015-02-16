@@ -24,12 +24,14 @@
             <div class="row">
                 <div class="col-xs-12 mTop20">
                     {{ h.follow_button('group', 'wfp') }}
-                    <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
-                        {{ _("Request Membership") }}
-                    </a>
+                	{% if not h.user_in_org_or_group(organization.id) and h.check_access('hdx_basic_user_info') %}
+                        <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
+                            {{ _("Request Membership") }}
+                        </a>
                         {% snippet 'organization/snippets/req_membership_new.html',
                             modal_div_id='req-membership-div', modal_div_class='fade',
                             form_action=data.links.request_membership %}
+                	{% endif %}
                     <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
 
                     <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
