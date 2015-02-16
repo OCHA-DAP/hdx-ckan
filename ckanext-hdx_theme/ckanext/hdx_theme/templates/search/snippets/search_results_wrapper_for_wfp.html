@@ -46,8 +46,8 @@ Example:
       
     {% block page_pagination %}
     	{% if not my_c.tab=='activities' %}
-        	{{ super() }}
+            <div class="paddingRowHack">
+                {{ super() }}
+            </div>
         {% endif %}
     {% endblock %}
-
-
