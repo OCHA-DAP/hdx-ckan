@@ -24,7 +24,7 @@
             <div class="row">
                 <div class="col-xs-12 mTop20">
                     {{ h.follow_button('group', 'wfp') }}
-                	{% if not h.user_in_org_or_group(data.org_info.id) and h.check_access('hdx_basic_user_info') %}
+                	{% if data.permissions.request_membership %}
                         <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
                             {{ _("Request Membership") }}
                         </a>
@@ -34,8 +34,12 @@
                 	{% endif %}
                     <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
 
-                    <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
-                    <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
+                    {% if data.permissions.edit %}
+                        <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
+                    {% endif %}
+                    {% if data.permissions.view_members %}
+                        <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
