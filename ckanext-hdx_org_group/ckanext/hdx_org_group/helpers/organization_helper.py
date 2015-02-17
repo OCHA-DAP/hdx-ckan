@@ -15,6 +15,8 @@ get_action = logic.get_action
 check_access = logic.check_access
 _get_or_bust = logic.get_or_bust
 
+NotFound = logic.NotFound
+
 
 def sort_results_case_insensitive(results, sort_by):
     if results:
@@ -37,13 +39,17 @@ def hdx_get_group_activity_list(context, data_dict):
         limit = int(
             data_dict.get('limit', config.get('ckan.activity_list_limit', 31)))
 
-
-
         activity_objects = model.activity.group_activity_list(group_uuid,
-                limit=limit, offset=offset)
-        activity_stream =  model_dictize.activity_list_dictize(activity_objects, context)
+                                                              limit=limit, offset=offset)
+        activity_stream = model_dictize.activity_list_dictize(
+            activity_objects, context)
     else:
-        activity_stream = get_action('group_activity_list')(context, data_dict)
+        if 'group_type' in data_dict and data_dict['group_type'] == 'organization':
+            activity_stream = get_action(
+                'organization_activity_list')(context, data_dict)
+        else:
+            activity_stream = get_action(
+                'group_activity_list')(context, data_dict)
     offset = int(data_dict.get('offset', 0))
     extra_vars = {
         'controller': 'group',
@@ -53,15 +59,17 @@ def hdx_get_group_activity_list(context, data_dict):
     }
     return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
 
+
 def hdx_light_group_show(context, data_dict):
     id = _get_or_bust(data_dict, "id")
     group_dict = {}
     group = model.Group.get(id)
+    if not group:
+        raise NotFound
     group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
     group_dict['display_name'] = group_dict['title'] = group.title
-
 
     result_list = []
     for name, extra in group._extras.iteritems():

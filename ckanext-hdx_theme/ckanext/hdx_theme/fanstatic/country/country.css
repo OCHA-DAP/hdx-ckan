@@ -83,6 +83,10 @@
 /* END Topline Charts styles */
 
 /* Dataset result list styles */
+    .country-dataset-results .dataset-section-header {
+        line-height: 50px;
+        background-color: #edf6fd;
+    }
     .country-dataset-results .dataset-section-title {
         font-weight: 500;
         font-size: 18px;

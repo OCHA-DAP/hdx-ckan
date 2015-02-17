@@ -1,0 +1,62 @@
+@import "variables";
+@import "mixins";
+
+
+@navTabsActiveColor: @orangeColor;
+@navTabsBorderHeight: @navBorderHeight;
+
+/* Alter page-header style - used with nav-tabs */
+.page-header{
+  background: none;
+  border-bottom: @navTabsBorderHeight solid @extraLightGrayColor;
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
+
+  .nav-tabs {
+    margin-bottom: -@navTabsBorderHeight; //reset default CKAN style
+  }
+
+}
+/* END Alter page-header style */
+
+.nav-tabs{
+  border-bottom: @navTabsBorderHeight solid @extraLightGrayColor;
+
+  > li {
+    margin-bottom: -@navTabsBorderHeight;
+
+
+    > a {
+      .gothamBoldFont(14px);
+      padding-left: 30px;
+      padding-right: 30px;
+      .letter-spacing-3;
+      color: @grayColor;
+      border: none;
+    }
+
+    > a:hover {
+      color: @navTabsActiveColor;
+    }
+
+    &.active > a {
+      &,
+      &:hover,
+      &:focus {
+        border: none;
+        border-bottom: @navTabsBorderHeight solid @navTabsActiveColor;
+        color: @navTabsActiveColor;
+      }
+    }
+  }
+
+  .hdx-tab-button {
+//    color: @blueColor;
+    i {
+      display: none;
+    }
+  }
+
+}
+/* END Style tabs*/

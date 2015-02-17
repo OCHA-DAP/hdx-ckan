@@ -1,0 +1,53 @@
+{#
+Wrapper for the list of datasets displayed in search results.
+This snippet contains the details around the list itself. It calls indicator_list.html or package_list.html
+
+packages       - A list of packages to display.
+
+
+Example:
+
+  {% snippet 'search/snippets/search_results_wrapper_for_wfp.html', tracking_enabled=g.tracking_enabled, my_c=c,
+
+   %}
+
+#}
+{% extends 'search/snippets/search_results_wrapper.html' %}
+
+
+      {% block form %}
+        {% set sorting = [
+          (_('Relevance'), 'score desc, metadata_modified desc'),
+          (_('Name Ascending'), 'title_case_insensitive asc'),
+          (_('Name Descending'), 'title_case_insensitive desc'),
+          (_('Last Modified'), 'metadata_modified desc'),
+          (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
+        %}
+        {% block search_form_snippet scoped %}
+            {% snippet 'search/snippets/search_form_for_wfp.html', type='dataset', query=my_c.q, sorting=sorting, no_title=True,
+                    tab=my_c.tab, sorting_selected=my_c.sort_by_selected,
+                    count=(my_c.count), show_empty=request.params, error=my_c.query_error, search_in_results=true,
+                    placeholder=_('Search within found datasets...'), display_search_input=false, id=my_c.group_dict.name, other_links=my_c.other_links,
+                    indicator_counts = my_c.indicator_counts, dataset_counts = my_c.dataset_counts,
+                    query_placeholder=search_results.query_placeholder %}
+        {% endblock %}
+      {% endblock %}
+
+      {% block package_search_results_datasets %}
+          {% if my_c.tab=='datasets' %}
+              {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items) }}
+          {% elif my_c.tab=='all' %}
+              {{ h.snippet('search/snippets/indicator_list.html',
+                        query=my_c.q, packages=my_c.page.items, show_preview_on_first=False) }}
+          {% elif my_c.tab=='activities' %}
+          	  {{ h.snippet('indicator/snippets/activity_stream_items.html', activities = search_results.activities['activities'], offset = search_results.activities['offset']) }}
+          {% endif %}
+      {% endblock %}
+      
+    {% block page_pagination %}
+    	{% if not my_c.tab=='activities' %}
+            <div class="paddingRowHack">
+                {{ super() }}
+            </div>
+        {% endif %}
+    {% endblock %}

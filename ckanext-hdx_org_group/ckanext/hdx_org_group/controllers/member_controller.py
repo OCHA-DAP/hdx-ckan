@@ -71,6 +71,7 @@ class HDXOrgMemberController(org.OrganizationController):
                         if user_dict:
                             #Add user
                             data_dict['username'] = user_dict[0].name
+                            h.flash_success('That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role'])
                         else:
                             user_data_dict = {
                                 'email': email,
@@ -82,6 +83,9 @@ class HDXOrgMemberController(org.OrganizationController):
                             user_dict = self._action('user_invite')(context,
                                                                 user_data_dict)
                             data_dict['username'] = user_dict['name']
+                            h.flash_success(email+' has been invited as '+data_dict['role'])
+                    else:
+                        h.flash_success(data_dict['username']+' has been added as '+data_dict['role'])
                     c.group_dict = self._action(
                         'group_member_create')(context, data_dict)
                 else:
@@ -105,6 +109,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 c.roles = self._action('member_roles_list')(
                     context, {'group_type': group_type}
                 )
+                h.flash_success(c.user_dict.username+' has been added as '+c.user_role)
             if not request.params['username']:
                 abort(404, _('User not found'))
         except NotAuthorized:

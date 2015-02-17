@@ -1,0 +1,13 @@
+{#
+The snippet for showing a search box with a search icon
+
+Example:
+
+  {% snippet 'search/snippets/search_box.html', q=query, input_name=name, placeholder=placeholder  %}
+
+#}
+
+<div class="search-box-wrapper">
+    <input name="{{ input_name }}" type="text" placeholder="{{ placeholder }}" value="{{ q }}" />
+      <span class="icon-search cursor-pointer" onclick="$(this).closest('form').submit()"></span>
+</div>

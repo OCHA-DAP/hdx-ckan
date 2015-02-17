@@ -83,7 +83,7 @@ function prepareMap(){
     layer = e.target;
     layer.setStyle({
       weight: 0,
-      fillOpacity: 1,
+      fillOpacity: 0,
       fillColor: '#f2f2ef'
     });
   };
@@ -129,7 +129,7 @@ function prepareMap(){
   getStyle = function(feature) {
     return {
       weight: 0,
-      fillOpacity: 1,
+      fillOpacity: 0,
       fillColor: '#f2f2ef'
     };
   };
@@ -150,17 +150,21 @@ function prepareMap(){
 
   topPane = map._createPane('leaflet-top-pane', map.getPanes().mapPane);
 
-  //TODO: Talk to Luis to change the base map to have the country names on zoom level 2
-  //after that switch the base map url to "http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
-  /**
-   * DO NOT REFACTOR map URL without fixing the TODO above
-   */
-  topLayer = L.tileLayer('https://{s}.tiles.mapbox.com/v3/yumiendo.ijchbik8/{z}/{x}/{y}.png', {
-    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Terms &amp; Feedback</a>',
+
+  topLayer = L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+    attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
     maxZoom: 7
   }).addTo(map);
   topPane.appendChild(topLayer.getContainer());
-  topLayer.setZIndex(7);
+
+  var topLayer2 = L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+    maxZoom: 6
+  }).addTo(map);
+  topLayer2.setZIndex(7);
+
+  topPane.appendChild(topLayer2.getContainer());
+
+  topLayer.setZIndex(1);
 }
 
 var countDatasets = {};

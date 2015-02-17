@@ -1,0 +1,27 @@
+@import "variables";
+
+@bodyBackgroundColor: @greenColor;
+@bodyBackgroundUrl: "@{imagePath}/homepage-new/map.png";
+
+/* Body Background */
+    body {
+      background-size: cover;
+      background: @bodyBackgroundColor url(@bodyBackgroundUrl) fixed;
+      min-width: 1260px;
+      color: @grayColor;
+      font-family: @sourceSansProFont;
+    }
+/* END Body Background */
+
+/* Default link style */
+    a, a:hover, a:focus, .dataset-heading a {
+        color: @defaultLinkColor;
+    }
+/* END Default link style */
+
+.caret{
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid @defaultLinkColor;
+    vertical-align: top;
+}

@@ -1,0 +1,110 @@
+{% extends "page-new.html" %}
+
+
+{% block breadcrumb_content %}
+  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  <li class="active"><a>{{ _("WFP - World Food Programme") }}</a></li>
+{% endblock %}
+
+
+{% block primary_content %}
+    <div class="row paddingRowHack intro-section">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-6">
+                    <div class="pull-left"><img class="org-icon" src="/images/icons/wfp-icon.svg" /></div>
+                    <div class="pull-left org-title">{{ _("WFP - World Food Programme") }}</div>
+                </div>
+                <div class="col-xs-6">
+                    <span class="org-description">
+                        {{ data.org_info.description }}
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 mTop20">
+                    {{ h.follow_button('group', 'wfp') }}
+                	{% if data.permissions.request_membership %}
+                        <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
+                            {{ _("Request Membership") }}
+                        </a>
+                        {% snippet 'organization/snippets/req_membership_new.html',
+                            modal_div_id='req-membership-div', modal_div_class='fade',
+                            form_action=data.links.request_membership %}
+                	{% endif %}
+                    <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
+
+                    {% if data.permissions.edit %}
+                        <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
+                    {% endif %}
+                    {% if data.permissions.view_members %}
+                        <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Global Operations Data") }}</div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                {% for top_line_item in data.top_line_items %}
+                    <div class="col-xs-3">
+                        {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
+                        unit=top_line_item.units,
+                        notes=top_line_item.notes, source=None,
+                        source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="row paddingRowHack whiteBackground">-->
+        <!--<div class="col-xs-12 paddingLeftHack paddingRightHack">-->
+            <!--<div class="org-section-title">{{ _("Interactive Data") }}</div>-->
+        <!--</div>-->
+        <!--<div class="col-xs-12 paddingLeftHack paddingRightHack">-->
+            <!--Content-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div class="row paddingRowHack whiteBackground">
+        <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Data & Activity") }}</div>
+        </div>
+        <div>
+
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-3 section-left">
+                    {% snippet 'search/snippets/search_facets.html', facets=data.search_results.facets %}
+                </div>
+                <div class="col-xs-9 section-right">
+                    {% snippet 'search/snippets/search_results_wrapper_for_wfp.html',
+                            tracking_enabled=g.tracking_enabled, my_c=c, search_results = data.search_results %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/activity-stream' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/organization-wfp' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/search-facets' %}
+{% endblock %}

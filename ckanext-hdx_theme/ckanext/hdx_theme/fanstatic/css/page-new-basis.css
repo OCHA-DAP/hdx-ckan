@@ -1,3 +1,10 @@
+/* Overriding default pointers */
+    .cursor-pointer {
+        cursor: pointer;
+    }
+/* END - Overriding default pointers */
+
+
 /* BEGIN - continuous browsing */
 	.cb-row{
 		background-color: #F6F6F6;

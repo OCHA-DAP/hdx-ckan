@@ -1,9 +1,16 @@
 function drawMap() {
+    var maxZoomValue = 4;
     var map = L.map('crisis-map', { attributionControl: false });
     map.scrollWheelZoom.disable();
-    L.tileLayer($('#crisis-map-url-div').text(), {
-        attribution: ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors',
-        maxZoom: 7
+    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+        minZoom: 0,
+        maxZoom: maxZoomValue
+    }).addTo(map);
+
+    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+        minZoom: 0,
+        maxZoom: maxZoomValue
     }).addTo(map);
 
     L.control.attribution({position: 'topright'}).addTo(map);
@@ -75,7 +82,7 @@ function drawMap() {
 
     var latitude = minLat + (maxLat-minLat)/2;
     var longitude = minLng + (maxLng-minLng)/2;
-    var zoom = 16;
+    var zoom = maxZoomValue;
 
     console.log(latitude);
     console.log(longitude);
@@ -86,9 +93,11 @@ function drawMap() {
       }
     }).addTo(map);
 
-    map.setView([latitude, longitude], zoom);
+    //map.setView([latitude, longitude], zoom);
     console.log([[minLat, minLng], [maxLat, maxLng]]);
-    map.fitBounds([[minLat, minLng], [maxLat, maxLng]]);
+    map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
+        maxZoom: maxZoomValue
+    });
 }
 
 function buildGraphs() {
@@ -98,18 +107,22 @@ function buildGraphs() {
         var dataRaw = dataEl.text();
         dataEl.remove();
 
-        var unitEl = element.find(".unit-name")
+        var unitEl = element.find(".unit-name");
         var unitName = unitEl.text();
         unitEl.remove();
 
         var data = JSON.parse(dataRaw);
         var chartEl = element.find(".chart-item")[0];
 
+        var chartType = 'bar';
+        if (data.length > 4)
+            chartType = 'area';
+
         var graph = c3.generate({
             bindto: chartEl,
             color: {
-                //pattern: [['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'][index%5]]
-                pattern: [['#46c7c3', '#f7968f', '#3b93ea', '#00bfb4', '#f46358'][index%5]]
+                //pattern: [['#46c7c3', '#f7968f', '#3b93ea', '#00bfb4', '#f46358'][index%5]] //previous colours
+                pattern: ['#46c7c3', '#f7968f', '#3b93ea', '#00bfb4', '#f46358'] //previous colours
             },
             padding: {
                 bottom: 10
@@ -124,7 +137,7 @@ function buildGraphs() {
                 names: {
                     "value": unitName
                 },
-                type: 'bar'
+                type: chartType
             },
             legend:{
                 show: false
