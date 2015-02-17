@@ -73,7 +73,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         country_code = c.group_dict.get('name', id)
 
         self.get_dataset_results(country_code)
-        c.hdx_group_activities = self.get_activity_stream(country_uuid)
+        # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
         (query, all_results) = self.get_dataset_search_results(country_code)
         vocab_topics_dict = all_results.get(
@@ -257,15 +257,15 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         result = get_action('hdx_get_indicator_values')({}, data_dict)
         return result
 
-    def get_activity_stream(self, country_uuid):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'for_view': True}
-        act_data_dict = {
-            'id': country_uuid, 'group_uuid': country_uuid, 'limit': 7}
-        result = get_action(
-            'hdx_get_group_activity_list')(context, act_data_dict)
-        return result
+    # def get_activity_stream(self, country_uuid):
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author,
+    #                'for_view': True}
+    #     act_data_dict = {
+    #         'id': country_uuid, 'group_uuid': country_uuid, 'limit': 7}
+    #     result = get_action(
+    #         'hdx_get_group_activity_list')(context, act_data_dict)
+    #     return result
 
     def get_cont_browsing(self, group_dict, vocab_topics_dict):
         cont_browsing_dict = {
