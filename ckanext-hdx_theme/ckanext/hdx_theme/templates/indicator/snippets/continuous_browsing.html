@@ -5,18 +5,19 @@
 
 #}
 <div class="row">
-	<div class="col-xs-12 mTop15 mBottom65 paddingLeftHack paddingRightHack">
-		<div class="row cb-row">
+	<div class="col-xs-12 mTop15 mBottom65">
+        <div class="cb-row">
+		<div class="row">
 			{% if type == "group" %}
 			<div class="col-xs-4 mTB30 cb-item">
 				<div class="cb-explore">
 					{{ _('Explore') }}
-				{% set title=pkg.title or pkg.name %}
-				{% set url=h.url_for(controller='package', action='search', q=title) %}
-				"<a href="{{ url }}" title="{{ title }}">{{ title|truncate(38, False) }}</a>"
-				{{ _('in the HDX Collection') }}
-			</div>
-		</div>
+                    {% set title=pkg.title or pkg.name %}
+                    {% set url=h.url_for(controller='package', action='search', q=title) %}
+                    "<a href="{{ url }}" title="{{ title }}">{{ title|truncate(38, False) }}</a>"
+                    {{ _('in the HDX Collection') }}
+			    </div>
+		    </div>
 			{% else %}
 			<div class="col-xs-2 mTB30 cb-item">
 				<div class="cb-explore">
@@ -55,5 +56,6 @@
 			</div>
 			{% endif %}
 		</div>
+            </div>
 	</div>
 </div>
