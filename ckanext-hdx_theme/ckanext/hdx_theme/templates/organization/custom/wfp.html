@@ -34,12 +34,14 @@
                 	{% endif %}
                     <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
 
-                    {% if data.permissions.edit %}
-                        <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
-                    {% endif %}
-                    {% if data.permissions.view_members %}
-                        <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
-                    {% endif %}
+                    <div class="pull-right">
+                        {% if data.permissions.edit %}
+                            <a href="{{ data.links.edit }}" class="btn btn-inverted">{{ _("Edit") }}</a>
+                        {% endif %}
+                        {% if data.permissions.view_members %}
+                            <a href="{{ data.links.members }}" class="btn btn-inverted">{{ _("Members") }}</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
