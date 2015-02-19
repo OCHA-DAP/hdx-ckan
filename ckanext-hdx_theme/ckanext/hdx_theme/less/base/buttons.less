@@ -1,0 +1,94 @@
+@import "variables";
+@import "mixins";
+
+/* Button style */
+.btn{
+  .gothamBoldFont(12px);
+  .uppercase;
+  .letter-spacing-0;
+
+  background-image: none;
+  text-shadow: none;
+  border: none;
+  background-color: @grayColor;
+  color: @whiteColor;
+
+  &:hover,
+  &:focus,
+  &.active {
+    background-color: @grayColor;
+    opacity: 0.7;
+    box-shadow: none;
+    color: @whiteColor;
+
+    .gothamBoldFont(12px);
+    .letter-spacing-0;
+    background-position: inherit;
+  }
+  &.hdx-btn.org-btn {
+    min-width: 100px;
+    margin-left: 0;
+    background-color: @blueColor;
+    color: @whiteColor;
+  }
+}
+
+.btn-inverted{
+  color: @grayColor;
+  background-color: @whiteColor;
+  border: 1px solid @lightGrayColor;
+  box-shadow: none;
+
+  &:hover,
+  &:focus {
+    background-color: @whiteColor;
+    opacity: 0.7;
+    color: @grayColor;
+  }
+}
+
+.btn-primary{
+  background-color: @blueColor;
+  color: @whiteColor;
+}
+
+.btn-danger{
+  background-color: @orangeColor;
+}
+
+
+    .resource-item .hdx-btn-group{
+        position: absolute;
+        top: 14px;
+        right: 10px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .btn.hdx-btn.ga-preview{
+        background-color: #888888;
+        color: white;
+        border: 0;
+        line-height: 35px;
+        padding: 0 20px;
+        text-transform: uppercase;
+        margin-left: 10px;
+        border-radius: 4px;
+    }
+    .btn.hdx-btn.ga-share, .btn.hdx-btn.ga-download{
+        background-image: none;
+        text-shadow: none;
+        background-color: #888888;
+        color: white;
+        border: 0;
+        line-height: 35px;
+        width: 35px;
+        border-radius: 4px;
+        padding: 0;
+        margin-left: 10px;
+    }
+    .btn.hdx-btn.ga-share img, .btn.hdx-btn.ga-download img{
+        width: 14px;
+        margin-bottom: 5px;
+    }
+/* END Button style*/

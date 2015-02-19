@@ -1,0 +1,90 @@
+@import "variables";
+@import "mixins";
+
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+  .container,
+  .navbar-static-top .container,
+  .navbar-fixed-top .container,
+  .navbar-fixed-bottom .container {
+    width: @containerRealSize;
+    padding: 0;
+  }
+
+  [class*="span"]{
+    margin-left: @gutterSize;
+  }
+
+  .row{
+    margin-left:-@gutterSize;
+  }
+
+  /* Generate span1->span12 classes */
+    @generateSpanIterations: 12;
+    .generateSpan (@index) when (@index > 0) {
+      .span@{index} {
+        width: (@containerSize/12)*@index - @gutterSize;
+      }
+      .generateSpan(@index - 1);
+    }
+
+    // end the loop when index is 0
+    .generateSpan (0) {}
+
+    // "call" the loopingClass the first time with highest value
+    .generateSpan (@generateSpanIterations);
+  /* END Generate span1->span12 classes */
+
+  /* Generate offset1->offset11 classes */
+    @generateOffsetIterations: 11;
+    .generateOffset (@index) when (@index > 0) {
+      .offset@{index} {
+        margin-left: (@containerSize/12)*@index + @gutterSize;
+      }
+      .generateOffset(@index - 1);
+    }
+
+    // end the loop when index is 0
+    .generateOffset (0) {}
+
+    // "call" the loopingClass the first time with highest value
+    .generateOffset (@generateOffsetIterations);
+  /* END Generate offset1->offset11 classes */
+
+  .paddingRowHack{
+    margin-left: -@containerMarginSize;
+    margin-right: -@containerMarginSize;
+  }
+
+  .paddingRowHack .paddingLeftHack{
+    padding-left: @containerMarginSize;
+    margin-left: 0;
+  }
+
+  .paddingRowHack .paddingRightHack{
+    padding-right: @containerMarginSize;
+    margin-right: 0;
+  }
+/* END - Customize fixed Bootstrap layout */
+
+/* Style default Primary */
+  [role=main] .primary{
+    width: 825px;
+    position: relative;
+  }
+
+  .support-primary {
+    float:left;
+    width: 100%;
+    background-color: #FFFFFF;
+    position: relative;
+  }
+/* END Style default Primary */
+
+/* Style default Secondary */
+  [role=main] .secondary {
+    width: 255px;
+    padding-right: @containerMarginSize;
+    position: relative;
+    color: #ffffff;
+  }
+/* END Style default Secondary */

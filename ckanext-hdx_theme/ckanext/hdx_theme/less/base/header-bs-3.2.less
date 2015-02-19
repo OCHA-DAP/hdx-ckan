@@ -1,28 +1,27 @@
+//header.css overrides needed because BS 3.2 has border-box for box-sizing
+@import "variables";
+
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
     .container,
     .navbar-static-top .container,
     .navbar-fixed-top .container,
     .navbar-fixed-bottom .container {
-        width: 1170px;
+        width: @containerRealSize;
         padding: 0;
     }
 
-    .offset1andHalf{
-        margin-left: 180px;
-    }
-
     .paddingRowHack{
-        margin-left: -45px;
-        margin-right: -45px;
+        margin-left: -@containerMarginSize;
+        margin-right: -@containerMarginSize;
     }
 
     .paddingRowHack .paddingLeftHack{
-        padding-left: 45px;
+        padding-left: @containerMarginSize;
         margin-left: 0;
     }
 
     .paddingRowHack .paddingRightHack{
-        padding-right: 45px;
+        padding-right: @containerMarginSize;
         margin-right: 0;
     }
     body{
@@ -39,7 +38,7 @@
 
     [role=main] .secondary{
         margin: 0;
-        padding-right: 15px; /* mimic the left 45 padding */
+        padding-right: @gutterSmallSize; /* mimic the left 45 padding */
         width: 100%;
         color: #ffffff;
     }
@@ -53,33 +52,11 @@
     }
 
     /* Style pagination */
-        .pagination ul {
-            line-height: 45px;
+        .pagination {
+          display: block;
+          text-align: center;
+          height: @containerMarginSize;
         }
-        .pagination ul>li {
-            line-height: 20px;
-            display: inline;
-            margin-right: -2px;
-        }
-
-        .module .pagination{
-            display: block;
-            text-align: center;
-            height: 45px;
-        }
-
-        .module .pagination ul{
-            overflow: hidden;
-        }
-
-        .module .pagination li a {
-            background-color: #ffffff;
-            padding: 13px 19px 14px;
-            line-height: 45px;
-        }
-
-/* END Pagination */
-
     /* END Style pagination */
 /* END Change the default style for ul items */
 
@@ -128,3 +105,4 @@
         height: 58px;
     }
 /* END Fix header styles */
+

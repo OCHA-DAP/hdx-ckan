@@ -17,13 +17,6 @@ overriding the form blocks depending on the current context
   </div>
 
    <div class="control-group">
-  	<label class="control-label" for="field-geojson">{{ _("Geojson")}}</label>
-  	<div class="controls">
-  		<textarea id="field-geojson" name="geojson">{{data.get('geojson', '')}}</textarea>
-  	</div>
-  </div>
-
-   <div class="control-group">
   	<label class="control-label" for="field-relief_web_url">{{ _("Relief Web URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-relief_web_url" name="relief_web_url" value="{{data.get('relief_web_url', '')}}">
@@ -36,6 +29,14 @@ overriding the form blocks depending on the current context
   		<input type="text" id="field-hr_info_url" name="hr_info_url" value="{{data.get('hr_info_url', '')}}">
   	</div>
   </div>
+
+  <div class="control-group">
+    <label class="control-label" for="field-geojson">{{ _("GeojsonL")}}</label>
+    <div class="controls">
+      <textarea id="field-geojson" name="geojson" value="{{data.get('geojson', '')}}"></textarea>
+    </div>
+  </div>
+
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}
 

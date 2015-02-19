@@ -107,18 +107,22 @@ function buildGraphs() {
         var dataRaw = dataEl.text();
         dataEl.remove();
 
-        var unitEl = element.find(".unit-name")
+        var unitEl = element.find(".unit-name");
         var unitName = unitEl.text();
         unitEl.remove();
 
         var data = JSON.parse(dataRaw);
         var chartEl = element.find(".chart-item")[0];
 
+        var chartType = 'bar';
+        if (data.length > 4)
+            chartType = 'area';
+
         var graph = c3.generate({
             bindto: chartEl,
             color: {
-                //pattern: [['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'][index%5]]
-                pattern: [['#46c7c3', '#f7968f', '#3b93ea', '#00bfb4', '#f46358'][index%5]]
+                //pattern: [['#46c7c3', '#f7968f', '#3b93ea', '#00bfb4', '#f46358'][index%5]] //previous colours
+                pattern: ['#46c7c3', '#f7968f', '#3b93ea', '#00bfb4', '#f46358'] //previous colours
             },
             padding: {
                 bottom: 10
@@ -133,7 +137,7 @@ function buildGraphs() {
                 names: {
                     "value": unitName
                 },
-                type: 'bar'
+                type: chartType
             },
             legend:{
                 show: false

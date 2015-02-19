@@ -15,7 +15,8 @@
 		<td class="dataset-details metadata-link">
 		{% if pkg_dict.owner_org %}
 		{% set org_id = pkg_dict.organization.name or pkg_dict.owner_org %}
-			<a href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
+			<a class="mx-ga-dimension-organization"
+               href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
 	            	{{ pkg_dict.organization.title }}
 	        </a>
 	    {% endif %}
@@ -28,9 +29,11 @@
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link mx-country">
+		<span data-module="hdx_show_more" style="visibility:hidden"><div>
 			{% for grp in pkg_dict.groups %}
 				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %},&nbsp;{% endif %}
 			{% endfor %}
+		<br/></div></span>
 		</td>
     </tr>
     {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
@@ -80,7 +83,7 @@
         	{% if pkg_dict.license_id %}
 				<span property="dc:rights"><a href="/about/license">{{ h.hdx_find_license_name(pkg_dict.license_id, pkg_dict.license_title) }}</a></span>
 				{% if pkg_dict.license_id == 'hdx-other' and pkg_dict.license_other %}
-				: <span data-module="hdx_show_more" style="visibility:hidden"><div>{{h.render_markdown(pkg_dict.license_other)}}</div></span>
+				: <span data-module="hdx_show_more" style="visibility:hidden">{{h.render_markdown(pkg_dict.license_other)}}</span>
 				{% endif %}
 				
 				{# link and open-data logo will be removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/294
@@ -103,11 +106,11 @@
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
 		{% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
-	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><div>{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</div></span></td>
+	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</span></td>
 	</tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
-		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden"><div>{{ h.render_markdown(pkg_dict.caveats) }}</div></span></td>
+		<td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{{ h.render_markdown(pkg_dict.caveats) }}</span></td>
 	</tr>
 
 	<tr>
@@ -115,7 +118,11 @@
 		<td class="dataset-details">
 			{% for tag in pkg_dict.tags %}
 	    		<div class="tag-wrapper">
-	      			<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+	    			{% if tag.vocabulary_id %}
+	      				<a class="label tag" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+	      			{% else %}	
+	      				<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+	      			{% endif %}
 	    		</div>
 	  		{% endfor %}
 		</td>

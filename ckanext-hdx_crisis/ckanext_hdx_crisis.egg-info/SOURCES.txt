@@ -2,6 +2,13 @@ setup.py
 ckanext/__init__.py
 ckanext/hdx_crisis/__init__.py
 ckanext/hdx_crisis/plugin.py
+ckanext/hdx_crisis/controllers/__init__.py
+ckanext/hdx_crisis/controllers/country_controller.py
+ckanext/hdx_crisis/controllers/crisis_controller.py
+ckanext/hdx_crisis/dao/__init__.py
+ckanext/hdx_crisis/dao/country_data_access.py
+ckanext/hdx_crisis/dao/data_access.py
+ckanext/hdx_crisis/tests/__init__.py
 ckanext_hdx_crisis.egg-info/PKG-INFO
 ckanext_hdx_crisis.egg-info/SOURCES.txt
 ckanext_hdx_crisis.egg-info/dependency_links.txt

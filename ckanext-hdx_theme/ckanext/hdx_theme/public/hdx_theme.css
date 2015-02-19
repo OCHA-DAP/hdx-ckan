@@ -144,23 +144,6 @@
     font-size: 15px;
 }
 
-.nav-tabs > li > a {
-    border-radius: 0 0 0 0;
-}
-
-.nav-tabs .hdx-tab-button {
-	color: #0099FF;
-}
-
-.nav-tabs .hdx-tab-button i {
-	display:none;
-}
-
-.navbar .nav .special-menuitem {
-	color: #1C687F;
-	font-size: 18px;
-}
-
 .masthead .navigation .nav-pills li a:hover, .masthead .navigation .nav-pills li.active a {
     background-color: transparent;
 }

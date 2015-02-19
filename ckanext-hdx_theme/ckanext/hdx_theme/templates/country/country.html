@@ -1,4 +1,4 @@
-{% extends "crisis-base.html" %}
+{% extends "crisis/crisis-base.html" %}
 
 {% block subtitle %}
     {{ c.group_dict.display_name }}
@@ -25,11 +25,12 @@
         {% endif %}
     </div>
 
+    {% if c.show_overview %}
     <div class="row">
         <div class="col-xs-4">
             <div class="row topline-numbers">
                 <div class="col-xs-12 mTop35 mBottom35 topline-title">
-                    Country Overview
+                    Overview
                 </div>
 
                 <div class="col-xs-12">
@@ -40,7 +41,7 @@
                                     {{ value.indicatorTypeName }}
                                 </td>
                                 <td class="value">
-                                    <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
+                                    <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="left" title="{{ value.unitName }}">{{ value.formatted_value }}</span>
                                 </td>
                             </tr>
                             <tr class="extra-info">
@@ -69,7 +70,7 @@
                         {{ val.title }}
                     </div>
                     <div class="col-xs-12 mTop10 mBottom10">
-                        <span data-module="bs_tooltip" data-toggle="tooltip" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
+                        <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="{{ val.unit }}" class="last-value">{{ val.lastValue }} <span class="last-date">/ {{ val.lastDate[:4] }}</span></span>
                     </div>
                     <div class="data hidden">
                         {{ val.data | safe }}
@@ -95,27 +96,30 @@
         {% endfor %}
 
     </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-xs-12">
 			<div class="row">
-                <div class="col-xs-12">
-                    <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
-                </div>
-        		<div class="col-xs-3 wrapper-secondary">
-        			<div class="row">
-        				<div class="col-xs-12">
-							<h2 class="uppercase">{{_('Activity')}}</h2>
-						    {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_group_activities['activities'], offset = c.hdx_group_activities['offset'] %}
-						    <br>
-						    {% if h.follow_status('group', c.group_dict.id) %}
-						      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> 
-						    {% endif %}
-						</div>
-					</div>
-	        	</div>
-	        	<div class="col-xs-9 wrapper-primary country-dataset-results">
-                    <div class="mTop20">
+                {% if c.show_overview %}
+                    <div class="col-xs-12">
+                        <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
+                    </div>
+                {% endif %}
+{#        		<div class="col-xs-3 wrapper-secondary">#}
+{#        			<div class="row">#}
+{#        				<div class="col-xs-12">#}
+{#							<h2 class="uppercase">{{_('Activity')}}</h2>#}
+{#						    {% snippet "indicator/snippets/activity_stream_items.html", activities = c.hdx_group_activities['activities'], offset = c.hdx_group_activities['offset'] %}#}
+{#						    <br>#}
+{#						    {% if h.follow_status('group', c.group_dict.id) %}#}
+{#						      <span class="more">See more in <a href="{{ h.url_for(controller='user', action='dashboard') }}">your dashboard</a></span> #}
+{#						    {% endif %}#}
+{#						</div>#}
+{#					</div>#}
+{#	        	</div>#}
+	        	<div class="col-xs-12 country-dataset-results">
+                    <div class="mTop20 dataset-section-header">
                         <span id="datasets-section" class="mL15 uppercase dataset-section-title">
                             {{ _('Datasets and Indicators') }}
                         </span>

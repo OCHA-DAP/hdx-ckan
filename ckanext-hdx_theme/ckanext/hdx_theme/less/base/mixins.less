@@ -1,0 +1,55 @@
+@import "variables.less";
+
+//Font mixins
+.font-definition(@weight: 400, @size: 16px) {
+  font-weight: @weight;
+  font-size: @size;
+}
+.gothamBoldFont(@size: 16px) {
+  font-family: @gothamBoldFont;
+  .font-definition(400, @size);
+}
+
+.gothamBookFont(@size: 16px) {
+  font-family: @gothamBookFont;
+  .font-definition(400, @size);
+}
+
+.gothamLightFont(@size: 16px) {
+  font-family: @gothamLightFont;
+  .font-definition(400, @size);
+}
+
+.sourceSansProFont(@weight: 400, @size: 16px) {
+  font-family: @sourceSansProFont;
+  .font-definition(@weight, @size);
+}
+
+.letter-spacing-1() {
+  letter-spacing: 0.01em;
+}
+
+.letter-spacing-0() {
+  letter-spacing: 0;
+}
+
+.letter-spacing-3() {
+  letter-spacing: 0.03em;
+}
+
+.uppercase(){
+  text-transform: uppercase;
+}
+
+
+// Vertical align items using tables
+.table-valign{
+  display: table;
+  position: relative;
+}
+.table-valign-content{
+  display: table-cell;
+  vertical-align: middle;
+}
+
+// END - Vertical align items using tables

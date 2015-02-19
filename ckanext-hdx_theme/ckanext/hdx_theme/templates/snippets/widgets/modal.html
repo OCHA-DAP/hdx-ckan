@@ -1,0 +1,36 @@
+{#
+
+Best way of using it is to extend it and override the needed sections
+
+Example:
+
+  {% snippet 'snippets/widgets/modal.html' modal_div_id='req-membership-div', modal_div_class='your_class' %}
+
+#}
+
+
+  <div id="{{ modal_div_id }}" class="modal hdx-modal {{ modal_div_class }}" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+          {% block modal_content %}
+              <div class="modal-header">
+                  {% block header %}
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                      <h3 id="{{ modal_div_id }}-label">
+                          {% block header_content %}{%  endblock %}
+                      </h3>
+                  {% endblock %}
+              </div>
+              <div class="modal-body">
+                  {% block body %}{%  endblock %}
+              </div>
+              <div class="modal-footer">
+                  {% block footer %}
+                      <button class="btn modal-submit" type="submit">{{ _('Submit') }}</button>
+                      <button class="btn modal-cancel" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+                  {% endblock %}
+              </div>
+          {% endblock %}
+          </div>
+      </div>
+  </div>
