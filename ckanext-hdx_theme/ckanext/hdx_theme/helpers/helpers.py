@@ -269,8 +269,21 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
     for ex in extras:
         if ex[key] == value_key:
             res = ex[ret_key]
-    print value_key +' : '+res
     return res
+
+def hdx_less_default():
+    return """@headerUserBackgroundColor: @blackColor;
+@headerNavBackgroundColor: #363636;
+@headerNavBorderColor: @grayColor;
+@headerNavSearchBorderColor: @extraLightGrayColor;
+@toolbarBackgroundColor: @lightGrayColor;
+
+@mainLinksColor: @whiteColor;
+
+@searchPlaceholderColor: @grayColor;
+@searchTextColor: @whiteColor;
+
+@bodyBackgroundColor: @wfpBlueColor;"""
 
 def load_json(obj, **kw):
     return json.loads(obj, **kw)
