@@ -25,6 +25,7 @@
         {% endif %}
     </div>
 
+    {% if c.show_overview %}
     <div class="row">
         <div class="col-xs-4">
             <div class="row topline-numbers">
@@ -95,13 +96,16 @@
         {% endfor %}
 
     </div>
+    {% endif %}
 
     <div class="row">
         <div class="col-xs-12">
 			<div class="row">
-                <div class="col-xs-12">
-                    <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
-                </div>
+                {% if c.show_overview %}
+                    <div class="col-xs-12">
+                        <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
+                    </div>
+                {% endif %}
 {#        		<div class="col-xs-3 wrapper-secondary">#}
 {#        			<div class="row">#}
 {#        				<div class="col-xs-12">#}
