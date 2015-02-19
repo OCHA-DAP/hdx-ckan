@@ -15,6 +15,7 @@ import ckan.model as model
 import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.helpers as h
+import ckan.lib.search as search
 
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
@@ -80,6 +81,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             'facets', {}).get('vocab_Topics', {})
         c.cont_browsing = self.get_cont_browsing(
             c.group_dict, vocab_topics_dict)
+
+        c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
 
         result = render('country/country.html')
 
@@ -223,8 +226,10 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         }
         try:
             query = get_action("package_search")({}, data_dict)
-        except:
-            abort(404, _('Query produced no results'))
+        except search.SearchError as se:
+            query = {}
+        except Exception as e:
+            abort(404, _('Query produced some error'))
         if 'results' in query:
             for dataset in query['results']:
                 date_parts = dataset.get('metadata_modified', '').split('T')
