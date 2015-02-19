@@ -42,6 +42,75 @@
       </div>
   </div>
 
+{% if h.hdx_get_extras_element(data.extras, value_key="customization") %}
+{% set custom_org = h.hdx_get_extras_element(data.extras, value_key="custom_org") %}
+{% set customizations = h.load_json(h.hdx_get_extras_element(data.extras, value_key="customization")) %}
+{% else %}
+{% set custom_org = 0 %}
+{% set customizations = {'highlight_color' : '', 'topline_dataset':'', 'topline_resource':''} %}
+{% endif %}
+
+{% if c.userobj.sysadmin %}
+<div id="customization-trigger" class="org-control-container">
+      <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom organization page:") }}</label>
+     <div class="controls" style="display:inline-block">
+        <input type="checkbox" {% if custom_org %}checked{% endif %} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+        </div>
+    </div>
+{% endif %}
+
+<div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+          2. {{ _('Customization') }}
+        </h1>
+</div>
+
+<div class="org-control-container">
+{% set is_upload = data.image_url and not data.image_url.startswith('http') %}
+    {% set is_url = data.image_url and data.image_url.startswith('http') %}
+
+    {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
+
+</div>
+
+<div class="org-control-container" style="margin-top:30px;">
+{{ form.input('highlight_color', label=_('Highlight Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Highlight color for layout')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+{{ form.input('topline_dataset', label=_('Dataset with Topline Numbers'), id='field-topline-dataset', type='text', value=customizations['topline_dataset'], classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('The id of the dataset that topline figures have been uploaded to.')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+{{ form.input('topline_resource', label=_('Resource with Topline Numbers'), id='field-topline-resource', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+{% if h.hdx_get_extras_element(data.extras, value_key="less") %}
+  {% set less = h.hdx_get_extras_element(data.extras, value_key="less") %}
+{% else %}
+  {% set less = h.hdx_less_default() %}
+{% endif %}
+{{ form.textarea('less', label=_('Custom Styling'), id='field-less', value=less, classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Use less to add your own styling to further customize your page.')}}</div>
+      </div>
+</div>
+
+<input type="hidden" name="customization" id="customization-json">
+
+</div>
+
   {% endblock %}
 
   {% block custom_fields %}
@@ -104,3 +173,6 @@
   </div>
   {% endblock %}
 </form>
+
+
+{% resource 'hdx_theme/custom_organization_creation.js' %}
