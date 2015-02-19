@@ -40,9 +40,22 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
     def org_read(self):
         org_id = 'wfp'
 
+        top_line_num_dataset = 'wfp-topline-figures'
+        top_line_num_resource = 'wfp-topline-figures.csv'
+
+        template_data = self.generate_template_data(org_id, top_line_num_dataset, top_line_num_resource)
+
+
+        result = render(
+            'organization/custom/wfp.html', extra_vars=template_data)
+
+        return result
+
+    def generate_template_data(self, org_id, top_line_num_dataset, top_line_num_resource):
+
         org_info = self.get_org(org_id)
 
-        top_line_items = self.get_top_line_numbers()
+        top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
 
         req_params = self.process_req_params(request.params)
 
@@ -86,10 +99,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
             'error_summary': None,
         }
 
-        result = render(
-            'organization/custom/wfp.html', extra_vars=template_data)
-
-        return result
+        return template_data
 
     def get_org(self, org_id):
         group_type = 'organization'
@@ -123,14 +133,14 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         return {}
 
-    def get_top_line_numbers(self):
+    def get_top_line_numbers(self, top_line_num_dataset, top_line_num_resource):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
         top_line_src_dict = {
             'top-line-numbers': {
-                'dataset': 'wfp-topline-figures',
-                'resource': 'wfp-topline-figures.csv'
+                'dataset': top_line_num_dataset,
+                'resource': top_line_num_resource
             }
         }
         datastore_access = data_access.CrisisDataAccess(top_line_src_dict)
@@ -268,7 +278,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': org_code})
         self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search(req_params.get('q',''), fq, facets, limit, page, sort_by,
+        (query, all_results) = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
         return query, all_results
@@ -298,7 +308,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         static_suffix = '...'
         body = ''
 
-        if tab== 'all':
+        if tab == 'all':
             body = hdx_helpers.hdx_show_singular_plural(dataset_count+indicator_count,
                                                         _('indicator / dataset'),
                                                         _('indicators & datasets'), True)
@@ -312,9 +322,12 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         response = static_prefix + " " + body + " " + static_suffix
         return response
 
-    def check_access(self, action_name, data_dict={}):
+    def check_access(self, action_name, data_dict=None):
+        if data_dict is None:
+            data_dict = {}
+
         context = {'model': model,
-               'user': c.user or c.author}
+                   'user': c.user or c.author}
         try:
             result = logic.check_access(action_name, context, data_dict)
         except logic.NotAuthorized:
