@@ -47,7 +47,7 @@ class LessCompiler(object):
         less_tmp_filename = css_filename_base + '-' + timestamp + ".less"
         self.less_tmp_filepath = self.less_base_path + '/tmp' + css_dest_dir + "/" + less_tmp_filename
 
-        less_import = '@import "{}/organizationXXX/wfp/organization-wfp";'.format(self.less_base_path)
+        less_import = '@import "{}/organization/wfp/organization-wfp";'.format(self.less_base_path)
         self.less = less_import + less
         if not self.less_base_path:
             log.error('hdx.css.basepath must be set in config file')

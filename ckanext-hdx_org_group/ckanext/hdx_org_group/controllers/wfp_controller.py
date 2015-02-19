@@ -7,6 +7,7 @@ Created on Jan 13, 2015
 
 import logging
 import collections
+import json
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -40,10 +41,12 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
     def org_read(self):
         org_id = 'wfp'
 
-        top_line_num_dataset = 'wfp-topline-figures'
-        top_line_num_resource = 'wfp-topline-figures.csv'
+        org_info = self.get_org(org_id)
 
-        template_data = self.generate_template_data(org_id, top_line_num_dataset, top_line_num_resource)
+        org_info['topline_dataset'] = 'wfp-topline-figures'
+        org_info['topline_resource'] = 'wfp-topline-figures.csv'
+
+        template_data = self.generate_template_data(org_info)
 
 
         result = render(
@@ -51,11 +54,17 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         return result
 
-    def generate_template_data(self, org_id, top_line_num_dataset, top_line_num_resource):
+    def generate_template_data(self, org_info):
 
-        org_info = self.get_org(org_id)
+        org_id = org_info['name']
 
-        top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
+        top_line_num_dataset = org_info.get('topline_dataset', None)
+        top_line_num_resource = org_info.get('topline_resource', None)
+
+        if top_line_num_dataset and top_line_num_resource:
+            top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
+        else:
+            top_line_items = []
 
         req_params = self.process_req_params(request.params)
 
@@ -117,11 +126,19 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
             org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
 
+            json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
+            jsonstring = json_extra[0] if len(json_extra) == 1 else ''
+            top_line_src_info = self._get_top_line_src_info(jsonstring)
+
             org_dict = {
                 'id': result['id'],
                 'display_name': result.get('display_name', ''),
                 'description': result['group'].description,
-                'link': org_url[0] if len(org_url) == 1 else None
+                'name': result['name'],
+                'link': org_url[0] if len(org_url) == 1 else None,
+                'revision_id': result['group'].revision_id,
+                'topline_dataset': top_line_src_info[0],
+                'topline_resource': top_line_src_info[1]
             }
 
             return org_dict
@@ -132,6 +149,14 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
             abort(401, _('Unauthorized to read org %s') % id)
 
         return {}
+
+    def _get_top_line_src_info(self, jsonstring):
+        if jsonstring and jsonstring.strip():
+            json_dict = json.loads(jsonstring)
+            if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
+                return (json_dict['topline_dataset'], json_dict['topline_resource'])
+
+        return (None, None)
 
     def get_top_line_numbers(self, top_line_num_dataset, top_line_num_resource):
         context = {'model': model, 'session': model.Session,

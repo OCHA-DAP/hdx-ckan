@@ -33,22 +33,14 @@ class CustomOrgController(wfp_controller.WfpController):
 
     def org_read(self, id):
 
-        top_line_num_dataset = 'wfp-topline-figures'
-        top_line_num_resource = 'wfp-topline-figures.csv'
+        org_info = self.get_org(id)
 
-        template_data = self.generate_template_data(id, top_line_num_dataset, top_line_num_resource)
+        template_data = self.generate_template_data(org_info)
 
-        less_code = '''
-        @extraLightGrayColor: red;
-        @wfpBlueColor: green;
-        '''
-
-        css_dest_dir = '/organization/' + id
-        compiler = less.LessCompiler(less_code, css_dest_dir, id, '123')
-        compilation_result = compiler.compile_less()
+        css_dest_dir = '/organization/' + org_info['name']
 
         template_data['style'] = {
-            'css_path': less.generate_custom_css_path(css_dest_dir, id, '123', True)
+            'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['revision_id'], True)
         }
 
 

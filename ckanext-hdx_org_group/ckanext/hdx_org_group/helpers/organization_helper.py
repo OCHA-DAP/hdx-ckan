@@ -10,6 +10,9 @@ import ckan.logic as logic
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization as d
 import ckan.model as model
+import ckan.logic.action.update as update
+
+import ckanext.hdx_theme.helpers.less as less
 
 get_action = logic.get_action
 check_access = logic.check_access
@@ -81,3 +84,18 @@ def hdx_light_group_show(context, data_dict):
 
     group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
     return group_dict
+
+def hdx_organization_update(context, data_dict):
+    result = update._group_or_org_update(context, data_dict, is_org=True)
+
+    if 'extras' in result:
+        less_code_list = [el.get('value', '') for el in result['extras'] if el['key'] == 'less']
+        if less_code_list:
+            less_code = less_code_list[0].strip()
+            if less_code:
+                css_dest_dir = '/organization/' + result['name']
+                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'], result['revision_id'])
+                compilation_result = compiler.compile_less()
+                result['less_compilation'] = compilation_result
+
+    return result

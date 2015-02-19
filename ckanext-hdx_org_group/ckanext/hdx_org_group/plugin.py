@@ -32,7 +32,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_actions
         return {
             'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
-            'hdx_light_group_show': hdx_org_actions.hdx_light_group_show
+            'hdx_light_group_show': hdx_org_actions.hdx_light_group_show,
+            'organization_update': hdx_org_actions.hdx_organization_update
         }
 
     # def get_auth_functions(self):
@@ -99,6 +100,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
         map.connect('organizations_index', '/organization',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='index')
+        map.connect('organization_edit', '/organization/edit/{id}', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                  action='edit', ckan_icon='edit')
+
         map.connect('request_membership', '/organization/{org_id}/request_membership',
                     controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
         map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
