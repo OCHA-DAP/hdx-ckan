@@ -1,11 +1,11 @@
 $(document).ready(function(){
 	//When checkbox is clicked toogle customization fields
-	$('#customization-trigger').click(function(){
+	$('#customization-trigger').click(function(e){
 		$('#customization-fields').toggle();
-		if($('#field-custom_org').is(':checked')){
-			$('#field-custom_org').prop('checked', false);
-		}else{
+		if($('#customization-fields').is(':visible')){
 			$('#field-custom_org').prop('checked', true);
+		}else{
+			$('#field-custom_org').prop('checked', false);
 		}
 	})
 
