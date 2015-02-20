@@ -79,21 +79,6 @@
             </span>
             <b class="caret"></b>
           </button>
-          <input type="hidden" name="sort" />
-          {% if tab == 'indicators' %}
-            <input type="hidden" name="ext_indicator" value="1">
-          {% endif %}
-          {% if tab == 'datasets'%}
-            <input type="hidden" name="ext_indicator" value="0">
-          {% endif %}
-          {% if is_dataset %}
-          <input id="preserve-search" type="hidden" name="q" />
-          {% endif %}
-          {% if other_links and other_links.params_nosort_noq %}
-		  	{% for key,value in  other_links.params_nosort_noq.items() %}
-		  		<input type="hidden" name="{{ key }}" value="{{ value }}" />
-		  	{% endfor %}
-		  {% endif %}
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}
@@ -102,18 +87,6 @@
             {% endfor %}
           </ul>
         </div>
-        <script>
-          $(function(){
-            $(".dropdown").on('click', 'li a', function(){
-              $(this).parents(".dropdown").find("button span").text($(this).text());
-              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
-              //add original search query if applicable
-              if($("#preserve-search"))
-                  $("#preserve-search").val($('.searchInput').val());
-              $(this).parents("form").submit();
-            });
-          });
-        </script>
       </div>
     {% endif %}
   {% endblock %}
