@@ -109,6 +109,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'methodology_bk_compat': hdx_helpers.methodology_bk_compat,
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
             'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
+            'load_json': hdx_helpers.load_json,
+            'hdx_less_default': hdx_helpers.hdx_less_default,
         }
 
     def get_actions(self):
