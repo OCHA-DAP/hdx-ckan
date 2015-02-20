@@ -472,10 +472,17 @@ class HDXSearchController(PackageController):
                 if k != 'page' and k not in params_to_skip]
 
     def _set_other_links(self, suffix='', other_params_dict=None):
+        url_param_list = ['sort', 'q', 'organization', 'tags',
+                           'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters'];
         named_route = self._get_named_route()
-        params = {k: v for k, v in request.params.items()
-                  if k in ['sort', 'q', 'organization', 'tags',
-                           'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters']}
+        params = {}
+
+        for k, v in request.params.items():
+            if k in url_param_list:
+                if k in params:
+                    params[k].append(v)
+                else:
+                    params[k] = [v]
 
         if other_params_dict:
             params.update(other_params_dict)

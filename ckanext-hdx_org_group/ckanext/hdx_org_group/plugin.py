@@ -124,6 +124,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         map.connect('browse_list', '/browse',
                     controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
+        map.connect('group_new', '/group/new', controller='group', action='new')
         map.connect(
             'country_read', '/group/{id}', controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
 
