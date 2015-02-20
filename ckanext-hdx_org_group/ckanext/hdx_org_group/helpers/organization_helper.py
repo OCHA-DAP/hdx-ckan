@@ -13,6 +13,7 @@ import ckan.model as model
 import ckan.logic.action.update as update
 
 import ckanext.hdx_theme.helpers.less as less
+import ckanext.hdx_theme.helpers.helpers as h
 
 get_action = logic.get_action
 check_access = logic.check_access
@@ -94,7 +95,7 @@ def hdx_organization_update(context, data_dict):
             less_code = less_code_list[0].strip()
             if less_code:
                 css_dest_dir = '/organization/' + result['name']
-                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'], result['revision_id'])
+                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'], h.hdx_get_extras_element(result['extras'], value_key="modified_at"))
                 compilation_result = compiler.compile_less()
                 result['less_compilation'] = compilation_result
 

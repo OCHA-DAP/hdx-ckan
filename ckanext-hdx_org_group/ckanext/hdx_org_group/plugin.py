@@ -63,6 +63,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                        tk.get_converter('convert_to_extras')],
             'less': [tk.get_validator('ignore_missing'),
                        tk.get_converter('convert_to_extras')],
+            'modified_at': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
         })
         return schema
 
@@ -88,6 +90,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             schema.update({'customization': [tk.get_validator(
                 'ignore_missing'), tk.get_converter('convert_to_extras')]})
             schema.update({'less': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'modified_at': [tk.get_validator(
                 'ignore_missing'), tk.get_converter('convert_to_extras')]})
             return schema
         else:

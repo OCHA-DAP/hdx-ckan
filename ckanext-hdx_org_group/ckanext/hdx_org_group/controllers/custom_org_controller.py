@@ -40,7 +40,7 @@ class CustomOrgController(wfp_controller.WfpController):
         css_dest_dir = '/organization/' + org_info['name']
 
         template_data['style'] = {
-            'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['revision_id'], True)
+            'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
         }
 
 

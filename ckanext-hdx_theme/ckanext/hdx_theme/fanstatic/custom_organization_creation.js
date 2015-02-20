@@ -11,6 +11,8 @@ $(document).ready(function(){
 
 	//On form submit
 	$('.create-org-btn').click(function(){
+		//Set timestamp
+		$('#field-modified_at').val(new Date().getTime())
 		if($('#field-custom_org').is(':checked')){
 			var customization = {
 				'highlight_color':$('#field-highlight-color').val(),
