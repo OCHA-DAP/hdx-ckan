@@ -77,6 +77,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
         map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
                   action='edit')
+        map.connect('pcode_mapper', '/dataset/{id}/pcode_mapper/{resource_id}',
+                    controller='ckanext.hdx_package.controllers.pcode_controller:PcodeController', action='pcode_mapper', ckan_icon='edit')
         
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:

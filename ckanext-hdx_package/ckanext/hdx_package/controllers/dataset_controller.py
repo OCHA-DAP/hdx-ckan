@@ -123,7 +123,7 @@ class DatasetController(PackageController):
                                         action='new_metadata',
                                         id=pkg_dict['name'])
                     else:
-                        # redirect to add dataset resources
+                        # redirect to add dataset sources
                         url = h.url_for(controller='package',
                                         action='new_resource',
                                         id=pkg_dict['name'])

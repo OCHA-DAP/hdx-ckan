@@ -1,0 +1,53 @@
+{% extends "page-new.html" %}
+
+
+{% block breadcrumb_content %}
+  <li>Pcode Mapper</li>
+{% endblock %}
+
+
+{% block primary_content %}
+    <div class="row paddingRowHack intro-section">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-12">
+                    test header
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div>PCODE Content</div>
+            <div>{{data}}</div>
+        </div>
+
+    </div>
+
+
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-12">
+                    test
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/activity-stream' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% resource 'hdx_theme/search-facets' %}
+{% endblock %}
