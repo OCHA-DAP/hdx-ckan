@@ -406,3 +406,23 @@ def _add_to_filter_list(src, param_name, filter_list):
             
     return filter_list
 
+@logic.side_effect_free
+def hdx_get_pcode_mapper_values(context, data_dict):
+        xml_url = data_dict.get('xml_url', 'http://gistmaps.itos.uga.edu/arcgis/services/COD_External/MLI_pcode/MapServer/WFSServer?request=GetFeature&service=WFS&typeNames=COD_External_MLI_pcode:Admin2&maxFeatures=99999')
+
+        xml_response = requests.get(xml_url, allow_redirects=True)
+
+        xml_content = xml_response.text
+
+        convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
+        shp_data = {'upload': xml_content}
+
+        print('Calling Ogre to perform shapefile to geoJSON conversion...')
+        try:
+            json_resp = requests.post(convert_url, files=shp_data)
+        except:
+            print("There was an error with the HTTP request")
+            raise
+        json_content = json_resp.text
+        print json_content
+        return json_content

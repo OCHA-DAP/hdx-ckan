@@ -3,6 +3,8 @@ import urllib
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.base as base
+get_action = logic.get_action
+import requests
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as df
 import ckan.lib.dictization as dictization
@@ -12,7 +14,6 @@ from ckan.common import _, c
 
 abort = base.abort
 render = base.render
-_get_action = logic.get_action
 
 
 class PcodeController(base.BaseController):
@@ -37,8 +38,11 @@ class PcodeController(base.BaseController):
             'error_summary': error_summary,
         }
 
-        result = render(
-            'package/custom/pcode_mapper.html', extra_vars=template_data)
+        data_dict['xml_url'] = 'http://gistmaps.itos.uga.edu/arcgis/services/COD_External/MLI_pcode/MapServer/WFSServer?request=GetFeature&service=WFS&typeNames=COD_External_MLI_pcode:Admin2&maxFeatures=99999'
+        data_dict['convert_url'] = u'http://ogre.adc4gis.com/convert'
+        result1 = get_action('hdx_get_pcode_mapper_values')({}, data_dict)
+        print result1
+        result = render('package/custom/pcode_mapper.html', extra_vars=template_data)
 
         return result
 

@@ -126,7 +126,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             'hdx_user_show': hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values,
-            'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods
+            'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
+            'hdx_get_pcode_mapper_values': hdx_actions.hdx_get_pcode_mapper_values,
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
 
         }
