@@ -22,11 +22,17 @@ var options = {
 function getData(options){
     //call DataProxy to get data for resource
     $.ajax({
-        url:"http://192.168.59.103:5001/?url=http://192.168.59.103:5000/dataset/mali-pcode/resource_download/ff4f1c6e-ba46-4195-b30a-e77c6b8dd676&max-results=100000&type=csv&format=json",
-        dataType: 'jsonp',
+        url:"http://192.168.59.103:5001",
+        data:{
+            url: "http://192.168.59.103:5000/dataset/mali-pcode/resource_download/ff4f1c6e-ba46-4195-b30a-e77c6b8dd676",
+            "max-results": 100000,
+            type: "csv",
+            format: "json"
+        },
+        dataType: 'json',
         success:function(data){
             // do stuff with json (in this case an array)
-            processData(options, JSON.parse(data));
+            processData(options, data);
         },
         error:function(error){
             console.log(error);
@@ -44,13 +50,16 @@ function processData(options, data){
         var pcode = $(options.pcodeSelectorId);
         var value = $(options.valueSelectorId);
 
-        var options = "";
+        var opts = "<option value='null'>---Select---</option>";
         for (var i in options.fields){
-            options += "<option value='"+i+"'>" + options.fields[i] + "</option>"
+            opts += "<option value='"+i+"'>" + options.fields[i] + "</option>"
         }
 
-        pcode.append(options);
-        value.append(options);
+        pcode.children().remove();
+        value.children().remove();
+
+        pcode.append(opts);
+        value.append(opts);
     }
 
     //get list of pcodes
@@ -188,6 +197,6 @@ function buildMap(options){
 
 $(document).ready(
     function (){
-        getGeoData(options);
+        getData(options);
     }
 );
