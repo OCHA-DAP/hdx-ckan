@@ -424,5 +424,4 @@ def hdx_get_pcode_mapper_values(context, data_dict):
             print("There was an error with the HTTP request")
             raise
         json_content = json_resp.text
-        print json_content
         return json_content

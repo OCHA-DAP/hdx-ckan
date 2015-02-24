@@ -7,6 +7,10 @@
 
 
 {% block primary_content %}
+  	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
+  	<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+	<div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
+
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
@@ -19,10 +23,10 @@
 
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div>PCODE Content</div>
-            <div>{{data}}</div>
-        </div>
+            <select id="pcode"><option>Loading</option></select>
+            <select id="value"><option>Loading</option></select>
 
+        </div>
     </div>
 
 
@@ -30,7 +34,8 @@
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 <div class="col-xs-12">
-                    test
+                    <div id="map" style="height: 400px;">
+                    </div>
                 </div>
             </div>
         </div>
@@ -50,4 +55,8 @@
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search-facets' %}
+  {% resource 'hdx_theme/d3' %}
+  {% resource 'hdx_theme/leaflet' %}
+  {% resource 'hdx_theme/pcode-mapper' %}
+
 {% endblock %}
