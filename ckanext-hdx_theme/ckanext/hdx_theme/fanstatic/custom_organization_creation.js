@@ -20,6 +20,13 @@ $(document).ready(function(){
 				'topline_resource':$('#field-topline-resource').val()
 			}
 			$('#customization-json').val(JSON.stringify(customization));
+
+			//Build visualization slu
+			var visualization = {}
+			$('.visualization_config').each(function(){
+				visualization[$(this).attr('name')] = this.value;
+			});
+			$('#visualization-json').val(JSON.stringify(visualization));
 		}
 		$('form').submit();
 	});

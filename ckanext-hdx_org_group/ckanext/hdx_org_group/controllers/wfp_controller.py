@@ -138,7 +138,9 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                 'link': org_url[0] if len(org_url) == 1 else None,
                 'revision_id': result['group'].revision_id,
                 'topline_dataset': top_line_src_info[0],
-                'topline_resource': top_line_src_info[1]
+                'topline_resource': top_line_src_info[1],
+                'modified_at': result['modified_at'],
+                'image_url': result.get('image_url',''),
             }
 
             return org_dict

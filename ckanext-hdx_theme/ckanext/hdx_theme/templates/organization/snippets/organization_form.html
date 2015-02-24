@@ -62,7 +62,7 @@
 <div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
 <div class="org-control-container">
   <h1 class="h1-title uppercase">
-          2. {{ _('Customization') }}
+          2. {{ _('Custom Styles') }}
         </h1>
 </div>
 
@@ -111,6 +111,86 @@
 </div>
 
 <input type="hidden" name="modified_at" id="field-modified_at">
+
+{% if h.hdx_get_extras_element(data.extras, value_key="visualization_config") %}
+{% set visualization = h.load_json(h.hdx_get_extras_element(data.extras, value_key="visualization_config")) %}
+{% else %}
+{% set visualization = {} %}
+{% endif %}
+
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+          3. {{ _('Visualization Configuration') }}
+        </h1>
+</div>
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="visualization-select">Visualization Type</label>
+          <select name="visualization-select" style="width:95%;" class="visualization_config">
+            <option value="3W-dashboard">3W Dashboard</option>
+          </select>
+</div>
+</div>
+
+<div id="dashboard-3w">
+<div class="org-control-container">
+<div class="controls">
+  <label class="control-label" for="dataset_id_1">Facts and Figures</label>
+          <input type="text" name='dataset_id_1' id='dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='control-full visualization_config' style="width:120px;float:left; margin-right:12px;" value="{{visualization['dataset_id_1']}}"/>
+          <input type="text" name='resource_id_1' id='resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='control-full visualization_config' style="width:120px; float:left;" value="{{visualization['resource_id_1']}}"/>
+<div>
+  <div class="org-control-info info-field" style="margin-top:-18px;">
+        <div class="org-info-label">{{_('Tell us where the data you want to visualize is.')}}</div>
+      </div>
+<br style="clear:both;">
+<div class="controls">
+  <label class="control-label" for="dataset_id_2">Geolocation Data</label>
+          <input type="text" name='dataset_id_2' id='dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='control-full visualization_config' style="width:120px;float:left; margin-right:12px;" value="{{visualization['dataset_id_2']}}"/>
+          <input type="text" name='resource_id_2' id='resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='control-full visualization_config' value="{{visualization['resource_id_2']}}" style="width:120px; float:left;"/>
+<div>
+  <div class="org-control-info info-field" style="margin-top:-18px;">
+        <div class="org-info-label">{{_('This visualization is a map, where is the geolocation data')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-who-column">Which column contains people or orgs?</label>
+    <div class="controls ">
+    <input id="field-who-column" type="text" name="who-column" value="{{visualization['who-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">This visualization allows users to filter data by person or organization.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-what-column">Which column contains activites or other stats?</label>
+    <div class="controls ">
+    <input id="field-what-column" type="text" name="what-column" value="{{visualization['what-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Pick something like .</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-where-column">Which column contains P Codes or other geocode?</label>
+    <div class="controls ">
+    <input id="field-where-column" type="text" name="where-column" value="{{visualization['what-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">To build the map from the geolocation layer we need to match to data to the geometery.</div>
+      </div>
+</div>
+</div>
+<input type="hidden" name="visualization_config" id="visualization-json">
+</div>
 
 
   {% endblock %}

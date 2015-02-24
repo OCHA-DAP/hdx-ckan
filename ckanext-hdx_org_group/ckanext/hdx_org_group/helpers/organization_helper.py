@@ -83,6 +83,9 @@ def hdx_light_group_show(context, data_dict):
         value = dictized["value"]
         result_list.append(dictized)
 
+        #Keeping the above for backwards compatibility
+        group_dict[name]= dictized["value"]
+
     group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
     return group_dict
 
