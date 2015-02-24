@@ -1,0 +1,116 @@
+  <div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-title">Title</label>
+    <div class="controls ">
+    <input id="field-title" type="text" name="viz-title" value="{{visualization['viz-title']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Give this visualization a title.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-description">Description</label>
+    <div class="controls ">
+    <input id="field-description" type="text" name="viz-description" value="{{visualization['viz-description']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Describe this visualization.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="controls">
+  <label class="control-label" for="dataset_id_1">Facts and Figures</label>
+          <input type="text" name='dataset_id_1' id='dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='control-full visualization_config' style="width:120px;float:left; margin-right:12px;" value="{{visualization['dataset_id_1']}}"/>
+          <input type="text" name='resource_id_1' id='resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='control-full visualization_config' style="width:120px; float:left;" value="{{visualization['resource_id_1']}}"/>
+<div>
+  <div class="org-control-info info-field" style="margin-top:-18px;">
+        <div class="org-info-label">{{_('Tell us where the data you want to visualize is.')}}</div>
+      </div>
+<br style="clear:both;">
+<div class="controls">
+  <label class="control-label" for="dataset_id_2">Geolocation Data</label>
+          <input type="text" name='dataset_id_2' id='dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='control-full visualization_config' style="width:120px;float:left; margin-right:12px;" value="{{visualization['dataset_id_2']}}"/>
+          <input type="text" name='resource_id_2' id='resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='control-full visualization_config' value="{{visualization['resource_id_2']}}" style="width:120px; float:left;"/>
+<div>
+  <div class="org-control-info info-field" style="margin-top:-18px;">
+        <div class="org-info-label">{{_('This visualization is a map, where is the geolocation data')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-who-column">Which column contains people or orgs?</label>
+    <div class="controls ">
+    <input id="field-who-column" type="text" name="who-column" value="{{visualization['who-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">This visualization allows users to filter data by person or organization.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-what-column">Which column contains activites or other stats?</label>
+    <div class="controls ">
+    <input id="field-what-column" type="text" name="what-column" value="{{visualization['what-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Pick something like sector or activity type.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-where-column">Which column contains P Codes or other geocode?</label>
+    <div class="controls ">
+    <input id="field-where-column" type="text" name="where-column" value="{{visualization['what-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">To build the map from the geolocation layer we need to match to data to the geometery.</div>
+      </div>
+</div>
+
+</div>
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-pos-x">Map Positioning (X value)</label>
+    <div class="controls ">
+    <input id="field-pos-x" type="text" name="pos-x" value="{{visualization['pos-x']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">The map will be centered at this coordinate.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-pos-y">Map Positioning (Y value)</label>
+    <div class="controls ">
+    <input id="field-pos-y" type="text" name="pos-y" value="{{visualization['pos-y']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">The map will be centered at this coordinate.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-zoom">Map Zoom</label>
+    <div class="controls ">
+    <input id="field-zoom" type="text" name="zoom" value="{{visualization['zoom']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Set the default zoom of the map in this visualization.</div>
+      </div>
+</div>

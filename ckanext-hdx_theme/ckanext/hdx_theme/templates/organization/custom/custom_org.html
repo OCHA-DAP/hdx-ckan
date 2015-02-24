@@ -65,6 +65,19 @@
     </div>
 
     <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Interactive Data") }}</div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
+                    <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
+                    <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div> 
+            </div>
+        </div>
+    </div>
+
+    <div class="row paddingRowHack whiteBackground">
         <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Data & Activity") }}</div>
         </div>
@@ -99,8 +112,37 @@
   {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search-facets' %}
+  {% resource 'hdx_theme/custom-visualization' %}
 {% endblock %}
 
+{% block meta %}
+      {{ super() }}
+
+    {% if data.org_info.visualization_config %}
+        {% set visualization = h.load_json(data.org_info.visualization_config) %}
+    {% else %}
+        {% set visualization = {} %}
+    {% endif %}
+
+  <script>
+  //Configuration object for interactive viz
+  var config = {
+    title:"{{visualization['viz-title']}}",
+    description:"{{visualization['viz-description']}}",
+    data:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])}}",
+    whoFieldName:"{{visualization['who-column']}}",
+    whatFieldName:"{{visualization['what-column']}}",
+    whereFieldName:"{{visualization['where-column']}}",
+    geo:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])}}",
+    joinAttribute:"NAME_REF",
+    x:"{{visualization['pos-x']}}",
+    y:"{{visualization['pos-y']}}",
+    zoom:"{{visualization['zoom']}}",
+    colors:['#81d4fa','#4fc3f7','#29b6f6','#03a9f4','#039be5','#0288d1','#0277bd','#01579b']
+};
+
+  </script>
+{% endblock %}
 
 {% block custom_styles %}
     {{ super() }}

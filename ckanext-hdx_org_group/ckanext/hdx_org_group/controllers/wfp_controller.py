@@ -106,6 +106,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
             },
             'errors': None,
             'error_summary': None,
+            'visualization_config': org_info.get('visualization_config','')
         }
 
         return template_data
@@ -141,6 +142,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                 'topline_resource': top_line_src_info[1],
                 'modified_at': result['modified_at'],
                 'image_url': result.get('image_url',''),
+                'visualization_config': result.get('visualization_config',''),
             }
 
             return org_dict

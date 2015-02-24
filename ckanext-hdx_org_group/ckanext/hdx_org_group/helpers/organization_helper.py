@@ -73,6 +73,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
+    group_dict['image_url'] = group.image_url
     group_dict['display_name'] = group_dict['title'] = group.title
 
     result_list = []

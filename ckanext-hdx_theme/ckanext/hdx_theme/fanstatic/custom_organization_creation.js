@@ -21,7 +21,7 @@ $(document).ready(function(){
 			}
 			$('#customization-json').val(JSON.stringify(customization));
 
-			//Build visualization slu
+			//Build visualization slug
 			var visualization = {}
 			$('.visualization_config').each(function(){
 				visualization[$(this).attr('name')] = this.value;
