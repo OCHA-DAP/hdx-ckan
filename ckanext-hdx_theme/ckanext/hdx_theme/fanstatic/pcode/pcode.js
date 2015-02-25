@@ -47,19 +47,41 @@ function processData(options, data){
     }
 
     function setFields(options) {
+        function pcodeOnChange(){
+            options.pcode = $(this).val();
+            getGeoData(options);
+        }
+        function valueOnChange(){
+            options.value = $(this).val();
+            processValues(options);
+        }
+
         var pcode = $(options.pcodeSelectorId);
         var value = $(options.valueSelectorId);
 
-        var opts = "<option value='null'>---Select---</option>";
+        var optsPcode = "<option value='null'>---Select---</option>";
+        var optsValue = "<option value='null'>---Select---</option>";
         for (var i in options.fields){
-            opts += "<option value='"+i+"'>" + options.fields[i] + "</option>"
+            var extraPcode = "", extraValue = "";
+            if (i == options.pcode)
+                extraPcode = "selected='selected'";
+            if (i == options.value)
+                extraValue = "selected='selected'";
+
+            optsPcode += "<option value='"+i+"' " + extraPcode + ">" + options.fields[i] + "</option>"
+            optsValue += "<option value='"+i+"' " + extraValue + ">" + options.fields[i] + "</option>"
         }
 
         pcode.children().remove();
         value.children().remove();
 
-        pcode.append(opts);
-        value.append(opts);
+        pcode.append(optsPcode);
+        value.append(optsValue);
+
+        //setup listeners
+        pcode.change(pcodeOnChange);
+        value.change(valueOnChange);
+
     }
 
     //get list of pcodes
@@ -69,7 +91,9 @@ function processData(options, data){
     setFields(options);
     getDataPcodes(options);
 
-    getGeoData(options);
+
+    if (options.pcode != null)
+        getGeoData(options);
 }
 
 function getGeoData(options){
@@ -165,11 +189,14 @@ function processGeoData(options, data){
 
     computeBondaryPoly(options, data);
     options.geoData = data;
-    buildMap(options)
+
+    if (options.value != null)
+        processValues(options);
 }
 
-function buildClassification(options){
+function processValues(options){
 
+    addLayersToMap(options);
 }
 
 function buildMap(options){
@@ -180,8 +207,14 @@ function buildMap(options){
         maxZoom: 10
     }).addTo(map);
 
+    options.map = map;
+    getData(options);
+}
+
+function addLayersToMap(option){
+    var map = option.map;
+
     L.control.attribution({position: 'topright'}).addTo(map);
-    //map.setView([9, -8], 5);
 
     L.geoJson(options.geoData, {
         style: function (feature) {
@@ -190,13 +223,11 @@ function buildMap(options){
     }).addTo(map);
 
     map.fitBounds([[options.boundaryPoly.minLat, options.boundaryPoly.minLng], [options.boundaryPoly.maxLat, options.boundaryPoly.maxLng]]);
-
 }
-
 
 
 $(document).ready(
     function (){
-        getData(options);
+        buildMap(options);
     }
 );
