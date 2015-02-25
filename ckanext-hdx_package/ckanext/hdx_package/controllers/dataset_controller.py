@@ -659,16 +659,18 @@ class DatasetController(PackageController):
 
 
     def _process_shapes(self, resources):
-        result = []
+        result = {}
         for resource in resources:
-            id = resource['id']
+            # id = resource['id']
             url = resource['url']
-            result.append(self._get_geojson(url))
+            name = resource['name']
+            result[name] = self._get_geojson(url)
             print id
         return result
 
 
-    def _get_geojson(self, url):
+    @staticmethod
+    def _get_geojson(url):
         urls_dict = {'shape_source_url': url, 'convert_url': u'http://ogre.adc4gis.com/convert'}
         g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
         return g_json
