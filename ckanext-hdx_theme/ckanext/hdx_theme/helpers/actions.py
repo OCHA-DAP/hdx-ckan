@@ -1,5 +1,5 @@
 import logging
-import datetime
+# import datetime
 import requests
 
 
@@ -10,9 +10,9 @@ import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.model.misc as misc
-import ckan.plugins as plugins
-import ckan.lib.plugins as lib_plugins
+# import ckan.model.misc as misc
+# import ckan.plugins as plugins
+# import ckan.lib.plugins as lib_plugins
 import ckan.new_authz as new_authz
 import beaker.cache as bcache
 import ckan.model as model
@@ -20,6 +20,7 @@ import ckan.model as model
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
+import urllib
 
 
 from ckan.common import c, _
@@ -407,16 +408,20 @@ def _add_to_filter_list(src, param_name, filter_list):
     return filter_list
 
 def hdx_get_shape_geojson(context, data_dict):
-    xml_url = data_dict.get('xml_url', None)
-    if xml_url is None:
+    shape_source_url = data_dict.get('shape_source_url', None)
+    if shape_source_url is None:
         return None;
-    xml_response = requests.get(xml_url, allow_redirects=True)
-    xml_content = xml_response.text
+    shape_src_response = requests.get(shape_source_url, allow_redirects=True)
+    urllib.URLopener().retrieve(shape_src_response.url, 'hdx_shape_temp_file.zip')
+
+    #shape_src_data = shape_src_response.content
+    #shape_src_data = shape_src_response.read()
     convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
-    shp_data = {'upload': xml_content}
+    # shape_data = {'upload': shape_src_data}
+    shape_data = {'upload': open('hdx_shape_temp_file.zip', 'rb')}
     print('Calling Ogre to perform shapefile to geoJSON conversion...')
     try:
-        json_resp = requests.post(convert_url, files=shp_data)
+        json_resp = requests.post(convert_url, files=shape_data)
     except:
         print("There was an error with the HTTP request")
         raise
