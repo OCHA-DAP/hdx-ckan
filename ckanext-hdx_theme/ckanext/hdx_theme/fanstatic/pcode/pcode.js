@@ -24,7 +24,7 @@ function getData(options){
     $.ajax({
         url:"http://192.168.59.103:5001",
         data:{
-            url: "http://192.168.59.103:5000/dataset/mali-pcode/resource_download/ff4f1c6e-ba46-4195-b30a-e77c6b8dd676",
+            url: "http://192.168.59.103:5000/dataset/mali-one-to-one/resource_download/ba3531af-f091-4b90-8b24-e21b3ca3010",
             "max-results": 100000,
             type: "csv",
             format: "json"
