@@ -224,7 +224,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_package_update_metadata': update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
-            'package_create': hdx_actions.package_create
+            'package_create': hdx_actions.package_create,
+            'resource_update': hdx_actions.resource_update,
+            'resource_create': hdx_actions.resource_create
         }
 
     def before_show(self, resource_dict):

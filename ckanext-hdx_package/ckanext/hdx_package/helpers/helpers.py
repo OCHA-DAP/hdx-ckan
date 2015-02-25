@@ -20,6 +20,9 @@ import ckan.lib.plugins as lib_plugins
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckan.lib.dictization.model_save as model_save
 import ckan.plugins as plugins
+import ckan.logic.action.update as ckan_update
+import ckan.logic.action.create as ckan_create
+import ckan.lib.uploader as uploader
 
 from ckan.logic.action.create import _validate
 
@@ -456,3 +459,104 @@ def get_tag_vocabulary(tags):
                 item['vocabulary_id'] = vocabulary.id
         item['name'] = tag_name
     return tags
+
+def resource_update(context, data_dict):
+    model = context['model']
+    user = context['user']
+    id = _get_or_bust(data_dict, "id")
+
+    resource = model.Resource.get(id)
+    context["resource"] = resource
+
+    if not resource:
+        logging.error('Could not find resource ' + id)
+        raise NotFound(_('Resource was not found.'))
+
+    _check_access('resource_update', context, data_dict)
+    del context["resource"]
+
+    package_id = resource.resource_group.package.id
+    pkg_dict = _get_action('package_show')(context, {'id': package_id})
+
+    for n, p in enumerate(pkg_dict['resources']):
+        if p['id'] == id:
+            break
+    else:
+        logging.error('Could not find resource ' + id)
+        raise NotFound(_('Resource was not found.'))
+
+    upload = uploader.ResourceUpload(data_dict)
+
+    pkg_dict['resources'][n] = data_dict
+
+    try:
+        context['defer_commit'] = True
+        context['use_cache'] = False
+        pkg_dict = _get_action('package_update')(context, pkg_dict)
+        context.pop('defer_commit')
+    except ValidationError, e:
+        errors = e.error_dict['resources'][n]
+        raise ValidationError(errors)
+
+    upload.upload(id, uploader.get_max_resource_size())
+    model.repo.commit()
+    result = _get_action('resource_show')(context, {'id': id})
+
+    _call_datapusher(context, result)
+
+    return result
+
+def resource_create(context, data_dict):
+    model = context['model']
+    user = context['user']
+
+    package_id = _get_or_bust(data_dict, 'package_id')
+    data_dict.pop('package_id')
+
+    pkg_dict = _get_action('package_show')(context, {'id': package_id})
+
+    _check_access('resource_create', context, data_dict)
+
+    if not 'resources' in pkg_dict:
+        pkg_dict['resources'] = []
+
+    upload = uploader.ResourceUpload(data_dict)
+
+    pkg_dict['resources'].append(data_dict)
+
+    try:
+        context['defer_commit'] = True
+        context['use_cache'] = False
+        _get_action('package_update')(context, pkg_dict)
+        context.pop('defer_commit')
+    except ValidationError, e:
+        errors = e.error_dict['resources'][-1]
+        raise ValidationError(errors)
+
+    ## Get out resource_id resource from model as it will not appear in
+    ## package_show until after commit
+    upload.upload(context['package'].resources[-1].id,
+                  uploader.get_max_resource_size())
+    model.repo.commit()
+
+    ##  Run package show again to get out actual last_resource
+    pkg_dict = _get_action('package_show')(context, {'id': package_id})
+    resource = pkg_dict['resources'][-1]
+
+    _call_datapusher(context, resource)
+
+    return resource
+
+def _call_datapusher(context, result):
+    if (result['format'] and
+                result['format'].lower() in ['csv', 'xls', 'application/csv', 'application/vnd.ms-excel'] and
+                result['url_type'] != 'datapusher'):
+        try:
+            get_action('datapusher_submit')(context, {
+                'resource_id': result['id']
+            })
+        except tk.ValidationError, e:
+            # If datapusher is offline want to catch error instead
+            # of raising otherwise resource save will fail with 500
+            log.critical(e)
+            pass

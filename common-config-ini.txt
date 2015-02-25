@@ -1,4 +1,4 @@
-# PLEASE ALSO SEE FILE specific-config-ini.sample AND THE COMMENTS 
+# PLEASE ALSO SEE FILE specific-config-ini.sample AND THE COMMENTS
 # FROM THE BEGINNING OF THAT FILE
 #
 # This file contains the common configuration options for ckan. 
@@ -76,7 +76,7 @@ ckan.site_id = default
 #		Add ``resource_proxy`` to enable resorce proxying and get around the
 #		same origin policy
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
-ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
+ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore datapusher
 
 
 ## Front-End Settings

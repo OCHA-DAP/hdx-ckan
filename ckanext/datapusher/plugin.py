@@ -66,8 +66,8 @@ class DatapusherPlugin(p.SingletonPlugin):
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IAuthFunctions)
-    p.implements(p.IResourceUrlChange)
-    p.implements(p.IDomainObjectModification, inherit=True)
+    # p.implements(p.IResourceUrlChange)
+    # p.implements(p.IDomainObjectModification, inherit=True)
     p.implements(p.ITemplateHelpers)
     p.implements(p.IRoutes, inherit=True)
 
