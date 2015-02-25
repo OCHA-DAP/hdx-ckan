@@ -1,5 +1,6 @@
 import logging
 # import datetime
+import os
 import requests
 
 
@@ -426,4 +427,5 @@ def hdx_get_shape_geojson(context, data_dict):
         print("There was an error with the HTTP request")
         raise
     json_content = json_resp.text
+    os.remove('hdx_shape_temp_file.zip')
     return json_content

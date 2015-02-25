@@ -26,7 +26,6 @@ import ckan.lib.plugins
 import ckan.new_authz as new_authz
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
-import requests
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
