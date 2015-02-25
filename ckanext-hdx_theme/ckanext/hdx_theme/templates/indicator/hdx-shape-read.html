@@ -1,0 +1,40 @@
+{% extends "indicator/read.html" %}
+
+{% set pkg = c.pkg_dict or pkg_dict %}
+
+
+
+{% block pre_primary %}
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+          <div class="row">
+            <div class="col-xs-12 mTop35">
+              <h1 class="itemTitle">
+                {{ pkg.title or pkg.name }}
+                 {% if pkg.state.startswith('draft') %}
+                  <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+                {% elif pkg.state.startswith('deleted') %}
+                  <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
+                {% endif %}
+              </h1>
+            </div>
+          </div>
+            <div class="row">
+                <div class="col-xs-12 mTop35">
+                    MAP CONTENT
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+{% endblock %}

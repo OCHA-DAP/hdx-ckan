@@ -1,24 +1,24 @@
 import logging
-from urllib import urlencode
-import datetime
+#from urllib import urlencode
+#import datetime
 import cgi
 
 from ckanext.hdx_package.helpers import helpers
-#import ckanext.hdx_package.plugin.HDXPackagePlugin as hdx_package
-from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
+#from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
+#from formencode import foreach
 
 from pylons import config
 from genshi.template import MarkupTemplate
-from genshi.template.text import NewTextTemplate
-from paste.deploy.converters import asbool
+#from genshi.template.text import NewTextTemplate
+#from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
-import ckan.lib.maintain as maintain
+#import ckan.lib.maintain as maintain
 import ckan.lib.package_saver as package_saver
-import ckan.lib.i18n as i18n
+#import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.lib.accept as accept
+#import ckan.lib.accept as accept
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.lib.datapreview as datapreview
@@ -26,6 +26,7 @@ import ckan.lib.plugins
 import ckan.new_authz as new_authz
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
+import requests
 
 from ckan.common import OrderedDict, _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
@@ -35,6 +36,7 @@ log = logging.getLogger(__name__)
 render = base.render
 abort = base.abort
 redirect = base.redirect
+
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -64,6 +66,8 @@ def clone_dict(old_dict):
     for k, v in old_dict.iteritems():
         data[k] = v
     return data
+
+
 
 class DatasetController(PackageController):
 
@@ -638,9 +642,12 @@ class DatasetController(PackageController):
         # related websites
         c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
             'url': 'http://www.unocha.org', 'name': 'UNOCHA'}, {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'}, {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
+
+        c.shapes = self._process_shapes(c.pkg_dict['resources'])
+
         try:
             if int(c.pkg_dict['indicator']):
-                return render('indicator/read.html', loader_class=loader)
+                return render('indicator/hdx-shape-read.html', loader_class=loader)
             else:
                 return render('package/hdx_read.html', loader_class=loader)
         except ckan.lib.render.TemplateNotFound:
@@ -650,6 +657,23 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+
+    def _process_shapes(self, resources):
+        result = []
+        for resource in resources:
+            id = resource['id']
+            url = resource['url']
+            result.append(self._get_geojson(url))
+            print id
+        return result
+
+
+    def _get_geojson(self, url):
+        urls_dict = {'shape_source_url': url, 'convert_url': u'http://ogre.adc4gis.com/convert'}
+        g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
+        return g_json
+
 
     def _resource_preview(self, data_dict):
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:

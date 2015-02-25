@@ -406,3 +406,19 @@ def _add_to_filter_list(src, param_name, filter_list):
             
     return filter_list
 
+def hdx_get_shape_geojson(context, data_dict):
+    xml_url = data_dict.get('xml_url', None)
+    if xml_url is None:
+        return None;
+    xml_response = requests.get(xml_url, allow_redirects=True)
+    xml_content = xml_response.text
+    convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
+    shp_data = {'upload': xml_content}
+    print('Calling Ogre to perform shapefile to geoJSON conversion...')
+    try:
+        json_resp = requests.post(convert_url, files=shp_data)
+    except:
+        print("There was an error with the HTTP request")
+        raise
+    json_content = json_resp.text
+    return json_content
