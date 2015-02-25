@@ -1,4 +1,3 @@
-
 var options = {
     pcode: null,
     value: null,
@@ -24,7 +23,7 @@ function getData(options){
     $.ajax({
         url:"http://192.168.59.103:5001",
         data:{
-            url: "http://192.168.59.103:5000/dataset/mali-one-to-one/resource_download/ba3531af-f091-4b90-8b24-e21b3ca3010",
+            url: "http://192.168.59.103:5000/dataset/mali-pcode/resource_download/ff4f1c6e-ba46-4195-b30a-e77c6b8dd676",
             "max-results": 100000,
             type: "csv",
             format: "json"
@@ -97,6 +96,7 @@ function processData(options, data){
 }
 
 function getGeoData(options){
+    options.geoData = null;
     $.ajax({
         url:"/api/action/hdx_get_pcode_mapper_values",
         dataType: 'jsonp',
@@ -176,16 +176,6 @@ function processGeoData(options, data){
         options.boundaryPoly.minLng = minLng;
         options.boundaryPoly.maxLng = maxLng;
     }
-    //match pcode from data and see what we can find in the geo data
-
-    //if (errors)
-    //    showErrors(options);
-    //else{
-    //    if (warnings)
-    //        showWarnings(options);
-    //
-    //    buildMap(options);
-    //}
 
     computeBondaryPoly(options, data);
     options.geoData = data;
@@ -195,8 +185,8 @@ function processGeoData(options, data){
 }
 
 function processValues(options){
-
-    addLayersToMap(options);
+    if (options.geoData != null)
+        addLayersToMap(options);
 }
 
 function buildMap(options){
@@ -207,20 +197,73 @@ function buildMap(options){
         maxZoom: 10
     }).addTo(map);
 
+    L.control.attribution({position: 'topright'}).addTo(map);
+
     options.map = map;
     getData(options);
 }
 
 function addLayersToMap(option){
     var map = option.map;
+    var defaultStyle = {color: '#ff493d', fillColor: '#ff493d', fillOpacity: 0.6, opacity: 0.7, weight: 1};
+    var hoverStyle = {color: '#000000', fillColor: '#ff493d', fillOpacity: 1, opacity: 0.7, weight: 1};
 
-    L.control.attribution({position: 'topright'}).addTo(map);
 
-    L.geoJson(options.geoData, {
+    var info = L.control({position: 'topleft'});
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
+        return this._div;
+    };
+
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        var innerData = "";
+        if (props){
+            for (var key in props){
+                var value = props[key];
+                innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
+            }
+        }
+        this._div.innerHTML = '<h4>' + "Shape info" + '</h4>' +  (props ? '<table>' + innerData + '</table>' : 'Hover over a shape');
+    };
+    info.showOtherMessage = function (message){
+        this._div.innerHTML = message;
+    };
+    info.addTo(map);
+
+
+    var layer = L.geoJson(options.geoData, {
         style: function (feature) {
-            return {color: '#ff493d', fillColor: '#ff493d', fillOpacity: 0.6, opacity: 0.7, weight: 1};
+            return defaultStyle;
+        },
+        onEachFeature: function (feature, layer) {
+            (function(layer, properties) {
+                // Create a mouseover event
+                layer.on("mouseover", function (e) {
+                    if (!L.Browser.ie && !L.Browser.opera) {
+                        layer.bringToFront();
+                    }
+
+                    layer.setStyle(hoverStyle);
+                    info.update(properties);
+                    console.log(properties);
+                });
+                // Create a mouseout event that undoes the mouseover changes
+                layer.on("mouseout", function (e) {
+                    // Start by reverting the style back
+                    layer.setStyle(defaultStyle);
+                    info.update();
+                });
+                // Close the "anonymous" wrapper function, and call it while passing
+                // in the variables necessary to make the events work the way we want.
+            })(layer, feature.properties);
         }
     }).addTo(map);
+
+    var layers = [];
+    layers['Shape file1'] = layer;
+    L.control.layers(layers).addTo(map);
 
     map.fitBounds([[options.boundaryPoly.minLat, options.boundaryPoly.minLng], [options.boundaryPoly.maxLat, options.boundaryPoly.maxLng]]);
 }
