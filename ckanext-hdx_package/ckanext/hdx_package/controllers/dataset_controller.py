@@ -490,8 +490,6 @@ class DatasetController(PackageController):
                        'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
             data['package_id'] = id
-            if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                data['shape'] = self._get_geojson(data['url'])
             try:
                 self._update_or_create_resource(context, data, id, resource_id)
             except ValidationError, e:
