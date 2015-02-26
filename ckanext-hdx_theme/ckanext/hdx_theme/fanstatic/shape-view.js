@@ -6,10 +6,10 @@ var options = {
     baseLayer: null,
     invertLatLong: true,
     boundaryPoly:{
-        minLat: 0,
-        maxLat: 0,
-        minLong: 0,
-        maxLong: 0
+        minLat: null,
+        maxLat: null,
+        minLong: null,
+        maxLong: null
     },
     data: null,
     fields: null,
@@ -91,10 +91,14 @@ function computeBondaryPoly(options, data) {
         }
     }
 
-    options.boundaryPoly.minLat = minLat;
-    options.boundaryPoly.maxLat = maxLat;
-    options.boundaryPoly.minLng = minLng;
-    options.boundaryPoly.maxLng = maxLng;
+    if (options.boundaryPoly.minLat > minLat || options.boundaryPoly.minLat == null)
+        options.boundaryPoly.minLat = minLat;
+    if (options.boundaryPoly.maxLat < maxLat || options.boundaryPoly.maxLat == null)
+        options.boundaryPoly.maxLat = maxLat;
+    if (options.boundaryPoly.minLng > minLng || options.boundaryPoly.minLng == null)
+        options.boundaryPoly.minLng = minLng;
+    if (options.boundaryPoly.maxLng > maxLng || options.boundaryPoly.maxLng == null)
+        options.boundaryPoly.maxLng = maxLng;
 }
 
 function buildMap(options){
@@ -115,6 +119,7 @@ function buildMap(options){
 function addLayersToMap(option, data){
     var map = option.map;
     var defaultStyle = {color: '#ff493d', fillColor: '#ff493d', fillOpacity: 0.6, opacity: 0.7, weight: 1};
+    var defaultPointStyle = {radius: 7, color: '#ff493d', fillColor: '#ff493d', fillOpacity: 0.6, opacity: 0.7, weight: 1};
     var hoverStyle = {color: '#000000', fillColor: '#ff493d', fillOpacity: 1, opacity: 0.7, weight: 1};
 
 
@@ -142,11 +147,15 @@ function addLayersToMap(option, data){
     info.addTo(map);
 
     var layers = [];
+    var firstLayer = false;
     for (var key in data){
         var value = data[key];
         var layer = L.geoJson(value, {
             style: function (feature) {
                 return defaultStyle;
+            },
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, defaultPointStyle);
             },
             onEachFeature: function (feature, layer) {
                 (function(layer, properties) {
@@ -169,7 +178,11 @@ function addLayersToMap(option, data){
                     // in the variables necessary to make the events work the way we want.
                 })(layer, feature.properties);
             }
-        }).addTo(map);
+        });
+        if (!firstLayer){
+            layer.addTo(map);
+            firstLayer = true;
+        }
         layers[key] = layer;
     }
 

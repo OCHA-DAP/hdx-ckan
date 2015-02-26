@@ -690,7 +690,7 @@ class DatasetController(PackageController):
         for resource in resources:
             if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and resource['shape'] != 'null':
                 name = resource['name']
-                result[name] = resource['shape']
+                result[name] = json.loads(resource['shape'])
         return result
 
 
