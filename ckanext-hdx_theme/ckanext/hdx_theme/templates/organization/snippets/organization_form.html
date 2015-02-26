@@ -22,7 +22,7 @@
     {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
 	<div class="org-control-container">
 		{% set org_url_value = h.hdx_get_extras_element(data.extras) %}
-	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-image-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
+	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
 	    <div class="org-control-info info-field">
 	    	<div class="org-info-label">{{_('Where can people go to find more about this organisation?')}}</div>
 	    </div>
@@ -70,7 +70,7 @@
 {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
     {% set is_url = data.image_url and data.image_url.startswith('http') %}
 
-    {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
+    {{ form.image_upload(data, errors, is_upload_enabled=True, is_url=is_url, is_upload=is_upload) }}
 
 </div>
 
