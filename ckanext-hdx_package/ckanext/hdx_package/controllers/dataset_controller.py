@@ -1,24 +1,24 @@
 import logging
-from urllib import urlencode
-import datetime
+#from urllib import urlencode
+#import datetime
 import cgi
 
 from ckanext.hdx_package.helpers import helpers
-#import ckanext.hdx_package.plugin.HDXPackagePlugin as hdx_package
-from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
+#from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
+#from formencode import foreach
 
 from pylons import config
 from genshi.template import MarkupTemplate
-from genshi.template.text import NewTextTemplate
-from paste.deploy.converters import asbool
+#from genshi.template.text import NewTextTemplate
+#from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
-import ckan.lib.maintain as maintain
+#import ckan.lib.maintain as maintain
 import ckan.lib.package_saver as package_saver
-import ckan.lib.i18n as i18n
+#import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
-import ckan.lib.accept as accept
+#import ckan.lib.accept as accept
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.lib.datapreview as datapreview
@@ -35,6 +35,7 @@ log = logging.getLogger(__name__)
 render = base.render
 abort = base.abort
 redirect = base.redirect
+
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -54,6 +55,10 @@ CONTENT_TYPES = {
     'json': 'application/json;charset=utf-8',
 }
 
+ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
+GEOJSON_FORMAT = 'geojson'
+
+
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
@@ -64,6 +69,8 @@ def clone_dict(old_dict):
     for k, v in old_dict.iteritems():
         data[k] = v
     return data
+
+
 
 class DatasetController(PackageController):
 
@@ -277,6 +284,10 @@ class DatasetController(PackageController):
                     dataset_id, resource_id)
 
             get_action('resource_update')(context, data)
+            if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                data['shape'] = json.dumps(self._get_geojson(data['url']))
+                if 'shape' in data and data['shape'] is not None:
+                    get_action('resource_update')(context, data)
         else:
             result_dict = get_action('resource_create')(context, data)
 
@@ -287,6 +298,10 @@ class DatasetController(PackageController):
                 result_dict['perma_link'] = self._get_perma_link(
                     dataset_id, result_dict['id'])
                 get_action('resource_update')(context, result_dict)
+            if 'format' in result_dict and result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
+                if 'shape' in result_dict and result_dict['shape'] is not None:
+                    get_action('resource_update')(context, result_dict)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
@@ -341,6 +356,8 @@ class DatasetController(PackageController):
                                    action='new_metadata', id=id))
 
             data['package_id'] = id
+            # if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+            #     data['shape'] = self._get_geojson(data['url'])
             try:
                 self._update_or_create_resource(context, data, id, resource_id)
 
@@ -374,9 +391,7 @@ class DatasetController(PackageController):
                                    action='new_resource', id=id))
         errors = errors or {}
         error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'action': 'new'}
-        vars['pkg_name'] = id
+        vars = {'data': data, 'errors': errors, 'error_summary': error_summary, 'action': 'new', 'pkg_name': id}
         # get resources for sidebar
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author}
@@ -638,7 +653,14 @@ class DatasetController(PackageController):
         # related websites
         c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
             'url': 'http://www.unocha.org', 'name': 'UNOCHA'}, {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'}, {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
+
+        has_shapes = 0
+        if 'resources' in c.pkg_dict:
+            has_shapes = self._has_shapes(c.pkg_dict['resources'])
         try:
+            if has_shapes > 0:
+                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                return render('indicator/hdx-shape-read.html', loader_class=loader)
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
             else:
@@ -650,6 +672,34 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    @staticmethod
+    def _has_shapes(resources):
+        result = 0
+        formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+        for resource in resources:
+            if 'format' in resource and resource['format'] in formats:
+                result = 1
+                return result
+        return result
+
+    @staticmethod
+    def _process_shapes(resources):
+        result = {}
+        formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+        for resource in resources:
+            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and resource['shape'] != 'null':
+                name = resource['name']
+                result[name] = json.loads(resource['shape'])
+        return result
+
+
+    @staticmethod
+    def _get_geojson(url):
+        urls_dict = {'shape_source_url': url, 'convert_url': u'http://ogre.adc4gis.com/convert'}
+        g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
+        return g_json
+
 
     def _resource_preview(self, data_dict):
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:

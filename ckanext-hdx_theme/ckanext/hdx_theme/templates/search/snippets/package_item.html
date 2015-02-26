@@ -96,17 +96,17 @@
                       -->
                     {% endif %}
                     {% if visualization %}
-                      <span class="icon-visualize" title="{{ _("Comparable Indicator") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                      <span class="icon-quality_checked" title="{{ _("Quality Checked") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                      <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                      <span class="icon-quality_checked" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                     {% endif %}
                     {% if has_related_items %}
-                      <span class="icon-gallery" title="{{ _("Gallery Item") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                      <span class="icon-gallery" title="{{ _('Gallery Item') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
                     {% endif %}
                     {% if package.subnational %}
-                      <span class="icon-subnational" title="{{ _("Sub-national Data") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                      <span class="icon-subnational" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
                     {% endif %}
                     {% if popular %}
-                      <span class="icon-fire" title="{{ _("Popular: ") }} {{ package.tracking_summary.recent }}{{ _(" views") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                      <span class="icon-fire" title="{{ _('Popular: ') }} {{ package.tracking_summary.recent }}{{ _(' views') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
                     {% endif %}
                   </li>
                 {% endif %}
