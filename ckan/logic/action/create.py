@@ -210,7 +210,7 @@ def resource_create(context, data_dict):
     :param url: url of resource
     :type url: string
     :param revision_id: (optional)
-    :type revisiion_id: string
+    :type revision_id: string
     :param description: (optional)
     :type description: string
     :param format: (optional)
