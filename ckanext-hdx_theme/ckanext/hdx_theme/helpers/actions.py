@@ -22,6 +22,7 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 import urllib
+import json
 
 
 from ckan.common import c, _
@@ -426,6 +427,6 @@ def hdx_get_shape_geojson(context, data_dict):
     except:
         print("There was an error with the HTTP request")
         raise
-    json_content = json_resp.text
+    json_content = json_resp.content
     os.remove('hdx_shape_temp_file.zip')
-    return json_content
+    return json.loads(json_content)

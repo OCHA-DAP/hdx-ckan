@@ -5,6 +5,13 @@
 
 
 {% block pre_primary %}
+  	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
+  	<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+	<div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
+    <div id="shapeData" style="display: none;">
+        {{ c.shapes }}
+    </div>
+
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
           <div class="row">
@@ -21,15 +28,12 @@
           </div>
             <div class="row">
                 <div class="col-xs-12 mTop35">
-                    MAP CONTENT
+                    <div id="map" style="height: 400px;"></div>
                 </div>
             </div>
-
         </div>
     </div>
 {% endblock %}
-
-
 
 {% block styles %}
   {{ super() }}
@@ -37,4 +41,8 @@
 
 {% block scripts %}
   {{ super() }}
+  {% resource 'hdx_theme/d3' %}
+  {% resource 'hdx_theme/leaflet' %}
+  {% resource 'hdx_theme/crisis-base' %}
+  {% resource 'hdx_theme/shape-view' %}
 {% endblock %}

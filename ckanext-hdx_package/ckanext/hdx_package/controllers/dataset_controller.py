@@ -642,7 +642,7 @@ class DatasetController(PackageController):
         c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
             'url': 'http://www.unocha.org', 'name': 'UNOCHA'}, {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'}, {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
-        c.shapes = self._process_shapes(c.pkg_dict['resources'])
+        c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
 
         try:
             if int(c.pkg_dict['indicator']):
@@ -665,7 +665,6 @@ class DatasetController(PackageController):
             url = resource['url']
             name = resource['name']
             result[name] = self._get_geojson(url)
-            print id
         return result
 
 
