@@ -1,3 +1,4 @@
+import json
 import logging
 # import datetime
 import os
@@ -415,11 +416,7 @@ def hdx_get_shape_geojson(context, data_dict):
         return None;
     shape_src_response = requests.get(shape_source_url, allow_redirects=True)
     urllib.URLopener().retrieve(shape_src_response.url, 'hdx_shape_temp_file.zip')
-
-    #shape_src_data = shape_src_response.content
-    #shape_src_data = shape_src_response.read()
     convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
-    # shape_data = {'upload': shape_src_data}
     shape_data = {'upload': open('hdx_shape_temp_file.zip', 'rb')}
     print('Calling Ogre to perform shapefile to geoJSON conversion...')
     try:
