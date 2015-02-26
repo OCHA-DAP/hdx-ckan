@@ -283,6 +283,7 @@ class DatasetController(PackageController):
             # Added by HDX - adding perma_link
             # Now that we have a resource id we want to add the
             # perma_link url to the resource
+            context['skip_datapusher'] = True
             if 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
                 result_dict['perma_link'] = self._get_perma_link(
                     dataset_id, result_dict['id'])
@@ -650,6 +651,17 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    def _resource_datapusher_status(self, context, resource_dict):
+        if resource_dict.get('datastore_active', False):
+            try:
+                status = get_action('datapusher_status')(context, {'resource_id':resource_dict['id']})
+                resource_dict['status'] = status['status']
+            except:
+                msg = 'Could not load datapusher status for resource {} with id {}'
+                msg.format(resource_dict['name'], resource_dict['id'])
+                log.warning(msg)
+
 
     def _resource_preview(self, data_dict):
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:

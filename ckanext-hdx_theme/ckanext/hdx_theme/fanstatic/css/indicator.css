@@ -249,4 +249,10 @@
 }
 /* END Style Resources List*/
 
+/* Status checker */
+.status-checker-link .loading{
+    background-image: url('/images/ajax-loader-b.gif')
+}
+/* END - status checker */
+
 /* END - Dataset specific styles */

@@ -157,7 +157,7 @@ def datapusher_hook(context, data_dict):
     context['ignore_auth'] = True
     p.toolkit.get_action('task_status_update')(context, task)
 
-
+@logic.side_effect_free
 def datapusher_status(context, data_dict):
     ''' Get the status of a datapusher job for a certain resource.
 
@@ -166,7 +166,7 @@ def datapusher_status(context, data_dict):
     :type resource_id: string
     '''
 
-    p.toolkit.check_access('datapusher_status', context, data_dict)
+    # p.toolkit.check_access('datapusher_status', context, data_dict)
 
     if 'id' in data_dict:
         data_dict['resource_id'] = data_dict['id']

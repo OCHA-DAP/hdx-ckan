@@ -6,13 +6,29 @@
 {% set resource_display_name = h.resource_display_name(res) %}
 
 {% resource 'hdx_theme/bs_popover.js' %}
+{% resource 'hdx_theme/status_checker/status_checker.js' %}
 
-<li class="resource-item">
+<li class="resource-item" xmlns="http://www.w3.org/1999/html">
   {% block resource_item_title %}
-  <a class="heading" {% if url_is_edit and can_edit %} href="{{ url }}" {% endif %} title="{{ res.name or res.description }}">
-    {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
-    {{ h.popular('views', res.tracking_summary.total, min=10) }}
-  </a>
+  <div>
+      <div style="float: left">
+          <a class="heading" {% if url_is_edit and can_edit %} href="{{ url }}" {% endif %} title="{{ res.name or res.description }}">
+            {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
+            {{ h.popular('views', res.tracking_summary.total, min=10) }}
+
+          </a>
+      </div>
+
+      <div style="float: left">
+          {% if res.datastore_active %}
+              <a class="status-checker-link">
+                <div class="loading"
+                      data-module="status_checker" data-module-endpoint="datapusher_status"
+                      data-module-params="resource_id={{ res.id }}"></div>
+              </a>
+          {% endif %}
+      </div>
+  </div>
   {% endblock %}
 
   <div class="description">

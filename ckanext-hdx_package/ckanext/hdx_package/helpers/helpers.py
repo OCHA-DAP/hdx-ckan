@@ -548,15 +548,17 @@ def resource_create(context, data_dict):
     return resource
 
 def _call_datapusher(context, result):
-    if (result['format'] and
-                result['format'].lower() in ['csv', 'xls', 'application/csv', 'application/vnd.ms-excel'] and
-                result['url_type'] != 'datapusher'):
-        try:
-            get_action('datapusher_submit')(context, {
-                'resource_id': result['id']
-            })
-        except tk.ValidationError, e:
-            # If datapusher is offline want to catch error instead
-            # of raising otherwise resource save will fail with 500
-            log.critical(e)
-            pass
+    skip_datapusher = context.get('skip_datapusher', False)
+    if not skip_datapusher:
+        if (result['format'] and
+                    result['format'].lower() in ['csv', 'xls', 'application/csv', 'application/vnd.ms-excel'] and
+                    result['url_type'] != 'datapusher'):
+            try:
+                get_action('datapusher_submit')(context, {
+                    'resource_id': result['id']
+                })
+            except tk.ValidationError, e:
+                # If datapusher is offline want to catch error instead
+                # of raising otherwise resource save will fail with 500
+                log.critical(e)
+                pass
