@@ -479,7 +479,6 @@ class GroupController(base.BaseController):
 
         try:
             old_data = self._action('group_show')(context, data_dict)
-            print old_data
             c.grouptitle = old_data.get('title')
             c.groupname = old_data.get('name')
             data = data or old_data
