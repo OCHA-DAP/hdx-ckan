@@ -286,7 +286,8 @@ class DatasetController(PackageController):
             get_action('resource_update')(context, data)
             if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
                 data['shape'] = json.dumps(self._get_geojson(data['url']))
-                get_action('resource_update')(context, data)
+                if 'shape' in data and data['shape'] is not None:
+                    get_action('resource_update')(context, data)
         else:
             result_dict = get_action('resource_create')(context, data)
 
@@ -299,7 +300,8 @@ class DatasetController(PackageController):
                 get_action('resource_update')(context, result_dict)
             if 'format' in result_dict and result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
                 result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
-                get_action('resource_update')(context, result_dict)
+                if 'shape' in result_dict and result_dict['shape'] is not None:
+                    get_action('resource_update')(context, result_dict)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
@@ -686,7 +688,7 @@ class DatasetController(PackageController):
         result = {}
         formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
         for resource in resources:
-            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource):
+            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and resource['shape'] != 'null':
                 name = resource['name']
                 result[name] = resource['shape']
         return result

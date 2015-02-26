@@ -424,6 +424,8 @@ def hdx_get_shape_geojson(context, data_dict):
     except:
         print("There was an error with the HTTP request")
         raise
-    json_content = json_resp.content
+    json_content = json.loads(json_resp.content)
     os.remove('hdx_shape_temp_file.zip')
-    return json.loads(json_content)
+    if 'errors' in json_content and json_content['errors']:
+        return None
+    return json_content
