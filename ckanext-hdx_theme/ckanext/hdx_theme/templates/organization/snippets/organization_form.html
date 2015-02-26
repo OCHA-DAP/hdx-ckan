@@ -75,9 +75,9 @@
 </div>
 
 <div class="org-control-container" style="margin-top:30px;">
-{{ form.input('highlight_color', label=_('Highlight Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
+{{ form.input('highlight_color', label=_('Base Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Highlight color for layout')}}</div>
+        <div class="org-info-label">{{_('Pick the color which this page\'s color scheme will be based on.' )}}</div>
       </div>
 </div>
 
@@ -205,3 +205,4 @@
 
 
 {% resource 'hdx_theme/custom_organization_creation.js' %}
+{% resource 'hdx_theme/colorpicker' %}

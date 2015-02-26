@@ -283,7 +283,23 @@ def hdx_less_default():
 @searchPlaceholderColor: @grayColor;
 @searchTextColor: @whiteColor;
 
-@bodyBackgroundColor: @wfpBlueColor;"""
+@bodyBackgroundColor: @wfpBlueColor;
+@navTabsActiveColor: @wfpBlueColor;
+@orderByDropdownColor: @wfpBlueColor;
+@defaultLinkColor: @wfpBlueColor;
+
+@paginationActiveBackground: @wfpBlueColor;
+
+@topLineItemNumberFontSize: 64px;
+
+
+
+@modalSubmitButtonBackgrColor: #FFFFFF;
+
+@modalSubmitButtonColor: #888888;
+
+@modalHeaderBackgroundColor: #EEEEEE;
+@modalFooterBackgroundColor: #EEEEEE;"""
 
 def load_json(obj, **kw):
     return json.loads(obj, **kw)

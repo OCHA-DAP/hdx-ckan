@@ -5,6 +5,7 @@ Created on Jan 14, 2015
 '''
 
 import pylons.config as config
+import json
 
 import ckan.logic as logic
 import ckan.lib.dictization.model_dictize as model_dictize
@@ -94,10 +95,21 @@ def hdx_organization_update(context, data_dict):
     result = update._group_or_org_update(context, data_dict, is_org=True)
 
     if 'extras' in result:
-        less_code_list = [el.get('value', '') for el in result['extras'] if el['key'] == 'less']
+        for el in result['extras']:
+            if el['key'] == 'less':
+                less_code_list = el.get('value', '')
+            elif el['key'] == 'customization':
+                variables = el.get('value', '')
+                if variables:
+                    variables = json.loads(variables)
+                    base_color = variables.get('highlight_color', '#0088FF')
+                else:
+                    base_color = '#0088FF'
         if less_code_list:
-            less_code = less_code_list[0].strip()
+            less_code = less_code_list.strip()
             if less_code:
+                #Add base color definition
+                less_code = '\n\r@wfpBlueColor: '+base_color+';\n\r'+less_code
                 css_dest_dir = '/organization/' + result['name']
                 compiler = less.LessCompiler(less_code, css_dest_dir, result['name'], h.hdx_get_extras_element(result['extras'], value_key="modified_at"))
                 compilation_result = compiler.compile_less()

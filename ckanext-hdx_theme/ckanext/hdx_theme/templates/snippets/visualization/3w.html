@@ -114,3 +114,25 @@
         <div class="org-info-label">Set the default zoom of the map in this visualization.</div>
       </div>
 </div>
+
+{% if visualization['colors'] is not defined %}
+{% set colors = ['#81d4fa','#4fc3f7','#29b6f6','#03a9f4','#039be5','#0288d1','#0277bd','#01579b'] %}
+{% else %}
+{% set colors = visualization['colors'] %}
+{% endif %}
+
+<div class="org-control-container">
+  <div class="control-group control-full">
+    <label class="control-label" for="field-zoom">Color Gradient</label>
+    <div class="controls ">
+    <input type="text" id="color-1" name="colors[]" value="{{colors[0]}}" placeholder="" class="visualization_config visualization_colors">
+    <input type="text" id="color-2" name="colors[]" value="{{colors[1]}}" placeholder="" id="color-3" class="visualization_config visualization_colors">
+    <input type="text" id="color-4" name="colors[]" value="{{colors[2]}}" placeholder="" class="visualization_config visualization_colors">
+     <input type="text" id="color-5" name="colors[]" value="{{colors[3]}}" placeholder="" class="visualization_config visualization_colors">
+      <input type="text" id="color-6" name="colors[]" value="{{colors[4]}}" placeholder="" class="visualization_config visualization_colors">
+       <input type="text" id="color-7" name="colors[]" value="{{colors[5]}}" placeholder="" class="visualization_config visualization_colors">
+        <input type="text" id="color-8" name="colors[]" value="{{colors[6]}}" placeholder="" class="visualization_config visualization_colors">
+         <input type="text" id="color-9" name="colors[]" value="{{colors[7]}}" placeholder="" class="visualization_config visualization_colors">
+    </div>
+  </div>
+      </div>
