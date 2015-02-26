@@ -55,6 +55,10 @@ CONTENT_TYPES = {
     'json': 'application/json;charset=utf-8',
 }
 
+ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
+GEOJSON_FORMAT = 'geojson'
+
+
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
@@ -280,6 +284,9 @@ class DatasetController(PackageController):
                     dataset_id, resource_id)
 
             get_action('resource_update')(context, data)
+            if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                data['shape'] = json.dumps(self._get_geojson(data['url']))
+                get_action('resource_update')(context, data)
         else:
             result_dict = get_action('resource_create')(context, data)
 
@@ -289,6 +296,9 @@ class DatasetController(PackageController):
             if 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
                 result_dict['perma_link'] = self._get_perma_link(
                     dataset_id, result_dict['id'])
+                get_action('resource_update')(context, result_dict)
+            if 'format' in result_dict and result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
                 get_action('resource_update')(context, result_dict)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
@@ -344,6 +354,8 @@ class DatasetController(PackageController):
                                    action='new_metadata', id=id))
 
             data['package_id'] = id
+            # if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+            #     data['shape'] = self._get_geojson(data['url'])
             try:
                 self._update_or_create_resource(context, data, id, resource_id)
 
@@ -377,9 +389,7 @@ class DatasetController(PackageController):
                                    action='new_resource', id=id))
         errors = errors or {}
         error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'action': 'new'}
-        vars['pkg_name'] = id
+        vars = {'data': data, 'errors': errors, 'error_summary': error_summary, 'action': 'new', 'pkg_name': id}
         # get resources for sidebar
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author}
@@ -480,6 +490,8 @@ class DatasetController(PackageController):
                        'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
             data['package_id'] = id
+            if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                data['shape'] = self._get_geojson(data['url'])
             try:
                 self._update_or_create_resource(context, data, id, resource_id)
             except ValidationError, e:
@@ -642,11 +654,15 @@ class DatasetController(PackageController):
         c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
             'url': 'http://www.unocha.org', 'name': 'UNOCHA'}, {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'}, {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
-        c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-
+        has_shapes = 0
+        if 'resources' in c.pkg_dict:
+            has_shapes = self._has_shapes(c.pkg_dict['resources'])
         try:
-            if int(c.pkg_dict['indicator']):
+            if has_shapes > 0:
+                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                 return render('indicator/hdx-shape-read.html', loader_class=loader)
+            if int(c.pkg_dict['indicator']):
+                return render('indicator/read.html', loader_class=loader)
             else:
                 return render('package/hdx_read.html', loader_class=loader)
         except ckan.lib.render.TemplateNotFound:
@@ -657,14 +673,24 @@ class DatasetController(PackageController):
 
         assert False, "We should never get here"
 
-
-    def _process_shapes(self, resources):
-        result = {}
+    @staticmethod
+    def _has_shapes(resources):
+        result = 0
+        formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
         for resource in resources:
-            # id = resource['id']
-            url = resource['url']
-            name = resource['name']
-            result[name] = self._get_geojson(url)
+            if 'format' in resource and resource['format'] in formats:
+                result = 1
+                return result
+        return result
+
+    @staticmethod
+    def _process_shapes(resources):
+        result = {}
+        formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+        for resource in resources:
+            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource):
+                name = resource['name']
+                result[name] = resource['shape']
         return result
 
 
