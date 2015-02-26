@@ -413,7 +413,7 @@ def _add_to_filter_list(src, param_name, filter_list):
 def hdx_get_shape_geojson(context, data_dict):
     shape_source_url = data_dict.get('shape_source_url', None)
     if shape_source_url is None:
-        return None;
+        return None
     shape_src_response = requests.get(shape_source_url, allow_redirects=True)
     urllib.URLopener().retrieve(shape_src_response.url, 'hdx_shape_temp_file.zip')
     convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
