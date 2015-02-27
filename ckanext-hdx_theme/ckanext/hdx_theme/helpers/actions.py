@@ -411,21 +411,25 @@ def _add_to_filter_list(src, param_name, filter_list):
     return filter_list
 
 def hdx_get_shape_geojson(context, data_dict):
-    shape_source_url = data_dict.get('shape_source_url', None)
-    if shape_source_url is None:
-        return None
-    shape_src_response = requests.get(shape_source_url, allow_redirects=True)
-    urllib.URLopener().retrieve(shape_src_response.url, 'hdx_shape_temp_file.zip')
-    convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
-    shape_data = {'upload': open('hdx_shape_temp_file.zip', 'rb')}
-    print('Calling Ogre to perform shapefile to geoJSON conversion...')
+    json_content = None
     try:
-        json_resp = requests.post(convert_url, files=shape_data)
-    except:
-        print("There was an error with the HTTP request")
-        raise
-    json_content = json.loads(json_resp.content)
-    os.remove('hdx_shape_temp_file.zip')
-    if 'errors' in json_content and json_content['errors']:
-        return None
+        shape_source_url = data_dict.get('shape_source_url', None)
+        if shape_source_url is None:
+            return None
+        shape_src_response = requests.get(shape_source_url, allow_redirects=True)
+        urllib.URLopener().retrieve(shape_src_response.url, '/tmp/hdx_shape_temp_file.zip')
+        convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
+        shape_data = {'upload': open('/tmp/hdx_shape_temp_file.zip', 'rb')}
+        print('Calling Ogre to perform shapefile to geoJSON conversion...')
+        try:
+            json_resp = requests.post(convert_url, files=shape_data)
+        except:
+            print("There was an error with the HTTP request")
+            raise
+        json_content = json.loads(json_resp.content)
+        os.remove('/tmp/hdx_shape_temp_file.zip')
+        if 'errors' in json_content and json_content['errors']:
+            return None
+    except :
+        print "Error retrieving the json content"
     return json_content
