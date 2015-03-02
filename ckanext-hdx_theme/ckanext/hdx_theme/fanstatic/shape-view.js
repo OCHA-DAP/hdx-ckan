@@ -189,6 +189,7 @@ function addLayersToMap(option, data){
     L.control.layers(layers).addTo(map);
 
     map.fitBounds([[options.boundaryPoly.minLat, options.boundaryPoly.minLng], [options.boundaryPoly.maxLat, options.boundaryPoly.maxLng]]);
+    info.update();
 }
 
 
