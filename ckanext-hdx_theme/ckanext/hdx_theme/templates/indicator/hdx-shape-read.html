@@ -4,7 +4,7 @@
 
 
 
-{% block pre_primary %}
+{% block pre_primary_content %}
   	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
   	<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
 	<div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
@@ -12,25 +12,14 @@
         {{ c.shapes }}
     </div>
 
-    <div class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-          <div class="row">
-            <div class="col-xs-12 mTop35">
-              <h1 class="itemTitle">
-                {{ pkg.title or pkg.name }}
-                 {% if pkg.state.startswith('draft') %}
-                  <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
-                {% elif pkg.state.startswith('deleted') %}
-                  <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
-                {% endif %}
-              </h1>
-            </div>
-          </div>
-            <div class="row">
-                <div class="col-xs-12 mTop35">
-                    <div id="map" style="height: 400px;"></div>
+    <div class="row mTop20">
+        <div class="col-xs-12">
+            <div class="row mBottom15">
+                <div class="col-xs-12">
+                    {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True, classes='indicator-actions followButtonContainer pull-right' %}
                 </div>
             </div>
+            <div id="map" style="height: 400px;"></div>
         </div>
     </div>
 {% endblock %}
