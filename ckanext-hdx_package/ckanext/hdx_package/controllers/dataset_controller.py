@@ -695,7 +695,6 @@ class DatasetController(PackageController):
                 elif resource['format'] == GEOJSON_FORMAT:
                     name = resource['name']
                     result[name] = DatasetController._get_json_from_resource(resource)
-                    print 'adasds'
         return result
 
     @staticmethod
