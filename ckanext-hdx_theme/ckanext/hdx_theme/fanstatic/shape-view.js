@@ -9,7 +9,8 @@ var options = {
         minLat: null,
         maxLat: null,
         minLong: null,
-        maxLong: null
+        maxLong: null,
+        overlap: true
     },
     data: null,
     fields: null,
@@ -90,6 +91,13 @@ function computeBondaryPoly(options, data) {
             }
         }
     }
+
+    //check if boundary poly's of all layers are a perfect overlap
+    if ((options.boundaryPoly.minLat != minLat && options.boundaryPoly.minLat != null) &&
+        (options.boundaryPoly.maxLat != maxLat && options.boundaryPoly.maxLat != null) &&
+        (options.boundaryPoly.minLng != minLng && options.boundaryPoly.minLng != null) &&
+        (options.boundaryPoly.maxLng != maxLng && options.boundaryPoly.maxLng != null))
+        options.boundaryPoly.overlap = false;
 
     if (options.boundaryPoly.minLat > minLat || options.boundaryPoly.minLat == null)
         options.boundaryPoly.minLat = minLat;
@@ -186,7 +194,7 @@ function addLayersToMap(option, data){
         layers[key] = layer;
     }
 
-    L.control.layers(layers).addTo(map);
+    L.control.layers([], layers).addTo(map);
 
     map.fitBounds([[options.boundaryPoly.minLat, options.boundaryPoly.minLng], [options.boundaryPoly.maxLat, options.boundaryPoly.maxLng]]);
     info.update();
