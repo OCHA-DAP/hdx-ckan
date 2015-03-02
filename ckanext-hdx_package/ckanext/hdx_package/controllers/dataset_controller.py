@@ -593,7 +593,11 @@ class DatasetController(PackageController):
             # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
-        
+
+        # check if user should see datapusher status checker
+        c.pkg_dict['datapusher_check_allowed'] = \
+            self._datapusher_check_allowed(context, c.pkg_dict.get('organization',{}).get('id'))
+
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
         try:
@@ -651,6 +655,15 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    def _datapusher_check_allowed(self, context, org_id):
+        # check if user should see datapusher status checker
+        try:
+            check_access('organization_update',context, {'id': org_id})
+            return True
+        except NotAuthorized:
+            log.info('Datapusher check is not allowed for user %s'.format(c.user or 'guest'))
+            return False
 
     def _resource_datapusher_status(self, context, resource_dict):
         if resource_dict.get('datastore_active', False):
@@ -771,6 +784,33 @@ class DatasetController(PackageController):
         except NotFound:
             abort(404, _('Dataset not found'))
         return render('package/confirm_delete.html')
+
+    def resources(self, id):
+        package_type = self._get_package_type(id.split('@')[0])
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+        data_dict = {'id': id}
+
+        try:
+            check_access('package_update', context, data_dict)
+        except NotAuthorized, e:
+            abort(401, _('User %r not authorized to edit %s') % (c.user, id))
+        # check if package exists
+        try:
+            c.pkg_dict = get_action('package_show')(context, data_dict)
+            c.pkg = context['package']
+        except NotFound:
+            abort(404, _('Dataset not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read package %s') % id)
+
+        self._setup_template_variables(context, {'id': id},
+                                       package_type=package_type)
+
+        c.pkg_dict['datapusher_check_allowed'] = \
+            self._datapusher_check_allowed(context, c.pkg_dict.get('organization',{}).get('id'))
+        return render('package/resources.html')
 
 
 # class HDXApiController(ApiController):

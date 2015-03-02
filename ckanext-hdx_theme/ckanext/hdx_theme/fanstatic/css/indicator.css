@@ -244,15 +244,33 @@
 
 /* Style Resources List */
 .resource-item .description{
+    clear: both;
 	text-align: justify;
 	max-width: 580px;
 }
 /* END Style Resources List*/
 
 /* Status checker */
-.status-checker-link .loading{
-    background-image: url('/images/ajax-loader-b.gif')
+
+.status-checker {
+    padding-left: 15px;
 }
+
+.status-checker a {
+    color: #004a61;
+}
+
+.status-checker .glyphicon {
+    font-size: 12px;
+}
+
+.status-checker .loading{
+    background-image: url('/images/ajax-loader-b.gif');
+    width: 15px;
+    height: 10px;
+    margin-top: 5px;
+}
+
 /* END - status checker */
 
 /* END - Dataset specific styles */

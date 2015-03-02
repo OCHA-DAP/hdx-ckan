@@ -19,12 +19,12 @@
           </a>
       </div>
 
-      <div style="float: left">
-          {% if res.datastore_active %}
-              <a class="status-checker-link">
-                <div class="loading"
+      <div class="status-checker" style="float: left">
+          {% if pkg.datapusher_check_allowed %}
+              <a name="status" href="{{ h.url_for('resource_data', id=pkg['id'], resource_id=res['id']) }}"
                       data-module="status_checker" data-module-endpoint="datapusher_status"
-                      data-module-params="resource_id={{ res.id }}"></div>
+                      data-module-params="resource_id={{ res.id }}">
+                <div class=""></div>
               </a>
           {% endif %}
       </div>

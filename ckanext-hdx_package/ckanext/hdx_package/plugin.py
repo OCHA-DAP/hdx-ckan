@@ -71,13 +71,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     action='perma_file')
         map.connect('dataset_preselect', '/dataset/preselect',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
+        map.connect('dataset_resources', '/dataset/resources/{id}', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+                  action='resources')
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('shorten_url', '/package/tools/shorten',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
         map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
                   action='edit')
-        
+
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
