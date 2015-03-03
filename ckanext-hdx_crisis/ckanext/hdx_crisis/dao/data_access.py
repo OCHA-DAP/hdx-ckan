@@ -38,27 +38,6 @@ class CrisisDataAccess():
     def get_top_line_items(self):
         return self.results
 
-    def _find_datastore_resource_id(self, context, dataset_id, resource_id):
-        try:
-            modified_context = dict(context)
-            modified_context['ignore_auth'] = True
-            dataset = get_action('package_show')(
-                modified_context,
-                {'id': dataset_id})
-
-            if 'resources' in dataset:
-                for r in dataset['resources']:
-                    if r['name'] == resource_id:
-                        return r['id']
-            return None
-        except:
-            log.warning(
-                'No dataset with id ' +
-                dataset_id)
-            return None
-
-        return None
-
     def _fetch_items_from_datastore(self, context, datastore_resource_id,
                                     ignore_auth=False, sql=None, sort=None):
         modified_context = context
@@ -81,6 +60,8 @@ class CrisisDataAccess():
                     return result['records']
             except logic.NotFound, e:
                 log.error(str(e))
+            except logic.ValidationError, e:
+                log.error('Validation error: ' + str(e))
         else:
             log.error(
                 'Resource id is None ')
@@ -91,8 +72,7 @@ class CrisisDataAccess():
 
     def fetch_data(self, context):
         top_line_info = self.resources_dict['top-line-numbers']
-        datastore_resource_id = self._find_datastore_resource_id(
-            context, top_line_info['dataset'], top_line_info['resource'])
+        datastore_resource_id = top_line_info['resource_id']
         self.results = self._fetch_items_from_datastore(
             context, datastore_resource_id, True,
             top_line_info.get('sql', None), CrisisDataAccess.SORT_FIELD)
@@ -106,14 +86,12 @@ class CrisisDataAccess():
 
         for code, res_dict in self.resources_dict.iteritems():
             if code != 'top-line-numbers':
-                log.info("Fetching data for dataset:{} and resource: {} ".format(
-                    res_dict['dataset'], res_dict['resource']))
-                res_id = self._find_datastore_resource_id(
-                    context, res_dict['dataset'], res_dict['resource'])
+                log.info("Fetching data for datastore: {} ".format(
+                    res_dict['resource_id']))
+                res_id = res_dict['resource_id']
                 if not res_id:
                     log.error(
-                        'Problem with resource (maybe it does not exist): ' +
-                        res_dict['dataset'] + " and " + res_dict['resource'])
+                        'A resource id for a datastore was not specified ')
                 sparkline_items = self._fetch_items_from_datastore(
                     context, res_id, True, res_dict.get('sql', None))
                 if code in self.results_dict:
@@ -132,28 +110,26 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
     CUMULATIVE_DEATHS = 'tot_death_evd'
     APPEAL_COVERAGE = 'plan_coverage'
 
-    def __init__(self):
+    def __init__(self, top_line_res_id, cases_res_id, appeal_res_id):
         self.resources_dict = {
             'top-line-numbers': {
-                'dataset': 'topline-ebola-outbreak-figures',
-                'resource': 'topline-ebola-outbreak-figures.csv'
+                'resource_id': top_line_res_id
             },
             EbolaCrisisDataAccess.CUMULATIVE_CASES: {
-                'dataset': 'ebola-cases-2014',
-                'resource': 'ebola-data-db-format.csv',
+                'resource_id': cases_res_id
             },
             EbolaCrisisDataAccess.APPEAL_COVERAGE: {
-                'dataset': 'fts-ebola-coverage',
-                'resource': 'fts-ebola-coverage.csv',
-                'sql': 'SELECT "Date", "Value" FROM "93b92803-f9fa-45f4-bf72-73a8ab1d8922" ORDER BY "Date" desc;'
+                'resource_id': appeal_res_id,
+                'sql': 'SELECT "Date", "Value" FROM "{}" ORDER BY "Date" desc;'.format(appeal_res_id)
             }
         }
-        self.resources_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES]['sql'] = ('SELECT "Indicator", "Date", sum(value) AS value '
-                                                                              'FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" '
-                                                                              'WHERE "Indicator" IN (\'Cumulative number of confirmed, probable and suspected Ebola deaths\','
-                                                                              '\'Cumulative number of confirmed, probable and suspected Ebola cases\') '
-                                                                              'GROUP BY "Indicator", "Date" '
-                                                                              'ORDER BY "Indicator", "Date" desc ')
+        sql = ('SELECT "Indicator", "Date", sum(value) AS value '
+              'FROM "{}" '
+              'WHERE "Indicator" IN (\'Cumulative number of confirmed, probable and suspected Ebola deaths\','
+              '\'Cumulative number of confirmed, probable and suspected Ebola cases\') '
+              'GROUP BY "Indicator", "Date" '
+              'ORDER BY "Indicator", "Date" desc ')
+        self.resources_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES]['sql'] = sql.format(cases_res_id)
 
     def _process_appeal_coverage(self):
         if CrisisDataAccess.SPARKLINES_FIELD in self.results_dict.get(EbolaCrisisDataAccess.APPEAL_COVERAGE, {}):
