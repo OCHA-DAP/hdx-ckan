@@ -824,6 +824,42 @@ class DatasetController(PackageController):
             abort(404, _('Dataset not found'))
         return render('package/confirm_delete.html')
 
+#copy from package.py:1183
+#related to issue 2367
+    def resource_read(self, id, resource_id):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        try:
+            c.resource = get_action('resource_show')(context,
+                                                     {'id': resource_id})
+            c.package = get_action('package_show')(context, {'id': id})
+            # required for nav menu
+            c.pkg = context['package']
+            c.pkg_dict = c.package
+            c.resource['perma_link'] = self._get_perma_link(id, resource_id)
+        except NotFound:
+            abort(404, _('Resource not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read resource %s') % id)
+        # get package license info
+        license_id = c.package.get('license_id')
+        try:
+            c.package['isopen'] = model.Package.\
+                get_license_register()[license_id].isopen()
+        except KeyError:
+            c.package['isopen'] = False
+
+        # TODO: find a nicer way of doing this
+        c.datastore_api = '%s/api/action' % config.get(
+            'ckan.site_url', '').rstrip('/')
+
+        c.related_count = c.pkg.related_count
+
+        c.resource['can_be_previewed'] = self._resource_preview(
+            {'resource': c.resource, 'package': c.package})
+        return render('package/resource_read.html')
+
 
         # class HDXApiController(ApiController):
 
