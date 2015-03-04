@@ -91,10 +91,11 @@ def hdx_light_group_show(context, data_dict):
     group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
     return group_dict
 
-def hdx_organization_update(context, data_dict):
-    result = update._group_or_org_update(context, data_dict, is_org=True)
 
+def compile_less(result, translate_func):
     if 'extras' in result:
+        base_color = '#0088FF'  # default value
+        less_code_list = None
         for el in result['extras']:
             if el['key'] == 'less':
                 less_code_list = el.get('value', '')
@@ -103,16 +104,30 @@ def hdx_organization_update(context, data_dict):
                 if variables:
                     variables = json.loads(variables)
                     base_color = variables.get('highlight_color', '#0088FF')
-                else:
-                    base_color = '#0088FF'
+
         if less_code_list:
             less_code = less_code_list.strip()
             if less_code:
-                #Add base color definition
-                less_code = '\n\r@wfpBlueColor: '+base_color+';\n\r'+less_code
+                # Add base color definition
+                less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r' + less_code
                 css_dest_dir = '/organization/' + result['name']
-                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'], h.hdx_get_extras_element(result['extras'], value_key="modified_at"))
+                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
+                                             h.hdx_get_extras_element(result['extras'], value_key="modified_at"),
+                                             translate_func=translate_func)
                 compilation_result = compiler.compile_less()
                 result['less_compilation'] = compilation_result
 
+
+def hdx_organization_update(context, data_dict):
+    result = update._group_or_org_update(context, data_dict, is_org=True)
+
+    compile_less(result)
+
     return result
+
+def recompile_everything(context):
+    orgs = get_action('organization_list')(context, {'all_fields': False})
+    if orgs:
+        for org_name in orgs:
+            org = get_action('hdx_light_group_show')(context, {'id': org_name})
+            compile_less(org, translate_func=lambda str: str)
