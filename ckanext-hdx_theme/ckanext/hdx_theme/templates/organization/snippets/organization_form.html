@@ -22,7 +22,7 @@
     {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
 	<div class="org-control-container">
 		{% set org_url_value = h.hdx_get_extras_element(data.extras) %}
-	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-image-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
+	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
 	    <div class="org-control-info info-field">
 	    	<div class="org-info-label">{{_('Where can people go to find more about this organisation?')}}</div>
 	    </div>
@@ -62,7 +62,7 @@
 <div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
 <div class="org-control-container">
   <h1 class="h1-title uppercase">
-          2. {{ _('Customization') }}
+          2. {{ _('Custom Styles') }}
         </h1>
 </div>
 
@@ -70,14 +70,14 @@
 {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
     {% set is_url = data.image_url and data.image_url.startswith('http') %}
 
-    {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
+    {{ form.image_upload(data, errors, is_upload_enabled=True, is_url=is_url, is_upload=is_upload) }}
 
 </div>
 
 <div class="org-control-container" style="margin-top:30px;">
-{{ form.input('highlight_color', label=_('Highlight Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
+{{ form.input('highlight_color', label=_('Base Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Highlight color for layout')}}</div>
+        <div class="org-info-label">{{_('Pick the color which this page\'s color scheme will be based on.' )}}</div>
       </div>
 </div>
 
@@ -108,8 +108,37 @@
 </div>
 
 <input type="hidden" name="customization" id="customization-json">
-
 </div>
+
+<input type="hidden" name="modified_at" id="field-modified_at">
+
+{% if h.hdx_get_extras_element(data.extras, value_key="visualization_config") %}
+{% set visualization = h.load_json(h.hdx_get_extras_element(data.extras, value_key="visualization_config")) %}
+{% else %}
+{% set visualization = {} %}
+{% endif %}
+
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+          3. {{ _('Visualization Configuration') }}
+        </h1>
+</div>
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="visualization-select">Visualization Type</label>
+          <select name="visualization-select" style="width:95%;" class="visualization_config">
+            <option value="3W-dashboard">3W Dashboard</option>
+          </select>
+</div>
+</div>
+
+<div id="dashboard-3w">
+{% snippet 'snippets/visualization/3w.html',
+                            visualization=visualization %}
+</div>
+
+<input type="hidden" name="visualization_config" id="visualization-json">
+
 
   {% endblock %}
 
@@ -176,3 +205,4 @@
 
 
 {% resource 'hdx_theme/custom_organization_creation.js' %}
+{% resource 'hdx_theme/colorpicker' %}

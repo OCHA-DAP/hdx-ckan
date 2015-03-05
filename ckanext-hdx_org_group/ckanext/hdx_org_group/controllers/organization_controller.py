@@ -73,3 +73,41 @@ class HDXOrganizationController(org.OrganizationController):
         )
         return render(self._index_template(group_type))
 
+
+    def read(self, id, limit=20):
+        group_type = self._get_group_type(id.split('@')[0])
+        if group_type != self.group_type:
+            abort(404, _('Incorrect group type'))
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'schema': self._db_to_form_schema(group_type=group_type),
+                   'for_view': True}
+        data_dict = {'id': id}
+
+        # unicode format (decoded from utf8)
+        q = c.q = request.params.get('q', '')
+
+        try:
+            # Do not query for the group datasets when dictizing, as they will
+            # be ignored and get requested on the controller anyway
+            context['include_datasets'] = False
+            c.group_dict = self._action('group_show')(context, data_dict)
+            c.group = context['group']
+        except NotFound:
+            abort(404, _('Group not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read group %s') % id)
+
+        #If custom_org set to true, redirect to the correct route
+        if self.custom_org_test(c.group_dict['extras']):
+            self._redirect_to('custom_org_read', id=id)
+        else:
+            self._read(id, limit)
+            return render(self._read_template(c.group_dict['type']))
+
+
+    def custom_org_test(self, org):
+        if [o.get('value', None) for o in org if o.get('key', '') == 'custom_org']:
+            return True
+        return False

@@ -5,11 +5,16 @@ Created on Jan 14, 2015
 '''
 
 import pylons.config as config
+import json
 
 import ckan.logic as logic
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization as d
 import ckan.model as model
+import ckan.logic.action.update as update
+
+import ckanext.hdx_theme.helpers.less as less
+import ckanext.hdx_theme.helpers.helpers as h
 
 get_action = logic.get_action
 check_access = logic.check_access
@@ -69,6 +74,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
+    group_dict['image_url'] = group.image_url
     group_dict['display_name'] = group_dict['title'] = group.title
 
     result_list = []
@@ -79,5 +85,49 @@ def hdx_light_group_show(context, data_dict):
         value = dictized["value"]
         result_list.append(dictized)
 
+        #Keeping the above for backwards compatibility
+        group_dict[name]= dictized["value"]
+
     group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
     return group_dict
+
+
+def compile_less(result, translate_func):
+    if 'extras' in result:
+        base_color = '#0088FF'  # default value
+        less_code_list = None
+        for el in result['extras']:
+            if el['key'] == 'less':
+                less_code_list = el.get('value', '')
+            elif el['key'] == 'customization':
+                variables = el.get('value', '')
+                if variables:
+                    variables = json.loads(variables)
+                    base_color = variables.get('highlight_color', '#0088FF')
+
+        if less_code_list:
+            less_code = less_code_list.strip()
+            if less_code:
+                # Add base color definition
+                less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r' + less_code
+                css_dest_dir = '/organization/' + result['name']
+                compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
+                                             h.hdx_get_extras_element(result['extras'], value_key="modified_at"),
+                                             translate_func=translate_func)
+                compilation_result = compiler.compile_less()
+                result['less_compilation'] = compilation_result
+
+
+def hdx_organization_update(context, data_dict):
+    result = update._group_or_org_update(context, data_dict, is_org=True)
+
+    compile_less(result)
+
+    return result
+
+def recompile_everything(context):
+    orgs = get_action('organization_list')(context, {'all_fields': False})
+    if orgs:
+        for org_name in orgs:
+            org = get_action('hdx_light_group_show')(context, {'id': org_name})
+            compile_less(org, translate_func=lambda str: str)
