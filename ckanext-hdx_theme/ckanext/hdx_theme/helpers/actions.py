@@ -25,6 +25,7 @@ import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 import urllib
 import json
+import tempfile
 
 
 from ckan.common import c, _
@@ -417,7 +418,7 @@ def hdx_get_shape_geojson(context, data_dict):
         return json_content
 
     tmp_dir = config.get('cache_dir', '/tmp/')
-    tmp_file = tmp_dir + 'hdx_shape_temp_file.zip'
+    tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
     try:
         shape_source_url = data_dict.get('shape_source_url', None)
         if shape_source_url is None:
