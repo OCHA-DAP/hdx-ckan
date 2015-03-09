@@ -114,6 +114,17 @@ var geomCall = $.ajax({
 //when both ready construct 3W
 
 $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
+    if(config.datatype=='datastore'){
+
+    }else{
+
+    }
+
+    if(config.geotype=='datastore'){
+
+    }else{
+
+    }
     var geom = geomArgs[0];
     geom.features.forEach(function(e){
         e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
