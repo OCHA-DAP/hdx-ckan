@@ -72,7 +72,7 @@ class CrisisDataAccess():
 
     def fetch_data(self, context):
         top_line_info = self.resources_dict['top-line-numbers']
-        datastore_resource_id = top_line_info['resource']
+        datastore_resource_id = top_line_info['resource_id']
         
         #datastore_resource_id = self._find_datastore_resource_id(
         #    context, top_line_info['dataset'], top_line_info['resource'])
