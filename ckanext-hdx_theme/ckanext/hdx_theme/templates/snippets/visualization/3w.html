@@ -22,24 +22,77 @@
       </div>
 </div>
 
+<div class="row" style="padding-left:25px;">
+<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+  <h3>Facts and Figures</h3>
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="visualization-select">Data Type</label>
+          <select name="datatype_1" class="visualization_config">
+            <option value="filestore">Filestore (json)</option>
+            <option value="datastore">Datastore (via datapusher)</option>
+          </select>
+</div>
+</div>
 <div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="dataset_id_1">Dataset ID</label>
+          <input type="text" name='dataset_id_1' id='dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='visualization_config' value="{{visualization['dataset_id_1']}}"/>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="dataset_id_1">Resource ID</label>
+          <input type="text" name='resource_id_1' id='resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='visualization_config' value="{{visualization['resource_id_1']}}"/>
+</div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control">
+    <label class="control-label" for="field-where-column">Join column (P-Codes or other geocode)</label>
+    <div class="controls">
+    <input id="field-where-column" type="text" name="where-column" value="{{visualization['where-column']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+</div>
+
+
+</div>
+<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+   <h3>Map Bounderies</h3>
+<div class="org-control-container" style="margin-bottom:30px;">
 <div class="controls">
-  <label class="control-label" for="dataset_id_1">Facts and Figures</label>
-          <input type="text" name='dataset_id_1' id='dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='control-full visualization_config' style="width:120px;float:left; margin-right:12px;" value="{{visualization['dataset_id_1']}}"/>
-          <input type="text" name='resource_id_1' id='resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='control-full visualization_config' style="width:120px; float:left;" value="{{visualization['resource_id_1']}}"/>
-<div>
-  <div class="org-control-info info-field" style="margin-top:-18px;">
-        <div class="org-info-label">{{_('Tell us where the data you want to visualize is.')}}</div>
-      </div>
-<br style="clear:both;">
-<div class="controls">
-  <label class="control-label" for="dataset_id_2">Geolocation Data</label>
-          <input type="text" name='dataset_id_2' id='dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='control-full visualization_config' style="width:120px;float:left; margin-right:12px;" value="{{visualization['dataset_id_2']}}"/>
-          <input type="text" name='resource_id_2' id='resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='control-full visualization_config' value="{{visualization['resource_id_2']}}" style="width:120px; float:left;"/>
-<div>
-  <div class="org-control-info info-field" style="margin-top:-18px;">
-        <div class="org-info-label">{{_('This visualization is a map, where is the geolocation data')}}</div>
-      </div>
+  <label class="control-label" for="visualization-select">Data Type</label>
+          <select name="datatype_2" class="visualization_config">
+            <option value="filestore">Filestore (json)</option>
+            <option value="datastore">Datastore (via datapusher)</option>
+          </select>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="dataset_id_2">Dataset ID</label>
+          <input type="text" name='dataset_id_2' id='dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='visualization_config' value="{{visualization['dataset_id_2']}}"/>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="dataset_id_2">Resource ID</label>
+          <input type="text" name='resource_id_2' id='resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='visualization_config' value="{{visualization['resource_id_2']}}"/>
+</div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control">
+    <label class="control-label" for="field-where-column-2">Join column (P-Codes or other geocode)</label>
+    <div class="controls">
+    <input id="field-where-column-2" type="text" name="where-column-2" value="{{visualization['where-column-2']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+</div>
+
+</div>
+
 </div>
 
 <div class="org-control-container">
@@ -63,18 +116,6 @@
   </div>
       <div class="org-control-info info-field">
         <div class="org-info-label">Pick something like sector or activity type.</div>
-      </div>
-</div>
-
-<div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-where-column">Which column contains P Codes or other geocode?</label>
-    <div class="controls ">
-    <input id="field-where-column" type="text" name="where-column" value="{{visualization['what-column']}}" placeholder="" class="visualization_config">
-    </div>
-  </div>
-      <div class="org-control-info info-field">
-        <div class="org-info-label">To build the map from the geolocation layer we need to match to data to the geometery.</div>
       </div>
 </div>
 

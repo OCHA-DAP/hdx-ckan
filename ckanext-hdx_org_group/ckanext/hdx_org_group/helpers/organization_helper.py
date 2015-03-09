@@ -97,14 +97,15 @@ def hdx_organization_update(context, data_dict):
     if 'extras' in result:
         for el in result['extras']:
             if el['key'] == 'less':
-                less_code_list = el.get('value', '')
+                less_code_list = el.get('value', None)
             elif el['key'] == 'customization':
-                variables = el.get('value', '')
-                if variables:
+                variables = el.get('value', None)
+                try:
                     variables = json.loads(variables)
                     base_color = variables.get('highlight_color', '#0088FF')
-                else:
+                except:
                     base_color = '#0088FF'
+        print less_code_list
         if less_code_list:
             less_code = less_code_list.strip()
             if less_code:
