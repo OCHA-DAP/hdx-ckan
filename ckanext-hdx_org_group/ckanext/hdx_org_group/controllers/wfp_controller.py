@@ -140,7 +140,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                 'revision_id': result['group'].revision_id,
                 'topline_dataset': top_line_src_info[0],
                 'topline_resource': top_line_src_info[1],
-                'modified_at': result['modified_at'],
+                'modified_at': result.get('modified_at', ''),
                 'image_url': result.get('image_url',''),
                 'visualization_config': result.get('visualization_config',''),
             }

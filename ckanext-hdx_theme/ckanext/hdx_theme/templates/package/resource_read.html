@@ -1,6 +1,7 @@
 {% extends "package/base.html" %}
 
 {% set res = c.resource %}
+{% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
 
 {% block head_extras -%}
   {{ super() }}
@@ -20,6 +21,7 @@
 
 {% block pre_primary %}
   {% block resource %}
+
     <section class="module module-resource">
       <div class="module-content">
         <div class="actions">
@@ -31,7 +33,7 @@
             {% endif %}
             {% if res.url %}
               <li>
-                <a class="btn hdx-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.url }}">
+                <a class="btn hdx-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}
@@ -58,7 +60,7 @@
           {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
           {% block resource_read_url %}
             {% if res.url %}
-              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.url }}" title="{{ res.url }}">{{ res.url }}</a></p>
+              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ resource_dwd_url }}" title="{{ resource_dwd_url }}">{{ resource_dwd_url }}</a></p>
             {% endif %}
           {% endblock %}
           <div class="prose notes" property="rdfs:label">

@@ -14,16 +14,20 @@ $(document).ready(function() {
   map.setView([5, -70], 5);
 
   drawDistricts(map);
-  drawGraph1();
-  drawGraph2();
+  var graph1Table = $('#chart1-datastore-id').text().trim();
+  var graph2Table = $('#chart2-datastore-id').text().trim();
+  drawGraph1(graph1Table);
+  drawGraph2(graph2Table);
 });
 
 function spawnGraph1(jsondata, id, dateName, valueName){
 
 }
 
-function drawGraph1() {
-  var sql = 'SELECT "Year", "Persons" FROM "6b0175c6-1209-42ed-9026-8bbaca7ea310"';
+function drawGraph1(tableName) {
+  //var sql = 'SELECT "Year", "Persons" FROM "6b0175c6-1209-42ed-9026-8bbaca7ea310"';
+  var sql = 'SELECT "Year", "Persons" FROM "table_name_placeholder"';
+  sql = sql.replace('table_name_placeholder', tableName);
 
   var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
@@ -77,8 +81,10 @@ function drawGraph1() {
   });
 }
 
-function drawGraph2() {
-  var sql = 'SELECT "Date", "Persons" FROM "9e69d499-0b2b-4da6-9c61-10e453a57504"';
+function drawGraph2(tableName) {
+  //var sql = 'SELECT "Date", "Persons" FROM "9e69d499-0b2b-4da6-9c61-10e453a57504"';
+  var sql = 'SELECT "Date", "Persons" FROM "table_name_placeholder"';
+  sql = sql.replace('table_name_placeholder', tableName);
 
   var data = encodeURIComponent(JSON.stringify({sql: sql}));
 

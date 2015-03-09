@@ -1,5 +1,7 @@
+import json
 import logging
-import datetime
+# import datetime
+import os
 import requests
 
 
@@ -10,9 +12,9 @@ import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.model.misc as misc
-import ckan.plugins as plugins
-import ckan.lib.plugins as lib_plugins
+# import ckan.model.misc as misc
+# import ckan.plugins as plugins
+# import ckan.lib.plugins as lib_plugins
 import ckan.new_authz as new_authz
 import beaker.cache as bcache
 import ckan.model as model
@@ -20,6 +22,8 @@ import ckan.model as model
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
+import urllib
+import json
 
 
 from ckan.common import c, _
@@ -405,4 +409,43 @@ def _add_to_filter_list(src, param_name, filter_list):
             filter_list.append('{}={}'.format(param_name, src))
             
     return filter_list
+
+def hdx_get_shape_geojson(context, data_dict):
+    json_content = None
+    if 'shape_source_url' not in data_dict:
+        return json_content
+
+    tmp_dir = config.get('cache_dir', '/tmp/')
+    tmp_file = tmp_dir + 'hdx_shape_temp_file.zip'
+    try:
+        shape_source_url = data_dict.get('shape_source_url', None)
+        if shape_source_url is None:
+            return json_content
+        shape_src_response = requests.get(shape_source_url, allow_redirects=True)
+        urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
+        convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
+        shape_data = {'upload': open(tmp_file, 'rb')}
+        log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
+        try:
+            json_resp = requests.post(convert_url, files=shape_data)
+        except:
+            log.error("There was an error with the HTTP request")
+            raise
+        json_content = json.loads(json_resp.content)
+        os.remove(tmp_file)
+        if 'errors' in json_content and json_content['errors']:
+            log.info('There are errors in json file, return None')
+            return None
+    except:
+        print 'Error retrieving the json content, return None'
+        json_content = None
+    return json_content
+
+
+def hdx_get_json_from_resource(context, data_dict):
+    if 'url' not in data_dict:
+        return None
+    url = data_dict['url']
+    resource_response = requests.get(url, allow_redirects=True)
+    return json.loads(resource_response.content)
 

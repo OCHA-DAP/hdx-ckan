@@ -151,9 +151,22 @@ smtp.starttls = False
 #hdx.orgrequest.email = hdx.feedback@gmail.com
 hdx.orgrequest.sendmails = true
 hdx.cache.onstartup = true
+hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
 hdx.datapreview.url = //data.hdx.rwlabs.org/dataproxy
 hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.mapbox.baselayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43d4f5j/{z}/{x}/{y}.png
 hdx.mapbox.labelslayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/{z}/{x}/{y}.png
+
+## Chart / Top line num source settings
+
+# Ebola page
+hdx.ebola.datastore.top_line_num = a02903a9-022b-4047-bbb5-45127b591c85
+hdx.ebola.datastore.cases = c59b5722-ca4b-41ca-a446-472d6d824d01
+hdx.ebola.datastore.appeal = 93b92803-f9fa-45f4-bf72-73a8ab1d8922
+
+# Columbia page
+hdx.colombia.datastore.top_line_num = f78fe6f8-c363-4988-a847-b7c1c81ca233
+hdx.colombia.datastore.displaced = 1f56da93-6622-477f-9b55-b109def3f248
+hdx.colombia.datastore.access_constraints = 9e69d499-0b2b-4da6-9c61-10e453a57504

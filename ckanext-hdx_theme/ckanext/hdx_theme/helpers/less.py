@@ -26,7 +26,7 @@ def generate_custom_css_path(css_dest_dir, css_filename_base, timestamp, relativ
 
 class LessCompiler(object):
 
-    def __init__(self, less, css_dest_dir, css_filename_base, timestamp=''):
+    def __init__(self, less, css_dest_dir, css_filename_base, timestamp='', translate_func=None):
         '''
        :param less: less code that needs to be compiled
        :type less: unicode
@@ -37,6 +37,8 @@ class LessCompiler(object):
        :param timestamp: name of the css file to be generated to which the timestamp will be concatenated
        :type timestamp: string
        '''
+
+        self.translate_func = _ if translate_func is None else translate_func
 
 
         self.timestamp = timestamp
@@ -67,22 +69,24 @@ class LessCompiler(object):
 
                 self._write_string_to_fs(self.css_file_path, css)
 
+                log.info('CSS file created: ' + self.css_file_path)
+
                 return {
                     'success': True,
-                    'message': _('CSS compiled successfully.')
+                    'message': self.translate_func('CSS compiled successfully.')
                 }
             except Exception as e:
                 message = e.output if hasattr(e, 'output') else e.message
                 log.error(message)
                 return {
                     'success': False,
-                    'message': _('Exception occurred while parsing the less file:') + message
+                    'message': self.translate_func('Exception occurred while parsing the less file:') + message
                 }
 
         else:
             return {
                 'success': False,
-                'message': _('Path problem. Either "hdx.css.basepath" or "hdx.less.basepath" not set in ckan config.')
+                'message': self.translate_func('Path problem. Either "hdx.css.basepath" or "hdx.less.basepath" not set in ckan config.')
             }
 
     def _write_string_to_fs(self, filepath, contents):

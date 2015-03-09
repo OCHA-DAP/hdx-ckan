@@ -17,10 +17,9 @@ log = logging.getLogger(__name__)
 
 class ColombiaCrisisDataAccess(data_access.CrisisDataAccess):
 
-    def __init__(self):
+    def __init__(self, top_line_resource_id):
         self.resources_dict = {
             'top-line-numbers': {
-                'dataset': 'topline-colombia-figures',
-                'resource': 'topline-colombia-figures.csv'
+                'resource_id': top_line_resource_id
             }
         }
