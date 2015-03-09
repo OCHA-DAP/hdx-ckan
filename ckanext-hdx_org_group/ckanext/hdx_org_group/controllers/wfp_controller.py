@@ -42,7 +42,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         org_id = 'wfp'
 
         org_info = self.get_org(org_id)
-
+        
         org_info['topline_dataset'] = 'wfp-topline-figures'
         org_info['topline_resource'] = 'wfp-topline-figures.csv'
 
@@ -169,7 +169,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         top_line_src_dict = {
             'top-line-numbers': {
                 'dataset': top_line_num_dataset,
-                'resource': top_line_num_resource
+                'resource_id': top_line_num_resource
             }
         }
         datastore_access = data_access.CrisisDataAccess(top_line_src_dict)
