@@ -135,7 +135,7 @@
         data:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])}}",
     {% else %}
         datatype: "datastore",
-        data:"{{ h.url_for('datastore_search', resource_id=visualization['resource_id_1'])}}",
+        data:"/api/action/datastore_search?resource_id={{visualization['resource_id_1']}}&limit=10000000",
     {% endif %}
     whoFieldName:"{{visualization['who-column']}}",
     whatFieldName:"{{visualization['what-column']}}",
@@ -145,7 +145,7 @@
         geo:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])}}",
     {% else %}
         geotype: "datastore",
-        geo:"{{ h.url_for('datastore_search', resource_id=visualization['resource_id_2'])}}",
+        geo:"/api/action/datastore_search?resource_id={{visualization['resource_id_2']}}&limit=10000000",
     {% endif %}
     joinAttribute:"{{visualization['where-column-2']}}",
     x:"{{visualization['pos-x']}}",

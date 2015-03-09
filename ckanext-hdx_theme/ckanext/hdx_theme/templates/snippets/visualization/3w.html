@@ -29,8 +29,8 @@
 <div class="controls">
   <label class="control-label" for="visualization-select">Data Type</label>
           <select name="datatype_1" class="visualization_config">
-            <option value="filestore">Filestore (json)</option>
-            <option value="datastore">Datastore (via datapusher)</option>
+            <option value="filestore" {% if visualization['datatype_1'] == 'filestore' %}selected{% endif %}>Filestore (json)</option>
+            <option value="datastore" {% if visualization['datatype_1'] == 'datastore' %}selected{% endif %}>Datastore (via datapusher)</option>
           </select>
 </div>
 </div>
@@ -64,8 +64,8 @@
 <div class="controls">
   <label class="control-label" for="visualization-select">Data Type</label>
           <select name="datatype_2" class="visualization_config">
-            <option value="filestore">Filestore (json)</option>
-            <option value="datastore">Datastore (via datapusher)</option>
+            <option value="filestore" {% if visualization['datatype_2'] == 'filestore' %}selected{% endif %}>Filestore (json)</option>
+            <option value="datastore" {% if visualization['datatype_2'] == 'datastore' %}selected{% endif %}>Datastore (via datapusher)</option>
           </select>
 </div>
 </div>

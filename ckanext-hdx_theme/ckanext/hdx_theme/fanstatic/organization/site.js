@@ -115,15 +115,10 @@ var geomCall = $.ajax({
 
 $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
     if(config.datatype=='datastore'){
-
-    }else{
-
+        dataArgs[0] = dataArgs[0]['result']['records']
     }
-
     if(config.geotype=='datastore'){
-
-    }else{
-
+        geomArgs[0] = geomArgs[0]['result']['records']
     }
     var geom = geomArgs[0];
     geom.features.forEach(function(e){
