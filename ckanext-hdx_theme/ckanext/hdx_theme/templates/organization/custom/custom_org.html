@@ -13,7 +13,8 @@
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 <div class="col-xs-6">
-                    <div class="pull-left"><img class="org-icon" src="{{data.org_info.image_url}}" /></div>
+                    <div class="pull-left">
+                        {% if data.org_info.image_url %}<img class="org-icon" src="{{data.org_info.image_url}}" />{% endif %}</div>
                     <div class="pull-left org-title">{{data.org_info.display_name}}</div>
                 </div>
                 <div class="col-xs-6">
@@ -129,12 +130,24 @@
   var config = {
     title:"{{visualization['viz-title']}}",
     description:"{{visualization['viz-description']}}",
-    data:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])}}",
+    {% if visualization['datatype_1'] =='filestore' %}
+        datatype: "filestore",
+        data:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])}}",
+    {% else %}
+        datatype: "datastore",
+        data:"/api/action/datastore_search?resource_id={{visualization['resource_id_1']}}&limit=10000000",
+    {% endif %}
     whoFieldName:"{{visualization['who-column']}}",
     whatFieldName:"{{visualization['what-column']}}",
     whereFieldName:"{{visualization['where-column']}}",
-    geo:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])}}",
-    joinAttribute:"NAME_REF",
+    {% if visualization['datatype_2'] =='filestore' %}
+        geotype: "filestore",
+        geo:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])}}",
+    {% else %}
+        geotype: "datastore",
+        geo:"/api/action/datastore_search?resource_id={{visualization['resource_id_2']}}&limit=10000000",
+    {% endif %}
+    joinAttribute:"{{visualization['where-column-2']}}",
     x:"{{visualization['pos-x']}}",
     y:"{{visualization['pos-y']}}",
     zoom:"{{visualization['zoom']}}",

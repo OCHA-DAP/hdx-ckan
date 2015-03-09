@@ -114,6 +114,16 @@ var geomCall = $.ajax({
 //when both ready construct 3W
 
 $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
+    if(config.datatype=='datastore'){
+        dataArgs[0] = dataArgs[0]['result']['records']
+    }
+    if(config.geotype=='datastore'){
+        geomArgs[0] = geomArgs[0]['result']['records']
+    }
+    var geom = geomArgs[0];
+    geom.features.forEach(function(e){
+        e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
+    })
     generate3WComponent(config,dataArgs[0],geomArgs[0]);
 });
 
