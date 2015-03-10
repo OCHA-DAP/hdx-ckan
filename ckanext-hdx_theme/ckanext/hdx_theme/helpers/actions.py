@@ -2,6 +2,7 @@ import json
 import logging
 # import datetime
 import os
+import sys
 import requests
 
 
@@ -24,6 +25,7 @@ import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 import urllib
 import json
+import tempfile
 
 
 from ckan.common import c, _
@@ -416,29 +418,31 @@ def hdx_get_shape_geojson(context, data_dict):
         return json_content
 
     tmp_dir = config.get('cache_dir', '/tmp/')
-    tmp_file = tmp_dir + 'hdx_shape_temp_file.zip'
+    tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
     try:
         shape_source_url = data_dict.get('shape_source_url', None)
         if shape_source_url is None:
             return json_content
         shape_src_response = requests.get(shape_source_url, allow_redirects=True)
         urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
-        convert_url = data_dict.get('convert_url', u'http://ogre.adc4gis.com/convert')
+        ogre_url = config.get('hdx.ogre.url')
+        convert_url = data_dict.get('convert_url', ogre_url+'/convert')
         shape_data = {'upload': open(tmp_file, 'rb')}
-        log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
+        print('Calling Ogre to perform shapefile to geoJSON conversion...')
         try:
             json_resp = requests.post(convert_url, files=shape_data)
         except:
-            log.error("There was an error with the HTTP request")
+            print("There was an error with the HTTP request")
+            print(sys.exc_info()[0])
             raise
         json_content = json.loads(json_resp.content)
         os.remove(tmp_file)
         if 'errors' in json_content and json_content['errors']:
             log.info('There are errors in json file, return None')
             return None
-    except:
-        print 'Error retrieving the json content, return None'
-        json_content = None
+    except :
+        print "Error retrieving the json content"
+        print(sys.exc_info()[0])
     return json_content
 
 

@@ -153,6 +153,7 @@ hdx.orgrequest.sendmails = true
 hdx.cache.onstartup = true
 hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
+hdx.ogre.url = http://ogre:3000
 hdx.datapreview.url = //data.hdx.rwlabs.org/dataproxy
 hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png

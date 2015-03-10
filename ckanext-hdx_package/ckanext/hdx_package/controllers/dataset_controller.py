@@ -707,7 +707,8 @@ class DatasetController(PackageController):
 
     @staticmethod
     def _get_geojson(url):
-        urls_dict = {'shape_source_url': url, 'convert_url': u'http://ogre.adc4gis.com/convert'}
+        ogre_url = config.get('hdx.ogre.url')
+        urls_dict = {'shape_source_url': url, 'convert_url': ogre_url+'/convert'}
         g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
         return g_json
 
