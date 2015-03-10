@@ -92,7 +92,7 @@ def hdx_light_group_show(context, data_dict):
     return group_dict
 
 
-def compile_less(result, translate_func):
+def compile_less(result, translate_func=None):
     if 'extras' in result:
         base_color = '#0088FF'  # default value
         less_code_list = None
