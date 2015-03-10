@@ -14,6 +14,7 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.helpers as h
+import ckan.new_authz as new_authz
 
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access
@@ -303,6 +304,11 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
+
+        is_org_member = (context.get('user', None) and
+                           new_authz.has_user_permission_for_group_or_org(org_code, context.get('user'), 'read'))
+        if is_org_member:
+            context['ignore_capacity_check'] = True
 
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': org_code})
