@@ -50,11 +50,11 @@
                   {% endblock %}
                 </li>
               {% endif %}
-              {% if package.private %}
+              {# {% if package.private %}
                 <li>
                   <a>Request data</a>&nbsp;<span class="icon-lock" style="font-size: 15px; color:#007ce0"></span>
                 </li>
-              {% endif %}
+              {% endif %} #}
             </ul>
             {% endblock %}
           </div>
@@ -73,8 +73,9 @@
         </div>
         <div class="dataset-others">
           {% block others %}
+            <ul class="hdx-bs3 list-items dataset-resources unstyled">
             {% if package.resources and not hide_resources %}
-              <ul class="hdx-bs3 list-items dataset-resources unstyled">
+
                 {% for resource in h.dict_list_reduce(package.resources, 'format') %}
                   <li>
                     <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
@@ -86,32 +87,38 @@
                     {{ size }}
                   </li>
                 {% endif %}
-                {% set popular = package.tracking_summary and package.tracking_summary.recent >= 10 %}
-                {% set has_related_items = package.related_count and package.related_count > 0 %}
-                {% if geolocated or visualization or popular or has_related_items or package.subnational %}
-                  <li class="label-icons">
-                    {% if geolocated %}
-                      <!--
-                      <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                      -->
-                    {% endif %}
-                    {% if visualization %}
-                      <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                      <span class="icon-quality_checked" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-                    {% endif %}
-                    {% if has_related_items %}
-                      <span class="icon-gallery" title="{{ _('Gallery Item') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
-                    {% endif %}
-                    {% if package.subnational %}
-                      <span class="icon-subnational" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
-                    {% endif %}
-                    {% if popular %}
-                      <span class="icon-fire" title="{{ _('Popular: ') }} {{ package.tracking_summary.recent }}{{ _(' views') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
-                    {% endif %}
-                  </li>
-                {% endif %}
-              </ul>
             {% endif %}
+
+            {% set popular = package.tracking_summary and package.tracking_summary.recent >= 10 %}
+            {% set has_related_items = package.related_count and package.related_count > 0 %}
+            {% if geolocated or visualization or popular or has_related_items or package.subnational
+                    or package.private %}
+              <li class="label-icons">
+                {% if geolocated %}
+                  <!--
+                  <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                  -->
+                {% endif %}
+                {% if visualization %}
+                  <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                  <span class="icon-quality_checked" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                {% endif %}
+                {% if has_related_items %}
+                  <span class="icon-gallery" title="{{ _('Gallery Item') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                {% endif %}
+                {% if package.subnational %}
+                  <span class="icon-subnational" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                {% endif %}
+                {% if popular %}
+                  <span class="icon-fire" title="{{ _('Popular: ') }} {{ package.tracking_summary.recent }}{{ _(' views') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+                {% endif %}
+                {% if package.private %}
+                   <span class="icon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                {% endif %}
+              </li>
+            {% endif %}
+            </ul>
+
           {% endblock %}
         </div>
       </div>
