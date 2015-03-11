@@ -679,7 +679,7 @@ class DatasetController(PackageController):
         result = 0
         formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
         for resource in resources:
-            if 'format' in resource and resource['format'] in formats:
+            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
                 result = 1
                 return result
         return result
@@ -689,7 +689,7 @@ class DatasetController(PackageController):
         result = {}
         for resource in resources:
             if 'format' in resource:
-                if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and resource['shape'] != 'null':
+                if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
                     name = resource['name']
                     result[name] = json.loads(resource['shape'])
                 elif resource['format'] == GEOJSON_FORMAT:
