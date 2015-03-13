@@ -7,12 +7,14 @@ Created on Jan 13, 2015
 
 import logging
 import collections
+import json
 
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.helpers as h
+import ckan.new_authz as new_authz
 
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access
@@ -41,8 +43,29 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         org_id = 'wfp'
 
         org_info = self.get_org(org_id)
+        
+        org_info['topline_dataset'] = 'wfp-topline-figures'
+        org_info['topline_resource'] = 'wfp-topline-figures.csv'
 
-        top_line_items = self.get_top_line_numbers()
+        template_data = self.generate_template_data(org_info)
+
+
+        result = render(
+            'organization/custom/wfp.html', extra_vars=template_data)
+
+        return result
+
+    def generate_template_data(self, org_info):
+
+        org_id = org_info['name']
+
+        top_line_num_dataset = org_info.get('topline_dataset', None)
+        top_line_num_resource = org_info.get('topline_resource', None)
+
+        if top_line_num_dataset and top_line_num_resource:
+            top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
+        else:
+            top_line_items = []
 
         req_params = self.process_req_params(request.params)
 
@@ -84,12 +107,10 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
             },
             'errors': None,
             'error_summary': None,
+            'visualization_config': org_info.get('visualization_config','')
         }
 
-        result = render(
-            'organization/custom/wfp.html', extra_vars=template_data)
-
-        return result
+        return template_data
 
     def get_org(self, org_id):
         group_type = 'organization'
@@ -107,11 +128,22 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
             org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
 
+            json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
+            jsonstring = json_extra[0] if len(json_extra) == 1 else ''
+            top_line_src_info = self._get_top_line_src_info(jsonstring)
+
             org_dict = {
                 'id': result['id'],
                 'display_name': result.get('display_name', ''),
                 'description': result['group'].description,
-                'link': org_url[0] if len(org_url) == 1 else None
+                'name': result['name'],
+                'link': org_url[0] if len(org_url) == 1 else None,
+                'revision_id': result['group'].revision_id,
+                'topline_dataset': top_line_src_info[0],
+                'topline_resource': top_line_src_info[1],
+                'modified_at': result.get('modified_at', ''),
+                'image_url': result.get('image_url',''),
+                'visualization_config': result.get('visualization_config',''),
             }
 
             return org_dict
@@ -123,14 +155,22 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         return {}
 
-    def get_top_line_numbers(self):
+    def _get_top_line_src_info(self, jsonstring):
+        if jsonstring and jsonstring.strip():
+            json_dict = json.loads(jsonstring)
+            if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
+                return (json_dict['topline_dataset'], json_dict['topline_resource'])
+
+        return (None, None)
+
+    def get_top_line_numbers(self, top_line_num_dataset, top_line_num_resource):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
         top_line_src_dict = {
             'top-line-numbers': {
-                'dataset': 'wfp-topline-figures',
-                'resource': 'wfp-topline-figures.csv'
+                'dataset': top_line_num_dataset,
+                'resource_id': top_line_num_resource
             }
         }
         datastore_access = data_access.CrisisDataAccess(top_line_src_dict)
@@ -265,10 +305,15 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
+        is_org_member = (context.get('user', None) and
+                           new_authz.has_user_permission_for_group_or_org(org_code, context.get('user'), 'read'))
+        if is_org_member:
+            context['ignore_capacity_check'] = True
+
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': org_code})
         self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search(req_params.get('q',''), fq, facets, limit, page, sort_by,
+        (query, all_results) = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
         return query, all_results
@@ -298,7 +343,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         static_suffix = '...'
         body = ''
 
-        if tab== 'all':
+        if tab == 'all':
             body = hdx_helpers.hdx_show_singular_plural(dataset_count+indicator_count,
                                                         _('indicator / dataset'),
                                                         _('indicators & datasets'), True)
@@ -312,9 +357,12 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         response = static_prefix + " " + body + " " + static_suffix
         return response
 
-    def check_access(self, action_name, data_dict={}):
+    def check_access(self, action_name, data_dict=None):
+        if data_dict is None:
+            data_dict = {}
+
         context = {'model': model,
-               'user': c.user or c.author}
+                   'user': c.user or c.author}
         try:
             result = logic.check_access(action_name, context, data_dict)
         except logic.NotAuthorized:

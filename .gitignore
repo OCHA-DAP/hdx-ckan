@@ -42,3 +42,8 @@ ckan_deb/DEBIAN/prerm
 node_modules/
 
 .idea
+
+#custom theming for orgs
+ckanext-hdx_theme/ckanext/hdx_theme/less/tmp/*
+ckanext-hdx_theme/ckanext/hdx_theme/public/css/generated/*
+

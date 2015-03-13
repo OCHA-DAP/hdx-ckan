@@ -9,17 +9,18 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 from routes.mapper import SubMapper
 import pylons.config as config
+import ckan.model as model
 import ckan.model.package as package
 import ckan.model.license as license
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.helpers.caching as caching
-
-
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
+
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
 
 def run_on_startup():
@@ -27,6 +28,11 @@ def run_on_startup():
     if 'true' == cache_on_startup:
         _generate_license_list()
         caching.cached_get_group_package_stuff()
+
+    compile_less_on_startup = config.get('hdx.less_compile.onstartup', 'true')
+    if 'true' == compile_less_on_startup:
+        org_helper.recompile_everything({'model': model, 'session': model.Session,
+                   'user': 'hdx', 'ignore_auth': True})
 
 
 def _generate_license_list():
@@ -73,6 +79,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
+        map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
+                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_read')
         map.connect('shorten_url', '/package/tools/shorten',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')
         map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',

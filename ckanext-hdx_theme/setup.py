@@ -26,5 +26,7 @@ setup(
 	"""
         [ckan.plugins]
 	hdx_theme=ckanext.hdx_theme.plugin:HDXThemePlugin
+	[paste.paster_command]
+    custom-less-compile = ckanext.hdx_theme.cli.cli:CustomLessCompile
 	""",
 )

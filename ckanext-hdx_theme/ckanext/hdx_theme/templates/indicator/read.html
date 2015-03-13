@@ -15,7 +15,31 @@
 {% endblock %}
 
 {% block pre_primary %}
-  {% snippet "indicator/snippets/read_pre_primary.html", pkg = pkg %}
+  <div class="row paddingRowHack whiteBackground">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+      <div class="row">
+        <div class="col-xs-12 mTop35">
+          <h1 class="itemTitle">
+            {{ pkg.title or pkg.name }}
+             {% if pkg.state.startswith('draft') %}
+              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+            {% elif pkg.state.startswith('deleted') %}
+              <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
+            {% endif %}
+          </h1>
+        </div>
+      </div>
+      <!-- here -->
+      {% block pre_primary_content %}
+        {% snippet "indicator/snippets/read_pre_primary.html", pkg = pkg %}
+      {% endblock %}
+    </div>
+    <div class="col-xs-12">
+      <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
+      </div>
+    </div>
+  </div>
+
 {% endblock %}
 
 {% block secondary %}

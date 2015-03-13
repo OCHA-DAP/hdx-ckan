@@ -86,7 +86,7 @@ Example:
 
         {% block page_pagination %}
             {% if my_c.tab != 'all' %}
-                {{ my_c.page.pager(q=my_c.q) }}
+                {{ super() }}
             {% endif %}
         {% endblock %}
 
