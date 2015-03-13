@@ -17,7 +17,7 @@
 
   <div class="description">
     {% if res.description %}
-      <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ res.description }}</div></span>
+      <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>
     {% else %}
       <span class="empty">{{ _('No description for this resource') }}</span>
     {% endif %}
