@@ -38,7 +38,6 @@ suffix = '#datasets-section'
 
 
 class WfpController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
-
     def org_read(self):
         org_id = 'wfp'
 
@@ -55,6 +54,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         return result
 
+    @maintain_deprecated('Merged with Custom_org controller. Do not use')
     def generate_template_data(self, org_info):
 
         org_id = org_info['name']
@@ -112,6 +112,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         return template_data
 
+    @maintain_deprecated('Merged with Custom_org controller. Do not use')
     def get_org(self, org_id):
         group_type = 'organization'
 

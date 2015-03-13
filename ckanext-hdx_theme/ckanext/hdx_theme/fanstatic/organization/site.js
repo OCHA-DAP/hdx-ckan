@@ -4,7 +4,6 @@
 //geom is geojson file
 
 function generate3WComponent(config,data,geom){    
-    
     $('#title').html(config.title);
     $('#description').html(config.description);
 
@@ -94,6 +93,10 @@ function generate3WComponent(config,data,geom){
         .text('Activities');  
 
 }
+
+//load config
+
+var config = JSON.parse($('#visualization-data').val());
 
 //load 3W data
 
