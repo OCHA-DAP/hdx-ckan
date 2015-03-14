@@ -77,7 +77,8 @@ class LessCompiler(object):
                 }
             except Exception as e:
                 message = e.output if hasattr(e, 'output') else e.message
-                log.error(message)
+                message = message if message else str(e)
+                log.error('Exception while compiling less' + message)
                 return {
                     'success': False,
                     'message': self.translate_func('Exception occurred while parsing the less file:') + message
