@@ -110,8 +110,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='index')
         map.connect('organization_new', '/organization/new',
                     controller='organization', action='new')
-        map.connect('organization_read', '/organization/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='read')
         map.connect('organization_edit', '/organization/edit/{id}', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                   action='edit', ckan_icon='edit')
         map.connect('request_membership', '/organization/{org_id}/request_membership',
@@ -128,6 +126,11 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
         map.connect(
             '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
+
+        # since the pattern of organization_read is so general it needs to be the last
+        # otherwise it will override other /organization routes
+        map.connect('organization_read', '/organization/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='read')
 
         map.connect('browse_list', '/browse',
                     controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
