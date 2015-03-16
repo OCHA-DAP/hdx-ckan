@@ -455,5 +455,5 @@ a:focus,
 }
 /* END Style breadcrumbs */
 .offset1andHalf {
-  margin-left: 180px;
+  margin-left: 180px !important;
 }
