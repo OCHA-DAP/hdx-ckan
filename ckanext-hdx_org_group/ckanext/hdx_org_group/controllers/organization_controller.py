@@ -13,6 +13,7 @@ from ckan.common import c, request, _
 import ckan.lib.helpers as h
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 
 abort = base.abort
 render = base.render
@@ -101,7 +102,8 @@ class HDXOrganizationController(org.OrganizationController):
 
         #If custom_org set to true, redirect to the correct route
         if self.custom_org_test(c.group_dict['extras']):
-            self._redirect_to('custom_org_read', id=id)
+            Org = custom_org.CustomOrgController()
+            return Org.org_read(id)
         else:
             self._read(id, limit)
             return render(self._read_template(c.group_dict['type']))
