@@ -337,6 +337,7 @@ class CustomOrgController(org.HDXOrganizationController, simple_search_controlle
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
+            params['id'] = org_code
             return h.url_for('custom_org_read', **params) + suffix
 
         context = {'model': model, 'session': model.Session,
