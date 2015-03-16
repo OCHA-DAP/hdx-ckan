@@ -4,21 +4,31 @@ Created on Jan 14, 2015
 @author: alexandru-m-g
 '''
 
+import logging
 import pylons.config as config
 import json
 
 import ckan.logic as logic
+import ckan.plugins as plugins
+import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
+import ckan.lib.dictization.model_save as model_save
 import ckan.lib.dictization as d
+import ckan.lib.navl.dictization_functions
 import ckan.model as model
 import ckan.logic.action.update as update
+import ckan.lib.plugins as lib_plugins
+import ckan.lib.uploader as uploader
 
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as h
 
+log = logging.getLogger(__name__)
+
 get_action = logic.get_action
 check_access = logic.check_access
 _get_or_bust = logic.get_or_bust
+_validate = ckan.lib.navl.dictization_functions.validate
 
 NotFound = logic.NotFound
 
@@ -120,11 +130,155 @@ def compile_less(result, translate_func=None):
 
 
 def hdx_organization_update(context, data_dict):
-    result = update._group_or_org_update(context, data_dict, is_org=True)
+    result = hdx_group_or_org_update(context, data_dict, is_org=True)
 
     compile_less(result)
 
     return result
+
+def hdx_group_or_org_update(context, data_dict, is_org=False):
+    # Overriding default so that orgs can have multiple images
+    model = context['model']
+    user = context['user']
+    session = context['session']
+    id = _get_or_bust(data_dict, 'id')
+
+    group = model.Group.get(id)
+    context["group"] = group
+    if group is None:
+        raise NotFound('Group was not found.')
+
+    # get the schema
+    group_plugin = lib_plugins.lookup_group_plugin(group.type)
+    try:
+        schema = group_plugin.form_to_db_schema_options({'type':'update',
+                                               'api':'api_version' in context,
+                                               'context': context})
+    except AttributeError:
+        schema = group_plugin.form_to_db_schema()
+
+    try:
+        customization = json.loads(h.hdx_get_extras_element(group.extras,'customization'))
+    except:
+        customization = {'image_sq':'','image_rect':''}
+
+    upload1 = uploader.Upload('group', customization['image_sq'])
+    upload1.update_data_dict(data_dict, 'image_url_sq',
+                           'image_sq', 'clear_upload')
+
+    upload2 = uploader.Upload('group', customization['image_rect'])
+    upload2.update_data_dict(data_dict, 'image_url_rect',
+                           'image_rect', 'clear_upload')
+
+    data_dict['customization'] = json.loads(data_dict['customization'])
+    ##Rearrange things the way we need them
+    try:
+        data_dict['customization']['image_sq'] = data_dict['image_sq']
+    except KeyError:
+        data_dict['customization']['image_sq'] = ''
+
+    try:
+        data_dict['customization']['image_rect'] = data_dict['image_rect']
+    except KeyError:
+        data_dict['customization']['image_rect'] = ''
+
+    data_dict['customization'] = json.dumps(data_dict['customization'])
+
+    if is_org:
+        check_access('organization_update', context, data_dict)
+    else:
+        check_access('group_update', context, data_dict)
+
+    if 'api_version' not in context:
+        # old plugins do not support passing the schema so we need
+        # to ensure they still work
+        try:
+            group_plugin.check_data_dict(data_dict, schema)
+        except TypeError:
+            group_plugin.check_data_dict(data_dict)
+
+    data, errors = _validate(data_dict, schema, context)
+    log.debug('group_update validate_errs=%r user=%s group=%s data_dict=%r',
+              errors, context.get('user'),
+              context.get('group').name if context.get('group') else '',
+              data_dict)
+
+    if errors:
+        session.rollback()
+        raise ValidationError(errors)
+
+    rev = model.repo.new_revision()
+    rev.author = user
+
+    if 'message' in context:
+        rev.message = context['message']
+    else:
+        rev.message = _(u'REST API: Update object %s') % data.get("name")
+
+    # when editing an org we do not want to update the packages if using the
+    # new templates.
+    if ((not is_org)
+            and not converters.asbool(
+                config.get('ckan.legacy_templates', False))
+            and 'api_version' not in context):
+        context['prevent_packages_update'] = True
+    group = model_save.group_dict_save(data, context)
+
+    if is_org:
+        plugin_type = plugins.IOrganizationController
+    else:
+        plugin_type = plugins.IGroupController
+
+    for item in plugins.PluginImplementations(plugin_type):
+        item.edit(group)
+
+    if is_org:
+        activity_type = 'changed organization'
+    else:
+        activity_type = 'changed group'
+
+    activity_dict = {
+            'user_id': model.User.by_name(user.decode('utf8')).id,
+            'object_id': group.id,
+            'activity_type': activity_type,
+            }
+    # Handle 'deleted' groups.
+    # When the user marks a group as deleted this comes through here as
+    # a 'changed' group activity. We detect this and change it to a 'deleted'
+    # activity.
+    if group.state == u'deleted':
+        if session.query(ckan.model.Activity).filter_by(
+                object_id=group.id, activity_type='deleted').all():
+            # A 'deleted group' activity for this group has already been
+            # emitted.
+            # FIXME: What if the group was deleted and then activated again?
+            activity_dict = None
+        else:
+            # We will emit a 'deleted group' activity.
+            activity_dict['activity_type'] = 'deleted group'
+    if activity_dict is not None:
+        activity_dict['data'] = {
+                'group': dictization.table_dictize(group, context)
+                }
+        activity_create_context = {
+            'model': model,
+            'user': user,
+            'defer_commit': True,
+            'ignore_auth': True,
+            'session': session
+        }
+        get_action('activity_create')(activity_create_context, activity_dict)
+        # TODO: Also create an activity detail recording what exactly changed
+        # in the group.
+
+    upload1.upload(uploader.get_max_image_size())
+    upload2.upload(uploader.get_max_image_size())
+    if not context.get('defer_commit'):
+        model.repo.commit()
+
+
+    return model_dictize.group_dictize(group, context)
+
 
 def recompile_everything(context):
     orgs = get_action('organization_list')(context, {'all_fields': False})

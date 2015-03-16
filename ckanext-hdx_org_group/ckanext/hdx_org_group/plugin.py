@@ -109,7 +109,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('organizations_index', '/organization',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='index')
         map.connect('organization_new', '/organization/new',
-                    controller='organization', action='new')
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='new')
         map.connect('organization_edit', '/organization/edit/{id}', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                   action='edit', ckan_icon='edit')
         map.connect('request_membership', '/organization/{org_id}/request_membership',
@@ -191,7 +191,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             schema.update({'custom_loc': [tk.get_validator(
                 'ignore_missing'), tk.get_converter('convert_to_extras')]})
             schema.update({'customization': [tk.get_validator(
-            
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
             return schema
         else:
             return None
