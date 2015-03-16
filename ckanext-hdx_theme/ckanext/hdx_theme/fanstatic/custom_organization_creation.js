@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    $('.create-org header ul').hide();
 	$('#field-highlight-color').spectrum({
 		preferredFormat: "hex",
 		showInput: true,

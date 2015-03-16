@@ -68,6 +68,7 @@
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Interactive Data") }}</div>
+            <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
@@ -118,43 +119,6 @@
 
 {% block meta %}
       {{ super() }}
-
-    {% if data.org_info.visualization_config %}
-        {% set visualization = h.load_json(data.org_info.visualization_config) %}
-    {% else %}
-        {% set visualization = {} %}
-    {% endif %}
-
-  <script>
-  //Configuration object for interactive viz
-  var config = {
-    title:"{{visualization['viz-title']}}",
-    description:"{{visualization['viz-description']}}",
-    {% if visualization['datatype_1'] =='filestore' %}
-        datatype: "filestore",
-        data:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])}}",
-    {% else %}
-        datatype: "datastore",
-        data:"/api/action/datastore_search?resource_id={{visualization['resource_id_1']}}&limit=10000000",
-    {% endif %}
-    whoFieldName:"{{visualization['who-column']}}",
-    whatFieldName:"{{visualization['what-column']}}",
-    whereFieldName:"{{visualization['where-column']}}",
-    {% if visualization['datatype_2'] =='filestore' %}
-        geotype: "filestore",
-        geo:"{{ h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])}}",
-    {% else %}
-        geotype: "datastore",
-        geo:"/api/action/datastore_search?resource_id={{visualization['resource_id_2']}}&limit=10000000",
-    {% endif %}
-    joinAttribute:"{{visualization['where-column-2']}}",
-    x:"{{visualization['pos-x']}}",
-    y:"{{visualization['pos-y']}}",
-    zoom:"{{visualization['zoom']}}",
-    colors:{{h.dump_json(visualization.get('colors','')) | safe}}
-};
-
-  </script>
 {% endblock %}
 
 {% block custom_styles %}
