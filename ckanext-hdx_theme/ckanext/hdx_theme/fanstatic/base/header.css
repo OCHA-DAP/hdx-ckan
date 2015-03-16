@@ -176,8 +176,7 @@ a:focus,
   display: inline-block;
   vertical-align: middle;
 }
-.btn.hdx-btn.ga-preview,
-.btn.hdx-btn.ga-edit{
+.btn.hdx-btn.ga-preview {
   background-color: #888888;
   color: white;
   border: 0;
