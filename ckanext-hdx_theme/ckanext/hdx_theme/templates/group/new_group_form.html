@@ -37,6 +37,23 @@ overriding the form blocks depending on the current context
     </div>
   </div>
 
+  {% if c.userobj.sysadmin %}
+<div id="customization-trigger" class="control-group">
+      <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom location page") }}</label>
+     <div class="controls" style="display:inline-block">
+        <input type="checkbox" {% if custom_loc %}checked{% endif %} name="custom_loc" id="field-custom_loc" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+        </div>
+    </div>
+{% endif %}
+
+<div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+          2. {{ _('Custom Styles') }}
+        </h1>
+</div>
+</div>
+
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}
 
@@ -51,3 +68,5 @@ overriding the form blocks depending on the current context
 {% block delete_button %}
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}
+
+{% resource 'hdx_theme/custom_location.js' %}

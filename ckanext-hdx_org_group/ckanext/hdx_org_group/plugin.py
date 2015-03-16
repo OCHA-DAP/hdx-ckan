@@ -163,7 +163,12 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         schema.update({'hr_info_url': [
                       tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
         schema.update({'geojson': [tk.get_validator(
-            'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            'ignore_missing'), tk.get_converter('convert_to_extras')],
+        'custom_loc': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
+            'customization': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
+            })
         return schema
 
     def form_to_db_schema(self):
@@ -183,6 +188,10 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
                           tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
             schema.update({'geojson': [tk.get_converter(
                 'convert_from_extras'), tk.get_validator('ignore_missing')]})
+            schema.update({'custom_loc': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'customization': [tk.get_validator(
+            
             return schema
         else:
             return None
