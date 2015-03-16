@@ -1,10 +1,8 @@
 '''
-Created on Jan 13, 2015
+Created on Feb 18, 2015
 
 @author: alexandru-m-g
 '''
-
-
 import logging
 import collections
 import json
@@ -21,6 +19,7 @@ import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 import ckan.controllers.organization as org
+import ckanext.hdx_theme.helpers.less as less
 
 render = base.render
 abort = base.abort
@@ -36,27 +35,60 @@ log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
 
+class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
 
-class WfpController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
-    def org_read(self):
-        org_id = 'wfp'
+    def org_read(self, id):
 
-        org_info = self.get_org(org_id)
-        
-        org_info['topline_dataset'] = 'wfp-topline-figures'
-        org_info['topline_resource'] = 'wfp-topline-figures.csv'
+        org_info = self.get_org(id)
 
         template_data = self.generate_template_data(org_info)
 
+        css_dest_dir = '/organization/' + org_info['name']
+
+        template_data['style'] = {
+            'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
+        }
+
 
         result = render(
-            'organization/custom/wfp.html', extra_vars=template_data)
+            'organization/custom/custom_org.html', extra_vars=template_data)
 
         return result
 
-    @maintain_deprecated('Merged with Custom_org controller. Do not use')
-    def generate_template_data(self, org_info):
+    def assemble_viz_config(self, visualization):
+        if visualization['datatype_1'] =='filestore':
+            datatype = "filestore"
+            data = h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])
+        else:
+            datatype = "datastore"
+            data = "/api/action/datastore_search?resource_id="+visualization['resource_id_1']+"&limit=10000000"
+    
+        if visualization['datatype_2'] =='filestore':
+            geotype = "filestore"
+            geo = h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])
+        else:
+            geotype = "datastore"
+            geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
+    
+        if visualization['visualization-select'] == '3W-dashboard':
+            config = {'title':visualization['viz-title'],
+            'description':visualization['viz-description'],
+            'datatype': datatype,
+            'data': data,
+            'whoFieldName':visualization['who-column'],
+            'whatFieldName':visualization['what-column'],
+            'whereFieldName':visualization['where-column'],
+            'geotype': geotype,
+            'geo':geo,
+            'joinAttribute':visualization['where-column-2'],
+            'x':visualization['pos-x'],
+            'y':visualization['pos-y'],
+            'zoom':visualization['zoom'],
+            'colors':visualization.get('colors','')
+};
+        return json.dumps(config)
 
+    def generate_template_data(self, org_info):
         org_id = org_info['name']
 
         top_line_num_dataset = org_info.get('topline_dataset', None)
@@ -67,7 +99,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         else:
             top_line_items = []
 
-        req_params = self.process_req_params(request.params)
+        req_params = self.process_req_params(org_id, request.params)
 
         tab_results, all_results = self.get_dataset_search_results(
             org_id, request.params)
@@ -103,16 +135,16 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                     'edit': self.check_access('organization_update', {'id': org_info['id']}),
                     'view_members': allow_basic_user_info,
                     'request_membership': allow_req_membership
-                }
+                },
+                'visualization_config': self.assemble_viz_config(json.loads(org_info['visualization_config']))
             },
             'errors': None,
             'error_summary': None,
-            'visualization_config': org_info.get('visualization_config','')
+
         }
 
         return template_data
 
-    @maintain_deprecated('Merged with Custom_org controller. Do not use')
     def get_org(self, org_id):
         group_type = 'organization'
 
@@ -195,18 +227,18 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
 
         return tab
 
-    def process_req_params(self, params):
+    def process_req_params(self, org_id, params):
         req_params = {}
+        req_params['id'] = org_id
         accepted_params = ['sort', 'q', 'organization', 'tags',
                            'vocab_Topics', 'license_id', 'groups',
-                           'res_format', '_show_filters', 'ext_indicator']
+                           'res_format', '_show_filters', 'ext_indicator', 'id']
         for k, v in params.items():
             if k in accepted_params:
                 if k in req_params:
                     req_params[k].append(v)
                 else:
                     req_params[k] = [v]
-
         return req_params
 
     def get_facet_information(self, tab_results, all_results, tab, req_params):
@@ -266,7 +298,6 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
                             self._get_named_route(), **params_item_copy) + suffix
                         item['is_used'] = False
                 else:
-                    params_item_copy[code] = [item['name']]
                     item['filter_link'] = h.url_for(
                         self._get_named_route(), **params_item_copy) + suffix
                     item['is_used'] = False
@@ -300,7 +331,7 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
-            return h.url_for('wfp_read', **params) + suffix
+            return h.url_for('custom_org_read', **params) + suffix
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -320,13 +351,13 @@ class WfpController(org.OrganizationController, simple_search_controller.HDXSimp
         return query, all_results
 
     def _set_other_links(self, suffix='', other_params_dict=None):
-        super(WfpController, self)._set_other_links(
+        super(CustomOrgController, self)._set_other_links(
             suffix=suffix, other_params_dict=other_params_dict)
         c.other_links['advanced_search'] = h.url_for(
             'search', organization=other_params_dict['id'])
 
     def _get_named_route(self):
-        return 'wfp_read'
+        return 'custom_org_read'
 
     def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,
