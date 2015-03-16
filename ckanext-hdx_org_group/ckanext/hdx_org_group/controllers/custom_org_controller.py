@@ -164,7 +164,6 @@ class CustomOrgController(org.HDXOrganizationController, simple_search_controlle
             context['include_datasets'] = False
             result = get_action(
                 'hdx_light_group_show')(context, data_dict)
-            print result
             org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
 
             json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
