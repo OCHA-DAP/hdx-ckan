@@ -18,7 +18,7 @@ import ckanext.hdx_search.controllers.simple_search_controller as simple_search_
 import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
-import ckan.controllers.organization as org
+import ckanext.hdx_org_group.controllers.organization_controller as org
 import ckanext.hdx_theme.helpers.less as less
 
 render = base.render
@@ -35,12 +35,14 @@ log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
 
-class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
+class CustomOrgController(org.HDXOrganizationController, simple_search_controller.HDXSimpleSearchController):
 
     def org_read(self, id):
 
         org_info = self.get_org(id)
-
+        if not org_info['custom']:
+            self._redirect_to('organization_read', id=id)
+        
         template_data = self.generate_template_data(org_info)
 
         css_dest_dir = '/organization/' + org_info['name']
@@ -56,6 +58,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         return result
 
     def assemble_viz_config(self, visualization):
+        try:
+            visualization = json.loads(visualization)
+        except:
+            return "{}"
         if visualization['datatype_1'] =='filestore':
             datatype = "filestore"
             data = h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])
@@ -136,7 +142,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'view_members': allow_basic_user_info,
                     'request_membership': allow_req_membership
                 },
-                'visualization_config': self.assemble_viz_config(json.loads(org_info['visualization_config']))
+                'visualization_config': self.assemble_viz_config(org_info['visualization_config'])
             },
             'errors': None,
             'error_summary': None,
@@ -158,7 +164,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             context['include_datasets'] = False
             result = get_action(
                 'hdx_light_group_show')(context, data_dict)
-
             org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
 
             json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
@@ -169,6 +174,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'id': result['id'],
                 'display_name': result.get('display_name', ''),
                 'description': result['group'].description,
+                'custom':  self.custom_org_test(result['extras']),
                 'name': result['name'],
                 'link': org_url[0] if len(org_url) == 1 else None,
                 'revision_id': result['group'].revision_id,
