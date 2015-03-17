@@ -7,9 +7,14 @@ function generate3WComponent(config,data,geom){
     $('#title').html(config.title);
     $('#description').html(config.description);
 
-    var whoChart = dc.rowChart('#hdx-3W-who');
-    var whatChart = dc.rowChart('#hdx-3W-what');
-    var whereChart = dc.geoChoroplethChart('#hdx-3W-where');
+    var containerIdPrefix = "#hdx-3W-";
+    var whoContainerId = containerIdPrefix + 'who';
+    var whatContainerId = containerIdPrefix + 'what';
+    var whereContainerId = containerIdPrefix + 'where';
+
+    var whoChart = dc.rowChart(whoContainerId);
+    var whatChart = dc.rowChart(whatContainerId);
+    var whereChart = dc.geoChoroplethChart(whereContainerId);
 
     var cf = crossfilter(data);
 
@@ -22,7 +27,11 @@ function generate3WComponent(config,data,geom){
     var whereGroup = whereDimension.group();
     var all = cf.groupAll();
 
-    whoChart.width($('#hxd-3W-who').width()).height(400)
+    var whoWidth = $(whoContainerId).width();
+    var whatWidth = $(whatContainerId).width();
+    var whereWidth = $(whereContainerId).width();
+
+    whoChart.width(whoWidth).height(400)
             .dimension(whoDimension)
             .group(whoGroup)
             .elasticX(true)
@@ -35,7 +44,7 @@ function generate3WComponent(config,data,geom){
             .colorAccessor(function(d, i){return i%8;})
             .xAxis().ticks(5);
 
-    whatChart.width($('#hxd-3W-what').width()).height(400)
+    whatChart.width(whatWidth).height(400)
             .dimension(whatDimension)
             .group(whatGroup)
             .elasticX(true)
@@ -52,7 +61,7 @@ function generate3WComponent(config,data,geom){
             .dimension(cf)
             .group(all);
 
-    whereChart.width($('#hxd-3W-where').width()).height(400)
+    whereChart.width(whereWidth).height(400)
             .dimension(whereDimension)
             .group(whereGroup)
             .colors(['#DDDDDD', config.colors[3]])
@@ -74,80 +83,80 @@ function generate3WComponent(config,data,geom){
 
     dc.renderAll();
     
-    var g = d3.selectAll('#hdx-3W-who').select('svg').append('g');
+    var g = d3.selectAll(whoContainerId).select('svg').append('g');
     
     g.append('text')
         .attr('class', 'x-axis-label')
         .attr('text-anchor', 'middle')
-        .attr('x', $('#hdx-3W-who').width()/2)
+        .attr('x', whoWidth/2)
         .attr('y', 400)
         .text('Activities');
 
-    var g = d3.selectAll('#hdx-3W-what').select('svg').append('g');
+    var g = d3.selectAll(whatContainerId).select('svg').append('g');
     
     g.append('text')
         .attr('class', 'x-axis-label')
         .attr('text-anchor', 'middle')
-        .attr('x', $('#hdx-3W-what').width()/2)
+        .attr('x', whatWidth/2)
         .attr('y', 400)
         .text('Activities');  
 
 }
 
-//load config
+$(document).ready(
+    function(){
+        //load config
+        var config = JSON.parse($('#visualization-data').val());
 
-var config = JSON.parse($('#visualization-data').val());
+        //load 3W data
+        var dataCall = $.ajax({
+            type: 'GET',
+            url: config.data,
+            dataType: 'json',
+        });
 
-//load 3W data
+        //load geometry
+        var geomCall = $.ajax({
+            type: 'GET',
+            url: config.geo,
+            dataType: 'json',
+        });
 
-var dataCall = $.ajax({ 
-    type: 'GET', 
-    url: config.data, 
-    dataType: 'json',
-});
+        //when both ready construct 3W
+        $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
+            if(config.datatype=='datastore'){
+                dataArgs[0] = dataArgs[0]['result']['records']
+            }
+            if(config.geotype=='datastore'){
+                geomArgs[0] = geomArgs[0]['result']['records']
+            }
+            var geom = geomArgs[0];
+            geom.features.forEach(function(e){
+                e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
+            });
+            generate3WComponent(config,dataArgs[0],geomArgs[0]);
+        });
 
-//load geometry
+        /*
+         * Example of datastore query used previously.
+         *
+        var sql = 'SELECT "Indicator", "Date", "Country", value FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" ' +
+                'WHERE "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola deaths\' '+
+                'OR "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola cases\' '+
+                'ORDER BY "Date"';
 
-var geomCall = $.ajax({ 
-    type: 'GET', 
-    url: config.geo, 
-    dataType: 'json',
-});
+        var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
-//when both ready construct 3W
+        $.ajax({
+          type: 'POST',
+          dataType: 'json',
+          url: 'https://data.hdx.rwlabs.org/api/3/action/datastore_search_sql',
+          data: data,
+          success: function(data) {
 
-$.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
-    if(config.datatype=='datastore'){
-        dataArgs[0] = dataArgs[0]['result']['records']
+          }
+        });
+        */
     }
-    if(config.geotype=='datastore'){
-        geomArgs[0] = geomArgs[0]['result']['records']
-    }
-    var geom = geomArgs[0];
-    geom.features.forEach(function(e){
-        e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
-    })
-    generate3WComponent(config,dataArgs[0],geomArgs[0]);
-});
+);
 
-/*
- * Example of datastore query used previously.
- * 
-var sql = 'SELECT "Indicator", "Date", "Country", value FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" ' +
-        'WHERE "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola deaths\' '+
-        'OR "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola cases\' '+
-        'ORDER BY "Date"';
-
-var data = encodeURIComponent(JSON.stringify({sql: sql}));
-
-
-$.ajax({
-  type: 'POST',
-  dataType: 'json',
-  url: 'https://data.hdx.rwlabs.org/api/3/action/datastore_search_sql',
-  data: data,
-  success: function(data) {
-
-  }
-});
-*/
