@@ -56,6 +56,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         return result
 
     def assemble_viz_config(self, visualization):
+        try:
+            visualization = json.loads(visualization)
+        except:
+            return "{}"
         if visualization['datatype_1'] =='filestore':
             datatype = "filestore"
             data = h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])
@@ -136,7 +140,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'view_members': allow_basic_user_info,
                     'request_membership': allow_req_membership
                 },
-                'visualization_config': self.assemble_viz_config(json.loads(org_info['visualization_config']))
+                'visualization_config': self.assemble_viz_config(org_info['visualization_config'])
             },
             'errors': None,
             'error_summary': None,
@@ -331,6 +335,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
+            params['id'] = org_code
             return h.url_for('custom_org_read', **params) + suffix
 
         context = {'model': model, 'session': model.Session,
