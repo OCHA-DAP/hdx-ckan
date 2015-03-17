@@ -82,6 +82,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/widget/topline', controller='ckanext.hdx_theme.controllers.widget_topline:WidgetToplineController', action='show')
 
+        map.connect(
+            '/widget/3W', controller='ckanext.hdx_theme.controllers.widget_3W:Widget3WController', action='show')
+
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
         return map
