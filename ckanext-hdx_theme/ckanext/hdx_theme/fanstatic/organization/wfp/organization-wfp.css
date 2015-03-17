@@ -1,3 +1,4 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400);
 /*
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
@@ -86,29 +87,111 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
-/* Body Background */
-body {
-  background-size: cover;
-  background: #0088ff url("/images/homepage-new/map.png") fixed;
-  min-width: 1260px;
-  color: #888888;
-  font-family: 'Source Sans Pro', sans-serif;
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
 }
-/* END Body Background */
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
 /* Default link style */
 a,
 a:hover,
 a:focus,
 .dataset-heading a {
   color: #0088ff;
+  text-decoration: none;
 }
 /* END Default link style */
-.caret {
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 9px solid #0088ff;
-  vertical-align: top;
-}
 .pagination,
 .module .pagination {
   background: #eeeeee;
@@ -310,6 +393,15 @@ a:focus,
   letter-spacing: 0.03em;
 }
 /* END DropDown style */
+/* Body Background */
+body {
+  background-size: cover;
+  background: #0088ff url("/images/homepage-new/map.png") fixed;
+  min-width: 1260px;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+/* END Body Background */
 .newHeader .header-user-box,
 .newHeader .header-user-box > span > a {
   font-family: 'Gotham-Bold', sans-serif;
@@ -530,6 +622,14 @@ a:focus,
   padding: 0;
 }
 /* END Style breadcrumbs */
+/* Style Caret */
+.caret {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #0088ff;
+  vertical-align: top;
+}
+/* END Style Caret */
 .offset1andHalf {
   margin-left: 180px !important;
 }

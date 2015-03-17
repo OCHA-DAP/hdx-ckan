@@ -1,30 +1,8 @@
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400);
 /*
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
-/* Body Background */
-body {
-  background-size: cover;
-  background: #1ebfb3 url("/images/homepage-new/map.png") fixed;
-  min-width: 1260px;
-  color: #888888;
-  font-family: 'Source Sans Pro', sans-serif;
-}
-/* END Body Background */
-/* Default link style */
-a,
-a:hover,
-a:focus,
-.dataset-heading a {
-  color: #007ce0;
-}
-/* END Default link style */
-.caret {
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 9px solid #007ce0;
-  vertical-align: top;
-}
 .table-valign {
   display: table;
   position: relative;
@@ -33,6 +11,39 @@ a:focus,
   display: table-cell;
   vertical-align: middle;
 }
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+/* Default link style */
+a,
+a:hover,
+a:focus,
+.dataset-heading a {
+  color: #007ce0;
+  text-decoration: none;
+}
+/* END Default link style */
 .pagination,
 .module .pagination {
   background: #eeeeee;
@@ -234,6 +245,15 @@ a:focus,
   letter-spacing: 0.03em;
 }
 /* END DropDown style */
+/* Body Background */
+body {
+  background-size: cover;
+  background: #1ebfb3 url("/images/homepage-new/map.png") fixed;
+  min-width: 1260px;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+/* END Body Background */
 .newHeader .header-user-box,
 .newHeader .header-user-box > span > a {
   font-family: 'Gotham-Bold', sans-serif;
@@ -454,6 +474,14 @@ a:focus,
   padding: 0;
 }
 /* END Style breadcrumbs */
+/* Style Caret */
+.caret {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #007ce0;
+  vertical-align: top;
+}
+/* END Style Caret */
 .offset1andHalf {
   margin-left: 180px !important;
 }

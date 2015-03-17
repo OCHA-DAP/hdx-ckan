@@ -1,23 +1,9 @@
-/* Body Background */
-body {
-  background-size: cover;
-  background: #1ebfb3 url("/images/homepage-new/map.png") fixed;
-  min-width: 1260px;
-  color: #888888;
-  font-family: 'Source Sans Pro', sans-serif;
-}
-/* END Body Background */
 /* Default link style */
 a,
 a:hover,
 a:focus,
 .dataset-heading a {
   color: #007ce0;
+  text-decoration: none;
 }
 /* END Default link style */
-.caret {
-  border-left: 9px solid transparent;
-  border-right: 9px solid transparent;
-  border-top: 9px solid #007ce0;
-  vertical-align: top;
-}
