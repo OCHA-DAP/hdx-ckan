@@ -1,0 +1,29 @@
+{% extends "widget/widget.html" %}
+
+{% block content %}
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Interactive Data") }}</div>
+            <input type="hidden" id="visualization-data" value='{"geotype": "filestore", "description": "One Description Test for custom demo org", "joinAttribute": "DIST_NO", "colors": ["#ffb5ff", "#e09ee7", "#a371b8", "#855ba0", "#664488", "#472d71", "#291759", "#0a0041"], "whoFieldName": "Organisation", "whatFieldName": "Activity", "whereFieldName": "DIST_NO", "title": "One Test for custom demo org", "datatype": "filestore", "geo": "/dataset/custom-test-org-data/resource_download/2119ce9f-523b-46e3-b6ac-3d842db62d44", "zoom": "1500", "data": "/dataset/custom-test-org-data/resource_download/8e312caf-6755-4875-9b37-ebed76da90a5", "y": "3", "x": "55"}'>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
+                <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
+                <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% resource 'hdx_theme/bootstrap' %}
+    {% resource 'hdx_theme/custom-visualization' %}
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/widget/3W/3W.css' %}
+{% endblock %}
+
