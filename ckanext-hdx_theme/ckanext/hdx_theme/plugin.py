@@ -9,7 +9,8 @@ import version
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
-
+import inspect
+import os
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -38,11 +39,29 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IGroupController, inherit=True)
     plugins.implements(plugins.IMiddleware, inherit=True)
 
+    def _add_resource(cls, path, name):
+        '''OVERRIDE toolkit.add_resource in order to allow adding a resource library
+         without the dependency to the base/main resource library
+
+        See: toolkit.py:_add_resource(cls,path,name) for more details
+
+        '''
+        # we want the filename that of the function caller but they will
+        # have used one of the available helper functions
+        frame, filename, line_number, function_name, lines, index =\
+            inspect.getouterframes(inspect.currentframe())[1]
+
+        this_dir = os.path.dirname(filename)
+        absolute_path = os.path.join(this_dir, path)
+        import ckan.lib.fanstatic_resources
+        ckan.lib.fanstatic_resources.create_library(name, absolute_path, False)
+
+
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
-        toolkit.add_resource('fanstatic', 'hdx_theme')
+        self._add_resource('fanstatic', 'hdx_theme')
 
     def before_map(self, map):
         map.connect(
@@ -60,6 +79,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             '/count/test', controller='ckanext.hdx_theme.helpers.count:CountController', action='test')
         map.connect(
             '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
+        map.connect(
+            '/widget/topline', controller='ckanext.hdx_theme.controllers.widget_topline:WidgetToplineController', action='show')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
