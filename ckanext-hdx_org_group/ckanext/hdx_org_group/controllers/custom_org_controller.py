@@ -75,21 +75,21 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
     
         if visualization['visualization-select'] == '3W-dashboard':
-            config = {'title':visualization['viz-title'],
-            'description':visualization['viz-description'],
-            'datatype': datatype,
-            'data': data,
-            'whoFieldName':visualization['who-column'],
-            'whatFieldName':visualization['what-column'],
-            'whereFieldName':visualization['where-column'],
-            'geotype': geotype,
-            'geo':geo,
-            'joinAttribute':visualization['where-column-2'],
-            'x':visualization['pos-x'],
-            'y':visualization['pos-y'],
-            'zoom':visualization['zoom'],
-            'colors':visualization.get('colors','')
-};
+            config = {'title': visualization['viz-title'],
+                      'description': visualization['viz-description'],
+                      'datatype': datatype,
+                      'data': data,
+                      'whoFieldName': visualization['who-column'],
+                      'whatFieldName': visualization['what-column'],
+                      'whereFieldName': visualization['where-column'],
+                      'geotype': geotype,
+                      'geo': geo,
+                      'joinAttribute': visualization['where-column-2'],
+                      'x': visualization['pos-x'],
+                      'y': visualization['pos-y'],
+                      'zoom': visualization['zoom'],
+                      'colors': visualization.get('colors', '')
+            }
         return json.dumps(config)
 
     def generate_template_data(self, org_info):
@@ -302,6 +302,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                             self._get_named_route(), **params_item_copy) + suffix
                         item['is_used'] = False
                 else:
+                    params_item_copy[code] = [item['name']]
                     item['filter_link'] = h.url_for(
                         self._get_named_route(), **params_item_copy) + suffix
                     item['is_used'] = False
@@ -336,7 +337,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             params = params_nopage
             params['page'] = page
             params['id'] = org_code
-            return h.url_for('custom_org_read', **params) + suffix
+            return h.url_for('organization_read', **params) + suffix
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -362,7 +363,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             'search', organization=other_params_dict['id'])
 
     def _get_named_route(self):
-        return 'custom_org_read'
+        return 'organization_read'
 
     def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,
