@@ -32,7 +32,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_actions
         return {
             'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
-            'hdx_light_group_show': hdx_org_actions.hdx_light_group_show
+            'hdx_light_group_show': hdx_org_actions.hdx_light_group_show,
+            'organization_update': hdx_org_actions.hdx_organization_update
         }
 
     # def get_auth_functions(self):
@@ -56,6 +57,16 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
             'fts_id': [tk.get_validator('ignore_missing'),
                        tk.get_converter('convert_to_extras')],
+            'custom_org': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
+            'customization': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
+            'less': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
+            'visualization_config':[tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
+            'modified_at': [tk.get_validator('ignore_missing'),
+                       tk.get_converter('convert_to_extras')],
         })
         return schema
 
@@ -76,6 +87,16 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 {'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
             schema.update({'fts_id': [tk.get_validator(
                 'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'custom_org': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'customization': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'less': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'visualization_config': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({'modified_at': [tk.get_validator(
+                'ignore_missing'), tk.get_converter('convert_to_extras')]})
             return schema
         else:
             return None
@@ -87,6 +108,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
         map.connect('organizations_index', '/organization',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='index')
+        map.connect('organization_new', '/organization/new',
+                    controller='organization', action='new')
+        map.connect('organization_edit', '/organization/edit/{id}', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                  action='edit', ckan_icon='edit')
         map.connect('request_membership', '/organization/{org_id}/request_membership',
                     controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
         map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
@@ -102,13 +127,21 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect(
             '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
 
+        # since the pattern of organization_read is so general it needs to be the last
+        # otherwise it will override other /organization routes
+        map.connect('organization_read', '/organization/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='read')
+
         map.connect('browse_list', '/browse',
                     controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
         map.connect('group_new', '/group/new', controller='group', action='new')
         map.connect(
             'country_read', '/group/{id}', controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+
         map.connect(
             'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController', action='org_read')
+        #map.connect(
+        #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
 
         return map
 

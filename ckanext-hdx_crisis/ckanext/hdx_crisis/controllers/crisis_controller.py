@@ -5,6 +5,7 @@ Created on Nov 3, 2014
 '''
 
 import logging
+import pylons.config as config
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -32,11 +33,15 @@ class CrisisController(base.BaseController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        crisis_data_access = data_access.EbolaCrisisDataAccess()
-        crisis_data_access.fetch_data(context)
-        c.top_line_items = crisis_data_access.get_top_line_items()
+        top_line_res_id = config.get('hdx.ebola.datastore.top_line_num')
+        cases_res_id = config.get('hdx.ebola.datastore.cases')
+        appeal_res_id = config.get('hdx.ebola.datastore.appeal')
 
-        formatter = formatters.TopLineItemsWithDateFormatter(c.top_line_items)
+        crisis_data_access = data_access.EbolaCrisisDataAccess(top_line_res_id, cases_res_id, appeal_res_id)
+        crisis_data_access.fetch_data(context)
+        top_line_items = crisis_data_access.get_top_line_items()
+
+        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
         formatter.format_results()
 
         search_params = {'q': u'ebola'}
@@ -45,7 +50,16 @@ class CrisisController(base.BaseController):
 
         self._generate_other_links(search_params)
 
-        return render('crisis/crisis-ebola.html')
+        template_data = {
+            'data': {
+                'top_line_items': top_line_items,
+                'cases_datastore_id': cases_res_id
+            },
+            'errors': None,
+            'error_summary': None,
+        }
+
+        return render('crisis/crisis-ebola.html', extra_vars=template_data)
 
     def _generate_dataset_results(self, context, search_params, action_alias='show_crisis'):
         limit = 25

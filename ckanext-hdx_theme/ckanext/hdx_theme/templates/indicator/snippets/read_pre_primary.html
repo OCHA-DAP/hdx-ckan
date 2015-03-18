@@ -1,25 +1,8 @@
-  <div class="row paddingRowHack whiteBackground">
-
-
-
-    <div class="col-xs-12 paddingLeftHack paddingRightHack">
-      <div class="row">
-        <div class="col-xs-12 mTop35">
-          <h1 class="itemTitle">
-            {{ pkg.title or pkg.name }}
-             {% if pkg.state.startswith('draft') %}
-              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
-            {% elif pkg.state.startswith('deleted') %}
-              <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
-            {% endif %}
-          </h1>
-        </div>
-      </div>
-      <div class="row mTop20">
+        <div class="row mTop20">
         <div id="optionsContent" class="col-xs-3 hidden">
           <div class="row">
             <div class="col-xs-12">
-              <div class="pull-left">
+              <div class="pull-left control-order-by">
                 <label for="field-order-by" class="uppercase">{{ _('Options') }}</label>
                 <div class="dropdown orderDropdown">
                   <button id="location-dd" class="dropdown-toggle sspBold16" data-toggle="dropdown">
@@ -57,9 +40,9 @@
                 </select>
                 <a id="showOptions" href="#" onclick="">{{ _("Select countries") }}</a>
               </span>
-              
+
 		     {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True, classes='indicator-actions followButtonContainer pull-right' %}
-      
+
             </div>
           </div>
 
@@ -74,9 +57,3 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-xs-12">
-      <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
-      </div>
-    </div>
-  </div>

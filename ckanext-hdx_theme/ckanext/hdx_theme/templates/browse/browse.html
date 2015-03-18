@@ -119,7 +119,7 @@
 
       <div class="form-select control-group control-order-by pull-right">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-        <div class="dropdown orderDropdown">
+        <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
           <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
 	        <span class="dropdown-toggle-text">
               {% for label, value in sorting %}
@@ -128,6 +128,7 @@
 	        </span>
             <b class="caret"></b>
           </button>
+
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
               {% if label and value %}

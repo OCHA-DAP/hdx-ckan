@@ -1,14 +1,16 @@
-var sql = 'SELECT "Indicator", "Date", "Country", value FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" ' +
+var sql = 'SELECT "Indicator", "Date", "Country", value FROM "table_name_placeholder" ' +
         'WHERE "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola deaths\' '+
         'OR "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola cases\' '+
         'ORDER BY "Date"';
+
+sql = sql.replace('table_name_placeholder', $('#cases-datastore-id').text().trim());
 
 var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
 $.ajax({
   type: 'POST',
   dataType: 'json',
-  url: 'https://data.hdx.rwlabs.org/api/3/action/datastore_search_sql',
+  url: '/api/3/action/datastore_search_sql',
   data: data,
   success: function(data) {
       var processedData = processData(data.result.records);

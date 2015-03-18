@@ -17,12 +17,12 @@
 
   <div class="description">
     {% if res.description %}
-      <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ res.description }}</div></span>
+      <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>
     {% else %}
       <span class="empty">{{ _('No description for this resource') }}</span>
     {% endif %}
   </div>
-  
+
 	{% block resource_item_edit %}
 		{% if url_is_edit and can_edit %}
    			<div class="hdx-btn-group">
@@ -41,29 +41,36 @@
     {% if not url_is_edit %}
     {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
     <div class="hdx-btn-group">
-      {% block resource_item_explore_links %}
-      {% if res.can_be_previewed and is_not_zipped %}
-      <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
-        {{ _('Preview') }}
-      </a>
-      {% endif %}
+        {% block resource_item_explore_links %}
 
-      {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
-      <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
-        <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
-      </a>
+            {% if res.can_be_previewed and is_not_zipped %}
+                <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
+                    {{ _('Preview') }}
+                </a>
+            {% endif %}
 
-      {% set button_id = 'social-btn-' + res.id %}
-      {% set social_div_id = 'social-' + res.id %}
-      {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
+            {%  if can_edit %}
+                <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit">
+                    {{ _('Update') }}
+                </a>
+            {% endif %}
+
+            {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
+            <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
+                <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
+            </a>
+
+            {% set button_id = 'social-btn-' + res.id %}
+            {% set social_div_id = 'social-' + res.id %}
+            {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
 
 
-      {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
-          target_url=resource_dwd_url,
-          icon=true,
-          class="btn btn-secondary hdx-btn resource-url-analytics ga-share", button_id=button_id %}
+            {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
+              target_url=resource_dwd_url,
+              icon=true,
+              class="btn btn-secondary hdx-btn resource-url-analytics ga-share", button_id=button_id %}
 
-      {% endblock %}
+        {% endblock %}
     </div>
 
     {# <div class="dropdown btn-group">
