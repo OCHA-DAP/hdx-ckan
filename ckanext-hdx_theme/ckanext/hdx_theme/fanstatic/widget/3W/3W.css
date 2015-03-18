@@ -7,6 +7,3 @@ a:focus,
   text-decoration: none;
 }
 /* END Default link style */
-.widget-container {
-  width: 100% !important;
-}
