@@ -26,18 +26,25 @@ log = logging.getLogger(__name__)
 class BrowseController(base.BaseController):
 
     def index(self):
-        c.countries = json.dumps(self.get_countries())
-        c.organizations, c.organization_count = self.get_organizations()
+        user = c.user or c.author
+        c.countries = json.dumps(self.get_countries(user))
+
+        request_params = {
+            'sort_option': request.params.get('sort', 'title asc'),
+            'page': request.params.get('page', 1)
+        }
+        c.organizations, c.organization_count = \
+            self.get_organizations(user, request_params)
         c.topics = self.get_topics()
         c.topic_icons = self.get_topic_icons()
 
         return base.render('browse/browse.html')
 
-    def get_countries(self):
+    def get_countries(self, user):
 
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+                   'user': user, 'for_view': True,
+                   }
         dataset_count_dict = self._get_dataset_counts(context, 'dataset')
         indicator_count_dict = self._get_dataset_counts(context, 'indicator')
 
@@ -57,13 +64,12 @@ class BrowseController(base.BaseController):
 
         return all_countries_world_1st
 
-    def get_organizations(self):
+    def get_organizations(self, user, request_params):
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+                   'user': user, 'for_view': True,
+                }
 
-        sort_option = c.sort_by_selected = request.params.get(
-            'sort', 'title asc')
+        sort_option = request_params.get('sort_option', 'title asc')
 
         data_dict = {
             'all_fields': True,
@@ -72,7 +78,7 @@ class BrowseController(base.BaseController):
 
         all_orgs = get_action('organization_list')(context, data_dict)
 
-        all_orgs  = helper.sort_results_case_insensitive(all_orgs, sort_option)
+        all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
 
         def pager_url(q=None, page=None):
             if sort_option:
@@ -84,14 +90,14 @@ class BrowseController(base.BaseController):
                     '#organizationsSection'
             return url
 
-        c.page = h.Page(
+        page = h.Page(
             collection=all_orgs,
-            page=request.params.get('page', 1),
+            page=request_params.get('page', 1),
             url=pager_url,
             items_per_page=20
         )
 
-        return (c.page, len(all_orgs))
+        return (page, len(all_orgs))
 
     def get_topics(self):
         context = {'model': model, 'session': model.Session,

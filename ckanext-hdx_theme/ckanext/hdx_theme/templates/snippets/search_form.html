@@ -44,7 +44,6 @@
             </span>
             <b class="caret"></b>
           </button>
-          <input type="hidden" name="sort" value="{{sorting_selected}}"/>
 
           <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
             {% for label, value in sorting %}
@@ -54,18 +53,6 @@
             {% endfor %}
           </ul>
         </div>
-        <script>
-          $(function(){
-            $(".dropdown").on('click', 'li a', function(){
-              $(this).parents(".dropdown").find("button span").text($(this).text());
-              $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
-              //add original search query if applicable
-              if($("#preserve-search"))
-              	$("#preserve-search").val($('.searchInput').val());
-              $(this).parents("form").submit();
-            });
-          });
-        </script>
       </div>
     {% endif %}
   {% endblock %}

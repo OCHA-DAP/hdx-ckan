@@ -252,7 +252,8 @@ a:focus,
   display: inline-block;
   vertical-align: middle;
 }
-.btn.hdx-btn.ga-preview {
+.btn.hdx-btn.ga-preview,
+.btn.hdx-btn.ga-edit {
   background-color: #888888;
   color: white;
   border: 0;
@@ -735,4 +736,7 @@ ul.hdx-bs3 {
 }
 .page-header {
   margin-top: 0;
+}
+.facet-count a {
+  color: #0088ff;
 }

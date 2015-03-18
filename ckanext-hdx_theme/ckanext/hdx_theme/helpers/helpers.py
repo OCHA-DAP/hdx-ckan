@@ -271,6 +271,38 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
             res = ex[ret_key]
     return res
 
+def hdx_less_default():
+    return """@headerUserBackgroundColor: @blackColor;
+@headerNavBackgroundColor: #363636;
+@headerNavBorderColor: @grayColor;
+@headerNavSearchBorderColor: @extraLightGrayColor;
+@toolbarBackgroundColor: @lightGrayColor;
+
+@mainLinksColor: @whiteColor;
+
+@searchPlaceholderColor: @grayColor;
+@searchTextColor: @whiteColor;
+
+@bodyBackgroundColor: @wfpBlueColor;
+@navTabsActiveColor: @wfpBlueColor;
+@orderByDropdownColor: @wfpBlueColor;
+@defaultLinkColor: @wfpBlueColor;
+
+@paginationActiveBackground: @wfpBlueColor;
+
+@topLineItemNumberFontSize: 64px;
+
+
+
+@modalSubmitButtonBackgrColor: #FFFFFF;
+
+@modalSubmitButtonColor: #888888;
+
+@modalHeaderBackgroundColor: #EEEEEE;
+@modalFooterBackgroundColor: #EEEEEE;"""
+
+def load_json(obj, **kw):
+    return json.loads(obj, **kw)
 
 def hdx_group_followee_list():
 

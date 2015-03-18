@@ -225,13 +225,6 @@ function browse_by_menu() {
   }
 }
 
-function initSortingWidget() {
-  $(".dropdown").on('click', 'li a', function(){
-    $(this).parents(".dropdown").find("button span").text($(this).text());
-    $(this).parents(".dropdown").find("input[name='sort']").val($(this).attr("val"));
-      window.location = '/browse?sort='+$(this).attr("val")+'#organizationsSection';
-  });
-}
 (function() {
   //fixed page menu
   $(window).scroll(browse_by_menu);

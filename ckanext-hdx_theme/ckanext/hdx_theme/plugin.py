@@ -109,6 +109,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'methodology_bk_compat': hdx_helpers.methodology_bk_compat,
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
             'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
+            'load_json': hdx_helpers.load_json,
+            'hdx_less_default': hdx_helpers.hdx_less_default,
         }
 
     def get_actions(self):
@@ -124,9 +126,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             'hdx_user_show': hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values,
-            'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods
+            'hdx_get_shape_geojson': hdx_actions.hdx_get_shape_geojson,
+            'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
+            'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
-
         }
 
     def get_auth_functions(self):
