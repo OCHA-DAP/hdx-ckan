@@ -282,10 +282,14 @@ class DatasetController(PackageController):
                     dataset_id, resource_id)
 
             get_action('resource_update')(context, data)
-            if 'format' in data and data['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                data['shape'] = json.dumps(self._get_geojson(data['url']))
+            if 'format' in data:
+                if data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                    data['shape'] = json.dumps(self._get_geojson(data['url']))
+                if data['format'] == GEOJSON_FORMAT:
+                    data['shape'] = json.dumps(self._get_json_from_resource(data['url']))
                 if 'shape' in data and data['shape'] is not None:
                     get_action('resource_update')(context, data)
+
         else:
             result_dict = get_action('resource_create')(context, data)
 
@@ -296,8 +300,11 @@ class DatasetController(PackageController):
                 result_dict['perma_link'] = self._get_perma_link(
                     dataset_id, result_dict['id'])
                 get_action('resource_update')(context, result_dict)
-            if 'format' in result_dict and result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
+            if 'format' in result_dict:
+                if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                    result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
+                elif result_dict['format'] == GEOJSON_FORMAT:
+                    result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
                 if 'shape' in result_dict and result_dict['shape'] is not None:
                     get_action('resource_update')(context, result_dict)
 
@@ -692,16 +699,17 @@ class DatasetController(PackageController):
                 if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
                     name = resource['name']
                     result[name] = json.loads(resource['shape'])
-                elif resource['format'] == GEOJSON_FORMAT:
+                elif resource['format'] == GEOJSON_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
                     name = resource['name']
-                    result[name] = DatasetController._get_json_from_resource(resource)
+                   # result[name] = DatasetController._get_json_from_resource(resource)
+                    result[name] = json.loads(resource['shape'])
         return result
 
     @staticmethod
     def _get_json_from_resource(resource):
-        if 'url' not in resource:
+        if not resource:
             return None
-        urls_dict = {'url': resource['url']}
+        urls_dict = {'url': resource}
         g_json = get_action('hdx_get_json_from_resource')({}, urls_dict)
         return g_json
 
