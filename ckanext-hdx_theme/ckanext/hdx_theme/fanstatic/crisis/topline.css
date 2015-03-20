@@ -25,6 +25,8 @@
   letter-spacing: 0.01em;
   margin-bottom: 10px;
   color: #333333;
+  line-height: 20px;
+  height: 40px;
 }
 .topline .indicator-value {
   font-family: 'Gotham-Light', sans-serif;
