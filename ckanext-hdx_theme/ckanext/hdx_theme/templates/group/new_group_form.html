@@ -37,6 +37,15 @@ overriding the form blocks depending on the current context
     </div>
   </div>
 
+{% if h.hdx_get_extras_element(data.extras, value_key="customization") %}
+  {% set custom_loc = h.hdx_get_extras_element(data.extras, value_key="custom_loc") %}
+{% set customizations = h.load_json(h.hdx_get_extras_element(data.extras, value_key="customization")) %}
+
+{% else %}
+{% set custom_loc = 0 %}
+{% set customizations = {} %}
+{% endif %}
+
   {% if c.userobj.sysadmin %}
 <div id="customization-trigger" class="control-group">
       <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom location page") }}</label>
@@ -52,6 +61,14 @@ overriding the form blocks depending on the current context
           2. {{ _('Custom Styles') }}
         </h1>
 </div>
+{% snippet 'group/snippets/custom/topline.html',
+                            customizations=customizations, form=form %}
+
+{% snippet 'group/snippets/custom/map.html',
+                            customizations=customizations, form=form %}
+
+{% snippet 'group/snippets/custom/charts.html',
+                            customizations=customizations, form=form %}
 </div>
 
   {% if action == "edit" %}{{ super() }}{% endif %}
