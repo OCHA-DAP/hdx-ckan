@@ -11,6 +11,8 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
 import inspect
 import os
+import json
+
 
 # def run_on_startup():
 #     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
@@ -134,6 +136,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
             'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
             'load_json': hdx_helpers.load_json,
+            'json_dumps': json.dumps,
             'hdx_less_default': hdx_helpers.hdx_less_default,
         }
 

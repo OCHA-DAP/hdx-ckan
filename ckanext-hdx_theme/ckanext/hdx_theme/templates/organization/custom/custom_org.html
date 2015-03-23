@@ -67,7 +67,21 @@
 
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Interactive Data") }}</div>
+            {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger",
+                title="Embed visualization",
+                embed_url=data.visualization_embed_url,
+                data=data.visualization_config_url,
+                sizes=[{"width": "800", "height": "500"},
+                       {"width": "1000","height": "500"},
+                       {"width": "1200","height": "500"}]) }}
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div>
+                <div class="org-section-title pull-left">{{ _("Interactive Data") }}</div>
+                <div class="pull-right">
+                    <a id="embedPopupTrigger" href="#">{{ _("Embed Visualization") }}</a>
+                </div>
+            </div>
             <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -112,6 +126,7 @@
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/custom-org' %}
   {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/popup-embed' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search-facets' %}
   {% resource 'hdx_theme/custom-visualization' %}

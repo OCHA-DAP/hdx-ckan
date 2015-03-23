@@ -1,0 +1,73 @@
+{#
+Creates a popup used to give the user the embed options for a certain widget
+
+Depends on:
+    Fanstatic resource bundle "popup-embed", because "popup-embed" depends on "popup" so it will automatically
+    include that resource as well
+
+Example:
+     {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger"
+                title="Embed visualization",
+                embed_url="http://yourHost/embed/url",
+                data="param1=val1&param2=val2",
+                sizes=[{"width": "800", "height": "500"},
+                       {"width": "1000","height": "500"},
+                       {"width": "1200","height": "500"}]) }}
+#}
+
+{% extends "widget/popup/popup.html" %}
+
+{% block content%}
+    <div class="row">
+        <div class="col-xs-12 mTop20">
+            <div class="config" style="display: none;">
+                <div class="embed-trigger">
+                    {{ triggerId }}
+                </div>
+                <div class="embed-url">
+                    {{ embed_url }}
+                </div>
+                <div class="embed-param">
+                    {{ data }}
+                </div>
+            </div>
+            <input readonly class="embed-link" type="text"
+                   value=''/>
+        </div>
+        <div class="col-xs-12 mTop10">
+            <p>Preview:</p>
+        </div>
+        <div class="col-xs-12">
+            <div class="preview-container">
+
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <label>
+                Size
+                <select class="frame-size">
+                    {% for a in sizes %}
+                        <option {%if loop.index == 1%} selected="selected" {% endif %} value="{{ h.json_dumps(a) }}">{{a.width}}x{{a.height}}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <div class="extra-options">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        First option
+                    </label>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox">
+                        Second option
+                    </label>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
