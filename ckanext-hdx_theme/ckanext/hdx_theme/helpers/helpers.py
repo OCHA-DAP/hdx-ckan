@@ -290,8 +290,8 @@ def hdx_less_default():
 
 @paginationActiveBackground: @wfpBlueColor;
 
-@topLineItemNumberFontSize: 64px;
-
+@topLineItemNumberFontSize: 56px;
+@topLineItemUnitFontSize: 28px;
 
 
 @modalSubmitButtonBackgrColor: #FFFFFF;
