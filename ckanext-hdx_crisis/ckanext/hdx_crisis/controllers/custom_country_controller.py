@@ -25,7 +25,7 @@ get_action = logic.get_action
 log = logging.getLogger(__name__)
 
 
-class CountryController(group.GroupController, controllers.CrisisController):
+class CustomCountryController(group.GroupController, controllers.CrisisController):
 
     def read(self, id):
 
@@ -37,9 +37,13 @@ class CountryController(group.GroupController, controllers.CrisisController):
             'chart2_datastore_id': config.get('hdx.colombia.datastore.access_constraints')
         }
 
-        template_data = self.generate_template_data(group_info.get('name', id), custom_options)
+        template_data = self.generate_template_data(group_info, custom_options)
 
         return render('country/custom_country.html', extra_vars=template_data)
+
+    # Will soon be removed
+    def show(self):
+        return self.read(u'col')
 
     def get_group(self, id):
         context = {'model': model, 'session': model.Session,
@@ -53,7 +57,9 @@ class CountryController(group.GroupController, controllers.CrisisController):
 
         return group_info
 
-    def generate_template_data(self, org_name, custom_options):
+    def generate_template_data(self, group_info, custom_options):
+
+        country_name = group_info['name']
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -62,10 +68,10 @@ class CountryController(group.GroupController, controllers.CrisisController):
         top_line_resource_id = custom_options.get('top_line_resource_id', None)
         top_line_items = self.get_top_line_numbers(top_line_resource_id)
 
-        search_params = {u'groups': org_name}
+        search_params = {u'groups': country_name}
 
         self._generate_dataset_results(
-            context, search_params, action_alias='show_custom_country', other_params_dict={'id': org_name} )
+            context, search_params, action_alias='show_custom_country', other_params_dict={'id': country_name} )
 
         self._generate_other_links(search_params)
 
@@ -73,7 +79,8 @@ class CountryController(group.GroupController, controllers.CrisisController):
             'data': {
                 'top_line_items': top_line_items,
                 'chart1_datastore_id': custom_options.get('chart1_datastore_id', None),
-                'chart2_datastore_id': custom_options.get('chart2_datastore_id', None)
+                'chart2_datastore_id': custom_options.get('chart2_datastore_id', None),
+                'country_title': group_info.get('title', group_info['name'])
             },
             'errors': None,
             'error_summary': None,

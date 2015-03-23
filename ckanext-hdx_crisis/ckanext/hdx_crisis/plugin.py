@@ -17,7 +17,7 @@ class HDXCrisisPlugin(plugins.SingletonPlugin):
         map.connect('show_crisis', '/ebola',
                     controller='ckanext.hdx_crisis.controllers.crisis_controller:CrisisController', action='show')
         map.connect('show_country', '/group/col',
-                    controller='ckanext.hdx_crisis.controllers.country_controller:CountryController', action='show')
+                    controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController', action='show')
         map.connect('show_custom_country', '/custom_group/{id}',
-                    controller='ckanext.hdx_crisis.controllers.country_controller:CountryController', action='read')
+                    controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController', action='read')
         return map
