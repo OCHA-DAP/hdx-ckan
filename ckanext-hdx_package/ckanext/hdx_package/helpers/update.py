@@ -242,6 +242,7 @@ def hdx_package_update_metadata(context, data_dict):
     allowed_fields = ['indicator', 'package_creator',
                       'dataset_date',
                       'last_metadata_update_date',
+                      'dataset_source_short_name', 'source_code',
                       'indicator_type', 'indicator_type_code',
                       'more_info',
                       'last_data_update_date',
