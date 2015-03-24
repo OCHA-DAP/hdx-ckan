@@ -58,6 +58,12 @@
     line-height: 24px;
   }
 
+  .admin-menu{
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+  }
+
 }
 
 
@@ -102,4 +108,25 @@
 
 .facet-count a{
   color: @wfpBlueColor;
+}
+
+
+//custom dropdown toggle
+.dropdown-toggle-org{
+  background-color: @whiteColor;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: 1px solid @extraLightGrayColor;
+
+  .dropdown-toggle-text{
+    color: @grayColor;
+//    .sourceSansProFont(700, 14px);
+    .gothamBoldFont(16px);
+  }
+
+  .caret{
+    margin-top: 5px;
+    margin-left: 5px;
+    border-top-color: @grayColor;
+  }
 }

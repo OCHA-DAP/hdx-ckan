@@ -827,6 +827,11 @@ ul.hdx-bs3 {
   font-size: 16px;
   line-height: 24px;
 }
+.intro-section .admin-menu {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
 .org-section-title {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -867,4 +872,21 @@ ul.hdx-bs3 {
 }
 .facet-count a {
   color: #0088ff;
+}
+.dropdown-toggle-org {
+  background-color: #ffffff;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: 1px solid #eeeeee;
+}
+.dropdown-toggle-org .dropdown-toggle-text {
+  color: #888888;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+.dropdown-toggle-org .caret {
+  margin-top: 5px;
+  margin-left: 5px;
+  border-top-color: #888888;
 }

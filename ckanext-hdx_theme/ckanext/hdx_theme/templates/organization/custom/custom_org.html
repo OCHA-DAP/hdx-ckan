@@ -64,7 +64,28 @@
                                 <img src="http://www.wfp.org/sites/default/themes/wfp/images/logos/wfp_logo_dark.png"/>
                                 {% if data.org_info.image_url %}<img src="{{data.org_info.image_url}}" />{% endif %}
                             </div>
+                            <span class="admin-menu">
+                                <span class="dropdown">
+                                    <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
+                                        <span class="dropdown-toggle-text">ADMIN</span>
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
+                                                <span>{{ _('Manage members') }}</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
+                                                <span>{{ _('Edit') }}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </span>
                         </div>
+
                     </div>
                 </div>
             </div>
