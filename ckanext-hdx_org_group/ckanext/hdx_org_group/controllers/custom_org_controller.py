@@ -308,6 +308,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                             self._get_named_route(), **params_item_copy) + suffix
                         item['is_used'] = False
                 else:
+                    params_item_copy[code] = [item['name']]
                     item['filter_link'] = h.url_for(
                         self._get_named_route(), **params_item_copy) + suffix
                     item['is_used'] = False
@@ -342,7 +343,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             params = params_nopage
             params['page'] = page
             params['id'] = org_code
-            return h.url_for('custom_org_read', **params) + suffix
+            return h.url_for('organization_read', **params) + suffix
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -368,7 +369,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             'search', organization=other_params_dict['id'])
 
     def _get_named_route(self):
-        return 'custom_org_read'
+        return 'organization_read'
 
     def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,

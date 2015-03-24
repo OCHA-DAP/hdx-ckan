@@ -111,6 +111,8 @@ class FileDownloadController(storage.StorageController):
                 file_name, file_extension = os.path.splitext(res_name_encoded)
                 if file_extension == '' and resource.format:
                     file_name = file_name + '.' + resource.format
+                else:
+                    file_name = res_name_encoded
                 headers[
                     'Content-Disposition'] = 'inline; filename="{}"'.format(file_name)
             fapp = FileApp(filepath, headers=None, **headers)
