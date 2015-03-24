@@ -1,4 +1,3 @@
-
 {% extends "page-new.html" %}
 
 
@@ -12,36 +11,61 @@
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
-                <div class="col-xs-6">
-                    <div class="pull-left">
-                        {% if data.org_info.image_url %}<img class="org-icon" src="{{data.org_info.image_url}}" />{% endif %}</div>
-                    <div class="pull-left org-title">{{data.org_info.display_name}}</div>
-                </div>
-                <div class="col-xs-6">
-                    <span class="org-description">
-                        {{ data.org_info.description }}
-                    </span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 mTop20">
-                    {{ h.follow_button('group', data.org_info.id) }}
-                	{% if data.permissions.request_membership %}
-                        <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
-                            {{ _("Request Membership") }}
-                        </a>
-                        {% snippet 'organization/snippets/req_membership_new.html',
-                            modal_div_id='req-membership-div', modal_div_class='fade',
-                            form_action=data.links.request_membership %}
-                	{% endif %}
-                    <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
+                <div class="col-xs-8">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="org-title">{{data.org_info.display_name}}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mTop10">
+                            <ul class="mainLinks org-info-links">
+                                <li><a href="#">4 Members</a></li>
+                                <li><a href="#">6 Followers</a></li>
+                                <li><a href="{{ data.org_info.link }}">Visit Website</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span data-module="hdx_show_more" data-module-points="340" style="visibility: hidden;" class="org-description">
+                                {{ data.org_info.description }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mTop30">
+                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right" %}
+                            {{ h.follow_button('group', data.org_info.id) }}
+                            {% if data.permissions.request_membership %}
+                                <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
+                                    {{ _("Request Membership") }}
+                                </a>
+                                {% snippet 'organization/snippets/req_membership_new.html',
+                                    modal_div_id='req-membership-div', modal_div_class='fade',
+                                    form_action=data.links.request_membership %}
+                            {% endif %}
 
-                    {% if data.permissions.edit %}
-                        <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
-                    {% endif %}
-                    {% if data.permissions.view_members %}
-                        <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
-                    {% endif %}
+                            {#
+                            {% if data.permissions.edit %}
+                                <a href="{{ data.links.edit }}" class="btn hdx-btn org-btn">{{ _("Edit") }}</a>
+                            {% endif %}
+                            {% if data.permissions.view_members %}
+                                <a href="{{ data.links.members }}" class="btn hdx-btn org-btn">{{ _("Members") }}</a>
+                            {% endif %}
+                            #}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="pull-left">
+                        <div class="org-logo-large table-valign">
+                            <div class="table-valign-content">
+                                <img src="http://www.wfp.org/sites/default/themes/wfp/images/logos/wfp_logo_dark.png"/>
+                                {% if data.org_info.image_url %}<img src="{{data.org_info.image_url}}" />{% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -49,7 +73,11 @@
 
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Global Operations Data") }}</div>
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Global Operations Data") }}
+                </span>
+            </div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
@@ -75,11 +103,25 @@
                        {"width": "1000","height": "500"},
                        {"width": "1200","height": "500"}]) }}
         </div>
+
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div>
-                <div class="org-section-title pull-left">{{ _("Interactive Data") }}</div>
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Interactive Data") }}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="mTop20 mBottom20">
+                <div class="pull-left visualization-title">
+                    Visualisation title
+                </div>
                 <div class="pull-right">
-                    <a id="embedPopupTrigger" href="#">{{ _("Embed Visualization") }}</a>
+                    <ul class="mainLinks visualization-links">
+                        <li><a id="embedPopupTrigger" href="#">{{ _("Embed data") }}</a></li>
+                        <li><a href="#">{{ _("Save as image") }}</a></li>
+                    </ul>
                 </div>
             </div>
             <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
@@ -95,12 +137,13 @@
 
     <div class="row paddingRowHack whiteBackground">
         <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Data & Activity") }}</div>
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Data & Activity") }}
+                </span>
+            </div>
         </div>
-        <div>
-
-        </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
             <div class="row">
                 <div class="col-xs-3 section-left">
                     {% snippet 'search/snippets/search_facets.html', facets=data.search_results.facets %}

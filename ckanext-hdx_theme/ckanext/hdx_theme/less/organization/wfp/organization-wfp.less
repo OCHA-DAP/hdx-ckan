@@ -17,28 +17,45 @@
 
 
 .intro-section{
-  padding-top: 50px;
-  padding-bottom: 30px;
-
-  background-color: @extraLightGrayColor;
+  padding-top: 40px;
 
   .org-icon{
-//    margin-top: -15px; //
     height: 60px;
     margin-right: 20px;
   }
 
+  .org-logo-large{
+    width: 370px;
+    height: 200px;
+    background-color: @logoBackgroundColor;
+    text-align: center;
+    img {
+      max-height: 125px;
+      max-width: 300px;
+    }
+  }
+
   .org-title{
     width: 470px;
-
-    .gothamBoldFont(48px);
+    .gothamBookFont(36px);
     color: @wfpBlueColor;
     line-height: 1;
+
+  }
+
+  .mainLinks.org-info-links{
+    padding-left: 0;
+
+    > li > a{
+      .gothamBoldFont(14px);
+      color: @wfpBlueColor;
+      .letter-spacing-0;
+    }
   }
 
   .org-description{
-    .sourceSansProFont(400, 17px);
-    line-height: 30px;
+    .sourceSansProFont(400, 16px);
+    line-height: 24px;
   }
 
 }
@@ -58,9 +75,25 @@
   color: @wfpBlueColor;
 }
 
+.visualization-title{
+  .sourceSansProFont(700, 18px);
+  color: @wfpBlueColor;
+}
+
+.mainLinks.visualization-links{
+  padding-left: 0;
+
+  > li > a{
+    .sourceSansProFont(400,14px);
+    color: @wfpBlueColor;
+    .letter-spacing-0;
+    text-transform: none;
+  }
+}
+
 //Override follow button style
-.btn.hdx-btn.org-btn{
-  .btn-inverted;
+.btn.hdx-btn{
+  margin-right: 12px;
 }
 
 .page-header {
