@@ -129,3 +129,48 @@
     border-top-color: @grayColor;
   }
 }
+
+//floating logo
+#floatingLogo{
+  position: fixed;
+  top: 0px;
+  margin-left: -@containerMarginSize;
+  z-index: 1000;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+//  width: 300px;
+  height: 75px;
+
+  background-color: #ffffff;
+  .logo{
+    width: 75px;
+    height: 75px;
+    background-color: @wfpBlueColor;
+
+    img {
+      max-width: 75px;
+      max-height: 75px;
+    }
+  }
+
+  &:hover .title-share{
+    display: block;
+  }
+
+  .title-share{
+    display: none;
+    padding: 15px;
+    .gothamBookFont(12px);
+    color: @darkGrayColor;
+    line-height: 16px;
+    max-width: 225px;
+    width: 225px;
+
+    a{
+      .gothamBoldFont(12px);
+      color: @wfpBlueColor;
+      text-transform: uppercase;
+    }
+  }
+}

@@ -8,6 +8,21 @@
 
 
 {% block primary_content %}
+    <div id="floatingLogo" style="display: none;">
+        <div class="logo pull-left">
+            <!-- TODO: add correct image url after functionality is ready  -->
+            <img src="{{data.org_info.image_url}}"/>
+        </div>
+        <div class="title-share pull-left">
+            <div>{{data.org_info.display_name}}</div>
+
+            <a href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
+               data-module-social_wrapper_div_id="dataset_social_wrapper" title="" onclick="return false;"
+               data-original-title="Share">
+                {{ _("Share") }}
+            </a>
+        </div>
+    </div>
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
@@ -20,8 +35,8 @@
                     <div class="row">
                         <div class="col-xs-12 mTop10">
                             <ul class="mainLinks org-info-links">
-                                <li><a href="#">4 Members</a></li>
-                                <li><a href="#">6 Followers</a></li>
+                                <li><a href="{{ data.links.members }}">X Members</a></li>
+                                <li><a href="#">Y Followers</a></li>
                                 <li><a href="{{ data.org_info.link }}">Visit Website</a></li>
                             </ul>
                         </div>
@@ -61,7 +76,6 @@
                     <div class="pull-left">
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
-                                <img src="http://www.wfp.org/sites/default/themes/wfp/images/logos/wfp_logo_dark.png"/>
                                 {% if data.org_info.image_url %}<img src="{{data.org_info.image_url}}" />{% endif %}
                             </div>
                             <span class="admin-menu">
@@ -92,7 +106,7 @@
         </div>
     </div>
 
-    <div class="row paddingRowHack whiteBackground">
+    <div id="floatingLogoAnchor" class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">
