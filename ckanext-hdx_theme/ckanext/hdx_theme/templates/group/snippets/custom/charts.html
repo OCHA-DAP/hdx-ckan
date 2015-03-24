@@ -1,0 +1,138 @@
+  <div class="org-control-container">
+  <h2>{{_('Chart Configuration')}}</h2>
+</div>
+
+  <div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_title">Title</label>
+    <div class="controls ">
+    <input id="chart_title" type="text" name="chart_title" value="{{customizations['chart_title']}}" placeholder="" class="customizations_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Give this visualization a title.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_description">Description</label>
+    <div class="controls ">
+    <input id="chart_description" type="text" name="chart_description" value="{{customizations['chart_description']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Describe this visualization.</div>
+      </div>
+</div>
+
+
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="chart_type">Data Type</label>
+          <select id="chart-select" name="chart_type_1" class="customization_config">
+            <option value="bar chart" {% if customizations['chart_type_1'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
+            <option value="line chart" {% if customizations['line_type_1'] == 'line chart' %}selected{% endif %}>Line Chart</option>
+            <option value="multiple bar chart" {% if customizations['chart_type_1'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
+            <option value="multiple line chart" {% if customizations['chart_type_1'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
+          </select>
+</div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_x_label">X Axis Label</label>
+    <div class="controls ">
+    <input id="chart_x_label" type="text" name="chart_x_label" value="{{customizations['chart_x_label']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What data is on the X Axis?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_y_label">Y Axis Label</label>
+    <div class="controls ">
+    <input id="chart_y_label" type="text" name="chart_y_label" value="{{customizations['chart_y_label']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What data is on the Y Axis?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_resource_id_1">Resource ID</label>
+    <div class="controls ">
+    <input id="chart_resource_id_1" type="text" name="chart_resource_id_1" value="{{customizations['chart_resource_id_1']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What is the ID of the resource which has the data in it?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_x_column_1">X Column</label>
+    <div class="controls ">
+    <input id="chart_x_column_1" type="text" name="chart_x_column_1" value="{{customizations['chart_x_column_1']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Which column contains the data to for the X axis?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_y_column_1">Y Column</label>
+    <div class="controls ">
+    <input id="chart_y_column_1" type="text" name="chart_y_column_1" value="{{customizations['chart_y_column_1']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Which column contains the data to for the Y axis?</div>
+      </div>
+</div>
+
+<div id="second-line" {% if ['chart_type_1'] == 'bar chart' or ['chart_type_1'] == 'line chart' %}style="display:none;"{% endif %}>
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_resource_id_2">Resource ID</label>
+    <div class="controls ">
+    <input id="chart_resource_id_2" type="text" name="chart_resource_id_2" value="{{customizations['chart_resource_id_2']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What is the ID of the resource which has the data in it?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_x_column_2">X Column</label>
+    <div class="controls ">
+    <input id="chart_x_column_2" type="text" name="chart_x_column_2" value="{{customizations['chart_x_column_2']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Which column contains the data to for the X axis?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_y_column_2">Y Column</label>
+    <div class="controls ">
+    <input id="chart_y_column_2" type="text" name="chart_y_column_2" value="{{customizations['chart_y_column_2']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Which column contains the data to for the Y axis?</div>
+      </div>
+</div>
+</div>

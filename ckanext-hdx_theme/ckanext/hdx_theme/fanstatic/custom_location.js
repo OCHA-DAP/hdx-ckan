@@ -7,6 +7,14 @@ $(document).ready(function(){
 			$('#field-custom_loc').prop('checked', false);
 		}
 	});
+
+	$('#chart-select').change(function(){
+		if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
+			$('#second-line').show();
+		}else{
+			$('#second-line').hide();
+		}
+	})
 	//On form submit
 	$('.create-loc-btn').click(function(){
 		//Set timestamp

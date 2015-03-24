@@ -1,0 +1,58 @@
+<div class="org-control-container">
+<h2>{{_('Map Configuration')}}</h2>
+</div>
+
+<div class="row" style="padding-left:25px;">
+<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+  <h3>Map Labels</h3>
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="map-select">Data Type</label>
+          <select name="map_datatype_1" class="customization_config">
+            <option value="filestore" {% if customizations['map_datatype_1'] == 'filestore' %}selected{% endif %}>Filestore (json)</option>
+            <option value="datastore" {% if customizations['map_datatype_1'] == 'datastore' %}selected{% endif %}>Datastore (via datapusher)</option>
+          </select>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_dataset_id_1">Dataset ID</label>
+          <input type="text" name='map_dataset_id_1' id='map_dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='customization_config' value="{{customizations['map_dataset_id_1']}}"/>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_resource_id_1">Resource ID</label>
+          <input type="text" name='map_resource_id_1' id='map_resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='customization_config' value="{{customizations['map_resource_id_1']}}"/>
+</div>
+</div>
+
+
+</div>
+<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+   <h3>Map Bounderies</h3>
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="map-select">Data Type</label>
+          <select name="map_datatype_2" class="customization_config">
+            <option value="filestore" {% if customizations['map_datatype_2'] == 'filestore' %}selected{% endif %}>Filestore (json)</option>
+            <option value="datastore" {% if customizations['map_datatype_2'] == 'datastore' %}selected{% endif %}>Datastore (via datapusher)</option>
+          </select>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_dataset_id_2">Dataset ID</label>
+          <input type="text" name='map_dataset_id_2' id='map_dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='customization_config' value="{{customizations['map_dataset_id_2']}}"/>
+</div>
+</div>
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_resource_id_2">Resource ID</label>
+          <input type="text" name='map_resource_id_2' id='map_resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='customization_config' value="{{customizations['map_resource_id_2']}}"/>
+</div>
+</div>
+
+</div>
+
+</div>
