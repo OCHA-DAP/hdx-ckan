@@ -20,6 +20,8 @@ import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 import ckan.controllers.organization as org
 import ckanext.hdx_theme.helpers.less as less
+from urllib import urlencode
+from pylons import config
 
 render = base.render
 abort = base.abort
@@ -75,22 +77,22 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
     
         if visualization['visualization-select'] == '3W-dashboard':
-            config = {'title': visualization['viz-title'],
-                      'description': visualization['viz-description'],
-                      'datatype': datatype,
-                      'data': data,
-                      'whoFieldName': visualization['who-column'],
-                      'whatFieldName': visualization['what-column'],
-                      'whereFieldName': visualization['where-column'],
-                      'geotype': geotype,
-                      'geo': geo,
-                      'joinAttribute': visualization['where-column-2'],
-                      'x': visualization['pos-x'],
-                      'y': visualization['pos-y'],
-                      'zoom': visualization['zoom'],
-                      'colors': visualization.get('colors', '')
-            }
-        return json.dumps(config)
+            config = {'title':visualization['viz-title'],
+                'description':visualization['viz-description'],
+                'datatype': datatype,
+                'data': data,
+                'whoFieldName':visualization['who-column'],
+                'whatFieldName':visualization['what-column'],
+                'whereFieldName':visualization['where-column'],
+                'geotype': geotype,
+                'geo':geo,
+                'joinAttribute':visualization['where-column-2'],
+                'x':visualization['pos-x'],
+                'y':visualization['pos-y'],
+                'zoom':visualization['zoom'],
+                'colors':visualization.get('colors','')
+            };
+        return config
 
     def generate_template_data(self, org_info):
         org_id = org_info['name']
@@ -120,6 +122,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         allow_basic_user_info = self.check_access('hdx_basic_user_info')
         allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
 
+        viz_config = self.assemble_viz_config(org_info['visualization_config'])
         template_data = {
             'data': {
                 'org_info': org_info,
@@ -140,7 +143,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'view_members': allow_basic_user_info,
                     'request_membership': allow_req_membership
                 },
-                'visualization_config': self.assemble_viz_config(org_info['visualization_config'])
+                'visualization_config': json.dumps(viz_config),
+                'visualization_config_url': urlencode(viz_config, True),
+                'visualization_embed_url': config.get('ckan.site_url', '').strip() + "/widget/3W"
+
             },
             'errors': None,
             'error_summary': None,

@@ -3,6 +3,7 @@
  * Please edit the LESS files
  */
 @import "variables";
+@import "fonts";
 @import "base";
 @import "mixins";
 
@@ -27,6 +28,20 @@
 @toolbarHeight: 20px;
 
 @mainLinksColor: @darkGrayColor;
+
+@bodyBackgroundColor: @greenColor;
+@bodyBackgroundUrl: "@{imagePath}/homepage-new/map.png";
+
+
+/* Body Background */
+    body {
+      background-size: cover;
+      background: @bodyBackgroundColor url(@bodyBackgroundUrl) fixed;
+      min-width: 1260px;
+      color: @grayColor;
+      font-family: @sourceSansProFont;
+    }
+/* END Body Background */
 
 .newHeader{
   .header-user-box, .header-user-box > span > a {
@@ -279,6 +294,15 @@
   }
 }
 /* END Style breadcrumbs */
+
+/* Style Caret */
+.caret{
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 9px solid @defaultLinkColor;
+    vertical-align: top;
+}
+/* END Style Caret */
 
 //special offset hack class
 .offset1andHalf{

@@ -7,3 +7,8 @@ a:focus,
   text-decoration: none;
 }
 /* END Default link style */
+body {
+  margin: 1px 0 0;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}

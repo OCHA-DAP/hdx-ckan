@@ -1,0 +1,16 @@
+{% extends "widget/widget.html" %}
+
+{% block content %}
+    {{ h.snippet('crisis/snippets/topline.html', title=title, value=formatted_value, unit=units,
+        notes=notes, sparkline_json=sparklines_json, source=source,
+        source_link=source_link, explore=explore, latest_date=latest_date) }}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/crisis/topline.css' %}
+{% endblock %}
