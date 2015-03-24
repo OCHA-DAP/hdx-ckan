@@ -17,6 +17,11 @@
   						action='show', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
+{% block crisis_map %}
+    <div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
+    {{ super() }}
+{% endblock %}
+
 {% block crisis_data %}
   <div class="row mTop25">
     <div class="col-xs-5">
@@ -36,14 +41,16 @@
     </div>
     <div class="col-xs-7">
       <div class="row">
-        <div id="chart1-datastore-id" style="display: none">{{ data.chart1_datastore_id }}</div>
+        <div id="chart1-datastore-id" style="display: none">{{ data.charts.chart1.sources[0].datastore_id }}</div>
+        <div id="chart1-configuration" style="display: none">{{ h.dump_json(data.charts.chart1) }}</div>
         <div class="col-xs-12 graph-title">
           Number of Internally Displaced People <span>OCHA - <a href="/dataset/idps-data-by-year">Data</a></span>
         </div>
         <div class="col-xs-12">
           <div id="graph1"></div>
         </div>
-        <div id="chart2-datastore-id" style="display: none">{{ data.chart2_datastore_id }}</div>
+        <div id="chart2-datastore-id" style="display: none">{{ data.charts.chart2.sources[0].datastore_id }}</div>
+        <div id="chart2-configuration" style="display: none">{{ h.dump_json(data.charts.chart2) }}</div>
         <div class="col-xs-12 graph-title">
           Number of People with Access Constraints <span>OCHA - <a href="/dataset/restricciones-de-acceso">Data</a></span>
         </div>

@@ -31,13 +31,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         group_info = self.get_group(id)
 
-        custom_options = {
-            'top_line_resource_id': config.get('hdx.colombia.datastore.top_line_num'),
-            'chart1_datastore_id': config.get('hdx.colombia.datastore.displaced'),
-            'chart2_datastore_id': config.get('hdx.colombia.datastore.access_constraints')
-        }
-
-        template_data = self.generate_template_data(group_info, custom_options)
+        template_data = self.generate_template_data(group_info)
 
         return render('country/custom_country.html', extra_vars=template_data)
 
@@ -57,7 +51,52 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         return group_info
 
-    def generate_template_data(self, group_info, custom_options):
+    def _get_top_line_datastore_id(self, group_info):
+        return config.get('hdx.colombia.datastore.top_line_num')
+
+    def _get_charts_config(self, group_info):
+        return {
+            'chart1': {
+                'title': 'Sample title',
+                'description': 'Sample description',
+                'type': 'bar-chart',
+                'title_x': 'Sample title x-axis',
+                'title_y': 'Sample title y-axis',
+                'sources': [
+                    {
+                        'datastore_id': config.get('hdx.colombia.datastore.displaced'),
+                        'description': 'Source description',
+                        'column_x': 'column_name_x',
+                        'column_y': 'column_name_y'
+                    }
+                ]
+            },
+            'chart2': {
+                'title': 'Sample title',
+                'description': 'Sample description',
+                'type': 'bar-chart',
+                'title_x': 'Sample title x-axis',
+                'title_y': 'Sample title y-axis',
+                'sources': [
+                    {
+                        'datastore_id': config.get('hdx.colombia.datastore.access_constraints'),
+                        'description': 'Source description',
+                        'column_x': 'column_name_x',
+                        'column_y': 'column_name_y'
+                    }
+                ]
+            }
+        }
+
+    def _get_maps_config(self, group_info):
+        return {
+            'boundries_datastore_id': 'boundries_datastore_id',
+            'boundries_join_column': 'boundries_join_column',
+            'facts_datastore_id': 'facts_datastore_id',
+            'facts_join_column': 'facts_join_column'
+        }
+
+    def generate_template_data(self, group_info):
 
         country_name = group_info['name']
 
@@ -65,7 +104,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        top_line_resource_id = custom_options.get('top_line_resource_id', None)
+        top_line_resource_id = self._get_top_line_datastore_id(group_info)
         top_line_items = self.get_top_line_numbers(top_line_resource_id)
 
         search_params = {u'groups': country_name}
@@ -77,10 +116,10 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         template_data = {
             'data': {
+                'country_title': group_info.get('title', group_info['name']),
                 'top_line_items': top_line_items,
-                'chart1_datastore_id': custom_options.get('chart1_datastore_id', None),
-                'chart2_datastore_id': custom_options.get('chart2_datastore_id', None),
-                'country_title': group_info.get('title', group_info['name'])
+                'charts': self._get_charts_config(group_info),
+                'map': self._get_maps_config(group_info)
             },
             'errors': None,
             'error_summary': None,
