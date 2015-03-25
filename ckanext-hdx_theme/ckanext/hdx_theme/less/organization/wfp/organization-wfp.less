@@ -46,10 +46,19 @@
   .mainLinks.org-info-links{
     padding-left: 0;
 
-    > li > a{
+    > li > a {
       .gothamBoldFont(14px);
-      color: @wfpBlueColor;
       .letter-spacing-0;
+      color: @wfpBlueColor;
+
+      &.disabled{
+        color: @blackColor;
+        cursor: default;
+
+        &:after{
+          color: @wfpBlueColor;
+        }
+      }
     }
   }
 

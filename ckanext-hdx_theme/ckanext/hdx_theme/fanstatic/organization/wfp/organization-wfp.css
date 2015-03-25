@@ -818,8 +818,15 @@ ul.hdx-bs3 {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #0088ff;
   letter-spacing: 0;
+  color: #0088ff;
+}
+.intro-section .mainLinks.org-info-links > li > a.disabled {
+  color: #000000;
+  cursor: default;
+}
+.intro-section .mainLinks.org-info-links > li > a.disabled:after {
+  color: #0088ff;
 }
 .intro-section .org-description {
   font-family: 'Source Sans Pro', sans-serif;
