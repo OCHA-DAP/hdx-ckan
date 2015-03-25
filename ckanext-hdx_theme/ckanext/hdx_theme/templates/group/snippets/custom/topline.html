@@ -9,9 +9,16 @@
       </div>
 </div>
 #}
+
 <div class="org-control-container">
-{{ form.input('topline_resource', label=_('Resource with Topline Numbers'), id='field-topline-resource', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="topline_resource">Resource with Topline Numbers</label>
+    <div class="controls ">
+    <input id="topline_resource" type="text" name="topline_resource" value="{{customizations['topline_resource']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
       <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
+        <div class="org-info-label">{_('The id of the resource that topline figures have been uploaded to.')}}</div>
       </div>
 </div>
+

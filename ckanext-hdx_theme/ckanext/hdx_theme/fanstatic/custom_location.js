@@ -37,14 +37,14 @@ $(document).ready(function(){
 					chart1[$(this).attr('name')] = this.value;
 			});
 
-			charts.append(chart1);
+			charts.push(chart1);
 
 			var chart2 = {}
 			$('#chart2 .chart_config').each(function(){
 				chart2[$(this).attr('name')] = this.value;
 			});
 
-			charts.append(chart2);
+			charts.push(chart2);
 
 			customization['charts'] = charts;
 			customization['map'] = map;

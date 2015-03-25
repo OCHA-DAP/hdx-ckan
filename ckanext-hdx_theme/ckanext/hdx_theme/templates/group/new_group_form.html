@@ -55,7 +55,7 @@ overriding the form blocks depending on the current context
     </div>
 {% endif %}
 
-<div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
+<div id="customization-fields" {% if not custom_loc %}style="display:none"{% endif %}>
 <div class="org-control-container">
   <h1 class="h1-title uppercase">
           2. {{ _('Custom Styles') }}
@@ -75,6 +75,8 @@ overriding the form blocks depending on the current context
 {% snippet 'group/snippets/custom/charts.html',
                             chart=customizations['charts'][1], chart_id=2, form=form %}
 </div>
+
+<input type="hidden" name="customization" value="" id="customization-json">
 </div>
 
   {% if action == "edit" %}{{ super() }}{% endif %}
