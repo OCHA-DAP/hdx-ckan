@@ -43,7 +43,7 @@ overriding the form blocks depending on the current context
 
 {% else %}
 {% set custom_loc = 0 %}
-{% set customizations = {} %}
+{% set customizations = {'map':{},'charts':[{},{}]} %}
 {% endif %}
 
   {% if c.userobj.sysadmin %}
@@ -66,9 +66,15 @@ overriding the form blocks depending on the current context
 
 {% snippet 'group/snippets/custom/map.html',
                             customizations=customizations, form=form %}
-
+<div id="chart1">
 {% snippet 'group/snippets/custom/charts.html',
-                            customizations=customizations, form=form %}
+                            chart=customizations['charts'][0], chart_id=1, form=form %}
+</div>
+
+<div id="chart2">
+{% snippet 'group/snippets/custom/charts.html',
+                            chart=customizations['charts'][1], chart_id=2, form=form %}
+</div>
 </div>
 
   {% if action == "edit" %}{{ super() }}{% endif %}

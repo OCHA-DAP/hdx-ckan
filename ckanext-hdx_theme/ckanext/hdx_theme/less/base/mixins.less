@@ -1,5 +1,16 @@
 @import "variables.less";
 
+//Font Faces
+.font-face(@family, @src){
+  @font-face {
+    font-family: @family;
+    src: url(@src);
+  }
+}
+.gotham-face(@type){
+  .font-face('Gotham-@{type}', '/fonts/Gotham_OTF/Gotham-@{type}.otf');
+}
+
 //Font mixins
 .font-definition(@weight: 400, @size: 16px) {
   font-weight: @weight;

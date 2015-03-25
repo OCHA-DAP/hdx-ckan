@@ -6,7 +6,7 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_title">Title</label>
     <div class="controls ">
-    <input id="chart_title" type="text" name="chart_title" value="{{customizations['chart_title']}}" placeholder="" class="customizations_config">
+    <input id="chart_title" type="text" name="chart_title" value="{{chart['chart_title']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -18,7 +18,7 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_description">Description</label>
     <div class="controls ">
-    <input id="chart_description" type="text" name="chart_description" value="{{customizations['chart_description']}}" placeholder="" class="customization_config">
+    <input id="chart_description" type="text" name="chart_description" value="{{chart['chart_description']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -30,11 +30,11 @@
 <div class="org-control-container" style="margin-bottom:30px;">
 <div class="controls">
   <label class="control-label" for="chart_type">Data Type</label>
-          <select id="chart-select" name="chart_type_1" class="customization_config">
-            <option value="bar chart" {% if customizations['chart_type_1'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
-            <option value="line chart" {% if customizations['line_type_1'] == 'line chart' %}selected{% endif %}>Line Chart</option>
-            <option value="multiple bar chart" {% if customizations['chart_type_1'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
-            <option value="multiple line chart" {% if customizations['chart_type_1'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
+          <select id="chart-select" name="chart_type_1" class="chart_config">
+            <option value="bar chart" {% if chart['chart_type_1'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
+            <option value="line chart" {% if chart['line_type_1'] == 'line chart' %}selected{% endif %}>Line Chart</option>
+            <option value="multiple bar chart" {% if chart['chart_type_1'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
+            <option value="multiple line chart" {% if chart['chart_type_1'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
           </select>
 </div>
 </div>
@@ -43,7 +43,7 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_x_label">X Axis Label</label>
     <div class="controls ">
-    <input id="chart_x_label" type="text" name="chart_x_label" value="{{customizations['chart_x_label']}}" placeholder="" class="customization_config">
+    <input id="chart_x_label" type="text" name="chart_x_label" value="{{chart['chart_x_label']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -55,7 +55,7 @@
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_y_label">Y Axis Label</label>
     <div class="controls ">
-    <input id="chart_y_label" type="text" name="chart_y_label" value="{{customizations['chart_y_label']}}" placeholder="" class="customization_config">
+    <input id="chart_y_label" type="text" name="chart_y_label" value="{{chart['chart_y_label']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -67,7 +67,7 @@
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_resource_id_1">Resource ID</label>
     <div class="controls ">
-    <input id="chart_resource_id_1" type="text" name="chart_resource_id_1" value="{{customizations['chart_resource_id_1']}}" placeholder="" class="customization_config">
+    <input id="chart_resource_id_1" type="text" name="chart_resource_id_1" value="{{chart['chart_resource_id_1']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -79,7 +79,7 @@
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_x_column_1">X Column</label>
     <div class="controls ">
-    <input id="chart_x_column_1" type="text" name="chart_x_column_1" value="{{customizations['chart_x_column_1']}}" placeholder="" class="customization_config">
+    <input id="chart_x_column_1" type="text" name="chart_x_column_1" value="{{chart['chart_x_column_1']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -91,7 +91,7 @@
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_y_column_1">Y Column</label>
     <div class="controls ">
-    <input id="chart_y_column_1" type="text" name="chart_y_column_1" value="{{customizations['chart_y_column_1']}}" placeholder="" class="customization_config">
+    <input id="chart_y_column_1" type="text" name="chart_y_column_1" value="{{chart['chart_y_column_1']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -99,12 +99,12 @@
       </div>
 </div>
 
-<div id="second-line" {% if ['chart_type_1'] == 'bar chart' or ['chart_type_1'] == 'line chart' %}style="display:none;"{% endif %}>
+<div id="second-line" {% if chart['chart_type_1'] == 'bar chart' or chart['chart_type_1'] == 'line chart' %}style="display:none;"{% endif %}>
 <div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_resource_id_2">Resource ID</label>
     <div class="controls ">
-    <input id="chart_resource_id_2" type="text" name="chart_resource_id_2" value="{{customizations['chart_resource_id_2']}}" placeholder="" class="customization_config">
+    <input id="chart_resource_id_2" type="text" name="chart_resource_id_2" value="{{chart['chart_resource_id_2']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -116,7 +116,7 @@
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_x_column_2">X Column</label>
     <div class="controls ">
-    <input id="chart_x_column_2" type="text" name="chart_x_column_2" value="{{customizations['chart_x_column_2']}}" placeholder="" class="customization_config">
+    <input id="chart_x_column_2" type="text" name="chart_x_column_2" value="{{chart['chart_x_column_2']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -128,7 +128,7 @@
 <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_y_column_2">Y Column</label>
     <div class="controls ">
-    <input id="chart_y_column_2" type="text" name="chart_y_column_2" value="{{customizations['chart_y_column_2']}}" placeholder="" class="customization_config">
+    <input id="chart_y_column_2" type="text" name="chart_y_column_2" value="{{chart['chart_y_column_2']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">

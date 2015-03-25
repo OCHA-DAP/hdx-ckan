@@ -1,4 +1,3 @@
-
 {% extends "page-new.html" %}
 
 
@@ -9,47 +8,127 @@
 
 
 {% block primary_content %}
+    <div id="floatingLogo" style="display: none;">
+        <div class="logo pull-left">
+            <!-- TODO: add correct image url after functionality is ready  -->
+            {% if data.org_info.image_sq %}
+                <img src="{{data.org_info.image_sq}}"/>
+            {% else %}
+                <img src="http://placehold.it/75x75"/>
+            {% endif %}
+        </div>
+        <div class="title-share pull-left">
+            <div>{{data.org_info.display_name}}</div>
+
+            <a href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
+               data-module-social_wrapper_div_id="dataset_social_wrapper" title="" onclick="return false;"
+               data-original-title="Share">
+                {{ _("Share") }}
+            </a>
+        </div>
+    </div>
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
-                <div class="col-xs-6">
-                    <div class="pull-left">
-                        {% if data.org_info.image_rect %}<img class="org-icon" src="{{data.org_info.image_rect}}" />{% endif %}</div>
-                    <div class="pull-left org-title">{{data.org_info.display_name}}</div>
-                </div>
-                <div class="col-xs-6">
-                    <span class="org-description">
-                        {{ data.org_info.description }}
-                    </span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 mTop20">
-                    {{ h.follow_button('group', data.org_info.id) }}
-                	{% if data.permissions.request_membership %}
-                        <a href="#" class="btn btn-inverted" data-toggle="modal" data-target="#req-membership-div">
-                            {{ _("Request Membership") }}
-                        </a>
-                        {% snippet 'organization/snippets/req_membership_new.html',
-                            modal_div_id='req-membership-div', modal_div_class='fade',
-                            form_action=data.links.request_membership %}
-                	{% endif %}
-                    <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
+                <div class="col-xs-8">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="org-title">{{data.org_info.display_name}}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mTop10">
+                            <ul class="mainLinks org-info-links">
+                                <li>
+                                    <a
+                                            {% if data.permissions.view_members %}
+                                                href="{{ data.links.members }}"
+                                            {% else %}
+                                                href="#" class="disabled"
+                                            {% endif %} >
+                                        {{ data.member_count }} {{ _('Members') }}
+                                    </a>
+                                </li>
+                                <li><a href="#" class="disabled">{{ data.follower_count }} {{ _('Followers') }}</a></li>
+                                <li><a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span data-module="hdx_show_more" data-module-points="340" style="visibility: hidden;" class="org-description">
+                                {{ h.render_markdown(data.org_info.description) }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mTop30">
+                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right" %}
+                            {{ h.follow_button('group', data.org_info.id) }}
+                            {% if data.permissions.request_membership %}
+                                <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
+                                    {{ _("Request Membership") }}
+                                </a>
+                                {% snippet 'organization/snippets/req_membership_new.html',
+                                    modal_div_id='req-membership-div', modal_div_class='fade',
+                                    form_action=data.links.request_membership %}
+                            {% endif %}
 
-                    {% if data.permissions.edit %}
-                        <a href="{{ data.links.edit }}" class="btn btn-inverted pull-right">{{ _("Edit") }}</a>
-                    {% endif %}
-                    {% if data.permissions.view_members %}
-                        <a href="{{ data.links.members }}" class="btn btn-inverted pull-right">{{ _("Members") }}</a>
-                    {% endif %}
+                            {#
+                            {% if data.permissions.edit %}
+                                <a href="{{ data.links.edit }}" class="btn hdx-btn org-btn">{{ _("Edit") }}</a>
+                            {% endif %}
+                            {% if data.permissions.view_members %}
+                                <a href="{{ data.links.members }}" class="btn hdx-btn org-btn">{{ _("Members") }}</a>
+                            {% endif %}
+                            #}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="pull-left">
+                        <div class="org-logo-large table-valign">
+                            <div class="table-valign-content">
+                                {% if data.org_info.image_rect %}<img src="{{data.org_info.image_rect}}" />
+                                {% else %}
+                                <img src="http://placehold.it/300x125" />
+                                {% endif %}
+                            </div>
+                            <span class="admin-menu">
+                                <span class="dropdown">
+                                    <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
+                                        <span class="dropdown-toggle-text">ADMIN</span>
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li>
+                                            <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
+                                                <span>{{ _('Manage members') }}</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
+                                                <span>{{ _('Edit') }}</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </span>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row paddingRowHack whiteBackground">
+    <div id="floatingLogoAnchor" class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Key Figures") }}</div>
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Key Figures") }}
+                </span>
+            </div>
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
@@ -67,26 +146,55 @@
 
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Interactive Data") }}</div>
+            {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger",
+                title="Embed visualization",
+                embed_url=data.visualization_embed_url,
+                data=data.visualization_config_url,
+                sizes=[{"width": "800", "height": "500"},
+                       {"width": "1000","height": "500"},
+                       {"width": "1200","height": "500"}]) }}
+        </div>
+
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Interactive Data") }}
+                </span>
+            </div>
+        </div>
+
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="mTop20 mBottom20">
+                <div class="pull-left visualization-title">
+                    Visualisation title
+                </div>
+                <div class="pull-right">
+                    <ul class="mainLinks visualization-links">
+                        <li><a id="embedPopupTrigger" href="#">{{ _("Embed data") }}</a></li>
+                        <li><a href="#">{{ _("Save as image") }}</a></li>
+                    </ul>
+                </div>
+            </div>
             <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
-                    <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
-                    <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div> 
+                <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
+                <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div>
             </div>
         </div>
     </div>
 
     <div class="row paddingRowHack whiteBackground">
         <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="org-section-title">{{ _("Data & Activity") }}</div>
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Data & Activity") }}
+                </span>
+            </div>
         </div>
-        <div>
-
-        </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
             <div class="row">
                 <div class="col-xs-3 section-left">
                     {% snippet 'search/snippets/search_facets.html', facets=data.search_results.facets %}
@@ -112,6 +220,8 @@
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/custom-org' %}
   {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/popup' %}
+  {% resource 'hdx_theme/popup-embed' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search-facets' %}
   {% resource 'hdx_theme/custom-visualization' %}

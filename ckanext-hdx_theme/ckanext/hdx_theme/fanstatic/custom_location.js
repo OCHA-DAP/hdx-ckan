@@ -20,6 +20,35 @@ $(document).ready(function(){
 		//Set timestamp
 		if($('#field-custom_loc').is(':checked')){
 			var customization = {}
+			//Grab misc customization values
+			$('.customization_config').each(function(){
+					customization[$(this).attr('name')] = this.value;
+				});
+			//Grab map config
+			var map = {}
+			$('.map_config').each(function(){
+					map[$(this).attr('name')] = this.value;
+			});
+
+			//Grab chart config
+			var charts = []
+			var chart1 = {}
+			$('#chart1 .chart_config').each(function(){
+					chart1[$(this).attr('name')] = this.value;
+			});
+
+			charts.append(chart1);
+
+			var chart2 = {}
+			$('#chart2 .chart_config').each(function(){
+				chart2[$(this).attr('name')] = this.value;
+			});
+
+			charts.append(chart2);
+
+			customization['charts'] = charts;
+			customization['map'] = map;
+			
 			$('#customization-json').val(JSON.stringify(customization));
 
 		}

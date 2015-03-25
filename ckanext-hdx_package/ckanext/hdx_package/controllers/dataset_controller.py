@@ -551,7 +551,7 @@ class DatasetController(PackageController):
             if domain and domain in resource.get('url', ''):
                 perma_link = h.url_for(
                     'perma_storage_file', id=dataset_id, resource_id=resource['id'])
-                resource['perma_link'] = perma_link
+                resource['perma_link'] = domain + perma_link
 
     def read(self, id, format='html'):
         if not format == 'html':
@@ -846,7 +846,7 @@ class DatasetController(PackageController):
             # required for nav menu
             c.pkg = context['package']
             c.pkg_dict = c.package
-            c.resource['perma_link'] = self._get_perma_link(id, resource_id)
+            self._create_perma_link_if_needed(id, c.resource)
         except NotFound:
             abort(404, _('Resource not found'))
         except NotAuthorized:
