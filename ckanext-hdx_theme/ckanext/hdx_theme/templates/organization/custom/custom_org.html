@@ -35,9 +35,18 @@
                     <div class="row">
                         <div class="col-xs-12 mTop10">
                             <ul class="mainLinks org-info-links">
-                                <li><a href="{{ data.links.members }}">X Members</a></li>
-                                <li><a href="#">Y Followers</a></li>
-                                <li><a href="{{ data.org_info.link }}">Visit Website</a></li>
+                                <li>
+                                    <a
+                                            {% if data.permissions.view_members %}
+                                                href="{{ data.links.members }}"
+                                            {% else %}
+                                                href="#" class="disabled"
+                                            {% endif %} >
+                                        {{ data.member_count }} {{ _('Members') }}
+                                    </a>
+                                </li>
+                                <li><a href="#" class="disabled">{{ data.follower_count }} {{ _('Followers') }}</a></li>
+                                <li><a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a></li>
                             </ul>
                         </div>
                     </div>

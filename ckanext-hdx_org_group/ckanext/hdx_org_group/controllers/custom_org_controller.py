@@ -123,9 +123,17 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
 
         viz_config = self.assemble_viz_config(org_info['visualization_config'])
+
+        follower_count = get_action('group_follower_count')(
+            {'model': model, 'session': model.Session},
+            {'id': org_info['id']}
+        )
+
         template_data = {
             'data': {
                 'org_info': org_info,
+                'member_count': hdx_helpers.get_group_members(org_info['id']),
+                'follower_count': follower_count,
                 'top_line_items': top_line_items,
                 'search_results': {
                     'facets': facets,
