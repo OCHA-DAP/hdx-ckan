@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <span data-module="hdx_show_more" data-module-points="340" style="visibility: hidden;" class="org-description">
-                                {{ data.org_info.description }}
+                                {{ h.render_markdown(data.org_info.description) }}
                             </span>
                         </div>
                     </div>
