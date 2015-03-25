@@ -163,14 +163,15 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         customization = {'image_sq':'','image_rect':''}
 
     upload1 = uploader.Upload('group', customization['image_sq'])
-    upload1.update_data_dict(data_dict, 'image_url_sq',
+    upload1.update_data_dict(data_dict, 'image_sq',
                            'image_sq', 'clear_upload')
 
     upload2 = uploader.Upload('group', customization['image_rect'])
-    upload2.update_data_dict(data_dict, 'image_url_rect',
+    upload2.update_data_dict(data_dict, 'image_rect',
                            'image_rect', 'clear_upload')
 
     data_dict['customization'] = json.loads(data_dict['customization'])
+    storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
     try:
         data_dict['customization']['image_sq'] = data_dict['image_sq']

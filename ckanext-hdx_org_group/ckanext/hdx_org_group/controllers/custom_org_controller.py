@@ -167,7 +167,13 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
             json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
             jsonstring = json_extra[0] if len(json_extra) == 1 else ''
-            top_line_src_info = self._get_top_line_src_info(jsonstring)
+            if jsonstring and jsonstring.strip():
+                json_dict = json.loads(jsonstring)
+                top_line_src_info = self._get_top_line_src_info(json_dict)
+                images = self._get_images(json_dict)
+            else:
+                top_line_src_info = (None,None)
+                images = (None, None)
 
             org_dict = {
                 'id': result['id'],
@@ -179,7 +185,8 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'topline_dataset': top_line_src_info[0],
                 'topline_resource': top_line_src_info[1],
                 'modified_at': result.get('modified_at', ''),
-                'image_url': result.get('image_url',''),
+                'image_sq': images[0],
+                'image_rect': images[1],
                 'visualization_config': result.get('visualization_config',''),
             }
 
@@ -192,10 +199,19 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         return {}
 
-    def _get_top_line_src_info(self, jsonstring):
-        if jsonstring and jsonstring.strip():
-            json_dict = json.loads(jsonstring)
-            if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
+    def _get_images(self, json_dict):
+        if 'image_sq' in json_dict and 'image_rect' in json_dict:
+                return (json_dict['image_sq'], json_dict['image_rect'])
+        elif 'image_sq' in json_dict:
+            return (json_dict['image_sq'], None)
+        elif 'image_rect' in json_dict:
+            return (None, json_dict['image_rect'])
+
+        return (None, None)
+
+
+    def _get_top_line_src_info(self, json_dict):
+        if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
                 return (json_dict['topline_dataset'], json_dict['topline_resource'])
 
         return (None, None)
