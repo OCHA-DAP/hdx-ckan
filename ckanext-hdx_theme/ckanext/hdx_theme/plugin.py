@@ -63,7 +63,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
-        self._add_resource('fanstatic', 'hdx_theme')
+        #self._add_resource('fanstatic', 'hdx_theme')
+        toolkit.add_resource('fanstatic', 'hdx_theme')
+
 
     def before_map(self, map):
         map.connect(
