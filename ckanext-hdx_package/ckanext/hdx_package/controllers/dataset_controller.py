@@ -48,6 +48,7 @@ flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
 _check_group_auth = logic.auth.create._check_group_auth
 
+
 CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
     'html': 'text/html;charset=utf-8',
@@ -512,6 +513,10 @@ class DatasetController(PackageController):
         context = {'model': model, 'session': model.Session,
                    'api_version': 3, 'for_edit': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        try:
+            check_access('resource_update', context, data)
+        except NotAuthorized:
+            abort(401, _('Unauthorized to edit this resource'))
         pkg_dict = get_action('package_show')(context, {'id': id})
         if pkg_dict['state'].startswith('draft'):
             # dataset has not yet been fully created
