@@ -794,10 +794,14 @@ ul.hdx-bs3 {
   margin-right: 20px;
 }
 .intro-section .org-logo-large {
+  background-color: #0088ff;
   width: 370px;
   height: 200px;
-  background-color: #0088ff;
   text-align: center;
+}
+.intro-section .org-logo-large img {
+  max-height: 125px;
+  max-width: 300px;
 }
 .intro-section .org-logo-large img {
   max-height: 125px;
