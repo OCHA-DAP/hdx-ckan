@@ -11,16 +11,17 @@ import ckan.lib.base as base
 import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
+import ckan.controllers.group as group
+
 
 import ckanext.hdx_crisis.dao.country_data_access as country_data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_crisis.controllers.crisis_controller as controllers
-import ckan.controllers.group as group
 
 render = base.render
 c = common.c
 get_action = logic.get_action
-
+json = common.json
 
 log = logging.getLogger(__name__)
 
@@ -29,9 +30,9 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
     def read(self, id):
 
-        group_info = self.get_group(id)
+        group_info, custom_dict = self.get_group(id)
 
-        template_data = self.generate_template_data(group_info)
+        template_data = self.generate_template_data(group_info, custom_dict)
 
         return render('country/custom_country.html', extra_vars=template_data)
 
@@ -49,64 +50,58 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         group_info = get_action('hdx_light_group_show')(context, data_dict)
 
-        return group_info
+        extras_dict = {item['key']: item['value'] for item in group_info.get('extras',{})}
+        json_string = extras_dict.get('customization', None)
+        if json_string:
+            custom_dict = json.loads(json_string)
+        else:
+            custom_dict = {}
 
-    def _get_top_line_datastore_id(self, group_info):
-        return config.get('hdx.colombia.datastore.top_line_num')
+        return group_info, custom_dict
 
-    def _get_charts_config(self, group_info):
-        return [
-            {
-                'title': 'Number of Internally Displaced People',
-                'type': 'bar',
-                'title_x': 'Test x title',
-                'title_y': 'Persons',
+    def _get_top_line_datastore_id(self, custom_dict):
+        return custom_dict.get('topline_resource', None)
+
+    def _get_charts_config(self, custom_dict):
+        charts = []
+        for chart_config in custom_dict.get('charts', []):
+            chart = {
+                'title': chart_config.get('chart_title', ''),
+                'type': chart_config.get('chart_type_1', ''),
+                'title_x': chart_config.get('chart_x_label', ''),
+                'title_y': chart_config.get('chart_y_label', ''),
                 'sources': [
                     {
-                        'datastore_id': config.get('hdx.colombia.datastore.displaced'),
-                        'title': 'Number of displaced ...',
-                        'orgName': 'OCHA',
-                        'url':'',
-                        'column_x': 'Year',
-                        'column_y': 'Persons'
-                    },
-                    {
-                        'datastore_id': config.get('hdx.colombia.datastore.displaced'),
-                        'title': 'Number of malaria ...',
-                        'orgName': 'OCHA',
-                        'url':'',
-                        'column_x': 'Year',
-                        'column_y': 'Persons'
-                    }
-                ]
-            },
-            {
-                'title': 'Number of People with Access Constraints',
-                'type': 'bar',
-                'title_x': 'Sample title x-axis',
-                'title_y': 'Persons',
-                'sources': [
-                    {
-                        'datastore_id': config.get('hdx.colombia.datastore.access_constraints'),
-                        'Title': 'Title',
-                        'orgName': 'OCHA',
-                        'url': '',
-                        'column_x': 'Date',
-                        'column_y': 'Persons'
+                        'datastore_id': chart_config.get('chart_resource_id_1', ''),
+                        'title': 'resource - title',
+                        'org_name': 'OCHA',
+                        'url': None,
+                        'column_x': chart_config.get('chart_x_column_1', ''),
+                        'column_y': chart_config.get('chart_y_column_1', ''),
+
                     }
                 ]
             }
-        ]
+            if chart_config.get('chart_resource_id_2', ''):
+                chart['sources'].append(
+                    {
+                        'datastore_id': chart_config.get('chart_resource_id_2', ''),
+                        'title': 'resource - title',
+                        'org_name': 'OCHA',
+                        'url': None,
+                        'column_x': chart_config.get('chart_x_column_2', ''),
+                        'column_y': chart_config.get('chart_y_column_2', ''),
 
-    def _get_maps_config(self, group_info):
-        return {
-            'boundries_datastore_id': 'boundries_datastore_id',
-            'boundries_join_column': 'boundries_join_column',
-            'facts_datastore_id': 'facts_datastore_id',
-            'facts_join_column': 'facts_join_column'
-        }
+                    }
+                )
+            charts.append(chart)
 
-    def generate_template_data(self, group_info):
+        return charts
+
+    def _get_maps_config(self, custom_dict):
+        return custom_dict.get('map', {})
+
+    def generate_template_data(self, group_info, custom_dict):
 
         country_name = group_info['name']
 
@@ -114,7 +109,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        top_line_resource_id = self._get_top_line_datastore_id(group_info)
+        top_line_resource_id = self._get_top_line_datastore_id(custom_dict)
         top_line_items = self.get_top_line_numbers(top_line_resource_id)
 
         search_params = {u'groups': country_name}
@@ -128,8 +123,8 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
             'data': {
                 'country_title': group_info.get('title', group_info['name']),
                 'top_line_items': top_line_items,
-                'charts': self._get_charts_config(group_info),
-                'map': self._get_maps_config(group_info)
+                'charts': self._get_charts_config(custom_dict),
+                'map': self._get_maps_config(custom_dict)
             },
             'errors': None,
             'error_summary': None,
