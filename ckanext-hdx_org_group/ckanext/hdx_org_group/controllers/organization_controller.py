@@ -113,3 +113,77 @@ class HDXOrganizationController(org.OrganizationController):
         if [o.get('value', None) for o in org if o.get('key', '') == 'custom_org']:
             return True
         return False
+
+
+    def new(self, data=None, errors=None, error_summary=None):
+        group_type = self._guess_group_type(True)
+        if data:
+            data['type'] = group_type
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'save': 'save' in request.params,
+                   'parent': request.params.get('parent', None)}
+        try:
+            self._check_access('group_create', context)
+        except NotAuthorized:
+            abort(401, _('Unauthorized to create a group'))
+
+        if context['save'] and not data:
+            return self._save_new(context, group_type)
+
+        data = data or {}
+        if not data.get('image_url', '').startswith('http'):
+            data.pop('image_url', None)
+
+        errors = errors or {}
+        error_summary = error_summary or {}
+        vars = {'data': data, 'errors': errors,
+                'error_summary': error_summary, 'action': 'new'}
+
+        self._setup_template_variables(context, data, group_type=group_type)
+        c.form = render(self._group_form(group_type=group_type),
+                        extra_vars=vars)
+        return render(self._new_template(group_type))
+
+    def edit(self, id, data=None, errors=None, error_summary=None):
+        group_type = self._get_group_type(id.split('@')[0])
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'save': 'save' in request.params,
+                   'for_edit': True,
+                   'parent': request.params.get('parent', None)
+                   }
+        data_dict = {'id': id}
+
+        
+        if context['save'] and not data:
+            return self._save_edit(id, context)
+
+        try:
+            old_data = self._action('group_show')(context, data_dict)
+            c.grouptitle = old_data.get('title')
+            c.groupname = old_data.get('name')
+            data = data or old_data
+        except NotFound:
+            abort(404, _('Group not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read group %s') % '')
+
+        group = context.get("group")
+        c.group = group
+        c.group_dict = self._action('group_show')(context, data_dict)
+
+        try:
+            self._check_access('group_update', context)
+        except NotAuthorized, e:
+            abort(401, _('User %r not authorized to edit %s') % (c.user, id))
+
+        errors = errors or {}
+        vars = {'data': data, 'errors': errors,
+                'error_summary': error_summary, 'action': 'edit'}
+
+        self._setup_template_variables(context, data, group_type=group_type)
+        c.form = render(self._group_form(group_type), extra_vars=vars)
+        return render(self._edit_template(c.group.type))
+

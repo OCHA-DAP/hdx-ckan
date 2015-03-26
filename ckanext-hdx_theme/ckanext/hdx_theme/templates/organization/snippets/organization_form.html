@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-<form class="dataset-form" method="post" data-module="basic-form">
+<form class="dataset-form" method="post" enctype="multipart/form-data" data-module="basic-form">
   {% block error_summary %}
     {{ form.errors(error_summary) }}
   {% endblock %}
@@ -73,10 +73,21 @@
 </div>
 
 <div class="org-control-container">
-{% set is_upload = data.image_url and not data.image_url.startswith('http') %}
-    {% set is_url = data.image_url and data.image_url.startswith('http') %}
+{% set is_upload = customizations['image_sq'] and not customizations['image_sq'].startswith('http') %}
+    {% set is_url = customizations['image_sq'] and customizations['image_sq'].startswith('http') %}
 
-    {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
+<input type="file" name="image_sq" value="{{customizations['image_sq']}}">
+
+    {# form.image_upload(data, errors, field_url=customizations['image_sq'], field_upload='image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Square Image 75x75')) #}
+
+</div>
+
+<div class="org-control-container">
+{% set is_upload = customizations['image_rect'] and not customizations['image_rect'].startswith('http') %}
+    {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
+
+    <input type="file" name="image_rect" value="{{customizations['image_rect']}}">
+    {# form.image_upload(data, errors, field_url=customizations['image_rect'], field_upload='image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Rectangular Image 300x125')) #}
 
 </div>
 

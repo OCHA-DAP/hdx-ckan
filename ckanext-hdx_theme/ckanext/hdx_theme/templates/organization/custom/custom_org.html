@@ -11,7 +11,11 @@
     <div id="floatingLogo" style="display: none;">
         <div class="logo pull-left">
             <!-- TODO: add correct image url after functionality is ready  -->
-            <img src="{{data.org_info.image_url}}"/>
+            {% if data.org_info.image_sq %}
+                <img src="{{data.org_info.image_sq}}"/>
+            {% else %}
+                <img src="http://placehold.it/75x75"/>
+            {% endif %}
         </div>
         <div class="title-share pull-left">
             <div>{{data.org_info.display_name}}</div>
@@ -85,7 +89,10 @@
                     <div class="pull-left">
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
-                                {% if data.org_info.image_url %}<img src="{{data.org_info.image_url}}" />{% endif %}
+                                {% if data.org_info.image_rect %}<img src="{{data.org_info.image_rect}}" />
+                                {% else %}
+                                <img src="http://placehold.it/300x125" />
+                                {% endif %}
                             </div>
                             <span class="admin-menu">
                                 <span class="dropdown">
@@ -119,7 +126,7 @@
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">
-                    {{ _("Global Operations Data") }}
+                    {{ _("Key Figures") }}
                 </span>
             </div>
         </div>
