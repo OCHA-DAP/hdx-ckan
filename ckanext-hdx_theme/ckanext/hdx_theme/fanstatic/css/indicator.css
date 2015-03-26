@@ -176,6 +176,12 @@
 .indicator-actions a.btn.hdx-btn {
 	margin-left: 12px;
 }
+
+.custom-dataset .indicator-actions a.btn.hdx-btn {
+	margin-left: 0px;
+    margin-right: 12px;
+}
+
 /* .indicator-actions {
 	margin-top: 10px;
 }
@@ -227,6 +233,15 @@
 }
  */
 /* END - Actions */
+
+
+/* Logo */
+.custom-dataset .org-logo {
+    max-height: 65px;
+    max-width: 160px;
+}
+/* END - Logo */
+
 
 /* Dataset specific styles */
 .dataset-res-wraper section.resources {
