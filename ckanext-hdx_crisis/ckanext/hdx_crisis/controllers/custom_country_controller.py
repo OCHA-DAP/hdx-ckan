@@ -65,6 +65,8 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_charts_config(self, custom_dict):
         charts = []
         for chart_config in custom_dict.get('charts', []):
+            resource_id1 = chart_config.get('chart_resource_id_1', '')
+            resource_id2 = chart_config.get('chart_resource_id_2', '')
             chart = {
                 'title': chart_config.get('chart_title', ''),
                 'type': chart_config.get('chart_type_1', ''),
@@ -72,31 +74,41 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 'title_y': chart_config.get('chart_y_label', ''),
                 'sources': [
                     {
-                        'datastore_id': chart_config.get('chart_resource_id_1', ''),
-                        'title': 'resource - title',
+                        'datastore_id': resource_id1,
+                        'title': self._get_resource_name(resource_id1),
                         'org_name': 'OCHA',
                         'url': None,
                         'column_x': chart_config.get('chart_x_column_1', ''),
                         'column_y': chart_config.get('chart_y_column_1', ''),
 
-                    }
+                        }
                 ]
             }
-            if chart_config.get('chart_resource_id_2', ''):
+            if resource_id2:
                 chart['sources'].append(
                     {
-                        'datastore_id': chart_config.get('chart_resource_id_2', ''),
-                        'title': 'resource - title',
+                        'datastore_id': resource_id2,
+                        'title': self._get_resource_name(resource_id2),
                         'org_name': 'OCHA',
                         'url': None,
                         'column_x': chart_config.get('chart_x_column_2', ''),
                         'column_y': chart_config.get('chart_y_column_2', ''),
 
-                    }
+                        }
                 )
             charts.append(chart)
 
         return charts
+
+    def _get_resource_name(self, resource_id):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+        try:
+            resource_dict = get_action('resource_show')(context, {'id': resource_id})
+
+            return resource_dict['name']
+        except logic.NotFound, e:
+            return ''
 
     def _get_maps_config(self, custom_dict):
         return custom_dict.get('map', {})
