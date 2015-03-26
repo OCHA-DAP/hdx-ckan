@@ -55,38 +55,48 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         return config.get('hdx.colombia.datastore.top_line_num')
 
     def _get_charts_config(self, group_info):
-        return {
-            'chart1': {
-                'title': 'Sample title',
-                'description': 'Sample description',
-                'type': 'bar-chart',
-                'title_x': 'Sample title x-axis',
-                'title_y': 'Sample title y-axis',
+        return [
+            {
+                'title': 'Number of Internally Displaced People',
+                'type': 'bar',
+                'title_x': 'Test x title',
+                'title_y': 'Persons',
                 'sources': [
                     {
                         'datastore_id': config.get('hdx.colombia.datastore.displaced'),
-                        'description': 'Source description',
-                        'column_x': 'column_name_x',
-                        'column_y': 'column_name_y'
+                        'title': 'Number of displaced ...',
+                        'orgName': 'OCHA',
+                        'url':'',
+                        'column_x': 'Year',
+                        'column_y': 'Persons'
+                    },
+                    {
+                        'datastore_id': config.get('hdx.colombia.datastore.displaced'),
+                        'title': 'Number of malaria ...',
+                        'orgName': 'OCHA',
+                        'url':'',
+                        'column_x': 'Year',
+                        'column_y': 'Persons'
                     }
                 ]
             },
-            'chart2': {
-                'title': 'Sample title',
-                'description': 'Sample description',
-                'type': 'bar-chart',
+            {
+                'title': 'Number of People with Access Constraints',
+                'type': 'bar',
                 'title_x': 'Sample title x-axis',
-                'title_y': 'Sample title y-axis',
+                'title_y': 'Persons',
                 'sources': [
                     {
                         'datastore_id': config.get('hdx.colombia.datastore.access_constraints'),
-                        'description': 'Source description',
-                        'column_x': 'column_name_x',
-                        'column_y': 'column_name_y'
+                        'Title': 'Title',
+                        'orgName': 'OCHA',
+                        'url': '',
+                        'column_x': 'Date',
+                        'column_y': 'Persons'
                     }
                 ]
             }
-        }
+        ]
 
     def _get_maps_config(self, group_info):
         return {
