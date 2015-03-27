@@ -74,18 +74,20 @@ def hdx_get_group_activity_list(context, data_dict):
     }
     return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
 
-
+@logic.side_effect_free
 def hdx_light_group_show(context, data_dict):
     id = _get_or_bust(data_dict, "id")
     group_dict = {}
     group = model.Group.get(id)
     if not group:
         raise NotFound
-    group_dict['group'] = group
+    #group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
     group_dict['image_url'] = group.image_url
     group_dict['display_name'] = group_dict['title'] = group.title
+    group_dict['description'] = group.description
+    group_dict['revision_id'] = group.revision_id
 
     result_list = []
     for name, extra in group._extras.iteritems():

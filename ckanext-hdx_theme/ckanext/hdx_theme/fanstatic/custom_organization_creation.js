@@ -31,10 +31,14 @@ showInput: true});
 		//Set timestamp
 		$('#field-modified_at').val(new Date().getTime())
 		if($('#field-custom_org').is(':checked')){
+            var use_org_color = "false"
+            if($('#use_org_color').is(':checked'))
+                use_org_color = "true"
 			var customization = {
 				'highlight_color':$('#field-highlight-color').val(),
 				'topline_dataset':$('#field-topline-dataset').val(),
-				'topline_resource':$('#field-topline-resource').val()
+				'topline_resource':$('#field-topline-resource').val(),
+                'use_org_color':use_org_color
 			}
 			$('#customization-json').val(JSON.stringify(customization));
 
