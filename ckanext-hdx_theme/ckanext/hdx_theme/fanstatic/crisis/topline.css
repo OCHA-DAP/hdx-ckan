@@ -21,10 +21,12 @@
 .topline .indicator-title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   letter-spacing: 0.01em;
   margin-bottom: 10px;
   color: #333333;
+  line-height: 20px;
+  height: 40px;
 }
 .topline .indicator-value {
   font-family: 'Gotham-Light', sans-serif;

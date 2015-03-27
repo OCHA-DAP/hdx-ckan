@@ -8,6 +8,8 @@
 @import "../base/mixins";
 
 @topLineItemNumberFontSize: 74px;
+@topLineItemUnitFontSize: 37px;
+@topLineIndicatorTitleLineHeight: 20px;
 
 .topline {
   border-top: 1px solid @lightGrayColor;
@@ -17,10 +19,12 @@
   color: @darkGrayColor;
 
   .indicator-title {
-    .gothamBoldFont;
+    .gothamBoldFont(14px);
     .letter-spacing-1;
     margin-bottom: 10px;
     color: @darkGrayColor;
+    line-height: @topLineIndicatorTitleLineHeight;
+    height: 2*@topLineIndicatorTitleLineHeight;
   }
 
   .indicator-value {
@@ -47,7 +51,7 @@
   }
 
   .small{
-    .gothamLightFont(37px);
+    .gothamLightFont(@topLineItemUnitFontSize);
     .letter-spacing-1;
     line-height: 1;
 

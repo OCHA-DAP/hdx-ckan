@@ -1,39 +1,4 @@
 /* Fonts */
-    @font-face {
-        font-family: 'Gotham-Bold';
-        src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-    }
-
-    @font-face {
-        font-family: 'Gotham-Book';
-        src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-    }
-
-    @font-face {
-        font-family: 'Gotham-Light';
-        src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-    }
-    
-    @font-face {
-        font-family: 'Gotham-Thin';
-        src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-    }
-    
-    @font-face {
-        font-family: 'Gotham-Black';
-        src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-    }
-
-    @font-face {
-        font-family: 'Gotham-Medium';
-        src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-    }
-
-    .gothamBold12{
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-    }
     .gothamBold20{
         font-family: 'Gotham-Bold', sans-serif;
         font-weight: 400;
@@ -299,6 +264,9 @@
     }
     .mTop35{
         margin-top: 35px;
+    }
+    .mTop30{
+        margin-top: 30px;
     }
     .mTop25{
         margin-top: 25px;
@@ -821,10 +789,6 @@
     line-height: 36px;
 }
 
-a, a:hover, a:focus{
-    color: #007CE0;
-    text-decoration: none;
-}
 .notes.embedded-content{
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 400;

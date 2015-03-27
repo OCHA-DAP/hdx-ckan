@@ -1,0 +1,14 @@
+/* Default link style */
+a,
+a:hover,
+a:focus,
+.dataset-heading a {
+  color: #007ce0;
+  text-decoration: none;
+}
+/* END Default link style */
+body {
+  margin: 1px 0 0;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}

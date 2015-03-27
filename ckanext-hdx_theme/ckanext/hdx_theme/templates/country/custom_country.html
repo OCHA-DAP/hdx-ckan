@@ -1,7 +1,7 @@
 {% extends "crisis/crisis-base.html" %}
 
-{% block subtitle %}{{ _("Colombia") }}{% endblock %}
-{% block crisis_title %} {{ _("Colombia") }} {% endblock %}
+{% block subtitle %}{{ data.country_title }}{% endblock %}
+{% block crisis_title %} {{ data.country_title }} {% endblock %}
 {% block crisis_actions %}
     <span class="mR45 pull-right" style="line-height: 50px;">
         <span class="followButtonContainer">
@@ -12,8 +12,14 @@
 {% endblock %}
 {% block breadcrumb_content %}
   <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
-  <li class="active">{{ h.nav_link(_('Colombia'), controller='ckanext.hdx_crisis.controllers.country_controller:CountryController',
+  <li class="active">{{ h.nav_link(data.country_title,
+                        controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController',
   						action='show', highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block crisis_map %}
+    <div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
+    {{ super() }}
 {% endblock %}
 
 {% block crisis_data %}
@@ -35,14 +41,16 @@
     </div>
     <div class="col-xs-7">
       <div class="row">
-        <div id="chart1-datastore-id" style="display: none">{{ data.chart1_datastore_id }}</div>
+        <div id="chart1-datastore-id" style="display: none">{{ data.charts[0].sources[0].datastore_id }}</div>
+        <div id="chart1-configuration" style="display: none">{{ h.dump_json(data.charts[0]) }}</div>
         <div class="col-xs-12 graph-title">
           Number of Internally Displaced People <span>OCHA - <a href="/dataset/idps-data-by-year">Data</a></span>
         </div>
         <div class="col-xs-12">
           <div id="graph1"></div>
         </div>
-        <div id="chart2-datastore-id" style="display: none">{{ data.chart2_datastore_id }}</div>
+        <div id="chart2-datastore-id" style="display: none">{{ data.charts[1].sources[0].datastore_id }}</div>
+        <div id="chart2-configuration" style="display: none">{{ h.dump_json(data.charts[1]) }}</div>
         <div class="col-xs-12 graph-title">
           Number of People with Access Constraints <span>OCHA - <a href="/dataset/restricciones-de-acceso">Data</a></span>
         </div>

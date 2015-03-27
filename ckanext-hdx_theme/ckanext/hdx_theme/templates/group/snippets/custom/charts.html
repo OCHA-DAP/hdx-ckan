@@ -1,0 +1,113 @@
+  <div class="org-control-container">
+  <h2>{{_('Chart Configuration')}} {{chart_id}}</h2>
+</div>
+
+  <div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_title">Title</label>
+    <div class="controls ">
+    <input id="chart_title" type="text" name="chart_title" value="{{chart['chart_title']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Give this visualization a title.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_description">Description</label>
+    <div class="controls ">
+    <input id="chart_description" type="text" name="chart_description" value="{{chart['chart_description']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Describe this visualization.</div>
+      </div>
+</div>
+
+
+<div class="org-control-container" style="margin-bottom:30px;">
+<div class="controls">
+  <label class="control-label" for="chart_type">Data Type</label>
+          <select id="chart-select" name="chart_type" class="chart_config">
+            <option value="bar chart" {% if chart['chart_type_1'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
+            <option value="line chart" {% if chart['line_type_1'] == 'line chart' %}selected{% endif %}>Line Chart</option>
+            <option value="multiple bar chart" {% if chart['chart_type_1'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
+            <option value="multiple line chart" {% if chart['chart_type_1'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
+          </select>
+</div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_x_label">X Axis Label</label>
+    <div class="controls ">
+    <input id="chart_x_label" type="text" name="chart_x_label" value="{{chart['chart_x_label']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What data is on the X Axis?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_y_label">Y Axis Label</label>
+    <div class="controls ">
+    <input id="chart_y_label" type="text" name="chart_y_label" value="{{chart['chart_y_label']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What data is on the Y Axis?</div>
+      </div>
+</div>
+{% if chart['resources'] %}
+  {% set resources = chart['resources'] %}
+{% else %}
+  {% set resources = [{},{}] %}
+{% endif %}
+
+{% for key in range(resources|length) %}
+  {% if key > 0 %}
+    <div id="second-line" {% if chart['chart_type'] == 'bar chart' or chart['chart_type'] == 'line chart' %}style="display:none;"{% endif %}>
+  {% endif %}
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_resource_id_{{key+1}}">Resource ID</label>
+    <div class="controls ">
+    <input id="chart_resource_id_{{key+1}}" type="text" name="chart_resource_id_{{key+1}}" value="{{resources[key]['chart_resource_id']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What is the ID of the resource which has the data in it?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_x_column_{{key+1}}">X Column</label>
+    <div class="controls ">
+    <input id="chart_x_column_{{key+1}}" type="text" name="chart_x_column_{{key+1}}" value="{{resources[key]['chart_x_column']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Which column contains the data to for the X axis?</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_y_column_{{key+1}}">Y Column</label>
+    <div class="controls ">
+    <input id="chart_y_column_{{key+1}}" type="text" name="chart_y_column_{{key+1}}" value="{{resources[key]['chart_y_column']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Which column contains the data to for the Y axis?</div>
+      </div>
+</div>
+  {% if key > 0 %}
+    </div>
+  {% endif %}
+{% endfor %}
