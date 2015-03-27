@@ -3,7 +3,7 @@
 {% block subtitle %}{{ data.country_title }}{% endblock %}
 {% block crisis_title %} {{ data.country_title }} {% endblock %}
 {% block crisis_actions %}
-    <span class="mR45 pull-right" style="line-height: 50px;">
+<span class="mR45 pull-right" style="line-height: 50px;">
         <span class="followButtonContainer">
             {{ h.follow_button('group', 'col') }}
         </span>
@@ -11,59 +11,61 @@
     </span>
 {% endblock %}
 {% block breadcrumb_content %}
-  <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
-  <li class="active">{{ h.nav_link(data.country_title,
-                        controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController',
-  						action='show', highlight_actions = 'new index') }}</li>
+<li>{% link_for _('Groups'), controller='group', action='index' %}</li>
+<li class="active">{{ h.nav_link(data.country_title,
+    controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController',
+    action='show', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block crisis_map %}
-    <div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
-    {{ super() }}
+<div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
+{{ super() }}
 {% endblock %}
 
 {% block crisis_data %}
-  <div class="row mTop25">
+<div class="row mTop25">
     <div class="col-xs-5">
-      <div class="row">
-        {% block top_line_figures %}
-          {% for item in data.top_line_items %}
+        <div class="row">
+            {% block top_line_figures %}
+            {% for item in data.top_line_items %}
             <div class="col-xs-12">
-              {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
+                {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
                 notes=item.notes, source=item.source,
                 source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
 
 
             </div>
-          {% endfor %}
-        {% endblock %}
-      </div>
+            {% endfor %}
+            {% endblock %}
+        </div>
     </div>
     <div class="col-xs-7">
-      <div class="row">
-        <div id="chart1-datastore-id" style="display: none">{{ data.charts[0].sources[0].datastore_id }}</div>
-        <div id="chart1-configuration" style="display: none">{{ h.dump_json(data.charts[0]) }}</div>
-        <div class="col-xs-12 graph-title">
-          Number of Internally Displaced People <span>OCHA - <a href="/dataset/idps-data-by-year">Data</a></span>
+        <div class="row">
+            {% for ci in data.charts %}
+                <div class="col-xs-12">
+                    <div class="row auto-graph">
+                        <div class="col-xs-12 graph-title">
+                            {{ ci.title }} <span>TBD - <a href="/TBD">Data</a></span>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="graph-data" style="display: none;">
+                                {{ h.json_dumps(ci) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        <div class="col-xs-12">
-          <div id="graph1"></div>
+    </div>
+    <div class="col-xs-7">
+        <div class="row">
         </div>
-        <div id="chart2-datastore-id" style="display: none">{{ data.charts[1].sources[0].datastore_id }}</div>
-        <div id="chart2-configuration" style="display: none">{{ h.dump_json(data.charts[1]) }}</div>
-        <div class="col-xs-12 graph-title">
-          Number of People with Access Constraints <span>OCHA - <a href="/dataset/restricciones-de-acceso">Data</a></span>
-        </div>
-        <div class="col-xs-12">
-          <div id="graph2"></div>
-        </div>
-      </div>
     </div>
 
-  </div>
+</div>
 {% endblock %}
 
 {% block scripts2 %}
-  {{ super() }}
-  {% resource 'hdx_theme/country-colombia' %}
+{{ super() }}
+{% resource 'hdx_theme/country-custom' %}
 {% endblock %}
