@@ -192,10 +192,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             org_dict = {
                 'id': result['id'],
                 'display_name': result.get('display_name', ''),
-                'description': result['group'].description,
+                'description': result['description'],
                 'name': result['name'],
                 'link': org_url[0] if len(org_url) == 1 else None,
-                'revision_id': result['group'].revision_id,
+                'revision_id': result['revision_id'],
                 'topline_dataset': top_line_src_info[0],
                 'topline_resource': top_line_src_info[1],
                 'modified_at': result.get('modified_at', ''),
