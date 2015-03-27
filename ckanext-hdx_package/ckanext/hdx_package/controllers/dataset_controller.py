@@ -48,6 +48,7 @@ flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
 _check_group_auth = logic.auth.create._check_group_auth
 
+
 CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
     'html': 'text/html;charset=utf-8',
@@ -512,6 +513,10 @@ class DatasetController(PackageController):
         context = {'model': model, 'session': model.Session,
                    'api_version': 3, 'for_edit': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        try:
+            check_access('resource_update', context, data)
+        except NotAuthorized:
+            abort(401, _('Unauthorized to edit this resource'))
         pkg_dict = get_action('package_show')(context, {'id': id})
         if pkg_dict['state'].startswith('draft'):
             # dataset has not yet been fully created
@@ -672,6 +677,12 @@ class DatasetController(PackageController):
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
             else:
+                org_id = c.pkg_dict.get('organization',{}).get('id', None)
+                org_info_dict = self._get_org_extras(org_id)
+                image_url = org_info_dict.get('image_url', None)
+                if org_info_dict.get('custom_org', False) and image_url:
+                    self._process_customizations(image_url, org_info_dict.get('customization', None))
+                    return render('package/custom_hdx_read.html', loader_class=loader)
                 return render('package/hdx_read.html', loader_class=loader)
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
@@ -680,6 +691,35 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    def _get_org_extras(self, org_id):
+        if not org_id:
+            return {}
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'include_datasets': False,
+                   'for_view': True}
+        data_dict = {'id': org_id}
+        org_info = get_action(
+                'hdx_light_group_show')(context, data_dict)
+
+        extras_dict = {item['key']: item['value'] for item in org_info.get('extras',{})}
+        extras_dict['image_url'] = org_info.get('image_url', None)
+
+        return extras_dict
+
+    def _process_customizations(self, image_url, json_string):
+        c.logo_config = {
+          'image_url': image_url,
+          'background_color': '#fafafa',
+          'border_color': '#cccccc'
+        }
+        if json_string:
+            custom_dict = json.loads(json_string)
+            if 'true' == custom_dict.get('use_org_color', False):
+                c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
+                c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
+
 
     @staticmethod
     def _has_shapes(resources):

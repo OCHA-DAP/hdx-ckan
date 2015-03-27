@@ -52,6 +52,15 @@
   text-transform: uppercase;
 }
 
+.org-logo(@wrapperWidth: 370px, @wrapperHeight: 200px, @imgMaxWidth: 300px, @imgMaxHeight: 125px ){
+  width: @wrapperWidth;
+  height: @wrapperHeight;
+  text-align: center;
+  img {
+    max-height: @imgMaxHeight;
+    max-width: @imgMaxWidth;
+  }
+}
 
 // Vertical align items using tables
 .table-valign{
