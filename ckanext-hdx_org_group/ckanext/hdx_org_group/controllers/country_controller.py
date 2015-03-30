@@ -103,6 +103,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             c.group_dict = self._action(
                 'hdx_light_group_show')(context, data_dict)
             # c.group = context['group']
+            pass
 
         except NotFound:
             abort(404, _('Group not found'))
