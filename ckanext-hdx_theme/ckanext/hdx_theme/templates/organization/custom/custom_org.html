@@ -6,13 +6,20 @@
   <li class="active"><a>{{data.org_info.name}}</a></li>
 {% endblock %}
 
+{% if data.org_info.image_sq %}
+    {% set image_sq = h.url_for('image_serve', label= data.org_info.image_sq)%}
+{% endif %}
+
+{% if data.org_info.image_rect %}
+    {% set image_rect = h.url_for('image_serve', label= data.org_info.image_rect)%}
+{% endif %}
 
 {% block primary_content %}
     <div id="floatingLogo" style="display: none;">
         <div class="logo pull-left">
             <!-- TODO: add correct image url after functionality is ready  -->
-            {% if data.org_info.image_sq %}
-                <img src="{{data.org_info.image_sq}}"/>
+            {% if image_sq %}
+                <img src="{{image_sq}}"/>
             {% else %}
                 <img src="http://placehold.it/75x75"/>
             {% endif %}
@@ -89,7 +96,7 @@
                     <div class="pull-left">
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
-                                {% if data.org_info.image_rect %}<img src="{{data.org_info.image_rect}}" />
+                                {% if image_rect %}<img src="{{image_rect}}" />
                                 {% else %}
                                 <img src="http://placehold.it/300x125" />
                                 {% endif %}
