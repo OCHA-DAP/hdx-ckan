@@ -5,7 +5,7 @@
 {% block crisis_actions %}
 <span class="mR45 pull-right" style="line-height: 50px;">
         <span class="followButtonContainer">
-            {{ h.follow_button('group', 'col') }}
+            {{ h.follow_button('group', data.country_name) }}
         </span>
         {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
     </span>
@@ -14,7 +14,7 @@
 <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
 <li class="active">{{ h.nav_link(data.country_title,
     controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController',
-    action='show', highlight_actions = 'new index') }}</li>
+    action='read', id=data.country_name, highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block crisis_map %}
