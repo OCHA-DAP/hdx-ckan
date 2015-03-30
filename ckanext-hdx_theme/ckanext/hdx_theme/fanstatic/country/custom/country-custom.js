@@ -45,10 +45,10 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
         }
     };
 
-    if(colXType){
-        config.data.xFormat = colXFormat;
+    if(colXType)
         config.axis.x.type = colXType;
-    }
+    if (colXFormat)
+        config.data.xFormat = colXFormat;
 
     var graph = c3.generate(config);
     //$("#graph1").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/idps-data-by-year"; });;
@@ -98,6 +98,8 @@ function autoGraph() {
                     if (data.fields[0].type == 'timestamp'){
                         columnXType = 'timeseries';
                         columnXFormat = '%Y-%m-%dT%H:%M:%S';
+                    } else if (data.fields[0].type == 'text'){
+                        columnXType = 'category';
                     }
 
 

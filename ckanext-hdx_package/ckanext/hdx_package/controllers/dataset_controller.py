@@ -710,12 +710,15 @@ class DatasetController(PackageController):
 
     def _process_customizations(self, image_url, json_string):
         c.logo_config = {
-          'image_url': image_url,
           'background_color': '#fafafa',
           'border_color': '#cccccc'
         }
         if json_string:
             custom_dict = json.loads(json_string)
+            image_name = custom_dict.get('image_rect', None)
+            if image_name:
+                c.logo_config['image_url'] = h.url_for('image_serve', label=image_name)
+
             if 'true' == custom_dict.get('use_org_color', False):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
