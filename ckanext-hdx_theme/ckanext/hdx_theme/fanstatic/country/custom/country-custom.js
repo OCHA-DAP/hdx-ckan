@@ -41,6 +41,9 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
         },
         axis: {
             x: {
+                tick: {
+                  rotate: 20
+                }
             }
         }
     };
