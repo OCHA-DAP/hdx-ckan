@@ -70,9 +70,11 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
 
-    def _get_charts_config(self, custom_dict):
+    def _get_charts_config(self, custom_dict, top_line_items_count):
         charts = []
-        for chart_config in custom_dict.get('charts', []):
+        for index, chart_config in enumerate(custom_dict.get('charts', [])):
+            if top_line_items_count <= 4 and index == 1:
+                break
             chart_type = 'area'
             if 'bar' in chart_config.get('chart_type', ''):
                 chart_type = 'bar'
@@ -136,7 +138,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 'country_name': group_info['name'],
                 'country_title': group_info.get('title', group_info['name']),
                 'top_line_items': top_line_items,
-                'charts': self._get_charts_config(custom_dict),
+                'charts': self._get_charts_config(custom_dict, len(top_line_items)),
                 'map': self._get_maps_config(custom_dict)
             },
             'errors': None,
