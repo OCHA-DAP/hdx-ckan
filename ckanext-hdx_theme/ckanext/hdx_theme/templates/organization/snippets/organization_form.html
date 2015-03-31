@@ -60,7 +60,7 @@
 <div id="customization-trigger" class="org-control-container">
       <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom organisation page") }}</label>
      <div class="controls" style="display:inline-block">
-        <input type="checkbox" {% if custom_org %}checked{% endif %} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+        <input type="checkbox" {% if custom_org %}checked{% endif %} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
         </div>
     </div>
 {% endif %}
@@ -83,8 +83,9 @@
 </div>
 
 <div class="org-control-container">
-{% set is_upload = customizations['image_rect'] and not customizations['image_rect'].startswith('http') %}
+    {% set is_upload = customizations['image_rect'] and not customizations['image_rect'].startswith('http') %}
     {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
+    {% set is_use_org_color = customizations['use_org_color'] %}
 
     <input type="file" name="image_rect" value="{{customizations['image_rect']}}">
     {# form.image_upload(data, errors, field_url=customizations['image_rect'], field_upload='image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Rectangular Image 300x125')) #}
@@ -96,6 +97,14 @@
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Pick the color which this page\'s color scheme will be based on.' )}}</div>
       </div>
+</div>
+
+
+<div class="org-control-container" style="margin-bottom:30px;">
+    <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Background logo same as base color ") }}</label>
+    <div class="controls" style="display:inline-block">
+        <input type="checkbox" name="use_org_color" id="use_org_color" value="true" {% if is_use_org_color=='true' %}checked{% endif %} style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+    </div>
 </div>
 
 <div class="org-control-container">

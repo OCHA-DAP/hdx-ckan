@@ -26,38 +26,46 @@ json = common.json
 log = logging.getLogger(__name__)
 
 
+def is_custom(environ, result):
+    group_info, custom_dict = get_group(result['id'])
+    result['group_info'] = group_info
+    result['group_customization'] = custom_dict
+    if group_info.get('custom_loc', False):
+        return True
+    return False
+
+
+def get_group(id):
+    context = {'model': model, 'session': model.Session,
+               'include_datasets': False,
+               'for_view': True}
+    data_dict = {'id': id}
+
+    group_info = get_action('hdx_light_group_show')(context, data_dict)
+
+    extras_dict = {item['key']: item['value'] for item in group_info.get('extras', {})}
+    json_string = extras_dict.get('customization', None)
+    if json_string:
+        custom_dict = json.loads(json_string)
+    else:
+        custom_dict = {}
+
+    return group_info, custom_dict
+
+
 class CustomCountryController(group.GroupController, controllers.CrisisController):
 
-    def read(self, id):
+    def read(self, id,  group_info, group_customization):
 
-        group_info, custom_dict = self.get_group(id)
+        # group_info, custom_dict = get_group(id)
 
-        template_data = self.generate_template_data(group_info, custom_dict)
+        template_data = self.generate_template_data(group_info, group_customization)
 
         return render('country/custom_country.html', extra_vars=template_data)
 
     # Will soon be removed
-    def show(self):
-        return self.read(u'col')
-
-    def get_group(self, id):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'schema': self._db_to_form_schema(group_type='group'),
-                   'include_datasets': False,
-                   'for_view': True}
-        data_dict = {'id': id}
-
-        group_info = get_action('hdx_light_group_show')(context, data_dict)
-
-        extras_dict = {item['key']: item['value'] for item in group_info.get('extras',{})}
-        json_string = extras_dict.get('customization', None)
-        if json_string:
-            custom_dict = json.loads(json_string)
-        else:
-            custom_dict = {}
-
-        return group_info, custom_dict
+    # def show(self):
+    #     return self.read(u'col')
 
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
@@ -65,37 +73,29 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_charts_config(self, custom_dict):
         charts = []
         for chart_config in custom_dict.get('charts', []):
-            resource_id1 = chart_config.get('chart_resource_id_1', '')
-            resource_id2 = chart_config.get('chart_resource_id_2', '')
+            chart_type = 'area'
+            if 'bar' in chart_config.get('chart_type', ''):
+                chart_type = 'bar'
             chart = {
                 'title': chart_config.get('chart_title', ''),
-                'type': chart_config.get('chart_type_1', ''),
+                'type': chart_type,
                 'title_x': chart_config.get('chart_x_label', ''),
                 'title_y': chart_config.get('chart_y_label', ''),
-                'sources': [
-                    {
-                        'datastore_id': resource_id1,
-                        'title': self._get_resource_name(resource_id1),
-                        'org_name': 'OCHA',
-                        'url': None,
-                        'column_x': chart_config.get('chart_x_column_1', ''),
-                        'column_y': chart_config.get('chart_y_column_1', ''),
-
-                        }
-                ]
+                'sources': []
             }
-            if resource_id2:
-                chart['sources'].append(
-                    {
-                        'datastore_id': resource_id2,
-                        'title': self._get_resource_name(resource_id2),
+
+            for resource in chart_config.get('resources', []):
+                resource_id = resource.get('chart_resource_id', False)
+                if resource_id:
+                    source = {
+                        'datastore_id': resource_id,
+                        'title': self._get_resource_name(resource_id),
                         'org_name': 'OCHA',
                         'url': None,
-                        'column_x': chart_config.get('chart_x_column_2', ''),
-                        'column_y': chart_config.get('chart_y_column_2', ''),
-
+                        'column_x': resource.get('chart_x_column', False),
+                        'column_y': resource.get('chart_y_column', False),
                         }
-                )
+                    chart['sources'].append(source)
             charts.append(chart)
 
         return charts
@@ -133,6 +133,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         template_data = {
             'data': {
+                'country_name': group_info['name'],
                 'country_title': group_info.get('title', group_info['name']),
                 'top_line_items': top_line_items,
                 'charts': self._get_charts_config(custom_dict),
@@ -153,7 +154,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         crisis_data_access.fetch_data(context)
         top_line_items = crisis_data_access.get_top_line_items()
 
-        formatter = formatters.TopLineItemsFormatter(top_line_items)
+        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
         formatter.format_results()
 
         return top_line_items

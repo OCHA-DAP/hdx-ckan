@@ -74,18 +74,20 @@ def hdx_get_group_activity_list(context, data_dict):
     }
     return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
 
-
+@logic.side_effect_free
 def hdx_light_group_show(context, data_dict):
     id = _get_or_bust(data_dict, "id")
     group_dict = {}
     group = model.Group.get(id)
     if not group:
         raise NotFound
-    group_dict['group'] = group
+    #group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
     group_dict['image_url'] = group.image_url
     group_dict['display_name'] = group_dict['title'] = group.title
+    group_dict['description'] = group.description
+    group_dict['revision_id'] = group.revision_id
 
     result_list = []
     for name, extra in group._extras.iteritems():
@@ -105,6 +107,7 @@ def hdx_light_group_show(context, data_dict):
 def compile_less(result, translate_func=None):
     if 'extras' in result:
         base_color = '#0088FF'  # default value
+        logo_use_org_color = "false"
         less_code_list = None
         for el in result['extras']:
             if el['key'] == 'less':
@@ -114,19 +117,26 @@ def compile_less(result, translate_func=None):
                 try:
                     variables = json.loads(variables)
                     base_color = variables.get('highlight_color', '#0088FF')
+                    logo_use_org_color = variables.get('use_org_color', 'false')
                 except:
                     base_color = '#0088FF'
         if less_code_list:
             less_code = less_code_list.strip()
             if less_code:
-                # Add base color definition
-                less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r' + less_code
+                less_code = _add_custom_less_code(base_color, logo_use_org_color) + less_code
                 css_dest_dir = '/organization/' + result['name']
                 compiler = less.LessCompiler(less_code, css_dest_dir, result['name'],
                                              h.hdx_get_extras_element(result['extras'], value_key="modified_at"),
                                              translate_func=translate_func)
                 compilation_result = compiler.compile_less()
                 result['less_compilation'] = compilation_result
+
+def _add_custom_less_code(base_color, logo_use_org_color):
+    # Add base color definition
+    less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r'
+    if not 'true' == logo_use_org_color:
+        less_code += '@logoBackgroundColor: #FAFAFA; @logoBorderColor: #CCCCCC;'
+    return less_code
 
 
 def hdx_organization_update(context, data_dict):
