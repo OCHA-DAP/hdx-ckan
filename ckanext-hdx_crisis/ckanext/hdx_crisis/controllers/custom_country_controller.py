@@ -73,9 +73,12 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_charts_config(self, custom_dict):
         charts = []
         for chart_config in custom_dict.get('charts', []):
+            chart_type = 'area'
+            if 'bar' in chart_config.get('chart_type', ''):
+                chart_type = 'bar'
             chart = {
                 'title': chart_config.get('chart_title', ''),
-                'type': chart_config.get('chart_type', ''),
+                'type': chart_type,
                 'title_x': chart_config.get('chart_x_label', ''),
                 'title_y': chart_config.get('chart_y_label', ''),
                 'sources': []
@@ -151,7 +154,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         crisis_data_access.fetch_data(context)
         top_line_items = crisis_data_access.get_top_line_items()
 
-        formatter = formatters.TopLineItemsFormatter(top_line_items)
+        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
         formatter.format_results()
 
         return top_line_items

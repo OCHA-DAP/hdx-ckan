@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
+@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
 /*
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
@@ -795,6 +795,7 @@ ul.hdx-bs3 {
 }
 .intro-section .org-logo-large {
   background-color: #0088ff;
+  border: 1px solid #0088ff;
   width: 370px;
   height: 200px;
   text-align: center;

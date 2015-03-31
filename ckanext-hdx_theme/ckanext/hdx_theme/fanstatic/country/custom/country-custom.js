@@ -13,7 +13,9 @@ $(document).ready(function() {
     L.control.attribution({position: 'topright'}).addTo(map);
     map.setView([5, -70], 5);
 
-    //drawDistricts(map);
+    var confJsonText = $("#map-configuration").text();
+    var confJson = JSON.parse(confJsonText);
+    loadMapData(map, confJson);
     autoGraph();
 });
 
@@ -41,6 +43,12 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
         },
         axis: {
             x: {
+                tick: {
+                    rotate: 20,
+                    culling: {
+                        max: 15
+                    }
+                }
             }
         }
     };
@@ -58,7 +66,7 @@ function autoGraph() {
     $(".auto-graph").each(function(idx, element){
         var graphData = $(element).find(".graph-data");
         var data = JSON.parse(graphData.text());
-        graphData.html("<img src='/base/images/loading-spinner.gif' />");
+        graphData.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
         graphData.css("display", "block");
 
         var graph = null;
@@ -121,26 +129,126 @@ function autoGraph() {
     });
 }
 
-function drawDistricts(map){
-    var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
-//  var color = ["#fcdcd2","#fabdae", "#f48272", "#f1635a", "#c06c5f"];
+function fitMap(map, data){
+    //Need to compute Top-Left corner and Bottom-Right corner for polygon.
+    var minLat, minLng, maxLat, maxLng;
+    var init = false;
 
-    var layers = {
-        totalIDPs: {
-            name: 'Number of IDPs per 100,000 inhabitants in 2013',
-//      threshold: [1, 10, 100, 500],
-//      threshold: [10, 100, 500, 1000],
-            threshold: [100, 500, 1000, 2000],
-            values: totalIDPs
+    //Use a stack to traverse the geojson since we can gave many levels of arrays in arrays
+    var stackArrays = [];
+    var stackIndex = [];
+
+    for (var idx in data.features){
+        var feature = data.features[idx];
+        stackArrays.push(feature.geometry.coordinates);
+        stackIndex.push(0);
+    }
+
+    while (stackArrays.length > 0){
+        var array = stackArrays.pop();
+        var index = stackIndex.pop();
+
+        if (index < array.length){
+            var item = array[index];
+            //check if we reached a tuple of coordinates
+            if (!$.isArray(item)){
+                var lat = parseFloat(array[1]);
+                var lng = parseFloat(array[0]);
+                //adjust min/max
+                if (init){
+                    if (lat < minLat)
+                        minLat = lat;
+                    if (lat > maxLat)
+                        maxLat = lat;
+                    if (lng < minLng)
+                        minLng = lng;
+                    if (lng > maxLng)
+                        maxLng = lng;
+                } else {
+                    init = true;
+                    minLat = maxLat = lat;
+                    minLng = maxLng = lng;
+                }
+            }
+            //push in the stack the current array with the next index
+            index++;
+            stackArrays.push(array);
+            stackIndex.push(index);
+            //if we haven't reached a tuple of coordinates, add in the stack the array
+            if ($.isArray(item)){
+                stackArrays.push(item);
+                stackIndex.push(0);
+            }
         }
-    };
+    }
 
+
+    map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
+        maxZoom: 10
+    });
+}
+
+function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
+    var map = {};
+    for (var idx in data){
+        var item = data[idx];
+        map[item[pcodeColumnName]] = item[valueColumnName];
+    }
+    return map;
+}
+
+function loadMapData(map, confJson){
+    var pcodeColumnName = confJson.map_column_1;
+    var valueColumnName = "value";
+
+    var data = null;
+    var dataPromise = $.ajax({
+        url: "/dataset/" + confJson.map_dataset_id_2 + "/resource_download/" + confJson.map_resource_id_2,
+        type: 'GET',
+        dataType: 'JSON',
+        success: function (result) {
+            data = result;
+        }
+    });
+    var values = null;
+    var sql = 'SELECT "'+ pcodeColumnName +'", "'+ valueColumnName +'" FROM "'+ confJson.map_resource_id_1 +'"';
+    var urldata = encodeURIComponent(JSON.stringify({sql: sql}));
+    var valuesPromise;
+    if (confJson.map_datatype_1 == "filestore"){
+        valuesPromise = $.ajax({
+            url: "/dataset/" + confJson.map_dataset_id_1 + "/resource_download/" + confJson.map_resource_id_1,
+            type: 'GET',
+            dataType: 'JSON',
+            success: function (result) {
+                values = processMapValues(result, confJson, pcodeColumnName, valueColumnName);
+            }
+        });
+    } else {
+        valuesPromise = $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: '/api/3/action/datastore_search_sql',
+            data: urldata,
+            success: function(result){
+                values = processMapValues(result.result.records, confJson, pcodeColumnName, valueColumnName);
+                return values;
+            }
+        });
+    }
+
+    $.when.apply($, [dataPromise, valuesPromise]).done(function(sources){
+        drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName);
+    });
+
+}
+
+function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName){
     function getStyle(values, threshold){
         function internalGetColor(color, i){
             return {color: color[i], fillColor: color[i], fillOpacity: 0.6, opacity: 0.7, weight: 1};
         }
         return function (feature){
-            var pcoderef = feature.properties.PCODE;
+            var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
                 for (var i = 0; i < 4; i++){
                     if (values[pcoderef] < threshold[i])
@@ -151,64 +259,59 @@ function drawDistricts(map){
                 return {"color": "none","opacity":1};
             }
         };
-
     }
 
+    var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
+    var threshold = [1, 1000, 5000, 10000];
     var info;
-    var regularLayers = {}, extraLayers = {};
 
-    $.each(layers, function (idx, val) {
-        regularLayers[val['name']] = L.geoJson(regions,{
-            style: getStyle(val['values'], val['threshold']),
-            onEachFeature: function (feature, layer) {
-                // no longer implementing the click function on the layers for now
-//          layer.on('click', function (){
-//            window.location.href="/group/" + feature.properties.CNTRY_CODE.toLowerCase() + "?sort=metadata_modified+desc"
-//          });
-                (function(layer, properties) {
-                    // Create a mouseover event
-                    layer.on("mouseover", function (e) {
-                        // Change the style to the highlighted version
+    fitMap(map, data);
+    L.geoJson(data,{
+        style: getStyle(values, threshold),
+        onEachFeature: function (feature, layer) {
+            (function(layer, properties) {
+                // Create a mouseover event
+                layer.on("mouseover", function (e) {
+                    // Change the style to the highlighted version
 
-                        var styleFunction;
-                        if (layer.defaultOptions == null)
-                            styleFunction = layer._options.style;
-                        else
-                            styleFunction = layer.defaultOptions.style;
-                        if (styleFunction != undefined) {
-                            var currentStyle = styleFunction({properties: properties});
-                            currentStyle['fillOpacity'] = 1;
-                            currentStyle['opacity'] = 1;
-                            currentStyle['color'] = '#888888';
-                            if (!L.Browser.ie && !L.Browser.opera) {
-                                layer.bringToFront();
-                                for (eLayer in extraLayers)
-                                    if (map.hasLayer(extraLayers[eLayer]))
-                                        extraLayers[eLayer].bringToFront();
-                            }
-
-                            layer.setStyle(currentStyle);
+                    var styleFunction;
+                    if (layer.defaultOptions == null)
+                        styleFunction = layer._options.style;
+                    else
+                        styleFunction = layer.defaultOptions.style;
+                    if (styleFunction != undefined) {
+                        var currentStyle = styleFunction({properties: properties});
+                        currentStyle['fillOpacity'] = 1;
+                        currentStyle['opacity'] = 1;
+                        currentStyle['color'] = '#888888';
+                        if (!L.Browser.ie && !L.Browser.opera) {
+                            layer.bringToFront();
+                            //for (eLayer in extraLayers)
+                            //    if (map.hasLayer(extraLayers[eLayer]))
+                            //        extraLayers[eLayer].bringToFront();
                         }
 
-                        info.update(properties);
-                    });
-                    // Create a mouseout event that undoes the mouseover changes
-                    layer.on("mouseout", function (e) {
-                        // Start by reverting the style back
-                        var styleFunction;
-                        if (layer.defaultOptions == null)
-                            styleFunction = layer._options.style;
-                        else
-                            styleFunction = layer.defaultOptions.style;
-                        layer.setStyle(styleFunction({properties: properties}));
-                        info.update();
-                    });
-                    // Close the "anonymous" wrapper function, and call it while passing
-                    // in the variables necessary to make the events work the way we want.
-                })(layer, feature.properties);
-            }
-        });
-    });
+                        layer.setStyle(currentStyle);
+                    }
+
+                    info.update(properties);
+                });
+                // Create a mouseout event that undoes the mouseover changes
+                layer.on("mouseout", function (e) {
+                    // Start by reverting the style back
+                    var styleFunction;
+                    if (layer.defaultOptions == null)
+                        styleFunction = layer._options.style;
+                    else
+                        styleFunction = layer.defaultOptions.style;
+                    layer.setStyle(styleFunction({properties: properties}));
+                    info.update();
+                });
+                // Close the "anonymous" wrapper function, and call it while passing
+                // in the variables necessary to make the events work the way we want.
+            })(layer, feature.properties);
+        }
+    }).addTo(map);
 
     info = L.control({position: 'topleft'});
 
@@ -218,12 +321,12 @@ function drawDistricts(map){
     };
 
     // method that we will use to update the control based on feature properties passed
-    info.update = function (props) {
-        this._div.innerHTML = '<h4>' + layers[this._layer]['name'] + '</h4>' +  (props ?
+    info.update = function (properties) {
+        this._div.innerHTML = '<h4>' + 'Title' + '</h4>' +  (properties ?
         '<table>' +
-        '<tr><td style="text-align: right;">Department: </td><td>&nbsp;&nbsp; <b>' + props.NAME + '</b><td></tr>' +
-        '<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
-        '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + layers[this._layer]['values'][props.PCODE] + '</b><td></tr>' +
+        '<tr><td style="text-align: right;">Department: </td><td>&nbsp;&nbsp; <b>' + properties['admin1Name'] + '</b><td></tr>' +
+        //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
+        '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
         '</table>'
             : 'No data available');
     };
@@ -250,8 +353,6 @@ function drawDistricts(map){
         return this._div;
     };
     legend.update = function (){
-        var threshold = layers[this._layer]['threshold'];
-
         this._div.innerHTML = '<div><i style="background: ' + color[0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
         for (var i = 0; i < threshold.length; i++) {
             this._div.innerHTML +=
@@ -260,27 +361,17 @@ function drawDistricts(map){
         }
     };
     legend.updateLayer = function (layer){
-        for (l in layers)
-            if (layers[l]['name'] == layer){
-                this._layer = l;
-                this.update();
-                return;
-            }
+        //for (l in layers)
+        //    if (layers[l]['name'] == layer){
+        //         this._layer = l;
+        //        this.update();
+        //        return;
+        //    }
 
         this.update();
         this._layer = null;
     };
     legend.addTo(map);
+    legend.updateLayer();
 
-    //L.control.layers(regularLayers).addTo(map);
-
-    map.on('baselayerchange', function (eventLayer) {
-        info.updateLayer(eventLayer.name);
-        legend.updateLayer(eventLayer.name);
-    });
-
-    var defaultLayer = layers['totalIDPs']['name'];
-    map.addLayer(regularLayers[defaultLayer]);
-    info.updateLayer(defaultLayer);
-    legend.updateLayer(defaultLayer);
 }
