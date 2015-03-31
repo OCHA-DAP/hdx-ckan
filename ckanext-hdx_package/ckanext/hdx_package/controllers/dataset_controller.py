@@ -679,9 +679,8 @@ class DatasetController(PackageController):
             else:
                 org_id = c.pkg_dict.get('organization',{}).get('id', None)
                 org_info_dict = self._get_org_extras(org_id)
-                image_url = org_info_dict.get('image_url', None)
-                if org_info_dict.get('custom_org', False) and image_url:
-                    self._process_customizations(image_url, org_info_dict.get('customization', None))
+                if org_info_dict.get('custom_org', False):
+                    self._process_customizations(org_info_dict.get('customization', None))
                     return render('package/custom_hdx_read.html', loader_class=loader)
                 return render('package/hdx_read.html', loader_class=loader)
         except ckan.lib.render.TemplateNotFound:
@@ -708,14 +707,17 @@ class DatasetController(PackageController):
 
         return extras_dict
 
-    def _process_customizations(self, image_url, json_string):
+    def _process_customizations(self, json_string):
         c.logo_config = {
-          'image_url': image_url,
           'background_color': '#fafafa',
           'border_color': '#cccccc'
         }
         if json_string:
             custom_dict = json.loads(json_string)
+            image_name = custom_dict.get('image_rect', None)
+            if image_name:
+                c.logo_config['image_url'] = h.url_for('image_serve', label=image_name)
+
             if 'true' == custom_dict.get('use_org_color', False):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')

@@ -75,7 +75,8 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         else:
             geotype = "datastore"
             geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
-    
+
+        #beware that visualisation type constants are also used in the template to select different resource bundles
         if visualization['visualization-select'] == '3W-dashboard':
             config = {'title':visualization['viz-title'],
                 'description':visualization['viz-description'],
@@ -90,8 +91,13 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'x':visualization['pos-x'],
                 'y':visualization['pos-y'],
                 'zoom':visualization['zoom'],
-                'colors':visualization.get('colors','')
-            };
+                'colors':visualization.get('colors',''),
+                'type': visualization['visualization-select']
+            }
+        else:
+            config = {
+                'type': visualization['visualization-select']
+            }
         return config
 
     def generate_template_data(self, org_info):
@@ -152,6 +158,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'request_membership': allow_req_membership
                 },
                 'visualization_config': json.dumps(viz_config),
+                'visualization_config_type': viz_config['type'],
                 'visualization_config_url': urlencode(viz_config, True),
                 'visualization_embed_url': config.get('ckan.site_url', '').strip() + "/widget/3W"
 
@@ -192,10 +199,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             org_dict = {
                 'id': result['id'],
                 'display_name': result.get('display_name', ''),
-                'description': result['group'].description,
+                'description': result['description'],
                 'name': result['name'],
                 'link': org_url[0] if len(org_url) == 1 else None,
-                'revision_id': result['group'].revision_id,
+                'revision_id': result['revision_id'],
                 'topline_dataset': top_line_src_info[0],
                 'topline_resource': top_line_src_info[1],
                 'modified_at': result.get('modified_at', ''),
