@@ -18,10 +18,10 @@
     <div id="floatingLogo" style="display: none;">
         <div class="logo pull-left">
             <!-- TODO: add correct image url after functionality is ready  -->
-            {% if image_sq %}
-                <img src="{{image_sq}}"/>
+            {% if image_rect %}
+                <img src="{{image_rect}}"/>
             {% else %}
-                <img src="http://placehold.it/75x75"/>
+                <img src="http://placehold.it/300x125"/>
             {% endif %}
         </div>
         <div class="title-share pull-left">
@@ -96,9 +96,9 @@
                     <div class="pull-left">
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
-                                {% if image_rect %}<img src="{{image_rect}}" />
+                                {% if image_sq %}<img src="{{image_sq}}" />
                                 {% else %}
-                                <img src="http://placehold.it/300x125" />
+                                <img src="http://placehold.it/75x75" />
                                 {% endif %}
                             </div>
                             <span class="admin-menu">
@@ -169,11 +169,11 @@
                 </span>
             </div>
         </div>
-
+{% set viz_title = h.load_json(data.visualization_config)['title'] %}
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="mTop20 mBottom20">
                 <div class="pull-left visualization-title">
-                    Visualisation title
+                    {{viz_title}}
                 </div>
                 <div class="pull-right">
                     <ul class="mainLinks visualization-links">
@@ -227,8 +227,6 @@
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/custom-org' %}
   {% resource 'hdx_theme/search' %}
-  {% resource 'hdx_theme/popup' %}
-  {% resource 'hdx_theme/popup-embed' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search-facets' %}
   {% resource 'hdx_theme/custom-visualization' %}
