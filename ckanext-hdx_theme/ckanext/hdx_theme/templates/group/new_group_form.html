@@ -79,6 +79,12 @@ overriding the form blocks depending on the current context
 <input type="hidden" name="customization" value="" id="customization-json">
 </div>
 
+<style>
+.org-control-info{
+  margin-top:-22px;
+}
+</style>
+
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}
 
