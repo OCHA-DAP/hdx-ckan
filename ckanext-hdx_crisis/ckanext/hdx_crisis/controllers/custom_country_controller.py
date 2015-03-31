@@ -154,7 +154,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         crisis_data_access.fetch_data(context)
         top_line_items = crisis_data_access.get_top_line_items()
 
-        formatter = formatters.TopLineItemsFormatter(top_line_items)
+        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
         formatter.format_results()
 
         return top_line_items
