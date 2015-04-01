@@ -52,6 +52,14 @@ def get_group(id):
 
     return group_info, custom_dict
 
+def _check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[]):
+    for key, value in dictionary.iteritems():
+            if key not in skipped_keys:
+                value = value.strip() if value else value
+                if not value:
+                    log.warning(warning_template.format(key))
+                    return False
+    return True
 
 class CustomCountryController(group.GroupController, controllers.CrisisController):
 
@@ -93,12 +101,13 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                         'datastore_id': resource_id,
                         'title': self._get_resource_name(resource_id),
                         'org_name': 'OCHA',
-                        'url': None,
+                        # 'url': None,
                         'column_x': resource.get('chart_x_column', False),
                         'column_y': resource.get('chart_y_column', False),
                         }
                     chart['sources'].append(source)
-            charts.append(chart)
+            if self._show_chart(chart):
+                charts.append(chart)
 
         return charts
 
@@ -114,6 +123,26 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
     def _get_maps_config(self, custom_dict):
         return custom_dict.get('map', {})
+
+    def _show_map(self, map_dict):
+        return _check_all_str_fields_not_empty(map_dict, 'Map config field "{}" is empty')
+
+    def _show_chart(self, chart_dict):
+        chart_main_check = \
+            _check_all_str_fields_not_empty(chart_dict,
+                                            'Chart config field "{}" is empty', ['sources'])
+        if not chart_main_check:
+            return False
+        if len(chart_dict.get('sources', [])) == 0:
+            return False
+
+        chart_src_check = \
+            _check_all_str_fields_not_empty(chart_dict['sources'][0],
+                                            'Chart source config field "{}" is empty')
+        if not chart_src_check:
+            return False
+
+        return True
 
     def generate_template_data(self, group_info, custom_dict):
 
@@ -139,11 +168,14 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 'country_title': group_info.get('title', group_info['name']),
                 'top_line_items': top_line_items,
                 'charts': self._get_charts_config(custom_dict, len(top_line_items)),
+                'show_map': True,
                 'map': self._get_maps_config(custom_dict)
             },
             'errors': None,
             'error_summary': None,
         }
+
+        template_data['data']['show_map'] = self._show_map(template_data['data']['map'])
 
         return template_data
 
