@@ -18,8 +18,10 @@
 {% endblock %}
 
 {% block crisis_map %}
-<div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
-{{ super() }}
+    {% if data.show_map %}
+        <div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
+        {{ super() }}
+    {% endif %}
 {% endblock %}
 
 {% block crisis_data %}
