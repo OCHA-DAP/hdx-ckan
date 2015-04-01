@@ -8,11 +8,12 @@ $(document).ready(function(){
 		}
 	});
 
-	$('#chart-select').change(function(){
+	$('#chart-select-1, #chart-select-2').click(function(){
+		chart_num = $(this).attr('chart-num');
 		if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
-			$('#second-line').show();
+			$('#chart_'+chart_num+'_second_line').show();
 		}else{
-			$('#second-line').hide();
+			$('#chart_'+chart_num+'_second_line').hide();
 		}
 	})
 	//On form submit
