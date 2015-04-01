@@ -4,8 +4,8 @@
 
 <div class="row" style="padding-left:25px;">
 <div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
-  <h3>Map Labels</h3>
-<div class="org-control-container" style="margin-bottom:30px;">
+  <h3>Values to Map</h3>
+<div class="org-control-container" style="margin-bottom:30px; margin-left:-130px;">
 <div class="controls">
   <label class="control-label" for="map-select">Data Type</label>
           <select name="map_datatype_1" class="map_config">
@@ -34,11 +34,25 @@
 </div>
 </div>
 
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_values">Values Column</label>
+          <input type="text" name='map_values' id='map_values' placeholder="{{_('Values')}}" class='map_config' value="{{customizations['map']['map_values']}}"/>
+</div>
+</div>
+
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_threshold">Threshold</label>
+          <input type="text" name='map_threshold' id='map_threshold' placeholder="{{_('Threshold')}}" class='map_config' value="{{customizations['map']['map_threshold']}}"/>
+</div>
+</div>
+
 
 </div>
 <div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
    <h3>Map Bounderies</h3>
-<div class="org-control-container" style="margin-bottom:30px;">
+<div class="org-control-container" style="margin-bottom:30px; margin-left:-130px;">
 <div class="controls">
   <label class="control-label" for="map-select">Data Type</label>
           <select name="map_datatype_2" class="map_config">
@@ -67,6 +81,19 @@
 </div>
 </div>
 
+<div class="org-control-container">
+<div class="control-group control-full org-control">
+  <label class="control-label" for="map_title_column">Title Column</label>
+          <input type="text" name='map_title_column' id='map_title_column' placeholder="{{_('Title Column')}}" class='map_config' value="{{customizations['map']['map_title_column']}}"/>
+</div>
 </div>
 
 </div>
+
+</div>
+
+<style>
+label{
+  text-align: left !important;
+}
+</style>
