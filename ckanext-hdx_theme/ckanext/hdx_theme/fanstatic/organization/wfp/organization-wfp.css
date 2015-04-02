@@ -809,12 +809,10 @@ ul.hdx-bs3 {
   max-width: 300px;
 }
 .intro-section .org-title {
-  width: 470px;
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 36px;
   color: #0088ff;
-  line-height: 1;
 }
 .intro-section .mainLinks.org-info-links {
   padding-left: 0;
