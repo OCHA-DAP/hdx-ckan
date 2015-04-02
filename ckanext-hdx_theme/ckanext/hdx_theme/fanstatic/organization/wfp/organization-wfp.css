@@ -813,6 +813,7 @@ ul.hdx-bs3 {
   font-weight: 400;
   font-size: 36px;
   color: #0088ff;
+  line-height: 1;
 }
 .intro-section .mainLinks.org-info-links {
   padding-left: 0;
@@ -841,6 +842,9 @@ ul.hdx-bs3 {
   position: absolute;
   bottom: 15px;
   right: 15px;
+}
+.intro-section div.summary p {
+  margin: 0px;
 }
 .org-section-title {
   margin-top: 30px;
