@@ -289,6 +289,8 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                 returnNew = false;
             }
         }
+        else
+            returnNew = false
         if (returnNew)
             return threshold;
         return defaultThreshold;
