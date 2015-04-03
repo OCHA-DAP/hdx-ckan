@@ -3,7 +3,7 @@
 ckan.module('hdx_show_more', function ($, _) {
   return {
 	options: {
-		points: 370,
+		points: 370
 	},
     initialize: function () {
 //      this.el.find('span').more({wordBreak: true, length: 370});

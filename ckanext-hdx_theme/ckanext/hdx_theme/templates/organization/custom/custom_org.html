@@ -18,10 +18,10 @@
     <div id="floatingLogo" style="display: none;">
         <div class="logo pull-left">
             <!-- TODO: add correct image url after functionality is ready  -->
-            {% if image_rect %}
-                <img src="{{image_rect}}"/>
+            {% if image_sq %}
+                <img src="{{image_sq}}" />
             {% else %}
-                <img src="http://placehold.it/300x125"/>
+                <img src="http://placehold.it/75x75" />
             {% endif %}
         </div>
         <div class="title-share pull-left">
@@ -63,13 +63,13 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12">
-                            <span data-module="hdx_show_more" data-module-points="340" style="visibility: hidden;" class="org-description">
+                            <span data-module="hdx_show_more" data-module-points="320" style="visibility: hidden;" class="org-description">
                                 {{ h.render_markdown(data.org_info.description) }}
                             </span>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 mTop30">
+                        <div class="col-xs-12 mTop23">
                             {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right" %}
                             {{ h.follow_button('group', data.org_info.id) }}
                             {% if data.permissions.request_membership %}
@@ -96,9 +96,10 @@
                     <div class="pull-left">
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
-                                {% if image_sq %}<img src="{{image_sq}}" />
+                                {% if image_rect %}
+                                    <img src="{{image_rect}}"/>
                                 {% else %}
-                                <img src="http://placehold.it/75x75" />
+                                    <img src="http://placehold.it/300x125"/>
                                 {% endif %}
                             </div>
                             <span class="admin-menu">
@@ -184,6 +185,7 @@
             </div>
             <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
         </div>
+        <div style="display: none" id="wfp-viz-base-url">{{ data.visualization_basemap_url }}</div>
         {% if data.visualization_config_type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="row">

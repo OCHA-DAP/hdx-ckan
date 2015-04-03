@@ -160,7 +160,9 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'visualization_config': json.dumps(viz_config),
                 'visualization_config_type': viz_config['type'],
                 'visualization_config_url': urlencode(viz_config, True),
-                'visualization_embed_url': config.get('ckan.site_url', '').strip() + "/widget/3W"
+                'visualization_embed_url': self._get_embed_url(),
+                'visualization_basemap_url': config.get('hdx.orgmap.url')
+
 
             },
             'errors': None,
@@ -169,6 +171,15 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         }
 
         return template_data
+
+    def _get_embed_url(self):
+        ckan_url = config.get('ckan.site_url', '').strip()
+        position = ckan_url.find('//')
+        if position >= 0:
+            ckan_url = ckan_url[position:]
+
+        url = ckan_url + "/widget/3W"
+        return url
 
     def get_org(self, org_id):
         group_type = 'organization'
