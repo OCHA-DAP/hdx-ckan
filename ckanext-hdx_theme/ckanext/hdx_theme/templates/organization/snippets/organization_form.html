@@ -76,9 +76,7 @@
 {% set is_upload = customizations['image_sq'] and not customizations['image_sq'].startswith('http') %}
     {% set is_url = customizations['image_sq'] and customizations['image_sq'].startswith('http') %}
 
-<input type="file" id="fileupload-sq" name="image_sq" value="{{customizations['image_sq']}}">
-
-    {# form.image_upload(data, errors, field_url=customizations['image_sq'], field_upload='image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Square Image 75x75')) #}
+    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Square Image 75x75')) }}
 
 </div>
 
@@ -87,8 +85,7 @@
     {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
     {% set is_use_org_color = customizations['use_org_color'] %}
 
-    <input type="file" id="fileupload-rect" name="image_rect" value="{{customizations['image_rect']}}">
-    {# form.image_upload(data, errors, field_url=customizations['image_rect'], field_upload='image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Rectangular Image 300x125')) #}
+    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Rectangular Image 300x125')) }}
 
 </div>
 
@@ -223,7 +220,5 @@
   {% endblock %}
 </form>
 
-
 {% resource 'hdx_theme/colorpicker' %}
-{% resource 'hdx_theme/image-upload' %}
 {% resource 'hdx_theme/custom_organization_creation.js' %}
