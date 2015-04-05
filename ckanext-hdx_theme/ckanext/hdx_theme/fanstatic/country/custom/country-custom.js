@@ -140,8 +140,10 @@ function fitMap(map, data){
 
     for (var idx in data.features){
         var feature = data.features[idx];
-        stackArrays.push(feature.geometry.coordinates);
-        stackIndex.push(0);
+        if (feature.geometry && feature.geometry.coordinates){
+            stackArrays.push(feature.geometry.coordinates);
+            stackIndex.push(0);
+        }
     }
 
     while (stackArrays.length > 0){
@@ -199,7 +201,7 @@ function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
 
 function loadMapData(map, confJson){
     var pcodeColumnName = confJson.map_column_1;
-    var valueColumnName = "value";
+    var valueColumnName = confJson.map_values ? confJson.map_values : 'value';
 
     var data = null;
     var dataPromise = $.ajax({
@@ -261,8 +263,41 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         };
     }
 
+    function getThreshold(defaultThreshold) {
+        var returnNew = true;
+        var threshold = [];
+        if (confJson.map_threshold) {
+            try{
+                var items = confJson.map_threshold.split(',');
+                if (items.length > 1) {
+                    for (var i = 0; i < items.length; i++) {
+                        var item = items[i].trim();
+                        var itemInt = parseInt(item);
+                        if (itemInt && !isNaN(itemInt)){
+                            threshold.push(itemInt);
+                        }
+                        else {
+                            returnNew = false;
+                            break;
+                        }
+                    }
+                }
+                else
+                    returnNew = false;
+            }
+            catch (e){
+                returnNew = false;
+            }
+        }
+        else
+            returnNew = false
+        if (returnNew)
+            return threshold;
+        return defaultThreshold;
+    }
+
     var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
-    var threshold = [1, 1000, 5000, 10000];
+    var threshold = getThreshold([1, 1000, 5000, 10000]);
     var info;
 
     fitMap(map, data);
@@ -322,9 +357,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     // method that we will use to update the control based on feature properties passed
     info.update = function (properties) {
+        var titleField = confJson.map_title_column ? confJson.map_title_column : 'admin1Name';
         this._div.innerHTML = '<h4>' + 'Title' + '</h4>' +  (properties ?
         '<table>' +
-        '<tr><td style="text-align: right;">Department: </td><td>&nbsp;&nbsp; <b>' + properties['admin1Name'] + '</b><td></tr>' +
+        '<tr><td style="text-align: right;">Department: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
         //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
         '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
         '</table>'
