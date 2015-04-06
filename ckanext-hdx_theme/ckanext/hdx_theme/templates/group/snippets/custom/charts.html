@@ -74,6 +74,19 @@
   {% endif %}
 <div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_dataset_id_{{key+1}}">Dataset ID</label>
+    <div class="controls ">
+    <input id="chart_dataset_id_{{key+1}}" type="text" name="chart_dataset_id_{{key+1}}" value="{{resources[key]['chart_dataset_id']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">What is the ID of the dataset which has the data in it?</div>
+      </div>
+</div>
+
+
+<div class="org-control-container">
+<div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="chart_resource_id_{{key+1}}">Resource ID</label>
     <div class="controls ">
     <input id="chart_resource_id_{{key+1}}" type="text" name="chart_resource_id_{{key+1}}" value="{{resources[key]['chart_resource_id']}}" placeholder="" class="chart_config">
