@@ -418,10 +418,10 @@ body {
   color: #f2645a;
 }
 .newHeader .header-nav-bg {
-  background-color: #363636;
+  background-color: #ffffff;
 }
 .newHeader .header-nav-border {
-  border-bottom: 3px solid #888888;
+  border-bottom: 3px solid #cccccc;
 }
 .newHeader .header-nav {
   height: 55px;
@@ -430,7 +430,7 @@ body {
   height: 55px;
 }
 .newHeader .header-user-bg {
-  background-color: #000000;
+  background-color: #333333;
 }
 .newHeader .submitData {
   /*Submit Data Button*/
@@ -472,7 +472,7 @@ body {
   height: 55px;
   margin-left: 50px;
   width: 350px;
-  border-bottom: 3px solid #eeeeee;
+  border-bottom: 3px solid #888888;
   margin-bottom: -3px;
 }
 .header-nav-search .header-search-form {
@@ -510,11 +510,11 @@ body {
   font-size: 18px;
   line-height: 28px;
   outline: none;
-  color: #ffffff;
+  color: #000000;
 }
 .header-nav-search .header-search-form input::-webkit-input-placeholder,
 .header-nav-search .header-search-form input:-ms-input-placeholder {
-  color: #888888;
+  color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -522,7 +522,7 @@ body {
 }
 .header-nav-search .header-search-form input:-moz-placeholder,
 .header-nav-search .header-search-form input::-moz-placeholder {
-  color: #888888;
+  color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -530,7 +530,7 @@ body {
   opacity: 1;
 }
 .newHeader .header-nav .header-nav-search .header-search-form input::-webkit-input-placeholder {
-  color: #888888;
+  color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -555,7 +555,7 @@ body {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage-new/logo-beta-inverted.svg");
+  background-image: url("/images/homepage-new/logo-beta.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;
@@ -580,7 +580,7 @@ body {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #ffffff;
+  color: #333333;
   letter-spacing: 0.03em;
   line-height: 31px;
   text-transform: uppercase;
@@ -602,7 +602,7 @@ body {
 }
 /* Style breadcrumbs */
 .toolbarRow {
-  background-color: #cccccc;
+  background-color: #eeeeee;
   height: 20px;
 }
 .toolbarRow .toolbar {
