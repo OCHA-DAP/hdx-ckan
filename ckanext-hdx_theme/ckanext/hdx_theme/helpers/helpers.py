@@ -445,10 +445,14 @@ def hdx_follow_button(obj_type, obj_id, **kw):
         context = {'model': model, 'session': model.Session, 'user': c.user}
         action = 'am_following_%s' % obj_type
         following = logic.get_action(action)(context, {'id': obj_id})
+        follow_extra_text = _('This Data')
+        if kw and 'follow_extra_text' in kw:
+            follow_extra_text = kw.pop('follow_extra_text')
         return h.snippet('snippets/hdx_follow_button.html',
                          following=following,
                          obj_id=obj_id,
                          obj_type=obj_type,
+                         follow_extra_text=follow_extra_text,
                          params=kw)
     return ''
 

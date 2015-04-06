@@ -16,23 +16,36 @@
 
 {% block primary_content %}
     <div id="floatingLogo" style="display: none;">
-        <div class="logo pull-left">
-            <!-- TODO: add correct image url after functionality is ready  -->
-            {% if image_sq %}
-                <img src="{{image_sq}}" />
-            {% else %}
-                <img src="http://placehold.it/75x75" />
-            {% endif %}
+        <div class="logo pull-left table-valign">
+            <div class="table-valign-content">
+                <!-- TODO: add correct image url after functionality is ready  -->
+                {% if image_sq %}
+                    <img class="org-logo" src="{{ image_sq }}" alt="{{ _('small logo') }}">
+                {% else %}
+                    <img class="org-logo" src="http://placehold.it/75x75" />
+                {% endif %}
+            </div>
         </div>
         <div class="title-share pull-left">
             <div>{{data.org_info.display_name}}</div>
 
             <a href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
-               data-module-social_wrapper_div_id="dataset_social_wrapper" title="" onclick="return false;"
+               data-module-social_wrapper_div_id="dataset_social_wrapper_floating" title="" onclick="return false;"
                data-original-title="Share">
                 {{ _("Share") }}
             </a>
+            <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
+
+            {{ h.hdx_follow_button('group', data.org_info.id, follow_extra_text=' ' ) }}
+
+            {% if data.permissions.request_membership %}
+                <a href="#" data-toggle="modal" data-target="#req-membership-div">
+                    {{ _("Request-Membership") }}
+                </a>
+            {% endif %}
+
         </div>
+
     </div>
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -56,7 +69,11 @@
                                         {{ data.member_count }} {{ _('Members') }}
                                     </a>
                                 </li>
-                                <li><a href="#" class="disabled">{{ data.follower_count }} {{ _('Followers') }}</a></li>
+                                <li>
+                                    <a href="#" class="followersNumber disabled">
+                                        <span>{{ data.follower_count }}</span> {{ _('Followers') }}
+                                    </a>
+                                </li>
                                 <li><a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a></li>
                             </ul>
                         </div>
