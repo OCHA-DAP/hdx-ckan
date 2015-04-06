@@ -364,9 +364,9 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     // method that we will use to update the control based on feature properties passed
     info.update = function (properties) {
         var titleField = confJson.map_title_column ? confJson.map_title_column : 'admin1Name';
-        this._div.innerHTML = '<h4>' + 'Title' + '</h4>' +  (properties ?
+        this._div.innerHTML = '<h4>' + 'Map Title' + '</h4>' +  (properties ?
         '<table>' +
-        '<tr><td style="text-align: right;">Department: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
+        '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
         //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
         '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
         '</table>'
@@ -376,12 +376,12 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         this._div.innerHTML = message;
     };
     info.updateLayer = function (layer) {
-        for (l in layers)
-            if (layers[l]['name'] == layer){
-                this._layer = l;
-                this.update();
-                return;
-            }
+        //for (var l in layers)
+        //    if (layers[l]['name'] == layer){
+        //        this._layer = l;
+        //        this.update();
+        //        return;
+        //    }
         this.update();
         this._layer = null;
     };
@@ -415,5 +415,6 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     };
     legend.addTo(map);
     legend.updateLayer();
+    info.updateLayer();
 
 }
