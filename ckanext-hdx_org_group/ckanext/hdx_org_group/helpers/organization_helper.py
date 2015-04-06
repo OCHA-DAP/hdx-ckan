@@ -176,12 +176,12 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     except:
         customization = {'image_sq':'','image_rect':''}
 
-    if data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
+    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
         upload1 = uploader.Upload('group', customization['image_sq'])
         upload1.update_data_dict(data_dict, 'image_sq',
                            'image_sq_upload', 'clear_upload')
 
-    if data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
+    if 'image_sq_upload' in data_dict and data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
         upload2 = uploader.Upload('group', customization['image_rect'])
         upload2.update_data_dict(data_dict, 'image_rect',
                            'image_rect_upload', 'clear_upload')
@@ -190,8 +190,6 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization'] = json.loads(data_dict['customization'])
     except:
         data_dict['customization'] = {}
-
-    print data_dict
 
     storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
