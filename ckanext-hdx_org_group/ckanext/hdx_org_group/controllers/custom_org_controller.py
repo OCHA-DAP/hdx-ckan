@@ -134,7 +134,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             {'model': model, 'session': model.Session},
             {'id': org_info['id']}
         )
-
+        add_data_url = h.url_for('add dataset')+'?organization_id={}'.format(org_info['id'])
         template_data = {
             'data': {
                 'org_info': org_info,
@@ -149,7 +149,8 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'links': {
                     'edit': h.url_for('organization_edit', id=org_id),
                     'members': h.url_for('organization_members', id=org_id),
-                    'request_membership': h.url_for('request_membership', org_id=org_id)
+                    'request_membership': h.url_for('request_membership', org_id=org_id),
+                    'add_data': add_data_url
                 },
                 'request_params': request.params,
                 'permissions': {
