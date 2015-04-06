@@ -128,6 +128,11 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         allow_basic_user_info = self.check_access('hdx_basic_user_info')
         allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
 
+        allow_edit = self.check_access('organization_update', {'id': org_info['id']})
+        allow_add_dataset = self.check_access('package_create',
+                                              {'organization_id': org_info['id'],
+                                               'owner_org': org_info['id']})
+
         viz_config = self.assemble_viz_config(org_info['visualization_config'])
 
         follower_count = get_action('group_follower_count')(
@@ -154,10 +159,12 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 },
                 'request_params': request.params,
                 'permissions': {
-                    'edit': self.check_access('organization_update', {'id': org_info['id']}),
+                    'edit': allow_edit,
+                    'add_dataset': allow_add_dataset,
                     'view_members': allow_basic_user_info,
                     'request_membership': allow_req_membership
                 },
+                'show_admin_menu': allow_add_dataset or allow_edit,
                 'visualization_config': json.dumps(viz_config),
                 'visualization_config_type': viz_config['type'],
                 'visualization_config_url': urlencode(viz_config, True),

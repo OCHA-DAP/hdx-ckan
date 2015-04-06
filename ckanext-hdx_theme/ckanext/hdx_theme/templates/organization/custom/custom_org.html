@@ -119,31 +119,39 @@
                                     <img src="http://placehold.it/300x125"/>
                                 {% endif %}
                             </div>
-                            <span class="admin-menu">
-                                <span class="dropdown">
-                                    <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
-                                        <span class="dropdown-toggle-text">ADMIN</span>
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
-                                                <span>{{ _('Manage members') }}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ data.links.add_data }}" title="{{ _('Add Data') }}">
-                                                <span>{{ _('Add Data') }}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
-                                                <span>{{ _('Edit') }}</span>
-                                            </a>
-                                        </li>
-                                    </ul>
+                            {% if data.show_admin_menu %}
+                                <span class="admin-menu">
+                                    <span class="dropdown">
+                                        <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
+                                            <span class="dropdown-toggle-text">ADMIN</span>
+                                            <b class="caret"></b>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {% if data.permissions.edit %}
+                                            <li>
+                                                <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
+                                                    <span>{{ _('Manage members') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if data.permissions.add_dataset %}
+                                            <li>
+                                                <a href="{{ data.links.add_data }}" title="{{ _('Add Data') }}">
+                                                    <span>{{ _('Add Data') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if data.permissions.edit %}
+                                            <li>
+                                                <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
+                                                    <span>{{ _('Edit') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </span>
                                 </span>
-                            </span>
+                            {% endif %}
                         </div>
 
                     </div>
