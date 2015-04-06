@@ -3,10 +3,14 @@
 </div>
 
 <div class="org-control-container">
-<div class="control-group control-full org-control">Map Title 
-  <label class="control-label" for="map_title"></label>
+<div class="control-group control-full org-control field-with-info">
+  <label class="control-label" for="map_title">Map Title 
+  </label>
           <input type="text" name='map_title' id='map_title' placeholder="{{_('Title')}}" class='map_config' value="{{customizations['map']['map_title']}}"/>
-</div>
+ </div>
+      <div class="org-control-info info-field" style="margin-top:5px;">
+        <div class="org-info-label">Give this visualization a title.</div>
+      </div>
 </div>
 
 <div class="row" style="padding-left:25px;">
@@ -89,8 +93,8 @@
 </div>
 
 <div class="org-control-container">
-<div class="control-group control-full org-control">District Name Columns 
-  <label class="control-label" for="map_district_name_column"></label>
+<div class="control-group control-full org-control"> 
+  <label class="control-label" for="map_district_name_column">District Name Columns</label>
           <input type="text" name='map_district_name_column' id='map_district_name_column' placeholder="{{_('District Name Column')}}" class='map_config' value="{{customizations['map']['map_district_names_column']}}"/>
 </div>
 </div>
