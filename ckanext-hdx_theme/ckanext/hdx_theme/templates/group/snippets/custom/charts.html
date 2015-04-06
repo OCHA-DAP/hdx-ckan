@@ -16,13 +16,13 @@
 
 <div class="org-control-container">
   <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="chart_description">Description</label>
+    <label class="control-label" for="chart_data_link_url">{{_('Data Link URL')}}</label>
     <div class="controls ">
-    <input id="chart_description" type="text" name="chart_description" value="{{chart['chart_description']}}" placeholder="" class="chart_config">
+    <input id="chart_data_link_url" type="text" name="chart_data_link_url" value="{{chart['chart_data_link_url']}}" placeholder="" class="chart_config">
     </div>
   </div>
       <div class="org-control-info info-field">
-        <div class="org-info-label">Describe this visualization.</div>
+        <div class="org-info-label">{{_('Source Data URL for this chart')}}</div>
       </div>
 </div>
 
@@ -30,12 +30,12 @@
 <div class="org-control-container" style="margin-bottom:30px;">
 <div class="controls">
   <label class="control-label" for="chart_type">Data Type</label>
-          <select id="chart-select-{{chart_id}}" name="chart_type" class="chart_config" chart-num="{{chart_id}}">
-            <option value="bar chart" {% if chart['chart_type_1'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
-            <option value="line chart" {% if chart['line_type_1'] == 'line chart' %}selected{% endif %}>Line Chart</option>
-            <option value="multiple bar chart" {% if chart['chart_type_1'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
-            <option value="multiple line chart" {% if chart['chart_type_1'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
-          </select>
+  <select id="chart-select-{{chart_id}}" name="chart_type" class="chart_config" chart-num="{{chart_id}}">
+    <option value="bar chart" {% if chart['chart_type_1'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
+    <option value="line chart" {% if chart['line_type_1'] == 'line chart' %}selected{% endif %}>Line Chart</option>
+    <option value="multiple bar chart" {% if chart['chart_type_1'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
+    <option value="multiple line chart" {% if chart['chart_type_1'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
+  </select>
 </div>
 </div>
 

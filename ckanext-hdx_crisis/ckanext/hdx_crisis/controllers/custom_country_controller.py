@@ -82,6 +82,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 chart_type = 'bar'
             chart = {
                 'title': chart_config.get('chart_title', ''),
+                'data_link_url': chart_config.get('chart_data_link_url', ''),
                 'type': chart_type,
                 'title_x': chart_config.get('chart_x_label', ''),
                 'title_y': chart_config.get('chart_y_label', ''),
