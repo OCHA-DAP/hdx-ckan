@@ -196,17 +196,17 @@
         {% endif %}
         {% if data.visualization_config_type == 'WFP' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
-                <div class="container" >
-                    <div class="row">
-                        <div id="header" class="col-md-12 rightcol">
-                            <p>Click a country to explore prices for different products</p>
-                        </div>
-                        <div id="map" class="col-md-12 rightcol"></div>
-                        <div id="charts" class="col-md-12 rightcol"></div>
+                <div class="row">
+                    <div id="header" class="col-xs-12 rightcol">
+                        <p>Click a country to explore prices for different products</p>
                     </div>
-                    <div class="row">
-                        <div id="hdxembed" class="col-md-12 rightcol"></div>
+                    <div class="col-xs-12 rightcol">
+                        <div id="map"></div>
                     </div>
+                    <div id="charts" class="col-xs-12 rightcol"></div>
+                </div>
+                <div class="row">
+                    <div id="hdxembed" class="col-md-12 rightcol"></div>
                 </div>
                 <div id="wfpModal" class="modal fade">
                     <div class="modal-dialog modal-lg">

@@ -1,21 +1,24 @@
 $(document).ready(function() {
-    var map = L.map('crisis-map', { attributionControl: false });
-    map.scrollWheelZoom.disable();
-    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
-        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
-        maxZoom: 7
-    }).addTo(map);
+    var crisisMapDiv = $("#crisis-map");
+    if (crisisMapDiv.length){
+        var map = L.map('crisis-map', { attributionControl: false });
+        map.scrollWheelZoom.disable();
+        L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+            attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+            maxZoom: 7
+        }).addTo(map);
 
-    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-        maxZoom: 7
-    }).addTo(map);
+        L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+            maxZoom: 7
+        }).addTo(map);
 
-    L.control.attribution({position: 'topright'}).addTo(map);
-    map.setView([5, -70], 5);
+        L.control.attribution({position: 'topright'}).addTo(map);
+        map.setView([5, -70], 5);
 
-    var confJsonText = $("#map-configuration").text();
-    var confJson = JSON.parse(confJsonText);
-    loadMapData(map, confJson);
+        var confJsonText = $("#map-configuration").text();
+        var confJson = JSON.parse(confJsonText);
+        loadMapData(map, confJson);
+    }
     autoGraph();
 });
 
@@ -53,8 +56,11 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
         }
     };
 
-    if(colXType)
+    if(colXType){
         config.axis.x.type = colXType;
+        if (colXType == 'timeseries')
+            config.axis.x.tick.format = '%b %d, %Y';
+    }
     if (colXFormat)
         config.data.xFormat = colXFormat;
 
