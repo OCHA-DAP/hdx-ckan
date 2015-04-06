@@ -1,7 +1,7 @@
 /* Image Upload
  * 
  */  
-this.ckan.module('image-upload', function($, _) {
+this.ckan.module('hdx-image-upload', function($, _) {
   return {
     /* options object can be extended using data-module-* attributes */
     options: {
@@ -82,7 +82,7 @@ this.ckan.module('image-upload', function($, _) {
         .insertBefore($('input', this.field_url));
 
       // Update the main label
-      $('label[for="field-image-upload"]').text(options.upload_label || this.i18n('upload_label'));
+      $('label[for="field-'+options.field_upload+'"]').text(options.upload_label || this.i18n('upload_label'));
 
       // Setup the file input
       this.input
@@ -167,7 +167,8 @@ this.ckan.module('image-upload', function($, _) {
      * Returns nothing.
      */
     _onInputChange: function() {
-      this.file_name = this.input.val();
+      var id = this.input[0].id;
+      this.file_name = $('#'+id).val();
       this.field_clear.val('');
       this.changeState(this.state.attached);
     },

@@ -76,7 +76,8 @@
 {% set is_upload = customizations['image_sq'] and not customizations['image_sq'].startswith('http') %}
     {% set is_url = customizations['image_sq'] and customizations['image_sq'].startswith('http') %}
 
-    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Square Image 75x75')) }}
+    
+    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Square Image 75x75'), upload_label=_('Square Image 75x75')) }}
 
 </div>
 
@@ -85,7 +86,7 @@
     {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
     {% set is_use_org_color = customizations['use_org_color'] %}
 
-    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, upload_label=_('Rectangular Image 300x125')) }}
+    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Rectangular Image 300x125'), upload_label=_('Rectangular Image 300x125')) }}
 
 </div>
 
@@ -139,15 +140,19 @@
 <div class="org-control-container" style="margin-bottom:30px;">
 <div class="controls">
   <label class="control-label" for="visualization-select">Visualization Type</label>
-          <select name="visualization-select" style="width:95%;" class="visualization_config">
-            <option value="3W-dashboard">3W Dashboard</option>
-            <option value="WFP">WFP</option>
+          <select id="visualization-select" name="visualization-select" style="width:95%;" class="visualization_config">
+            <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option>
+            <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
           </select>
 </div>
 </div>
 
-<div id="dashboard-3w">
+<div class="visualization-div" id="3W-dashboard" {% if visualization['visualization-select'] != '3W-dashboard' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/3w.html',
+                            visualization=visualization %}
+</div>
+<div class="visualization-div" id="WFP" {% if visualization['visualization-select'] != 'WFP' %}style="display:none;"{% endif %}>
+{% snippet 'snippets/visualization/wfp.html',
                             visualization=visualization %}
 </div>
 <input type="hidden" name="visualization_config" id="visualization-json">
@@ -222,3 +227,4 @@
 
 {% resource 'hdx_theme/colorpicker' %}
 {% resource 'hdx_theme/custom_organization_creation.js' %}
+{% resource 'hdx_theme/hdx-image-upload.js' %}

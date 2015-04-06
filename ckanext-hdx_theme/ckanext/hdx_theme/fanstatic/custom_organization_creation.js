@@ -16,6 +16,12 @@ showInput: true});
 		}
 	});
 
+    $('#visualization-select').change(function(){
+        var this_div = $(this).val();
+        $('.visualization-div').hide();
+        $('#'+this_div).show();
+    })
+
 	$('#field-highlight-color').change(function(){
 		color = this.value;
 		var rainbow = new Rainbow(); 
