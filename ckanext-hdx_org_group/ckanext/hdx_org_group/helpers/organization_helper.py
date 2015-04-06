@@ -300,7 +300,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
 
     if 'image_sq_upload' in data_dict and data_dict['image_sq']:
         upload1.upload(uploader.get_max_image_size())
-    if 'image_sq_upload' in data_dict and data_dict['image_rect']:
+    if 'image_rect_upload' in data_dict and data_dict['image_rect']:
         upload2.upload(uploader.get_max_image_size())
     if not context.get('defer_commit'):
         model.repo.commit()
