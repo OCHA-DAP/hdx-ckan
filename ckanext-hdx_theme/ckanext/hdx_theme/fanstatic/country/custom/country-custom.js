@@ -70,16 +70,16 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
 }
 function autoGraph() {
     $(".auto-graph").each(function(idx, element){
-        var graphData = $(element).find(".graph-data");
-        var data = JSON.parse(graphData.text());
-        graphData.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
-        graphData.css("display", "block");
+        var graphDataDiv = $(element).find(".graph-data");
+        var graphData = JSON.parse(graphDataDiv.text());
+        graphDataDiv.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
+        graphDataDiv.css("display", "block");
 
         var graph = null;
         var promises = [];
         var results = [];
-        for (var sIdx in data.sources){
-            var source = data.sources[sIdx];
+        for (var sIdx in graphData.sources){
+            var source = graphData.sources[sIdx];
             source["data"] = null;
             results.push(source);
             var sql = 'SELECT "'+ source.column_x + '", "'+ source.column_y +'" FROM "'+ source.datastore_id +'"';
@@ -107,7 +107,7 @@ function autoGraph() {
                         columnXType = null,
                         columnXFormat = null,
                         columnY = response.column_y,
-                        graphType = element.type;
+                        graphType = graphData.type;
 
                     if (data.fields[0].type == 'timestamp'){
                         columnXType = 'timeseries';
@@ -118,7 +118,7 @@ function autoGraph() {
 
 
                     if (!graph){
-                        graph = prepareGraph(graphData[0], data.records, columnX, columnXType, columnXFormat, columnY, 'bar');
+                        graph = prepareGraph(graphDataDiv[0], data.records, columnX, columnXType, columnXFormat, columnY, graphType);
                     }
                     else
                         graph.load({
