@@ -141,23 +141,16 @@
   position: fixed;
   top: 0px;
   margin-left: -@containerMarginSize;
-  z-index: 1000;
+  z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
 //  width: 300px;
-  height: 75px;
-
+  border: 1px solid @logoBorderColor;
   background-color: #ffffff;
-  .logo{
-    width: 75px;
-    height: 75px;
-    background-color: @wfpBlueColor;
-
-    img {
-      max-width: 75px;
-      max-height: 75px;
-    }
+  .table-valign{
+    background-color: @logoBackgroundColor;
+    .org-logo(75px, 75px, 60px, 60px);
   }
 
   &:hover .title-share{
@@ -167,16 +160,29 @@
   .title-share{
     display: none;
     padding: 15px;
-    .gothamBookFont(12px);
-    color: @darkGrayColor;
-    line-height: 16px;
-    max-width: 225px;
-    width: 225px;
+    max-width: 285px;
+    min-width: 225px;
+    line-height: 12px;
+
+    .floating-org-title{
+      .gothamBookFont(14px);
+      color: @darkGrayColor;
+      line-height: 16px;
+      height: 32px;
+    }
 
     a{
-      .gothamBoldFont(12px);
+      .gothamBoldFont(10px);
       color: @wfpBlueColor;
       text-transform: uppercase;
+
+      line-height: 12px;
+
+      +a:before{
+        content: "|";
+        margin-right: 3px;
+        margin-left: 3px;
+      }
     }
   }
 }
