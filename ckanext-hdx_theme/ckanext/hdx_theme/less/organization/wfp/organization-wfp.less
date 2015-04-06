@@ -141,23 +141,16 @@
   position: fixed;
   top: 0px;
   margin-left: -@containerMarginSize;
-  z-index: 1000;
+  z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
 
 //  width: 300px;
-  height: 75px;
-
+  border: 1px solid @logoBorderColor;
   background-color: #ffffff;
-  .logo{
-    width: 75px;
-    height: 75px;
-    background-color: @wfpBlueColor;
-
-    img {
-      max-width: 75px;
-      max-height: 75px;
-    }
+  .table-valign{
+    background-color: @logoBackgroundColor;
+    .org-logo(74px, 74px, 60px, 60px);
   }
 
   &:hover .title-share{
@@ -177,6 +170,9 @@
       .gothamBoldFont(12px);
       color: @wfpBlueColor;
       text-transform: uppercase;
+
+      padding-right: 5px;
+      line-height: 20px;
     }
   }
 }

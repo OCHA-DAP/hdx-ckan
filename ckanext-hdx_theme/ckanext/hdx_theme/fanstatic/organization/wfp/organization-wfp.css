@@ -908,20 +908,25 @@ ul.hdx-bs3 {
   position: fixed;
   top: 0px;
   margin-left: -45px;
-  z-index: 1000;
+  z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  height: 75px;
+  border: 1px solid #0088ff;
   background-color: #ffffff;
 }
-#floatingLogo .logo {
-  width: 75px;
-  height: 75px;
+#floatingLogo .table-valign {
   background-color: #0088ff;
+  width: 74px;
+  height: 74px;
+  text-align: center;
 }
-#floatingLogo .logo img {
-  max-width: 75px;
-  max-height: 75px;
+#floatingLogo .table-valign img {
+  max-height: 60px;
+  max-width: 60px;
+}
+#floatingLogo .table-valign img {
+  max-height: 60px;
+  max-width: 60px;
 }
 #floatingLogo:hover .title-share {
   display: block;
@@ -943,4 +948,6 @@ ul.hdx-bs3 {
   font-size: 12px;
   color: #0088ff;
   text-transform: uppercase;
+  padding-right: 5px;
+  line-height: 20px;
 }
