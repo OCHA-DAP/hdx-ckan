@@ -298,10 +298,12 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         # TODO: Also create an activity detail recording what exactly changed
         # in the group.
 
-    if 'image_sq_upload' in data_dict and data_dict['image_sq']:
+    try:
         upload1.upload(uploader.get_max_image_size())
-    if 'image_rect_upload' in data_dict and data_dict['image_rect']:
         upload2.upload(uploader.get_max_image_size())
+    except:
+        pass
+
     if not context.get('defer_commit'):
         model.repo.commit()
 
