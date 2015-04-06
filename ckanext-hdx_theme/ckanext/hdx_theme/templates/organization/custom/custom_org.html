@@ -30,7 +30,7 @@
             <div class="floating-org-title">{{data.org_info.display_name}}</div>
             <div>
                 <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
-                <a href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
+                <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
                    data-module-social_wrapper_div_id="dataset_social_wrapper_floating" title="" onclick="return false;"
                    data-original-title="Share">
                     {{ _("Share") }}
@@ -87,7 +87,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 mTop23">
-                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right" %}
+                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right", button_class="social_share_trigger" %}
                             {{ h.follow_button('group', data.org_info.id) }}
                             {% if data.permissions.request_membership %}
                                 <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
