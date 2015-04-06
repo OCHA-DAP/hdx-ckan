@@ -768,6 +768,8 @@ ul.hdx-bs3 {
 .hdx-modal .modal-header {
   background-color: #eeeeee;
   font-family: 'Gotham-Book', sans-serif;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 .hdx-modal .modal-body {
   font-family: 'Gotham-Book', sans-serif;
@@ -775,6 +777,8 @@ ul.hdx-bs3 {
 .hdx-modal .modal-footer {
   background-color: #eeeeee;
   border-style: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 .hdx-modal label {
   font-size: 14px;
