@@ -96,6 +96,8 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             }
         else:
             config = {
+                'title':visualization['viz-title'],
+                'description':visualization['viz-description'],
                 'type': visualization['visualization-select']
             }
         return config
