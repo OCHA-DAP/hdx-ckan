@@ -534,3 +534,19 @@ def https_load(url):
 def count_public_datasets_for_group(datasets_list):
     a = len([i for i in datasets_list if i['private'] == False])
     return a
+
+
+def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
+    for key, value in dictionary.iteritems():
+            if key not in skipped_keys:
+                value = value.strip() if value else value
+                if not value:
+                    message = warning_template.format(key)
+                    log.warning(message)
+                    add_error('Empty field', message, errors)
+                    return False
+    return True
+
+def add_error(type, message, errors):
+    if isinstance(errors, list):
+        errors.append({'_type': type, 'message': message})

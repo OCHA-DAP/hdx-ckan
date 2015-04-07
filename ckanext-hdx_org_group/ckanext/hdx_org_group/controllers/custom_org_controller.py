@@ -101,29 +101,38 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         return config
 
     def generate_template_data(self, org_info):
+        errors = []
         org_id = org_info['name']
 
         top_line_num_dataset = org_info.get('topline_dataset', None)
         top_line_num_resource = org_info.get('topline_resource', None)
 
+        top_line_items = []
         if top_line_num_dataset and top_line_num_resource:
-            top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
-        else:
-            top_line_items = []
+            try:
+                top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
+            except Exception, e:
+                log.warning(e)
+                hdx_helpers.add_error('Fetching data problem', str(e), errors)
 
         req_params = self.process_req_params(org_id, request.params)
 
-        tab_results, all_results = self.get_dataset_search_results(
-            org_id, request.params)
-        tab = self.get_tab_name()
-        query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
+        activities = None
+        facets = {}
+        query_placeholder = ''
+        try:
+            tab_results, all_results = self.get_dataset_search_results(
+                org_id, request.params)
+            tab = self.get_tab_name()
+            query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
-        facets = self.get_facet_information(
-            tab_results, all_results, tab, req_params)
-        if tab == 'activities':
-            activities = self.get_activity_stream(org_info.get('id', org_id))
-        else:
-            activities = None
+            facets = self.get_facet_information(
+                tab_results, all_results, tab, req_params)
+            if tab == 'activities':
+                activities = self.get_activity_stream(org_info.get('id', org_id))
+        except Exception, e:
+            log.warning(e)
+            hdx_helpers.add_error('Fetching data problem', str(e), errors)
 
         allow_basic_user_info = self.check_access('hdx_basic_user_info')
         allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
@@ -165,19 +174,28 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'request_membership': allow_req_membership
                 },
                 'show_admin_menu': allow_add_dataset or allow_edit,
-                'visualization_config': json.dumps(viz_config),
-                'visualization_config_type': viz_config['type'],
-                'visualization_config_url': urlencode(viz_config, True),
-                'visualization_embed_url': self._get_embed_url(),
-                'visualization_basemap_url': config.get('hdx.orgmap.url')
-
+                'show_visualization': True,
+                'visualization': {
+                    'config': json.dumps(viz_config),
+                    'config_type': viz_config['type'],
+                    'config_url': urlencode(viz_config, True),
+                    'embed_url': self._get_embed_url(),
+                    'basemap_url': config.get('hdx.orgmap.url')
+                }
 
             },
-            'errors': None,
-            'error_summary': None,
+            'errors': errors,
+            'error_summary': '',
 
         }
 
+        template_data['data']['show_visualization'] = \
+            hdx_helpers.check_all_str_fields_not_empty(template_data['data']['visualization'],
+                                                       'Visualization config field "{}" is empty',
+                                                       errors=errors)
+
+        template_data['error_summary'] = \
+            '; '.join([e.get('message', '') for e in template_data['errors']])
         return template_data
 
     def _get_embed_url(self):
