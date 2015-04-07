@@ -8,6 +8,7 @@ import logging
 import pylons.config as config
 
 import ckan.lib.base as base
+import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
@@ -16,6 +17,7 @@ import ckan.controllers.group as group
 
 import ckanext.hdx_crisis.dao.country_data_access as country_data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_crisis.controllers.crisis_controller as controllers
 
 render = base.render
@@ -52,14 +54,6 @@ def get_group(id):
 
     return group_info, custom_dict
 
-def _check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[]):
-    for key, value in dictionary.iteritems():
-            if key not in skipped_keys:
-                value = value.strip() if value else value
-                if not value:
-                    log.warning(warning_template.format(key))
-                    return False
-    return True
 
 class CustomCountryController(group.GroupController, controllers.CrisisController):
 
@@ -125,11 +119,11 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         return custom_dict.get('map', {})
 
     def _show_map(self, map_dict):
-        return _check_all_str_fields_not_empty(map_dict, 'Map config field "{}" is empty')
+        return helpers.check_all_str_fields_not_empty(map_dict, 'Map config field "{}" is empty')
 
     def _show_chart(self, chart_dict):
         chart_main_check = \
-            _check_all_str_fields_not_empty(chart_dict,
+            helpers.check_all_str_fields_not_empty(chart_dict,
                                             'Chart config field "{}" is empty', ['sources'])
         if not chart_main_check:
             return False
@@ -137,7 +131,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
             return False
 
         chart_src_check = \
-            _check_all_str_fields_not_empty(chart_dict['sources'][0],
+            helpers.check_all_str_fields_not_empty(chart_dict['sources'][0],
                                             'Chart source config field "{}" is empty')
         if not chart_src_check:
             return False
