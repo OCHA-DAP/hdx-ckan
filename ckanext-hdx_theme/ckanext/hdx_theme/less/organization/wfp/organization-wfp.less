@@ -150,7 +150,7 @@
   background-color: #ffffff;
   .table-valign{
     background-color: @logoBackgroundColor;
-    .org-logo(74px, 74px, 60px, 60px);
+    .org-logo(75px, 75px, 60px, 60px);
   }
 
   &:hover .title-share{
@@ -160,19 +160,29 @@
   .title-share{
     display: none;
     padding: 15px;
-    .gothamBookFont(12px);
-    color: @darkGrayColor;
-    line-height: 16px;
-    max-width: 225px;
-    width: 225px;
+    max-width: 285px;
+    min-width: 225px;
+    line-height: 12px;
+
+    .floating-org-title{
+      .gothamBookFont(14px);
+      color: @darkGrayColor;
+      line-height: 16px;
+      height: 32px;
+    }
 
     a{
-      .gothamBoldFont(12px);
+      .gothamBoldFont(10px);
       color: @wfpBlueColor;
       text-transform: uppercase;
 
-      padding-right: 5px;
-      line-height: 20px;
+      line-height: 12px;
+
+      +a:before{
+        content: "|";
+        margin-right: 3px;
+        margin-left: 3px;
+      }
     }
   }
 }

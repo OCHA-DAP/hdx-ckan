@@ -27,22 +27,22 @@
             </div>
         </div>
         <div class="title-share pull-left">
-            <div>{{data.org_info.display_name}}</div>
-
-            <a href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
-               data-module-social_wrapper_div_id="dataset_social_wrapper_floating" title="" onclick="return false;"
-               data-original-title="Share">
-                {{ _("Share") }}
-            </a>
-            <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
-
-            {{ h.hdx_follow_button('group', data.org_info.id, follow_extra_text=' ' ) }}
-
-            {% if data.permissions.request_membership %}
-                <a href="#" data-toggle="modal" data-target="#req-membership-div">
-                    {{ _("Request-Membership") }}
+            <div class="floating-org-title">{{data.org_info.display_name}}</div>
+            <div>
+                <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
+                <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
+                   data-module-social_wrapper_div_id="dataset_social_wrapper_floating" title="" onclick="return false;"
+                   data-original-title="Share">
+                    {{ _("Share") }}
                 </a>
-            {% endif %}
+                {{ h.hdx_follow_button('group', data.org_info.id, follow_extra_text=' ' ) }}
+
+                {% if data.permissions.request_membership %}
+                    <a href="#" data-toggle="modal" data-target="#req-membership-div">
+                        {{ _("Request Membership") }}
+                    </a>
+                {% endif %}
+            </div>
 
         </div>
 
@@ -87,7 +87,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 mTop23">
-                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right" %}
+                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right", button_class="social_share_trigger" %}
                             {{ h.follow_button('group', data.org_info.id) }}
                             {% if data.permissions.request_membership %}
                                 <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
@@ -119,31 +119,39 @@
                                     <img src="http://placehold.it/300x125"/>
                                 {% endif %}
                             </div>
-                            <span class="admin-menu">
-                                <span class="dropdown">
-                                    <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
-                                        <span class="dropdown-toggle-text">ADMIN</span>
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
-                                                <span>{{ _('Manage members') }}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ data.links.add_data }}" title="{{ _('Add Data') }}">
-                                                <span>{{ _('Add Data') }}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
-                                                <span>{{ _('Edit') }}</span>
-                                            </a>
-                                        </li>
-                                    </ul>
+                            {% if data.show_admin_menu %}
+                                <span class="admin-menu">
+                                    <span class="dropdown">
+                                        <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
+                                            <span class="dropdown-toggle-text">ADMIN</span>
+                                            <b class="caret"></b>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {% if data.permissions.edit %}
+                                            <li>
+                                                <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
+                                                    <span>{{ _('Manage members') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if data.permissions.add_dataset %}
+                                            <li>
+                                                <a href="{{ data.links.add_data }}" title="{{ _('Add Data') }}">
+                                                    <span>{{ _('Add Data') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if data.permissions.edit %}
+                                            <li>
+                                                <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
+                                                    <span>{{ _('Edit') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </span>
                                 </span>
-                            </span>
+                            {% endif %}
                         </div>
 
                     </div>
@@ -218,7 +226,7 @@
             </div>
         {% endif %}
         {% if data.visualization_config_type == 'WFP' %}
-            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div id="wfp-visualization-wrapper" class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="container" >
                     <div class="row">
                         <div id="header" class="col-md-12 rightcol">

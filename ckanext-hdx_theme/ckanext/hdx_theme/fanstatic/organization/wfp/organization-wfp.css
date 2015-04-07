@@ -768,6 +768,8 @@ ul.hdx-bs3 {
 .hdx-modal .modal-header {
   background-color: #eeeeee;
   font-family: 'Gotham-Book', sans-serif;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 .hdx-modal .modal-body {
   font-family: 'Gotham-Book', sans-serif;
@@ -775,6 +777,8 @@ ul.hdx-bs3 {
 .hdx-modal .modal-footer {
   background-color: #eeeeee;
   border-style: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 .hdx-modal label {
   font-size: 14px;
@@ -916,8 +920,8 @@ ul.hdx-bs3 {
 }
 #floatingLogo .table-valign {
   background-color: #0088ff;
-  width: 74px;
-  height: 74px;
+  width: 75px;
+  height: 75px;
   text-align: center;
 }
 #floatingLogo .table-valign img {
@@ -934,20 +938,28 @@ ul.hdx-bs3 {
 #floatingLogo .title-share {
   display: none;
   padding: 15px;
+  max-width: 285px;
+  min-width: 225px;
+  line-height: 12px;
+}
+#floatingLogo .title-share .floating-org-title {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   color: #333333;
   line-height: 16px;
-  max-width: 225px;
-  width: 225px;
+  height: 32px;
 }
 #floatingLogo .title-share a {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 10px;
   color: #0088ff;
   text-transform: uppercase;
-  padding-right: 5px;
-  line-height: 20px;
+  line-height: 12px;
+}
+#floatingLogo .title-share a + a:before {
+  content: "|";
+  margin-right: 3px;
+  margin-left: 3px;
 }
