@@ -1,7 +1,7 @@
 @import "variables";
 @import "mixins";
 
-@orderByDropdownColor: @blueColor;
+@orderByDropdownColor: @defaultLinkColor;
 
 /* Order DropDown style */
 .control-order-by {
@@ -24,12 +24,20 @@
       .caret {
         margin-top: 6px;
       }
+
+      &:hover, &:focus {
+        color: darken(@orderByDropdownColor, 20%);
+      }
     }
 
     .dropdown-toggle-text {
       .gothamBoldFont(14px);
       color: @orderByDropdownColor;
       .letter-spacing-3;
+
+      &:hover, &:focus {
+        color: darken(@orderByDropdownColor, 20%);
+      }
     }
   }
 }

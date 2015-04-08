@@ -64,4 +64,5 @@
 }
 #wfp-visualization-wrapper #hdxembed {
   padding-top: 15px;
+  display:none;
 }

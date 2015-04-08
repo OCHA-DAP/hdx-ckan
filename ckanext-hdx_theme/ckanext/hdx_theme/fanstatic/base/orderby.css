@@ -27,11 +27,19 @@
 .control-order-by .orderDropdown .dropdown-toggle .caret {
   margin-top: 6px;
 }
+.control-order-by .orderDropdown .dropdown-toggle:hover,
+.control-order-by .orderDropdown .dropdown-toggle:focus {
+  color: #00447a;
+}
 .control-order-by .orderDropdown .dropdown-toggle-text {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
   color: #007ce0;
   letter-spacing: 0.03em;
+}
+.control-order-by .orderDropdown .dropdown-toggle-text:hover,
+.control-order-by .orderDropdown .dropdown-toggle-text:focus {
+  color: #00447a;
 }
 /* END DropDown style */

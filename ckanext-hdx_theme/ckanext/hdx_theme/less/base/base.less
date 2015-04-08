@@ -1,8 +1,12 @@
 @import "variables";
 
 /* Default link style */
-    a, a:hover, a:focus, .dataset-heading a {
+    a, .dataset-heading a {
         color: @defaultLinkColor;
         text-decoration: none;
+        &:hover, &:focus {
+            color: darken(@defaultLinkColor, 20%);
+            text-decoration: none;
+        }
     }
 /* END Default link style */

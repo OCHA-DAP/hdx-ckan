@@ -37,6 +37,21 @@ log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
 
+def _get_embed_url(viz_config):
+    ckan_url = config.get('ckan.site_url', '').strip()
+    position = ckan_url.find('//')
+    if position >= 0:
+        ckan_url = ckan_url[position:]
+
+    widget_url = ""
+    if viz_config['type'] == '3W-dashboard':
+        widget_url = "/widget/3W"
+    if viz_config['type'] == 'WFP':
+        widget_url = "/widget/WFP"
+
+    url = ckan_url + widget_url
+    return url
+
 class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
 
     def org_read(self, id):
@@ -80,7 +95,8 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         config = {
                 'title':visualization['viz-title'],
                 'data_link_url':visualization.get('viz-data-link-url','#'),
-                'type': visualization['visualization-select']
+                'type': visualization['visualization-select'],
+                'description':visualization['viz-description']
         }
         if visualization['visualization-select'] == '3W-dashboard':
             config.update({'datatype': datatype,
@@ -96,12 +112,11 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'zoom':visualization['zoom'],
                 'colors':visualization.get('colors','')
             })
-        else:
-            config = {
-                'type': visualization['visualization-select'],
-                'title':visualization['viz-title'],
-                'description':visualization['viz-description']
-            }
+        if visualization['visualization-select'] == 'WFP':
+            config.update({
+                'embedded': "true"
+            })
+
         return config
 
     def generate_template_data(self, org_info):
@@ -183,7 +198,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'config': viz_config,
                     'config_type': viz_config['type'],
                     'config_url': urlencode(viz_config, True),
-                    'embed_url': self._get_embed_url(),
+                    'embed_url': _get_embed_url(viz_config),
                     'basemap_url': config.get('hdx.orgmap.url')
                 }
 
@@ -202,15 +217,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         template_data['error_summary'] = \
             '; '.join([e.get('message', '') for e in template_data['errors']])
         return template_data
-
-    def _get_embed_url(self):
-        ckan_url = config.get('ckan.site_url', '').strip()
-        position = ckan_url.find('//')
-        if position >= 0:
-            ckan_url = ckan_url[position:]
-
-        url = ckan_url + "/widget/3W"
-        return url
 
     def get_org(self, org_id):
         group_type = 'organization'
