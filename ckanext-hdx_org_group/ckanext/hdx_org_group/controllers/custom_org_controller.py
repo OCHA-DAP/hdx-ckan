@@ -97,11 +97,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'colors':visualization.get('colors','')
             })
         else:
-            config = {
-                'type': visualization['visualization-select'],
-                'title':visualization['viz-title'],
-                'description':visualization['viz-description']
-            }
+            config.update({})
         return config
 
     def generate_template_data(self, org_info):
