@@ -1,0 +1,7 @@
+.js .image-upload input[type=file] {
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
