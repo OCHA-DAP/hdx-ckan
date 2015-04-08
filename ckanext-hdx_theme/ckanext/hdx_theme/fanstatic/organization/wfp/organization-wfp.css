@@ -869,7 +869,14 @@ ul.hdx-bs3 {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
   font-size: 18px;
-  color: #0088ff;
+  color: #333333;
+}
+.visualization-title span {
+  margin-left: 10px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
 }
 .mainLinks.visualization-links {
   padding-left: 0;
