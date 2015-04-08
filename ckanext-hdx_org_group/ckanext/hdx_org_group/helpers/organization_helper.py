@@ -181,7 +181,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         upload1.update_data_dict(data_dict, 'image_sq',
                            'image_sq_upload', 'clear_upload')
 
-    if 'image_sq_upload' in data_dict and data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
+    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict['image_rect_upload'] != None:
         upload2 = uploader.Upload('group', customization['image_rect'])
         upload2.update_data_dict(data_dict, 'image_rect',
                            'image_rect_upload', 'clear_upload')
@@ -300,6 +300,10 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
 
     try:
         upload1.upload(uploader.get_max_image_size())
+    except:
+        pass
+
+    try:
         upload2.upload(uploader.get_max_image_size())
     except:
         pass
