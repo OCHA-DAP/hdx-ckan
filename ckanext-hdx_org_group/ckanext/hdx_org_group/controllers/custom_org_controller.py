@@ -95,8 +95,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         config = {
                 'title':visualization['viz-title'],
                 'data_link_url':visualization.get('viz-data-link-url','#'),
-                'type': visualization['visualization-select'],
-                'description':visualization['viz-description']
+                'type': visualization['visualization-select']
         }
         if visualization['visualization-select'] == '3W-dashboard':
             config.update({'datatype': datatype,
