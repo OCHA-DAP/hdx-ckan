@@ -272,17 +272,7 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
     return res
 
 def hdx_less_default():
-    return """@headerUserBackgroundColor: @blackColor;
-@headerNavBackgroundColor: #363636;
-@headerNavBorderColor: @grayColor;
-@headerNavSearchBorderColor: @extraLightGrayColor;
-@toolbarBackgroundColor: @lightGrayColor;
-
-@mainLinksColor: @whiteColor;
-
-@searchPlaceholderColor: @grayColor;
-@searchTextColor: @whiteColor;
-
+    return """
 @bodyBackgroundColor: @wfpBlueColor;
 @navTabsActiveColor: @wfpBlueColor;
 @orderByDropdownColor: @wfpBlueColor;

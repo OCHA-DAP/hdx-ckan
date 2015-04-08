@@ -15,7 +15,6 @@
 //override vars for the WFP Page
 @import "variables-wfp";
 
-
 .intro-section{
   padding-top: 40px;
 
@@ -43,6 +42,10 @@
       .gothamBoldFont(14px);
       .letter-spacing-0;
       color: @wfpBlueColor;
+
+      &:focus, &:hover {
+        color: darken(@wfpBlueColor, 20%);
+      }
 
       &.disabled{
         color: @blackColor;
@@ -106,6 +109,10 @@
     color: @wfpBlueColor;
     .letter-spacing-0;
     text-transform: none;
+
+    &:hover, &:focus {
+      color: darken(@wfpBlueColor, 20%);
+    }
   }
 }
 
@@ -179,7 +186,7 @@
 
     a{
       .gothamBoldFont(10px);
-      color: @wfpBlueColor;
+//      color: @wfpBlueColor;
       text-transform: uppercase;
 
       line-height: 12px;

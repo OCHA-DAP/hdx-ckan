@@ -823,6 +823,8 @@ var map;
 var embedded = (parseGet('embedded'));
 
 $(document).ready(function(){
+    url = $("#wfp-viz-embed-url").text().trim();
+
     if(embedded ==='true'){
         initembed();
     } else {

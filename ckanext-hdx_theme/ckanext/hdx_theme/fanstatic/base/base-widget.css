@@ -1,9 +1,14 @@
 /* Default link style */
 a,
-a:hover,
-a:focus,
 .dataset-heading a {
   color: #007ce0;
+  text-decoration: none;
+}
+a:hover,
+.dataset-heading a:hover,
+a:focus,
+.dataset-heading a:focus {
+  color: #00447a;
   text-decoration: none;
 }
 /* END Default link style */
