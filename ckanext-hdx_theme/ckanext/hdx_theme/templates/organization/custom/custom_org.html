@@ -16,23 +16,36 @@
 
 {% block primary_content %}
     <div id="floatingLogo" style="display: none;">
-        <div class="logo pull-left">
-            <!-- TODO: add correct image url after functionality is ready  -->
-            {% if image_sq %}
-                <img src="{{image_sq}}" />
-            {% else %}
-                <img src="http://placehold.it/75x75" />
-            {% endif %}
+        <div class="logo pull-left table-valign">
+            <div class="table-valign-content">
+                <!-- TODO: add correct image url after functionality is ready  -->
+                {% if image_sq %}
+                    <img class="org-logo" src="{{ image_sq }}" alt="{{ _('small logo') }}">
+                {% else %}
+                    <img class="org-logo" src="http://placehold.it/75x75" />
+                {% endif %}
+            </div>
         </div>
         <div class="title-share pull-left">
-            <div>{{data.org_info.display_name}}</div>
+            <div class="floating-org-title">{{data.org_info.display_name}}</div>
+            <div>
+                <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
+                <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
+                   data-module-social_wrapper_div_id="dataset_social_wrapper_floating" title="" onclick="return false;"
+                   data-original-title="Share">
+                    {{ _("Share") }}
+                </a>
+                {{ h.hdx_follow_button('group', data.org_info.id, follow_extra_text=' ' ) }}
 
-            <a href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
-               data-module-social_wrapper_div_id="dataset_social_wrapper" title="" onclick="return false;"
-               data-original-title="Share">
-                {{ _("Share") }}
-            </a>
+                {% if data.permissions.request_membership %}
+                    <a href="#" data-toggle="modal" data-target="#req-membership-div">
+                        {{ _("Request Membership") }}
+                    </a>
+                {% endif %}
+            </div>
+
         </div>
+
     </div>
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -56,7 +69,11 @@
                                         {{ data.member_count }} {{ _('Members') }}
                                     </a>
                                 </li>
-                                <li><a href="#" class="disabled">{{ data.follower_count }} {{ _('Followers') }}</a></li>
+                                <li>
+                                    <a href="#" class="followersNumber disabled">
+                                        <span>{{ data.follower_count }}</span> {{ _('Followers') }}
+                                    </a>
+                                </li>
                                 <li><a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a></li>
                             </ul>
                         </div>
@@ -70,7 +87,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 mTop23">
-                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right" %}
+                            {% snippet 'indicator/snippets/share_button.html', title=data.org_info.display_name, placement="right", button_class="social_share_trigger" %}
                             {{ h.follow_button('group', data.org_info.id) }}
                             {% if data.permissions.request_membership %}
                                 <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
@@ -102,26 +119,39 @@
                                     <img src="http://placehold.it/300x125"/>
                                 {% endif %}
                             </div>
-                            <span class="admin-menu">
-                                <span class="dropdown">
-                                    <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
-                                        <span class="dropdown-toggle-text">ADMIN</span>
-                                        <b class="caret"></b>
-                                    </a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <li>
-                                            <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
-                                                <span>{{ _('Manage members') }}</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
-                                                <span>{{ _('Edit') }}</span>
-                                            </a>
-                                        </li>
-                                    </ul>
+                            {% if data.show_admin_menu %}
+                                <span class="admin-menu">
+                                    <span class="dropdown">
+                                        <a href="#" class="dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
+                                            <span class="dropdown-toggle-text">ADMIN</span>
+                                            <b class="caret"></b>
+                                        </a>
+                                        <ul class="dropdown-menu" role="menu">
+                                            {% if data.permissions.edit %}
+                                            <li>
+                                                <a href="{{ data.links.members }}" title="{{ _('Manage members') }}">
+                                                    <span>{{ _('Manage members') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if data.permissions.add_dataset %}
+                                            <li>
+                                                <a href="{{ data.links.add_data }}" title="{{ _('Add Data') }}">
+                                                    <span>{{ _('Add Data') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                            {% if data.permissions.edit %}
+                                            <li>
+                                                <a href="{{ data.links.edit }}" title="{{ _('Edit') }}">
+                                                    <span>{{ _('Edit') }}</span>
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </span>
                                 </span>
-                            </span>
+                            {% endif %}
                         </div>
 
                     </div>
@@ -131,33 +161,36 @@
     </div>
 
     <div id="floatingLogoAnchor" class="row paddingRowHack whiteBackground">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="list-header crisis-list-header">
-                <span class="mL15 list-header-title">
-                    {{ _("Key Figures") }}
-                </span>
+        {% if data.top_line_items %}
+            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                <div class="list-header crisis-list-header">
+                    <span class="mL15 list-header-title">
+                        {{ _("Key Figures") }}
+                    </span>
+                </div>
             </div>
-        </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="row">
-                {% for top_line_item in data.top_line_items %}
-                    <div class="col-xs-3">
-                        {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
-                        unit=top_line_item.units,
-                        notes=top_line_item.notes, source=None,
-                        source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
-                    </div>
-                {% endfor %}
+            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                <div class="row">
+                    {% for top_line_item in data.top_line_items %}
+                        <div class="col-xs-3">
+                            {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
+                            unit=top_line_item.units,
+                            notes=top_line_item.notes, source=None,
+                            source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 
+    {% if data.show_visualization %}
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger",
                 title="Embed data",
-                embed_url=data.visualization_embed_url,
-                data=data.visualization_config_url,
+                embed_url=data.visualization.embed_url,
+                data=data.visualization.config_url,
                 sizes=[{"width": "800", "height": "500"},
                        {"width": "1000","height": "500"},
                        {"width": "1200","height": "500"}]) }}
@@ -169,32 +202,34 @@
                     {{ _("Interactive Data") }}
                 </span>
             </div>
-        </div>
-{% set viz_title = h.load_json(data.visualization_config)['title'] %}
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="mTop20 mBottom20">
-                <div class="pull-left visualization-title">
-                    {{viz_title}}
-                </div>
-                <div class="pull-right">
-                    <ul class="mainLinks visualization-links">
-                        <li><a id="embedPopupTrigger" href="#">{{ _("Embed data") }}</a></li>
-                        <li><a href="#">{{ _("Save as image") }}</a></li>
-                    </ul>
+
+            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                <div class="list-header crisis-list-header">
+                    <span class="mL15 list-header-title">
+                        {{ _("Interactive Data") }}
+                    </span>
                 </div>
             </div>
-            <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
+            <input type="hidden" id="visualization-data" value="{{data.visualization.config}}">
         </div>
-        {% if data.visualization_config_type == '3W-dashboard' %}
+        {% if data.visualization.config_type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
-                <div class="row">
-                    <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
-                    <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
-                    <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div>
+                <div class="mTop20 mBottom20">
+                    <div class="pull-left visualization-title">
+                        {{viz_title}}
+                        <span> <a href="{{data_link_url}}">Data</a></span>
+                    </div>
+                    <div class="pull-right">
+                        <ul class="mainLinks visualization-links">
+                            <li><a id="embedPopupTrigger" href="#">{{ _("Embed") }}</a></li>
+                            <li><a href="#">{{ _("Save as image") }}</a></li>
+                        </ul>
+                    </div>
                 </div>
+                <input type="hidden" id="visualization-data" value="{{ h.json_dumps(data.visualization.config) }}">
             </div>
         {% endif %}
-        {% if data.visualization_config_type == 'WFP' %}
+        {% if data.visualization.config_type == 'WFP' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="row">
                     <div style="display: none" id="wfp-viz-base-url">{{ data.visualization_basemap_url }}</div>
@@ -210,24 +245,37 @@
                 <div class="row">
                     <div id="hdxembed" class="col-md-12 rightcol"></div>
                 </div>
-                <div id="wfpModal" class="modal fade">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <p id="modal-header-content"></p>
+            {% endif %}
+            {% if data.visualization.config_type == 'WFP' %}
+                <div id="wfp-visualization-wrapper" class="col-xs-12 paddingLeftHack paddingRightHack">
+                    <div class="container" >
+                        <div class="row">
+                            <div id="header" class="col-md-12 rightcol">
+                                <p>Click a country to explore prices for different products</p>
                             </div>
-                            <div id="modal-body" class="modal-body">
-                            </div>
-                            <div id="modal-footer" class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <div id="map" class="col-md-12 rightcol"></div>
+                            <div id="charts" class="col-md-12 rightcol"></div>
+                        </div>
+                    </div>
+                    <div id="wfpModal" class="modal fade">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <p id="modal-header-content"></p>
+                                </div>
+                                <div id="modal-body" class="modal-body">
+                                </div>
+                                <div id="modal-footer" class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        {% endif %}
-    </div>
+            {% endif %}
+        </div>
+    {% endif %}
 
     <div class="row paddingRowHack whiteBackground">
         <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -268,10 +316,10 @@
   {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/search-facets' %}
 
-    {% if data.visualization_config_type == '3W-dashboard' %}
+    {% if data.visualization.config_type == '3W-dashboard' %}
       {% resource 'hdx_theme/custom-vis-3w' %}
     {% endif %}
-    {% if data.visualization_config_type == 'WFP' %}
+    {% if data.visualization.config_type == 'WFP' %}
       {% resource 'hdx_theme/leaflet' %}
       {% resource 'hdx_theme/custom-vis-wfp' %}
     {% endif %}

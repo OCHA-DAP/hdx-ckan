@@ -435,10 +435,14 @@ def hdx_follow_button(obj_type, obj_id, **kw):
         context = {'model': model, 'session': model.Session, 'user': c.user}
         action = 'am_following_%s' % obj_type
         following = logic.get_action(action)(context, {'id': obj_id})
+        follow_extra_text = _('This Data')
+        if kw and 'follow_extra_text' in kw:
+            follow_extra_text = kw.pop('follow_extra_text')
         return h.snippet('snippets/hdx_follow_button.html',
                          following=following,
                          obj_id=obj_id,
                          obj_type=obj_type,
+                         follow_extra_text=follow_extra_text,
                          params=kw)
     return ''
 
@@ -520,3 +524,19 @@ def https_load(url):
 def count_public_datasets_for_group(datasets_list):
     a = len([i for i in datasets_list if i['private'] == False])
     return a
+
+
+def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
+    for key, value in dictionary.iteritems():
+            if key not in skipped_keys:
+                value = value.strip() if value else value
+                if not value:
+                    message = warning_template.format(key)
+                    log.warning(message)
+                    add_error('Empty field', message, errors)
+                    return False
+    return True
+
+def add_error(type, message, errors):
+    if isinstance(errors, list):
+        errors.append({'_type': type, 'message': message})

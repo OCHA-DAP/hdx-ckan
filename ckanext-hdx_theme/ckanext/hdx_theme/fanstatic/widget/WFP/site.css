@@ -1,82 +1,67 @@
-#map{
-    height:500px;
+#wfp-visualization-wrapper #map {
+  height: 500px;
 }
-
-.modal-content{
-    padding-left:10px;
-    padding-right:10px;
+#wfp-visualization-wrapper .modal-content {
+  padding-left: 10px;
+  padding-right: 10px;
 }
-
-#header {
-    height:80px;
+#wfp-visualization-wrapper #header {
+  height: 80px;
 }
-
-.sparkline{
+#wfp-visualization-wrapper .sparkline {
   fill: none;
-  stroke-width:2px;
+  stroke-width: 2px;
   stroke: #2a93fc;
 }
-
-.sparkyearline{
+#wfp-visualization-wrapper .sparkyearline {
   fill: none;
-  stroke-width:1px;
+  stroke-width: 1px;
   stroke: #eeeeee;
   shape-rendering: crispEdges;
 }
-
-.productsparkline{
-    border-width:2px;
-    border-color:#fff;
-    border-style:solid;
+#wfp-visualization-wrapper .productsparkline {
+  border-width: 2px;
+  border-color: #fff;
+  border-style: solid;
 }
-
-.productsparkline:hover{
-    border-width:2px;
-    border-color:#2a93fc;
-    border-style:solid;
-    cursor:pointer;
+#wfp-visualization-wrapper .productsparkline:hover {
+  border-width: 2px;
+  border-color: #2a93fc;
+  border-style: solid;
+  cursor: pointer;
 }
-
-.area {
+#wfp-visualization-wrapper .area {
   fill: #2a93fc;
   clip-path: url(#clip);
 }
-
-.axis path,
-.axis line {
+#wfp-visualization-wrapper .axis path,
+#wfp-visualization-wrapper .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
 }
-
-.axis {
-    font-size:11px;
+#wfp-visualization-wrapper .axis {
+  font-size: 11px;
 }
-
-.brush .extent {
+#wfp-visualization-wrapper .brush .extent {
   stroke: #fff;
   fill-opacity: .125;
   shape-rendering: crispEdges;
 }
-
-.bar {
-    fill:#2a93fc;
+#wfp-visualization-wrapper .bar {
+  fill: #2a93fc;
 }
-
-.bar:hover {
-    cursor: pointer;
+#wfp-visualization-wrapper .bar:hover {
+  cursor: pointer;
 }
-
-#embedoptions{
-    display:none;
-    padding:10px;
+#wfp-visualization-wrapper #embedoptions {
+  display: none;
+  padding: 10px;
 }
-
-#hdxembedoptions{
-    display:none;
-    padding:10px;
+#wfp-visualization-wrapper #hdxembedoptions {
+  display: none;
+  padding: 10px;
 }
-
-#hdxembed{
-    padding-top: 15px;
+#wfp-visualization-wrapper #hdxembed {
+  padding-top: 15px;
 }
