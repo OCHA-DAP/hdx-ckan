@@ -14,7 +14,8 @@ class WidgetWFPController(widget.WidgetController):
         return data
     def _get_data(self):
         ret = {
-            "type": ""
+            "type": "WFP",
+            "embeded": True
         }
         keys = []
 
@@ -33,7 +34,7 @@ class WidgetWFPController(widget.WidgetController):
         extra = {
             "data": json.dumps(data),
             "visualization_basemap_url": config.get("hdx.orgmap.url"),
-            "visualization_embed_url": org_controller._get_embed_url({'type': 'WFP'})
+            "visualization_embed_url": org_controller._get_embed_url({'type': 'WFP', })
         }
 
         result = render('widget/WFP/WFP.html', extra_vars=extra)

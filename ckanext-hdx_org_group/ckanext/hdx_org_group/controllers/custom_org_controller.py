@@ -109,16 +109,13 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'x':visualization['pos-x'],
                 'y':visualization['pos-y'],
                 'zoom':visualization['zoom'],
-                'colors':visualization.get('colors',''),
-                'type': visualization['visualization-select']
-            }
-        if visualization['visualization-select'] == '3W-dashboard':
-            config = {
-                'type': visualization['visualization-select'],
-                'embed': True
-            }
-        else:
-            config.update({})
+                'colors':visualization.get('colors','')
+            })
+        if visualization['visualization-select'] == 'WFP':
+            config.update({
+                'embedded': "true"
+            })
+
         return config
 
     def generate_template_data(self, org_info):
@@ -200,7 +197,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'config': viz_config,
                     'config_type': viz_config['type'],
                     'config_url': urlencode(viz_config, True),
-                    'embed_url': _get_embed_url(),
+                    'embed_url': _get_embed_url(viz_config),
                     'basemap_url': config.get('hdx.orgmap.url')
                 }
 
