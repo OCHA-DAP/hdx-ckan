@@ -77,10 +77,13 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
 
         #beware that visualisation type constants are also used in the template to select different resource bundles
+        config = {
+                'title':visualization['viz-title'],
+                'data_link_url':visualization.get('viz-data-link-url','#'),
+                'type': visualization['visualization-select']
+        }
         if visualization['visualization-select'] == '3W-dashboard':
-            config = {'title':visualization['viz-title'],
-                'description':visualization['viz-description'],
-                'datatype': datatype,
+            config.update({'datatype': datatype,
                 'data': data,
                 'whoFieldName':visualization['who-column'],
                 'whatFieldName':visualization['what-column'],
@@ -91,15 +94,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'x':visualization['pos-x'],
                 'y':visualization['pos-y'],
                 'zoom':visualization['zoom'],
-                'colors':visualization.get('colors',''),
-                'type': visualization['visualization-select']
-            }
+                'colors':visualization.get('colors','')
+            })
         else:
-            config = {
-                'title':visualization['viz-title'],
-                'description':visualization['viz-description'],
-                'type': visualization['visualization-select']
-            }
+            config.update({})
         return config
 
     def generate_template_data(self, org_info):
@@ -178,7 +176,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'show_admin_menu': allow_add_dataset or allow_edit,
                 'show_visualization': True,
                 'visualization': {
-                    'config': json.dumps(viz_config),
+                    'config': viz_config,
                     'config_type': viz_config['type'],
                     'config_url': urlencode(viz_config, True),
                     'embed_url': self._get_embed_url(),
@@ -194,6 +192,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         template_data['data']['show_visualization'] = \
             hdx_helpers.check_all_str_fields_not_empty(template_data['data']['visualization'],
                                                        'Visualization config field "{}" is empty',
+                                                       skipped_keys=['config'],
                                                        errors=errors)
 
         template_data['error_summary'] = \
