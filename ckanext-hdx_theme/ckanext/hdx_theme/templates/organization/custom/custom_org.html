@@ -155,7 +155,7 @@
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             {{ h.snippet('widget/popup/popup-embed.html', id="embedPopup", triggerId="embedPopupTrigger",
-                title="Embed visualization",
+                title="Embed data",
                 embed_url=data.visualization_embed_url,
                 data=data.visualization_config_url,
                 sizes=[{"width": "800", "height": "500"},
@@ -185,7 +185,6 @@
             </div>
             <input type="hidden" id="visualization-data" value="{{data.visualization_config}}">
         </div>
-        <div style="display: none" id="wfp-viz-base-url">{{ data.visualization_basemap_url }}</div>
         {% if data.visualization_config_type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="row">
@@ -198,6 +197,8 @@
         {% if data.visualization_config_type == 'WFP' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="row">
+                    <div style="display: none" id="wfp-viz-base-url">{{ data.visualization_basemap_url }}</div>
+                    <div style="display: none" id="wfp-viz-embed-url">{{ data.visualization_embed_url }}</div>
                     <div id="header" class="col-xs-12 rightcol">
                         <p>Click a country to explore prices for different products</p>
                     </div>

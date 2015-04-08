@@ -37,6 +37,21 @@ log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
 
+def _get_embed_url(viz_config):
+    ckan_url = config.get('ckan.site_url', '').strip()
+    position = ckan_url.find('//')
+    if position >= 0:
+        ckan_url = ckan_url[position:]
+
+    widget_url = ""
+    if viz_config['type'] == '3W-dashboard':
+        widget_url = "/widget/3W"
+    if viz_config['type'] == 'WFP':
+        widget_url = "/widget/WFP"
+
+    url = ckan_url + widget_url
+    return url
+
 class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
 
     def org_read(self, id):
@@ -93,6 +108,11 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'zoom':visualization['zoom'],
                 'colors':visualization.get('colors',''),
                 'type': visualization['visualization-select']
+            }
+        if visualization['visualization-select'] == '3W-dashboard':
+            config = {
+                'type': visualization['visualization-select'],
+                'embed': True
             }
         else:
             config = {
@@ -160,7 +180,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'visualization_config': json.dumps(viz_config),
                 'visualization_config_type': viz_config['type'],
                 'visualization_config_url': urlencode(viz_config, True),
-                'visualization_embed_url': self._get_embed_url(),
+                'visualization_embed_url': _get_embed_url(viz_config),
                 'visualization_basemap_url': config.get('hdx.orgmap.url')
 
 
@@ -171,15 +191,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         }
 
         return template_data
-
-    def _get_embed_url(self):
-        ckan_url = config.get('ckan.site_url', '').strip()
-        position = ckan_url.find('//')
-        if position >= 0:
-            ckan_url = ckan_url[position:]
-
-        url = ckan_url + "/widget/3W"
-        return url
 
     def get_org(self, org_id):
         group_type = 'organization'
