@@ -74,11 +74,22 @@
 
 <div class="org-control-container">
 {% set is_upload = customizations['image_sq'] and not customizations['image_sq'].startswith('http') %}
-    {% set is_url = customizations['image_sq'] and customizations['image_sq'].startswith('http') %}
+{% set is_url = customizations['image_sq'] and customizations['image_sq'].startswith('http') %}
 
-    
-    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Square Image 75x75'), upload_label=_('Square Image 75x75')) }}
+{% if is_url %}
+  {% set image_preview = customizations['image_sq'] %}
+{% elif is_upload %}
+  {% set image_preview = h.url_for('image_serve', label= customizations['image_sq']) %}
+{% else %}
+  {% set image_preview = 'http://placehold.it/75x75' %}
+{% endif %}
 
+<div style="border: solid 10px #CCC; width:572px; height:86px; margin-bottom:10px;">
+<div style="width:475px; float:left; margin-top:5px; padding:5px;">    
+    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 75x75'), upload_label=_('Logo 75x75')) }}
+  </div>
+<div style="float:left; padding:5px;"><img src="{{ image_preview }}"></div>
+</div>
 </div>
 
 <div class="org-control-container">
@@ -86,8 +97,21 @@
     {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
     {% set is_use_org_color = customizations['use_org_color'] %}
 
-    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Rectangular Image 300x125'), upload_label=_('Rectangular Image 300x125')) }}
 
+{% if is_url %}
+  {% set image_preview = customizations['image_rect'] %}
+{% elif is_upload %}
+  {% set image_preview = h.url_for('image_serve', label= customizations['image_rect']) %}
+{% else %}
+  {% set image_preview = 'http://placehold.it/300x125' %}
+{% endif %}
+<div style="border: solid 10px #CCC; width: 572px; height: 135px;">
+<div style="width:250px; margin-top:32px; float:left; padding:5px;">
+    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 300x125'), upload_label=_('Logo 300x125')) }}
+</div>
+<div style="float:left; padding:5px;"><img src="{{ image_preview }}"></div>
+</div>
+</div>
 </div>
 
 <div class="org-control-container" style="margin-top:30px;">
