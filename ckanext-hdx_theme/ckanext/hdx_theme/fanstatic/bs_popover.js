@@ -7,7 +7,10 @@ ckan.module('bs_popover', function($, _) {
 			if (this.options.social_div_id) {
 				var contentEl 	= $('#'+this.options.social_div_id);
 				var newContent 	= contentEl.html();
-				contentEl.remove();
+
+				// commented out for the case when there are several 'share' buttons on the page
+				// contentEl.remove();
+
 				if ( newContent && newContent.length > 0 )
 					content = newContent;
 			}

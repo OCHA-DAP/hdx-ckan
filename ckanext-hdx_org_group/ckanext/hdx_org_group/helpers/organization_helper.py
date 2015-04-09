@@ -19,9 +19,12 @@ import ckan.model as model
 import ckan.logic.action.update as update
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.uploader as uploader
+import paste.deploy.converters as converters
 
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as h
+
+from ckan.common import _, request
 
 log = logging.getLogger(__name__)
 
@@ -31,6 +34,7 @@ _get_or_bust = logic.get_or_bust
 _validate = ckan.lib.navl.dictization_functions.validate
 
 NotFound = logic.NotFound
+ValidationError = logic.ValidationError
 
 
 def sort_results_case_insensitive(results, sort_by):
@@ -168,31 +172,40 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         schema = group_plugin.form_to_db_schema()
 
     try:
-        customization = json.loads(h.hdx_get_extras_element(group.extras,'customization'))
+        customization = json.loads(group.extras['customization'])
     except:
         customization = {'image_sq':'','image_rect':''}
 
-    upload1 = uploader.Upload('group', customization['image_sq'])
-    upload1.update_data_dict(data_dict, 'image_sq',
-                           'image_sq', 'clear_upload')
+    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
+        upload1 = uploader.Upload('group', customization['image_sq'])
+        upload1.update_data_dict(data_dict, 'image_sq',
+                           'image_sq_upload', 'clear_upload')
 
-    upload2 = uploader.Upload('group', customization['image_rect'])
-    upload2.update_data_dict(data_dict, 'image_rect',
-                           'image_rect', 'clear_upload')
+    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict['image_rect_upload'] != None:
+        upload2 = uploader.Upload('group', customization['image_rect'])
+        upload2.update_data_dict(data_dict, 'image_rect',
+                           'image_rect_upload', 'clear_upload')
 
     try:
         data_dict['customization'] = json.loads(data_dict['customization'])
     except:
         data_dict['customization'] = {}
+
     storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
     try:
-        data_dict['customization']['image_sq'] = data_dict['image_sq']
+        if data_dict['image_sq'] != '' and data_dict['image_sq'] != None:
+            data_dict['customization']['image_sq'] = data_dict['image_sq']
+        else:
+            data_dict['customization']['image_sq'] = customization['image_sq']
     except KeyError:
         data_dict['customization']['image_sq'] = ''
 
     try:
-        data_dict['customization']['image_rect'] = data_dict['image_rect']
+        if data_dict['image_rect'] != '' and data_dict['image_rect'] != None:
+            data_dict['customization']['image_rect'] = data_dict['image_rect']
+        else:
+            data_dict['customization']['image_rect'] = customization['image_rect']
     except KeyError:
         data_dict['customization']['image_rect'] = ''
 
@@ -285,8 +298,16 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         # TODO: Also create an activity detail recording what exactly changed
         # in the group.
 
-    upload1.upload(uploader.get_max_image_size())
-    upload2.upload(uploader.get_max_image_size())
+    try:
+        upload1.upload(uploader.get_max_image_size())
+    except:
+        pass
+
+    try:
+        upload2.upload(uploader.get_max_image_size())
+    except:
+        pass
+
     if not context.get('defer_commit'):
         model.repo.commit()
 

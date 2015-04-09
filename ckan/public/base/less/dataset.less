@@ -19,6 +19,9 @@
 
 .dataset-heading a {
   color: @listingHeadingTextColor;
+  &:hover, &:focus{
+    color: darken(@listingHeadingTextColor, 20%);
+  }
 }
 
 .dataset-heading .label {

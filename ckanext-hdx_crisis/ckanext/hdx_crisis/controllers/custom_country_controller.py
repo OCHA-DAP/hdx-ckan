@@ -8,6 +8,7 @@ import logging
 import pylons.config as config
 
 import ckan.lib.base as base
+import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
@@ -16,6 +17,7 @@ import ckan.controllers.group as group
 
 import ckanext.hdx_crisis.dao.country_data_access as country_data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_crisis.controllers.crisis_controller as controllers
 
 render = base.render
@@ -52,14 +54,6 @@ def get_group(id):
 
     return group_info, custom_dict
 
-def _check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[]):
-    for key, value in dictionary.iteritems():
-            if key not in skipped_keys:
-                value = value.strip() if value else value
-                if not value:
-                    log.warning(warning_template.format(key))
-                    return False
-    return True
 
 class CustomCountryController(group.GroupController, controllers.CrisisController):
 
@@ -78,7 +72,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
 
-    def _get_charts_config(self, custom_dict, top_line_items_count):
+    def _get_charts_config(self, custom_dict, top_line_items_count, errors):
         charts = []
         for index, chart_config in enumerate(custom_dict.get('charts', [])):
             if top_line_items_count <= 4 and index == 1:
@@ -88,6 +82,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 chart_type = 'bar'
             chart = {
                 'title': chart_config.get('chart_title', ''),
+                'data_link_url': chart_config.get('chart_data_link_url', ''),
                 'type': chart_type,
                 'title_x': chart_config.get('chart_x_label', ''),
                 'title_y': chart_config.get('chart_y_label', ''),
@@ -106,7 +101,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                         'column_y': resource.get('chart_y_column', False),
                         }
                     chart['sources'].append(source)
-            if self._show_chart(chart):
+            if self._show_chart(chart, errors):
                 charts.append(chart)
 
         return charts
@@ -124,21 +119,21 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_maps_config(self, custom_dict):
         return custom_dict.get('map', {})
 
-    def _show_map(self, map_dict):
-        return _check_all_str_fields_not_empty(map_dict, 'Map config field "{}" is empty')
+    def _show_map(self, map_dict, errors):
+        return helpers.check_all_str_fields_not_empty(map_dict, 'Map config field "{}" is empty', errors=errors)
 
-    def _show_chart(self, chart_dict):
+    def _show_chart(self, chart_dict, errors):
         chart_main_check = \
-            _check_all_str_fields_not_empty(chart_dict,
-                                            'Chart config field "{}" is empty', ['sources'])
+            helpers.check_all_str_fields_not_empty(chart_dict,
+                                            'Chart config field "{}" is empty', ['sources'], errors=errors)
         if not chart_main_check:
             return False
         if len(chart_dict.get('sources', [])) == 0:
             return False
 
         chart_src_check = \
-            _check_all_str_fields_not_empty(chart_dict['sources'][0],
-                                            'Chart source config field "{}" is empty')
+            helpers.check_all_str_fields_not_empty(chart_dict['sources'][0],
+                                            'Chart source config field "{}" is empty', errors=errors)
         if not chart_src_check:
             return False
 
@@ -146,19 +141,26 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
     def generate_template_data(self, group_info, custom_dict):
 
+        errors = []
+
         country_name = group_info['name']
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        top_line_resource_id = self._get_top_line_datastore_id(custom_dict)
-        top_line_items = self.get_top_line_numbers(top_line_resource_id)
+        top_line_items = []
+        try:
+            top_line_resource_id = self._get_top_line_datastore_id(custom_dict)
+            top_line_items = self.get_top_line_numbers(top_line_resource_id)
+        except Exception, e:
+            log.warning(e)
+            helpers.add_error('Fetching data problem', str(e), errors)
 
         search_params = {u'groups': country_name}
 
         self._generate_dataset_results(
-            context, search_params, action_alias='show_custom_country', other_params_dict={'id': country_name} )
+            context, search_params, action_alias='show_custom_country', other_params_dict={'id': country_name})
 
         self._generate_other_links(search_params)
 
@@ -167,16 +169,18 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 'country_name': group_info['name'],
                 'country_title': group_info.get('title', group_info['name']),
                 'top_line_items': top_line_items,
-                'charts': self._get_charts_config(custom_dict, len(top_line_items)),
+                'charts': self._get_charts_config(custom_dict, len(top_line_items), errors),
                 'show_map': True,
                 'map': self._get_maps_config(custom_dict)
             },
-            'errors': None,
-            'error_summary': None,
+            'errors': errors,
+            'error_summary': '',
         }
 
-        template_data['data']['show_map'] = self._show_map(template_data['data']['map'])
+        template_data['data']['show_map'] = self._show_map(template_data['data']['map'], errors)
 
+        template_data['error_summary'] = \
+            '; '.join([e.get('message', '') for e in template_data['errors']])
         return template_data
 
     def get_top_line_numbers(self, top_line_resource_id):

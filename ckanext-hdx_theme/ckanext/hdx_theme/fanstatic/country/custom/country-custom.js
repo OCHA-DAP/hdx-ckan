@@ -1,21 +1,24 @@
 $(document).ready(function() {
-    var map = L.map('crisis-map', { attributionControl: false });
-    map.scrollWheelZoom.disable();
-    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
-        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
-        maxZoom: 7
-    }).addTo(map);
+    var crisisMapDiv = $("#crisis-map");
+    if (crisisMapDiv.length){
+        var map = L.map('crisis-map', { attributionControl: false });
+        map.scrollWheelZoom.disable();
+        L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+            attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+            maxZoom: 7
+        }).addTo(map);
 
-    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-        maxZoom: 7
-    }).addTo(map);
+        L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+            maxZoom: 7
+        }).addTo(map);
 
-    L.control.attribution({position: 'topright'}).addTo(map);
-    map.setView([5, -70], 5);
+        L.control.attribution({position: 'topright'}).addTo(map);
+        map.setView([5, -70], 5);
 
-    var confJsonText = $("#map-configuration").text();
-    var confJson = JSON.parse(confJsonText);
-    loadMapData(map, confJson);
+        var confJsonText = $("#map-configuration").text();
+        var confJson = JSON.parse(confJsonText);
+        loadMapData(map, confJson);
+    }
     autoGraph();
 });
 
@@ -53,8 +56,11 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
         }
     };
 
-    if(colXType)
+    if(colXType){
         config.axis.x.type = colXType;
+        if (colXType == 'timeseries')
+            config.axis.x.tick.format = '%b %d, %Y';
+    }
     if (colXFormat)
         config.data.xFormat = colXFormat;
 
@@ -64,16 +70,16 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
 }
 function autoGraph() {
     $(".auto-graph").each(function(idx, element){
-        var graphData = $(element).find(".graph-data");
-        var data = JSON.parse(graphData.text());
-        graphData.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
-        graphData.css("display", "block");
+        var graphDataDiv = $(element).find(".graph-data");
+        var graphData = JSON.parse(graphDataDiv.text());
+        graphDataDiv.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
+        graphDataDiv.css("display", "block");
 
         var graph = null;
         var promises = [];
         var results = [];
-        for (var sIdx in data.sources){
-            var source = data.sources[sIdx];
+        for (var sIdx in graphData.sources){
+            var source = graphData.sources[sIdx];
             source["data"] = null;
             results.push(source);
             var sql = 'SELECT "'+ source.column_x + '", "'+ source.column_y +'" FROM "'+ source.datastore_id +'"';
@@ -101,7 +107,7 @@ function autoGraph() {
                         columnXType = null,
                         columnXFormat = null,
                         columnY = response.column_y,
-                        graphType = element.type;
+                        graphType = graphData.type;
 
                     if (data.fields[0].type == 'timestamp'){
                         columnXType = 'timeseries';
@@ -112,7 +118,7 @@ function autoGraph() {
 
 
                     if (!graph){
-                        graph = prepareGraph(graphData[0], data.records, columnX, columnXType, columnXFormat, columnY, 'bar');
+                        graph = prepareGraph(graphDataDiv[0], data.records, columnX, columnXType, columnXFormat, columnY, graphType);
                     }
                     else
                         graph.load({
@@ -358,9 +364,9 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     // method that we will use to update the control based on feature properties passed
     info.update = function (properties) {
         var titleField = confJson.map_title_column ? confJson.map_title_column : 'admin1Name';
-        this._div.innerHTML = '<h4>' + 'Title' + '</h4>' +  (properties ?
+        this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
         '<table>' +
-        '<tr><td style="text-align: right;">Department: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
+        '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
         //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
         '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
         '</table>'
@@ -370,12 +376,12 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         this._div.innerHTML = message;
     };
     info.updateLayer = function (layer) {
-        for (l in layers)
-            if (layers[l]['name'] == layer){
-                this._layer = l;
-                this.update();
-                return;
-            }
+        //for (var l in layers)
+        //    if (layers[l]['name'] == layer){
+        //        this._layer = l;
+        //        this.update();
+        //        return;
+        //    }
         this.update();
         this._layer = null;
     };
@@ -409,5 +415,6 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     };
     legend.addTo(map);
     legend.updateLayer();
+    info.updateLayer();
 
 }
