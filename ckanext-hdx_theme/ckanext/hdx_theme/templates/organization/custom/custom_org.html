@@ -202,7 +202,7 @@
                     {{ _("Interactive Data") }}
                 </span>
             </div>
-            <input type="hidden" id="visualization-data" value="{{data.visualization.config}}">
+            <input type="hidden" id="visualization-data" value="{{ h.json_dumps(data.visualization.config) }}">
         </div>
             {% set viz_title = data.visualization.config.title %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -222,7 +222,7 @@
             </div>
         <div style="display: none" id="wfp-viz-base-url">{{ data.visualization.basemap_url }}</div>
         <div style="display: none" id="wfp-viz-embed-url">{{ data.visualization.embed_url }}</div>
-        {% if data.visualization_config_type == '3W-dashboard' %}
+        {% if data.visualization.config.type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="row">
                     <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>

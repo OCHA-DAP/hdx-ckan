@@ -31,11 +31,7 @@ class Widget3WController(widget.WidgetController):
 
 
         config = urlparse.parse_qs(request.url.split("?")[1])
-        for key in config:
-            if isinstance(ret[key], list):
-                ret[key] = config[key]
-            else:
-                ret[key] = config[key][0]
+        ret.update(config)
 
         return ret
     def show(self):
