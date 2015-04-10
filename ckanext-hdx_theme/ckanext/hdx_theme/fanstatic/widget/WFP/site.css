@@ -6,7 +6,7 @@
   padding-right: 10px;
 }
 #wfp-visualization-wrapper #header {
-  height: 80px;
+  height: 40px;
 }
 #wfp-visualization-wrapper .sparkline {
   fill: none;
@@ -64,5 +64,4 @@
 }
 #wfp-visualization-wrapper #hdxembed {
   padding-top: 15px;
-  display:none;
 }
