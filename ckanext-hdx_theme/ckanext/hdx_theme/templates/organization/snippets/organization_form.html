@@ -86,9 +86,9 @@
 
 <div style="border: solid 10px #CCC; width:572px; height:86px; margin-bottom:10px;">
 <div style="width:475px; float:left; margin-top:5px; padding:5px;">    
-    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 75x75'), upload_label=_('Logo 75x75')) }}
+    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', field_clear='clear_image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 75x75'), upload_label=_('Logo 75x75')) }}
   </div>
-<div style="float:left; padding:5px;"><img src="{{ image_preview }}"></div>
+<div style="float:left; padding:5px;"><img src="{{ image_preview }}" style="width: 75px !important; height:75px !important;"></div>
 </div>
 </div>
 
@@ -107,9 +107,9 @@
 {% endif %}
 <div style="border: solid 10px #CCC; width: 572px; height: 135px;">
 <div style="width:250px; margin-top:32px; float:left; padding:5px;">
-    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 300x125'), upload_label=_('Logo 300x125')) }}
+    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', field_clear='clear_image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 300x125'), upload_label=_('Logo 300x125')) }}
 </div>
-<div style="float:left; padding:5px;"><img src="{{ image_preview }}"></div>
+<div style="float:left; padding:5px;"><img src="{{ image_preview }}" style="width: 300px !important; height:125px !important;"></div>
 </div>
 </div>
 </div>
