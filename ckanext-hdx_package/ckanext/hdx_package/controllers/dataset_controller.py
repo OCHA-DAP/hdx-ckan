@@ -677,7 +677,8 @@ class DatasetController(PackageController):
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
             else:
-                org_id = c.pkg_dict.get('organization',{}).get('id', None)
+                org_dict = c.pkg_dict.get('organization') or {}
+                org_id = org_dict.get('id', None)
                 org_info_dict = self._get_org_extras(org_id)
                 if org_info_dict.get('custom_org', False):
                     self._process_customizations(org_info_dict.get('customization', None))

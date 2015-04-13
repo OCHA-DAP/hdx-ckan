@@ -1,7 +1,7 @@
 function initMap(){
-    
+    var base_osm_url = $('#wfp-viz-base-url').text().trim();
     var base_osm = L.tileLayer(
-            'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+            base_osm_url,{
             attribution: '&copy; OpenStreetMap contributors'}
     );
           
@@ -823,6 +823,8 @@ var map;
 var embedded = (parseGet('embedded'));
 
 $(document).ready(function(){
+    url = $("#wfp-viz-embed-url").text().trim();
+
     if(embedded ==='true'){
         initembed();
     } else {

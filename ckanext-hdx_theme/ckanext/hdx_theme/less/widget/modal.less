@@ -14,9 +14,13 @@
 
 @modalLabelFontSize: 14px;
 
+@modalHeaderFooterRadius: 6px;
+
 .hdx-modal .modal-header {
   background-color: @modalHeaderBackgroundColor;
   font-family: @gothamBookFont;
+  border-top-left-radius: @modalHeaderFooterRadius;
+  border-top-right-radius: @modalHeaderFooterRadius;
 }
 
 .hdx-modal .modal-body{
@@ -26,6 +30,8 @@
 .hdx-modal .modal-footer {
   background-color: @modalFooterBackgroundColor;
   border-style: none;
+  border-bottom-left-radius: @modalHeaderFooterRadius;
+  border-bottom-right-radius: @modalHeaderFooterRadius;
 }
 
 .hdx-modal label {

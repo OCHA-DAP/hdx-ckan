@@ -157,6 +157,7 @@ hdx.ogre.url = http://ogre:3000
 hdx.datapreview.url = //data.hdx.rwlabs.org/dataproxy
 hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
+hdx.orgmap.url = //{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
 hdx.mapbox.baselayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43d4f5j/{z}/{x}/{y}.png
 hdx.mapbox.labelslayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/{z}/{x}/{y}.png
 

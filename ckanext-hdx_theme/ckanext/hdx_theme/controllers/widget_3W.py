@@ -24,17 +24,14 @@ class Widget3WController(widget.WidgetController):
             "zoom": "1500",
             "data": "/dataset/custom-test-org-data/resource_download/8e312caf-6755-4875-9b37-ebed76da90a5",
             "y": "3",
-            "x": "55"
+            "x": "55",
+            "type": ""
         }
         keys = ["geotype", "description", "joinAttribute", "colors", "whoFieldName", "whatFieldName", "whereFieldName", "title", "datatype", "geo", "zoom", "data", "y", "x"];
 
 
         config = urlparse.parse_qs(request.url.split("?")[1])
-        for key in config:
-            if isinstance(ret[key], list):
-                ret[key] = config[key]
-            else:
-                ret[key] = config[key][0]
+        ret.update(config)
 
         return ret
     def show(self):

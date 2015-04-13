@@ -187,10 +187,15 @@
 }
 /* Default link style */
 a,
-a:hover,
-a:focus,
 .dataset-heading a {
   color: #0088ff;
+  text-decoration: none;
+}
+a:hover,
+.dataset-heading a:hover,
+a:focus,
+.dataset-heading a:focus {
+  color: #005299;
   text-decoration: none;
 }
 /* END Default link style */
@@ -388,12 +393,20 @@ a:focus,
 .control-order-by .orderDropdown .dropdown-toggle .caret {
   margin-top: 6px;
 }
+.control-order-by .orderDropdown .dropdown-toggle:hover,
+.control-order-by .orderDropdown .dropdown-toggle:focus {
+  color: #005299;
+}
 .control-order-by .orderDropdown .dropdown-toggle-text {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
   color: #0088ff;
   letter-spacing: 0.03em;
+}
+.control-order-by .orderDropdown .dropdown-toggle-text:hover,
+.control-order-by .orderDropdown .dropdown-toggle-text:focus {
+  color: #005299;
 }
 /* END DropDown style */
 /* Body Background */
@@ -418,10 +431,10 @@ body {
   color: #f2645a;
 }
 .newHeader .header-nav-bg {
-  background-color: #363636;
+  background-color: #ffffff;
 }
 .newHeader .header-nav-border {
-  border-bottom: 3px solid #888888;
+  border-bottom: 3px solid #cccccc;
 }
 .newHeader .header-nav {
   height: 55px;
@@ -430,7 +443,7 @@ body {
   height: 55px;
 }
 .newHeader .header-user-bg {
-  background-color: #000000;
+  background-color: #333333;
 }
 .newHeader .submitData {
   /*Submit Data Button*/
@@ -472,7 +485,7 @@ body {
   height: 55px;
   margin-left: 50px;
   width: 350px;
-  border-bottom: 3px solid #eeeeee;
+  border-bottom: 3px solid #888888;
   margin-bottom: -3px;
 }
 .header-nav-search .header-search-form {
@@ -510,11 +523,11 @@ body {
   font-size: 18px;
   line-height: 28px;
   outline: none;
-  color: #ffffff;
+  color: #000000;
 }
 .header-nav-search .header-search-form input::-webkit-input-placeholder,
 .header-nav-search .header-search-form input:-ms-input-placeholder {
-  color: #888888;
+  color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -522,7 +535,7 @@ body {
 }
 .header-nav-search .header-search-form input:-moz-placeholder,
 .header-nav-search .header-search-form input::-moz-placeholder {
-  color: #888888;
+  color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -530,7 +543,7 @@ body {
   opacity: 1;
 }
 .newHeader .header-nav .header-nav-search .header-search-form input::-webkit-input-placeholder {
-  color: #888888;
+  color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -555,7 +568,7 @@ body {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage-new/logo-beta-inverted.svg");
+  background-image: url("/images/homepage-new/logo-beta.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;
@@ -580,10 +593,14 @@ body {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #ffffff;
+  color: #333333;
   letter-spacing: 0.03em;
   line-height: 31px;
   text-transform: uppercase;
+}
+.mainLinks > li > a:hover,
+.mainLinks > li > a:focus {
+  color: #000000;
 }
 .mainLinks > li > a:after {
   content: "|";
@@ -602,7 +619,7 @@ body {
 }
 /* Style breadcrumbs */
 .toolbarRow {
-  background-color: #cccccc;
+  background-color: #eeeeee;
   height: 20px;
 }
 .toolbarRow .toolbar {
@@ -768,6 +785,8 @@ ul.hdx-bs3 {
 .hdx-modal .modal-header {
   background-color: #eeeeee;
   font-family: 'Gotham-Book', sans-serif;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 .hdx-modal .modal-body {
   font-family: 'Gotham-Book', sans-serif;
@@ -775,6 +794,8 @@ ul.hdx-bs3 {
 .hdx-modal .modal-footer {
   background-color: #eeeeee;
   border-style: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 .hdx-modal label {
   font-size: 14px;
@@ -809,7 +830,6 @@ ul.hdx-bs3 {
   max-width: 300px;
 }
 .intro-section .org-title {
-  width: 470px;
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 36px;
@@ -825,6 +845,10 @@ ul.hdx-bs3 {
   font-size: 14px;
   letter-spacing: 0;
   color: #0088ff;
+}
+.intro-section .mainLinks.org-info-links > li > a:focus,
+.intro-section .mainLinks.org-info-links > li > a:hover {
+  color: #005299;
 }
 .intro-section .mainLinks.org-info-links > li > a.disabled {
   color: #000000;
@@ -843,6 +867,9 @@ ul.hdx-bs3 {
   position: absolute;
   bottom: 15px;
   right: 15px;
+}
+.intro-section div.summary p {
+  margin: 0px;
 }
 .org-section-title {
   margin-top: 30px;
@@ -863,7 +890,14 @@ ul.hdx-bs3 {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
   font-size: 18px;
-  color: #0088ff;
+  color: #333333;
+}
+.visualization-title span {
+  margin-left: 10px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
 }
 .mainLinks.visualization-links {
   padding-left: 0;
@@ -875,6 +909,10 @@ ul.hdx-bs3 {
   color: #0088ff;
   letter-spacing: 0;
   text-transform: none;
+}
+.mainLinks.visualization-links > li > a:hover,
+.mainLinks.visualization-links > li > a:focus {
+  color: #005299;
 }
 .btn.hdx-btn {
   margin-right: 12px;
@@ -906,20 +944,25 @@ ul.hdx-bs3 {
   position: fixed;
   top: 0px;
   margin-left: -45px;
-  z-index: 1000;
+  z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  height: 75px;
+  border: 1px solid #0088ff;
   background-color: #ffffff;
 }
-#floatingLogo .logo {
+#floatingLogo .table-valign {
+  background-color: #0088ff;
   width: 75px;
   height: 75px;
-  background-color: #0088ff;
+  text-align: center;
 }
-#floatingLogo .logo img {
-  max-width: 75px;
-  max-height: 75px;
+#floatingLogo .table-valign img {
+  max-height: 60px;
+  max-width: 60px;
+}
+#floatingLogo .table-valign img {
+  max-height: 60px;
+  max-width: 60px;
 }
 #floatingLogo:hover .title-share {
   display: block;
@@ -927,18 +970,27 @@ ul.hdx-bs3 {
 #floatingLogo .title-share {
   display: none;
   padding: 15px;
+  max-width: 285px;
+  min-width: 225px;
+  line-height: 12px;
+}
+#floatingLogo .title-share .floating-org-title {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   color: #333333;
   line-height: 16px;
-  max-width: 225px;
-  width: 225px;
+  height: 32px;
 }
 #floatingLogo .title-share a {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 12px;
-  color: #0088ff;
+  font-size: 10px;
   text-transform: uppercase;
+  line-height: 12px;
+}
+#floatingLogo .title-share a + a:before {
+  content: "|";
+  margin-right: 3px;
+  margin-left: 3px;
 }

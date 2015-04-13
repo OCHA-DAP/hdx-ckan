@@ -1,0 +1,23 @@
+  <div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-title">Title</label>
+    <div class="controls ">
+    <input id="field-title" type="text" name="viz-title" value="{{visualization['viz-title']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">Give this visualization a title.</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-data-link-url">Data Link URL</label>
+    <div class="controls ">
+    <input id="field-data-link-url" type="text" name="viz-data-link-url" value="{{visualization['viz-data-link-url']}}" placeholder="" class="visualization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Source Data URL for map.')}}</div>
+      </div>
+</div>

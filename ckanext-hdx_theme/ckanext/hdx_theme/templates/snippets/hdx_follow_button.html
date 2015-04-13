@@ -12,15 +12,15 @@
 	{% for key,value in params.iteritems() %}
 	 {{ key }}="{{ value }}"
 	 {% endfor%}  
-	data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="unfollow" data-module-extra_text='This Data'>
-	{{ _('Unfollow This Data') }}
+	data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="unfollow" data-module-extra_text='{{ follow_extra_text }}'>
+	{{ _('Unfollow') }} {{ follow_extra_text }}
 </a>
 {% else %}
 <a href="{{ h.url_for(controller=controller, action='follow', id=obj_id) }}"
 	 {% for key,value in params.iteritems() %}
 	 {{ key }}="{{ value }}"
 	 {% endfor%} 
-	 data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="follow" data-module-extra_text='This Data'>
-	{{ _('Follow This Data') }}
+	 data-module="hdx_follow" data-module-type="{{ obj_type }}" data-module-id="{{ obj_id }}" data-module-action="follow" data-module-extra_text='{{ follow_extra_text }}'>
+	{{ _('Follow') }} {{ follow_extra_text }}
 </a>
 {% endif %}
