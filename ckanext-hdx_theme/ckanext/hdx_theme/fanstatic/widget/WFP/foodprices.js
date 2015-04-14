@@ -10,7 +10,9 @@ function initMap(){
         zoom: 2,
         layers: [base_osm]
     });
-
+    
+    map.scrollWheelZoom.disable();
+    
     return map;
 }
 
@@ -215,9 +217,10 @@ function generateChartView(cf,adm0,prod,unit,adm0_code){
     $('#maplink').click(function(event){
        event.preventDefault();
        backToMap();
-    });    
-    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
+    });
     generateBarChart(getAVG(cf.groupByAdm1Sum.all(),cf.groupByAdm1Count.all()),cf,prod,unit,adm0,adm0_code);
+    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
+    
 
 }
 
@@ -256,9 +259,9 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code){
     cf.byDate.filterAll();
     cf.byMkt.filterAll();
     cf.byAdm1.filter(adm1);    
-    
-    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
     generateBarChart(getAVG(cf.groupByMktSum.all(),cf.groupByMktCount.all()),cf,prod,unit,adm0,adm0_code,adm1);
+    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
+    
 
 }
 
@@ -325,7 +328,7 @@ function generateTimeCharts(data,cf){
 
     var margin = {top: 10, right: 20, bottom: 20, left: 60},
         width = $('#nav_chart').width() - margin.left - margin.right,
-        height = 175 - margin.top - margin.bottom,
+        height = 175 - margin.top - 10 - margin.bottom,
         height2 = 50 - margin.top - margin.bottom;
 
     var x = d3.time.scale().range([0, width]),
@@ -337,11 +340,20 @@ function generateTimeCharts(data,cf){
         xAxis2 = d3.svg.axis().scale(x2).orient("bottom").ticks(5),
         yAxis = d3.svg.axis().scale(y).orient("left").ticks(5);
 
+    var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        ];        
+
     var brush = d3.svg.brush()
         .x(x2)
         .on("brush", brushed)
         .on("brushend", function(){
+                           
             cf.byDate.filterRange(brush.empty() ? x2.domain() : brush.extent());
+            var dates = brush.empty() ? x2.domain() : brush.extent();
+            var dateFormatted = monthNames[dates[0].getMonth()] +" " + dates[0].getFullYear() + " - " +  monthNames[dates[1].getMonth()] +" " + dates[1].getFullYear();
+    
+            $("#dateextent").html("Average Price for period " + dateFormatted);
             if(curLevel === "adm0"){
                 transitionBarChart(getAVG(cf.groupByAdm1Sum.all(),cf.groupByAdm1Count.all()));
             }
@@ -349,7 +361,7 @@ function generateTimeCharts(data,cf){
                 transitionBarChart(getAVG(cf.groupByMktSum.all(),cf.groupByMktCount.all()));
             }                        
         });
-
+        
     var area = d3.svg.area()
         //.interpolate("monotone")
         .x(function(d) { return x(d.key); })
@@ -364,7 +376,7 @@ function generateTimeCharts(data,cf){
 
     var main_chart = d3.select("#main_chart").append("svg")
         .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom);
+        .attr("height", height + margin.top+10 + margin.bottom);
 
     main_chart.append("defs").append("clipPath")
         .attr("id", "clip")
@@ -374,7 +386,7 @@ function generateTimeCharts(data,cf){
 
     var focus = main_chart.append("g")
         .attr("class", "focus")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + margin.left + "," + (margin.top+10) + ")");
 
     var nav_chart = d3.select("#nav_chart").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -388,11 +400,71 @@ function generateTimeCharts(data,cf){
     y.domain([0, d3.max(data.map(function(d) { return d.value; }))]);
     x2.domain(x.domain());
     y2.domain(y.domain());
+    
+    var price = main_chart.append("g")
+         .attr("class", "pricelabel")
+         .style("display", "none");
+
+        price.append("circle")
+            .attr("cy",10)
+            .attr("r", 4)
+            .attr("fill","#ffffff")
+            .attr("stroke","#5fbbff");
+
+        price.append("text")
+            .attr("x", 9)
+            .attr("dy", ".35em")
+            .attr("class","wfplabel");    
+
+    var bisectDate = d3.bisector(function(d) { return d.key; }).left;
 
     focus.append("path")
         .datum(data)
         .attr("class", "area")
-        .attr("d", area);
+        .attr("d", area)
+        .on("mouseover", function() { price.style("display", null); })
+        .on("mouseout", function() { price.style("display", "none"); })
+        .on("mousemove",function(d){
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(data, x0),
+                d0 = data[i - 1],
+                d1 = data[i],
+                d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+            price.attr("transform", "translate(" + (x(d.key)+margin.left) + "," + (y(d.value)+margin.top) + ")");
+            var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
+            price.select("text").text(value);
+        });
+
+    var linedata = [];
+    
+    data.forEach(function(e){
+        linedata.push([{x:e.key,y:0},{x:e.key,y:e.value}]);
+    });
+
+    var line = d3.svg.line()
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); });
+
+    focus.append("g")
+        .selectAll(".line")
+        .data(linedata)
+        .enter().append("path")
+        .attr("class", "priceline")
+        .attr("d", line)
+        .attr("stroke","#5fbbff")
+        .attr("clip-path", "url(#clip)")
+        .on("mouseover", function() { price.style("display", null); })
+        .on("mouseout", function() { price.style("display", "none"); })
+        .on("mousemove",function(d){
+            var x0 = x.invert(d3.mouse(this)[0]),
+                i = bisectDate(data, x0),
+                d0 = data[i - 1],
+                d1 = data[i],
+                d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+            price.attr("transform", "translate(" + (x(d.key)+margin.left) + "," + (y(d.value)+margin.top) + ")");
+            var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
+            price.select("text").text(value);
+        });
 
     focus.append("g")
         .attr("class", "x axis")
@@ -421,7 +493,7 @@ function generateTimeCharts(data,cf){
           .attr("height", height2 + 7);
   
     main_chart.append("text")
-        .attr("class", "y label")
+        .attr("class", "y wfplabel ylabel")
         .attr("text-anchor", "end")
         .attr("y", 20)
         .attr("x",-30)
@@ -434,11 +506,17 @@ function generateTimeCharts(data,cf){
         event.preventDefault();
         downloadData(data,'Date');
     });
+    
+    var dates = brush.empty() ? x2.domain() : brush.extent();
+    var dateFormatted = monthNames[dates[0].getMonth()] +" " + dates[0].getFullYear() + " - " +  monthNames[dates[1].getMonth()] +" " + dates[1].getFullYear();
+    
+    $("#dateextent").html("Average Price for period " + dateFormatted);     
   
     function brushed() {
       x.domain(brush.empty() ? x2.domain() : brush.extent());
       focus.select(".area").attr("d", area);
       focus.select(".x.axis").call(xAxis);
+      focus.selectAll(".priceline").attr("d", line); 
     }      
 }
 
@@ -466,10 +544,17 @@ function downloadData(data,name){
 }
 
 function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
-    $('#drilldown_chart').html('<p>Click a bar on the chart below to explore data for that area.</p>');
-    var margin = {top: 10, right: 60, bottom: 60, left: 60},
+    data.forEach(function(e){
+        if(e.key.length>14){
+            e.display = e.key.substring(0,14)+"...";
+        } else {
+            e.display = e.key;
+        }
+    });
+    $('#drilldown_chart').html('<p>Click a bar on the chart below to explore data for that area. <span id="dateextent"></span></p>');
+    var margin = {top: 20, right: 60, bottom: 60, left: 60},
         width = $("#drilldown_chart").width() - margin.left - margin.right,
-        height =  130 - margin.top - margin.bottom;
+        height =  135 - margin.top - margin.bottom;
     
     var x = d3.scale.ordinal()
         .rangeRoundBands([0, width]);
@@ -486,7 +571,7 @@ function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
         .orient("left")
         .ticks(3);
     
-    x.domain(data.map(function(d) {return d.key; }));
+    x.domain(data.map(function(d) {return d.display; }));
     y.domain([d3.max(data.map(function(d) { return d.value; })),0]);
     
     var svg = d3.select("#drilldown_chart").append("svg")
@@ -502,18 +587,27 @@ function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
         .selectAll("text")  
             .style("text-anchor", "start")
             .attr("transform", function(d) {
-                return "rotate(35)"; 
+                return "rotate(30)"; 
             });
 
     svg.append("g")
         .attr("class", "y axis yaxis")
         .call(yAxis);
 
+    var price = svg.append("g")
+         .attr("class", "pricelabel");
+         //.style("display", "none");
+
+        price.append("text")
+            .attr("dy", ".35em")
+            .style("text-anchor", "middle")
+            .attr("class","wfplabel");
+
     svg.selectAll("rect")
             .data(data)
             .enter()
             .append("rect") 
-            .attr("x", function(d,i) { return x(d.key); })
+            .attr("x", function(d,i) { return x(d.display); })
             .attr("width", x.rangeBand()-1)
             .attr("y", function(d){
                            return y(d.value);        
@@ -522,14 +616,32 @@ function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
                             return height-y(d.value);
             })
             .attr("class","bar")
+           .on("mouseover", function(d) {
+                    price.style("display", null);
+                    price.attr("transform", "translate(" + (x(d.display)+(x.rangeBand()-1)/2) + "," + (y(d.value)-10) + ")");
+                    var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
+                    price.select("text").text(value);
+            })
+            .on("mouseout", function() { 
+                    price.style("display", "none");
+            })    
             .on("click",function(d){
                 if(curLevel === "adm1"){generateMktChartView(cf,d.key,prod,unit,adm0,adm0_code,adm1);};
                 if(curLevel === "adm0"){generateADMChartView(cf,d.key,prod,unit,adm0,adm0_code);};
-            });    
+            });
+ 
             
 }
 
 function transitionBarChart(data){
+    
+    data.forEach(function(e){
+        if(e.key.length>14){
+            e.display = e.key.substring(0,14)+"...";
+        } else {
+            e.display = e.key;
+        }
+    });   
     
     var margin = {top: 10, right: 60, bottom: 60, left: 60},
         width = $("#drilldown_chart").width() - margin.left - margin.right,
@@ -542,7 +654,7 @@ function transitionBarChart(data){
         .range([0,height]);
 
     
-    x.domain(data.map(function(d) {return d.key; }));
+    x.domain(data.map(function(d) {return d.display; }));
     y.domain([d3.max(data.map(function(d) { return d.value; })),0]);
     
     var xAxis = d3.svg.axis()
@@ -564,12 +676,13 @@ function transitionBarChart(data){
         .selectAll("text")  
             .style("text-anchor", "start")
             .attr("transform", function(d) {
-                return "rotate(35)"; 
-            });
+                return "rotate(30)";
+    }); 
+        
     var count = data.length;
     
     var svg = d3.select("#drilldown_chart").selectAll("rect")
-            .attr("x", function(d,i) { return x(d.key); })
+            .attr("x", function(d,i) { return x(d.display); })
             .attr("width", x.rangeBand()-1)
             .attr("y", function(d){
                            return y(d.value);        
@@ -668,7 +781,7 @@ function getProductsByCountryID(adm0_code,adm0_name){
 function getNameParams(adm0,prod,unit,adm1,mkt){
     
     if(prod=='Not found' && unit =='Not found'){
-            var sql = 'SELECT distinct(adm0_name) FROM "'+datastoreID+'" where adm0_id='+adm0;
+            var sql = 'SELECT distinct adm0_name FROM "'+datastoreID+'" where adm0_id='+adm0;
 
             var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
@@ -768,18 +881,18 @@ function initembed(){
     var mkt = parseGet('mkt');
     
     if(size==='small'){
-        $('#map').width(470);
-        $('#map').height(485);
-        $('#charts').width(496); 
+        $('#map').width(450);
+        $('#map').height(480);
+        $('#charts').width(470); 
     }
     if(size==='medium'){
         $('#map').width(750);
-        $('#map').height(485);
+        $('#map').height(480);
         $('#charts').width(750); 
     }
     if(size==='large'){
         $('#map').width(960);
-        $('#map').height(485);
+        $('#map').height(480);
         $('#charts').width(960); 
     }
     $('#charts').hide();
