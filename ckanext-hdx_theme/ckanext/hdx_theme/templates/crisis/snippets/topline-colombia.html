@@ -4,8 +4,8 @@
 
 <div class="topline topline-colombia">
     <div class="row">
-        <div class="col-xs-6">
-            <div class="row">
+        <div class="col-xs-6 topline-information table-valign">
+            <div class="row table-valign-content">
                 <div class="col-xs-12 indicator-title">
                     {{ title }}
                 </div>
@@ -25,8 +25,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-6">
-            <div class="row">
+        <div class="col-xs-6 topline-information table-valign">
+            <div class="row table-valign-content">
+                <div class="margin-hack">
                 {% if sparkline_json %}
                     <div class="col-xs-8 indicator-value">
                         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
@@ -39,6 +40,7 @@
                         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
                     </div>
                 {% endif %}
+                </div>
             </div>
         </div>
     </div>
