@@ -10,11 +10,13 @@
 @topLineItemNumberFontSize: 74px;
 @topLineItemUnitFontSize: 37px;
 @topLineIndicatorTitleLineHeight: 20px;
+@topLineIndicatorTitleHeight: 2*@topLineIndicatorTitleLineHeight;
+@topLinePadding: 20px 0;
 
 .topline {
   border-top: 1px solid @lightGrayColor;
   border-bottom: 1px solid @lightGrayColor;
-  padding: 20px 0;
+  padding: @topLinePadding;
   margin-top: -1px;
   color: @darkGrayColor;
 
@@ -24,7 +26,7 @@
     margin-bottom: 10px;
     color: @darkGrayColor;
     line-height: @topLineIndicatorTitleLineHeight;
-    height: 2*@topLineIndicatorTitleLineHeight;
+    height: @topLineIndicatorTitleHeight;
   }
 
   .indicator-value {
