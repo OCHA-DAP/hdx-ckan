@@ -802,7 +802,7 @@ function initHDX(){
         $('#hdxembedbutton').hide();
         $('#hdxembedoptions').show();
     });
-    $('input[type=radio][name=hdxsizewfpviz]').change(function() {
+        $('input[type=radio][name=hdxsizewfpviz]').change(function() {
 
         if(this.value==='small'){
             var value = '<iframe src="'+url+embed+'&size=small" width=500 height=600></iframe>';
