@@ -5,9 +5,9 @@ function initMap(){
             attribution: '&copy; OpenStreetMap contributors'}
     );
           
-    var map = L.map('map', {
-        center: [0,0],
-        zoom: 2,
+    map = L.map('map', {
+        center: [9, 22],
+        zoom: 3,
         layers: [base_osm]
     });
     

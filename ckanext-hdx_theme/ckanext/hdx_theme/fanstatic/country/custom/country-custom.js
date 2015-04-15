@@ -13,7 +13,7 @@ $(document).ready(function() {
         }).addTo(map);
 
         L.control.attribution({position: 'topright'}).addTo(map);
-        map.setView([5, -70], 5);
+        //map.setView([5, -70], 5);
 
         var confJsonText = $("#map-configuration").text();
         var confJson = JSON.parse(confJsonText);
@@ -287,6 +287,9 @@ function fitMap(map, data){
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
         maxZoom: 10
     });
+    var computedZoom = map.getZoom();
+    computedZoom++;
+    map.setZoom(computedZoom);
 }
 
 function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
