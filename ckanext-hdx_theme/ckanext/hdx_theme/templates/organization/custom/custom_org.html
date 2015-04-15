@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="title-share pull-left">
-            <div class="floating-org-title">{{data.org_info.display_name}}</div>
+            <div class="floating-org-title">{{data.org_info.display_name |truncate(60,True)}}</div>
             <div>
                 <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
                 <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
