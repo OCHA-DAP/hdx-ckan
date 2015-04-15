@@ -13,7 +13,7 @@ $(document).ready(function() {
         }).addTo(map);
 
         L.control.attribution({position: 'topright'}).addTo(map);
-        map.setView([5, -70], 5);
+        //map.setView([5, -70], 5);
 
         var confJsonText = $("#map-configuration").text();
         var confJson = JSON.parse(confJsonText);
@@ -68,6 +68,51 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
     //$("#graph1").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/idps-data-by-year"; });;
     return graph;
 }
+
+function prepareGraph2(element, data, colXType, colXFormat, graphType) {
+    var config = {
+        bindto: element,
+        color: {
+            pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+        },
+        padding: {
+            bottom: 20,
+            right: 20
+        },
+
+        data: {
+            x: 'x',
+            columns: data,
+            type: graphType
+        },
+        legend: {
+            show: true
+        },
+        axis: {
+            x: {
+                tick: {
+                    rotate: 20,
+                    culling: {
+                        max: 15
+                    }
+                }
+            }
+        }
+    };
+
+    if(colXType){
+        config.axis.x.type = colXType;
+        if (colXType == 'timeseries')
+            config.axis.x.tick.format = '%b %d, %Y';
+    }
+    if (colXFormat)
+        config.data.xFormat = colXFormat;
+
+    var graph = c3.generate(config);
+    //$("#graph1").find("svg g:eq(0)").on("click", function (d,i) { window.location.href="/dataset/idps-data-by-year"; });;
+    return graph;
+}
+
 function autoGraph() {
     $(".auto-graph").each(function(idx, element){
         var graphDataDiv = $(element).find(".graph-data");
@@ -98,16 +143,23 @@ function autoGraph() {
         }
 
         $.when.apply($, promises).done(function(sources){
+            var columnX, columnXType, columnXFormat, columnY, graphType;
+
+            var dataCols = [];
+                dataColsInit = false;
+
             for (var s in results){
                 var response = results[s];
                 if (response){
-                    var data = response.data.result;
+                    var data = response.data.result,
+                        colX = ['x'],
+                        colY = [graphData.sources[s]['title']];
 
-                    var columnX = response.column_x,
-                        columnXType = null,
-                        columnXFormat = null,
-                        columnY = response.column_y,
-                        graphType = graphData.type;
+                    columnX = response.column_x,
+                    columnXType = null,
+                    columnXFormat = null,
+                    columnY = response.column_y,
+                    graphType = graphData.type;
 
                     if (data.fields[0].type == 'timestamp'){
                         columnXType = 'timeseries';
@@ -116,22 +168,63 @@ function autoGraph() {
                         columnXType = 'category';
                     }
 
-
-                    if (!graph){
-                        graph = prepareGraph(graphDataDiv[0], data.records, columnX, columnXType, columnXFormat, columnY, graphType);
+                    for (var i = 0; i < data.records.length; i++){
+                        var dataEl = data.records[i];
+                        if (!dataColsInit){
+                            colX.push(dataEl[columnX]);
+                        }
+                        colY.push(dataEl[columnY]);
                     }
-                    else
-                        graph.load({
-                            json: data,
-                            keys: {
-                                x: columnX,
-                                value: [columnY]
-                            },
-                            type: 'area'
-                        });
+
+                    if (!dataColsInit){
+                        dataCols.push(colX);
+                        dataColsInit = true;
+                    }
+                    dataCols.push(colY);
                 }
             }
+            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType);
         });
+
+        //$.when.apply($, promises).done(function(sources){
+        //    var columnX, columnXType, columnXFormat, columnY, graphType;
+        //
+        //    for (var s in results){
+        //        var response = results[s];
+        //        if (response){
+        //            var data = response.data.result;
+        //
+        //            columnX = response.column_x,
+        //            columnXType = null,
+        //            columnXFormat = null,
+        //            columnY = response.column_y,
+        //            graphType = graphData.type;
+        //
+        //            if (data.fields[0].type == 'timestamp'){
+        //                columnXType = 'timeseries';
+        //                columnXFormat = '%Y-%m-%dT%H:%M:%S';
+        //            } else if (data.fields[0].type == 'text'){
+        //                columnXType = 'category';
+        //            }
+        //
+        //
+        //
+        //
+        //            //if (!graph){
+        //            //    graph = prepareGraph(graphDataDiv[0], data.records, columnX, columnXType, columnXFormat, columnY, graphType);
+        //            //}
+        //            //else
+        //            //    graph.load({
+        //            //        json: data,
+        //            //        keys: {
+        //            //            x: columnX,
+        //            //            value: [columnY]
+        //            //        },
+        //            //        type: 'area'
+        //            //    });
+        //        }
+        //    }
+        //});
     });
 }
 
@@ -194,6 +287,9 @@ function fitMap(map, data){
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
         maxZoom: 10
     });
+    var computedZoom = map.getZoom();
+    computedZoom++;
+    map.setZoom(computedZoom);
 }
 
 function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
