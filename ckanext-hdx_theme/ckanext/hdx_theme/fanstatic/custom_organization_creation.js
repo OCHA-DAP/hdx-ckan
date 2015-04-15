@@ -51,8 +51,10 @@ showInput: true});
 			//Build visualization slug
 			var visualization = {}
 			var arrays = []
+            var viz_type = $('#visualization-select').val();
 			$('.visualization_config').each(function(){
 				//if this is an array, perserve it.
+              if($(this).attr('viz-type') == viz_type || this.id == 'visualization-select'){
 				if($.inArray($(this).attr('name').slice(0,-2), arrays) > -1){
 					visualization[$(this).attr('name').slice(0,-2)].push(this.value);
 				}
@@ -62,8 +64,9 @@ showInput: true});
 				}else{
 					visualization[$(this).attr('name')] = this.value;
 				}
+            }
 			});
-			$('#visualization-json').val(JSON.stringify(visualization));
+			 $('#visualization-json').val(JSON.stringify(visualization));
 		}
 		$('form').submit();
 	});

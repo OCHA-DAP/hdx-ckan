@@ -77,26 +77,34 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             visualization = json.loads(visualization)
         except:
             return "{}"
-        if visualization['datatype_1'] =='filestore':
-            datatype = "filestore"
-            data = h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])
-        else:
-            datatype = "datastore"
-            data = "/api/action/datastore_search?resource_id="+visualization['resource_id_1']+"&limit=10000000"
-    
-        if visualization['datatype_2'] =='filestore':
-            geotype = "filestore"
-            geo = h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])
-        else:
-            geotype = "datastore"
-            geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
-
-        #beware that visualisation type constants are also used in the template to select different resource bundles
+        
         config = {
                 'title':visualization['viz-title'],
                 'data_link_url':visualization.get('viz-data-link-url','#'),
                 'type': visualization['visualization-select']
         }
+
+        if visualization['visualization-select'] == 'WFP':
+            config.update({
+                'embedded': "true"
+            })
+            return config
+
+        if visualization.get('datatype_1','') =='filestore':
+            datatype = "filestore"
+            data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1',''), resource_id=visualization.get('resource_id_1',''))
+        else:
+            datatype = "datastore"
+            data = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_1','')+"&limit=10000000"
+    
+        if visualization.get('datatype_2','') =='filestore':
+            geotype = "filestore"
+            geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2',''), resource_id=visualization.get('resource_id_2',''))
+        else:
+            geotype = "datastore"
+            geo = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_2','')+"&limit=10000000"
+
+        #beware that visualisation type constants are also used in the template to select different resource bundles
         if visualization['visualization-select'] == '3W-dashboard':
             config.update({'datatype': datatype,
                 'data': data,
@@ -110,10 +118,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'y':visualization['pos-y'],
                 'zoom':visualization['zoom'],
                 'colors':visualization.get('colors','')
-            })
-        if visualization['visualization-select'] == 'WFP':
-            config.update({
-                'embedded': "true"
             })
 
         return config
