@@ -165,6 +165,7 @@
 <div class="controls">
   <label class="control-label" for="visualization-select">Visualization Type</label>
           <select id="visualization-select" name="visualization-select" style="width:95%;" class="visualization_config">
+            <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
             <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option>
             <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
           </select>
