@@ -81,7 +81,7 @@
 {% elif is_upload %}
   {% set image_preview = h.url_for('image_serve', label= customizations['image_sq']) %}
 {% else %}
-  {% set image_preview = 'http://placehold.it/75x75' %}
+  {% set image_preview = 'https://placehold.it/75x75' %}
 {% endif %}
 
 <div style="border: solid 10px #CCC; width:572px; height:86px; margin-bottom:10px;">
@@ -103,7 +103,7 @@
 {% elif is_upload %}
   {% set image_preview = h.url_for('image_serve', label= customizations['image_rect']) %}
 {% else %}
-  {% set image_preview = 'http://placehold.it/300x125' %}
+  {% set image_preview = 'https://placehold.it/300x125' %}
 {% endif %}
 <div style="border: solid 10px #CCC; width: 572px; height: 135px;">
 <div style="width:250px; margin-top:32px; float:left; padding:5px;">
