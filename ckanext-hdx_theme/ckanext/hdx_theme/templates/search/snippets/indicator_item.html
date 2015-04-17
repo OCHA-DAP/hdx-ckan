@@ -7,6 +7,10 @@
   {{ super() }}
 {% endblock %}
 
+{% block owner_update %}
+  {{ package.dataset_source }}
+{% endblock %}
+
 {% block preview_link %}
   <a data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}"
      data-module-subchart="true" data-module-click_only="true"

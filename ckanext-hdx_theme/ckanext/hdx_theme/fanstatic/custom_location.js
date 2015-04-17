@@ -71,6 +71,7 @@ $(document).ready(function(){
 			$('#customization-json').val(JSON.stringify(customization));
 
 		}
+		$('#mc-embedded-subscribe-form').remove();
 		$('form').submit();
 	});
 });
