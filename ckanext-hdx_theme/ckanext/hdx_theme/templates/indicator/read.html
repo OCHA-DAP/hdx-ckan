@@ -6,8 +6,13 @@
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
+  {% if pkg.indicator %}
 	  <li>{{ h.nav_link(_('Indicators'), 
 	  	controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search', ext_indicator=1) }}</li>
+    {% else %}
+    <li>{{ h.nav_link(_('Datasets'), 
+      controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search', ext_indicator=0) }}</li>
+    {% endif %}
 	{% endblock %}
   <li class="active">{{ h.nav_link( pkg.title|truncate(120), 
   	controller='package', action='read', id=pkg.name, highlight_actions = 'new index') }}</li>
