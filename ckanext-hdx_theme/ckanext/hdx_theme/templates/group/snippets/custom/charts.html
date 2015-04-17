@@ -30,7 +30,7 @@
 <div class="org-control-container" style="margin-bottom:30px;">
 <div class="control-group org-control field-with-info">
     <label class="control-label" for="chart_type">Data Type</label>
-  <select id="chart-select-{{chart_id}}" name="chart_type" class="chart_config" chart-num="{{chart_id}}">
+  <select id="chart-select-{{chart_id}}" name="chart_type" class="chart_config" chart-num="{{chart_id}}" style="margin-left: 10px; width: 270px;">
     <option value="bar chart" {% if chart['chart_type'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
     <option value="line chart" {% if chart['chart_type'] == 'line chart' %}selected{% endif %}>Line Chart</option>
     <option value="multiple bar chart" {% if chart['chart_type'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>

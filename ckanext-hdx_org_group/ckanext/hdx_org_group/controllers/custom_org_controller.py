@@ -79,12 +79,12 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             return "{}"
         
         config = {
-                'title':visualization['viz-title'],
+                'title':visualization.get('viz-title',''),
                 'data_link_url':visualization.get('viz-data-link-url','#'),
-                'type': visualization['visualization-select']
+                'type': visualization.get('visualization-select','')
         }
 
-        if visualization['visualization-select'] == 'WFP':
+        if visualization.get('visualization-select','') == 'WFP':
             config.update({
                 'embedded': "true"
             })
@@ -105,18 +105,18 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             geo = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_2','')+"&limit=10000000"
 
         #beware that visualisation type constants are also used in the template to select different resource bundles
-        if visualization['visualization-select'] == '3W-dashboard':
+        if visualization.get('visualization-select','') == '3W-dashboard':
             config.update({'datatype': datatype,
                 'data': data,
-                'whoFieldName':visualization['who-column'],
-                'whatFieldName':visualization['what-column'],
-                'whereFieldName':visualization['where-column'],
+                'whoFieldName':visualization.get('who-column',''),
+                'whatFieldName':visualization.get('what-column',''),
+                'whereFieldName':visualization.get('where-column',''),
                 'geotype': geotype,
                 'geo':geo,
-                'joinAttribute':visualization['where-column-2'],
-                'x':visualization['pos-x'],
-                'y':visualization['pos-y'],
-                'zoom':visualization['zoom'],
+                'joinAttribute':visualization.get('where-column-2',''),
+                'x':visualization.get('pos-x',''),
+                'y':visualization.get('pos-y',''),
+                'zoom':visualization.get('zoom',''),
                 'colors':visualization.get('colors','')
             })
 
