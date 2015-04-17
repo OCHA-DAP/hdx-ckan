@@ -47,8 +47,11 @@
                 <div class="col-xs-12 graph-wrapper-col">
                     <div class="row auto-graph">
                         <div class="col-xs-12 graph-title">
-                            {% set data_link_url = ci.data_link_url or "#" %}
-                            {{ ci.title }} <span>OCHA - <a href="{{data_link_url}}">Data</a></span>
+                            {{ ci.title }}
+                            {% for src in ci.sources %}
+                                {% set data_link_url = ci.data_link_url or "#" %}
+                                <span>{{src.source}} - <a href="{{src.data_link_url}}">Data</a></span>
+                            {% endfor %}
                         </div>
                         <div class="col-xs-12">
                             <div class="graph-data" style="display: none;">
