@@ -153,7 +153,8 @@ function autoGraph() {
                 if (response){
                     var data = response.data.result,
                         colX = ['x'],
-                        colY = [graphData.sources[s]['title']];
+                        //colY = [graphData.sources[s]['title']];
+                        colY = [response.label_x];
 
                     columnX = response.column_x,
                     columnXType = null,

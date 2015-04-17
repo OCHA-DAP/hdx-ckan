@@ -82,7 +82,6 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 chart_type = 'bar'
             chart = {
                 'title': chart_config.get('chart_title', ''),
-                'data_link_url': chart_config.get('chart_data_link_url', ''),
                 'type': chart_type,
                 'title_x': chart_config.get('chart_x_label', ''),
                 'title_y': chart_config.get('chart_y_label', ''),
@@ -95,8 +94,11 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                     source = {
                         'datastore_id': resource_id,
                         'title': self._get_resource_name(resource_id),
-                        'org_name': 'OCHA',
+                        #'org_name': 'OCHA',
                         # 'url': None,
+                        'data_link_url': resource.get('chart_data_link_url', ''),
+                        'source': resource.get('chart_source', 'OCHA'),
+                        'label_x': resource.get('chart_label', ''),
                         'column_x': resource.get('chart_x_column', False),
                         'column_y': resource.get('chart_y_column', False),
                         }
