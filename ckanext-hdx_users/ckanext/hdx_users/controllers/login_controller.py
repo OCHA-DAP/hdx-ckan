@@ -68,7 +68,12 @@ class LoginController(ckan_user.UserController):
             user_dict = get_action('user_show')(context, data_dict)
 
             #IAuthenticator too buggy, doing this instead
-            token = get_action('token_show')(context, user_dict)
+            try:
+                token = get_action('token_show')(context, user_dict)
+            except NotFound, e:
+                token = {'valid':True} #Until we figure out what to do with existing users
+            except:
+                abort(500, _('Something wrong'))
             if not token['valid']:
                 #force logout
                 for item in p.PluginImplementations(p.IAuthenticator):
