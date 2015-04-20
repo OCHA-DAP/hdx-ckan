@@ -357,7 +357,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#510702"], //7 colors
         ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"] //8 colors
     ];
-    var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"];
+    //var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"];
 
     function getStyle(values, threshold){
         function internalGetColor(color, i){
