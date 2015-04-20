@@ -23,8 +23,8 @@ class Widget3WController(widget.WidgetController):
             "geo": "/dataset/custom-test-org-data/resource_download/2119ce9f-523b-46e3-b6ac-3d842db62d44",
             "zoom": "1500",
             "data": "/dataset/custom-test-org-data/resource_download/8e312caf-6755-4875-9b37-ebed76da90a5",
-            "y": "3",
-            "x": "55",
+            "y": "6",
+            "x": "46",
             "type": ""
         }
         keys = ["geotype", "description", "joinAttribute", "colors", "whoFieldName", "whatFieldName", "whereFieldName", "title", "datatype", "geo", "zoom", "data", "y", "x"];

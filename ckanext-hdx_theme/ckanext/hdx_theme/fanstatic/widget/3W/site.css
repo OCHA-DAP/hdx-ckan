@@ -10,3 +10,20 @@
 .x-axis-label{
     font-size:0.8em;
 }
+
+#hdx-3W-where {
+    height:360px;
+    width:100%;
+}
+
+#wheretitle{
+    padding-bottom:10px;
+}
+
+#header{
+    padding-bottom:20px;
+    border-bottom-color: #dddddd;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin-bottom:20px;
+}

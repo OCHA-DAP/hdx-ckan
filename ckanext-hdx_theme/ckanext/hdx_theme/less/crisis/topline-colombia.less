@@ -7,9 +7,15 @@
 @topLineIndicatorTitleHeight: inherit;
 @topLinePadding: 0px;
 
-.topline-colombia{
+@topLineItemHeight: 105px;
+@topLineItemValueFontSize: 47px;
+
+@chartTitlePaddingTop: (@topLineItemHeight - @topLineItemValueFontSize)/2;
+@chartWrapperHeight: 4*@topLineItemHeight + 5;
+
+.topline.topline-colombia{
   .topline-information {
-    height: 105px;
+    height: @topLineItemHeight;
     .margin-hack {
       margin-left: -15px;
       margin-right: -15px;
@@ -36,4 +42,19 @@
   }
 
 }
+
 /* END Topline numbers */
+
+/* Graphs */
+
+.row.graph-item-wrapper {
+  border-top: 1px solid @lightGrayColor;
+  border-bottom: 1px solid @lightGrayColor;
+  padding-top: @chartTitlePaddingTop;
+  height: @chartWrapperHeight;
+  margin-top: -1px;
+  margin-left: 5px;
+
+}
+
+/* END - Graphs */

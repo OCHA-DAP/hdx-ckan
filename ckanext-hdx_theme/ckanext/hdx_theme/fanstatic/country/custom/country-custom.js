@@ -69,11 +69,11 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
     return graph;
 }
 
-function prepareGraph2(element, data, colXType, colXFormat, graphType) {
+function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList) {
     var config = {
         bindto: element,
         color: {
-            pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+            pattern: colorList
         },
         padding: {
             bottom: 20,
@@ -91,9 +91,9 @@ function prepareGraph2(element, data, colXType, colXFormat, graphType) {
         axis: {
             x: {
                 tick: {
-                    rotate: 20,
+                    rotate: 25,
                     culling: {
-                        max: 15
+                        max: 22
                     }
                 }
             }
@@ -114,8 +114,11 @@ function prepareGraph2(element, data, colXType, colXFormat, graphType) {
 }
 
 function autoGraph() {
+    var colorList = ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'];
+
     $(".auto-graph").each(function(idx, element){
         var graphDataDiv = $(element).find(".graph-data");
+        var sourceListDiv = $(element).find(".source-list");
         var graphData = JSON.parse(graphDataDiv.text());
         graphDataDiv.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
         graphDataDiv.css("display", "block");
@@ -123,9 +126,11 @@ function autoGraph() {
         var graph = null;
         var promises = [];
         var results = [];
+        var sourceList = "";
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
             source["data"] = null;
+            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source +" - <a href='"+ source.data_link_url +"'>Data</a></div>";
             results.push(source);
             var sql = 'SELECT "'+ source.column_x + '", "'+ source.column_y +'" FROM "'+ source.datastore_id +'"';
             var urldata = encodeURIComponent(JSON.stringify({sql: sql}));
@@ -141,19 +146,21 @@ function autoGraph() {
             });
             promises.push(promise);
         }
+        sourceListDiv.html(sourceList);
 
         $.when.apply($, promises).done(function(sources){
             var columnX, columnXType, columnXFormat, columnY, graphType;
 
             var dataCols = [];
-                dataColsInit = false;
+            var dataColsInit = false;
 
             for (var s in results){
                 var response = results[s];
                 if (response){
                     var data = response.data.result,
                         colX = ['x'],
-                        colY = [graphData.sources[s]['title']];
+                        //colY = [graphData.sources[s]['title']];
+                        colY = [response.label_x];
 
                     columnX = response.column_x,
                     columnXType = null,
@@ -183,48 +190,9 @@ function autoGraph() {
                     dataCols.push(colY);
                 }
             }
-            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType);
+            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType, colorList);
         });
 
-        //$.when.apply($, promises).done(function(sources){
-        //    var columnX, columnXType, columnXFormat, columnY, graphType;
-        //
-        //    for (var s in results){
-        //        var response = results[s];
-        //        if (response){
-        //            var data = response.data.result;
-        //
-        //            columnX = response.column_x,
-        //            columnXType = null,
-        //            columnXFormat = null,
-        //            columnY = response.column_y,
-        //            graphType = graphData.type;
-        //
-        //            if (data.fields[0].type == 'timestamp'){
-        //                columnXType = 'timeseries';
-        //                columnXFormat = '%Y-%m-%dT%H:%M:%S';
-        //            } else if (data.fields[0].type == 'text'){
-        //                columnXType = 'category';
-        //            }
-        //
-        //
-        //
-        //
-        //            //if (!graph){
-        //            //    graph = prepareGraph(graphDataDiv[0], data.records, columnX, columnXType, columnXFormat, columnY, graphType);
-        //            //}
-        //            //else
-        //            //    graph.load({
-        //            //        json: data,
-        //            //        keys: {
-        //            //            x: columnX,
-        //            //            value: [columnY]
-        //            //        },
-        //            //        type: 'area'
-        //            //    });
-        //        }
-        //    }
-        //});
     });
 }
 
@@ -347,6 +315,18 @@ function loadMapData(map, confJson){
 }
 
 function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName){
+    var newcolor = [
+        ["#ffbd13"], //1 color
+        ["#ffbd13", "#ff493d"], //2 colors
+        ["#ffe082", "#ff8053", "#ff493d"], //3 colors
+        ["#ffe082", "#ffbd13", "#ff8053", "#ff493d"], //4 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"], //5 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d", "#930D05"], //6 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#510702"], //7 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"] //8 colors
+    ];
+    //var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"];
+
     function getStyle(values, threshold){
         function internalGetColor(color, i){
             return {color: color[i], fillColor: color[i], fillOpacity: 0.6, opacity: 0.7, weight: 1};
@@ -354,11 +334,11 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return function (feature){
             var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
-                for (var i = 0; i < 4; i++){
+                for (var i = 0; i < threshold.length; i++){
                     if (values[pcoderef] < threshold[i])
-                        return internalGetColor(color, i);
+                        return internalGetColor(newcolor[threshold.length], i);
                 }
-                return internalGetColor(color, 4);
+                return internalGetColor(newcolor[threshold.length], threshold.length);
             } else {
                 return {"color": "none","opacity":1};
             }
@@ -371,7 +351,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         if (confJson.map_threshold) {
             try{
                 var items = confJson.map_threshold.split(',');
-                if (items.length > 1) {
+                if (items.length > 0) {
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i].trim();
                         var itemInt = parseInt(item);
@@ -398,7 +378,6 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return defaultThreshold;
     }
 
-    var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
     var threshold = getThreshold([1, 1000, 5000, 10000]);
     var info;
 
@@ -459,7 +438,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     // method that we will use to update the control based on feature properties passed
     info.update = function (properties) {
-        var titleField = confJson.map_title_column ? confJson.map_title_column : 'admin1Name';
+        var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
         this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
         '<table>' +
         '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
@@ -491,10 +470,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return this._div;
     };
     legend.update = function (){
-        this._div.innerHTML = '<div><i style="background: ' + color[0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
+        this._div.innerHTML = '<div><i style="background: ' + newcolor[threshold.length][0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
         for (var i = 0; i < threshold.length; i++) {
             this._div.innerHTML +=
-                '<div><i style="background:' + color[i+1] + '"></i> ' +
+                '<div><i style="background:' + newcolor[threshold.length][i+1] + '"></i> ' +
                 threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '</div>' : '+</div>');
         }
     };

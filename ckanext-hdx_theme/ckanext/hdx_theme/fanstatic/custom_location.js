@@ -9,7 +9,7 @@ $(document).ready(function(){
 	});
 
 	$('#chart-select-1, #chart-select-2').click(function(){
-		chart_num = $(this).attr('chart-num');
+		var chart_num = $(this).attr('chart-num');
 		if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
 			$('#chart_'+chart_num+'_second_line').show();
 		}else{
@@ -31,8 +31,8 @@ $(document).ready(function(){
 					map[$(this).attr('name')] = this.value;
 			});
 
-			var resource_keys1 = ['chart_dataset_id_1','chart_resource_id_1', 'chart_x_column_1', 'chart_y_column_1']
-			var resource_keys2 = ['chart_dataset_id_2','chart_resource_id_2', 'chart_x_column_2', 'chart_y_column_2']
+			var resource_keys1 = ['chart_dataset_id_1','chart_resource_id_1','chart_source_1','chart_data_link_url_1','chart_label_1', 'chart_x_column_1', 'chart_y_column_1']
+			var resource_keys2 = ['chart_dataset_id_2','chart_resource_id_2','chart_source_2','chart_data_link_url_2','chart_label_2', 'chart_x_column_2', 'chart_y_column_2']
 
 
 			//Grab chart config
