@@ -347,6 +347,18 @@ function loadMapData(map, confJson){
 }
 
 function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName){
+    var newcolor = [
+        ["#ffbd13"], //1 color
+        ["#ffbd13", "#ff493d"], //2 colors
+        ["#ffe082", "#ff8053", "#ff493d"], //3 colors
+        ["#ffe082", "#ffbd13", "#ff8053", "#ff493d"], //4 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"], //5 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d", "#930D05"], //6 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#510702"], //7 colors
+        ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"] //8 colors
+    ];
+    var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d","#D01A0E", "#930D05", "#510702"];
+
     function getStyle(values, threshold){
         function internalGetColor(color, i){
             return {color: color[i], fillColor: color[i], fillOpacity: 0.6, opacity: 0.7, weight: 1};
@@ -354,11 +366,11 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return function (feature){
             var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
-                for (var i = 0; i < 4; i++){
+                for (var i = 0; i < threshold.length - 1; i++){
                     if (values[pcoderef] < threshold[i])
-                        return internalGetColor(color, i);
+                        return internalGetColor(newcolor[threshold.length - 1], i);
                 }
-                return internalGetColor(color, 4);
+                return internalGetColor(newcolor[threshold.length - 1], threshold.length - 1);
             } else {
                 return {"color": "none","opacity":1};
             }
@@ -398,7 +410,6 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return defaultThreshold;
     }
 
-    var color = ["#EAFF94","#ffe082", "#ffbd13", "#ff8053", "#ff493d"];
     var threshold = getThreshold([1, 1000, 5000, 10000]);
     var info;
 
