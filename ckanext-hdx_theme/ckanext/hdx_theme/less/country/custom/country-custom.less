@@ -12,6 +12,7 @@
   span{
     .sourceSansProFont(400, 12px);
     line-height: 18px;
+    margin-left: 5px;
   }
 }
 
@@ -26,4 +27,13 @@
 }
 .graph-wrapper-row {
   border-top: 1px solid @lightGrayColor;
+}
+
+
+.map-info.legend.source-list {
+  position: absolute;
+  z-index: 1000;
+}
+a:hover > .source-list {
+  display: block !important;
 }

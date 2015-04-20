@@ -69,11 +69,11 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
     return graph;
 }
 
-function prepareGraph2(element, data, colXType, colXFormat, graphType) {
+function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList) {
     var config = {
         bindto: element,
         color: {
-            pattern: ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700']
+            pattern: colorList
         },
         padding: {
             bottom: 20,
@@ -114,8 +114,11 @@ function prepareGraph2(element, data, colXType, colXFormat, graphType) {
 }
 
 function autoGraph() {
+    var colorList = ['#1ebfb3', '#117be1', '#f2645a', '#555555', '#ffd700'];
+
     $(".auto-graph").each(function(idx, element){
         var graphDataDiv = $(element).find(".graph-data");
+        var sourceListDiv = $(element).find(".source-list");
         var graphData = JSON.parse(graphDataDiv.text());
         graphDataDiv.html("<div style='text-align: center;'><img src='/base/images/loading-spinner.gif' /></div>");
         graphDataDiv.css("display", "block");
@@ -123,9 +126,11 @@ function autoGraph() {
         var graph = null;
         var promises = [];
         var results = [];
+        var sourceList = "";
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
             source["data"] = null;
+            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> Source" + sIdx + " - <a href='#'>Data</a></div>";
             results.push(source);
             var sql = 'SELECT "'+ source.column_x + '", "'+ source.column_y +'" FROM "'+ source.datastore_id +'"';
             var urldata = encodeURIComponent(JSON.stringify({sql: sql}));
@@ -141,6 +146,7 @@ function autoGraph() {
             });
             promises.push(promise);
         }
+        sourceListDiv.html(sourceList);
 
         $.when.apply($, promises).done(function(sources){
             var columnX, columnXType, columnXFormat, columnY, graphType;
@@ -186,45 +192,6 @@ function autoGraph() {
             graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType);
         });
 
-        //$.when.apply($, promises).done(function(sources){
-        //    var columnX, columnXType, columnXFormat, columnY, graphType;
-        //
-        //    for (var s in results){
-        //        var response = results[s];
-        //        if (response){
-        //            var data = response.data.result;
-        //
-        //            columnX = response.column_x,
-        //            columnXType = null,
-        //            columnXFormat = null,
-        //            columnY = response.column_y,
-        //            graphType = graphData.type;
-        //
-        //            if (data.fields[0].type == 'timestamp'){
-        //                columnXType = 'timeseries';
-        //                columnXFormat = '%Y-%m-%dT%H:%M:%S';
-        //            } else if (data.fields[0].type == 'text'){
-        //                columnXType = 'category';
-        //            }
-        //
-        //
-        //
-        //
-        //            //if (!graph){
-        //            //    graph = prepareGraph(graphDataDiv[0], data.records, columnX, columnXType, columnXFormat, columnY, graphType);
-        //            //}
-        //            //else
-        //            //    graph.load({
-        //            //        json: data,
-        //            //        keys: {
-        //            //            x: columnX,
-        //            //            value: [columnY]
-        //            //        },
-        //            //        type: 'area'
-        //            //    });
-        //        }
-        //    }
-        //});
     });
 }
 

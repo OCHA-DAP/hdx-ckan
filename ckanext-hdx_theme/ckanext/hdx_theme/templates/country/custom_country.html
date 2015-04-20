@@ -48,7 +48,14 @@
                     <div class="row auto-graph">
                         <div class="col-xs-12 graph-title">
                             {% set data_link_url = ci.data_link_url or "#" %}
-                            {{ ci.title }} <span>OCHA - <a href="{{data_link_url}}">Data</a></span>
+                            <div style="float: left;">{{ ci.title }}</div>
+                            <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
+                            <span style="float: left;">
+                                <a href="#" onclick="return false;">
+                                    {{ _("Info") }}
+                                    <div class="map-info legend source-list" style="display: none;"></div>
+                                </a>
+                            </span>
                         </div>
                         <div class="col-xs-12">
                             <div class="graph-data" style="display: none;">
