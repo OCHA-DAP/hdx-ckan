@@ -67,18 +67,9 @@
   </div>
 
 <div style="clear:both;">
-    <div class="{{ form_field_wrapper_classes }}">
       
-{{ form.input('maintainer_email', label=_('Maintainer Email'), id='field-maintainer-email', placeholder=_('joe@example.com'), value=maintainer_email, error=errors.maintainer_email, classes=['control-medium']) }}
-    </div>
-    {% if new_dataset %}
-      <div class="dataset-form-info-field info-field">
-        {% trans %}
-        This field will be publicly visible if the dataset's visibility is set to "public". It is not a required field.
-        {% endtrans %}
-      </div>
-    {% endif %}
-  </div>
+{{ form.hidden('maintainer_email', value=maintainer_email) }}
+     </div>
 
 
 {% endblock %}
