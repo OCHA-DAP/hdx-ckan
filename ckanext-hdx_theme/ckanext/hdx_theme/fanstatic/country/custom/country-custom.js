@@ -366,11 +366,11 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return function (feature){
             var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
-                for (var i = 0; i < threshold.length - 1; i++){
+                for (var i = 0; i < threshold.length; i++){
                     if (values[pcoderef] < threshold[i])
-                        return internalGetColor(newcolor[threshold.length - 1], i);
+                        return internalGetColor(newcolor[threshold.length], i);
                 }
-                return internalGetColor(newcolor[threshold.length - 1], threshold.length - 1);
+                return internalGetColor(newcolor[threshold.length], threshold.length);
             } else {
                 return {"color": "none","opacity":1};
             }
@@ -383,7 +383,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         if (confJson.map_threshold) {
             try{
                 var items = confJson.map_threshold.split(',');
-                if (items.length > 1) {
+                if (items.length > 0) {
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i].trim();
                         var itemInt = parseInt(item);
@@ -502,10 +502,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return this._div;
     };
     legend.update = function (){
-        this._div.innerHTML = '<div><i style="background: ' + color[0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
+        this._div.innerHTML = '<div><i style="background: ' + newcolor[threshold.length][0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
         for (var i = 0; i < threshold.length; i++) {
             this._div.innerHTML +=
-                '<div><i style="background:' + color[i+1] + '"></i> ' +
+                '<div><i style="background:' + newcolor[threshold.length][i+1] + '"></i> ' +
                 threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '</div>' : '+</div>');
         }
     };
