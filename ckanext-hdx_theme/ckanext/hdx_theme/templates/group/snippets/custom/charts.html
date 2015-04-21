@@ -14,23 +14,13 @@
       </div>
 </div>
 
-<div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="chart_data_link_url">{{_('Data Link URL')}}</label>
-    <div class="controls ">
-    <input id="chart_data_link_url" type="text" name="chart_data_link_url" value="{{chart['chart_data_link_url']}}" placeholder="" class="chart_config">
-    </div>
-  </div>
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Source Data URL for this chart')}}</div>
-      </div>
-</div>
+
 
 
 <div class="org-control-container" style="margin-bottom:30px;">
 <div class="control-group org-control field-with-info">
     <label class="control-label" for="chart_type">Data Type</label>
-  <select id="chart-select-{{chart_id}}" name="chart_type" class="chart_config" chart-num="{{chart_id}}">
+  <select id="chart-select-{{chart_id}}" name="chart_type" class="chart_config" chart-num="{{chart_id}}" style="margin-left: 10px; width: 270px;">
     <option value="bar chart" {% if chart['chart_type'] == 'bar chart' %}selected{% endif %}>Bar Chart</option>
     <option value="line chart" {% if chart['chart_type'] == 'line chart' %}selected{% endif %}>Line Chart</option>
     <option value="multiple bar chart" {% if chart['chart_type'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
@@ -72,12 +62,13 @@
 {% endif %}
 
 {% for key in range(resources|length) %}
+  {% set label_i = key+1 if key >0 else '' %}
   {% if key > 0 %}
     <div id="chart_{{chart_id}}_second_line" {% if chart['chart_type'] == 'bar chart' or chart['chart_type'] == 'line chart' %}style="display:none;"{% endif %}>
   {% endif %}
 <div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="chart_dataset_id_{{key+1}}">Dataset ID</label>
+    <label class="control-label" for="chart_dataset_id_{{key+1}}">Dataset ID {{label_i}}</label>
     <div class="controls ">
     <input id="chart_dataset_id_{{key+1}}" type="text" name="chart_dataset_id_{{key+1}}" value="{{resources[key]['chart_dataset_id']}}" placeholder="" class="chart_config">
     </div>
@@ -90,7 +81,7 @@
 
 <div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="chart_resource_id_{{key+1}}">Resource ID</label>
+    <label class="control-label" for="chart_resource_id_{{key+1}}">Resource ID {{label_i}}</label>
     <div class="controls ">
     <input id="chart_resource_id_{{key+1}}" type="text" name="chart_resource_id_{{key+1}}" value="{{resources[key]['chart_resource_id']}}" placeholder="" class="chart_config">
     </div>
@@ -101,8 +92,44 @@
 </div>
 
 <div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_source_{{key+1}}">{{_('Source')}} {{label_i}}</label>
+    <div class="controls ">
+    <input id="chart_source_{{key+1}}" type="text" name="chart_source_{{key+1}}" value="{{resources[key]['chart_source']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Source for this chart')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_data_link_url_{{key+1}}">{{_('Data Link URL')}} {{label_i}}</label>
+    <div class="controls ">
+    <input id="chart_data_link_url_{{key+1}}" type="text" name="chart_data_link_url_{{key+1}}" value="{{resources[key]['chart_data_link_url']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Source Data URL for this chart')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="chart_label_{{key+1}}">{{_('Label')}} {{label_i}}</label>
+    <div class="controls ">
+    <input id="chart_label_{{key+1}}" type="text" name="chart_label_{{key+1}}" value="{{resources[key]['chart_label']}}" placeholder="" class="chart_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Label that will show in chart legend')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="chart_x_column_{{key+1}}">X Column</label>
+    <label class="control-label" for="chart_x_column_{{key+1}}">X Column {{label_i}}</label>
     <div class="controls ">
     <input id="chart_x_column_{{key+1}}" type="text" name="chart_x_column_{{key+1}}" value="{{resources[key]['chart_x_column']}}" placeholder="" class="chart_config">
     </div>
@@ -114,7 +141,7 @@
 
 <div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="chart_y_column_{{key+1}}">Y Column</label>
+    <label class="control-label" for="chart_y_column_{{key+1}}">Y Column {{label_i}}</label>
     <div class="controls ">
     <input id="chart_y_column_{{key+1}}" type="text" name="chart_y_column_{{key+1}}" value="{{resources[key]['chart_y_column']}}" placeholder="" class="chart_config">
     </div>

@@ -56,6 +56,11 @@
                                     <div class="map-info legend source-list" style="display: none;"></div>
                                 </a>
                             </span>
+                            {{ ci.title }}
+                            {% for src in ci.sources %}
+                                {% set data_link_url = ci.data_link_url or "#" %}
+                                <span>{{src.source}} - <a href="{{src.data_link_url}}">Data</a></span>
+                            {% endfor %}
                         </div>
                         <div class="col-xs-12">
                             <div class="graph-data" style="display: none;">
