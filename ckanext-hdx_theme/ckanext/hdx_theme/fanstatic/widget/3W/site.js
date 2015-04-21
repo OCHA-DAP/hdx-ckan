@@ -1,4 +1,3 @@
-
 //function to generate the 3W component
 //data is the whole 3W Excel data set
 //geom is geojson file
@@ -14,7 +13,7 @@ function generate3WComponent(config,data,geom){
 
     var whoChart = dc.rowChart(whoContainerId);
     var whatChart = dc.rowChart(whatContainerId);
-    var whereChart = dc.geoChoroplethChart(whereContainerId);
+    var whereChart = dc.leafletChoroplethChart(whereContainerId);
 
     var cf = crossfilter(data);
 
@@ -61,10 +60,13 @@ function generate3WComponent(config,data,geom){
             .dimension(cf)
             .group(all);
 
-    whereChart.width(whereWidth).height(400)
+    whereChart.width(whereWidth).height(360)
             .dimension(whereDimension)
             .group(whereGroup)
-            .colors(['#DDDDDD', config.colors[3]])
+            .center([config.y,config.x])
+            .zoom(config.zoom)
+            .geojson(geom)
+            .colors(['#CCCCCC', config.colors[4]])
             .colorDomain([0, 1])
             .colorAccessor(function (d) {
                 if(d>0){
@@ -73,16 +75,15 @@ function generate3WComponent(config,data,geom){
                     return 0;
                 }
             })
-            .overlayGeoJson(geom.features, 'Regions', function (d) {
-                return d.properties[config.joinAttribute];
-            })
-            .projection(d3.geo.mercator().center([config.x,config.y]).scale(config.zoom))
-            .title(function(d){
-                return d.key;
-            });
+            .featureKeyAccessor(function(feature){
+                return feature.properties[config.joinAttribute];
+            }).map();
 
     dc.renderAll();
-    
+
+    var map = whereChart.map();
+    console.log(map);
+
     var g = d3.selectAll(whoContainerId).select('svg').append('g');
     
     g.append('text')
@@ -109,6 +110,7 @@ $(document).ready(
         var config = JSON.parse($('#visualization-data').val());
 
         //load 3W data
+
         var dataCall = $.ajax({
             type: 'GET',
             url: config.data,
@@ -116,6 +118,7 @@ $(document).ready(
         });
 
         //load geometry
+
         var geomCall = $.ajax({
             type: 'GET',
             url: config.geo,
@@ -134,7 +137,7 @@ $(document).ready(
             geom.features.forEach(function(e){
                 e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
             });
-            generate3WComponent(config,dataArgs[0],geomArgs[0]);
+            generate3WComponent(config,dataArgs[0],geom);
         });
 
         /*

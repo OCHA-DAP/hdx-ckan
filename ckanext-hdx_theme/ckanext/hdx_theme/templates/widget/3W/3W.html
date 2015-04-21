@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-xs-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
                 <div class="col-xs-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
-                <div class="col-xs-4" id="hdx-3W-where"><p>Where</p></div>
+                <div class="col-md-4"><p id="wheretitle">Where</p><div id="hdx-3W-where"></div></div>
             </div>
         </div>
     </div>
@@ -19,6 +19,7 @@
 {% block scripts %}
     {{ super() }}
     {% resource 'hdx_theme/bootstrap' %}
+    {% resource 'hdx_theme/leaflet' %}
     {% resource 'hdx_theme/custom-vis-3w' %}
 {% endblock %}
 
