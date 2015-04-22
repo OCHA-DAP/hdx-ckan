@@ -1,5 +1,6 @@
 {% extends "page-new.html" %}
 
+{% block subtitle %}{{ data.org_info.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}
   <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
@@ -22,12 +23,12 @@
                 {% if image_sq %}
                     <img class="org-logo" src="{{ image_sq }}" alt="{{ _('small logo') }}">
                 {% else %}
-                    <img class="org-logo" src="http://placehold.it/75x75" />
+                    <img class="org-logo" src="https://placehold.it/75x75" />
                 {% endif %}
             </div>
         </div>
         <div class="title-share pull-left">
-            <div class="floating-org-title">{{data.org_info.display_name}}</div>
+            <div class="floating-org-title">{{data.org_info.display_name |truncate(60,True)}}</div>
             <div>
                 <span id="dataset_social_wrapper_floating" class="popover-wrapper"></span>
                 <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
@@ -116,7 +117,7 @@
                                 {% if image_rect %}
                                     <img src="{{image_rect}}"/>
                                 {% else %}
-                                    <img src="http://placehold.it/300x125"/>
+                                    <img src="https://placehold.it/300x125"/>
                                 {% endif %}
                             </div>
                             {% if data.show_admin_menu %}
@@ -225,10 +226,21 @@
         <div style="display: none" id="wfp-viz-embed-url">{{ data.visualization.embed_url }}</div>
         {% if data.visualization.config.type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                <div id="header" class="row">
+                    <div class="col-md-8">
+                        <p id="description"></p>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="reset btn btn-primary btn-sm" id="reset" href="javascript:dc.filterAll();dc.redrawAll();">Reset All</a>
+                    </div>
+                    <div id="count-info" class="col-md-3">
+                        <span class="filter-count "></span> selected out of <span class="total-count "></span> records.
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
                     <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
-                    <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div>
+                    <div class="col-md-4"><p id="wheretitle">Where</p><div id="hdx-3W-where"></div></div>
                 </div>
             </div>
         {% endif %}
@@ -303,6 +315,7 @@
   {% resource 'hdx_theme/search-facets' %}
 
     {% if data.visualization.config_type == '3W-dashboard' %}
+      {% resource 'hdx_theme/leaflet' %}
       {% resource 'hdx_theme/custom-vis-3w' %}
     {% endif %}
     {% if data.visualization.config_type == 'WFP' %}

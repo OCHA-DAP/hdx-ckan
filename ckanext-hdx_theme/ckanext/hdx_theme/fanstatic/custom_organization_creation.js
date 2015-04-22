@@ -68,6 +68,7 @@ showInput: true});
 			});
 			 $('#visualization-json').val(JSON.stringify(visualization));
 		}
+        $('#mc-embedded-subscribe-form').remove();
 		$('form').submit();
 	});
 });

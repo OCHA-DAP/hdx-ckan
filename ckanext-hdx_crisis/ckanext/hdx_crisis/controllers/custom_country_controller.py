@@ -82,7 +82,6 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 chart_type = 'bar'
             chart = {
                 'title': chart_config.get('chart_title', ''),
-                'data_link_url': chart_config.get('chart_data_link_url', ''),
                 'type': chart_type,
                 'title_x': chart_config.get('chart_x_label', ''),
                 'title_y': chart_config.get('chart_y_label', ''),
@@ -95,8 +94,11 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                     source = {
                         'datastore_id': resource_id,
                         'title': self._get_resource_name(resource_id),
-                        'org_name': 'OCHA',
+                        #'org_name': 'OCHA',
                         # 'url': None,
+                        'data_link_url': resource.get('chart_data_link_url', ''),
+                        'source': resource.get('chart_source', 'OCHA'),
+                        'label_x': resource.get('chart_label', ''),
                         'column_x': resource.get('chart_x_column', False),
                         'column_y': resource.get('chart_y_column', False),
                         }
@@ -139,6 +141,20 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         return True
 
+    def _create_sections(self, top_line_items, charts_config_data):
+        sections = []
+        len_charts = len(charts_config_data)
+        len_toplines = len(top_line_items)
+        max = len_charts if len_charts > len_toplines/4 else len_toplines/4
+
+        for i in range(0, max):
+            section = {
+                'top_line_items': top_line_items[i*4:(i+1)*4],
+                'chart': charts_config_data[i] if i < len_charts else None
+            }
+            sections.append(section)
+        return sections
+
     def generate_template_data(self, group_info, custom_dict):
 
         errors = []
@@ -164,12 +180,15 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         self._generate_other_links(search_params)
 
+        charts_config_data = self._get_charts_config(custom_dict, len(top_line_items), errors)
+
         template_data = {
             'data': {
                 'country_name': group_info['name'],
                 'country_title': group_info.get('title', group_info['name']),
-                'top_line_items': top_line_items,
-                'charts': self._get_charts_config(custom_dict, len(top_line_items), errors),
+                # 'top_line_items': top_line_items,
+                # 'charts': charts_config_data,
+                'topline_chart_sections': self._create_sections(top_line_items, charts_config_data),
                 'show_map': True,
                 'map': self._get_maps_config(custom_dict)
             },

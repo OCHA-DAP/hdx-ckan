@@ -121,7 +121,7 @@ def compile_less(result, translate_func=None):
                 variables = el.get('value', None)
                 try:
                     variables = json.loads(variables)
-                    base_color = variables.get('highlight_color', '#0088FF')
+                    base_color = variables.get('highlight_color', '#0088FF') or '#0088FF'
                     logo_use_org_color = variables.get('use_org_color', 'false')
                 except:
                     base_color = '#0088FF'

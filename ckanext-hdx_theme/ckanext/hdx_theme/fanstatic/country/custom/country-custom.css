@@ -15,11 +15,12 @@
   margin-bottom: 10px;
   margin-left: 45px;
 }
-.graph-title span {
+.graph-title .graph-info-label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 12px;
-  line-height: 18px;
+  line-height: 25px;
+  margin-left: 5px;
 }
 .graph-data {
   height: 320px;
@@ -31,4 +32,20 @@
 }
 .graph-wrapper-row {
   border-top: 1px solid #cccccc;
+}
+.map-info.legend.source-list {
+  position: absolute;
+  z-index: 1000;
+}
+.map-info.legend.source-list div {
+  margin-top: 10px;
+}
+.map-info.legend.source-list div:first-child {
+  margin-top: 0px;
+}
+div.graph-info-label:hover a .source-list {
+  display: block !important;
+  min-width: 180px;
+  max-width: 300px;
+  margin-left: -70px;
 }
