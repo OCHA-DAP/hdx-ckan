@@ -37,6 +37,12 @@
   position: absolute;
   z-index: 1000;
 }
+.map-info.legend.source-list div {
+  margin-top: 10px;
+}
+.map-info.legend.source-list div:first-child {
+  margin-top: 0px;
+}
 a:hover > .source-list {
   display: block !important;
 }

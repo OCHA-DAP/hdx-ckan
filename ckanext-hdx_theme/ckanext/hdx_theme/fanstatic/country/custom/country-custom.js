@@ -190,7 +190,7 @@ function autoGraph() {
                     dataCols.push(colY);
                 }
             }
-            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType);
+            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType, colorList);
         });
 
     });
