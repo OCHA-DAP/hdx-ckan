@@ -15,7 +15,7 @@
   margin-bottom: 10px;
   margin-left: 45px;
 }
-.graph-title div {
+.graph-title .graph-info-label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 12px;
@@ -43,7 +43,7 @@
 .map-info.legend.source-list div:first-child {
   margin-top: 0px;
 }
-.graph-info-label:hover a .source-list {
+div.graph-info-label:hover a .source-list {
   display: block !important;
   min-width: 180px;
   max-width: 300px;
