@@ -152,7 +152,7 @@ function autoGraph() {
             var columnX, columnXType, columnXFormat, columnY, graphType;
 
             var dataCols = [];
-                dataColsInit = false;
+            var dataColsInit = false;
 
             for (var s in results){
                 var response = results[s];

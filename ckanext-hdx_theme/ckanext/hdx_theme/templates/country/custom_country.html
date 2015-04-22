@@ -50,12 +50,12 @@
                             {% set data_link_url = ci.data_link_url or "#" %}
                             <div style="float: left;">{{ ci.title }}</div>
                             <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
-                            <span style="float: left;">
+                            <div class="graph-info-legend" style="float: left;">
                                 <a>
                                     {{ _("Info") }}
                                     <div class="map-info legend source-list" style="display: none;"></div>
                                 </a>
-                            </span>
+                            </div>
                         </div>
                         <div class="col-xs-12">
                             <div class="graph-data" style="display: none;">
