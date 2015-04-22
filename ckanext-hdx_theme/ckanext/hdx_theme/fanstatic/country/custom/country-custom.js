@@ -91,9 +91,9 @@ function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList
         axis: {
             x: {
                 tick: {
-                    rotate: 20,
+                    rotate: 25,
                     culling: {
-                        max: 15
+                        max: 20
                     }
                 }
             }
