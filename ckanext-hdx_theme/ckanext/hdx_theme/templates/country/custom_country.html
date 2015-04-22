@@ -26,26 +26,26 @@
 
 {% block crisis_data %}
 <div class="row mTop25">
-    <div class="col-xs-5">
-        <div class="row">
-            {% block top_line_figures %}
-            {% for item in data.top_line_items %}
-            <div class="col-xs-12">
-                {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
-                notes=item.notes, source=item.source,
-                source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
+    {% for section in data.topline_chart_sections  %}
+        <div class="col-xs-5">
+            <div class="row">
+                {% for item in section.top_line_items %}
+                <div class="col-xs-12">
+                    {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
+                    notes=item.notes, source=item.source,
+                    source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
 
 
+                </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-            {% endblock %}
         </div>
-    </div>
-    <div class="col-xs-7">
-        <div class="row graph-wrapper-row">
-            {% for ci in data.charts %}
-                <div class="col-xs-12 graph-wrapper-col">
-                    <div class="row auto-graph">
+
+        <div class="col-xs-7">
+            <div class="row">
+                {% set ci = section.chart %}
+                <div class="col-xs-12">
+                    <div class="row auto-graph graph-item-wrapper">
                         <div class="col-xs-12 graph-title">
                             {% set data_link_url = ci.data_link_url or "#" %}
                             <div style="float: left;">{{ ci.title }}</div>
@@ -64,9 +64,14 @@
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
         </div>
-    </div>
+
+    {% endfor %}
+
+
+
+
 </div>
 {% endblock %}
 
