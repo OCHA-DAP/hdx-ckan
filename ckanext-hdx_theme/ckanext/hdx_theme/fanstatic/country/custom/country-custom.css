@@ -20,7 +20,23 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 18px;
+  margin-left: 5px;
 }
 .graph-data {
   height: 320px;
+}
+.graph-wrapper-col {
+  border-bottom: 1px solid #cccccc;
+  padding-top: 35px;
+  height: 424px;
+}
+.graph-wrapper-row {
+  border-top: 1px solid #cccccc;
+}
+.map-info.legend.source-list {
+  position: absolute;
+  z-index: 1000;
+}
+a:hover > .source-list {
+  display: block !important;
 }

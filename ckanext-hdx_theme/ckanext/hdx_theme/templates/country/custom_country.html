@@ -47,11 +47,15 @@
                 <div class="col-xs-12">
                     <div class="row auto-graph graph-item-wrapper">
                         <div class="col-xs-12 graph-title">
-                            {{ ci.title }}
-                            {% for src in ci.sources %}
-                                {% set data_link_url = ci.data_link_url or "#" %}
-                                <span>{{src.source}} - <a href="{{src.data_link_url}}">Data</a></span>
-                            {% endfor %}
+                            {% set data_link_url = ci.data_link_url or "#" %}
+                            <div style="float: left;">{{ ci.title }}</div>
+                            <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
+                            <span style="float: left;">
+                                <a href="#" onclick="return false;">
+                                    {{ _("Info") }}
+                                    <div class="map-info legend source-list" style="display: none;"></div>
+                                </a>
+                            </span>
                         </div>
                         <div class="col-xs-12">
                             <div class="graph-data" style="display: none;">
