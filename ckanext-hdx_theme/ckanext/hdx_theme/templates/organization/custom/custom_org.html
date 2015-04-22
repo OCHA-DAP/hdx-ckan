@@ -226,10 +226,21 @@
         <div style="display: none" id="wfp-viz-embed-url">{{ data.visualization.embed_url }}</div>
         {% if data.visualization.config.type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                <div id="header" class="row">
+                    <div class="col-md-8">
+                        <p id="description"></p>
+                    </div>
+                    <div class="col-md-1">
+                        <a class="reset btn btn-primary btn-sm" id="reset" href="javascript:dc.filterAll();dc.redrawAll();">Reset All</a>
+                    </div>
+                    <div id="count-info" class="col-md-3">
+                        <span class="filter-count "></span> selected out of <span class="total-count "></span> records.
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
                     <div class="col-md-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
-                    <div class="col-md-4" id="hdx-3W-where"><p>Where</p></div>
+                    <div class="col-md-4"><p id="wheretitle">Where</p><div id="hdx-3W-where"></div></div>
                 </div>
             </div>
         {% endif %}
@@ -304,6 +315,7 @@
   {% resource 'hdx_theme/search-facets' %}
 
     {% if data.visualization.config_type == '3W-dashboard' %}
+      {% resource 'hdx_theme/leaflet' %}
       {% resource 'hdx_theme/custom-vis-3w' %}
     {% endif %}
     {% if data.visualization.config_type == 'WFP' %}
