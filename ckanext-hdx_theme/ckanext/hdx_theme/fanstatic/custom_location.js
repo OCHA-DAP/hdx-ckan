@@ -9,7 +9,7 @@ $(document).ready(function(){
 	});
 
 	$('#chart-select-1, #chart-select-2').click(function(){
-		chart_num = $(this).attr('chart-num');
+		var chart_num = $(this).attr('chart-num');
 		if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
 			$('#chart_'+chart_num+'_second_line').show();
 		}else{
