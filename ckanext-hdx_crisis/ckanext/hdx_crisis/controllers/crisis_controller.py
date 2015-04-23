@@ -61,7 +61,8 @@ class CrisisController(base.BaseController):
 
         return render('crisis/crisis-ebola.html', extra_vars=template_data)
 
-    def _generate_dataset_results(self, context, search_params, action_alias='show_crisis'):
+    def _generate_dataset_results(self, context, search_params,
+                                  action_alias='show_crisis', other_params_dict={}):
         limit = 25
 
         sort_option = request.params.get('sort', None)
@@ -87,9 +88,9 @@ class CrisisController(base.BaseController):
         def pager_url(q=None, page=None):
             if sort_option:
                 url = h.url_for(
-                    action_alias, page=page, sort=sort_option) + '#datasets-section'
+                    action_alias, page=page, sort=sort_option, **other_params_dict) + '#datasets-section'
             else:
-                url = h.url_for(action_alias, page=page) + '#datasets-section'
+                url = h.url_for(action_alias, page=page, **other_params_dict) + '#datasets-section'
             return url
 
         get_action('populate_related_items_count')(context, {'pkg_dict_list':query['results']})

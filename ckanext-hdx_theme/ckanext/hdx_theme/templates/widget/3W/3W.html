@@ -1,0 +1,30 @@
+{% extends "widget/widget.html" %}
+
+{% block content %}
+    <div class="row paddingRowHack whiteBackground">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="org-section-title">{{ _("Interactive Data") }}</div>
+            <input type="hidden" id="visualization-data" value='{{ data }}'>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
+                <div class="col-xs-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
+                <div class="col-md-4"><p id="wheretitle">Where</p><div id="hdx-3W-where"></div></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% resource 'hdx_theme/bootstrap' %}
+    {% resource 'hdx_theme/leaflet' %}
+    {% resource 'hdx_theme/custom-vis-3w' %}
+{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/widget/3W/3W.css' %}
+{% endblock %}
+

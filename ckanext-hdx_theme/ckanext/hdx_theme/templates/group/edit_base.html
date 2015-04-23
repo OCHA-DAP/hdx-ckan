@@ -1,0 +1,33 @@
+{% extends "page.html" %}
+
+{% set organization = c.group_dict %}
+
+{% block subtitle %}{{ c.group_dict.display_name }} - {{ _('Organizations') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li>{% link_for _('Organizations'), controller='organization', action='index' %}</li>
+  {% block breadcrumb_content_inner %}
+    <li>{% link_for organization.display_name|truncate(35), controller='organization', action='read', id=organization.name %}</li>
+    <li class="active">{% link_for _('Manage'), controller='organization', action='edit', id=organization.name %}</li>
+  {% endblock %}
+{% endblock %}
+
+{% block content_action %}
+
+{% endblock %}
+
+{% block content_primary_nav %}
+{% endblock %}
+
+{% block secondary_content %}
+  {% if organization %}
+    {% snippet 'snippets/organization.html', organization=organization %}
+  {% else %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+{% block links %}
+  {{ super() }}
+  {% include "organization/snippets/feeds.html" %}
+{% endblock %}

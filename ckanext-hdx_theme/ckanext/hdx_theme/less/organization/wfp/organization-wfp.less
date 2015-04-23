@@ -10,35 +10,67 @@
 
 @import "../../layout/left-right";
 @import "../../search/widget/search-box";
-@import "../../widgets/modal";
+@import "../../widget/modal";
 
 //override vars for the WFP Page
 @import "variables-wfp";
 
-
 .intro-section{
-  padding-top: 50px;
-  padding-bottom: 30px;
-
-  background-color: @extraLightGrayColor;
+  padding-top: 40px;
 
   .org-icon{
-//    margin-top: -15px; //
     height: 60px;
     margin-right: 20px;
   }
 
-  .org-title{
-    width: 470px;
+  .org-logo-large{
+    background-color: @logoBackgroundColor;
+    border: 1px solid @logoBorderColor;
+    .org-logo(370px, 200px, 300px, 125px);
+  }
 
-    .gothamBoldFont(48px);
+  .org-title{
+    .gothamBookFont(36px);
     color: @wfpBlueColor;
     line-height: 1;
   }
 
+  .mainLinks.org-info-links{
+    padding-left: 0;
+
+    > li > a {
+      .gothamBoldFont(14px);
+      .letter-spacing-0;
+      color: @wfpBlueColor;
+
+      &:focus, &:hover {
+        color: darken(@wfpBlueColor, 20%);
+      }
+
+      &.disabled{
+        color: @blackColor;
+        cursor: default;
+
+        &:after{
+          color: @wfpBlueColor;
+        }
+      }
+    }
+  }
+
   .org-description{
-    .sourceSansProFont(400, 17px);
-    line-height: 30px;
+    .sourceSansProFont(400, 16px);
+    line-height: 24px;
+  }
+
+  .admin-menu{
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  div.summary p{
+    margin: 0px;
   }
 
 }
@@ -58,9 +90,35 @@
   color: @wfpBlueColor;
 }
 
+.visualization-title{
+  .sourceSansProFont(700, 18px);
+  color: @darkGrayColor;
+
+  span{
+    margin-left: 10px;
+    .sourceSansProFont(400, 12px);
+    line-height: 18px;
+  }
+}
+
+.mainLinks.visualization-links{
+  padding-left: 0;
+
+  > li > a{
+    .sourceSansProFont(400,14px);
+    color: @wfpBlueColor;
+    .letter-spacing-0;
+    text-transform: none;
+
+    &:hover, &:focus {
+      color: darken(@wfpBlueColor, 20%);
+    }
+  }
+}
+
 //Override follow button style
-.btn.hdx-btn.org-btn{
-  .btn-inverted;
+.btn.hdx-btn{
+  margin-right: 12px;
 }
 
 .page-header {
@@ -69,4 +127,75 @@
 
 .facet-count a{
   color: @wfpBlueColor;
+}
+
+
+//custom dropdown toggle
+.dropdown-toggle-org{
+  background-color: @whiteColor;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: 1px solid @extraLightGrayColor;
+
+  .dropdown-toggle-text{
+    color: @grayColor;
+    .gothamBoldFont(14px);
+  }
+
+  .caret{
+    margin-top: 5px;
+    margin-left: 5px;
+    border-top-color: @grayColor;
+  }
+}
+
+//floating logo
+#floatingLogo{
+  position: fixed;
+  top: 0px;
+  margin-left: -@containerMarginSize;
+  z-index: 1040;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+
+//  width: 300px;
+  border: 1px solid @logoBorderColor;
+  background-color: #ffffff;
+  .table-valign{
+    background-color: @logoBackgroundColor;
+    .org-logo(75px, 75px, 60px, 60px);
+  }
+
+  &:hover .title-share{
+    display: block;
+  }
+
+  .title-share{
+    display: none;
+    padding: 15px;
+    max-width: 285px;
+    min-width: 225px;
+    line-height: 12px;
+
+    .floating-org-title{
+      .gothamBookFont(14px);
+      color: @darkGrayColor;
+      line-height: 16px;
+      height: 32px;
+    }
+
+    a{
+      .gothamBoldFont(10px);
+//      color: @wfpBlueColor;
+      text-transform: uppercase;
+
+      line-height: 12px;
+
+      +a:before{
+        content: "|";
+        margin-right: 3px;
+        margin-left: 3px;
+      }
+    }
+  }
 }

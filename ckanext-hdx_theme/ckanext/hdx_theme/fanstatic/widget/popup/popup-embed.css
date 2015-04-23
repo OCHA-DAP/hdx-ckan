@@ -1,0 +1,67 @@
+/* Default link style */
+a,
+.dataset-heading a {
+  color: #007ce0;
+  text-decoration: none;
+}
+a:hover,
+.dataset-heading a:hover,
+a:focus,
+.dataset-heading a:focus {
+  color: #00447a;
+  text-decoration: none;
+}
+/* END Default link style */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(1, 1, 1, 0.3);
+  z-index: 10000;
+}
+.popup .content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background-color: white;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+  letter-spacing: 0;
+}
+.popup .content .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #000000;
+  letter-spacing: 0;
+}
+.embed-link {
+  width: 100%;
+}
+.extra-options {
+  padding-left: 5px;
+  border-left: 1px solid #888888;
+}
+.popup label:after {
+  content: "";
+}
+.preview-container {
+  width: 100%;
+  max-width: 1110px;
+  max-height: 502px;
+  overflow: auto;
+}

@@ -33,6 +33,8 @@ this.ckan.module('hdx_follow', function($, _) {
 		initialize: function () {
 			$.proxyAll(this, /_on/);
 			this.el.on('click', this._onClick);
+
+            this.sandbox.subscribe('follow-unfollow', this._onSwitchLabel)
 		},
 
 		/* Handles the clicking of the follow button
@@ -64,24 +66,31 @@ this.ckan.module('hdx_follow', function($, _) {
 		 *
 		 * Returns nothing.
 		 */
-		_onClickLoaded: function(json) {
-			var options = this.options;
-			var sandbox = this.sandbox;
-			options.loading = false;
-			this.el.removeClass('disabled');
-      var followers = $(".followersNumber").find("span");
-			var next_val = parseInt(followers.html());
-      if (options.action == 'follow') {
-				options.action = 'unfollow';
-				this.el.html(this.i18n('unfollow') + " " + this.options.extra_text);
-				next_val = next_val + 1;
-			} else {
-				options.action = 'follow';
-				this.el.html(this.i18n('follow') + " " + this.options.extra_text);
-				next_val = next_val - 1;
-			}
-      followers.html(next_val);
-			sandbox.publish('follow-' + options.action + '-' + options.id);
-		}
+        _onClickLoaded: function(json) {
+            var options = this.options;
+            var sandbox = this.sandbox;
+            options.loading = false;
+            this.el.removeClass('disabled');
+            var followers = $(".followersNumber").find("span");
+
+            var curr_val = parseInt(followers.html());
+            var next_val = curr_val + (options.action=='follow'?1:-1);
+
+            this.sandbox.publish('follow-unfollow', {action: options.action, type: 'published'});
+
+            followers.html(next_val);
+            sandbox.publish('follow-' + options.action + '-' + options.id);
+        },
+        _onSwitchLabel: function(message) {
+            var action = message.action;
+            var options = this.options;
+            if (action == 'follow') {
+                options.action = 'unfollow';
+                this.el.html(this.i18n('unfollow') + " " + this.options.extra_text);
+            } else {
+                options.action = 'follow';
+                this.el.html(this.i18n('follow') + " " + this.options.extra_text);
+            }
+        }
 	};
 });

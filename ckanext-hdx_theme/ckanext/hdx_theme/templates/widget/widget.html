@@ -1,0 +1,22 @@
+
+
+<html>
+    <head>
+        {% block styles %}
+            {% resource 'hdx_theme/base/base-widget.css' %}
+            {% resource 'hdx_theme/base/fonts.css' %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="container-fluid widget-container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+    {% block scripts %}
+
+    {% endblock %}
+</html>
+
+
+

@@ -20,6 +20,8 @@ import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
 import ckan.controllers.organization as org
 import ckanext.hdx_theme.helpers.less as less
+from urllib import urlencode
+from pylons import config
 
 render = base.render
 abort = base.abort
@@ -34,6 +36,21 @@ _ = common._
 log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
+
+def _get_embed_url(viz_config):
+    ckan_url = config.get('ckan.site_url', '').strip()
+    position = ckan_url.find('//')
+    if position >= 0:
+        ckan_url = ckan_url[position:]
+
+    widget_url = ""
+    if viz_config['type'] == '3W-dashboard':
+        widget_url = "/widget/3W"
+    if viz_config['type'] == 'WFP':
+        widget_url = "/widget/WFP"
+
+    url = ckan_url + widget_url
+    return url
 
 class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
 
@@ -60,69 +77,105 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             visualization = json.loads(visualization)
         except:
             return "{}"
-        if visualization['datatype_1'] =='filestore':
+        
+        config = {
+                'title':visualization.get('viz-title',''),
+                'data_link_url':visualization.get('viz-data-link-url','#'),
+                'type': visualization.get('visualization-select','')
+        }
+
+        if visualization.get('visualization-select','') == 'WFP':
+            config.update({
+                'embedded': "true"
+            })
+            return config
+
+        if visualization.get('datatype_1','') =='filestore':
             datatype = "filestore"
-            data = h.url_for('perma_storage_file', id=visualization['dataset_id_1'], resource_id=visualization['resource_id_1'])
+            data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1',''), resource_id=visualization.get('resource_id_1',''))
         else:
             datatype = "datastore"
-            data = "/api/action/datastore_search?resource_id="+visualization['resource_id_1']+"&limit=10000000"
+            data = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_1','')+"&limit=10000000"
     
-        if visualization['datatype_2'] =='filestore':
+        if visualization.get('datatype_2','') =='filestore':
             geotype = "filestore"
-            geo = h.url_for('perma_storage_file', id=visualization['dataset_id_2'], resource_id=visualization['resource_id_2'])
+            geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2',''), resource_id=visualization.get('resource_id_2',''))
         else:
             geotype = "datastore"
-            geo = "/api/action/datastore_search?resource_id="+visualization['resource_id_2']+"&limit=10000000"
-    
-        if visualization['visualization-select'] == '3W-dashboard':
-            config = {'title': visualization['viz-title'],
-                      'description': visualization['viz-description'],
-                      'datatype': datatype,
-                      'data': data,
-                      'whoFieldName': visualization['who-column'],
-                      'whatFieldName': visualization['what-column'],
-                      'whereFieldName': visualization['where-column'],
-                      'geotype': geotype,
-                      'geo': geo,
-                      'joinAttribute': visualization['where-column-2'],
-                      'x': visualization['pos-x'],
-                      'y': visualization['pos-y'],
-                      'zoom': visualization['zoom'],
-                      'colors': visualization.get('colors', '')
-            }
-        return json.dumps(config)
+            geo = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_2','')+"&limit=10000000"
+
+        #beware that visualisation type constants are also used in the template to select different resource bundles
+        if visualization.get('visualization-select','') == '3W-dashboard':
+            config.update({'datatype': datatype,
+                'data': data,
+                'whoFieldName':visualization.get('who-column',''),
+                'whatFieldName':visualization.get('what-column',''),
+                'whereFieldName':visualization.get('where-column',''),
+                'geotype': geotype,
+                'geo':geo,
+                'joinAttribute':visualization.get('where-column-2',''),
+                'x':visualization.get('pos-x',''),
+                'y':visualization.get('pos-y',''),
+                'zoom':visualization.get('zoom',''),
+                'colors':visualization.get('colors','')
+            })
+
+        return config
 
     def generate_template_data(self, org_info):
+        errors = []
         org_id = org_info['name']
 
         top_line_num_dataset = org_info.get('topline_dataset', None)
         top_line_num_resource = org_info.get('topline_resource', None)
 
+        top_line_items = []
         if top_line_num_dataset and top_line_num_resource:
-            top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
-        else:
-            top_line_items = []
+            try:
+                top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
+            except Exception, e:
+                log.warning(e)
+                hdx_helpers.add_error('Fetching data problem', str(e), errors)
 
         req_params = self.process_req_params(org_id, request.params)
 
-        tab_results, all_results = self.get_dataset_search_results(
-            org_id, request.params)
-        tab = self.get_tab_name()
-        query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
+        activities = None
+        facets = {}
+        query_placeholder = ''
+        try:
+            tab_results, all_results = self.get_dataset_search_results(
+                org_id, request.params)
+            tab = self.get_tab_name()
+            query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
-        facets = self.get_facet_information(
-            tab_results, all_results, tab, req_params)
-        if tab == 'activities':
-            activities = self.get_activity_stream(org_info.get('id', org_id))
-        else:
-            activities = None
+            facets = self.get_facet_information(
+                tab_results, all_results, tab, req_params)
+            if tab == 'activities':
+                activities = self.get_activity_stream(org_info.get('id', org_id))
+        except Exception, e:
+            log.warning(e)
+            hdx_helpers.add_error('Fetching data problem', str(e), errors)
 
         allow_basic_user_info = self.check_access('hdx_basic_user_info')
         allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
 
+        allow_edit = self.check_access('organization_update', {'id': org_info['id']})
+        allow_add_dataset = self.check_access('package_create',
+                                              {'organization_id': org_info['id'],
+                                               'owner_org': org_info['id']})
+
+        viz_config = self.assemble_viz_config(org_info['visualization_config'])
+
+        follower_count = get_action('group_follower_count')(
+            {'model': model, 'session': model.Session},
+            {'id': org_info['id']}
+        )
+        add_data_url = h.url_for('add dataset')+'?organization_id={}'.format(org_info['id'])
         template_data = {
             'data': {
                 'org_info': org_info,
+                'member_count': hdx_helpers.get_group_members(org_info['id']),
+                'follower_count': follower_count,
                 'top_line_items': top_line_items,
                 'search_results': {
                     'facets': facets,
@@ -132,21 +185,40 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'links': {
                     'edit': h.url_for('organization_edit', id=org_id),
                     'members': h.url_for('organization_members', id=org_id),
-                    'request_membership': h.url_for('request_membership', org_id=org_id)
+                    'request_membership': h.url_for('request_membership', org_id=org_id),
+                    'add_data': add_data_url
                 },
                 'request_params': request.params,
                 'permissions': {
-                    'edit': self.check_access('organization_update', {'id': org_info['id']}),
+                    'edit': allow_edit,
+                    'add_dataset': allow_add_dataset,
                     'view_members': allow_basic_user_info,
                     'request_membership': allow_req_membership
                 },
-                'visualization_config': self.assemble_viz_config(org_info['visualization_config'])
+                'show_admin_menu': allow_add_dataset or allow_edit,
+                'show_visualization': True,
+                'visualization': {
+                    'config': viz_config,
+                    'config_type': viz_config['type'],
+                    'config_url': urlencode(viz_config, True),
+                    'embed_url': _get_embed_url(viz_config),
+                    'basemap_url': config.get('hdx.orgmap.url')
+                }
+
             },
-            'errors': None,
-            'error_summary': None,
+            'errors': errors,
+            'error_summary': '',
 
         }
 
+        template_data['data']['show_visualization'] = \
+            hdx_helpers.check_all_str_fields_not_empty(template_data['data']['visualization'],
+                                                       'Visualization config field "{}" is empty',
+                                                       skipped_keys=['config'],
+                                                       errors=errors)
+
+        template_data['error_summary'] = \
+            '; '.join([e.get('message', '') for e in template_data['errors']])
         return template_data
 
     def get_org(self, org_id):
@@ -167,19 +239,26 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
             json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
             jsonstring = json_extra[0] if len(json_extra) == 1 else ''
-            top_line_src_info = self._get_top_line_src_info(jsonstring)
+            if jsonstring and jsonstring.strip():
+                json_dict = json.loads(jsonstring)
+                top_line_src_info = self._get_top_line_src_info(json_dict)
+                images = self._get_images(json_dict)
+            else:
+                top_line_src_info = (None,None)
+                images = (None, None)
 
             org_dict = {
                 'id': result['id'],
                 'display_name': result.get('display_name', ''),
-                'description': result['group'].description,
+                'description': result['description'],
                 'name': result['name'],
                 'link': org_url[0] if len(org_url) == 1 else None,
-                'revision_id': result['group'].revision_id,
+                'revision_id': result['revision_id'],
                 'topline_dataset': top_line_src_info[0],
                 'topline_resource': top_line_src_info[1],
                 'modified_at': result.get('modified_at', ''),
-                'image_url': result.get('image_url',''),
+                'image_sq': images[0],
+                'image_rect': images[1],
                 'visualization_config': result.get('visualization_config',''),
             }
 
@@ -192,10 +271,19 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         return {}
 
-    def _get_top_line_src_info(self, jsonstring):
-        if jsonstring and jsonstring.strip():
-            json_dict = json.loads(jsonstring)
-            if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
+    def _get_images(self, json_dict):
+        if 'image_sq' in json_dict and 'image_rect' in json_dict:
+                return (json_dict['image_sq'], json_dict['image_rect'])
+        elif 'image_sq' in json_dict:
+            return (json_dict['image_sq'], None)
+        elif 'image_rect' in json_dict:
+            return (None, json_dict['image_rect'])
+
+        return (None, None)
+
+
+    def _get_top_line_src_info(self, json_dict):
+        if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
                 return (json_dict['topline_dataset'], json_dict['topline_resource'])
 
         return (None, None)

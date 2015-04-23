@@ -1,0 +1,81 @@
+{% extends "crisis/crisis-base.html" %}
+
+{% block subtitle %}{{ data.country_title }}{% endblock %}
+{% block crisis_title %} {{ data.country_title }} {% endblock %}
+{% block crisis_actions %}
+<span class="mR45 pull-right" style="line-height: 50px;">
+        <span class="followButtonContainer">
+            {{ h.follow_button('group', data.country_name) }}
+        </span>
+        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+    </span>
+{% endblock %}
+{% block breadcrumb_content %}
+<li>{% link_for _('Groups'), controller='group', action='index' %}</li>
+<li class="active">{{ h.nav_link(data.country_title,
+    controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController',
+    action='read', id=data.country_name, highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block crisis_map %}
+    {% if data.show_map %}
+        <div id="map-configuration" style="display: none">{{ h.dump_json(data.map) }}</div>
+        {{ super() }}
+    {% endif %}
+{% endblock %}
+
+{% block crisis_data %}
+<div class="row mTop25">
+    {% for section in data.topline_chart_sections  %}
+        <div class="col-xs-5">
+            <div class="row">
+                {% for item in section.top_line_items %}
+                <div class="col-xs-12">
+                    {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
+                    notes=item.notes, source=item.source,
+                    source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
+
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-xs-7">
+            <div class="row">
+                {% set ci = section.chart %}
+                <div class="col-xs-12">
+                    <div class="row auto-graph graph-item-wrapper">
+                        <div class="col-xs-12 graph-title">
+                            {% set data_link_url = ci.data_link_url or "#" %}
+                            <div style="float: left;">{{ ci.title }}</div>
+                            <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
+                            <div class="graph-info-label" style="float: left;">
+                                <a>
+                                    {{ _("Info") }}
+                                    <div class="map-info legend source-list" style="display: none;"></div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="graph-data" style="display: none;">
+                                {{ h.json_dumps(ci) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+
+
+
+
+</div>
+{% endblock %}
+
+{% block scripts2 %}
+{{ super() }}
+{% resource 'hdx_theme/country-custom' %}
+{% endblock %}

@@ -70,7 +70,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         self.get_country(id)
 
-        country_uuid = c.group_dict.get('id', id)
+        #country_uuid = c.group_dict.get('id', id)
         country_code = c.group_dict.get('name', id)
 
         self.get_dataset_results(country_code)
@@ -248,7 +248,10 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             # 's': [el[1] for el in indicators_4_charts_list]
             'ds': [el[0] + '___' + el[1] for el in indicators_4_charts_list]
         }
-        result = get_action('hdx_get_indicator_values')({}, data_dict)
+        try:
+            result = get_action('hdx_get_indicator_values')({}, data_dict)
+        except:
+            return {}
         return result
 
     def _get_top_line_num(self, country_id):
@@ -259,7 +262,10 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             # 's': [el[1] for el in indicators_4_top_line_list]
             'ds': [el[0] + '___' + el[1] for el in indicators_4_top_line_list]
         }
-        result = get_action('hdx_get_indicator_values')({}, data_dict)
+        try:
+            result = get_action('hdx_get_indicator_values')({}, data_dict)
+        except:
+            return {}
         return result
 
     # def get_activity_stream(self, country_uuid):

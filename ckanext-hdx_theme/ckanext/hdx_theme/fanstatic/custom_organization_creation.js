@@ -16,6 +16,12 @@ showInput: true});
 		}
 	});
 
+    $('#visualization-select').change(function(){
+        var this_div = $(this).val();
+        $('.visualization-div').hide();
+        $('#'+this_div).show();
+    })
+
 	$('#field-highlight-color').change(function(){
 		color = this.value;
 		var rainbow = new Rainbow(); 
@@ -31,18 +37,24 @@ showInput: true});
 		//Set timestamp
 		$('#field-modified_at').val(new Date().getTime())
 		if($('#field-custom_org').is(':checked')){
+            var use_org_color = "false"
+            if($('#use_org_color').is(':checked'))
+                use_org_color = "true"
 			var customization = {
 				'highlight_color':$('#field-highlight-color').val(),
 				'topline_dataset':$('#field-topline-dataset').val(),
-				'topline_resource':$('#field-topline-resource').val()
+				'topline_resource':$('#field-topline-resource').val(),
+                'use_org_color':use_org_color
 			}
 			$('#customization-json').val(JSON.stringify(customization));
 
 			//Build visualization slug
 			var visualization = {}
 			var arrays = []
+            var viz_type = $('#visualization-select').val();
 			$('.visualization_config').each(function(){
 				//if this is an array, perserve it.
+              if($(this).attr('viz-type') == viz_type || this.id == 'visualization-select'){
 				if($.inArray($(this).attr('name').slice(0,-2), arrays) > -1){
 					visualization[$(this).attr('name').slice(0,-2)].push(this.value);
 				}
@@ -52,9 +64,11 @@ showInput: true});
 				}else{
 					visualization[$(this).attr('name')] = this.value;
 				}
+            }
 			});
-			$('#visualization-json').val(JSON.stringify(visualization));
+			 $('#visualization-json').val(JSON.stringify(visualization));
 		}
+        $('#mc-embedded-subscribe-form').remove();
 		$('form').submit();
 	});
 });

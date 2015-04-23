@@ -1,0 +1,27 @@
+@import "../../base/variables";
+@import "popup";
+
+.embed-link{
+  width: 100%;
+}
+
+.extra-options{
+  padding-left: 5px;
+  border-left: 1px solid @grayColor;
+}
+
+.popup{
+  label:after{
+    content: "";
+  }
+}
+
+@previewContainerHeight: 502px;
+@previewContainerWidth: @containerRealSize - 2*@popupPaddingSize;
+.preview-container{
+  width: 100%;
+  max-width: @previewContainerWidth;
+  max-height: @previewContainerHeight;
+
+  overflow: auto;
+}

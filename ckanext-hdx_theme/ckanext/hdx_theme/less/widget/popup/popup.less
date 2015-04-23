@@ -1,0 +1,37 @@
+@import "../../base/base";
+@import "../../base/mixins";
+@import "../../base/variables";
+
+@popupPaddingSize: 30px;
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(1,1,1,0.3);
+  z-index: 10000;
+
+  .content {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    padding: @popupPaddingSize;
+
+    background-color: white;
+
+    //default font style
+    .sourceSansProFont(400, 14px);
+    color: @darkGrayColor;
+    .letter-spacing-0;
+
+    .title{
+      .gothamBoldFont(18px);
+      color: @blackColor;
+      .letter-spacing-0;
+    }
+  }
+}

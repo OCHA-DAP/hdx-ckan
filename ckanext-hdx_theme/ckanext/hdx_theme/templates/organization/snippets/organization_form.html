@@ -1,6 +1,6 @@
 {% import 'macros/form.html' as form %}
 
-<form class="dataset-form" method="post" data-module="basic-form">
+<form class="dataset-form" method="post" enctype="multipart/form-data" data-module="basic-form">
   {% block error_summary %}
     {{ form.errors(error_summary) }}
   {% endblock %}
@@ -60,7 +60,7 @@
 <div id="customization-trigger" class="org-control-container">
       <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom organisation page") }}</label>
      <div class="controls" style="display:inline-block">
-        <input type="checkbox" {% if custom_org %}checked{% endif %} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+        <input type="checkbox" {% if custom_org %}checked{% endif %} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
         </div>
     </div>
 {% endif %}
@@ -73,18 +73,60 @@
 </div>
 
 <div class="org-control-container">
-{% set is_upload = data.image_url and not data.image_url.startswith('http') %}
-    {% set is_url = data.image_url and data.image_url.startswith('http') %}
+{% set is_upload = customizations['image_sq'] and not customizations['image_sq'].startswith('http') %}
+{% set is_url = customizations['image_sq'] and customizations['image_sq'].startswith('http') %}
 
-    {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload) }}
+{% if is_url %}
+  {% set image_preview = customizations['image_sq'] %}
+{% elif is_upload %}
+  {% set image_preview = h.url_for('image_serve', label= customizations['image_sq']) %}
+{% else %}
+  {% set image_preview = 'https://placehold.it/75x75' %}
+{% endif %}
 
+<div style="border: solid 10px #CCC; width:572px; height:86px; margin-bottom:10px;">
+<div style="width:475px; float:left; margin-top:5px; padding:5px;">    
+    {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', field_clear='clear_image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 75x75'), upload_label=_('Logo 75x75')) }}
+  </div>
+<div style="float:left; padding:5px;"><img src="{{ image_preview }}" style="width: 75px !important; height:75px !important;"></div>
 </div>
+</div>
+
+<div class="org-control-container">
+    {% set is_upload = customizations['image_rect'] and not customizations['image_rect'].startswith('http') %}
+    {% set is_url = customizations['image_rect'] and customizations['image_rect'].startswith('http') %}
+    {% set is_use_org_color = customizations['use_org_color'] %}
+
+
+{% if is_url %}
+  {% set image_preview = customizations['image_rect'] %}
+{% elif is_upload %}
+  {% set image_preview = h.url_for('image_serve', label= customizations['image_rect']) %}
+{% else %}
+  {% set image_preview = 'https://placehold.it/300x125' %}
+{% endif %}
+<div style="border: solid 10px #CCC; width: 572px; height: 135px;">
+<div style="width:250px; margin-top:32px; float:left; padding:5px;">
+    {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', field_clear='clear_image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 300x125'), upload_label=_('Logo 300x125')) }}
+</div>
+<div style="float:left; padding:5px;"><img src="{{ image_preview }}" style="width: 300px !important; height:125px !important;"></div>
+</div>
+</div>
+
 
 <div class="org-control-container" style="margin-top:30px;">
 {{ form.input('highlight_color', label=_('Base Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Pick the color which this page\'s color scheme will be based on.' )}}</div>
       </div>
+</div>
+
+
+<div class="org-control-container" style="margin-bottom:30px;">
+    <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Background logo same as base color ") }}</label>
+    <div class="controls" style="display:inline-block">
+        <input type="checkbox" name="use_org_color" id="use_org_color" value="true" {% if is_use_org_color=='true' %}checked{% endif %} style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
+    </div>
 </div>
 
 <div class="org-control-container">
@@ -122,14 +164,20 @@
 <div class="org-control-container" style="margin-bottom:30px;">
 <div class="controls">
   <label class="control-label" for="visualization-select">Visualization Type</label>
-          <select name="visualization-select" style="width:95%;" class="visualization_config">
-            <option value="3W-dashboard">3W Dashboard</option>
+          <select id="visualization-select" name="visualization-select" style="width:95%;" class="visualization_config">
+            <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
+            <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option>
+            <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
           </select>
 </div>
 </div>
 
-<div id="dashboard-3w">
+<div class="visualization-div" id="3W-dashboard" {% if visualization['visualization-select'] != '3W-dashboard' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/3w.html',
+                            visualization=visualization %}
+</div>
+<div class="visualization-div" id="WFP" {% if visualization['visualization-select'] != 'WFP' %}style="display:none;"{% endif %}>
+{% snippet 'snippets/visualization/wfp.html',
                             visualization=visualization %}
 </div>
 <input type="hidden" name="visualization_config" id="visualization-json">
@@ -203,5 +251,7 @@
 </form>
 
 
-{% resource 'hdx_theme/custom_organization_creation.js' %}
 {% resource 'hdx_theme/colorpicker' %}
+{% resource 'hdx_theme/custom_organization_creation.js' %}
+{% resource 'hdx_theme/organization/organization-form.css' %}
+{% resource 'hdx_theme/image-upload' %}

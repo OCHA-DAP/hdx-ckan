@@ -8,19 +8,25 @@
 @import "../base/mixins";
 
 @topLineItemNumberFontSize: 74px;
+@topLineItemUnitFontSize: 37px;
+@topLineIndicatorTitleLineHeight: 20px;
+@topLineIndicatorTitleHeight: 2*@topLineIndicatorTitleLineHeight;
+@topLinePadding: 20px 0;
 
 .topline {
   border-top: 1px solid @lightGrayColor;
   border-bottom: 1px solid @lightGrayColor;
-  padding: 20px 0;
+  padding: @topLinePadding;
   margin-top: -1px;
   color: @darkGrayColor;
 
   .indicator-title {
-    .gothamBoldFont;
+    .gothamBoldFont(14px);
     .letter-spacing-1;
     margin-bottom: 10px;
     color: @darkGrayColor;
+    line-height: @topLineIndicatorTitleLineHeight;
+    height: @topLineIndicatorTitleHeight;
   }
 
   .indicator-value {
@@ -47,7 +53,7 @@
   }
 
   .small{
-    .gothamLightFont(37px);
+    .gothamLightFont(@topLineItemUnitFontSize);
     .letter-spacing-1;
     line-height: 1;
 

@@ -1,0 +1,24 @@
+<div class="org-control-container">
+<h2>{{_('Topline Configuration')}}</h2>
+</div>
+{#
+	<div class="org-control-container">
+{{ form.input('topline_dataset', label=_('Dataset with Topline Numbers'), id='field-topline-dataset', type='text', value=customizations['topline_dataset'], classes=['customization-config','control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('The id of the dataset that topline figures have been uploaded to.')}}</div>
+      </div>
+</div>
+#}
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="topline_resource">Resource with Topline Numbers</label>
+    <div class="controls ">
+    <input id="topline_resource" type="text" name="topline_resource" value="{{customizations['topline_resource']}}" placeholder="" class="customization_config">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
+      </div>
+</div>
+

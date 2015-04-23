@@ -1,0 +1,51 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.graph-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  color: #333333;
+  margin-bottom: 10px;
+  margin-left: 45px;
+}
+.graph-title .graph-info-label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 25px;
+  margin-left: 5px;
+}
+.graph-data {
+  height: 320px;
+}
+.graph-wrapper-col {
+  border-bottom: 1px solid #cccccc;
+  padding-top: 35px;
+  height: 424px;
+}
+.graph-wrapper-row {
+  border-top: 1px solid #cccccc;
+}
+.map-info.legend.source-list {
+  position: absolute;
+  z-index: 1000;
+}
+.map-info.legend.source-list div {
+  margin-top: 10px;
+}
+.map-info.legend.source-list div:first-child {
+  margin-top: 0px;
+}
+div.graph-info-label:hover a .source-list {
+  display: block !important;
+  min-width: 180px;
+  max-width: 300px;
+  margin-left: -70px;
+}

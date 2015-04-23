@@ -4,25 +4,32 @@
 
 <div class="topline topline-colombia">
     <div class="row">
-        <div class="col-xs-6">
-            <div class="row">
-                <div class="col-xs-12 indicator-title">
-                    {{ title }}
-                </div>
-                <div class="col-xs-12">
-                    <span class="source-title">{{ source }}</span> -
-                    {% if source_link %}
-                    <span><a class="source-link" href="{{ source_link }}" target="new">Data</a></span> -
-                    {% endif %}
-                    {% if explore %}
-                    <span><a class="source-link" href="{{ explore }}" target="new">Explore</a></span> -
-                    {% endif %}
-                    <span class="source-date">{{ latest_date }}</span>
+        <div class="col-xs-6 topline-information table-valign">
+            <div class="row table-valign-content">
+                <div class="margin-hack">
+                    <div class="col-xs-12 indicator-title">
+                        {{ title }}
+                    </div>
+                    <div class="col-xs-12">
+                        <span class="source-title">{{ source }}</span>
+                        {% if source_link %}
+                        - <span><a class="source-link" href="{{ source_link }}" target="new">Data</a></span>
+                        {% endif %}
+                        {% if explore %}
+                        - <span><a class="source-link" href="{{ explore }}" target="new">Explore</a></span>
+                        {% endif %}
+                        {% if latest_date %}
+                        - <span class="source-date">{{ latest_date }}</span>
+                        {% endif %}
+
+
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-6">
-            <div class="row">
+        <div class="col-xs-6 topline-information table-valign">
+            <div class="row table-valign-content">
+                <div class="margin-hack">
                 {% if sparkline_json %}
                     <div class="col-xs-8 indicator-value">
                         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
@@ -35,6 +42,7 @@
                         {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
                     </div>
                 {% endif %}
+                </div>
             </div>
         </div>
     </div>

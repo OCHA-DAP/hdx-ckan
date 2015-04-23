@@ -1,20 +1,111 @@
 /* Topline numbers style change for Colombia
  * (smaller fonts + smaller margins)
  */
-.topline-colombia .indicator-title {
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ *
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.topline {
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  padding: 0px;
+  margin-top: -1px;
+  color: #333333;
+}
+.topline .indicator-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+  color: #333333;
+  line-height: 20px;
+  height: inherit;
+}
+.topline .indicator-value {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 74px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.topline .source-title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  color: #333333;
+}
+.topline .source-link {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+}
+.topline .source-date {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: #888888;
+}
+.topline .small {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 37px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  margin-bottom: 20px;
+  margin-left: -15px;
+}
+.topline .sparkline {
+  position: relative;
+  width: 103px;
+  height: 74px;
+}
+.topline .topline-value {
+  white-space: nowrap;
+}
+.topline.topline-colombia .topline-information {
+  height: 105px;
+}
+.topline.topline-colombia .topline-information .margin-hack {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.topline.topline-colombia .indicator-title {
   font-size: 14px;
   margin-bottom: 0;
 }
-.topline-colombia .indicator-value {
+.topline.topline-colombia .indicator-value {
   font-size: 47px;
 }
-.topline-colombia .small {
+.topline.topline-colombia .small {
   font-size: 25px;
   margin-bottom: 10px;
   margin-left: -10px;
 }
-.topline-colombia .small.indicator-prevalue {
+.topline.topline-colombia .small.indicator-prevalue {
   font-size: 37px;
   margin-right: -10px;
 }
 /* END Topline numbers */
+/* Graphs */
+.row.graph-item-wrapper {
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  padding-top: 29px;
+  height: 425px;
+  margin-top: -1px;
+  margin-left: 5px;
+}
+/* END - Graphs */
