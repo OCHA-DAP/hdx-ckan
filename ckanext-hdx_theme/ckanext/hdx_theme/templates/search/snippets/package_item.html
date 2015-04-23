@@ -27,7 +27,7 @@
                 <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
                   {{ last_user.fullname }}
                 </a>
-              {% endif %}{% endblock %} - {{f_updated_time}}
+              {% endif %}  - {{f_updated_time}} {% endblock %}
             {% endblock %}
           </div>
           <div class="dataset-actions">
