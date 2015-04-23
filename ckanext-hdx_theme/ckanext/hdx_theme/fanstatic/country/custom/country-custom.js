@@ -127,24 +127,31 @@ function autoGraph() {
         var promises = [];
         var results = [];
         var sourceList = "";
+        var timeformat = '%Y-%m-%dT%H:%M:%S';
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
-            source["data"] = null;
-            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source +" - <a href='"+ source.data_link_url +"'>Data</a></div>";
-            results.push(source);
-            var sql = 'SELECT "'+ source.column_x + '", "'+ source.column_y +'" FROM "'+ source.datastore_id +'"';
-            var urldata = encodeURIComponent(JSON.stringify({sql: sql}));
-            var promise = $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                url: '/api/3/action/datastore_search_sql',
-                data: urldata,
-                index: sIdx,
-                success: function(data){
-                    results[this.index].data = data;
-                }
-            });
-            promises.push(promise);
+            sourceList += "<div><i style='background: " + colorList[sIdx] + "'></i> " + source.source + " - <a href='" + source.data_link_url + "'>Data</a></div>";
+            if ( source['source_type']=='ckan' ) {
+                source["data"] = null;
+                results.push(source);
+                var sql = 'SELECT "' + source.column_x + '", "' + source.column_y + '" FROM "' + source.datastore_id + '"';
+                var urldata = encodeURIComponent(JSON.stringify({sql: sql}));
+                var promise = $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/api/3/action/datastore_search_sql',
+                    data: urldata,
+                    index: sIdx,
+                    success: function (data) {
+                        results[this.index].data = data;
+                    }
+                });
+                promises.push(promise);
+            }
+            else{
+                results.push(source);
+                timeformat = '%Y-%m-%d';
+            }
         }
         sourceListDiv.html(sourceList);
 
@@ -157,8 +164,8 @@ function autoGraph() {
             for (var s in results){
                 var response = results[s];
                 if (response){
-                    var data = response.data.result,
-                        colX = ['x'],
+                    var data = response.data.result ? response.data.result : response.data;
+                    var colX = ['x'],
                         //colY = [graphData.sources[s]['title']];
                         colY = [response.label_x];
 
@@ -170,7 +177,7 @@ function autoGraph() {
 
                     if (data.fields[0].type == 'timestamp'){
                         columnXType = 'timeseries';
-                        columnXFormat = '%Y-%m-%dT%H:%M:%S';
+                        columnXFormat = timeformat;
                     } else if (data.fields[0].type == 'text'){
                         columnXType = 'category';
                     }

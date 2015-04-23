@@ -15,18 +15,21 @@ import ckan.logic as logic
 import ckan.controllers.group as group
 
 
+import ckanext.hdx_crisis.controllers.crisis_controller as controllers
 import ckanext.hdx_crisis.dao.country_data_access as country_data_access
+import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as helpers
-import ckanext.hdx_crisis.controllers.crisis_controller as controllers
 
 render = base.render
 c = common.c
 get_action = logic.get_action
 json = common.json
+_ = common._
 
 log = logging.getLogger(__name__)
 
+IndicatorAccess = indicator_access.IndicatorAccess
 
 def is_custom(environ, result):
     group_info, custom_dict = get_group(result['id'])
@@ -72,39 +75,102 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
 
-    def _get_charts_config(self, custom_dict, top_line_items_count, errors):
+
+    def _ckan_src_chart_config(self, chart_config, chart_type):
+        chart = {
+            'title': chart_config.get('chart_title', ''),
+            'type': chart_type,
+            'title_x': chart_config.get('chart_x_label', ''),
+            'title_y': chart_config.get('chart_y_label', ''),
+            'sources': []
+        }
+        for resource in chart_config.get('resources', []):
+            resource_id = resource.get('chart_resource_id', False)
+            if resource_id:
+                source = {
+                    'source_type': 'ckan',
+                    'datastore_id': resource_id,
+                    'title': self._get_resource_name(resource_id),
+                    # 'org_name': 'OCHA',
+                    # 'url': None,
+                    'data_link_url': resource.get('chart_data_link_url', ''),
+                    'source': resource.get('chart_source', 'OCHA'),
+                    'label_x': resource.get('chart_label', ''),
+                    'column_x': resource.get('chart_x_column', False),
+                    'column_y': resource.get('chart_y_column', False),
+                }
+                chart['sources'].append(source)
+        return chart
+
+    def _cps_src_chart_config(self, chart_config, chart_type, country_code):
+        dataseries_code = chart_config.get('chart_dataseries_code', '')
+        if '___' in dataseries_code:
+            splitted_codes = dataseries_code.split('___')
+            dataseries_list = [(splitted_codes[0], splitted_codes[1])]
+            indicator_dao = IndicatorAccess(country_code, dataseries_list, {'sorting': 'INDICATOR_TYPE_ASC'})
+            indicator_dao.fetch_indicator_data_from_cps()
+            structured_cps_data = indicator_dao.get_structured_data_from_cps()
+            ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
+            try:
+                ind_code = structured_cps_data.iterkeys().next()
+                ind_dict = structured_cps_data[ind_code].itervalues().next()
+                chart = {
+                    'title': chart_config.get('chart_title', ''),
+                    'type': chart_type,
+                    'dataseries_code': chart_config.get('chart_dataseries_code', ''),
+                    'title_x': _('Date'),
+                    'title_y': ind_dict.get('unit', ''),
+                    'sources': [
+                        {
+                            'source_type': 'cps',
+                            'title': ind_dict.get('title', ''),
+                            'data_link_url': ckan_data.get(ind_code, {}).get('datasetLink', ''),
+                            'source': ind_dict.get('sourceName', ''),
+                            'label_x': ind_dict.get('unit', ''),
+                            'column_x': 'date',
+                            'column_y': 'value',
+                            'data': {
+                                'fields': [
+                                    {
+                                        'id': 'date',
+                                        'type': 'timestamp'
+                                    },
+                                    {
+                                        'id': 'value',
+                                        'type': 'float'
+                                    }
+                                ],
+                                'records': ind_dict.get('data', [])
+                            }
+                        }
+                    ]
+
+                }
+                return chart
+            except Exception, e:
+                log.warning("Exception while iterating dataseries data: " + str(e))
+                return {}
+
+    def _get_charts_config(self, country_code, custom_dict, top_line_items_count, errors):
         charts = []
         for index, chart_config in enumerate(custom_dict.get('charts', [])):
             if top_line_items_count <= 4 and index == 1:
                 break
+            source_type = 'ckan'
             chart_type = 'area'
             if 'bar' in chart_config.get('chart_type', ''):
                 chart_type = 'bar'
-            chart = {
-                'title': chart_config.get('chart_title', ''),
-                'type': chart_type,
-                'title_x': chart_config.get('chart_x_label', ''),
-                'title_y': chart_config.get('chart_y_label', ''),
-                'sources': []
-            }
+            if 'indicator' in chart_config.get('chart_type', ''):
+                source_type = 'cps'
 
-            for resource in chart_config.get('resources', []):
-                resource_id = resource.get('chart_resource_id', False)
-                if resource_id:
-                    source = {
-                        'datastore_id': resource_id,
-                        'title': self._get_resource_name(resource_id),
-                        #'org_name': 'OCHA',
-                        # 'url': None,
-                        'data_link_url': resource.get('chart_data_link_url', ''),
-                        'source': resource.get('chart_source', 'OCHA'),
-                        'label_x': resource.get('chart_label', ''),
-                        'column_x': resource.get('chart_x_column', False),
-                        'column_y': resource.get('chart_y_column', False),
-                        }
-                    chart['sources'].append(source)
-            if self._show_chart(chart, errors):
-                charts.append(chart)
+            if source_type == 'ckan':
+                chart = self._ckan_src_chart_config(chart_config, chart_type)
+                if self._show_chart(chart, errors):
+                    charts.append(chart)
+            else:
+                chart = self._cps_src_chart_config(chart_config, chart_type, country_code)
+                if self._show_chart(chart, errors):
+                    charts.append(chart)
 
         return charts
 
@@ -135,7 +201,8 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         chart_src_check = \
             helpers.check_all_str_fields_not_empty(chart_dict['sources'][0],
-                                            'Chart source config field "{}" is empty', errors=errors)
+                                            'Chart source config field "{}" is empty', ['data'],
+                                            errors=errors)
         if not chart_src_check:
             return False
 
@@ -180,7 +247,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         self._generate_other_links(search_params)
 
-        charts_config_data = self._get_charts_config(custom_dict, len(top_line_items), errors)
+        charts_config_data = self._get_charts_config(group_info['name'], custom_dict, len(top_line_items), errors)
 
         template_data = {
             'data': {

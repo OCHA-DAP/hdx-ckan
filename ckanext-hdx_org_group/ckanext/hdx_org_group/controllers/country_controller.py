@@ -15,10 +15,10 @@ import ckan.model as model
 import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.helpers as h
-import ckan.lib.search as search
 
 import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 
 render = base.render
 abort = base.abort
@@ -110,8 +110,11 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
             abort(401, _('Unauthorized to read group %s') % id)
 
     def get_dataset_results(self, country_id):
-        upper_case_id = country_id.upper()
-        top_line_results = self._get_top_line_num(upper_case_id)
+
+        top_line_dao = indicator_access.IndicatorAccess(
+            country_id, indicators_4_top_line_list, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
+
+        top_line_results = top_line_dao.fetch_indicator_data_from_cps()
         top_line_data = top_line_results.get('results', [])
 
         if not top_line_data:
@@ -129,57 +132,26 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         top_line_ind_codes = [el['indicatorTypeCode']
                               for el in sorted_top_line_data]
 
-        chart_results = self._get_chart_data(upper_case_id)
-        chart_data = chart_results.get('results', [])
-        if not chart_data:
+        chart_dao = indicator_access.IndicatorAccess(
+            country_id, indicators_4_charts_list, {'sorting': 'INDICATOR_TYPE_ASC'})
+
+        chart_dao.fetch_indicator_data_from_cps()
+        chart_dataseries_dict = chart_dao.get_structured_data_from_cps()
+        if not chart_dataseries_dict:
             log.warn('No chart data found for country: {}'.format(country_id))
-            chart_data = []
+            chart_dataseries_dict = {}
+
+        # We can do the steps below because, in this case,
+        # we know that each indicator type has only one source
         chart_data_dict = {}
+        for key, value in chart_dataseries_dict.iteritems():
+            try:
+                # we're taking the first (and only) soruce
+                new_value = value.itervalues().next()
+                chart_data_dict[key] = new_value
+            except Exception, e:
+                log.warning("Exception while iterating dataseries data: " + e)
 
-        # for el in chart_data:
-        #     ind_type = el.get('indicatorTypeCode', None)
-        #     if ind_type:
-        #         d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
-        #         el['datetime'] = d
-        #         if ind_type in chart_data_dict:
-        #             chart_data_dict[ind_type].append(el)
-        #         else:
-        #             chart_data_dict[ind_type] = [el]
-
-        for el in chart_data:
-            ind_type = el.get('indicatorTypeCode', None)
-            if ind_type:
-                # d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
-                el_time = el.get('time')
-                el_value = el.get('value')
-                val = {
-                    'date': el_time,
-                    'value': el_value
-                }
-
-                if ind_type in chart_data_dict:
-                    chart_data_dict[ind_type]['data'].append(val)
-
-                    last_date = dt.datetime.strptime(
-                        chart_data_dict[ind_type]['lastDate'], '%Y-%m-%d')
-                    curr_date = dt.datetime.strptime(el_time, '%Y-%m-%d')
-
-                    if last_date < curr_date:
-                        chart_data_dict[ind_type]['lastDate'] = el_time
-                        chart_data_dict[ind_type]['lastValue'] = el_value
-
-                else:
-                    newel = {
-                        'title': el.get('indicatorTypeName'),
-                        'sourceName': el.get('sourceName'),
-                        'sourceCode': el.get('sourceCode'),
-                        'lastDate': el_time,
-                        'lastValue': el_value,
-                        'unit': el.get('unitName'),
-                        'code': ind_type,
-                        'data': [val]
-                    }
-                    chart_data_dict[ind_type] = newel
 
         # for code in chart_data_dict.keys():
         #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
@@ -190,8 +162,10 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                 chart_data_list.append(chart_data_dict[code])
 
         chart_ind_codes = [chart['code'] for chart in chart_data_list]
-        indic_extra_dict = self._get_indicator_info(
-            top_line_ind_codes + chart_ind_codes)
+        shown_dataseries_codes = [(el, '') for el in top_line_ind_codes + chart_ind_codes]
+        shown_dataseries_dao = indicator_access.IndicatorAccess(country_id, shown_dataseries_codes)
+
+        indic_extra_dict = shown_dataseries_dao.fetch_indicator_data_from_ckan()
 
         for chart in chart_data_list:
             code = chart['code']
@@ -212,61 +186,6 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                 el['datasetLink'] = top_line_extra.get('datasetLink')
                 el['datasetUpdateDate'] = top_line_extra.get(
                     'datasetUpdateDate')
-
-    def _get_indicator_info(self, indic_code_list):
-        result = {}
-        fq = '+extras_indicator_type_code:('
-        fq += ' OR '.join(['"{}"'.format(code) for code in indic_code_list])
-        fq += ')'
-        data_dict = {
-            'rows': 25,
-            'start': 0,
-            'ext_indicator': u'1',
-            'fq': fq + ' +dataset_type:dataset'
-        }
-        try:
-            query = get_action("package_search")({}, data_dict)
-        except search.SearchError as se:
-            query = {}
-        except Exception as e:
-            abort(404, _('Query produced some error'))
-        if 'results' in query:
-            for dataset in query['results']:
-                date_parts = dataset.get('metadata_modified', '').split('T')
-                if date_parts:
-                    result[dataset['indicator_type_code']] = {
-                        'datasetUpdateDate': dt.datetime.strptime(date_parts[0], '%Y-%m-%d').strftime('%b %d, %Y'),
-                        'datasetLink': h.url_for(controller='package', action='read', id=dataset['name'])
-                    }
-        return result
-
-    def _get_chart_data(self, country_id):
-        data_dict = {
-            'sorting': 'INDICATOR_TYPE_ASC',
-            'l': country_id,
-            # 'it': indicators_4_charts,
-            # 's': [el[1] for el in indicators_4_charts_list]
-            'ds': [el[0] + '___' + el[1] for el in indicators_4_charts_list]
-        }
-        try:
-            result = get_action('hdx_get_indicator_values')({}, data_dict)
-        except:
-            return {}
-        return result
-
-    def _get_top_line_num(self, country_id):
-        data_dict = {
-            'periodType': 'LATEST_YEAR_BY_COUNTRY',
-            'l': country_id,
-            # 'it': indicators_4_top_line,
-            # 's': [el[1] for el in indicators_4_top_line_list]
-            'ds': [el[0] + '___' + el[1] for el in indicators_4_top_line_list]
-        }
-        try:
-            result = get_action('hdx_get_indicator_values')({}, data_dict)
-        except:
-            return {}
-        return result
 
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,
