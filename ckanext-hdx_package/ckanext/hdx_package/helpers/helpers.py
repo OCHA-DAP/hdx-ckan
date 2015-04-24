@@ -241,6 +241,7 @@ def _tag_search(context, data_dict):
         if not vocab:
             raise NotFound
         q = q.filter(model.Tag.vocabulary_id == vocab.id)
+
 # CHANGES to initial version
 #     else:
 # If no vocabulary_name in data dict then show free tags only.
@@ -261,6 +262,7 @@ def _tag_search(context, data_dict):
             term, escape='\\')
         q = q.filter(model.Tag.name.ilike('%' + escaped_term + '%'))
 
+    q = q.filter(model.PackageTag.state == 'active')
     count = q.count()
     q = q.offset(offset)
     q = q.limit(limit)
