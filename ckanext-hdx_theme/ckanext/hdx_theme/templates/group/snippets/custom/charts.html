@@ -25,7 +25,7 @@
     <option value="line chart" {% if chart['chart_type'] == 'line chart' %}selected{% endif %}>Line Chart</option>
     <option value="multiple bar chart" {% if chart['chart_type'] == 'multiple bar chart' %}selected{% endif %}>Multiple Bar Chart</option>
     <option value="multiple line chart" {% if chart['chart_type'] == 'multiple line chart' %}selected{% endif %}>Multiple Line Chart</option>
-    <option value="indicator bar chart" {% if chart['chart_type'] == 'indicator bar chart' %}selected{% endif %}>Indicator Bar Chart</option>
+    <option value="indicator line chart" {% if chart['chart_type'] == 'indicator line chart' %}selected{% endif %}>Indicator Line Chart</option>
   </select>
 </div>
 <div class="org-control-info info-field">
@@ -36,13 +36,32 @@
 {% set cps_section_display = 'display: none' if chart['chart_type'] != 'indicator bar chart' else ''  %}
 {% set ckan_section_display = 'display: none' if chart['chart_type'] == 'indicator bar chart' else ''  %}
 
+{% set dataseries_list = [
+    {'code': 'PVH140___mdgs','name':_('Children under five mortality rate per 1,000 live births')},
+    {'code': 'PVN010___fao-foodsec','name':_('Prevalence of undernourishment')},
+    {'code': 'PVW010___mdgs','name':_('Proportion of the population using improved drinking water sources')},
+    {'code': 'PVF020___faostat3','name':_('Per capita food supply')},
+    {'code': 'PSE160___data.undp.org','name':_('MPI: Population living below $1.25 PPP per day')},
+    {'code': 'PCX051___mdgs','name':_('Mobile cellular subscriptions per 100 inhabitants')},
+    {'code': 'PVE130___mdgs','name':_('Total net enrolment ratio in primary education')},
+    {'code': 'PCX060___mdgs','name':_('Internet users per 100 inhabitants')},
+    {'code': 'RW002___RW','name':_('Number of Disasters')},
+    {'code': 'PVE110___data.undp.org','name':_('Mean years of schooling (of adults)')},
+    {'code': 'PVN050___mdgs','name':_('Children under 5 moderately or severely underweight')},
+    {'code': 'PVN070___mdgs','name':_('Population undernourished (percentage)')},
+    {'code': 'PVW040___mdgs','name':_('Proportion of the population using improved sanitation facilities')}
+]%}
+
 <div class="cps-sourced-charts" style="{{ cps_section_display }}">
   <div class="org-control-container">
       <div class="control-group control-full org-control field-with-info">
-          <label class="control-label" for="chart_dataseries_code">Indicator</label>
-          <div class="controls ">
-              <input type="text" name="chart_dataseries_code" value="{{chart['chart_dataseries_code']}}" placeholder="" class="chart_config">
-          </div>
+          <label class="control-label" for="chart-dataseries-code">Indicator</label>
+          <select id="chart-dataseries-code" name="chart_dataseries_code" style="margin-left: 10px; width: 270px;" class="chart_config">
+              {% for item in dataseries_list %}
+                  {% set dataseries_selected = 'selected="selected"' if item.code == chart.chart_dataseries_code else '' %}
+                  <option value="{{ item.code }}" {{ dataseries_selected }}>{{ item.name }}</option>
+              {% endfor %}
+          </select>
       </div>
       <div class="org-control-info info-field">
           <div class="org-info-label">Which indicator do you wish to represent on the chart?</div>

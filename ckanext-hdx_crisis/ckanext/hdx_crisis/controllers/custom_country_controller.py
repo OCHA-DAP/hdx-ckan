@@ -90,7 +90,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 source = {
                     'source_type': 'ckan',
                     'datastore_id': resource_id,
-                    'title': self._get_resource_name(resource_id),
+                    # 'title': self._get_resource_name(resource_id),
                     # 'org_name': 'OCHA',
                     # 'url': None,
                     'data_link_url': resource.get('chart_data_link_url', ''),
@@ -123,8 +123,6 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                     'sources': [
                         {
                             'source_type': 'cps',
-                            'title': ind_dict.get('title', ''),
-                            'data_link_url': ckan_data.get(ind_code, {}).get('datasetLink', ''),
                             'source': ind_dict.get('sourceName', ''),
                             'label_x': ind_dict.get('unit', ''),
                             'column_x': 'date',
@@ -146,6 +144,9 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                     ]
 
                 }
+                data_link_url = ckan_data.get(ind_code, {}).get('datasetLink', '')
+                if data_link_url:
+                    chart['sources'][0]['data_link_url'] = data_link_url
                 return chart
             except Exception, e:
                 log.warning("Exception while iterating dataseries data: " + str(e))

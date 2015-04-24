@@ -130,7 +130,10 @@ function autoGraph() {
         var timeformat = '%Y-%m-%dT%H:%M:%S';
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
-            sourceList += "<div><i style='background: " + colorList[sIdx] + "'></i> " + source.source + " - <a href='" + source.data_link_url + "'>Data</a></div>";
+            sourceList += "<div><i style='background: " + colorList[sIdx] + "'></i> " + source.source;
+            if (source.data_link_url) {
+                sourceList += " - <a href='" + source.data_link_url + "'>Data</a></div>";
+            }
             if ( source['source_type']=='ckan' ) {
                 source["data"] = null;
                 results.push(source);
