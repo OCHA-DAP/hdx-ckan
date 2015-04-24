@@ -10,7 +10,6 @@
 {% block owner_update %}
 {% set updated_time = package.metadata_modified or package.metadata_created%}
 {% set f_updated_time = h.render_datetime(updated_time) %}
-
   {{ package.dataset_source }} - {{f_updated_time}}
 {% endblock %}
 

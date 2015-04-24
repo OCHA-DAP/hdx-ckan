@@ -9,6 +9,7 @@ from ckan.common import _, c, g, request
 import ckan.logic as logic
 from pylons import config
 import ckan.model as model
+import ckan.plugins as p
 
 render = base.render
 
@@ -64,8 +65,22 @@ class LoginController(ckan_user.UserController):
         if c.user:
             context = None
             data_dict = {'id': c.user}
-
             user_dict = get_action('user_show')(context, data_dict)
+
+            #IAuthenticator too buggy, doing this instead
+            try:
+                token = get_action('token_show')(context, user_dict)
+            except NotFound, e:
+                token = {'valid':True} #Until we figure out what to do with existing users
+            except:
+                abort(500, _('Something wrong'))
+            if not token['valid']:
+                #force logout
+                for item in p.PluginImplementations(p.IAuthenticator):
+                    item.logout()
+                #redirect to validation page
+                h.flash_error(_('You have not yet validated your email.'))
+                h.redirect_to(self._get_repoze_handler('logout_handler_path'))
 
             if 'created' in user_dict:
                 time_passed = datetime.datetime.now(
