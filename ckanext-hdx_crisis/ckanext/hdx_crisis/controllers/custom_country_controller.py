@@ -124,7 +124,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                         {
                             'source_type': 'cps',
                             'source': ind_dict.get('sourceName', ''),
-                            'label_x': ind_dict.get('unit', ''),
+                            'label_x': ind_dict.get('title', ''),
                             'column_x': 'date',
                             'column_y': 'value',
                             'data': {
@@ -175,15 +175,15 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         return charts
 
-    def _get_resource_name(self, resource_id):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
-        try:
-            resource_dict = get_action('resource_show')(context, {'id': resource_id})
-
-            return resource_dict['name']
-        except logic.NotFound, e:
-            return ''
+    # def _get_resource_name(self, resource_id):
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author}
+    #     try:
+    #         resource_dict = get_action('resource_show')(context, {'id': resource_id})
+    #
+    #         return resource_dict['name']
+    #     except logic.NotFound, e:
+    #         return ''
 
     def _get_maps_config(self, custom_dict):
         return custom_dict.get('map', {})

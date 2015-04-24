@@ -33,8 +33,8 @@
       </div>
 </div>
 
-{% set cps_section_display = 'display: none' if chart['chart_type'] != 'indicator bar chart' else ''  %}
-{% set ckan_section_display = 'display: none' if chart['chart_type'] == 'indicator bar chart' else ''  %}
+{% set cps_section_display = 'display: none' if chart['chart_type'] != 'indicator line chart' else ''  %}
+{% set ckan_section_display = 'display: none' if chart['chart_type'] == 'indicator line chart' else ''  %}
 
 {% set dataseries_list = [
     {'code': 'PVH140___mdgs','name':_('Children under five mortality rate per 1,000 live births')},
