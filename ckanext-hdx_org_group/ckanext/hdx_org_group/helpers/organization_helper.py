@@ -5,27 +5,25 @@ Created on Jan 14, 2015
 '''
 
 import logging
-import pylons.config as config
 import json
 import os
+
+import pylons.config as config
 
 import ckan.logic as logic
 import ckan.plugins as plugins
 import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
-import ckan.lib.dictization as d
 import ckan.lib.navl.dictization_functions
 import ckan.model as model
-import ckan.logic.action.update as update
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.uploader as uploader
 import paste.deploy.converters as converters
-
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as h
+from ckan.common import _
 
-from ckan.common import _, request
 
 log = logging.getLogger(__name__)
 
@@ -78,35 +76,6 @@ def hdx_get_group_activity_list(context, data_dict):
         'offset': offset,
     }
     return hdx_package_helpers._activity_list(context, activity_stream, extra_vars)
-
-@logic.side_effect_free
-def hdx_light_group_show(context, data_dict):
-    id = _get_or_bust(data_dict, "id")
-    group_dict = {}
-    group = model.Group.get(id)
-    if not group:
-        raise NotFound
-    #group_dict['group'] = group
-    group_dict['id'] = group.id
-    group_dict['name'] = group.name
-    group_dict['image_url'] = group.image_url
-    group_dict['display_name'] = group_dict['title'] = group.title
-    group_dict['description'] = group.description
-    group_dict['revision_id'] = group.revision_id
-
-    result_list = []
-    for name, extra in group._extras.iteritems():
-        dictized = d.table_dictize(extra, context)
-        if not extra.state == 'active':
-            continue
-        value = dictized["value"]
-        result_list.append(dictized)
-
-        #Keeping the above for backwards compatibility
-        group_dict[name]= dictized["value"]
-
-    group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
-    return group_dict
 
 
 def compile_less(result, translate_func=None):

@@ -3,7 +3,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
-import ckanext.hdx_org_group.helpers
+import ckanext.hdx_org_group.actions.get as get_actions
 
 
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
@@ -32,7 +32,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_actions
         return {
             'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
-            'hdx_light_group_show': hdx_org_actions.hdx_light_group_show,
+            'hdx_light_group_show': get_actions.hdx_light_group_show,
             'organization_update': hdx_org_actions.hdx_organization_update
         }
 
