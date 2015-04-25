@@ -5,6 +5,7 @@ Created on Dec 2, 2014
 '''
 
 import logging
+import math
 import pylons.config as config
 
 import ckan.lib.base as base
@@ -148,7 +149,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         sections = []
         len_charts = len(charts_config_data)
         len_toplines = len(top_line_items)
-        max = len_charts if len_charts > len_toplines/4 else len_toplines/4
+        max = len_charts if len_charts > int(math.ceil(len_toplines/4.0)) else int(math.ceil(len_toplines/4.0))
 
         for i in range(0, max):
             section = {
