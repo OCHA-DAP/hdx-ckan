@@ -27,7 +27,8 @@
 {% block crisis_data %}
 <div class="row mTop25">
     {% for section in data.topline_chart_sections  %}
-        <div class="col-xs-5">
+        {% set toplines_col_class = "col-xs-5" if section.chart else "col-xs-12" %}
+        <div class="{{ toplines_col_class }}">
             <div class="row">
                 {% for item in section.top_line_items %}
                 <div class="col-xs-12">
@@ -44,6 +45,7 @@
         <div class="col-xs-7">
             <div class="row">
                 {% set ci = section.chart %}
+                {% if ci %}
                 <div class="col-xs-12">
                     <div class="row auto-graph graph-item-wrapper">
                         <div class="col-xs-12 graph-title">
@@ -64,6 +66,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </div>
         </div>
 
