@@ -19,7 +19,7 @@ $(document).ready(function() {
         else {
             var attribution = '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>' +
                     ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
-            L.tileLayer("//{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png", {
+            L.tileLayer(confJson.basemap_url, {
                 attribution: attribution,
                 maxZoom: 7
             }).addTo(map);

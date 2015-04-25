@@ -200,6 +200,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         }
 
         template_data['data']['map']['is_polygon'] = 'true' if group_info['name']!='nepal-earthquake' else 'false'
+        template_data['data']['map']['basemap_url'] = '' if group_info['name']!='nepal-earthquake' else config.get('hdx.crisismap.url')
 
         template_data['data']['show_map'] = self._show_map(template_data['data']['map'], errors)
 
