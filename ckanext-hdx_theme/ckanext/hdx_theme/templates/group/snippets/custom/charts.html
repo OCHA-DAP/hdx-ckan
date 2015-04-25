@@ -64,7 +64,7 @@
 {% for key in range(resources|length) %}
   {% set label_i = key+1 if key >0 else '' %}
   {% if key > 0 %}
-    <div id="chart_{{chart_id}}_second_line" {% if chart['chart_type'] == 'bar chart' or chart['chart_type'] == 'line chart' %}style="display:none;"{% endif %}>
+    <div id="chart_{{chart_id}}_second_line" {% if chart['chart_type'] == 'bar chart' or chart['chart_type'] == 'line chart' or not chart['chart_type'] %}style="display:none;"{% endif %}>
   {% endif %}
 <div class="org-control-container">
 <div class="control-group control-full org-control field-with-info">
