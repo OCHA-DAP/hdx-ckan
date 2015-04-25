@@ -29,11 +29,14 @@ log = logging.getLogger(__name__)
 
 
 def is_custom(environ, result):
-    group_info, custom_dict = get_group(result['id'])
-    result['group_info'] = group_info
-    result['group_customization'] = custom_dict
-    if group_info.get('custom_loc', False):
-        return True
+    try:
+        group_info, custom_dict = get_group(result['id'])
+        result['group_info'] = group_info
+        result['group_customization'] = custom_dict
+        if group_info.get('custom_loc', False):
+            return True
+    except Exception, e:
+        log.warning("Exception while checking if page is custom")
     return False
 
 
