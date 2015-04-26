@@ -341,7 +341,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     function getStyle(values, threshold){
         function internalGetColor(color, i){
-            var weight = confJson.is_polygon=='true' ? 1 : 4;
+            var weight = 1;
             return {color: color[i], fillColor: color[i], fillOpacity: 0.6, opacity: 0.7, weight: weight};
         }
         return function (feature){
