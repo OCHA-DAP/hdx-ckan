@@ -111,7 +111,13 @@
                 {% block header_site_navigation_tabs %}
                   <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
                   <li><a href="/browse">{{ _('Browse') }}</a></li>
-                  <li><a href="/ebola">{{ _('Crises') }}</a></li>
+                  <li style="position: relative">
+                      <a id="crises-label" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">{{ _('Crises') }}</a>
+                      <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+                          <li><a href="{{ h.url_for('show_custom_country', id='nepal-earthquake') }}">{{ _('Nepal Earthquake') }}</a></li>
+                          <li><a href="/ebola">{{ _('Ebola') }}</a></li>
+                      </ul>
+                  </li>
                 {% endblock %}
               </ul>
             </span>

@@ -232,7 +232,6 @@
 .mainLinks {
   padding-left: 25px;
   margin: 0;
-  display: inline;
   >li {
     display: inline;
 
@@ -260,6 +259,21 @@
     >a:focus {
       text-decoration: none;
       cursor: pointer;
+    }
+    .dropdown-menu a:hover{
+      background-color: #FFFFFF;
+      color: #333333;
+      text-decoration: underline;
+    }
+    .crises-menu{
+      left: inherit;
+      right: 0px;
+    }
+
+    #crises-label:after {
+      content: '\25bc';
+      margin-left: 3px;
+      font-size: 13px;
     }
   }
 
