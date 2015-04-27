@@ -947,7 +947,7 @@ ul.hdx-bs3 {
   z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  border: 1px solid #0088ff;
+  max-height: 75px;
   background-color: #ffffff;
 }
 #floatingLogo .table-valign {

@@ -762,7 +762,7 @@ function transitionBarChart(data){
 }
 
 function backToMap(){
-        $('#header').html('<h3>WFP collected Food prices</h3><p>Click a country to explore prices for different products</p>');
+        $('#header').html('<p>Click a country to explore prices for different products</p>');
         $('#map').show();
         map.invalidateSize();
         $('#charts').hide(); 
