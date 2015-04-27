@@ -25,17 +25,14 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def setup_class(cls):
-        umodel.setup()
         super(TestEmailAccess, cls).setup_class()
+        umodel.setup()
 
         cls._get_action('user_create')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
             {'name': 'johnfoo', 'fullname': 'John Foo',
              'email': 'example@example.com', 'password': 'abcd'})
 
-    @classmethod
-    def teardown_Class(cls):
-        umodel.delete_tables()
 
     @classmethod
     def _get_action(cls, action_name):
