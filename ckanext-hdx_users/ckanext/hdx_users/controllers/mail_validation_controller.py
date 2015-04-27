@@ -289,7 +289,6 @@ class ValidationController(ckan.controllers.user.UserController):
            'Please click the following link to validate your email\n' \
            '{link}\n' \
            ''.format(link=link.format(h.full_current_url(), validate_link))
-        print body
         try:
             mailer.mail_recipient("HDX Registration", user['email'], "HDX: Validate Your Email", body)
             return True
