@@ -1,15 +1,25 @@
 function initMap(){
-    var base_osm_url = $('#wfp-viz-base-url').text().trim();
-    var base_osm = L.tileLayer(
-            base_osm_url,{
-            attribution: '&copy; OpenStreetMap contributors'}
-    );
+    //var base_osm_url = $('#wfp-viz-base-url').text().trim();
+    //var base_osm = L.tileLayer(
+    //        base_osm_url,{
+    //        attribution: '&copy; OpenStreetMap contributors'}
+    //);
           
     map = L.map('map', {
         center: [0,0],
         zoom: 2,
-        layers: [base_osm]
+        //layers: [base_osm]
     });
+
+    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+        maxZoom: 7
+    }).addTo(map);
+
+    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+        maxZoom: 7
+    }).addTo(map);
+
     
     map.scrollWheelZoom.disable();
     

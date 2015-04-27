@@ -223,6 +223,8 @@
                 <input type="hidden" id="visualization-data" value="{{ h.json_dumps(data.visualization.config) }}">
             </div>
         <div style="display: none" id="wfp-viz-base-url">{{ data.visualization.basemap_url }}</div>
+        <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+        <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
         <div style="display: none" id="wfp-viz-embed-url">{{ data.visualization.embed_url }}</div>
         {% if data.visualization.config.type == '3W-dashboard' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
