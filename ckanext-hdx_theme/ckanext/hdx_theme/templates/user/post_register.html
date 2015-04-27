@@ -20,7 +20,7 @@
     <div class="module-content">
       <p>{% trans %}If you haven't received an email to validate your account, we can resend it.{% endtrans %}</p>
       <p class="action">
-        <a class="btn" href="{{ h.url_for(controller='ckanext.hdx_users.controllers.registration_controller:RequestController', action='validation_resend', id=user )}}">{{ _('Resend Email') }}</a>
+        <a class="btn" href="{{ h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='validation_resend', id=user )}}">{{ _('Resend Email') }}</a>
       </p>
     </div>
   </section>
