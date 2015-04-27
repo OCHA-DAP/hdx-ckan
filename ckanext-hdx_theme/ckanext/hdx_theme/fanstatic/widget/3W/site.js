@@ -63,8 +63,8 @@ function generate3WComponent(config,data,geom){
     whereChart.width(whereWidth).height(360)
             .dimension(whereDimension)
             .group(whereGroup)
-            .center([config.y,config.x])
-            .zoom(config.zoom)
+            .center([0,0])
+            .zoom(0)
             .geojson(geom)
             .colors(['#CCCCCC', config.colors[4]])
             .colorDomain([0, 1])
@@ -77,12 +77,12 @@ function generate3WComponent(config,data,geom){
             })
             .featureKeyAccessor(function(feature){
                 return feature.properties[config.joinAttribute];
-            }).map();
+            });
 
     dc.renderAll();
 
     var map = whereChart.map();
-    console.log(map);
+    zoomToGeom(geom);
 
     var g = d3.selectAll(whoContainerId).select('svg').append('g');
     
@@ -102,6 +102,11 @@ function generate3WComponent(config,data,geom){
         .attr('y', 400)
         .text('Activities');  
 
+
+    function zoomToGeom(geom){
+        var bounds = d3.geo.bounds(geom);
+        map.fitBounds([[bounds[0][1],bounds[0][0]],[bounds[1][1],bounds[1][0]]]);
+    }
 }
 
 $(document).ready(
@@ -139,27 +144,6 @@ $(document).ready(
             });
             generate3WComponent(config,dataArgs[0],geom);
         });
-
-        /*
-         * Example of datastore query used previously.
-         *
-        var sql = 'SELECT "Indicator", "Date", "Country", value FROM "f48a3cf9-110e-4892-bedf-d4c1d725a7d1" ' +
-                'WHERE "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola deaths\' '+
-                'OR "Indicator"=\'Cumulative number of confirmed, probable and suspected Ebola cases\' '+
-                'ORDER BY "Date"';
-
-        var data = encodeURIComponent(JSON.stringify({sql: sql}));
-
-        $.ajax({
-          type: 'POST',
-          dataType: 'json',
-          url: 'https://data.hdx.rwlabs.org/api/3/action/datastore_search_sql',
-          data: data,
-          success: function(data) {
-
-          }
-        });
-        */
     }
 );
 
