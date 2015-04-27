@@ -35,7 +35,15 @@ function addCountriesToMap(results){
         opacity:0.8,
         weight:1
     };
-    
+
+    var world_style_hover = {
+        color: '#fff',
+        fillColor: '#2a93fc',
+        fillOpacity:1,
+        opacity:1,
+        weight:1
+    };
+
     var world = topojson.feature(un_world, un_world.objects.un_world);
 
     for(i = world.features.length-1; i >= 0; i--){
@@ -49,6 +57,12 @@ function addCountriesToMap(results){
         onEachFeature: function(feature, layer){
             layer.on('click', function (e) {
                 initCountry(feature.properties.ADM0_CODE,feature.properties.ADM0_NAME,embedded);
+            });
+            layer.on("mouseover", function (e) {
+                layer.setStyle(world_style_hover);
+            });
+            layer.on("mouseout", function (e) {
+                layer.setStyle(world_style);
             });
         }  
     }).addTo(map);    
