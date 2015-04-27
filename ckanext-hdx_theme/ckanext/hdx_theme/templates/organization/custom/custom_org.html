@@ -36,6 +36,7 @@
                    data-original-title="Share">
                     {{ _("Share") }}
                 </a>
+                <a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a>
                 {{ h.hdx_follow_button('group', data.org_info.id, follow_extra_text=' ' ) }}
 
                 {% if data.permissions.request_membership %}
