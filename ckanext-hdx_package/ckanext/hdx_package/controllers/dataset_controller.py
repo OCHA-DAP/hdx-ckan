@@ -514,7 +514,7 @@ class DatasetController(PackageController):
                    'api_version': 3, 'for_edit': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
         try:
-            check_access('resource_update', context, data)
+            check_access('resource_update', context, {'id': resource_id})
         except NotAuthorized:
             abort(401, _('Unauthorized to edit this resource'))
         pkg_dict = get_action('package_show')(context, {'id': id})

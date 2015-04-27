@@ -65,3 +65,15 @@
 #wfp-visualization-wrapper #hdxembed {
   padding-top: 15px;
 }
+#wfp-visualization-wrapper .wfplabel {
+  font-size: 11px;
+}
+#wfp-visualization-wrapper .setbrush {
+  text-decoration: underline;
+  font-size: 10px;
+  color: #2a93fc;
+  margin-left: 5px;
+}
+#wfp-visualization-wrapper .setbrush:hover {
+  cursor: pointer;
+}
