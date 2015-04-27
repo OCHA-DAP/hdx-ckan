@@ -1,6 +1,8 @@
 {% extends "widget/widget.html" %}
 
 {% block content %}
+    <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+    <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
     <div id="wfp-visualization-wrapper" class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
