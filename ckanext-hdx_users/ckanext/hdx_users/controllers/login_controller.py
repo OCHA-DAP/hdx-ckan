@@ -100,4 +100,3 @@ class LoginController(ckan_user.UserController):
         self.login(error)
         vars = {'contribute': True}
         return base.render('user/login.html', extra_vars=vars)
-
