@@ -38,9 +38,8 @@ function generate3WComponent(config,data,geom){
                 return group.top(15);
             })
             .labelOffsetY(13)
-            .colors(config.colors)
-            .colorDomain([0,7])
-            .colorAccessor(function(d, i){return i%8;})
+            .colors([config.colors[4]])
+            .colorAccessor(function(d, i){return 0;})
             .xAxis().ticks(5);
 
     whatChart.width(whatWidth).height(400)
@@ -51,9 +50,8 @@ function generate3WComponent(config,data,geom){
                 return group.top(15);
             })
             .labelOffsetY(13)
-            .colors(config.colors)
-            .colorDomain([0,7])
-            .colorAccessor(function(d, i){return i%8;})
+            .colors([config.colors[4]])
+            .colorAccessor(function(d, i){return 0;})
             .xAxis().ticks(5);
 
     dc.dataCount('#count-info')
