@@ -18,16 +18,17 @@
               {% block owner_update %}
               {% set updated_time = package.metadata_modified or package.metadata_created%}
               {% set f_updated_time = h.render_datetime(updated_time) %}
-              {% set last_user = h.get_last_modifier_user(p_id=package.id) %}
+
               {% if package.organization %}
                 <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
                   {{ package.organization.title or package.organization.name }}
                 </a>
               {% else %}
+                {% set last_user = h.get_last_modifier_user(p_id=package.id) %}
                 <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
                   {{ last_user.fullname }}
                 </a>
-              {% endif %}{% endblock %} - {{f_updated_time}}
+              {% endif %}  - {{f_updated_time}} {% endblock %}
             {% endblock %}
           </div>
           <div class="dataset-actions">
@@ -101,6 +102,8 @@
                 {% endif %}
                 {% if visualization %}
                   <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                {% endif %}
+                {% if package.indicator or package.quality %}
                   <span class="icon-quality_checked" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                 {% endif %}
                 {% if has_related_items %}

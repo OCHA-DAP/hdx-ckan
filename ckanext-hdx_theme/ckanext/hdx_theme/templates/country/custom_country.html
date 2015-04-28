@@ -25,57 +25,91 @@
 {% endblock %}
 
 {% block crisis_data %}
-<div class="row mTop25">
-    {% for section in data.topline_chart_sections  %}
-        <div class="col-xs-5">
+{% if data.is_crisis %}
+    <div id="floatingLogoAnchor" class="row paddingRowHack whiteBackground">
+    {% if data.topline_chart_sections %}
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Key Figures") }}
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
-                {% for item in section.top_line_items %}
-                <div class="col-xs-12">
-                    {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
-                    notes=item.notes, source=item.source,
-                    source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
-
-
-                </div>
+                {% for section in data.topline_chart_sections  %}
+                    {% for top_line_item in section.top_line_items %}
+                        <div class="col-xs-3">
+                            {{ h.snippet('crisis/snippets/topline.html', title=top_line_item.title, value=top_line_item.formatted_value,
+                            unit=top_line_item.units,
+                            notes=top_line_item.notes, source=None,
+                            source_link=top_line_item.source_link, explore=top_line_item.explore, latest_date=top_line_item.latest_date) }}
+                        </div>
+                    {% endfor %}
                 {% endfor %}
             </div>
         </div>
+    {% endif %}
+    </div>
 
-        <div class="col-xs-7">
-            <div class="row">
-                {% set ci = section.chart %}
-                <div class="col-xs-12">
-                    <div class="row auto-graph graph-item-wrapper">
-                        <div class="col-xs-12 graph-title">
-                            {% set data_link_url = ci.data_link_url or "#" %}
-                            <div style="float: left;">{{ ci.title }}</div>
-                            <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
-                            <span style="float: left;">
-                                <a>
-                                    {{ _("Info") }}
-                                    <div class="map-info legend source-list" style="display: none;"></div>
-                                </a>
-                            </span>
-                        </div>
-                        <div class="col-xs-12">
-                            <div class="graph-data" style="display: none;">
-                                {{ h.json_dumps(ci) }}
+{% else %}
+
+    <div class="row mTop25">
+        {% for section in data.topline_chart_sections  %}
+            {% set toplines_col_class = "col-xs-5" if section.chart else "col-xs-12" %}
+            <div class="{{ toplines_col_class }}">
+                <div class="row">
+                    {% for item in section.top_line_items %}
+                    <div class="col-xs-12">
+                        {{ h.snippet('crisis/snippets/topline-colombia.html', title=item.title, value=item.formatted_value, unit=item.units,
+                        notes=item.notes, source=item.source,
+                        source_link=item.source_link, explore=item.explore, latest_date=item.latest_date) }}
+
+
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-xs-7">
+                <div class="row">
+                    {% set ci = section.chart %}
+                    {% if ci %}
+                    <div class="col-xs-12">
+                        <div class="row auto-graph graph-item-wrapper">
+                            <div class="col-xs-12 graph-title">
+                                {% set data_link_url = ci.data_link_url or "#" %}
+                                <div style="float: left;">{{ ci.title }}</div>
+                                <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
+                                <div class="graph-info-label" style="float: left;">
+                                    <a>
+                                        {{ _("Info") }}
+                                        <div class="map-info legend source-list" style="display: none;"></div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="graph-data" style="display: none;">
+                                    {{ h.json_dumps(ci) }}
+                                </div>
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
             </div>
-        </div>
 
-    {% endfor %}
+        {% endfor %}
 
-
-
-
-</div>
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block scripts2 %}
-{{ super() }}
-{% resource 'hdx_theme/country-custom' %}
+    {{ super() }}
+    {% if data.is_crisis %}
+        {% resource 'hdx_theme/nepal-quake-country-custom' %}
+    {% else %}
+        {% resource 'hdx_theme/country-custom' %}
+    {% endif %}
 {% endblock %}

@@ -1,15 +1,25 @@
 function initMap(){
-    var base_osm_url = $('#wfp-viz-base-url').text().trim();
-    var base_osm = L.tileLayer(
-            base_osm_url,{
-            attribution: '&copy; OpenStreetMap contributors'}
-    );
+    //var base_osm_url = $('#wfp-viz-base-url').text().trim();
+    //var base_osm = L.tileLayer(
+    //        base_osm_url,{
+    //        attribution: '&copy; OpenStreetMap contributors'}
+    //);
           
     map = L.map('map', {
-        center: [9, 22],
-        zoom: 3,
-        layers: [base_osm]
+        center: [0,0],
+        zoom: 2,
+        //layers: [base_osm]
     });
+
+    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+        maxZoom: 7
+    }).addTo(map);
+
+    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+        maxZoom: 7
+    }).addTo(map);
+
     
     map.scrollWheelZoom.disable();
     
@@ -17,7 +27,10 @@ function initMap(){
 }
 
 function addCountriesToMap(results){
-    
+    var popup = new L.Popup({
+        autoPan: false,
+        offset: [0, 0]
+      });
     var world_style = {
         color: '#fff',
         fillColor: '#2a93fc',
@@ -25,7 +38,15 @@ function addCountriesToMap(results){
         opacity:0.8,
         weight:1
     };
-    
+
+    var world_style_hover = {
+        color: '#fff',
+        fillColor: '#2a93fc',
+        fillOpacity:1,
+        opacity:1,
+        weight:1
+    };
+
     var world = topojson.feature(un_world, un_world.objects.un_world);
 
     for(i = world.features.length-1; i >= 0; i--){
@@ -39,6 +60,18 @@ function addCountriesToMap(results){
         onEachFeature: function(feature, layer){
             layer.on('click', function (e) {
                 initCountry(feature.properties.ADM0_CODE,feature.properties.ADM0_NAME,embedded);
+            });
+            layer.on("mouseover", function (e) {
+                layer.setStyle(world_style_hover);
+                popup.setLatLng(e.latlng);
+                popup.setContent("<div class='marker-container'> <div class='marker-box'>"+feature.properties.ADM0_NAME+"</div></div>");
+                if (!popup._map) {
+                  popup.openOn(map);
+                }
+            });
+            layer.on("mouseout", function (e) {
+                layer.setStyle(world_style);
+                popup._close();
             });
         }  
     }).addTo(map);    
@@ -201,8 +234,9 @@ function generateChartView(cf,adm0,prod,unit,adm0_code){
     cf.byAdm1.filterAll(); 
     cf.byMkt.filterAll();    
     
+    var title = 'Price of ' + prod + ' per ' + unit + ' in '+adm0;
+    var html = '<h4>'+title+'</h4><p>';
     
-    var html = '<h4>Price of ' + prod + ' per ' + unit + ' in '+adm0+'</h4><p>';
     if(embedded ==='true'){
         html += '<a id="maplink" href="">Map</a> > ';
     }
@@ -219,7 +253,7 @@ function generateChartView(cf,adm0,prod,unit,adm0_code){
        backToMap();
     });
     generateBarChart(getAVG(cf.groupByAdm1Sum.all(),cf.groupByAdm1Count.all()),cf,prod,unit,adm0,adm0_code);
-    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
+    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf,title);
     
 
 }
@@ -235,7 +269,10 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code){
     }
     
     curLevel = 'adm1';
-    var html = '<h4>Price of ' + prod + ' per ' + unit + ' in '+adm1+'</h4><p>';
+    
+    var title = 'Price of ' + prod + ' per ' + unit + ' in '+adm1;    
+    var html = '<h4>'+title+'</h4><p>';
+    
     if(embedded ==='true'){
         html += '<a id="maplink" href="">Map</a> > ';
     }
@@ -260,7 +297,7 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code){
     cf.byMkt.filterAll();
     cf.byAdm1.filter(adm1);    
     generateBarChart(getAVG(cf.groupByMktSum.all(),cf.groupByMktCount.all()),cf,prod,unit,adm0,adm0_code,adm1);
-    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
+    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf,title);
     
 
 }
@@ -277,10 +314,14 @@ function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1){
     
     curLevel = 'mkt';
     
-    var html = '<h4>Price of ' + prod + ' per ' + unit + ' in '+mkt+'</h4><p>';
+    var title = 'Price of ' + prod + ' per ' + unit + ' in '+mkt;
+    
+    var html = '<h4>'+title+'</h4><p>';
+    
     if(embedded ==='true'){
         html += '<a id="maplink" href="">Map</a> > ';
     }
+    
     html +='<a id="adm0link" href="">'+adm0+'</a> > <a id="prodlink" href="">' + prod + '</a> > <a id="adm1link" href="">' + adm1 + '</a> > ' + mkt + '</p>';
     $(targetHeader).html(html);
     $(targetDiv).html('<div class="row"><div id="nav_chart" class="col-xs-12"></div></div><div class="row"><div id="main_chart" class="col-xs-12"></div></div><div class="row"><div id="drilldown_chart" class="col-xs-12"></div></div>');
@@ -306,7 +347,7 @@ function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1){
     cf.byDate.filterAll();
     cf.byMkt.filter(mkt);    
     
-    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf);
+    generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf,title);
 }
 
 function getAVG(sum,count){
@@ -322,9 +363,19 @@ function getAVG(sum,count){
     return data;    
 }
 
-function generateTimeCharts(data,cf){
+function generateTimeCharts(data,cf,title){
     
-    $('#nav_chart').html('<p>Select a portion of the chart below to zoom in the data.</p>');
+    $('#nav_chart').html('<p>Select a portion of the chart below to zoom in the data.</p><p><span id="brush6" class="setbrush">Last 6 months</span><span id="brush12" class="setbrush">1 year</span><span id="brush60" class="setbrush">5 years</span></p>');
+
+    $('#brush6').click(function(){
+        setBrushExtent(data,6);
+    });
+    $('#brush12').click(function(){
+        setBrushExtent(data,12);
+    });
+    $('#brush60').click(function(){
+        setBrushExtent(data,60);
+    });
 
     var margin = {top: 10, right: 20, bottom: 20, left: 60},
         width = $('#nav_chart').width() - margin.left - margin.right,
@@ -345,7 +396,7 @@ function generateTimeCharts(data,cf){
         ];        
 
     var brush = d3.svg.brush()
-        .x(x2)
+        .x(x2)        
         .on("brush", brushed)
         .on("brushend", function(){
                            
@@ -409,7 +460,7 @@ function generateTimeCharts(data,cf){
             .attr("cy",10)
             .attr("r", 4)
             .attr("fill","#ffffff")
-            .attr("stroke","#5fbbff");
+            .attr("stroke","#6fbfff");
 
         price.append("text")
             .attr("x", 9)
@@ -432,7 +483,11 @@ function generateTimeCharts(data,cf){
                 d = x0 - d0.key > d1.key - x0 ? d1 : d0;
             price.attr("transform", "translate(" + (x(d.key)+margin.left) + "," + (y(d.value)+margin.top) + ")");
             var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
-            price.select("text").text(value);
+            var m_names = new Array('Jan', 'Feb', 'Mar', 
+                'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 
+                'Oct', 'Nov', 'Dec'); 
+            var date = m_names[d.key.getMonth()] + '-' + d.key.getFullYear();
+            price.select("text").text(date+": "+value);
         });
 
     var linedata = [];
@@ -451,7 +506,7 @@ function generateTimeCharts(data,cf){
         .enter().append("path")
         .attr("class", "priceline")
         .attr("d", line)
-        .attr("stroke","#5fbbff")
+        .attr("stroke","#6fbfff")
         .attr("clip-path", "url(#clip)")
         .on("mouseover", function() { price.style("display", null); })
         .on("mouseout", function() { price.style("display", "none"); })
@@ -463,7 +518,11 @@ function generateTimeCharts(data,cf){
                 d = x0 - d0.key > d1.key - x0 ? d1 : d0;
             price.attr("transform", "translate(" + (x(d.key)+margin.left) + "," + (y(d.value)+margin.top) + ")");
             var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
-            price.select("text").text(value);
+            var m_names = new Array('Jan', 'Feb', 'Mar', 
+                'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 
+                'Oct', 'Nov', 'Dec'); 
+            var date = m_names[d.key.getMonth()] + '-' + d.key.getFullYear();
+            price.select("text").text(date+": "+value);
         });
 
     focus.append("g")
@@ -487,15 +546,22 @@ function generateTimeCharts(data,cf){
 
     context.append("g")
         .attr("class", "x brush")
+        //.call(brush.extent(x2.domain()))
         .call(brush)
         .selectAll("rect")
-          .attr("y", -6)
-          .attr("height", height2 + 7);
+            .attr("y", -6)
+            .attr("height", height2+6)
+            .style({
+                "stroke-width":2,
+                "stroke":"#6fbfff",
+                "fill-opacity": "0"
+            });  
+
   
     main_chart.append("text")
         .attr("class", "y wfplabel ylabel")
         .attr("text-anchor", "end")
-        .attr("y", 20)
+        .attr("y", 0)
         .attr("x",-30)
         .attr("dy", ".75em")
         .attr("transform", "rotate(-90)")
@@ -504,24 +570,34 @@ function generateTimeCharts(data,cf){
     $('#main_chart').append('<a id="mainchartdownload" href="">Download Data</a>');
     $('#mainchartdownload').click(function(event){
         event.preventDefault();
-        downloadData(data,'Date');
+        downloadData(data,'Date',title);
     });
     
     var dates = brush.empty() ? x2.domain() : brush.extent();
     var dateFormatted = monthNames[dates[0].getMonth()] +" " + dates[0].getFullYear() + " - " +  monthNames[dates[1].getMonth()] +" " + dates[1].getFullYear();
     
-    $("#dateextent").html("Average Price for period " + dateFormatted);     
+    $("#dateextent").html("Average Price for period " + dateFormatted);
   
     function brushed() {
       x.domain(brush.empty() ? x2.domain() : brush.extent());
       focus.select(".area").attr("d", area);
       focus.select(".x.axis").call(xAxis);
       focus.selectAll(".priceline").attr("d", line); 
-    }      
+    }
+    
+    function setBrushExtent(data,months){
+        var domain = d3.extent(data.map(function(d) { return d.key; }));  
+        var endDate = domain[1];
+        var tempDate = new Date(endDate.getFullYear(), endDate.getMonth()-months, endDate.getDate());
+        var begDate = tempDate < domain[0] ? domain[0] : tempDate;
+        d3.select(".brush").call(brush.extent([begDate,endDate]));
+        brushed();
+    }
 }
 
-function downloadData(data,name){
+function downloadData(data,name,title){
     var csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += title+'\n\n';
     csvContent += name+',Price\n';
     var m_names = new Array('January', 'February', 'March', 
     'April', 'May', 'June', 'July', 'August', 'September', 
@@ -709,7 +785,7 @@ function transitionBarChart(data){
 }
 
 function backToMap(){
-        $('#header').html('<h3>WFP collected Food prices</h3><p>Click a country to explore prices for different products</p>');
+        $('#header').html('<p>Click a country to explore prices for different products</p>');
         $('#map').show();
         map.invalidateSize();
         $('#charts').hide(); 
@@ -873,6 +949,7 @@ function parseGet(val) {
 }
 
 function initembed(){
+    $('#header').height(60);
     var size = parseGet('size');
     var prod = parseGet('prod');
     var unit = parseGet('unit');

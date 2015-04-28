@@ -1,0 +1,81 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ *
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.topline {
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  padding: 20px 0;
+  margin-top: -1px;
+  color: #333333;
+}
+.topline .indicator-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+  color: #333333;
+  line-height: 20px;
+  height: 40px;
+}
+.topline .indicator-value {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 56px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.topline .source-title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  color: #333333;
+}
+.topline .source-link {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+}
+.topline .source-date {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: #888888;
+}
+.topline .small {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  margin-bottom: 20px;
+  margin-left: -15px;
+}
+.topline .sparkline {
+  position: relative;
+  width: 103px;
+  height: 74px;
+}
+.topline .topline-value {
+  white-space: nowrap;
+}
+.topline .indicator-prevalue {
+  margin-left: -5px;
+}

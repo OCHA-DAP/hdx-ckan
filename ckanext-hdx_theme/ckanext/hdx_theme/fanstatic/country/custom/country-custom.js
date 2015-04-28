@@ -1,22 +1,34 @@
 $(document).ready(function() {
     var crisisMapDiv = $("#crisis-map");
     if (crisisMapDiv.length){
+        var confJsonText = $("#map-configuration").text();
+        var confJson = JSON.parse(confJsonText);
+
         var map = L.map('crisis-map', { attributionControl: false });
         map.scrollWheelZoom.disable();
-        L.tileLayer($('#mapbox-baselayer-url-div').text(), {
-            attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
-            maxZoom: 7
-        }).addTo(map);
+        if ( confJson.is_crisis=='false' ) {
+             L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+                attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+                maxZoom: 7
+            }).addTo(map);
 
-        L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
-            maxZoom: 7
-        }).addTo(map);
+            L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+                maxZoom: 7
+            }).addTo(map);
+        }
+        else {
+            var attribution = '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>' +
+                    ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
+            L.tileLayer(confJson.basemap_url, {
+                attribution: attribution,
+                maxZoom: 7
+            }).addTo(map);
+        }
 
         L.control.attribution({position: 'topright'}).addTo(map);
         //map.setView([5, -70], 5);
 
-        var confJsonText = $("#map-configuration").text();
-        var confJson = JSON.parse(confJsonText);
+
         loadMapData(map, confJson);
     }
     autoGraph();
@@ -91,9 +103,9 @@ function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList
         axis: {
             x: {
                 tick: {
-                    rotate: 20,
+                    rotate: 25,
                     culling: {
-                        max: 15
+                        max: 22
                     }
                 }
             }
@@ -130,7 +142,7 @@ function autoGraph() {
         var timeformat = '%Y-%m-%dT%H:%M:%S';
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
-            sourceList += "<div><i style='background: " + colorList[sIdx] + "'></i> " + source.source;
+            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source +" - <a target='new' href='"+ source.data_link_url +"'>Data</a></div>";
             if (source.data_link_url) {
                 sourceList += " - <a href='" + source.data_link_url + "'>Data</a></div>";
             }
@@ -162,7 +174,7 @@ function autoGraph() {
             var columnX, columnXType, columnXFormat, columnY, graphType;
 
             var dataCols = [];
-                dataColsInit = false;
+            var dataColsInit = false;
 
             for (var s in results){
                 var response = results[s];
@@ -339,7 +351,8 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     function getStyle(values, threshold){
         function internalGetColor(color, i){
-            return {color: color[i], fillColor: color[i], fillOpacity: 0.6, opacity: 0.7, weight: 1};
+            var weight = 1;
+            return {color: color[i], fillColor: color[i], fillOpacity: 0.6, opacity: 0.7, weight: weight};
         }
         return function (feature){
             var pcoderef = feature.properties[confJson.map_column_2];
@@ -364,7 +377,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                 if (items.length > 0) {
                     for (var i = 0; i < items.length; i++) {
                         var item = items[i].trim();
-                        var itemInt = parseInt(item);
+                        var itemInt = parseFloat(item);
                         if (itemInt && !isNaN(itemInt)){
                             threshold.push(itemInt);
                         }
@@ -449,9 +462,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     // method that we will use to update the control based on feature properties passed
     info.update = function (properties) {
         var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
+        var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
         this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
         '<table>' +
-        '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + properties[titleField] + '</b><td></tr>' +
+        '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + titleValue + '</b><td></tr>' +
         //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
         '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
         '</table>'

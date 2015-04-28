@@ -9,7 +9,7 @@ $(document).ready(function(){
 	});
 
 	$('#chart-select-1, #chart-select-2').click(function(){
-		chart_num = $(this).attr('chart-num');
+		var chart_num = $(this).attr('chart-num');
         if(this.value =='indicator line chart') {
             $('#chart' + chart_num + ' .cps-sourced-charts').show();
             $('#chart' + chart_num + ' .ckan-sourced-charts').hide();
@@ -65,13 +65,15 @@ $(document).ready(function(){
 			var chart2 = {}
 			chart2['resources'] = [{},{}]
 			$('#chart2 .chart_config').each(function(){
-				if($.inArray($(this).attr('name'), resource_keys1) > -1){
-						chart2['resources'][0][$(this).attr('name').slice(0,-2)] = this.value;
-					}else if($.inArray($(this).attr('name'), resource_keys2) > -1){
-						chart2['resources'][1][$(this).attr('name').slice(0,-2)] = this.value;
-					}else{
-						chart2[$(this).attr('name')] = this.value;
-					}
+                if ($(this).is(':visible')) {
+                    if ($.inArray($(this).attr('name'), resource_keys1) > -1) {
+                        chart2['resources'][0][$(this).attr('name').slice(0, -2)] = this.value;
+                    } else if ($.inArray($(this).attr('name'), resource_keys2) > -1) {
+                        chart2['resources'][1][$(this).attr('name').slice(0, -2)] = this.value;
+                    } else {
+                        chart2[$(this).attr('name')] = this.value;
+                    }
+                }
 			});
 
 			charts.push(chart2);
