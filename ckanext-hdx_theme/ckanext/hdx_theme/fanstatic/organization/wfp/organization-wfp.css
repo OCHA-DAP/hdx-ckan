@@ -581,7 +581,6 @@ body {
 .mainLinks {
   padding-left: 25px;
   margin: 0;
-  display: inline;
 }
 .mainLinks > li {
   display: inline;
@@ -609,6 +608,20 @@ body {
 .mainLinks > li > a:focus {
   text-decoration: none;
   cursor: pointer;
+}
+.mainLinks > li .dropdown-menu a:hover {
+  background-color: #FFFFFF;
+  color: #333333;
+  text-decoration: underline;
+}
+.mainLinks > li .crises-menu {
+  left: inherit;
+  right: 0px;
+}
+.mainLinks > li #crises-label:after {
+  content: '\25bc';
+  margin-left: 3px;
+  font-size: 13px;
 }
 .mainLinks > li:first-child > a {
   margin-left: 0;
@@ -947,7 +960,7 @@ ul.hdx-bs3 {
   z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  border: 1px solid #0088ff;
+  max-height: 75px;
   background-color: #ffffff;
 }
 #floatingLogo .table-valign {
