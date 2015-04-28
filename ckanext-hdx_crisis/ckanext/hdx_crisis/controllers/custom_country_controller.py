@@ -5,18 +5,15 @@ Created on Dec 2, 2014
 '''
 
 import logging
-import pylons.config as config
 
 import ckan.lib.base as base
-import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
 import ckan.controllers.group as group
-
-
 import ckanext.hdx_crisis.controllers.crisis_controller as controllers
 import ckanext.hdx_crisis.dao.country_data_access as country_data_access
+import ckanext.hdx_org_group.actions.get as hdx_org_get
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as helpers
@@ -32,30 +29,12 @@ log = logging.getLogger(__name__)
 IndicatorAccess = indicator_access.IndicatorAccess
 
 def is_custom(environ, result):
-    group_info, custom_dict = get_group(result['id'])
+    group_info, custom_dict = hdx_org_get.get_group(result['id'])
     result['group_info'] = group_info
     result['group_customization'] = custom_dict
     if group_info.get('custom_loc', False):
         return True
     return False
-
-
-def get_group(id):
-    context = {'model': model, 'session': model.Session,
-               'include_datasets': False,
-               'for_view': True}
-    data_dict = {'id': id}
-
-    group_info = get_action('hdx_light_group_show')(context, data_dict)
-
-    extras_dict = {item['key']: item['value'] for item in group_info.get('extras', {})}
-    json_string = extras_dict.get('customization', None)
-    if json_string:
-        custom_dict = json.loads(json_string)
-    else:
-        custom_dict = {}
-
-    return group_info, custom_dict
 
 
 class CustomCountryController(group.GroupController, controllers.CrisisController):
