@@ -26,7 +26,57 @@ dataseries_list = ctrlr.indicators_4_top_line_list
 
 @logic.side_effect_free
 def hdx_datasets_for_group(context, data_dict):
-    pass
+    '''
+    Returns a paginated list of datasets for a group with 25 items per page.
+    Options for sorting are: metadata_modified desc, title_case_insensitive desc, title_case_insensitive asc,
+    views_recent desc, score desc ( only useful if query string is specified, should be combined
+    with metadata_modified desc )
+    :param id: the id of the group for which datasets are requested
+    :type id: string
+    :param page: page number starting from 1
+    :type page: int
+    :param sort: the field by which the datasets should be sorted. Defaults to 'metadata_modified desc'
+    :type sort: string
+    :param q: query string
+    :type q: string
+    :param type: 'all', 'indicators', 'datasets'. Defaults to 'all'
+    :type q: string
+    :return:
+    '''
+
+    skipped_keys = ['q', 'id', 'sort', 'type', 'page']
+
+    id = _get_or_bust(data_dict, "id")
+
+    limit = 25
+
+    sort_option = data_dict.get('sort', 'metadata_modified desc')
+
+    page = int(data_dict.get('page', 1))
+    new_data_dict = {'sort': sort_option,
+                 'rows': limit,
+                 'start': (page-1) * limit,
+                 }
+    type = data_dict.get('type', None)
+    if type == 'indicators':
+        new_data_dict['ext_indicator'] = u'1'
+    elif type == 'datasets':
+        new_data_dict['ext_indicator'] = u'0'
+
+    search_param_list = [
+        key + ":" + value for key, value in data_dict.iteritems() if key not in skipped_keys]
+    search_param_list.append(u'groups:{}'.format(id))
+
+    if search_param_list != None:
+        new_data_dict['fq'] = " ".join(
+            search_param_list) + ' +dataset_type:dataset'
+
+    if data_dict.get('q', None):
+        new_data_dict['q'] = data_dict['q']
+
+    query = get_action("package_search")(context, new_data_dict)
+
+    return query
 
 
 @logic.side_effect_free

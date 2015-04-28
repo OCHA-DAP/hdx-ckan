@@ -34,6 +34,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'hdx_get_group_activity_list': hdx_org_actions.hdx_get_group_activity_list,
             'hdx_light_group_show': get_actions.hdx_light_group_show,
             'hdx_topline_num_for_group': get_actions.hdx_topline_num_for_group,
+            'hdx_datasets_for_group': get_actions.hdx_datasets_for_group,
             'organization_update': hdx_org_actions.hdx_organization_update
         }
 
