@@ -142,7 +142,7 @@ function autoGraph() {
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
             source["data"] = null;
-            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source +" - <a href='"+ source.data_link_url +"'>Data</a></div>";
+            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source +" - <a target='new' href='"+ source.data_link_url +"'>Data</a></div>";
             results.push(source);
             var sql = 'SELECT "'+ source.column_x + '", "'+ source.column_y +'" FROM "'+ source.datastore_id +'"';
             var urldata = encodeURIComponent(JSON.stringify({sql: sql}));

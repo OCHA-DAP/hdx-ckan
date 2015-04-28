@@ -960,7 +960,7 @@ ul.hdx-bs3 {
   z-index: 1040;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
-  border: 1px solid #0088ff;
+  max-height: 75px;
   background-color: #ffffff;
 }
 #floatingLogo .table-valign {
@@ -983,7 +983,7 @@ ul.hdx-bs3 {
 #floatingLogo .title-share {
   display: none;
   padding: 15px;
-  max-width: 285px;
+  max-width: 385px;
   min-width: 225px;
   line-height: 12px;
 }
