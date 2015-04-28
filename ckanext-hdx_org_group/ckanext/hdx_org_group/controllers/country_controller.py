@@ -180,12 +180,18 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         # updating the top line info with links and dates
         for el in sorted_top_line_data:
+            cps_time = el.get('time', '')
+            if cps_time:
+                el['datasetUpdateDate'] = \
+                    dt.datetime.strptime(cps_time, '%Y-%m-%d').strftime('%b %d, %Y')
+
             top_line_extra = indic_extra_dict.get(
                 el['indicatorTypeCode'], None)
             if top_line_extra:
                 el['datasetLink'] = top_line_extra.get('datasetLink')
-                el['datasetUpdateDate'] = top_line_extra.get(
-                    'datasetUpdateDate')
+                # el['datasetUpdateDate'] = top_line_extra.get(
+                #     'datasetUpdateDate')
+
 
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,
