@@ -6,7 +6,7 @@ $(document).ready(function() {
 
         var map = L.map('crisis-map', { attributionControl: false });
         map.scrollWheelZoom.disable();
-        if ( confJson.is_polygon == 'true' ) {
+        if ( confJson.is_crisis=='false' ) {
              L.tileLayer($('#mapbox-baselayer-url-div').text(), {
                 attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
                 maxZoom: 7
@@ -452,7 +452,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     // method that we will use to update the control based on feature properties passed
     info.update = function (properties) {
         var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
-        var titleValue = confJson.is_polygon=='true' ? properties[titleField] : ' Earthquake Intensity';
+        var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
         this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
         '<table>' +
         '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + titleValue + '</b><td></tr>' +
