@@ -43,7 +43,32 @@
 
     .homepage-background{
         height: 710px;
+        position: relative;
         /*min-width: 1260px;*/
+    }
+    .homepage-background .hdx-warning{
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #F2645A;
+    }
+
+    .homepage-background .hdx-warning .hdx-warning-text {
+        width: 1170px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .homepage-background .hdx-warning .hdx-warning-text a{
+        font-family: "Gotham-Light",sans-serif;
+        font-size: 16px;
+        color: #FFFFFF;
+    }
+    .homepage-background .hdx-warning-text .hdx-warning-text-important{
+        font-family: 'Gotham-Bold',sans-serif;
     }
 
 

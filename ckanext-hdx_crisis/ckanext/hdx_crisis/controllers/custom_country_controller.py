@@ -5,6 +5,7 @@ Created on Dec 2, 2014
 '''
 
 import logging
+import math
 import pylons.config as config
 
 import ckan.lib.base as base
@@ -29,11 +30,14 @@ log = logging.getLogger(__name__)
 
 
 def is_custom(environ, result):
-    group_info, custom_dict = get_group(result['id'])
-    result['group_info'] = group_info
-    result['group_customization'] = custom_dict
-    if group_info.get('custom_loc', False):
-        return True
+    try:
+        group_info, custom_dict = get_group(result['id'])
+        result['group_info'] = group_info
+        result['group_customization'] = custom_dict
+        if group_info.get('custom_loc', False):
+            return True
+    except Exception, e:
+        log.warning("Exception while checking if page is custom")
     return False
 
 
@@ -145,7 +149,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         sections = []
         len_charts = len(charts_config_data)
         len_toplines = len(top_line_items)
-        max = len_charts if len_charts > len_toplines/4 else len_toplines/4
+        max = len_charts if len_charts > int(math.ceil(len_toplines/4.0)) else int(math.ceil(len_toplines/4.0))
 
         for i in range(0, max):
             section = {
@@ -195,6 +199,12 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
             'errors': errors,
             'error_summary': '',
         }
+
+        is_crisis = group_info['name']=='nepal-earthquake'
+
+        template_data['data']['is_crisis'] = is_crisis
+        template_data['data']['map']['is_crisis'] = 'true' if is_crisis else 'false'
+        template_data['data']['map']['basemap_url'] = 'default' if not is_crisis else config.get('hdx.crisismap.url')
 
         template_data['data']['show_map'] = self._show_map(template_data['data']['map'], errors)
 
