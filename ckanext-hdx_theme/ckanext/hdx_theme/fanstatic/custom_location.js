@@ -10,11 +10,20 @@ $(document).ready(function(){
 
 	$('#chart-select-1, #chart-select-2').click(function(){
 		var chart_num = $(this).attr('chart-num');
-		if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
-			$('#chart_'+chart_num+'_second_line').show();
-		}else{
-			$('#chart_'+chart_num+'_second_line').hide();
-		}
+        if(this.value =='indicator line chart') {
+            $('#chart' + chart_num + ' .cps-sourced-charts').show();
+            $('#chart' + chart_num + ' .ckan-sourced-charts').hide();
+        }
+		else {
+            $('#chart' + chart_num + ' .cps-sourced-charts').hide();
+            $('#chart' + chart_num + ' .ckan-sourced-charts').show();
+
+            if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
+                $('#chart_'+chart_num+'_second_line').show();
+            }else{
+                $('#chart_'+chart_num+'_second_line').hide();
+            }
+        }
 	})
 	//On form submit
 	$('.create-loc-btn').click(function(){
@@ -40,13 +49,15 @@ $(document).ready(function(){
 			var chart1 = {}
 			chart1['resources'] = [{},{}]
 			$('#chart1 .chart_config').each(function(){
-					if($.inArray($(this).attr('name'), resource_keys1) > -1){
-						chart1['resources'][0][$(this).attr('name').slice(0,-2)] = this.value;
-					}else if($.inArray($(this).attr('name'), resource_keys2) > -1){
-						chart1['resources'][1][$(this).attr('name').slice(0,-2)] = this.value;
-					}else{
-						chart1[$(this).attr('name')] = this.value;
-					}
+                if ($(this).is(':visible')) {
+                    if ($.inArray($(this).attr('name'), resource_keys1) > -1) {
+                        chart1['resources'][0][$(this).attr('name').slice(0, -2)] = this.value;
+                    } else if ($.inArray($(this).attr('name'), resource_keys2) > -1) {
+                        chart1['resources'][1][$(this).attr('name').slice(0, -2)] = this.value;
+                    } else {
+                        chart1[$(this).attr('name')] = this.value;
+                    }
+                }
 			});
 
 			charts.push(chart1);
@@ -54,13 +65,15 @@ $(document).ready(function(){
 			var chart2 = {}
 			chart2['resources'] = [{},{}]
 			$('#chart2 .chart_config').each(function(){
-				if($.inArray($(this).attr('name'), resource_keys1) > -1){
-						chart2['resources'][0][$(this).attr('name').slice(0,-2)] = this.value;
-					}else if($.inArray($(this).attr('name'), resource_keys2) > -1){
-						chart2['resources'][1][$(this).attr('name').slice(0,-2)] = this.value;
-					}else{
-						chart2[$(this).attr('name')] = this.value;
-					}
+                if ($(this).is(':visible')) {
+                    if ($.inArray($(this).attr('name'), resource_keys1) > -1) {
+                        chart2['resources'][0][$(this).attr('name').slice(0, -2)] = this.value;
+                    } else if ($.inArray($(this).attr('name'), resource_keys2) > -1) {
+                        chart2['resources'][1][$(this).attr('name').slice(0, -2)] = this.value;
+                    } else {
+                        chart2[$(this).attr('name')] = this.value;
+                    }
+                }
 			});
 
 			charts.push(chart2);
