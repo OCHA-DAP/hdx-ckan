@@ -96,7 +96,7 @@ function initCountry(adm0_code,adm0_name){
         $('#charts').show();
         $('#header').show();
     }
-    var html = '<h4>'+adm0_name+' Product Price since 2013</h4><p>';
+    var html = '<h4>'+adm0_name+' Product Price since 2010</h4><p>';
     if(embedded ==='true'){
         html += '<a id="maplink" href="">Map</a> > ';
     }
@@ -166,7 +166,7 @@ function generateSparklines(results,adm0_code,adm0_name){
 function generateSparkline(prodID,unitID,data,topMonth){
     
     var svg = d3.select('#product_'+prodID+'_'+unitID).append('svg').attr('width',$('#product_'+prodID+'_'+unitID).width()).attr('height', '50px');
-    var x = d3.scale.linear().domain([2013*12,topMonth]).range([0, $('#product_'+prodID+'_'+unitID).width()]);
+    var x = d3.scale.linear().domain([2010*12,topMonth]).range([0, $('#product_'+prodID+'_'+unitID).width()]);
     //var y = d3.scale.linear().domain([d3.max(data,function(d){return d.y;}),d3.min(data,function(d){return d.y;})]).range([0, 50]);
     var y = d3.scale.linear().domain([d3.max(data,function(d){return d.y;})*1.1,0]).range([0, 50]);
 
@@ -188,12 +188,12 @@ function generateSparkline(prodID,unitID,data,topMonth){
         });        
     
     for(i=0;i<25;i++){
-        if((2013+i)*12<topMonth){
+        if((2010+i)*12<topMonth){
             var dataLine=[{
-                x:(2013+i)*12,
+                x:(2010+i)*12,
                 y:0
             },{
-                x:(2013+i)*12,
+                x:(2010+i)*12,
                 y:50
             }];
             svg.append('path').attr('d', yearLine(dataLine)).attr('class', 'sparkyearline');
@@ -459,8 +459,8 @@ function generateTimeCharts(data,cf,title){
     y2.domain(y.domain());
     
     var price = main_chart.append("g")
-         .attr("class", "pricelabel")
-         .style("display", "none");
+         .attr("class", "barpricelabel");
+         //.style("display", "none");
 
         price.append("circle")
             .attr("cy",10)
@@ -471,7 +471,7 @@ function generateTimeCharts(data,cf,title){
         price.append("text")
             .attr("x", 9)
             .attr("dy", ".35em")
-            .attr("class","wfplabel");    
+            .attr("class","wfplabel");
 
     var bisectDate = d3.bisector(function(d) { return d.key; }).left;
 
@@ -700,8 +700,8 @@ function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
             .attr("class","bar")
            .on("mouseover", function(d) {
                     price.style("display", null);
-                    price.attr("transform", "translate(" + (x(d.display)+(x.rangeBand()-1)/2) + "," + (y(d.value)-10) + ")");
                     var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
+                    price.attr("transform", "translate(" + (x(d.display)+(x.rangeBand()-1)/2) + "," + (y(d.value)-10) + ")");
                     price.select("text").text(value);
             })
             .on("mouseout", function() { 
@@ -775,11 +775,17 @@ function transitionBarChart(data){
                 } else {
                             return height-y(d.value);
                 }
-            });      
+            }).on("mouseover", function(d) {
+                    var price = d3.select(".barpricelabel");
+                    price.style("display", null);
+                    var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
+                    price.attr("transform", "translate(" + (x(d.display)+(x.rangeBand()-1)/2) + "," + (y(d.value)-10) + ")");
+                    price.select("text").text(value);
+            });
     
     var svg = d3.select("#drilldown_chart").selectAll("rect").data(data)
         .transition().duration(200)  
-            .attr("x", function(d,i) { return x(d.key); })
+            .attr("x", function(d,i) { return x(d.display); })
             .attr("width", x.rangeBand()-1)
             .attr("y", function(d){
                            return y(d.value);        
@@ -845,7 +851,7 @@ function getProductDataByCountryID(adm0_code,cm_id,um_id,adm0_name,cm_name,um_na
 
 function getProductsByCountryID(adm0_code,adm0_name){
     
-    var sql = 'SELECT cm_id, cm_name, um_id, um_name, avg(cast(mp_month as double precision)) as month_num, mp_year, avg(mp_price) FROM "' + datastoreID + '" where adm0_id=' + adm0_code + ' and mp_year>2012 group by cm_id, cm_name, um_name, um_id, mp_month, mp_year order by cm_id, um_id, mp_year, month_num';    
+    var sql = 'SELECT cm_id, cm_name, um_id, um_name, avg(cast(mp_month as double precision)) as month_num, mp_year, avg(mp_price) FROM "' + datastoreID + '" where adm0_id=' + adm0_code + ' and mp_year>2009 group by cm_id, cm_name, um_name, um_id, mp_month, mp_year order by cm_id, um_id, mp_year, month_num';
 
     var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
