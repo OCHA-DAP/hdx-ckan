@@ -20,17 +20,13 @@ function initMap(){
         maxZoom: 7
     }).addTo(map);
 
-    
+
     map.scrollWheelZoom.disable();
     
     return map;
 }
 
 function addCountriesToMap(results){
-    var popup = new L.Popup({
-        autoPan: false,
-        offset: [0, 0]
-      });
     var world_style = {
         color: '#fff',
         fillColor: '#2a93fc',
@@ -58,13 +54,23 @@ function addCountriesToMap(results){
     var overlay_world = L.geoJson(world.features,{
         style:world_style,
         onEachFeature: function(feature, layer){
+            var bounds = layer.getBounds();
+            var position = bounds.getNorthEast();
+            var popup = new L.Popup({
+                autoPan: false,
+                offset: [0,0]
+              });
+            position.lng = bounds.getCenter().lng;
+            popup.setLatLng(position);
+
+            popup.setContent("<div class='marker-container'> <div class='marker-box'>"+feature.properties.ADM0_NAME+"</div></div>");
+
             layer.on('click', function (e) {
                 initCountry(feature.properties.ADM0_CODE,feature.properties.ADM0_NAME,embedded);
             });
             layer.on("mouseover", function (e) {
                 layer.setStyle(world_style_hover);
-                popup.setLatLng(e.latlng);
-                popup.setContent("<div class='marker-container'> <div class='marker-box'>"+feature.properties.ADM0_NAME+"</div></div>");
+                //popup.setLatLng(e.latlng);
                 if (!popup._map) {
                   popup.openOn(map);
                 }
