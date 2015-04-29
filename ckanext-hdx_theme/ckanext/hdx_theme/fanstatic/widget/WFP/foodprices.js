@@ -620,9 +620,12 @@ function downloadData(data,name,title){
     });
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'data.csv');
+    link.setAttribute("id","data-download-csv");
+    document.getElementById('main_chart').appendChild(link);
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "data.csv");
     link.click();
+    link.parentNode.removeChild(link);
 }
 
 function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
