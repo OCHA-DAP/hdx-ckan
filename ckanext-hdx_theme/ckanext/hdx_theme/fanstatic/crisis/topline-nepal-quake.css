@@ -76,3 +76,6 @@
 .topline .topline-value {
   white-space: nowrap;
 }
+.topline .indicator-prevalue {
+  margin-left: -5px;
+}
