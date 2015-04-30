@@ -110,7 +110,7 @@ def member_list(context, data_dict=None):
 
     group = model.Group.get(_get_or_bust(data_dict, 'id'))
     if not group:
-        raise NotFound
+        raise logic.NotFound
 
     obj_type = data_dict.get('object_type', None)
     capacity = data_dict.get('capacity', None)
@@ -170,7 +170,7 @@ def hdx_basic_user_info(context, data_dict):
     if id:
         user_obj = model.User.get(id)
         if user_obj is None:
-            raise NotFound
+            raise logic.NotFound
         else:
             ds_num = counting.count_user_datasets(id)
             org_num = counting.count_user_orgs(id)
@@ -283,11 +283,11 @@ def hdx_user_show(context, data_dict):
         user_obj = model.User.get(id)
         context['user_obj'] = user_obj
         if user_obj is None:
-            raise NotFound
+            raise logic.NotFound
     elif provided_user:
         context['user_obj'] = user_obj = provided_user
     else:
-        raise NotFound
+        raise logic.NotFound
 
     _check_access('user_show', context, data_dict)
 
@@ -457,9 +457,13 @@ def hdx_get_shape_geojson(context, data_dict):
 
 
 def hdx_get_json_from_resource(context, data_dict):
-    if 'url' not in data_dict:
-        return None
-    url = data_dict['url']
-    resource_response = requests.get(url, allow_redirects=True)
-    return json.loads(resource_response.content)
+    try:
+        if 'url' not in data_dict:
+            return None
+        url = data_dict['url']
+        resource_response = requests.get(url, allow_redirects=True)
+        res = json.loads(resource_response.content)
+    except:
+        res = None
+    return res
 
