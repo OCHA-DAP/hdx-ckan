@@ -258,7 +258,7 @@ function generateChartView(cf,adm0,prod,unit,adm0_code,currency){
        event.preventDefault();
        backToMap();
     });
-    generateBarChart(getAVG(cf.groupByAdm1Sum.all(),cf.groupByAdm1Count.all()),cf,prod,unit,adm0,adm0_code);
+    generateBarChart(getAVG(cf.groupByAdm1Sum.all(),cf.groupByAdm1Count.all()),cf,prod,unit,adm0,adm0_code,null,currency);
     generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf,title);
     
 
@@ -301,8 +301,8 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code,currency){
     });    
     cf.byDate.filterAll();
     cf.byMkt.filterAll();
-    cf.byAdm1.filter(adm1);    
-    generateBarChart(getAVG(cf.groupByMktSum.all(),cf.groupByMktCount.all()),cf,prod,unit,adm0,adm0_code,adm1);
+    cf.byAdm1.filter(adm1);
+    generateBarChart(getAVG(cf.groupByMktSum.all(),cf.groupByMktCount.all()),cf,prod,unit,adm0,adm0_code,adm1,currency);
     generateTimeCharts(getAVG(cf.groupByDateSum.all(),cf.groupByDateCount.all()),cf,title);
     
 
@@ -344,7 +344,7 @@ function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1,currency){
     
     $('#adm1link').click(function(event){
         event.preventDefault();
-        generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code);
+        generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code,currency);
     });     
     $('#maplink').click(function(event){
        event.preventDefault();
@@ -628,7 +628,7 @@ function downloadData(data,name,title){
     link.parentNode.removeChild(link);
 }
 
-function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
+function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1,currency){
     data.forEach(function(e){
         if(e.key.length>14){
             e.display = e.key.substring(0,14)+"...";
@@ -711,8 +711,8 @@ function generateBarChart(data,cf,prod,unit,adm0,adm0_code,adm1){
                     price.style("display", "none");
             })    
             .on("click",function(d){
-                if(curLevel === "adm1"){generateMktChartView(cf,d.key,prod,unit,adm0,adm0_code,adm1);};
-                if(curLevel === "adm0"){generateADMChartView(cf,d.key,prod,unit,adm0,adm0_code);};
+                if(curLevel === "adm1"){generateMktChartView(cf,d.key,prod,unit,adm0,adm0_code,adm1,currency);};
+                if(curLevel === "adm0"){generateADMChartView(cf,d.key,prod,unit,adm0,adm0_code,currency);};
             });
  
             
