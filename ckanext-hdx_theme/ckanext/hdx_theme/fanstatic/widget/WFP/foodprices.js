@@ -224,7 +224,7 @@ function crossfilterData(data){
     return cf;
 }
 
-function generateChartView(cf,adm0,prod,unit,adm0_code){
+function generateChartView(cf,adm0,prod,unit,adm0_code,currency){
     makeEmbedURL(adm0_code,prod,unit,'','');
     if(embedded!=='true'){
         var targetDiv = '#modal-body';
@@ -240,7 +240,7 @@ function generateChartView(cf,adm0,prod,unit,adm0_code){
     cf.byAdm1.filterAll(); 
     cf.byMkt.filterAll();    
     
-    var title = 'Price of ' + prod + ' per ' + unit + ' in '+adm0;
+    var title = 'Price of ' + prod + ' in ' + currency + ' per ' + unit + ' in '+adm0;
     var html = '<h4>'+title+'</h4><p>';
     
     if(embedded ==='true'){
@@ -264,7 +264,7 @@ function generateChartView(cf,adm0,prod,unit,adm0_code){
 
 }
 
-function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code){
+function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code,currency){
     makeEmbedURL(adm0_code,prod,unit,adm1,'');
     if(embedded!=='true'){
         var targetDiv = '#modal-body';
@@ -276,7 +276,7 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code){
     
     curLevel = 'adm1';
     
-    var title = 'Price of ' + prod + ' per ' + unit + ' in '+adm1;    
+    var title = 'Price of ' + prod + ' in ' + currency+ ' per ' + unit + ' in '+adm1 + ', ' + adm0;
     var html = '<h4>'+title+'</h4><p>';
     
     if(embedded ==='true'){
@@ -308,7 +308,7 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code){
 
 }
 
-function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1){
+function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1,currency){
     makeEmbedURL(adm0_code,prod,unit,adm1,mkt);
     if(embedded!=='true'){
         var targetDiv = '#modal-body';
@@ -320,7 +320,7 @@ function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1){
     
     curLevel = 'mkt';
     
-    var title = 'Price of ' + prod + ' per ' + unit + ' in '+mkt;
+    var title = 'Price of ' + prod + ' in ' + currency + ' per ' + unit + ' in '+mkt + ', ' + adm1 + ', ' + adm0 ;
     
     var html = '<h4>'+title+'</h4><p>';
     
@@ -828,7 +828,7 @@ function getCountryIDs(){
 }
 
 function getProductDataByCountryID(adm0_code,cm_id,um_id,adm0_name,cm_name,um_name,adm1_name,mkt_name){
-    var sql = 'SELECT adm1_id,adm1_name,mkt_id,mkt_name, cast(mp_month as double precision) as month_num, mp_year, mp_price FROM "'+datastoreID+'" where adm0_id='+adm0_code+' and cm_id='+cm_id+' and um_id='+um_id;
+    var sql = 'SELECT adm1_id,adm1_name,mkt_id,mkt_name, cast(mp_month as double precision) as month_num, mp_year, mp_price, cur_name FROM "'+datastoreID+'" where adm0_id='+adm0_code+' and cm_id='+cm_id+' and um_id='+um_id;
 
     var data = encodeURIComponent(JSON.stringify({sql: sql}));
 
@@ -839,14 +839,17 @@ function getProductDataByCountryID(adm0_code,cm_id,um_id,adm0_name,cm_name,um_na
       data: data,
       success: function(data) {
 
-           var cf = crossfilterData(data.result.records); 
+           var cf = crossfilterData(data.result.records);
+           var currency = '';
+           if (data.result.records)
+                currency  = data.result.records[0].cur_name;
            if(adm1_name===''){
-              generateChartView(cf,adm0_name,cm_name,um_name,adm0_code); 
+              generateChartView(cf,adm0_name,cm_name,um_name,adm0_code,currency);
            } else if (mkt_name===''){
-              generateADMChartView(cf,adm1_name,cm_name,um_name,adm0_name,adm0_code);  
+              generateADMChartView(cf,adm1_name,cm_name,um_name,adm0_name,adm0_code,currency);
            } else {
                cf.byAdm1.filter(adm1_name);
-               generateMktChartView(cf,mkt_name,cm_name,um_name,adm0_name,adm0_code,adm1_name); 
+               generateMktChartView(cf,mkt_name,cm_name,um_name,adm0_name,adm0_code,adm1_name,currency);
            }
       }
     });    
