@@ -152,10 +152,10 @@ function buildGraphs() {
                     }
                 },
                 y: {
-                    label: {
-                        text: unitName,
-                        position: 'outer-middle'
-                    }
+                    //label: {
+                    //    text: unitName,
+                    //    position: 'outer-middle'
+                    //}
                 }
             }
         });

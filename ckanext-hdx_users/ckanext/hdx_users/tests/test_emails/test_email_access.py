@@ -6,10 +6,12 @@ Created on Dec 8, 2014
 
 import unicodedata
 import logging as logging
-
+from nose.tools import assert_equal
 import ckan.model as model
+import ckanext.hdx_users.model as umodel
 import ckan.tests as tests
 import ckan.lib.helpers as h
+from ckan.tests import CreateTestData
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
@@ -19,16 +21,18 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_users hdx_theme')
+            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_theme')
 
     @classmethod
     def setup_class(cls):
         super(TestEmailAccess, cls).setup_class()
+        umodel.setup()
 
         cls._get_action('user_create')({
             'model': model, 'session': model.Session, 'user': 'testsysadmin'},
             {'name': 'johnfoo', 'fullname': 'John Foo',
              'email': 'example@example.com', 'password': 'abcd'})
+
 
     @classmethod
     def _get_action(cls, action_name):
@@ -101,3 +105,71 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
                     return True
 
         return False
+
+    def test_create_validation_token(self):
+        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
+        res = self.app.get(offset, status=[200,302])
+        fv = res.forms[1]
+        fv['name'] = "testingvalid"
+        fv['fullname'] = "Valid Test"
+        fv['email'] = "valid@example.com"
+        fv['password1'] = "password"
+        fv['password2'] = "password"
+        res = fv.submit('save')
+
+        user = model.User.by_name('testingvalid')
+        assert user
+        token = umodel.ValidationToken.get(user.id)
+        assert token
+
+    def test_login_not_valid(self):
+        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
+        res = self.app.get(offset, status=[200,302])
+        fv = res.forms[1]
+        fv['name'] = "testingvalid"
+        fv['fullname'] = "Valid Test"
+        fv['email'] = "valid@example.com"
+        fv['password1'] = "password"
+        fv['password2'] = "password"
+        res = fv.submit('save')
+
+        user = model.User.by_name('testingvalid')
+
+        offset = h.url_for(controller='user', action='login')
+        res = self.app.get(offset)
+        fv = res.forms[1]
+        fv['login'] = user.name
+        fv['password'] = 'password'
+        res = fv.submit()
+
+        # first get redirected to logged_in
+        assert '302' in res.status
+        # then get redirected to login
+        res = res.follow()
+        assert res.headers['Location'].startswith('http://localhost/user/logged_in') or \
+               res.header('Location').startswith('/user/logged_in')
+        res = res.follow()
+        assert res.headers['Location'].startswith('http://localhost/user/logout') or \
+               res.header('Location').startswith('/user/logout')
+        
+    def test_validate_account(self):
+        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
+        res = self.app.get(offset, status=[200,302])
+        fv = res.forms[1]
+        fv['name'] = "testingvalid"
+        fv['fullname'] = "Valid Test"
+        fv['email'] = "valid@example.com"
+        fv['password1'] = "password"
+        fv['password2'] = "password"
+        res = fv.submit('save')
+
+        user = model.User.by_name('testingvalid')
+        assert user
+        token = umodel.ValidationToken.get(user.id)
+        assert token
+
+        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='validate', token=token.token)
+        res = self.app.get(offset, status=[200,302])
+
+        token = umodel.ValidationToken.get(user.id)
+        assert token.valid is True
