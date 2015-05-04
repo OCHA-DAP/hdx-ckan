@@ -1,4 +1,5 @@
 {% set username = request.environ.get('REMOTE_USER') %}
+
 {% if data.package_creator %}
   {% set package_creator = data.package_creator %}
 {% else %}
@@ -19,6 +20,7 @@
   {% set new_dataset = True %}
 {% endif %}
 
+{% set user_is_sysadmin = h.check_access('sysadmin') %}
 {% if new_dataset %}
   {% set form_field_wrapper_classes = 'dataset-form-field-wrapper field-with-info' %}
 {% endif %}
@@ -93,28 +95,37 @@
 {% endblock %}
 
 {% block basic_fields_quality %}
+    {% if user_is_sysadmin %}
     <div class="subnational_info_align" style="clear:both;">
-    <div class="{{ form_field_wrapper_classes }}">
-    <div class="control-group">
-      <label class="control-label" for="field-quality" style="display: inline-block;">{{ _("Dataset's quality has been confirmed:") }}</label>
-     <div class="controls" style="display:inline-block">
-        {% if new_dataset %}
-        <input type="checkbox" checked name="quality" id="field-quality" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
-        {% else %}
-          <input type="checkbox" {% if data.quality or data.indicator %}checked{% endif%} name="indicator" id="field-indicator" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
-        {% endif %}
-      </div>
-    </div>
-      </div>
-      {% if new_dataset %}
-        <div class="dataset-form-info-field dataset-form-info-field-height info-field">
-        {% trans %}
-        Has the quality of this dataset been evaluated by our data team?
-        {% endtrans %}
+        <div class="{{ form_field_wrapper_classes }}">
+            <div class="control-group">
+                <label class="control-label" for="field-quality" style="display: inline-block;">{{ _("Dataset's quality
+                    has been confirmed:") }}</label>
+
+                <div class="controls" style="display:inline-block">
+                    {% if new_dataset %}
+                    <input type="checkbox" name="quality" id="field-quality" value="1"
+                           style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+                    {% else %}
+                    <input type="checkbox" {% if data.quality or data.indicator=='1' %}checked{% endif%}
+                           name="quality" id="field-quality" value="1"
+                           style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
+                    {% endif %}
+                </div>
+            </div>
         </div>
-    {% endif %}
+        {% if new_dataset %}
+        <div class="dataset-form-info-field dataset-form-info-field-height info-field">
+            {% trans %}
+            Has the quality of this dataset been evaluated by our data team?
+            {% endtrans %}
+        </div>
+        {% endif %}
     </div>
-    <span class="clear" /></span>
+    <span class="clear"/></span>
+    {% elif data.quality=='1' %}
+        <input type="hidden" name="quality" id="field-quality" value="1" >
+    {% endif %}
 {% endblock %}
 
 {% block package_basic_fields_countries %}
@@ -205,7 +216,7 @@
 {% set dataset_is_draft = data.get('state', 'draft').startswith('draft') or data.get('state', 'none') ==  'none' %}
 {% set dataset_has_organization = data.owner_org or data.group_id %}
 {% set organizations_available = h.organizations_available('create_dataset') %}
-{% set user_is_sysadmin = h.check_access('sysadmin') %}
+
 {# Check for user admin was removed according to https://github.com/OCHA-DAP/hdx-ckan/issues/313 #}
 {# {% set show_organizations_selector = organizations_available and (user_is_sysadmin or dataset_is_draft) %} #}
 {# {% set show_visibility_selector = dataset_has_organization or (organizations_available and (user_is_sysadmin or dataset_is_draft)) %} #}
@@ -267,5 +278,4 @@
 {% endif %}
 
 {% endblock %}
-
 
