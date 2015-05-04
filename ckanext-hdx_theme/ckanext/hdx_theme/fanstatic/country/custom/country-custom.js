@@ -21,7 +21,7 @@ $(document).ready(function() {
                     ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
             L.tileLayer(confJson.basemap_url, {
                 attribution: attribution,
-                maxZoom: 7
+                maxZoom: 14
             }).addTo(map);
         }
 
@@ -291,6 +291,89 @@ function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
     return map;
 }
 
+function generatePointLayerObject(map){
+    var geojsonResourceId = 'cce1f038-cf51-4dbc-bd7a-379d4c1a8043';
+    var datasetId = 'json-repository';
+    var pointLayerObject = {
+        'fetchGeojsonData': function () {
+            var promise = $.ajax({
+                url: "/dataset/" + datasetId + "/resource_download/" + geojsonResourceId,
+                type: 'GET',
+                dataType: 'JSON',
+                context: this,
+                success: function (result) {
+                    this.data = result;
+                }
+            });
+            return promise;
+        },
+        'drawLayer': function () {
+            function generatePropSymbolsObject(minRadius, maxRadius, featureData, fieldName) {
+                var obj = {
+                    'init': function() {
+                        this.numOfSegments = maxRadius - minRadius + 1;
+                        this.min = -1;
+                        this.max = -1;
+                        for (var i=0; i<featureData.features.length; i++) {
+                            var strValue = featureData.features[i].properties[fieldName];
+                            value = parseFloat(strValue);
+                            if ( !isNaN(value) ) {
+                                if (this.min == -1 || this.min > value)
+                                    this.min = value;
+                                if (this.max == -1 || this.max < value)
+                                    this.max = value;
+                            }
+                        }
+                        this.segmentSize = (this.max - this.min) / this.numOfSegments;
+                    },
+                    'computeRadius': function(value){
+                        if ( !isNaN(value) ) {
+                            var reducedValue = value - this.min;
+                            var segmentNum = reducedValue / this.segmentSize;
+                            var radius = minRadius + segmentNum;
+                            return radius;
+                        }
+                        else {
+                            return minRadius + ((maxRadius - minRadius) / 2)
+                        }
+                    }
+
+                }
+                obj.init();
+                return obj;
+            }
+
+            var propSymbolsCalculator = generatePropSymbolsObject(8, 20, this.data, 'Individuals');
+
+            L.geoJson(this.data, {
+                pointToLayer: function (feature, latlng) {
+                    var circleConfig = {
+                        radius: 8,
+                        fillColor: "gray",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.6
+                    };
+                    var indivNum = parseInt(feature.properties.Individuals);
+                    circleConfig.radius = propSymbolsCalculator.computeRadius(indivNum);
+                    if (!isNaN(indivNum)) {
+                        circleConfig.fillColor = "#ff493d";
+                    }
+                    return L.circleMarker(latlng, circleConfig);
+                }
+
+            }).addTo(map);
+        },
+        'process': function () {
+            var promise = this.fetchGeojsonData();
+            $.when.apply($, [promise]).done(this.drawLayer);
+
+        }
+    };
+    return pointLayerObject;
+}
+
 function loadMapData(map, confJson){
     var pcodeColumnName = confJson.map_column_1;
     var valueColumnName = confJson.map_values ? confJson.map_values : 'value';
@@ -330,9 +413,12 @@ function loadMapData(map, confJson){
         });
     }
 
+    var info = null;
     $.when.apply($, [dataPromise, valuesPromise]).done(function(sources){
-        drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName);
+        info = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName);
     });
+
+    generatePointLayerObject(map, info).process();
 
 }
 
@@ -432,8 +518,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
                         layer.setStyle(currentStyle);
                     }
-
-                    info.update(properties);
+                    var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
+                    var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
+                    var updateValue = values[properties[confJson.map_column_2]]
+                    info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {'key': 'Value', 'value': updateValue}]);
                 });
                 // Create a mouseout event that undoes the mouseover changes
                 layer.on("mouseout", function (e) {
@@ -460,7 +548,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     };
 
     // method that we will use to update the control based on feature properties passed
-    info.update = function (properties) {
+    info.update_old = function (properties) {
         var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
         var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
         this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
@@ -470,6 +558,22 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
         '</table>'
             : 'No data available');
+    };
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (title, itemArray) {
+        var html = '<h4>' + title + '</h4>' ;
+        if (itemArray) {
+            html += '<table>';
+            for (var i=0; i<itemArray.length; i++) {
+                html += '<tr><td style="text-align: right;">' + itemArray[i].key
+                        + ': </td><td>&nbsp;&nbsp; <b>' + itemArray[i].value + '</b><td></tr>';
+            }
+            html += '</table>';
+        }
+        else
+            html += 'No data available';
+
+        this._div.innerHTML = html;
     };
     info.showOtherMessage = function (message){
         this._div.innerHTML = message;
@@ -516,4 +620,5 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     legend.updateLayer();
     info.updateLayer();
 
+    return info;
 }
