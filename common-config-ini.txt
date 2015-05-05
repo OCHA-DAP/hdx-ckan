@@ -172,3 +172,8 @@ hdx.ebola.datastore.appeal = 93b92803-f9fa-45f4-bf72-73a8ab1d8922
 hdx.colombia.datastore.top_line_num = f78fe6f8-c363-4988-a847-b7c1c81ca233
 hdx.colombia.datastore.displaced = 1f56da93-6622-477f-9b55-b109def3f248
 hdx.colombia.datastore.access_constraints = 9e69d499-0b2b-4da6-9c61-10e453a57504
+
+
+# Nepal Earthquake page
+hdx.nepal_earthquake.filestore.circle_markers = 24a28485-d36a-47a0-bd76-9d5b98276e65
+hdx.nepal_earthquake.filestore.shakemap = 3e03e1f4-998d-4549-9df9-a9f2d94368cb
