@@ -291,7 +291,7 @@ function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
     return map;
 }
 
-function generatePointLayerObject(map){
+function generatePointLayerObject(map, infoObj){
     var geojsonResourceId = 'cce1f038-cf51-4dbc-bd7a-379d4c1a8043';
     var datasetId = 'json-repository';
     var pointLayerObject = {
@@ -345,7 +345,7 @@ function generatePointLayerObject(map){
 
             var propSymbolsCalculator = generatePropSymbolsObject(8, 20, this.data, 'Individuals');
 
-            L.geoJson(this.data, {
+            var pointsLayer = L.geoJson(this.data, {
                 pointToLayer: function (feature, latlng) {
                     var circleConfig = {
                         radius: 8,
@@ -361,9 +361,35 @@ function generatePointLayerObject(map){
                         circleConfig.fillColor = "#ff493d";
                     }
                     return L.circleMarker(latlng, circleConfig);
+                },
+                onEachFeature: function (feature, layer) {
+                    (function (layer, properties) {
+                        // Create a mouseover event
+                        layer._originalStyle = layer.options;
+
+                        layer.on("mouseover", function (e) {
+                            layer.setStyle({'fillColor': "red"});
+                            var indivNum = feature.properties.Individuals;
+                            var status = feature.properties.Status;
+                            infoObj.update('IDP Locations', [
+                                {'key': 'Status', 'value': status},
+                                {'key': 'Individuals', 'value': indivNum}
+                            ]);
+                        });
+                        // Create a mouseout event that undoes the mouseover changes
+                        layer.on("mouseout", function (e) {
+
+                            layer.setStyle( layer._originalStyle );
+                            infoObj.update();
+                        });
+                        // Close the "anonymous" wrapper function, and call it while passing
+                        // in the variables necessary to make the events work the way we want.
+                    })(layer, feature.properties);
                 }
 
-            }).addTo(map);
+            });
+            pointsLayer.setZIndex(1000);
+            pointsLayer.addTo(map);
         },
         'process': function () {
             var promise = this.fetchGeojsonData();
@@ -416,9 +442,11 @@ function loadMapData(map, confJson){
     var info = null;
     $.when.apply($, [dataPromise, valuesPromise]).done(function(sources){
         info = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName);
+        if ( confJson.is_crisis=='true' ) {
+            generatePointLayerObject(map, info).process();
+        }
     });
 
-    generatePointLayerObject(map, info).process();
 
 }
 
@@ -481,7 +509,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             }
         }
         else
-            returnNew = false
+            returnNew = false;
         if (returnNew)
             return threshold;
         return defaultThreshold;
@@ -509,18 +537,18 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                         currentStyle['fillOpacity'] = 1;
                         currentStyle['opacity'] = 1;
                         currentStyle['color'] = '#888888';
-                        if (!L.Browser.ie && !L.Browser.opera) {
-                            layer.bringToFront();
+                        //if (!L.Browser.ie && !L.Browser.opera) {
+                        //    layer.bringToFront();
                             //for (eLayer in extraLayers)
                             //    if (map.hasLayer(extraLayers[eLayer]))
                             //        extraLayers[eLayer].bringToFront();
-                        }
+                        //}
 
                         layer.setStyle(currentStyle);
                     }
                     var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
                     var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
-                    var updateValue = values[properties[confJson.map_column_2]]
+                    var updateValue = values[properties[confJson.map_column_2]];
                     info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {'key': 'Value', 'value': updateValue}]);
                 });
                 // Create a mouseout event that undoes the mouseover changes
@@ -547,18 +575,6 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         return this._div;
     };
 
-    // method that we will use to update the control based on feature properties passed
-    info.update_old = function (properties) {
-        var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
-        var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
-        this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
-        '<table>' +
-        '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + titleValue + '</b><td></tr>' +
-        //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
-        '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
-        '</table>'
-            : 'No data available');
-    };
     // method that we will use to update the control based on feature properties passed
     info.update = function (title, itemArray) {
         var html = '<h4>' + title + '</h4>' ;
