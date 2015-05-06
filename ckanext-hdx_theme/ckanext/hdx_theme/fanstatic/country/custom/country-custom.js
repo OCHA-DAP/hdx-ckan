@@ -386,6 +386,22 @@ function generatePointLayerObject(map, infoObj, circleMarkersData, layers){
     return pointLayerObject;
 }
 
+function _addRemoveLayers(layers, choroplethLayerId, legend) {
+    for (var idx in  layers){
+        var layer = layers[idx];
+        if (layer._map)
+            layer.bringToFront();
+
+        if (layer._leaflet_id == choroplethLayerId){
+            var legendC = $(legend.getContainer());
+            if (layer._map)
+                legendC.show();
+            else
+                legendC.hide();
+        }
+    }
+}
+
 function loadMapData(map, confJson, layers){
     var pcodeColumnName = confJson.map_column_1;
     var valueColumnName = confJson.map_values ? confJson.map_values : 'value';
@@ -453,29 +469,35 @@ function loadMapData(map, confJson, layers){
 
     var info = null;
     $.when.apply($, promiseList).done(function(sources){
-        info = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers);
+        var controls = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers);
+        info = controls.info;
+        var legend = controls.legend;
         if ( confJson.is_crisis=='true' ) {
             drawShakeMap(map, shakeMapData, info, confJson, layers);
             generatePointLayerObject(map, info, circleMarkersData, layers).process();
-
-            map.setView([27.67744748160599, 85.41183471679688], 10);
+            map.setView([27.69844, 85.38183], 12);
 
             var layersName = ["Choropleth", "Shake Map", "IDP Camps with Population"];
             var layerControl = L.control.layers();
+            var choroplethLayerId = null;
             for (var idx in layers){
                 var name = layersName[idx];
                 var layer = layers[idx];
+                if (name == "Choropleth"){
+                    choroplethLayerId = layer._leaflet_id;
+                }
 
                 layerControl.addOverlay(layer, name);
             }
             layerControl.addTo(map);
 
             map.on('overlayadd', function(){
-                for (var idx in layers){
-                    var layer = layers[idx];
-                    layer.bringToFront();
-                }
+                _addRemoveLayers(layers, choroplethLayerId, legend);
             });
+            map.on('overlayremove', function(){
+                _addRemoveLayers(layers, choroplethLayerId, legend);
+            })
+            _addRemoveLayers(layers, choroplethLayerId, legend);
         }
 
     });
@@ -555,7 +577,7 @@ function drawShakeMap(map, shakeMapData, info, confJson, layers) {
             }
         });
         layers.push(layer);
-        layer.addTo(map);
+        //layer.addTo(map);
     }
     var threshold = [4, 5, 6, 7, 8];
     _internalDraw(shakeMapData);
@@ -689,7 +711,9 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
         }
     });
     layers.push(choroplethLayer);
-    //choroplethLayer.addTo(map);
+    if (confJson.is_crisis!='true') {
+        choroplethLayer.addTo(map);
+    }
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
@@ -756,5 +780,8 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     legend.addTo(map);
     legend.updateLayer();
     info.updateLayer();
-    return info;
+    return {
+        info: info,
+        legend: legend
+    };
 }
