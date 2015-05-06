@@ -28,8 +28,7 @@ $(document).ready(function() {
         L.control.attribution({position: 'topright'}).addTo(map);
         //map.setView([5, -70], 5);
 
-        var layers = L.control.layers();
-        layers.addTo(map);
+        var layers = [];
 
         loadMapData(map, confJson, layers);
     }
@@ -293,20 +292,8 @@ function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
     return map;
 }
 
-function generatePointLayerObject(map, infoObj, confJson, layers){
+function generatePointLayerObject(map, infoObj, circleMarkersData, layers){
     var pointLayerObject = {
-        'fetchGeojsonData': function () {
-            var promise = $.ajax({
-                url: confJson.circle_markers,
-                type: 'GET',
-                dataType: 'JSON',
-                context: this,
-                success: function (result) {
-                    this.data = result;
-                }
-            });
-            return promise;
-        },
         'drawLayer': function () {
             function generatePropSymbolsObject(minRadius, maxRadius, featureData, fieldName) {
                 var obj = {
@@ -388,14 +375,12 @@ function generatePointLayerObject(map, infoObj, confJson, layers){
                 }
 
             });
-            pointsLayer.setZIndex(95);
-            layers.addOverlay(pointsLayer, "IDP Camps with Population");
+            layers.push(pointsLayer);
             pointsLayer.addTo(map);
         },
         'process': function () {
-            var promise = this.fetchGeojsonData();
-            $.when.apply($, [promise]).done(this.drawLayer);
-
+            this.data = circleMarkersData;
+            this.drawLayer();
         }
     };
     return pointLayerObject;
@@ -440,19 +425,64 @@ function loadMapData(map, confJson, layers){
         });
     }
 
+    var promiseList = [dataPromise, valuesPromise];
+    var circleMarkersData = null, shakeMapData = null;
+    if (confJson.is_crisis=='true'){
+        var circleMarkers = $.ajax({
+            url: confJson.circle_markers,
+            type: 'GET',
+            dataType: 'JSON',
+            context: this,
+            success: function (result) {
+                circleMarkersData = result;
+            }
+        });
+        promiseList.push(circleMarkers);
+
+        var shakeMap = $.ajax({
+            url: confJson.shakemap,
+            type: 'GET',
+            dataType: 'JSON',
+            context: this,
+            success: function (result) {
+                shakeMapData = result;
+            }
+        });
+        promiseList.push(shakeMap);
+    }
+
     var info = null;
-    $.when.apply($, [dataPromise, valuesPromise]).done(function(sources){
+    $.when.apply($, promiseList).done(function(sources){
         info = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers);
         if ( confJson.is_crisis=='true' ) {
-            generatePointLayerObject(map, info, confJson, layers).process();
+            drawShakeMap(map, shakeMapData, info, confJson, layers);
+            generatePointLayerObject(map, info, circleMarkersData, layers).process();
+
+            map.setView([27.67744748160599, 85.41183471679688], 10);
+
+            var layersName = ["Choropleth", "Shake Map", "IDP Camps with Population"];
+            var layerControl = L.control.layers();
+            for (var idx in layers){
+                var name = layersName[idx];
+                var layer = layers[idx];
+
+                layerControl.addOverlay(layer, name);
+            }
+            layerControl.addTo(map);
+
+            map.on('overlayadd', function(){
+                for (var idx in layers){
+                    var layer = layers[idx];
+                    layer.bringToFront();
+                }
+            });
         }
+
     });
-
-
 }
 
 
-function drawShakeMap(map, data, info, confJson, layers) {
+function drawShakeMap(map, shakeMapData, info, confJson, layers) {
     var newcolor = [
         ["#ffffff"], //1 color
         ["#ffffff", "#ffffff"], //2 colors
@@ -501,9 +531,9 @@ function drawShakeMap(map, data, info, confJson, layers) {
                             layer.setStyle(currentStyle);
                         }
                         var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
-                        var titleValue = properties[titleField];
+                        var titleValue = 'Earthquake Intensity';
                         var updateValue = properties["value"];
-                        info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {
+                        info.update('Nepal Earthquake', [{'key': 'Name', 'value': titleValue}, {
                             'key': 'Value',
                             'value': updateValue
                         }]);
@@ -524,25 +554,11 @@ function drawShakeMap(map, data, info, confJson, layers) {
                 })(layer, feature.properties);
             }
         });
-        layer.setZIndex(100);
-        layers.addOverlay(layer, "Shake Map");
-        //layer.addTo(map); //not enabled by default for now
+        layers.push(layer);
+        layer.addTo(map);
     }
     var threshold = [4, 5, 6, 7, 8];
-
-    //get data store it in values ...
-    $.ajax({
-        url: confJson.shakemap,
-        type: 'GET',
-        dataType: 'JSON',
-        context: this,
-        success: function (result) {
-            _internalDraw(result);
-        }
-    });
-
-
-
+    _internalDraw(shakeMapData);
 }
 
 
@@ -624,8 +640,6 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     if ( confJson.is_crisis != 'true' )
         fitMap(map, data);
 
-    drawShakeMap(map, data, info, confJson, layers);
-
     var choroplethLayer = L.geoJson(data,{
         style: getStyle(values, threshold),
         onEachFeature: function (feature, layer) {
@@ -654,7 +668,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                         layer.setStyle(currentStyle);
                     }
                     var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
-                    var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
+                    var titleValue = properties[titleField] ;
                     var updateValue = values[properties[confJson.map_column_2]];
                     info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {'key': 'Value', 'value': updateValue}]);
                 });
@@ -674,9 +688,8 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             })(layer, feature.properties);
         }
     });
-    choroplethLayer.setZIndex(90);
-    layers.addOverlay(choroplethLayer, "Choropleth");
-    choroplethLayer.addTo(map);
+    layers.push(choroplethLayer);
+    //choroplethLayer.addTo(map);
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
@@ -685,7 +698,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     // method that we will use to update the control based on feature properties passed
     info.update = function (title, itemArray) {
-        var html = '<h4>' + title + '</h4>' ;
+        var html = '<h4>' + (title ? title : 'Hover over the map') + '</h4>' ;
         if (itemArray) {
             html += '<table>';
             for (var i=0; i<itemArray.length; i++) {
@@ -743,10 +756,5 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     legend.addTo(map);
     legend.updateLayer();
     info.updateLayer();
-
-    if ( confJson.is_crisis=='true' ) {
-        map.setView([27.67744748160599, 85.41183471679688], 10);
-    }
-
     return info;
 }
