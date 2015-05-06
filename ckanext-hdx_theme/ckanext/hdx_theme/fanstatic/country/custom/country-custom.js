@@ -357,9 +357,9 @@ function generatePointLayerObject(map, infoObj, circleMarkersData, layers){
                         layer.on("mouseover", function (e) {
                             layer.setStyle({'fillColor': "red"});
                             var indivNum = feature.properties.Individuals;
-                            var status = feature.properties.Status;
+                            var siteName = feature.properties["Site Name"];
                             infoObj.update('IDP Locations', [
-                                {'key': 'Status', 'value': status},
+                                {'key': "Site Name", 'value': siteName},
                                 {'key': 'Individuals', 'value': indivNum}
                             ]);
                         });
