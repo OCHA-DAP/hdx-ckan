@@ -254,6 +254,10 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         template_data['data']['map']['is_crisis'] = 'true' if is_crisis else 'false'
         template_data['data']['map']['basemap_url'] = 'default' if not is_crisis else config.get('hdx.crisismap.url')
 
+        if is_crisis:
+            template_data['data']['map']['circle_markers'] = config.get('hdx.nepal_earthquake.filestore.circle_markers')
+            template_data['data']['map']['shakemap'] = config.get('hdx.nepal_earthquake.filestore.shakemap')
+
         template_data['data']['show_map'] = self._show_map(template_data['data']['map'], errors)
 
         template_data['error_summary'] = \
