@@ -21,15 +21,17 @@ $(document).ready(function() {
                 ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
             L.tileLayer(confJson.basemap_url, {
                 attribution: attribution,
-                maxZoom: 14
+                //maxZoom: 14
             }).addTo(map);
         }
 
         L.control.attribution({position: 'topright'}).addTo(map);
         //map.setView([5, -70], 5);
 
+        var layers = L.control.layers();
+        layers.addTo(map);
 
-        loadMapData(map, confJson);
+        loadMapData(map, confJson, layers);
     }
     autoGraph();
 });
@@ -291,13 +293,11 @@ function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
     return map;
 }
 
-function generatePointLayerObject(map, infoObj){
-    var geojsonResourceId = 'cce1f038-cf51-4dbc-bd7a-379d4c1a8043';
-    var datasetId = 'json-repository';
+function generatePointLayerObject(map, infoObj, confJson, layers){
     var pointLayerObject = {
         'fetchGeojsonData': function () {
             var promise = $.ajax({
-                url: "/dataset/" + datasetId + "/resource_download/" + geojsonResourceId,
+                url: confJson.circle_markers,
                 type: 'GET',
                 dataType: 'JSON',
                 context: this,
@@ -343,7 +343,7 @@ function generatePointLayerObject(map, infoObj){
                 return obj;
             }
 
-            var propSymbolsCalculator = generatePropSymbolsObject(8, 20, this.data, 'Individuals');
+            var propSymbolsCalculator = generatePropSymbolsObject(6, 6, this.data, 'Individuals');
 
             var pointsLayer = L.geoJson(this.data, {
                 pointToLayer: function (feature, latlng) {
@@ -358,7 +358,7 @@ function generatePointLayerObject(map, infoObj){
                     var indivNum = parseInt(feature.properties.Individuals);
                     circleConfig.radius = propSymbolsCalculator.computeRadius(indivNum);
                     if (!isNaN(indivNum)) {
-                        circleConfig.fillColor = "#ff493d";
+                        circleConfig.fillColor = "#91a7ff";
                     }
                     return L.circleMarker(latlng, circleConfig);
                 },
@@ -388,7 +388,8 @@ function generatePointLayerObject(map, infoObj){
                 }
 
             });
-            pointsLayer.setZIndex(1000);
+            pointsLayer.setZIndex(95);
+            layers.addOverlay(pointsLayer, "IDP Camps with Population");
             pointsLayer.addTo(map);
         },
         'process': function () {
@@ -400,7 +401,7 @@ function generatePointLayerObject(map, infoObj){
     return pointLayerObject;
 }
 
-function loadMapData(map, confJson){
+function loadMapData(map, confJson, layers){
     var pcodeColumnName = confJson.map_column_1;
     var valueColumnName = confJson.map_values ? confJson.map_values : 'value';
 
@@ -441,16 +442,111 @@ function loadMapData(map, confJson){
 
     var info = null;
     $.when.apply($, [dataPromise, valuesPromise]).done(function(sources){
-        info = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName);
+        info = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers);
         if ( confJson.is_crisis=='true' ) {
-            generatePointLayerObject(map, info).process();
+            generatePointLayerObject(map, info, confJson, layers).process();
         }
     });
 
 
 }
 
-function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName){
+
+function drawShakeMap(map, data, info, confJson, layers) {
+    var newcolor = [
+        ["#ffffff"], //1 color
+        ["#ffffff", "#ffffff"], //2 colors
+        ["#ffffff", "#ffffff", "#ffffff"], //3 colors
+        ["#ffffff", "#ffffff", "#ffffff", "#ffffff"], //4 colors
+        ["#ffffff","#ffffff", "#ffffff", "#ffffff", "#ffffff"], //5 colors
+        ["#bdbdbd", "#969696", "#737373", "#525252", "#252525", "#020202"], //6 colors
+        ["#ffffff","#ffffff", "#ffffff", "#ffffff", "#ffffff","#ffffff", "#ffffff"], //7 colors
+        ["#ffffff","#ffffff", "#ffffff", "#ffffff", "#ffffff","#ffffff", "#ffffff", "#ffffff"] //8 colors
+    ];
+
+    function _getStyle(threshold){
+        function internalGetColor(color, i){
+            var weight = 2;
+            return {color: color[i], fillColor: color[i], fillOpacity: 0, opacity: 0.7, weight: weight};
+        }
+        return function (feature){
+            var value = feature.properties["value"];
+            for (var i = 0; i < threshold.length; i++){
+                if (value < threshold[i]){
+                    return internalGetColor(newcolor[threshold.length], i);
+                }
+            }
+            return internalGetColor(newcolor[threshold.length], threshold.length);
+        };
+    }
+
+    function _internalDraw(data) {
+        var layer = L.geoJson(data, {
+            style: _getStyle(threshold),
+            onEachFeature: function (feature, layer) {
+                (function (layer, properties) {
+                    // Create a mouseover event
+                    layer.on("mouseover", function (e) {
+                        // Change the style to the highlighted version
+                        var styleFunction;
+                        if (layer.defaultOptions == null)
+                            styleFunction = layer._options.style;
+                        else
+                            styleFunction = layer.defaultOptions.style;
+                        if (styleFunction != undefined) {
+                            var currentStyle = styleFunction({properties: properties});
+                            currentStyle['fillOpacity'] = 0;
+                            currentStyle['opacity'] = 1;
+                            currentStyle['color'] = '#888888';
+                            layer.setStyle(currentStyle);
+                        }
+                        var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
+                        var titleValue = properties[titleField];
+                        var updateValue = properties["value"];
+                        info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {
+                            'key': 'Value',
+                            'value': updateValue
+                        }]);
+                    });
+                    // Create a mouseout event that undoes the mouseover changes
+                    layer.on("mouseout", function (e) {
+                        // Start by reverting the style back
+                        var styleFunction;
+                        if (layer.defaultOptions == null)
+                            styleFunction = layer._options.style;
+                        else
+                            styleFunction = layer.defaultOptions.style;
+                        layer.setStyle(styleFunction({properties: properties}));
+                        info.update();
+                    });
+                    // Close the "anonymous" wrapper function, and call it while passing
+                    // in the variables necessary to make the events work the way we want.
+                })(layer, feature.properties);
+            }
+        });
+        layer.setZIndex(100);
+        layers.addOverlay(layer, "Shake Map");
+        //layer.addTo(map); //not enabled by default for now
+    }
+    var threshold = [4, 5, 6, 7, 8];
+
+    //get data store it in values ...
+    $.ajax({
+        url: confJson.shakemap,
+        type: 'GET',
+        dataType: 'JSON',
+        context: this,
+        success: function (result) {
+            _internalDraw(result);
+        }
+    });
+
+
+
+}
+
+
+function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers){
     var newcolor = [
         ["#ffbd13"], //1 color
         ["#ffbd13", "#ff493d"], //2 colors
@@ -472,6 +568,12 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
                 for (var i = 0; i < threshold.length; i++){
+                    if (values[pcoderef] == 0 && confJson.is_crisis=='true'){
+                        var tmpColor = internalGetColor(newcolor[threshold.length], i);
+                        tmpColor["fillOpacity"] = 0;
+                        return tmpColor;
+                    }
+
                     if (values[pcoderef] < threshold[i])
                         return internalGetColor(newcolor[threshold.length], i);
                 }
@@ -517,9 +619,14 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     var threshold = getThreshold([1, 1000, 5000, 10000]);
     var info;
+    info = L.control({position: 'topleft'});
 
-    fitMap(map, data);
-    L.geoJson(data,{
+    if ( confJson.is_crisis != 'true' )
+        fitMap(map, data);
+
+    drawShakeMap(map, data, info, confJson, layers);
+
+    var choroplethLayer = L.geoJson(data,{
         style: getStyle(values, threshold),
         onEachFeature: function (feature, layer) {
             (function(layer, properties) {
@@ -566,9 +673,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                 // in the variables necessary to make the events work the way we want.
             })(layer, feature.properties);
         }
-    }).addTo(map);
-
-    info = L.control({position: 'topleft'});
+    });
+    choroplethLayer.setZIndex(90);
+    layers.addOverlay(choroplethLayer, "Choropleth");
+    choroplethLayer.addTo(map);
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
@@ -635,6 +743,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     legend.addTo(map);
     legend.updateLayer();
     info.updateLayer();
+
+    if ( confJson.is_crisis=='true' ) {
+        map.setView([27.67744748160599, 85.41183471679688], 10);
+    }
 
     return info;
 }

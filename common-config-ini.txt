@@ -175,5 +175,5 @@ hdx.colombia.datastore.access_constraints = 9e69d499-0b2b-4da6-9c61-10e453a57504
 
 
 # Nepal Earthquake page
-hdx.nepal_earthquake.filestore.circle_markers = 24a28485-d36a-47a0-bd76-9d5b98276e65
-hdx.nepal_earthquake.filestore.shakemap = 3e03e1f4-998d-4549-9df9-a9f2d94368cb
+hdx.nepal_earthquake.filestore.circle_markers = /dataset/json-repository/resource_download/8673ff32-03dd-493f-92c1-7d43ea216a70
+hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_download/665dd302-f329-4219-870e-a0e0576985fc
