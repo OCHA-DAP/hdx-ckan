@@ -608,6 +608,7 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
         'fillOpacity': 0,
         'weight': 1
     };
+    var _defaultFillOpacity = 0.6;
 
     var _featureKey = function (feature) {
         return feature.key;
@@ -629,19 +630,25 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
                 if (isSelectedGeo(v.d)) {
                     options.fillColor = _chart.getColor(v.d.value, v.i);
                     options.opacity = 0.8;
-                    options.fillOpacity = 1;                                
+                    options.fillOpacity = _defaultFillOpacity;
                 } else {
                     options.fillColor = _chart.getColor(0, v.i);
                     options.opacity = 0.8;
-                    options.fillOpacity = 1;                                
+                    options.fillOpacity = _defaultFillOpacity;
                 }
             } else {
                 options.fillColor = _chart.getColor(v.d.value, v.i);
                 options.opacity = 0.8;
-                options.fillOpacity = 1;                 
+                options.fillOpacity = _defaultFillOpacity;
             }           
         }
         return options;
+    };
+
+    var _hoverFeatureStyle = function(feature){
+        var result = _featureStyle(feature);
+        result.fillOpacity = 1;
+        return result;
     };
 
     var _popup = function (d, feature) {
@@ -743,9 +750,11 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
             if (_chart.renderPopup()) {
                 //layer.bindPopup(_chart.popup()(v.d, feature));
                 layer.on("mouseover",function(){
+                    layer.setStyle(_hoverFeatureStyle(feature));
                     _info.update(_chart.popup()(v.d, feature));
                 });
                 layer.on("mouseout",function(){
+                    layer.setStyle(_featureStyle(feature));
                     _info.update();
                 });
             }
