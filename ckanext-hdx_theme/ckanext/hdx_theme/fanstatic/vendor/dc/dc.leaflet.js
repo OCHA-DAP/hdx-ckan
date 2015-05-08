@@ -596,6 +596,7 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
 
     var _geojsonLayer = false;
     var _dataMap = [];
+    var _info = false;
 
     var _geojson = false;
     var _renderPopup = true;
@@ -652,6 +653,21 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
             style: _chart.featureStyle(),
             onEachFeature: processFeatures
         });
+
+        _info = L.control();
+
+        _info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'hdx-3w-info');
+            this.update();
+            return this._div;
+        };
+
+        _info.update = function (name) {
+            this._div.innerHTML = (name ? name: 'Hover for name');
+        };
+
+        _info.addTo(_chart.map());
+
         _chart.map().addLayer(_geojsonLayer);
     };
 
@@ -725,7 +741,13 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
         if (v && v.d) {
             layer.key = v.d.key;
             if (_chart.renderPopup()) {
-                layer.bindPopup(_chart.popup()(v.d, feature));
+                //layer.bindPopup(_chart.popup()(v.d, feature));
+                layer.on("mouseover",function(){
+                    _info.update(_chart.popup()(v.d, feature));
+                });
+                layer.on("mouseout",function(){
+                    _info.update();
+                });
             }
             if (_chart.brushOn()) {
                 layer.on("click", selectFilter);
