@@ -114,6 +114,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'geotype': geotype,
                 'geo':geo,
                 'joinAttribute':visualization.get('where-column-2',''),
+                'nameAttribute':visualization.get('map_district_name_column',''),
                 'x':visualization.get('pos-x',''),
                 'y':visualization.get('pos-y',''),
                 'zoom':visualization.get('zoom',''),
