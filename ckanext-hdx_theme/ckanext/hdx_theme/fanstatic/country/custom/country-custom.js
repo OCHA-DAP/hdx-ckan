@@ -18,18 +18,19 @@ $(document).ready(function() {
         }
         else {
             var attribution = '<a href="http://www.openstreetmap.org/copyright" target="_blank">© OpenStreetMap contributors</a>' +
-                    ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
+                ' | <a href="http://earthquake.usgs.gov/earthquakes/eventpage/us20002926#impact_shakemap" target="_blank">USGS</a>';
             L.tileLayer(confJson.basemap_url, {
                 attribution: attribution,
-                maxZoom: 7
+                //maxZoom: 14
             }).addTo(map);
         }
 
         L.control.attribution({position: 'topright'}).addTo(map);
         //map.setView([5, -70], 5);
 
+        var layers = [];
 
-        loadMapData(map, confJson);
+        loadMapData(map, confJson, layers);
     }
     autoGraph();
 });
@@ -291,7 +292,117 @@ function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
     return map;
 }
 
-function loadMapData(map, confJson){
+function generatePointLayerObject(map, infoObj, circleMarkersData, layers){
+    var pointLayerObject = {
+        'drawLayer': function () {
+            function generatePropSymbolsObject(minRadius, maxRadius, featureData, fieldName) {
+                var obj = {
+                    'init': function() {
+                        this.numOfSegments = maxRadius - minRadius + 1;
+                        this.min = -1;
+                        this.max = -1;
+                        for (var i=0; i<featureData.features.length; i++) {
+                            var strValue = featureData.features[i].properties[fieldName];
+                            value = parseFloat(strValue);
+                            if ( !isNaN(value) ) {
+                                if (this.min == -1 || this.min > value)
+                                    this.min = value;
+                                if (this.max == -1 || this.max < value)
+                                    this.max = value;
+                            }
+                        }
+                        this.segmentSize = (this.max - this.min) / this.numOfSegments;
+                    },
+                    'computeRadius': function(value){
+                        if ( !isNaN(value) ) {
+                            var reducedValue = value - this.min;
+                            var segmentNum = reducedValue / this.segmentSize;
+                            var radius = minRadius + segmentNum;
+                            return radius;
+                        }
+                        else {
+                            return minRadius + ((maxRadius - minRadius) / 2)
+                        }
+                    }
+
+                };
+                obj.init();
+                return obj;
+            }
+
+            var propSymbolsCalculator = generatePropSymbolsObject(6, 6, this.data, 'Individuals');
+
+            var pointsLayer = L.geoJson(this.data, {
+                pointToLayer: function (feature, latlng) {
+                    var circleConfig = {
+                        radius: 8,
+                        fillColor: "gray",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.6
+                    };
+                    var indivNum = parseInt(feature.properties.Individuals);
+                    circleConfig.radius = propSymbolsCalculator.computeRadius(indivNum);
+                    if (!isNaN(indivNum)) {
+                        circleConfig.fillColor = "#91a7ff";
+                    }
+                    return L.circleMarker(latlng, circleConfig);
+                },
+                onEachFeature: function (feature, layer) {
+                    (function (layer, properties) {
+                        // Create a mouseover event
+                        layer._originalStyle = layer.options;
+
+                        layer.on("mouseover", function (e) {
+                            layer.setStyle({'fillColor': "red"});
+                            var indivNum = feature.properties.Individuals;
+                            var siteName = feature.properties["Site Name"];
+                            infoObj.update('IDP Locations', [
+                                {'key': "Site Name", 'value': siteName},
+                                {'key': 'Individuals', 'value': indivNum}
+                            ]);
+                        });
+                        // Create a mouseout event that undoes the mouseover changes
+                        layer.on("mouseout", function (e) {
+
+                            layer.setStyle( layer._originalStyle );
+                            infoObj.update();
+                        });
+                        // Close the "anonymous" wrapper function, and call it while passing
+                        // in the variables necessary to make the events work the way we want.
+                    })(layer, feature.properties);
+                }
+
+            });
+            layers.push(pointsLayer);
+            pointsLayer.addTo(map);
+        },
+        'process': function () {
+            this.data = circleMarkersData;
+            this.drawLayer();
+        }
+    };
+    return pointLayerObject;
+}
+
+function _addRemoveLayers(layers, choroplethLayerId, legend) {
+    for (var idx in  layers){
+        var layer = layers[idx];
+        if (layer._map)
+            layer.bringToFront();
+
+        if (layer._leaflet_id == choroplethLayerId){
+            var legendC = $(legend.getContainer());
+            if (layer._map)
+                legendC.show();
+            else
+                legendC.hide();
+        }
+    }
+}
+
+function loadMapData(map, confJson, layers){
     var pcodeColumnName = confJson.map_column_1;
     var valueColumnName = confJson.map_values ? confJson.map_values : 'value';
 
@@ -330,13 +441,150 @@ function loadMapData(map, confJson){
         });
     }
 
-    $.when.apply($, [dataPromise, valuesPromise]).done(function(sources){
-        drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName);
-    });
+    var promiseList = [dataPromise, valuesPromise];
+    var circleMarkersData = null, shakeMapData = null;
+    if (confJson.is_crisis=='true'){
+        var circleMarkers = $.ajax({
+            url: confJson.circle_markers,
+            type: 'GET',
+            dataType: 'JSON',
+            context: this,
+            success: function (result) {
+                circleMarkersData = result;
+            }
+        });
+        promiseList.push(circleMarkers);
 
+        var shakeMap = $.ajax({
+            url: confJson.shakemap,
+            type: 'GET',
+            dataType: 'JSON',
+            context: this,
+            success: function (result) {
+                shakeMapData = result;
+            }
+        });
+        promiseList.push(shakeMap);
+    }
+
+    var info = null;
+    $.when.apply($, promiseList).done(function(sources){
+        var controls = drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers);
+        info = controls.info;
+        var legend = controls.legend;
+        if ( confJson.is_crisis=='true' ) {
+            drawShakeMap(map, shakeMapData, info, confJson, layers);
+            generatePointLayerObject(map, info, circleMarkersData, layers).process();
+            map.setView([27.69844, 85.38183], 12);
+
+            var layersName = ["Choropleth", "Shake Map", "IDP Camps with Population"];
+            var layerControl = L.control.layers();
+            var choroplethLayerId = null;
+            for (var idx in layers){
+                var name = layersName[idx];
+                var layer = layers[idx];
+                if (name == "Choropleth"){
+                    choroplethLayerId = layer._leaflet_id;
+                }
+
+                layerControl.addOverlay(layer, name);
+            }
+            layerControl.addTo(map);
+
+            map.on('overlayadd', function(){
+                _addRemoveLayers(layers, choroplethLayerId, legend);
+            });
+            map.on('overlayremove', function(){
+                _addRemoveLayers(layers, choroplethLayerId, legend);
+            })
+            _addRemoveLayers(layers, choroplethLayerId, legend);
+        }
+
+    });
 }
 
-function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName){
+
+function drawShakeMap(map, shakeMapData, info, confJson, layers) {
+    var newcolor = [
+        ["#ffffff"], //1 color
+        ["#ffffff", "#ffffff"], //2 colors
+        ["#ffffff", "#ffffff", "#ffffff"], //3 colors
+        ["#ffffff", "#ffffff", "#ffffff", "#ffffff"], //4 colors
+        ["#ffffff","#ffffff", "#ffffff", "#ffffff", "#ffffff"], //5 colors
+        ["#bdbdbd", "#969696", "#737373", "#525252", "#252525", "#020202"], //6 colors
+        ["#ffffff","#ffffff", "#ffffff", "#ffffff", "#ffffff","#ffffff", "#ffffff"], //7 colors
+        ["#ffffff","#ffffff", "#ffffff", "#ffffff", "#ffffff","#ffffff", "#ffffff", "#ffffff"] //8 colors
+    ];
+
+    function _getStyle(threshold){
+        function internalGetColor(color, i){
+            var weight = 2;
+            return {color: color[i], fillColor: color[i], fillOpacity: 0, opacity: 0.7, weight: weight};
+        }
+        return function (feature){
+            var value = feature.properties["value"];
+            for (var i = 0; i < threshold.length; i++){
+                if (value < threshold[i]){
+                    return internalGetColor(newcolor[threshold.length], i);
+                }
+            }
+            return internalGetColor(newcolor[threshold.length], threshold.length);
+        };
+    }
+
+    function _internalDraw(data) {
+        var layer = L.geoJson(data, {
+            style: _getStyle(threshold),
+            onEachFeature: function (feature, layer) {
+                (function (layer, properties) {
+                    // Create a mouseover event
+                    layer.on("mouseover", function (e) {
+                        // Change the style to the highlighted version
+                        var styleFunction;
+                        if (layer.defaultOptions == null)
+                            styleFunction = layer._options.style;
+                        else
+                            styleFunction = layer.defaultOptions.style;
+                        if (styleFunction != undefined) {
+                            var currentStyle = styleFunction({properties: properties});
+                            currentStyle['fillOpacity'] = 0;
+                            currentStyle['opacity'] = 1;
+                            currentStyle['color'] = '#888888';
+                            layer.setStyle(currentStyle);
+                        }
+                        var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
+                        var titleValue = 'Earthquake Intensity';
+                        var updateValue = properties["value"];
+                        info.update('Nepal Earthquake', [{'key': 'Name', 'value': titleValue}, {
+                            'key': 'Value',
+                            'value': updateValue
+                        }]);
+                    });
+                    // Create a mouseout event that undoes the mouseover changes
+                    layer.on("mouseout", function (e) {
+                        // Start by reverting the style back
+                        var styleFunction;
+                        if (layer.defaultOptions == null)
+                            styleFunction = layer._options.style;
+                        else
+                            styleFunction = layer.defaultOptions.style;
+                        layer.setStyle(styleFunction({properties: properties}));
+                        info.update();
+                    });
+                    // Close the "anonymous" wrapper function, and call it while passing
+                    // in the variables necessary to make the events work the way we want.
+                })(layer, feature.properties);
+            }
+        });
+        layers.push(layer);
+        //layer.addTo(map);
+    }
+    var threshold = [4, 5, 6, 7, 8];
+    _internalDraw(shakeMapData);
+}
+
+
+function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumnName, layers){
     var newcolor = [
         ["#ffbd13"], //1 color
         ["#ffbd13", "#ff493d"], //2 colors
@@ -358,6 +606,12 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
                 for (var i = 0; i < threshold.length; i++){
+                    if (values[pcoderef] == 0 && confJson.is_crisis=='true'){
+                        var tmpColor = internalGetColor(newcolor[threshold.length], i);
+                        tmpColor["fillOpacity"] = 0;
+                        return tmpColor;
+                    }
+
                     if (values[pcoderef] < threshold[i])
                         return internalGetColor(newcolor[threshold.length], i);
                 }
@@ -395,7 +649,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             }
         }
         else
-            returnNew = false
+            returnNew = false;
         if (returnNew)
             return threshold;
         return defaultThreshold;
@@ -403,9 +657,12 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     var threshold = getThreshold([1, 1000, 5000, 10000]);
     var info;
+    info = L.control({position: 'topleft'});
 
-    fitMap(map, data);
-    L.geoJson(data,{
+    if ( confJson.is_crisis != 'true' )
+        fitMap(map, data);
+
+    var choroplethLayer = L.geoJson(data,{
         style: getStyle(values, threshold),
         onEachFeature: function (feature, layer) {
             (function(layer, properties) {
@@ -423,17 +680,19 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                         currentStyle['fillOpacity'] = 1;
                         currentStyle['opacity'] = 1;
                         currentStyle['color'] = '#888888';
-                        if (!L.Browser.ie && !L.Browser.opera) {
-                            layer.bringToFront();
+                        //if (!L.Browser.ie && !L.Browser.opera) {
+                        //    layer.bringToFront();
                             //for (eLayer in extraLayers)
                             //    if (map.hasLayer(extraLayers[eLayer]))
                             //        extraLayers[eLayer].bringToFront();
-                        }
+                        //}
 
                         layer.setStyle(currentStyle);
                     }
-
-                    info.update(properties);
+                    var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
+                    var titleValue = properties[titleField] ;
+                    var updateValue = values[properties[confJson.map_column_2]];
+                    info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {'key': 'Value', 'value': updateValue}]);
                 });
                 // Create a mouseout event that undoes the mouseover changes
                 layer.on("mouseout", function (e) {
@@ -450,9 +709,11 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                 // in the variables necessary to make the events work the way we want.
             })(layer, feature.properties);
         }
-    }).addTo(map);
-
-    info = L.control({position: 'topleft'});
+    });
+    layers.push(choroplethLayer);
+    if (confJson.is_crisis!='true') {
+        choroplethLayer.addTo(map);
+    }
 
     info.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
@@ -460,16 +721,20 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     };
 
     // method that we will use to update the control based on feature properties passed
-    info.update = function (properties) {
-        var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
-        var titleValue = confJson.is_crisis=='true' ? ' Earthquake Intensity' : properties[titleField] ;
-        this._div.innerHTML = '<h4>' + confJson.map_title + '</h4>' +  (properties ?
-        '<table>' +
-        '<tr><td style="text-align: right;">Name: </td><td>&nbsp;&nbsp; <b>' + titleValue + '</b><td></tr>' +
-        //'<tr><td style="text-align: right;">Municipality: </td><td>&nbsp;&nbsp; <b>' + props.NAME_DEPT + '</b><td></tr>' +
-        '<tr><td style="text-align: right;">Value: </td><td>&nbsp;&nbsp; <b>' + values[properties[confJson.map_column_2]] + '</b><td></tr>' +
-        '</table>'
-            : 'No data available');
+    info.update = function (title, itemArray) {
+        var html = '<h4>' + (title ? title : 'Hover over the map') + '</h4>' ;
+        if (itemArray) {
+            html += '<table>';
+            for (var i=0; i<itemArray.length; i++) {
+                html += '<tr><td style="text-align: right;">' + itemArray[i].key
+                        + ': </td><td>&nbsp;&nbsp; <b>' + itemArray[i].value + '</b><td></tr>';
+            }
+            html += '</table>';
+        }
+        else
+            html += 'No data available';
+
+        this._div.innerHTML = html;
     };
     info.showOtherMessage = function (message){
         this._div.innerHTML = message;
@@ -515,5 +780,8 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     legend.addTo(map);
     legend.updateLayer();
     info.updateLayer();
-
+    return {
+        info: info,
+        legend: legend
+    };
 }

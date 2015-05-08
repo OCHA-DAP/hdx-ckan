@@ -1,110 +1,133 @@
 <div class="org-control-container">
-<h2>{{_('Map Configuration')}}</h2>
+    <h2>{{_('Map Configuration')}}</h2>
 </div>
 
 <div class="org-control-container">
-<div class="control-group control-full org-control field-with-info">
-  <label class="control-label" for="map_title">{{_('Map Title')}} 
-  </label>
-          <input type="text" name='map_title' id='map_title' placeholder="{{_('Title')}}" class='map_config' value="{{customizations['map']['map_title']}}"/>
- </div>
-      <div class="org-control-info info-field" style="margin-top:5px;">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="map_title">{{_('Map Title')}}
+        </label>
+        <input type="text" name='map_title' id='map_title' placeholder="{{_('Title')}}" class='map_config'
+               value="{{customizations['map']['map_title']}}"/>
+    </div>
+    <div class="org-control-info info-field" style="margin-top:5px;">
         <div class="org-info-label">{{_('Give this visualization a title.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="row" style="padding-left:25px;">
-<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
-  <h3>{{_('Values to Map')}}</h3>
-<div class="org-control-container" style="margin-bottom:30px; margin-left:-130px;">
-<div class="controls">
-  <label class="control-label" for="map-select">{{_('Data Type')}}</label>
-          <select name="map_datatype_1" class="map_config">
-            <option value="filestore" {% if customizations['map']['map_datatype_1'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
-            <option value="datastore" {% if customizations['map']['map_datatype_1'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
-          </select>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_dataset_id_1">{{_('Dataset ID')}}</label>
-          <input type="text" name='map_dataset_id_1' id='map_dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='map_config' value="{{customizations['map']['map_dataset_id_1']}}"/>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_resource_id_1">{{_('Resource ID')}}</label>
-          <input type="text" name='map_resource_id_1' id='map_resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='map_config' value="{{customizations['map']['map_resource_id_1']}}"/>
-</div>
-</div>
+    <div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+        <h3>{{_('Values to Map')}}</h3>
 
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_column_1">{{_('Join Column')}}</label>
-          <input type="text" name='map_column_1' id='map_column_1' placeholder="{{_('Join Column')}}" class='map_config' value="{{customizations['map']['map_column_1']}}"/>
-</div>
-</div>
+        <div class="org-control-container" style="margin-bottom:30px; margin-left:-130px;">
+            <div class="controls">
+                <label class="control-label" for="map-select">{{_('Data Type')}}</label>
+                <select name="map_datatype_1" class="map_config">
+                    <option value="filestore" {% if customizations[
+                    'map']['map_datatype_1'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
+                    <option value="datastore" {% if customizations[
+                    'map']['map_datatype_1'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via
+                    datapusher)')}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_dataset_id_1">{{_('Dataset ID')}}</label>
+                <input type="text" name='map_dataset_id_1' id='map_dataset_id_1' label="{{_('Dataset ID')}}"
+                       placeholder="{{_('Dataset ID')}}" class='map_config'
+                       value="{{customizations['map']['map_dataset_id_1']}}"/>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_resource_id_1">{{_('Resource ID')}}</label>
+                <input type="text" name='map_resource_id_1' id='map_resource_id_1' label="{{_('Resource ID')}}"
+                       placeholder="{{_('Resource ID')}}" class='map_config'
+                       value="{{customizations['map']['map_resource_id_1']}}"/>
+            </div>
+        </div>
 
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_values">{{_('Values Column')}}</label>
-          <input type="text" name='map_values' id='map_values' placeholder="{{_('Values')}}" class='map_config' value="{{customizations['map']['map_values']}}"/>
-</div>
-</div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_column_1">{{_('Join Column')}}</label>
+                <input type="text" name='map_column_1' id='map_column_1' placeholder="{{_('Join Column')}}"
+                       class='map_config' value="{{customizations['map']['map_column_1']}}"/>
+            </div>
+        </div>
 
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_threshold">{{_('Threshold')}}</label>
-          <input type="text" name='map_threshold' id='map_threshold' placeholder="{{_('Threshold')}}" class='map_config' value="{{customizations['map']['map_threshold']}}"/>
-</div>
-</div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_values">{{_('Values Column')}}</label>
+                <input type="text" name='map_values' id='map_values' placeholder="{{_('Values')}}" class='map_config'
+                       value="{{customizations['map']['map_values']}}"/>
+            </div>
+        </div>
+
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_threshold">{{_('Threshold')}}</label>
+                <input type="text" name='map_threshold' id='map_threshold' placeholder="{{_('Threshold')}}"
+                       class='map_config' value="{{customizations['map']['map_threshold']}}"/>
+            </div>
+        </div>
 
 
-</div>
-<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
-   <h3>{{_('Map Bounderies')}}</h3>
-<div class="org-control-container" style="margin-bottom:30px; margin-left:-130px;">
-<div class="controls">
-  <label class="control-label" for="map-select">{{_('Data Type')}}</label>
-          <select name="map_datatype_2" class="map_config">
-            <option value="filestore" {% if customizations['map']['map_datatype_2'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
-            <option value="datastore" {% if customizations['map']['map_datatype_2'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
-          </select>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_dataset_id_2">{{_('Dataset ID')}}</label>
-          <input type="text" name='map_dataset_id_2' id='map_dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='map_config' value="{{customizations['map']['map_dataset_id_2']}}"/>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_resource_id_2">{{_('Resource ID')}}</label>
-          <input type="text" name='map_resource_id_2' id='map_resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='map_config' value="{{customizations['map']['map_resource_id_2']}}"/>
-</div>
-</div>
+    </div>
+    <div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+        <h3>{{_('Map Bounderies')}}</h3>
 
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="map_column_2">{{_('Join Column')}}</label>
-          <input type="text" name='map_column_2' id='map_column_2' placeholder="{{_('Join Column')}}" class='map_config' value="{{customizations['map']['map_column_2']}}"/>
-</div>
-</div>
+        <div class="org-control-container" style="margin-bottom:30px; margin-left:-130px;">
+            <div class="controls">
+                <label class="control-label" for="map-select">{{_('Data Type')}}</label>
+                <select name="map_datatype_2" class="map_config">
+                    <option value="filestore" {% if customizations[
+                    'map']['map_datatype_2'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
+                    <option value="datastore" {% if customizations[
+                    'map']['map_datatype_2'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via
+                    datapusher)')}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_dataset_id_2">{{_('Dataset ID')}}</label>
+                <input type="text" name='map_dataset_id_2' id='map_dataset_id_2' label="{{_('Dataset ID')}}"
+                       placeholder="{{_('Dataset ID')}}" class='map_config'
+                       value="{{customizations['map']['map_dataset_id_2']}}"/>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_resource_id_2">{{_('Resource ID')}}</label>
+                <input type="text" name='map_resource_id_2' id='map_resource_id_2' label="{{_('Resource ID')}}"
+                       placeholder="{{_('Resource ID')}}" class='map_config'
+                       value="{{customizations['map']['map_resource_id_2']}}"/>
+            </div>
+        </div>
 
-<div class="org-control-container">
-<div class="control-group control-full org-control"> 
-  <label class="control-label" for="map_district_name_column">{{_('District Name Columns')}}</label>
-          <input type="text" name='map_district_name_column' id='map_district_name_column' placeholder="{{_('District Name Column')}}" class='map_config' value="{{customizations['map']['map_district_name_column']}}"/>
-</div>
-</div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_column_2">{{_('Join Column')}}</label>
+                <input type="text" name='map_column_2' id='map_column_2' placeholder="{{_('Join Column')}}"
+                       class='map_config' value="{{customizations['map']['map_column_2']}}"/>
+            </div>
+        </div>
 
-</div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_district_name_column">{{_('District Name Columns')}}</label>
+                <input type="text" name='map_district_name_column' id='map_district_name_column'
+                       placeholder="{{_('District Name Column')}}" class='map_config'
+                       value="{{customizations['map']['map_district_name_column']}}"/>
+            </div>
+        </div>
+
+    </div>
 
 </div>
 
 <style>
-label{
-  text-align: left !important;
-}
+    label {
+        text-align: left !important;
+    }
 </style>

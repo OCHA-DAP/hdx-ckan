@@ -765,7 +765,7 @@ function transitionBarChart(data){
     }); 
         
     var count = data.length;
-    
+
     var svg = d3.select("#drilldown_chart").selectAll("rect")
             .attr("x", function(d,i) { return x(d.display); })
             .attr("width", x.rangeBand()-1)
@@ -779,7 +779,7 @@ function transitionBarChart(data){
                             return height-y(d.value);
                 }
             }).on("mouseover", function(d) {
-                    var price = d3.select(".barpricelabel");
+                    var price = d3.select(".pricelabel");
                     price.style("display", null);
                     var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
                     price.attr("transform", "translate(" + (x(d.display)+(x.rangeBand()-1)/2) + "," + (y(d.value)-10) + ")");

@@ -14,6 +14,7 @@ class Widget3WController(widget.WidgetController):
             "geotype": "filestore",
             "description": "One Description Test for custom demo org",
             "joinAttribute": "DIST_NO",
+            "nameAttribute":"DISTRICT",
             "colors": ["#ffb5ff", "#e09ee7", "#a371b8", "#855ba0", "#664488", "#472d71", "#291759", "#0a0041"],
             "whoFieldName": "Organisation",
             "whatFieldName": "Activity",
