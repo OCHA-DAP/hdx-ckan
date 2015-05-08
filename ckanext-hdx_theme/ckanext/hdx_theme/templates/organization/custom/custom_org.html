@@ -233,17 +233,24 @@
                     <div class="col-md-8">
                         <p id="description"></p>
                     </div>
-                    <div class="col-md-1">
-                        <a class="reset btn btn-primary btn-sm" id="reset" href="javascript:dc.filterAll();dc.redrawAll();">Reset All</a>
-                    </div>
-                    <div id="count-info" class="col-md-3">
-                        <span class="filter-count "></span> selected out of <span class="total-count "></span> records.
-                    </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
                     <div class="col-xs-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
-                    <div class="col-xs-4"><p id="wheretitle">Where</p><div id="hdx-3W-where"></div></div>
+                    <div class="col-xs-4">
+                        <div>
+                            <div class="pull-left">
+                                <p id="wheretitle">Where</p>
+                            </div>
+                            <div class="pull-right">
+                                <a class="reset" id="reset" href="javascript:dc.filterAll();dc.redrawAll();">Reset All</a>
+                            </div>
+                            <div id="count-info" class="pull-right">
+                                <span class="filter-count "></span>/<span class="total-count "></span> selected records &nbsp;
+                            </div>
+                        </div>
+                        <div id="hdx-3W-where"></div>
+                    </div>
                 </div>
             </div>
         {% endif %}
