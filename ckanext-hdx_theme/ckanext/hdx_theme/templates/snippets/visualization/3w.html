@@ -1,158 +1,203 @@
-  <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-viz-title">{{_('Title')}}</label>
-    <div class="controls ">
-    <input id="field-viz-title" type="text" name="viz-title" value="{{visualization['viz-title']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-viz-title">{{_('Title')}}</label>
+
+        <div class="controls ">
+            <input id="field-viz-title" type="text" name="viz-title" value="{{visualization['viz-title']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Give this visualization a title.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-data-link-url">{{_('Data Link URL')}}</label>
-    <div class="controls ">
-    <input id="field-data-link-url" type="text" name="viz-data-link-url" value="{{visualization['viz-data-link-url']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-data-link-url">{{_('Data Link URL')}}</label>
+
+        <div class="controls ">
+            <input id="field-data-link-url" type="text" name="viz-data-link-url"
+                   value="{{visualization['viz-data-link-url']}}" placeholder="" class="visualization_config"
+                   viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Source Data URL for map.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="row" style="padding-left:25px;">
-<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
-  <h3>{{_('Facts and Figures')}}</h3>
-<div class="org-control-container" style="margin-bottom:30px;">
-<div class="controls">
-  <label class="control-label" for="visualization-select">{{_('Data Type')}}</label>
-          <select name="datatype_1" class="visualization_config" viz-type="3W-dashboard">
-            <option value="filestore" {% if visualization['datatype_1'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
-            <option value="datastore" {% if visualization['datatype_1'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
-          </select>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="dataset_id_1">{{_('Dataset ID')}}</label>
-          <input type="text" name='dataset_id_1' id='dataset_id_1' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='visualization_config' viz-type="3W-dashboard" value="{{visualization['dataset_id_1']}}"/>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="resource_id_1">{{_('Resource ID')}}</label>
-          <input type="text" name='resource_id_1' id='resource_id_1' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='visualization_config' viz-type="3W-dashboard" value="{{visualization['resource_id_1']}}"/>
-</div>
-</div>
+    <div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+        <h3>{{_('Facts and Figures')}}</h3>
 
-<div class="org-control-container">
-  <div class="control-group control-full org-control">
-    <label class="control-label" for="field-where-column">{{_('Join column (P-Codes or other geocode)')}}</label>
-    <div class="controls">
-    <input id="field-where-column" type="text" name="where-column" value="{{visualization['where-column']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        <div class="org-control-container" style="margin-bottom:30px;">
+            <div class="controls">
+                <label class="control-label" for="visualization-select">{{_('Data Type')}}</label>
+                <select name="datatype_1" class="visualization_config" viz-type="3W-dashboard">
+                    <option value="filestore" {% if visualization['datatype_1'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
+                    <option value="datastore" {% if visualization['datatype_1'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="dataset_id_1">{{_('Dataset ID')}}</label>
+                <input type="text" name='dataset_id_1' id='dataset_id_1' label="{{_('Dataset ID')}}"
+                       placeholder="{{_('Dataset ID')}}" class='visualization_config' viz-type="3W-dashboard"
+                       value="{{visualization['dataset_id_1']}}"/>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="resource_id_1">{{_('Resource ID')}}</label>
+                <input type="text" name='resource_id_1' id='resource_id_1' label="{{_('Resource ID')}}"
+                       placeholder="{{_('Resource ID')}}" class='visualization_config' viz-type="3W-dashboard"
+                       value="{{visualization['resource_id_1']}}"/>
+            </div>
+        </div>
+
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="field-where-column">{{_('Join column (P-Codes or other
+                    geocode)')}}</label>
+                <div class="controls">
+                    <input id="field-where-column" type="text" name="where-column"
+                           value="{{visualization['where-column']}}"
+                           placeholder="" class="visualization_config" viz-type="3W-dashboard">
+                </div>
+            </div>
+        </div>
+
+
     </div>
-  </div>
-</div>
+    <div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
+        <h3>{{_('Map Bounderies')}}</h3>
 
+        <div class="org-control-container" style="margin-bottom:30px;">
+            <div class="controls">
+                <label class="control-label" for="visualization-select">{{_('Data Type')}}</label>
+                <select name="datatype_2" class="visualization_config" viz-type="3W-dashboard">
+                    <option value="filestore" {% if visualization['datatype_2'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
+                    <option value="datastore" {% if visualization['datatype_2'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="dataset_id_2">{{_('Dataset ID')}}</label>
+                <input type="text" name='dataset_id_2' id='dataset_id_2' label="{{_('Dataset ID')}}"
+                       placeholder="{{_('Dataset ID')}}" class='visualization_config' viz-type="3W-dashboard"
+                       value="{{visualization['dataset_id_2']}}"/>
+            </div>
+        </div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="resource_id_2">{{_('Resource ID')}}</label>
+                <input type="text" name='resource_id_2' id='resource_id_2' label="{{_('Resource ID')}}"
+                       placeholder="{{_('Resource ID')}}" class='visualization_config' viz-type="3W-dashboard"
+                       value="{{visualization['resource_id_2']}}"/>
+            </div>
+        </div>
 
-</div>
-<div class="well" style="width:33.5%; float:left; margin:5px; padding-bottom:5px;">
-   <h3>{{_('Map Bounderies')}}</h3>
-<div class="org-control-container" style="margin-bottom:30px;">
-<div class="controls">
-  <label class="control-label" for="visualization-select">{{_('Data Type')}}</label>
-          <select name="datatype_2" class="visualization_config" viz-type="3W-dashboard">
-            <option value="filestore" {% if visualization['datatype_2'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
-            <option value="datastore" {% if visualization['datatype_2'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
-          </select>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="dataset_id_2">{{_('Dataset ID')}}</label>
-          <input type="text" name='dataset_id_2' id='dataset_id_2' label="{{_('Dataset ID')}}" placeholder="{{_('Dataset ID')}}" class='visualization_config' viz-type="3W-dashboard" value="{{visualization['dataset_id_2']}}"/>
-</div>
-</div>
-<div class="org-control-container">
-<div class="control-group control-full org-control">
-  <label class="control-label" for="resource_id_2">{{_('Resource ID')}}</label>
-          <input type="text" name='resource_id_2' id='resource_id_2' label="{{_('Resource ID')}}" placeholder="{{_('Resource ID')}}" class='visualization_config' viz-type="3W-dashboard" value="{{visualization['resource_id_2']}}"/>
-</div>
-</div>
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="field-where-column-2">{{_('Join column (P-Codes or other
+                    geocode)')}}</label>
+                <div class="controls">
+                    <input id="field-where-column-2" type="text" name="where-column-2"
+                           value="{{visualization['where-column-2']}}" placeholder="" class="visualization_config"
+                           viz-type="3W-dashboard">
+                </div>
+            </div>
+        </div>
 
-<div class="org-control-container">
-  <div class="control-group control-full org-control">
-    <label class="control-label" for="field-where-column-2">{{_('Join column (P-Codes or other geocode)')}}</label>
-    <div class="controls">
-    <input id="field-where-column-2" type="text" name="where-column-2" value="{{visualization['where-column-2']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        <div class="org-control-container">
+            <div class="control-group control-full org-control">
+                <label class="control-label" for="map_district_name_column">{{_('District Name Columns')}}</label>
+                <div class="controls">
+                    <input type="text" name='map_district_name_column' id='map_district_name_column'
+                           placeholder="" class='visualization_config'
+                           viz-type="3W-dashboard"
+                           value="{{visualization['map_district_name_column']}}"/>
+                </div>
+            </div>
+        </div>
+
     </div>
-  </div>
-</div>
-
-</div>
 
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-who-column">{{_('Which column contains people or orgs?')}}</label>
-    <div class="controls ">
-    <input id="field-who-column" type="text" name="who-column" value="{{visualization['who-column']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-who-column">{{_('Which column contains people or orgs?')}}</label>
+
+        <div class="controls ">
+            <input id="field-who-column" type="text" name="who-column" value="{{visualization['who-column']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('This visualization allows users to filter data by person or organization.')}}</div>
-      </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('This visualization allows users to filter data by person or organization.')}}
+        </div>
+    </div>
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-what-column">{{_('Which column contains activites or other stats?')}}</label>
-    <div class="controls ">
-    <input id="field-what-column" type="text" name="what-column" value="{{visualization['what-column']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-what-column">{{_('Which column contains activites or other
+            stats?')}}</label>
+
+        <div class="controls ">
+            <input id="field-what-column" type="text" name="what-column" value="{{visualization['what-column']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Pick something like sector or activity type.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-pos-x">{{_('Map Positioning (X value)')}}</label>
-    <div class="controls ">
-    <input id="field-pos-x" type="text" name="pos-x" value="{{visualization['pos-x']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-pos-x">{{_('Map Positioning (X value)')}}</label>
+
+        <div class="controls ">
+            <input id="field-pos-x" type="text" name="pos-x" value="{{visualization['pos-x']}}" placeholder=""
+                   class="visualization_config" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('The map will be centered at this coordinate.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-pos-y">{{_('Map Positioning (Y value)')}}</label>
-    <div class="controls ">
-    <input id="field-pos-y" type="text" name="pos-y" value="{{visualization['pos-y']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-pos-y">{{_('Map Positioning (Y value)')}}</label>
+
+        <div class="controls ">
+            <input id="field-pos-y" type="text" name="pos-y" value="{{visualization['pos-y']}}" placeholder=""
+                   class="visualization_config" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('The map will be centered at this coordinate.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-zoom">{{_('Map Zoom')}}</label>
-    <div class="controls ">
-    <input id="field-zoom" type="text" name="zoom" value="{{visualization['zoom']}}" placeholder="" class="visualization_config" viz-type="3W-dashboard">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-zoom">{{_('Map Zoom')}}</label>
+
+        <div class="controls ">
+            <input id="field-zoom" type="text" name="zoom" value="{{visualization['zoom']}}" placeholder=""
+                   class="visualization_config" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Set the default zoom of the map in this visualization.')}}</div>
-      </div>
+    </div>
 </div>
 
 {% if visualization['colors'] is not defined %}
@@ -162,17 +207,26 @@
 {% endif %}
 
 <div class="org-control-container">
-  <div class="control-group control-full">
-    <label class="control-label" for="field-zoom">{{_('Color Gradient')}}</label>
-    <div class="controls ">
-    <input type="text" id="color-1" name="colors[]" value="{{colors[0]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-    <input type="text" id="color-2" name="colors[]" value="{{colors[1]}}" placeholder="" id="color-3" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-    <input type="text" id="color-4" name="colors[]" value="{{colors[2]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-     <input type="text" id="color-5" name="colors[]" value="{{colors[3]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-      <input type="text" id="color-6" name="colors[]" value="{{colors[4]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-       <input type="text" id="color-7" name="colors[]" value="{{colors[5]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-        <input type="text" id="color-8" name="colors[]" value="{{colors[6]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
-         <input type="text" id="color-9" name="colors[]" value="{{colors[7]}}" placeholder="" class="visualization_config visualization_colors" viz-type="3W-dashboard">
+    <div class="control-group control-full">
+        <label class="control-label" for="field-zoom">{{_('Color Gradient')}}</label>
+
+        <div class="controls ">
+            <input type="text" id="color-1" name="colors[]" value="{{colors[0]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-2" name="colors[]" value="{{colors[1]}}" placeholder="" id="color-3"
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-4" name="colors[]" value="{{colors[2]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-5" name="colors[]" value="{{colors[3]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-6" name="colors[]" value="{{colors[4]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-7" name="colors[]" value="{{colors[5]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-8" name="colors[]" value="{{colors[6]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+            <input type="text" id="color-9" name="colors[]" value="{{colors[7]}}" placeholder=""
+                   class="visualization_config visualization_colors" viz-type="3W-dashboard">
+        </div>
     </div>
-  </div>
-      </div>
+</div>
