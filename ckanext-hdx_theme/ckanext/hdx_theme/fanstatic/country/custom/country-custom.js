@@ -475,7 +475,7 @@ function loadMapData(map, confJson, layers){
         if ( confJson.is_crisis=='true' ) {
             drawShakeMap(map, shakeMapData, info, confJson, layers);
             generatePointLayerObject(map, info, circleMarkersData, layers).process();
-            map.setView([27.69844, 85.38183], 12);
+            map.setView([27.69844, 85.38183], 11);
 
             var layersName = ["Choropleth", "Shake Map", "IDP Camps with Population"];
             var layerControl = L.control.layers();
