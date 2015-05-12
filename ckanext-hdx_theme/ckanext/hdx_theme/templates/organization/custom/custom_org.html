@@ -228,7 +228,7 @@
         <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
         <div style="display: none" id="wfp-viz-embed-url">{{ data.visualization.embed_url }}</div>
         {% if data.visualization.config.type == '3W-dashboard' %}
-            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div id="hdx-3w-visualization-wrapper" class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div id="header" class="row">
                     <div class="col-md-8">
                         <p id="description"></p>
