@@ -1028,7 +1028,7 @@ function initHDX(){
     });     
 }
 
-var datastoreID = '9e1eb333-333e-4a1f-acfe-f0b43ba73379';
+var datastoreID = 'b5b850a5-76da-4c33-a410-fd447deac042';
 var url = 'http://127.0.0.1:8000/index.html';
 var map;
 var embedded = (parseGet('embedded'));
