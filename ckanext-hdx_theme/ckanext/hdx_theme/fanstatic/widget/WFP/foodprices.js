@@ -475,7 +475,10 @@ function generateTimeCharts(data,cf,title){
 
     var bisectDate = d3.bisector(function(d) { return d.key; }).left;
 
-    focus.append("path")
+    focus
+        .append("g")
+        .attr("clip-path", "url(#clip)")
+        .append("path")
         .datum(data)
         .attr("class", "area")
         .attr("d", area)

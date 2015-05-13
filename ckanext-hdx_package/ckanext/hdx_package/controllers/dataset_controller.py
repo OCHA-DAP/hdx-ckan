@@ -913,6 +913,47 @@ class DatasetController(PackageController):
         return render('package/resource_read.html')
 
 
+    def resource_datapreview(self, id, resource_id):
+        '''
+        Modified by HDX - from package controller.
+        - change to have protocol-relative URL
+
+        Embeded page for a resource data-preview.
+
+        Depending on the type, different previews are loaded.  This could be an
+        img tag where the image is loaded directly or an iframe that embeds a
+        webpage, recline or a pdf preview.
+        '''
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': c.user or c.author,
+            'auth_user_obj': c.userobj
+        }
+
+        try:
+            c.resource = get_action('resource_show')(context,
+                                                     {'id': resource_id})
+            c.package = get_action('package_show')(context, {'id': id})
+
+            data_dict = {'resource': c.resource, 'package': c.package}
+
+            preview_plugin = datapreview.get_preview_plugin(data_dict)
+
+            if preview_plugin is None:
+                abort(409, _('No preview has been defined.'))
+
+            preview_plugin.setup_template_variables(context, data_dict)
+            c.resource['url'] = c.resource['url'].replace('http://', '//').replace(':5000', '')
+            c.resource_json = json.dumps(c.resource)
+        except NotFound:
+            abort(404, _('Resource not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read resource %s') % id)
+        else:
+            return render(preview_plugin.preview_template(context, data_dict))
+
+
         # class HDXApiController(ApiController):
 
         #     def package_create(self):

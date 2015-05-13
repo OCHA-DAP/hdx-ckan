@@ -1,7 +1,7 @@
 {% extends "widget/widget.html" %}
 
 {% block content %}
-    <div class="row paddingRowHack whiteBackground">
+    <div id="hdx-3w-visualization-wrapper" class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="org-section-title">{{ _("Interactive Data") }}</div>
             <input type="hidden" id="visualization-data" value='{{ data }}'>
@@ -25,6 +25,6 @@
 
 {% block styles %}
     {{ super() }}
-    {% resource 'hdx_theme/widget/3W/3W.css' %}
+    {% resource 'hdx_theme/widget/3W/site.css' %}
 {% endblock %}
 
