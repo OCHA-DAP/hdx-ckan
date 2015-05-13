@@ -82,7 +82,7 @@ function prepareGraph(element, data, colX, colXType, colXFormat, colY, graphType
     return graph;
 }
 
-function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList) {
+function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList, columnYLabel) {
     var config = {
         bindto: element,
         color: {
@@ -108,6 +108,12 @@ function prepareGraph2(element, data, colXType, colXFormat, graphType, colorList
                     culling: {
                         max: 22
                     }
+                }
+            },
+            y: {
+                label: {
+                    text: columnYLabel,
+                    position: 'outer-middle'
                 }
             }
         }
@@ -172,7 +178,7 @@ function autoGraph() {
         sourceListDiv.html(sourceList);
 
         $.when.apply($, promises).done(function(sources){
-            var columnX, columnXType, columnXFormat, columnY, graphType;
+            var columnX, columnXType, columnXFormat, columnY, columnYLabel, graphType;
 
             var dataCols = [];
             var dataColsInit = false;
@@ -189,6 +195,7 @@ function autoGraph() {
                     columnXType = null,
                     columnXFormat = null,
                     columnY = response.column_y,
+                    columnYLabel = graphData.title_y,
                     graphType = graphData.type;
 
                     if (data.fields[0].type == 'timestamp'){
@@ -213,7 +220,7 @@ function autoGraph() {
                     dataCols.push(colY);
                 }
             }
-            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType, colorList);
+            graph = prepareGraph2(graphDataDiv[0], dataCols, columnXType, columnXFormat, graphType, colorList, columnYLabel);
         });
 
     });
