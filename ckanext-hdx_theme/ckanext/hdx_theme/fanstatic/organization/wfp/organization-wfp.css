@@ -232,6 +232,7 @@ a:focus,
   display: inline-block;
   width: 45px;
   padding: 0;
+  line-height: 45px;
 }
 .pagination li.active a,
 .module .pagination li.active a {
