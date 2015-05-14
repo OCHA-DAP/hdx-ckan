@@ -55,7 +55,7 @@
               <div>
                 <p class="exampleSearch">
                   {{ _("e.g.") }} <a href="{% url_for 'show_custom_country', id='nepal-earthquake' %}">{{ _("Nepal Earthquake") }}</a>
-                  {{ _("or") }} <a href="{% url_for 'search', q='Ebola', sort='metadata_modified desc' %}">{{ _("Ebola") }}</a>
+                  {{ _("or") }} <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>
                 </p>
               </div>
             </div>

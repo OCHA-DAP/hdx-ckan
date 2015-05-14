@@ -79,6 +79,9 @@
 .topline .indicator-prevalue {
   margin-left: -5px;
 }
+.topline .indicator-prevalue {
+  margin-left: -5px;
+}
 .topline .source-title {
   height: 20px;
   display: block;
