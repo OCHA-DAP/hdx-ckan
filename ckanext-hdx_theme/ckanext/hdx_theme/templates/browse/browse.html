@@ -31,7 +31,7 @@
                   -->
 
                   <a class="btn demoButton" href="/dataset/mobile_cellular_subscriptions_per_100_inhabitants">Show me a cool visualisation</a>
-                  <span class="visTexts">TAKE A LOOK AT OUR <a href="/ebola">EBOLA</a> & <a href="/group/col">COLOMBIA</a> PAGES</span>
+                  <span class="visTexts">TAKE A LOOK AT OUR <a href="/ebola">EBOLA</a> & <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a> PAGES</span>
                 </div>
             </div>
 			<div class="col-xs-4">

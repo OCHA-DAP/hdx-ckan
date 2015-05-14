@@ -75,6 +75,9 @@
 .topline .topline-value {
   white-space: nowrap;
 }
+.topline .indicator-prevalue {
+  margin-left: 0px;
+}
 .topline.topline-colombia .topline-information {
   height: 105px;
 }
