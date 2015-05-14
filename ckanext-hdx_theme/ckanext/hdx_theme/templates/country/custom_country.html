@@ -8,6 +8,9 @@
             {{ h.follow_button('group', data.country_name) }}
         </span>
         {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+        {% if h.check_access('group_update', {'id': data.country_name}) %}
+            {% link_for _('Edit'), controller='group', action='edit', id=data.country_name, class_='btn' %}
+        {% endif %}
     </span>
 {% endblock %}
 {% block breadcrumb_content %}
