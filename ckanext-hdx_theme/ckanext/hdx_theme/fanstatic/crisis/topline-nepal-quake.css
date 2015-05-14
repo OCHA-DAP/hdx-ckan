@@ -77,10 +77,10 @@
   white-space: nowrap;
 }
 .topline .indicator-prevalue {
-  margin-left: -5px;
+  margin-left: 0px;
 }
 .topline .indicator-prevalue {
-  margin-left: -5px;
+  margin-left: 0px;
 }
 .topline .source-title {
   height: 20px;
