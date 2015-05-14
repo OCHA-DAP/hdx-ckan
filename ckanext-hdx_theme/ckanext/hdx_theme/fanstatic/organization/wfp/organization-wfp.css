@@ -428,6 +428,10 @@ body {
   line-height: 25px;
   color: #eeeeee;
 }
+.newHeader .header-user-box i,
+.newHeader .header-user-box > span > a i {
+  display: none;
+}
 .newHeader .header-user-name {
   color: #f2645a;
 }
