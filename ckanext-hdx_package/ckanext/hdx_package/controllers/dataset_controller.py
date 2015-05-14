@@ -944,7 +944,12 @@ class DatasetController(PackageController):
                 abort(409, _('No preview has been defined.'))
 
             preview_plugin.setup_template_variables(context, data_dict)
-            c.resource['url'] = c.resource['url'].replace('http://', '//').replace(':5000', '')
+
+            # If the browser is going to make a direct request (not via dataproxy) for
+            # the resource it needs to have protocol-relative url
+            if preview_plugin and preview_plugin.name == 'text_preview':
+                c.resource['url'] = c.resource['url'].replace('http://', '//').replace(':5000', '')
+
             c.resource_json = json.dumps(c.resource)
         except NotFound:
             abort(404, _('Resource not found'))
