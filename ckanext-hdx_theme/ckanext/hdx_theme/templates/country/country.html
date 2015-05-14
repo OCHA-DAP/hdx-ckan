@@ -9,6 +9,9 @@
             {{ h.follow_button('group', c.group_dict.id) }}
         </span>
         {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+        {% if h.check_access('group_update', {'id': c.group_dict.id}) %}
+            {% link_for _('Edit'), controller='group', action='edit', id=c.group_dict.name, class_='btn' %}
+        {% endif %}
     </span>
 {% endblock %}
 
