@@ -293,7 +293,7 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code,currency){
     
     $('#prodlink').click(function(event){
         event.preventDefault();
-        generateChartView(cf,adm0,prod,unit,adm0_code);
+        generateChartView(cf,adm0,prod,unit,adm0_code,currency);
     });
     $('#maplink').click(function(event){
        event.preventDefault();
@@ -339,7 +339,7 @@ function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1,currency){
     
     $('#prodlink').click(function(event){
         event.preventDefault();
-        generateChartView(cf,adm0,prod,unit,adm0_code);
+        generateChartView(cf,adm0,prod,unit,adm0_code,currency);
     });
     
     $('#adm1link').click(function(event){
