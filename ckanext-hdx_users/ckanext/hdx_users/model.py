@@ -15,55 +15,58 @@ import ckan.model.types as _types
 mapper = orm.mapper
 log = logging.getLogger(__name__)
 
+
 class ValidationToken(DomainObject):
-	'''
-	Tokens for validating email addresses upon user creation
-	'''
+    '''
+    Tokens for validating email addresses upon user creation
+    '''
 
-	def __init__(self, user_id, token, valid):
-		self.user_id = user_id
-		self.token = token
-		self.valid = valid
+    def __init__(self, user_id, token, valid):
+        self.user_id = user_id
+        self.token = token
+        self.valid = valid
 
-	@classmethod
-	def get(self, user_id):
-		query = meta.Session.query(ValidationToken)
-		return query.filter_by(user_id=user_id).first()
+    @classmethod
+    def get(self, user_id):
+        query = meta.Session.query(ValidationToken)
+        return query.filter_by(user_id=user_id).first()
 
-	@classmethod
-	def get_by_token(self, token):
-		query = meta.Session.query(ValidationToken)
-		return query.filter_by(token=token).first()
+    @classmethod
+    def get_by_token(self, token):
+        query = meta.Session.query(ValidationToken)
+        return query.filter_by(token=token).first()
 
 
+    @classmethod
+    def check_existence(self):
+        return validation_token_table.exists()
 
-	@classmethod
-	def check_existence(self):
-		return validation_token_table.exists()
 
 validation_token_table = Table('validation_tokens', meta.metadata,
-	Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
-	Column('user_id', types.UnicodeText, ForeignKey('user.id')),
-	Column('token', types.UnicodeText),
-	Column('valid', types.Boolean) 
-	)
+                               Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
+                               Column('user_id', types.UnicodeText, ForeignKey('user.id')),
+                               Column('token', types.UnicodeText),
+                               Column('valid', types.Boolean)
+                               )
 
-mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(),])
+mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
+
 
 def setup():
-	'''
-	Create our tables!
-	'''
+    '''
+    Create our tables!
+    '''
 
-	if model.user_table.exists() and not validation_token_table.exists():
-		validation_token_table.create()
-		log.debug('Validation Token table created')
+    if model.user_table.exists() and not validation_token_table.exists():
+        validation_token_table.create()
+        log.debug('Validation Token table created')
+
 
 def delete_tables():
-	'''
-	Delete data from some extra tables to prevent IntegrityError between tests.
-	'''
+    '''
+    Delete data from some extra tables to prevent IntegrityError between tests.
+    '''
 
-	if validation_token_table.exists():
-		validation_token_table.delete()
-		log.debug('Validation Token table deleted')
+    if validation_token_table.exists():
+        validation_token_table.delete()
+        log.debug('Validation Token table deleted')
