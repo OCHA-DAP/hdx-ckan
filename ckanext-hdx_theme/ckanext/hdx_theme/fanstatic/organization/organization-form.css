@@ -10,3 +10,11 @@ border-bottom: 0px !important;
 margin-bottom: 30px !important;
 line-height: 2px !important;
 }
+
+.org-control textarea {
+	max-height: 500px !important;
+}
+
+.org-control {
+	max-height: 500px !important;
+}

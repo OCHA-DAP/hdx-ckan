@@ -154,7 +154,7 @@
 {% else %}
   {% set less = h.hdx_less_default() %}
 {% endif %}
-{{ form.textarea('less', label=_('Custom Styling'), id='field-less', value=less, classes=['control-full','org-control','field-with-info']) }}
+{{ form.textarea('less', label=_('Custom Styling'), id='field-less', value=less, rows=10, classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Use less to add your own styling to further customize your page.')}}</div>
       </div>
