@@ -61,11 +61,13 @@ overriding the form blocks depending on the current context
           2. {{ _('Custom Styles') }}
         </h1>
 </div>
+{% snippet 'group/snippets/custom/map.html',
+                            customizations=customizations, form=form %}
+
+<br>
 {% snippet 'group/snippets/custom/topline.html',
                             customizations=customizations, form=form %}
 
-{% snippet 'group/snippets/custom/map.html',
-                            customizations=customizations, form=form %}
 <div id="chart1">
 {% snippet 'group/snippets/custom/charts.html',
                             chart=customizations['charts'][0], chart_id=1, form=form %}
@@ -82,6 +84,11 @@ overriding the form blocks depending on the current context
 <style>
 .org-control-info{
   margin-top:-22px;
+}
+
+.create-org.form-actions {
+margin-bottom: 30px;
+line-height: 2px;
 }
 </style>
 
