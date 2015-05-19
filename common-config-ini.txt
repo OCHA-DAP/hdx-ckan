@@ -178,3 +178,6 @@ hdx.colombia.datastore.access_constraints = 9e69d499-0b2b-4da6-9c61-10e453a57504
 # Nepal Earthquake page
 hdx.nepal_earthquake.filestore.circle_markers = /dataset/json-repository/resource_download/c7a5b4a5-ce29-484e-9f8c-581ccefba04e
 hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_download/475656c7-ee1e-4cd1-a11e-fd20e397be1c
+
+# GIS
+hdx.gis.layer_import_url = http://localhost:1234/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}

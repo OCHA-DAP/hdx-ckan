@@ -1,24 +1,15 @@
 import logging
-# from urllib import urlencode
-#import datetime
 import cgi
 
 from ckanext.hdx_package.helpers import helpers
-#from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
-#from formencode import foreach
 
 from pylons import config
 from genshi.template import MarkupTemplate
-#from genshi.template.text import NewTextTemplate
-#from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
-#import ckan.lib.maintain as maintain
 import ckan.lib.package_saver as package_saver
-#import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
-#import ckan.lib.accept as accept
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.lib.datapreview as datapreview
@@ -48,7 +39,6 @@ flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
 _check_group_auth = logic.auth.create._check_group_auth
 
-
 CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
     'html': 'text/html;charset=utf-8',
@@ -57,11 +47,11 @@ CONTENT_TYPES = {
 
 ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
 GEOJSON_FORMAT = 'geojson'
+GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
 
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
-#from ckan.controllers.api import ApiController
 
 def clone_dict(old_dict):
     data = dict()
@@ -275,6 +265,7 @@ class DatasetController(PackageController):
         return perma_link
 
     def _update_or_create_resource(self, context, data, dataset_id, resource_id):
+        gis_data = {"dataset_id": dataset_id, "resource_id": resource_id}
         if resource_id:
             data['id'] = resource_id
             # Added by HDX - adding perma_link
@@ -284,11 +275,14 @@ class DatasetController(PackageController):
 
             get_action('resource_update')(context, data)
             if 'format' in data:
-                if data['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                    data['shape'] = json.dumps(self._get_geojson(data['url']))
-                if data['format'] == GEOJSON_FORMAT:
-                    data['shape'] = json.dumps(self._get_json_from_resource(data['url']))
-                if 'shape' in data and data['shape'] is not None:
+                # if data['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                #     data['shape'] = json.dumps(self._get_geojson(data['url']))
+                # if data['format'] == GEOJSON_FORMAT:
+                #     data['shape'] = json.dumps(self._get_json_from_resource(data['url']))
+                if data['format'] in GIS_FORMATS:
+                    gis_data['url'] = data['url']
+                    data['shape_info'] = self._get_shape_info_as_json(gis_data)
+                if 'shape_info' in data and data['shape_info'] is not None:
                     get_action('resource_update')(context, data)
 
         else:
@@ -302,11 +296,14 @@ class DatasetController(PackageController):
                     dataset_id, result_dict['id'])
                 get_action('resource_update')(context, result_dict)
             if 'format' in result_dict:
-                if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                    result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
-                elif result_dict['format'] == GEOJSON_FORMAT:
-                    result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
-                if 'shape' in result_dict and result_dict['shape'] is not None:
+                # if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
+                #     result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
+                # elif result_dict['format'] == GEOJSON_FORMAT:
+                #     result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
+                if result_dict['format'] in GIS_FORMATS:
+                    gis_data['url'] = result_dict['url']
+                    result_dict['shape_info'] = self._get_shape_info_as_json(gis_data)
+                if 'shape_info' in result_dict and result_dict['shape_info'] is not None:
                     get_action('resource_update')(context, result_dict)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
@@ -619,7 +616,7 @@ class DatasetController(PackageController):
                 {'resource': resource, 'package': c.pkg_dict})
 
         # Is this an indicator? Load up graph data
-        #c.pkg_dict['indicator'] = 1
+        # c.pkg_dict['indicator'] = 1
         try:
             if int(c.pkg_dict['indicator']):
                 c.pkg_dict['graph'] = '{}'
@@ -701,17 +698,17 @@ class DatasetController(PackageController):
                    'for_view': True}
         data_dict = {'id': org_id}
         org_info = get_action(
-                'hdx_light_group_show')(context, data_dict)
+            'hdx_light_group_show')(context, data_dict)
 
-        extras_dict = {item['key']: item['value'] for item in org_info.get('extras',{})}
+        extras_dict = {item['key']: item['value'] for item in org_info.get('extras', {})}
         extras_dict['image_url'] = org_info.get('image_url', None)
 
         return extras_dict
 
     def _process_customizations(self, json_string):
         c.logo_config = {
-          'background_color': '#fafafa',
-          'border_color': '#cccccc'
+            'background_color': '#fafafa',
+            'border_color': '#cccccc'
         }
         if json_string:
             custom_dict = json.loads(json_string)
@@ -723,13 +720,13 @@ class DatasetController(PackageController):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
-
     @staticmethod
     def _has_shapes(resources):
         result = 0
         formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
         for resource in resources:
-            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
+            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and (
+                        resource['shape'] != 'null') and 'errors' not in resource['shape']:
                 result = 1
                 return result
         return result
@@ -739,30 +736,37 @@ class DatasetController(PackageController):
         result = {}
         for resource in resources:
             if 'format' in resource:
-                if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
+                if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and (
+                            resource['shape'] != 'null') and 'errors' not in resource['shape']:
                     name = resource['name']
                     result[name] = json.loads(resource['shape'])
-                elif resource['format'] == GEOJSON_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
+                elif resource['format'] == GEOJSON_FORMAT and ('shape' in resource) and (
+                            resource['shape'] != 'null') and 'errors' not in resource['shape']:
                     name = resource['name']
-                   # result[name] = DatasetController._get_json_from_resource(resource)
+                    # result[name] = DatasetController._get_json_from_resource(resource)
                     result[name] = json.loads(resource['shape'])
         return result
 
-    @staticmethod
-    def _get_json_from_resource(resource):
-        if not resource:
-            return None
-        urls_dict = {'url': resource}
-        g_json = get_action('hdx_get_json_from_resource')({}, urls_dict)
-        return g_json
+    # @staticmethod
+    # def _get_json_from_resource(resource):
+    #     if not resource:
+    #         return None
+    #     urls_dict = {'url': resource}
+    #     g_json = get_action('hdx_get_json_from_resource')({}, urls_dict)
+    #     return g_json
 
-    @staticmethod
-    def _get_geojson(url):
-        ogre_url = config.get('hdx.ogre.url')
-        urls_dict = {'shape_source_url': url, 'convert_url': ogre_url+'/convert'}
-        g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
-        return g_json
+    # @staticmethod
+    # def _get_geojson(url):
+    #     ogre_url = config.get('hdx.ogre.url')
+    #     urls_dict = {'shape_source_url': url, 'convert_url': ogre_url + '/convert'}
+    #     g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
+    #     return g_json
 
+    def _get_shape_info_as_json(self, gis_data):
+        layer_import_url = config.get('hdx.gis.layer_import_url')
+        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}", gis_data['resource_id']).replace("{resource_download_url}", gis_data['url'])
+        result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
+        return json.dumps(result)
 
     def _resource_preview(self, data_dict):
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:
@@ -813,12 +817,11 @@ class DatasetController(PackageController):
             status = 'Private'
             data_dict = clone_dict(c.pkg_dict)
             data_dict['private'] = True
-        #try:
+        # try:
         pkg_dict = get_action('package_update')(context, data_dict)
-        #except:
-        #   return self._finish(500, {'success': False, 'message':'Oops! We can't do this right now. Something went wrong.'}, content_type='json') 
+        # except:
+        #   return self._finish(500, {'success': False, 'message':'Oops! We can't do this right now. Something went wrong.'}, content_type='json')
         return self._finish(200, {'success': True, 'status': status, 'text': text}, content_type='json')
-
 
     # copy from package.py:1094
     def resource_delete(self, id, resource_id):
@@ -850,7 +853,6 @@ class DatasetController(PackageController):
             abort(404, _('Resource not found'))
         return render('package/confirm_delete_resource.html')
 
-
     def delete(self, id):
 
         if 'cancel' in request.params:
@@ -876,8 +878,8 @@ class DatasetController(PackageController):
             abort(404, _('Dataset not found'))
         return render('package/confirm_delete.html')
 
-#copy from package.py:1183
-#related to issue 2367
+    # copy from package.py:1183
+    # related to issue 2367
     def resource_read(self, id, resource_id):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
@@ -897,7 +899,7 @@ class DatasetController(PackageController):
         # get package license info
         license_id = c.package.get('license_id')
         try:
-            c.package['isopen'] = model.Package.\
+            c.package['isopen'] = model.Package. \
                 get_license_register()[license_id].isopen()
         except KeyError:
             c.package['isopen'] = False
@@ -911,7 +913,6 @@ class DatasetController(PackageController):
         c.resource['can_be_previewed'] = self._resource_preview(
             {'resource': c.resource, 'package': c.package})
         return render('package/resource_read.html')
-
 
     def resource_datapreview(self, id, resource_id):
         '''
@@ -959,99 +960,99 @@ class DatasetController(PackageController):
             return render(preview_plugin.preview_template(context, data_dict))
 
 
-        # class HDXApiController(ApiController):
+            # class HDXApiController(ApiController):
 
-        #     def package_create(self):
-        #         context = {'model': model, 'session': model.Session, 'user': c.user,
-        #                    'api_version': 3, 'auth_user_obj': c.userobj}
-        #         log.debug('create: %s' % (context))
-        #         try:
-        #             request_data = self._get_request_data()
-        #             data_dict = {}
-        #             data_dict.update(request_data)
-        #         except ValueError, inst:
-        #             return self._finish_bad_request(
-        #                 _('JSON Error: %s') % inst)
+            #     def package_create(self):
+            #         context = {'model': model, 'session': model.Session, 'user': c.user,
+            #                    'api_version': 3, 'auth_user_obj': c.userobj}
+            #         log.debug('create: %s' % (context))
+            #         try:
+            #             request_data = self._get_request_data()
+            #             data_dict = {}
+            #             data_dict.update(request_data)
+            #         except ValueError, inst:
+            #             return self._finish_bad_request(
+            #                 _('JSON Error: %s') % inst)
 
-        #         try:
-        #             response_data = self.package_create_rest(context, data_dict)
-        #             location = None
-        #             return self._finish_ok(response_data,
-        #                                    resource_location=location)
-        #         except NotAuthorized, e:
-        #             extra_msg = e.extra_msg
-        #             return self._finish_not_authz(extra_msg)
-        #         except NotFound, e:
-        #             extra_msg = e.extra_msg
-        #             return self._finish_not_found(extra_msg)
-        #         except ValidationError, e:
-        #             # CS: nasty_string ignore
-        #             log.error('Validation error: %r' % str(e.error_dict))
-        #             return self._finish(409, e.error_dict, content_type='json')
-        #         except DataError, e:
-        #             log.error('Format incorrect: %s - %s' % (e.error, request_data))
-        #             error_dict = {
-        #                 'success': False,
-        #                 'error': {'__type': 'Integrity Error',
-        #                                     'message': e.error,
-        #                                     'data': request_data}}
-        #             return self._finish(400, error_dict, content_type='json')
-        #         except search.SearchIndexError:
-        #             log.error('Unable to add package to search index: %s' %
-        #                       request_data)
-        #             return self._finish(500,
-        #                                 _(u'Unable to add package to search index') %
-        #                                 request_data)
-        #         except:
-        #             model.Session.rollback()
-        #             raise
+            #         try:
+            #             response_data = self.package_create_rest(context, data_dict)
+            #             location = None
+            #             return self._finish_ok(response_data,
+            #                                    resource_location=location)
+            #         except NotAuthorized, e:
+            #             extra_msg = e.extra_msg
+            #             return self._finish_not_authz(extra_msg)
+            #         except NotFound, e:
+            #             extra_msg = e.extra_msg
+            #             return self._finish_not_found(extra_msg)
+            #         except ValidationError, e:
+            #             # CS: nasty_string ignore
+            #             log.error('Validation error: %r' % str(e.error_dict))
+            #             return self._finish(409, e.error_dict, content_type='json')
+            #         except DataError, e:
+            #             log.error('Format incorrect: %s - %s' % (e.error, request_data))
+            #             error_dict = {
+            #                 'success': False,
+            #                 'error': {'__type': 'Integrity Error',
+            #                                     'message': e.error,
+            #                                     'data': request_data}}
+            #             return self._finish(400, error_dict, content_type='json')
+            #         except search.SearchIndexError:
+            #             log.error('Unable to add package to search index: %s' %
+            #                       request_data)
+            #             return self._finish(500,
+            #                                 _(u'Unable to add package to search index') %
+            #                                 request_data)
+            #         except:
+            #             model.Session.rollback()
+            #             raise
 
-        #     def request_wrapper(self, context, data_dict=None, result=None):
-        #         user = context['user']
+            #     def request_wrapper(self, context, data_dict=None, result=None):
+            #         user = context['user']
 
-        #         if new_authz.auth_is_anon_user(context):
-        #             check1 = new_authz.check_config_permission('anon_create_dataset')
-        #         else:
-        #             check1 = new_authz.check_config_permission('create_dataset_if_not_in_organization') \
-        #                 or new_authz.check_config_permission('create_unowned_dataset') \
-        #                 or new_authz.has_user_permission_for_some_org(user, 'create_dataset')
+            #         if new_authz.auth_is_anon_user(context):
+            #             check1 = new_authz.check_config_permission('anon_create_dataset')
+            #         else:
+            #             check1 = new_authz.check_config_permission('create_dataset_if_not_in_organization') \
+            #                 or new_authz.check_config_permission('create_unowned_dataset') \
+            #                 or new_authz.has_user_permission_for_some_org(user, 'create_dataset')
 
-        #         if not check1:
-        #             return {'success': False, 'msg': _('User %s not authorized to create packages') % user}
+            #         if not check1:
+            #             return {'success': False, 'msg': _('User %s not authorized to create packages') % user}
 
-        #         check2 = _check_group_auth(context,data_dict)
-        #         if not check2:
-        #             return {'success': False, 'msg': _('User %s not authorized to edit these groups') % user}
+            #         check2 = _check_group_auth(context,data_dict)
+            #         if not check2:
+            #             return {'success': False, 'msg': _('User %s not authorized to edit these groups') % user}
 
-        #         user = context['user']
-        #         if user in (model.PSEUDO_USER__VISITOR, ''):
-        #             return {'success': False, 'msg': _('Valid API key needed to create a package')}
+            #         user = context['user']
+            #         if user in (model.PSEUDO_USER__VISITOR, ''):
+            #             return {'success': False, 'msg': _('Valid API key needed to create a package')}
 
-        #         # If an organization is given are we able to add a dataset to it?
-        #         data_dict = data_dict or {}
-        #         org_id = data_dict.get('owner_org')
-        #         if org_id and not new_authz.has_user_permission_for_group_or_org(
-        #                 org_id, user, 'create_dataset'):
-        #             return {'success': False, 'msg': _('User %s not authorized to add dataset to this organization') % user}
-        #         return {'success': True, 'result':result}
+            #         # If an organization is given are we able to add a dataset to it?
+            #         data_dict = data_dict or {}
+            #         org_id = data_dict.get('owner_org')
+            #         if org_id and not new_authz.has_user_permission_for_group_or_org(
+            #                 org_id, user, 'create_dataset'):
+            #             return {'success': False, 'msg': _('User %s not authorized to add dataset to this organization') % user}
+            #         return {'success': True, 'result':result}
 
-        #     def convert_groups(self, groups):
-        #         countries = []
-        #         for g in groups:
-        #             countries.append(g['id'])
-        #         return countries
+            #     def convert_groups(self, groups):
+            #         countries = []
+            #         for g in groups:
+            #             countries.append(g['id'])
+            #         return countries
 
-        #     def package_create_rest(self, context, data_dict):
-        #         import ckan.lib.dictization.model_save as model_save
+            #     def package_create_rest(self, context, data_dict):
+            #         import ckan.lib.dictization.model_save as model_save
 
-        #         check_access('package_create_rest', context, data_dict)
-        #         dictized_package = model_save.package_api_to_dict(data_dict, context)
-        #         dictized_after = get_action('package_create')(context, dictized_package)
-        #         ## Update
-        #         dictized_package['groups'] = self.convert_groups(dictized_package['groups'])
-        #         dictized_after = get_action('package_update')(context, dictized_package)
-        #         pkg = context['package']
-        #         package_dict = model_dictize.package_to_api(pkg, context)
+            #         check_access('package_create_rest', context, data_dict)
+            #         dictized_package = model_save.package_api_to_dict(data_dict, context)
+            #         dictized_after = get_action('package_create')(context, dictized_package)
+            #         ## Update
+            #         dictized_package['groups'] = self.convert_groups(dictized_package['groups'])
+            #         dictized_after = get_action('package_update')(context, dictized_package)
+            #         pkg = context['package']
+            #         package_dict = model_dictize.package_to_api(pkg, context)
 
-        #         data_dict['id'] = pkg.id
-        #         return self.request_wrapper(context, package_dict, dictized_after)
+            #         data_dict['id'] = pkg.id
+            #         return self.request_wrapper(context, package_dict, dictized_after)
