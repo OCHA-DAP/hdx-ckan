@@ -166,6 +166,8 @@ class DashboardController(uc.UserController):
         limit = 20
         data_dict['limit'] = limit
         data_dict['offset'] = (page - 1) * limit
+        data_dict['sort'] = request.params.get('sort', 'metadata_modified desc')
+        c.sort_by_selected = data_dict['sort']
         c.is_sysadmin = new_authz.is_sysadmin(c.user)
         try:
             user_dict = get_action('hdx_user_show')(context, data_dict)

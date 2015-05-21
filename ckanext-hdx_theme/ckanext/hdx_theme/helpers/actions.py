@@ -308,10 +308,12 @@ def hdx_user_show(context, data_dict):
 
     offset = data_dict.get('offset', 0)
     limit = data_dict.get('limit', 20)
+    print data_dict.get('sort', None)
+    sort = data_dict.get('sort', 'metadata_modified desc')
     user_dict['datasets'] = []
     dataset_q = model.Session.query(model.Package).join(model.PackageRole
     ).filter_by(user=user_obj, role=model.Role.ADMIN
-    ).offset(offset).limit(limit)
+    ).order_by(sort).offset(offset).limit(limit)
 
     dataset_q_counter = model.Session.query(model.Package).join(model.PackageRole
     ).filter_by(user=user_obj, role=model.Role.ADMIN
