@@ -53,6 +53,7 @@ lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
 
+
 def clone_dict(old_dict):
     data = dict()
     for k, v in old_dict.iteritems():
@@ -664,12 +665,13 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
-        has_shapes = 0
+        has_shapes = False
         if 'resources' in c.pkg_dict:
             has_shapes = self._has_shapes(c.pkg_dict['resources'])
         try:
-            if has_shapes > 0:
-                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+            if has_shapes:
+                # c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                c.shapes = self._process_shapes(c.pkg_dict['resources'])
                 return render('indicator/hdx-shape-read.html', loader_class=loader)
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
@@ -720,31 +722,28 @@ class DatasetController(PackageController):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
-    @staticmethod
-    def _has_shapes(resources):
-        result = 0
-        formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+    def _has_shapes(self, resources):
         for resource in resources:
-            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and (
-                        resource['shape'] != 'null') and 'errors' not in resource['shape']:
-                result = 1
-                return result
-        return result
+            if self._has_shape_info(resource):
+                return True
+        return False
 
-    @staticmethod
-    def _process_shapes(resources):
+    def _has_shape_info(self, resource):
+        if ('format' in resource) and (resource['format'] in GIS_FORMATS) and ('shape_info' in resource) and (
+                    resource['shape_info'] != 'null'):
+            shp_info = json.loads(resource['shape_info'])
+            if 'success' in shp_info and shp_info['success'] == 'true':
+                return True
+        return False
+
+    def _process_shapes(self, resources):
         result = {}
         for resource in resources:
-            if 'format' in resource:
-                if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and (
-                            resource['shape'] != 'null') and 'errors' not in resource['shape']:
-                    name = resource['name']
-                    result[name] = json.loads(resource['shape'])
-                elif resource['format'] == GEOJSON_FORMAT and ('shape' in resource) and (
-                            resource['shape'] != 'null') and 'errors' not in resource['shape']:
-                    name = resource['name']
-                    # result[name] = DatasetController._get_json_from_resource(resource)
-                    result[name] = json.loads(resource['shape'])
+            if self._has_shape_info(resource):
+                res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
+                res_pbf_url = res_pbf_template_url.replace('{resource_id}', resource['id'])
+                name = resource['name']
+                result[name] = res_pbf_url
         return result
 
     # @staticmethod
@@ -764,7 +763,8 @@ class DatasetController(PackageController):
 
     def _get_shape_info_as_json(self, gis_data):
         layer_import_url = config.get('hdx.gis.layer_import_url')
-        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}", gis_data['resource_id']).replace("{resource_download_url}", gis_data['url'])
+        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}", gis_data[
+            'resource_id']).replace("{resource_download_url}", gis_data['url'])
         result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
         return json.dumps(result)
 
