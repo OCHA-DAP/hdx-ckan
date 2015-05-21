@@ -5,6 +5,12 @@
     {{ form.errors(error_summary) }}
   {% endblock %}
 
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+          1. {{ _('General Information') }}
+        </h1>
+</div>
+
   {% block basic_fields %}
     {% set attrs = {'data-module': 'slug-preview-target', 'type':'hidden'} %}
     <div class="org-control-container">
@@ -130,10 +136,9 @@
 </div>
 
 <div class="org-control-container">
-{{ form.input('topline_dataset', label=_('Dataset with Topline Numbers'), id='field-topline-dataset', type='text', value=customizations['topline_dataset'], classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The id of the dataset that topline figures have been uploaded to.')}}</div>
-      </div>
+  <h1 class="h1-title uppercase">
+          3. {{ _('Topline Numbers') }}
+        </h1>
 </div>
 
 <div class="org-control-container">
@@ -149,7 +154,7 @@
 {% else %}
   {% set less = h.hdx_less_default() %}
 {% endif %}
-{{ form.textarea('less', label=_('Custom Styling'), id='field-less', value=less, classes=['control-full','org-control','field-with-info']) }}
+{{ form.textarea('less', label=_('Custom Styling'), id='field-less', value=less, rows=10, classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Use less to add your own styling to further customize your page.')}}</div>
       </div>
@@ -158,7 +163,7 @@
 
 <div class="org-control-container">
   <h1 class="h1-title uppercase">
-          3. {{ _('Visualization Configuration') }}
+          4. {{ _('Visualization Configuration') }}
         </h1>
 </div>
 <div class="org-control-container" style="margin-bottom:30px;">

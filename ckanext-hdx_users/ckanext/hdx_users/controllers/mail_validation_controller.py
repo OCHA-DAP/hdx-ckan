@@ -41,7 +41,8 @@ NotAuthorized = logic.NotAuthorized
 unflatten = dictization_functions.unflatten
 
 Invalid = df.Invalid
-#
+
+
 def name_validator_with_changed_msg(val, context):
     """This is just a wrapper function around the validator.name_validator function. 
         The wrapper function just changes the message in case the name_match doesn't match.
@@ -280,7 +281,6 @@ class ValidationController(ckan.controllers.user.UserController):
                 user['id']))
 
 
-
     def send_validation_email(self, user, token):
         validate_link = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='validate',
                                   token=token['token'])
@@ -288,9 +288,10 @@ class ValidationController(ckan.controllers.user.UserController):
         body = 'Hello! Thank you for registering for an HDX account. '\
            'Please click the following link to validate your email\n' \
            '{link}\n' \
-           ''.format(link=link.format(h.full_current_url(), validate_link))
+           ''.format(link=link.format(config['ckan.site_url'], validate_link))
+        
         try:
-            mailer.mail_recipient("HDX Registration", user['email'], "HDX: Validate Your Email", body)
+            mailer.mail_recipient(user['name'], user['email'], "HDX: Validate Your Email", body)
             return True
         except:
             return False
@@ -359,9 +360,13 @@ class ValidationController(ckan.controllers.user.UserController):
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')
-            if g.openid_enabled:
-                err += _(' (Or if using OpenID, it hasn\'t been associated '
+            try:
+                if g.openid_enabled:
+                    err += _(' (Or if using OpenID, it hasn\'t been associated '
                          'with a user account.)')
+            except:
+                pass
+                
             if h.asbool(config.get('ckan.legacy_templates', 'false')):
                 h.flash_error(err)
                 h.redirect_to(controller='user',

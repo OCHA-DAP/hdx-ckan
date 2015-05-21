@@ -5,3 +5,16 @@ border-bottom: 0px !important;
 .nav-tabs {
 border-bottom: 0px !important;
 }
+
+.create-org.form-actions {
+margin-bottom: 30px !important;
+line-height: 2px !important;
+}
+
+.org-control textarea {
+	max-height: 500px !important;
+}
+
+.org-control {
+	max-height: 500px !important;
+}
