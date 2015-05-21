@@ -6,6 +6,8 @@ Created on May 16, 2014
 '''
 
 import ckan.tests as tests
+from ckan.tests.functional.api.base import *
+import json
 import webtest
 import ckan.plugins as p
 import ckan.lib.create_test_data as ctd
@@ -23,7 +25,7 @@ import ckanext.hdx_package.helpers.caching as caching
 
 log = logging.getLogger(__name__)
 
-class TestMetadataFields(tests.WsgiAppCase):
+class TestMetadataFields(tests.WsgiAppCase, ApiTestCase):
     
     @classmethod
     def setup_class(cls):
@@ -142,6 +144,13 @@ class TestMetadataFields(tests.WsgiAppCase):
         result = logic.get_action('related_update')(context,data_dict)
         #Confirm related item owner status
         assert result['owner_id'] == user.id
+
+    def test_tags_autocomplete(self):
+        offset = '/api/2/util/tag/autocomplete?incomplete=a'
+
+        res = self.app.get(offset, status=[200,302])
+        r = json.loads(res.body)
+        assert len(r['ResultSet']['Result']) > 0
 
     def _related_create(self, title, description, type, url, image_url):
         usr = logic.get_action('get_site_user')({'model':model,'ignore_auth': True},{})

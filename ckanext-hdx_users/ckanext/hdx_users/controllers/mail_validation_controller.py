@@ -360,9 +360,13 @@ class ValidationController(ckan.controllers.user.UserController):
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')
-            if g.openid_enabled:
-                err += _(' (Or if using OpenID, it hasn\'t been associated '
+            try:
+                if g.openid_enabled:
+                    err += _(' (Or if using OpenID, it hasn\'t been associated '
                          'with a user account.)')
+            except:
+                pass
+                
             if h.asbool(config.get('ckan.legacy_templates', 'false')):
                 h.flash_error(err)
                 h.redirect_to(controller='user',
