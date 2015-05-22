@@ -5,14 +5,11 @@ from pylons import config
 
 import ckan.lib.base as base
 import ckan.controllers.user
-from ckan.common import _, c, request
+from ckan.common import _, c, g, request
 import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
 import ckan.lib.base as base
 import ckan.controllers.user
-from ckan.common import _, c, request
-import ckan.lib.helpers as h
-import ckan.lib.mailer as mailer
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.navl.dictization_functions as dictization_functions
