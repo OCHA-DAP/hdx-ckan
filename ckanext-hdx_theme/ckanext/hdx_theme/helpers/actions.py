@@ -1,4 +1,4 @@
-#import json
+# import json
 import logging
 # import datetime
 import os
@@ -194,7 +194,7 @@ def hdx_get_sys_admins(context, data_dict):
     # TODO: check access that user is logged in
     q = model.Session.query(model.User).filter(model.User.sysadmin == True)
     return [{'name': m.name, 'display_name': m.fullname or m.name, 'email': m.email} for m in q.all()]
-    #return q.all();
+    # return q.all();
 
 
 def hdx_send_new_org_request(context, data_dict):
@@ -297,7 +297,7 @@ def hdx_user_show(context, data_dict):
         return user_dict
 
     revisions_q = model.Session.query(model.Revision
-    ).filter_by(author=user_obj.name)
+                                      ).filter_by(author=user_obj.name)
 
     revisions_list = []
     for revision in revisions_q.limit(20).all():
@@ -310,12 +310,12 @@ def hdx_user_show(context, data_dict):
     limit = data_dict.get('limit', 20)
     user_dict['datasets'] = []
     dataset_q = model.Session.query(model.Package).join(model.PackageRole
-    ).filter_by(user=user_obj, role=model.Role.ADMIN
-    ).offset(offset).limit(limit)
+                                                        ).filter_by(user=user_obj, role=model.Role.ADMIN
+                                                                    ).offset(offset).limit(limit)
 
     dataset_q_counter = model.Session.query(model.Package).join(model.PackageRole
-    ).filter_by(user=user_obj, role=model.Role.ADMIN
-    ).count()
+                                                                ).filter_by(user=user_obj, role=model.Role.ADMIN
+                                                                            ).count()
 
     for dataset in dataset_q:
         try:
@@ -466,4 +466,3 @@ def hdx_get_json_from_resource(context, data_dict):
     except:
         res = None
     return res
-
