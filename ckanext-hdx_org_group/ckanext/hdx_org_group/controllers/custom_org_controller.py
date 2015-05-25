@@ -86,7 +86,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         if visualization.get('visualization-select', '') == 'WFP':
             config.update({
                 'embedded': "true",
+                'data_link_url':visualization.get('viz-data-link-url','#'),
+                'type': visualization.get('visualization-select',''),
                 'resource_id': visualization.get('viz-resource-id', '#'),
+                'datastore_id':visualization.get('viz-resource-id', '')
             })
             return config
 
@@ -119,9 +122,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                            'geo': geo,
                            'joinAttribute': visualization.get('where-column-2', ''),
                            'nameAttribute': visualization.get('map_district_name_column', ''),
-                           'x': visualization.get('pos-x', ''),
-                           'y': visualization.get('pos-y', ''),
-                           'zoom': visualization.get('zoom', ''),
                            'colors': visualization.get('colors', '')
                            })
 
