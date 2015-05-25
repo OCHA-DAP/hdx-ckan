@@ -27,6 +27,10 @@
     <div class="border-bottom-grey">
       <div class="image">{{ h.linked_gravatar(user.email_hash, 190) }}</div>
       <h1 class="heading">{{ user.display_name }}</h1>
+      {% if user.state == 'deleted' %}
+      <span class="label label-important">{{ _('Deleted') }}</span>
+      {% endif %}
+      
       {% if c.user_dict['about'] %}
         {{ c.user_dict['about'] }}
       {% else %}

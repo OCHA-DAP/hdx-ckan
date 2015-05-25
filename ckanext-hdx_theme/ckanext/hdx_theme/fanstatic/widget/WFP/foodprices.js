@@ -293,7 +293,7 @@ function generateADMChartView(cf,adm1,prod,unit,adm0,adm0_code,currency){
     
     $('#prodlink').click(function(event){
         event.preventDefault();
-        generateChartView(cf,adm0,prod,unit,adm0_code);
+        generateChartView(cf,adm0,prod,unit,adm0_code,currency);
     });
     $('#maplink').click(function(event){
        event.preventDefault();
@@ -339,7 +339,7 @@ function generateMktChartView(cf,mkt,prod,unit,adm0,adm0_code,adm1,currency){
     
     $('#prodlink').click(function(event){
         event.preventDefault();
-        generateChartView(cf,adm0,prod,unit,adm0_code);
+        generateChartView(cf,adm0,prod,unit,adm0_code,currency);
     });
     
     $('#adm1link').click(function(event){
@@ -1029,13 +1029,14 @@ function initHDX(){
     });     
 }
 
-var datastoreID = 'b5b850a5-76da-4c33-a410-fd447deac042';
+var datastoreID;
 var url = 'http://127.0.0.1:8000/index.html';
 var map;
 var embedded = (parseGet('embedded'));
 
 $(document).ready(function(){
     url = $("#wfp-viz-embed-url").text().trim();
+    datastoreID = $("#wfp-viz-embed-datastore").text().trim();
 
     if(embedded ==='true'){
         initembed();

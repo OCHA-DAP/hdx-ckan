@@ -93,6 +93,39 @@ class DashboardController(uc.UserController):
             'dict': None,
         }
 
+    def read(self, id=None):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   'for_view': True}
+        data_dict = {'id': id,
+                     'user_obj': c.userobj}
+
+        context['with_related'] = True
+
+        self._setup_template_variables(context, data_dict)
+
+        # The legacy templates have the user's activity stream on the user
+        # profile page, new templates do not.
+        if h.asbool(config.get('ckan.legacy_templates', False)):
+            c.user_activity_stream = get_action('user_activity_list_html')(
+                context, {'id': c.user_dict['id']})
+
+        return render('user/read.html')
+
+    def _setup_template_variables(self, context, data_dict):
+        c.is_sysadmin = new_authz.is_sysadmin(c.user)
+        try:
+            user_dict = get_action('user_show')(context, data_dict)
+        except NotFound:
+            abort(404, _('User not found'))
+        except NotAuthorized:
+            abort(401, _('Not authorized to see this page'))
+        if user_dict['state'] == 'deleted' and not c.is_sysadmin:
+            abort(404, _('User not found'))
+        c.user_dict = user_dict
+        c.is_myself = user_dict['name'] == c.user
+        c.about_formatted = h.render_markdown(user_dict['about'])
+
     def dashboard_activity_stream(self, user_id, filter_type=None, filter_id=None,
                               offset=0):
         '''Return the dashboard activity stream of the current user.

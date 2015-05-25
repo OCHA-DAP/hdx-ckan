@@ -32,10 +32,10 @@ c = common.c
 request = common.request
 _ = common._
 
-
 log = logging.getLogger(__name__)
 
 suffix = '#datasets-section'
+
 
 def _get_embed_url(viz_config):
     ckan_url = config.get('ckan.site_url', '').strip()
@@ -52,8 +52,8 @@ def _get_embed_url(viz_config):
     url = ckan_url + widget_url
     return url
 
-class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
 
+class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
     def org_read(self, id):
 
         org_info = self.get_org(id)
@@ -66,7 +66,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
         }
 
-
         result = render(
             'organization/custom/custom_org.html', extra_vars=template_data)
 
@@ -77,49 +76,57 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             visualization = json.loads(visualization)
         except:
             return "{}"
-        
+
         config = {
-                'title':visualization.get('viz-title',''),
-                'data_link_url':visualization.get('viz-data-link-url','#'),
-                'type': visualization.get('visualization-select','')
+            'title': visualization.get('viz-title', ''),
+            'data_link_url': visualization.get('viz-data-link-url', '#'),
+            'type': visualization.get('visualization-select', '')
         }
 
-        if visualization.get('visualization-select','') == 'WFP':
+        if visualization.get('visualization-select', '') == 'WFP':
             config.update({
-                'embedded': "true"
+                'embedded': "true",
+                'data_link_url':visualization.get('viz-data-link-url','#'),
+                'type': visualization.get('visualization-select',''),
+                'resource_id': visualization.get('viz-resource-id', '#'),
+                'datastore_id':visualization.get('viz-resource-id', '')
             })
             return config
 
-        if visualization.get('datatype_1','') =='filestore':
+        if visualization.get('datatype_1', '') == 'filestore':
             datatype = "filestore"
-            data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1',''), resource_id=visualization.get('resource_id_1',''))
+            data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1', ''),
+                             resource_id=visualization.get('resource_id_1', ''))
         else:
             datatype = "datastore"
-            data = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_1','')+"&limit=10000000"
-    
-        if visualization.get('datatype_2','') =='filestore':
+            data = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_1',
+                                                                                   '') + "&limit=10000000"
+
+        if visualization.get('datatype_2', '') == 'filestore':
             geotype = "filestore"
-            geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2',''), resource_id=visualization.get('resource_id_2',''))
+            geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2', ''),
+                            resource_id=visualization.get('resource_id_2', ''))
         else:
             geotype = "datastore"
-            geo = "/api/action/datastore_search?resource_id="+visualization.get('resource_id_2','')+"&limit=10000000"
+            geo = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_2',
+                                                                                  '') + "&limit=10000000"
 
-        #beware that visualisation type constants are also used in the template to select different resource bundles
-        if visualization.get('visualization-select','') == '3W-dashboard':
+        # beware that visualisation type constants are also used in the template to select different resource bundles
+        if visualization.get('visualization-select', '') == '3W-dashboard':
             config.update({'datatype': datatype,
-                'data': data,
-                'whoFieldName':visualization.get('who-column',''),
-                'whatFieldName':visualization.get('what-column',''),
-                'whereFieldName':visualization.get('where-column',''),
-                'geotype': geotype,
-                'geo':geo,
-                'joinAttribute':visualization.get('where-column-2',''),
-                'nameAttribute':visualization.get('map_district_name_column',''),
-                'x':visualization.get('pos-x',''),
-                'y':visualization.get('pos-y',''),
-                'zoom':visualization.get('zoom',''),
-                'colors':visualization.get('colors','')
-            })
+                           'data': data,
+                           'whoFieldName': visualization.get('who-column', ''),
+                           'whatFieldName': visualization.get('what-column', ''),
+                           'whereFieldName': visualization.get('where-column', ''),
+                           'geotype': geotype,
+                           'geo': geo,
+                           'joinAttribute': visualization.get('where-column-2', ''),
+                           'nameAttribute': visualization.get('map_district_name_column', ''),
+                           'x': visualization.get('pos-x', ''),
+                           'y': visualization.get('pos-y', ''),
+                           'zoom': visualization.get('zoom', ''),
+                           'colors': visualization.get('colors', '')
+                           })
 
         return config
 
@@ -171,7 +178,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             {'model': model, 'session': model.Session},
             {'id': org_info['id']}
         )
-        add_data_url = h.url_for('add dataset')+'?organization_id={}'.format(org_info['id'])
+        add_data_url = h.url_for('add dataset') + '?organization_id={}'.format(org_info['id'])
         template_data = {
             'data': {
                 'org_info': org_info,
@@ -238,14 +245,15 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
             org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
 
-            json_extra = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'customization']
+            json_extra = [el.get('value', None) for el in result.get('extras', []) if
+                          el.get('key', '') == 'customization']
             jsonstring = json_extra[0] if len(json_extra) == 1 else ''
             if jsonstring and jsonstring.strip():
                 json_dict = json.loads(jsonstring)
                 top_line_src_info = self._get_top_line_src_info(json_dict)
                 images = self._get_images(json_dict)
             else:
-                top_line_src_info = (None,None)
+                top_line_src_info = (None, None)
                 images = (None, None)
 
             org_dict = {
@@ -260,7 +268,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'modified_at': result.get('modified_at', ''),
                 'image_sq': images[0],
                 'image_rect': images[1],
-                'visualization_config': result.get('visualization_config',''),
+                'visualization_config': result.get('visualization_config', ''),
             }
 
             return org_dict
@@ -274,7 +282,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
     def _get_images(self, json_dict):
         if 'image_sq' in json_dict and 'image_rect' in json_dict:
-                return (json_dict['image_sq'], json_dict['image_rect'])
+            return (json_dict['image_sq'], json_dict['image_rect'])
         elif 'image_sq' in json_dict:
             return (json_dict['image_sq'], None)
         elif 'image_rect' in json_dict:
@@ -282,10 +290,9 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         return (None, None)
 
-
     def _get_top_line_src_info(self, json_dict):
         if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
-                return (json_dict['topline_dataset'], json_dict['topline_resource'])
+            return (json_dict['topline_dataset'], json_dict['topline_resource'])
 
         return (None, None)
 
@@ -386,7 +393,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                         item['is_used'] = True
                     else:
                         params_item_copy[code] = params_item_copy[
-                            code] + [item['name']]
+                                                     code] + [item['name']]
                         item['filter_link'] = h.url_for(
                             self._get_named_route(), **params_item_copy) + suffix
                         item['is_used'] = False
@@ -433,7 +440,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                    'auth_user_obj': c.userobj}
 
         is_org_member = (context.get('user', None) and
-                           new_authz.has_user_permission_for_group_or_org(org_code, context.get('user'), 'read'))
+                         new_authz.has_user_permission_for_group_or_org(org_code, context.get('user'), 'read'))
         if is_org_member:
             context['ignore_capacity_check'] = True
 
@@ -471,7 +478,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         body = ''
 
         if tab == 'all':
-            body = hdx_helpers.hdx_show_singular_plural(dataset_count+indicator_count,
+            body = hdx_helpers.hdx_show_singular_plural(dataset_count + indicator_count,
                                                         _('indicator / dataset'),
                                                         _('indicators & datasets'), True)
         elif tab == 'indicators':
@@ -496,4 +503,3 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             result = False
 
         return result
-
