@@ -5,11 +5,13 @@
     {{ form.errors(error_summary) }}
   {% endblock %}
 
-<div class="org-control-container">
-  <h1 class="h1-title uppercase">
-          1. {{ _('General Information') }}
-        </h1>
-</div>
+    {%  block general_information_section_title %}
+        <div class="org-control-container">
+            <h1 class="h1-title uppercase">
+                1. {{ _('General Information') }}
+            </h1>
+        </div>
+    {% endblock %}
 
   {% block basic_fields %}
     {% set attrs = {'data-module': 'slug-preview-target', 'type':'hidden'} %}
