@@ -17,14 +17,14 @@ class WidgetWFPController(widget.WidgetController):
             "type": "WFP",
             "embeded": True
         }
-        keys = []
+        arrayKeys = []
 
-        # config = urlparse.parse_qs(request.url.split("?")[1])
-        # for key in config:
-        #     if isinstance(ret[key], list):
-        #         ret[key] = config[key]
-        #     else:
-        #         ret[key] = config[key][0]
+        config = urlparse.parse_qs(request.url.split("?")[1])
+        for key in config:
+            if key in arrayKeys:
+                ret[key] = config[key]
+            else:
+                ret[key] = config[key][0]
 
         return ret
     def show(self):
@@ -34,7 +34,8 @@ class WidgetWFPController(widget.WidgetController):
         extra = {
             "data": json.dumps(data),
             "visualization_basemap_url": config.get("hdx.orgmap.url"),
-            "visualization_embed_url": org_controller._get_embed_url({'type': 'WFP', })
+            "visualization_embed_url": org_controller._get_embed_url({'type': 'WFP', }),
+            "datastore_id": data['datastore_id']
         }
 
         result = render('widget/WFP/WFP.html', extra_vars=extra)
