@@ -82,6 +82,7 @@ a:focus,
   display: inline-block;
   width: 45px;
   padding: 0;
+  line-height: 45px;
 }
 .pagination li.active a,
 .module .pagination li.active a {
@@ -276,6 +277,10 @@ body {
   text-transform: uppercase;
   line-height: 25px;
   color: #eeeeee;
+}
+.newHeader .header-user-box i,
+.newHeader .header-user-box > span > a i {
+  display: none;
 }
 .newHeader .header-user-name {
   color: #f2645a;

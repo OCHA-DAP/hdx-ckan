@@ -158,48 +158,6 @@
     </div>
 </div>
 
-<div class="org-control-container">
-    <div class="control-group control-full org-control field-with-info">
-        <label class="control-label" for="field-pos-x">{{_('Map Positioning (X value)')}}</label>
-
-        <div class="controls ">
-            <input id="field-pos-x" type="text" name="pos-x" value="{{visualization['pos-x']}}" placeholder=""
-                   class="visualization_config" viz-type="3W-dashboard">
-        </div>
-    </div>
-    <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The map will be centered at this coordinate.')}}</div>
-    </div>
-</div>
-
-<div class="org-control-container">
-    <div class="control-group control-full org-control field-with-info">
-        <label class="control-label" for="field-pos-y">{{_('Map Positioning (Y value)')}}</label>
-
-        <div class="controls ">
-            <input id="field-pos-y" type="text" name="pos-y" value="{{visualization['pos-y']}}" placeholder=""
-                   class="visualization_config" viz-type="3W-dashboard">
-        </div>
-    </div>
-    <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The map will be centered at this coordinate.')}}</div>
-    </div>
-</div>
-
-<div class="org-control-container">
-    <div class="control-group control-full org-control field-with-info">
-        <label class="control-label" for="field-zoom">{{_('Map Zoom')}}</label>
-
-        <div class="controls ">
-            <input id="field-zoom" type="text" name="zoom" value="{{visualization['zoom']}}" placeholder=""
-                   class="visualization_config" viz-type="3W-dashboard">
-        </div>
-    </div>
-    <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Set the default zoom of the map in this visualization.')}}</div>
-    </div>
-</div>
-
 {% if visualization['colors'] is not defined %}
 {% set colors = ['#81d4fa','#4fc3f7','#29b6f6','#03a9f4','#039be5','#0288d1','#0277bd','#01579b'] %}
 {% else %}

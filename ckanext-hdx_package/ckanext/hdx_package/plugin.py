@@ -66,7 +66,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
-
+    
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
@@ -163,7 +163,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
             'subnational': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
-            'quality': [tk.get_validator('ignore_missing'),
+            'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
         })
 
@@ -222,8 +222,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_validator('ignore_missing')],
             'subnational': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_missing')],
-            'quality': [tk.get_converter('convert_from_extras'),
-                              tk.get_validator('ignore_missing')],
+            'quality': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
         })
         return schema
 

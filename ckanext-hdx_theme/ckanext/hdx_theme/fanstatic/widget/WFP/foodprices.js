@@ -471,6 +471,7 @@ function generateTimeCharts(data,cf,title){
         price.append("text")
             .attr("x", 9)
             .attr("dy", ".35em")
+            .attr("transform", "translate(-60, -5)")
             .attr("class","wfplabel");
 
     var bisectDate = d3.bisector(function(d) { return d.key; }).left;
@@ -1028,13 +1029,14 @@ function initHDX(){
     });     
 }
 
-var datastoreID = 'b5b850a5-76da-4c33-a410-fd447deac042';
+var datastoreID;
 var url = 'http://127.0.0.1:8000/index.html';
 var map;
 var embedded = (parseGet('embedded'));
 
 $(document).ready(function(){
     url = $("#wfp-viz-embed-url").text().trim();
+    datastoreID = $("#wfp-viz-embed-datastore").text().trim();
 
     if(embedded ==='true'){
         initembed();

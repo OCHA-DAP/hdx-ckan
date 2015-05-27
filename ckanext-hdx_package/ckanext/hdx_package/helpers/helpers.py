@@ -262,7 +262,7 @@ def _tag_search(context, data_dict):
             term, escape='\\')
         q = q.filter(model.Tag.name.ilike('%' + escaped_term + '%'))
 
-    q = q.filter(model.PackageTag.state == 'active')
+    q = q.join('package_tags').filter(model.PackageTag.state == 'active')
     count = q.count()
     q = q.offset(offset)
     q = q.limit(limit)
