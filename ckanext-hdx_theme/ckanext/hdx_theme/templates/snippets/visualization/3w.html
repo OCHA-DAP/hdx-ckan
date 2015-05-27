@@ -33,7 +33,7 @@
 
         <div class="org-control-container" style="margin-bottom:30px;">
             <div class="controls">
-                <label class="control-label" for="visualization-select">{{_('Data Type')}}</label>
+                <label class="control-label" for="datatype_1">{{_('Data Type')}}</label>
                 <select name="datatype_1" class="visualization_config" viz-type="3W-dashboard">
                     <option value="filestore" {% if visualization['datatype_1'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
                     <option value="datastore" {% if visualization['datatype_1'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
@@ -76,7 +76,7 @@
 
         <div class="org-control-container" style="margin-bottom:30px;">
             <div class="controls">
-                <label class="control-label" for="visualization-select">{{_('Data Type')}}</label>
+                <label class="control-label" for="datatype_2">{{_('Data Type')}}</label>
                 <select name="datatype_2" class="visualization_config" viz-type="3W-dashboard">
                     <option value="filestore" {% if visualization['datatype_2'] == 'filestore' %}selected{% endif %}>{{_('Filestore (json)')}}</option>
                     <option value="datastore" {% if visualization['datatype_2'] == 'datastore' %}selected{% endif %}>{{_('Datastore (via datapusher)')}}</option>
