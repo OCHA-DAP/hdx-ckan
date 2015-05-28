@@ -135,4 +135,14 @@
     <script src="/scripts.js"></script>
     -->
   {% endblock -%}
+  <script>
+    $(document).ready(function(){
+        var base = '{{ app_globals.site_url }}';
+        $('a').each(function(){
+          if (this.href.search(base) == -1){
+            this.target="_new";
+          }
+        });
+    });
+  </script>
 </html>
