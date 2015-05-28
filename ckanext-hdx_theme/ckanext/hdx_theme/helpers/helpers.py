@@ -33,7 +33,6 @@ downloadable_formats = {
 
 
 def is_downloadable(resource):
-    print resource
     format = resource.get('format', 'data').lower()
     if format in downloadable_formats:
         return True
@@ -45,13 +44,6 @@ def is_not_zipped(res):
         return False
     return True
 
-
-def offsite_link(res):
-    url = res.get('url', 'zip').strip().lower()
-    base = config.get('site_url').strip.lower()
-    if re.search(base, url):
-        return False
-    return True
 
 def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
