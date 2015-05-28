@@ -432,7 +432,9 @@ def hdx_get_shape_info(context, data_dict):
         shape_info = json.dumps({
             'success': 'false',
             'message': 'Error retrieving the shape info content',
-            'error_type': 'Timeout'
+            'layer_id': 'None',
+            'error_type': 'ckan-generated-error',
+            'error_class': 'None'
         })
     return shape_info
 
