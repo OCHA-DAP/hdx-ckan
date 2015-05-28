@@ -766,7 +766,7 @@ class DatasetController(PackageController):
         gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}", gis_data[
             'resource_id']).replace("{resource_download_url}", gis_data['url'])
         result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
-        return json.dumps(result)
+        return result
 
     def _resource_preview(self, data_dict):
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:

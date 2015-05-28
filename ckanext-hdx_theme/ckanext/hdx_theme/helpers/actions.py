@@ -424,15 +424,16 @@ def _add_to_filter_list(src, param_name, filter_list):
 def hdx_get_shape_info(context, data_dict):
     try:
         gis_url = data_dict.get('gis_url', None)
-        shape_info = requests.get(gis_url, allow_redirects=True)
+        response = requests.get(gis_url, allow_redirects=True)
+        shape_info = response.text if hasattr(response, 'text') else ''
     except:
         log.error("Error retrieving the shape info content")
         log.error(sys.exc_info()[0])
-        shape_info = {
+        shape_info = json.dumps({
             'success': 'false',
             'message': 'Error retrieving the shape info content',
             'error_type': 'Timeout'
-        }
+        })
     return shape_info
 
 
