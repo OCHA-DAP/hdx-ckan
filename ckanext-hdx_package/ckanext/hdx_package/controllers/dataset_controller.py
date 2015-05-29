@@ -762,9 +762,12 @@ class DatasetController(PackageController):
     #     return g_json
 
     def _get_shape_info_as_json(self, gis_data):
+        resource_id = gis_data['resource_id']
+        resource_id = resource_id if resource_id and resource_id.strip() else 'new'
+
         layer_import_url = config.get('hdx.gis.layer_import_url')
-        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}", gis_data[
-            'resource_id']).replace("{resource_download_url}", gis_data['url'])
+        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
+                    resource_id).replace("{resource_download_url}", gis_data['url'])
         result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
         return result
 
