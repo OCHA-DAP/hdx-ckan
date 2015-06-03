@@ -201,7 +201,7 @@ class DatasetController(PackageController):
                 if this_org in user_orgs:
                     return render('organization/request_mem_or_org.html')
         except:
-            return render('user/login.html', extra_vars={'contribute': True})
+            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='contribute'))
 
         package_type = self._guess_package_type(True)
 
