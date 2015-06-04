@@ -4,6 +4,12 @@
   {% block error_summary %}
     {{ form.errors(error_summary) }}
   {% endblock %}
+  <div class="org-control-container">
+    <h1 class="h1-title uppercase">
+          {% block page_heading %}1. {{ _('Basic Details') }}{% endblock %}
+        </h1>
+        <p>{{ _('Tell us some basic details about your organisation.') }}</p>
+  </div>
 
   {% block basic_fields %}
     {% set attrs = {'data-module': 'slug-preview-target', 'type':'hidden'} %}
@@ -130,20 +136,6 @@
 </div>
 
 <div class="org-control-container">
-{{ form.input('topline_dataset', label=_('Dataset with Topline Numbers'), id='field-topline-dataset', type='text', value=customizations['topline_dataset'], classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The id of the dataset that topline figures have been uploaded to.')}}</div>
-      </div>
-</div>
-
-<div class="org-control-container">
-{{ form.input('topline_resource', label=_('Resource with Topline Numbers'), id='field-topline-resource', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
-      </div>
-</div>
-
-<div class="org-control-container">
 {% if h.hdx_get_extras_element(data.extras, value_key="less") %}
   {% set less = h.hdx_get_extras_element(data.extras, value_key="less") %}
 {% else %}
@@ -155,10 +147,24 @@
       </div>
 </div>
 
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+    3. {{_('Topline Numbers')}}
+  </h1>
+</div>
+
+<div class="org-control-container">
+{{ form.input('topline_resource', label=_('Resource with Topline Numbers'), id='field-topline-resource', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
+      </div>
+</div>
+
+
 
 <div class="org-control-container">
   <h1 class="h1-title uppercase">
-          3. {{ _('Visualization Configuration') }}
+          4. {{ _('Visualization Configuration') }}
         </h1>
 </div>
 <div class="org-control-container" style="margin-bottom:30px;">

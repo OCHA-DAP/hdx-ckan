@@ -6,6 +6,8 @@
 As the form is rendered as a seperate page we take advantage of this by
 overriding the form blocks depending on the current context
 #}
+{%  block general_information_section_title %}{% endblock %}
+
 {% block dataset_fields %}
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}

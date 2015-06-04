@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 import requests
+import datetime
 
 from pylons import config
 import sqlalchemy
@@ -220,11 +221,13 @@ def hdx_send_new_org_request(context, data_dict):
              'Person\'s email: {person_email}\n' \
              'Person\'s ckan username: {ckan_username}\n' \
              'Person\'s ckan email: {ckan_email}\n' \
+             'Request time: {request_time}\n' \
              '(This is an automated mail)' \
              '').format(org_name=data_dict['title'], org_description=data_dict['description'],
                         org_url=data_dict['org_url'], person_name=data_dict['your_name'],
                         person_email=data_dict['your_email'],
-                        ckan_username=ckan_username, ckan_email=ckan_email)
+                        ckan_username=ckan_username, ckan_email=ckan_email,
+                        request_time=datetime.datetime.now().isoformat())
 
     hdx_mail.send_mail([{'display_name': display_name, 'email': email}], subject, body)
 
