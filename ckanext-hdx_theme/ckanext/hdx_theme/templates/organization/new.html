@@ -35,10 +35,6 @@
 	        </div>
 	      {% endif %}
 		  {% block primary_content_inner %}
-		    <h1 class="h1-title uppercase">
-		      {% block page_heading %}1. {{ _('Basic Details') }}{% endblock %}
-		    </h1>
-		    <p>{{ _('Tell us some basic details about your organisation.') }}</p>
 		    {% block form %}
 		      {{ c.form | safe }}
 		    {% endblock %}
