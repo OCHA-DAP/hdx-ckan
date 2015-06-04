@@ -6,8 +6,9 @@
   {% endblock %}
   <div class="org-control-container">
     <h1 class="h1-title uppercase">
-      1. {{ _('General Information')}}
-    </h1>
+          {% block page_heading %}1. {{ _('Basic Details') }}{% endblock %}
+        </h1>
+        <p>{{ _('Tell us some basic details about your organisation.') }}</p>
   </div>
 
   {% block basic_fields %}
