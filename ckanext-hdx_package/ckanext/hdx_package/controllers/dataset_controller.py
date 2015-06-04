@@ -670,8 +670,8 @@ class DatasetController(PackageController):
             has_shapes = self._has_shapes(c.pkg_dict['resources'])
         try:
             if has_shapes:
-                # c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                c.shapes = self._process_shapes(c.pkg_dict['resources'])
+                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                # c.shapes = self._process_shapes(c.pkg_dict['resources'])
                 return render('indicator/hdx-shape-read.html', loader_class=loader)
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html', loader_class=loader)
@@ -738,10 +738,15 @@ class DatasetController(PackageController):
 
     def _process_shapes(self, resources):
         result = {}
+        context = {'model': model, 'session': model.Session,
+           'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
         for resource in resources:
             if self._has_shape_info(resource):
                 res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
-                res_pbf_url = res_pbf_template_url.replace('{resource_id}', resource['id'])
+                shp_info = json.loads(resource['shape_info'])
+
+                res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
                 name = resource['name']
                 result[name] = res_pbf_url
         return result
