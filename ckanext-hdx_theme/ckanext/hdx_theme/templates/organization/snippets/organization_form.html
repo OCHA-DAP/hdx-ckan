@@ -138,19 +138,6 @@
 </div>
 
 <div class="org-control-container">
-  <h1 class="h1-title uppercase">
-          3. {{ _('Topline Numbers') }}
-        </h1>
-</div>
-
-<div class="org-control-container">
-{{ form.input('topline_resource', label=_('Resource with Topline Numbers'), id='field-topline-resource', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
-      </div>
-</div>
-
-<div class="org-control-container">
 {% if h.hdx_get_extras_element(data.extras, value_key="less") %}
   {% set less = h.hdx_get_extras_element(data.extras, value_key="less") %}
 {% else %}
@@ -161,6 +148,20 @@
         <div class="org-info-label">{{_('Use less to add your own styling to further customize your page.')}}</div>
       </div>
 </div>
+
+<div class="org-control-container">
+  <h1 class="h1-title uppercase">
+    3. {{_('Topline Numbers')}}
+  </h1>
+</div>
+
+<div class="org-control-container">
+{{ form.input('topline_resource', label=_('Resource with Topline Numbers'), id='field-topline-resource', type='text', value=customizations['topline_resource'], classes=['control-full','org-control','field-with-info']) }}
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('The id of the resource that topline figures have been uploaded to.')}}</div>
+      </div>
+</div>
+
 
 
 <div class="org-control-container">
