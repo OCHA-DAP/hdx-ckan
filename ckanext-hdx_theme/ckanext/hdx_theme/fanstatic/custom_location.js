@@ -85,6 +85,7 @@ $(document).ready(function(){
 
 		}
 		$('#mc-embedded-subscribe-form').remove();
+		$('.header-search-form').remove(); //This is weird and incredibly anal of FF >.>
 		$('form').submit();
 	});
 });
