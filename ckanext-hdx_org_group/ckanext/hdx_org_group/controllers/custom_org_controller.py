@@ -130,14 +130,12 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
     def generate_template_data(self, org_info):
         errors = []
         org_id = org_info['name']
-
-        top_line_num_dataset = org_info.get('topline_dataset', None)
         top_line_num_resource = org_info.get('topline_resource', None)
 
         top_line_items = []
-        if top_line_num_dataset and top_line_num_resource:
+        if top_line_num_resource:
             try:
-                top_line_items = self.get_top_line_numbers(top_line_num_dataset, top_line_num_resource)
+                top_line_items = self.get_top_line_numbers(top_line_num_resource)
             except Exception, e:
                 log.warning(e)
                 hdx_helpers.add_error('Fetching data problem', str(e), errors)
@@ -260,8 +258,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'name': result['name'],
                 'link': org_url[0] if len(org_url) == 1 else None,
                 'revision_id': result['revision_id'],
-                'topline_dataset': top_line_src_info[0],
-                'topline_resource': top_line_src_info[1],
+                'topline_resource': top_line_src_info,
                 'modified_at': result.get('modified_at', ''),
                 'image_sq': images[0],
                 'image_rect': images[1],
@@ -288,18 +285,17 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         return (None, None)
 
     def _get_top_line_src_info(self, json_dict):
-        if 'topline_dataset' in json_dict and 'topline_resource' in json_dict:
-            return (json_dict['topline_dataset'], json_dict['topline_resource'])
+        if 'topline_resource' in json_dict:
+            return json_dict['topline_resource']
 
         return (None, None)
 
-    def get_top_line_numbers(self, top_line_num_dataset, top_line_num_resource):
+    def get_top_line_numbers(self, top_line_num_resource):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
         top_line_src_dict = {
             'top-line-numbers': {
-                'dataset': top_line_num_dataset,
                 'resource_id': top_line_num_resource
             }
         }

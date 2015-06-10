@@ -69,6 +69,7 @@ showInput: true});
 			 $('#visualization-json').val(JSON.stringify(visualization));
 		}
         $('#mc-embedded-subscribe-form').remove();
+        $('.header-search-form').remove(); //This is weird and incredibly anal of FF >.>
 		$('form').submit();
 	});
 });

@@ -47,6 +47,15 @@
     </title>
 
     {#
+      Images for Facebook shares
+    #}
+
+    <meta property="og:image" content="{{app_globals.site_url}}/images/hxl_fb-01.png">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    {#
     The links block allows you to add additonal content before the stylesheets
     such as rss feeds and favicons in the same way as the meta block.
     #}
@@ -133,4 +142,14 @@
     <script src="/scripts.js"></script>
     {% resource 'hdx_theme/google-analytics' %}
   {% endblock -%}
+  <script>
+    $(document).ready(function(){
+        var base = '{{ app_globals.site_url }}';
+        $('a').each(function(){
+          if (this.href.search(base) == -1 && this.href.search('http://docs.hdx.rwlabs.org') == -1){
+            this.target="_new";
+          }
+        });
+    });
+  </script>
 </html>

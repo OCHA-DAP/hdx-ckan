@@ -144,6 +144,11 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
 
         profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
+        non_admin = model.User.by_name('tester')
+        profile_result2 = self.app.get(profile_url, status=[404], headers={'Authorization': unicodedata.normalize(
+            'NFKD', non_admin.apikey).encode('ascii', 'ignore')})
+
+        assert '404' in profile_result2.status
 
         assert '<span class="label label-important">Deleted</span>' in str(profile_result.response)
 
