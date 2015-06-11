@@ -16,7 +16,7 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
 
         page = self._getAboutPage('license')
-        assert 'Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
+        assert 'FAILData Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
         page = self._getAboutPage('license', testsysadmin.apikey)
         assert 'Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page, even when the user is logged in'
 
