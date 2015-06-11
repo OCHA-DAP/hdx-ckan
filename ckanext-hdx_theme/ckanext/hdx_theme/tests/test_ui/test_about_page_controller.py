@@ -6,7 +6,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
 class TestAboutPageController(hdx_test_base.HdxBaseTest):
-    
+
     #loads missing plugins
     @classmethod
     def _load_plugins(cls):
@@ -16,7 +16,7 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
 
         page = self._getAboutPage('license')
-        assert 'Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
+        assert 'FAIL Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page when no user is logged in'
         page = self._getAboutPage('license', testsysadmin.apikey)
         assert 'Data Licenses' in str(page.response), 'the url /about/license should redirect to the Data Licenses page, even when the user is logged in'
 
@@ -44,5 +44,3 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         else:
             page = self.app.get(url)
         return page
-
-
