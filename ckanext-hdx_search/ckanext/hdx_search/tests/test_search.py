@@ -30,7 +30,7 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
         offset = h.url_for(
             controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         response = self.app.get(offset, params={'q': 'health'})
-        assert 'FAIL200' in response.status
+        assert '200' in response.status
 
     def test_indicators(self):
     	user = model.User.by_name('tester')
