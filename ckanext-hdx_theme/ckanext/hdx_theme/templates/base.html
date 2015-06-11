@@ -145,9 +145,9 @@
   <script>
     $(document).ready(function(){
         var base = '{{ app_globals.site_url }}';
-        if(base.startsWith('https://')){//Sometimes the site_url config doesn't factor in HTTPSs
+        if(base.lastIndexOf('https://')){//Sometimes the site_url config doesn't factor in HTTPSs
           base = base.slice(7);
-        }else if(base.startsWith('http://')){
+        }else if(base.lastIndexOf('http://')){
           base = base.slice(6);
         }
         $('a').each(function(){
