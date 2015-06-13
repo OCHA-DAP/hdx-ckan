@@ -1,0 +1,24 @@
+{% extends "group/base_form_page.html" %}
+
+{% block breadcrumb_content %}
+  <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
+  {% block breadcrumb_content_inner %}
+    <li>{% link_for organization.display_name|truncate(35), controller='group', action='read', id=organization.name %}</li>
+    <li class="active">{% link_for _('Manage'), controller='group', action='edit', id=organization.name %}</li>
+  {% endblock %}
+{% endblock %}
+
+{% block primary %}
+    <div class="create-org">
+    {% block primary_content %}
+    	{{ super() }}
+    {% endblock %}
+    </div>
+{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+
+{% block page_heading_class %}hide-heading{% endblock %}
+{% block page_heading %}{{ _('Edit Group') }}{% endblock %}
+

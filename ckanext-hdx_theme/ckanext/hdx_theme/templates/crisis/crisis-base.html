@@ -1,0 +1,69 @@
+{% extends "page-new.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block primary_content %}
+  <div class="row paddingRowHack" style="position: relative;">
+    {% block crisis_map %}
+        <div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
+        <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+        <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
+        <div id="crisis-map" style="position: relative; z-index: 0;">
+        </div>
+        <div class="crisis-map-title">
+          <span class="mL45 crisisTitle"> {% block crisis_title %} Crisis title {% endblock %}</span>
+            {% block crisis_actions %}
+                <span class="mR45 pull-right" style="line-height: 50px;">
+                {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+                </span>
+            {% endblock %}
+        </div>
+   {% endblock %}
+  </div>
+
+  {% block crisis_data %}
+
+  {% endblock %}
+
+  {% block package_search_results %}
+  <section class="list-items module">
+    <div class="list-items module-content mT35">
+	{% block package_search_results_list %}
+        <div class="list-header crisis-list-header">
+          <span class="mL15 list-header-title">
+            Datasets [{{c.item_count}}]
+          </span>
+          <span class="mL15 list-header-showall">
+            <a id="datasets-section" href="{{ c.other_links.show_more }}">Show all datasets</a>
+          </span>
+
+        </div>
+        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.items) }}
+	{% endblock %}
+	</div>
+	{% block page_pagination %}
+        {{ c.page.pager(q=c.q) }}
+    {% endblock %}
+  </section>
+  {% endblock %}
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+
+  {% resource 'hdx_theme/bs_popover.js' %}
+  {% resource 'hdx_theme/d3' %}
+  {% resource 'hdx_theme/c3' %}
+  {% resource 'hdx_theme/leaflet' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/crisis-base' %}
+
+  <script src="/base/javascript/modules/autocomplete.js"></script>
+{% endblock %}

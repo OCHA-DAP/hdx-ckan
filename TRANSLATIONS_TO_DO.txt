@@ -1,0 +1,5 @@
+TEXT TO ADD TO TRANSLATIONS (specific template file and text)
+
+package_metadata_field:
+Start Date
+End Date

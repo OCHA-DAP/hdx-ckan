@@ -1,0 +1,28 @@
+{% extends "user/dashboard.html" %}
+
+{% block dashboard_activity_stream_context %}{% endblock %}
+
+{% block add_action_content %}
+  {% if h.check_access('group_create') %}
+  {% if c.userobj.sysadmin %}
+    <li>{% link_for _('Add Group'), controller='group', action='new', class_="btn btn-primary", icon="plus-sign-alt" %}</li>
+    {% endif %}
+  {% endif %}
+{% endblock %}
+
+{% block primary_content_inner %}
+  <h2 class="hide-heading">{{ _('My Locations') }}</h2>
+  {% set groups = h.hdx_group_followee_list() %}
+  {% if groups %}
+    <div class="wide" style="min-height: 200px;">
+      {% snippet "group/snippets/group_list.html", groups=groups %}
+    </div>
+  {% else %}
+    <p class="empty" style="min-height: 200px;">
+      {{ _('You are not following any locations.') }}
+      {# if h.check_access('group_create') %}
+        {% link_for _('Create one now?'), controller='group', action='new' %}
+      {% endif #}
+    </p>
+  {% endif %}
+{% endblock %}

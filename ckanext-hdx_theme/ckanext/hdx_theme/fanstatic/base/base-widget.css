@@ -1,0 +1,19 @@
+/* Default link style */
+a,
+.dataset-heading a {
+  color: #007ce0;
+  text-decoration: none;
+}
+a:hover,
+.dataset-heading a:hover,
+a:focus,
+.dataset-heading a:focus {
+  color: #00447a;
+  text-decoration: none;
+}
+/* END Default link style */
+body {
+  margin: 1px 0 0;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}

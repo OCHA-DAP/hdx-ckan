@@ -1,0 +1,72 @@
+{% extends "organization/snippets/organization_form.html" %}
+
+{% import 'macros/form.html' as form %}
+
+{#
+As the form is rendered as a seperate page we take advantage of this by
+overriding the form blocks depending on the current context
+#}
+{% block dataset_fields %}
+  {% if action == "edit" %}{{ super() }}{% endif %}
+{% endblock %}
+
+{% block basic_fields %}
+<div class="row">
+	<div class="offset1 span9">
+	<h1 class="h1-title uppercase">
+      {% block page_heading %}1. {{ _('Basic Details') }}{% endblock %}
+    </h1>
+    <p>{{ _('Tell us some basic details about your organisation.') }}</p>
+	{{ super() }}
+	</div>
+</div>
+{% endblock %}
+
+{% block custom_fields %}
+<div class="row">
+	<div class="offset1 span9">
+	<h1 class="h1-title uppercase">
+		2. {{ _('Details about you ') }}
+    </h1>
+    <p>{{ _('Tell us some basic details about you.') }}</p>
+    </div>
+</div>
+	{% block user_info_fields %}
+	 <div class="row">
+	 	<div class="offset1 span9>
+			<div class="org-control-container">
+				<input type="hidden" name="from" value="{{data.from}}" /> 
+			    {{ form.input('your_name', label=_('Your Name'), id='field-image-url', placeholder=_('Type your name here'), 
+			    	value=data.your_name, error=errors.your_name, classes=['control-full','org-control','field-with-info', 'mandatory']) }}
+			    <div class="org-control-info info-field">
+			    	<div class="org-info-label">{{_('We need your full, real name')}}</div>
+			    </div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="offset1 span9">
+			<div class="org-control-container">
+			    {{ form.input('your_email', label=_('Your Email'), id='your-email', type='email', placeholder=_('name@example.com'), 
+			    	value=data.your_email, error=errors.your_email, classes=['control-full','org-control','field-with-info', 'mandatory']) }}
+			    <div class="org-control-info info-field">
+			    	<div class="org-info-label">{{_('This email should be related to the organisation.')}}</div>
+			    </div>
+			</div>
+		</div>
+	</div>
+	{% endblock %}
+{% endblock %}
+
+{% block action_buttons %}
+<div class="row">
+	<div class="offset1 span9">
+	  <div class="create-org form-actions">
+		<button class="btn btn-primary create-org-btn" name="save" type="submit">
+			{% block save_text %}{{ _('Request New Organisation') }}{% endblock %}
+		</button>
+	  </div>
+	</div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,29 @@
+{% block related_list %}
+    {% if pkg.related %}
+    <style>
+      .media-grid {
+        background: transparent !important;
+        border: 0px !important;
+      }
+      .media-item{
+        margin: 15px 0 0 0px !important;
+        width:90%;
+      }
+      .media-item > img{
+        width:100%;
+      }
+
+      .banner{
+        width: 50% !important;
+      }
+    </style>
+      {% snippet "related/snippets/related_list.html", related_items=pkg.related, pkg_id=pkg.name %}
+       {% if user %}
+       <br>
+      <span class="more">{% link_for _('ADD MORE'), controller='related', action='new', id=pkg.name, class_="btn btn-primary" %}</span>
+      {% endif %}
+    {% else %}
+    {{ _('There are no gallery items for this')}} {% if pkg.indicator == 1%}indicator{% else %}dataset{% endif %}.  {% if user %}
+      {% link_for _('Add one.'), controller='related', action='new', id=pkg.name %} {% endif %}
+    {% endif %}
+  {% endblock %}

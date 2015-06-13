@@ -94,6 +94,7 @@ class Package(vdm.sqlalchemy.RevisionedObjectMixin,
 
     def add_resource(self, url, format=u'', description=u'', hash=u'', **kw):
         import resource
+        print self.id
         self.resources_all.append(resource.Resource(
             package_id=self.id,
             url=url,

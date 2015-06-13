@@ -1,0 +1,30 @@
+{% extends 'search/snippets/search_form.html' %}
+  {% set req_params = show_empty %}
+  {% block search_sortby %}
+  	{% if not tab == 'activities' %} 
+  		{{ super() }}
+  	{% else %}
+  	<div class="form-select control-group control-order-by mTop10">&nbsp;</div>
+  	{% endif %}
+  {% endblock %}
+
+  {% block before_results %}
+      <form method="get" action="#datasets-section" >
+      {% snippet "search/snippets/search_box.html", q=req_params.get('q', ''), placeholder=query_placeholder,
+            input_name='q' %}
+
+          {% for key,value in req_params.iteritems()  %}
+              {% if key != 'q' %}
+                  <input type="hidden" name="{{ key }}" value="{{ value }}" />
+              {% endif %}
+          {% endfor %}
+           <button style="visibility: hidden; position: absolute" type="submit"></button>
+      </form>
+  {% endblock %}
+  
+  {% block content_primary_nav %}
+        	{{ super() }}
+        	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'activities' }}">
+        		<a href="{{ other_links.activities }}">{{_('Activity')}}</a>
+        	</li>
+  {% endblock %}

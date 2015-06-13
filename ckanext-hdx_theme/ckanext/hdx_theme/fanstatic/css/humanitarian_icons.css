@@ -1,0 +1,762 @@
+/**
+ * Icons list view: http://mw1.google.com/crisisresponse/icons/un-ocha/index.html
+ * Reference: http://reliefweb.int/report/world/world-humanitarian-and-country-icons-2012
+ */
+
+@font-face {
+	font-family: 'humanitarian_icons';
+	src:url('fonts/humanitarian_icons.eot');
+	src:url('fonts/humanitarian_icons.eot?#iefix') format('embedded-opentype'),
+		url('fonts/humanitarian_icons.ttf') format('truetype'),
+		url('fonts/humanitarian_icons.woff') format('woff'),
+		url('fonts/humanitarian_icons.svg#icomoon') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class*="topic-icon-"] {
+	font-family: 'humanitarian_icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.topic-icon-activity_needs_assessment:before {
+	content: "\e600";
+}
+.topic-icon-activity_policy:before {
+	content: "\e601";
+}
+.topic-icon-activity_financing:before {
+	content: "\e602";
+}
+.topic-icon-activity_information_management:before {
+	content: "\e603";
+}
+.topic-icon-activity_information_technology:before {
+	content: "\e604";
+}
+.topic-icon-activity_analysis:before {
+	content: "\e605";
+}
+.topic-icon-activity_fund:before {
+	content: "\e606";
+}
+.topic-icon-activity_training:before {
+	content: "\e607";
+}
+.topic-icon-activity_leadership:before {
+	content: "\e608";
+}
+.topic-icon-activity_partnership:before {
+	content: "\e609";
+}
+.topic-icon-activity_deployment:before {
+	content: "\e60a";
+}
+.topic-icon-activity_humanitarian_programme_cycle:before {
+	content: "\e60b";
+}
+.topic-icon-activity_services_and_tools:before {
+	content: "\e60c";
+}
+.topic-icon-activity_scale_operation:before {
+	content: "\e60d";
+}
+.topic-icon-activity_staff_management:before {
+	content: "\e60e";
+}
+.topic-icon-activity_innovation:before {
+	content: "\e60f";
+}
+.topic-icon-activity_response:before {
+	content: "\e610";
+}
+.topic-icon-activity_meeting:before {
+	content: "\e611";
+}
+.topic-icon-activity_assessment:before {
+	content: "\e612";
+}
+.topic-icon-activity_public_information:before {
+	content: "\e613";
+}
+.topic-icon-activity_civil-military_coordination:before {
+	content: "\e614";
+}
+.topic-icon-activity_gap_analysis:before {
+	content: "\e615";
+}
+.topic-icon-activity_preparedness:before {
+	content: "\e616";
+}
+.topic-icon-activity_learning:before {
+	content: "\e617";
+}
+.topic-icon-activity_advocacy:before {
+	content: "\e618";
+}
+.topic-icon-activity_coordinated_assessment:before {
+	content: "\e619";
+}
+.topic-icon-activity_reporting:before {
+	content: "\e61a";
+}
+.topic-icon-camp_IDP_refugee_camp:before {
+	content: "\e61b";
+}
+.topic-icon-camp_temporary_camp:before {
+	content: "\e61c";
+}
+.topic-icon-camp_permanent_camp:before {
+	content: "\e61d";
+}
+.topic-icon-camp_transition_site:before {
+	content: "\e61e";
+}
+.topic-icon-camp_spontaneous_site:before {
+	content: "\e61f";
+}
+.topic-icon-camp_registration:before {
+	content: "\e620";
+}
+.topic-icon-cluster_CCCM:before {
+	content: "\e621";
+}
+.topic-icon-cluster_early_recovery:before {
+	content: "\e622";
+}
+.topic-icon-cluster_education:before {
+	content: "\e623";
+}
+.topic-icon-cluster_emergency_telecommunications:before {
+	content: "\e624";
+}
+.topic-icon-cluster_health:before {
+	content: "\e625";
+}
+.topic-icon-cluster_food_security:before {
+	content: "\e626";
+}
+.topic-icon-cluster_protection:before {
+	content: "\e627";
+}
+.topic-icon-cluster_WASH:before {
+	content: "\e628";
+}
+.topic-icon-cluster_shelter:before {
+	content: "\e629";
+}
+.topic-icon-cluster_logistics:before {
+	content: "\e62a";
+}
+.topic-icon-cluster_nutrition:before {
+	content: "\e62b";
+}
+.topic-icon-crisis_humanitarian_access:before {
+	content: "\e62c";
+}
+.topic-icon-crisis_population_displacement:before {
+	content: "\e62d";
+}
+.topic-icon-crisis_population_return:before {
+	content: "\e62e";
+}
+.topic-icon-crisis_conflict:before {
+	content: "\e62f";
+}
+.topic-icon-damage_affected:before {
+	content: "\e630";
+}
+.topic-icon-damage_destroyed:before {
+	content: "\e631";
+}
+.topic-icon-damage_not_affected:before {
+	content: "\e632";
+}
+.topic-icon-damage_airport_affected:before {
+	content: "\e633";
+}
+.topic-icon-damage_airport_destroyed:before {
+	content: "\e634";
+}
+.topic-icon-damage_airport_not_affected:before {
+	content: "\e635";
+}
+.topic-icon-damage_bridge_affected:before {
+	content: "\e636";
+}
+.topic-icon-damage_bridge_destroyed:before {
+	content: "\e637";
+}
+.topic-icon-damage_bridge_not_affected:before {
+	content: "\e638";
+}
+.topic-icon-damage_building_not_affected:before {
+	content: "\e639";
+}
+.topic-icon-damage_port_affected:before {
+	content: "\e63a";
+}
+.topic-icon-damage_port_destroyed:before {
+	content: "\e63b";
+}
+.topic-icon-damage_port_not_affected:before {
+	content: "\e63c";
+}
+.topic-icon-damage_building_affected:before {
+	content: "\e63d";
+}
+.topic-icon-damage_building_destroyed:before {
+	content: "\e63e";
+}
+.topic-icon-damage_house_affected:before {
+	content: "\e63f";
+}
+.topic-icon-damage_house_destroyed:before {
+	content: "\e640";
+}
+.topic-icon-damage_house_not_affected:before {
+	content: "\e641";
+}
+.topic-icon-damage_road_affected:before {
+	content: "\e642";
+}
+.topic-icon-damage_road_destroyed:before {
+	content: "\e643";
+}
+.topic-icon-damage_road_not_affected:before {
+	content: "\e644";
+}
+.topic-icon-damage_school_affected:before {
+	content: "\e645";
+}
+.topic-icon-damage_school_destroyed:before {
+	content: "\e646";
+}
+.topic-icon-damage_school_not_affected:before {
+	content: "\e647";
+}
+.topic-icon-disaster_cold_wave:before {
+	content: "\e648";
+}
+.topic-icon-disaster_heatwave:before {
+	content: "\e649";
+}
+.topic-icon-disaster_cyclone:before {
+	content: "\e64a";
+}
+.topic-icon-disaster_earthquake:before {
+	content: "\e64b";
+}
+.topic-icon-disaster_fire:before {
+	content: "\e64c";
+}
+.topic-icon-disaster_epidemic:before {
+	content: "\e64d";
+}
+.topic-icon-disaster_insect_infestation:before {
+	content: "\e64e";
+}
+.topic-icon-disaster_heavy_rain:before {
+	content: "\e64f";
+}
+.topic-icon-disaster_drought:before {
+	content: "\e650";
+}
+.topic-icon-disaster_flash_flood:before {
+	content: "\e651";
+}
+.topic-icon-disaster_flood:before {
+	content: "\e652";
+}
+.topic-icon-disaster_snow_avalanche:before {
+	content: "\e653";
+}
+.topic-icon-disaster_storm_surge:before {
+	content: "\e654";
+}
+.topic-icon-disaster_tsunami:before {
+	content: "\e655";
+}
+.topic-icon-disaster_landslide:before {
+	content: "\e656";
+}
+.topic-icon-disaster_technological:before {
+	content: "\e657";
+}
+.topic-icon-disaster_tornado:before {
+	content: "\e658";
+}
+.topic-icon-disaster_violent_wind:before {
+	content: "\e659";
+}
+.topic-icon-disaster_locust_infestation:before {
+	content: "\e65a";
+}
+.topic-icon-disaster_snowfall:before {
+	content: "\e65b";
+}
+.topic-icon-disaster_storm:before {
+	content: "\e65c";
+}
+.topic-icon-disaster_volcano:before {
+	content: "\e65d";
+}
+.topic-icon-food_NFI_mosquito_net:before {
+	content: "\e65e";
+}
+.topic-icon-food_NFI_blanket:before {
+	content: "\e65f";
+}
+.topic-icon-food_NFI_bottled_water:before {
+	content: "\e660";
+}
+.topic-icon-food_NFI_bucket:before {
+	content: "\e661";
+}
+.topic-icon-food_NFI_clothing:before {
+	content: "\e662";
+}
+.topic-icon-food_NFI_detergent:before {
+	content: "\e663";
+}
+.topic-icon-food_NFI_flour:before {
+	content: "\e664";
+}
+.topic-icon-food_NFI_food:before {
+	content: "\e665";
+}
+.topic-icon-food_NFI_infant_formula:before {
+	content: "\e666";
+}
+.topic-icon-food_NFI_kitchen_set:before {
+	content: "\e667";
+}
+.topic-icon-food_NFI_mattress:before {
+	content: "\e668";
+}
+.topic-icon-food_NFI_medicine:before {
+	content: "\e669";
+}
+.topic-icon-food_NFI_medical_supply:before {
+	content: "\e66a";
+}
+.topic-icon-food_NFI_non-food_items:before {
+	content: "\e66b";
+}
+.topic-icon-food_NFI_oil:before {
+	content: "\e66c";
+}
+.topic-icon-food_NFI_plastic_sheeting:before {
+	content: "\e66d";
+}
+.topic-icon-food_NFI_relief_goods:before {
+	content: "\e66e";
+}
+.topic-icon-food_NFI_rice:before {
+	content: "\e66f";
+}
+.topic-icon-food_NFI_salt:before {
+	content: "\e670";
+}
+.topic-icon-food_NFI_sugar:before {
+	content: "\e671";
+}
+.topic-icon-food_NFI_stove:before {
+	content: "\e672";
+}
+.topic-icon-food_NFI_soap:before {
+	content: "\e673";
+}
+.topic-icon-food_NFI_tarpaulin:before {
+	content: "\e674";
+}
+.topic-icon-food_NFI_vaccine:before {
+	content: "\e675";
+}
+.topic-icon-food_NFI_tent:before {
+	content: "\e676";
+}
+.topic-icon-infrastructure_infrastructure:before {
+	content: "\e677";
+}
+.topic-icon-infrastructure_government_office:before {
+	content: "\e678";
+}
+.topic-icon-infrastructure_diplomatic_mission:before {
+	content: "\e679";
+}
+.topic-icon-infrastructure_assembly_point:before {
+	content: "\e67a";
+}
+.topic-icon-infrastructure_hotel:before {
+	content: "\e67b";
+}
+.topic-icon-infrastructure_house:before {
+	content: "\e67c";
+}
+.topic-icon-infrastructure_police_station:before {
+	content: "\e67d";
+}
+.topic-icon-infrastructure_church:before {
+	content: "\e67e";
+}
+.topic-icon-infrastructure_mosque:before {
+	content: "\e67f";
+}
+.topic-icon-infrastructure_hindu_temple:before {
+	content: "\e680";
+}
+.topic-icon-infrastructure_buddhist_temple:before {
+	content: "\e681";
+}
+.topic-icon-infrastructure_health_facility:before {
+	content: "\e682";
+}
+.topic-icon-infrastructure_hospital:before {
+	content: "\e683";
+}
+.topic-icon-infrastructure_mobile_clinic:before {
+	content: "\e684";
+}
+.topic-icon-infrastructure_health_post:before {
+	content: "\e685";
+}
+.topic-icon-infrastructure_school:before {
+	content: "\e686";
+}
+.topic-icon-infrastructure_clinic:before {
+	content: "\e687";
+}
+.topic-icon-infrastructure_food_warehouse:before {
+	content: "\e688";
+}
+.topic-icon-infrastructure_building:before {
+	content: "\e689";
+}
+.topic-icon-infrastructure_community_building:before {
+	content: "\e68a";
+}
+.topic-icon-infrastructure_distribution_site:before {
+	content: "\e68b";
+}
+.topic-icon-infrastructure_university:before {
+	content: "\e68c";
+}
+.topic-icon-infrastructure_UN_office:before {
+	content: "\e68d";
+}
+.topic-icon-infrastructure_NGO_office:before {
+	content: "\e68e";
+}
+.topic-icon-logistics_airport:before {
+	content: "\e68f";
+}
+.topic-icon-logistics_airport_military:before {
+	content: "\e690";
+}
+.topic-icon-logistics_boat:before {
+	content: "\e691";
+}
+.topic-icon-logistics_truck:before {
+	content: "\e692";
+}
+.topic-icon-logistics_bridge:before {
+	content: "\e693";
+}
+.topic-icon-logistics_car:before {
+	content: "\e694";
+}
+.topic-icon-logistics_gas_station:before {
+	content: "\e695";
+}
+.topic-icon-logistics_helicopter:before {
+	content: "\e696";
+}
+.topic-icon-logistics_helipad:before {
+	content: "\e697";
+}
+.topic-icon-logistics_road:before {
+	content: "\e698";
+}
+.topic-icon-logistics_port:before {
+	content: "\e699";
+}
+.topic-icon-logistics_train:before {
+	content: "\e69a";
+}
+.topic-icon-logistics_tunnel:before {
+	content: "\e69b";
+}
+.topic-icon-logistics_ferry:before {
+	content: "\e69c";
+}
+.topic-icon-logistics_ship:before {
+	content: "\e69d";
+}
+.topic-icon-logistics_bus:before {
+	content: "\e69e";
+}
+.topic-icon-other_cluster_coordination:before {
+	content: "\e69f";
+}
+.topic-icon-other_cluster_rule_of_law:before {
+	content: "\e6a0";
+}
+.topic-icon-other_cluster_environment:before {
+	content: "\e6a1";
+}
+.topic-icon-other_cluster_multicluster:before {
+	content: "\e6a2";
+}
+.topic-icon-other_cluster_agriculture:before {
+	content: "\e6a3";
+}
+.topic-icon-other_cluster_fishery:before {
+	content: "\e6a4";
+}
+.topic-icon-other_cluster_safety_security:before {
+	content: "\e6a5";
+}
+.topic-icon-other_cluster_other:before {
+	content: "\e6a6";
+}
+.topic-icon-people_affected_population:before {
+	content: "\e6a7";
+}
+.topic-icon-people_missing:before {
+	content: "\e6a8";
+}
+.topic-icon-people_dead:before {
+	content: "\e6a9";
+}
+.topic-icon-people_injured:before {
+	content: "\e6aa";
+}
+.topic-icon-people_woman:before {
+	content: "\e6ab";
+}
+.topic-icon-people_children:before {
+	content: "\e6ac";
+}
+.topic-icon-people_elderly:before {
+	content: "\e6ad";
+}
+.topic-icon-people_pregnant:before {
+	content: "\e6ae";
+}
+.topic-icon-people_physical_impairments:before {
+	content: "\e6af";
+}
+.topic-icon-people_man:before {
+	content: "\e6b0";
+}
+.topic-icon-people_child_combatant:before {
+	content: "\e6b1";
+}
+.topic-icon-people_infant:before {
+	content: "\e6b2";
+}
+.topic-icon-people_national_army:before {
+	content: "\e6b3";
+}
+.topic-icon-people_peacekeeping_force:before {
+	content: "\e6b4";
+}
+.topic-icon-people_rebel:before {
+	content: "\e6b5";
+}
+.topic-icon-people_drowned:before {
+	content: "\e6b6";
+}
+.topic-icon-physical_barrier_physical_closure:before {
+	content: "\e6b7";
+}
+.topic-icon-physical_barrier_checkpoint:before {
+	content: "\e6b8";
+}
+.topic-icon-physical_barrier_mililtary_gate:before {
+	content: "\e6b9";
+}
+.topic-icon-physical_barrier_observation_tower:before {
+	content: "\e6ba";
+}
+.topic-icon-physical_barrier_roadblock:before {
+	content: "\e6bb";
+}
+.topic-icon-physical_barrier_border_crossing:before {
+	content: "\e6bc";
+}
+.topic-icon-physical_barrier_earthmound:before {
+	content: "\e6bd";
+}
+.topic-icon-physical_barrier_road_barrier:before {
+	content: "\e6be";
+}
+.topic-icon-product_type_calendar:before {
+	content: "\e6bf";
+}
+.topic-icon-product_type_chart:before {
+	content: "\e6c0";
+}
+.topic-icon-product_type_data:before {
+	content: "\e6c1";
+}
+.topic-icon-product_type_document:before {
+	content: "\e6c2";
+}
+.topic-icon-product_type_film:before {
+	content: "\e6c3";
+}
+.topic-icon-product_type_map:before {
+	content: "\e6c4";
+}
+.topic-icon-product_type_photo:before {
+	content: "\e6c5";
+}
+.topic-icon-product_type_report:before {
+	content: "\e6c6";
+}
+.topic-icon-product_type_table:before {
+	content: "\e6c7";
+}
+.topic-icon-security_arrest:before {
+	content: "\e6c8";
+}
+.topic-icon-security_assault:before {
+	content: "\e6c9";
+}
+.topic-icon-security_carjacking:before {
+	content: "\e6ca";
+}
+.topic-icon-security_dangerous_area:before {
+	content: "\e6cb";
+}
+.topic-icon-security_forced_entry:before {
+	content: "\e6cc";
+}
+.topic-icon-security_mine:before {
+	content: "\e6cd";
+}
+.topic-icon-security_attack:before {
+	content: "\e6ce";
+}
+.topic-icon-security_harrassment:before {
+	content: "\e6cf";
+}
+.topic-icon-security_murder:before {
+	content: "\e6d0";
+}
+.topic-icon-security_house_burned:before {
+	content: "\e6d1";
+}
+.topic-icon-security_forced_recruitment:before {
+	content: "\e6d2";
+}
+.topic-icon-security_abduction:before {
+	content: "\e6d3";
+}
+.topic-icon-security_robbery:before {
+	content: "\e6d4";
+}
+.topic-icon-socioeconomic_population_growth:before {
+	content: "\e6d5";
+}
+.topic-icon-socioeconomic_livestock:before {
+	content: "\e6d6";
+}
+.topic-icon-socioeconomic_livelihood:before {
+	content: "\e6d7";
+}
+.topic-icon-socioeconomic_debris_management:before {
+	content: "\e6d8";
+}
+.topic-icon-socioeconomic_trade_and_market:before {
+	content: "\e6d9";
+}
+.topic-icon-socioeconomic_reconstruction:before {
+	content: "\e6da";
+}
+.topic-icon-socioeconomic_urban:before {
+	content: "\e6db";
+}
+.topic-icon-socioeconomic_urban_rural:before {
+	content: "\e6dc";
+}
+.topic-icon-socioeconomic_rural_exodus:before {
+	content: "\e6dd";
+}
+.topic-icon-socioeconomic_rural:before {
+	content: "\e6de";
+}
+.topic-icon-telecommunications_computer:before {
+	content: "\e6df";
+}
+.topic-icon-telecommunications_radio:before {
+	content: "\e6e0";
+}
+.topic-icon-telecommunications_walkie_talkie:before {
+	content: "\e6e1";
+}
+.topic-icon-telecommunications_e-mail:before {
+	content: "\e6e2";
+}
+.topic-icon-telecommunications_fax:before {
+	content: "\e6e3";
+}
+.topic-icon-telecommunications_internet:before {
+	content: "\e6e4";
+}
+.topic-icon-telecommunications_mobile_phone:before {
+	content: "\e6e5";
+}
+.topic-icon-wash_latrine_cabin:before {
+	content: "\e6e6";
+}
+.topic-icon-wash_toilet:before {
+	content: "\e6e7";
+}
+.topic-icon-wash_shower:before {
+	content: "\e6e8";
+}
+.topic-icon-wash_sanitation:before {
+	content: "\e6e9";
+}
+.topic-icon-wash_solid_waste:before {
+	content: "\e6ea";
+}
+.topic-icon-wash_spring_water:before {
+	content: "\e6eb";
+}
+.topic-icon-wash_submersible_pump:before {
+	content: "\e6ec";
+}
+.topic-icon-wash_water_trucking:before {
+	content: "\e6ed";
+}
+.topic-icon-wash_communal_latrine:before {
+	content: "\e6ee";
+}
+.topic-icon-wash_water_source:before {
+	content: "\e6ef";
+}
+.topic-icon-wash_potable_water_source:before {
+	content: "\e6f0";
+}
+.topic-icon-wash_borehole:before {
+	content: "\e6f1";
+}
+.topic-icon-wash_well:before {
+	content: "\e6f2";
+}
+.topic-icon-wash_potable_water:before {
+	content: "\e6f3";
+}

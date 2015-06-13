@@ -1,0 +1,267 @@
+/* Override background for two column layout */
+    .contentBackground.twoColumnBackground{
+        background-image: none;
+        background-color: #ffffff;
+        min-height: auto;
+    }
+/* END Override background for two column layout */
+
+	
+/* BEGIN indicator information */
+	
+	.notes.embedded-content {
+	    font-family: 'Source Sans Pro',sans-serif;
+	    font-size: 14px;
+	    font-weight: 400;
+	    max-width: none;
+	    text-align:justify;
+	}
+	
+	.additional-info table, .additional-info table th, .additional-info table td, .additional-info table tr {
+	    border: 0 none;
+	    border-radius: 0 !important;
+	    vertical-align: top;
+	}
+	.additional-info table tr {
+	    font-family: 'Source Sans Pro',sans-serif;
+	    font-size: 14px;
+	    font-weight: 400;
+	    height: 38px;
+	}
+	
+	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+  	  border-top: none;
+	}
+	.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    	border: none;
+	}
+	
+	.table-bordered.table-condensed.mTop20 tbody tr th.dataset-label {
+    	max-width: 200px;
+    	width: 175px
+	}
+	
+	.table-bordered.table-condensed.mTop20 tbody tr td.dataset-details{
+	   text-align:justify;
+	   width: 100%;
+	}
+	
+	.metadata-link a, .metadata-link a:hover, .metadata-link a:focus {
+	   	font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    color: #007ce0;
+	    letter-spacing: 0.01em;
+	    opacity: 1;
+	    text-decoration: none;
+	}
+	
+	.tag-wrapper {
+        margin-right: 0;
+        float: left;
+    }
+        
+    .tag-wrapper .tag{
+        background-color: #f2645a;
+        font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.03em;
+	    opacity: 1;
+	    text-decoration: none;
+    }
+    
+    .tag-wrapper .tag:hover, .tag-wrapper .tag:focus {
+        background-color: #ce554d;
+        border: none;
+        box-shadow: none;
+        font-family: 'Source Sans Pro', sans-serif;
+	    font-weight: 400;
+	    font-size: 14px;
+	    letter-spacing: 0.03em;
+	    opacity: 1;
+	    text-decoration: none;
+    }
+
+	.resource-item .heading {
+	    color: #000000;
+	    font-size: 14px;
+	    font-weight: bold;
+	    letter-spacing: 0.03em;
+	}
+	
+	span.is-more p{
+		margin: 0px;
+		display: inline;
+	}
+	span.is-more a.more-link,
+	.more-link {
+		background-color: transparent;
+	    border: 0;
+	    border-radius: 0;
+	    margin-left: 0px;
+	    padding: 0px;
+	    font-weight:normal;
+	}
+/* END indicator information  */
+
+/* Graph options */
+    .graphOptionsRow{
+        margin-left: -45px;
+        margin-right: -15px;
+    }
+    .graphOptions{
+        background-color: #eeeeee;
+        height: 330px;
+        overflow-y: scroll;
+    }
+
+    .graphOptions ul{
+        padding-left: 0;
+    }
+
+    .graphOptions li{
+        list-style: none;
+    }
+/* END Graph options */
+
+/* Side panel Locations */
+    #showOptions {
+        font-weight: bold;
+        margin-left: 20px;
+        line-height: 45px;
+    }
+    #sidePanelCountries li input{
+        position: static;
+    }
+    #sidePanelCountries li label:after{
+        content: "";
+    }
+    #sidePanelCountries li label{
+        font-weight: normal;
+    }
+
+    #sidePanelCountries .locationCheckbox {
+        margin-right: 10px;
+        margin-left: 20px;
+    }
+    #sidePanelCountries .locationCheckbox~label {
+        color: #000000;
+    }
+    #sidePanelCountries .locationCheckbox[value="*ALL*"] {
+        margin-left: 0;
+    }
+    #sidePanelCountries .locationCheckbox[value="*ALL*"]~label {
+        color: #000000;
+        font-weight: bold;
+
+    }
+/* END Side panel Locations */
+
+.select2-container .select2-choice{
+    border: 1px solid #aaa;
+    border-radius: 4px;
+}
+
+.select2-container .select2-choice .select2-arrow{
+    border-radius: 0;
+}
+
+#chart-container svg > g:nth-child(3) .c3-axis-x {
+    opacity: 0 !important;
+}
+
+
+/* Actions */
+.indicator-actions a.btn.hdx-btn {
+	margin-left: 12px;
+}
+
+.custom-dataset .indicator-actions a.btn.hdx-btn {
+	margin-left: 0px;
+    margin-right: 12px;
+}
+
+/* .indicator-actions {
+	margin-top: 10px;
+}
+.indicator-actions .dropdown-menu {
+	right: 10px;
+}
+.indicator-actions .dropdown-menu li span {
+	color: #333;
+	padding: 3px 20px;
+}
+.indicator-actions .caret {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid;
+    display: inline-block;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    width: 0;
+}
+.indicator-actions .dropdown-toggle, .indicator-actions.open .dropdown-toggle {
+    background-color: #ffffff;
+    border: medium none;
+    color: #007ce0;
+    margin-top: -2px;
+    text-align: left;
+    box-shadow: none;
+}
+
+.dropdown-menu .social-item {
+	line-height: 30px;
+}
+
+.dropdown-menu .social-link.first-link {
+	margin-left: 17px;
+}
+
+.dropdown-menu .social-link {
+	display: inline;
+	padding: 3px;
+}
+.dropdown-menu .social-link:hover {
+	background-color: transparent;
+	opacity: 0.8;
+}
+
+.dropdown-menu .social-link .social-images {
+	height: 20px;
+}
+ */
+/* END - Actions */
+
+
+/* Logo */
+.custom-dataset .org-logo {
+    max-height: 65px;
+    max-width: 160px;
+}
+/* END - Logo */
+
+
+/* Dataset specific styles */
+.dataset-res-wraper section.resources {
+	margin-top: inherit;
+}
+
+.dataset-notes.notes p {
+	margin-top: 10px;
+	margin-bottom: 0px;
+}
+
+.dataset-notes.notes {
+	width: 600px;
+}
+
+/* Style Resources List */
+.resource-item .description{
+	text-align: justify;
+	max-width: 450px;
+}
+/* END Style Resources List*/
+
+/* END - Dataset specific styles */

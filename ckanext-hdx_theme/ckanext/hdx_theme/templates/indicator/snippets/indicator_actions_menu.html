@@ -1,0 +1,20 @@
+{% set url = request.url %}
+
+{% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
+
+<span class="{{ classes }}">
+  {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title %}
+  {{ h.follow_button('dataset', pkg.name) }}
+  {% if h.check_access('package_update', {'id':pkg.id }) %}
+    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
+  {% endif %}
+  {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
+    {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=True %}
+  {% endif %}
+  {#
+  <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+          data-toggle="tooltip">Analyse</a>
+  <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+          data-toggle="tooltip"><i class="glyphicon glyphicon-wrench"></i></a>
+  #}
+</span>

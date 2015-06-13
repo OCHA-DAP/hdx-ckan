@@ -1,0 +1,217 @@
+{% extends "page.html" %}
+
+{% block flash %}
+  {# eat the flash messages so they don't remain in the session #}
+  {% set flash_messages = h.flash.pop_messages() %}
+{% endblock %}
+
+
+{% block subtitle %}{{ _("Welcome") }}{% endblock %}
+
+{% block maintag %}{% endblock %}
+
+
+{% block content %}
+<div class="homepage-main">
+  <div class="homepage-background">
+    <div class="container">
+      <div class="row blankRow">
+
+      </div>
+      <div class="row">
+        <div class="span6 leftContent">
+          <div class="row blankRow">
+          </div>
+          <div class="row">
+            <div class="span6">
+              <h1>
+                {{ _("The Humanitarian") }}<br>
+                {{ _("Data Exchange") }}
+              </h1>
+              <h3>
+                {{ _("Where your data comes to life") }}
+              </h3>
+              <p class="hdxDescription">
+                {#
+                {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
+                      global datasets relevant to humanitarian work as well as local datasets from our
+                      three pilot locations - Colombia, Kenya and Yemen. You can also create an
+                      account and add your own data to the repository to share privately or publicly. 
+                      Please have a look around and send us your feedback!") }}
+                      #}
+              </p>
+            </div>
+          </div>
+
+        </div>
+        <div class="offset1 span5 rightContent">
+          <div class="searchBox">
+            <div class="searchHeader searchContent">
+              <p>{{ _("Find data") }}</p>
+            </div>
+
+            <div class="searchContent firstSearch">
+              {{ self.home_search() }}
+              <div>
+                <p class="exampleSearch">
+                  {{ _("e.g.") }} <a href="{% url_for 'show_custom_country', id='nepal-earthquake' %}">{{ _("Nepal Earthquake") }}</a>
+                  {{ _("or") }} <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>
+                </p>
+              </div>
+            </div>
+            <div class="searchContent secondSearch">
+              {{ self.group_select() }}
+            </div>
+          </div>
+
+          <div class="row countRow">
+            <div class="span6 hdxTextRow ">
+              <div class="row">
+                <div class="span2">
+                  <div class="row">
+                    <div class="span2 itemCount">
+                      <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
+                         data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
+                        0
+                      </a>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div id="datasets-count" class="span2 itemName">
+                      {{ _("Datasets") }}
+                    </div>
+                  </div>
+                </div>
+
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="{% url_for 'group_index' %}"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
+                      0
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="span2 itemName">
+                    {{ _("Locations") }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="span2">
+                <div class="row">
+                  <div class="span2 itemCount">
+                    <a href="#"
+                       data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
+                      0
+                    </a>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="span2 itemName">
+                    {{ _("Sources") }}
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hdx-warning">
+        <div class="hdx-warning-text">
+            <a href="{% url_for 'show_custom_country', id='nepal-earthquake' %}">
+                Trending: <span class="hdx-warning-text-important">Nepal Earthquake</span> Crisis &raquo;
+            </a>
+        </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block header %}
+  <div class="homepageHeaderFooterBackground">
+     {{ super() }}
+  </div>
+
+  <!--- DO NOT REMOVE or the warnings generated by this page will be transfered to the next page --->
+  {{ self.flash() }}
+  <!--- END DO NOT REMOVE --->
+{% endblock %}
+
+{% block footer %}
+  <div class="homepageHeaderFooterBackground">
+    <footer class="newFooter">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <span class="text">
+              {{ _("A project by") }}:
+            </span>
+            <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
+            <span class="text">
+              {{ _("Related Sites") }}:
+            </span>
+            <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
+            <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
+            <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
+            <span class="text">
+              {{ _("Stay connected") }}:
+            </span>
+            <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
+            <a href="mailto:hdx@un.org"><img src="/images/homepage-new/email.png"/></a>
+          </div>
+        </div>
+      </div>
+      {% block footer_debug %}
+        {% if g.debug %}
+          {% include 'snippets/debug.html' %}
+        {% endif %}
+      {% endblock %}
+    </footer>
+  </div>
+{% endblock %}
+
+
+{% block home_search %}
+  <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
+    <div class="input-append">
+      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Collection') }}">
+      <button type="submit" class="button">
+        <i class="icon-search"></i>
+      </button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block group_select %}
+    <div class="dropdown selectCountryDropdown">
+      <button class="dropdown-toggle selectCountry" data-toggle="dropdown">
+        {{ _("Choose Location") }}
+        <b class="caret"></b>
+      </button>
+      <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto; min-height: 96px;">
+        {% for group in c.group_package_stuff %}
+          {% if group.type is defined %}
+            {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
+              <li><a tabindex="-1" href="{{url}}">{{ group.display_name }}</a></li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+   {{ super() }}
+   <link rel="stylesheet" href="/homepage.css">
+   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
+   {% resource 'hdx_theme/homepage' %}
+{% endblock %}
+
+{# Remove the toolbar. #}
+
+{% block toolbar %}{% endblock %}

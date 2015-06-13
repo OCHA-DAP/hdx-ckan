@@ -1,0 +1,45 @@
+{% extends "package/hdx_read.html" %}
+
+    {% block title_and_actions %}
+    <div class="col-xs-12 paddingLeftHack paddingRightHack custom-dataset">
+      <div class="row">
+        <div class="col-xs-8">
+            <div class="row">
+                <div class="col-xs-12 mTop35">
+                  <h1 class="itemTitle">
+                    {{ pkg.title or pkg.name }}
+                     {% if pkg.state.startswith('draft') %}
+                      <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+                    {% elif pkg.state.startswith('deleted') %}
+                      <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
+                    {% endif %}
+                  </h1>
+                </div>
+            </div>
+          <div class="row mBottom15">
+            <div class="col-xs-12">
+                {% if c.pkg_notes_formatted %}
+                  <div class="notes embedded-content">
+                    {{ c.pkg_notes_formatted }}
+                  </div>
+                {% endif %}
+            </div>
+            <div class="col-xs-12 align-bottom-right mTop20">
+                {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='indicator-actions followButtonContainer pull-left' %}
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-4 mTop35">
+            <div class="pull-right">
+                <div style="background-color: {{ c.logo_config.background_color }}; border: 1px solid {{ c.logo_config.border_color }}"
+                     class="org-logo-large table-valign">
+                    <div class="table-valign-content">
+                        <img class="org-logo" src="{{ c.logo_config.image_url }}" alt="{{ _('Organization logo') }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+
+    </div>
+    {% endblock %}

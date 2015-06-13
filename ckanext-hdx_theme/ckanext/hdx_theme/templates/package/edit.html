@@ -1,0 +1,52 @@
+{% extends 'package/base_form_page.html' %}
+
+{% set pkg = c.pkg_dict %}
+{% set form_style = c.form_style or c.action %}
+
+{% block breadcrumb_content_selected %}{% endblock %}
+
+{% block breadcrumb_content %}
+  {{ super() }}
+  <li class="active">{% link_for _('Edit'), controller='package', action='edit', id=pkg.name %}</li>
+{% endblock %}
+
+{% block resources_module %}
+  {% snippet 'package/snippets/resources.html', pkg=pkg, action='resource_edit' %}
+{% endblock %}
+
+{% block content_action %}
+  {% link_for _('View dataset'), controller='package', action='read', id=pkg.name, class_='btn', icon='eye-open' %}
+{% endblock %}
+
+{% block secondary_content %}
+  {% snippet 'package/snippets/info.html', pkg=pkg, action='package_edit' %}
+{% endblock %}
+
+
+
+{% block page_header %}
+  <header class="module-content page-header paddingRowHack" style="width: 915px;">
+    <div class="paddingLeftHack paddingRightHack">
+      <ul class="nav nav-tabs">
+        {% block content_primary_nav %}
+          {{ h.build_nav_icon('dataset_edit', _('Edit metadata'), id=pkg.name) }}
+          {{ h.build_nav_icon('dataset_resources', _('Resources'), id=pkg.name) }}
+        {% endblock %}
+      </ul>
+    </div>
+  </header>
+{% endblock %}
+
+
+{% block primary_content %}
+  <div class="paddingRowHack graybg">
+    <div class="paddingLeftHack paddingRightHack dataset-form-field-wrapper">
+      {{ super() }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="/dataset_create.css"/>
+{% endblock %}

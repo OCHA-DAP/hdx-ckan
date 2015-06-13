@@ -1,0 +1,47 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Register') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Registration'), controller='user', action='register') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+
+  <article class="module userRegisterContent">
+    <div class="module-content">
+      <div class="pull-right">
+      {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#register-for-an-account','text':'How to Register'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
+    </div>
+      <h1 class="page-heading">
+        {% block page_heading %}{{ _('Register for an account') }}{% endblock %}
+      </h1>
+      {{ c.form | safe }}
+    </div>
+  </article>
+{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow module-shallow pBottom35">
+    <h2 class="module-heading mBottom35">{{ _('Thank you!') }}</h2>
+    <div class="module-content">
+      <p>{{ _('Thank you for joining the HDX Community.') }}</p>
+      <p>{{ _('Please fill in your details to the right to create an account.') }}</p>
+      <p>{{ _('An account allows you to join organizations and share datasets.') }}</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block scripts2 %}
+  {% resource 'hdx_theme/login' %}
+  {{ super() }}
+  <script src="/scripts/latinise.js"></script>
+  <script>
+    $(document).ready(function(){
+        //Force ascii encoding
+        $('#field-username').blur(function(){
+          $(this).val($('#field-username').val().latinise());
+        });
+    });
+  </script>
+{% endblock %}

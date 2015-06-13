@@ -1,0 +1,43 @@
+{% extends "dataviewer/base.html" %}
+
+{% block page %}
+  <div id="datapreview-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.datapreview.url') }}</div>
+  <div id="previewmap-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.previewmap.url') }}</div>
+  <div data-module="reclinepreview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
+    <h4 class="loading-dialog">
+      <div class="loading-spinner"></div>
+      <div class="left">{{ _('Loading...') }}</div>
+    </h4>
+  </div>
+
+ {% resource 'ckanext-reclinepreview/vendor/jquery/1.7.1/jquery.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/underscore/1.4.2/underscore.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/backbone/0.9.2/backbone.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/mustache/0.5.0-dev/mustache.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/bootstrap/2.0.2/bootstrap.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/json/json2.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/flot/excanvas.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/flot/jquery.flot.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet/0.4.4/leaflet.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet.markercluster/leaflet.markercluster.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/slickgrid/2.0.1/jquery-ui-1.8.16.custom.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/slickgrid/2.0.1/jquery.event.drag-2.0.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/slickgrid/2.0.1/slick.grid.js' %}
+ {% resource 'ckanext-reclinepreview/vendor/moment/1.6.2/moment.js' %}
+
+ {% resource 'hdx_theme/recline/recline.js' %}
+
+ {% resource 'hdx_theme/recline/preview_recline.js' %}
+
+ {% resource 'ckanext-reclinepreview/vendor/bootstrap/2.0.2/css/bootstrap.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet/0.4.4/leaflet.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet/0.4.4/leaflet.ie.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet.markercluster/MarkerCluster.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet.markercluster/MarkerCluster.Default.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/leaflet.markercluster/MarkerCluster.Default.ie.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/slickgrid/2.0.1/slick.grid.css' %}
+ {% resource 'ckanext-reclinepreview/vendor/recline/recline.css' %}
+
+ {% resource 'ckanext-reclinepreview/css/recline.css' %}
+  
+{% endblock %}

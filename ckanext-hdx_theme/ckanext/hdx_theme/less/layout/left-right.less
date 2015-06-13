@@ -1,0 +1,19 @@
+@import "../base/variables";
+
+@verticalLineColor: @extraLightGrayColor;
+@spaceToVerticalLine: 35px;
+@verticalLineWidth: 1px;
+
+/* Left - right layout */
+.section-right {
+  border-left: @verticalLineWidth solid @verticalLineColor;
+  padding-left: @containerMarginSize;
+
+}
+
+.section-left {
+  border-right: @verticalLineWidth solid @verticalLineColor;
+  margin-right: -1px;
+  padding-right: @containerMarginSize;
+}
+/* END - Left - right layout */

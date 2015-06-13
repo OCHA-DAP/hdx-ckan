@@ -1,0 +1,15 @@
+<a href="#" data-module-placement="left"  data-module="bs_popover" data-module-social_div_id="help_me"
+   data-module-social_wrapper_div_id="help_me_wrapper" 
+title="Help Me" onclick="return false;">
+    <img src="/images/help.svg" alt="Help" width="40px"/>
+  </a>
+<span class="popover-wrapper" id="help_me_wrapper"></span>
+<div style="display:none" id="help_me">
+	{% for l in links %}
+	<div class="resource-social" style="margin-bottom:4px;">
+	  <a href="{{l.url}}">
+	    {{l.text}}
+	  </a>
+	</div>
+	{% endfor %}
+</div>

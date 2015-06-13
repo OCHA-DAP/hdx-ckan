@@ -1,0 +1,32 @@
+{% extends 'search/snippets/package_item.html' %}
+
+{% set geolocated=true %}
+{% set visualization=true %}
+
+{% block package_item_content %}
+  {{ super() }}
+{% endblock %}
+
+{% block owner_update %}
+{% set updated_time = package.metadata_modified or package.metadata_created%}
+{% set f_updated_time = h.render_datetime(updated_time) %}
+  {{ package.dataset_source }} - {{f_updated_time}}
+{% endblock %}
+
+{% block preview_link %}
+  <a data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}"
+     data-module-subchart="true" data-module-click_only="true"
+      {% if show_preview_on_first and loop.index == 1 %}
+        data-module-click_only_show="true"
+      {% endif %}
+     data-module-container="chart-container"
+     data-module-parent_selector=".dataset-item" style="cursor: pointer;">
+      Preview
+  </a>
+{% endblock %}
+
+{% block follow_link %}
+   {# h.hdx_follow_link('dataset', package.id, "this indicator", "link-separator") #}
+{% endblock %}
+
+

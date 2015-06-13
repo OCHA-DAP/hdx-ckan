@@ -1,0 +1,38 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('Thank You For Signing Up') }}{% endblock %}
+
+{% block toolbar %}
+{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1 class="page-heading">{% block page_heading %}{{ _('One Last Thing: Validate Your Email') }}{% endblock %}</h1>
+      <p>Thank you for signing up to HDX. Just one last thing before you can login. Please validate your email by clicking on the link in the email we've just sent you.</p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow module-shallow border-bottom-grey pBottom35">
+    <h2 class="module-heading">{{ _('No Email?') }}</h2>
+    <div class="module-content">
+      <p>{% trans %}If you haven't received an email to validate your account, we can resend it.{% endtrans %}</p>
+      <p class="action">
+        <a class="btn" href="{{ h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='validation_resend', id=user )}}">{{ _('Resend Email') }}</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="module module-narrow module-shallow">
+    <h2 class="module-heading">{{ _('Still No Email?') }}</h2>
+    <div class="module-content">
+      <p>{% trans %}You may have misspelled your email address. Before you create a new account, contact us.{% endtrans %}</p>
+      <p class="action">
+        <a class="btn" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact Us') }}</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}
+

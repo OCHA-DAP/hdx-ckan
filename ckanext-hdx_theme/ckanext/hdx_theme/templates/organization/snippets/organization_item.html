@@ -1,0 +1,89 @@
+{#
+Renders a media item for a organization. This should be used in a list.
+
+organization - A organization dict.
+
+Example:
+
+    <ul class="media-grid">
+      {% for organization in organizations %}
+        {% snippet "organization/snippets/organization_item.html", organization=organization %}
+      {% endfor %}
+    </ul>
+#}
+
+{% set url = h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc') %}
+{% set res = h.get_last_modifier_user(g_id=organization.id, get_timestamp=True) %}
+{% set last_user = res[0] %}
+{% set updated_time = res[1] %}
+{% set f_updated_time = h.render_datetime(updated_time) %}
+{% set followers = h.get_group_followers(organization.id) %}
+{% set members = h.get_group_members(organization.id) %}
+
+<li class="list-items dataset-item" id="mx-org-item-{{organization.name}}">
+    <div class="list-items dataset-content">
+      {% block title %}
+   		 <h3 class="list-items dataset-heading">
+   		   <a href="{{ url }}" title="{{ _('View {organization_name}').format(organization_name=organization.display_name) }}" >
+    			<span>{{ _('{organization_name}').format(organization_name=organization.display_name) }}</span>
+  		   </a>
+   		 </h3>
+  	{% endblock %}
+      <div>
+        <span class="sspBold16">
+          {{ _('Updated by') }}
+        </span>
+        <span class="sspBold16 updatedNameColor">
+          {{ h.hdx_linked_user(last_user) }}
+        </span>
+        - {{f_updated_time}}</div>
+      {% block description %}
+    	{% if organization.description %}
+      		<div class="list-items content">{{ h.markdown_extract(organization.description, extract_length=80) }}</div>
+    	{% else %}
+      		<div class="list-items content empty">{{ _('This organization has no description') }}</div>
+    	{% endif %}
+	  {% endblock %}
+	  
+	  {% block role %}
+	  	{% if organization.role %}
+	  		<div class="list-items extra-info">{{ _('Your role') }}: {{ organization.role }}</div>
+	  	{% endif %}
+	  {% endblock %}
+	  
+	  {% block counters %}
+	  <div class="list-items mTop20">
+		  {% block datasets %}
+			  {% if organization.packages %}
+			    {% if organization.packages is number %}
+			    	{% set num_of_pack = organization.packages %}
+			    {% else %}
+			    	{% set num_of_pack = organization.packages|length %}
+			    {% endif %}
+			   <span class="sspBold14">
+			   		 <a class="sspBold14" href="{{ h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+			   	</span>
+			   {% else %}
+			      <span class="sspBold14">{{ _('0 Datasets') }}</span>
+			   {% endif %}
+		  {% endblock %}
+		-
+		  {% block members %}
+			  {% set group_members_url = h.url_for(controller='organization', action='members', id=organization.name or organization.title, sort='metadata_modified desc') %}
+			  {% if members == 0 %}
+			  	<span class="sspBold14">{{members}} {{ _('Members') }}</span>
+			  {% else %}
+			   	<a class="sspBold14" href="{{ group_members_url }}">{{ members }} {% if members != 1 %}{{ _('Members') }}{% else %}{{ _('Member') }}{% endif %}</a>
+			  {% endif %}
+		  {% endblock %}
+		-
+		  {% block followers %}
+		   <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+		  {% endblock %}
+	  </div>
+	  {% endblock %}
+    </div>
+</li>
+{% if position is divisibleby 3 %}
+  <li class="clearfix js-hide"></li>
+{% endif %}

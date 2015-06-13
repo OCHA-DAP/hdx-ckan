@@ -1,0 +1,28 @@
+{# {% snippet "organization/snippets/mem_or_org.html", parent_route='user_dashboard_organizations' %} #}
+{% set parent_route = parent_route if parent_route else 'user_dashboard_organizations' %}
+<div class="paddingRowHack graybg">
+	<div class="paddingLeftHack paddingRightHack">
+		<div class="row">
+			<div class="span6">
+				<div class="mLR15 pLR45 pTB15 whitebg border-grey">
+					<p><strong>1.{{_('FIND')}}</strong> {{ _('There is a chance that your organisation already exists in HDX. If so, you can request membership as an administrator or editor. You will then be able to share data under the organisation\'s name. ')}}</p>
+					<br>
+					<center><a href="/organization" class="btn btn-primary">{{ _("Find Your Organisation")}}</a></center>
+				</div>
+			</div>
+			<div class="span6">
+				<div class="mLR15 pLR45 pTB15 whitebg border-grey">
+					<p><strong>2.{{_('REQUEST')}}</strong> {{ _('If you do not see your organisation in HDX, you can create one. Tell us a few things about your organisation and we will process the request within 24 hours.')}}</p>
+					<br>
+					<center><a href="/organization/request_new?from={{ parent_route }}" class="btn btn-primary">{{ _("Request New Organisation")}}</a></center>
+				</div>
+			</div>
+		</div>
+		<div class="row"><br/><br/></div>
+	</div>
+</div>
+<style>
+/* Put here for now because Arti is not down with the new layouts and he may have something better we can use instead */
+
+
+</style>

@@ -1,0 +1,64 @@
+{% extends "user/dashboard.html" %}
+
+{% block dashboard_activity_stream_context %}{% endblock %}
+
+{% block add_action_content %}
+  {% if h.check_access('package_create') %}
+  {# if c.userobj.sysadmin #}
+    <li>{% link_for _('Add Dataset'), controller='package', action='new', class_="btn btn-primary", icon="plus-sign-alt" %}</li>
+  {# endif #}
+  {% endif %}
+{% endblock %}
+
+{% block primary_content_inner %}
+{# This is a little different because the query is run through SQLAlchemy, not Solr #}
+{% set sorting = [
+        (_('Name Ascending'), 'title asc'),
+        (_('Name Descending'), 'title desc'),
+        (_('Last Modified'), 'metadata_modified desc') ]
+      %}
+{% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %} 
+{% resource 'hdx_theme/order-by-dropdown.js' %}
+{% if sorting %}
+<form class="list-items search-form pull-right" method="get" data-module="select-switch">
+      <div class="form-select control-group control-order-by mTop10">
+        <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+        <div class="dropdown orderDropdown">
+          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+            <span class="dropdown-toggle-text">
+              {% for label, value in sorting %}
+                  {% if sorting_option == value %} {{ label }} {% endif %}
+              {% endfor %}
+            </span>
+            <b class="caret"></b>
+          </button>
+          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+            {% for label, value in sorting %}
+              {% if label and value %}
+                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+</form>
+  {% endif %}
+
+  <h2 class="page-heading sspBold28 black">{{ _('My Datasets') }}</h2>
+  <div style="min-height: 120px;">
+    {% if c.user_dict.datasets %}
+      {% snippet 'snippets/package_list.html', packages=c.user_dict.datasets, show_my_links=true %}
+      {{ c.page.pager() }}
+    {% else %}
+      <p class="empty">
+        {{ _('You haven\'t created any datasets.') }}
+        {# Users must go to a country before creating a new collection so I commented out the part below.
+          {% if h.check_access('package_create') %}
+            {% link_for _('Create one now?'), controller='package', action='new' %}
+          {% endif %}
+        #}
+      </p>
+    {% endif %}
+  </div>
+  
+{% endblock %}

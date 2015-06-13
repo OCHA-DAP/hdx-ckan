@@ -1,0 +1,41 @@
+{% extends "package/edit_base.html" %}
+
+{% set disable_reorder = false %}
+{% set has_reorder = disable_reorder and c.pkg_dict and c.pkg_dict.resources and c.pkg_dict.resources|length > 0 %}
+
+{% block subtitle %}{{ _('Resources') }} - {{ h.dataset_display_name(pkg) }}{% endblock %}
+
+{% block page_primary_action %}
+  {% link_for _('Add new resource'), controller='package', action='new_resource', id=c.pkg_dict.name, class_='btn btn-primary', icon='plus' %}
+{% endblock %}
+
+{% block content_action %}
+<div class="pull-right" style="margin-right:-30px; margin-left:40px;">
+  {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#submitting-data','text':'Submitting Data'},{'url':'http://docs.hdx.rwlabs.org/screencasts#updating-a-resource','text':'Update Resource'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
+  </div>
+  {{ super() }}
+{% endblock %}
+
+{% block primary_content_inner %}
+  {% if pkg.resources %}
+    <ul class="resource-list"{% if has_reorder %} data-module="resource-reorder" data-module-id="{{ pkg.id }}"{% endif %}>
+      {% for resource in pkg.resources %}
+        {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource, url_is_edit=true %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
+      <p class="empty">This dataset has no data, <a href="{{ url }}">why not add some?</a></p>
+    {% endtrans %}
+  {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  {% if has_reorder %}
+    {% resource 'vendor/reorder' %}
+  {% endif %}
+{% endblock %}

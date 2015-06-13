@@ -1,0 +1,4 @@
+
+        [ckan.plugins]
+        hdx_crisis=ckanext.hdx_crisis.plugin:HDXCrisisPlugin
+    

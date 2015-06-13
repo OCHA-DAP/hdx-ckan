@@ -1,0 +1,1017 @@
+@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ *
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.topline {
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  padding: 20px 0;
+  margin-top: -1px;
+  color: #333333;
+}
+.topline .indicator-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  margin-bottom: 10px;
+  color: #333333;
+  line-height: 20px;
+  height: 40px;
+}
+.topline .indicator-value {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 56px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.topline .source-title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  color: #333333;
+}
+.topline .source-link {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+}
+.topline .source-date {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: #888888;
+}
+.topline .small {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  margin-bottom: 20px;
+  margin-left: -15px;
+}
+.topline .sparkline {
+  position: relative;
+  width: 103px;
+  height: 74px;
+}
+.topline .topline-value {
+  white-space: nowrap;
+}
+.topline .indicator-prevalue {
+  margin-left: 0px;
+}
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+/* Default link style */
+a,
+.dataset-heading a {
+  color: #0088ff;
+  text-decoration: none;
+}
+a:hover,
+.dataset-heading a:hover,
+a:focus,
+.dataset-heading a:focus {
+  color: #005299;
+  text-decoration: none;
+}
+/* END Default link style */
+.pagination,
+.module .pagination {
+  background: #eeeeee;
+  border-top: none;
+  height: 45px;
+  margin-bottom: 0;
+}
+.pagination ul,
+.module .pagination ul {
+  line-height: 45px;
+  overflow: hidden;
+  border-radius: 0;
+}
+.pagination li,
+.module .pagination li {
+  display: inline;
+}
+.pagination li a,
+.module .pagination li a,
+.pagination li a:hover,
+.module .pagination li a:hover,
+.pagination li a:focus,
+.module .pagination li a:focus {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+  background-color: #ffffff;
+  border: none;
+  margin-left: -2px;
+  display: inline-block;
+  width: 45px;
+  padding: 0;
+  line-height: 45px;
+}
+.pagination li.active a,
+.module .pagination li.active a {
+  background-color: #0088ff;
+  color: #ffffff;
+}
+.pagination li.disabled a,
+.module .pagination li.disabled a {
+  cursor: default;
+}
+/* Alter page-header style - used with nav-tabs */
+.page-header {
+  background: none;
+  border-bottom: 3px solid #eeeeee;
+  -webkit-border-radius: 0 3px 0 0;
+  -moz-border-radius: 0 3px 0 0;
+  border-radius: 0 3px 0 0;
+}
+.page-header .nav-tabs {
+  margin-bottom: -3px;
+}
+/* END Alter page-header style */
+.nav-tabs {
+  border-bottom: 3px solid #eeeeee;
+}
+.nav-tabs > li {
+  margin-bottom: -3px;
+}
+.nav-tabs > li > a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  padding-left: 30px;
+  padding-right: 30px;
+  letter-spacing: 0.03em;
+  color: #888888;
+  border: none;
+}
+.nav-tabs > li > a:hover {
+  color: #0088ff;
+}
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  border: none;
+  border-bottom: 3px solid #0088ff;
+  color: #0088ff;
+}
+.nav-tabs .hdx-tab-button i {
+  display: none;
+}
+/* END Style tabs*/
+/* Button style */
+.btn {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  background-image: none;
+  text-shadow: none;
+  border: none;
+  background-color: #888888;
+  color: #ffffff;
+}
+.btn:hover,
+.btn:focus,
+.btn.active {
+  background-color: #888888;
+  opacity: 0.7;
+  box-shadow: none;
+  color: #ffffff;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  letter-spacing: 0;
+  background-position: inherit;
+}
+.btn.hdx-btn.org-btn {
+  min-width: 100px;
+  margin-left: 0;
+  background-color: #007ce0;
+  color: #ffffff;
+}
+.btn-inverted {
+  color: #888888;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  box-shadow: none;
+}
+.btn-inverted:hover,
+.btn-inverted:focus {
+  background-color: #ffffff;
+  opacity: 0.7;
+  color: #888888;
+}
+.btn-primary {
+  background-color: #007ce0;
+  color: #ffffff;
+}
+.btn-danger {
+  background-color: #f2645a;
+}
+.resource-item .hdx-btn-group {
+  position: absolute;
+  top: 14px;
+  right: 10px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.btn.hdx-btn.ga-preview,
+.btn.hdx-btn.ga-edit {
+  background-color: #888888;
+  color: white;
+  border: 0;
+  line-height: 35px;
+  padding: 0 20px;
+  text-transform: uppercase;
+  margin-left: 10px;
+  border-radius: 4px;
+}
+.btn.hdx-btn.ga-share,
+.btn.hdx-btn.ga-download {
+  background-image: none;
+  text-shadow: none;
+  background-color: #888888;
+  color: white;
+  border: 0;
+  line-height: 35px;
+  width: 35px;
+  border-radius: 4px;
+  padding: 0;
+  margin-left: 10px;
+}
+.btn.hdx-btn.ga-share img,
+.btn.hdx-btn.ga-download img {
+  width: 14px;
+  margin-bottom: 5px;
+}
+/* END Button style*/
+/* Order DropDown style */
+.control-order-by label {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.03em;
+}
+.control-order-by .orderDropdown {
+  display: inline;
+}
+.control-order-by .orderDropdown .dropdown-toggle {
+  background-color: #ffffff;
+  border: none;
+  color: #0088ff;
+  text-align: left;
+  margin-top: -4px;
+}
+.control-order-by .orderDropdown .dropdown-toggle .caret {
+  margin-top: 6px;
+}
+.control-order-by .orderDropdown .dropdown-toggle:hover,
+.control-order-by .orderDropdown .dropdown-toggle:focus {
+  color: #005299;
+}
+.control-order-by .orderDropdown .dropdown-toggle-text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #0088ff;
+  letter-spacing: 0.03em;
+}
+.control-order-by .orderDropdown .dropdown-toggle-text:hover,
+.control-order-by .orderDropdown .dropdown-toggle-text:focus {
+  color: #005299;
+}
+/* END DropDown style */
+/* Body Background */
+body {
+  background-size: cover;
+  background: #0088ff url("/images/homepage-new/map.png") fixed;
+  min-width: 1260px;
+  color: #888888;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+/* END Body Background */
+.newHeader .header-user-box,
+.newHeader .header-user-box > span > a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  line-height: 25px;
+  color: #eeeeee;
+}
+.newHeader .header-user-box i,
+.newHeader .header-user-box > span > a i {
+  display: none;
+}
+.newHeader .header-user-name {
+  color: #f2645a;
+}
+.newHeader .header-nav-bg {
+  background-color: #ffffff;
+}
+.newHeader .header-nav-border {
+  border-bottom: 3px solid #cccccc;
+}
+.newHeader .header-nav {
+  height: 55px;
+}
+.newHeader .header-nav .table-valign {
+  height: 55px;
+}
+.newHeader .header-user-bg {
+  background-color: #333333;
+}
+.newHeader .submitData {
+  /*Submit Data Button*/
+  background-color: #f2645a;
+  border-radius: 6px;
+  display: inline-block;
+  padding: 10px 30px;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.newHeader #feedback-button {
+  /* Feedback Button */
+  background-color: #888888;
+  border-radius: 20px;
+  padding: 10px 15px 10px;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 31px;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: none;
+  text-decoration: none;
+}
+.newHeader .dropdown-menu {
+  margin: 0;
+}
+.newHeader .dropdown-menu > li > a:hover,
+.newHeader .dropdown-menu > li > a:focus {
+  color: #ffffff;
+  background-color: #007ce0;
+  background-image: none;
+}
+/* HEADER Search Widget  */
+.header-nav-search {
+  height: 55px;
+  margin-left: 50px;
+  width: 350px;
+  border-bottom: 3px solid #888888;
+  margin-bottom: -3px;
+}
+.header-nav-search .header-search-form {
+  margin: 0;
+  padding: 0;
+}
+.header-nav-search .header-search-form .input-prepend {
+  margin: 0;
+}
+.header-nav-search .header-search-form .icon-search {
+  margin: 0 20px;
+  font-size: 20px;
+  line-height: 28px;
+}
+.header-nav-search .header-search-form .filter-icon {
+  margin-right: 20px;
+  visibility: hidden;
+  color: #007ce0;
+  font-size: 20px;
+  cursor: pointer;
+}
+.header-nav-search .header-search-form input,
+.header-nav-search .header-search-form input:focus {
+  border: none;
+  text-shadow: none;
+  box-shadow: none;
+  transition: none;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  height: 28px;
+  background: transparent;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  outline: none;
+  color: #000000;
+}
+.header-nav-search .header-search-form input::-webkit-input-placeholder,
+.header-nav-search .header-search-form input:-ms-input-placeholder {
+  color: #dadada;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+}
+.header-nav-search .header-search-form input:-moz-placeholder,
+.header-nav-search .header-search-form input::-moz-placeholder {
+  color: #dadada;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+  opacity: 1;
+}
+.newHeader .header-nav .header-nav-search .header-search-form input::-webkit-input-placeholder {
+  color: #dadada;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 28px;
+}
+/* HDX Version display */
+.hdxLogo {
+  position: relative;
+}
+.logo #hdxVersion {
+  color: #888888;
+  position: absolute;
+  float: left;
+  font-size: 10px;
+  left: 99px;
+  top: 27px;
+  width: 0;
+  display: none;
+  line-height: 22px;
+}
+.logo .logo-img:hover ~ #hdxVersion {
+  display: block;
+}
+.logo .logo-img {
+  background-image: url("/images/homepage-new/logo-beta.svg");
+  background-repeat: no-repeat;
+  background-size: 126px 31px;
+  width: 126px;
+  height: 31px;
+  min-width: 126px;
+  min-height: 31px;
+}
+/* END HDX Version display */
+/* Style links inside header-nav, main navigation links */
+.mainLinks {
+  padding-left: 25px;
+  margin: 0;
+}
+.mainLinks > li {
+  display: inline;
+}
+.mainLinks > li > a {
+  margin-left: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #333333;
+  letter-spacing: 0.03em;
+  line-height: 31px;
+  text-transform: uppercase;
+}
+.mainLinks > li > a:hover,
+.mainLinks > li > a:focus {
+  color: #000000;
+}
+.mainLinks > li > a:after {
+  content: "|";
+  margin-left: 15px;
+}
+.mainLinks > li > a:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+.mainLinks > li .dropdown-menu a:hover {
+  background-color: #FFFFFF;
+  color: #333333;
+  text-decoration: underline;
+}
+.mainLinks > li .crises-menu {
+  left: inherit;
+  right: 0px;
+}
+.mainLinks > li #crises-label:after {
+  content: '\25bc';
+  margin-left: 3px;
+  font-size: 13px;
+}
+.mainLinks > li:first-child > a {
+  margin-left: 0;
+}
+.mainLinks > li:last-child > a:after {
+  content: "";
+  margin: 0;
+}
+/* Style breadcrumbs */
+.toolbarRow {
+  background-color: #eeeeee;
+  height: 20px;
+}
+.toolbarRow .toolbar {
+  margin: 0;
+  padding: 0;
+}
+.toolbarRow .toolbar .breadcrumb {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+.toolbarRow .toolbar .breadcrumb > li {
+  text-shadow: none;
+}
+.toolbarRow .toolbar .breadcrumb > li + li::before {
+  content: "";
+  padding: 0;
+}
+/* END Style breadcrumbs */
+/* Style Caret */
+.caret {
+  border-left: 9px solid transparent;
+  border-right: 9px solid transparent;
+  border-top: 9px solid #0088ff;
+  vertical-align: top;
+}
+/* END Style Caret */
+.offset1andHalf {
+  margin-left: 180px !important;
+}
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+.container,
+.navbar-static-top .container,
+.navbar-fixed-top .container,
+.navbar-fixed-bottom .container {
+  width: 1170px;
+  padding: 0;
+}
+.paddingRowHack {
+  margin-left: -45px;
+  margin-right: -45px;
+}
+.paddingRowHack .paddingLeftHack {
+  padding-left: 45px;
+  margin-left: 0;
+}
+.paddingRowHack .paddingRightHack {
+  padding-right: 45px;
+  margin-right: 0;
+}
+body {
+  line-height: 20px;
+}
+/* END - Customize fixed Bootstrap layout */
+/* Style default Primary */
+[role=main] .primary {
+  width: 100%;
+  float: none;
+  padding-left: 0;
+}
+[role=main] .secondary {
+  margin: 0;
+  padding-right: 15px;
+  /* mimic the left 45 padding */
+  width: 100%;
+  color: #ffffff;
+}
+/* END Style default Primary */
+/* Change the default style for ul items */
+ul.hdx-bs3 {
+  padding-left: 0;
+  list-style-type: none;
+}
+/* Style pagination */
+.pagination {
+  display: block;
+  text-align: center;
+  height: 45px;
+}
+/* END Style pagination */
+/* END Change the default style for ul items */
+/* Missing styles due to removal of BS 2.3 + other fixes */
+.uppercase {
+  text-transform: uppercase;
+}
+.form-actions {
+  margin-right: 0;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background: none;
+}
+/* END Missing styles due to removal of BS 2.3 */
+/* Fix search widget */
+/* Fix size due to different box-sizing */
+.form-search .input-append .searchInput {
+  width: 266px;
+  float: left;
+}
+/* Fix button position */
+.form-search .input-append .input-group-addon {
+  padding: 0;
+  border: none;
+  float: left;
+}
+/* END Fix search widget */
+/* Utility classes */
+.whiteBackground {
+  background-color: #ffffff;
+}
+/* END Utility classes */
+/* Style Select2 Dropdown */
+.select2-container .select2-choice .select2-arrow {
+  width: 42px;
+}
+/* END Style Select2 Dropdown */
+/* Fix header styles */
+.newHeader .header-nav .header-nav-search {
+  height: 58px;
+}
+/* END Fix header styles */
+/* Left - right layout */
+.section-right {
+  border-left: 1px solid #eeeeee;
+  padding-left: 45px;
+}
+.section-left {
+  border-right: 1px solid #eeeeee;
+  margin-right: -1px;
+  padding-right: 45px;
+}
+/* END - Left - right layout */
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+/* Search box */
+.search-box-wrapper {
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  padding: 5px;
+  margin-top: 35px;
+  margin-bottom: 30px;
+}
+.search-box-wrapper:focus {
+  outline: solid;
+  outline-color: #003580;
+}
+.search-box-wrapper input,
+.search-box-wrapper input:focus {
+  border-style: none;
+  width: 97%;
+  outline: none;
+}
+/* END - Search box */
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+.hdx-modal .modal-header {
+  background-color: #eeeeee;
+  font-family: 'Gotham-Book', sans-serif;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+.hdx-modal .modal-body {
+  font-family: 'Gotham-Book', sans-serif;
+}
+.hdx-modal .modal-footer {
+  background-color: #eeeeee;
+  border-style: none;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+.hdx-modal label {
+  font-size: 14px;
+}
+.hdx-modal .modal-submit {
+  background-color: #ffffff;
+  color: #888888;
+}
+.hdx-modal .modal-cancel {
+  background-color: #888888;
+}
+.intro-section {
+  padding-top: 40px;
+}
+.intro-section .org-icon {
+  height: 60px;
+  margin-right: 20px;
+}
+.intro-section .org-logo-large {
+  background-color: #0088ff;
+  border: 1px solid #0088ff;
+  width: 370px;
+  height: 200px;
+  text-align: center;
+}
+.intro-section .org-logo-large img {
+  max-height: 125px;
+  max-width: 300px;
+}
+.intro-section .org-logo-large img {
+  max-height: 125px;
+  max-width: 300px;
+}
+.intro-section .org-title {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  color: #0088ff;
+  line-height: 1;
+}
+.intro-section .mainLinks.org-info-links {
+  padding-left: 0;
+}
+.intro-section .mainLinks.org-info-links > li > a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0;
+  color: #0088ff;
+}
+.intro-section .mainLinks.org-info-links > li > a:focus,
+.intro-section .mainLinks.org-info-links > li > a:hover {
+  color: #005299;
+}
+.intro-section .mainLinks.org-info-links > li > a.disabled {
+  color: #000000;
+  cursor: default;
+}
+.intro-section .mainLinks.org-info-links > li > a.disabled:after {
+  color: #0088ff;
+}
+.intro-section .org-description {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+}
+.intro-section .admin-menu {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+.intro-section div.summary p {
+  margin: 0px;
+}
+.org-section-title {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  color: #888888;
+  text-transform: uppercase;
+}
+.org-section-dropdown {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  color: #0088ff;
+}
+.visualization-title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #333333;
+}
+.visualization-title span {
+  margin-left: 10px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+}
+.mainLinks.visualization-links {
+  padding-left: 0;
+}
+.mainLinks.visualization-links > li > a {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #0088ff;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.mainLinks.visualization-links > li > a:hover,
+.mainLinks.visualization-links > li > a:focus {
+  color: #005299;
+}
+.btn.hdx-btn {
+  margin-right: 12px;
+}
+.page-header {
+  margin-top: 0;
+}
+.facet-count a {
+  color: #0088ff;
+}
+.dropdown-toggle-org {
+  background-color: #ffffff;
+  padding: 5px 15px;
+  border-radius: 5px;
+  border: 1px solid #eeeeee;
+}
+.dropdown-toggle-org .dropdown-toggle-text {
+  color: #888888;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.dropdown-toggle-org .caret {
+  margin-top: 5px;
+  margin-left: 5px;
+  border-top-color: #888888;
+}
+#floatingLogo {
+  position: fixed;
+  top: 0px;
+  margin-left: -45px;
+  z-index: 1040;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  max-height: 75px;
+  background-color: #ffffff;
+}
+#floatingLogo .table-valign {
+  background-color: #0088ff;
+  width: 75px;
+  height: 75px;
+  text-align: center;
+}
+#floatingLogo .table-valign img {
+  max-height: 60px;
+  max-width: 60px;
+}
+#floatingLogo .table-valign img {
+  max-height: 60px;
+  max-width: 60px;
+}
+#floatingLogo:hover .title-share {
+  display: block;
+}
+#floatingLogo .title-share {
+  display: none;
+  padding: 15px;
+  max-width: 385px;
+  min-width: 225px;
+  line-height: 12px;
+}
+#floatingLogo .title-share .floating-org-title {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+  line-height: 16px;
+  height: 32px;
+}
+#floatingLogo .title-share a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  text-transform: uppercase;
+  line-height: 12px;
+}
+#floatingLogo .title-share a + a:before {
+  content: "|";
+  margin-right: 3px;
+  margin-left: 3px;
+}

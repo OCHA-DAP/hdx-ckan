@@ -1,0 +1,30 @@
+{#
+Creates a popup base that can be extended to embed content in it
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/popup/popup.html', id="embedPopup", title="Embed visualization") }}
+#}
+
+<div id="{{ id }}" class="popup" style="display: none;">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="title pull-left">
+                    {{ title }}
+                </div>
+                <div class="pull-right">
+                    <i class="close glyphicon glyphicon-remove"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            {% block content %}
+            {% endblock %}
+        </div>
+
+    </div>
+</div>
+

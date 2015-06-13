@@ -1,0 +1,21 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.org-logo-large {
+  width: 185px;
+  height: 100px;
+  text-align: center;
+}
+.org-logo-large img {
+  max-height: 65px;
+  max-width: 160px;
+}

@@ -1,0 +1,15 @@
+{#
+Display a grid of organization items.
+
+organizations - A list of organizations.
+
+Example:
+
+    {% snippet "organization/snippets/organization_list.html" %}
+
+#}
+<ul class="list-items dataset-list unstyled" >
+  {% for organization in organizations %}
+    {% snippet "organization/snippets/organization_item.html", organization=organization, position=loop.index %}
+  {% endfor %}
+</ul>

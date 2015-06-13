@@ -1,0 +1,31 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+#hdx-3w-visualization-wrapper .dc-chart g.row text {
+  fill: black;
+  font-size: 0.8em;
+}
+#hdx-3w-visualization-wrapper .dc-chart .pie-slice {
+  fill: black;
+}
+#hdx-3w-visualization-wrapper .x-axis-label {
+  font-size: 0.8em;
+}
+#hdx-3w-visualization-wrapper #hdx-3W-where {
+  height: 360px;
+  width: 100%;
+}
+#hdx-3w-visualization-wrapper #wheretitle {
+  padding-bottom: 10px;
+}
+#hdx-3w-visualization-wrapper .hdx-3w-chart {
+  width: 100%;
+}
+#hdx-3w-visualization-wrapper .hdx-3w-info {
+  padding: 5px;
+  background-color: white;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}

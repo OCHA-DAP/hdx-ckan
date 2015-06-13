@@ -1,0 +1,78 @@
+{% extends "page-new.html" %}
+{% import 'macros/form.html' as form %}
+
+{% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Search'), controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', highlight_actions = 'new index') }}</li>
+{% endblock %}
+
+{% block primary_content %}
+<div id="filter_dropdown">
+  <div class="row paddingRowHack filter_bg">
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div id="search_bar_content" style="display: none;" data-module-show="{{ c.filters_are_selected }}"> 
+          <div id="filter_container" class="mTB35 col-xs-8">
+            <div class="row">
+              {% for facet in c.facet_titles %}
+                {{h.snippet('snippets/facet_list_new.html', title=c.facet_titles[facet], name=facet ,hide_empty=True)}}
+              {% endfor %}
+            </div>
+          </div>
+          <div id="date_container" class="mTB35 col-xs-4">
+            <div class="row controls">
+              <div class="col-xs-4">
+                <label>Date Range</label>
+              </div>
+              <div class="col-xs-4">
+                <input style="width: 100px;" placeholder="Start date" type="text" title="Coming soon" data-module="bs_tooltip">
+              </div>
+              <div class="col-xs-4">
+                <input style="width: 100px;" placeholder="End date" type="text" title="Coming soon" data-module="bs_tooltip">
+              </div>
+            </div>
+          </div>
+
+        </div>
+    </div>
+  </div>
+{#  <div id="search_filter_btn">Filter<span>+</span></div>#}
+</div>
+
+    {% block search_results_wrapper %}
+        {% snippet 'search/snippets/search_results_wrapper_for_search_page.html',
+                        tracking_enabled=g.tracking_enabled, my_c=c %}
+    {% endblock %}
+
+  {% block package_search_results_api %}
+  {% endblock %}
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}
+
+
+{% block scripts2 %}
+  {{ super() }}
+  {% resource 'hdx_theme/bs_tooltip.js' %}
+  {% resource 'hdx_theme/filter' %}
+  {% resource 'hdx_theme/search' %}
+  {% resource 'hdx_theme/jquery.highlight' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
+  
+  <script src="/base/javascript/modules/autocomplete.js"></script>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block  global_dataset_input_search%}
+	{% if c.other_links and c.other_links.params_noq %}
+  		{% for key,value in  c.other_links.params_noq.items() %}
+  			<input type="hidden" name="{{ key }}" value="{{ value }}" />
+  		{% endfor %}
+  	{% endif %}
+  <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all data') }}">
+{% endblock %}

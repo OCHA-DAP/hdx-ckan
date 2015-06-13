@@ -1,0 +1,3 @@
+recursive-include ckanext-hdx_theme/ckanext/hdx_theme/templates *
+recursive-include ckanext-hdx_theme/ckanext/hdx_theme/public *
+recursive-include ckanext-hdx_theme/ckanext/hdx_theme/fanstatic *

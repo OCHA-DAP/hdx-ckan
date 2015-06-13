@@ -1,0 +1,26 @@
+{#
+
+Example:
+
+  {% snippet 'snippets/widgets/req_membership_new.html' modal_div_id='req-membership-div', modal_div_class='your_class',
+                form_action = url %}
+
+#}
+
+{% extends "snippets/widgets/modal.html" %}
+
+{% block modal_content %}
+     <form action="{{ form_action }}" method="post">
+     {{ super() }}
+     </form>
+{% endblock %}
+
+{% block header_content %}{{ _('Request Membership') }}{%  endblock %}
+
+{% block body %}
+    <div class="form-group">
+        <label for="req-membership-text" class="control-label">{{ _('Message') }}</label>
+        <textarea class="form-control" name="message"
+                  id="req-membership-text" placeholder="{{ _('Please add me to this organisation') }}..."></textarea>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% set has_more_length = g.activity_list_limit|int %}
+{% set has_more = activities|length > has_more_length %}
+
+{% set stream_filter_type = c.dashboard_activity_stream_context.filter_type if c %}
+{% set stream_filter_type = stream_filter_type if stream_filter_type else controller %}
+{% if activities %}
+  <ul class="activity" data-module="activity-stream" data-module-more="{{ has_more }}" data-module-context="{{ stream_filter_type }}" data-module-id="{{ id }}" data-module-offset="{{ offset }}">
+      {% if offset > 0 %}
+      <li class="load-less"><a href="{{ h.url_for(controller=controller, action=action, id=id, offset=(offset-30 if offset-30 > 0 else 0)) }}" class="btn btn-rounded">{{ _('Load less') }}</a></li>
+      {% endif %}
+  {% for activity in activities %}
+      {% if loop.index <= has_more_length %}
+          {% snippet 'indicator/snippets/activity_item.html', activity=activity %}
+      {% endif %}
+  {% endfor %}
+      {% if has_more %}
+      <li class="load-more"><a href="{{ h.url_for(controller=controller, action=action, id=id, offset=offset+30) }}" class="btn btn-rounded">{{ _('Load more') }}</a></li>
+      {% endif %}
+  </ul>
+{% else %}
+  <p class="empty">{{ _('No activities are within this activity stream') }}</p>
+{% endif %}

@@ -1,0 +1,15 @@
+.field-with-info {
+	float: left;
+}
+
+
+.field-with-info ~ .info-field{
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover ~ .info-field, .info-field:hover{
+	opacity: 1;
+	visibility: visible;
+}

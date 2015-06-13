@@ -1,0 +1,43 @@
+{#
+ Example:
+
+  {% snippet "package/snippets/resources_list.html", count=count, name=name, links=links, more %}
+
+#}
+<div id="{{ id }}" class="col-xs-2 mTB30 cb-item">
+	<div class="cb-item-count">
+		{{ count }} &nbsp;
+	</div>
+	<div class="cb-border-wrapper">
+		<div class="cb-item-name">
+			{{ name }} 
+		</div>
+		<div class="cb-item-links">
+			<ul class="hdx-bs3">
+			{% if links|length > 0 %}
+				{% set upper_limit = 4 %}
+				{% set uppercase = 'uppercase' if upper else '' %}
+				{% for i in range(0,links|length) %}
+                    {% set show_style = 'display:none' if i > upper_limit else '' %}
+					{% if links[i].url %}
+					    <li style="{{ show_style }}">
+                            <a href="{{links[i].url}}" title="{{links[i].name}}" class="{{uppercase}}">{{ links[i].name|truncate(18,True) }}</a>
+                        </li>
+					{% else %}
+					    <li style="{{ show_style }}">
+                            <span data-toggle="tooltip" data-module-placement="bottom" data-module="bs_tooltip" data-original-title="Coming soon..." class="{{uppercase}}">{{ links[i].name|truncate(18,True) }}</span>
+                        </li>
+					{% endif %}
+				{% endfor %}
+				{% if links|length > 4 %}
+					<li>
+                        <a style="cursor: pointer;" onclick="$(this).parent().siblings().show();$(this).hide(); $(this).parents('.cb-border-wrapper').attr('style', 'overflow-y: scroll;'); $(this).parents('.cb-border-wrapper').animate({scrollTop: 160}, 'slow'); ">{{ _('+ More') }}</a>
+                    </li>
+				{% endif%}
+			{% else %}
+				<li><span>{{ _('No items') }}</span></li>
+			{% endif %}
+			</ul>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,20 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _('About') }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li >{% link_for _('About'), controller='home', action='about' %}</li>
+  <li class="active">{% link_for title, controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page=page %}</li>
+
+{% endblock %}
+
+{% block primary %}
+<article class="module">
+    <div class="module-content">
+      {% snippet html %}
+    </div>
+</article>
+
+{% endblock %}
+
+{% block secondary %}{% endblock %}
