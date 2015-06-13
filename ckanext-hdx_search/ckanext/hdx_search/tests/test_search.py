@@ -75,6 +75,7 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
         context = {'model': model, 'session': model.Session,
                        'user': user, 'for_view': True, 'auth_user_obj': user}
         s = hdx_actions.package_search(context, data_dict)
+        print s['results']
         assert len(s['results']) > 0
 
 #     def test_new_sort_org(self):

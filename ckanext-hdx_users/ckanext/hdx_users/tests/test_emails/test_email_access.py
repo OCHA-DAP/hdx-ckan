@@ -24,8 +24,8 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
             'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_theme')
 
     @classmethod
-    def setup_class(cls):
-        super(TestEmailAccess, cls).setup_class()
+    def setUp(cls):
+        super(TestEmailAccess, cls).setUp()
         umodel.setup()
 
         cls._get_action('user_create')({
