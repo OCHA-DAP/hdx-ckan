@@ -58,7 +58,7 @@ class LoginController(ckan_user.UserController):
     def logged_in(self):
         # redirect if needed
         came_from = request.params.get('came_from', '')
-        if self._sane_came_from(came_from):
+        if h.url_is_local(came_from):
             return h.redirect_to(str(came_from))
 
         if c.user:
@@ -72,7 +72,7 @@ class LoginController(ckan_user.UserController):
                 ) - dateutil.parser.parse(user_dict['created'])
             else:
                 time_passed = None
-            if not user_dict['activity'] and time_passed and time_passed.days < 3:
+            if not (user_dict['number_created_packages'] > 0 or user_dict['number_of_edits'] > 0) and time_passed and time_passed.days < 3:
                 #/dataset/new
                 contribute_url = h.url_for(controller='package', action='new')
                 # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
