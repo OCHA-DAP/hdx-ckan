@@ -82,7 +82,7 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
 #             controller='organization', action='list')
 #         response = self.app.get(org, params={'sort':'title+asc'})
 #         assert '200' in response.status
-# 
+#
 #     def test_new_sort_grp(self):
 #         grp = h.url_for(
 #             controller='group', action='list')

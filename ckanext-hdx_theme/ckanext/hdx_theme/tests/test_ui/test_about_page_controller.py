@@ -6,7 +6,7 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
 class TestAboutPageController(hdx_test_base.HdxBaseTest):
-    
+
     #loads missing plugins
     @classmethod
     def _load_plugins(cls):
@@ -44,5 +44,3 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
         else:
             page = self.app.get(url)
         return page
-
-
