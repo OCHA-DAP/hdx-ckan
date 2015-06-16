@@ -560,16 +560,15 @@ class DatasetController(PackageController):
 
     def read(self, id, format='html'):
         if not format == 'html':
-            ctype, extension, loader = \
+            ctype, extension = \
                 self._content_type_from_extension(format)
             if not ctype:
                 # An unknown format, we'll carry on in case it is a
                 # revision specifier and re-constitute the original id
                 id = "%s.%s" % (id, format)
-                ctype, format, loader = "text/html; charset=utf-8", "html", \
-                                        MarkupTemplate
+                ctype, format = "text/html; charset=utf-8", "html"
         else:
-            ctype, format, loader = self._content_type_from_accept()
+            ctype, format = self._content_type_from_accept()
 
         response.headers['Content-Type'] = ctype
 
@@ -673,17 +672,17 @@ class DatasetController(PackageController):
         try:
             if has_shapes > 0:
                 c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                return render('indicator/hdx-shape-read.html', loader_class=loader)
+                return render('indicator/hdx-shape-read.html')
             if int(c.pkg_dict['indicator']):
-                return render('indicator/read.html', loader_class=loader)
+                return render('indicator/read.html')
             else:
                 org_dict = c.pkg_dict.get('organization') or {}
                 org_id = org_dict.get('id', None)
                 org_info_dict = self._get_org_extras(org_id)
                 if org_info_dict.get('custom_org', False):
                     self._process_customizations(org_info_dict.get('customization', None))
-                    return render('package/custom_hdx_read.html', loader_class=loader)
-                return render('package/hdx_read.html', loader_class=loader)
+                    return render('package/custom_hdx_read.html')
+                return render('package/hdx_read.html')
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
@@ -767,10 +766,8 @@ class DatasetController(PackageController):
     def _resource_preview(self, data_dict):
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:
             return False
-        return bool(datapreview.res_format(data_dict['resource'])
-                    in datapreview.direct() + datapreview.loadable()
-                    or datapreview.get_preview_plugin(
-            data_dict, return_first=True))
+        '''Deprecated in 2.3'''
+        return bool(datapreview.get_preview_plugin(data_dict, return_first=True))
 
     def shorten(self):
         import requests

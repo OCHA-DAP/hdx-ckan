@@ -25,8 +25,11 @@ class TestPermaLinkDisplay(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         testsysadmin = model.User.by_name('testsysadmin')
         context = {
             'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        package = self._get_action('package_show')(
+            context, {'id': 'test_private_dataset_1'})
+
         resource = self._get_action('resource_show')(
-            context, {'id': 'hdx_test.csv'})
+            context, {'id': package['resources'][0]['id']})
         perma_link = h.url_for(controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                                action='perma_file', id='test_private_dataset_1', resource_id=resource['id'])
 
