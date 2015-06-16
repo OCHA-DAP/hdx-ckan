@@ -68,13 +68,13 @@
     null,
     "Odstranit"
   ],
+  "Reorder resource view": [
+    null,
+    "Přeuspořádat zobrazení zdroje"
+  ],
   "Reorder resources": [
     null,
     "Změnit pořadí zdrojů"
-  ],
-  "Reset this": [
-    null,
-    "Resetovat"
   ],
   "Resource uploaded": [
     null,
