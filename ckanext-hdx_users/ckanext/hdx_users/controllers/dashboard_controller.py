@@ -98,7 +98,9 @@ class DashboardController(uc.UserController):
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'for_view': True}
         data_dict = {'id': id,
-                     'user_obj': c.userobj}
+                     'user_obj': c.userobj,
+                     'include_datasets': True,
+                     'include_num_followers': True}
 
         context['with_related'] = True
 

@@ -106,12 +106,9 @@ def package_search(context, data_dict):
         for package in query.results:
             # get the package object
             package, package_dict = package['id'], package.get(data_source)
-            pkg_query = session.query(model.PackageRevision)\
-                .filter(model.PackageRevision.id == package)\
-                .filter(_and_(
-                    model.PackageRevision.state == u'active',
-                    model.PackageRevision.current == True
-                ))
+            pkg_query = session.query(model.Package)\
+                .filter(model.Package.id == package)\
+                .filter(model.Package.state == u'active')
             pkg = pkg_query.first()
 
             # if the index has got a package that is not in ckan then

@@ -54,8 +54,8 @@ def invalidate_group_caches_wrapper(func):
 class TestGroupsCaching(hdx_test_base.HdxBaseTest):
     
     @classmethod
-    def setup_class(cls):
-        super(TestGroupsCaching,cls).setup_class()
+    def setup(cls):
+        super(TestGroupsCaching,cls).setup()
         
         global num_cached_group_list_called
         global num_filter_focus_countries
@@ -67,8 +67,8 @@ class TestGroupsCaching(hdx_test_base.HdxBaseTest):
         caching.invalidate_group_caches = invalidate_group_caches_wrapper(caching.invalidate_group_caches)
    
     @classmethod
-    def teardown_class(cls):
-        super(TestGroupsCaching, cls).teardown_class()
+    def teardown(cls):
+        super(TestGroupsCaching, cls).teardown()
 
         tk.get_action = original_get_action
         caching.filter_focus_countries = original_filter_focus_countries
