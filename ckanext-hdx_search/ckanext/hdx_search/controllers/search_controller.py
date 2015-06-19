@@ -73,7 +73,7 @@ def search_for_all(context, data_dict):
         'fq': data_dict.get('fq', None),
         'facet.field': facet_fields,
         'facet.limit': 1000,
-        'rows': 10,
+        'rows': 1,  # since this is just for facets,counts and one indicator, 1 should be enough
         'sort': 'extras_indicator desc, ' + sort,
     }
 #     if tab == 'indicators':
@@ -351,7 +351,7 @@ class HDXSearchController(PackageController):
 
         self._decide_adding_dataset_criteria(data_dict)
 
-        query = hdx_actions.package_search(context, data_dict)
+        query = get_action('package_search')(context, data_dict)
 
         if not query.get('results', None):
             log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
@@ -450,6 +450,11 @@ class HDXSearchController(PackageController):
             c.filters_are_selected = False
 
     def _set_remove_field_function(self):
+        '''
+        Defines the method that is used to generate the URL for a search result
+        with the specific key(s) removed. For example the function will be used
+        to generate the link when clicking on a remove filter link.
+        '''
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
                                       controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
