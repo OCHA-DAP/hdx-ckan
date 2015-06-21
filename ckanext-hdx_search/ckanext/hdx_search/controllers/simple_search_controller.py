@@ -13,10 +13,10 @@ import ckanext.hdx_search.controllers.search_controller as search_controller
 
 class HDXSimpleSearchController(search_controller.HDXSearchController):
 
-    def package_search(self):
-        return search_controller.HDXSearchController.search(self)
-
     def _search_url(self, params, package_type=None):
+        '''
+        See corresponding docstring in parent.
+        '''
         if not package_type or package_type == 'dataset':
             url = h.url_for('simple_search')
         else:
@@ -27,15 +27,21 @@ class HDXSimpleSearchController(search_controller.HDXSearchController):
         pass
 
     def _allowed_num_of_items(self, search_extras):
+        '''
+        See corresponding docstring in parent.
+        '''
         return search_controller.LARGE_NUM_OF_ITEMS
 
     def _search_template(self):
         return base.render('search/simple_search.html')
 
     def _set_remove_field_function(self):
+        '''
+        See corresponding docstring in parent.
+        '''
         def remove_field(key, value=None, replace=None):
             return h.remove_url_param(key, value=value, replace=replace,
-                                      controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search')
+                                      controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search')
 
         c.remove_field = remove_field
     

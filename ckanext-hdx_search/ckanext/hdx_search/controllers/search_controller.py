@@ -200,24 +200,27 @@ class HDXSearchController(PackageController):
         sort_by = request.params.get('sort', None)
         params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
-        def _sort_by(fields):
-            """
-            Sort by the given list of fields.
+        # The sort_by function seems to not be used anymore
 
-            Each entry in the list is a 2-tuple: (fieldname, sort_order)
+        #  def _sort_by(fields):
+        #     """
+        #     Sort by the given list of fields.
+        #
+        #     Each entry in the list is a 2-tuple: (fieldname, sort_order)
+        #
+        #     eg - [('metadata_modified', 'desc'), ('name', 'asc')]
+        #
+        #     If fields is empty, then the default ordering is used.
+        #     """
+        #     params = params_nosort[:]
+        #
+        #     if fields:
+        #         sort_string = ', '.join('%s %s' % f for f in fields)
+        #         params.append(('sort', sort_string))
+        #     return self._search_url(params, package_type)
+        #
+        # c.sort_by = _sort_by
 
-            eg - [('metadata_modified', 'desc'), ('name', 'asc')]
-
-            If fields is empty, then the default ordering is used.
-            """
-            params = params_nosort[:]
-
-            if fields:
-                sort_string = ', '.join('%s %s' % f for f in fields)
-                params.append(('sort', sort_string))
-            return self._search_url(params, package_type)
-
-        c.sort_by = _sort_by
         if not sort_by:
             c.sort_by_fields = []
         else:
@@ -427,6 +430,16 @@ class HDXSearchController(PackageController):
             data_dict['extras']['ext_indicator'] = 0
 
     def _allowed_num_of_items(self, search_extras):
+        '''
+        In case we show an indicator (or feature - not used anymore)
+        in the ALL tab of the search result page we need to show a
+        smaller number of items in the result body.
+
+        :param search_extras:
+        :type search_extras:
+        :return: How many items should be displayed in the result list
+        :rtype: int
+        '''
         if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
             return LARGE_NUM_OF_ITEMS
         else:
@@ -436,6 +449,15 @@ class HDXSearchController(PackageController):
         return render('search/search.html')
 
     def _search_url(self, params, package_type=None):
+        '''
+        Returns the url of the current search type
+        :param params: the parameters that will be added to the search url
+        :type params: list of key-value tuples
+        :param package_type: for now this is always 'dataset'
+        :type package_type: string
+
+        :rtype: string
+        '''
         if not package_type or package_type == 'dataset':
             url = h.url_for('search')
         else:
