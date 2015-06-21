@@ -31,13 +31,11 @@ class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
         hdx_test_base.load_plugin('hdx_org_group hdx_theme')
 
     def setup(self):
-        super(TestHDXReqsOrgController, self).setup()
         global original_send_mail
         original_send_mail = hdx_mail.send_mail
         hdx_mail.send_mail = send_mail
 
     def teardown(self):
-        super(TestHDXReqsOrgController, self).teardown()
         global original_send_mail
         global mail_info
         hdx_mail.send_mail = original_send_mail

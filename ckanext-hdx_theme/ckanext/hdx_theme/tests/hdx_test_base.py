@@ -39,7 +39,7 @@ class HdxBaseTest(object):
         load_plugin('hdx_theme')
 
     @classmethod
-    def setup(cls):
+    def setup_class(cls):
         cls.original_config = config.copy()
 
         cls._load_plugins()
@@ -50,7 +50,7 @@ class HdxBaseTest(object):
         cls._create_test_data()
 
     @classmethod
-    def teardown(cls):
+    def teardown_class(cls):
         model.Session.remove()
         model.repo.rebuild_db()
 
