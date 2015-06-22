@@ -15,7 +15,7 @@ from genshi.template import MarkupTemplate
 import ckan.logic as logic
 import ckan.lib.base as base
 #import ckan.lib.maintain as maintain
-import ckan.lib.package_saver as package_saver
+#import ckan.lib.package_saver as package_saver
 #import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
 #import ckan.lib.accept as accept
@@ -572,7 +572,6 @@ class DatasetController(PackageController):
 
         response.headers['Content-Type'] = ctype
 
-        package_type = self._get_package_type(id.split('@')[0])
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
@@ -626,10 +625,9 @@ class DatasetController(PackageController):
             # If there's no indicator value it isn't an indicator
             c.pkg_dict['indicator'] = 0
 
+        package_type = c.pkg_dict['type'] or 'dataset'
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
-
-        package_saver.PackageSaver().render_package(c.pkg_dict, context)
 
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
