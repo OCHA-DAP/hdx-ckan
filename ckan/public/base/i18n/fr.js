@@ -72,10 +72,6 @@
     null,
     "Réordonner les ressources"
   ],
-  "Reset this": [
-    null,
-    "Réinitialiser ceci"
-  ],
   "Resource uploaded": [
     null,
     "Ressource  téléchargée"
