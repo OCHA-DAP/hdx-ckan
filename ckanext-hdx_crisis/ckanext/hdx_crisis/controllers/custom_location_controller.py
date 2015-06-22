@@ -2,6 +2,7 @@
 Created on Dec 2, 2014
 
 @author: alexandru-m-g
+updated by dan on Jun 22, 2015
 '''
 
 import logging
@@ -19,6 +20,7 @@ import ckanext.hdx_org_group.actions.get as hdx_org_get
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as helpers
+import ckanext.hdx_crisis.dao.crisis_config as crisis_config
 
 render = base.render
 c = common.c
@@ -30,7 +32,14 @@ log = logging.getLogger(__name__)
 
 IndicatorAccess = indicator_access.IndicatorAccess
 
+
 def is_custom(environ, result):
+    '''
+    check if location is a custom one and/or contains visual customizations
+    :param environ:
+    :param result:
+    :return:
+    '''
     try:
         group_info, custom_dict = hdx_org_get.get_group(result['id'])
         result['group_info'] = group_info
@@ -42,9 +51,12 @@ def is_custom(environ, result):
     return False
 
 
-class CustomCountryController(group.GroupController, controllers.CrisisController):
-
-    def read(self, id,  group_info, group_customization):
+class CustomLocationController(group.GroupController, controllers.CrisisController):
+    '''
+    Extends Group and Crisis Controller and is used by custom locations to populate
+    and compute the data to be displayed
+    '''
+    def read(self, id, group_info, group_customization):
 
         # group_info, custom_dict = get_group(id)
 
@@ -52,13 +64,8 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         return render('country/custom_country.html', extra_vars=template_data)
 
-    # Will soon be removed
-    # def show(self):
-    #     return self.read(u'col')
-
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
-
 
     def _ckan_src_chart_config(self, chart_config, chart_type):
         chart = {
@@ -74,9 +81,6 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 source = {
                     'source_type': 'ckan',
                     'datastore_id': resource_id,
-                    # 'title': self._get_resource_name(resource_id),
-                    # 'org_name': 'OCHA',
-                    # 'url': None,
                     'data_link_url': resource.get('chart_data_link_url', ''),
                     'source': resource.get('chart_source', 'OCHA'),
                     'label_x': resource.get('chart_label', ''),
@@ -159,16 +163,6 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         return charts
 
-    # def _get_resource_name(self, resource_id):
-    #     context = {'model': model, 'session': model.Session,
-    #                'user': c.user or c.author}
-    #     try:
-    #         resource_dict = get_action('resource_show')(context, {'id': resource_id})
-    #
-    #         return resource_dict['name']
-    #     except logic.NotFound, e:
-    #         return ''
-
     def _get_maps_config(self, custom_dict):
         return custom_dict.get('map', {})
 
@@ -178,7 +172,7 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
     def _show_chart(self, chart_dict, errors):
         chart_main_check = \
             helpers.check_all_str_fields_not_empty(chart_dict,
-                                            'Chart config field "{}" is empty', ['sources'], errors=errors)
+                                                   'Chart config field "{}" is empty', ['sources'], errors=errors)
         if not chart_main_check:
             return False
         if len(chart_dict.get('sources', [])) == 0:
@@ -186,8 +180,8 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
 
         chart_src_check = \
             helpers.check_all_str_fields_not_empty(chart_dict['sources'][0],
-                                            'Chart source config field "{}" is empty', ['data'],
-                                            errors=errors)
+                                                   'Chart source config field "{}" is empty', ['data'],
+                                                   errors=errors)
         if not chart_src_check:
             return False
 
@@ -197,11 +191,11 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         sections = []
         len_charts = len(charts_config_data)
         len_toplines = len(top_line_items)
-        max = len_charts if len_charts > int(math.ceil(len_toplines/4.0)) else int(math.ceil(len_toplines/4.0))
+        max = len_charts if len_charts > int(math.ceil(len_toplines / 4.0)) else int(math.ceil(len_toplines / 4.0))
 
         for i in range(0, max):
             section = {
-                'top_line_items': top_line_items[i*4:(i+1)*4],
+                'top_line_items': top_line_items[i * 4:(i + 1) * 4],
                 'chart': charts_config_data[i] if i < len_charts else None
             }
             sections.append(section)
@@ -242,21 +236,27 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
                 # 'charts': charts_config_data,
                 'topline_chart_sections': self._create_sections(top_line_items, charts_config_data),
                 'show_map': True,
-                'map': self._get_maps_config(custom_dict)
+                'map': self._get_maps_config(custom_dict),
+                'is_crisis': False
+
             },
             'errors': errors,
             'error_summary': '',
         }
+        template_data['data']['map']['basemap_url'] = 'default'
+        template_data['data']['map']['is_crisis'] = 'false'
 
-        is_crisis = group_info['name']=='nepal-earthquake'
-
-        template_data['data']['is_crisis'] = is_crisis
-        template_data['data']['map']['is_crisis'] = 'true' if is_crisis else 'false'
-        template_data['data']['map']['basemap_url'] = 'default' if not is_crisis else config.get('hdx.crisismap.url')
-
+        is_crisis = self.is_crisis(group_info['name'])
         if is_crisis:
-            template_data['data']['map']['circle_markers'] = config.get('hdx.nepal_earthquake.filestore.circle_markers')
-            template_data['data']['map']['shakemap'] = config.get('hdx.nepal_earthquake.filestore.shakemap')
+            crisis = crisis_config.CrisisConfig.get_crises(group_info['name'])
+            crisis.process_config(template_data['data'])
+        # template_data['data']['is_crisis'] = True if is_crisis else False
+        # template_data['data']['map']['is_crisis'] = 'true' if is_crisis else 'false'
+        # template_data['data']['map']['basemap_url'] = 'default' if not is_crisis else config.get('hdx.crisismap.url')
+        #
+        # if is_crisis:
+        #     template_data['data']['map']['circle_markers'] = config.get('hdx.nepal_earthquake.filestore.circle_markers')
+        #     template_data['data']['map']['shakemap'] = config.get('hdx.nepal_earthquake.filestore.shakemap')
 
         template_data['data']['show_map'] = self._show_map(template_data['data']['map'], errors)
 
@@ -277,3 +277,12 @@ class CustomCountryController(group.GroupController, controllers.CrisisControlle
         formatter.format_results()
 
         return top_line_items
+
+    def is_crisis(self, label):
+        '''
+        check if label (group name) is one of our crises
+        :param label:
+        :return:
+        '''
+        # crises = config.get('hdx.crises').split(', ')
+        return True if label in crisis_config.CRISES else False

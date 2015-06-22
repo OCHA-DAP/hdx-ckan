@@ -12,22 +12,8 @@ get_action = logic.get_action
 
 log = logging.getLogger(__name__)
 
-# ebola_sample_resources_dict = {
-#     'top-line-numbers': {
-#         'dataset': 'ds_name',
-#         'resource': 'resource_name'
-#     },
-#     'Cumulative Cases of Ebola': {
-#         'dataset': 'ds_name',
-#         'resource': 'resource_name',
-#         'sql': "SQL QUERY"
-#     }
-#
-# }
-
 
 class CrisisDataAccess():
-
     UNIQUE_ID_COL = 'code'
     SPARKLINES_FIELD = 'sparklines'
     SORT_FIELD = '_id'
@@ -73,8 +59,8 @@ class CrisisDataAccess():
     def fetch_data(self, context):
         top_line_info = self.resources_dict['top-line-numbers']
         datastore_resource_id = top_line_info['resource_id']
-        
-        #datastore_resource_id = self._find_datastore_resource_id(
+
+        # datastore_resource_id = self._find_datastore_resource_id(
         #    context, top_line_info['dataset'], top_line_info['resource'])
         self.results = self._fetch_items_from_datastore(
             context, datastore_resource_id, True,
@@ -108,7 +94,6 @@ class CrisisDataAccess():
 
 
 class EbolaCrisisDataAccess(CrisisDataAccess):
-
     CUMULATIVE_CASES = 'tot_case_evd'
     CUMULATIVE_DEATHS = 'tot_death_evd'
     APPEAL_COVERAGE = 'plan_coverage'
@@ -127,11 +112,11 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
             }
         }
         sql = ('SELECT "Indicator", "Date", sum(value) AS value '
-              'FROM "{}" '
-              'WHERE "Indicator" IN (\'Cumulative number of confirmed, probable and suspected Ebola deaths\','
-              '\'Cumulative number of confirmed, probable and suspected Ebola cases\') '
-              'GROUP BY "Indicator", "Date" '
-              'ORDER BY "Indicator", "Date" desc ')
+               'FROM "{}" '
+               'WHERE "Indicator" IN (\'Cumulative number of confirmed, probable and suspected Ebola deaths\','
+               '\'Cumulative number of confirmed, probable and suspected Ebola cases\') '
+               'GROUP BY "Indicator", "Date" '
+               'ORDER BY "Indicator", "Date" desc ')
         self.resources_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES]['sql'] = sql.format(cases_res_id)
 
     def _process_appeal_coverage(self):
@@ -164,9 +149,11 @@ class EbolaCrisisDataAccess(CrisisDataAccess):
                 EbolaCrisisDataAccess.CUMULATIVE_CASES][CrisisDataAccess.SPARKLINES_FIELD]
 
             cases_sparklines = [
-                {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola cases']
+                {'date': item['Date'], 'value': item['value']} for item in sparklines if
+                item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola cases']
             deaths_sparklines = [
-                {'date': item['Date'], 'value': item['value']} for item in sparklines if item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola deaths']
+                {'date': item['Date'], 'value': item['value']} for item in sparklines if
+                item['Indicator'] == 'Cumulative number of confirmed, probable and suspected Ebola deaths']
 
             if cases_sparklines:
                 self.results_dict[EbolaCrisisDataAccess.CUMULATIVE_CASES][

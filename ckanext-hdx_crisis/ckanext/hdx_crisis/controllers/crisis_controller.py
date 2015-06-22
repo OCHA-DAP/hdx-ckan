@@ -2,6 +2,10 @@
 Created on Nov 3, 2014
 
 @author: alexandru-m-g
+updated by: dan on Jun 22, 2015
+
+Created to manage easier the Ebola crisis
+
 '''
 
 import logging
@@ -21,13 +25,19 @@ c = common.c
 request = common.request
 _ = common._
 
-
 log = logging.getLogger(__name__)
 
 
 class CrisisController(base.BaseController):
-
+    '''
+        Used to populate the template data for Ebola page. Ebola page is a bit different due to sparklines and other
+        UI requirements.
+    '''
     def show(self):
+        '''
+        Compute all the data related to Ebola crisis.
+        :return: renders the crisis-ebola.html template with data computed about Ebola
+        '''
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -63,6 +73,14 @@ class CrisisController(base.BaseController):
 
     def _generate_dataset_results(self, context, search_params,
                                   action_alias='show_crisis', other_params_dict={}):
+        '''
+        Perform a search of datasets related to Ebola based on keyword "ebola"
+        :param context:
+        :param search_params:
+        :param action_alias:
+        :param other_params_dict:
+        :return:
+        '''
         limit = 25
 
         sort_option = request.params.get('sort', None)
@@ -93,7 +111,7 @@ class CrisisController(base.BaseController):
                 url = h.url_for(action_alias, page=page, **other_params_dict) + '#datasets-section'
             return url
 
-        get_action('populate_related_items_count')(context, {'pkg_dict_list':query['results']})
+        get_action('populate_related_items_count')(context, {'pkg_dict_list': query['results']})
 
         c.page = h.Page(
             collection=query['results'],
@@ -106,6 +124,11 @@ class CrisisController(base.BaseController):
         c.item_count = query['count']
 
     def _generate_other_links(self, search_params):
+        '''
+        Show all search results based on sort options and search params
+        :param search_params:
+        :return:
+        '''
         c.other_links = {}
         sort_option = request.params.get('sort', None)
 

@@ -7,7 +7,7 @@ Created on Nov 3, 2014
 import logging
 import ckan.plugins as plugins
 
-import ckanext.hdx_crisis.controllers.custom_country_controller as custom_country_controller
+import ckanext.hdx_crisis.controllers.custom_location_controller as custom_location_controller
 
 
 class HDXCrisisPlugin(plugins.SingletonPlugin):
@@ -17,8 +17,8 @@ class HDXCrisisPlugin(plugins.SingletonPlugin):
         map.connect('show_crisis', '/ebola',
                     controller='ckanext.hdx_crisis.controllers.crisis_controller:CrisisController', action='show')
         # map.connect('show_country', '/group/col',
-        #             controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController', action='show')
+        #             controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController', action='show')
         map.connect('show_custom_country', '/group/{id}',
-                    controller='ckanext.hdx_crisis.controllers.custom_country_controller:CustomCountryController', action='read',
-                    conditions={'function': custom_country_controller.is_custom})
+                    controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController', action='read',
+                    conditions={'function': custom_location_controller.is_custom})
         return map
