@@ -1,3 +1,7 @@
+"""
+Extends the default storage controller and adds new functionality to
+accommodate how HDX hosts files
+"""
 import ckan.controllers.storage as storage
 import os
 import re
@@ -38,6 +42,9 @@ _eq_re = re.compile(r"^(.*)(=[0-9]*)$")
 
 
 def generate_response(http_status, unicode_body, no_cache=True, other_headers=None):
+    """
+    Generates response to file download request
+    """
     r = request.environ['pylons.pylons'].response
     if no_cache:
         r.headers['Pragma'] = 'no-cache'
@@ -57,6 +64,9 @@ class FileDownloadController(storage.StorageController):
 
     @property
     def ofs(self):
+        """
+        Gets the ofs driver
+        """
         if not FileDownloadController._ofs_impl:
             FileDownloadController._ofs_impl = get_ofs()
         return FileDownloadController._ofs_impl
@@ -121,6 +131,10 @@ class FileDownloadController(storage.StorageController):
             h.redirect_to(file_url.encode('ascii', 'ignore'))
 
     def file(self, label):
+        """
+        Completely different from ckan core to accommodate how we
+        host files. Triggers download file request
+        """
         from sqlalchemy.engine import create_engine
         # from label find resource id
         url = config.get('ckan.site_url', '') + \
@@ -138,6 +152,9 @@ class FileDownloadController(storage.StorageController):
         return self._download_file(res, label)
 
     def perma_file(self, id, resource_id):
+        """
+        Same as the above but for permalinks
+        """
         from sqlalchemy.engine import create_engine
         # from label find resource id
         engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
@@ -155,6 +172,9 @@ class FileDownloadController(storage.StorageController):
         return self._download_file(res, label)
 
     def _get_label_from_resource(self, resource):
+        """
+        Given a url, isolate label
+        """
         prefix = '/storage/f/'
         url = resource.url
         index = url.find(prefix)
