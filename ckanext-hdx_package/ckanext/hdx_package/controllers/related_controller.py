@@ -1,3 +1,6 @@
+"""
+Extended from related controller to change redirections and some behavior
+"""
 import urllib
 
 import ckan.model as model
