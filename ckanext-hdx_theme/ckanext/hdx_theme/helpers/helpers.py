@@ -31,12 +31,11 @@ downloadable_formats = {
     'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
 }
 
+def direct():
+    ''' Stolen from 2.2 Directly embeddable formats.'''
+    direct_embed = config.get('ckan.preview.direct', '').split()
+    return direct_embed or DEFAULT_DIRECT_EMBED
 
-def is_downloadable(resource):
-    format = resource.get('format', 'data').lower()
-    if format in downloadable_formats:
-        return True
-    return False
 
 def is_not_zipped(res):
     url = res.get('url', 'zip').strip().lower() #Default to zip so preview doesn't show if there is no url
@@ -483,36 +482,19 @@ def hdx_resource_preview(resource, package):
     '''
 
     if not resource['url']:
-        return h.snippet("dataviewer/snippets/no_preview.html",
-                       resource_type=format_lower,
-                       reason=_(u'The resource url is not specified.'))
+        return False
 
     format_lower = datapreview.res_format(resource)
     directly = False
     data_dict = {'resource': resource, 'package': package}
 
     if datapreview.get_preview_plugin(data_dict, return_first=True):
-        url = h.url_for(controller='package', action='resource_datapreview',
+        url = url_for(controller='package', action='resource_datapreview',
                       resource_id=resource['id'], id=package['id'], qualified=True)
-    elif format_lower in datapreview.direct():
-        directly = True
-        url = resource['url']
-    elif format_lower in datapreview.loadable():
-        url = resource['url']
     else:
-        reason = None
-        if format_lower:
-            log.info(
-                _(u'No preview handler for resource of type {0}'.format(
-                    format_lower))
-            )
-        else:
-            reason = _(u'The resource format is not specified.')
-        return h.snippet("dataviewer/snippets/no_preview.html",
-                       reason=reason,
-                       resource_type=format_lower)
+        return False
 
-    return h.snippet("dataviewer/snippets/data_preview.html",
+    return snippet("dataviewer/snippets/data_preview.html",
                    embed=directly,
                    resource_url=url,
                    raw_resource_url=https_load(resource.get('url')))

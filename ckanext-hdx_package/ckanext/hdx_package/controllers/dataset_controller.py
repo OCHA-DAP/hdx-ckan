@@ -415,9 +415,10 @@ class DatasetController(PackageController):
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
                                    action='read', id=id))
-            #elif save_action == 'finish':
-            #    redirect(h.url_for(controller='package',
-            #                       action='read', id=id))
+            ### Leaving this in HDX unless we update the templates
+            elif save_action == 'finish':
+                redirect(h.url_for(controller='package',
+                                   action='read', id=id))
             else:
                 # add more resources
                 redirect(h.url_for(controller='package',
@@ -696,11 +697,8 @@ class DatasetController(PackageController):
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
 
-<<<<<<< HEAD
-=======
-        #package_saver.PackageSaver().render_package(c.pkg_dict, context)
+        package_saver.PackageSaver().render_package(c.pkg_dict, context)
 
->>>>>>> 8afdf3f... still working through hdx_packages, main dataset_controller.py done nosetests pass needs run through.
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
 
@@ -1005,6 +1003,8 @@ class DatasetController(PackageController):
                 get_license_register()[license_id].isopen()
         except KeyError:
             c.package['isopen'] = False
+
+        dataset_type = c.pkg_dict['type'] or 'dataset'
 
         # TODO: find a nicer way of doing this
         c.datastore_api = '%s/api/action' % config.get(
