@@ -874,8 +874,12 @@ class GroupController(base.BaseController):
         return render(self._about_template(group_type))
 
     def _get_group_dict(self, id):
-        ''' returns the result of group_show action or aborts if there is a
-        problem '''
+        '''
+        Retrieves the result of group_show action
+        :param id: group id
+        :return: returns the result of group_show action or aborts if there is a
+        problem
+        '''
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'for_view': True}
