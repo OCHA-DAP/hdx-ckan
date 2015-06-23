@@ -31,11 +31,11 @@ downloadable_formats = {
     'csv', 'xls', 'xlsx', 'txt', 'jpg', 'jpeg', 'png', 'gif', 'zip', 'xml'
 }
 
-def direct():
-    ''' Stolen from 2.2 Directly embeddable formats.'''
-    direct_embed = config.get('ckan.preview.direct', '').split()
-    return direct_embed or DEFAULT_DIRECT_EMBED
-
+def is_downloadable(resource):
+    format = resource.get('format', 'data').lower()
+    if format in downloadable_formats:
+        return True
+    return False
 
 def is_not_zipped(res):
     url = res.get('url', 'zip').strip().lower() #Default to zip so preview doesn't show if there is no url
