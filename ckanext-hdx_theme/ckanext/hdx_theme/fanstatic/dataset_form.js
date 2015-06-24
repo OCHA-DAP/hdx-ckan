@@ -137,6 +137,18 @@ $(document).ready(function(){
         }
       }
     }
+
+    alert("This script won't work - it used to be in package_metadata_fields.html:180");
+    var date = "{{data.dataset_date}}";
+    if(date.match("-")){
+      var range = date.split("-");
+      //Clear single date field
+      document.getElementById('field-dataset_date').value = '';
+
+      //Set range
+      document.getElementById('date_range1').value = range[0];
+      document.getElementById('date_range2').value = range[1];
+    }
 });
 
 $('#field-license').change(function(){ 

@@ -27,10 +27,11 @@ function mce_preload_check(){
         setTimeout('mce_preload_check();', 250);
         return;
     }
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '/scripts/jquery.form-n-validate.js';
-    head.appendChild(script);
+    //script bundled in mailchimp resource package
+    //var script = document.createElement('script');
+    //script.type = 'text/javascript';
+    //script.src = '/OLD/scripts/jquery.form-n-validate.js';
+    //head.appendChild(script);
     try {
         var validatorLoaded=jQuery("#fake-form").validate({});
     } catch(err) {

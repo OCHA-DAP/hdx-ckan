@@ -1,0 +1,12 @@
+#recaptcha_widget_div * {
+    #border: 0 !important;
+    line-height: normal !important;
+}
+#recaptcha_response_field{
+    border: 1px solid #DFDFDF !important;
+    width: 288px !important;
+    border-radius: 0;
+}
+#recaptcha_area, #recaptcha_table {
+    width: auto !important;
+}

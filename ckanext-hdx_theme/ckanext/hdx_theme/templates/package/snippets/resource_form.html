@@ -5,6 +5,7 @@
 {% set action = form_action or h.url_for(controller='package', action='new_resource', id=pkg_name) %}
 
 {% resource 'hdx_theme/resource_form.js' %}
+{% resource 'hdx_theme/css/hdx-icons.css' %}
 {% resource 'hdx_theme/hdx-resource-upload-field.js' %}
 
 {% block secondary %}
@@ -41,10 +42,7 @@
                   after the input. This enables us to style the label based on the state
                   of the radio using css. eg. input[type=radio]+label {}
                   #}
-                  {#<input id="field-resource-type-file" type="radio" name="resource_type" checked="checked" value="file" />
-                  <label class="radio inline type-file" for="field-resource-type-file">{{ _('Upload a file') }}
-                    <img src="/images/svg/fileupload.svg" style="top: -10px; left: 40px; position: relative;" />
-                  </label>#}
+
                   <span class="radio inline" style="margin-left: 26px; margin-right: 26px; padding: 0;">
                     <span class="control-label"> OR </span>
                   </span>
@@ -55,6 +53,7 @@
                   <span id="field-link-upload" style="position: relative;">
                     <input id="field-resource-type-api" {{ link_upload_string }} type="radio" name="resource_type" value="api" style="visibility: hidden; position: absolute;" />
                     <label id="mx-type-url" class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+                    <i class="icon-check"></i>
                   </span>
                 </div>
                 {#<div class="controls">

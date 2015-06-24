@@ -89,3 +89,23 @@ ul.hdx-bs3 {
   height: 58px;
 }
 /* END Fix header styles */
+/* Social widget - share */
+.resource-social a {
+  line-height: 31px;
+  vertical-align: middle;
+  display: block;
+}
+.resource-social a i {
+  font-size: 31px;
+  width: 31px;
+  padding-right: 5px;
+}
+.resource-social a span {
+  font-size: 14px;
+  vertical-align: bottom;
+  line-height: 25px;
+}
+.resource-social a:hover {
+  text-decoration: none;
+}
+/**/
