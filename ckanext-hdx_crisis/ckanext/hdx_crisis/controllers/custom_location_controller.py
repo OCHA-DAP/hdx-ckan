@@ -60,10 +60,10 @@ class CustomLocationController(group.GroupController, base.BaseController):
 
     def read(self, id, group_info, group_customization):
 
-        template_data = self.generate_template_data(group_info, group_customization)
+        template_data = self.generate_template_data(id, group_info, group_customization)
         return render('country/custom_country.html', extra_vars=template_data)
 
-    def generate_template_data(self, group_info, custom_dict):
+    def generate_template_data(self, id, group_info, custom_dict):
         '''
         Compute all data for current custom location/crisis
         :param group_info: information about group (location)
@@ -72,7 +72,7 @@ class CustomLocationController(group.GroupController, base.BaseController):
         '''
         errors = []
 
-        country_name = group_info['name']
+        country_name = group_info['name'] or id
 
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
