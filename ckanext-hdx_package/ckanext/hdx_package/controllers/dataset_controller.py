@@ -697,7 +697,7 @@ class DatasetController(PackageController):
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
 
-        package_saver.PackageSaver().render_package(c.pkg_dict, context)
+        #package_saver.PackageSaver().render_package(c.pkg_dict, context)
 
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
