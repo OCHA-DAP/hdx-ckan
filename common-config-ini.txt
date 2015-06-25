@@ -164,6 +164,11 @@ hdx.mapbox.labelslayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/
 
 ## Chart / Top line num source settings
 
+# Current active crises
+hdx.crises = ebola, nepal-earthquake
+hdx.crisis.ebola = ebola
+hdx.crisis.nepal_earthquake = nepal-earthquake
+
 # Ebola page
 hdx.ebola.datastore.top_line_num = a02903a9-022b-4047-bbb5-45127b591c85
 hdx.ebola.datastore.cases = c59b5722-ca4b-41ca-a446-472d6d824d01
