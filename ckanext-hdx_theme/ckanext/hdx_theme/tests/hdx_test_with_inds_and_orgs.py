@@ -26,7 +26,6 @@ def get_packages():
             "name": "test_indicator_1",
             "notes": "This is a hdxtest indicator",
             "title": "Test Indicator 1",
-            "indicator": 1,
             "groups": [{"name": "roger"}]
         },
         {
@@ -71,7 +70,6 @@ def get_packages():
             "name": "test_private_dataset_1",
             "notes": "This is a private test dataset",
             "title": "Test Private dataset 1",
-            "indicator": 1,
             "groups": [{"name": "roger"}],
             "owner_org": "hdx-test-org",
         }
@@ -99,7 +97,39 @@ def get_resource():
     return resource
 
 
+def get_users():
+    new_users = [
+        {
+            'name': 'johndoe1',
+            'fullname': 'John Doe1',
+            'email': 'johndoe1@test.test',
+            'password': 'password',
+            'about': 'John Doe1, 1st user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
+        },
+        {
+            'name': 'annaanderson2',
+            'fullname': 'Anna Anderson2',
+            'email': 'annaanderson2@test.test',
+            'password': 'password',
+            'about': 'Anna Anderson2, 2nd user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
+        },
+        {
+            'name': 'janedoe3',
+            'fullname': 'Jane Doe3',
+            'email': 'janedoe3@test.test',
+            'password': 'password',
+            'about': 'Jane Doe3, 3rd user created by HDXWithIndsAndOrgsTest. Member of hdx-test-org.'
+        }
+
+    ]
+    return new_users
+
+
 class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
+    '''
+    This class extends the HDX Base test class by adding additional test data.
+    More precisely: datasets, organizations, members to organizations
+    '''
 
     @classmethod
     def _load_plugins(cls):
@@ -110,23 +140,35 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
         return tk.get_action(action_name)
 
     @classmethod
-    def _create_test_data(cls):
+    def _create_test_data(cls, create_datasets=True, create_members=False):
         super(HDXWithIndsAndOrgsTest, cls)._create_test_data()
 
         packages = get_packages()
         organization = get_organization()
         resource = get_resource()
+        users = get_users()
+
+
+
+        if create_members:
+            organization['users'] = []
+            for new_user in users:
+                context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+                user = cls._get_action('user_create')(context, new_user)
+                organization['users'].append({'name': user['id']})
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-
         cls._get_action('organization_create')(context, organization)
 
-        for package in packages:
-            c = {'ignore_auth': True,
-                 'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-            cls._get_action('package_create')(c, package)
-            # This is a copy of the hack done in dataset_controller
-            cls._get_action('package_update')(c, package)
+        if create_datasets:
+            for package in packages:
+                c = {'ignore_auth': True,
+                     'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+                cls._get_action('package_create')(c, package)
+                # This is a copy of the hack done in dataset_controller
+                cls._get_action('package_update')(c, package)
 
-        cls._get_action('resource_create')(context, resource)
+            cls._get_action('resource_create')(context, resource)
+
