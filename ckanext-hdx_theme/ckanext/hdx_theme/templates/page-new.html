@@ -151,7 +151,7 @@
   {% endif %}
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
-  <script src="/mailchimp.js"></script>
+  {% resource 'hdx_theme/mailchimp' %}
   {{ super() }}
 {% endblock -%}
 

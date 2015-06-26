@@ -661,21 +661,6 @@ a.info-tooltip, .info-item-name {
 	text-decoration: none;
 }
 
-.resource-social a img {
-	height: 25px;
-	vertical-align: center;
-	padding-right: 5px;
-}
-.resource-social a span {
-	font-size: 14px;
-	color: #444444;
-	vertical-align: bottom;
-	line-height: 25px;
-}
-.resource-social a:hover {
-	text-decoration:none;
-}
-
 .popover-wrapper .popover {
 	width: 140px;
 }

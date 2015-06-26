@@ -1,0 +1,4 @@
+var RecaptchaOptions = {
+    theme : 'clean'
+};
+

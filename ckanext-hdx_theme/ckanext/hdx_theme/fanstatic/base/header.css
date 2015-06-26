@@ -263,7 +263,7 @@ a:focus,
 /* Body Background */
 body {
   background-size: cover;
-  background: #1ebfb3 url("/images/homepage-new/map.png") fixed;
+  background: #1ebfb3 url("/images/homepage/map.png") fixed;
   min-width: 1260px;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
@@ -423,7 +423,7 @@ body {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage-new/logo-beta.svg");
+  background-image: url("/images/homepage/logo-beta.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;

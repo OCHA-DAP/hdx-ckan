@@ -79,18 +79,7 @@
 {% endblock %}
 
 {%- block scripts2 %}
-    {{ super() }}
-<!-- <script src="/base/vendor/jquery.ui.widget.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.iframe-transport.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.fileupload.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.fileupload-ui.js"></script>-->
-
-  <script>
-  $('document').ready(function(){
-    //Just in case of page back
-    $('option[value=-1]').attr('selected', true);
-     });
-  </script>
+  {{ super() }}
   {% resource 'hdx_theme/leaflet'  %}
   {% resource 'hdx_theme/submit-dataset-map' %}
 {% endblock -%}

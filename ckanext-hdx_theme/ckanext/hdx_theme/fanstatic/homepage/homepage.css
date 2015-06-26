@@ -31,7 +31,7 @@
 
     .homepage-main{
         background-color: #1ebfb3;
-        background-image: url("/images/homepage-new/map.png");
+        background-image: url("/images/homepage/map.png");
         background-size: auto 100%;
         background-repeat: no-repeat;
         background-position: center;
@@ -158,7 +158,7 @@
         width: 316px;
         height: 45px;
         background-color: #ffffff;
-        /*background: url(/images/homepage-new/select-arrow.png) no-repeat right #ddd;*/
+        /*background: url(/images/homepage/select-arrow.png) no-repeat right #ddd;*/
         border: 0;
         border-radius: 6px;
         font-family: 'Source Sans Pro', sans-serif;
