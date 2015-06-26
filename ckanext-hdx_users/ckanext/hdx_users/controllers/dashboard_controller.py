@@ -1,3 +1,8 @@
+"""
+    HDX Modifications to the default behavior of CKAN's dashboard
+    for usersand user profiles. Overrides functions found in user.py
+
+"""
 import ckan.controllers.user as uc
 import logging
 from urllib import quote
@@ -94,6 +99,10 @@ class DashboardController(uc.UserController):
         }
 
     def read(self, id=None):
+        """
+        Identical to user.py:read, but needs to be here to receive requests
+        and direct them to the correct _setup_template_variables method
+        """
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'for_view': True}
@@ -115,6 +124,10 @@ class DashboardController(uc.UserController):
         return render('user/read.html')
 
     def _setup_template_variables(self, context, data_dict):
+        """
+        Sets up template variables. If the user is deleted, throws a 404
+        unless the user is logged in as sysadmin.
+        """
         c.is_sysadmin = new_authz.is_sysadmin(c.user)
         try:
             user_dict = get_action('user_show')(context, data_dict)
@@ -162,6 +175,10 @@ class DashboardController(uc.UserController):
 
 
     def dashboard(self, id=None, offset=0):
+        """
+        Display basic dashboard, creates a filter for organizations
+        to pass onto the template that is not included in CKAN core
+        """
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'for_view': True}
@@ -190,6 +207,10 @@ class DashboardController(uc.UserController):
         return render('user/dashboard.html')
 
     def dashboard_datasets(self):
+        """
+        Dashboard tab for datasets. Modified to add the ability to change
+        the order and ultimately filter datasets displayed
+        """
         context = {'model': model, 'session': model.Session,'for_view': True, 
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
         data_dict = {'user_obj': c.userobj}

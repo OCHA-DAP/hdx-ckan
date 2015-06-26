@@ -1,3 +1,8 @@
+"""
+Requires users validate email before account is active. Has some
+duplicates methods from registration_controller.py because when
+enabled it will override them when enabled
+"""
 import datetime
 import dateutil
 
@@ -138,6 +143,10 @@ class ValidationController(ckan.controllers.user.UserController):
 
 
     def register(self, data=None, errors=None, error_summary=None):
+        """
+        Creates a new user, but allows logged in users to create
+        additional accounts as per HDX requirements at the time.
+        """
         context = {'model': model, 'session': model.Session, 'user': c.user}
         try:
             check_access('user_create', context)
@@ -152,6 +161,11 @@ class ValidationController(ckan.controllers.user.UserController):
         return result
 
     def post_register(self):
+        """
+            If the user has registered but not validated their email
+            redirect to a special page reminding them why they can't
+            login.
+        """
         if not c.user:
             user = request.params.get('user')
             vars = {'user':user}
@@ -171,6 +185,7 @@ class ValidationController(ckan.controllers.user.UserController):
         
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
+                   'auth_user_obj': c.userobj,
                    'schema': temp_schema,
                    'save': 'save' in request.params}
 

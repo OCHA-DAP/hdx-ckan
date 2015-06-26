@@ -15,6 +15,9 @@ Invalid = df.Invalid
 
 
 def groups_not_empty(key, data, errors, context):
+    """
+    When creating a package, groups cannot be empty
+    """
     # All the extra logic here is needed to deal with the multi-step wizard used for creating a new dataset
     # We need to make sure that the validation only runs at the last step of the wizard
     allow_partial_update    = context.get('allow_partial_update',False)

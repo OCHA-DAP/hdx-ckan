@@ -1,3 +1,6 @@
+"""
+Extended from related controller to change redirections and some behavior
+"""
 import urllib
 
 import ckan.model as model
@@ -88,7 +91,8 @@ class RelatedController(base.BaseController):
         return base.render(tpl)
 
     def related_update(self, context, data_dict):
-        '''Update a related item.
+        '''TAKEN FROM ACTION/UPDATE.PY
+        Update a related item.
 
         You must be the owner of a related item to update it.
 

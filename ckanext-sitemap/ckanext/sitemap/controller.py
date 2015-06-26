@@ -18,6 +18,9 @@ class SitemapController(BaseController):
 
     @beaker_cache(expire=3600*24, type="dbm", invalidate_on_startup=True)
     def _render_sitemap(self, page):
+        """
+        Build the XML
+        """
         root = etree.Element("urlset", nsmap={None: SITEMAP_NS})
         #pkgs = Session.query(Package).all()
         pkgs = Session.query(Package).filter(Package.private == False).offset(int(page)*25).limit(25)
@@ -38,6 +41,9 @@ class SitemapController(BaseController):
         return etree.tostring(root, pretty_print=True)
 
     def view(self):
+        """
+        List datasets 25 at a time
+        """
         #Sitemap Index
         root = etree.Element("sitemapindex", nsmap={None: SITEMAP_NS})
         pkgs = Session.query(Package).filter(Package.private == False).count()
@@ -52,4 +58,7 @@ class SitemapController(BaseController):
         #return self._render_sitemap()
 
     def index(self, page):
+        """
+        Create an index of all xml pages
+        """
         return self._render_sitemap(page)

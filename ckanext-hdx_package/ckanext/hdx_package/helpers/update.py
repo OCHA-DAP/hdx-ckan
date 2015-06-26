@@ -85,7 +85,9 @@ def package_update(context, data_dict):
                 # to ensure they still work.
                 package_plugin.check_data_dict(data_dict)
 
-    data, errors = _validate(data_dict, schema, context)
+    data, errors = lib_plugins.plugin_validate(
+        package_plugin, context, data_dict, schema, 'package_update')
+    #data, errors = _validate(data_dict, schema, context)
     log.debug('package_update validate_errs=%r user=%s package=%s data=%r',
               errors, context.get('user'),
               context.get('package').name if context.get('package') else '',
@@ -121,10 +123,20 @@ def package_update(context, data_dict):
     _get_action('package_owner_org_update')(context_org_update,
                                             org_dict)
 
+    if data.get('resources'):
+        for index, resource in enumerate(data['resources']):
+            resource['id'] = pkg.resources[index].id
+
+
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
 
         item.after_update(context, data)
+
+    # Create default views for resources if necessary
+    if data.get('resources'):
+        logic.get_action('package_create_default_resource_views')(
+            context, {'package': data})
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -145,6 +157,9 @@ def package_update(context, data_dict):
 
 
 def modified_save(context, pkg, data):
+    """
+    Wrapper around lib.dictization.model_save.package_dict_save
+    """
     groups_key = 'groups'
     if groups_key in data:
         temp_groups = data[groups_key]
@@ -158,6 +173,9 @@ def modified_save(context, pkg, data):
 
 
 def package_membership_list_save(group_dicts, package, context):
+    """
+    Overrides lib.dictization.model_save.package_membership_list_save
+    """
 
     allow_partial_update = context.get("allow_partial_update", False)
     if group_dicts is None and allow_partial_update:

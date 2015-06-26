@@ -1,3 +1,7 @@
+"""
+Originally written when registration was closed to new users (beta phase)
+Now maintained
+"""
 import ckan.lib.base as base
 import ckan.controllers.user
 from ckan.common import _, c, request
@@ -146,6 +150,10 @@ class RequestController(ckan.controllers.user.UserController):
         return base.render(self.request_register_form, cache_force=True, extra_vars=vars)
 
     def register(self, data=None, errors=None, error_summary=None):
+        """
+        Creates a new user, but allows logged in users to create
+        additional accounts as per HDX requirements at the time.
+        """
         context = {'model': model, 'session': model.Session, 'user': c.user}
         try:
             check_access('user_create', context)
@@ -170,6 +178,7 @@ class RequestController(ckan.controllers.user.UserController):
         
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
+                   'auth_user_obj': c.userobj,
                    'schema': temp_schema,
                    'save': 'save' in request.params}
 

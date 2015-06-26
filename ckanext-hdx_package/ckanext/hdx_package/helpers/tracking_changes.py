@@ -34,6 +34,9 @@ def add_tracking_summary_to_resource_dict(resource_dict):
                 resource_dict['tracking_summary'] = tracking_summary
 
 def _erase_tracking_summary(resource_dict):
+    """
+    Erase tracking summary
+    """
     if 'tracking_summary' in resource_dict \
             and resource_dict['tracking_summary']:
         summary = resource_dict['tracking_summary']
