@@ -77,8 +77,7 @@
       {% endblock %}
     #}
     {%- block styles %}
-      {% resource g.main_css[6:] %}
-      <link rel="stylesheet" href="/hdx_theme.css" />
+      {% resource 'hdx_theme/lite-main.css' %}
     {% endblock %}
 
     {% block head_extras %}
@@ -126,6 +125,8 @@
       {% endblock %}
     #}
     {%- block scripts %}
+      {% resource 'hdx_theme/bootstrap' %}
+      {% resource 'hdx_theme/google-analytics' %}
       {% resource 'hdx_theme/external-links.js' %}
     {% endblock -%}
 
@@ -140,6 +141,5 @@
 
   </body>
   {%- block scripts2 %}
-    {% resource 'hdx_theme/google-analytics' %}
   {% endblock -%}
 </html>

@@ -1,0 +1,4 @@
+CSS -> should be LESS in the hdx_theme/less directory
+JS -> add it inside fanstatic in a proper directory :)
+
+You should have a good reason to put CSS/JS in this folder
