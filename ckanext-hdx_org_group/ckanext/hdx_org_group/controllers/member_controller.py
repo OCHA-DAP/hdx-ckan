@@ -77,6 +77,21 @@ class HDXOrgMemberController(org.OrganizationController):
         return q, sort
 
     def member_new(self, id):
+        '''
+        Modified core method from 'group' controller.
+
+        Added the 'user_invite' functionality. Expects POST request.
+        If there's an 'email' parameter in the request and the email
+        is not associated with any user account, a new user account with that
+        email will be created and added as a member with the specific 'role'
+        to the organization.
+        Otherwise a 'username' is expected as a request parameter
+
+        :param id: id of the organization to which a member should be added.
+        :type id: string
+        :return: the rendered template
+        :rtype: unicode
+        '''
         context = self._get_context()
 
         #self._check_access('group_delete', context, {'id': id})
@@ -89,14 +104,14 @@ class HDXOrgMemberController(org.OrganizationController):
                 if data_dict.get('email', '').strip() != '' or \
                         data_dict.get('username', '').strip() != '':
                     email = data_dict.get('email')
-                    # Check if email is used
+                    flash_message = None
                     if email:
                         # Check if email is used
                         user_dict = model.User.by_email(email)
                         if user_dict:
                             # Add user
                             data_dict['username'] = user_dict[0].name
-                            h.flash_success('That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role'])
+                            flash_message = 'That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role']
                         else:
                             user_data_dict = {
                                 'email': email,
@@ -110,9 +125,10 @@ class HDXOrgMemberController(org.OrganizationController):
                             data_dict['username'] = user_dict['name']
                             h.flash_success(email+' has been invited as '+data_dict['role'])
                     else:
-                        h.flash_success(data_dict['username']+' has been added as '+data_dict['role'])
+                        flash_message = data_dict['username']+' has been added as '+data_dict['role']
                     c.group_dict = self._action(
                         'group_member_create')(context, data_dict)
+                    h.flash_success(flash_message)
                 else:
                     h.flash_error(_('''You need to either fill the username or
                         the email of the person you wish to invite'''))

@@ -141,6 +141,21 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def _create_test_data(cls, create_datasets=True, create_members=False):
+        '''
+        This method is responsible for creating additional test data.
+        Please note that the corresponding function from the parent is still called
+        so all standard test data will still be available to the tests.
+
+        Override this function in your test and call it with different params
+        depending on what test data you need.
+
+        :param create_datasets: If the org doesn't need datasets set this flag to False. Default True.
+        :type create_datasets: boolean
+        :param create_members: If the org should have some members set this flag to True. Default False.
+            Note that 'testsysadmin' will be a member (admin) of the org regardless of the flag.
+        :type create_members: boolean
+
+        '''
         super(HDXWithIndsAndOrgsTest, cls)._create_test_data()
 
         packages = get_packages()
@@ -148,15 +163,14 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
         resource = get_resource()
         users = get_users()
 
-
-
         if create_members:
             organization['users'] = []
             for new_user in users:
                 context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+                           'model': model, 'session': model.Session, 'user': 'testsysadmin'}
                 user = cls._get_action('user_create')(context, new_user)
-                organization['users'].append({'name': user['id']})
+                member = {'name': user['id'], 'capacity': 'member'}
+                organization['users'].append(member)
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -171,4 +185,3 @@ class HDXWithIndsAndOrgsTest(hdx_test_base.HdxBaseTest):
                 cls._get_action('package_update')(c, package)
 
             cls._get_action('resource_create')(context, resource)
-
