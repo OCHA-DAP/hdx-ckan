@@ -4,9 +4,7 @@
 
 {# remove any scripts #}
 {% block scripts %}
-  <script>
-    var preload_resource = {{ h.literal(c.resource_json) }};
-  </script>
+  {% resource 'hdx_theme/dataviewer.js' %}
 {% endblock %}
 
 {# remove any ckan styles #}

@@ -134,7 +134,7 @@
     }
 
     .newFooter a.social-icon {
-		background-image: url("/images/homepage-new/socialBlog.png");
+		background-image: url("/images/homepage/socialBlog.png");
 		background-size: 250px 64px;
         background-color: #404040;
         border-radius: 3px;
@@ -606,7 +606,7 @@
 
 /* Style default Secondary */
     .twoColumnBackground{
-        background-image:url('/images/homepage-new/columnBackground.png');
+        background-image:url('/images/homepage/columnBackground.png');
         background-repeat: repeat-y;
         min-height: 350px;
     }

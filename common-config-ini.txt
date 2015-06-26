@@ -82,7 +82,7 @@ ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package
 
 ## Front-End Settings
 ckan.site_title = Humanitarian Data Exchange
-ckan.site_logo = /hdx-logo-positive.png
+ckan.site_logo = /images/homepage/logo-beta-inverted.svg
 ckan.site_description =
 ckan.favicon = /images/icons/hdx.ico
 ckan.gravatar_default = identicon

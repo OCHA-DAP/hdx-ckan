@@ -37,38 +37,23 @@
 		</td>
     </tr>
     {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
-    <tr>
-    	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
-  		<td class="dataset-details">
-  			{% if pkg_dict.private %}
-  				<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
-  				<div id="private_block"><span id="visibility">{{ _('Private') }}</span> - 
-  	{% set locale = h.dump_json({'content': _('Are you sure? This dataset will be visible to all of HDX')}) %}
-  	<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it public') }}</a></div>
-		  	{% else %}
-		  		<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
-		  		<div id="private_block"><span id="visibility">{{ _('Public') }}</span> - 
-{% set locale = h.dump_json({'content': _('Are you sure? This dataset will not be visible in search results')}) %}
-		  		<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it private') }}</a></div>
-		  	{% endif %}
-  		</td>
-	</tr>
-	<script>
-		function toggleVis(){
-			$('#private_loading').show();
-			$('#private_block').hide();
-			  $.ajax({
-  				url: '{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}',
-  				}).done(function(e) {
-  					if(e.success){
-  						$('#visibility').html(e.status);
-	  					$('#visibility_change').html(e.text);
-	  					$('#private_loading').hide();
-	  					$('#private_block').show();
-	  				}
-				});
-			}
-	</script>
+		{% resource 'hdx_theme/indicator/additional_info.js' %}
+		<tr>
+			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
+			<td class="dataset-details">
+				{% if pkg_dict.private %}
+					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
+					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
+					{% set locale = h.dump_json({'content': _('Are you sure? This dataset will be visible to all of HDX')}) %}
+					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it public') }}</a></div>
+				{% else %}
+					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
+					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
+					{% set locale = h.dump_json({'content': _('Are you sure? This dataset will not be visible in search results')}) %}
+					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it private') }}</a></div>
+				{% endif %}
+			</td>
+		</tr>
 	{% else %}
 		<tr>
     	<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
