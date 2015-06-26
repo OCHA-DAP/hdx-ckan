@@ -4,14 +4,12 @@ Tests for sitemap.
 
 import logging
 import unittest
-#import mock
 from StringIO import StringIO
 import json
 from lxml import etree
 import datetime
 
 from pylons import config
-import ckan.plugins.toolkit as tk
 import ckan.config as ckanconfig
 import webtest
 
@@ -22,8 +20,6 @@ import ckan.lib.create_test_data as ctd
 from ckan.lib.helpers import url_for
 from ckan.logic.auth.get import package_show
 from ckan.tests.functional.base import FunctionalTestCase
-import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-#import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 
 import testdata
@@ -32,21 +28,6 @@ log = logging.getLogger(__file__)
 
 siteschema = etree.XMLSchema(etree.parse(StringIO(testdata.sitemap)))
 indexschema = etree.XMLSchema(etree.parse(StringIO(testdata.sitemapindex)))
-
-package = {
-          "package_creator": "test function",
-          "private": False,
-          "dataset_date": "01/01/1960-12/31/2012",
-          "indicator": "0",
-          "caveats": "These are the caveats",
-          "license_other": "TEST OTHER LICENSE",
-          "methodology": "This is a test methodology",
-          "dataset_source": "World Bank",
-          "license_id": "hdx-other",
-          "name": "test_activity_4",
-          "notes": "This is a test activity",
-          "title": "Test Activity 4",
-        }
 
 def _get_test_app():
     config['ckan.legacy_templates'] = False
@@ -93,7 +74,6 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         assert self.cont.response.status == "200 OK"
 
     def test_validity_index(self):
-        #self._create_pkg()
         url = url_for(controller="ckanext.sitemap.controller:SitemapController",
                       action='view')
         self.cont = self.app.get(url)
@@ -103,7 +83,6 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         assert indexschema.validate(etree.parse(self.content_file))
 
     def test_validity_map(self):
-        #self._create_pkg()
         url = url_for(controller="ckanext.sitemap.controller:SitemapController",
                       action='index', page=1)
         self.cont = self.app.get(url)
@@ -113,7 +92,6 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         assert siteschema.validate(etree.parse(self.content_file))
 
     def test_packages(self):
-        #self._create_pkg()
         url = url_for(controller="ckanext.sitemap.controller:SitemapController",
                       action='index', page=1)
         self.cont = self.app.get(url)
