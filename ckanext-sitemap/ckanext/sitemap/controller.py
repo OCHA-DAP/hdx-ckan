@@ -9,6 +9,7 @@ from ckan.lib.helpers import url_for
 from lxml import etree
 from pylons import config, response
 from pylons.decorators.cache import beaker_cache
+import math
 
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
@@ -23,7 +24,7 @@ class SitemapController(BaseController):
         """
         root = etree.Element("urlset", nsmap={None: SITEMAP_NS})
         #pkgs = Session.query(Package).all()
-        pkgs = Session.query(Package).filter(Package.private == False).offset(int(page)*25).limit(25)
+        pkgs = Session.query(Package).filter(Package.private == False).offset((int(page)-1)*25).limit(25)
         for pkg in pkgs:
             url = etree.SubElement(root, 'url')
             loc = etree.SubElement(url, 'loc')
@@ -47,7 +48,7 @@ class SitemapController(BaseController):
         #Sitemap Index
         root = etree.Element("sitemapindex", nsmap={None: SITEMAP_NS})
         pkgs = Session.query(Package).filter(Package.private == False).count()
-        count = pkgs/25
+        count = int(math.ceil(pkgs/25.5))+1
         for i in range(1,count):
             sitemap = etree.SubElement(root, 'sitemap')
             loc = etree.SubElement(sitemap, 'loc')
