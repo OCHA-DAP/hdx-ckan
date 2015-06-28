@@ -71,10 +71,11 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         return result
 
-    def assemble_viz_config(self, visualization):
+    def assemble_viz_config(self, vis_json_config):
         try:
-            visualization = json.loads(visualization)
-        except:
+            visualization = json.loads(vis_json_config)
+        except Exception, e:
+            log.warning(e)
             return "{}"
 
         config = {
@@ -86,44 +87,42 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         if visualization.get('visualization-select', '') == 'WFP':
             config.update({
                 'embedded': "true",
-                'data_link_url':visualization.get('viz-data-link-url','#'),
-                'type': visualization.get('visualization-select',''),
-                'resource_id': visualization.get('viz-resource-id', '#'),
-                'datastore_id':visualization.get('viz-resource-id', '')
+                'datastore_id': visualization.get('viz-resource-id', '')
             })
-            return config
 
-        if visualization.get('datatype_1', '') == 'filestore':
-            datatype = "filestore"
-            data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1', ''),
-                             resource_id=visualization.get('resource_id_1', ''))
         else:
-            datatype = "datastore"
-            data = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_1',
-                                                                                   '') + "&limit=10000000"
+            if visualization.get('datatype_1', '') == 'filestore':
+                datatype = "filestore"
+                data = h.url_for('perma_storage_file', id=visualization.get('dataset_id_1', ''),
+                                 resource_id=visualization.get('resource_id_1', ''))
+            else:
+                datatype = "datastore"
+                data = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_1',
+                                                                                       '') + "&limit=10000000"
 
-        if visualization.get('datatype_2', '') == 'filestore':
-            geotype = "filestore"
-            geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2', ''),
-                            resource_id=visualization.get('resource_id_2', ''))
-        else:
-            geotype = "datastore"
-            geo = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_2',
-                                                                                  '') + "&limit=10000000"
+            if visualization.get('datatype_2', '') == 'filestore':
+                geotype = "filestore"
+                geo = h.url_for('perma_storage_file', id=visualization.get('dataset_id_2', ''),
+                                resource_id=visualization.get('resource_id_2', ''))
+            else:
+                geotype = "datastore"
+                geo = "/api/action/datastore_search?resource_id=" + visualization.get('resource_id_2',
+                                                                                      '') + "&limit=10000000"
 
-        # beware that visualisation type constants are also used in the template to select different resource bundles
-        if visualization.get('visualization-select', '') == '3W-dashboard':
-            config.update({'datatype': datatype,
-                           'data': data,
-                           'whoFieldName': visualization.get('who-column', ''),
-                           'whatFieldName': visualization.get('what-column', ''),
-                           'whereFieldName': visualization.get('where-column', ''),
-                           'geotype': geotype,
-                           'geo': geo,
-                           'joinAttribute': visualization.get('where-column-2', ''),
-                           'nameAttribute': visualization.get('map_district_name_column', ''),
-                           'colors': visualization.get('colors', '')
-                           })
+            # beware that visualisation type constants are also used
+            # in the template to select different resource bundles
+            if visualization.get('visualization-select', '') == '3W-dashboard':
+                config.update({'datatype': datatype,
+                               'data': data,
+                               'whoFieldName': visualization.get('who-column', ''),
+                               'whatFieldName': visualization.get('what-column', ''),
+                               'whereFieldName': visualization.get('where-column', ''),
+                               'geotype': geotype,
+                               'geo': geo,
+                               'joinAttribute': visualization.get('where-column-2', ''),
+                               'nameAttribute': visualization.get('map_district_name_column', ''),
+                               'colors': visualization.get('colors', '')
+                               })
 
         return config
 
