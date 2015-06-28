@@ -299,7 +299,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'resource_id': top_line_num_resource
             }
         }
-        datastore_access = data_access.CrisisDataAccess(top_line_src_dict)
+        datastore_access = data_access.DataAccess(top_line_src_dict)
         datastore_access.fetch_data(context)
         top_line_items = datastore_access.get_top_line_items()
 
