@@ -18,7 +18,7 @@ from genshi.template import MarkupTemplate
 import ckan.logic as logic
 import ckan.lib.base as base
 #import ckan.lib.maintain as maintain
-import ckan.lib.package_saver as package_saver
+#import ckan.lib.package_saver as package_saver
 #import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
 #import ckan.lib.accept as accept
