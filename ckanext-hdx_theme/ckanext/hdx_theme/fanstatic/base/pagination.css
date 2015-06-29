@@ -11,7 +11,8 @@
   background: #eeeeee;
   border-top: none;
   height: 45px;
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
 }
 .pagination ul,
 .module .pagination ul {

@@ -207,7 +207,8 @@ a:focus,
   background: #eeeeee;
   border-top: none;
   height: 45px;
-  margin-bottom: 0;
+  margin: 0;
+  padding: 0;
 }
 .pagination ul,
 .module .pagination ul {
@@ -416,7 +417,7 @@ a:focus,
 /* Body Background */
 body {
   background-size: cover;
-  background: #0088ff url("/images/homepage-new/map.png") fixed;
+  background: #0088ff url("/images/homepage/map.png") fixed;
   min-width: 1260px;
   color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
@@ -576,7 +577,7 @@ body {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage-new/logo-beta.svg");
+  background-image: url("/images/homepage/logo-beta.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;
@@ -672,7 +673,7 @@ body {
 }
 /* END Style Caret */
 .offset1andHalf {
-  margin-left: 180px !important;
+  margin-left: 12.5% !important;
 }
 /* Customize fixed Bootstrap layout -- ugly hacking :) */
 .container,
@@ -785,6 +786,27 @@ ul.hdx-bs3 {
   text-decoration: none;
 }
 /**/
+/* search_form.html customisations */
+.list-items.search-form {
+  border-bottom: none;
+  margin: 0;
+  padding: 0;
+  margin-left: 40px;
+}
+.list-items.search-form h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.list-items.search-form .search-input.search-giant input {
+  border-radius: 14px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+}
+.list-items.search-form .search-input {
+  margin-bottom: 25px;
+}
+/* END search_form.html customisations */
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;

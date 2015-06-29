@@ -1852,9 +1852,9 @@ textarea {
   margin-right: 10px;
   text-transform: uppercase;
 }
-.dataset-private .icon-lock {
-  width: 9px;
-}
+/*.dataset-private .icon-lock {*/
+  /*width: 9px;*/
+/*}*/
 .dataset-private.pull-right {
   margin-right: 0;
 }
