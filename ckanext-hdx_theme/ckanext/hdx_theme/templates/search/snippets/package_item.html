@@ -53,7 +53,7 @@
               {% endif %}
               {# {% if package.private %}
                 <li>
-                  <a>Request data</a>&nbsp;<span class="icon-lock" style="font-size: 15px; color:#007ce0"></span>
+                  <a>Request data</a>&nbsp;<span class="glyphicon glyphicon-lock" style="font-size: 15px; color:#007ce0"></span>
                 </li>
               {% endif %} #}
             </ul>
@@ -116,7 +116,7 @@
                   <span class="icon-fire" title="{{ _('Popular: ') }} {{ package.tracking_summary.recent }}{{ _(' views') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
                 {% endif %}
                 {% if package.private %}
-                   <span class="icon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                   <span class="glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                 {% endif %}
               </li>
             {% endif %}
