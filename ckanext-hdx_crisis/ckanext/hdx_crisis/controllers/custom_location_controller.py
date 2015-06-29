@@ -18,7 +18,7 @@ import ckanext.hdx_org_group.actions.get as hdx_org_get
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as helpers
-import ckanext.hdx_crisis.dao.crisis_config as crisis_config
+import ckanext.hdx_crisis.config.crisis_config as crisis_config
 import ckan.lib.helpers as h
 
 render = base.render
