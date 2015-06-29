@@ -14,11 +14,8 @@ import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
 import ckanext.hdx_crisis.controllers.custom_location_controller as custom_location_controller
-#import ckanext.hdx_crisis.dao.country_data_access as country_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
-#import ckanext.hdx_theme.helpers.helpers as helpers
-#import ckanext.hdx_crisis.dao.crisis_config as crisis_config
 import ckanext.hdx_crisis.dao.ebola_crisis_data_access as ebola_crisis_data_access
 
 EbolaCrisisDataAccess = ebola_crisis_data_access.EbolaCrisisDataAccess

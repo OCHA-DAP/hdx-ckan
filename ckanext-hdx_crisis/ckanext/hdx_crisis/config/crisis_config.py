@@ -22,7 +22,7 @@ class CrisisConfig:
 
     @staticmethod
     def get_crises(label):
-        import ckanext.hdx_crisis.dao.nepal_crisis_config as nepal_crisis_config
+        import ckanext.hdx_crisis.config.nepal_crisis_config as nepal_crisis_config
 
         if label == c_nepal_earthquake:
             return nepal_crisis_config.NepalCrisisConfig()

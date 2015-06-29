@@ -4,7 +4,7 @@ Created on Jun 18, 2015
 @author: dan
 '''
 
-import ckanext.hdx_crisis.dao.crisis_config as crisis_config
+import ckanext.hdx_crisis.config.crisis_config as crisis_config
 import pylons.config as config
 
 
