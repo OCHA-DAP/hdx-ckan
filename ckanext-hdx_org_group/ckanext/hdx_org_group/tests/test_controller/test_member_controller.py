@@ -6,8 +6,7 @@ Created on Jun 23, 2015
 
 
 import ckan.model as model
-import logging as logging
-import ckan.plugins.toolkit as tk
+import logging
 import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
@@ -15,7 +14,7 @@ import ckan.lib.mailer as mailer
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
-import ckanext.hdx_org_group.controllers.member_controller  as member_controller
+import ckanext.hdx_org_group.controllers.member_controller as member_controller
 
 c = common.c
 log = logging.getLogger(__name__)
@@ -26,10 +25,8 @@ c_dict = None
 
 invited_user = None
 
+
 class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
-    @classmethod
-    def _get_action(cls, action_name):
-        return tk.get_action(action_name)
 
     @classmethod
     def _load_plugins(cls):
@@ -162,5 +159,3 @@ class MockedHDXOrgMemberController(member_controller.HDXOrgMemberController):
 
     def _render_template(self, template_name):
         pass
-
-
