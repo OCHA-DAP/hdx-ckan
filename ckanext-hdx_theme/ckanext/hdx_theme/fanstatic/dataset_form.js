@@ -138,6 +138,7 @@ $(document).ready(function(){
       }
     }
 
+    //alert("This script won't work - it used to be in package_metadata_fields.html:180");
     var date = $('hdx_dataset_date').text().trim();
     if(date.match("-")){
       var range = date.split("-");
