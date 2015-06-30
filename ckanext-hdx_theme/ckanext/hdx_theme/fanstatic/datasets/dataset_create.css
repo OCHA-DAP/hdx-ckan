@@ -1,4 +1,4 @@
-.datasetModule{
+.module.datasetModule{
     margin-left: 100px;
 }
 /*  */
@@ -7,6 +7,9 @@
 	float: left;
 }
 
+input[type=radio], input[type=checkbox] {
+    top: 0;
+}
 
 .field-with-info ~ .info-field{
 	opacity: 0;
@@ -65,7 +68,8 @@
     }
 
     .dataset-required label:after{
-        color: #f2645a
+        color: #f2645a;
+        content: "*";
     }
 
     .editor textarea{
@@ -134,6 +138,8 @@
         padding: 0 0 0 15px;
         font-size: 14px;
         color: #000000;
+        border-radius: 3px;
+        border: 1px solid #ffffff;
     }
 
     .input-prepend .add-on{
@@ -244,13 +250,15 @@
         border-radius: 40px;
         top: -19px;
         color: #007ce0;
-        left: 309px;
+        left: 303px;
         display: none;
+        height: 40px;
+        width: 40px;
     }
 
     .dataset-form-resource-types input[type="radio"]:checked + label.type-url + i {
-        left: 230px;
-        top: -80px;
+        left: 223px;
+        top: -160px;
     }
 
     .dataset-form-resource-types input[type="radio"]:checked + label + i{

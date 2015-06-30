@@ -36,13 +36,13 @@
                 <a class="btn hdx-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
-                    <i class="icon-eye-open"></i> {{ _('View') }}
+                    <i class="glyphicon glyphicon-eye-open"></i> {{ _('View') }}
                   {% elif  res.resource_type == 'api' %}
-                    <i class="icon-key"></i> {{ _('API Endpoint') }}
+                    <i class="glyphicon glyphicon-key"></i> {{ _('API Endpoint') }}
                   {% elif not res.can_be_previewed %}
-                    <i class="icon-external-link"></i> {{ _('Go to resource') }}
+                    <i class="glyphicon glyphicon-external-link"></i> {{ _('Go to resource') }}
                   {% else %}
-                    <i class="icon-download"></i> {{ _('Download') }}
+                    <i class="glyphicon glyphicon-download"></i> {{ _('Download') }}
                   {% endif %}
                 #}
                 	<img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" style="width: 14px;" />
