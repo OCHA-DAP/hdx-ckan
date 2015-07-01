@@ -24,7 +24,9 @@ class ValidationCommand(p.toolkit.CkanCommand):
         if cmd == 'initdb':
             print 'Initializing Database...'
             self.initdb()
+            print 'DONE Initializing Database...'
         elif cmd == 'cleandb':
+            print 'Cleandb Database...'
             self.cleandb()
         else:
             print 'Error: command "{0}" not recognized'.format(cmd)

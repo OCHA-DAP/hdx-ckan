@@ -2,18 +2,23 @@ import datetime
 import logging
 
 import sqlalchemy.orm as orm
-from sqlalchemy.schema import Table, Column, UniqueConstraint, ForeignKey
+from sqlalchemy.schema import Table, Column, UniqueConstraint, ForeignKey, CreateTable
 import sqlalchemy.types as types
 import vdm.sqlalchemy
 
 import ckan.model as model
 from ckan.model.domain_object import DomainObject
-import ckan.model.domain_object as domain_object
+# import ckan.model.domain_object as domain_object
+
 from ckan.model import meta, extension, core, user
 import ckan.model.types as _types
 
 mapper = orm.mapper
 log = logging.getLogger(__name__)
+# DomainObject = domain_object.DomainObject
+
+# MetaData = meta.MetaData
+# metadata = MetaData()
 
 
 class ValidationToken(DomainObject):
@@ -36,7 +41,6 @@ class ValidationToken(DomainObject):
         query = meta.Session.query(ValidationToken)
         return query.filter_by(token=token).first()
 
-
     @classmethod
     def check_existence(self):
         return validation_token_table.exists()
@@ -46,8 +50,15 @@ validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                Column('user_id', types.UnicodeText, ForeignKey('user.id')),
                                Column('token', types.UnicodeText),
-                               Column('valid', types.Boolean)
+                               Column('valid', types.Boolean, default=0)
                                )
+
+# validation_token_table = Table('validation_tokens', metadata,
+#                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
+#                                Column('user_id', types.UnicodeText, ForeignKey('user.id')),
+#                                Column('token', types.UnicodeText),
+#                                Column('valid', types.Boolean)
+#                                )
 
 mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
 
@@ -56,10 +67,16 @@ def setup():
     '''
     Create our tables!
     '''
-
+    print 'User Model setup...'
+    print "user table exists:" + str(model.user_table.exists())
     if model.user_table.exists() and not validation_token_table.exists():
+        print 'validation_token_table.create()'
+        print CreateTable(validation_token_table)
         validation_token_table.create()
+        # meta.metadata.create_all()
+        print 'DONE validation_token_table.create()'
         log.debug('Validation Token table created')
+    print 'DONE User Model setup...'
 
 
 def delete_tables():
