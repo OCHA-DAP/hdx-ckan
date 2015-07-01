@@ -933,3 +933,18 @@ span.is-more a.more-link, .more-link {
 .contentBackground {
     background-color: #ffffff;
 }
+
+/* OLD Resource Edit Form*/
+    .graybg {
+        background: #eee;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+
+/* END OLD Resource Edit Form*/
+
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}

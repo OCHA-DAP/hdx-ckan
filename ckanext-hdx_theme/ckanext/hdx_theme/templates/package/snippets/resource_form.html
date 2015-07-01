@@ -7,6 +7,7 @@
 {% resource 'hdx_theme/resource_form.js' %}
 {% resource 'hdx_theme/css/hdx-icons.css' %}
 {% resource 'hdx_theme/hdx-resource-upload-field.js' %}
+{% resource 'hdx_theme/datasets/dataset_create.css' %}
 
 {% block secondary %}
 {% endblock %}
@@ -35,24 +36,25 @@
 
               {% block basic_fields_data %}
               	{% set is_file_upload = data.resource_type == "file.upload" %}
-                <div class="controls"{% if allow_upload %} data-module="hdx-resource-upload-field"{% endif %} data-module-checked="{{is_file_upload }}">
+                <div class="controls">
                   {#
                   This block uses a slightly odd pattern. Unlike the rest of the radio
                   buttons which are wrapped _inside_ the labels here we place the label
                   after the input. This enables us to style the label based on the state
                   of the radio using css. eg. input[type=radio]+label {}
                   #}
-
-                  <span class="radio inline" style="margin-left: 26px; margin-right: 26px; padding: 0;">
+                  <span class="pull-left" {% if allow_upload %} data-module="hdx-resource-upload-field"{% endif %} data-module-checked="{{is_file_upload }}">
+                  </span>
+                  <span class="radio inline pull-left" style="margin-left: 26px; margin-right: 26px; padding: 0; display: inline-block;">
                     <span class="control-label"> OR </span>
                   </span>
                   {% set link_upload_string = '' %}
                   {% if not is_file_upload and data.name %}
                   	{% set link_upload_string = 'checked="checked"' %}
                   {% endif %}
-                  <span id="field-link-upload" style="position: relative;">
+                  <span id="field-link-upload" class="" style="position: relative;">
                     <input id="field-resource-type-api" {{ link_upload_string }} type="radio" name="resource_type" value="api" style="visibility: hidden; position: absolute;" />
-                    <label id="mx-type-url" class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+                    <label style="display: inline-block;" id="mx-type-url" class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
                     <i class="icon-check"></i>
                   </span>
                 </div>

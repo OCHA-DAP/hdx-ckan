@@ -117,13 +117,15 @@
         {% endblock %}
 
         {% block page_header %}
-          <header class="module-content page-header paddingRowHack mBottom10">
-            <div class="paddingLeftHack">
-              <ul class="nav nav-tabs paddingRightHack">
-                {% block content_primary_nav %}{% endblock %}
-              </ul>
-            </div>
-r          </header>
+          <div class="paddingLeftHack">
+            <header class="module-content page-header paddingRowHack mBottom10">
+              <div class="paddingLeftHack">
+                <ul class="nav nav-tabs paddingRightHack">
+                  {% block content_primary_nav %}{% endblock %}
+                </ul>
+              </div>
+            </header>
+          </div>
           {% if self.content_action() | trim %}
             <div class="content_action">
                 {% block content_action %}{% endblock %}
