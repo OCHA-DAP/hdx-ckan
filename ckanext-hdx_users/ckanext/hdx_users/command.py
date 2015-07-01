@@ -20,7 +20,7 @@ class ValidationCommand(p.toolkit.CkanCommand):
             return
 
         cmd = self.args[0]
-        self._load_config()
+        self._load_config(load_site_user=False)
         if cmd == 'initdb':
             print 'Initializing Database...'
             self.initdb()
