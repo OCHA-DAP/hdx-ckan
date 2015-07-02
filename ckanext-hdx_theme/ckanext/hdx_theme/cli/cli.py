@@ -5,7 +5,7 @@ class CustomLessCompile(cli.CkanCommand):
     summary = 'Compile all custom less themes'
 
     def command(self):
-        self._load_config(True)
+        self._load_config()
         import logging as logging
         import ckan.model as model
         import ckanext.hdx_org_group.helpers.organization_helper as org_helper
