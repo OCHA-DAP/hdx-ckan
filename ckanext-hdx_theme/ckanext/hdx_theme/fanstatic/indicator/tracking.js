@@ -1,4 +1,5 @@
 $(function (){
+  //Only open a new window for non-file uploads
   // Tracking
   var url = location.pathname;
   // remove any site root from url
@@ -11,11 +12,22 @@ $(function (){
           timeout : 300 });
   $('a.resource-url-analytics').click(function (e){
     var url = $(e.target).closest('a').attr('href');
-    $.ajax({url : $('body').data('site-root') + '_tracking',
+    //Only open a new window for non-file uploads
+    var type = $(e.target).closest('a').attr('tracking-type');
+    if(type == 'file.upload'){
+      $.ajax({url : $('body').data('site-root') + '_tracking',
+            data : {url:url, type:'resource'},
+            type : 'POST',
+            complete : function () {location.href = url;},
+            timeout : 30});
+      e.preventDefault();
+    }else{
+      $.ajax({url : $('body').data('site-root') + '_tracking',
             data : {url:url, type:'resource'},
             type : 'POST',
             complete : function () {window.open(url);},
             timeout : 30});
-    e.preventDefault();
+      e.preventDefault();
+    }
   });
 });
