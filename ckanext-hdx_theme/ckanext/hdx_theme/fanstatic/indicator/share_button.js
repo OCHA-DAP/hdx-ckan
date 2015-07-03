@@ -1,8 +1,8 @@
 $(document).ready(function(){
-  $('.{{ button_class }}').click(function(){
+  $('#button_class').click(function(){
     $.ajax({
-      url: "{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}",
-      data:{'url':"{{ url }}" },
+      url: $('#short_path').val(),
+      data:{'url':$('#target_url').val() },
       type: 'POST'
     }).done(function(msg){
       $('.resource-social a').each(function(){
