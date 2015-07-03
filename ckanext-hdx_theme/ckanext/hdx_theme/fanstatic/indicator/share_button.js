@@ -1,8 +1,8 @@
 $(document).ready(function(){
-  $('#button_class').click(function(){
+  $('#share_button').click(function(e){
     $.ajax({
-      url: $('#short_path').val(),
-      data:{'url':$('#target_url').val() },
+      url: $(this).attr('short-path'),
+      data:{'url':$(this).attr('target-url'), },
       type: 'POST'
     }).done(function(msg){
       $('.resource-social a').each(function(){
