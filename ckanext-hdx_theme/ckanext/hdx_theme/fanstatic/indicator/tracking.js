@@ -14,7 +14,7 @@ $(function (){
     $.ajax({url : $('body').data('site-root') + '_tracking',
             data : {url:url, type:'resource'},
             type : 'POST',
-            complete : function () {location.href = url;},
+            complete : function () {window.open(url);},
             timeout : 30});
     e.preventDefault();
   });
