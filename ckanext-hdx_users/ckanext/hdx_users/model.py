@@ -17,8 +17,14 @@ mapper = orm.mapper
 log = logging.getLogger(__name__)
 # DomainObject = domain_object.DomainObject
 
-# MetaData = meta.MetaData
-# metadata = MetaData()
+USER_STATUSES = [
+    'hdx_onboarding_user_registered',
+    'hdx_onboarding_user_validated',
+    'hdx_onboarding_details',
+    'hdx_onboarding_follows',
+    'hdx_onboarding_org',
+    'hdx_onboarding_friends'
+]
 
 
 class ValidationToken(DomainObject):
@@ -50,15 +56,8 @@ validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                Column('user_id', types.UnicodeText, ForeignKey('user.id')),
                                Column('token', types.UnicodeText),
-                               Column('valid', types.Boolean, default=0)
+                               Column('valid', types.Boolean)
                                )
-
-# validation_token_table = Table('validation_tokens', metadata,
-#                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
-#                                Column('user_id', types.UnicodeText, ForeignKey('user.id')),
-#                                Column('token', types.UnicodeText),
-#                                Column('valid', types.Boolean)
-#                                )
 
 mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
 
@@ -68,14 +67,10 @@ def setup():
     Create our tables!
     '''
     print 'User Model setup...'
-    print "user table exists:" + str(model.user_table.exists())
     if model.user_table.exists() and not validation_token_table.exists():
-        print 'validation_token_table.create()'
         print CreateTable(validation_token_table)
         validation_token_table.create()
-        # meta.metadata.create_all()
         print 'DONE validation_token_table.create()'
-        log.debug('Validation Token table created')
     print 'DONE User Model setup...'
 
 

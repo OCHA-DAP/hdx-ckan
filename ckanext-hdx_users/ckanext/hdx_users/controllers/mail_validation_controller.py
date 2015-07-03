@@ -8,7 +8,7 @@ import dateutil
 
 from pylons import config
 
-import ckan.lib.base as base
+# import ckan.lib.base as base
 import ckan.controllers.user
 from ckan.common import _, c, g, request
 import ckan.lib.helpers as h
@@ -24,9 +24,10 @@ import pylons.configuration as configuration
 import re
 import ckan.lib.navl.dictization_functions as df
 import ckan.lib.maintain as maintain
-from urllib import quote
+# from urllib import quote
 import ckan.plugins as p
 
+import ckanext.hdx_users.helpers.user_extra as ue_helpers
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -57,7 +58,7 @@ def name_validator_with_changed_msg(val, context):
     except Invalid as invalid:
         if val in ['new', 'edit', 'search']:
             raise Invalid(_('That name cannot be used'))
-    
+
         if len(val) < 2:
             raise Invalid(_('Name must be at least %s characters long') % 2)
         if len(val) > PACKAGE_NAME_MAX_LENGTH:
@@ -65,13 +66,13 @@ def name_validator_with_changed_msg(val, context):
                           PACKAGE_NAME_MAX_LENGTH)
         if not name_match.match(val):
             raise Invalid(_('Username should be lowercase letters and/or numbers and/or these symbols: -_'))
-        
+
         raise invalid
-        
+
 
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
-    
+
     @staticmethod
     @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
     def _validate_form(data, errors):
@@ -98,9 +99,9 @@ class ValidationController(ckan.controllers.user.UserController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user,
                    'request': 'request' in request.params}
-        #try:
+        # try:
         #    check_access('request_register', context)
-        #except NotAuthorized:
+        # except NotAuthorized:
         #    abort(401, _('Unauthorized to request new registration.'))
 
         if context['request'] and not data:
@@ -123,7 +124,9 @@ class ValidationController(ckan.controllers.user.UserController):
                 org = data['org']
                 reason = data['reason']
 
-                h.log.info('Request access for {name} ({email}) of {org} with reason: {reason}'.format(name = name, email = email, org = org, reason=reason))
+                h.log.info(
+                    'Request access for {name} ({email}) of {org} with reason: {reason}'.format(name=name, email=email,
+                                                                                                org=org, reason=reason))
                 try:
                     send_mail(name, email, org, reason)
                     h.flash_success(_('We will check your request and we will send you an email!'))
@@ -141,7 +144,6 @@ class ValidationController(ckan.controllers.user.UserController):
         c.form = render(self.request_register_form, extra_vars=vars)
         return base.render(self.request_register_form, cache_force=True, extra_vars=vars)
 
-
     def register(self, data=None, errors=None, error_summary=None):
         """
         Creates a new user, but allows logged in users to create
@@ -152,7 +154,7 @@ class ValidationController(ckan.controllers.user.UserController):
             check_access('user_create', context)
         except NotAuthorized:
             abort(401, _('Unauthorized to register as a user.'))
-        #hack to disable check if user is logged in
+        # hack to disable check if user is logged in
         save_user = c.user
         c.user = None
         result = self.new(data, errors, error_summary)
@@ -168,21 +170,21 @@ class ValidationController(ckan.controllers.user.UserController):
         """
         if not c.user:
             user = request.params.get('user')
-            vars = {'user':user}
+            vars = {'user': user}
             return render('user/post_register.html', extra_vars=vars)
         else:
             return render('user/logout_first.html')
 
-    
     def new(self, data=None, errors=None, error_summary=None):
         '''GET to display a form for registering a new user.
            or POST the form data to actually do the user registration.
         '''
-        
+
         temp_schema = self._new_form_to_db_schema()
         if temp_schema.has_key('name'):
-           temp_schema['name'] = [name_validator_with_changed_msg if var==name_validator else var for var in temp_schema['name'] ]
-        
+            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+                                   temp_schema['name']]
+
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'auth_user_obj': c.userobj,
@@ -204,7 +206,7 @@ class ValidationController(ckan.controllers.user.UserController):
         data = data or {}
         errors = errors or {}
         error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors, 
+        vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary,
                 'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
 
@@ -220,6 +222,9 @@ class ValidationController(ckan.controllers.user.UserController):
             captcha.check_recaptcha(request)
             user = get_action('user_create')(context, data_dict)
             token = get_action('token_create')(context, user)
+            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'], 'extras': ue_helpers.get_default_extras()})
+            print user_extra
+
         except NotAuthorized:
             abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
@@ -236,13 +241,15 @@ class ValidationController(ckan.controllers.user.UserController):
             return self.new(data_dict, errors, error_summary)
         if not c.user:
             # Send validation email
-            self.send_validation_email(user,token)
+            self.send_validation_email(user, token)
 
             # Redirect to a URL picked up by repoze.who which performs the
             # login
-            #login_url = self._get_repoze_handler('login_handler_path')
+            # login_url = self._get_repoze_handler('login_handler_path')
 
-            post_register_url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='post_register')
+            post_register_url = h.url_for(
+                controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                action='post_register')
 
             # We need to pass the logged in URL as came_from parameter
             # otherwise we lose the language setting
@@ -256,12 +263,12 @@ class ValidationController(ckan.controllers.user.UserController):
             # #1799 User has managed to register whilst logged in - warn user
             # they are not re-logged in as new user.
             h.flash_success(_('User "%s" is now registered but you are still '
-                            'logged in as "%s" from before') %
+                              'logged in as "%s" from before') %
                             (data_dict['name'], c.user))
             return render('user/logout_first.html')
 
     def validation_resend(self, id):
-        #Get user by id
+        # Get user by id
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'for_view': True}
@@ -275,7 +282,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except:
             abort(500, _('Error'))
 
-        #Get token for user
+        # Get token for user
         try:
             token = get_action('token_show')(context, data_dict)
         except NotFound, e:
@@ -283,25 +290,28 @@ class ValidationController(ckan.controllers.user.UserController):
         except:
             abort(500, _('Error'))
 
-        #Send Validation email
-        self.send_validation_email(user,token)
+        # Send Validation email
+        self.send_validation_email(user, token)
 
-        post_register_url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='post_register')
+        post_register_url = h.url_for(
+            controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+            action='post_register')
         redirect_url = '{0}?user={1}'
         h.redirect_to(redirect_url.format(
-                post_register_url,
-                user['id']))
-
+            post_register_url,
+            user['id']))
 
     def send_validation_email(self, user, token):
-        validate_link = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='validate',
-                                  token=token['token'])
+        validate_link = h.url_for(
+            controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+            action='validate',
+            token=token['token'])
         link = '{0}{1}'
-        body = 'Hello! Thank you for registering for an HDX account. '\
-           'Please click the following link to validate your email\n' \
-           '{link}\n' \
-           ''.format(link=link.format(config['ckan.site_url'], validate_link))
-        
+        body = 'Hello! Thank you for registering for an HDX account. ' \
+               'Please click the following link to validate your email\n' \
+               '{link}\n' \
+               ''.format(link=link.format(config['ckan.site_url'], validate_link))
+
         try:
             mailer.mail_recipient(user['name'], user['email'], "HDX: Validate Your Email", body)
             return True
@@ -314,7 +324,7 @@ class ValidationController(ckan.controllers.user.UserController):
                    'for_view': True}
         data_dict = {'token': token,
                      'user_obj': c.userobj}
-        #Update token for user
+        # Update token for user
         try:
             token = get_action('token_update')(context, data_dict)
         except NotFound, e:
@@ -322,9 +332,9 @@ class ValidationController(ckan.controllers.user.UserController):
         except:
             abort(500, _('Error'))
 
-        #Set Flash message
+        # Set Flash message
         h.flash_success(_('Your email has been validated. You may now login.'))
-        #Redirect to login
+        # Redirect to login
         h.redirect_to('login')
 
     def logged_in(self):
@@ -338,18 +348,18 @@ class ValidationController(ckan.controllers.user.UserController):
             data_dict = {'id': c.user}
             user_dict = get_action('user_show')(context, data_dict)
 
-            #IAuthenticator too buggy, doing this instead
+            # IAuthenticator too buggy, doing this instead
             try:
                 token = get_action('token_show')(context, user_dict)
             except NotFound, e:
-                token = {'valid':True} #Until we figure out what to do with existing users
+                token = {'valid': True}  # Until we figure out what to do with existing users
             except:
                 abort(500, _('Something wrong'))
             if not token['valid']:
-                #force logout
+                # force logout
                 for item in p.PluginImplementations(p.IAuthenticator):
                     item.logout()
-                #redirect to validation page
+                # redirect to validation page
                 h.flash_error(_('You have not yet validated your email.'))
                 h.redirect_to(self._get_repoze_handler('logout_handler_path'))
 
@@ -359,12 +369,12 @@ class ValidationController(ckan.controllers.user.UserController):
             else:
                 time_passed = None
             if not user_dict['activity'] and time_passed and time_passed.days < 3:
-                #/dataset/new
+                # /dataset/new
                 contribute_url = h.url_for(controller='package', action='new')
                 # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
                 #    If you want to associate this dataset with an organization, either click on "My Organizations" below
                 #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
-                #h.flash_success(_(message), True)
+                # h.flash_success(_(message), True)
                 return h.redirect_to(controller='user', action='dashboard_organizations')
             else:
                 h.flash_success(_("%s is now logged in") %
@@ -375,15 +385,13 @@ class ValidationController(ckan.controllers.user.UserController):
             try:
                 if g.openid_enabled:
                     err += _(' (Or if using OpenID, it hasn\'t been associated '
-                         'with a user account.)')
+                             'with a user account.)')
             except:
                 pass
-                
+
             if h.asbool(config.get('ckan.legacy_templates', 'false')):
                 h.flash_error(err)
                 h.redirect_to(controller='user',
                               action='login', came_from=came_from)
             else:
                 return self.login(error=err)
-
-
