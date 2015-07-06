@@ -46,7 +46,7 @@
     <div class="hdx-btn-group">
         {% block resource_item_explore_links %}
 
-            {% if res.can_be_previewed and is_not_zipped %}
+            {% if res.has_views and is_not_zipped %}
                 <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
                     {{ _('Preview') }}
                 </a>
