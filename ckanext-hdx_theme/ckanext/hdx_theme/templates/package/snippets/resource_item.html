@@ -6,6 +6,7 @@
 {% set resource_display_name = h.resource_display_name(res) %}
 
 {% resource 'hdx_theme/bs_popover.js' %}
+{% resource 'hdx_theme/indicator/tracking.js' %}
 
 <li class="resource-item">
   {% block resource_item_title %}
@@ -56,7 +57,7 @@
             {% endif %}
 
             {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
-            <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
+            <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.resource_type}}">
                 <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
             </a>
 
