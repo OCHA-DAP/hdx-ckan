@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{%- block scripts %}
+{# We need to override this block to remove the insertion of Bootstrap 3 which is used in rest of ckan
+   as recline needs Bootstrap 2 #}
+  {% resource 'hdx_theme/google-analytics' %}
+  {% resource 'hdx_theme/external-links.js' %}
+{% endblock -%}
+
+{% block page %}
+
+  <div id="datapreview-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.datapreview.url') }}</div>
+  <div id="previewmap-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.previewmap.url') }}</div>
+  <div data-module="recline_view"
+       data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}"
+       data-module-resource = "{{ h.dump_json(resource_json) }}";
+       data-module-resource-view = "{{ h.dump_json(resource_view_json) }}";
+       >
+    <h4 class="loading-dialog">
+      <div class="loading-spinner"></div>
+      <div class="left">{{ _('Loading...') }}</div>
+    </h4>
+  </div>
+
+    {% resource 'ckanext-reclineview/vendor/jquery/1.7.1/jquery.js' %}
+    {% resource 'ckanext-reclineview/vendor/underscore/1.4.4/underscore.js' %}
+    {% resource 'ckanext-reclineview/vendor/backbone/1.0.0/backbone.js' %}
+    {% resource 'ckanext-reclineview/vendor/mustache/0.5.0-dev/mustache.js' %}
+    {% resource 'ckanext-reclineview/vendor/bootstrap/2.3.2/bootstrap.js' %}
+    {% resource 'ckanext-reclineview/vendor/json/json2.js' %}
+    {% resource 'ckanext-reclineview/vendor/flot/excanvas.js' %}
+    {% resource 'ckanext-reclineview/vendor/flot/jquery.flot.js' %}
+    {% resource 'ckanext-reclineview/vendor/flot/jquery.flot.time.js' %}
+    {% resource 'ckanext-reclineview/vendor/leaflet/0.7.3/leaflet.js' %}
+    {% resource 'ckanext-reclineview/vendor/leaflet.markercluster/leaflet.markercluster.js' %}
+    {% resource 'ckanext-reclineview/vendor/slickgrid/2.0.1/jquery-ui-1.8.16.custom.js' %}
+    {% resource 'ckanext-reclineview/vendor/slickgrid/2.0.1/jquery.event.drag-2.0.js' %}
+    {% resource 'ckanext-reclineview/vendor/slickgrid/2.0.1/slick.grid.js' %}
+    {% resource 'ckanext-reclineview/vendor/slickgrid/2.0.1/plugins/slick.rowselectionmodel.js' %}
+    {% resource 'ckanext-reclineview/vendor/slickgrid/2.0.1/plugins/slick.rowmovemanager.js' %}
+    {% resource 'ckanext-reclineview/vendor/moment/2.0.0/moment.js' %}
+    {% resource 'ckanext-reclineview/vendor/ckan.js/ckan.js' %}
+
+    {#    {% resource 'ckanext-reclineview/vendor/recline/recline.js' %} -- removed from original #}
+    {% resource 'hdx_theme/reclineview/recline.js' %}
+
+    {% resource 'ckanext-reclineview/widget.recordcount.js' %}
+    {% resource 'ckanext-reclineview/recline_view.js' %}
+
+    {% resource 'ckanext-reclineview/vendor/bootstrap/2.3.2/css/bootstrap.css' %}
+    {% resource 'ckanext-reclineview/vendor/leaflet/0.7.3/leaflet.css' %}
+    {% resource 'ckanext-reclineview/vendor/leaflet.markercluster/MarkerCluster.css' %}
+    {% resource 'ckanext-reclineview/vendor/leaflet.markercluster/MarkerCluster.Default.css' %}
+    {% resource 'ckanext-reclineview/vendor/leaflet.markercluster/MarkerCluster.Default.ie.css' %}
+    {% resource 'ckanext-reclineview/vendor/slickgrid/2.0.1/slick.grid.css' %}
+    {% resource 'ckanext-reclineview/vendor/recline/recline.css' %}
+
+    {% resource 'ckanext-reclineview/css/recline.css' %}
+{% endblock %}
+
+{% block styles %}{% endblock %}
+{% block custom_styles %}{% endblock %}
