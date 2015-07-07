@@ -21,8 +21,8 @@ Example:
                 <img class="mTop20" src="/images/onboarding/steps.png">
             </div>
             <div class="mTop10 bottom-actions">
-                <input class="btn btn-empty btn-large pull-left" type="button" value="Do this later">
-                <input class="btn btn-primary btn-large pull-right" type="button" value="Next">
+                <input class="btn btn-empty btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Do this later">
+                <input class="btn btn-primary btn-large pull-right" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#followPopup');" value="Next">
             </div>
         </div>
     </div>

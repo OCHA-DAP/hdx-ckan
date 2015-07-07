@@ -58,6 +58,6 @@ Example:
     </div>
 {% endblock %}
 {% block actions %}
-    <input class="btn btn-primary btn-large" type="button" value="Register">
+    <input class="btn btn-primary btn-large" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" value="Register">
 {% endblock %}
 
