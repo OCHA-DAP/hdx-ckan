@@ -8,6 +8,8 @@
   file.
   #}
   {%- block header %}
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+    {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
     {% include "header.html" %}
   {% endblock -%}
 

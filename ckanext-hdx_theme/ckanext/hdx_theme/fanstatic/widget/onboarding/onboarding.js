@@ -1,3 +1,7 @@
+function closeCurrentWidget(self){
+    $(self).parents(".popup").hide();
+}
+
 function showOnboardingWidget(id){
     $(id).show();
 
@@ -25,4 +29,6 @@ function showOnboardingWidget(id){
                 $this.addClass("input-content");
         }
     )
+
+    return false;
 }

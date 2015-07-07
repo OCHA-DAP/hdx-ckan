@@ -61,9 +61,11 @@
             </span>
           {% else %}
             {% block header_account_notlogged %}
-              <span>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</span>
+              <span>
+                <a class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#">Log in</a>
+              </span>
               <span style="margin: 0 10px;">|</span>
-              <span><a href="/user/register">{{_('Sign up')}}</a></span>
+              <span><a onclick="showOnboardingWidget('#signupPopup');" href="#">{{_('Sign up')}}</a></span>
             {% endblock %}
           {% endif %}
         </div>
