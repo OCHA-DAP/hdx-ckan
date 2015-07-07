@@ -34,6 +34,12 @@ function showOnboardingWidget(id){
             _triggerInputDataClass($(el));
         }
     );
+    $(id).find('input[type="password"], input[type="text"]').change(
+        function(){
+            var $this = $(this);
+            _triggerInputDataClass($this);
+        }
+    );
     $(id).find('input[type="password"], input[type="text"]').on("keyup",
         function(){
             var $this = $(this);
