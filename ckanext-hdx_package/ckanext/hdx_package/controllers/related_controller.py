@@ -1,8 +1,7 @@
 """
 Extended from related controller to change redirections and some behavior
 """
-import urllib
-
+import logging
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.base as base
@@ -116,12 +115,12 @@ class RelatedController(base.BaseController):
 
         if not related:
             logging.error('Could not find related ' + id)
-            raise NotFound(_('Item was not found.'))
+            raise logic.NotFound(_('Item was not found.'))
 
         data, errors = df.validate(data_dict, schema, context)
         if errors:
             model.Session.rollback()
-            raise ValidationError(errors)
+            raise logic.ValidationError(errors)
 
         related = dictization.model_save.related_dict_save(data, context)
 
