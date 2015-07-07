@@ -1,0 +1,68 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.notification-widget {
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.notification-widget .notification-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #007ce0;
+  letter-spacing: 0.01em;
+  line-height: 20px;
+  padding: 20px;
+}
+.notification-widget .notification-title .close {
+  margin-left: 20px;
+  float: right;
+  top: 0;
+}
+.notification-widget .notification-message {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #007ce0;
+  letter-spacing: 0.01em;
+}
+.popup-invite .notification-widget {
+  position: relative;
+}
+.popup-invite .notification-widget .notification-title {
+  background-color: #1ebfb3;
+  letter-spacing: 0.01em;
+  padding: 32.5px;
+}
+.popup-invite .notification-widget .notification-title .close {
+  position: absolute;
+  right: 20px;
+  line-height: 85px;
+}
+.popup-invite .notification-widget .bottom-actions {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+.invite-widget {
+  height: 475px;
+  width: 890px;
+  background-color: #eeeeee;
+  padding: 60px;
+  background-image: url('/images/backgrounds/pixels_white.png');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100%;
+}
+.invite-actions {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}

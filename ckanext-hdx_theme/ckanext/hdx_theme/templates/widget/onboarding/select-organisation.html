@@ -1,0 +1,60 @@
+{#
+Select organization widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/select-organization.html', id="selectOrganizationPopup") }}
+#}
+
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-select-organisation" %}
+
+{% resource 'hdx_theme/widget/onboarding/select-organisation.css' %}
+{% extends "widget/onboarding/two-column.html" %}
+
+{% block left_content %}
+    <div>
+        <div class="large-title">Prepare to share data</div>
+        <div class="mTop20 large-text">Sharing data on HDX is easy.</div>
+        <div class="mTop20 regular-text">
+            Data on HDX is <strong>shared through organisations.</strong><br/>
+            Create a new organisation or join an existing one. <br/>
+            Data can be shared publicly or privately with members of an organisation.
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_content %}
+    <div class="hide">
+        <div class="bold-regular-text">Find your organisation: </div>
+        <div class="regular-text">see if your organisation exists by scrolling through the list below:</div>
+
+        <div class="mTop20">Insert SELECT2 here :)</div>
+        <div class="regular-text mTop20">Don't see your organisation? <a href="#">Request a new organisation</a></div>
+        <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.</div>
+        <div class="regular-text mTop20">If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
+    </div>
+
+    <div class="">
+        <div class="bold-regular-text">Create a new organisation: </div>
+        <div class="regular-text">Tell us a bit more about your organisation. We will review your request and get back to you within 24 hours. Check <a href="#">existing organisations</a></div>
+
+        <div class="mTop20 control">
+            <input id="org-name" class="full-width required" type="text">
+            <label for="org-name">Name of organisation</label>
+        </div>
+
+        <div class="mTop20 control">
+            <input id="org-url" class="full-width required" type="text">
+            <label for="org-url">URL of organisation</label>
+        </div>
+    </div>
+{% endblock %}
+
+{% block actions %}
+    <input class="btn btn-empty btn-empty-black btn-large" type="button" value="Skip">
+    <input class="btn btn-primary btn-large mL45" type="button" value="Submit">
+{% endblock %}
+
