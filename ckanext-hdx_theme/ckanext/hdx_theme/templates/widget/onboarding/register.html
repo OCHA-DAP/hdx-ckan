@@ -1,0 +1,60 @@
+{#
+Register widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/register.html', id="registerPopup") }}
+#}
+
+{% resource 'hdx_theme/widget/onboarding/register.css' %}
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-register" %}
+
+{% extends "widget/onboarding/two-column.html" %}
+
+{% block left_content %}
+    <div>
+        <div class="center large-title">Welcome to <strong>HDX</strong></div>
+        <div class="mTop20 large-text">Your email has been verified.</div>
+        <div class="large-text">Now you can register your account</div>
+        <div class="center">
+            <img class="mTop35 envelope " src="/images/onboarding/registration.png">
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_content %}
+    <div class="register-form">
+        <div class="small-form-title">Please fill out the following:</div>
+        <div class="mTop20 control">
+            <input id="register-username" class="full-width required" type="text">
+            <label for="register-username">Username</label>
+        </div>
+        <div class="mTop10 control">
+            <input id="register-password" class="full-width required" type="password">
+            <label for="register-password">Password</label>
+        </div>
+        <div class="row mTop10">
+            <div class="col-xs-6">
+                <div class="control">
+                    <input id="register-first-name" class="full-width required" type="text">
+                    <label for="register-first-name">First Name</label>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <div class="control">
+                    <input id="register-last-name" class="full-width required" type="text">
+                    <label for="register-last-name">Last Name</label>
+                </div>
+            </div>
+        </div>
+        <div class="mTop10 captcha">Captcha here :)</div>
+
+    </div>
+{% endblock %}
+{% block actions %}
+    <input class="btn btn-primary btn-large" type="button" value="Register">
+{% endblock %}
+

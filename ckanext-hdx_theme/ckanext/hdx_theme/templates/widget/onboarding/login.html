@@ -1,0 +1,52 @@
+{#
+Shows the login popup
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+#}
+{% resource 'hdx_theme/popup' %}
+{% resource 'hdx_theme/login-widget' %}
+{% set class = "popup-onboarding" %}
+
+{% extends "widget/popup/popup.html" %}
+
+{% block titlebar %}{% endblock %}
+{% block content %}
+    <div class="login-widget">
+        <div class="row">
+            <div class="login-top">
+                <div class="login-photo">
+                    <img src="/images/icons/wfp-icon.png" />
+                </div>
+                <i class="close glyphicon glyphicon-remove"></i>
+            </div>
+        </div>
+        <div class="row">
+            <div class="login-content">
+                <div class="col-xs-12">
+                    <div class="username-text center">Alexandru Artimon</div>
+                    <div class="email-text center"> <span>aalecs@gmail.com</span>&nbsp;<span><a href="#">Not you?</a></span></div>
+                    <div class="username hide mTop10 control">
+                        <input id="login-email"  class="full-width required" type="text">
+                        <label for="login-email">Email</label>
+                    </div>
+                    <div class="password mTop10 control">
+                        <input id="login-password" class="full-width required" type="password">
+                        <label for="login-password">Password</label>
+                    </div>
+                    <div class="checkbox-style mTop10"><input id="login-remember-me" type="checkbox"><label for="login-remember-me">Remember me</label> </div>
+                    <div class=" mTop10"><input class="full-width btn btn-primary btn-large" type="button" value="Login"> </div>
+                    <div class="member center mTop10"><a href="#">Forgot your password?</a></div>
+                    <div class="member center">Not a member? <a href="#">Register</a></div>
+
+                </div>
+            </div>
+        </div>
+        <div>
+
+        </div>
+    </div>
+{% endblock %}

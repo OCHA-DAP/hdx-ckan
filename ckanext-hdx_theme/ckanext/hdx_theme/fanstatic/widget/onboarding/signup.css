@@ -1,0 +1,72 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.signup-widget {
+  height: 560px;
+  width: 890px;
+  background-color: #007ce0;
+  background-image: url('/images/backgrounds/pixels_white.png');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100%;
+  color: #ffffff;
+}
+.signup-widget .close {
+  margin-top: 25px;
+  margin-right: 25px;
+}
+.signup-widget .inner-bg {
+  background-image: url('/images/backgrounds/browse_illustration.png');
+  background-position: bottom right;
+  background-size: 430px;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  padding: 60px;
+}
+.signup-widget .signup-list {
+  margin-left: 0;
+  list-style: none;
+  padding-left: 10px;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+.signup-widget .signup-list .starred:after {
+  content: "*";
+  margin-left: 5px;
+}
+.signup-widget .signup-list li:before {
+  display: inline-block;
+  content: "-";
+  width: 1em;
+  margin-left: -10px;
+}
+.signup-widget .signup-list li.starred-reason {
+  font-size: 10px;
+  font-style: italic;
+}
+.signup-widget .signup-list li.starred-reason:before {
+  content: "*";
+}
+.signup-widget .signup-box {
+  width: 370px;
+  height: 230px;
+  padding: 35px;
+  background-color: #eeeeee;
+  border-radius: 6px;
+}
+.signup-widget .signup-action {
+  text-transform: none;
+}
+.signup-widget .signup-action i {
+  float: right;
+  margin-left: 8px;
+  font-size: 14px;
+  margin-top: 1px;
+}

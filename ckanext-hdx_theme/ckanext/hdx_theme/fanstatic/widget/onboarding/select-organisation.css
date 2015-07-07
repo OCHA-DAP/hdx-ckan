@@ -1,0 +1,15 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.two-column-select-organisation .two-column-left {
+  height: 560px;
+}
+.two-column-select-organisation .two-column-right {
+  height: 560px;
+  padding: 60px;
+}

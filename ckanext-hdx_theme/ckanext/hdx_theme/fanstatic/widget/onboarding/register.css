@@ -1,0 +1,19 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.two-column-register .two-column-left {
+  height: 560px;
+}
+.two-column-register .two-column-left .envelope {
+  height: 250px;
+}
+.two-column-register .two-column-right {
+  height: 560px;
+  color: #000000;
+  padding: 60px 60px 0;
+}

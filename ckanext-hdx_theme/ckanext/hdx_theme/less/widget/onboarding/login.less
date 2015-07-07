@@ -1,0 +1,67 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+
+@loginTopHeight: 145px;
+@loginTopWidth: @popupWidth;
+@loginPhotoSize: 105px;
+@loginPhotoBorderSize: 5px;
+@loginPhotoTotalSize: (@loginPhotoSize + 2*@loginPhotoBorderSize);
+
+.login-widget {
+  .login-top {
+    position: relative;
+    background-image: url('/images/backgrounds/browse_illustration.png');
+    background-color: @blueColor;
+    background-size: 400px;
+    background-position: 15px -97px;
+    background-repeat: no-repeat;
+
+    height: @loginTopHeight;
+    width: @loginTopWidth;
+
+    .login-photo {
+      background-color: @greenColor;
+      width: @loginPhotoSize;
+      height: @loginPhotoSize;
+      border-radius: @loginPhotoTotalSize/2;
+      border: @loginPhotoBorderSize solid @whiteColor;
+
+      position: absolute;
+      top: @loginTopHeight - @loginPhotoTotalSize/2;
+      left: @loginTopWidth/2 - @loginPhotoSize/2;
+
+      img {
+        height: 100%;
+        width: 100%;
+        border-radius: @loginPhotoTotalSize/2;
+      }
+    }
+
+    .close {
+      float: right;
+      margin-top: @paddingSmall;
+      margin-right: @paddingSmall;
+    }
+  }
+
+
+
+  .login-content {
+    background-color: @extraLightGrayColor;
+    height: 340px;
+    width: @loginTopWidth;
+    padding: @loginPhotoTotalSize/2 15px @paddingNormal;
+
+    .username-text {
+      .gothamBoldFont();
+      color: @blackColor;
+      line-height: 23px;
+      .letter-spacing-1();
+    }
+
+    .email-text {
+      .gothamBookFont(14px);
+    }
+  }
+}
