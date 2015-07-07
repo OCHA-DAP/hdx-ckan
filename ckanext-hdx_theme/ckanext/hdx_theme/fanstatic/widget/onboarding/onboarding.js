@@ -20,15 +20,26 @@ function showOnboardingWidget(id){
         }, 0);
     });
 
+    $(id).find('input[type="password"], input[type="text"]');
+
+    function _triggerInputDataClass($this){
+        if ($this.val() === "")
+            $this.removeClass("input-content");
+        else
+            $this.addClass("input-content");
+    }
+
+    $(id).find('input[type="password"], input[type="text"]').each(
+        function(idx, el){
+            _triggerInputDataClass($(el));
+        }
+    );
     $(id).find('input[type="password"], input[type="text"]').on("keyup",
         function(){
             var $this = $(this);
-            if ($this.val() === "")
-                $this.removeClass("input-content");
-            else
-                $this.addClass("input-content");
+            _triggerInputDataClass($this);
         }
-    )
+    );
 
     return false;
 }
