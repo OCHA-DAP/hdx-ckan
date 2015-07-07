@@ -49,7 +49,7 @@ Example:
         </div>
     </div>
     <div class="bottom-actions">
-        <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" value="Skip">
-        <input class="mL35 btn btn-primary btn-large pull-right" type="button" value="Next">
+        <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Skip">
+        <input class="mL35 btn btn-primary btn-large pull-right" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#donePopup');" value="Next">
     </div>
 {% endblock %}
