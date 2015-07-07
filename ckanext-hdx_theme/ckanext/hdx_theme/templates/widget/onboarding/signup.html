@@ -40,17 +40,19 @@ Example:
                     <a class="btn btn-demo signup-action" type="button"> See it in action <i class="glyphicon glyphicon-play"></i></a>
                 </div>
                 <div class="col-xs-6">
-                    <div class="signup-box">
-                        <div class="control">
-                            <input id="signup-email" class="full-width required" type="text">
-                            <label for="signup-email">Your Email Address</label>
+                    <form action="/user/register" method="post">
+                        <div class="signup-box">
+                            <div class="control">
+                                <input id="field-email" name="email" class="full-width required" type="text">
+                                <label for="field-email">Your Email Address</label>
+                            </div>
+                            <div class="mTop10">
+                                <input id="signup-send-updates" type="checkbox"><label for="signup-send-updates">Allow HDX to send updates</label>
+                            </div>
+                            <input class="mTop10 full-width btn btn-primary btn-large" type="submit" value="Sign up">
+                            <div class="member center mTop10">Already a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#loginPopup');">Sign in</a></div>
                         </div>
-                        <div class="mTop10">
-                            <input id="signup-send-updates" type="checkbox"><label for="signup-send-updates">Allow HDX to send updates</label>
-                        </div>
-                        <input class="mTop10 full-width btn btn-primary btn-large" type="button" value="Sign up">
-                        <div class="member center mTop10">Already a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#loginPopup');">Sign in</a></div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
