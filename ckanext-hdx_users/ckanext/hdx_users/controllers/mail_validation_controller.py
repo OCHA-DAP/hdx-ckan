@@ -330,7 +330,7 @@ class ValidationController(ckan.controllers.user.UserController):
     def logged_in(self):
         # redirect if needed
         came_from = request.params.get('came_from', '')
-        if self._sane_came_from(came_from):
+        if h.url_is_local(came_from):
             return h.redirect_to(str(came_from))
 
         if c.user:
