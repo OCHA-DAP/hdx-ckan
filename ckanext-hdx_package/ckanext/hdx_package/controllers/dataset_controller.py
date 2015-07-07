@@ -5,6 +5,7 @@ import logging
 # from urllib import urlencode
 #import datetime
 import cgi
+from string import lower
 
 from ckanext.hdx_package.helpers import helpers
 #from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
@@ -334,7 +335,7 @@ class DatasetController(PackageController):
                 #     result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
                 # elif result_dict['format'] == GEOJSON_FORMAT:
                 #     result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
-                if result_dict['format'] in GIS_FORMATS:
+                if lower(result_dict['format']) in GIS_FORMATS:
                     gis_data['url'] = result_dict['url']
                     result_dict['shape_info'] = self._get_shape_info_as_json(gis_data)
                 if 'shape_info' in result_dict and result_dict['shape_info'] is not None:
@@ -712,8 +713,8 @@ class DatasetController(PackageController):
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
-        c.hdx_activities = get_action(
-            'hdx_get_activity_list')(context, act_data_dict)
+        # c.hdx_activities = get_action(
+        #     'hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
 
         # count the number of resource downloads
@@ -811,7 +812,7 @@ class DatasetController(PackageController):
         return False
 
     def _has_shape_info(self, resource):
-        if ('format' in resource) and (resource['format'] in GIS_FORMATS) and ('shape_info' in resource) and (
+        if ('format' in resource) and (lower(resource['format']) in GIS_FORMATS) and ('shape_info' in resource) and (
                     resource['shape_info'] != 'null'):
             shp_info = json.loads(resource['shape_info'])
             if 'success' in shp_info and shp_info['success'] == 'true':
