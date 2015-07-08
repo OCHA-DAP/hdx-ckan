@@ -1,0 +1,37 @@
+{#
+Notification widget:
+   - title bar
+   - content
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/notification.html', id="signupPopup", title="Good job!") }}
+#}
+{% resource 'hdx_theme/popup' %}
+{% resource 'hdx_theme/onboarding' %}
+{% resource 'hdx_theme/widget/onboarding/notification.css' %}
+{% set class = class or "popup-onboarding" %}
+
+{% extends "widget/popup/popup.html" %}
+
+{% block titlebar %}{% endblock %}
+{% block content %}
+    <div class="notification-widget">
+        <div class="notification-title">
+            {% block notification_title %}
+                {{ title }}
+            {% endblock %}
+            <i class="close glyphicon glyphicon-remove"></i>
+        </div>
+        <div>
+            <div>
+                {% block notification_content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

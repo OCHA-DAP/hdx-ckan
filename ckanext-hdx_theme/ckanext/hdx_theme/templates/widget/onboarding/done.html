@@ -1,0 +1,25 @@
+{#
+Done widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/done.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "Thank you - you're all set." %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+    <div class="done-widget">
+        <div class="center">
+            <img class="gif mTop20" src="/images/onboarding/outgoingmail.gif">
+            <div class="mTop30 notification-message">
+                Invitation has been sent.
+            </div>
+        </div>
+    </div>
+{% endblock %}

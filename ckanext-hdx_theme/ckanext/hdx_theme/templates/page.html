@@ -8,6 +8,8 @@
   file.
   #}
   {%- block header %}
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+    {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
     {% include "header.html" %}
   {% endblock -%}
 
@@ -157,6 +159,7 @@
   {% if g.tracking_enabled %}
       {% resource 'hdx_theme/indicator/tracking.js' %}
   {% endif %}
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
   {% resource 'hdx_theme/mailchimp' %}

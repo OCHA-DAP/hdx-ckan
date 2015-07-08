@@ -1,0 +1,55 @@
+{#
+Invige widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
+#}
+{% resource 'hdx_theme/popup' %}
+{% resource 'hdx_theme/onboarding' %}
+{% resource 'hdx_theme/widget/onboarding/invite.css' %}
+
+{% set title = "Your request has been submitted. You will receive a confirmation in the next 24 hours." %}
+{% set class = "popup-onboarding popup-invite" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_title %}
+    <div class="center regular-text">
+        {{ title }}
+    </div>
+{% endblock %}
+
+{% block notification_content %}
+    <div class="invite-widget">
+        <div class="row">
+            <div class="col-xs-6">
+                <div class="large-title">Invite friends & colleagues</div>
+                <div class="mTop30">HDX is used over 200 countries and territories. Help us connect more data and people by introducing HDX to your network.</div>
+                <div class="mTop20">
+                    <div class="mTop10 control">
+                        <input id="invite-email1" class="full-width" type="text">
+                        <label for="invite-email1">Email address</label>
+                    </div>
+                    <div class="mTop10 control">
+                        <input id="invite-email2" class="full-width" type="text">
+                        <label for="invite-email2">Email address</label>
+                    </div>
+                    <div class="mTop10 control">
+                        <input id="invite-email3" class="full-width" type="text">
+                        <label for="invite-email3">Email address</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6">
+                <img class="gif" style="width: 330px;" src="/images/onboarding/invitefriends.gif">
+            </div>
+        </div>
+    </div>
+    <div class="bottom-actions">
+        <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Skip">
+        <input class="mL35 btn btn-primary btn-large pull-right" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#donePopup');" value="Next">
+    </div>
+{% endblock %}

@@ -47,6 +47,16 @@
   }
 }
 
+.btn-demo {
+  border: 2px solid @whiteColor;
+  border-radius: 5px;
+  padding: 8px 10px;
+  margin-right: 20px;
+  background: none;
+  box-shadow: none;
+
+}
+
 .btn-primary{
   background-color: @blueColor;
   color: @whiteColor;
@@ -54,6 +64,26 @@
 
 .btn-danger{
   background-color: @orangeColor;
+}
+
+.btn-empty, .btn-empty-black {
+  background: none;
+  text-align: left;
+  padding-left: 0;
+  padding-right: 0;
+  width: auto;
+  color: @blueColor;
+  &:hover, &:focus {
+    color: @blueColor;
+    background: none;
+  }
+}
+
+.btn-empty-black {
+  color: @blackColor;
+  &:hover, &:focus {
+    color: @blackColor;
+  }
 }
 
 
