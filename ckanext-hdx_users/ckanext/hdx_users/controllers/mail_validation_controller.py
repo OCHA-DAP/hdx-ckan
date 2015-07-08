@@ -223,7 +223,7 @@ class ValidationController(ckan.controllers.user.UserController):
             user = get_action('user_create')(context, data_dict)
             token = get_action('token_create')(context, user)
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'], 'extras': ue_helpers.get_default_extras()})
-            print user_extra
+            # print user_extra
 
         except NotAuthorized:
             abort(401, _('Unauthorized to create user %s') % '')
@@ -340,8 +340,8 @@ class ValidationController(ckan.controllers.user.UserController):
     def logged_in(self):
         # redirect if needed
         came_from = request.params.get('came_from', '')
-        if self._sane_came_from(came_from):
-            return h.redirect_to(str(came_from))
+        # if self._sane_came_from(came_from):
+        #     return h.redirect_to(str(came_from))
 
         if c.user:
             context = None
@@ -364,11 +364,10 @@ class ValidationController(ckan.controllers.user.UserController):
                 h.redirect_to(self._get_repoze_handler('logout_handler_path'))
 
             if 'created' in user_dict:
-                time_passed = datetime.datetime.now(
-                ) - dateutil.parser.parse(user_dict['created'])
+                time_passed = datetime.datetime.now() - dateutil.parser.parse(user_dict['created'])
             else:
                 time_passed = None
-            if not user_dict['activity'] and time_passed and time_passed.days < 3:
+            if 'activity' in user_dict and (not user_dict['activity']) and time_passed and time_passed.days < 3:
                 # /dataset/new
                 contribute_url = h.url_for(controller='package', action='new')
                 # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
@@ -377,8 +376,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 # h.flash_success(_(message), True)
                 return h.redirect_to(controller='user', action='dashboard_organizations')
             else:
-                h.flash_success(_("%s is now logged in") %
-                                user_dict['display_name'])
+                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')
