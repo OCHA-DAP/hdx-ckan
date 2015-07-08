@@ -58,8 +58,7 @@
                 </a>
             {% endif %}
 
-            {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
-            <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
+            <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
             </a>
 
