@@ -302,8 +302,7 @@ class DatasetController(PackageController):
             data['id'] = resource_id
             # Added by HDX - adding perma_link
             if 'resource_type' in data and u'file.upload' == data['resource_type']:
-                data['perma_link'] = self._get_perma_link(
-                    dataset_id, resource_id)
+                data['perma_link'] = None #Depricated in 2.3
 
             get_action('resource_update')(context, data)
             if 'format' in data:
@@ -321,8 +320,7 @@ class DatasetController(PackageController):
             # Now that we have a resource id we want to add the
             # perma_link url to the resource
             if 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
-                result_dict['perma_link'] = self._get_perma_link(
-                    dataset_id, result_dict['id'])
+                result_dict['perma_link'] = None #depricated in 2.3
                 get_action('resource_update')(context, result_dict)
             if 'format' in result_dict:
                 if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
@@ -674,7 +672,7 @@ class DatasetController(PackageController):
 
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
-            self._create_perma_link_if_needed(id, resource)
+            #self._create_perma_link_if_needed(id, resource)
 
             # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
@@ -991,7 +989,7 @@ class DatasetController(PackageController):
             # required for nav menu
             c.pkg = context['package']
             c.pkg_dict = c.package
-            self._create_perma_link_if_needed(id, c.resource)
+            #self._create_perma_link_if_needed(id, c.resource)
         except NotFound:
             abort(404, _('Resource not found'))
         except NotAuthorized:
