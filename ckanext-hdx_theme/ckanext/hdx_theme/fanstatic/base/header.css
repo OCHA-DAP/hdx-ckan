@@ -148,7 +148,6 @@ a:focus,
   border: none;
   background-color: #888888;
   color: #ffffff;
-  box-shadow: none;
 }
 .btn:hover,
 .btn:focus,

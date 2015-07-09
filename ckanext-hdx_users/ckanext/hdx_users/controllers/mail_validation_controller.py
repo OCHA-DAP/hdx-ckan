@@ -28,6 +28,7 @@ import ckan.lib.maintain as maintain
 import ckan.plugins as p
 
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
+import ckanext.hdx_users.logic.schema as user_reg_schema
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -44,6 +45,11 @@ NotAuthorized = logic.NotAuthorized
 unflatten = dictization_functions.unflatten
 
 Invalid = df.Invalid
+
+OnbNotAuth = {'success': False, 'error': {'message': _('Unauthorized to create user')}}
+OnbUserNotFound = {'success': False, 'error': {'message': 'User not found'}}
+OnbIntegrityErr = {'success': False, 'error': {'message': 'Integrity Error'}}
+OnbSuccess = {'success': True}
 
 
 def name_validator_with_changed_msg(val, context):
@@ -128,7 +134,7 @@ class ValidationController(ckan.controllers.user.UserController):
                     'Request access for {name} ({email}) of {org} with reason: {reason}'.format(name=name, email=email,
                                                                                                 org=org, reason=reason))
                 try:
-                    send_mail(name, email, org, reason)
+                    # send_mail(name, email, org, reason)
                     h.flash_success(_('We will check your request and we will send you an email!'))
                     h.redirect_to('/')
                 except mailer.MailerException, e:
@@ -161,6 +167,62 @@ class ValidationController(ckan.controllers.user.UserController):
         c.user = save_user
 
         return result
+
+    def register_email(self, data=None, errors=None, error_summary=None):
+        """
+
+        """
+        temp_schema = user_reg_schema.register_user_schema()
+        if 'name' in temp_schema:
+            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+                                   temp_schema['name']]
+        context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
+                   'schema': temp_schema, 'save': 'save' in request.params}
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+        if 'email' in data_dict:
+            data_dict['name'] = data_dict['email']
+        context['message'] = data_dict.get('log_message', '')
+
+        try:
+            check_access('user_create', context, data_dict)
+            check_access('user_can_register', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return {'success': False, 'error': {'message': error_summary}}
+
+        # hack to disable check if user is logged in
+        save_user = c.user
+        c.user = None
+        try:
+            # TODO
+            # captcha.check_recaptcha(request)
+            user = get_action('user_create')(context, data_dict)
+            token = get_action('token_create')(context, user)
+            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
+                                                                   'extras': ue_helpers.get_initial_extras()})
+
+        except NotAuthorized:
+            return OnbNotAuth
+            # abort(401, _('Unauthorized to create user %s') % '')
+        except NotFound, e:
+            return OnbUserNotFound
+            # abort(404, _('User not found'))
+        except DataError:
+            return OnbIntegrityErr
+            # abort(400, _(u'Integrity Error'))
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return {'success': False, 'error': {'message': error_summary}}
+        if not c.user:
+            # Send validation email
+            self.send_validation_email(user, token)
+
+        c.user = save_user
+        return OnbSuccess
 
     def post_register(self):
         """
@@ -222,7 +284,8 @@ class ValidationController(ckan.controllers.user.UserController):
             captcha.check_recaptcha(request)
             user = get_action('user_create')(context, data_dict)
             token = get_action('token_create')(context, user)
-            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'], 'extras': ue_helpers.get_default_extras()})
+            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
+                                                                   'extras': ue_helpers.get_default_extras()})
             # print user_extra
 
         except NotAuthorized:
