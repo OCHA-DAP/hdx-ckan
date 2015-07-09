@@ -31,7 +31,9 @@ $(document).ready(function(){
 
                     var path = "/api/action/" + action + "_" + type;
                     $.post(path, JSON.stringify({id: id}), function(result){
-                        console.log(result);
+                        if (!result.success){
+                            console.error(result.result);
+                        }
                     }, "json");
                 })
             });
