@@ -434,7 +434,7 @@ def hdx_get_shape_info(context, data_dict):
         log.error("Error retrieving the shape info content")
         log.error(sys.exc_info()[0])
         shape_info = json.dumps({
-            'success': 'false',
+            'state': 'failure',
             'message': 'Error retrieving the shape info content',
             'layer_id': 'None',
             'error_type': 'ckan-generated-error',

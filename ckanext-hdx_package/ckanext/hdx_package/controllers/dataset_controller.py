@@ -6,13 +6,13 @@ import logging
 #import datetime
 import cgi
 from string import lower
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 
 from ckanext.hdx_package.helpers import helpers
 #from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
 #from formencode import foreach
 
 from pylons import config
-from genshi.template import MarkupTemplate
 #from genshi.template.text import NewTextTemplate
 #from paste.deploy.converters import asbool
 
@@ -31,7 +31,7 @@ import ckan.new_authz as new_authz
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 
-from ckan.common import OrderedDict, _, json, request, c, g, response
+from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
@@ -59,9 +59,6 @@ CONTENT_TYPES = {
     'json': 'application/json;charset=utf-8',
 }
 
-ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
-GEOJSON_FORMAT = 'geojson'
-GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
 
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
@@ -288,58 +285,24 @@ class DatasetController(PackageController):
             # return render(self._new_template(package_type), extra_vars={'stage':
             # stage})
 
-    def _get_perma_link(self, dataset_id, resource_id):
-        """
-        Get perma link for resource
-        """
-        perma_link = h.url_for(
-            'perma_storage_file', id=dataset_id, resource_id=resource_id)
-        if '://' not in perma_link:
-            perma_link = config.get(
-                'ckan.site_url', '') + perma_link
-        return perma_link
+    # def _get_perma_link(self, dataset_id, resource_id):
+    #     """
+    #     Get perma link for resource
+    #     """
+    #     perma_link = h.url_for(
+    #         'perma_storage_file', id=dataset_id, resource_id=resource_id)
+    #     if '://' not in perma_link:
+    #         perma_link = config.get(
+    #             'ckan.site_url', '') + perma_link
+    #     return perma_link
 
     def _update_or_create_resource(self, context, data, dataset_id, resource_id):
         gis_data = {"dataset_id": dataset_id, "resource_id": resource_id}
         if resource_id:
-            data['id'] = resource_id
-            # Added by HDX - adding perma_link
-            if 'resource_type' in data and u'file.upload' == data['resource_type']:
-                data['perma_link'] = self._get_perma_link(
-                    dataset_id, resource_id)
-
             get_action('resource_update')(context, data)
-            if 'format' in data:
-                # if data['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                #     data['shape'] = json.dumps(self._get_geojson(data['url']))
-                # if data['format'] == GEOJSON_FORMAT:
-                #     data['shape'] = json.dumps(self._get_json_from_resource(data['url']))
-                if data['format'] in GIS_FORMATS:
-                    gis_data['url'] = data['url']
-                    data['shape_info'] = self._get_shape_info_as_json(gis_data)
-                if 'shape_info' in data and data['shape_info'] is not None:
-                    get_action('resource_update')(context, data)
 
         else:
-            result_dict = get_action('resource_create')(context, data)
-
-            # Added by HDX - adding perma_link
-            # Now that we have a resource id we want to add the
-            # perma_link url to the resource
-            if 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
-                result_dict['perma_link'] = self._get_perma_link(
-                    dataset_id, result_dict['id'])
-                get_action('resource_update')(context, result_dict)
-            if 'format' in result_dict:
-                # if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                #     result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
-                # elif result_dict['format'] == GEOJSON_FORMAT:
-                #     result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
-                if lower(result_dict['format']) in GIS_FORMATS:
-                    gis_data['url'] = result_dict['url']
-                    result_dict['shape_info'] = self._get_shape_info_as_json(gis_data)
-                if 'shape_info' in result_dict and result_dict['shape_info'] is not None:
-                    get_action('resource_update')(context, result_dict)
+            get_action('resource_create')(context, data)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
