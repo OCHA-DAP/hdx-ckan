@@ -17,8 +17,21 @@ mapper = orm.mapper
 log = logging.getLogger(__name__)
 # DomainObject = domain_object.DomainObject
 
-# MetaData = meta.MetaData
-# metadata = MetaData()
+HDX_ONBOARDING_USER_REGISTERED = 'hdx_onboarding_user_registered'
+HDX_ONBOARDING_USER_VALIDATED = 'hdx_onboarding_user_validated'
+HDX_ONBOARDING_DETAILS = 'hdx_onboarding_details'
+HDX_ONBOARDING_FOLLOWS = 'hdx_onboarding_follows'
+HDX_ONBOARDING_ORG = 'hdx_onboarding_org'
+HDX_ONBOARDING_FRIENDS = 'hdx_onboarding_friends'
+
+USER_STATUSES = [
+    HDX_ONBOARDING_USER_REGISTERED,
+    HDX_ONBOARDING_USER_VALIDATED,
+    HDX_ONBOARDING_DETAILS,
+    HDX_ONBOARDING_FOLLOWS,
+    HDX_ONBOARDING_ORG,
+    HDX_ONBOARDING_FRIENDS
+]
 
 
 class ValidationToken(DomainObject):
@@ -50,15 +63,8 @@ validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                Column('user_id', types.UnicodeText, ForeignKey('user.id')),
                                Column('token', types.UnicodeText),
-                               Column('valid', types.Boolean, default=0)
+                               Column('valid', types.Boolean)
                                )
-
-# validation_token_table = Table('validation_tokens', metadata,
-#                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
-#                                Column('user_id', types.UnicodeText, ForeignKey('user.id')),
-#                                Column('token', types.UnicodeText),
-#                                Column('valid', types.Boolean)
-#                                )
 
 mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
 
@@ -68,14 +74,10 @@ def setup():
     Create our tables!
     '''
     print 'User Model setup...'
-    print "user table exists:" + str(model.user_table.exists())
     if model.user_table.exists() and not validation_token_table.exists():
-        print 'validation_token_table.create()'
         print CreateTable(validation_token_table)
         validation_token_table.create()
-        # meta.metadata.create_all()
         print 'DONE validation_token_table.create()'
-        log.debug('Validation Token table created')
     print 'DONE User Model setup...'
 
 
