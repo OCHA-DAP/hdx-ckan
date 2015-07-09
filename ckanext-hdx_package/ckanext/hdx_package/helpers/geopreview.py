@@ -6,11 +6,15 @@ Created on Jul 07, 2015
 import json
 from string import lower
 from pylons import config
-from ckanext.hdx_package.actions.create import get_action, _get_or_bust
+
+import ckan.logic as logic
 
 ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
 GEOJSON_FORMAT = 'geojson'
 GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+
+_get_or_bust = logic.get_or_bust
+get_action = logic.get_action
 
 
 def _get_shape_info_as_json(gis_data):
