@@ -5,6 +5,9 @@
 {% set is_not_zipped = h.is_not_zipped(res) %}
 {% set resource_display_name = h.resource_display_name(res) %}
 
+{# This should be included via page.html but it's not loading for me. Investigate after template upgrade to 2.3 in complete and delete this #}
+{% resource 'hdx_theme/indicator/tracking.js' %}
+{# #}
 {% resource 'hdx_theme/bs_popover.js' %}
 
 <li class="resource-item">
@@ -55,8 +58,7 @@
                 </a>
             {% endif %}
 
-            {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
-            <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" target="_blank">
+            <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
             </a>
 

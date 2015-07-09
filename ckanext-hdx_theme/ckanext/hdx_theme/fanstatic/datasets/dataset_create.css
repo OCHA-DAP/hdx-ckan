@@ -261,6 +261,11 @@ input[type=radio], input[type=checkbox] {
         top: -160px;
     }
 
+    .dataset-form-resource-types input[type="radio"]:checked + label.type-file + i {
+        top: 235px;
+        left: 330px;
+    }
+
     .dataset-form-resource-types input[type="radio"]:checked + label + i{
         display: block;
         background: white;
