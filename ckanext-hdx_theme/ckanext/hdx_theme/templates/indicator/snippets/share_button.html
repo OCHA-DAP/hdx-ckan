@@ -9,7 +9,7 @@
 {% resource 'hdx_theme/css/hdx-icons.css' %}
 {% resource 'hdx_theme/indicator/share_button.js' %}
 
-<a href="#" class="{{ class }} {{ button_class }}" data-module-placement="{{ placement }}"  data-module="bs_popover" data-module-social_div_id="{{ dataset_social }}"
+<a href="javascript:void(0);" id="share_button" target-url="{{url}}" short-path="{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}" class="{{ class }} {{ button_class }}" data-module-placement="{{ placement }}"  data-module="bs_popover" data-module-social_div_id="{{ dataset_social }}"
    data-module-social_wrapper_div_id="{{ dataset_social_wrapper }}" title="{{ panel_title }}" onclick="return false;">
   {% if icon %}
     <img src="/images/homepage/share.svg" alt="Share" />
