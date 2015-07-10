@@ -23,7 +23,8 @@
   position: relative;
 }
 .popup.popup-onboarding input[type="text"],
-.popup.popup-onboarding input[type="password"] {
+.popup.popup-onboarding input[type="password"],
+.popup.popup-onboarding textarea {
   height: 44px;
   border-radius: 6px;
   border: 1px solid white;
@@ -32,11 +33,13 @@
   color: #333333;
 }
 .popup.popup-onboarding input[type="text"]:focus,
-.popup.popup-onboarding input[type="password"]:focus {
+.popup.popup-onboarding input[type="password"]:focus,
+.popup.popup-onboarding textarea:focus {
   outline: none;
 }
 .popup.popup-onboarding input[type="text"] ~ label,
-.popup.popup-onboarding input[type="password"] ~ label {
+.popup.popup-onboarding input[type="password"] ~ label,
+.popup.popup-onboarding textarea ~ label {
   color: #cccccc;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -51,11 +54,13 @@
   transition: 1s;
 }
 .popup.popup-onboarding input[type="text"] ~ label:after,
-.popup.popup-onboarding input[type="password"] ~ label:after {
+.popup.popup-onboarding input[type="password"] ~ label:after,
+.popup.popup-onboarding textarea ~ label:after {
   content: "";
 }
 .popup.popup-onboarding input[type="text"].input-content ~ label,
-.popup.popup-onboarding input[type="password"].input-content ~ label {
+.popup.popup-onboarding input[type="password"].input-content ~ label,
+.popup.popup-onboarding textarea.input-content ~ label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 10px;
@@ -64,11 +69,13 @@
   bottom: 1px;
 }
 .popup.popup-onboarding input[type="text"].required.input-content ~ label:after,
-.popup.popup-onboarding input[type="password"].required.input-content ~ label:after {
+.popup.popup-onboarding input[type="password"].required.input-content ~ label:after,
+.popup.popup-onboarding textarea.required.input-content ~ label:after {
   content: "";
 }
 .popup.popup-onboarding input[type="text"].required ~ label:after,
-.popup.popup-onboarding input[type="password"].required ~ label:after {
+.popup.popup-onboarding input[type="password"].required ~ label:after,
+.popup.popup-onboarding textarea.required ~ label:after {
   content: "*";
   margin-left: 5px;
   color: red;
