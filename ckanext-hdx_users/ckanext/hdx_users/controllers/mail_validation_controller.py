@@ -27,11 +27,13 @@ import ckan.lib.navl.dictization_functions as df
 import ckan.lib.maintain as maintain
 # from urllib import quote
 import ckan.plugins as p
+import exceptions as exceptions
 
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
-import ckan.lib.dictization.model_dictize as model_dictize
+# import ckan.lib.dictization.model_dictize as model_dictize
+import ckanext.hdx_theme.util.mail as hdx_mail
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -536,3 +538,40 @@ class ValidationController(ckan.controllers.user.UserController):
                               action='login', came_from=came_from)
             else:
                 return self.login(error=err)
+
+    def request_new_organization(self):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author}
+        try:
+            check_access('hdx_send_new_org_request', context)
+        except logic.NotAuthorized:
+            base.abort(401, _('Unauthorized to send a new org request'))
+
+        if 'save' in request.params:
+            try:
+                data = self._process_new_org_request()
+                self._validate_new_org_request_field(data)
+
+                get_action('hdx_send_new_org_request')(context, data)
+
+                data.clear()
+            except hdx_mail.NoRecipientException, e:
+                error_summary = e.error_summary
+                return json.dumps({'success': False, 'error': {'message': error_summary}})
+            except logic.ValidationError, e:
+                error_summary = e.error_summary
+                return json.dumps({'success': False, 'error': {'message': error_summary}})
+            except exceptions.Exception, e:
+                error_summary = e.error_summary
+                return json.dumps({'success': False, 'error': {'message': error_summary}})
+
+        return OnbSuccess
+
+    def _validate_new_org_request_field(self, data):
+        errors = {}
+        for field in ['title', 'description', 'your_email', 'your_name']:
+            if data[field].strip() == '':
+                errors[field] = [_('should not be empty')]
+
+        if len(errors) > 0:
+            raise logic.ValidationError(errors)
