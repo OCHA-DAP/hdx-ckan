@@ -6,6 +6,7 @@ Created on July 2nd, 2015
 
 import ckanext.hdx_user_extra.model as ue_model
 import ckan.logic as logic
+import sys
 
 NotFound = logic.NotFound
 
@@ -22,12 +23,14 @@ def user_extra_update(context, data_dict):
     # model = context['model']
     result = []
     for ue in data_dict['extras']:
-        user_extra = ue_model.UserExtra.get(user_id=data_dict['user_id'], key=ue['key'])
-        if user_extra is None:
-            raise NotFound
-        user_extra.value = ue['new_value']
-        session.add(user_extra)
-        session.commit()
-        result.append(user_extra)
+        try:
+            user_extra = ue_model.UserExtra.get(user_id=data_dict['user_id'], key=ue['key'])
+            if user_extra is None:
+                raise NotFound
+            user_extra.value = ue['new_value']
+            session.add(user_extra)
+            session.commit()
+            result.append(user_extra)
+        except:
+            print sys.exc_info()[0]
     return result
-
