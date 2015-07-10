@@ -13,7 +13,7 @@
 
 {% block content %}
 
-{% if (data.current_step == 'hdx_onboarding_details') %}
+{% if (data and data.current_step == 'hdx_onboarding_details') %}
   {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email) }}
 {% endif %}
 
