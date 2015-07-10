@@ -20,6 +20,15 @@ $(document).ready(function(){
     });
 
     $('#select-organisation-form').on('submit', function(){
+        $this = $(this);
+        $.post('/user/request_membership', $this.serialize(), function(result_data){
+            var result = JSON.stringify(result_data);
+            if (result.success){
+                closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
+            } else {
+                alert("Can't join org: " + result.error.message);
+            }
+        });
     });
 
     $('#create-organisation-form').on('submit', function(){
@@ -29,7 +38,7 @@ $(document).ready(function(){
             if (result.success){
                 closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
             } else {
-                alert("Can't invite friends: " + result.error.message);
+                alert("Can't create org: " + result.error.message);
             }
         })
     });
