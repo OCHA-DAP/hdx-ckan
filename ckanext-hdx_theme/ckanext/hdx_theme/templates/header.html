@@ -1,12 +1,13 @@
 {% block header_wrapper %}
+<div>
+  {{data}}
+</div>
 <header class="newHeader">
 <div class="homepage-header-user-bg">
   <div class="container">
     <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
         <div class="header-user-box pull-right">
-          {{data}}||||||||
-          {{ h.get_user_extra(user_id='d1c56d42-2e99-43e2-aeb1-fd42b0a7b5b6') }}
           {% if c.userobj %}
             <span class="dropdown">
               <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">

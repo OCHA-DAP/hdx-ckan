@@ -12,6 +12,7 @@ $(document).ready(function(){
                 var result = JSON.parse(result_data);
                 console.log(result);
                 if (result.success){
+                    $("#verifyPopup").find(".verify-email").html(email);
                     closeCurrentWidget($this);showOnboardingWidget('#verifyPopup');
                 } else {
                     alert("Can't signup: " + result.error.message);

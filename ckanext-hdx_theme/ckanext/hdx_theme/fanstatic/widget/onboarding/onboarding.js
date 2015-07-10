@@ -4,6 +4,7 @@ function closeCurrentWidget(self){
 
 function showOnboardingWidget(id){
     $(id).show();
+    $(id).find("input:first").focus();
 
     $(id).find('img.gif-auto-play').remove();
     $(id).find('img.gif').each(function(idx, element){
