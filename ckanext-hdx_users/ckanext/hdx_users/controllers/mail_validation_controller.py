@@ -219,7 +219,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
-            return {'success': False, 'error': {'message': error_summary}}
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
         if not c.user:
             # Send validation email
             self.send_validation_email(user, token)
@@ -250,7 +250,7 @@ class ValidationController(ckan.controllers.user.UserController):
             return OnbNotAuth
         except ValidationError, e:
             error_summary = e.error_summary
-            return {'success': False, 'error': {'message': error_summary}}
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
 
         # hack to disable check if user is logged in
         save_user = c.user
@@ -270,7 +270,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
-            return {'success': False, 'error': {'message': error_summary}}
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
         if not c.user:
             pass
         c.user = save_user
