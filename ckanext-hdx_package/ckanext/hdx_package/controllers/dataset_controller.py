@@ -793,7 +793,10 @@ class DatasetController(PackageController):
 
                 res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
                 name = resource['name']
-                result[name] = res_pbf_url
+                result[name] = {
+                    'url': res_pbf_url,
+                    'bounding_box': shp_info['bounding_box']
+                }
         return result
 
     # @staticmethod

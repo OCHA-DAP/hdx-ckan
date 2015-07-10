@@ -19,7 +19,16 @@ var options = {
 
 };
 
-function getFieldListAndBuildLayer(value, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key) {
+function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key) {
+    var value = layer_data['url'];
+
+    var bboxArray = layer_data['bounding_box'].replace("BOX(", "").replace(")", "").split(",");
+    var xmin = bboxArray[0].split(" ")[0];
+    var ymin = bboxArray[0].split(" ")[1];
+    var xmax = bboxArray[1].split(" ")[0];
+    var ymax = bboxArray[1].split(" ")[1];
+    var bounds = [[ymin, xmin], [ymax, xmax]]
+
     var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
     var splitString = "/postgis/";
     var splitPosition = fieldsInfo.indexOf(splitString);
@@ -70,10 +79,15 @@ function getFieldListAndBuildLayer(value, defaultPointStyle, defaultLineStyle, d
                 return layerName + '_label';
             }
         });
+        mvtSource.myFitBounds = function() {
+            options.map.fitBounds(bounds);
+        };
         if (!firstAdded) {
+            mvtSource.myFitBounds();
             options.map.addLayer(mvtSource);
             firstAdded = true;
         }
+
         layers[key] = mvtSource;
 
     });
@@ -143,9 +157,8 @@ function getData(options){
     var promises = [];
     var firstAdded = false;
     for (var key in data) {
-        var value = data[key];
 
-        var promise = getFieldListAndBuildLayer(value, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key);
+        var promise = getFieldListAndBuildLayer(data[key], defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key);
         if (!firstAdded){
             firstAdded = true;
         }
@@ -154,6 +167,9 @@ function getData(options){
 
     $.when.apply($, promises).done(function(sources){
         L.control.layers([], layers).addTo(options.map);
+        options.map.on('overlayadd', function(e){
+            e.layer.myFitBounds();
+        });
     });
 
     //addLayersToMap(options, []);
