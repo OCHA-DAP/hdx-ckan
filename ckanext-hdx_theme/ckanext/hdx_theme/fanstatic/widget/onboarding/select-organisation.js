@@ -29,6 +29,7 @@ $(document).ready(function(){
                 alert("Can't join org: " + result.error.message);
             }
         });
+        return false;
     });
 
     $('#create-organisation-form').on('submit', function(){
@@ -40,7 +41,8 @@ $(document).ready(function(){
             } else {
                 alert("Can't create org: " + result.error.message);
             }
-        })
+        });
+        return false;
     });
 
 });

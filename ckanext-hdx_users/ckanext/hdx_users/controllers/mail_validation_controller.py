@@ -551,26 +551,23 @@ class ValidationController(ckan.controllers.user.UserController):
         except logic.NotAuthorized:
             base.abort(401, _('Unauthorized to send a new org request'))
 
-        if 'save' in request.params:
-            try:
-                user = model.User.get(context['user'])
-                data = self._process_new_org_request(user)
-                self._validate_new_org_request_field(data)
+        try:
+            user = model.User.get(context['user'])
+            data = self._process_new_org_request(user)
+            self._validate_new_org_request_field(data)
 
-                get_action('hdx_send_new_org_request')(context, data)
+            get_action('hdx_send_new_org_request')(context, data)
 
-                data.clear()
-            except hdx_mail.NoRecipientException, e:
-                error_summary = e.error_summary
-                return self.error_message(error_summary)
-            except logic.ValidationError, e:
-                error_summary = e.error_summary
-                return self.error_message(error_summary)
-            except exceptions.Exception, e:
-                error_summary = str(e)
-                return self.error_message(error_summary)
-        else:
-            return OnbNotAuth
+            data.clear()
+        except hdx_mail.NoRecipientException, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        except logic.ValidationError, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
         return OnbSuccess
 
     def error_message(self, error_summary):
