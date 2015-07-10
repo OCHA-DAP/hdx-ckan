@@ -7,5 +7,42 @@ $(document).ready(function(){
             });
             $('#existing-org-selector').select2();
         }
-    })
+    });
+
+    $('#organisation-form-submit').on('click', function(){
+        if ($('#select-organisation').is(':visible')){
+            $('#select-organisation-form').submit();
+        } else {
+            if ($('#create-organisation').is(':visible')){
+                $('#create-organisation-form').submit();
+            }
+        }
+    });
+
+    $('#select-organisation-form').on('submit', function(){
+        $this = $(this);
+        $.post('/user/request_membership', $this.serialize(), function(result_data){
+            var result = JSON.stringify(result_data);
+            if (result.success){
+                closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
+            } else {
+                alert("Can't join org: " + result.error.message);
+            }
+        });
+        return false;
+    });
+
+    $('#create-organisation-form').on('submit', function(){
+        $this = $(this);
+        $.post('/user/request_new_organization', $this.serialize(), function(result_data){
+            var result = JSON.stringify(result_data);
+            if (result.success){
+                closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
+            } else {
+                alert("Can't create org: " + result.error.message);
+            }
+        });
+        return false;
+    });
+
 });

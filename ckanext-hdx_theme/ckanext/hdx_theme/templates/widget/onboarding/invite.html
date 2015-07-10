@@ -10,6 +10,7 @@ Example:
 {% resource 'hdx_theme/popup' %}
 {% resource 'hdx_theme/onboarding' %}
 {% resource 'hdx_theme/widget/onboarding/invite.css' %}
+{% resource 'hdx_theme/widget/onboarding/invite.js' %}
 
 {% set title = "Your request has been submitted. You will receive a confirmation in the next 24 hours." %}
 {% set class = "popup-onboarding popup-invite" %}
@@ -29,18 +30,20 @@ Example:
                 <div class="large-title">Invite friends & colleagues</div>
                 <div class="mTop30">HDX is used over 200 countries and territories. Help us connect more data and people by introducing HDX to your network.</div>
                 <div class="mTop20">
-                    <div class="mTop10 control">
-                        <input id="invite-email1" class="full-width" type="text">
-                        <label for="invite-email1">Email address</label>
-                    </div>
-                    <div class="mTop10 control">
-                        <input id="invite-email2" class="full-width" type="text">
-                        <label for="invite-email2">Email address</label>
-                    </div>
-                    <div class="mTop10 control">
-                        <input id="invite-email3" class="full-width" type="text">
-                        <label for="invite-email3">Email address</label>
-                    </div>
+                    <form id="invite-form">
+                        <div class="mTop10 control">
+                            <input id="invite-email1" name="email1" class="full-width" type="text">
+                            <label for="invite-email1">Email address</label>
+                        </div>
+                        <div class="mTop10 control">
+                            <input id="invite-email2" name="email2" class="full-width" type="text">
+                            <label for="invite-email2">Email address</label>
+                        </div>
+                        <div class="mTop10 control">
+                            <input id="invite-email3" name="email3" class="full-width" type="text">
+                            <label for="invite-email3">Email address</label>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="col-xs-6">
@@ -50,6 +53,6 @@ Example:
     </div>
     <div class="bottom-actions">
         <input class="btn btn-empty btn-empty-black btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Skip">
-        <input class="mL35 btn btn-primary btn-large pull-right" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#donePopup');" value="Next">
+        <input class="mL35 btn btn-primary btn-large pull-right" type="button" onclick="$('#invite-form').submit();" value="Next">
     </div>
 {% endblock %}
