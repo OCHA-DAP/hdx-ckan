@@ -591,3 +591,18 @@ class ValidationController(ckan.controllers.user.UserController):
                 }
         print data
         return data
+
+    def invite_friends(self):
+        try:
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user or c.author}
+            # TODO to be changed with mailchimp or check more information
+            subject = "Please join HDX website"
+            body = "Your friend " + c.user + " invited you to join HDX"
+            friends = [request.params.get('email1', ''), request.params.get('email2', ''), request.params.get('email3', ''),]
+            for f in friends:
+                hdx_mail.send_mail([{'display_name': f['email'], 'email': f['email']}], subject, body)
+        except exceptions.Exception, e:
+                error_summary = e.error_summary
+                return self.error_message(error_summary)
+        return OnbSuccess
