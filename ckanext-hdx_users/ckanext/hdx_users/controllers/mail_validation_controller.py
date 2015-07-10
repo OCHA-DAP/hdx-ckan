@@ -22,6 +22,7 @@ import ckan.lib.captcha as captcha
 import ckan.new_authz as new_authz
 import pylons.configuration as configuration
 import re
+import json
 import ckan.lib.navl.dictization_functions as df
 import ckan.lib.maintain as maintain
 # from urllib import quote
@@ -48,10 +49,10 @@ unflatten = dictization_functions.unflatten
 
 Invalid = df.Invalid
 
-OnbNotAuth = {'success': False, 'error': {'message': _('Unauthorized to create user')}}
-OnbUserNotFound = {'success': False, 'error': {'message': 'User not found'}}
-OnbIntegrityErr = {'success': False, 'error': {'message': 'Integrity Error'}}
-OnbSuccess = {'success': True}
+OnbNotAuth = json.dumps({'success': False, 'error': {'message': _('Unauthorized to create user')}})
+OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
+OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity Error'}})
+OnbSuccess = json.dumps({'success': True})
 
 
 def name_validator_with_changed_msg(val, context):
@@ -425,7 +426,7 @@ class ValidationController(ckan.controllers.user.UserController):
                'Please click the following link to validate your email\n' \
                '{link}\n' \
                ''.format(link=link.format(config['ckan.site_url'], validate_link))
-
+        print 'Validate link: ' + validate_link
         try:
             mailer.mail_recipient(user['name'], user['email'], "HDX: Validate Your Email", body)
             return True
