@@ -775,10 +775,9 @@ class DatasetController(PackageController):
         return False
 
     def _has_shape_info(self, resource):
-        if ('format' in resource) and (lower(resource['format']) in GIS_FORMATS) and ('shape_info' in resource) and (
-                    resource['shape_info'] != 'null'):
+        if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
             shp_info = json.loads(resource['shape_info'])
-            if 'success' in shp_info and shp_info['success'] == 'true':
+            if shp_info.get('state', '') == 'success':
                 return True
         return False
 
