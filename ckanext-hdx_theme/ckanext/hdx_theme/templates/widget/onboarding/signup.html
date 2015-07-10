@@ -10,6 +10,7 @@ Example:
 {% resource 'hdx_theme/popup' %}
 {% resource 'hdx_theme/onboarding' %}
 {% resource 'hdx_theme/widget/onboarding/signup.css' %}
+{% resource 'hdx_theme/widget/onboarding/signup.js' %}
 {% set class = "popup-onboarding" %}
 
 {% extends "widget/popup/popup.html" %}
@@ -40,7 +41,7 @@ Example:
                     <a class="btn btn-demo signup-action" type="button"> See it in action <i class="glyphicon glyphicon-play"></i></a>
                 </div>
                 <div class="col-xs-6">
-                    <form action="/user/register_email" method="post">
+                    <form id="signup-form">
                         <div class="signup-box">
                             <div class="control">
                                 <input id="field-email" name="email" class="full-width required" type="text">
