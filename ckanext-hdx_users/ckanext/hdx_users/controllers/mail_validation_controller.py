@@ -453,8 +453,7 @@ class ValidationController(ckan.controllers.user.UserController):
     #     h.redirect_to('login')
 
     def validate(self, token):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
         data_dict = {'token': token,
                      'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
         try:
@@ -471,9 +470,11 @@ class ValidationController(ckan.controllers.user.UserController):
         # h.flash_success(_('Your email has been validated. You may now login.'))
         # Redirect to login
 
+        user = model.User.get(data_dict['user_id'])
         template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
         template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
-
+        template_data['data']['email'] = user.email
+        template_data['data']['name'] = user.name
         return render('home/index.html', extra_vars=template_data)
         # h.redirect_to(controller='home', action='index')
 
