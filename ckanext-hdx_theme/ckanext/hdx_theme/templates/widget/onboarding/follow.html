@@ -8,7 +8,9 @@ Example:
     {{ h.snippet('widget/onboarding/follow.html', id="followPopup") }}
 #}
 
+{% resource 'hdx_theme/follow.js' %}
 {% resource 'hdx_theme/widget/onboarding/follow.css' %}
+{% resource 'hdx_theme/widget/onboarding/follow.js' %}
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-follow" %}
 
@@ -30,31 +32,7 @@ Example:
     <div class="row follow-form">
         <div class="col-xs-12">
             <span class="bold-regular-text">Select the locations, organisations, topics and crises you want to follow : </span><span class="regular-text">If you would like to follow more - click on "follow" button on most of the HDX pages.</span>
-            <ul class="selectable-list">
-                <li>
-                    <input id="abc1" type="checkbox"><div></div><label for="abc1" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc2" type="checkbox"><div></div><label for="abc2" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc3" type="checkbox"><div></div><label for="abc3" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc4" type="checkbox"><div></div><label for="abc4" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc5" type="checkbox"><div></div><label for="abc5" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc6" type="checkbox"><div></div><label for="abc6" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc7" type="checkbox"><div></div><label for="abc7" class="regular-text">Population</label><span>topic</span>
-                </li>
-                <li>
-                    <input id="abc8" type="checkbox"><div></div><label for="abc8" class="regular-text">Population</label><span>topic</span>
-                </li>
+            <ul id="follow-form-item-list" class="selectable-list">
                 <li><span>{# DO NOT REMOVE THIS ONE #}</span></li>
             </ul>
         </div>
