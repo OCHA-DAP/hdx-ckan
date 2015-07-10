@@ -35,6 +35,9 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         map.connect('/user/register_email',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='register_email')
+        map.connect('/user/request_new_organization',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                    action='request_new_organization')
         map.connect('/user/register_details',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='register_details')
@@ -60,7 +63,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return {
             'token_create': create.token_create,
             'token_show': get.token_show,
-            'token_show_by_id':get.token_show_by_id,
+            'token_show_by_id': get.token_show_by_id,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list
         }
