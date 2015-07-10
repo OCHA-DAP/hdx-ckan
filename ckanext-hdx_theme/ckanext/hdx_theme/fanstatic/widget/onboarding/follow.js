@@ -2,13 +2,14 @@ $(document).ready(function(){
     $.getJSON("/api/action/onboarding_followee_list", function(data){
         if (data.success){
             var followList = $("#follow-form-item-list");
+            var onlyItem = $(followList.find("li")[0]);
             var items = data.result;
             $.each(items, function(idx, item){
                 var itemId = "follow-form-item-" + idx;
                 var objType = "group";
                 if (item.type == "dataset")
                     objType = "dataset";
-                followList.prepend(
+                onlyItem.before(
                     '<li>' +
                     '<input data-module-type="'+ objType +'" ' +
                         'data-module-id="'+ item.id +'" data-module-action="'+ (item.follow ? 'unfollow' : 'follow') +'" ' +
