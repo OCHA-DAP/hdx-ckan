@@ -11,7 +11,7 @@ $(document).ready(function(){
                     password: $("#register-password").val(),
                     ajax: true
                 };
-                $.post("/login_generic", $this.serialize(), function(result_data){
+                $.post("/login_generic", actions, function(result_data){
                     var result = JSON.parse(result_data);
                     if (result.success){
                         closeCurrentWidget($this);showOnboardingWidget('#registeredPopup');
