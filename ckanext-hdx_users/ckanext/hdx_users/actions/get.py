@@ -18,6 +18,15 @@ def token_show(context, user):
     return token_obj.as_dict()
 
 
+def token_show_by_id(context, data_dict):
+    # model = context['model']
+    id = data_dict['id']
+    token_obj = umodel.ValidationToken.get_by_token(token=id)
+    if token_obj is None:
+        raise NotFound
+    return token_obj.as_dict()
+
+
 @logic.side_effect_free
 def onboarding_followee_list(context, data_dict):
     # model = context['model']

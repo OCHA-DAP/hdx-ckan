@@ -37,12 +37,24 @@ def get_user_extra(user_id=None):
                'user': c.user or c.author, 'auth_user_obj': c.userobj}
     id = c.userobj.id if user_id is None else user_id
 
-    data_dict = {'user_obj': c.userobj, 'user_id': id,
-                 'extras': {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'value': 'True'}}
+    data_dict = {'user_obj': c.userobj, 'user_id': id}
+    user_extra_list = get_action('user_extra_show')(context, data_dict)
+    crt_step = get_current_step(user_extra_list)
     result = {
         'data': {
             'user_id': id,
-            'extra': get_action('user_extra_show')(context, data_dict),
+            'current_step': crt_step,
+            'extra': user_extra_list,
         }
     }
     return result
+
+
+def get_current_step(extra):
+    us_dict = {}
+    for ex in extra:
+        us_dict[ex.key] = ex.value
+    for step in user_model.USER_STATUSES:
+        if us_dict[step] == 'False':
+            return step
+    return None

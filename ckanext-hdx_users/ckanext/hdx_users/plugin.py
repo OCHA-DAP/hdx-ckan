@@ -60,12 +60,14 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return {
             'token_create': create.token_create,
             'token_show': get.token_show,
+            'token_show_by_id':get.token_show_by_id,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list
         }
 
     def get_auth_functions(self):
-        return {'user_can_register': authorize.user_can_register}
+        return {'user_can_register': authorize.user_can_register,
+                'user_can_validate': authorize.user_can_validate}
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):
