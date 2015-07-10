@@ -3,8 +3,13 @@ $(document).ready(function(){
 
     $("#register-form").on("submit", function(){
         $this = $(this);
-        $.post("/user/register_details", $this.serialize(), function(result){
-            console.log(result);
+        $.post("/user/register_details", $this.serialize(), function(result_data){
+            var result = JSON.parse(result_data);
+            if (result.success){
+                closeCurrentWidget($this);showOnboardingWidget('#registeredPopup');
+            } else {
+                alert("Can't register: " + result.error.message);
+            }
         });
 
         return false;
