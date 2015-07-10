@@ -235,7 +235,7 @@ class ValidationController(ckan.controllers.user.UserController):
             temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
                                    temp_schema['name']]
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        #TODO DAN-HDX
+        # TODO DAN-HDX
         if 'id' not in data_dict:
             data_dict['id'] = 'd1c56d42-2e99-43e2-aeb1-fd42b0a7b5b6'
         user_obj = model.User.get(data_dict['id'])
@@ -425,7 +425,8 @@ class ValidationController(ckan.controllers.user.UserController):
                'Please click the following link to validate your email\n' \
                '{link}\n' \
                ''.format(link=link.format(config['ckan.site_url'], validate_link))
-
+        print 'Validate link: ' + validate_link
+        print 'user_id: ' + user['id']
         try:
             mailer.mail_recipient(user['name'], user['email'], "HDX: Validate Your Email", body)
             return True
@@ -454,11 +455,12 @@ class ValidationController(ckan.controllers.user.UserController):
     def validate(self, token):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
-        data_dict = {'token': token, 'user_obj': c.userobj, 'user_id': c.userobj.id,
-                     'extras': {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'value': 'True'}}
+        data_dict = {'token': token,
+                     'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
         try:
             # Update token for user
             token = get_action('token_update')(context, data_dict)
+            data_dict['user_id'] = token['user_id']
             get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
             abort(404, _('Token not found'))
@@ -469,7 +471,7 @@ class ValidationController(ckan.controllers.user.UserController):
         # h.flash_success(_('Your email has been validated. You may now login.'))
         # Redirect to login
 
-        template_data = ue_helpers.get_user_extra()
+        template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
         template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
 
         return render('home/index.html', extra_vars=template_data)
