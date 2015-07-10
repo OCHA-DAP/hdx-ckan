@@ -30,7 +30,7 @@ def _get_shape_info_as_json(gis_data):
 
 
 def add_init_shape_info_data_if_needed(resource_data):
-    if 'format' in resource_data and lower(resource_data['format']) in GIS_FORMATS:
+    if lower(resource_data.get('format', '')) in GIS_FORMATS:
         shape_info = json.dumps({
             'state': 'processing',
             'message': 'The processing of the geo-preview has started',
