@@ -9,6 +9,7 @@ Example:
 #}
 
 {% resource 'hdx_theme/widget/onboarding/register.css' %}
+{% resource 'hdx_theme/widget/onboarding/register.js' %}
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-register" %}
 
@@ -27,10 +28,11 @@ Example:
 
 {% block right_content %}
     <div class="register-form">
-        <form action="/user/register_details" method="post">
+        <form id="register-form">
             <div class="small-form-title">Please fill out the following:</div>
             <div class="mTop20 control">
-                <input id="register-username" name="email" class="full-width required" type="text" value="zxcv@k.ro" readonly>
+                <input style="display: none;" name="id" disabled="disabled" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
+                <input id="register-username" name="email" disabled="disabled" class="full-width disabled required" type="text" value="{{ email }}" readonly>
                 <label for="register-username">Username</label>
             </div>
             <div class="mTop10 control">
@@ -55,11 +57,10 @@ Example:
                 <div class="g-recaptcha" data-sitekey="6Lc2n_ESAAAAAA0bvtnjEcju37JknyfXft7y4ya9"
                         style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
             </div>
-            <input class="mTop10 full-width btn btn-primary btn-large" type="submit" value="DAN-HDX">
         </form>
     </div>
 {% endblock %}
 {% block actions %}
-    <input class="btn btn-primary btn-large" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" value="Register">
+    <input class="btn btn-primary btn-large" type="button" onclick="$('#register-form').submit();" value="Register">
 {% endblock %}
 
