@@ -35,8 +35,9 @@ class UserExtra(DomainObject):
 
     @classmethod
     def get_by_user(self, user_id):
-        query = meta.Session.query(UserExtra)
-        return query.filter_by(user_id=user_id).all()
+        query = meta.Session.query(UserExtra).filter_by(user_id=user_id)
+        result = query.all()
+        return result
 
     @classmethod
     def get_by_key(self, key):

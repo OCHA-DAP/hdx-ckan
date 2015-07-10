@@ -27,34 +27,36 @@ Example:
 
 {% block right_content %}
     <div class="register-form">
-        <div class="small-form-title">Please fill out the following:</div>
-        <div class="mTop20 control">
-            <input id="register-username" class="full-width required" type="text">
-            <label for="register-username">Username</label>
-        </div>
-        <div class="mTop10 control">
-            <input id="register-password" class="full-width required" type="password">
-            <label for="register-password">Password</label>
-        </div>
-        <div class="row mTop10">
-            <div class="col-xs-6">
-                <div class="control">
-                    <input id="register-first-name" class="full-width required" type="text">
-                    <label for="register-first-name">First Name</label>
+        <form action="/user/register_details" method="post">
+            <div class="small-form-title">Please fill out the following:</div>
+            <div class="mTop20 control">
+                <input id="register-username" name="email" class="full-width required" type="text" value="zxcv@k.ro" readonly>
+                <label for="register-username">Username</label>
+            </div>
+            <div class="mTop10 control">
+                <input id="register-password" name="password" class="full-width required" type="password">
+                <label for="register-password">Password</label>
+            </div>
+            <div class="row mTop10">
+                <div class="col-xs-6">
+                    <div class="control">
+                        <input id="register-first-name" name="first-name" class="full-width required" type="text">
+                        <label for="register-first-name">First Name</label>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="control">
+                        <input id="register-last-name" name="last-name" class="full-width required" type="text">
+                        <label for="register-last-name">Last Name</label>
+                    </div>
                 </div>
             </div>
-            <div class="col-xs-6">
-                <div class="control">
-                    <input id="register-last-name" class="full-width required" type="text">
-                    <label for="register-last-name">Last Name</label>
-                </div>
+            <div class="mTop10 captcha">
+                <div class="g-recaptcha" data-sitekey="6Lc2n_ESAAAAAA0bvtnjEcju37JknyfXft7y4ya9"
+                        style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
             </div>
-        </div>
-        <div class="mTop10 captcha">
-            <div class="g-recaptcha" data-sitekey="6Lc2n_ESAAAAAA0bvtnjEcju37JknyfXft7y4ya9"
-                    style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
-        </div>
-
+            <input class="mTop10 full-width btn btn-primary btn-large" type="submit" value="DAN-HDX">
+        </form>
     </div>
 {% endblock %}
 {% block actions %}

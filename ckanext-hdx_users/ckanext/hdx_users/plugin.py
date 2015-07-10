@@ -1,10 +1,10 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-import logging
 import ckanext.hdx_users.actions.create as create
 import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.logic.register_auth as authorize
+import ckanext.hdx_users.helpers.user_extra as h_user_extra
 
 
 def user_create(context, data_dict=None):
@@ -35,6 +35,9 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         map.connect('/user/register_email',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='register_email')
+        map.connect('/user/register_details',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                    action='register_details')
         map.connect('/user/validate/{token}',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='validate')
@@ -69,12 +72,13 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.ITemplateHelpers)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
 
     def get_helpers(self):
-        return {}
+        return {'get_user_extra': h_user_extra.get_user_extra}
 
     def is_fallback(self):
         return False
