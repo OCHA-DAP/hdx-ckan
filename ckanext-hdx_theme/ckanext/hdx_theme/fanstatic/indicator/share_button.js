@@ -1,7 +1,8 @@
 $(document).ready(function(){
   $('.{{ button_class }}').click(function(){
     $.ajax({
-      url: "{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}",
+      //url: "{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}",
+      url: alert("TODO: Needs to be changed"),
       data:{'url':"{{ url }}" },
       type: 'POST'
     }).done(function(msg){
