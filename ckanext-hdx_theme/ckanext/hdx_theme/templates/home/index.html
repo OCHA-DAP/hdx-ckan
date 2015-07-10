@@ -12,26 +12,16 @@
 
 
 {% block content %}
-{{ h.snippet('widget/onboarding/notification.html', id="notificationPopup", title="Yes bosss!") }}
-{{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
-{{ h.snippet('widget/onboarding/register.html', id="registerPopup") }}
-{{ h.snippet('widget/onboarding/registered.html', id="registeredPopup") }}
-{{ h.snippet('widget/onboarding/follow.html', id="followPopup") }}
-{{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
-{{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
-{{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
+
+{% if (data.current_step == 'hdx_onboarding_details') %}
+  {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email) }}
+{% endif %}
 
 <div class="homepage-main">
   <div class="homepage-background">
     <div class="container">
       <div class="row blankRow">
         <div class="col-xs-3">
-          <a onclick="showOnboardingWidget('#loginPopup');"> LOGIN </a><br/>
-          <a onclick="showOnboardingWidget('#signupPopup');"> SIGNUP </a><br/>
-          <a onclick="showOnboardingWidget('#notificationPopup');"> NOTIFICATION </a><br/>
-        </div>
-        <div class="col-xs-3">
-          <a onclick="showOnboardingWidget('#verifyPopup');"> VERIFY </a><br/>
           <a onclick="showOnboardingWidget('#registerPopup');"> REGISTER </a><br/>
           <a onclick="showOnboardingWidget('#registeredPopup');"> REGISTERED </a><br/>
         </div>
