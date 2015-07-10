@@ -34,9 +34,13 @@ import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
 # import ckan.lib.dictization.model_dictize as model_dictize
 import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.hdx_theme.helpers.helpers as hdx_h
+import logging as logging
+
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
+log = logging.getLogger(__name__)
 render = base.render
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
 abort = base.abort
@@ -563,7 +567,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 error_summary = e.error_summary
                 return self.error_message(error_summary)
             except exceptions.Exception, e:
-                error_summary = e.error_summary
+                error_summary = str(e)
                 return self.error_message(error_summary)
         else:
             return OnbNotAuth
@@ -582,12 +586,12 @@ class ValidationController(ckan.controllers.user.UserController):
             raise logic.ValidationError(errors)
 
     def _process_new_org_request(self, user):
-        data = {'name': request.params.get('name', ''), \
-                'title': request.params.get('name', ''), \
-                'org_url': request.params.get('url', ''), \
-                'description': request.params.get('description', ''), \
-                'your_email': user.email, \
-                'your_name': user.fullname, \
+        data = {'name': request.params.get('name', ''),
+                'title': request.params.get('name', ''),
+                'org_url': request.params.get('url', ''),
+                'description': request.params.get('description', ''),
+                'your_email': user.email,
+                'your_name': user.fullname,
                 }
         print data
         return data
@@ -599,10 +603,38 @@ class ValidationController(ckan.controllers.user.UserController):
             # TODO to be changed with mailchimp or check more information
             subject = "Please join HDX website"
             body = "Your friend " + c.user + " invited you to join HDX"
-            friends = [request.params.get('email1', ''), request.params.get('email2', ''), request.params.get('email3', ''),]
+            friends = [request.params.get('email1', None), request.params.get('email2', None),
+                       request.params.get('email3', None), ]
             for f in friends:
-                hdx_mail.send_mail([{'display_name': f['email'], 'email': f['email']}], subject, body)
+                if f is not None:
+                    hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
         except exceptions.Exception, e:
-                error_summary = e.error_summary
-                return self.error_message(error_summary)
+            error_summary = str(e)
+            return self.error_message(error_summary)
         return OnbSuccess
+
+    def request_membership(self):
+        try:
+            org_id = request.params.get('org_id', '')
+            msg = request.params.get('message', 'New Onboarding module: create a new organization')
+            user = hdx_h.hdx_get_user_info(c.user)
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user or c.author}
+            org_admins = get_action('member_list')(context, {'id': org_id, 'capacity': 'admin', 'object_type': 'user'})
+            admins = []
+            for admin_tuple in org_admins:
+                admin_id = admin_tuple[0]
+                admins.append(hdx_h.hdx_get_user_info(admin_id))
+            admins_with_email = [admin for admin in admins if admin['email']]
+
+            data_dict = {'display_name': user['display_name'], 'name': user['name'],
+                         'email': user['email'], 'organization': org_id,
+                         'message': msg, 'admins': admins_with_email}
+            get_action('hdx_send_request_membership')(context, data_dict)
+
+            return OnbSuccess
+        except hdx_mail.NoRecipientException, e:
+            return self.error_message(_(str(e)))
+        except exceptions.Exception, e:
+            log.error(str(e))
+            return self.error_message(_('Request can not be sent. Contact an administrator.'))
