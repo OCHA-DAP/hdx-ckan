@@ -1,5 +1,6 @@
 @import "../../base/mixins";
 @import "../../base/variables";
+@import "onboarding-variables";
 
 .popup.popup-onboarding {
   .content {
@@ -20,9 +21,7 @@
     position: relative;
   }
 
-  @inputHeight: 44px;
-  @inputPadding: 20px;
-  input[type="text"], input[type="password"] {
+  input[type="text"], input[type="password"], textarea {
     height: @inputHeight;
     border-radius: 6px;
     border: 1px solid white;

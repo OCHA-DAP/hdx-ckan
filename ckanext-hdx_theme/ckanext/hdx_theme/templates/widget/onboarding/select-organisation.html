@@ -12,6 +12,7 @@ Example:
 {% set two_column_class = "two-column-select-organisation" %}
 
 {% resource 'hdx_theme/widget/onboarding/select-organisation.css' %}
+{% resource 'hdx_theme/widget/onboarding/select-organisation.js' %}
 {% extends "widget/onboarding/two-column.html" %}
 
 {% block left_content %}
@@ -31,7 +32,10 @@ Example:
         <div class="bold-regular-text">Find your organisation: </div>
         <div class="regular-text">see if your organisation exists by scrolling through the list below:</div>
 
-        <div class="mTop20">Insert SELECT2 here :)</div>
+        <select class="mTop20" id="existing-org-selector">
+            <option id=""></option>
+        </select>
+
         <div class="regular-text mTop20">Don't see your organisation? <a href="#" onclick="$('#select-organisation').hide();$('#create-organisation').show();">Request a new organisation</a></div>
         <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.</div>
         <div class="regular-text mTop20">If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
@@ -42,14 +46,25 @@ Example:
         <div class="regular-text">Tell us a bit more about your organisation. We will review your request and get back to you within 24 hours. Check <a href="#" onclick="$('#create-organisation').hide();$('#select-organisation').show();">existing organisations</a></div>
 
         <div class="mTop20 control">
-            <input id="org-name" class="full-width required" type="text">
+            <input id="org-name" name="name" class="full-width required" type="text">
             <label for="org-name">Name of organisation</label>
         </div>
 
         <div class="mTop20 control">
-            <input id="org-url" class="full-width required" type="text">
+            <input id="org-url" name="url" class="full-width required" type="text">
             <label for="org-url">URL of organisation</label>
         </div>
+
+        <div class="mTop20 control">
+            <textarea id="org-description" name="description" class="full-width required"></textarea>
+            <label for="org-description">Description of organisation</label>
+        </div>
+
+        <div class="mTop20 control">
+            <input id="org-fts" name="fts_id" class="full-width required" type="text">
+            <label for="org-fts">FTS ID</label>
+        </div>
+
     </div>
 {% endblock %}
 

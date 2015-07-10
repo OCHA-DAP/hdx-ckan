@@ -21,8 +21,6 @@ function showOnboardingWidget(id){
         }, 0);
     });
 
-    $(id).find('input[type="password"], input[type="text"]');
-
     function _triggerInputDataClass($this){
         if ($this.val() === "")
             $this.removeClass("input-content");
@@ -30,18 +28,18 @@ function showOnboardingWidget(id){
             $this.addClass("input-content");
     }
 
-    $(id).find('input[type="password"], input[type="text"]').each(
+    $(id).find('input[type="password"], input[type="text"], textarea').each(
         function(idx, el){
             _triggerInputDataClass($(el));
         }
     );
-    $(id).find('input[type="password"], input[type="text"]').change(
+    $(id).find('input[type="password"], input[type="text"], textarea').change(
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
         }
     );
-    $(id).find('input[type="password"], input[type="text"]').on("keyup",
+    $(id).find('input[type="password"], input[type="text"], textarea').on("keyup",
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);

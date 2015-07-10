@@ -196,7 +196,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+            return self.error_message(error_summary)
 
         # hack to disable check if user is logged in
         save_user = c.user
@@ -221,7 +221,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+            return self.error_message(error_summary)
         if not c.user:
             # Send validation email
             self.send_validation_email(user, token)
@@ -249,7 +249,7 @@ class ValidationController(ckan.controllers.user.UserController):
             return OnbNotAuth
         except ValidationError, e:
             error_summary = e.error_summary
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+            return self.error_message(error_summary)
 
         # hack to disable check if user is logged in
         save_user = c.user
@@ -269,7 +269,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+            return self.error_message(error_summary)
         if not c.user:
             pass
         c.user = save_user
@@ -462,7 +462,7 @@ class ValidationController(ckan.controllers.user.UserController):
             return OnbNotAuth
         except ValidationError, e:
             error_summary = e.error_summary
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+            return self.error_message(error_summary)
 
         try:
             # Update token for user
@@ -549,7 +549,8 @@ class ValidationController(ckan.controllers.user.UserController):
 
         if 'save' in request.params:
             try:
-                data = self._process_new_org_request()
+                user = model.User.get(context['user'])
+                data = self._process_new_org_request(user)
                 self._validate_new_org_request_field(data)
 
                 get_action('hdx_send_new_org_request')(context, data)
@@ -557,15 +558,19 @@ class ValidationController(ckan.controllers.user.UserController):
                 data.clear()
             except hdx_mail.NoRecipientException, e:
                 error_summary = e.error_summary
-                return json.dumps({'success': False, 'error': {'message': error_summary}})
+                return self.error_message(error_summary)
             except logic.ValidationError, e:
                 error_summary = e.error_summary
-                return json.dumps({'success': False, 'error': {'message': error_summary}})
+                return self.error_message(error_summary)
             except exceptions.Exception, e:
                 error_summary = e.error_summary
-                return json.dumps({'success': False, 'error': {'message': error_summary}})
-
+                return self.error_message(error_summary)
+        else:
+            return OnbNotAuth
         return OnbSuccess
+
+    def error_message(self, error_summary):
+        return json.dumps({'success': False, 'error': {'message': error_summary}})
 
     def _validate_new_org_request_field(self, data):
         errors = {}
@@ -575,3 +580,29 @@ class ValidationController(ckan.controllers.user.UserController):
 
         if len(errors) > 0:
             raise logic.ValidationError(errors)
+
+    def _process_new_org_request(self, user):
+        data = {'name': request.params.get('name', ''), \
+                'title': request.params.get('name', ''), \
+                'org_url': request.params.get('url', ''), \
+                'description': request.params.get('description', ''), \
+                'your_email': user.email, \
+                'your_name': user.fullname, \
+                }
+        print data
+        return data
+
+    def invite_friends(self):
+        try:
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user or c.author}
+            # TODO to be changed with mailchimp or check more information
+            subject = "Please join HDX website"
+            body = "Your friend " + c.user + " invited you to join HDX"
+            friends = [request.params.get('email1', ''), request.params.get('email2', ''), request.params.get('email3', ''),]
+            for f in friends:
+                hdx_mail.send_mail([{'display_name': f['email'], 'email': f['email']}], subject, body)
+        except exceptions.Exception, e:
+                error_summary = e.error_summary
+                return self.error_message(error_summary)
+        return OnbSuccess
