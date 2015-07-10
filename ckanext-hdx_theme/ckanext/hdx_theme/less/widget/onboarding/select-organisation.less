@@ -11,5 +11,23 @@
   .two-column-right {
     height: @widgetHeight;
     padding: @paddingLarge;
+
+    #create-organisation {
+      overflow: scroll;
+      height: 400px;
+    }
+
+    @textAreaHeight: 160px;
+    #org-description {
+      height: @textAreaHeight;
+      padding: 14px @paddingSmall;
+      & ~ label{
+        bottom: @textAreaHeight - @inputHeight;
+      }
+      &.input-content ~ label {
+        bottom: 6px;
+      }
+
+    }
   }
 }
