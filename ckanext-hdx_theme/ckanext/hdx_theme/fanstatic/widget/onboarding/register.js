@@ -7,12 +7,7 @@ $(document).ready(function(){
             var result = JSON.parse(result_data);
             if (result.success){
                 $.post("/login_generic", $this.serialize(), function(result_data){
-                    var result = JSON.parse(result_data);
-                    if (result.success){
-                        closeCurrentWidget($this);showOnboardingWidget('#registeredPopup');
-                    } else {
-                        alert("Can't login with the newly created account!");
-                    }
+                    closeCurrentWidget($this);showOnboardingWidget('#registeredPopup');
                 });
             } else {
                 alert("Can't register: " + result.error.message);
