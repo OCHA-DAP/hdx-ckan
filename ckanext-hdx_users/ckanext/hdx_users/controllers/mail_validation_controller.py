@@ -29,6 +29,8 @@ import ckan.plugins as p
 
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.logic.schema as user_reg_schema
+import ckanext.hdx_users.model as user_model
+import ckan.lib.dictization.model_dictize as model_dictize
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -224,6 +226,55 @@ class ValidationController(ckan.controllers.user.UserController):
         c.user = save_user
         return OnbSuccess
 
+    def register_details(self, data=None, errors=None, error_summary=None):
+        """
+
+        """
+        temp_schema = user_reg_schema.register_details_user_schema()
+        if 'name' in temp_schema:
+            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+                                   temp_schema['name']]
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+        #TODO DAN-HDX
+        if 'id' not in data_dict:
+            data_dict['id'] = 'd1c56d42-2e99-43e2-aeb1-fd42b0a7b5b6'
+        user_obj = model.User.get(data_dict['id'])
+        context = {'model': model, 'session': model.Session, 'user': user_obj.name,
+                   'schema': temp_schema}
+        data_dict['name'] = data_dict['email']
+        data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
+        try:
+            check_access('user_update', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError, e:
+            error_summary = e.error_summary
+            return {'success': False, 'error': {'message': error_summary}}
+
+        # hack to disable check if user is logged in
+        save_user = c.user
+        c.user = None
+        try:
+            # TODO
+            user = get_action('user_update')(context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+            # abort(401, _('Unauthorized to create user %s') % '')
+        except NotFound, e:
+            return OnbUserNotFound
+            # abort(404, _('User not found'))
+        except DataError:
+            return OnbIntegrityErr
+            # abort(400, _(u'Integrity Error'))
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return {'success': False, 'error': {'message': error_summary}}
+        if not c.user:
+            pass
+        c.user = save_user
+        return OnbSuccess
+
     def post_register(self):
         """
             If the user has registered but not validated their email
@@ -381,24 +432,48 @@ class ValidationController(ckan.controllers.user.UserController):
         except:
             return False
 
+    # def validate(self, token):
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author, 'auth_user_obj': c.userobj,
+    #                'for_view': True}
+    #     data_dict = {'token': token,
+    #                  'user_obj': c.userobj}
+    #     # Update token for user
+    #     try:
+    #         token = get_action('token_update')(context, data_dict)
+    #     except NotFound, e:
+    #         abort(404, _('Token not found'))
+    #     except:
+    #         abort(500, _('Error'))
+    #
+    #     # Set Flash message
+    #     h.flash_success(_('Your email has been validated. You may now login.'))
+    #     # Redirect to login
+    #     h.redirect_to('login')
+
     def validate(self, token):
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   'for_view': True}
-        data_dict = {'token': token,
-                     'user_obj': c.userobj}
-        # Update token for user
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        data_dict = {'token': token, 'user_obj': c.userobj, 'user_id': c.userobj.id,
+                     'extras': {'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'value': 'True'}}
         try:
+            # Update token for user
             token = get_action('token_update')(context, data_dict)
+            get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
             abort(404, _('Token not found'))
         except:
             abort(500, _('Error'))
 
         # Set Flash message
-        h.flash_success(_('Your email has been validated. You may now login.'))
+        # h.flash_success(_('Your email has been validated. You may now login.'))
         # Redirect to login
-        h.redirect_to('login')
+
+        template_data = ue_helpers.get_user_extra()
+        template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
+
+        return render('home/index.html', extra_vars=template_data)
+        # h.redirect_to(controller='home', action='index')
 
     def logged_in(self):
         # redirect if needed

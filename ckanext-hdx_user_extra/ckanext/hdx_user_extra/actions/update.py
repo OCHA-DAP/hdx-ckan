@@ -19,9 +19,10 @@ def user_extra_update(context, data_dict):
     :return: list of extras updated
     '''
     session = context['session']
+    # model = context['model']
     result = []
-    for ue in data_dict.get('extras'):
-        user_extra = ue_model.UserExtra.get(user_id=ue['user_id'], key=ue['key'])
+    for ue in data_dict['extras']:
+        user_extra = ue_model.UserExtra.get(user_id=data_dict['user_id'], key=ue['key'])
         if user_extra is None:
             raise NotFound
         user_extra.value = ue['new_value']
@@ -29,3 +30,4 @@ def user_extra_update(context, data_dict):
         session.commit()
         result.append(user_extra)
     return result
+
