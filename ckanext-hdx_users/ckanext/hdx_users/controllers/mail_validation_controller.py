@@ -236,9 +236,6 @@ class ValidationController(ckan.controllers.user.UserController):
             temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
                                    temp_schema['name']]
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        # TODO DAN-HDX
-        if 'id' not in data_dict:
-            data_dict['id'] = 'd1c56d42-2e99-43e2-aeb1-fd42b0a7b5b6'
         user_obj = model.User.get(data_dict['id'])
         context = {'model': model, 'session': model.Session, 'user': user_obj.name,
                    'schema': temp_schema}

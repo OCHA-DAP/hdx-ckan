@@ -31,8 +31,9 @@ Example:
         <form id="register-form">
             <div class="small-form-title">Please fill out the following:</div>
             <div class="mTop20 control">
-                <input style="display: none;" name="id" disabled="disabled" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
-                <input id="register-username" name="email" disabled="disabled" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+                <input style="display: none;" name="id" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
+                <input style="display: none;" name="email" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+                <input id="register-username" disabled="disabled" class="full-width disabled required" type="text" value="{{ email }}" readonly>
                 <label for="register-username">Username</label>
             </div>
             <div class="mTop10 control">
