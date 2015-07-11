@@ -676,8 +676,8 @@ class DatasetController(PackageController):
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
-        # c.hdx_activities = get_action(
-        #     'hdx_get_activity_list')(context, act_data_dict)
+        c.hdx_activities = get_action(
+            'hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
 
         # count the number of resource downloads
