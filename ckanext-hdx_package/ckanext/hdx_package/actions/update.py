@@ -9,7 +9,6 @@ import ckan.logic.action.update as core_update
 
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
-import json
 from string import lower
 
 _get_or_bust = logic.get_or_bust
@@ -27,9 +26,8 @@ def resource_update(context, data_dict):
 
     result_dict = core_update.resource_update(context, data_dict)
 
-    if do_geo_preview and \
-        lower(data_dict.get('format', '')) in geopreview.GIS_FORMATS:
+    if do_geo_preview and lower(data_dict.get('format', '')) in geopreview.GIS_FORMATS:
 
-        problem_appeared = geopreview.start_geo_transformation_process(context, result_dict)
-        if problem_appeared:
+        started_successfully = geopreview.start_geo_transformation_process(context, result_dict)
+        if not started_successfully:
             get_action('resource_update')(context, result_dict)
