@@ -12,11 +12,15 @@
 
 
 {% block content %}
+
+{% if (data and data.current_step == 'hdx_onboarding_details') %}
+  {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email) }}
+{% endif %}
+
 <div class="homepage-main">
   <div class="homepage-background">
     <div class="container">
       <div class="row blankRow">
-
       </div>
       <div class="row">
         <div class="col-xs-6 leftContent">

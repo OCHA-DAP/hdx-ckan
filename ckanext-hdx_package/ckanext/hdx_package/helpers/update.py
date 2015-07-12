@@ -6,18 +6,11 @@ Created on Apr 30, 2014
 
 import logging
 import datetime
-import json
-
 import ckan.plugins as plugins
 import ckan.logic as logic
-import ckan.logic.schema as schema_
-import ckan.lib.dictization as dictization
-import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.navl.dictization_functions
-import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
-import ckan.model as model
 import ckanext.hdx_package.helpers.helpers as helpers
 
 from ckan.common import _
@@ -57,7 +50,7 @@ def package_update(context, data_dict):
 
     pkg = model.Package.get(name_or_id)
     if pkg is None:
-        raise NotFound(_('Package was not found.'))
+        raise logic.NotFound(_('Package was not found.'))
     context["package"] = pkg
     data_dict["id"] = pkg.id
     if 'groups' in data_dict:
@@ -267,7 +260,7 @@ def hdx_package_update_metadata(context, data_dict):
                       'groups']
 
     package = _get_action('package_show')(context, data_dict)
-    requested_groups = [el.get('id', el.get('name', '')) for el in data_dict.get('groups',[])]
+    requested_groups = [el.get('id', el.get('name','')) for el in data_dict.get('groups',[])]
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
             package[key] = value

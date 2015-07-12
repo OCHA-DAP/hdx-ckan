@@ -1,0 +1,17 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+@import "notification";
+
+@doneHeight: 360px - @notificationTitleHeight;
+
+.done-widget {
+  padding: @notificationPaddingSize;
+  height: @doneHeight;
+  background-color: @whiteColor;
+  width: @popupWidth;
+
+  img {
+    height: 150px;
+  }
+}

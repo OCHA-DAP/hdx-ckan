@@ -1,0 +1,61 @@
+{#
+Shows the login popup
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}
+#}
+{% resource 'hdx_theme/popup' %}
+{% resource 'hdx_theme/login-widget' %}
+{% set class = "popup-onboarding" %}
+
+{% extends "widget/popup/popup.html" %}
+
+{% block titlebar %}{% endblock %}
+{% block content %}
+    <div class="login-widget">
+        <div class="row">
+            <div class="login-top">
+                <div class="login-photo center">
+                    <img class="hide" src="/images/icons/wfp-icon.png" />
+                    <i class="glyphicon glyphicon-user" style="
+                        color: white;
+                        font-size: 60px;
+                        text-align: center;
+                        top: 16px;
+                    "></i>
+                </div>
+                <i class="close glyphicon glyphicon-remove"></i>
+            </div>
+        </div>
+        <div class="row">
+            <form action="/login_generic" method="post">
+                <div class="login-content">
+                    <div class="col-xs-12">
+                        <div class="username-static hide">
+                            <div class="username-text center">Alexandru Artimon</div>
+                            <div class="email-text center"> <span>aalecs@gmail.com</span>&nbsp;<span><a href="#">Not you?</a></span></div>
+                        </div>
+                        <div class="username mTop10 control">
+                            <input id="field-login" name="login" class="full-width required" type="text">
+                            <label for="field-login">Email</label>
+                        </div>
+                        <div class="password mTop10 control">
+                            <input id="field-password" name="password" class="full-width required" type="password">
+                            <label for="field-password">Password</label>
+                        </div>
+                        <div class="checkbox-style mTop10"><input id="field-remember" name="remember" type="checkbox"><label for="field-remember">Remember me</label> </div>
+                        <div class="mTop10"><input class="full-width btn btn-primary btn-large" type="submit" value="Login"> </div>
+                        <div class="member center mTop10"><a href="{{ h.url_for(controller='user', action='request_reset') }}">Forgot your password?</a></div>
+                        <div class="member center">Not a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#signupPopup');">Register</a></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div>
+
+        </div>
+    </div>
+{% endblock %}

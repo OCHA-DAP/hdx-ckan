@@ -1,6 +1,6 @@
 function file_upload_selected(){
   $('#field-url').parent().parent().css({'opacity':0, 'height':0});
-  $('label.type-file').click();
+  $('#field-resource-type-upload').click();
 }
 
 $(document).ready(function(){
@@ -12,6 +12,10 @@ $(document).ready(function(){
  				return true;
  			}
  		});
+
+ 		if($('#mx-file').attr('is-upload')){
+ 			file_upload_selected();
+ 		}
 
  		$('#field-link-upload').click(function(){
         $('#field-url').parent().parent().css({'opacity':100, 'height':'inherit'});

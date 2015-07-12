@@ -1,0 +1,76 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+
+.signup-widget {
+  height: @baseHeight;
+  width: 2*@bigColumnWidth;
+
+  background-color: @blueColor;
+  background-image: url('/images/backgrounds/pixels_white.png');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100%;
+  color: @whiteColor;
+  
+  .close {
+    margin-top: 25px;
+    margin-right: 25px;
+  }
+  
+  .inner-bg {
+    background-image: url('/images/backgrounds/browse_illustration.png');
+    background-position: bottom right;
+    background-size: 430px;
+    background-repeat: no-repeat;
+
+    width: 100%;
+    height: 100%;
+    padding: @paddingLarge;
+  }
+
+  .signup-list {
+    margin-left: 0;
+    list-style: none;
+    padding-left: 10px;
+
+    .gothamBookFont(12px);
+    .starred:after {
+      content: "*";
+      margin-left: 5px;
+    }
+
+    li:before {
+      display: inline-block;
+      content: "-";
+      width: 1em;
+      margin-left: -10px;
+    }
+    li.starred-reason{
+      font-size: 10px;
+      font-style: italic;
+      &:before{
+        content: "*";
+      }
+    }
+
+  }
+
+  .signup-box {
+    width: @popupWidth;
+    height: 230px;
+    padding: @paddingNormal;
+    background-color: @extraLightGrayColor;
+    border-radius: 6px;
+  }
+
+  .signup-action {
+    text-transform: none;
+    i {
+      float: right;
+      margin-left: 8px;
+      font-size: 14px;
+      margin-top: 1px;
+    }
+  }
+}

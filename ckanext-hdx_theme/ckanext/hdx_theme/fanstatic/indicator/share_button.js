@@ -1,9 +1,8 @@
 $(document).ready(function(){
-  $('.{{ button_class }}').click(function(){
+  $('#share_button').click(function(e){
     $.ajax({
-      //url: "{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}",
-      url: alert("TODO: Needs to be changed"),
-      data:{'url':"{{ url }}" },
+      url: $(this).attr('short-path'),
+      data:{'url':$(this).attr('target-url'), },
       type: 'POST'
     }).done(function(msg){
       $('.resource-social a').each(function(){
