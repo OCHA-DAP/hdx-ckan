@@ -61,8 +61,8 @@
   position: relative;
   margin: 0;
   padding-left: 32px;
+  padding-right: 78px;
   font-weight: 700;
-  line-height: 62px;
   width: 100%;
   z-index: 3;
 }

@@ -10,12 +10,12 @@ $(document).ready(function(){
                 if (item.type == "dataset")
                     objType = "dataset";
                 onlyItem.before(
-                    '<li>' +
+                    '<li class="table-valign">' +
                     '<input data-module-type="'+ objType +'" ' +
                         'data-module-id="'+ item.id +'" data-module-action="'+ (item.follow ? 'unfollow' : 'follow') +'" ' +
                         'id="'+ itemId +'" type="checkbox" '+ (item.follow ? 'checked' : '') +'>' +
                     '<div></div>' +
-                    '<label for="'+ itemId +'" class="regular-text">'+ item.display_name +'</label>' +
+                    '<label for="'+ itemId +'" class="regular-text table-valign-content">'+ item.display_name +'</label>' +
                     '<span>'+ item.type +'</span>' +
                     '</li>'
                 );
