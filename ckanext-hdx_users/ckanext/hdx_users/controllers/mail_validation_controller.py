@@ -267,6 +267,7 @@ class ValidationController(ckan.controllers.user.UserController):
             # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
+        return OnbSuccess
 
     def request_new_organization(self):
         '''
@@ -327,12 +328,12 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
             get_action('user_extra_update')(context, ue_dict)
 
-            return OnbSuccess
         except hdx_mail.NoRecipientException, e:
             return self.error_message(_(str(e)))
         except exceptions.Exception, e:
             log.error(str(e))
             return self.error_message(_('Request can not be sent. Contact an administrator.'))
+        return OnbSuccess
 
     def invite_friends(self):
         '''
