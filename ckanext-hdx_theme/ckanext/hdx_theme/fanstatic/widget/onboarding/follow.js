@@ -38,6 +38,19 @@ $(document).ready(function(){
                     }, "json");
                 })
             });
+            $('#follow-form-item-loading').hide();
+            $('#follow-form').on("submit", function(){
+                $this = $(this);
+                $.post('/user/follow_details', $this.serialize(), function(result_data){
+                    var result = JSON.parse(result_data);
+                    if (result.success){
+                        closeCurrentWidget($this);showOnboardingWidget('#selectOrgPopup');
+                    } else {
+                        alert("Can't follow org: " + result.error.message);
+                    }
+                });
+                return false;
+            });
         }
     });
 });
