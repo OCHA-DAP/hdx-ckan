@@ -19,8 +19,11 @@ Example:
         <div class="row">
             <div class="login-top">
                 <div class="login-photo center">
-                    <img class="hide" src="/images/icons/wfp-icon.png" />
-                    <i class="glyphicon glyphicon-user" style="
+                    <div id="login-photo-gravatar">
+                        {{ h.gravatar('3567e42856cec4f65229414bf7557915', size=95) }}
+                    </div>
+                    <i id="login-photo-default" class="glyphicon glyphicon-user" style="
+                        display: none;
                         color: white;
                         font-size: 60px;
                         text-align: center;
@@ -34,12 +37,13 @@ Example:
             <form action="/login_generic" method="post">
                 <div class="login-content">
                     <div class="col-xs-12">
-                        <div class="username-static hide">
-                            <div class="username-text center">Alexandru Artimon</div>
-                            <div class="email-text center"> <span>aalecs@gmail.com</span>&nbsp;<span><a href="#">Not you?</a></span></div>
+                        <div id="username-static" class="username-static">
+                            <div class="username-text center">CJ Hendrix</div>
+                            <!-- DON'T forget to fill username in the login -->
+                            <div class="email-text center"> <span>hendrix@un.org</span>&nbsp;<span><a onclick="$('#field-login').val(''); $('#username-static, #login-photo-gravatar').hide(); $('#username-form-field, #login-photo-default').show();" href="#">Not you?</a></span></div>
                         </div>
-                        <div class="username mTop10 control">
-                            <input id="field-login" name="login" class="full-width required" type="text">
+                        <div id="username-form-field" class="username mTop10 control" style="display: none;">
+                            <input id="field-login" name="login" class="full-width required" type="text" value="cj">
                             <label for="field-login">Email</label>
                         </div>
                         <div class="password mTop10 control">

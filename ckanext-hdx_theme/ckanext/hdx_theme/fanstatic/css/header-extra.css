@@ -496,6 +496,10 @@
         display: block;
     }
 
+    .select2-container.required.error > .select2-choice {
+        border-color: red;
+    }
+
     .select2-container .select2-choice{
         background-image: none;
         color: #888888;

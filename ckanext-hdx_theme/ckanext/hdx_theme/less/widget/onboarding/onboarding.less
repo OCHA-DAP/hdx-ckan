@@ -61,6 +61,9 @@
     &.required.input-content ~ label:after {
       content: "";
     }
+    &.required.error{
+      border-color: red;
+    }
 
     &.required ~ label {
       &:after{
@@ -143,3 +146,9 @@
   }
 }
 
+#incomplete-profile {
+  .gothamMediumFont(12px);
+  color: white;
+  .letter-spacing-1();
+  line-height: 24px;
+}

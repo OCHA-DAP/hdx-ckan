@@ -35,12 +35,12 @@
   color: #007ce0;
   letter-spacing: 0.01em;
 }
-.done-widget {
+.logout-widget {
   padding: 20px;
   height: 300px;
   background-color: #ffffff;
   width: 370px;
 }
-.done-widget img {
+.logout-widget img {
   height: 150px;
 }

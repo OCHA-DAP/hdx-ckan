@@ -1,0 +1,25 @@
+{#
+Logout widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/logout.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "You logged out of HDX" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+    <div class="logout-widget">
+        <div class="center">
+            <img class="mTop20" src="/images/onboarding/logout.png">
+            <div class="mTop30 notification-message">
+                Thank you for using HDX !
+            </div>
+        </div>
+    </div>
+{% endblock %}
