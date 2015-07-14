@@ -29,6 +29,4 @@ def resource_create(context, data_dict):
     result_dict = core_create.resource_create(context, data_dict)
 
     if do_geo_preview and lower(result_dict.get('format', '')) in geopreview.GIS_FORMATS:
-        started_successfully = geopreview.start_geo_transformation_process(context, result_dict)
-        if not started_successfully:
-            get_action('resource_update')(context, result_dict)
+        geopreview.do_geo_transformation_process(result_dict)

@@ -283,6 +283,13 @@ def hdx_resource_update_metadata(context, data_dict):
     as a parameter and you can't supply just a modified field .
     This function first loads the resource via resource_show() and then modifies the respective dict. 
     '''
+
+    # Below params are need in context so that the URL of the resource is not
+    # transformed to a real URL for an uploaded file
+    # ( for uploaded files the url field is the filename )
+    context['use_cache'] = False
+    context['for_edit'] = True
+
     allowed_fields = ['last_data_update_date', 'shape_info']
 
     resource_was_modified = False
