@@ -6,6 +6,7 @@ enabled it will override them when enabled
 import datetime
 import dateutil
 import hashlib
+import requests
 
 from pylons import config
 
@@ -201,7 +202,10 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             # TODO
             # captcha.check_recaptcha(request)
-
+            # g-recaptcha-response
+            captcha_response = data_dict.get('g-recaptcha-response', None)
+            if not self.is_valid_captcha(response=captcha_response):
+                raise ValidationError('Captcha is not valid')
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
@@ -248,8 +252,9 @@ class ValidationController(ckan.controllers.user.UserController):
         :return:
         '''
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        user_id = c.user or data_dict['id']
-        user_obj = model.User.get(user_id)
+        name = c.user or data_dict['id']
+        user_obj = model.User.get(name)
+        user_id = user_obj.id
         context = {'model': model, 'session': model.Session, 'user': user_obj.name}
         try:
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
@@ -267,6 +272,7 @@ class ValidationController(ckan.controllers.user.UserController):
             # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
+        return OnbSuccess
 
     def request_new_organization(self):
         '''
@@ -327,12 +333,12 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
             get_action('user_extra_update')(context, ue_dict)
 
-            return OnbSuccess
         except hdx_mail.NoRecipientException, e:
             return self.error_message(_(str(e)))
         except exceptions.Exception, e:
             log.error(str(e))
             return self.error_message(_('Request can not be sent. Contact an administrator.'))
+        return OnbSuccess
 
     def invite_friends(self):
         '''
@@ -691,3 +697,11 @@ class ValidationController(ckan.controllers.user.UserController):
                 'your_name': user.fullname,
                 }
         return data
+
+    def is_valid_captcha(self, response):
+        url = configuration.config.get('hdx.captcha.url')
+        secret = configuration.config.get('ckan.recaptcha.privatekey')
+        params = {'secret': secret, "response": response}
+        r = requests.get(url, params=params, verify=True)
+        res = json.loads(r.content)
+        return 'success' in res and res['success'] == True

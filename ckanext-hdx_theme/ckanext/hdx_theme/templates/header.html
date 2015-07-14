@@ -6,9 +6,27 @@
   <div class="container">
     <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
-        <div id="incomplete-profile" class="pull-left">
-          » You haven't optimised your your account. <a href="#">Complete setting up your account</a>
-        </div>
+        {% if c.userobj %}
+          {% set data = h.get_user_extra(c.userobj.id) %}
+          {% set step = data.data.current_step %}
+          {% if step != null %}
+            {% if step == "hdx_onboarding_follows" %}
+              <div id="incomplete-profile" class="pull-left">
+                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+              </div>
+            {% endif %}
+            {% if step == "hdx_onboarding_org" %}
+              <div id="incomplete-profile" class="pull-left">
+                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
+              </div>
+            {% endif %}
+            {% if step == "hdx_onboarding_friends" %}
+              <div id="incomplete-profile" class="pull-left">
+                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
         <div class="header-user-box pull-right">
           {% if c.userobj %}
             <span class="dropdown">
