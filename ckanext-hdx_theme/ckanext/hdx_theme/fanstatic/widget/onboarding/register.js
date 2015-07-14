@@ -23,7 +23,7 @@ $(document).ready(function(){
                 });
 
             } else {
-                alert("Can't register: " + result.error.message);
+                alert("Can't register: " + JSON.stringify(result.error.message));
             }
         });
 
