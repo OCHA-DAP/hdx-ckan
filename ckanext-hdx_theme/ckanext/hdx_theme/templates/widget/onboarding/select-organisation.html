@@ -33,14 +33,19 @@ Example:
         <div class="regular-text">see if your organisation exists by scrolling through the list below:</div>
 
         <form id="select-organisation-form">
-            <select class="mTop20" id="existing-org-selector" name="org_id">
+            <select class="mTop20 required" id="existing-org-selector" name="org_id">
                 <option id=""></option>
             </select>
-        </form>
 
-        <div class="regular-text mTop20">Don't see your organisation? <a href="#" onclick="$('#select-organisation').hide();$('#create-organisation').show();">Request a new organisation</a></div>
-        <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.</div>
-        <div class="regular-text mTop20">If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
+            <div class="regular-text mTop20">Don't see your organisation? <a href="#" onclick="$('#select-organisation').hide();$('#create-organisation').show();">Request a new organisation</a></div>
+            <div class="regular-text mTop20">Confirm that you would like to become a member of the organisation above.</div>
+            <div class="regular-text mTop20">If the administrator of the organisation agrees to your request, you will receive an email confirming your membership.</div>
+
+            <div class="right-side-actions">
+                <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Skip">
+                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+            </div>
+        </form>
     </div>
 
     <div id="create-organisation" style="display: none;">
@@ -66,13 +71,11 @@ Example:
                 <input id="org-fts" name="fts_id" class="full-width required" type="text">
                 <label for="org-fts">FTS ID</label>
             </div>
+            <div class="right-side-actions">
+                <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Skip">
+                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+            </div>
         </form>
-
     </div>
-{% endblock %}
-
-{% block actions %}
-    <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Skip">
-    <input id="organisation-form-submit" class="btn btn-primary btn-large mL45" type="button" value="Submit">
 {% endblock %}
 

@@ -73,6 +73,11 @@
 .popup.popup-onboarding textarea.required.input-content ~ label:after {
   content: "";
 }
+.popup.popup-onboarding input[type="text"].required.error,
+.popup.popup-onboarding input[type="password"].required.error,
+.popup.popup-onboarding textarea.required.error {
+  border-color: red;
+}
 .popup.popup-onboarding input[type="text"].required ~ label:after,
 .popup.popup-onboarding input[type="password"].required ~ label:after,
 .popup.popup-onboarding textarea.required ~ label:after {

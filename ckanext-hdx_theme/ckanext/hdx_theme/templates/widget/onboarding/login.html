@@ -39,10 +39,11 @@ Example:
                     <div class="col-xs-12">
                         <div id="username-static" class="username-static">
                             <div class="username-text center">CJ Hendrix</div>
-                            <div class="email-text center"> <span>hendrix@un.org</span>&nbsp;<span><a onclick="$('#username-static, #login-photo-gravatar').hide(); $('#username-form-field, #login-photo-default').show();" href="#">Not you?</a></span></div>
+                            <!-- DON'T forget to fill username in the login -->
+                            <div class="email-text center"> <span>hendrix@un.org</span>&nbsp;<span><a onclick="$('#field-login').val(''); $('#username-static, #login-photo-gravatar').hide(); $('#username-form-field, #login-photo-default').show();" href="#">Not you?</a></span></div>
                         </div>
                         <div id="username-form-field" class="username mTop10 control" style="display: none;">
-                            <input id="field-login" name="login" class="full-width required" type="text">
+                            <input id="field-login" name="login" class="full-width required" type="text" value="cj">
                             <label for="field-login">Email</label>
                         </div>
                         <div class="password mTop10 control">
