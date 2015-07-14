@@ -55,6 +55,6 @@ def get_current_step(extra):
     for ex in extra:
         us_dict[ex.key] = ex.value
     for step in user_model.USER_STATUSES:
-        if us_dict[step] == 'False':
+        if us_dict.get(step) == 'False':
             return step
     return None
