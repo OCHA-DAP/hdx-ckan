@@ -24,8 +24,7 @@ def user_can_register(context, data_dict=None):
 
 @logic.auth_allow_anonymous_access
 def user_can_validate(context, data_dict=None):
-    token_id = data_dict['token']
-    token = get_action('token_show_by_id')(context, {'id': token_id})
+    token = get_action('token_show_by_id')(context, data_dict)
 
     if not token:
         return {'success': False, 'msg': 'User has no token'}

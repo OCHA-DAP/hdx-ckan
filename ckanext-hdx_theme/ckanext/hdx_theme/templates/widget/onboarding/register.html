@@ -35,7 +35,7 @@ Example:
                 <input style="display: none;" name="email" class="full-width disabled required" type="text" value="{{ email }}" readonly>
                 <input style="display: none;" name="login" class="full-width disabled required" type="text" value="{{ email }}" readonly>
                 <input style="display: none;" name="ajax" class="full-width disabled required" type="text" value="true" readonly>
-                <input id="register-username" disabled="disabled" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+                <input id="register-username" class="full-width required" type="text" name="name">
                 <label for="register-username">Username</label>
             </div>
             <div class="mTop10 control">
@@ -60,10 +60,12 @@ Example:
                 <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
                         style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
             </div>
+            <div class="right-side-actions">
+                <input class="btn btn-primary btn-large" type="submit" value="Register">
+            </div>
         </form>
     </div>
 {% endblock %}
 {% block actions %}
-    <input class="btn btn-primary btn-large" type="button" onclick="$('#register-form').submit();" value="Register">
 {% endblock %}
 

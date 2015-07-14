@@ -5,6 +5,7 @@ enabled it will override them when enabled
 """
 import datetime
 import dateutil
+import hashlib
 
 from pylons import config
 
@@ -36,7 +37,6 @@ import ckanext.hdx_users.model as user_model
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import logging as logging
-
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -88,11 +88,290 @@ def name_validator_with_changed_msg(val, context):
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
 
+    def register_email(self, data=None, errors=None, error_summary=None):
+        """
+        STEP 1: user register the email
+        """
+        temp_schema = user_reg_schema.register_user_schema()
+        if 'name' in temp_schema:
+            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+                                   temp_schema['name']]
+        context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
+                   'schema': temp_schema, 'save': 'save' in request.params}
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+        if 'email' in data_dict:
+            md5 = hashlib.md5()
+            md5.update(data_dict['email'])
+            data_dict['name'] = md5.hexdigest()
+        context['message'] = data_dict.get('log_message', '')
+
+        try:
+            check_access('user_create', context, data_dict)
+            check_access('user_can_register', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+
+        # hack to disable check if user is logged in
+        save_user = c.user
+        c.user = None
+        try:
+
+            user = get_action('user_create')(context, data_dict)
+            token = get_action('token_create')(context, user)
+            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
+                                                                   'extras': ue_helpers.get_initial_extras()})
+
+        except NotAuthorized:
+            return OnbNotAuth
+            # abort(401, _('Unauthorized to create user %s') % '')
+        except NotFound, e:
+            return OnbUserNotFound
+            # abort(404, _('User not found'))
+        except DataError:
+            return OnbIntegrityErr
+            # abort(400, _(u'Integrity Error'))
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        if not c.user:
+            # Send validation email
+            self.send_validation_email(user, token)
+
+        c.user = save_user
+        return OnbSuccess
+
+    def validate(self, token):
+        '''
+        Step 2: user click on validate link from email
+        :param token:
+        :return:
+        '''
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        data_dict = {'token': token,
+                     'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
+
+        try:
+            check_access('user_can_validate', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+
+        try:
+            # Update token for user
+            token = get_action('token_show_by_id')(context, data_dict)
+            data_dict['user_id'] = token['user_id']
+            get_action('user_extra_update')(context, data_dict)
+        except NotFound, e:
+            abort(404, _('Token not found'))
+        except:
+            abort(500, _('Error'))
+
+        user = model.User.get(data_dict['user_id'])
+        template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
+        # template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
+        template_data['data']['email'] = user.email
+        template_data['data']['name'] = user.name
+        return render('home/index.html', extra_vars=template_data)
+
+    def register_details(self, data=None, errors=None, error_summary=None):
+        '''
+        Step 3: user enters details for registration (username, password, firstname, lastname and captcha
+        :param data:
+        :param errors:
+        :param error_summary:
+        :return:
+        '''
+        temp_schema = user_reg_schema.register_details_user_schema()
+        if 'name' in temp_schema:
+            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+                                   temp_schema['name']]
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+        user_obj = model.User.get(data_dict['id'])
+        context = {'model': model, 'session': model.Session, 'user': user_obj.name,
+                   'schema': temp_schema}
+        # data_dict['name'] = data_dict['email']
+        data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
+        try:
+            # TODO
+            # captcha.check_recaptcha(request)
+
+            check_access('user_update', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+
+        # hack to disable check if user is logged in
+        save_user = c.user
+        c.user = None
+        try:
+            token_dict = get_action('token_show')(context, data_dict)
+            data_dict['token'] = token_dict['token']
+            get_action('token_update')(context, data_dict)
+            user = get_action('user_update')(context, data_dict)
+
+            ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
+            get_action('user_extra_update')(context, ue_dict)
+
+        except NotAuthorized:
+            return OnbNotAuth
+            # abort(401, _('Unauthorized to create user %s') % '')
+        except NotFound, e:
+            return OnbUserNotFound
+            # abort(404, _('User not found'))
+        except DataError:
+            return OnbIntegrityErr
+            # abort(400, _(u'Integrity Error'))
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        if not c.user:
+            pass
+        c.user = save_user
+        return OnbSuccess
+
+    def follow_details(self, data=None, errors=None, error_summary=None):
+        '''
+        Step 4: user follows key entities
+        :param data:
+        :param errors:
+        :param error_summary:
+        :return:
+        '''
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+        user_id = c.user or data_dict['id']
+        user_obj = model.User.get(user_id)
+        context = {'model': model, 'session': model.Session, 'user': user_obj.name}
+        try:
+            ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
+            get_action('user_extra_update')(context, ue_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+            # abort(401, _('Unauthorized to create user %s') % '')
+        except NotFound, e:
+            return OnbUserNotFound
+            # abort(404, _('User not found'))
+        except DataError:
+            return OnbIntegrityErr
+            # abort(400, _(u'Integrity Error'))
+        except ValidationError, e:
+            # errors = e.error_dict
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+
+    def request_new_organization(self):
+        '''
+        Step 5a: user can request to create a new organization
+        :return:
+        '''
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user}
+        try:
+            check_access('hdx_send_new_org_request', context)
+        except logic.NotAuthorized:
+            base.abort(401, _('Unauthorized to send a new org request'))
+
+        try:
+            user = model.User.get(context['user'])
+            data = self._process_new_org_request(user)
+            self._validate_new_org_request_field(data)
+
+            get_action('hdx_send_new_org_request')(context, data)
+
+            ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
+            get_action('user_extra_update')(context, ue_dict)
+
+        except hdx_mail.NoRecipientException, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        except logic.ValidationError, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
+        return OnbSuccess
+
+    def request_membership(self):
+        '''
+        Step 5b: user can request membership to an existing organization
+        :return:
+        '''
+        try:
+            org_id = request.params.get('org_id', '')
+            msg = request.params.get('message', 'New Onboarding module: create a new organization')
+            user = hdx_h.hdx_get_user_info(c.user)
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user}
+            org_admins = get_action('member_list')(context, {'id': org_id, 'capacity': 'admin', 'object_type': 'user'})
+            admins = []
+            for admin_tuple in org_admins:
+                admin_id = admin_tuple[0]
+                admins.append(hdx_h.hdx_get_user_info(admin_id))
+            admins_with_email = [admin for admin in admins if admin['email']]
+
+            data_dict = {'display_name': user['display_name'], 'name': user['name'],
+                         'email': user['email'], 'organization': org_id,
+                         'message': msg, 'admins': admins_with_email}
+            get_action('hdx_send_request_membership')(context, data_dict)
+
+            ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
+            get_action('user_extra_update')(context, ue_dict)
+
+            return OnbSuccess
+        except hdx_mail.NoRecipientException, e:
+            return self.error_message(_(str(e)))
+        except exceptions.Exception, e:
+            log.error(str(e))
+            return self.error_message(_('Request can not be sent. Contact an administrator.'))
+
+    def invite_friends(self):
+        '''
+        Step 6: user can invite friends by email to access HDX
+        :return:
+        '''
+        try:
+            context = {'model': model, 'session': model.Session,
+                       'user': c.user}
+            # TODO to be changed with mailchimp or check more information
+            subject = "Please join HDX website"
+            body = "Your friend " + c.user + " invited you to join HDX"
+            friends = [request.params.get('email1', None), request.params.get('email2', None),
+                       request.params.get('email3', None), ]
+            for f in friends:
+                if f is not None:
+                    hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
+            user_id = c.user
+            ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
+            get_action('user_extra_update')(context, ue_dict)
+
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
+        return OnbSuccess
+
+    def _get_ue_dict(self, user_id, key, value='True'):
+        ue_dict = self._build_extras_dict(key, value)
+        ue_dict['user_id'] = user_id
+        return ue_dict
+
+    def _build_extras_dict(self, key, value='True'):
+        return {'extras': [{'key': key, 'new_value': value}]}
+
     @staticmethod
     @maintain.deprecated('The functionality of sending emails with new user requests has been deprecated')
     def _validate_form(data, errors):
         ''' The functionality of sending emails with new user requests has been deprecated.
-            Deprecated since 13.08.2014 - hdx 0.3.6 
+            Deprecated since 13.08.2014 - hdx 0.3.6
         '''
         if not data['fullname']:
             errors['fullname'] = [_(u'Fullname is required!')]
@@ -176,108 +455,6 @@ class ValidationController(ckan.controllers.user.UserController):
         c.user = save_user
 
         return result
-
-    def register_email(self, data=None, errors=None, error_summary=None):
-        """
-
-        """
-        temp_schema = user_reg_schema.register_user_schema()
-        if 'name' in temp_schema:
-            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
-                                   temp_schema['name']]
-        context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
-                   'schema': temp_schema, 'save': 'save' in request.params}
-        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        if 'email' in data_dict:
-            data_dict['name'] = data_dict['email']
-        context['message'] = data_dict.get('log_message', '')
-
-        try:
-            check_access('user_create', context, data_dict)
-            check_access('user_can_register', context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        except ValidationError, e:
-            # errors = e.error_dict
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-
-        # hack to disable check if user is logged in
-        save_user = c.user
-        c.user = None
-        try:
-            # TODO
-            # captcha.check_recaptcha(request)
-            user = get_action('user_create')(context, data_dict)
-            token = get_action('token_create')(context, user)
-            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
-                                                                   'extras': ue_helpers.get_initial_extras()})
-
-        except NotAuthorized:
-            return OnbNotAuth
-            # abort(401, _('Unauthorized to create user %s') % '')
-        except NotFound, e:
-            return OnbUserNotFound
-            # abort(404, _('User not found'))
-        except DataError:
-            return OnbIntegrityErr
-            # abort(400, _(u'Integrity Error'))
-        except ValidationError, e:
-            # errors = e.error_dict
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        if not c.user:
-            # Send validation email
-            self.send_validation_email(user, token)
-
-        c.user = save_user
-        return OnbSuccess
-
-    def register_details(self, data=None, errors=None, error_summary=None):
-        """
-
-        """
-        temp_schema = user_reg_schema.register_details_user_schema()
-        if 'name' in temp_schema:
-            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
-                                   temp_schema['name']]
-        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        user_obj = model.User.get(data_dict['id'])
-        context = {'model': model, 'session': model.Session, 'user': user_obj.name,
-                   'schema': temp_schema}
-        data_dict['name'] = data_dict['email']
-        data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
-        try:
-            check_access('user_update', context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        except ValidationError, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-
-        # hack to disable check if user is logged in
-        save_user = c.user
-        c.user = None
-        try:
-            # TODO
-            user = get_action('user_update')(context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-            # abort(401, _('Unauthorized to create user %s') % '')
-        except NotFound, e:
-            return OnbUserNotFound
-            # abort(404, _('User not found'))
-        except DataError:
-            return OnbIntegrityErr
-            # abort(400, _(u'Integrity Error'))
-        except ValidationError, e:
-            # errors = e.error_dict
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        if not c.user:
-            pass
-        c.user = save_user
-        return OnbSuccess
 
     def post_register(self):
         """
@@ -436,56 +613,6 @@ class ValidationController(ckan.controllers.user.UserController):
         except:
             return False
 
-    # def validate(self, token):
-    #     context = {'model': model, 'session': model.Session,
-    #                'user': c.user or c.author, 'auth_user_obj': c.userobj,
-    #                'for_view': True}
-    #     data_dict = {'token': token,
-    #                  'user_obj': c.userobj}
-    #     # Update token for user
-    #     try:
-    #         token = get_action('token_update')(context, data_dict)
-    #     except NotFound, e:
-    #         abort(404, _('Token not found'))
-    #     except:
-    #         abort(500, _('Error'))
-    #
-    #     # Set Flash message
-    #     h.flash_success(_('Your email has been validated. You may now login.'))
-    #     # Redirect to login
-    #     h.redirect_to('login')
-
-    def validate(self, token):
-        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
-        data_dict = {'token': token,
-                     'extras': [{'key': user_model.HDX_ONBOARDING_USER_VALIDATED, 'new_value': 'True'}]}
-
-        try:
-            check_access('user_can_validate', context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        except ValidationError, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-
-        try:
-            # Update token for user
-            token = get_action('token_update')(context, data_dict)
-            data_dict['user_id'] = token['user_id']
-            get_action('user_extra_update')(context, data_dict)
-        except NotFound, e:
-            abort(404, _('Token not found'))
-        except:
-            abort(500, _('Error'))
-
-        user = model.User.get(data_dict['user_id'])
-        template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
-        template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
-        template_data['data']['email'] = user.email
-        template_data['data']['name'] = user.name
-        return render('home/index.html', extra_vars=template_data)
-        # h.redirect_to(controller='home', action='index')
-
     def logged_in(self):
         # redirect if needed
         came_from = request.params.get('came_from', '')
@@ -543,33 +670,6 @@ class ValidationController(ckan.controllers.user.UserController):
             else:
                 return self.login(error=err)
 
-    def request_new_organization(self):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
-        try:
-            check_access('hdx_send_new_org_request', context)
-        except logic.NotAuthorized:
-            base.abort(401, _('Unauthorized to send a new org request'))
-
-        try:
-            user = model.User.get(context['user'])
-            data = self._process_new_org_request(user)
-            self._validate_new_org_request_field(data)
-
-            get_action('hdx_send_new_org_request')(context, data)
-
-            data.clear()
-        except hdx_mail.NoRecipientException, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        except logic.ValidationError, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        except exceptions.Exception, e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-        return OnbSuccess
-
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
 
@@ -590,48 +690,4 @@ class ValidationController(ckan.controllers.user.UserController):
                 'your_email': user.email,
                 'your_name': user.fullname,
                 }
-        print data
         return data
-
-    def invite_friends(self):
-        try:
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
-            # TODO to be changed with mailchimp or check more information
-            subject = "Please join HDX website"
-            body = "Your friend " + c.user + " invited you to join HDX"
-            friends = [request.params.get('email1', None), request.params.get('email2', None),
-                       request.params.get('email3', None), ]
-            for f in friends:
-                if f is not None:
-                    hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
-        except exceptions.Exception, e:
-            error_summary = str(e)
-            return self.error_message(error_summary)
-        return OnbSuccess
-
-    def request_membership(self):
-        try:
-            org_id = request.params.get('org_id', '')
-            msg = request.params.get('message', 'New Onboarding module: create a new organization')
-            user = hdx_h.hdx_get_user_info(c.user)
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
-            org_admins = get_action('member_list')(context, {'id': org_id, 'capacity': 'admin', 'object_type': 'user'})
-            admins = []
-            for admin_tuple in org_admins:
-                admin_id = admin_tuple[0]
-                admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = [admin for admin in admins if admin['email']]
-
-            data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_id,
-                         'message': msg, 'admins': admins_with_email}
-            get_action('hdx_send_request_membership')(context, data_dict)
-
-            return OnbSuccess
-        except hdx_mail.NoRecipientException, e:
-            return self.error_message(_(str(e)))
-        except exceptions.Exception, e:
-            log.error(str(e))
-            return self.error_message(_('Request can not be sent. Contact an administrator.'))
