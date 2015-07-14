@@ -19,9 +19,8 @@ def token_show(context, user):
 
 
 def token_show_by_id(context, data_dict):
-    # model = context['model']
-    id = data_dict['id']
-    token_obj = umodel.ValidationToken.get_by_token(token=id)
+    token = data_dict.get('token', None)
+    token_obj = umodel.ValidationToken.get_by_token(token=token)
     if token_obj is None:
         raise NotFound
     return token_obj.as_dict()
@@ -29,12 +28,12 @@ def token_show_by_id(context, data_dict):
 
 @logic.side_effect_free
 def onboarding_followee_list(context, data_dict):
-    # model = context['model']
     # TODO check if user is following org&locs
     result = []
 
-    locs = get_action('group_list')(context, {'package_count': True, 'include_extras': True, 'all_fields': True,
-                                              'sort': 'package_count desc'})
+    data_filter = {'package_count': True, 'include_extras': True, 'all_fields': True, 'sort': 'package_count desc'}
+
+    locs = get_action('group_list')(context, data_filter)
     result_aux = []
     i = 1
     for item in locs:
@@ -42,28 +41,21 @@ def onboarding_followee_list(context, data_dict):
         if is_custom(item['extras']):
             if item['name'] == c_nepal_earthquake:
                 type = 'crisis'
-            result.append({'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,
-                           'follow': False})
+            result.append(create_item(item, type, False))
         else:
             if i <= NoOfLocs:
-                result_aux.append(
-                    {'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,
-                     'follow': False})
+                result_aux.append(create_item(item, type, False))
                 i += 1
 
-    orgs = get_action('organization_list')(context, {'package_count': True, 'include_extras': True, 'all_fields': True,
-                                                     'sort': 'package_count desc'})
+    orgs = get_action('organization_list')(context, data_filter)
     i = 1
     type = 'organization'
     for item in orgs:
         if is_custom(item['extras']):
-            result.append({'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,
-                           'follow': False})
+            result.append(create_item(item, type, False))
         else:
             if i <= NoOfOrgs:
-                result_aux.append(
-                    {'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,
-                     'follow': False})
+                result_aux.append(create_item(item, type, False))
                 i += 1
 
     result.extend(result_aux)
@@ -75,3 +67,8 @@ def is_custom(extras):
         if 'key' in item and ('custom_loc' == item['key'] or 'custom_org' == item['key']) and '1' == item['value']:
             return True
     return False
+
+
+def create_item(item, type, follow=False):
+    return {'id': item['id'], 'name': item['name'], 'display_name': item['display_name'], 'type': type,
+            'follow': follow}
