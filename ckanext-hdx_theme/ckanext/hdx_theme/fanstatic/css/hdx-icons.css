@@ -119,3 +119,6 @@
 	content: "\e617";
 }
 
+.icon-plus-sign-alt:before {
+  content: "\f0fe";
+}
