@@ -99,6 +99,7 @@ ckan.preview.loadable = html htm rdf+xml owl+xml xml n3 n-triples turtle plain a
 #licenses_group_url = http://licenses.opendefinition.org/licenses/groups/ckan.json
 # ckan.template_footer_end =
 
+
 #!ckan.tracking_enabled = True
 
 ## Internationalisation Settings
@@ -121,7 +122,7 @@ ckan.feeds.author_link =
 ofs.impl = pairtree
 ofs.storage_dir = /opt/www/data
 ckan.storage_path = /opt/www/data
-ckan.max_resource_size = 10
+ckan.max_resource_size = 300
 ckan.max_image_size = 2
 
 ## Datapusher settings
@@ -188,3 +189,5 @@ hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_down
 # This should be overriden in your own prod.ini
 # hdx.gis.layer_import_url = http://localhost:1234/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}
 # hdx.gis.resource_pbf_url = http://localhost:7101/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
+
+hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify

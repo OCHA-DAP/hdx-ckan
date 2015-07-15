@@ -6,6 +6,7 @@ enabled it will override them when enabled
 import datetime
 import dateutil
 import hashlib
+import requests
 
 from pylons import config
 
@@ -39,6 +40,7 @@ import ckanext.hdx_theme.helpers.helpers as hdx_h
 import logging as logging
 
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
+from sqlalchemy.exc import IntegrityError
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -54,10 +56,13 @@ NotAuthorized = logic.NotAuthorized
 unflatten = dictization_functions.unflatten
 
 Invalid = df.Invalid
-
+CaptchaNotValid = _('Captcha is not valid')
 OnbNotAuth = json.dumps({'success': False, 'error': {'message': _('Unauthorized to create user')}})
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
+OnbExistingUsername = json.dumps({'success': False, 'error': {'message': 'Username is already used'}})
+OnbTokenNotFound = json.dumps({'success': False, 'error': {'message': 'Token not found'}})
 OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity Error'}})
+OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
 OnbSuccess = json.dumps({'success': True})
 
 
@@ -129,7 +134,7 @@ class ValidationController(ckan.controllers.user.UserController):
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
-            return OnbUserNotFound
+            return OnbTokenNotFound
             # abort(404, _('User not found'))
         except DataError:
             return OnbIntegrityErr
@@ -138,6 +143,10 @@ class ValidationController(ckan.controllers.user.UserController):
             # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
+
         if not c.user:
             # Send validation email
             self.send_validation_email(user, token)
@@ -169,9 +178,10 @@ class ValidationController(ckan.controllers.user.UserController):
             data_dict['user_id'] = token['user_id']
             get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
-            abort(404, _('Token not found'))
-        except:
-            abort(500, _('Error'))
+            return OnbUserNotFound
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
 
         user = model.User.get(data_dict['user_id'])
         template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
@@ -199,14 +209,16 @@ class ValidationController(ckan.controllers.user.UserController):
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
         try:
-            # TODO
-            # captcha.check_recaptcha(request)
-
+            captcha_response = data_dict.get('g-recaptcha-response', None)
+            if not self.is_valid_captcha(response=captcha_response):
+                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
         except ValidationError, e:
             error_summary = e.error_summary
+            if error_summary == CaptchaNotValid:
+                return OnbCaptchaErr
             return self.error_message(error_summary)
 
         # hack to disable check if user is logged in
@@ -216,26 +228,27 @@ class ValidationController(ckan.controllers.user.UserController):
             token_dict = get_action('token_show')(context, data_dict)
             data_dict['token'] = token_dict['token']
             get_action('token_update')(context, data_dict)
-            user = get_action('user_update')(context, data_dict)
+            get_action('user_update')(context, data_dict)
 
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
             get_action('user_extra_update')(context, ue_dict)
 
         except NotAuthorized:
             return OnbNotAuth
-            # abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
             return OnbUserNotFound
-            # abort(404, _('User not found'))
         except DataError:
             return OnbIntegrityErr
-            # abort(400, _(u'Integrity Error'))
         except ValidationError, e:
-            # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
-        if not c.user:
-            pass
+        except IntegrityError:
+            return OnbExistingUsername
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
+        # if not c.user:
+        #     pass
         c.user = save_user
         return OnbSuccess
 
@@ -248,8 +261,9 @@ class ValidationController(ckan.controllers.user.UserController):
         :return:
         '''
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
-        user_id = c.user or data_dict['id']
-        user_obj = model.User.get(user_id)
+        name = c.user or data_dict['id']
+        user_obj = model.User.get(name)
+        user_id = user_obj.id
         context = {'model': model, 'session': model.Session, 'user': user_obj.name}
         try:
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
@@ -266,6 +280,9 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = str(e)
             return self.error_message(error_summary)
         return OnbSuccess
 
@@ -692,3 +709,11 @@ class ValidationController(ckan.controllers.user.UserController):
                 'your_name': user.fullname,
                 }
         return data
+
+    def is_valid_captcha(self, response):
+        url = configuration.config.get('hdx.captcha.url')
+        secret = configuration.config.get('ckan.recaptcha.privatekey')
+        params = {'secret': secret, "response": response}
+        r = requests.get(url, params=params, verify=True)
+        res = json.loads(r.content)
+        return 'success' in res and res['success'] == True
