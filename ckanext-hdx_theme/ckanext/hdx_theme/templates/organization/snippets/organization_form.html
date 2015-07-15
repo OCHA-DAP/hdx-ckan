@@ -40,6 +40,7 @@
 	    		{{_('Brief overview of what organisation is for.')}}</div>
 	    </div>
     </div>
+  {% if c.userobj.sysadmin %}
   <div class="org-control-container" style="margin-top:50px;">
     {% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}
       {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
@@ -47,6 +48,7 @@
         <div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
       </div>
   </div>
+  {% endif %}
 
 {% if h.hdx_get_extras_element(data.extras, value_key="customization") %}
 {% set custom_org = h.hdx_get_extras_element(data.extras, value_key="custom_org") %}
