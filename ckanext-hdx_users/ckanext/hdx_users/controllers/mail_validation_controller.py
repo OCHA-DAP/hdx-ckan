@@ -57,12 +57,14 @@ unflatten = dictization_functions.unflatten
 
 Invalid = df.Invalid
 CaptchaNotValid = _('Captcha is not valid')
+LoginFailed = _('Login failed. Bad username or password.')
 OnbNotAuth = json.dumps({'success': False, 'error': {'message': _('Unauthorized to create user')}})
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
 OnbExistingUsername = json.dumps({'success': False, 'error': {'message': 'Username is already used'}})
 OnbTokenNotFound = json.dumps({'success': False, 'error': {'message': 'Token not found'}})
 OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity Error'}})
 OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
+OnbLoginErr = json.dumps({'success': False, 'error': {'message': LoginFailed}})
 OnbSuccess = json.dumps({'success': True})
 
 
@@ -92,6 +94,95 @@ def name_validator_with_changed_msg(val, context):
 
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
+
+    def login(self, error=None):
+        '''
+        Code copied from controllers/user.py:345
+        :param error:
+        :return:
+        '''
+        # Do any plugin login stuff
+        for item in p.PluginImplementations(p.IAuthenticator):
+            item.login()
+
+        if 'error' in request.params:
+            h.flash_error(request.params['error'])
+
+        if not c.user:
+            came_from = request.params.get('came_from')
+            if not came_from:
+                came_from = h.url_for(controller='user', action='logged_in',
+                                      __ckan_no_root=True)
+            c.login_handler = h.url_for(
+                self._get_repoze_handler('login_handler_path'),
+                came_from=came_from)
+            if error:
+                # vars = {'error_summary': {'': error}}
+                template_data = ue_helpers.get_login(False, error)
+            else:
+                template_data = {}
+            return render('home/index.html', extra_vars=template_data)
+            # return render('user/login.html', extra_vars=vars)
+            # return OnbLoginErr
+        else:
+            return render('user/logout_first.html')
+
+    def logged_in(self):
+        # redirect if needed
+        came_from = request.params.get('came_from', '')
+        if h.url_is_local(came_from):
+            return h.redirect_to(str(came_from))
+
+        if c.user:
+            context = None
+            data_dict = {'id': c.user}
+            user_dict = get_action('user_show')(context, data_dict)
+
+            # IAuthenticator too buggy, doing this instead
+            try:
+                token = get_action('token_show')(context, user_dict)
+            except NotFound, e:
+                token = {'valid': True}  # Until we figure out what to do with existing users
+            except:
+                abort(500, _('Something wrong'))
+            if not token['valid']:
+                # force logout
+                for item in p.PluginImplementations(p.IAuthenticator):
+                    item.logout()
+                # redirect to validation page
+                h.flash_error(_('You have not yet validated your email.'))
+                h.redirect_to(self._get_repoze_handler('logout_handler_path'))
+
+            if 'created' in user_dict:
+                time_passed = datetime.datetime.now() - dateutil.parser.parse(user_dict['created'])
+            else:
+                time_passed = None
+            if 'activity' in user_dict and (not user_dict['activity']) and time_passed and time_passed.days < 3:
+                # /dataset/new
+                contribute_url = h.url_for(controller='package', action='new')
+                # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
+                #    If you want to associate this dataset with an organization, either click on "My Organizations" below
+                #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
+                # h.flash_success(_(message), True)
+                return h.redirect_to(controller='user', action='dashboard_organizations')
+            else:
+                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
+                return self.me()
+        else:
+            err = _('Login failed. Bad username or password.')
+            try:
+                if g.openid_enabled:
+                    err += _(' (Or if using OpenID, it hasn\'t been associated '
+                             'with a user account.)')
+            except:
+                pass
+
+            if h.asbool(config.get('ckan.legacy_templates', 'false')):
+                h.flash_error(err)
+                h.redirect_to(controller='user',
+                              action='login', came_from=came_from)
+            else:
+                return self.login(error=err)
 
     def register_email(self, data=None, errors=None, error_summary=None):
         """
@@ -630,63 +721,6 @@ class ValidationController(ckan.controllers.user.UserController):
             return True
         except:
             return False
-
-    def logged_in(self):
-        # redirect if needed
-        came_from = request.params.get('came_from', '')
-        if h.url_is_local(came_from):
-            return h.redirect_to(str(came_from))
-
-        if c.user:
-            context = None
-            data_dict = {'id': c.user}
-            user_dict = get_action('user_show')(context, data_dict)
-
-            # IAuthenticator too buggy, doing this instead
-            try:
-                token = get_action('token_show')(context, user_dict)
-            except NotFound, e:
-                token = {'valid': True}  # Until we figure out what to do with existing users
-            except:
-                abort(500, _('Something wrong'))
-            if not token['valid']:
-                # force logout
-                for item in p.PluginImplementations(p.IAuthenticator):
-                    item.logout()
-                # redirect to validation page
-                h.flash_error(_('You have not yet validated your email.'))
-                h.redirect_to(self._get_repoze_handler('logout_handler_path'))
-
-            if 'created' in user_dict:
-                time_passed = datetime.datetime.now() - dateutil.parser.parse(user_dict['created'])
-            else:
-                time_passed = None
-            if 'activity' in user_dict and (not user_dict['activity']) and time_passed and time_passed.days < 3:
-                # /dataset/new
-                contribute_url = h.url_for(controller='package', action='new')
-                # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
-                #    If you want to associate this dataset with an organization, either click on "My Organizations" below
-                #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
-                # h.flash_success(_(message), True)
-                return h.redirect_to(controller='user', action='dashboard_organizations')
-            else:
-                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                return self.me()
-        else:
-            err = _('Login failed. Bad username or password.')
-            try:
-                if g.openid_enabled:
-                    err += _(' (Or if using OpenID, it hasn\'t been associated '
-                             'with a user account.)')
-            except:
-                pass
-
-            if h.asbool(config.get('ckan.legacy_templates', 'false')):
-                h.flash_error(err)
-                h.redirect_to(controller='user',
-                              action='login', came_from=came_from)
-            else:
-                return self.login(error=err)
 
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})

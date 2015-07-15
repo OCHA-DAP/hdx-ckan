@@ -92,7 +92,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config, 'templates')
 
     def get_helpers(self):
-        return {'get_user_extra': h_user_extra.get_user_extra}
+        return {'get_user_extra': h_user_extra.get_user_extra,
+                'get_login': h_user_extra.get_login}
 
     def is_fallback(self):
         return False
