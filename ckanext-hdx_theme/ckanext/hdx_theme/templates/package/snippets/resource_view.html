@@ -26,7 +26,7 @@
         </p>
         <p id="data-view-error" class="collapse"></p>
         <p>
-          <a href="{{ raw_resource_url }}" class="btn btn-large resource-url-analytics" target="_blank">
+          <a href="{{ raw_resource_url }}" class="btn btn-large resource-url-analytics" target="_blank" tracking-type="{{resource['url_type']}}">
             <i class="icon-large icon-download"></i>
             {{ _('Download resource') }}
           </a>
@@ -82,3 +82,5 @@
 
 {% resource 'base/modules/data-viewer.js' %}
 {% resource 'base/modules/resource-view-embed.js' %}
+{% resource 'hdx_theme/indicator/tracking.js' %}
+
