@@ -67,3 +67,15 @@ function showOnboardingWidget(id){
 
     return false;
 }
+
+$(document).ready(function(){
+    var loginError = $("#login-error").text();
+    if (loginError && loginError != ""){
+        var errMsg = $("#loginPopup").find(".error-message");
+        errMsg.text(loginError);
+        $("#field-login").addClass("error");
+        $("#field-password").addClass("error");
+        errMsg.show();
+        showOnboardingWidget("#loginPopup");
+    }
+});
