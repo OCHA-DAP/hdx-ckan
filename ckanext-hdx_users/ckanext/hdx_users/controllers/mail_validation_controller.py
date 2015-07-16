@@ -12,7 +12,7 @@ from pylons import config
 
 # import ckan.lib.base as base
 import ckan.controllers.user
-from ckan.common import _, c, g, request
+from ckan.common import _, c, g, request, response
 import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
 import ckan.lib.base as base
@@ -121,6 +121,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 template_data = ue_helpers.get_login(False, error)
             else:
                 template_data = {}
+
             return render('home/index.html', extra_vars=template_data)
             # return render('user/login.html', extra_vars=vars)
             # return OnbLoginErr
@@ -166,7 +167,11 @@ class ValidationController(ckan.controllers.user.UserController):
                 # h.flash_success(_(message), True)
                 return h.redirect_to(controller='user', action='dashboard_organizations')
             else:
+                userobj = c.userobj if c.userobj else model.User.get(c.user)
+                login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
+                              'email_hash': userobj.email_hash, 'login': userobj.name}
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
+                response.set_cookie('hdx_login', json.dumps(login_dict), max_age=14 * 24 * 3600)
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')

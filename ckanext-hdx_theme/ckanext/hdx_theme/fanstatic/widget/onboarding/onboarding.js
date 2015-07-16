@@ -4,7 +4,7 @@ function closeCurrentWidget(self){
 
 function showOnboardingWidget(id){
     $(id).show();
-    $(id).find("input:first").focus();
+    $(id).find("input[type!='button']:visible:first").focus();
 
     $(id).find('img.gif-auto-play').remove();
     $(id).find('img.gif').each(function(idx, element){
@@ -77,5 +77,9 @@ $(document).ready(function(){
         $("#field-password").addClass("error");
         errMsg.show();
         showOnboardingWidget("#loginPopup");
+    }
+    var userLogout = $("#user-logout").text();
+    if (userLogout && userLogout != ""){
+        showOnboardingWidget("#logoutPopup");
     }
 });
