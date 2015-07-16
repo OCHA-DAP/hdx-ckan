@@ -78,4 +78,8 @@ $(document).ready(function(){
         errMsg.show();
         showOnboardingWidget("#loginPopup");
     }
+    var userLogout = $("#user-logout").text();
+    if (userLogout && userLogout != ""){
+        showOnboardingWidget("#logoutPopup");
+    }
 });
