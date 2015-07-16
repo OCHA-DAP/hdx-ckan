@@ -496,6 +496,10 @@
         display: block;
     }
 
+    .select2-container.required.error > .select2-choice {
+        border-color: red;
+    }
+
     .select2-container .select2-choice{
         background-image: none;
         color: #888888;
@@ -536,7 +540,6 @@
     }
 
     .select2-container .select2-choice .select2-arrow {
-        width: 31px;
         background-color: #888888;
         background-image: none;
         padding-top: 14px;

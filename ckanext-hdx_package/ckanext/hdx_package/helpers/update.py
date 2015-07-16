@@ -274,7 +274,6 @@ def hdx_package_update_metadata(context, data_dict):
         log.warn('Indicator: {} - num of groups in request is {} but only {} are in the db. Difference: {}'.
                  format(package.get('name','unknown'),len(requested_groups), len(db_groups), ", ".join(not_saved_groups)))
 
-
     return package
 
 
@@ -284,12 +283,26 @@ def hdx_resource_update_metadata(context, data_dict):
     as a parameter and you can't supply just a modified field .
     This function first loads the resource via resource_show() and then modifies the respective dict. 
     '''
-    allowed_fields = ['last_data_update_date']
 
+    # Below params are need in context so that the URL of the resource is not
+    # transformed to a real URL for an uploaded file
+    # ( for uploaded files the url field is the filename )
+    context['use_cache'] = False
+    context['for_edit'] = True
+
+    allowed_fields = ['last_data_update_date', 'shape_info']
+
+    resource_was_modified = False
     resource = _get_action('resource_show')(context, data_dict)
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
+            resource_was_modified = True
             resource[key] = value
-    resource = _get_action('resource_update')(context, resource)
+
+    if resource_was_modified:
+        # we don't want the resource update to generate another
+        # geopreview transformation
+        context['do_geo_preview'] = False
+        resource = _get_action('resource_update')(context, resource)
 
     return resource

@@ -1,5 +1,6 @@
 @import "../../base/mixins";
 @import "../../base/variables";
+@import "onboarding-variables";
 
 .popup.popup-onboarding {
   .content {
@@ -20,9 +21,7 @@
     position: relative;
   }
 
-  @inputHeight: 44px;
-  @inputPadding: 20px;
-  input[type="text"], input[type="password"] {
+  input[type="text"], input[type="password"], textarea {
     height: @inputHeight;
     border-radius: 6px;
     border: 1px solid white;
@@ -61,6 +60,9 @@
 
     &.required.input-content ~ label:after {
       content: "";
+    }
+    &.required.error{
+      border-color: red;
     }
 
     &.required ~ label {
@@ -144,3 +146,9 @@
   }
 }
 
+#incomplete-profile {
+  .gothamMediumFont(12px);
+  color: white;
+  .letter-spacing-1();
+  line-height: 24px;
+}

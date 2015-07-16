@@ -9,6 +9,7 @@ Example:
 #}
 
 {% resource 'hdx_theme/widget/onboarding/register.css' %}
+{% resource 'hdx_theme/widget/onboarding/register.js' %}
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-register" %}
 
@@ -27,37 +28,44 @@ Example:
 
 {% block right_content %}
     <div class="register-form">
-        <div class="small-form-title">Please fill out the following:</div>
-        <div class="mTop20 control">
-            <input id="register-username" class="full-width required" type="text">
-            <label for="register-username">Username</label>
-        </div>
-        <div class="mTop10 control">
-            <input id="register-password" class="full-width required" type="password">
-            <label for="register-password">Password</label>
-        </div>
-        <div class="row mTop10">
-            <div class="col-xs-6">
-                <div class="control">
-                    <input id="register-first-name" class="full-width required" type="text">
-                    <label for="register-first-name">First Name</label>
+        <form id="register-form">
+            <div class="small-form-title">Please fill out the following:</div>
+            <div class="mTop20 control">
+                <input style="display: none;" name="id" class="full-width disabled required" type="text" value="{{ user_id }}" readonly>
+                <input style="display: none;" name="email" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+                <input style="display: none;" name="login" class="full-width disabled required" type="text" value="{{ email }}" readonly>
+                <input style="display: none;" name="ajax" class="full-width disabled required" type="text" value="true" readonly>
+                <input id="register-username" class="full-width required" type="text" name="name">
+                <label for="register-username">Username</label>
+            </div>
+            <div class="mTop10 control">
+                <input id="register-password" name="password" class="full-width required" type="password">
+                <label for="register-password">Password</label>
+            </div>
+            <div class="row mTop10">
+                <div class="col-xs-6">
+                    <div class="control">
+                        <input id="register-first-name" name="first-name" class="full-width required" type="text">
+                        <label for="register-first-name">First Name</label>
+                    </div>
+                </div>
+                <div class="col-xs-6">
+                    <div class="control">
+                        <input id="register-last-name" name="last-name" class="full-width required" type="text">
+                        <label for="register-last-name">Last Name</label>
+                    </div>
                 </div>
             </div>
-            <div class="col-xs-6">
-                <div class="control">
-                    <input id="register-last-name" class="full-width required" type="text">
-                    <label for="register-last-name">Last Name</label>
-                </div>
+            <div class="mTop10 captcha">
+                <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
+                        style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
             </div>
-        </div>
-        <div class="mTop10 captcha">
-            <div class="g-recaptcha" data-sitekey="6Lc2n_ESAAAAAA0bvtnjEcju37JknyfXft7y4ya9"
-                    style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
-        </div>
-
+            <div class="right-side-actions">
+                <input class="btn btn-primary btn-large" type="submit" value="Register">
+            </div>
+        </form>
     </div>
 {% endblock %}
 {% block actions %}
-    <input class="btn btn-primary btn-large" type="button" onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" value="Register">
 {% endblock %}
 

@@ -4,6 +4,7 @@ function closeCurrentWidget(self){
 
 function showOnboardingWidget(id){
     $(id).show();
+    $(id).find("input:first").focus();
 
     $(id).find('img.gif-auto-play').remove();
     $(id).find('img.gif').each(function(idx, element){
@@ -20,8 +21,6 @@ function showOnboardingWidget(id){
         }, 0);
     });
 
-    $(id).find('input[type="password"], input[type="text"]');
-
     function _triggerInputDataClass($this){
         if ($this.val() === "")
             $this.removeClass("input-content");
@@ -29,23 +28,42 @@ function showOnboardingWidget(id){
             $this.addClass("input-content");
     }
 
-    $(id).find('input[type="password"], input[type="text"]').each(
+    $(id).find('input[type="password"], input[type="text"], textarea').each(
         function(idx, el){
             _triggerInputDataClass($(el));
         }
     );
-    $(id).find('input[type="password"], input[type="text"]').change(
+    $(id).find('input[type="password"], input[type="text"], textarea').change(
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
         }
     );
-    $(id).find('input[type="password"], input[type="text"]').on("keyup",
+    $(id).find('input[type="password"], input[type="text"], textarea').on("keyup",
         function(){
             var $this = $(this);
             _triggerInputDataClass($this);
         }
     );
+
+    $(id).find('input[type="submit"]').on("click", function(){
+        var result = precheckForm(id);
+        return !result;
+    });
+
+    function precheckForm(id){
+        var error = false;
+        $(id).find("input.required, textarea.required, select.required").each(function(idx, el){
+            var $el = $(el);
+            if ($el.is(":visible") && ($el.val() === null || $el.val() === "")){
+                $el.addClass("error");
+                error = true;
+            } else {
+                $el.removeClass("error");
+            }
+        });
+        return error;
+    }
 
     return false;
 }

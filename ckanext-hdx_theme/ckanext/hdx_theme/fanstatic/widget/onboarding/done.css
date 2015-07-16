@@ -25,6 +25,8 @@
   margin-left: 20px;
   float: right;
   top: 0;
+  color: #ffffff;
+  opacity: 1;
 }
 .notification-widget .notification-message {
   font-family: 'Gotham-Bold', sans-serif;

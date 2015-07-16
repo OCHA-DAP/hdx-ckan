@@ -70,7 +70,7 @@ class MigrateCommand(p.toolkit.CkanCommand):
             Session.execute("update resource set url_type = 'upload', "
                             "url = '%s' where id = '%s'"  % (filename, id))
             Session.execute("update resource_revision set url_type = 'upload', "
-                            "url = %s where id = '%s' and "
+                            "url = '%s' where id = '%s' and "
                             "revision_id = '%s'" % (filename, id, revision_id))
             Session.commit()
             print "Saved url %s" % url
