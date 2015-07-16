@@ -7,7 +7,6 @@
     <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
         {% if data %}
-          {{ data }}
           {% set step = data.current_step %}
           {% if step %}
             <div id="login-error" style="display: none;">{{ data.message }}</div>
