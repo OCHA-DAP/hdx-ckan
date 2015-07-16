@@ -38,7 +38,7 @@ import ckanext.hdx_users.model as user_model
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import logging as logging
-
+import urllib2 as urllib2
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 from sqlalchemy.exc import IntegrityError
 
@@ -171,7 +171,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
                               'email_hash': userobj.email_hash, 'login': userobj.name}
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                response.set_cookie('hdx_login', json.dumps(login_dict), max_age=14 * 24 * 3600)
+                response.set_cookie('hdx_login', urllib2.quote(json.dumps(login_dict)), max_age=14 * 24 * 3600)
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')
