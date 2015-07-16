@@ -184,6 +184,11 @@ class ValidationController(ckan.controllers.user.UserController):
             else:
                 return self.login(error=err)
 
+    def logged_out_page(self):
+        template_data = ue_helpers.get_logout(True, _('User logged out with success'))
+        return render('home/index.html', extra_vars=template_data)
+        # return render('user/logout.html')
+
     def register_email(self, data=None, errors=None, error_summary=None):
         """
         STEP 1: user register the email

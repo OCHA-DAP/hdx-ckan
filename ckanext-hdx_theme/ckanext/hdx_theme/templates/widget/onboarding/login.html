@@ -50,6 +50,9 @@ Example:
                             <input id="field-password" name="password" class="full-width required" type="password">
                             <label for="field-password">Password</label>
                         </div>
+                        <div class="error-message" style="display: none;">
+
+                        </div>
                         <div class="checkbox-style mTop10"><input id="field-remember" name="remember" type="checkbox"><label for="field-remember">Remember me</label> </div>
                         <div class="mTop10"><input class="full-width btn btn-primary btn-large" type="submit" value="Login"> </div>
                         <div class="member center mTop10"><a href="{{ h.url_for(controller='user', action='request_reset') }}">Forgot your password?</a></div>

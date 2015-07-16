@@ -53,8 +53,19 @@ def get_user_extra(user_id=None):
 def get_login(success=True, message=None):
     result = {
         'data': {
-            'user_id': c.user,
+            # 'user_id': c.user,
             'current_step': user_model.HDX_LOGIN,
+            'success': success,
+            'message': message
+        }
+    }
+    return result
+
+
+def get_logout(success=True, message=None):
+    result = {
+        'data': {
+            'current_step': user_model.HDX_LOGOUT,
             'success': success,
             'message': message
         }

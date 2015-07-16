@@ -59,6 +59,15 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         map.connect('/user/validation_resend/{id}',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action="validation_resend")
+        map.connect('/user/logged_out_page',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                    action='logged_out_page')
+        # map.connect('/user/logged_out',
+        #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        #             action='logged_out')
+        map.connect('/user/logged_out_redirect',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                    action='logged_out_page')
         map.connect('/user/logged_in',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='logged_in')

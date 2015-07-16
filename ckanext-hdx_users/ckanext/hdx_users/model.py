@@ -24,6 +24,7 @@ HDX_ONBOARDING_FOLLOWS = 'hdx_onboarding_follows'
 HDX_ONBOARDING_ORG = 'hdx_onboarding_org'
 HDX_ONBOARDING_FRIENDS = 'hdx_onboarding_friends'
 HDX_LOGIN = 'hdx_login'
+HDX_LOGOUT = 'hdx_logout'
 
 USER_STATUSES = [
     HDX_ONBOARDING_USER_REGISTERED,
