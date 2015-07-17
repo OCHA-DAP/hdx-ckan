@@ -464,13 +464,12 @@ class ValidationController(ckan.controllers.user.UserController):
                        'user': c.user}
             # TODO to be changed with mailchimp or check more information
             usr = c.userobj.display_name or c.user
-            subject = "Join HDX"
+            subject = 'Join HDX'
             link = '{0}'.format(config['ckan.site_url'])
-            body = "Your friend " + usr + " invited you to join HDX.\n You can join here: " + link
-            friends = [request.params.get('email1', None), request.params.get('email2', None),
-                       request.params.get('email3', None), ]
+            body = 'Your friend " + usr + " invited you to join HDX.\n You can join here: ' + link
+            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
-                if f is not None:
+                if f:
                     hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
