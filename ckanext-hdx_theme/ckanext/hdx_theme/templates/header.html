@@ -8,7 +8,7 @@
       <div class="span12 paddingLeftHack paddingRightHack">
         {% if data %}
           {% set step = data.current_step %}
-          {% if step == "login_error" %}
+          {% if step == "hdx_login" %}
             <div id="login-error" style="display: none;">{{ data.message }}</div>
           {% endif %}
           {% if step == "hdx_logout" %}
