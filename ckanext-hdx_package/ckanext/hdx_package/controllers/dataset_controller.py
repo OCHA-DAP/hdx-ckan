@@ -646,7 +646,7 @@ class DatasetController(PackageController):
 
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
-            self._create_perma_link_if_needed(id, resource)
+            #self._create_perma_link_if_needed(id, resource)
 
             # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
@@ -972,7 +972,7 @@ class DatasetController(PackageController):
             # required for nav menu
             c.pkg = context['package']
             c.pkg_dict = c.package
-            self._create_perma_link_if_needed(id, c.resource)
+            #self._create_perma_link_if_needed(id, c.resource)
         except NotFound:
             abort(404, _('Resource not found'))
         except NotAuthorized:
