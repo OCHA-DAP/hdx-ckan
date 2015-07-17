@@ -18,7 +18,7 @@
 		{% resource 'hdx_theme/trigger_click_hash.js' %}
 		{# link_for _('+ Add Member'), controller='organization', action='member_new', id=c.group_dict.id, class_='btn hdx-btn main-hdx-btn' #}
 		<a data-module="trigger_click_hash" data-module-expected_hash="#add-member"
-	  		href="#add-member-div" data-toggle="modal" class="btn hdx-btn main-hdx-btn">{{ _('+ Add Member') }}</a>
+	  		href="#add-member-div" data-toggle="modal" class="btn hdx-btn main-hdx-btn add-member">{{ _('+ Add Member') }}</a>
 		{% snippet 'organization/snippets/add_member.html', form_url=h.url_for(controller='organization', action='member_new', id=c.group_dict.id), roles=roles, modal_div_id='add-member-div', authorized=authorized %}
   	{% endif %}
   	{% set selected_sorting = c.sort_by_selected or 'title asc' %}
