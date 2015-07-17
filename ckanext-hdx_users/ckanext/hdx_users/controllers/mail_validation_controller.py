@@ -463,8 +463,10 @@ class ValidationController(ckan.controllers.user.UserController):
             context = {'model': model, 'session': model.Session,
                        'user': c.user}
             # TODO to be changed with mailchimp or check more information
-            subject = "Please join HDX website"
-            body = "Your friend " + c.user + " invited you to join HDX"
+            usr = c.userobj.display_name or c.user
+            subject = "Join HDX"
+            link = '{0}'
+            body = "Your friend " + usr + " invited you to join HDX.\n You can join here: ".format(link=link.format(config['ckan.site_url']))
             friends = [request.params.get('email1', None), request.params.get('email2', None),
                        request.params.get('email3', None), ]
             for f in friends:
@@ -722,9 +724,8 @@ class ValidationController(ckan.controllers.user.UserController):
             action='validate',
             token=token['token'])
         link = '{0}{1}'
-        body = 'Hello! Thank you for registering for an HDX account. ' \
-               'Please click the following link to validate your email\n' \
-               '{link}\n' \
+        body = 'Thank you for your interest in HDX. In order to continue registering your account, please verify your email address.\n' \
+               'Click this link:    {link}\n' \
                ''.format(link=link.format(config['ckan.site_url'], validate_link))
         print 'Validate link: ' + validate_link
         try:
