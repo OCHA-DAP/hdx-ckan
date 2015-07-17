@@ -2,18 +2,38 @@ import datetime
 import logging
 
 import sqlalchemy.orm as orm
-from sqlalchemy.schema import Table, Column, UniqueConstraint, ForeignKey
+from sqlalchemy.schema import Table, Column, UniqueConstraint, ForeignKey, CreateTable
 import sqlalchemy.types as types
 import vdm.sqlalchemy
 
 import ckan.model as model
 from ckan.model.domain_object import DomainObject
-import ckan.model.domain_object as domain_object
+# import ckan.model.domain_object as domain_object
+
 from ckan.model import meta, extension, core, user
 import ckan.model.types as _types
 
 mapper = orm.mapper
 log = logging.getLogger(__name__)
+# DomainObject = domain_object.DomainObject
+
+HDX_ONBOARDING_USER_REGISTERED = 'hdx_onboarding_user_registered'
+HDX_ONBOARDING_USER_VALIDATED = 'hdx_onboarding_user_validated'
+HDX_ONBOARDING_DETAILS = 'hdx_onboarding_details'
+HDX_ONBOARDING_FOLLOWS = 'hdx_onboarding_follows'
+HDX_ONBOARDING_ORG = 'hdx_onboarding_org'
+HDX_ONBOARDING_FRIENDS = 'hdx_onboarding_friends'
+HDX_LOGIN = 'hdx_login'
+HDX_LOGOUT = 'hdx_logout'
+
+USER_STATUSES = [
+    HDX_ONBOARDING_USER_REGISTERED,
+    HDX_ONBOARDING_USER_VALIDATED,
+    HDX_ONBOARDING_DETAILS,
+    HDX_ONBOARDING_FOLLOWS,
+    HDX_ONBOARDING_ORG,
+    HDX_ONBOARDING_FRIENDS
+]
 
 
 class ValidationToken(DomainObject):
@@ -36,7 +56,6 @@ class ValidationToken(DomainObject):
         query = meta.Session.query(ValidationToken)
         return query.filter_by(token=token).first()
 
-
     @classmethod
     def check_existence(self):
         return validation_token_table.exists()
@@ -56,10 +75,12 @@ def setup():
     '''
     Create our tables!
     '''
-
+    print 'User Model setup...'
     if model.user_table.exists() and not validation_token_table.exists():
+        print CreateTable(validation_token_table)
         validation_token_table.create()
-        log.debug('Validation Token table created')
+        print 'DONE validation_token_table.create()'
+    print 'DONE User Model setup...'
 
 
 def delete_tables():

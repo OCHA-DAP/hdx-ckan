@@ -1,0 +1,114 @@
+.list-items.facet-items:last-child {
+   	border-bottom: 0px;
+}
+
+dt.uppercase {
+    color: #888888;
+    font-family: 'Gotham-Book',sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.member-item{
+    position: relative;
+}
+
+.member-actions {
+	position: absolute;
+	top: 20px;
+	right: 14px;
+	display: inline-block;
+    font-size: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Org member search customization */
+.page_primary_action .list-items.search-form {
+  margin: 0;
+}
+
+/* Customizations of modal popups */
+.hdx-modal.modal-content {
+    background-color: #eee;
+    color: #000;
+    top: 30%;
+}
+
+.hdx-modal .modal-header {
+    border: 0 none;
+}
+
+.hdx-modal .modal-footer {
+    box-shadow: 0 1px 0 #ffffff inset;
+}
+
+
+.hdx-modal .control-label {
+    margin-left: 10px;
+    margin-right: 15px;
+    text-align: left;
+    width: 50px;
+
+    float: left;
+    font-size: 16px;
+}
+
+.hdx-modal .controls {
+    margin-left: 80px;
+    margin-right: 10px;
+}
+
+.hdx-modal .controls {
+    margin-left: 80px;
+}
+
+.hdx-modal .control-group {
+    margin-top: 10px;
+}
+
+.hdx-modal .control-medium .controls input[disabled] {
+    background-color: #eeeeee;
+    cursor: not-allowed;
+}
+
+.hdx-modal .control-medium .controls input {
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+    padding: 5px;
+    padding-left: 10px;
+    font-size: 16px;
+}
+
+.hdx-modal.hdx-has-tabs .modal-body {
+    padding-top: 0px;
+}
+
+.hdx-modal.hdx-has-tabs .tab-content {
+    padding-top: 15px;
+}
+
+.js .hdx-modal .tab-content {
+    display: block;
+}
+
+.hdx-modal .nav-tabs > li.active > a, .hdx-modal .nav-tabs > li.active > a:focus {
+    background-color: inherit;
+}
+
+
+/*END - Customizations of modal popups */
+
+.hdx-btn.main-hdx-btn.hdx-btn.add-member{
+    margin-bottom: 10px;
+}
+
+.primary .page_primary_action {
+    margin-left: 40px;
+}
+
+.btn.hdx-btn.main-hdx-btn {
+    margin-left: 10px;
+    padding: 4px 12px;
+}

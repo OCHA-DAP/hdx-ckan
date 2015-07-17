@@ -72,10 +72,6 @@
     null,
     "资源重排序"
   ],
-  "Reset this": [
-    null,
-    "重置这一项"
-  ],
   "Resource uploaded": [
     null,
     "上传资源"

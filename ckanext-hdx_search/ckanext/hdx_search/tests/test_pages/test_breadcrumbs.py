@@ -32,7 +32,7 @@ class TestBreadcrumbs(hdx_test_base.HdxBaseTest):
 
     def test_breadcrumb_on_dataset_page(self):
         url = h.url_for(
-            controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='package_search')
+            controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search')
         result = self.app.get(url)
         page = str(result.response)
 

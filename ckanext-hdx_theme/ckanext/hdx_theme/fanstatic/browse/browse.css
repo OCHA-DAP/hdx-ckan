@@ -53,8 +53,6 @@
     color: #ffffff;
     letter-spacing: 0.03em;
     line-height: 1;
-    background: none;
-    box-shadow: none;
 }
 
 .topSection .sectionDemo .visTexts{
@@ -73,12 +71,12 @@
 }
 
 
-.topSection .sectionDemo .demoButton{
-    border: 2px solid #ffffff;
-    border-radius: 5px;
-    padding: 8px 10px;
-    margin-right: 20px;
-}
+/*.topSection .sectionDemo .demoButton{*/
+    /*border: 2px solid #ffffff;*/
+    /*border-radius: 5px;*/
+    /*padding: 8px 10px;*/
+    /*margin-right: 20px;*/
+/*}*/
 
 .browseSectionHeight{
     height: 40px;

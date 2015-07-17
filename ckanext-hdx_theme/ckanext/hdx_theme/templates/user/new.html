@@ -35,13 +35,5 @@
 {% block scripts2 %}
   {% resource 'hdx_theme/login' %}
   {{ super() }}
-  <script src="/scripts/latinise.js"></script>
-  <script>
-    $(document).ready(function(){
-        //Force ascii encoding
-        $('#field-username').blur(function(){
-          $(this).val($('#field-username').val().latinise());
-        });
-    });
-  </script>
+  {% resource 'hdx_theme/latinise.js' %}
 {% endblock %}

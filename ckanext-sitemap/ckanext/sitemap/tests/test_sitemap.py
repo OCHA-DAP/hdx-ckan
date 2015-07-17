@@ -4,26 +4,36 @@ Tests for sitemap.
 
 import logging
 import unittest
-import mock
 from StringIO import StringIO
 import json
 from lxml import etree
 import datetime
 
 from pylons import config
+import ckan.config as ckanconfig
+import webtest
 
 from ckan.model import Session, Package, Resource
 import ckan.model as model
 from ckan.tests import CreateTestData
+import ckan.lib.create_test_data as ctd
 from ckan.lib.helpers import url_for
 from ckan.logic.auth.get import package_show
 from ckan.tests.functional.base import FunctionalTestCase
+
 
 import testdata
 
 log = logging.getLogger(__file__)
 
 siteschema = etree.XMLSchema(etree.parse(StringIO(testdata.sitemap)))
+indexschema = etree.XMLSchema(etree.parse(StringIO(testdata.sitemapindex)))
+
+def _get_test_app():
+    config['ckan.legacy_templates'] = False
+    app = ckanconfig.middleware.make_app(config['global_conf'], **config)
+    app = webtest.TestApp(app)
+    return app
 
 class TestSitemap(FunctionalTestCase, unittest.TestCase):
     
@@ -33,6 +43,11 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         Remove any initial sessions.
         """
         Session.remove()
+        cls.original_config = config.copy()
+        plugins = set(config['ckan.plugins'].strip().split())
+        plugins.add('sitemap')
+        config['ckan.plugins'] = ' '.join(plugins)
+        cls.app = _get_test_app()
         CreateTestData.create()
         url = url_for(controller="ckanext.sitemap.controller:SitemapController",
                       action='view')
@@ -47,14 +62,40 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         CreateTestData.delete()
         Session.remove()
 
+    @classmethod
+    def _get_action(cls, action_name):
+        return tk.get_action(action_name)
+    
     def test_controller(self):
-        self.assert_(self.cont.response.status == "200 OK")
+        url = url_for(controller="ckanext.sitemap.controller:SitemapController",
+                      action='view')
+        self.cont = self.app.get(url)
+        self.content_file = StringIO(self.cont.body)
+        assert self.cont.response.status == "200 OK"
 
-    def test_validity(self):
+    def test_validity_index(self):
+        url = url_for(controller="ckanext.sitemap.controller:SitemapController",
+                      action='view')
+        self.cont = self.app.get(url)
+        print self.cont.body
+        self.content_file = StringIO(self.cont.body)
+        indexschema.assertValid(etree.parse(self.content_file))
+        assert indexschema.validate(etree.parse(self.content_file))
+
+    def test_validity_map(self):
+        url = url_for(controller="ckanext.sitemap.controller:SitemapController",
+                      action='index', page=1)
+        self.cont = self.app.get(url)
+        print self.cont.body
+        self.content_file = StringIO(self.cont.body)
         siteschema.assertValid(etree.parse(self.content_file))
-        self.assert_(siteschema.validate(etree.parse(self.content_file)))
+        assert siteschema.validate(etree.parse(self.content_file))
 
     def test_packages(self):
+        url = url_for(controller="ckanext.sitemap.controller:SitemapController",
+                      action='index', page=1)
+        self.cont = self.app.get(url)
+        self.content_file = StringIO(self.cont.body)
         tree = etree.parse(self.content_file)
         self.assert_("annakarenina" in self.cont.body)
         log.debug(self.cont.body)
@@ -94,4 +135,3 @@ class TestSitemap(FunctionalTestCase, unittest.TestCase):
         cont2 = self.app.get(url)
         log.debug(cont2.body)
         self.assert_(cont1.body == cont2.body)
-

@@ -1,21 +1,25 @@
+"""
+Functions for creating and maintaining datasets.
+"""
 import logging
 # from urllib import urlencode
 #import datetime
 import cgi
+from string import lower
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 
 from ckanext.hdx_package.helpers import helpers
 #from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
 #from formencode import foreach
 
 from pylons import config
-from genshi.template import MarkupTemplate
 #from genshi.template.text import NewTextTemplate
 #from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
 #import ckan.lib.maintain as maintain
-import ckan.lib.package_saver as package_saver
+#import ckan.lib.package_saver as package_saver
 #import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
 #import ckan.lib.accept as accept
@@ -27,7 +31,7 @@ import ckan.new_authz as new_authz
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 
-from ckan.common import OrderedDict, _, json, request, c, g, response
+from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
@@ -55,8 +59,6 @@ CONTENT_TYPES = {
     'json': 'application/json;charset=utf-8',
 }
 
-ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
-GEOJSON_FORMAT = 'geojson'
 
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
@@ -64,6 +66,9 @@ from ckan.controllers.package import PackageController
 #from ckan.controllers.api import ApiController
 
 def clone_dict(old_dict):
+    """
+    Creates a copy of the data dictionary
+    """
     data = dict()
     for k, v in old_dict.iteritems():
         data[k] = v
@@ -111,14 +116,15 @@ class DatasetController(PackageController):
             if ckan_phase:
                 # prevent clearing of groups etc
                 context['allow_partial_update'] = True
-                # sort the tags
-                data_dict['tags'] = self._tag_string_to_list(
-                    data_dict['tag_string'])
+                if 'tag_string' in data_dict:
+                    # sort the tags
+                    data_dict['tags'] = self._tag_string_to_list(data_dict['tag_string'])
                 if data_dict.get('pkg_name'):
                     is_an_update = True
                     # This is actually an update not a save
                     data_dict['id'] = data_dict['pkg_name']
                     del data_dict['pkg_name']
+                    #data_dict['state'] = 'draft'
                     # this is actually an edit not a save
                     pkg_dict = get_action('package_update')(context, data_dict)
 
@@ -182,6 +188,9 @@ class DatasetController(PackageController):
             return self.new(data_dict, errors, error_summary)
 
     def preselect(self):
+        """
+        Force user to pick an organization before creating a dataset
+        """
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
         c.organizations_available = helpers.hdx_organizations_available_with_roles()
         if c.organizations_available and len(c.organizations_available) > 0:
@@ -190,6 +199,11 @@ class DatasetController(PackageController):
             return base.render('organization/request_mem_or_org.html')
 
     def new(self, data=None, errors=None, error_summary=None):
+        """
+        Creates a new dataset, modified to create two page flow
+        (no longer needed) and to force users to join an org 
+        (still needed)
+        """
         # Is the user a member of any orgs? If not make them join one first
         try:
             user_orgs = helpers.hdx_user_org_num(c.userobj.id)
@@ -206,7 +220,7 @@ class DatasetController(PackageController):
         package_type = self._guess_package_type(True)
 
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'save': 'save' in request.params}
 
         # Package needs to have a organization group in the call to
@@ -231,83 +245,64 @@ class DatasetController(PackageController):
         error_summary = error_summary or {}
         # in the phased add dataset we need to know that
         # we have already completed stage 1
-        stage = ['inactive']
-        if data.get('state') == 'draft':
-            stage = ['inactive', 'complete']
-        elif data.get('state') == 'draft-complete':
-            stage = ['inactive', 'complete', 'complete']
+        stage = ['active']
+        if data.get('state', '').startswith('draft'):
+            stage = ['active', 'complete']
 
         # if we are creating from a group then this allows the group to be
         # set automatically
         data['group_id'] = request.params.get('group') or \
                            request.params.get('groups__0__id')
-
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary,
-                'action': 'new', 'stage': stage, 'validation_fail': 0}
+        form_snippet = self._package_form(package_type=package_type)
+        form_vars = {'data': data, 'errors': errors,
+                     'error_summary': error_summary,
+                     'action': 'new', 'stage': stage,
+                     'dataset_type': package_type,
+                    }
         c.errors_json = h.json.dumps(errors)
 
         self._setup_template_variables(context, {},
                                        package_type=package_type)
 
-        # TODO: This check is to maintain backwards compatibility with the
-        # old way of creating custom forms. This behaviour is now deprecated.
-        if hasattr(self, 'package_form'):
-            c.form = render(self.package_form, extra_vars=vars)
-        else:
-            c.form = render(self._package_form(package_type=package_type),
-                            extra_vars=vars)
-
-        if not request.is_xhr:
-            return render(self._new_template(package_type), extra_vars={'stage': stage, 'data': data})
-        else:
-            return self._finish(200, {'validation_fail': 1, 'errors': vars['errors'],
-                                      'error_summary': vars['error_summary']}, content_type='json')
+        new_template = self._new_template(package_type)
+        c.form = ckan.lib.render.deprecated_lazy_render(
+            new_template,
+            form_snippet,
+            lambda: render(form_snippet, extra_vars=form_vars),
+            'use of c.form is deprecated. please see '
+            'ckan/templates/package/base_form_page.html for an example '
+            'of the new way to include the form snippet'
+            )
+        return render(new_template,
+                      extra_vars={'form_vars': form_vars,
+                                  'form_snippet': form_snippet,
+                                  'dataset_type': package_type})
+        #if not request.is_xhr:
+        #    return render(self._new_template(package_type), extra_vars={'stage': stage, 'data': data})
+        #else:
+        #    return self._finish(200, {'validation_fail': 1, 'errors': vars['errors'],
+        #                              'error_summary': vars['error_summary']}, content_type='json')
             # return render(self._new_template(package_type), extra_vars={'stage':
             # stage})
 
-    def _get_perma_link(self, dataset_id, resource_id):
-        perma_link = h.url_for(
-            'perma_storage_file', id=dataset_id, resource_id=resource_id)
-        if '://' not in perma_link:
-            perma_link = config.get(
-                'ckan.site_url', '') + perma_link
-        return perma_link
+    # def _get_perma_link(self, dataset_id, resource_id):
+    #     """
+    #     Get perma link for resource
+    #     """
+    #     perma_link = h.url_for(
+    #         'perma_storage_file', id=dataset_id, resource_id=resource_id)
+    #     if '://' not in perma_link:
+    #         perma_link = config.get(
+    #             'ckan.site_url', '') + perma_link
+    #     return perma_link
 
     def _update_or_create_resource(self, context, data, dataset_id, resource_id):
+        gis_data = {"dataset_id": dataset_id, "resource_id": resource_id}
         if resource_id:
-            data['id'] = resource_id
-            # Added by HDX - adding perma_link
-            if 'resource_type' in data and u'file.upload' == data['resource_type']:
-                data['perma_link'] = self._get_perma_link(
-                    dataset_id, resource_id)
-
             get_action('resource_update')(context, data)
-            if 'format' in data:
-                if data['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                    data['shape'] = json.dumps(self._get_geojson(data['url']))
-                if data['format'] == GEOJSON_FORMAT:
-                    data['shape'] = json.dumps(self._get_json_from_resource(data['url']))
-                if 'shape' in data and data['shape'] is not None:
-                    get_action('resource_update')(context, data)
 
         else:
-            result_dict = get_action('resource_create')(context, data)
-
-            # Added by HDX - adding perma_link
-            # Now that we have a resource id we want to add the
-            # perma_link url to the resource
-            if 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
-                result_dict['perma_link'] = self._get_perma_link(
-                    dataset_id, result_dict['id'])
-                get_action('resource_update')(context, result_dict)
-            if 'format' in result_dict:
-                if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                    result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
-                elif result_dict['format'] == GEOJSON_FORMAT:
-                    result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
-                if 'shape' in result_dict and result_dict['shape'] is not None:
-                    get_action('resource_update')(context, result_dict)
+            get_action('resource_create')(context, data)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
@@ -322,12 +317,12 @@ class DatasetController(PackageController):
             del data['id']
 
             context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
+                       'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
             # see if we have any data that we are trying to save
             data_provided = False
             for key, value in data.iteritems():
-                if value and key != 'resource_type':
+                if ((value or isinstance(value, cgi.FieldStorage)) and key != 'resource_type'):
                     data_provided = True
                     break
 
@@ -378,8 +373,12 @@ class DatasetController(PackageController):
                       _('The dataset {id} could not be found.').format(id=id))
             if save_action == 'go-metadata':
                 # go to final stage of add dataset
+                data_dict = get_action('package_show')(context, {'id': id})
+                get_action('package_update')(
+                    dict(context, allow_state_change=True),
+                    dict(data_dict, state='active'))
                 redirect(h.url_for(controller='package',
-                                   action='new_metadata', id=id))
+                                   action='read', id=id))
             elif save_action == 'go-dataset':
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
@@ -388,6 +387,7 @@ class DatasetController(PackageController):
                 # go to first stage of add dataset
                 redirect(h.url_for(controller='package',
                                    action='read', id=id))
+            ### Leaving this in HDX unless we update the templates
             elif save_action == 'finish':
                 redirect(h.url_for(controller='package',
                                    action='read', id=id))
@@ -400,25 +400,48 @@ class DatasetController(PackageController):
         vars = {'data': data, 'errors': errors, 'error_summary': error_summary, 'action': 'new', 'pkg_name': id}
         # get resources for sidebar
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
         try:
             pkg_dict = get_action('package_show')(context, {'id': id})
         except NotFound:
             abort(404, _('The dataset {id} could not be found.').format(id=id))
+        try:
+            check_access(
+                'resource_create', context, {"package_id": pkg_dict["id"]})
+        except NotAuthorized:
+            abort(401, _('Unauthorized to create a resource for this package'))
+
+        package_type = pkg_dict['type'] or 'dataset'
+
+        errors = errors or {}
+        error_summary = error_summary or {}
+        vars = {'data': data, 'errors': errors,
+                'error_summary': error_summary, 'action': 'new',
+                'resource_form_snippet': self._resource_form(package_type),
+                'dataset_type': package_type}
+        vars['pkg_name'] = id
         # required for nav menu
         vars['pkg_dict'] = pkg_dict
-        if pkg_dict['state'] == 'draft':
+        template = 'package/new_resource_not_draft.html'
+        if pkg_dict['state'].startswith('draft'):
             vars['stage'] = ['complete', 'active']
-        elif pkg_dict['state'] == 'draft-complete':
-            vars['stage'] = ['complete', 'active', 'complete']
+            template = 'package/new_resource.html'
+        return render(template, extra_vars=vars)
 
-        if not request.is_xhr:
-            return render('package/new_resource.html', extra_vars=vars)
-        else:
-            # Adding url for easy update
-            vars['action_url'] = h.url_for(
-                controller='package', action='new_resource', id=vars['pkg_name'])
-            return self._finish(200, vars, content_type='json')
+        # # required for nav menu
+        # vars['pkg_dict'] = pkg_dict
+        # if pkg_dict['state'] == 'draft':
+        #     vars['stage'] = ['complete', 'active']
+        # elif pkg_dict['state'] == 'draft-complete':
+        #     vars['stage'] = ['complete', 'active', 'complete']
+
+        # if not request.is_xhr:
+        #     return render('package/new_resource.html', extra_vars=vars)
+        # else:
+        #     # Adding url for easy update
+        #     vars['action_url'] = h.url_for(
+        #         controller='package', action='new_resource', id=vars['pkg_name'])
+        #     return self._finish(200, vars, content_type='json')
 
     def new_metadata(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
@@ -487,6 +510,9 @@ class DatasetController(PackageController):
 
     def resource_edit(self, id, resource_id, data=None, errors=None,
                       error_summary=None):
+        """
+        Edit resource metadata
+        """
         if request.method == 'POST' and not data:
             data = data or clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(
                 request.POST))))
@@ -507,8 +533,8 @@ class DatasetController(PackageController):
                                           errors, error_summary)
             except NotAuthorized:
                 abort(401, _('Unauthorized to edit this resource'))
-            redirect(h.url_for(controller='package', action='resources',
-                               id=id))
+            redirect(h.url_for(controller='package', action='resource_read',
+                               id=id, resource_id=resource_id))
 
         context = {'model': model, 'session': model.Session,
                    'api_version': 3, 'for_edit': True,
@@ -544,13 +570,20 @@ class DatasetController(PackageController):
         if not data:
             data = resource_dict
 
+        package_type = pkg_dict['type'] or 'dataset'
+
         errors = errors or {}
         error_summary = error_summary or {}
         vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary, 'action': 'new'}
+                'error_summary': error_summary, 'action': 'new',
+                'resource_form_snippet': self._resource_form(package_type),
+                'dataset_type':package_type}
         return render('package/resource_edit.html', extra_vars=vars)
 
     def _create_perma_link_if_needed(self, dataset_id, resource):
+        """
+        Create a perma link
+        """
         if 'perma_link' not in resource and resource.get('resource_type', '') == 'file.upload':
             domain = config.get('ckan.site_url', '')
             if domain and domain in resource.get('url', ''):
@@ -559,21 +592,22 @@ class DatasetController(PackageController):
                 resource['perma_link'] = domain + perma_link
 
     def read(self, id, format='html'):
+        """
+        Display the package, includes HDX additions for continuous browsing
+        """
         if not format == 'html':
-            ctype, extension, loader = \
+            ctype, extension = \
                 self._content_type_from_extension(format)
             if not ctype:
                 # An unknown format, we'll carry on in case it is a
                 # revision specifier and re-constitute the original id
                 id = "%s.%s" % (id, format)
-                ctype, format, loader = "text/html; charset=utf-8", "html", \
-                                        MarkupTemplate
+                ctype, format = "text/html; charset=utf-8", "html"
         else:
-            ctype, format, loader = self._content_type_from_accept()
+            ctype, format = self._content_type_from_accept()
 
         response.headers['Content-Type'] = ctype
 
-        package_type = self._get_package_type(id.split('@')[0])
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
@@ -612,11 +646,15 @@ class DatasetController(PackageController):
 
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
-            self._create_perma_link_if_needed(id, resource)
+            #self._create_perma_link_if_needed(id, resource)
 
             # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
+
+            resource_views = get_action('resource_view_list')(
+                context, {'id': resource['id']})
+            resource['has_views'] = len(resource_views) > 0
 
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
@@ -627,10 +665,11 @@ class DatasetController(PackageController):
             # If there's no indicator value it isn't an indicator
             c.pkg_dict['indicator'] = 0
 
+        package_type = c.pkg_dict['type'] or 'dataset'
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
 
-        package_saver.PackageSaver().render_package(c.pkg_dict, context)
+        #package_saver.PackageSaver().render_package(c.pkg_dict, context)
 
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
@@ -667,23 +706,23 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
-        has_shapes = 0
+        has_shapes = False
         if 'resources' in c.pkg_dict:
             has_shapes = self._has_shapes(c.pkg_dict['resources'])
         try:
-            if has_shapes > 0:
+            if has_shapes:
                 c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                return render('indicator/hdx-shape-read.html', loader_class=loader)
+                return render('indicator/hdx-shape-read.html')
             if int(c.pkg_dict['indicator']):
-                return render('indicator/read.html', loader_class=loader)
+                return render('indicator/read.html')
             else:
                 org_dict = c.pkg_dict.get('organization') or {}
                 org_id = org_dict.get('id', None)
                 org_info_dict = self._get_org_extras(org_id)
                 if org_info_dict.get('custom_org', False):
                     self._process_customizations(org_info_dict.get('customization', None))
-                    return render('package/custom_hdx_read.html', loader_class=loader)
-                return render('package/hdx_read.html', loader_class=loader)
+                    return render('package/custom_hdx_read.html')
+                return render('package/hdx_read.html')
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
@@ -693,6 +732,9 @@ class DatasetController(PackageController):
         assert False, "We should never get here"
 
     def _get_org_extras(self, org_id):
+        """
+        Get the extras for our orgs
+        """
         if not org_id:
             return {}
         context = {'model': model, 'session': model.Session,
@@ -709,6 +751,9 @@ class DatasetController(PackageController):
         return extras_dict
 
     def _process_customizations(self, json_string):
+        """
+        Process settings for datasets belonging to custom layouts 
+        """
         c.logo_config = {
           'background_color': '#fafafa',
           'border_color': '#cccccc'
@@ -723,56 +768,81 @@ class DatasetController(PackageController):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
-
-    @staticmethod
-    def _has_shapes(resources):
-        result = 0
-        formats = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+    def _has_shapes(self, resources):
         for resource in resources:
-            if ('format' in resource) and (resource['format'] in formats) and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
-                result = 1
-                return result
-        return result
+            if self._has_shape_info(resource):
+                return True
+        return False
 
-    @staticmethod
-    def _process_shapes(resources):
+    def _has_shape_info(self, resource):
+        if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
+            shp_info = json.loads(resource['shape_info'])
+            if shp_info.get('state', '') == 'success':
+                return True
+        return False
+
+    def _process_shapes(self, resources):
         result = {}
+        context = {'model': model, 'session': model.Session,
+           'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
         for resource in resources:
-            if 'format' in resource:
-                if resource['format'] == ZIPPED_SHAPEFILE_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
-                    name = resource['name']
-                    result[name] = json.loads(resource['shape'])
-                elif resource['format'] == GEOJSON_FORMAT and ('shape' in resource) and (resource['shape'] != 'null') and 'errors' not in resource['shape']:
-                    name = resource['name']
-                   # result[name] = DatasetController._get_json_from_resource(resource)
-                    result[name] = json.loads(resource['shape'])
+            if self._has_shape_info(resource):
+                res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
+                shp_info = json.loads(resource['shape_info'])
+
+                res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
+                name = resource['name']
+                result[name] = {
+                    'url': res_pbf_url,
+                    'bounding_box': shp_info['bounding_box']
+                }
         return result
 
-    @staticmethod
-    def _get_json_from_resource(resource):
-        if not resource:
-            return None
-        urls_dict = {'url': resource}
-        g_json = get_action('hdx_get_json_from_resource')({}, urls_dict)
-        return g_json
+    # @staticmethod
+    # def _get_json_from_resource(resource):
+    #     """
+    #     Get json from the resource files
+    #     """
+    #     if not resource:
+    #         return None
+    #     urls_dict = {'url': resource}
+    #     g_json = get_action('hdx_get_json_from_resource')({}, urls_dict)
+    #     return g_json
+    # 
+    # @staticmethod
+    # def _get_geojson(url):
+    #     """
+    #     Get geojson from resources
+    #     """
+    #     ogre_url = config.get('hdx.ogre.url')
+    #     urls_dict = {'shape_source_url': url, 'convert_url': ogre_url+'/convert'}
+    #     g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
+    #     return g_json
 
-    @staticmethod
-    def _get_geojson(url):
-        ogre_url = config.get('hdx.ogre.url')
-        urls_dict = {'shape_source_url': url, 'convert_url': ogre_url+'/convert'}
-        g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
-        return g_json
+    def _get_shape_info_as_json(self, gis_data):
+        resource_id = gis_data['resource_id']
+        resource_id = resource_id if resource_id and resource_id.strip() else 'new'
 
+        layer_import_url = config.get('hdx.gis.layer_import_url')
+        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
+                    resource_id).replace("{resource_download_url}", gis_data['url'])
+        result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
+        return result
 
     def _resource_preview(self, data_dict):
+        """
+        Preview resources
+        """
         if 'format' not in data_dict['resource'] or not data_dict['resource']['format']:
             return False
-        return bool(datapreview.res_format(data_dict['resource'])
-                    in datapreview.direct() + datapreview.loadable()
-                    or datapreview.get_preview_plugin(
-            data_dict, return_first=True))
+        '''Deprecated in 2.3'''
+        return bool(datapreview.get_preview_plugin(data_dict, return_first=True))
 
     def shorten(self):
+        """
+        Use Google's url shorten to create social sharing links
+        """
         import requests
 
         params = request.params.items()
@@ -788,6 +858,9 @@ class DatasetController(PackageController):
         return self._finish(200, {'url': short}, content_type='json')
 
     def visibility(self, id):
+        """
+        Toggle the visibility of the dataset
+        """
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
@@ -822,6 +895,9 @@ class DatasetController(PackageController):
 
     # copy from package.py:1094
     def resource_delete(self, id, resource_id):
+        """
+        Delete a resource, HDX changed the redirection point.
+        """
 
         if 'cancel' in request.params:
             h.redirect_to(
@@ -848,11 +924,13 @@ class DatasetController(PackageController):
             abort(401, _('Unauthorized to delete resource %s') % '')
         except NotFound:
             abort(404, _('Resource not found'))
-        return render('package/confirm_delete_resource.html')
+        return render('package/confirm_delete_resource.html', {'dataset_type': self._get_package_type(id)})
 
 
     def delete(self, id):
-
+        """
+        Delete package, HDX changed the redirection point
+        """
         if 'cancel' in request.params:
             h.redirect_to(controller='package', action='edit', id=id)
 
@@ -870,15 +948,20 @@ class DatasetController(PackageController):
                 h.flash_notice(_('Dataset has been deleted.'))
                 h.redirect_to(controller='user', action='dashboard_datasets')
             c.pkg_dict = get_action('package_show')(context, {'id': id})
+            dataset_type = c.pkg_dict['type'] or 'dataset'
         except NotAuthorized:
             abort(401, _('Unauthorized to delete package %s') % '')
         except NotFound:
             abort(404, _('Dataset not found'))
-        return render('package/confirm_delete.html')
+        return render('package/confirm_delete.html',
+                      extra_vars={'dataset_type': dataset_type})
 
 #copy from package.py:1183
 #related to issue 2367
     def resource_read(self, id, resource_id):
+        """
+        Display resource, modified to add permalinks
+        """
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
@@ -889,7 +972,7 @@ class DatasetController(PackageController):
             # required for nav menu
             c.pkg = context['package']
             c.pkg_dict = c.package
-            self._create_perma_link_if_needed(id, c.resource)
+            #self._create_perma_link_if_needed(id, c.resource)
         except NotFound:
             abort(404, _('Resource not found'))
         except NotAuthorized:
@@ -902,6 +985,8 @@ class DatasetController(PackageController):
         except KeyError:
             c.package['isopen'] = False
 
+        dataset_type = c.pkg_dict['type'] or 'dataset'
+
         # TODO: find a nicer way of doing this
         c.datastore_api = '%s/api/action' % config.get(
             'ckan.site_url', '').rstrip('/')
@@ -910,7 +995,32 @@ class DatasetController(PackageController):
 
         c.resource['can_be_previewed'] = self._resource_preview(
             {'resource': c.resource, 'package': c.package})
-        return render('package/resource_read.html')
+
+        resource_views = get_action('resource_view_list')(
+            context, {'id': resource_id})
+        c.resource['has_views'] = len(resource_views) > 0
+
+        current_resource_view = None
+        view_id = request.GET.get('view_id')
+        if c.resource['can_be_previewed'] and not view_id:
+            current_resource_view = None
+        elif c.resource['has_views']:
+            if view_id:
+                current_resource_view = [rv for rv in resource_views
+                                         if rv['id'] == view_id]
+                if len(current_resource_view) == 1:
+                    current_resource_view = current_resource_view[0]
+                else:
+                    abort(404, _('Resource view not found'))
+            else:
+                current_resource_view = resource_views[0]
+
+        vars = {'resource_views': resource_views,
+                'current_resource_view': current_resource_view,
+                'dataset_type': dataset_type}
+
+        template = self._resource_template(dataset_type)
+        return render(template, extra_vars=vars)
 
 
     def resource_datapreview(self, id, resource_id):
@@ -958,100 +1068,3 @@ class DatasetController(PackageController):
         else:
             return render(preview_plugin.preview_template(context, data_dict))
 
-
-        # class HDXApiController(ApiController):
-
-        #     def package_create(self):
-        #         context = {'model': model, 'session': model.Session, 'user': c.user,
-        #                    'api_version': 3, 'auth_user_obj': c.userobj}
-        #         log.debug('create: %s' % (context))
-        #         try:
-        #             request_data = self._get_request_data()
-        #             data_dict = {}
-        #             data_dict.update(request_data)
-        #         except ValueError, inst:
-        #             return self._finish_bad_request(
-        #                 _('JSON Error: %s') % inst)
-
-        #         try:
-        #             response_data = self.package_create_rest(context, data_dict)
-        #             location = None
-        #             return self._finish_ok(response_data,
-        #                                    resource_location=location)
-        #         except NotAuthorized, e:
-        #             extra_msg = e.extra_msg
-        #             return self._finish_not_authz(extra_msg)
-        #         except NotFound, e:
-        #             extra_msg = e.extra_msg
-        #             return self._finish_not_found(extra_msg)
-        #         except ValidationError, e:
-        #             # CS: nasty_string ignore
-        #             log.error('Validation error: %r' % str(e.error_dict))
-        #             return self._finish(409, e.error_dict, content_type='json')
-        #         except DataError, e:
-        #             log.error('Format incorrect: %s - %s' % (e.error, request_data))
-        #             error_dict = {
-        #                 'success': False,
-        #                 'error': {'__type': 'Integrity Error',
-        #                                     'message': e.error,
-        #                                     'data': request_data}}
-        #             return self._finish(400, error_dict, content_type='json')
-        #         except search.SearchIndexError:
-        #             log.error('Unable to add package to search index: %s' %
-        #                       request_data)
-        #             return self._finish(500,
-        #                                 _(u'Unable to add package to search index') %
-        #                                 request_data)
-        #         except:
-        #             model.Session.rollback()
-        #             raise
-
-        #     def request_wrapper(self, context, data_dict=None, result=None):
-        #         user = context['user']
-
-        #         if new_authz.auth_is_anon_user(context):
-        #             check1 = new_authz.check_config_permission('anon_create_dataset')
-        #         else:
-        #             check1 = new_authz.check_config_permission('create_dataset_if_not_in_organization') \
-        #                 or new_authz.check_config_permission('create_unowned_dataset') \
-        #                 or new_authz.has_user_permission_for_some_org(user, 'create_dataset')
-
-        #         if not check1:
-        #             return {'success': False, 'msg': _('User %s not authorized to create packages') % user}
-
-        #         check2 = _check_group_auth(context,data_dict)
-        #         if not check2:
-        #             return {'success': False, 'msg': _('User %s not authorized to edit these groups') % user}
-
-        #         user = context['user']
-        #         if user in (model.PSEUDO_USER__VISITOR, ''):
-        #             return {'success': False, 'msg': _('Valid API key needed to create a package')}
-
-        #         # If an organization is given are we able to add a dataset to it?
-        #         data_dict = data_dict or {}
-        #         org_id = data_dict.get('owner_org')
-        #         if org_id and not new_authz.has_user_permission_for_group_or_org(
-        #                 org_id, user, 'create_dataset'):
-        #             return {'success': False, 'msg': _('User %s not authorized to add dataset to this organization') % user}
-        #         return {'success': True, 'result':result}
-
-        #     def convert_groups(self, groups):
-        #         countries = []
-        #         for g in groups:
-        #             countries.append(g['id'])
-        #         return countries
-
-        #     def package_create_rest(self, context, data_dict):
-        #         import ckan.lib.dictization.model_save as model_save
-
-        #         check_access('package_create_rest', context, data_dict)
-        #         dictized_package = model_save.package_api_to_dict(data_dict, context)
-        #         dictized_after = get_action('package_create')(context, dictized_package)
-        #         ## Update
-        #         dictized_package['groups'] = self.convert_groups(dictized_package['groups'])
-        #         dictized_after = get_action('package_update')(context, dictized_package)
-        #         pkg = context['package']
-        #         package_dict = model_dictize.package_to_api(pkg, context)
-
-        #         data_dict['id'] = pkg.id
-        #         return self.request_wrapper(context, package_dict, dictized_after)

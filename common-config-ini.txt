@@ -77,12 +77,12 @@ ckan.site_id = default
 #		same origin policy
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
-ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
+ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats text_view recline_view datastore
 
 
 ## Front-End Settings
 ckan.site_title = Humanitarian Data Exchange
-ckan.site_logo = /hdx-logo-positive.png
+ckan.site_logo = /images/homepage/logo-beta-inverted.svg
 ckan.site_description =
 ckan.favicon = /images/icons/hdx.ico
 ckan.gravatar_default = identicon
@@ -98,6 +98,7 @@ ckan.preview.loadable = html htm rdf+xml owl+xml xml n3 n-triples turtle plain a
 #!ckan.recaptcha.privatekey = 
 #licenses_group_url = http://licenses.opendefinition.org/licenses/groups/ckan.json
 # ckan.template_footer_end =
+
 
 #!ckan.tracking_enabled = True
 
@@ -121,7 +122,7 @@ ckan.feeds.author_link =
 ofs.impl = pairtree
 ofs.storage_dir = /opt/www/data
 ckan.storage_path = /opt/www/data
-ckan.max_resource_size = 10
+ckan.max_resource_size = 300
 ckan.max_image_size = 2
 
 ## Datapusher settings
@@ -164,6 +165,11 @@ hdx.mapbox.labelslayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43djggg/
 
 ## Chart / Top line num source settings
 
+# Current active crises
+hdx.crises = ebola, nepal-earthquake
+hdx.crisis.ebola = ebola
+hdx.crisis.nepal_earthquake = nepal-earthquake
+
 # Ebola page
 hdx.ebola.datastore.top_line_num = a02903a9-022b-4047-bbb5-45127b591c85
 hdx.ebola.datastore.cases = c59b5722-ca4b-41ca-a446-472d6d824d01
@@ -178,3 +184,10 @@ hdx.colombia.datastore.access_constraints = 9e69d499-0b2b-4da6-9c61-10e453a57504
 # Nepal Earthquake page
 hdx.nepal_earthquake.filestore.circle_markers = /dataset/json-repository/resource_download/c7a5b4a5-ce29-484e-9f8c-581ccefba04e
 hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_download/475656c7-ee1e-4cd1-a11e-fd20e397be1c
+
+# GIS
+# This should be overriden in your own prod.ini
+# hdx.gis.layer_import_url = http://localhost:1234/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}
+# hdx.gis.resource_pbf_url = http://localhost:7101/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
+
+hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify

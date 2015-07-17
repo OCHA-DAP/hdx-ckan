@@ -1,4 +1,4 @@
-{% extends "page-new.html" %}
+{% extends "page.html" %}
 
 {% block primary_content %}
 <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
@@ -30,7 +30,7 @@
                   <a class="btn visButton" href="#">Show me a cool visualisation</a>
                   -->
 
-                  <a class="btn demoButton" href="/dataset/mobile_cellular_subscriptions_per_100_inhabitants">Show me a cool visualisation</a>
+                  <a class="btn btn-demo" href="/dataset/mobile_cellular_subscriptions_per_100_inhabitants">Show me a cool visualisation</a>
                   <span class="visTexts">TAKE A LOOK AT OUR <a href="/ebola">EBOLA</a> & <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a> PAGES</span>
                 </div>
             </div>

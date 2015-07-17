@@ -1,0 +1,80 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.two-column-follow .two-column-left {
+  height: 560px;
+}
+.two-column-follow .two-column-left .envelope {
+  height: 200px;
+}
+.two-column-follow .two-column-right {
+  height: 560px;
+  padding: 35px 35px 85px;
+}
+.two-column-follow .two-column-right .follow-form {
+  height: 100%;
+  overflow: scroll;
+  position: relative;
+}
+.two-column-follow .two-column-right .fading {
+  z-index: 10;
+  background: linear-gradient(to bottom, rgba(238, 238, 238, 0) 0%, #eeeeee 100%);
+  position: absolute;
+  bottom: 85px;
+  height: 32px;
+  width: 375px;
+}
+.two-column-follow .two-column-right .selectable-list {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  width: 100%;
+}
+.two-column-follow .two-column-right .selectable-list li {
+  height: 64px;
+  border-top: 1px solid #cccccc;
+  border-bottom: 1px solid #cccccc;
+  margin-top: -1px;
+  position: relative;
+}
+.two-column-follow .two-column-right .selectable-list li input[type="checkbox"] {
+  position: absolute;
+  top: 26px;
+  left: 10px;
+}
+.two-column-follow .two-column-right .selectable-list li input[type="checkbox"]:checked + div {
+  background-color: #007ce0;
+  opacity: 0.1;
+}
+.two-column-follow .two-column-right .selectable-list li div {
+  position: absolute;
+  z-index: 1;
+  height: 62px;
+  width: 100%;
+}
+.two-column-follow .two-column-right .selectable-list li label {
+  position: relative;
+  margin: 0;
+  padding-left: 32px;
+  padding-right: 78px;
+  font-weight: 700;
+  width: 100%;
+  z-index: 3;
+}
+.two-column-follow .two-column-right .selectable-list li span {
+  position: absolute;
+  right: 10px;
+  top: 22px;
+  line-height: 20px;
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  color: #333333;
+  letter-spacing: 0.01em;
+}

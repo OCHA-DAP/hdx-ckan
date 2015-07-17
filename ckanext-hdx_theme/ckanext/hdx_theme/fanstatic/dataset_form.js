@@ -129,13 +129,25 @@ $(document).ready(function(){
     // get rid of country tags is user tried to delete them and just got the error.
     if ($('div#select_country').find('span.error-block').length) {
       // console.log('country error detected. must be #985 :D');
-      if ($('div#select_country').find('span.error-block').html().match('issing value').length) {
+      if ($('div#select_country').find('span.error-block').html().match('Missing value').length) {
         if ($('#selected_groups').find('span.pill').length) {
           $('#selected_groups').find('span.pill').each(function() {
             $(this).find('i').trigger('click');
           });
         }
       }
+    }
+
+    //alert("This script won't work - it used to be in package_metadata_fields.html:180");
+    var date = $('hdx_dataset_date').text().trim();
+    if(date.match("-")){
+      var range = date.split("-");
+      //Clear single date field
+      document.getElementById('field-dataset_date').value = '';
+
+      //Set range
+      document.getElementById('date_range1').value = range[0];
+      document.getElementById('date_range2').value = range[1];
     }
 });
 

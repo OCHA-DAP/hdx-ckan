@@ -5,12 +5,13 @@
 {% set action = form_action or h.url_for(controller='package', action='new_resource', id=pkg_name) %}
 
 {% resource 'hdx_theme/resource_form.js' %}
+{% resource 'hdx_theme/css/hdx-icons.css' %}
 {% resource 'hdx_theme/hdx-resource-upload-field.js' %}
+{% resource 'hdx_theme/datasets/dataset_create.css' %}
 
 {% block secondary %}
 {% endblock %}
-
-    <form class="dataset-form dataset-resource-form" method="post" action="{{ action }}" data-module="basic-form resource-form">
+    <form class="dataset-form dataset-resource-form" method="post" action="{{ action }}" data-module="basic-form resource-form" enctype="multipart/form-data">
       <div class="paddingRowHack">
         <div class="paddingLeftHack paddingRightHack graybg">
           <div class="datasetModule">
@@ -31,39 +32,37 @@
 
             <div class="control-group dataset-form-resource-types mBottom40">
               {% block basic_fields %}
-
-              {% block basic_fields_data %}
-              	{% set is_file_upload = data.resource_type == "file.upload" %}
-                <div class="controls"{% if allow_upload %} data-module="hdx-resource-upload-field"{% endif %} data-module-checked="{{is_file_upload }}">
+                  <div class="controls">
+                  {% set is_upload = (data.url_type == 'upload') or  (data.resource_type == "file.upload") %}
                   {#
                   This block uses a slightly odd pattern. Unlike the rest of the radio
                   buttons which are wrapped _inside_ the labels here we place the label
                   after the input. This enables us to style the label based on the state
                   of the radio using css. eg. input[type=radio]+label {}
                   #}
-                  {#<input id="field-resource-type-file" type="radio" name="resource_type" checked="checked" value="file" />
-                  <label class="radio inline type-file" for="field-resource-type-file">{{ _('Upload a file') }}
-                    <img src="/images/svg/fileupload.svg" style="top: -10px; left: 40px; position: relative;" />
-                  </label>#}
-                  <span class="radio inline" style="margin-left: 26px; margin-right: 26px; padding: 0;">
+                  <span class="pull-left" style="float: left; overflow: visible">
+                    <input type="file" is-upload="{{is_upload}}" id="mx-file" name="upload" onclick="file_upload_selected();" style="opacity:0; height:0px;"></input>
+                    <input id="field-resource-type-upload" type="radio" name="resource_type" value="file.upload" style="opacity:0; height:0px;"></input>
+                    <label class="radio inline type-file" for="mx-file" id="mx-type-file" style="display: inline-block;">Upload a file</label>
+                    <i class="icon-check"></i>
+                  </span>
+                  <span class="radio inline pull-left" style="margin-left: 26px; margin-right: 26px; padding: 0; display: inline-block;">
                     <span class="control-label"> OR </span>
                   </span>
                   {% set link_upload_string = '' %}
-                  {% if not is_file_upload and data.name %}
-                  	{% set link_upload_string = 'checked="checked"' %}
+                  {% if not is_upload and data.name %}
+                    {% set link_upload_string = 'checked="checked"' %}
                   {% endif %}
-                  <span id="field-link-upload" style="position: relative;">
+                  <span id="field-link-upload" class="" style="position: relative;">
                     <input id="field-resource-type-api" {{ link_upload_string }} type="radio" name="resource_type" value="api" style="visibility: hidden; position: absolute;" />
-                    <label id="mx-type-url" class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+                    <label style="display: inline-block;" id="mx-type-url" class="radio inline type-url" for="field-resource-type-api">{{ _('Link to URL') }} <div class="underExample">({{ _('eg. API') }})</div></label>
+                    <i class="icon-check"></i>
                   </span>
                 </div>
-                {#<div class="controls">
-                  <div class="explanatoryText">{{ _("Format: xls, json, pdf, csv, txt") }}</div>
-                </div>#}
-              </div>
               {% endblock %}
 
-              {% block basic_fields_url %}
+
+             {% block basic_fields_url %}
               {{ form.input('url', id='field-url', label=_('File or URL'), placeholder=_('eg. http://example.com/population-jan-2011.json'), value=data.url, error=errors.url, classes=['control-full', 'control-large', 'dataset-form-field-wrapper', 'dataset-required']) }}
               {% endblock %}
 
@@ -99,8 +98,6 @@
     </div>
   {% endblock %}
 
-
-            {% endblock %}
 
             {% block metadata_fields %}
               {% if include_metadata %}

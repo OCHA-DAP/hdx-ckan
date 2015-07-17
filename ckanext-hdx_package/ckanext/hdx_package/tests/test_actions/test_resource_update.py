@@ -28,8 +28,11 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
+        package = self._get_action('package_show')(
+            context, {'id': 'test_private_dataset_1'})
+
         resource = self._get_action('resource_show')(
-            context, {'id': 'hdx_test.csv'})
+            context, {'id': package['resources'][0]['id']})
 
         original = resource.get(field, None)
 
@@ -37,7 +40,7 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             context, {'id': resource['id'], field: new_field_value})
 
         changed_resource = self._get_action('resource_show')(
-            context, {'id': 'hdx_test.csv'})
+            context, {'id': package['resources'][0]['id']})
         modified = changed_resource[field]
 
         assert original != modified, '{} should have been changed by action'.format(

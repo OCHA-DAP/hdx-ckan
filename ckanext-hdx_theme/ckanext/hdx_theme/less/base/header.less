@@ -12,7 +12,7 @@
 @import "buttons";
 @import "orderby";
 
-@hdxLogoUrl: "@{imagePath}/homepage-new/logo-beta.svg";
+@hdxLogoUrl: "@{imagePath}/homepage/logo-beta.svg";
 
 @headerNavHeight: 55px;
 @headerNavBorderHeight: @navBorderHeight;
@@ -30,7 +30,7 @@
 @mainLinksColor: @darkGrayColor;
 
 @bodyBackgroundColor: @greenColor;
-@bodyBackgroundUrl: "@{imagePath}/homepage-new/map.png";
+@bodyBackgroundUrl: "@{imagePath}/homepage/map.png";
 
 
 /* Body Background */
@@ -327,5 +327,159 @@
 
 //special offset hack class
 .offset1andHalf{
-  margin-left: @containerSize/4/2 + @gutterSize !important; //should be able to override spanX
+  margin-left: 12.5% !important; //should be able to override spanX
 }
+
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+    .container,
+    .navbar-static-top .container,
+    .navbar-fixed-top .container,
+    .navbar-fixed-bottom .container {
+        width: @containerRealSize;
+        padding: 0;
+    }
+
+    .paddingRowHack{
+        margin-left: -@containerMarginSize;
+        margin-right: -@containerMarginSize;
+    }
+
+    .paddingRowHack .paddingLeftHack{
+        padding-left: @containerMarginSize;
+        margin-left: 0;
+    }
+
+    .paddingRowHack .paddingRightHack{
+        padding-right: @containerMarginSize;
+        margin-right: 0;
+    }
+    body{
+        line-height: 20px;
+    }
+/* END - Customize fixed Bootstrap layout */
+
+/* Style default Primary */
+    [role=main] .primary{
+        width: 100%;
+        float: none;
+        padding-left: 0;
+    }
+
+    [role=main] .secondary{
+        margin: 0;
+        padding-right: @gutterSmallSize; /* mimic the left 45 padding */
+        width: 100%;
+        color: #ffffff;
+    }
+
+/* END Style default Primary */
+
+/* Change the default style for ul items */
+    ul.hdx-bs3 {
+        padding-left: 0;
+        list-style-type: none;
+    }
+
+    /* Style pagination */
+        .pagination {
+          display: block;
+          text-align: center;
+          height: @containerMarginSize;
+        }
+    /* END Style pagination */
+/* END Change the default style for ul items */
+
+/* Missing styles due to removal of BS 2.3 + other fixes */
+    .uppercase{
+        text-transform: uppercase;
+    }
+
+    .form-actions{
+        margin-right: 0;
+    }
+
+    .nav > li > a:hover, .nav > li > a:focus{
+        background: none;
+    }
+/* END Missing styles due to removal of BS 2.3 */
+
+/* Fix search widget */
+    /* Fix size due to different box-sizing */
+    .form-search .input-append .searchInput {
+        width: 266px;
+        float: left;
+    }
+    /* Fix button position */
+    .form-search .input-append .input-group-addon {
+        padding: 0;
+        border: none;
+        float: left;
+    }
+/* END Fix search widget */
+
+
+/* Utility classes */
+    .whiteBackground{
+        background-color: #ffffff;
+    }
+/* END Utility classes */
+/* Style Select2 Dropdown */
+    .select2-container .select2-choice .select2-arrow{
+        width: 42px;
+    }
+/* END Style Select2 Dropdown */
+
+/* Fix header styles */
+    .newHeader .header-nav .header-nav-search{
+        height: 58px;
+    }
+/* END Fix header styles */
+
+/* Social widget - share */
+    .resource-social a {
+        line-height: 31px;
+        vertical-align: middle;
+        display: block;
+    }
+    .resource-social a i {
+        font-size: 31px;
+        width: 31px;
+        padding-right: 5px;
+    }
+    .resource-social a span {
+        font-size: 14px;
+        vertical-align: bottom;
+        line-height: 25px;
+    }
+    .resource-social a:hover {
+        text-decoration:none;
+    }
+/**/
+
+
+
+/* search_form.html customisations */
+    .list-items.search-form {
+        border-bottom: none;
+        margin: 0;
+        padding: 0;
+
+        h2 {
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 16px;
+            font-weight: 400;
+            margin-left: 40px;
+        }
+        .search-input.search-giant input {
+    		border-radius: 14px;
+            background-color: #ffffff;
+            border: 1px solid #cccccc;
+            margin-left: 40px;
+        }
+        .search-input {
+    	    margin-bottom: 25px;
+            margin-right: 40px;
+        }
+    }
+
+/* END search_form.html customisations */

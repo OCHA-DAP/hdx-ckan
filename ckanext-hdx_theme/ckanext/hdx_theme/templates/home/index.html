@@ -12,18 +12,21 @@
 
 
 {% block content %}
+
+{% if (data and data.current_step == 'hdx_onboarding_details') %}
+  {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email) }}
+{% endif %}
 <div class="homepage-main">
   <div class="homepage-background">
     <div class="container">
       <div class="row blankRow">
-
       </div>
       <div class="row">
-        <div class="span6 leftContent">
+        <div class="col-xs-6 leftContent">
           <div class="row blankRow">
           </div>
           <div class="row">
-            <div class="span6">
+            <div class="col-xs-12">
               <h1>
                 {{ _("The Humanitarian") }}<br>
                 {{ _("Data Exchange") }}
@@ -44,7 +47,7 @@
           </div>
 
         </div>
-        <div class="offset1 span5 rightContent">
+        <div class="col-xs-offset-1 col-xs-5 rightContent">
           <div class="searchBox">
             <div class="searchHeader searchContent">
               <p>{{ _("Find data") }}</p>
@@ -65,11 +68,11 @@
           </div>
 
           <div class="row countRow">
-            <div class="span6 hdxTextRow ">
+            <div class="col-xs-12 hdxTextRow ">
               <div class="row">
-                <div class="span2">
+                <div class="col-xs-4">
                   <div class="row">
-                    <div class="span2 itemCount">
+                    <div class="col-xs-4 itemCount">
                       <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
                          data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
                         0
@@ -77,15 +80,15 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div id="datasets-count" class="span2 itemName">
+                    <div id="datasets-count" class="col-xs-4 itemName">
                       {{ _("Datasets") }}
                     </div>
                   </div>
                 </div>
 
-              <div class="span2">
+              <div class="col-xs-4">
                 <div class="row">
-                  <div class="span2 itemCount">
+                  <div class="col-xs-4 itemCount">
                     <a href="{% url_for 'group_index' %}"
                        data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
                       0
@@ -93,15 +96,15 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="span2 itemName">
+                  <div class="col-xs-4 itemName">
                     {{ _("Locations") }}
                   </div>
                 </div>
               </div>
 
-              <div class="span2">
+              <div class="col-xs-4">
                 <div class="row">
-                  <div class="span2 itemCount">
+                  <div class="col-xs-4 itemCount">
                     <a href="#"
                        data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
                       0
@@ -109,7 +112,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="span2 itemName">
+                  <div class="col-xs-4 itemName">
                     {{ _("Sources") }}
                   </div>
                 </div>
@@ -152,7 +155,7 @@
     <footer class="newFooter">
       <div class="container">
         <div class="row">
-          <div class="span12">
+          <div class="col-xs-12">
             <span class="text">
               {{ _("A project by") }}:
             </span>
@@ -166,8 +169,8 @@
             <span class="text">
               {{ _("Stay connected") }}:
             </span>
-            <a href="http://www.twitter.com/humdata"><img src="/images/homepage-new/twitter.png"/></a>
-            <a href="mailto:hdx@un.org"><img src="/images/homepage-new/email.png"/></a>
+            <a href="http://www.twitter.com/humdata"><img src="/images/homepage/twitter.png"/></a>
+            <a href="mailto:hdx@un.org"><img src="/images/homepage/email.png"/></a>
           </div>
         </div>
       </div>
@@ -186,7 +189,7 @@
     <div class="input-append">
       <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search HDX Collection') }}">
       <button type="submit" class="button">
-        <i class="icon-search"></i>
+        <i class="glyphicon glyphicon-search"></i>
       </button>
     </div>
   </form>
@@ -211,7 +214,6 @@
 
 {% block scripts %}
    {{ super() }}
-   <link rel="stylesheet" href="/homepage.css">
    <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700' rel='stylesheet' type='text/css'>
    {% resource 'hdx_theme/homepage' %}
 {% endblock %}

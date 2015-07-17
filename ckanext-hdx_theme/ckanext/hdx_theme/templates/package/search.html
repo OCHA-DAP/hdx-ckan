@@ -1,4 +1,4 @@
-{% extends "page-new.html" %}
+{% extends "page.html" %}
 {% import 'macros/form.html' as form %}
 
 {% block subtitle %}{{ _("Search for a Dataset") }}{% endblock %}
@@ -26,26 +26,11 @@
         {% endfor %}
 
       </div>
-      {#
-      <div id="date_container">
-        <label>Date Range</label>
-        <input placeholder="Start date" type="text">
-        <input placeholder="End date" type="text">
-      </div>
-      #}
     </div>
-{#    <div id="search_filter_btn">Filter<span>-</span></div>#}
   </div>
   <section class="list-items module">
     <div class="list-items module-content mT35">
       {% block page_primary_action %}
-            {# if h.check_access('package_create') #}
-            {#
-              <div class="list-items page_primary_action">
-                {% link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign-alt' %}
-              </div>
-              #}
-            {# % endif % #}
       {% endblock %}
       {% block form %}
         {% set facets = {
@@ -76,77 +61,17 @@
   </section>
 
   {% block package_search_results_api %}
-  {#
-  <section class="module">
-    <div class="module-content">
-      <small>
-        {% set api_link = h.link_to(_('API'), h.url_for(controller='api', action='get_api', ver=3)) %}
-        {% set api_doc_link = h.link_to(_('API Docs'), 'http://docs.ckan.org/en/{0}/api.html'.format(g.ckan_doc_version)) %}
-        {% if g.dumps_url -%}
-          {% set dump_link = h.link_to(_('full {format} dump').format(format=g.dumps_format), g.dumps_url) %}
-          {% trans %}
-            You can also access this registry using the {{ api_link }} (see {{ api_doc_link }}) or download a {{ dump_link }}.
-          {% endtrans %}
-        {% else %}
-          {% trans %}
-            You can also access this registry using the {{ api_link }} (see {{ api_doc_link}}).
-          {% endtrans %}
-        {% endif %}
-      </small>
-    </div>
-  </section>
-  #}
   {% endblock %}
 {% endblock %}
 
 {% block secondary %}
-    {# include "group/snippets/data_themes.html" #}
 {% endblock %}
 
 {% block scripts2 %}
-  <!--
-    -- Removed as they are not needed in the new search page
-  <script src="/scripts/chosen.min.js"></script>
-  <script type="text/javascript" src="/scripts/bootstrap-multiselect.js"></script>
-<script>
-$(document).ready(function(){
-  $("#search_bar_content").slideUp(300, function() {
-          $("#search_bar_content").css('height','0px');
-          return $("#search_filter_btn span").text('+');
-        });
-
-  $('.multiselect').multiselect();
-
-  $('#filter_dropdown').on('change','input', function(){
-      window.location = $(this).val();
-  });
-
-  $("#search_filter_btn").click(function() {
-      if ($("#search_filter_btn span").text() === '+') {
-        return $("#search_bar_content").slideDown(300, function() {
-          $("#search_bar_content").css('height','230px');
-          return $("#search_filter_btn span").text('-');
-        });
-      } else {
-        return $("#search_bar_content").slideUp(300, function() {
-          $("#search_bar_content").css('height','0px');
-          return $("#search_filter_btn span").text('+');
-        });
-      }
-    });
-});
-</script>
-   -->
 {% endblock %}
 
 {% block styles %}
   {{ super() }}
-  <!--
-    -- Removed as they are not needed in the new search page
-  <link rel="stylesheet" href="/frog_search.css" />
-  <link rel="stylesheet" href="/css/chosen.min.css" />
-  <link rel="stylesheet" href="/css/bootstrap-multiselect.css" type="text/css"/>
-  -->
 {% endblock %}
 
 {% block  global_dataset_input_search%}

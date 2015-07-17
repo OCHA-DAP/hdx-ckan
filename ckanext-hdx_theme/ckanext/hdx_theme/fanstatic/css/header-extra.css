@@ -134,7 +134,7 @@
     }
 
     .newFooter a.social-icon {
-		background-image: url("/images/homepage-new/socialBlog.png");
+		background-image: url("/images/homepage/socialBlog.png");
 		background-size: 250px 64px;
         background-color: #404040;
         border-radius: 3px;
@@ -496,6 +496,10 @@
         display: block;
     }
 
+    .select2-container.required.error > .select2-choice {
+        border-color: red;
+    }
+
     .select2-container .select2-choice{
         background-image: none;
         color: #888888;
@@ -536,7 +540,6 @@
     }
 
     .select2-container .select2-choice .select2-arrow {
-        width: 31px;
         background-color: #888888;
         background-image: none;
         padding-top: 14px;
@@ -579,34 +582,17 @@
 		color: #007CE0;
 	}
 
-    .list-items.search-form{
-        border-bottom: none;
-        margin: 0;
-        padding: 0;
-    }
-    .list-items.search-form h2 {
-	    font-family: 'Source Sans Pro', sans-serif;
-	    font-size: 16px;
-	    font-weight: 400;
-	}
-    .list-items.search-form .search-input.search-giant input {
-		border-radius: 14px;
-	}
-	.list-items.search-form .search-input {
-	    margin-bottom: 25px;
-	}
-
 /* END Style Dataset Item */
 
 /* Style default Primary */
     [role=main] .primary{
-        padding-left: 45px;
+        /*padding-left: 45px;*/
     }
 /* END Style default Primary */
 
 /* Style default Secondary */
     .twoColumnBackground{
-        background-image:url('/images/homepage-new/columnBackground.png');
+        background-image:url('/images/homepage/columnBackground.png');
         background-repeat: repeat-y;
         min-height: 350px;
     }
@@ -912,3 +898,56 @@ span.is-more a.more-link, .more-link {
         margin-left:140px;
     }
 /* END Login form fix for #2022 */
+
+/* Fix primary actions on old pages (eg. Add group button on /group ) */
+    .page_primary_action {
+        margin-left: 45px;
+    }
+/* END Fix primary actions on old pages (eg. Add group button on /group ) */
+
+/* Private dataset label fix */
+    .label-inverse,
+    .badge-inverse {
+      background-color: #333333;
+    }
+/* END Private dataset label fix */
+
+/* FIX Org Page */
+    .float-right{
+        float: right;
+    }
+
+    .org-nums dl {
+        margin-top: 14px;
+        border-bottom: 1px solid #888888;
+        padding-bottom: 15px;
+    }
+    .unstyled {
+        margin: 0;
+        list-style: none;
+    }
+    .dataset-resources {
+        margin-top: 8px;
+        padding: 0;
+    }
+
+/* END FIX Org Page */
+
+.contentBackground {
+    background-color: #ffffff;
+}
+
+/* OLD Resource Edit Form*/
+    .graybg {
+        background: #eee;
+        padding-top: 20px;
+        padding-bottom: 10px;
+    }
+
+/* END OLD Resource Edit Form*/
+
+.alert-error {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}

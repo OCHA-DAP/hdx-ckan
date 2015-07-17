@@ -68,13 +68,13 @@
     null,
     "Ta bort"
   ],
+  "Reorder resource view": [
+    null,
+    "Sortera om resursvyn"
+  ],
   "Reorder resources": [
     null,
     "Ändra ordning på resurser"
-  ],
-  "Reset this": [
-    null,
-    "Återställ detta"
   ],
   "Resource uploaded": [
     null,

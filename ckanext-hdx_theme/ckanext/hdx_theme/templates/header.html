@@ -1,9 +1,42 @@
 {% block header_wrapper %}
+<div>
+</div>
 <header class="newHeader">
 <div class="homepage-header-user-bg">
   <div class="container">
     <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
+        {% if data %}
+          {% set step = data.current_step %}
+          {% if step == "hdx_login" %}
+            <div id="login-error" style="display: none;">{{ data.message }}</div>
+          {% endif %}
+          {% if step == "hdx_logout" %}
+            <div id="user-logout" style="display: none;">{{data.message}}</div>
+          {% endif %}
+        {% endif %}
+
+        {% if c.userobj %}
+          {% set data = h.get_user_extra(c.userobj.id) %}
+          {% set step = data.data.current_step %}
+          {% if step != null %}
+            {% if step == "hdx_onboarding_follows" %}
+              <div id="incomplete-profile" class="pull-left">
+                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+              </div>
+            {% endif %}
+            {% if step == "hdx_onboarding_org" %}
+              <div id="incomplete-profile" class="pull-left">
+                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
+              </div>
+            {% endif %}
+            {% if step == "hdx_onboarding_friends" %}
+              <div id="incomplete-profile" class="pull-left">
+                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
+              </div>
+            {% endif %}
+          {% endif %}
+        {% endif %}
         <div class="header-user-box pull-right">
           {% if c.userobj %}
             <span class="dropdown">
@@ -61,9 +94,11 @@
             </span>
           {% else %}
             {% block header_account_notlogged %}
-              <span>{% link_for _('Log in'), controller='user', action='login', class_='special-menuitem' %}</span>
+              <span>
+                <a class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#">Log in</a>
+              </span>
               <span style="margin: 0 10px;">|</span>
-              <span><a href="/user/register">{{_('Sign up')}}</a></span>
+              <span><a onclick="showOnboardingWidget('#signupPopup');" href="#">{{_('Sign up')}}</a></span>
             {% endblock %}
           {% endif %}
         </div>
@@ -134,7 +169,7 @@
               <a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">
                 <div class="submitData">
                   {{ _("Share data") }}
-                  <img src="/images/homepage-new/attachment.svg" style="height: 21px; margin-left: 20px;" />
+                  <img src="/images/homepage/attachment.svg" style="height: 21px; margin-left: 20px;" />
                 </div>
               </a>
             </span>

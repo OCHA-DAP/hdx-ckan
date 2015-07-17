@@ -72,10 +72,6 @@
     null,
     "Riordina risorse"
   ],
-  "Reset this": [
-    null,
-    "Cancella"
-  ],
   "Resource uploaded": [
     null,
     "Risorsa caricata"

@@ -21,17 +21,7 @@
 
 {% block styles %}
     {{ super() }}
-    <style>
-      .module{
-        margin-top: 0;
-      }
-
-      .module .module-content{
-        padding-top: 0;
-        margin-bottom: 0;
-      }
-    </style>
-    <link rel="stylesheet" href="/dataset_create.css" />
+  {% resource 'hdx_theme/datasets/dataset.css' %}
 {% endblock %}
 
 

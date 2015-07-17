@@ -37,7 +37,11 @@
       {% endif %}
       {% endblock %}
     {% block page_pagination %}
-    {{ c.page.pager() }}
+        <div class="paddingRowHack">
+            <div class="paddingLeftHack">
+                {{ c.page.pager() }}
+            </div>
+        </div>
     {% endblock %}
 {% endblock %}
 

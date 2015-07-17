@@ -68,13 +68,13 @@
     null,
     "Entfernen"
   ],
-  "Reorder resources": [
+  "Reorder resource view": [
     null,
     "Ressourcen neu ordnen"
   ],
-  "Reset this": [
+  "Reorder resources": [
     null,
-    "Dieses zurücksetzen"
+    "Ressourcen neu ordnen"
   ],
   "Resource uploaded": [
     null,
