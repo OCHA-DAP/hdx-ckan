@@ -34,6 +34,7 @@ class IndicatorAccess(object):
         try:
             self.__cps_data = get_action('hdx_get_indicator_values')({}, self.__cps_params_dict)
         except:
+            self.__cps_data = {}
             return {}
         return self.__cps_data
 

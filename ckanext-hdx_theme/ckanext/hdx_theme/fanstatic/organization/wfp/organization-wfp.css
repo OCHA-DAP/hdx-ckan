@@ -827,14 +827,17 @@ ul.hdx-bs3 {
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 16px;
   font-weight: 400;
+  margin-left: 40px;
 }
 .list-items.search-form .search-input.search-giant input {
   border-radius: 14px;
   background-color: #ffffff;
   border: 1px solid #cccccc;
+  margin-left: 40px;
 }
 .list-items.search-form .search-input {
   margin-bottom: 25px;
+  margin-right: 40px;
 }
 /* END search_form.html customisations */
 /* Left - right layout */
