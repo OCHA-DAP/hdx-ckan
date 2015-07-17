@@ -171,7 +171,8 @@ class ValidationController(ckan.controllers.user.UserController):
                 login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
                               'email_hash': userobj.email_hash, 'login': userobj.name}
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                response.set_cookie('hdx_login', urllib2.quote(json.dumps(login_dict)), max_age=14 * 24 * 3600)
+                max_age = int(14 * 24 * 3600)
+                response.set_cookie('hdx_login', urllib2.quote(json.dumps(login_dict)), max_age=max_age)
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')
