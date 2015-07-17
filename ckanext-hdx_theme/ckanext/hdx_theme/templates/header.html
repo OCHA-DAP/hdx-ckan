@@ -6,6 +6,16 @@
   <div class="container">
     <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
+        {% if data %}
+          {% set step = data.current_step %}
+          {% if step == "login_error" %}
+            <div id="login-error" style="display: none;">{{ data.message }}</div>
+          {% endif %}
+          {% if step == "hdx_logout" %}
+            <div id="user-logout" style="display: none;">{{data.message}}</div>
+          {% endif %}
+        {% endif %}
+
         {% if c.userobj %}
           {% set data = h.get_user_extra(c.userobj.id) %}
           {% set step = data.data.current_step %}

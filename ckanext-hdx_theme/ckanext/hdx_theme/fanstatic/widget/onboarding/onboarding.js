@@ -4,7 +4,7 @@ function closeCurrentWidget(self){
 
 function showOnboardingWidget(id){
     $(id).show();
-    $(id).find("input:first").focus();
+    $(id).find("input[type!='button']:visible:first").focus();
 
     $(id).find('img.gif-auto-play').remove();
     $(id).find('img.gif').each(function(idx, element){
@@ -67,3 +67,37 @@ function showOnboardingWidget(id){
 
     return false;
 }
+
+$(document).ready(function(){
+    //check cookies
+    var loginCookie = $.cookie("hdx_login");
+    if (loginCookie){
+        var data = JSON.parse(loginCookie);
+        console.log(data);
+
+        $('#username-form-field, #login-photo-default').hide();
+        $('#field-login').val(data.login);
+        $('#user-display-name').text(data.display_name);
+        if (data.email)
+            $('#user-display-email').text(data.email);
+        $('#login-photo-gravatar-img').attr("src", "//gravatar.com/avatar/"+ data.email_hash +"?s=95&d=identicon");
+        $('#username-static, #login-photo-gravatar').show();
+    }
+
+    //check for logout event
+    var userLogout = $("#user-logout").text();
+    if (userLogout && userLogout != ""){
+        showOnboardingWidget("#logoutPopup");
+        return;
+    }
+    //check for login error
+    var loginError = $("#login-error").text();
+    if (loginError && loginError != ""){
+        var errMsg = $("#loginPopup").find(".error-message");
+        errMsg.text(loginError);
+        $("#field-login").addClass("error");
+        $("#field-password").addClass("error");
+        errMsg.show();
+        showOnboardingWidget("#loginPopup");
+    }
+});

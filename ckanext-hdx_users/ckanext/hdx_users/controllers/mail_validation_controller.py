@@ -12,7 +12,7 @@ from pylons import config
 
 # import ckan.lib.base as base
 import ckan.controllers.user
-from ckan.common import _, c, g, request
+from ckan.common import _, c, g, request, response
 import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
 import ckan.lib.base as base
@@ -38,8 +38,9 @@ import ckanext.hdx_users.model as user_model
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import logging as logging
-
+import urllib2 as urllib2
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
+from sqlalchemy.exc import IntegrityError
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -55,10 +56,15 @@ NotAuthorized = logic.NotAuthorized
 unflatten = dictization_functions.unflatten
 
 Invalid = df.Invalid
-
+CaptchaNotValid = _('Captcha is not valid')
+LoginFailed = _('Login failed. Bad username or password.')
 OnbNotAuth = json.dumps({'success': False, 'error': {'message': _('Unauthorized to create user')}})
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
+OnbExistingUsername = json.dumps({'success': False, 'error': {'message': 'Username is already used'}})
+OnbTokenNotFound = json.dumps({'success': False, 'error': {'message': 'Token not found'}})
 OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity Error'}})
+OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
+OnbLoginErr = json.dumps({'success': False, 'error': {'message': LoginFailed}})
 OnbSuccess = json.dumps({'success': True})
 
 
@@ -88,6 +94,105 @@ def name_validator_with_changed_msg(val, context):
 
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
+
+    def login(self, error=None):
+        '''
+        Code copied from controllers/user.py:345
+        :param error:
+        :return:
+        '''
+        # Do any plugin login stuff
+        for item in p.PluginImplementations(p.IAuthenticator):
+            item.login()
+
+        if 'error' in request.params:
+            h.flash_error(request.params['error'])
+
+        if not c.user:
+            came_from = request.params.get('came_from')
+            if not came_from:
+                came_from = h.url_for(controller='user', action='logged_in',
+                                      __ckan_no_root=True)
+            c.login_handler = h.url_for(
+                self._get_repoze_handler('login_handler_path'),
+                came_from=came_from)
+            if error:
+                # vars = {'error_summary': {'': error}}
+                template_data = ue_helpers.get_login(False, error)
+            else:
+                template_data = {}
+
+            return render('home/index.html', extra_vars=template_data)
+            # return render('user/login.html', extra_vars=vars)
+            # return OnbLoginErr
+        else:
+            return render('user/logout_first.html')
+
+    def logged_in(self):
+        # redirect if needed
+        came_from = request.params.get('came_from', '')
+        if h.url_is_local(came_from):
+            return h.redirect_to(str(came_from))
+
+        if c.user:
+            context = None
+            data_dict = {'id': c.user}
+            user_dict = get_action('user_show')(context, data_dict)
+
+            # IAuthenticator too buggy, doing this instead
+            try:
+                token = get_action('token_show')(context, user_dict)
+            except NotFound, e:
+                token = {'valid': True}  # Until we figure out what to do with existing users
+            except:
+                abort(500, _('Something wrong'))
+            if not token['valid']:
+                # force logout
+                for item in p.PluginImplementations(p.IAuthenticator):
+                    item.logout()
+                # redirect to validation page
+                h.flash_error(_('You have not yet validated your email.'))
+                h.redirect_to(self._get_repoze_handler('logout_handler_path'))
+
+            if 'created' in user_dict:
+                time_passed = datetime.datetime.now() - dateutil.parser.parse(user_dict['created'])
+            else:
+                time_passed = None
+            if 'activity' in user_dict and (not user_dict['activity']) and time_passed and time_passed.days < 3:
+                # /dataset/new
+                contribute_url = h.url_for(controller='package', action='new')
+                # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
+                #    If you want to associate this dataset with an organization, either click on "My Organizations" below
+                #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
+                # h.flash_success(_(message), True)
+                return h.redirect_to(controller='user', action='dashboard_organizations')
+            else:
+                userobj = c.userobj if c.userobj else model.User.get(c.user)
+                login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
+                              'email_hash': userobj.email_hash, 'login': userobj.name}
+                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
+                response.set_cookie('hdx_login', urllib2.quote(json.dumps(login_dict)), max_age=14 * 24 * 3600)
+                return self.me()
+        else:
+            err = _('Login failed. Bad username or password.')
+            try:
+                if g.openid_enabled:
+                    err += _(' (Or if using OpenID, it hasn\'t been associated '
+                             'with a user account.)')
+            except:
+                pass
+
+            if h.asbool(config.get('ckan.legacy_templates', 'false')):
+                h.flash_error(err)
+                h.redirect_to(controller='user',
+                              action='login', came_from=came_from)
+            else:
+                return self.login(error=err)
+
+    def logged_out_page(self):
+        template_data = ue_helpers.get_logout(True, _('User logged out with success'))
+        return render('home/index.html', extra_vars=template_data)
+        # return render('user/logout.html')
 
     def register_email(self, data=None, errors=None, error_summary=None):
         """
@@ -130,7 +235,7 @@ class ValidationController(ckan.controllers.user.UserController):
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
-            return OnbUserNotFound
+            return OnbTokenNotFound
             # abort(404, _('User not found'))
         except DataError:
             return OnbIntegrityErr
@@ -139,6 +244,10 @@ class ValidationController(ckan.controllers.user.UserController):
             # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
+
         if not c.user:
             # Send validation email
             self.send_validation_email(user, token)
@@ -170,9 +279,10 @@ class ValidationController(ckan.controllers.user.UserController):
             data_dict['user_id'] = token['user_id']
             get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
-            abort(404, _('Token not found'))
-        except:
-            abort(500, _('Error'))
+            return OnbUserNotFound
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
 
         user = model.User.get(data_dict['user_id'])
         template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
@@ -200,17 +310,16 @@ class ValidationController(ckan.controllers.user.UserController):
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
         try:
-            # TODO
-            # captcha.check_recaptcha(request)
-            # g-recaptcha-response
             captcha_response = data_dict.get('g-recaptcha-response', None)
             if not self.is_valid_captcha(response=captcha_response):
-                raise ValidationError('Captcha is not valid')
+                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
         except ValidationError, e:
             error_summary = e.error_summary
+            if error_summary == CaptchaNotValid:
+                return OnbCaptchaErr
             return self.error_message(error_summary)
 
         # hack to disable check if user is logged in
@@ -220,26 +329,27 @@ class ValidationController(ckan.controllers.user.UserController):
             token_dict = get_action('token_show')(context, data_dict)
             data_dict['token'] = token_dict['token']
             get_action('token_update')(context, data_dict)
-            user = get_action('user_update')(context, data_dict)
+            get_action('user_update')(context, data_dict)
 
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
             get_action('user_extra_update')(context, ue_dict)
 
         except NotAuthorized:
             return OnbNotAuth
-            # abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
             return OnbUserNotFound
-            # abort(404, _('User not found'))
         except DataError:
             return OnbIntegrityErr
-            # abort(400, _(u'Integrity Error'))
         except ValidationError, e:
-            # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
-        if not c.user:
-            pass
+        except IntegrityError:
+            return OnbExistingUsername
+        except exceptions.Exception, e:
+            error_summary = str(e)
+            return self.error_message(error_summary)
+        # if not c.user:
+        #     pass
         c.user = save_user
         return OnbSuccess
 
@@ -271,6 +381,9 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             # errors = e.error_dict
             error_summary = e.error_summary
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = str(e)
             return self.error_message(error_summary)
         return OnbSuccess
 
@@ -618,63 +731,6 @@ class ValidationController(ckan.controllers.user.UserController):
             return True
         except:
             return False
-
-    def logged_in(self):
-        # redirect if needed
-        came_from = request.params.get('came_from', '')
-        if h.url_is_local(came_from):
-            return h.redirect_to(str(came_from))
-
-        if c.user:
-            context = None
-            data_dict = {'id': c.user}
-            user_dict = get_action('user_show')(context, data_dict)
-
-            # IAuthenticator too buggy, doing this instead
-            try:
-                token = get_action('token_show')(context, user_dict)
-            except NotFound, e:
-                token = {'valid': True}  # Until we figure out what to do with existing users
-            except:
-                abort(500, _('Something wrong'))
-            if not token['valid']:
-                # force logout
-                for item in p.PluginImplementations(p.IAuthenticator):
-                    item.logout()
-                # redirect to validation page
-                h.flash_error(_('You have not yet validated your email.'))
-                h.redirect_to(self._get_repoze_handler('logout_handler_path'))
-
-            if 'created' in user_dict:
-                time_passed = datetime.datetime.now() - dateutil.parser.parse(user_dict['created'])
-            else:
-                time_passed = None
-            if 'activity' in user_dict and (not user_dict['activity']) and time_passed and time_passed.days < 3:
-                # /dataset/new
-                contribute_url = h.url_for(controller='package', action='new')
-                # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
-                #    If you want to associate this dataset with an organization, either click on "My Organizations" below
-                #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
-                # h.flash_success(_(message), True)
-                return h.redirect_to(controller='user', action='dashboard_organizations')
-            else:
-                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
-                return self.me()
-        else:
-            err = _('Login failed. Bad username or password.')
-            try:
-                if g.openid_enabled:
-                    err += _(' (Or if using OpenID, it hasn\'t been associated '
-                             'with a user account.)')
-            except:
-                pass
-
-            if h.asbool(config.get('ckan.legacy_templates', 'false')):
-                h.flash_error(err)
-                h.redirect_to(controller='user',
-                              action='login', came_from=came_from)
-            else:
-                return self.login(error=err)
 
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})

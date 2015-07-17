@@ -47,7 +47,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
 
         var mvtSource = new L.TileLayer.MVTSource({
             url: value + "?fields=ogc_fid" + extraFields,
-            debug: true,
+            //debug: true,
             mutexToggle: true,
             //clickableLayers: [],
             getIDForLayerFeature: function (feature) {

@@ -3,6 +3,8 @@ $(document).ready(function(){
 
     $("#register-form").on("submit", function () {
         $this = $(this);
+        $iframe = $($(".g-recaptcha").find("iframe:first"));
+        $iframe.css("border", "");
         $.post("/user/register_details", $this.serialize(), function (result_data) {
             var result = JSON.parse(result_data);
             if (result.success) {
@@ -23,7 +25,11 @@ $(document).ready(function(){
                 });
 
             } else {
-                alert("Can't register: " + JSON.stringify(result.error.message));
+                if (result.error.message == "Captcha is not valid"){
+                    $iframe.css("border", "1px solid red");
+                } else {
+                    alert("Can't register: " + JSON.stringify(result.error.message));
+                }
             }
         });
 
