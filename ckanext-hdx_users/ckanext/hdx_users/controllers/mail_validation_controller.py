@@ -466,7 +466,7 @@ class ValidationController(ckan.controllers.user.UserController):
             usr = c.userobj.display_name or c.user
             subject = 'Join HDX'
             link = '{0}'.format(config['ckan.site_url'])
-            body = 'Your friend " + usr + " invited you to join HDX.\n You can join here: ' + link
+            body = 'Your friend ' + usr + ' invited you to join HDX.\n You can join here: ' + link
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
                 if f:
