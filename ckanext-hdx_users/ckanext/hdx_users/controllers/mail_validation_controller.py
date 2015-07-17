@@ -444,7 +444,7 @@ class ValidationController(ckan.controllers.user.UserController):
                          'message': msg, 'admins': admins_with_email}
             get_action('hdx_send_request_membership')(context, data_dict)
 
-            ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
+            ue_dict = self._get_ue_dict(user['id'], user_model.HDX_ONBOARDING_ORG)
             get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException, e:
