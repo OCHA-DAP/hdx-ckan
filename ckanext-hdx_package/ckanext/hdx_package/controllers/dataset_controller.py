@@ -297,40 +297,12 @@ class DatasetController(PackageController):
     #     return perma_link
 
     def _update_or_create_resource(self, context, data, dataset_id, resource_id):
+        gis_data = {"dataset_id": dataset_id, "resource_id": resource_id}
         if resource_id:
-            data['id'] = resource_id
-            # Added by HDX - adding perma_link
-            if 'resource_type' in data and u'file.upload' == data['resource_type']:
-                data['perma_link'] = self._get_perma_link(
-                    dataset_id, resource_id)
-
             get_action('resource_update')(context, data)
-            if 'format' in data:
-                if data['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                    data['shape'] = json.dumps(self._get_geojson(data['url']))
-                if data['format'] == GEOJSON_FORMAT:
-                    data['shape'] = json.dumps(self._get_json_from_resource(data['url']))
-                if 'shape' in data and data['shape'] is not None:
-                    get_action('resource_update')(context, data)
 
         else:
-            result_dict = get_action('resource_create')(context, data)
-
-            # Added by HDX - adding perma_link
-            # Now that we have a resource id we want to add the
-            # perma_link url to the resource
-            if result_dict and 'resource_type' in result_dict and u'file.upload' == result_dict['resource_type']:
-                result_dict['perma_link'] = self._get_perma_link(
-                    dataset_id, result_dict['id'])
-                get_action('resource_update')(context, result_dict)
-            if result_dict and 'format' in result_dict:
-                if result_dict['format'] == ZIPPED_SHAPEFILE_FORMAT:
-                    result_dict['shape'] = json.dumps(self._get_geojson(result_dict['url']))
-                elif result_dict['format'] == GEOJSON_FORMAT:
-                    result_dict['shape'] = json.dumps(self._get_json_from_resource(result_dict['url']))
-                if 'shape' in result_dict and result_dict['shape'] is not None:
-                    get_action('resource_update')(context, result_dict)
-
+            get_action('resource_create')(context, data)
 
     def new_resource(self, id, data=None, errors=None, error_summary=None):
         ''' FIXME: This is a temporary action to allow styling of the
