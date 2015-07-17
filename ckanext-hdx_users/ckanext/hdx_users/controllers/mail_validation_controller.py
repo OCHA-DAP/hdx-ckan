@@ -472,7 +472,7 @@ class ValidationController(ckan.controllers.user.UserController):
             for f in friends:
                 if f is not None:
                     hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
-            user_id = c.user
+            user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
 
