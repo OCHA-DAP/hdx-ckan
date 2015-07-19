@@ -31,8 +31,14 @@
             {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#submitting-data','text':'Submitting Data'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
           </div>
           <div class="module-content" id="dataset_part_1">
-            <div class="package-upload-header mTop45 sspBold20 mBottom40" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
-            {% block form %}{{ c.form | safe }}{% endblock %}
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="package-upload-header mTop45 sspBold20 mBottom40" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
+              </div>
+              <div class="col-xs-12">
+                {% block form %}{{ c.form | safe }}{% endblock %}
+              </div>
+            </div>
           </div>
           <div class="paddingLeftHack paddingRightHack" style="margin-top:0px;">
           </div>

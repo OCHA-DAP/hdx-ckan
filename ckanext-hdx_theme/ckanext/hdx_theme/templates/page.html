@@ -163,18 +163,17 @@
 {% endblock %}
 
 {%- block scripts %}
-  <!--/{% resource 'base/main' %}-->
-  {#% resource 'base/ckan' %#}
+
   {% resource 'hdx_theme/bs_popover.js' %}
-  {% if g.tracking_enabled %}
-      {% resource 'hdx_theme/indicator/tracking.js' %}
-  {% endif %}
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
-  {% resource 'hdx_theme/mailchimp' %}
-  {{ super() }}
-{% endblock -%}
+    {% if g.tracking_enabled %}
+        {% resource 'hdx_theme/indicator/tracking.js' %}
+    {% endif %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,700,300,500' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
+    {% resource 'hdx_theme/mailchimp' %}
+    {{ super() }}
+  {% endblock -%}
 
 {%- block scripts2 %}
   {{ super() }}

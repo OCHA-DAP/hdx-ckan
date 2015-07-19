@@ -520,9 +520,7 @@
     }
 
     .select2-container-multi .select2-choices .select2-search-choice{
-        height: 28px;
         line-height: 28px;
-
     }
 
     .select2-container-multi .select2-choices .select2-search-choice .select2-search-choice-close{
