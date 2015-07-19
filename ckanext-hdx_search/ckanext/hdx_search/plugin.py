@@ -1,15 +1,17 @@
 import logging, re
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-import ckan.lib.plugins as lib_plugins
 
 import ckanext.hdx_search.actions.actions as actions
+import ckanext.hdx_package.helpers.helpers as hdx_package_helper
+
 
 def convert_country(q):
     for c in tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True}):
         if re.findall(c['display_name'].lower(),q.lower()):
             q += ' '+c['name']
     return q
+
 
 class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -64,6 +66,15 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return search_results
 
     def before_view(self, pkg_dict):
+        return pkg_dict
+
+    def before_index(self, pkg_dict):
+        if pkg_dict.get('res_format'):
+            new_formats = []
+            for format in pkg_dict['res_format']:
+                new_format = hdx_package_helper.hdx_unified_resource_format(format)
+                new_formats.append(new_format)
+            pkg_dict['res_format'] = new_formats
         return pkg_dict
 
     def get_actions(self):

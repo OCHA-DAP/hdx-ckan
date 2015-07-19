@@ -125,6 +125,9 @@ ckan.storage_path = /opt/www/data
 ckan.max_resource_size = 300
 ckan.max_image_size = 2
 
+# Path to resource format mapping file is:
+ckan.resource_formats = %(here)s/ckanext-hdx_package/ckanext/hdx_package/config/resource_formats.json
+
 ## Datapusher settings
 
 # Make sure you have set up the DataStore
