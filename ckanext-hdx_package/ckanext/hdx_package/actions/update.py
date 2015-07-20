@@ -25,6 +25,10 @@ def resource_update(context, data_dict):
     if do_geo_preview:
         geopreview.add_init_shape_info_data_if_needed(data_dict)
 
+    if data_dict.get('resource_type', '') != 'file.upload':
+        #If this isn't an upload, it is a link so make sure we update
+        #the url_type otherwise solr will screw everything up
+        data_dict['url_type'] = 'api'
     result_dict = core_update.resource_update(context, data_dict)
 
     if do_geo_preview and lower(data_dict.get('format', '')) in geopreview.GIS_FORMATS:
