@@ -2,6 +2,7 @@ import ckan.plugins as p
 import os
 from ckan.model import Session
 import requests
+import time
 from urlparse import urlparse
 from ckan.lib.uploader import ResourceUpload
 
@@ -41,7 +42,9 @@ class MigrateCommand(p.toolkit.CkanCommand):
                                   "where resource_type = 'file.upload' "
                                   "and (url_type <> 'upload' or url_type is null)"
                                   "and url like '%storage%'")
-        for id, revision_id, url  in results:
+        for id, revision_id, url in results:
+            print 'Give it a second, would you?'
+            time.sleep(1)
             url_parts = urlparse(url)
             url_parts = url_parts.path.split("/")
             filename = url_parts[len(url_parts)-1]
@@ -68,7 +71,7 @@ class MigrateCommand(p.toolkit.CkanCommand):
                         out.write(chunk)
 
             Session.execute("update resource set url_type = 'upload', "
-                            "url = '%s' where id = '%s'"  % (filename, id))
+                            "url = '%s' where id = '%s'" % (filename, id))
             Session.execute("update resource_revision set url_type = 'upload', "
                             "url = '%s' where id = '%s' and "
                             "revision_id = '%s'" % (filename, id, revision_id))
