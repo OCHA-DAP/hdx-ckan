@@ -24,7 +24,7 @@ $(document).ready(function(){
           });
         }
         if (flag) {
-          $('#selected_groups').append('<span class="filtered pill">'+country_name+' <i id="field-group-'+country+'" name="groups__'+(number_of_groups)+'__id" value="'+country+'" class="group_checked icon-remove"/></span>');
+          $('#selected_groups').append('<span class="filtered pill">'+country_name+' <i id="field-group-'+country+'" name="groups__'+(number_of_groups)+'__id" value="'+country+'" class="group_checked glyphicon glyphicon-remove"/></span>');
           // //Add to solr_additions
           // var additions = $('#field-solr_additions').val();
           // if(!additions){
@@ -51,7 +51,7 @@ $(document).ready(function(){
       $('#'+id).remove();
       $(event.target).remove();
       var country = event.target.innerText.toLowerCase().trim();
-    }else if(event.target.className == "group_checked icon-remove"){
+    }else if(event.target.className == "group_checked glyphicon glyphicon-remove"){
       var id = event.target.id;
       $('#'+id+'-input').remove();
       $(event.target).parent().remove();
