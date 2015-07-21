@@ -13,13 +13,14 @@ $(document).ready(function(){
  			}
  		});
 
- 		if($('#mx-file').attr('is-upload')){
+ 		if($('#mx-file').attr('is-upload') == "True"){
  			file_upload_selected();
  		}
 
+
  		$('#field-link-upload').click(function(){
-        $('#field-url').parent().parent().css({'opacity':100, 'height':'inherit'});
-    });
+        	$('#field-url').parent().parent().css({'opacity':100, 'height':'inherit'});
+    	});
 
  		//Add red asterisks
  		$('#field-name').parent().parent().addClass('dataset-required');

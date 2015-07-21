@@ -6,13 +6,28 @@ border-bottom: 0px !important;
 border-bottom: 0px !important;
 }
 
+.url-align{
+	margin-bottom: 30px;
+}
+
+.button-align{
+	margin-left:25px;
+	margin-bottom:20px;
+}
+
 .create-org.form-actions {
 margin-bottom: 30px !important;
 line-height: 2px !important;
 }
 
-.field-with-info {
-	float: left;
+
+.info-field {
+  float:left;
+  margin-left: 30px;
+  margin-top: 25px;
+  background-color: #CCCCCC;
+  color: #FFFFFF;
+  padding: 5px 10px;
 }
 
 
