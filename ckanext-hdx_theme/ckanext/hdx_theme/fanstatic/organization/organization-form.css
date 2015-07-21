@@ -15,6 +15,10 @@ border-bottom: 0px !important;
 	margin-bottom:20px;
 }
 
+.button-align a, .button-align button{
+	margin-right:20px;
+}
+
 .create-org.form-actions {
 margin-bottom: 30px !important;
 line-height: 2px !important;
@@ -88,14 +92,15 @@ line-height: 2px !important;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
   	display: inline-block;
-	height: 20px;
+	/*height: 20px;*/
 	padding: 4px 6px;
 	margin-bottom: 10px;
 	font-size: 14px;
-	line-height: 20px;
+	/*line-height: 20px;*/
 	color: #555555;
 	vertical-align: middle;
 }
+
 
 .create-org.form-actions {
   background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -108,4 +113,45 @@ line-height: 2px !important;
   float: left;
   line-height: 75px;
   vertical-align: top;
+}
+
+.form-horizontal .controls, .org-map .controls{
+	margin-top:-20px;
+}
+
+.form-horizontal .control-full, .org-map .control-full{
+	width:90%;
+}
+
+.one-line-label label{
+	width:200px!important;
+}
+
+.one-line-label .controls{
+	margin-left:-5px !important;
+}
+
+.taller-textarea {
+	height: 250px !important;
+}
+
+.org-map .well{
+	width:33.5%; float:left; margin:5px; padding-bottom:5px;
+}
+
+.org-topline input{
+	width: 90%;
+	margin-top: -15px;
+}
+
+.org-topline label{
+	margin-top:15px;
+}
+
+.org-charts input{
+	width:90%;
+}
+
+.org-charts .info-field{
+	margin-top: 10px;
 }
