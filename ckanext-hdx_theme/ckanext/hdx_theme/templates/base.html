@@ -61,10 +61,6 @@
     #}
     {% block links -%}
       <link rel="shortcut icon" href="{{ g.favicon }}" />
-      <script src="/base/vendor/jquery.js"></script>
-      {% resource 'hdx_theme/vendor/jquery.cookie/jquery.cookie.js' %}
-      {% resource 'hdx_theme/ckan' %}
-      {% resource 'vendor/vendor' %}
     {% endblock -%}
 
     {#
@@ -128,9 +124,13 @@
       {% endblock %}
     #}
     {%- block scripts %}
+      {% resource 'vendor/jquery.js' %}
+      {% resource 'hdx_theme/vendor/jquery.cookie/jquery.cookie.js' %}
+      {% resource 'hdx_theme/ckan' %}
       {% resource 'hdx_theme/bootstrap' %}
       {% resource 'hdx_theme/google-analytics' %}
       {% resource 'hdx_theme/external-links.js' %}
+      {% resource 'vendor/vendor' %}
     {% endblock -%}
 
 
