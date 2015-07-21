@@ -78,7 +78,7 @@
                         {% set format_attrs = {'data-module': 'autocomplete', 'data-module-source': '/api/2/util/resource/format_autocomplete?incomplete=?'} %}
                         {% call form.input('format', id='field-format', label=_('Format'), placeholder=_('eg. CSV, XML or JSON'), value=data.format, error=errors.format, classes=['control-medium', 'dataset-form-field-wrapper'], attrs=format_attrs) %}
                         <div class="controls">
-                            <div class="explanatoryText">{{ _('This is generated automatically. You can edit if you wish') }}</div>
+                            <div class="explanatoryText">{{ _('HDX will allow previews of certain formats, like CSV, TXT, XLS, and JSON. Map previews are also possible if you set the file format to "zipped shapefile", "geojson", or "kml". Map previews may take a few minutes to appear.') }}</div>
                         </div>
                         {% endcall %}
                         {% endblock %}
