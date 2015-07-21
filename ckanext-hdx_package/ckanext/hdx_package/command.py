@@ -43,8 +43,8 @@ class MigrateCommand(p.toolkit.CkanCommand):
                                   "and (url_type <> 'upload' or url_type is null)"
                                   "and url like '%storage%'")
         for id, revision_id, url in results:
-            print 'Give it a second, would you?'
-            time.sleep(1)
+            # Give it a second, would you?
+            time.sleep(0.7)
             url_parts = urlparse(url)
             url_parts = url_parts.path.split("/")
             filename = url_parts[len(url_parts)-1]
