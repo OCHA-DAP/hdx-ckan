@@ -926,6 +926,33 @@ class DatasetController(PackageController):
             abort(404, _('Resource not found'))
         return render('package/confirm_delete_resource.html', {'dataset_type': self._get_package_type(id)})
 
+    def resource_download(self, id, resource_id):
+        '''
+        This is a wrapper of the core ckan function.
+        It's meant to allow old style HDX perma_links (/dataset/{id}/resource_download/{resource_id})
+        to still function for ppl that have bookmarked the url or for custom pages.
+
+        :param id: package id
+        :type id: string
+        :param resource_id: resource id
+        :type resource_id: string
+        :return:
+        :rtype:
+        '''
+        result = super(DatasetController, self).resource_download(id, resource_id)
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+        try:
+            rsc = get_action('resource_show')(context, {'id': resource_id})
+            response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(rsc.get('name', 'download'))
+        except NotFound:
+            abort(404, _('Resource not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read resource %s') % id)
+
+        return result
 
     def delete(self, id):
         """
