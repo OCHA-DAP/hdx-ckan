@@ -131,7 +131,6 @@ class HDXReqsOrgController(base.BaseController):
                 'your_name': request.params.get('your_name', ''), \
                 #'from': request.params.get('from', '')
                 }
-        print data
         return data
 
     def _validate_new_org_request_field(self, data):
