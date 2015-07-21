@@ -18,7 +18,7 @@ dt.uppercase {
 	top: 20px;
 	right: 14px;
 	display: inline-block;
-    font-size: 0;
+    /*font-size: 0;*/
     vertical-align: middle;
     white-space: nowrap;
 }
