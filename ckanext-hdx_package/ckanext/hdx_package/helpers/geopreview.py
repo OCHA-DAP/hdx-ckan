@@ -15,7 +15,8 @@ from ckan.common import c
 
 ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
 GEOJSON_FORMAT = 'geojson'
-GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT]
+KML_FORMAT = 'kml'
+GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT, KML_FORMAT]
 
 _get_or_bust = logic.get_or_bust
 get_action = logic.get_action
