@@ -21,7 +21,6 @@ border-bottom: 0px !important;
 
 .create-org.form-actions {
 margin-bottom: 30px !important;
-line-height: 2px !important;
 }
 
 
@@ -136,7 +135,7 @@ line-height: 2px !important;
 }
 
 .org-map .well{
-	width:33.5%; float:left; margin:5px; padding-bottom:5px;
+	float:left; margin:5px; padding-bottom:5px;
 }
 
 .org-topline input{
