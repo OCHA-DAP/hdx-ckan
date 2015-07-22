@@ -374,12 +374,12 @@ class ValidationController(ckan.controllers.user.UserController):
                   <body>
                     <p>You have successfully registered your account on HDX.</p>
                     <p>Username: {username}</p>
-                    <p>Username: {password}</p>
+                    <p>Password: {password}</p>
                     <p><a href="{link}">Login</a></p>
                     <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
                   </body>
                 </html>
-                """.format(username=data_dict.get('username'), password=data_dict.get('password'), link=link,
+                """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
                            tour_link=tour_link)
 
                 try:
