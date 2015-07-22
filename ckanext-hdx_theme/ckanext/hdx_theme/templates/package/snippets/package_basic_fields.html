@@ -23,20 +23,27 @@
 {% set user_is_sysadmin = h.check_access('sysadmin') %}
 {% if new_dataset %}
   {% set form_field_wrapper_classes = 'col-xs-8 dataset-form-field-wrapper field-with-info' %}
+  {% set special_form_field_wrapper_classes = 'col-xs-4' %}
 {% else %}
   {% set form_field_wrapper_classes = 'col-xs-10' %}
+  {% set special_form_field_wrapper_classes = 'col-xs-5' %}
 {% endif %}
 
 {% import 'macros/form.html' as form %}
 
 {% block package_basic_fields_title %}
     <div class="row">
-        <div class="{{ form_field_wrapper_classes }}">
+        <div class="{{ special_form_field_wrapper_classes }}">
             <div class="row">
-                {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required', 'col-xs-6'], attrs={'data-module': 'slug-preview-target'}) }}
-                {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full', 'control-large','dataset-required', 'col-xs-6']) }}
+                {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'dataset-required', 'col-xs-12'], attrs={'data-module': 'slug-preview-target'}) }}
             </div>
         </div>
+        <div class="{{ special_form_field_wrapper_classes }} field-with-info">
+            <div class="row">
+                {{ form.input('dataset_source', id='field-dataset_source', label=_('Source'), placeholder=_('Enter the source(s) of the data'), value=data.dataset_source, error=errors.dataset_source, classes=['control-full', 'control-large','dataset-required', 'col-xs-12']) }}
+            </div>
+        </div>
+
         {% if new_dataset %}
             <div class="col-xs-4 info-field">
                 <div class="dataset-form-info-field ">
