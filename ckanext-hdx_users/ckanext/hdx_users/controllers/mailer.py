@@ -32,7 +32,6 @@ def _mail_recipient(recipient_name, recipient_email,
     mail_from = config.get('smtp.mail_from')
     body = add_msg_niceties(recipient_name, body, sender_name, sender_url)
     msg = MIMEMultipart('alternative')
-    # msg = MIMEText(body.encode('utf-8'), 'plain', 'utf-8')
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
