@@ -381,12 +381,8 @@ class ValidationController(ckan.controllers.user.UserController):
                 </html>
                 """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
                            tour_link=tour_link)
+                hdx_mailer.mail_recipient(data_dict.get('fullname'), data_dict.get('email'), subject, html)
 
-                try:
-                    hdx_mailer.mail_recipient(data_dict.get('fullname'), data_dict.get('email'), subject, html)
-                    return True
-                except:
-                    return False
         except NotAuthorized:
             return OnbNotAuth
         except NotFound, e:
