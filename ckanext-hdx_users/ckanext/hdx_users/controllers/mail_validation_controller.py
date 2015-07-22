@@ -364,7 +364,6 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_extra_update')(context, ue_dict)
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
-
                 subject = 'Thank you for registering on HDX!'
                 link = config['ckan.site_url'] + '/login'
                 tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
@@ -517,7 +516,7 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
 
-            subject = '"{fullname}" invited you to join HDX!'.format(fullname=usr)
+            subject = '{fullname} invited you to join HDX!'.format(fullname=usr)
             link = config['ckan.site_url'] + '/login'
             hdx_link = '<a href="{link}">tour</a>'.format(link=link)
             tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
@@ -532,15 +531,10 @@ class ValidationController(ckan.controllers.user.UserController):
                 </html>
             """.format(fullname=usr, tour_link=tour_link, hdx_link=hdx_link)
 
-
-            try:
-                friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
-                for f in friends:
-                    if f:
-                        hdx_mailer.mail_recipient(f, f, subject, html)
-                return True
-            except:
-                return False
+            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
+            for f in friends:
+                if f:
+                    hdx_mailer.mail_recipient(f, f, subject, html)
 
         except exceptions.Exception, e:
             error_summary = str(e)
