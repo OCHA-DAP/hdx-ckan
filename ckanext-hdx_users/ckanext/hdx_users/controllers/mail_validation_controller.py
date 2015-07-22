@@ -61,6 +61,7 @@ LoginFailed = _('Login failed. Bad username or password.')
 OnbNotAuth = json.dumps({'success': False, 'error': {'message': _('Unauthorized to create user')}})
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
 OnbExistingUsername = json.dumps({'success': False, 'error': {'message': 'Username is already used'}})
+OnbExistingEmail = json.dumps({'success': False, 'error': {'message': 'Email is already in use'}})
 OnbTokenNotFound = json.dumps({'success': False, 'error': {'message': 'Token not found'}})
 OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity Error'}})
 OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
@@ -221,7 +222,9 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             check_access('user_create', context, data_dict)
             check_access('user_can_register', context, data_dict)
-        except NotAuthorized:
+        except NotAuthorized, e:
+            if e.message and e.message.get('email'):
+                return self.error_message(e.message.get('email')[0])
             return OnbNotAuth
         except ValidationError, e:
             # errors = e.error_dict
