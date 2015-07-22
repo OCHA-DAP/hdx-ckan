@@ -516,7 +516,7 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
 
-            subject = '"{fullname}" invited you to join HDX!'.format(fullname=usr)
+            subject = '{fullname} invited you to join HDX!'.format(fullname=usr)
             link = config['ckan.site_url'] + '/login'
             hdx_link = '<a href="{link}">tour</a>'.format(link=link)
             tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
