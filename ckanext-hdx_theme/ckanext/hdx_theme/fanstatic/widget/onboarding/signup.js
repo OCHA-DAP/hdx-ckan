@@ -12,7 +12,6 @@ $(document).ready(function(){
                 var result = JSON.parse(result_data);
                 console.log(result);
                 if (result.success){
-
                     //check for newsletter
                     if ($("#signup-send-updates").is(":checked")){
                         console.log("Attempt to register to newsletter!");
@@ -39,7 +38,10 @@ $(document).ready(function(){
                     $("#verifyPopup").find(".verify-email").html(email);
                     closeCurrentWidget($this);showOnboardingWidget('#verifyPopup');
                 } else {
-                    alert("Can't signup: " + result.error.message);
+                    var errMsg = $("#signup-form").find(".error-message");
+                    errMsg.text(result.error.message);
+                    $("#field-email").addClass("error");
+                    errMsg.show();
                 }
             });
         }

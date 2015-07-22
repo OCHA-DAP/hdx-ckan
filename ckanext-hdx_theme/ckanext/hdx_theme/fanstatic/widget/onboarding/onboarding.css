@@ -9,6 +9,12 @@
 .popup.popup-onboarding .content {
   padding: 0;
 }
+.popup.popup-onboarding .error-message {
+  color: red;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+}
 .popup.popup-onboarding .close {
   opacity: 1;
   color: #ffffff;
