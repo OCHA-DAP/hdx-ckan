@@ -344,14 +344,16 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
             get_action('user_extra_update')(context, ue_dict)
 
-            subject = 'Thank you for registering on HDX!'
-            link = str(config['ckan.site_url']) + '/login'
-            tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
-            body = 'You have successfully registered your account on HDX.\n Username: ' + data_dict.get(
-                'name') + ' \n Password: ' + data_dict.get(
-                'password') + ' \n <a href="{0}">Login</a> \n You can learn more about HDX by taking this quick ' + tour_link + ' or by reading our FAQ.'.format(
-                link)
-            hdx_mail.send_mail(data_dict.get('email'), subject, body)
+            if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
+                subject = 'Thank you for registering on HDX!'
+                link = config['ckan.site_url'] + '/login'
+                tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+                body = 'You have successfully registered your account on HDX.\n Username: ' + data_dict.get(
+                    'name') + ' \n Password: ' + data_dict.get(
+                    'password') + ' \n <a href="'+link+'">Login</a> \n You can learn more about HDX by taking this quick ' + tour_link + ' or by reading our FAQ.'
+                print body
+
+                hdx_mail.send_mail([{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, body)
 
         except NotAuthorized:
             return OnbNotAuth
