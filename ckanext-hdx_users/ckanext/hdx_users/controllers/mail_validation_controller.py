@@ -41,6 +41,8 @@ import logging as logging
 import urllib2 as urllib2
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 from sqlalchemy.exc import IntegrityError
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -748,8 +750,28 @@ class ValidationController(ckan.controllers.user.UserController):
                ''.format(link=link.format(config['ckan.site_url'], validate_link))
         subject = "Please verify your email address"
         print 'Validate link: ' + validate_link
+
+
+        msg = MIMEMultipart('alternative')
+        msg['To'] = user['email']
+        msg['From'] = configuration.config.get('hdx.orgrequest.email')
+        msg['Subject'] = subject
+        html = """\
+        <html>
+          <head></head>
+          <body>
+            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
+            <p><a href="{link}">Verify Email</a></p>
+          </body>
+        </html>
+        """.format(link=link.format(config['ckan.site_url'], validate_link))
+
+        part = MIMEText(html, 'html')
+        msg.attach(part)
+
         try:
-            mailer.mail_recipient(user['name'], user['email'], subject, body)
+            # mailer.mail_recipient(user['name'], user['email'], subject, body)
+            hdx_mail.send_mail([{'display_name': user['name'], 'email': user['email']}], subject, msg.as_string())
             return True
         except:
             return False
