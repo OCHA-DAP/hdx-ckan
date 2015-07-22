@@ -779,8 +779,8 @@ a.tag:hover {
   -o-transform-origin: center center;
   transform-origin: center center;
   position: absolute;
-  top: 15px;
-  right: -35px;
+  top: 10px;
+  right: -20px;
   width: 80px;
   color: #ffffff;
   background-color: #005d7a;
@@ -793,7 +793,7 @@ a.tag:hover {
   margin: 0;
   list-style: none;
   *zoom: 1;
-  margin: 0 -25px;
+  margin: 0 -10px;
   padding-bottom: 15px;
   background: #fbfbfb url("../../../base/images/bg.png");
   border: 1px solid #dddddd;
@@ -811,9 +811,9 @@ a.tag:hover {
 .media-item {
   position: relative;
   float: left;
-  width: 189px;
+  width: 250px;
   padding: 15px;
-  margin: 15px 0 0 15px;
+  margin: 15px 0 0 -20px;
   background-color: white;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -883,6 +883,7 @@ a.tag:hover {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
+  width: 230px;
 }
 .media-heading {
   font-size: 18px;
