@@ -834,7 +834,7 @@ def filter_fields_and_values_exist_and_are_valid(key, data, errors, context):
     convert_to_list_if_string = logic.converters.convert_to_list_if_string
     fields = convert_to_list_if_string(data.get(('filter_fields',)))
     values = convert_to_list_if_string(data.get(('filter_values',)))
-
+    
     if not fields:
         errors[('filter_fields',)].append(_('"filter_fields" is required when '
                                             '"filter_values" is filled'))

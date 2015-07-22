@@ -42,3 +42,19 @@
   margin-left: 40px;
 }
 
+.modal{
+  right:30% !important;
+  left:30% !important;
+  width:40%;
+  height:215px;
+  background: #fff;
+}
+
+.modal-header{
+  background:#007ce0;
+  color: #fff;
+  height: 100px;
+}
+
+.modal-body{
+}

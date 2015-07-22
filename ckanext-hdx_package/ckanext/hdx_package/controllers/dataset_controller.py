@@ -879,17 +879,24 @@ class DatasetController(PackageController):
                                     content_type='json')
             text = 'make it private'
             status = 'Public'
-            data_dict = clone_dict(c.pkg_dict)
+            data_dict = c.pkg_dict
             data_dict['private'] = False
         else:
             text = 'make it public'
             status = 'Private'
-            data_dict = clone_dict(c.pkg_dict)
+            data_dict = c.pkg_dict
             data_dict['private'] = True
-        #try:
-        pkg_dict = get_action('package_update')(context, data_dict)
-        #except:
-        #   return self._finish(500, {'success': False, 'message':'Oops! We can't do this right now. Something went wrong.'}, content_type='json') 
+        if data_dict.get('extras', None):
+            del(data_dict['extras'])
+        if not data_dict.get('dataset_source', None):
+            data_dict['dataset_source'] = "Unknown"
+        if not data_dict.get('package_creator', None):
+            data_dict['package_creator'] = "Unknown"
+
+        try:
+            pkg_dict = get_action('package_update')(context, data_dict)
+        except:
+            self._finish(500, {'success': False, 'message':"Oops! We can't do this right now. Something went wrong."}, content_type='json') 
         return self._finish(200, {'success': True, 'status': status, 'text': text}, content_type='json')
 
 
