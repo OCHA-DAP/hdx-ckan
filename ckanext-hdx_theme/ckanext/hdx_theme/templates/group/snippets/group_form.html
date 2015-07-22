@@ -69,6 +69,7 @@
   {% endblock %}
   #}
 
+  <div class="org-control-container button-align">
   <div class="create-org form-actions">
       {% block delete_button %}
         {% if h.check_access('group_delete', {'id': data.id})  %}
@@ -78,6 +79,7 @@
       {% endblock %}
     <button class="btn btn-primary create-loc-btn" name="save" type="submit">{% block save_text %}{{ _('Save Group') }}{% endblock %}</button>
   </div>
+</div>
 </form>
 
 
