@@ -21,9 +21,10 @@ class MailerException(Exception):
 
 
 def add_msg_niceties(recipient_name, body, sender_name, sender_url):
+    footer = '<br><p><a href="https://data.hdx.rwlabs.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our Blogs | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p>'
     return _(u"Dear %s,") % recipient_name \
            + u"\r\n\r\n%s\r\n\r\n" % body \
-           + u"\r\n%s  %s" % (sender_name, sender_url)
+           + u"\r\n%s" % footer
 
 
 def _mail_recipient(recipient_name, recipient_email,
