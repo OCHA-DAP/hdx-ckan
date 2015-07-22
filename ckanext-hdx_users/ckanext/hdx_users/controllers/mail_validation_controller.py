@@ -43,6 +43,7 @@ from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_L
 from sqlalchemy.exc import IntegrityError
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -787,7 +788,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         try:
             # mailer.mail_recipient(user['name'], user['email'], subject, body)
-            hdx_mail.send_mail([{'display_name': 'User', 'email': user['email']}], subject, msg.as_string())
+            hdx_mailer.mail_recipient('User',user['email'], subject, html)
             return True
         except:
             return False

@@ -73,7 +73,7 @@ $(document).ready(function(){
     var loginCookie = $.cookie("hdx_login");
     if (loginCookie){
         var data = JSON.parse(loginCookie);
-        console.log(data);
+        //console.log(data);
 
         $('#username-form-field, #login-photo-default').hide();
         $('#field-login').val(data.login);

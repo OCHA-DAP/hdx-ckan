@@ -47,6 +47,9 @@ def get_user_extra(user_id=None):
             'extra': user_extra_list,
         }
     }
+    if crt_step == user_model.HDX_ONBOARDING_FIRST_LOGIN:
+        data_dict['extras'] = [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]
+        get_action('user_extra_update')(context, data_dict)
     return result
 
 
