@@ -364,16 +364,29 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_extra_update')(context, ue_dict)
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
+
                 subject = 'Thank you for registering on HDX!'
                 link = config['ckan.site_url'] + '/login'
                 tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
-                body = 'You have successfully registered your account on HDX.\n Username: ' + data_dict.get(
-                    'name') + ' \n Password: ' + data_dict.get(
-                    'password') + ' \n <a href="'+link+'">Login</a> \n You can learn more about HDX by taking this quick ' + tour_link + ' or by reading our FAQ.'
-                print body
+                html = """\
+                <html>
+                  <head></head>
+                  <body>
+                    <p>You have successfully registered your account on HDX.</p>
+                    <p>Username: {username}</p>
+                    <p>Username: {password}</p>
+                    <p><a href="{link}">Login</a></p>
+                    <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
+                  </body>
+                </html>
+                """.format(username=data_dict.get('username'), password=data_dict.get('password'), link=link,
+                           tour_link=tour_link)
 
-                hdx_mail.send_mail([{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, body)
-
+                try:
+                    hdx_mailer.mail_recipient(data_dict.get('fullname'), data_dict.get('email'), subject, html)
+                    return True
+                except:
+                    return False
         except NotAuthorized:
             return OnbNotAuth
         except NotFound, e:
@@ -498,21 +511,39 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 6: user can invite friends by email to access HDX
         :return:
         '''
+        if not c.user:
+            return OnbNotAuth
         try:
             context = {'model': model, 'session': model.Session,
                        'user': c.user}
-            # TODO to be changed with mailchimp or check more information
             usr = c.userobj.display_name or c.user
-            subject = 'Join HDX'
-            link = '{0}'.format(config['ckan.site_url'])
-            body = 'Your friend ' + usr + ' invited you to join HDX.\n You can join here: ' + link
-            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
-            for f in friends:
-                if f:
-                    hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
+
+            subject = '"{fullname}" invited you to join HDX!'.format(fullname=usr)
+            link = config['ckan.site_url'] + '/login'
+            hdx_link = '<a href="{link}">tour</a>'.format(link=link)
+            tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+            html = """\
+            <html>
+              <head></head>
+              <body>
+                <p>{fullname} invited you to join the <a href="https://hdx.rwlabs.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
+                <p>You can learn more about HDX by taking this quick {tour_link} (launches browser and start playing Luis’s walk-through video).</p>
+                <p>Join {hdx_link}!</p>
+              </body>
+            </html>
+            """.format(fullname=usr, tour_link=tour_link, hdx_link=hdx_link)
+
+            try:
+                friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
+                for f in friends:
+                    if f:
+                        hdx_mailer.mail_recipient(f, f, subject, html)
+                return True
+            except:
+                return False
 
         except exceptions.Exception, e:
             error_summary = str(e)
@@ -762,33 +793,21 @@ class ValidationController(ckan.controllers.user.UserController):
             action='validate',
             token=token['token'])
         link = '{0}{1}'
-        body = 'Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below\n' \
-               '<a href="{link}">Verify Email</a>\n' \
-               ''.format(link=link.format(config['ckan.site_url'], validate_link))
         subject = "Please verify your email address"
         print 'Validate link: ' + validate_link
-
-
-        msg = MIMEMultipart('alternative')
-        msg['To'] = user['email']
-        msg['From'] = configuration.config.get('hdx.orgrequest.email')
-        msg['Subject'] = subject
         html = """\
         <html>
           <head></head>
           <body>
-            <p>Thank you for your interest in HDX.. In order to continue registering your account, please verify your email address by simply clicking below.</p>
+            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
             <p><a href="{link}">Verify Email</a></p>
           </body>
         </html>
         """.format(link=link.format(config['ckan.site_url'], validate_link))
 
-        part = MIMEText(html, 'html')
-        msg.attach(part)
-
         try:
             # mailer.mail_recipient(user['name'], user['email'], subject, body)
-            hdx_mailer.mail_recipient('User',user['email'], subject, html)
+            hdx_mailer.mail_recipient('User', user['email'], subject, html)
             return True
         except:
             return False
