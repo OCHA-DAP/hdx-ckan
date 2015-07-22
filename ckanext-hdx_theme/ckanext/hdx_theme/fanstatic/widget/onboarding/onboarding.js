@@ -73,7 +73,7 @@ $(document).ready(function(){
     var loginCookie = $.cookie("hdx_login");
     if (loginCookie){
         var data = JSON.parse(loginCookie);
-        console.log(data);
+        //console.log(data);
 
         $('#username-form-field, #login-photo-default').hide();
         $('#field-login').val(data.login);
@@ -82,6 +82,13 @@ $(document).ready(function(){
             $('#user-display-email').text(data.email);
         $('#login-photo-gravatar-img').attr("src", "//gravatar.com/avatar/"+ data.email_hash +"?s=95&d=identicon");
         $('#username-static, #login-photo-gravatar').show();
+    }
+
+    //check for first login
+    var firstLogin = $("#first-login").text();
+    if (firstLogin && firstLogin != ""){
+        showOnboardingWidget("#registeredPopup");
+        return;
     }
 
     //check for logout event
@@ -98,6 +105,13 @@ $(document).ready(function(){
         $("#field-login").addClass("error");
         $("#field-password").addClass("error");
         errMsg.show();
-        showOnboardingWidget("#loginPopup");
+
     }
+    var userLogin = $("#user-login").text();
+    if (userLogin && userLogin != ""){
+        showOnboardingWidget("#loginPopup");
+        return;
+    }
+
+
 });

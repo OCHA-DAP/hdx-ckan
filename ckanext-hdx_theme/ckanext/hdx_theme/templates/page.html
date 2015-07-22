@@ -71,12 +71,14 @@
                 The pre_primary block can be used to add content to before the
                 rendering of the main content columns of the page.
                 #}
-                <div class="row paddingRowHack contentBackground">
-                  <div class="col-xs-12 paddingLeftHack paddingRightHack">
-                    {% block pre_primary %}
-                    {% endblock %}
+                {% if self.pre_primary() | trim %}
+                  <div class="row paddingRowHack contentBackground">
+                    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+                      {% block pre_primary %}
+                      {% endblock %}
+                    </div>
                   </div>
-                </div>
+                {% endif %}
 
                 <div class="row paddingRowHack contentBackground{% if self.secondary()|trim != '' and not secondary_right_side %} twoColumnBackground{% endif %}">
                   <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -173,7 +175,6 @@
     <link href='https://fonts.googleapis.com/css?family=Raleway:100' rel='stylesheet' type='text/css'>
     {% resource 'hdx_theme/mailchimp' %}
     {{ super() }}
-   {% resource 'hdx_theme/hdx_notify.js' %}
   {% endblock -%}
 
 {%- block scripts2 %}

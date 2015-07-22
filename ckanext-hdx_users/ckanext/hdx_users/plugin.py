@@ -74,6 +74,9 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         map.connect('/login',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='new_login')
+        map.connect('/user/first_login',
+                    controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                    action='first_login')
         return map
 
     def after_map(self, map):

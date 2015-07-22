@@ -41,6 +41,9 @@ import logging as logging
 import urllib2 as urllib2
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 from sqlalchemy.exc import IntegrityError
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -61,6 +64,7 @@ LoginFailed = _('Login failed. Bad username or password.')
 OnbNotAuth = json.dumps({'success': False, 'error': {'message': _('Unauthorized to create user')}})
 OnbUserNotFound = json.dumps({'success': False, 'error': {'message': 'User not found'}})
 OnbExistingUsername = json.dumps({'success': False, 'error': {'message': 'Username is already used'}})
+OnbExistingEmail = json.dumps({'success': False, 'error': {'message': 'Email is already in use'}})
 OnbTokenNotFound = json.dumps({'success': False, 'error': {'message': 'Token not found'}})
 OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity Error'}})
 OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
@@ -98,8 +102,24 @@ class ValidationController(ckan.controllers.user.UserController):
     def new_login(self, error=None):
         template_data = {}
         if not c.user:
-            template_data = ue_helpers.get_new_login(True, "")
+            template_data = ue_helpers.get_login(True, "")
         return render('home/index.html', extra_vars=template_data)
+
+    def first_login(self, error=None):
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        data_dict = {'extras': [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]}
+        if c.user:
+            try:
+                data_dict['user_id'] = c.userobj.id or c.user
+                get_action('user_extra_update')(context, data_dict)
+            except NotFound, e:
+                return OnbUserNotFound
+            except exceptions.Exception, e:
+                error_summary = str(e)
+                return self.error_message(error_summary)
+        else:
+            return OnbUserNotFound
+        return OnbSuccess
 
     def login(self, error=None):
         '''
@@ -221,7 +241,9 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             check_access('user_create', context, data_dict)
             check_access('user_can_register', context, data_dict)
-        except NotAuthorized:
+        except NotAuthorized, e:
+            if e.message and e.message.get('email'):
+                return self.error_message(e.message.get('email')[0])
             return OnbNotAuth
         except ValidationError, e:
             # errors = e.error_dict
@@ -341,14 +363,24 @@ class ValidationController(ckan.controllers.user.UserController):
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
             get_action('user_extra_update')(context, ue_dict)
 
-            subject = 'Thank you for registering on HDX!'
-            link = str(config['ckan.site_url']) + '/login'
-            tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
-            body = 'You have successfully registered your account on HDX.\n Username: ' + data_dict.get(
-                'name') + ' \n Password: ' + data_dict.get(
-                'password') + ' \n <a href="{0}">Login</a> \n You can learn more about HDX by taking this quick ' + tour_link + ' or by reading our FAQ.'.format(
-                link)
-            hdx_mail.send_mail(data_dict.get('email'), subject, body)
+            if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
+                subject = 'Thank you for registering on HDX!'
+                link = config['ckan.site_url'] + '/login'
+                tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+                html = """\
+                <html>
+                  <head></head>
+                  <body>
+                    <p>You have successfully registered your account on HDX.</p>
+                    <p>Username: {username}</p>
+                    <p>Password: {password}</p>
+                    <p><a href="{link}">Login</a></p>
+                    <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
+                  </body>
+                </html>
+                """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
+                           tour_link=tour_link)
+                hdx_mailer.mail_recipient(data_dict.get('fullname'), data_dict.get('email'), subject, html)
 
         except NotAuthorized:
             return OnbNotAuth
@@ -474,21 +506,35 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 6: user can invite friends by email to access HDX
         :return:
         '''
+        if not c.user:
+            return OnbNotAuth
         try:
             context = {'model': model, 'session': model.Session,
                        'user': c.user}
-            # TODO to be changed with mailchimp or check more information
             usr = c.userobj.display_name or c.user
-            subject = 'Join HDX'
-            link = '{0}'.format(config['ckan.site_url'])
-            body = 'Your friend ' + usr + ' invited you to join HDX.\n You can join here: ' + link
-            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
-            for f in friends:
-                if f:
-                    hdx_mail.send_mail([{'display_name': f, 'email': f}], subject, body)
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
             get_action('user_extra_update')(context, ue_dict)
+
+            subject = '{fullname} invited you to join HDX!'.format(fullname=usr)
+            link = config['ckan.site_url'] + '/login'
+            hdx_link = '<a href="{link}">tour</a>'.format(link=link)
+            tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+            html = """\
+                <html>
+                  <head></head>
+                  <body>
+                    <p>{fullname} invited you to join the <a href="https://hdx.rwlabs.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
+                    <p>You can learn more about HDX by taking this quick {tour_link}</p>
+                    <p>Join {hdx_link}</p>
+                  </body>
+                </html>
+            """.format(fullname=usr, tour_link=tour_link, hdx_link=hdx_link)
+
+            friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
+            for f in friends:
+                if f:
+                    hdx_mailer.mail_recipient(f, f, subject, html)
 
         except exceptions.Exception, e:
             error_summary = str(e)
@@ -738,13 +784,21 @@ class ValidationController(ckan.controllers.user.UserController):
             action='validate',
             token=token['token'])
         link = '{0}{1}'
-        body = 'Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below\n' \
-               '<a href="{link}">Verify Email</a>\n' \
-               ''.format(link=link.format(config['ckan.site_url'], validate_link))
         subject = "Please verify your email address"
         print 'Validate link: ' + validate_link
+        html = """\
+        <html>
+          <head></head>
+          <body>
+            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
+            <p><a href="{link}">Verify Email</a></p>
+          </body>
+        </html>
+        """.format(link=link.format(config['ckan.site_url'], validate_link))
+
         try:
-            mailer.mail_recipient(user['name'], user['email'], subject, body)
+            # mailer.mail_recipient(user['name'], user['email'], subject, body)
+            hdx_mailer.mail_recipient('User', user['email'], subject, html)
             return True
         except:
             return False
