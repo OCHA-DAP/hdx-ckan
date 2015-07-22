@@ -95,6 +95,12 @@ def name_validator_with_changed_msg(val, context):
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
 
+    def new_login(self, error=None):
+        template_data = {}
+        if not c.user:
+            template_data = ue_helpers.get_new_login(True, "")
+        return render('home/index.html', extra_vars=template_data)
+
     def login(self, error=None):
         '''
         Code copied from controllers/user.py:345
