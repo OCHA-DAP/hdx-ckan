@@ -23,7 +23,7 @@ class MailerException(Exception):
 def add_msg_niceties(recipient_name, body, sender_name, sender_url):
     return _(u"Dear %s,") % recipient_name \
            + u"\r\n\r\n%s\r\n\r\n" % body \
-           + u"--\r\n%s (%s)" % (sender_name, sender_url)
+           + u"\r\n%s  %s" % (sender_name, sender_url)
 
 
 def _mail_recipient(recipient_name, recipient_email,

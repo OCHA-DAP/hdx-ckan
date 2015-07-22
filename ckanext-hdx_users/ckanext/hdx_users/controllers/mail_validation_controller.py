@@ -526,15 +526,16 @@ class ValidationController(ckan.controllers.user.UserController):
             hdx_link = '<a href="{link}">tour</a>'.format(link=link)
             tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
             html = """\
-            <html>
-              <head></head>
-              <body>
-                <p>{fullname} invited you to join the <a href="https://hdx.rwlabs.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
-                <p>You can learn more about HDX by taking this quick {tour_link} (launches browser and start playing Luis’s walk-through video).</p>
-                <p>Join {hdx_link}!</p>
-              </body>
-            </html>
+                <html>
+                  <head></head>
+                  <body>
+                    <p>{fullname} invited you to join the <a href="https://hdx.rwlabs.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
+                    <p>You can learn more about HDX by taking this quick {tour_link}</p>
+                    <p>Join {hdx_link}</p>
+                  </body>
+                </html>
             """.format(fullname=usr, tour_link=tour_link, hdx_link=hdx_link)
+
 
             try:
                 friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
