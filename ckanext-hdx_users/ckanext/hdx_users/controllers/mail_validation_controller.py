@@ -366,7 +366,7 @@ class ValidationController(ckan.controllers.user.UserController):
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
                 subject = 'Thank you for registering on HDX!'
                 link = config['ckan.site_url'] + '/login'
-                tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+                tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
                 html = """\
                 <html>
                   <head></head>
@@ -519,7 +519,7 @@ class ValidationController(ckan.controllers.user.UserController):
             subject = '{fullname} invited you to join HDX!'.format(fullname=usr)
             link = config['ckan.site_url'] + '/login'
             hdx_link = '<a href="{link}">tour</a>'.format(link=link)
-            tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+            tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
             html = """\
                 <html>
                   <head></head>
