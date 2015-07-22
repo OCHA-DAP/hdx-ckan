@@ -101,8 +101,24 @@ class ValidationController(ckan.controllers.user.UserController):
     def new_login(self, error=None):
         template_data = {}
         if not c.user:
-            template_data = ue_helpers.get_new_login(True, "")
+            template_data = ue_helpers.get_login(True, "")
         return render('home/index.html', extra_vars=template_data)
+
+    def first_login(self, error=None):
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        data_dict = {'extras': [{'key': user_model.HDX_ONBOARDING_FIRST_LOGIN, 'new_value': 'True'}]}
+        if c.user:
+            try:
+                data_dict['user_id'] = c.userobj.id or c.user
+                get_action('user_extra_update')(context, data_dict)
+            except NotFound, e:
+                return OnbUserNotFound
+            except exceptions.Exception, e:
+                error_summary = str(e)
+                return self.error_message(error_summary)
+        else:
+            return OnbUserNotFound
+        return OnbSuccess
 
     def login(self, error=None):
         '''
@@ -760,7 +776,7 @@ class ValidationController(ckan.controllers.user.UserController):
         <html>
           <head></head>
           <body>
-            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
+            <p>Thank you for your interest in HDX.. In order to continue registering your account, please verify your email address by simply clicking below.</p>
             <p><a href="{link}">Verify Email</a></p>
           </body>
         </html>
@@ -771,7 +787,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         try:
             # mailer.mail_recipient(user['name'], user['email'], subject, body)
-            hdx_mail.send_mail([{'display_name': user['name'], 'email': user['email']}], subject, msg.as_string())
+            hdx_mail.send_mail([{'display_name': 'User', 'email': user['email']}], subject, msg.as_string())
             return True
         except:
             return False

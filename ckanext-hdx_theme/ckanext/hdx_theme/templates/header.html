@@ -9,13 +9,16 @@
         {% if data %}
           {% set step = data.current_step %}
           {% if step == "hdx_login" %}
-            <div id="login-error" style="display: none;">{{ data.message }}</div>
-          {% endif %}
-          {% if step == "hdx_first_login" %}
-            <div id="first-login" style="display: none;">first login</div>
+            <div id="user-login" style="display: none;">User login</div>
+            {% if not data.success %}
+              <div id="login-error" style="display: none;">{{ data.message }}</div>
+            {% endif %}
           {% endif %}
           {% if step == "hdx_logout" %}
             <div id="user-logout" style="display: none;">{{data.message}}</div>
+          {% endif %}
+          {% if step == "hdx_first_login" %}
+            <div id="first-login" style="display: none;">first login</div>
           {% endif %}
         {% endif %}
 
