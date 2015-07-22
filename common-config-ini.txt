@@ -194,3 +194,4 @@ hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_down
 # hdx.gis.resource_pbf_url = http://localhost:7101/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
 
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
+hdx.onboarding.send_confirmation_email = false
