@@ -84,6 +84,13 @@ $(document).ready(function(){
         $('#username-static, #login-photo-gravatar').show();
     }
 
+    //check for first login
+    var firstLogin = $("#first-login").text();
+    if (firstLogin && firstLogin != ""){
+        showOnboardingWidget("#registeredPopup");
+        return;
+    }
+
     //check for logout event
     var userLogout = $("#user-logout").text();
     if (userLogout && userLogout != ""){
