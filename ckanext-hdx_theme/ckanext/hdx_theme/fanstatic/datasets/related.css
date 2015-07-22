@@ -5,6 +5,8 @@
 
 .wrapper-secondary .media-grid {
   margin: 0 -10px;
+  background: transparent;
+  border:0px;
 }
 
 .wrapper-secondary .media-item {
