@@ -41,3 +41,20 @@
   margin-bottom: 25px;
   margin-left: 40px;
 }
+
+#hdx-dataset.modal{
+  right:30%;
+  left:30%;
+  width:40%;
+  height:215px;
+  background: #fff;
+}
+
+#hdx-dataset .modal-header{
+  background:#007ce0;
+  color: #fff;
+  height: 100px;
+}
+
+#hdx-dataset .modal-body{
+}

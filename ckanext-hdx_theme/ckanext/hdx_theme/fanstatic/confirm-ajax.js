@@ -10,7 +10,7 @@ this.ckan.module('confirm-ajax', function (jQuery, _) {
         cancel: _('Cancel')
       },
       template: [
-        '<div class="modal">',
+        '<div id="hdx-dataset" class="modal">',
         '<div class="modal-header">',
         '<button type="button" class="close" data-dismiss="modal">×</button>',
         '<h3></h3>',
