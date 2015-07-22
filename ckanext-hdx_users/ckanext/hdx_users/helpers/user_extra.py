@@ -51,21 +51,20 @@ def get_user_extra(user_id=None):
 
 
 def get_login(success=True, message=None):
-    result = {
-        'data': {
-            # 'user_id': c.user,
-            'current_step': user_model.HDX_LOGIN,
-            'success': success,
-            'message': message
-        }
-    }
-    return result
+    return get_current_step_dict(user_model.HDX_LOGIN, success, message)
+
+def get_new_login(success=True, message=None):
+    return get_current_step_dict(user_model.HDX_FIRST_LOGIN, success, message)
 
 
 def get_logout(success=True, message=None):
+    return get_current_step_dict(user_model.HDX_LOGOUT, success, message)
+
+
+def get_current_step_dict(step, success=True, message=None):
     result = {
         'data': {
-            'current_step': user_model.HDX_LOGOUT,
+            'current_step': step,
             'success': success,
             'message': message
         }

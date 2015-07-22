@@ -95,6 +95,12 @@ def name_validator_with_changed_msg(val, context):
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
 
+    def new_login(self, error=None):
+        template_data = {}
+        if not c.user:
+            template_data = ue_helpers.get_new_login(True, "")
+        return render('home/index.html', extra_vars=template_data)
+
     def login(self, error=None):
         '''
         Code copied from controllers/user.py:345
@@ -334,6 +340,15 @@ class ValidationController(ckan.controllers.user.UserController):
 
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
             get_action('user_extra_update')(context, ue_dict)
+
+            subject = 'Thank you for registering on HDX!'
+            link = str(config['ckan.site_url']) + '/login'
+            tour_link = '<a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">tour</a>'
+            body = 'You have successfully registered your account on HDX.\n Username: ' + data_dict.get(
+                'name') + ' \n Password: ' + data_dict.get(
+                'password') + ' \n <a href="{0}">Login</a> \n You can learn more about HDX by taking this quick ' + tour_link + ' or by reading our FAQ.'.format(
+                link)
+            hdx_mail.send_mail(data_dict.get('email'), subject, body)
 
         except NotAuthorized:
             return OnbNotAuth
@@ -723,12 +738,13 @@ class ValidationController(ckan.controllers.user.UserController):
             action='validate',
             token=token['token'])
         link = '{0}{1}'
-        body = 'Thank you for your interest in HDX. In order to continue registering your account, please verify your email address.\n' \
-               'Click this link:    {link}\n' \
+        body = 'Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below\n' \
+               '<a href="{link}">Verify Email</a>\n' \
                ''.format(link=link.format(config['ckan.site_url'], validate_link))
+        subject = "Please verify your email address"
         print 'Validate link: ' + validate_link
         try:
-            mailer.mail_recipient(user['name'], user['email'], "HDX: Validate Your Email", body)
+            mailer.mail_recipient(user['name'], user['email'], subject, body)
             return True
         except:
             return False
