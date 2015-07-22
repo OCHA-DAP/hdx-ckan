@@ -97,27 +97,31 @@
                 </div>
               </div>
             </div>
-            <div class="col-xs-2">
+            <div class="col-xs-1">
               <div class="control-group">
                 <div class="control-label" style="margin-top: 40px; text-align: center;">
                    OR
                 </div>
               </div>
             </div>
-            <div class="col-xs-5">
+            <div class="col-xs-6">
               <div class="control-group">
                 <label class="control-label" for="ui_date_range1">Date Range</label>
-                <div class="controls">
-                  <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
-                         data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
-                         data-module-alt_field_id='date_range1'
-                         label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:120px;float:left; margin-right:12px;"/>
-                  <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
-                         data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
-                         data-module-alt_field_id='date_range2'
-                         label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' style="width:120px; float:left;"/>
-                  <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
-                  <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+                <div class="row controls">
+                  <div class="col-xs-6">
+                    <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
+                           data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
+                           data-module-alt_field_id='date_range1'
+                           label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' />
+                    <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
+                  </div>
+                  <div class="col-xs-6">
+                    <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
+                           data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
+                           data-module-alt_field_id='date_range2'
+                           label="{{_('End Date')}}" placeholder="{{_('End Date')}}" value='' error='{{errors.dataset_date}}' class='control-full' />
+                    <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+                  </div>
                 </div>
               </div>
             </div>
