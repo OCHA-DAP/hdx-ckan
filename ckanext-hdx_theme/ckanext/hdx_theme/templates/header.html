@@ -11,6 +11,9 @@
           {% if step == "hdx_login" %}
             <div id="login-error" style="display: none;">{{ data.message }}</div>
           {% endif %}
+          {% if step == "hdx_first_login" %}
+            <div id="first-login" style="display: none;">first login</div>
+          {% endif %}
           {% if step == "hdx_logout" %}
             <div id="user-logout" style="display: none;">{{data.message}}</div>
           {% endif %}
