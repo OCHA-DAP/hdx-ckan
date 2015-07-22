@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 HDX_ONBOARDING_USER_REGISTERED = 'hdx_onboarding_user_registered'
 HDX_ONBOARDING_USER_VALIDATED = 'hdx_onboarding_user_validated'
 HDX_ONBOARDING_DETAILS = 'hdx_onboarding_details'
+HDX_ONBOARDING_FIRST_LOGIN = 'hdx_onboarding_first_login'
 HDX_ONBOARDING_FOLLOWS = 'hdx_onboarding_follows'
 HDX_ONBOARDING_ORG = 'hdx_onboarding_org'
 HDX_ONBOARDING_FRIENDS = 'hdx_onboarding_friends'
@@ -31,6 +32,7 @@ USER_STATUSES = [
     HDX_ONBOARDING_USER_REGISTERED,
     HDX_ONBOARDING_USER_VALIDATED,
     HDX_ONBOARDING_DETAILS,
+    HDX_ONBOARDING_FIRST_LOGIN,
     HDX_ONBOARDING_FOLLOWS,
     HDX_ONBOARDING_ORG,
     HDX_ONBOARDING_FRIENDS

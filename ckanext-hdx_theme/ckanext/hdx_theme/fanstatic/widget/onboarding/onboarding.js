@@ -105,6 +105,13 @@ $(document).ready(function(){
         $("#field-login").addClass("error");
         $("#field-password").addClass("error");
         errMsg.show();
-        showOnboardingWidget("#loginPopup");
+
     }
+    var userLogin = $("#user-login").text();
+    if (userLogin && userLogin != ""){
+        showOnboardingWidget("#loginPopup");
+        return;
+    }
+
+
 });
