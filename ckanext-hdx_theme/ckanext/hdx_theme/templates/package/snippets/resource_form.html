@@ -67,7 +67,7 @@
                         {% endblock %}
 
                         {% block basic_fields_name %}
-                        {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. Population'), value=data.name, error=errors.name, classes=['control-full', 'dataset-form-field-wrapper']) }}
+                        {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. Population'), value=data.name, error=errors.name, classes=['control-full', 'dataset-form-field-wrapper', 'dataset-required']) }}
                         {% endblock %}
 
                         {% block basic_fields_description %}
