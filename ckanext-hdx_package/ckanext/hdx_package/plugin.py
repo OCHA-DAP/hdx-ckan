@@ -68,6 +68,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
+    plugins.implements(plugins.IValidators, inherit=True)
     
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -169,6 +170,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
         })
 
+        schema['resources'].update(
+            {
+                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('clean_format'),
+                           unicode]
+            }
+        )
+
         return schema
 
     def create_package_schema(self):
@@ -252,6 +260,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         '''
         tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
         return resource_dict
+
+    def get_validators(self):
+        return {
+            'hdx_detect_format': vd.detect_format
+        }
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
