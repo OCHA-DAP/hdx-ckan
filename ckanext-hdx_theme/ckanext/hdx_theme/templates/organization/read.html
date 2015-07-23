@@ -65,6 +65,7 @@
 	</div>
     {% endblock %}
     {% block groups_search_form %}
+    <div class="paddingLeftHack">
       {% set facets = {
         'fields': c.fields_grouped,
         'search': c.search_facets,
@@ -80,9 +81,11 @@
       {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}
       {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}	
       {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_option, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
+  </div>
 	{% endblock %}
 
 	{% block packages_list %}
+	<div class="paddingLeftHack">
       {% if c.page.items %}
         {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
         {% else %}
@@ -97,6 +100,7 @@
 			    </p>
 		    </div>
       {% endif %}
+  </div>
   {% endblock %}
   {% block page_pagination %}
     {{ c.page.pager(q=c.q) }}

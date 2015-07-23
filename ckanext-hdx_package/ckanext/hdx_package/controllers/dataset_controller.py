@@ -422,7 +422,7 @@ class DatasetController(PackageController):
         vars['pkg_name'] = id
         # required for nav menu
         vars['pkg_dict'] = pkg_dict
-        template = 'package/new_resource_not_draft.html'
+        template = 'package/new_resource.html'
         if pkg_dict['state'].startswith('draft'):
             vars['stage'] = ['complete', 'active']
             template = 'package/new_resource.html'

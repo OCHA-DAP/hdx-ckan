@@ -11,7 +11,6 @@
 
 {% block secondary %}
 {% endblock %}
-<div class="paddingLeftHack">
     <form class="dataset-form dataset-resource-form" method="post" action="{{ action }}" data-module="basic-form resource-form" enctype="multipart/form-data">
         <div class="paddingRowHack">
             <div class="paddingLeftHack paddingRightHack graybg">
@@ -116,7 +115,11 @@
 
                     </div>
                 </div>
-                <div class="form-actions">
+
+
+            </div>
+            <div class="paddingLeftHack paddingRightHack">
+            <div class="form-actions">
                     {% block delete_button %}
                     {% if data.id %}
                     {% if h.check_access('resource_delete', {'id': data.id})  %}
@@ -137,9 +140,7 @@
                     {% else #}
                     <button class="btn btn-primary" name="save" value="finish" type="submit" id="mx-save-dataset">{% block save_button_text2 %}{{ _('Add') }}{% endblock %}</button>
                     {# endif #}
-                </div>
-
             </div>
+                </div>
         </div>
     </form>
-</div>
