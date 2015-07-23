@@ -23,8 +23,23 @@ $(document).ready(function(){
     	});
 
 		$('#mx-file').change(function (e) {
-			var file_name = $(this).val();
-			$('#field-name').val(file_name);
+			try {
+				var html5_file = this.files[0];
+				$('#field-name').val( html5_file.name );
+				//alert("File size is: " + html5_file.size)
+			}
+			catch(e) {
+				// The browser does not support html5 file api
+				//alert("HTML 5 not supported");
+				var url = $(this).val();
+				if ( url.indexOf('/') >= 0 || url.indexOf('\\') >= 0 ) {
+					$('#field-name').val( url.match(/[^\/\\]+$/) );
+				}
+				else {
+					$('#field-name').val(url);
+				}
+			}
+
 		});
 
 
