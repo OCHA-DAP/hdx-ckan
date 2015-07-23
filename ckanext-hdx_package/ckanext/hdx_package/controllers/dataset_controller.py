@@ -533,7 +533,7 @@ class DatasetController(PackageController):
                                           errors, error_summary)
             except NotAuthorized:
                 abort(401, _('Unauthorized to edit this resource'))
-            redirect(h.url_for(controller='package', action='resource_read',
+            redirect(h.url_for(controller='package', action='resources',
                                id=id, resource_id=resource_id))
 
         context = {'model': model, 'session': model.Session,
