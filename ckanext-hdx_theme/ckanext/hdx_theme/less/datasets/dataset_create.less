@@ -5,8 +5,15 @@
 @import "../base/variables";
 @import "../base/mixins";
 
-.module.datasetModule{
+.module .datasetModule{
   margin-left: 100px;
+}
+
+.primary .module .datasetModule{
+  margin-left: 0px;
+}
+.primary .module .module-content{
+  padding-left: 45px;
 }
 
 input[type=radio], input[type=checkbox] {
@@ -59,6 +66,10 @@ input[type=radio], input[type=checkbox] {
 
 .simple-dataset-control{
   width: 370px;
+}
+
+.dataset-form-field-wrapper {
+    width: 670px;
 }
 
 .dataset-form-field-wrapper .control-full textarea {
@@ -247,9 +258,15 @@ label:after {
 }
 
 .dataset-form-resource-types input[type="radio"]:checked + label.type-file + i {
+  top: 115px;
+  left: 430px;
+}
+
+.primary .dataset-form-resource-types input[type="radio"]:checked + label.type-file + i {
   top: 235px;
   left: 377px;
 }
+
 
 .dataset-form-resource-types input[type="radio"]:checked + label + i{
   display: block;

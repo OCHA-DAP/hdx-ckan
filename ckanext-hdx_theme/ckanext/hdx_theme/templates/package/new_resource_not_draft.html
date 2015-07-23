@@ -9,7 +9,7 @@
 {% block subtitle %}{{ _('Add data to the dataset') }}{% endblock %}
 
 {% block form %}
-  {% snippet 'package/snippets/resource_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, stage=stage, allow_upload=g.ofs_impl and logged_in %}
+    {% snippet 'package/snippets/resource_form.html', data=data, errors=errors, error_summary=error_summary, include_metadata=false, pkg_name=pkg_name, stage=stage, allow_upload=g.ofs_impl and logged_in %}
 {% endblock %}
 
 {% block secondary %}{% endblock %}
@@ -28,7 +28,8 @@
 
 {% block primary %}
     {% if c.action != 'resource_edit' %}
-
+        </div></div>
+        <div>
     {% else %}
         <div class="primary">
     {% endif %}
@@ -43,7 +44,4 @@
         {{ super() }}
     {% endblock %}
     </div>
-    {% if c.action != 'resource_edit' %}
-    </div>
-    {% endif %}
 {% endblock %}
