@@ -173,6 +173,10 @@ label:after {
 .radio.inline + .radio.inline {
   margin-left: 0;
 }
+.dataset-form-resource-types .resource-file-uploader {
+  position: relative;
+  display: inline-block;
+}
 .dataset-form-resource-types .radio {
   height: 140px;
   font-family: 'Gotham-Bold', sans-serif;
@@ -214,27 +218,19 @@ label:after {
 }
 .dataset-form-resource-types input[type="radio"] + label + i {
   position: absolute;
+  background: white;
   background-position: 0 0;
   font-size: 40px;
   border-radius: 40px;
-  top: -19px;
   color: #007ce0;
-  left: 303px;
   display: none;
   height: 40px;
   width: 40px;
-}
-.dataset-form-resource-types input[type="radio"]:checked + label.type-url + i {
-  left: 223px;
-  top: -160px;
-}
-.dataset-form-resource-types input[type="radio"]:checked + label.type-file + i {
-  top: 235px;
-  left: 377px;
+  top: -20px;
+  right: -20px;
 }
 .dataset-form-resource-types input[type="radio"]:checked + label + i {
   display: block;
-  background: white;
 }
 .explanatoryText {
   margin-left: 6px;
