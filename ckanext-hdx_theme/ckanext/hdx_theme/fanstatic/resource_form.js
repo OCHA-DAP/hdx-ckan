@@ -1,5 +1,5 @@
 function file_upload_selected(){
-  $('#field-url').parent().parent().css({'opacity':0, 'height':0});
+  $('#field-url').closest('.control-group').hide();
   $('#field-resource-type-upload').click();
 }
 
@@ -19,9 +19,13 @@ $(document).ready(function(){
 
 
  		$('#field-link-upload').click(function(){
-        	$('#field-url').parent().parent().css({'opacity':100, 'height':'inherit'});
+        	$('#field-url').closest('.control-group').show();
     	});
 
- 		//Add red asterisks
- 		$('#field-name').parent().parent().addClass('dataset-required');
+		$('#mx-file').change(function (e) {
+			var file_name = $(this).val();
+			$('#field-name').val(file_name);
+		});
+
+
  	});

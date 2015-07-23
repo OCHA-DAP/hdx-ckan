@@ -537,7 +537,7 @@ class DatasetController(PackageController):
                                id=id, resource_id=resource_id))
 
         context = {'model': model, 'session': model.Session,
-                   'api_version': 3, 'for_edit': True,
+                   'api_version': 3, 'for_edit': True, 'use_cache': False,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
         try:
             check_access('resource_update', context, {'id': resource_id})
