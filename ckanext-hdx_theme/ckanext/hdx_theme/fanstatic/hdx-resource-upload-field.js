@@ -36,6 +36,7 @@ this.ckan.module('hdx-resource-upload-field', function (jQuery, _, i18n) {
         '   <input type="file" id="mx-file" onclick="file_upload_selected();"></input>',
         '   <input id="field-resource-type-upload" type="radio" name="resource_type" value="file.upload"></input>',
         '   <label class="radio inline type-file" for="field-resource-type-upload" id="mx-type-file"></label>',
+        '   <i class="icon-check"></i>',
         '</span>'
       ].join('\n')
     },

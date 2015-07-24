@@ -68,13 +68,13 @@
     null,
     "Poista"
   ],
+  "Reorder resource view": [
+    null,
+    "Uudelleenjärjestä resurssinäyttö"
+  ],
   "Reorder resources": [
     null,
     "Uudelleenjärjestä resurssit"
-  ],
-  "Reset this": [
-    null,
-    "Resetoi tämä"
   ],
   "Resource uploaded": [
     null,
@@ -114,7 +114,7 @@
   ],
   "Unable to get data for uploaded file": [
     null,
-    "Datan saamien ladattavalle tiedostolle epäonnistui"
+    "Datan saaminen ladattavalle tiedostolle epäonnistui"
   ],
   "Unable to upload file": [
     null,

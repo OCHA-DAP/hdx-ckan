@@ -72,10 +72,6 @@
     null,
     "Forandre rekkefølge på ressurser"
   ],
-  "Reset this": [
-    null,
-    "Tilbakestill"
-  ],
   "Resource uploaded": [
     null,
     "Ressurs lastet opp"

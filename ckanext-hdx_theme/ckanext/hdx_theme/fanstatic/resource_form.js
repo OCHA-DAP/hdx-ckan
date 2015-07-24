@@ -1,6 +1,6 @@
 function file_upload_selected(){
-  $('#field-url').parent().parent().css({'opacity':0, 'height':0});
-  $('label.type-file').click();
+  $('#field-url').closest('.control-group').hide();
+  $('#field-resource-type-upload').click();
 }
 
 $(document).ready(function(){
@@ -13,10 +13,34 @@ $(document).ready(function(){
  			}
  		});
 
- 		$('#field-link-upload').click(function(){
-        $('#field-url').parent().parent().css({'opacity':100, 'height':'inherit'});
-    });
+ 		if($('#mx-file').attr('is-upload') == "True"){
+ 			file_upload_selected();
+ 		}
 
- 		//Add red asterisks
- 		$('#field-name').parent().parent().addClass('dataset-required');
+
+ 		$('#field-link-upload').click(function(){
+        	$('#field-url').closest('.control-group').show();
+    	});
+
+		$('#mx-file').change(function (e) {
+			try {
+				var html5_file = this.files[0];
+				$('#field-name').val( html5_file.name );
+				//alert("File size is: " + html5_file.size)
+			}
+			catch(e) {
+				// The browser does not support html5 file api
+				//alert("HTML 5 not supported");
+				var url = $(this).val();
+				if ( url.indexOf('/') >= 0 || url.indexOf('\\') >= 0 ) {
+					$('#field-name').val( url.match(/[^\/\\]+$/) );
+				}
+				else {
+					$('#field-name').val(url);
+				}
+			}
+
+		});
+
+
  	});

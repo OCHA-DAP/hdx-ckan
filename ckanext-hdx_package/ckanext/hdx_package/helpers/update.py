@@ -6,18 +6,11 @@ Created on Apr 30, 2014
 
 import logging
 import datetime
-import json
-
 import ckan.plugins as plugins
 import ckan.logic as logic
-import ckan.logic.schema as schema_
-import ckan.lib.dictization as dictization
-import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.navl.dictization_functions
-import ckan.lib.navl.validators as validators
 import ckan.lib.plugins as lib_plugins
-import ckan.model as model
 import ckanext.hdx_package.helpers.helpers as helpers
 
 from ckan.common import _
@@ -57,7 +50,7 @@ def package_update(context, data_dict):
 
     pkg = model.Package.get(name_or_id)
     if pkg is None:
-        raise NotFound(_('Package was not found.'))
+        raise logic.NotFound(_('Package was not found.'))
     context["package"] = pkg
     data_dict["id"] = pkg.id
     if 'groups' in data_dict:
@@ -85,7 +78,9 @@ def package_update(context, data_dict):
                 # to ensure they still work.
                 package_plugin.check_data_dict(data_dict)
 
-    data, errors = _validate(data_dict, schema, context)
+    data, errors = lib_plugins.plugin_validate(
+        package_plugin, context, data_dict, schema, 'package_update')
+    #data, errors = _validate(data_dict, schema, context)
     log.debug('package_update validate_errs=%r user=%s package=%s data=%r',
               errors, context.get('user'),
               context.get('package').name if context.get('package') else '',
@@ -121,10 +116,20 @@ def package_update(context, data_dict):
     _get_action('package_owner_org_update')(context_org_update,
                                             org_dict)
 
+    if data.get('resources'):
+        for index, resource in enumerate(data['resources']):
+            resource['id'] = pkg.resources[index].id
+
+
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
 
         item.after_update(context, data)
+
+    # Create default views for resources if necessary
+    if data.get('resources'):
+        logic.get_action('package_create_default_resource_views')(
+            context, {'package': data})
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -145,6 +150,9 @@ def package_update(context, data_dict):
 
 
 def modified_save(context, pkg, data):
+    """
+    Wrapper around lib.dictization.model_save.package_dict_save
+    """
     groups_key = 'groups'
     if groups_key in data:
         temp_groups = data[groups_key]
@@ -158,6 +166,9 @@ def modified_save(context, pkg, data):
 
 
 def package_membership_list_save(group_dicts, package, context):
+    """
+    Overrides lib.dictization.model_save.package_membership_list_save
+    """
 
     allow_partial_update = context.get("allow_partial_update", False)
     if group_dicts is None and allow_partial_update:
@@ -249,7 +260,7 @@ def hdx_package_update_metadata(context, data_dict):
                       'groups']
 
     package = _get_action('package_show')(context, data_dict)
-    requested_groups = [el.get('id', el.get('name', '')) for el in data_dict.get('groups',[])]
+    requested_groups = [el.get('id', el.get('name','')) for el in data_dict.get('groups',[])]
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
             package[key] = value
@@ -263,7 +274,6 @@ def hdx_package_update_metadata(context, data_dict):
         log.warn('Indicator: {} - num of groups in request is {} but only {} are in the db. Difference: {}'.
                  format(package.get('name','unknown'),len(requested_groups), len(db_groups), ", ".join(not_saved_groups)))
 
-
     return package
 
 
@@ -273,12 +283,26 @@ def hdx_resource_update_metadata(context, data_dict):
     as a parameter and you can't supply just a modified field .
     This function first loads the resource via resource_show() and then modifies the respective dict. 
     '''
-    allowed_fields = ['last_data_update_date']
 
+    # Below params are need in context so that the URL of the resource is not
+    # transformed to a real URL for an uploaded file
+    # ( for uploaded files the url field is the filename )
+    context['use_cache'] = False
+    context['for_edit'] = True
+
+    allowed_fields = ['last_data_update_date', 'shape_info']
+
+    resource_was_modified = False
     resource = _get_action('resource_show')(context, data_dict)
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
+            resource_was_modified = True
             resource[key] = value
-    resource = _get_action('resource_update')(context, resource)
+
+    if resource_was_modified:
+        # we don't want the resource update to generate another
+        # geopreview transformation
+        context['do_geo_preview'] = False
+        resource = _get_action('resource_update')(context, resource)
 
     return resource

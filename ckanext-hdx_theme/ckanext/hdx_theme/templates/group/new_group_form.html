@@ -9,31 +9,31 @@ overriding the form blocks depending on the current context
 {% endblock %}
 
 {% block custom_fields %}
-  <div class="control-group">
+  <div class="control-group control-full">
   	<label class="control-label" for="field-language_code">{{ _("Language Code")}}</label>
   	<div class="controls">
   		<input type="text" id="field-language_code" name="language_code" {% if data.get('language_code', False)%} value="{{data.get('language_code', False)}}"{% endif %}>
   	</div>
   </div>
 
-   <div class="control-group">
+   <div class="control-group control-full">
   	<label class="control-label" for="field-relief_web_url">{{ _("Relief Web URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-relief_web_url" name="relief_web_url" value="{{data.get('relief_web_url', '')}}">
   	</div>
   </div>
 
-   <div class="control-group">
+   <div class="control-group control-full">
   	<label class="control-label" for="field-hr_info_url">{{ _("HR.info URL")}}</label>
   	<div class="controls">
   		<input type="text" id="field-hr_info_url" name="hr_info_url" value="{{data.get('hr_info_url', '')}}">
   	</div>
   </div>
 
-  <div class="control-group">
+  <div class="control-group control-full">
     <label class="control-label" for="field-geojson">{{ _("Geojson")}}</label>
     <div class="controls">
-      <textarea id="field-geojson" name="geojson">{{data.get('geojson', '')}}</textarea>
+      <textarea id="field-geojson" name="geojson" class="taller-textarea">{{data.get('geojson', '')}}</textarea>
     </div>
   </div>
 
@@ -47,7 +47,7 @@ overriding the form blocks depending on the current context
 {% endif %}
 
   {% if c.userobj.sysadmin %}
-<div id="customization-trigger" class="control-group">
+<div id="customization-trigger" class="control-group one-line-label">
       <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Use custom location page") }}</label>
      <div class="controls" style="display:inline-block">
         <input type="checkbox" {% if custom_loc %}checked{% endif %} name="custom_loc" id="field-custom_loc" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
@@ -80,17 +80,6 @@ overriding the form blocks depending on the current context
 
 <input type="hidden" name="customization" value="" id="customization-json">
 </div>
-
-<style>
-.org-control-info{
-  margin-top:-22px;
-}
-
-.create-org.form-actions {
-margin-bottom: 30px;
-line-height: 2px;
-}
-</style>
 
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}

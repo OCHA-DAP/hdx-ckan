@@ -1,0 +1,29 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.two-column-widget {
+  width: 890px;
+}
+.two-column-widget .two-column-left {
+  background-color: #007ce0;
+  background-image: url('/images/backgrounds/pixels_white.png');
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 200%;
+  color: #ffffff;
+  padding: 60px;
+}
+.two-column-widget .two-column-right {
+  position: relative;
+  background-color: #eeeeee;
+}
+.two-column-widget .two-column-right .right-side-actions {
+  position: absolute;
+  right: 35px;
+  bottom: 35px;
+}

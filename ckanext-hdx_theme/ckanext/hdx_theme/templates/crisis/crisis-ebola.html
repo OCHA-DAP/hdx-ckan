@@ -4,8 +4,8 @@
 {% block subtitle %}{{ _("Ebola crisis page") }}{% endblock %}
 {% block crisis_title %} {{ _("West Africa: Ebola outbreak") }} {% endblock %}
 {% block breadcrumb_content %}
-  <li class="active">{{ h.nav_link(_('Ebola'), controller='ckanext.hdx_crisis.controllers.crisis_controller:CrisisController', 
-  						action='show', highlight_actions = 'new index') }}</li>
+  <li class="active">{{ h.nav_link(_('Ebola'), controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
+  						action='read', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 

@@ -36,3 +36,7 @@ $(document).ready(function() {
     $('#country-map').html("Geolocation API is not supported in your browser. :(");
   }
 });
+$('document').ready(function(){
+  //Just in case of page back
+  $('option[value=-1]').attr('selected', true);
+});

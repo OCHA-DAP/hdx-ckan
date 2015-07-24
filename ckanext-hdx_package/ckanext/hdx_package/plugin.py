@@ -17,6 +17,8 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
+import ckanext.hdx_package.actions.create as hdx_create
+import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 
@@ -66,6 +68,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
+    plugins.implements(plugins.IValidators, inherit=True)
     
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -73,8 +76,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                     action='file')
-        map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
-                    action='perma_file')
+        map.connect('perma_storage_file', '/dataset/{id}/resource_download/{resource_id}', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+                    action='resource_download')
         map.connect('dataset_preselect', '/dataset/preselect',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
         map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
@@ -167,6 +170,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
         })
 
+        schema['resources'].update(
+            {
+                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('clean_format'),
+                           unicode]
+            }
+        )
+
         return schema
 
     def create_package_schema(self):
@@ -238,7 +248,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_package_update_metadata': update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
-            'package_create': hdx_actions.package_create
+            'package_create': hdx_actions.package_create,
+            'resource_create': hdx_create.resource_create,
+            'resource_update': hdx_update.resource_update
         }
 
     def before_show(self, resource_dict):
@@ -248,6 +260,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         '''
         tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
         return resource_dict
+
+    def get_validators(self):
+        return {
+            'hdx_detect_format': vd.detect_format
+        }
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,

@@ -1,0 +1,93 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+
+@widgetHeight: @baseHeight;
+@listItemHeight: 64px;
+@listItemPadding: 10px;
+
+.two-column-follow {
+  .two-column-left {
+    height: @widgetHeight;
+
+    .envelope {
+      height: 200px;
+    }
+  }
+  @extraPaddingTwoColumnRight: 50px;
+  .two-column-right {
+    height: @widgetHeight;
+    padding: @paddingNormal @paddingNormal @paddingNormal + @extraPaddingTwoColumnRight;
+    .follow-form {
+      height: 100%;
+      overflow: scroll;
+      position: relative;
+    }
+
+    .fading {
+      z-index: 10;
+      background: linear-gradient(to bottom, rgba(238, 238, 238, 0) 0%, rgba(238, 238, 238, 1) 100%);
+      position: absolute;
+      bottom: @paddingNormal + @extraPaddingTwoColumnRight;
+      height: @listItemHeight/2;
+      width: @bigColumnWidth - 2*@paddingNormal;
+    }
+
+    .selectable-list {
+      list-style: none;
+      margin: 20px 0 0;
+      padding: 0;
+      width: 100%;
+
+      li {
+        height: @listItemHeight;
+        border-top: 1px solid @lightGrayColor;
+        border-bottom: 1px solid @lightGrayColor;
+        margin-top: -1px;
+        position: relative;
+        width: 100%;
+
+        input[type="checkbox"] {
+          position: absolute;
+          top: (@listItemHeight - @checkBoxSize)/2;
+          left: @listItemPadding;
+
+          &:checked + div {
+            background-color: @blueColor;
+            opacity: 0.1;
+          }
+        }
+
+        div {
+          position: absolute;
+          z-index: 1;
+          height: @listItemHeight - 2px;
+          width: 100%;
+        }
+
+        label {
+          position: relative;
+          margin: 0;
+          padding-left: @listItemPadding + @checkBoxSize + @listItemPadding;
+          padding-right: 78px; //"organization" was the longest item type :)
+          font-weight: 700;
+          width: 100%;
+          z-index: 3;
+        }
+
+        @itemLineHeight: 20px;
+        span {
+          position:  absolute;
+          right: @listItemPadding;
+          top: (@listItemHeight - @itemLineHeight)/2;
+          line-height: @itemLineHeight;
+
+          text-transform: uppercase;
+          .sourceSansProFont(400, 10px);
+          color: @darkGrayColor;
+          .letter-spacing-1();
+        }
+      }
+    }
+  }
+}

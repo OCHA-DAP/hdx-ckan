@@ -5,6 +5,7 @@
      {% set can_actions = can_create_dataset or can_edit %}
 
 {% block item_title_contrib %}
+<div class="paddingLeftHack">
     <div class="mTop35">
       <h1 class="itemTitle">
         {{ c.group_dict.display_name or c.group_dict.title or c.group_dict.name }}
@@ -18,10 +19,11 @@
 	      </span>
     </div>
     <div class="info-secondary-data">{{ _('updated on') }} {{ h.render_datetime(c.group_dict.metadata_modified or c.group_dict.metadata_created or c.group_dict.created, with_hours=False) }}</div>
-
+</div>
 {% endblock %}
 
 {% block page_header %}
+<div class="paddingLeftHack">
 	<header class="module-content page-header paddingRowHack mBottom10">
 		<ul class="nav nav-tabs paddingLeftHack paddingRightHack">
 		   {% block content_primary_nav %}
@@ -38,6 +40,7 @@
 			{% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
 		</div>
   	{% endif %}
+</div>
 {% endblock %}
 
 
@@ -46,6 +49,7 @@
 
 {% block primary_content_inner %}
 	{% block package_notes %}
+	<div class="paddingLeftHack">
 	    {% if c.group_dict.description %}
 	      <div class="notes embedded-content mBottom15">
           {{ h.render_markdown(c.group_dict.description) }}
@@ -58,8 +62,10 @@
  	        {% endif %}
 	      </div>
 	    {% endif %}
+	</div>
     {% endblock %}
     {% block groups_search_form %}
+    <div class="paddingLeftHack">
       {% set facets = {
         'fields': c.fields_grouped,
         'search': c.search_facets,
@@ -75,9 +81,11 @@
       {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}
       {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}	
       {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_option, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
+  </div>
 	{% endblock %}
 
 	{% block packages_list %}
+	<div class="paddingLeftHack">
       {% if c.page.items %}
         {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
         {% else %}
@@ -92,6 +100,7 @@
 			    </p>
 		    </div>
       {% endif %}
+  </div>
   {% endblock %}
   {% block page_pagination %}
     {{ c.page.pager(q=c.q) }}

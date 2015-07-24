@@ -1,3 +1,7 @@
+"""
+Extends the default storage controller and adds new functionality to
+accommodate how HDX hosts files
+"""
 import ckan.controllers.storage as storage
 import os
 import re
@@ -13,10 +17,14 @@ from pylons import config
 from paste.fileapp import FileApp
 from paste.deploy.converters import asbool
 
-from ckan.lib.base import BaseController, c, request, render, config, h, abort
+from ckan.lib.base import c, request, config, h, redirect, abort
 from ckan.lib.jsonp import jsonpify
+from ckan.common import _, request, c, response
+import ckan.lib.uploader as uploader
 import ckan.model as model
 import ckan.logic as logic
+import paste.fileapp
+import mimetypes
 
 try:
     from cStringIO import StringIO
@@ -38,6 +46,9 @@ _eq_re = re.compile(r"^(.*)(=[0-9]*)$")
 
 
 def generate_response(http_status, unicode_body, no_cache=True, other_headers=None):
+    """
+    Generates response to file download request
+    """
     r = request.environ['pylons.pylons'].response
     if no_cache:
         r.headers['Pragma'] = 'no-cache'
@@ -57,6 +68,9 @@ class FileDownloadController(storage.StorageController):
 
     @property
     def ofs(self):
+        """
+        Gets the ofs driver
+        """
         if not FileDownloadController._ofs_impl:
             FileDownloadController._ofs_impl = get_ofs()
         return FileDownloadController._ofs_impl
@@ -121,6 +135,10 @@ class FileDownloadController(storage.StorageController):
             h.redirect_to(file_url.encode('ascii', 'ignore'))
 
     def file(self, label):
+        """
+        Completely different from ckan core to accommodate how we
+        host files. Triggers download file request
+        """
         from sqlalchemy.engine import create_engine
         # from label find resource id
         url = config.get('ckan.site_url', '') + \
@@ -138,6 +156,10 @@ class FileDownloadController(storage.StorageController):
         return self._download_file(res, label)
 
     def perma_file(self, id, resource_id):
+        """
+        Same as the above but for permalinks
+        """
+
         from sqlalchemy.engine import create_engine
         # from label find resource id
         engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
@@ -153,8 +175,47 @@ class FileDownloadController(storage.StorageController):
             label = self._get_label_from_resource(res)
 
         return self._download_file(res, label)
+        
+    # def perma_file(self, id, resource_id):
+    #     """
+    #     Same as the above but for permalinks
+    #     """
+
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
+    #     try:
+    #         rsc = logic.get_action('resource_show')(context, {'id': resource_id})
+    #         pkg = logic.get_action('package_show')(context, {'id': id})
+    #     except logic.NotFound:
+    #         abort(404, _('Resource not found'))
+    #     except logic.NotAuthorized:
+    #         abort(401, _('Unauthorized to read resource %s') % id)
+
+    #     if rsc.get('url_type') == 'upload':
+    #         upload = uploader.ResourceUpload(rsc)
+    #         filepath = upload.get_path(rsc['id'])
+    #         print filepath
+    #         fileapp = paste.fileapp.FileApp(filepath)
+    #         try:
+    #            status, headers, app_iter = request.call_application(fileapp)
+    #         except OSError:
+    #            abort(404, _('Resource data not found'))
+    #         response.headers.update(dict(headers))
+    #         content_type, content_enc = mimetypes.guess_type(rsc.get('url',''))
+    #         if content_type:
+    #             response.headers['Content-Type'] = content_type
+    #         response.status = status
+    #         return app_iter
+    #     elif not 'url' in rsc:
+    #         abort(404, _('No download is available'))
+    #     redirect(rsc['url'])
+
 
     def _get_label_from_resource(self, resource):
+        """
+        Given a url, isolate label
+        """
         prefix = '/storage/f/'
         url = resource.url
         index = url.find(prefix)

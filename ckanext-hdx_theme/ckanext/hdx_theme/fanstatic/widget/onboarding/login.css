@@ -1,0 +1,57 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.login-widget .login-top {
+  position: relative;
+  background-image: url('/images/backgrounds/browse_illustration.png');
+  background-color: #007ce0;
+  background-size: 400px;
+  background-position: 15px -97px;
+  background-repeat: no-repeat;
+  height: 145px;
+  width: 370px;
+}
+.login-widget .login-top .login-photo {
+  background-color: #007ce0;
+  width: 105px;
+  height: 105px;
+  border-radius: 57.5px;
+  border: 5px solid #ffffff;
+  position: absolute;
+  top: 87.5px;
+  left: 132.5px;
+}
+.login-widget .login-top .login-photo img {
+  height: 100%;
+  width: 100%;
+  border-radius: 57.5px;
+}
+.login-widget .login-top .close {
+  float: right;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+.login-widget .login-content {
+  background-color: #eeeeee;
+  height: 340px;
+  width: 370px;
+  padding: 57.5px 15px 35px;
+}
+.login-widget .login-content .username-text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #000000;
+  line-height: 23px;
+  letter-spacing: 0.01em;
+}
+.login-widget .login-content .email-text {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}

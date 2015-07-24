@@ -1,0 +1,178 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.popup.popup-onboarding .content {
+  padding: 0;
+}
+.popup.popup-onboarding .error-message {
+  color: red;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+}
+.popup.popup-onboarding .close {
+  opacity: 1;
+  color: #ffffff;
+  font-weight: 400;
+  text-shadow: none;
+}
+.popup.popup-onboarding .close:hover,
+.popup.popup-onboarding .close:focus {
+  opacity: 0.5;
+}
+.popup.popup-onboarding .control {
+  position: relative;
+}
+.popup.popup-onboarding input[type="text"],
+.popup.popup-onboarding input[type="password"],
+.popup.popup-onboarding textarea {
+  height: 44px;
+  border-radius: 6px;
+  border: 1px solid white;
+  padding-left: 20px;
+  font-size: 16px;
+  color: #333333;
+}
+.popup.popup-onboarding input[type="text"]:focus,
+.popup.popup-onboarding input[type="password"]:focus,
+.popup.popup-onboarding textarea:focus {
+  outline: none;
+}
+.popup.popup-onboarding input[type="text"] ~ label,
+.popup.popup-onboarding input[type="password"] ~ label,
+.popup.popup-onboarding textarea ~ label {
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  opacity: 1;
+  position: absolute;
+  bottom: 0;
+  margin: 0;
+  left: 20px;
+  line-height: 44px;
+  cursor: text;
+  transition: 1s;
+}
+.popup.popup-onboarding input[type="text"] ~ label:after,
+.popup.popup-onboarding input[type="password"] ~ label:after,
+.popup.popup-onboarding textarea ~ label:after {
+  content: "";
+}
+.popup.popup-onboarding input[type="text"].input-content ~ label,
+.popup.popup-onboarding input[type="password"].input-content ~ label,
+.popup.popup-onboarding textarea.input-content ~ label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 10px;
+  color: #888888;
+  bottom: 1px;
+}
+.popup.popup-onboarding input[type="text"].required.input-content ~ label:after,
+.popup.popup-onboarding input[type="password"].required.input-content ~ label:after,
+.popup.popup-onboarding textarea.required.input-content ~ label:after {
+  content: "";
+}
+.popup.popup-onboarding input[type="text"].required.error,
+.popup.popup-onboarding input[type="password"].required.error,
+.popup.popup-onboarding textarea.required.error {
+  border-color: red;
+}
+.popup.popup-onboarding input[type="text"].required ~ label:after,
+.popup.popup-onboarding input[type="password"].required ~ label:after,
+.popup.popup-onboarding textarea.required ~ label:after {
+  content: "*";
+  margin-left: 5px;
+  color: red;
+}
+.popup.popup-onboarding .center {
+  text-align: center;
+}
+.popup.popup-onboarding .full-width {
+  width: 100%;
+}
+.popup.popup-onboarding .member {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.01em;
+}
+.popup.popup-onboarding .member a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+.popup.popup-onboarding input[type="checkbox"] {
+  top: 0;
+}
+.popup.popup-onboarding input[type="checkbox"] ~ label {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #333333;
+  letter-spacing: 0.01em;
+  padding: 0;
+  margin-left: 5px;
+}
+.popup.popup-onboarding input[type="checkbox"] ~ label:after {
+  content: "";
+}
+.popup.popup-onboarding .large-title {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 40px;
+  letter-spacing: 0.01em;
+}
+.popup.popup-onboarding .large-title strong {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 36px;
+}
+.popup.popup-onboarding .btn-large {
+  min-width: 150px;
+}
+.popup.popup-onboarding .btn-large.btn-empty {
+  min-width: 0;
+}
+.popup.popup-onboarding .bold-regular-text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+}
+.popup.popup-onboarding .large-text {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+}
+.popup.popup-onboarding .regular-text {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+.popup.popup-onboarding .small-form-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+#incomplete-profile {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: white;
+  letter-spacing: 0.01em;
+  line-height: 24px;
+}

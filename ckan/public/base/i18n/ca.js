@@ -68,13 +68,13 @@
     null,
     "Esborra"
   ],
+  "Reorder resource view": [
+    null,
+    "Reordenar vistes del recurs"
+  ],
   "Reorder resources": [
     null,
     "Reordenar recursos"
-  ],
-  "Reset this": [
-    null,
-    "Reiniciar"
   ],
   "Resource uploaded": [
     null,

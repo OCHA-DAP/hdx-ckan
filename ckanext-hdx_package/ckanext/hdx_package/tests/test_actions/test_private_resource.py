@@ -34,8 +34,11 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
         context = {
             'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
+        package = self._get_action('package_show')(
+            context, {'id': 'test_private_dataset_1'})
+
         resource = self._get_action('resource_show')(
-            context, {'id': 'hdx_test.csv'})
+            context, {'id': package['resources'][0]['id']})
 
         dwld_url = h.url_for(controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                              action='file', label='test_folder/hdx_test.csv')

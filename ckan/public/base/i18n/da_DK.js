@@ -72,10 +72,6 @@
     null,
     "Skift rækkefølge på ressourcer"
   ],
-  "Reset this": [
-    null,
-    "Nulstil dette"
-  ],
   "Resource uploaded": [
     null,
     "Ressource uploadet"

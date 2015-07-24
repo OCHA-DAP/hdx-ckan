@@ -5,6 +5,8 @@ import ckan.lib.plugins as lib_plugins
 
 import ckanext.hdx_org_group.actions.get as get_actions
 
+log = logging.getLogger(__name__)
+
 
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -82,26 +84,29 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
-        if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
-            schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
-            schema.update({'description': [tk.get_validator('not_empty')]})
-            schema.update(
-                {'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
-            schema.update({'fts_id': [tk.get_validator(
-                'ignore_missing'), tk.get_converter('convert_to_extras')]})
-            schema.update({'custom_org': [tk.get_validator(
-                'ignore_missing'), tk.get_converter('convert_to_extras')]})
-            schema.update({'customization': [tk.get_validator(
-                'ignore_missing'), tk.get_converter('convert_to_extras')]})
-            schema.update({'less': [tk.get_validator(
-                'ignore_missing'), tk.get_converter('convert_to_extras')]})
-            schema.update({'visualization_config': [tk.get_validator(
-                'ignore_missing'), tk.get_converter('convert_to_extras')]})
-            schema.update({'modified_at': [tk.get_validator(
-                'ignore_missing'), tk.get_converter('convert_to_extras')]})
-            return schema
-        else:
-            return None
+        try:
+            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
+                schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+                schema.update({'description': [tk.get_validator('not_empty')]})
+                schema.update(
+                    {'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'fts_id': [tk.get_validator(
+                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'custom_org': [tk.get_validator(
+                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'customization': [tk.get_validator(
+                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'less': [tk.get_validator(
+                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'visualization_config': [tk.get_validator(
+                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'modified_at': [tk.get_validator(
+                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                return schema
+        except TypeError, e:
+            log.warn('Exception in db_to_form_schema: {}'.format(str(e)))
+
+        return None
 
     def before_map(self, map):
         map.connect('organization_bulk_process',
@@ -126,8 +131,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             '/organization/member_new/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_new')
         map.connect(
             '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
-        map.connect(
-            '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
 
         # since the pattern of organization_read is so general it needs to be the last
         # otherwise it will override other /organization routes
@@ -142,10 +145,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         map.connect(
             'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController', action='org_read')
-        
+
         map.connect(
             'image_serve', '/image/{label}', controller='ckanext.hdx_org_group.controllers.image_upload_controller:ImageController', action='file')
-        
 
         #map.connect(
         #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
@@ -154,6 +156,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
+    '''
+    This plugin only contains the schema changes that are specific to the group entity
+    '''
+
     plugins.implements(plugins.IGroupForm, inherit=False)
 
     def group_types(self):

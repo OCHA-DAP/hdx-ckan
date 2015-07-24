@@ -1,0 +1,63 @@
+{#
+Signup widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/signup.html', id="signupPopup") }}
+#}
+{% resource 'hdx_theme/popup' %}
+{% resource 'hdx_theme/onboarding' %}
+{% resource 'hdx_theme/widget/onboarding/signup.css' %}
+{% resource 'hdx_theme/widget/onboarding/signup.js' %}
+{% set class = "popup-onboarding" %}
+
+{% extends "widget/popup/popup.html" %}
+
+
+{% block titlebar %}{% endblock %}
+{% block content %}
+    <div class="signup-widget">
+        <i class="close glyphicon glyphicon-remove" ></i>
+        <div class="inner-bg">
+            <div class="row">
+                <div class="col-xs-6">
+
+                    <div class="large-title">
+                        Sign up with HDX <strong>to join the community</strong> and <strong>access more features</strong>
+                    </div>
+                    <br/>
+                    <span class="bold-regular-text">
+                        By signing up you can:
+                    </span>
+                    <ul class="signup-list">
+                        <li>Follow the latest changes to data, locations, organisations, topics and crises</li>
+                        <li class="starred">Share data publicly or privately</li>
+                        <li class="starred">Add data visualizations as gallery items alongside datasets</li>
+                        <li>Contact data contributors</li>
+                        <li class="starred-reason">You need to be affiliated with an organization to access these features</li>
+                    </ul>
+                    <a class="btn btn-demo signup-action" type="button" href="https://www.youtube.com/watch?v=P8XDNmcQI0o" target="_blank"> {{_('See HDX in action')}} <i class="glyphicon glyphicon-play"></i></a>
+                </div>
+                <div class="col-xs-6">
+                    <form id="signup-form">
+                        <div class="signup-box">
+                            <div class="control">
+                                <input id="field-email" name="email" class="full-width required" type="text">
+                                <label for="field-email">Your Email Address</label>
+                            </div>
+                            <div class="error-message" style="display: none;"></div>
+                            <div class="mTop10">
+                                <input id="signup-send-updates" type="checkbox"><label for="signup-send-updates">{{_('Allow HDX to send email updates')}}</label>
+                            </div>
+                            <input class="mTop10 full-width btn btn-primary btn-large" type="submit" value="Sign up">
+                            <div class="member center mTop10">Already a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#loginPopup');">Sign in</a></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

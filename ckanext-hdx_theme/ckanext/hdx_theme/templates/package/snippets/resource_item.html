@@ -5,8 +5,13 @@
 {% set is_not_zipped = h.is_not_zipped(res) %}
 {% set resource_display_name = h.resource_display_name(res) %}
 
-{% resource 'hdx_theme/bs_popover.js' %}
+{# This should be included via page.html but it's not loading for me. Investigate after template upgrade to 2.3 in complete and delete this #}
 {% resource 'hdx_theme/indicator/tracking.js' %}
+{# #}
+{% resource 'hdx_theme/bs_popover.js' %}
+{% resource 'hdx_theme/jquery.expander' %}
+{% resource 'hdx_theme/hdx_show_more.js' %}
+{% resource 'hdx_theme/resource-list' %}
 
 <li class="resource-item">
   {% block resource_item_title %}
@@ -30,8 +35,8 @@
 	   			<a class="btn hdx-btn main-hdx-btn" title="Edit" href="{{ url }}">{{ _('Edit') }}</a>
 	            {% if res.id and h.check_access('resource_delete', {'id': res.id})  %}
 	            	{% set locale = h.dump_json({'content': _('Are you sure you want to delete this resource?')}) %}
-					<a class="btn hdx-btn main-hdx-btn" title="Delete" href="{% url_for controller='package', action='resource_delete', resource_id=res.id, id=pkg.name %}" data-module="confirm-action" data-module-i18n="{{ locale }}">
-						<img alt="{{ _('Delete Resource') }}" src="/images/actions/delete.png">
+					<a class="btn hdx-btn main-hdx-btn" title="Delete" href="{% url_for controller='package', action='resource_delete', resource_id=res.id, id=pkg.name %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">
+						<span class='glyphicon glyphicon-trash' ></span>
 					</a>
 	            {% endif %}
    			</div>
@@ -44,7 +49,7 @@
     <div class="hdx-btn-group">
         {% block resource_item_explore_links %}
 
-            {% if res.can_be_previewed and is_not_zipped %}
+            {% if res.has_views and is_not_zipped and res.format|lower not in ['xlsx'] %}
                 <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
                     {{ _('Preview') }}
                 </a>
@@ -56,9 +61,8 @@
                 </a>
             {% endif %}
 
-            {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
-            <a href="{{ resource_dwd_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.resource_type}}">
-                <img src="/images/homepage-new/download.svg" alt=" {{ _('Download') }}" />
+            <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
+                <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
             </a>
 
             {% set button_id = 'social-btn-' + res.id %}

@@ -10,10 +10,16 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins.toolkit as toolkit
 
+from ckan.common import _
+
 log = logging.getLogger(__name__)
 _get_or_bust = logic.get_or_bust
 
-DEFAULT_FORMATS = ['csv', 'xls', 'application/csv', 'application/vnd.ms-excel']
+DEFAULT_FORMATS = [
+    'csv', 'xls', 'xlsx', 'tsv', 'application/csv',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+]
 
 
 class DatastoreException(Exception):
@@ -57,6 +63,8 @@ class ResourceDataController(base.BaseController):
             )
         except logic.NotFound:
             datapusher_status = {}
+        except logic.NotAuthorized:
+            base.abort(401, _('Not authorized to see this page'))
 
         return base.render('package/resource_data.html',
                            extra_vars={'status': datapusher_status})

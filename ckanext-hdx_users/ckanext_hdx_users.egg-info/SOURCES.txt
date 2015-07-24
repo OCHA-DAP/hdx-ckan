@@ -14,6 +14,11 @@ ckanext/hdx_users/controllers/dashboard_controller.py
 ckanext/hdx_users/controllers/login_controller.py
 ckanext/hdx_users/controllers/mail_validation_controller.py
 ckanext/hdx_users/controllers/registration_controller.py
+ckanext/hdx_users/helpers/__init__.py
+ckanext/hdx_users/helpers/user_extra.py
+ckanext/hdx_users/logic/__init__.py
+ckanext/hdx_users/logic/register_auth.py
+ckanext/hdx_users/logic/schema.py
 ckanext/hdx_users/tests/__init__.py
 ckanext/hdx_users/tests/test_emails/__init__.py
 ckanext/hdx_users/tests/test_emails/test_email_access.py

@@ -19,20 +19,164 @@ var options = {
 
 };
 
+function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key) {
+    var value = layer_data['url'];
+
+    var bboxArray = layer_data['bounding_box'].replace("BOX(", "").replace(")", "").split(",");
+    var xmin = bboxArray[0].split(" ")[0];
+    var ymin = bboxArray[0].split(" ")[1];
+    var xmax = bboxArray[1].split(" ")[0];
+    var ymax = bboxArray[1].split(" ")[1];
+    var bounds = [[ymin, xmin], [ymax, xmax]]
+
+    var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
+    var splitString = "/postgis/";
+    var splitPosition = fieldsInfo.indexOf(splitString);
+    fieldsInfo = fieldsInfo.substr(0, splitPosition) + "/tables/" + fieldsInfo.substr(splitPosition + splitString.length);
+
+    var promise = $.getJSON(fieldsInfo + "?format=geojson", function (data) {
+        var extraFields = "";
+        if (data.columns) {
+            for (var i = 0; i < data.columns.length; i++) {
+                var column = data.columns[i];
+                if (column.data_type == "character varying") {
+                    extraFields += ',"' + column.column_name+'"';
+                }
+            }
+        }
+
+        var mvtSource = new L.TileLayer.MVTSource({
+            url: value + "?fields=ogc_fid" + extraFields,
+            //debug: true,
+            mutexToggle: true,
+            //clickableLayers: [],
+            getIDForLayerFeature: function (feature) {
+                return feature.properties.ogc_fid;
+            },
+            filter: function (feature, context) {
+                return true;
+            },
+            style: function (feature) {
+                switch (feature.type) {
+                    case 1: //Point
+                        return defaultPointStyle;
+                    case 2: //Line
+                        return defaultLineStyle;
+                    case 3: //Polygon
+                        return defaultStyle;
+                }
+                return defaultStyle;
+            },
+            onClick: function (event) {
+                if (event.feature && event.feature.properties) {
+                    info.update(event.feature.properties);
+                }
+            },
+            layerLink: function (layerName) {
+                if (layerName.indexOf('_label') > -1) {
+                    return layerName.replace('_label', '');
+                }
+                return layerName + '_label';
+            }
+        });
+        mvtSource.myFitBounds = function() {
+            options.map.fitBounds(bounds);
+        };
+        if (!firstAdded) {
+            mvtSource.myFitBounds();
+            options.map.addLayer(mvtSource);
+            firstAdded = true;
+        }
+
+        layers[key] = mvtSource;
+
+    });
+    return promise;
+}
 function getData(options){
     //call DataProxy to get data for resource
     var data = JSON.parse($("#shapeData").text());
     var layers = [];
-    for (var i in data){
-        var value = data[i];
-        computeBondaryPoly(options, value);
+
+    var defaultStyle = {
+        color: 'rgba(255, 73, 61, 0.6)',
+        outline: {
+            color: 'rgba(255, 73, 61, 0.7)',
+            size: 1
+        },
+        selected: {
+            color: 'rgba(255, 73, 61, 1)',
+            outline: {
+                color: 'rgba: (0, 0, 0, 1)',
+                size: 2
+            }
+        }
+    };
+    var defaultLineStyle = {
+        color: 'rgba(255, 73, 61, 0.6)',
+        size: 3,
+        selected: {
+            color: 'rgba(255, 73, 61, 1)',
+            size: 4
+        }
+    };
+    var defaultPointStyle = {
+        color: 'rgba(255, 73, 61, 0.6)',
+        radius: 5,
+        selected: {
+            color: 'rgba(255, 73, 61, 1)',
+            radius: 7
+        }
+    };
+
+
+    var info = L.control({position: 'topleft'});
+
+    info.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'map-info'); // create a div with a class "info"
+        return this._div;
+    };
+
+    // method that we will use to update the control based on feature properties passed
+    info.update = function (props) {
+        var innerData = "";
+        if (props){
+            for (var key in props){
+                var value = props[key];
+                innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
+            }
+        }
+        this._div.innerHTML = '<h4>' + "Shape info" + '</h4>' +  (props ? '<table>' + innerData + '</table>' : 'Click on a shape');
+    };
+    info.showOtherMessage = function (message){
+        this._div.innerHTML = message;
+    };
+    info.addTo(options.map);
+    info.update();
+
+    var promises = [];
+    var firstAdded = false;
+    for (var key in data) {
+
+        var promise = getFieldListAndBuildLayer(data[key], defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key);
+        if (!firstAdded){
+            firstAdded = true;
+        }
+        promises.push(promise);
     }
 
-    addLayersToMap(options, data);
+    $.when.apply($, promises).done(function(sources){
+        L.control.layers([], layers).addTo(options.map);
+        options.map.on('overlayadd', function(e){
+            e.layer.myFitBounds();
+        });
+    });
+
+    //addLayersToMap(options, []);
 }
 
 
-function computeBondaryPoly(options, data) {
+function computeBoundaryPoly(options, data) {
     //Need to compute Top-Left corner and Bottom-Right corner for polygon.
     var minLat, minLng, maxLat, maxLng;
     var init = false;

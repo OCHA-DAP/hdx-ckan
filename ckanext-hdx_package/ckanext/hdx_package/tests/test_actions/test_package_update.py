@@ -7,6 +7,7 @@ Created on Sep 9, 2014
 # -*- coding: utf-8 -*-
 
 import logging as logging
+import pylons.config as config
 import json
 import ckan.plugins.toolkit as tk
 import ckan.tests as tests
@@ -45,6 +46,46 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
+
+    def test_create_and_upload(self):
+        package = {
+          "package_creator": "test function",
+          "private": False,
+          "dataset_date": "01/01/1960-12/31/2012",
+          "indicator": "1",
+          "caveats": "These are the caveats",
+          "license_other": "TEST OTHER LICENSE",
+          "methodology": "This is a test methodology",
+          "dataset_source": "World Bank",
+          "license_id": "hdx-other",
+          "name": "test_activity_3",
+          "notes": "This is a test activity",
+          "title": "Test Activity 3",
+        }
+
+        resource = {
+        'package_id': 'test_activity_3',
+        'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
+        'resource_type': 'file.upload',
+        'format': 'CSV',
+        'name': 'hdx_test.csv'
+        }
+
+        testsysadmin = model.User.by_name('testsysadmin')
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'nouser'}
+        self._get_action('package_create')(context, package)
+        
+        self._get_action('resource_create')(context, resource)
+        
+        test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+                             action='read', id=package['name'])
+        result = self.app.post(
+                test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        assert '200' in str(result)
+        assert '<a class="heading"  title="hdx_test.csv">' in str(result)
+
 
     def test_hdx_package_delete_redirect(self):
         package = {

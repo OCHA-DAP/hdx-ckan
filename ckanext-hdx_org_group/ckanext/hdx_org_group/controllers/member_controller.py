@@ -27,14 +27,19 @@ parse_params = logic.parse_params
 class HDXOrgMemberController(org.OrganizationController):
 
     def members(self, id):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
+        '''
+        Modified core method from 'group' controller.
+        Added search & sort functionality.
 
-        q = c.q = request.params.get('q', '')
-        sort = request.params.get('sort', '')
+        :param id: id of the organization for which the member list is requested
+        :type id: string
+        :return: the rendered template
+        :rtype: unicode
+        '''
+        context = self._get_context()
+
+        q, sort = self._find_filter_params()
         reverse = True if sort == u'title desc' else False
-
-        c.sort_by_selected = sort
 
         try:
             member_list = self._action('member_list')(
@@ -42,17 +47,52 @@ class HDXOrgMemberController(org.OrganizationController):
                           'q': q, 'user_info': True}
             )
             member_list.sort(key=lambda y: y[4].lower(), reverse=reverse)
-            c.members = [a[0:4] for a in member_list]
-            c.group_dict = self._action('group_show')(context, {'id': id})
+            data_dict = {'id': id}
+            data_dict['include_datasets'] = False
+            c_params = {
+                'sort': sort,
+                'members': [a[0:4] for a in member_list],
+                'group_dict': self._action('group_show')(context, data_dict)
+            }
+            self._set_c_params(c_params)
         except NotAuthorized:
             base.abort(401, _('Unauthorized to delete group %s') % '')
         except NotFound:
             base.abort(404, _('Group not found'))
         return self._render_template('group/members.html')
 
-    def member_new(self, id):
+    def _get_context(self):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author}
+        return context
+
+    def _set_c_params(self, params):
+        c.sort_by_selected = params.get('sort')
+        c.members = params.get('members')
+        c.group_dict = params.get('group_dict')
+
+    def _find_filter_params(self):
+        q = c.q = request.params.get('q', '')
+        sort = request.params.get('sort', '')
+        return q, sort
+
+    def member_new(self, id):
+        '''
+        Modified core method from 'group' controller.
+
+        Added the 'user_invite' functionality. Expects POST request.
+        If there's an 'email' parameter in the request and the email
+        is not associated with any user account, a new user account with that
+        email will be created and added as a member with the specific 'role'
+        to the organization.
+        Otherwise a 'username' is expected as a request parameter
+
+        :param id: id of the organization to which a member should be added.
+        :type id: string
+        :return: the rendered template
+        :rtype: unicode
+        '''
+        context = self._get_context()
 
         #self._check_access('group_delete', context, {'id': id})
         try:
@@ -64,14 +104,14 @@ class HDXOrgMemberController(org.OrganizationController):
                 if data_dict.get('email', '').strip() != '' or \
                         data_dict.get('username', '').strip() != '':
                     email = data_dict.get('email')
-                    #Check if email is used
+                    flash_message = None
                     if email:
-                        #Check if email is used
+                        # Check if email is used
                         user_dict = model.User.by_email(email)
                         if user_dict:
-                            #Add user
+                            # Add user
                             data_dict['username'] = user_dict[0].name
-                            h.flash_success('That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role'])
+                            flash_message = 'That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role']
                         else:
                             user_data_dict = {
                                 'email': email,
@@ -85,31 +125,15 @@ class HDXOrgMemberController(org.OrganizationController):
                             data_dict['username'] = user_dict['name']
                             h.flash_success(email+' has been invited as '+data_dict['role'])
                     else:
-                        h.flash_success(data_dict['username']+' has been added as '+data_dict['role'])
+                        flash_message = data_dict['username']+' has been added as '+data_dict['role']
                     c.group_dict = self._action(
                         'group_member_create')(context, data_dict)
+                    h.flash_success(flash_message)
                 else:
                     h.flash_error(_('''You need to either fill the username or
                         the email of the person you wish to invite'''))
                 self._redirect_to(controller='group', action='members', id=id)
 
-            # I think the 'else' is not used. We should consider removing it.
-            else:
-                user = request.params.get('user')
-                if user:
-                    c.user_dict = get_action('user_show')(
-                        context, {'id': user})
-                    c.user_role = new_authz.users_role_for_group_or_org(
-                        id, user) or 'member'
-                else:
-                    c.user_role = 'member'
-                c.group_dict = self._action('group_show')(context, {'id': id})
-                group_type = 'organization' if c.group_dict[
-                    'is_organization'] else 'group'
-                c.roles = self._action('member_roles_list')(
-                    context, {'group_type': group_type}
-                )
-                h.flash_success(c.user_dict.username+' has been added as '+c.user_role)
             if not request.params['username']:
                 abort(404, _('User not found'))
         except NotAuthorized:
@@ -130,8 +154,7 @@ class HDXOrgMemberController(org.OrganizationController):
         if 'cancel' in request.params:
             self._redirect_to(controller='group', action='members', id=id)
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author}
+        context = self._get_context()
 
         try:
             self._check_access('group_member_delete', context, {'id': id})

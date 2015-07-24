@@ -1,4 +1,5 @@
 $(function (){
+  //Only open a new window for non-file uploads
   // Tracking
   var url = location.pathname;
   // remove any site root from url
@@ -13,7 +14,7 @@ $(function (){
     var url = $(e.target).closest('a').attr('href');
     //Only open a new window for non-file uploads
     var type = $(e.target).closest('a').attr('tracking-type');
-    if(!type || type == 'file.upload'){
+    if(!type || type == 'file.upload' || type == 'upload'){
       $.ajax({url : $('body').data('site-root') + '_tracking',
             data : {url:url, type:'resource'},
             type : 'POST',
