@@ -1,0 +1,32 @@
+{#
+Registered widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/registered.html', id="registeredPopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/registered.css' %}
+{% resource 'hdx_theme/widget/onboarding/registered.js' %}
+{% set class = "popup-onboarding" %}
+{% set title = "You're now registered on HDX !" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+    <div class="registered-widget">
+        <div>
+            <div class="notification-message">You can complete setting up your account by:</div>
+            <div class="center">
+                <img class="mTop20" src="/images/onboarding/steps.png">
+            </div>
+            <div class="mTop10 bottom-actions">
+                <form id="registered-form" onsubmit="return false;">
+                    <input class="btn btn-empty btn-large pull-left" type="button" onclick="closeCurrentWidget(this);" value="Do this later">
+                    <input class="btn btn-primary btn-large pull-right" type="submit" value="Next">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

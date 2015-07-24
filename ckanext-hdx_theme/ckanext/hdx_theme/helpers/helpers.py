@@ -38,9 +38,10 @@ def is_downloadable(resource):
         return True
     return False
 
+
 def is_not_zipped(res):
-    url = res.get('url', 'zip').strip().lower() #Default to zip so preview doesn't show if there is no url
-    if re.search(r'zip$',url) or re.search(r'rar$',url):
+    url = res.get('url', 'zip').strip().lower()  # Default to zip so preview doesn't show if there is no url
+    if re.search(r'zip$', url) or re.search(r'rar$', url):
         return False
     return True
 
@@ -218,7 +219,8 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
         return htmlResult
     else:
         newResult = str(htmlResult).replace('</a>',
-                                            ' <span class="nav-short-message">{message}</span></a>'.format(message=kw['message']))
+                                            ' <span class="nav-short-message">{message}</span></a>'.format(
+                                                message=kw['message']))
         return h.literal(newResult)
 
 
@@ -271,6 +273,7 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
             res = ex[ret_key]
     return res
 
+
 def hdx_less_default():
     return """
 @bodyBackgroundColor: @wfpBlueColor;
@@ -291,11 +294,12 @@ def hdx_less_default():
 @modalHeaderBackgroundColor: #EEEEEE;
 @modalFooterBackgroundColor: #EEEEEE;"""
 
+
 def load_json(obj, **kw):
     return json.loads(obj, **kw)
 
-def hdx_group_followee_list():
 
+def hdx_group_followee_list():
     context = {'model': model, 'session': model.Session,
                'user': c.user or c.author, 'auth_user_obj': c.userobj,
                'for_view': True}
@@ -333,7 +337,7 @@ def hdx_organizations_available_with_roles():
             org['has_add_dataset_rights'] = False
 
     organizations_available.sort(key=lambda y:
-                                 y['display_name'].lower())
+    y['display_name'].lower())
     return organizations_available
 
 
@@ -472,6 +476,7 @@ def hdx_add_url_param(alternative_url=None, controller=None, action=None,
     return h._create_url_with_params(params=params, controller=controller,
                                      action=action, extras=extras)
 
+
 def hdx_resource_preview(resource, package):
     ## COPY OF THE DEFAULT HELPER BY THE SAME NAME BUT FORCES URLS OVER HTTPS
     '''
@@ -483,42 +488,26 @@ def hdx_resource_preview(resource, package):
     '''
 
     if not resource['url']:
-        return h.snippet("dataviewer/snippets/no_preview.html",
-                       resource_type=format_lower,
-                       reason=_(u'The resource url is not specified.'))
+        return False
 
     format_lower = datapreview.res_format(resource)
     directly = False
     data_dict = {'resource': resource, 'package': package}
 
     if datapreview.get_preview_plugin(data_dict, return_first=True):
-        url = h.url_for(controller='package', action='resource_datapreview',
-                      resource_id=resource['id'], id=package['id'], qualified=True)
-    elif format_lower in datapreview.direct():
-        directly = True
-        url = resource['url']
-    elif format_lower in datapreview.loadable():
-        url = resource['url']
+        url = tk.url_for(controller='package', action='resource_datapreview',
+                         resource_id=resource['id'], id=package['id'], qualified=True)
     else:
-        reason = None
-        if format_lower:
-            log.info(
-                _(u'No preview handler for resource of type {0}'.format(
-                    format_lower))
-            )
-        else:
-            reason = _(u'The resource format is not specified.')
-        return h.snippet("dataviewer/snippets/no_preview.html",
-                       reason=reason,
-                       resource_type=format_lower)
+        return False
 
     return h.snippet("dataviewer/snippets/data_preview.html",
                    embed=directly,
                    resource_url=url,
                    raw_resource_url=https_load(resource.get('url')))
 
+
 def https_load(url):
-    return re.sub(r'^http://','//', url)
+    return re.sub(r'^http://', '//', url)
 
 
 def count_public_datasets_for_group(datasets_list):
@@ -528,14 +517,15 @@ def count_public_datasets_for_group(datasets_list):
 
 def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[], errors=None):
     for key, value in dictionary.iteritems():
-            if key not in skipped_keys:
-                value = value.strip() if value else value
-                if not value:
-                    message = warning_template.format(key)
-                    log.warning(message)
-                    add_error('Empty field', message, errors)
-                    return False
+        if key not in skipped_keys:
+            value = value.strip() if value else value
+            if not value:
+                message = warning_template.format(key)
+                log.warning(message)
+                add_error('Empty field', message, errors)
+                return False
     return True
+
 
 def add_error(type, message, errors):
     if isinstance(errors, list):

@@ -1,3 +1,12 @@
+"""
+    Handles modifications to registration and login flow. 
+    Including password reset, logging in and redirecting user
+    to the correct contribute page when not logged in.
+
+    This is different from modifications to the registration
+    and login flow made to add email validation to account
+    creation. That class is in mail_validation_controller.py 
+"""
 import datetime
 import dateutil
 
@@ -20,6 +29,9 @@ check_access = logic.check_access
 class LoginController(ckan_user.UserController):
 
     def request_reset(self):
+        """
+        Email password reset instructions to user
+        """
         context = {'model': model, 'session': model.Session, 'user': c.user,
                    'auth_user_obj': c.userobj}
         data_dict = {'id': request.params.get('user')}
@@ -42,7 +54,6 @@ class LoginController(ckan_user.UserController):
             except NotFound:
                 h.flash_error(_('No such user: %s') % id)
 
-            print user_obj
             if user_obj:
                 try:
                     mailer.send_reset_link(user_obj)
@@ -56,9 +67,13 @@ class LoginController(ckan_user.UserController):
         return render('user/request_reset.html')
 
     def logged_in(self):
+        """
+        Logs user in but directs to different templates depending
+        on the user's activity level.
+        """
         # redirect if needed
         came_from = request.params.get('came_from', '')
-        if self._sane_came_from(came_from):
+        if h.url_is_local(came_from):
             return h.redirect_to(str(came_from))
 
         if c.user:
@@ -72,7 +87,7 @@ class LoginController(ckan_user.UserController):
                 ) - dateutil.parser.parse(user_dict['created'])
             else:
                 time_passed = None
-            if not user_dict['activity'] and time_passed and time_passed.days < 3:
+            if not (user_dict['number_created_packages'] > 0 or user_dict['number_of_edits'] > 0) and time_passed and time_passed.days < 3:
                 #/dataset/new
                 contribute_url = h.url_for(controller='package', action='new')
                 # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
@@ -86,9 +101,6 @@ class LoginController(ckan_user.UserController):
                 return self.me()
         else:
             err = _('Login failed. Bad username or password.')
-            if g.openid_enabled:
-                err += _(' (Or if using OpenID, it hasn\'t been associated '
-                         'with a user account.)')
             if h.asbool(config.get('ckan.legacy_templates', 'false')):
                 h.flash_error(err)
                 h.redirect_to(controller='user',
@@ -97,6 +109,10 @@ class LoginController(ckan_user.UserController):
                 return self.login(error=err)
 
     def contribute(self, error=None):
+        """
+        If the user tries to add data but isn't logged in, directs
+        them to a specific contribute login page.
+        """
         self.login(error)
         vars = {'contribute': True}
         return base.render('user/login.html', extra_vars=vars)

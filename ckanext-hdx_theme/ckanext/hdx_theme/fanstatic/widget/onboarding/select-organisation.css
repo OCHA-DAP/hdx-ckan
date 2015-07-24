@@ -1,0 +1,29 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.two-column-select-organisation .two-column-left {
+  height: 560px;
+}
+.two-column-select-organisation .two-column-right {
+  height: 560px;
+  padding: 60px;
+}
+.two-column-select-organisation .two-column-right #create-organisation {
+  overflow: scroll;
+  height: 400px;
+}
+.two-column-select-organisation .two-column-right #org-description {
+  height: 160px;
+  padding: 14px 20px;
+}
+.two-column-select-organisation .two-column-right #org-description ~ label {
+  bottom: 116px;
+}
+.two-column-select-organisation .two-column-right #org-description.input-content ~ label {
+  bottom: 6px;
+}

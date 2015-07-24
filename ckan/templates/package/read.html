@@ -7,7 +7,7 @@
   {% block package_description %}
     {% if pkg.private %}
       <span class="dataset-private label label-inverse pull-right">
-        <i class="icon-lock"></i>
+        <i class="glyphicon glyphicon-lock"></i>
         {{ _('Private') }}
       </span>
     {% endif %}
@@ -16,6 +16,9 @@
         {{ pkg.title or pkg.name }}
         {% if pkg.state.startswith('draft') %}
           [{{ _('Draft') }}]
+        {% endif %}
+        {% if pkg.state == 'deleted' %}
+          [{{ _('Deleted') }}]
         {% endif %}
       {% endblock %}
     </h1>

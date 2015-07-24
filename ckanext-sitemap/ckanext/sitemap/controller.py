@@ -9,6 +9,7 @@ from ckan.lib.helpers import url_for
 from lxml import etree
 from pylons import config, response
 from pylons.decorators.cache import beaker_cache
+import math
 
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
@@ -18,9 +19,12 @@ class SitemapController(BaseController):
 
     @beaker_cache(expire=3600*24, type="dbm", invalidate_on_startup=True)
     def _render_sitemap(self, page):
+        """
+        Build the XML
+        """
         root = etree.Element("urlset", nsmap={None: SITEMAP_NS})
         #pkgs = Session.query(Package).all()
-        pkgs = Session.query(Package).filter(Package.private == False).offset(int(page)*25).limit(25)
+        pkgs = Session.query(Package).filter(Package.private == False).offset((int(page)-1)*25).limit(25)
         for pkg in pkgs:
             url = etree.SubElement(root, 'url')
             loc = etree.SubElement(url, 'loc')
@@ -38,10 +42,13 @@ class SitemapController(BaseController):
         return etree.tostring(root, pretty_print=True)
 
     def view(self):
+        """
+        List datasets 25 at a time
+        """
         #Sitemap Index
         root = etree.Element("sitemapindex", nsmap={None: SITEMAP_NS})
         pkgs = Session.query(Package).filter(Package.private == False).count()
-        count = pkgs/25
+        count = int(math.ceil(pkgs/25.5))+1
         for i in range(1,count):
             sitemap = etree.SubElement(root, 'sitemap')
             loc = etree.SubElement(sitemap, 'loc')
@@ -52,4 +59,7 @@ class SitemapController(BaseController):
         #return self._render_sitemap()
 
     def index(self, page):
+        """
+        Create an index of all xml pages
+        """
         return self._render_sitemap(page)

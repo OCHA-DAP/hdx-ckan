@@ -1,9 +1,8 @@
 {% import "macros/form.html" as form %}
-<script type="text/javascript">
-  var RecaptchaOptions = {
-     theme : 'clean'
-  };
-</script>
+
+<script type="text/javascript" src="//www.google.com/recaptcha/api/challenge?k={{ capcha_api_key }}"></script>
+{% resource 'hdx_theme/new_user_form.js' %}
+{% resource 'hdx_theme/new_user_form.css' %}
 {% resource 'hdx_theme/hdx_style_on_focus.js' %}
 <form class="form registerForm" action="" method="post">
   {{ form.errors(error_summary) }}
@@ -33,23 +32,6 @@
   		<div class="control-group control-medium">
             <label class="control-label hide" for="recaptcha_response_field">Captcha</label>
             <div class="controls editor">
-              <style>
-                #recaptcha_widget_div * {
-                  #border: 0 !important;
-                  line-height: normal !important;
-                }
-                #recaptcha_response_field{
-                  border: 1px solid #DFDFDF !important;
-                  width: 288px !important;
-                  border-radius: 0;
-                }
-                #recaptcha_area, #recaptcha_table {
-                  width: auto !important;
-                }
-              </style>
-              <script type="text/javascript"
-                      src="//www.google.com/recaptcha/api/challenge?k={{ capcha_api_key }}">
-              </script>
               <noscript>
                 <iframe src="//www.google.com/recaptcha/api/noscript?k={{ capcha_api_key }}"
                         height="300" width="500" frameborder="0"></iframe><br>

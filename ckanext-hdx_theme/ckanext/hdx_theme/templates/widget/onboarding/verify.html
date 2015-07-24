@@ -1,0 +1,24 @@
+{#
+Verify email widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/verify.html', id="verifyPopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/verify.css' %}
+{% set class = "popup-onboarding" %}
+{% set title = "We've received your request !" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+    <div class="verify-widget">
+        <div class="center">
+            <img class="gif mTop45" src="/images/onboarding/incomingmail.gif">
+            <div class="notification-message mTop20">Click on the verification email we sent to:</div>
+            <div class="verify-email mTop10">-</div>
+        </div>
+    </div>
+{% endblock %}

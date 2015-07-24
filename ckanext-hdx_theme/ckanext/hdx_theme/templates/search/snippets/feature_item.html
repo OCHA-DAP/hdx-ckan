@@ -3,7 +3,7 @@
 {% set f_type = package.feature_type or None %}
 
 {% block pre_icon %}
-  <span class="mL15 pull-left pre-icon"><i class="icon {% if f_type == 'topic' %}icon-tag{% elif f_type == 'organization' %}icon-earth{% else %}icon-location{% endif %}"></i></span>
+  <span class="mL15 pull-left pre-icon"><i class="icon {% if f_type == 'topic' %}glyphicon glyphicon-tag{% elif f_type == 'organization' %}glyphicon glyphicon-earth{% else %}glyphicon glyphicon-location{% endif %}"></i></span>
 {% endblock %}
 
 {% block title %}

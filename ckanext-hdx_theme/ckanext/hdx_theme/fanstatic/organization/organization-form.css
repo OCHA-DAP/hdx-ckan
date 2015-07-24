@@ -6,15 +6,151 @@ border-bottom: 0px !important;
 border-bottom: 0px !important;
 }
 
+.url-align{
+	margin-bottom: 30px;
+}
+
+.button-align{
+	margin-left:25px;
+	margin-bottom:20px;
+}
+
+.button-align a, .button-align button{
+	margin-right:20px;
+}
+
 .create-org.form-actions {
 margin-bottom: 30px !important;
-line-height: 2px !important;
+}
+
+
+.info-field {
+  float:left;
+  margin-left: 30px;
+  margin-top: 25px;
+  background-color: #CCCCCC;
+  color: #FFFFFF;
+  padding: 5px 10px;
+}
+
+
+.field-with-info ~ .info-field{
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 1s, visibility 1s;
+}
+
+.field-with-info:hover ~ .info-field, .info-field:hover{
+	opacity: 1;
+	visibility: visible;
 }
 
 .org-control textarea {
 	max-height: 500px !important;
+	margin-bottom: -5px;
+	border-color: #cccccc;
 }
 
 .org-control {
 	max-height: 500px !important;
+}
+
+.org-control {
+  width: 400px;
+  float: left;
+  min-height: 70px;
+  max-height: 100px;
+  padding-right: 15px;
+}
+
+.org-control.mandatory label:after {
+  color: #FF0000;
+  content: " *";
+}
+
+.org-control label, .dataset-form label {
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+	font-style: italic;
+}
+
+.org-control-container {
+  width: 920px;
+  float: left;
+}
+.create-org h1 {
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.6em;
+  font-weight: 300;
+}
+.controls input {
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+  	display: inline-block;
+	/*height: 20px;*/
+	padding: 4px 6px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	/*line-height: 20px;*/
+	color: #555555;
+	vertical-align: middle;
+}
+
+
+.create-org.form-actions {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+  margin-bottom: 0;
+  margin-left: -25px;
+  margin-right: -25px;
+  padding-bottom: 0;
+  text-align: right;
+  border-top: none;
+  float: left;
+  line-height: 75px;
+  vertical-align: top;
+}
+
+.form-horizontal .controls, .org-map .controls{
+	margin-top:-20px;
+}
+
+.form-horizontal .control-full, .org-map .control-full{
+	width:90%;
+}
+
+.one-line-label label{
+	width:200px!important;
+}
+
+.one-line-label .controls{
+	margin-left:-5px !important;
+}
+
+.taller-textarea {
+	height: 250px !important;
+}
+
+.org-map .well{
+	float:left; margin:5px; padding-bottom:5px;
+}
+
+.org-topline input{
+	width: 90%;
+	margin-top: -15px;
+}
+
+.org-topline label{
+	margin-top:15px;
+}
+
+.org-charts input{
+	width:90%;
+}
+
+.org-charts .info-field{
+	margin-top: 10px;
 }

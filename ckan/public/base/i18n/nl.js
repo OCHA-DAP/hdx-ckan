@@ -72,10 +72,6 @@
     null,
     "Wijzig sortering bronnen"
   ],
-  "Reset this": [
-    null,
-    "Reset dit"
-  ],
   "Resource uploaded": [
     null,
     "De bron is geupload"

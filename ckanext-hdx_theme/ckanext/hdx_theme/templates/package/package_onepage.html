@@ -9,69 +9,48 @@
 {% endblock %}
 
 {% block primary %}
-<div class="paddingRowHack">
-  <div class="paddingLeftHack paddingRightHack mTB45">
-    <div class="row">
-      <div class="span5 countrySelectorDiv">
-        <div class="content">
-          {% block country_list %}{{super()}}{% endblock %}
+  <div class="paddingRowHack">
+    <div class="paddingLeftHack paddingRightHack mTB45">
+      <div class="row">
+        <div class="col-xs-5 countrySelectorDiv">
+          <div class="content">
+            {% block country_list %}{{super()}}{% endblock %}
+          </div>
+        </div>
+        <div id="country-map" class="col-xs-7 countryMapDiv">
         </div>
       </div>
-      <div id="country-map" class="span11 countryMapDiv">
-      </div>
     </div>
   </div>
-</div>
 
   {% block primary_content %}
-<div class="paddingRowHack graybg">
-  <div class="paddingLeftHack paddingRightHack">
-  <section class="module datasetModule">
-    <div class="pull-right">
-      {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#submitting-data','text':'Submitting Data'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
-    </div>
-    <div class="module-content" id="dataset_part_1">
-      <div class="package-upload-header mTop45 sspBold20 mBottom40" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
-      {% block form %}{{ c.form | safe }}{% endblock %}
-    </div>
-    <div class="paddingLeftHack paddingRightHack" style="margin-top:0px;">
-    </div>
-  </section>
-  </div>
-</div>
-      <div class="form-actions">
-        {% block cancel_button %}
-          <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
-        {% endblock %}
-        <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
-      </div>
-
-
-
-    {#
-      <div class="module-content graybg" id="dataset_part_2">
-        <div class="package-upload-header-sm">{{ _("OPTIONAL DETAILS") }}</div>
-        {% block form2 %}{{ c.form | safe }}{% endblock %}
-      </div>
-      <div class="module-content" style="margin-top:0px;">
-      <div class="form-actions">
-        {% block cancel_button %}
-          <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
-        {% endblock %}
-        <button class="btn btn-primary" type="submit" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+    <div class="paddingRowHack graybg">
+      <div class="paddingLeftHack paddingRightHack">
+        <section class="module datasetModule">
+          <div class="pull-right">
+            {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#submitting-data','text':'Submitting Data'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
+          </div>
+          <div class="module-content" id="dataset_part_1">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="package-upload-header mTop45 sspBold20 mBottom40" style="color: #333333">1. {{ _("Tell us some details about your dataset") }}</div>
+              </div>
+              <div class="col-xs-12">
+                {% block form %}{{ c.form | safe }}{% endblock %}
+              </div>
+            </div>
+          </div>
+          <div class="paddingLeftHack paddingRightHack" style="margin-top:0px;">
+          </div>
+        </section>
       </div>
     </div>
-    </section>
-    #}
-    {#
-    <section class="module inactive">
-      <div class="overlay"></div>
-      <div class="module-content" id="dataset_part_3">
-        <div class="package-upload-header">3. {{ _("ADD FILES") }}</div>
-        {% block form3 %}{{ c.form | safe }}{% endblock %}
-      </div>
-    </section> #}
-
+    <div class="form-actions">
+      {% block cancel_button %}
+        <a class="btn" href="">{% block cancel_button_text %}{{ _('Cancel') }}{% endblock %}</a>
+      {% endblock %}
+      <button class="btn btn-primary" id="onepage_submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+    </div>
   {% endblock %}
 {% endblock %}
 
@@ -79,23 +58,13 @@
 {% endblock %}
 
 {%- block scripts2 %}
-    {{ super() }}
-<!-- <script src="/base/vendor/jquery.ui.widget.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.iframe-transport.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.fileupload.js"></script>
-<script src="/base/vendor/jquery-fileupload/jquery.fileupload-ui.js"></script>-->
-
-  <script>
-  $('document').ready(function(){
-    //Just in case of page back
-    $('option[value=-1]').attr('selected', true);
-     });
-  </script>
+  {{ super() }}
   {% resource 'hdx_theme/leaflet'  %}
   {% resource 'hdx_theme/submit-dataset-map' %}
 {% endblock -%}
 
 {% block styles %}
-    {{ super() }}
-    <link rel="stylesheet" href="/dataset_create.css" />
+  {{ super() }}
+  {% resource 'hdx_theme/datasets/dataset.css' %}
+  {% resource 'hdx_theme/datasets/dataset_create.css' %}
 {% endblock %}

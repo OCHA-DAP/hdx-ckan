@@ -3,6 +3,7 @@ import ckan.lib.cli as cli
 
 class CustomLessCompile(cli.CkanCommand):
     summary = 'Compile all custom less themes'
+
     def command(self):
         self._load_config()
         import logging as logging
@@ -13,6 +14,6 @@ class CustomLessCompile(cli.CkanCommand):
         self.log.info("Recompiling all custom less themes")
 
         org_helper.recompile_everything({'model': model, 'session': model.Session,
-                   'user': 'hdx', 'ignore_auth': True})
+                                         'user': 'hdx', 'ignore_auth': True})
 
         self.log.info("Done")

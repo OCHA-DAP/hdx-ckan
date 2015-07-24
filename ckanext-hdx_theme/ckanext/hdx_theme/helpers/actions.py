@@ -425,48 +425,66 @@ def _add_to_filter_list(src, param_name, filter_list):
     return filter_list
 
 
-def hdx_get_shape_geojson(context, data_dict):
-    err_json_content = {'errors': "No valid file"}
-    if 'shape_source_url' not in data_dict:
-        return err_json_content
-    json_content = err_json_content
-    tmp_dir = config.get('cache_dir', '/tmp/')
-    tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
+def hdx_get_shape_info(context, data_dict):
     try:
-        shape_source_url = data_dict.get('shape_source_url', None)
-        if shape_source_url is None:
-            raise
-        shape_src_response = requests.get(shape_source_url, allow_redirects=True)
-        urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
-        ogre_url = config.get('hdx.ogre.url')
-        convert_url = data_dict.get('convert_url', ogre_url + '/convert')
-        shape_data = {'upload': open(tmp_file, 'rb')}
-        log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
-        try:
-            json_resp = requests.post(convert_url, files=shape_data)
-        except:
-            log.error("There was an error with the HTTP request")
-            log.error(sys.exc_info()[0])
-            raise
-        json_content = json.loads(json_resp.content)
-        os.remove(tmp_file)
-        if 'errors' in json_content and json_content['errors']:
-            log.error('There are errors in json file, error message: ' + str(json_content['errors']))
-            raise
+        gis_url = data_dict.get('gis_url', None)
+        response = requests.get(gis_url, allow_redirects=True)
+        shape_info = response.text if hasattr(response, 'text') else ''
     except:
-        log.error("Error retrieving the json content")
+        log.error("Error retrieving the shape info content")
         log.error(sys.exc_info()[0])
-        return err_json_content
-    return json_content
+        shape_info = json.dumps({
+            'state': 'failure',
+            'message': 'Error retrieving the shape info content',
+            'layer_id': 'None',
+            'error_type': 'ckan-generated-error',
+            'error_class': 'None'
+        })
+    return shape_info
 
 
-def hdx_get_json_from_resource(context, data_dict):
-    try:
-        if 'url' not in data_dict:
-            return None
-        url = data_dict['url']
-        resource_response = requests.get(url, allow_redirects=True)
-        res = json.loads(resource_response.content)
-    except:
-        res = None
-    return res
+# def hdx_get_shape_geojson(context, data_dict):
+#     err_json_content = {'errors': "No valid file"}
+#     if 'shape_source_url' not in data_dict:
+#         return err_json_content
+#     json_content = err_json_content
+#     tmp_dir = config.get('cache_dir', '/tmp/')
+#     tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
+#     try:
+#         shape_source_url = data_dict.get('shape_source_url', None)
+#         if shape_source_url is None:
+#             raise
+#         shape_src_response = requests.get(shape_source_url, allow_redirects=True)
+#         urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
+#         ogre_url = config.get('hdx.ogre.url')
+#         convert_url = data_dict.get('convert_url', ogre_url + '/convert')
+#         shape_data = {'upload': open(tmp_file, 'rb')}
+#         log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
+#         try:
+#             json_resp = requests.post(convert_url, files=shape_data)
+#         except:
+#             log.error("There was an error with the HTTP request")
+#             log.error(sys.exc_info()[0])
+#             raise
+#         json_content = json.loads(json_resp.content)
+#         os.remove(tmp_file)
+#         if 'errors' in json_content and json_content['errors']:
+#             log.error('There are errors in json file, error message: ' + str(json_content['errors']))
+#             raise
+#     except:
+#         log.error("Error retrieving the json content")
+#         log.error(sys.exc_info()[0])
+#         return err_json_content
+#     return json_content
+#
+#
+# def hdx_get_json_from_resource(context, data_dict):
+#     try:
+#         if 'url' not in data_dict:
+#             return None
+#         url = data_dict['url']
+#         resource_response = requests.get(url, allow_redirects=True)
+#         res = json.loads(resource_response.content)
+#     except:
+#         res = None
+#     return res

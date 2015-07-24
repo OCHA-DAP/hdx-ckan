@@ -14,13 +14,13 @@
   {% block basic_fields %}
     {% set attrs = {'data-module': 'slug-preview-target', 'type':'hidden'} %}
     <div class="org-control-container">
-    {{ form.input('title', label=_('Name of Organisation'), id='field-title', value=data.title, error=errors.title, classes=['control-full', 'org-control', 'mandatory', 'field-with-info'], attrs=attrs) }}
+        {{ form.input('title', label=_('Name of Organisation'), id='field-title', value=data.title, error=errors.title, classes=['control-full', 'org-control', 'mandatory', 'field-with-info'], attrs=attrs) }}
 
-    {# Perhaps these should be moved into the controller? #}
-    {% set prefix = h.url_for(controller='organization', action='read', id='') %}
-    {% set domain = h.url_for(controller='organization', action='read', id='', qualified=true) %}
-    {% set domain = domain|replace("http://", "")|replace("https://", "") %}
-    {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<organization>'} %}
+        {# Perhaps these should be moved into the controller? #}
+        {% set prefix = h.url_for(controller='organization', action='read', id='') %}
+        {% set domain = h.url_for(controller='organization', action='read', id='', qualified=true) %}
+        {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+        {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<organization>'} %}
 		<div class="org-control-info  info-field">
 			<div class="org-info-label">{{_('Be as specific as possible (i.e. don\'t just say WFP, say WFP-Colombia)')}}</div>
 		</div>
@@ -40,6 +40,7 @@
 	    		{{_('Brief overview of what organisation is for.')}}</div>
 	    </div>
     </div>
+  {% if c.userobj.sysadmin %}
   <div class="org-control-container" style="margin-top:50px;">
     {% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}
       {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
@@ -47,6 +48,7 @@
         <div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
       </div>
   </div>
+  {% endif %}
 
 {% if h.hdx_get_extras_element(data.extras, value_key="customization") %}
 {% set custom_org = h.hdx_get_extras_element(data.extras, value_key="custom_org") %}
@@ -251,7 +253,7 @@
           <a class="btn btn-danger pull-left" href="{% url_for controller='organization', action='delete', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
-    <button class="btn btn-primary create-org-btn" name="save" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
+    <button class="mL15 btn btn-primary create-org-btn" name="save" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
   </div>
   {% endblock %}
 </form>

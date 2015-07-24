@@ -11,7 +11,7 @@ import ckan.model as model
 import ckan.common as common
 import ckan.lib.dictization as d
 
-import ckanext.hdx_crisis.dao.country_data_access as country_data_access
+import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.controllers.country_controller as ctrlr
 
@@ -95,7 +95,7 @@ def hdx_topline_num_for_group(context, data_dict):
 
     if group_info.get('custom_loc', False) and datastore_id:
         #source is datastore
-        crisis_data_access = country_data_access.ColombiaCrisisDataAccess(datastore_id)
+        crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
         crisis_data_access.fetch_data(context)
         top_line_items = crisis_data_access.get_top_line_items()
         for item in top_line_items:

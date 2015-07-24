@@ -25,5 +25,8 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_package=ckanext.hdx_package.plugin:HDXPackagePlugin
+
+        [paste.paster_command]
+        hdx-migrate = ckanext.hdx_package.command:MigrateCommand
     ''',
 )

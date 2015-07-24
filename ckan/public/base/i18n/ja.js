@@ -68,13 +68,13 @@
     null,
     "削除"
   ],
+  "Reorder resource view": [
+    null,
+    "リソースビューを再整列"
+  ],
   "Reorder resources": [
     null,
     "リソースを再整列"
-  ],
-  "Reset this": [
-    null,
-    "これを初期化"
   ],
   "Resource uploaded": [
     null,
@@ -138,7 +138,7 @@
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
-    "ファイルをアップロードしています。ナビゲートを離れてこのアップロードを終了しても良いですか?"
+    "ファイルをアップロードしています。ナビゲートを離れてこのアップロードを終了しても良いですか？"
   ],
   "show less": [
     null,
