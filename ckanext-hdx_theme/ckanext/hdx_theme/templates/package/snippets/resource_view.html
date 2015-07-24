@@ -1,13 +1,12 @@
 {% import 'macros/form.html' as form %}
 <div id="view-{{ resource_view['id'] }}" class="resource-view" data-id="{{ resource_view['id'] }}" data-title="{{ resource_view['title'] }}" data-description="{{ resource_view['descripion'] }}">
-  <a class="btn pull-right"
+  {# <a class="btn pull-right"
      href="#embed-{{ resource_view['id'] }}"
      data-module="resource-view-embed"
      data-module-id="{{ resource_view['id'] }}"
      data-module-url="{{ h.url('resource_view', id=package['name'], resource_id=resource['id'], view_id=resource_view['id'], qualified=True) }}">
-    <i class="icon-code"></i>
     {{ _("Embed") }}
-  </a>
+  </a>   #}
   <p class="desc clearfix">{{ resource_view['description'] }}</p>
   <div class="m-top ckanext-datapreview">
     {% if not to_preview and h.resource_view_is_filterable(resource_view) %}
