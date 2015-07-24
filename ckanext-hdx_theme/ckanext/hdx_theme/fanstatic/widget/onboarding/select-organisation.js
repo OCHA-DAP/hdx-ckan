@@ -13,7 +13,7 @@ $(document).ready(function(){
         $this = $(this);
         $.post('/user/request_membership', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
-            $sel = $($("#select-organisation-form").find(".select2-container.mTop20.required").find("a:first"));
+            $sel = $($("#select-organisation-form .select2-container.mTop20.required").find("a:first"));
             $sel.css("border", "");
             if (result.success){
                 closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
