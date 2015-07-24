@@ -13,10 +13,13 @@ $(document).ready(function(){
         $this = $(this);
         $.post('/user/request_membership', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
+            $sel = $($("#select-organisation-form .select2-container.mTop20.required").find("a:first"));
+            $sel.css("border", "");
             if (result.success){
                 closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
             } else {
-                alert("Can't join org: " + result.error.message);
+                //alert("Can't join org: " + result.error.message);
+                $sel.css("border", "1px solid red");
             }
         });
         return false;
