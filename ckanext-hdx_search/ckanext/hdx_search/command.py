@@ -3,6 +3,7 @@ from ckan.model import Session
 import ckan.lib.helpers as h
 import json
 import os
+import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 
 class FeatureSearchCommand(p.toolkit.CkanCommand):
     '''
@@ -40,24 +41,38 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
         json file for lunr.js to search against
         '''
         index = list()
-        groups = Session.execute('select id, title from "group"')
-        for id, title in groups:
+        groups = Session.execute('select id, title, is_organization from "group"')
+        for id, title, is_org in groups:
+            if is_org:
+                page_type = 'organization'
+            else:
+                #check if the group page is a country first,
+                #otherwise it's a crisis page
+                if title.capitalize() in focus_countries.FOCUS_COUNTRIES:#Is this up-to-date?
+                    page_type = "country"
+                else:
+                    page_type = "crisis"
+
+
             url = h.url_for(controller='group',
                                     action='read',
                                     id=id,
                                     qualified=True)
-            index.append({'title':title, 'url': url})
+            index.append({'title':title, 'url': url, 'type':page_type})
 
-        topic = Session.execute("select id from vocabulary where name='Topics'")
-        topic = [id for id in topic]
-        topics = Session.execute("select id, name from tag where vocabulary_id='%s'" % (topic[0][0]))
-        for id, name in topics:
-            url = h.url_for(controller='tag',
-                                    action='read',
-                                    id=id,
-                                    qualified=True)
-            index.append({'title':name.capitalize(), 'url': url})
+        ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
+        # topic = Session.execute("select id from vocabulary where name='Topics'")
+        # topic = [id for id in topic]
+        # topics = Session.execute("select id, name from tag where vocabulary_id='%s'" % (topic[0][0]))
+        # for id, name in topics:
+        #     url = h.url_for(controller='tag',
+        #                             action='read',
+        #                             id=id,
+        #                             qualified=True)
+        #     index.append({'title':name.capitalize(), 'url': url, 'type': 'topic'})
 
-        dir_path = os.path.abspath('../ckanext-hdx_theme/ckanext/hdx_theme/public/scripts') 
-        f = open(dir_path+'/feature-index.json', 'w')
-        f.write(json.dumps(index))
+        dir_path = os.path.abspath('../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search') 
+        f = open(dir_path+'/feature-index.js', 'w')
+        file_body = json.dumps(index)
+        file_body = 'var feature_index='+file_body+';'
+        f.write(file_body)
