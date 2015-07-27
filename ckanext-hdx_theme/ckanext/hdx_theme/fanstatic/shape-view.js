@@ -39,8 +39,9 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
         if (data.columns) {
             for (var i = 0; i < data.columns.length; i++) {
                 var column = data.columns[i];
+                var escaped_column_name = encodeURIComponent(column.column_name);
                 if (column.data_type == "character varying") {
-                    extraFields += ',"' + column.column_name+'"';
+                    extraFields += ',"' + escaped_column_name+'"';
                 }
             }
         }
