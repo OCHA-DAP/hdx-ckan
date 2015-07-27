@@ -27,7 +27,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
     var ymin = bboxArray[0].split(" ")[1];
     var xmax = bboxArray[1].split(" ")[0];
     var ymax = bboxArray[1].split(" ")[1];
-    var bounds = [[ymin, xmin], [ymax, xmax]]
+    var bounds = [[ymin, xmin], [ymax, xmax]];
 
     var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
     var splitString = "/postgis/";
@@ -39,8 +39,9 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
         if (data.columns) {
             for (var i = 0; i < data.columns.length; i++) {
                 var column = data.columns[i];
+                var escaped_column_name = encodeURIComponent(column.column_name);
                 if (column.data_type == "character varying") {
-                    extraFields += ',"' + column.column_name+'"';
+                    extraFields += ',"' + escaped_column_name+'"';
                 }
             }
         }
