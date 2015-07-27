@@ -27,7 +27,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
     var ymin = bboxArray[0].split(" ")[1];
     var xmax = bboxArray[1].split(" ")[0];
     var ymax = bboxArray[1].split(" ")[1];
-    var bounds = [[ymin, xmin], [ymax, xmax]]
+    var bounds = [[ymin, xmin], [ymax, xmax]];
 
     var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
     var splitString = "/postgis/";
