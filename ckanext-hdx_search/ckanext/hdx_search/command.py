@@ -3,7 +3,6 @@ from ckan.model import Session
 import ckan.lib.helpers as h
 import json
 import os
-import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 
 class FeatureSearchCommand(p.toolkit.CkanCommand):
     '''
@@ -46,19 +45,24 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
             if is_org:
                 page_type = 'organization'
             else:
-                #check if the group page is a country first,
-                #otherwise it's a crisis page
-                if title.capitalize() in focus_countries.FOCUS_COUNTRIES:#Is this up-to-date?
-                    page_type = "country"
-                else:
-                    page_type = "crisis"
-
+                page_type = "country"
+                
 
             url = h.url_for(controller='group',
                                     action='read',
                                     id=id,
                                     qualified=True)
             index.append({'title':title, 'url': url, 'type':page_type})
+
+        ## I hate this, but given the way we did crisis
+        ## I think this is the only way to go. Please update
+        ## when new crisis are added
+
+        index.append({'title':'Ebola', 'url':h.url_for(controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
+            action='read',qualified=True), 'type':'crisis'})
+        index.append({'title':'Nepal Earthquake', 'url':h.url_for(controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
+                    action='read', id='nepal-earthquake', qualified=True), 'type':'crisis'})
+
 
         ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
         # topic = Session.execute("select id from vocabulary where name='Topics'")
