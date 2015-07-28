@@ -191,3 +191,16 @@
 
 
 /* END - Show full text on hover over select2 options */
+
+/* Styling search recommendations */
+
+#search-recs {
+    margin-top:8px;
+    font-family:'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #888888;
+    letter-spacing: 0.01em;
+}
+
+/* END - Styling search recommendations */
