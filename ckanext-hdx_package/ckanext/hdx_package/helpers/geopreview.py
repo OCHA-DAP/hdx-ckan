@@ -4,6 +4,7 @@ Created on Jul 07, 2015
 @author: alexandru-m-g
 '''
 import json
+import urllib
 from string import lower
 from pylons import config
 
@@ -27,9 +28,12 @@ def _get_shape_info_as_json(gis_data):
     resource_id = resource_id if resource_id and resource_id.strip() else 'new'
 
     layer_import_url = config.get('hdx.gis.layer_import_url')
-    gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
-                                                                                       resource_id).replace(
-        "{resource_download_url}", gis_data['url'])
+    encoded_download_url = urllib.quote_plus(gis_data['url'])
+    gis_url = layer_import_url.format(dataset_id=gis_data['dataset_id'], resource_id=resource_id,
+                                      resource_download_url=encoded_download_url, url_type=gis_data['url_type'])
+    # gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
+    #                                                                                    resource_id).replace(
+    #     "{resource_download_url}", gis_data['url'])
     result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
     return result
 
@@ -78,7 +82,8 @@ def do_geo_transformation_process(result_dict):
     gis_data = {
         'dataset_id': dataset_id,
         'resource_id': resource_id,
-        'url': url
+        'url': url,
+        'url_type': result_dict.get('url_type', 'api')
     }
     shape_info_json = _get_shape_info_as_json(gis_data)
     shape_info = json.loads(shape_info_json)

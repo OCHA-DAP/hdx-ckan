@@ -14,13 +14,16 @@
   label:after{
     content: "";
   }
+  .content {
+    background-color: #FFFFFF;
+  }
 }
 
 @previewContainerHeight: 502px;
 @previewContainerWidth: @containerRealSize - 2*@popupPaddingSize;
 .preview-container{
   width: 100%;
-  max-width: @previewContainerWidth;
-  max-height: @previewContainerHeight;
-  overflow: auto;
+  //max-width: @previewContainerWidth;
+  //max-height: @previewContainerHeight;
+  //overflow: auto;
 }
