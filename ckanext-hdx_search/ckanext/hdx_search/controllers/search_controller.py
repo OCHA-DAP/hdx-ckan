@@ -329,7 +329,7 @@ class HDXSearchController(PackageController):
         return self._search_template()
 
     def _which_tab_is_selected(self, search_extras):
-        c.tab = 'all'
+        c.tab = 'datasets'
         if 'ext_indicator' in search_extras:
             if int(search_extras['ext_indicator']) == 1:
                 c.tab = 'indicators'
