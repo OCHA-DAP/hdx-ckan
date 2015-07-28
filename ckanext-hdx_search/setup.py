@@ -25,5 +25,8 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_search=ckanext.hdx_search.plugin:HDXSearchPlugin
+
+        [paste.paster_command]
+        hdx-feature-search = ckanext.hdx_search.command:FeatureSearchCommand
     ''',
 )

@@ -350,7 +350,13 @@ class ValidationController(ckan.controllers.user.UserController):
             if error_summary == CaptchaNotValid:
                 return OnbCaptchaErr
             return self.error_message(error_summary)
-
+        # except NotAuthorized, e:
+        #     if e.message and e.message.get('email'):
+        #         return self.error_message(e.message.get('email')[0])
+        #     return OnbNotAuth
+        except exceptions.Exception, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
         # hack to disable check if user is logged in
         save_user = c.user
         c.user = None
