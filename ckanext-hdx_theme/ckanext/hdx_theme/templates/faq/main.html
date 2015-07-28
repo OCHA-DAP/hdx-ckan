@@ -1,0 +1,26 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("FREQUENTLY ASKED QUESTIONS") }}{% endblock %}
+
+{% block pre_primary %}
+    BIG PICTURE
+{% endblock %}
+
+{% block primary %}
+    {% snippet 'faq/questions_sections.html', data=data %}
+{% endblock %}
+
+{% block secondary %}
+    {% for section in data %}
+        <p>
+            <a id='menu-{{ section.id }}' href="#{{ section.id }}"> {{ section.title }} </a>
+        </p>
+    {% endfor %}
+{% endblock %}
+
+
+{%- block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/faq/faq.css' %}
+    {% resource 'hdx_theme/faq/faq.js' %}
+{% endblock %}

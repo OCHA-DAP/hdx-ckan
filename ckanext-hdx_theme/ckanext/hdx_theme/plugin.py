@@ -91,6 +91,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/widget/WFP', controller='ckanext.hdx_theme.controllers.widget_WFP:WidgetWFPController', action='show')
 
+        map.connect(
+            '/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
         return map

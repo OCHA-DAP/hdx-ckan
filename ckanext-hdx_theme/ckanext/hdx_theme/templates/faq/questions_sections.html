@@ -1,0 +1,46 @@
+
+{% for section in data %}
+    <p>
+        <a class="section-flag" id='{{ section.id }}' href="javascript:void(0)"> {{ section.title }} </a>
+    </p>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        {% for question in section.questions %}
+            {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
+            {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="{{ q_id }}">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ a_id }}"
+                           aria-expanded="true" aria-controls="{{ a_id }}">
+                            {{ question.q | safe }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ a_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{ q_id }}">
+                    <div class="panel-body">
+                        {{ question.a | safe }}
+                    </div>
+                </div>
+            </div>
+         {% endfor %}
+
+
+        {# <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="about-who-manages-header">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#about-who-manages-content"
+                       aria-expanded="true" aria-controls="about-who-manages-content">
+                        Who manages HDX?
+                    </a>
+                </h4>
+            </div>
+            <div id="about-who-manages-content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="about-who-manages-header">
+                <div class="panel-body">
+                    HDX is managed by the United Nations Office for the Coordination of Humanitarian Affairs (OCHA). OCHA is part of the United Nations Secretariat responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.
+                </div>
+            </div>
+        </div>  #}
+    </div>
+
+{% endfor %}
+
