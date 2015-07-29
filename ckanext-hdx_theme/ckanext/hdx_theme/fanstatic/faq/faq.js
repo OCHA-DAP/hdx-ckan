@@ -22,3 +22,8 @@
 
   $(window).scroll(scroll_to_menu);
 }).call(this);
+
+function showFaqWidget(id) {
+    $(id).show();
+    return false;
+}
