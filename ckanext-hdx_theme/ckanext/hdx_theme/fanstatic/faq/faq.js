@@ -2,22 +2,33 @@
     function scroll_to_menu() {
         var window_top = $(window).scrollTop();
         var window_bottom = window_top + $(window).height();
-        var lowest = null;
-        var lowestEl = null;
+        var lowestAfterWindow = null;
+        var highestBeforeWindow = null;
+        var nextActiveEl = null;
         var sections = $('.section-flag');
         for (var i=0; i<sections.length; i++ ) {
             var el = $(sections[i]);
-            //$('#menu-' + el.attr('id')).removeClass('active');
             var section_top = el.offset().top;
-            if ( (!lowest || section_top < lowest) && window_top < section_top
-                        && window_bottom > section_top ) {
-                lowest = section_top;
-                lowestEl = el;
+
+            var isHighestBeforeWindow = false, isLowestAfterWindowAndVisible= false;
+            isHighestBeforeWindow = window_top > section_top
+                && (!highestBeforeWindow || section_top > highestBeforeWindow);
+            if ( isHighestBeforeWindow )
+                highestBeforeWindow = section_top;
+            else {
+                var isVisible = window_top < section_top && window_bottom > section_top;
+                isLowestAfterWindowAndVisible = isVisible && (!lowestAfterWindow || section_top < lowestAfterWindow);
+                if ( isLowestAfterWindowAndVisible )
+                    lowestAfterWindow = section_top;
+            }
+
+            if ( isHighestBeforeWindow || isLowestAfterWindowAndVisible ) {
+                nextActiveEl = el;
             }
         }
-        if (lowestEl) {
+        if (nextActiveEl) {
             $('.hdx-faq-sidebar li a').removeClass('active');
-            var targetEl = $('#menu-' + lowestEl.attr('id'));
+            var targetEl = $('#menu-' + nextActiveEl.attr('id'));
             targetEl.addClass('active');
         }
     }
