@@ -11,11 +11,17 @@
 {% endblock %}
 
 {% block secondary %}
-    {% for section in data %}
-        <p>
-            <a id='menu-{{ section.id }}' href="#{{ section.id }}"> {{ section.title }} </a>
-        </p>
-    {% endfor %}
+    <div id="hdx-faq-sidebar-wrapper">
+    <nav class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+        <ul class="nav">
+        {% for section in data %}
+            <li>
+                <a id='menu-{{ section.id }}' href="#{{ section.id }}"> {{ section.title }} </a>
+            </li>
+        {% endfor %}
+        </ul>
+    </nav>
+    </div>
 {% endblock %}
 
 

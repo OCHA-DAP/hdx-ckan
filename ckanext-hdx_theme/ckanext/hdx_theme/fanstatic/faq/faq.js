@@ -19,6 +19,36 @@
         }
     }
 
+    function sticky_menu() {
+        var window_top = $(window).scrollTop();
+        var marker_top = $('#hdx-faq-sidebar-wrapper').offset().top;
+        if (window_top > marker_top) {
+            $('#hdx-faq-sidebar').addClass('sticky');
+        }
+        else {
+            $('#hdx-faq-sidebar').removeClass('sticky');
+        }
+    }
 
-  $(window).scroll(scroll_to_menu);
+    function add_menu_click_events() {
+
+        function scrollTo() {
+
+            $('html, body').animate({
+                scrollTop: $(this).offset().top - 40
+            }, 700);
+            return false;
+        }
+
+        var menuAnchors = $('.hdx-faq-sidebar li a');
+        for (var i=0; i<menuAnchors.length; i++) {
+            aEl = $(menuAnchors[i]);
+            aEl.click(scrollTo);
+        }
+
+    }
+
+    $(window).scroll(scroll_to_menu);
+    $(window).scroll(sticky_menu);
+    sticky_menu();
 }).call(this);
