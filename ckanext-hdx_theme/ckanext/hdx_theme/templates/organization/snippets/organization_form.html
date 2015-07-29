@@ -92,11 +92,11 @@
   {% set image_preview = 'https://placehold.it/75x75' %}
 {% endif %}
 
-<div style="border: solid 10px #CCC; width:572px; height:86px; margin-bottom:10px;">
-<div style="width:475px; float:left; margin-top:5px; padding:5px;">    
+<div class="image-upload-wrapper-sq">
+<div class="image-upload-wrapper">    
     {{ form.image_upload(customizations, errors, field_url='image_sq', field_upload='image_sq_upload', field_clear='clear_image_sq', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 75x75'), upload_label=_('Logo 75x75')) }}
   </div>
-<div style="float:left; padding:5px;"><img src="{{ image_preview }}" style="width: 75px !important; height:75px !important;"></div>
+<div class="image-upload-preview"><img src="{{ image_preview }}" style="width: 75px !important; height:75px !important;"></div>
 </div>
 </div>
 
@@ -113,11 +113,11 @@
 {% else %}
   {% set image_preview = 'https://placehold.it/300x125' %}
 {% endif %}
-<div style="border: solid 10px #CCC; width: 572px; height: 135px;">
-<div style="width:250px; margin-top:32px; float:left; padding:5px;">
+<div class="image-upload-wrapper-rect">
+<div class="image-upload-wrapper">
     {{ form.image_upload(customizations, errors, field_url='image_rect', field_upload='image_rect_upload', field_clear='clear_image_rect', is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, url_label=_('Logo 300x125'), upload_label=_('Logo 300x125')) }}
 </div>
-<div style="float:left; padding:5px;"><img src="{{ image_preview }}" style="width: 300px !important; height:125px !important;"></div>
+<div class="image-upload-preview"><img src="{{ image_preview }}" style="width: 300px !important; height:125px !important;"></div>
 </div>
 </div>
 
@@ -246,6 +246,7 @@
   #}
 
   {% block action_buttons %}
+  <div class="org-control-container button-align2">
   <div class="create-org form-actions">
       {% block delete_button %}
         {% if h.check_access('organization_delete', {'id': data.id})  %}
@@ -255,6 +256,7 @@
       {% endblock %}
     <button class="mL15 btn btn-primary create-org-btn" name="save" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
   </div>
+</div>
   {% endblock %}
 </form>
 
