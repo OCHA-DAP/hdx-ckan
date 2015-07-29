@@ -41,15 +41,15 @@
 		<tr>
 			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
 			<td class="dataset-details">
-				{% set locale = h.dump_json({'content': _('Are you sure? This will affect whether this data is visible to everyone')}) %}
-
 				{% if pkg_dict.private %}
 					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
 					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
+					{% set locale = h.dump_json({'content': _('Are you sure? This dataset will be visible to all of HDX')}) %}
 					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it public') }}</a></div>
 				{% else %}
 					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
 					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
+					{% set locale = h.dump_json({'content': _('Are you sure? This dataset will not be visible in search results')}) %}
 					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it private') }}</a></div>
 				{% endif %}
 			</td>

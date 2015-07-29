@@ -40,17 +40,24 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
         json file for lunr.js to search against
         '''
         index = list()
-        groups = Session.execute('select id, title, is_organization from "group"')
-        for id, title, is_org in groups:
+        crises = config.get('hdx.crises').split(", ")
+        groups = Session.execute('select name, title, is_organization from "group"')
+        for name, title, is_org in groups:
             if is_org:
                 page_type = 'organization'
+                url = h.url_for(controller='organization',
+                                    action='read',
+                                    id=name,
+                                    qualified=True)
             else:
+                if name in crises:
+                    continue
                 page_type = "country"
                 
 
-            url = h.url_for(controller='group',
+                url = h.url_for(controller='group',
                                     action='read',
-                                    id=id,
+                                    id=name,
                                     qualified=True)
             index.append({'title':title, 'url': url, 'type':page_type})
 

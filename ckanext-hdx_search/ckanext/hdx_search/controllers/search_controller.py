@@ -68,6 +68,8 @@ def search_for_all(context, data_dict):
     sort = data_dict.get('sort', None)
     if not sort:
         sort = 'score desc'
+
+    q = data_dict.get('q', None)
     search = {
         'q': data_dict.get('q', None),
         'fq': data_dict.get('fq', None),
