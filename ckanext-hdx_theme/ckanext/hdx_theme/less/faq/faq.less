@@ -16,13 +16,58 @@
   background-image: none;
 }
 
-a.active {
-  color: red;
+
+.menu-item-font(@fcolor){
+  font-family: @gothamBookFont;
+  font-size: 14px;
+  color: @fcolor;
+  letter-spacing: 0.01em;
 }
 
-.hdx-faq-sidebar.sticky{
-  position: fixed;
-  top: 20px;
+.hdx-faq-sidebar {
+  &.sticky {
+    position: fixed;
+    top: 15px;
+  }
+  a.active {
+    color: red;
+  }
+}
+
+
+
+.hdx-wrapper .top-banner {
+    background-color: #FFFFFF;
+    background-image: url("/images/backgrounds/faq_top_f.png");
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 100% auto;
+    height: 315px;
+    margin-left: -@containerMarginSize;
+    margin-right: -@containerMarginSize;
+
+    .top-banner-text-wrapper{
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 90px;
+      width: 50%;
+
+      .top-banner-title {
+        font-family: @gothamMediumFont;
+        font-size: 36px;
+        color: #FFFFFF;
+        letter-spacing: 0.01em;
+        text-align: center;
+      }
+
+      .top-banner-more {
+        .menu-item-font(#FFFFFF);
+        text-align: center;
+      }
+      .top-banner-more-button-wrapper{
+        text-align: center;
+      }
+    }
 }
 
 @widgetHeight: @baseHeight;

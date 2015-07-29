@@ -9,9 +9,25 @@
 {% block subtitle %}{{ _("FREQUENTLY ASKED QUESTIONS") }}{% endblock %}
 
 {% block pre_primary %}
-    BIG PICTURE
+    <div class="row top-banner">
+        <div class="col-xs-12">
+            <div class="top-banner-text-wrapper">
+                <div class="top-banner-title">
+                   {{ _('Frequently Asked Questions') }}
+                </div>
+                <div class="top-banner-more mTop60">
+                    {{ _("Don't see an answer you are looking for ?") }}
+                </div>
+                <div class="top-banner-more-button-wrapper mTop30">
+                    <a class="btn hdx-btn btn-blue-on-white" onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">
+                        {{ _("Contact us") }}
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
  <div>
-    <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">Send FAQ</a>
  </div>
 {% endblock %}
 
@@ -21,7 +37,7 @@
 
 {% block secondary %}
     <div id="hdx-faq-sidebar-wrapper">
-    <nav class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+    <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
         <ul class="nav">
         {% for section in data %}
             <li>
@@ -29,7 +45,7 @@
             </li>
         {% endfor %}
         </ul>
-    </nav>
+    </div>
     </div>
 {% endblock %}
 

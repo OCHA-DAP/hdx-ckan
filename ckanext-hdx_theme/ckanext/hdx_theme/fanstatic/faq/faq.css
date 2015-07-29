@@ -1,0 +1,57 @@
+.container .twoColumnBackground {
+  background-image: none;
+}
+.hdx-faq-sidebar.sticky {
+  position: fixed;
+  top: 15px;
+}
+.hdx-faq-sidebar a.active {
+  color: red;
+}
+.hdx-wrapper .top-banner {
+  background-color: #FFFFFF;
+  background-image: url("/images/backgrounds/faq_top_f.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% auto;
+  height: 315px;
+  margin-left: -45px;
+  margin-right: -45px;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 90px;
+  width: 50%;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-title {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 36px;
+  color: #FFFFFF;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more-button-wrapper {
+  text-align: center;
+}
+#faq-msg {
+  height: 160px;
+  padding: 14px 20px;
+}
+#faq-msg ~ label {
+  bottom: 116px;
+}
+#faq-msg.input-content ~ label {
+  bottom: 6px;
+}
+#faq-send-message {
+  overflow: scroll;
+  height: 400px;
+}

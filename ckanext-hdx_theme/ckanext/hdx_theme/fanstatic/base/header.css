@@ -218,6 +218,12 @@ a:focus,
 .btn-empty-black:focus {
   color: #000000;
 }
+.btn-blue-on-white,
+.btn-blue-on-white:hover,
+.btn-blue-on-white:focus {
+  color: #007ce0;
+  background-color: #ffffff;
+}
 .resource-item .hdx-btn-group {
   position: absolute;
   top: 14px;

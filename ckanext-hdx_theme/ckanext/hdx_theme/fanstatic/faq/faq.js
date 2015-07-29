@@ -1,20 +1,23 @@
 (function() {
     function scroll_to_menu() {
         var window_top = $(window).scrollTop();
+        var window_bottom = window_top + $(window).height();
         var lowest = null;
-        var highestEl = null;
+        var lowestEl = null;
         var sections = $('.section-flag');
         for (var i=0; i<sections.length; i++ ) {
             var el = $(sections[i]);
-            $('#menu-' + el.attr('id')).removeClass('active');
+            //$('#menu-' + el.attr('id')).removeClass('active');
             var section_top = el.offset().top;
-            if ( (!lowest || section_top < lowest) && window_top < section_top  ) {
+            if ( (!lowest || section_top < lowest) && window_top < section_top
+                        && window_bottom > section_top ) {
                 lowest = section_top;
-                highestEl = el;
+                lowestEl = el;
             }
         }
-        if (highestEl) {
-            var targetEl = $('#menu-' + highestEl.attr('id'));
+        if (lowestEl) {
+            $('.hdx-faq-sidebar li a').removeClass('active');
+            var targetEl = $('#menu-' + lowestEl.attr('id'));
             targetEl.addClass('active');
         }
     }
@@ -33,9 +36,10 @@
     function add_menu_click_events() {
 
         function scrollTo() {
+            targetId = $(this).attr('href');
 
             $('html, body').animate({
-                scrollTop: $(this).offset().top - 40
+                scrollTop: $(targetId).offset().top - 40
             }, 700);
             return false;
         }
@@ -50,7 +54,9 @@
 
     $(window).scroll(scroll_to_menu);
     $(window).scroll(sticky_menu);
+    scroll_to_menu();
     sticky_menu();
+    add_menu_click_events();
 }).call(this);
 
 
