@@ -1,0 +1,58 @@
+{#
+Select organization widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup") }}
+#}
+
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-select-organisation" %}
+
+{% resource 'hdx_theme/faq/faq.css' %}
+{% resource 'hdx_theme/faq/faq.js' %}
+{% extends "widget/onboarding/two-column.html" %}
+
+{% block left_content %}
+    <div>
+        <div class="large-title">Didn't see an answer?</div>
+        <div class="mTop20 large-text">We are here to help !</div>
+        <div class="mTop20 regular-text">
+            Please send us your question and we will get back to you as soon as we can. Your question will help us improve HDX
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_content %}
+    <div id="faq-send-message">
+        <div class="bold-regular-text">Please fill out the following: </div>
+        <form id="faq-send-message-form">
+            <select class="mTop20 required" id="topics" name="topic">
+                <option id=""></option>
+            </select>
+            <div class="mTop10 control">
+                <input id="fullname" name="fullname" class="full-width required" type="text">
+                <label for="fullname">Your name</label>
+            </div>
+            <div class="mTop10 control">
+                <input id="email" name="email" class="full-width required" type="text">
+                <label for="email">Your email address</label>
+            </div>
+            <div class="mTop10 control">
+                <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
+                <label for="faq-msg">Your question</label>
+            </div>
+            <div class="mTop10 captcha">
+                <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
+                        style="transform:scale(1.0);transform-origin:0;-webkit-transform:scale(1.0);-webkit-transform-origin:0 0;"></div>
+            </div>
+            <div class="right-side-actions">
+                <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
+                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+

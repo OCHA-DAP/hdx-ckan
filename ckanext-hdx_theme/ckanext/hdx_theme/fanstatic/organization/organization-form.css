@@ -19,6 +19,17 @@ border-bottom: 0px !important;
 	margin-right:20px;
 }
 
+.button-align2{
+	margin-left:25px;
+	margin-bottom:20px;
+	margin-top: 25px;
+}
+
+.button-align2 a, .button-align2 button{
+	margin-right:20px;
+}
+
+
 .create-org.form-actions {
 margin-bottom: 30px !important;
 }
@@ -78,6 +89,17 @@ margin-bottom: 30px !important;
   width: 920px;
   float: left;
 }
+
+.well.org-map-well {
+	min-height: 450px;
+	margin-left:20px;
+}
+
+.well .org-control-container input{
+	width: 280px;
+
+}
+
 .create-org h1 {
   cursor: pointer;
   font-family: 'Roboto', sans-serif;
@@ -110,7 +132,7 @@ margin-bottom: 30px !important;
   text-align: right;
   border-top: none;
   float: left;
-  line-height: 75px;
+  /*line-height: 75px;*/
   vertical-align: top;
 }
 
@@ -154,3 +176,27 @@ margin-bottom: 30px !important;
 .org-charts .info-field{
 	margin-top: 10px;
 }
+
+.image-upload-wrapper-sq{
+	border: solid 10px #CCC;
+	width: 572px;
+	height: 105px;
+	margin-bottom: 15px;
+}
+
+.image-upload-wrapper-rect{
+	border: solid 10px #CCC;
+	width: 572px;
+	height: 155px;
+}
+ .image-upload-wrapper{
+ 	margin-top:10px; float:left; padding:5px;
+ 	height:36%;
+ 	width:200px;
+ }
+
+ .image-upload-preview{
+ 	float:left; padding:5px;
+ 	text-align:right;
+ 	width:63%;
+ }

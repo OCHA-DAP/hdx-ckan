@@ -52,3 +52,9 @@
     $(window).scroll(sticky_menu);
     sticky_menu();
 }).call(this);
+
+
+function showFaqWidget(id) {
+    $(id).show();
+    return false;
+}
