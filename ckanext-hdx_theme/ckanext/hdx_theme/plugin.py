@@ -93,6 +93,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         map.connect(
             '/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+        map.connect(
+            '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 

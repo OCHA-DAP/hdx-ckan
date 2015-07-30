@@ -1,4 +1,6 @@
 import ckan.lib.base as base
+import ckan.controllers.user
+from ckan.common import _, c, g, request, response
 
 about = {
     'title': 'About',
@@ -79,8 +81,17 @@ for f in faq_data:
 
 class FaqController(base.BaseController):
     def show(self):
-        data_dict = {
-            'data': faq_data,
-            'topics': topics
+        fullname = c.userobj.display_name or ''
+        email = c.userobj.email or ''
+        template_data = {
+            'data': {
+                'faq_data': faq_data,
+                'topics': topics,
+                'fullname': fullname,
+                'email': email,
+            },
+            'errors': '',
+            'error_summary': '',
         }
-        return base.render('faq/main.html', extra_vars=data_dict)
+
+        return base.render('faq/main.html', extra_vars=template_data)

@@ -53,4 +53,18 @@ function showFaqWidget(id) {
 
 $(document).ready(function(){
     $('#topics-selector').select2();
+
+    $('#create-organisation-form').on('submit', function(){
+        $this = $(this);
+        $.post('/faq/contact_us', $this.serialize(), function(result_data){
+            var result = JSON.parse(result_data);
+            if (result.success){
+                closeCurrentWidget($this); showOnboardingWidget('#invitePopup');
+            } else {
+                alert("Can't send your request: " + result.error.message);
+            }
+        });
+        return false;
+    });
+
 });

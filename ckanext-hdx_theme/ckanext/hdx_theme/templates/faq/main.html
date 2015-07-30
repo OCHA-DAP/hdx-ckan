@@ -7,7 +7,7 @@
 
 {% block pre_primary %}
     {%- block faqwidget %}
-        {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup", topics=topics) }}
+        {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup", topics=data.topics) }}
     {% endblock -%}
     <div class="row top-banner">
         <div class="col-xs-12">
@@ -30,14 +30,14 @@
 {% endblock %}
 
 {% block primary %}
-    {% snippet 'faq/questions_sections.html', data=data %}
+    {% snippet 'faq/questions_sections.html', data=data.faq_data %}
 {% endblock %}
 
 {% block secondary %}
     <div id="hdx-faq-sidebar-wrapper">
     <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
         <ul class="nav">
-        {% for section in data %}
+        {% for section in data.faq_data %}
             <li>
                 <a id='menu-{{ section.id }}' href="#{{ section.id }}"> {{ section.title }} </a>
             </li>
