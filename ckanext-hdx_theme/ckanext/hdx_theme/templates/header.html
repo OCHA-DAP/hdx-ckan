@@ -6,12 +6,6 @@
   <div class="container">
     <div class="row paddingRowHack header-user-bg">
       <div class="span12 paddingLeftHack paddingRightHack">
-                      <div id="incomplete-profile" class="pull-left">
-                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
-              </div>
-                      <div id="incomplete-profile" class="pull-left">
-                » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
-              </div>
         {% if data %}
           {% set step = data.current_step %}
           {% if step == "hdx_login" %}
