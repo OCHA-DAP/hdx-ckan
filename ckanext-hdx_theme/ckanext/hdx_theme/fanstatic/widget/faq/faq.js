@@ -58,6 +58,8 @@ $(document).ready(function(){
         $this = $(this);
         $iframe = $($(".g-recaptcha").find("iframe:first"));
         $iframe.css("border", "");
+        //$sel = $($("#faq-send-message-form .select2-container.mTop20.required").find("a:first"));
+        //$sel.css("border", "");
         $.post('/faq/contact_us', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
             if (result.success){
