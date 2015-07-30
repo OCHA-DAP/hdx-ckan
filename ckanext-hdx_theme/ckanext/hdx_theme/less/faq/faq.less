@@ -20,14 +20,14 @@
   .nav li a {
     .menu-item-font(@grayColor);
     padding: 0;
-  }
-  .nav li a.active {
-    @gothamMediumFont;
-    font-size: 14px;
-    color: @blueColor;
-    line-height: 20px;
-    letter-spacing: 0.01em;
-    padding: 0;
+    &:hover, &.active {
+      font-family: @gothamMediumFont;
+      font-size: 14px;
+      color: @blueColor;
+      line-height: 20px;
+      letter-spacing: 0.01em;
+      padding: 0;
+    }
   }
 }
 
@@ -90,6 +90,7 @@
 
       .panel-title a {
         font-family: @sourceSansProFont;
+        font-weight: 400;
         font-size: 18px;
         color: @blackColor;
         line-height: 24px;

@@ -12,14 +12,15 @@
   letter-spacing: 0.01em;
   padding: 0;
 }
+.hdx-faq-sidebar .nav li a:hover,
 .hdx-faq-sidebar .nav li a.active {
+  font-family: 'Gotham-Medium', sans-serif;
   font-size: 14px;
   color: #007ce0;
   line-height: 20px;
   letter-spacing: 0.01em;
   padding: 0;
 }
-@gotham MediumFont;
 .hdx-wrapper .section-flag {
   font-family: 'Gotham-Book', sans-serif;
   font-size: 14px;
@@ -80,6 +81,7 @@
 }
 .hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title a {
   font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
   font-size: 18px;
   color: #000000;
   line-height: 24px;
