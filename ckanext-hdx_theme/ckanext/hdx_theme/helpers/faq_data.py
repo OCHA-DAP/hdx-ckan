@@ -46,7 +46,7 @@ about = {
         },
         {
             'q': 'What browsers are best to use for HDX?',
-            'a': 'We support current versions of most popular browsers. However, some older browsers may not support our more advanced features.',
+            'a': 'We build and test HDX using the latest versions of Chrome and Firefox. We also test on Internet Explorer 10 and later, but do not formally support it.',
         },
     ]
 }
