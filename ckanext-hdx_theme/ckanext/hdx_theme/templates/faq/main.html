@@ -1,9 +1,10 @@
 {% extends "page.html" %}
 
-
-
-
 {% block subtitle %}{{ _("FREQUENTLY ASKED QUESTIONS") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('FAQ'), controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show') }}</li>
+{% endblock %}
 
 {% block pre_primary %}
     {%- block faqwidget %}
