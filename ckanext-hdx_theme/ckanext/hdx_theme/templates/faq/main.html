@@ -8,6 +8,7 @@
 {% block pre_primary %}
     {%- block faqwidget %}
         {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup", topics=data.topics) }}
+        {{ h.snippet('widget/faq/done.html', id="faqDonePopup") }}
     {% endblock -%}
     <div class="row top-banner">
         <div class="col-xs-12">

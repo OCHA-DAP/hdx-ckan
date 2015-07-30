@@ -15,3 +15,6 @@
 #faqSendMsgPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;
 }
+#faqDonePopup .notification-widget .notification-title {
+  text-align: center;
+}
