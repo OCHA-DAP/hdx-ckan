@@ -1,6 +1,6 @@
 {% extends "page.html" %}
 
-{% block subtitle %}{{ _("FREQUENTLY ASKED QUESTIONS") }}{% endblock %}
+{% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
 
 {% block breadcrumb_content %}
   <li class="active">{{ h.nav_link(_('FAQ'), controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show') }}</li>
@@ -45,6 +45,9 @@
             </li>
         {% endfor %}
         </ul>
+        <p class="no-answer-found mTop30">
+            <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
+        </p>
     </div>
     </div>
 {% endblock %}

@@ -21,6 +21,12 @@
   letter-spacing: 0.01em;
   padding: 0;
 }
+.hdx-faq-sidebar .no-answer-found a {
+  color: #000000;
+}
+.hdx-faq-sidebar .no-answer-found a:hover {
+  color: #007ce0;
+}
 .hdx-wrapper .section-flag {
   font-family: 'Gotham-Book', sans-serif;
   font-size: 14px;
