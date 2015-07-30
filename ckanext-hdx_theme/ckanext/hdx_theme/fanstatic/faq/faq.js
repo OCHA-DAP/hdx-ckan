@@ -47,10 +47,10 @@
     function add_menu_click_events() {
 
         function scrollTo() {
-            targetId = $(this).attr('href');
+            var targetId = $(this).attr('href');
 
             $('html, body').animate({
-                scrollTop: $(targetId).offset().top - 40
+                'scrollTop': $(targetId).offset().top - 40
             }, 700);
             return false;
         }

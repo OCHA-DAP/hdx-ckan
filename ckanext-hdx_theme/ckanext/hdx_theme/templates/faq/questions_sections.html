@@ -1,7 +1,7 @@
 
 {% for section in data %}
     <p>
-        <a class="section-flag" id='{{ section.id }}' href="javascript:void(0)"> {{ section.title }} </a>
+        <a class="section-flag" id='body-{{ section.id }}' href="javascript:void(0)"> {{ section.title }} </a>
     </p>
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         {% for question in section.questions %}
