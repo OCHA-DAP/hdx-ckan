@@ -1,18 +1,20 @@
 {% extends "page.html" %}
 
 
-  {%- block faqwidget %}
-    {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup") }}
-  {% endblock -%}
+
 
 
 {% block subtitle %}{{ _("FREQUENTLY ASKED QUESTIONS") }}{% endblock %}
 
 {% block pre_primary %}
+    {%- block faqwidget %}
+        {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup", topics=topics) }}
+    {% endblock -%}
     BIG PICTURE
  <div>
     <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">Send FAQ</a>
  </div>
+
 {% endblock %}
 
 {% block primary %}

@@ -66,15 +66,21 @@ organizations = {
     ]
 }
 
-
 faq_data = [
     about,
     user_registration,
     organizations
 ]
 
+topics = {}
+for f in faq_data:
+    topics[f.get('id')] = f.get('title')
+
 
 class FaqController(base.BaseController):
-
     def show(self):
-        return base.render('faq/main.html', extra_vars={'data': faq_data})
+        data_dict = {
+            'data': faq_data,
+            'topics': topics
+        }
+        return base.render('faq/main.html', extra_vars={'data': faq_data, 'topics': topics})

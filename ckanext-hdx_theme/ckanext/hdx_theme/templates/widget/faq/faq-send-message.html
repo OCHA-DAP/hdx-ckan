@@ -11,8 +11,8 @@ Example:
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-select-organisation" %}
 
-{% resource 'hdx_theme/faq/faq.css' %}
-{% resource 'hdx_theme/faq/faq.js' %}
+{% resource 'hdx_theme/widget/faq/faq.css' %}
+{% resource 'hdx_theme/widget/faq/faq.js' %}
 {% extends "widget/onboarding/two-column.html" %}
 
 {% block left_content %}
@@ -29,22 +29,24 @@ Example:
     <div id="faq-send-message">
         <div class="bold-regular-text">Please fill out the following: </div>
         <form id="faq-send-message-form">
-            <select class="mTop20 required" id="topics" name="topic">
-                <option id=""></option>
+            <select class="mTop20 required" id="topics-selector" name="topic">
+                {% for key, value in topics.iteritems() %}
+                    <option id="{{key}}" value="{{key}}">{{value}}</option>
+                {% endfor %}
             </select>
-            <div class="mTop10 control">
+            <div class="mTop15 control">
                 <input id="fullname" name="fullname" class="full-width required" type="text">
                 <label for="fullname">Your name</label>
             </div>
-            <div class="mTop10 control">
+            <div class="mTop15 control">
                 <input id="email" name="email" class="full-width required" type="text">
                 <label for="email">Your email address</label>
             </div>
-            <div class="mTop10 control">
+            <div class="mTop15 control">
                 <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
                 <label for="faq-msg">Your question</label>
             </div>
-            <div class="mTop10 captcha">
+            <div class="mTop15 captcha">
                 <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
                         style="transform:scale(1.0);transform-origin:0;-webkit-transform:scale(1.0);-webkit-transform-origin:0 0;"></div>
             </div>
