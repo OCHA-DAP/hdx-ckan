@@ -3,15 +3,15 @@
     <p class="mTop60 mBottom15">
         <a class="section-flag" id='body-{{ section.id }}' href="javascript:void(0)"> {{ section.title }} </a>
     </p>
-    <div class="panel-group hdx-panel-group" id="accordion" role="tablist" aria-multiselectable="false">
+    <div class="panel-group hdx-panel-group" id="accordion-{{ section.id }}" role="tablist" aria-multiselectable="false">
         {% for question in section.questions %}
             {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
             {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
             <div class="panel">
                 <div class="panel-heading" role="tab" id="{{ q_id }}">
                     <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ a_id }}"
-                           aria-expanded="true" aria-controls="{{ a_id }}">
+                        <a role="button" data-toggle="collapse" data-parent="#accordion-{{ section.id }}" href="#{{ a_id }}"
+                           aria-expanded="false" aria-controls="{{ a_id }}">
                             {{ question.q | safe }}
                         </a>
                     </h4>
@@ -24,22 +24,6 @@
             </div>
          {% endfor %}
 
-
-        {# <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="about-who-manages-header">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#about-who-manages-content"
-                       aria-expanded="true" aria-controls="about-who-manages-content">
-                        Who manages HDX?
-                    </a>
-                </h4>
-            </div>
-            <div id="about-who-manages-content" class="panel-collapse collapse" role="tabpanel" aria-labelledby="about-who-manages-header">
-                <div class="panel-body">
-                    HDX is managed by the United Nations Office for the Coordination of Humanitarian Affairs (OCHA). OCHA is part of the United Nations Secretariat responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.
-                </div>
-            </div>
-        </div>  #}
     </div>
 
 {% endfor %}
