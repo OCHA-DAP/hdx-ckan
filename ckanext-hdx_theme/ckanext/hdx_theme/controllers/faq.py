@@ -15,6 +15,15 @@ CaptchaNotValid = _('Captcha is not valid')
 FaqSuccess = json.dumps({'success': True})
 FaqCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
 
+
+for section in faq_data:
+    s_id = ''.join(i if i.isalnum() else '_' for i in section['title'])
+    s_id = 'faq-{}'.format(s_id)
+    section['id'] = s_id
+    for question in section['questions']:
+        q_id = ''.join(i if i.isalnum() else '_' for i in question['q'])
+        question['id'] = q_id
+
 topics = {}
 for f in faq_data:
     topics[f.get('id')] = f.get('title')
