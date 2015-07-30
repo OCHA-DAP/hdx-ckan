@@ -83,4 +83,4 @@ class FaqController(base.BaseController):
             'data': faq_data,
             'topics': topics
         }
-        return base.render('faq/main.html', extra_vars={'data': faq_data, 'topics': topics})
+        return base.render('faq/main.html', extra_vars=data_dict)
