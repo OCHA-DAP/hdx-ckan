@@ -30,16 +30,17 @@ Example:
         <div class="bold-regular-text">Please fill out the following: </div>
         <form id="faq-send-message-form">
             <select class="mTop20 required" id="topics-selector" name="topic">
+                <option id="" value="">Your question is regarding ...</option>
                 {% for key, value in topics.iteritems() %}
                     <option id="{{key}}" value="{{value}}">{{value}}</option>
                 {% endfor %}
             </select>
             <div class="mTop15 control">
-                <input id="fullname" name="fullname" class="full-width required" type="text">
+                <input id="fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
                 <label for="fullname">Your name</label>
             </div>
             <div class="mTop15 control">
-                <input id="email" name="email" class="full-width required" type="text">
+                <input id="email" name="email" class="full-width required" type="text" value="{{email}}">
                 <label for="email">Your email address</label>
             </div>
             <div class="mTop15 control">

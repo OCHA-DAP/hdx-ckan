@@ -31,8 +31,8 @@ for f in faq_data:
 
 class FaqController(base.BaseController):
     def show(self):
-        fullname = c.userobj.display_name or ''
-        email = c.userobj.email or ''
+        fullname = c.userobj.display_name if c.userobj and c.userobj.display_name is not None else ''
+        email = c.userobj.email if c.userobj and c.userobj.email is not None else ''
         template_data = {
             'data': {
                 'faq_data': faq_data,
