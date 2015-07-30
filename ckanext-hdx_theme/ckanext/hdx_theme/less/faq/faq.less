@@ -1,4 +1,4 @@
-
+@import "../base/variables";
 
 .container .twoColumnBackground{
   background-image: none;
@@ -17,12 +17,23 @@
     position: fixed;
     top: 15px;
   }
-  a.active {
-    color: red;
+  .nav li a {
+    .menu-item-font(@grayColor);
+    padding: 0;
+  }
+  .nav li a.active {
+    @gothamMediumFont;
+    font-size: 14px;
+    color: @blueColor;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+    padding: 0;
   }
 }
 
-
+.hdx-wrapper .section-flag {
+  .menu-item-font(@grayColor);
+}
 
 .hdx-wrapper .top-banner {
     background-color: #FFFFFF;
@@ -58,3 +69,49 @@
     }
 }
 
+.hdx-wrapper .hdx-panel-group {
+  .panel {
+    border: none;
+    border-bottom: 1px solid @lightGrayColor;
+    box-shadow: none;
+    margin: 0;
+    &:hover {
+      background-color: #EDF6FD;
+    }
+    & + .panel {
+      margin: 0;
+    }
+    .panel-heading {
+      height: 74px;
+      border: none;
+      box-shadow: none;
+      background-color: inherit;
+      padding-top: 30px;
+
+      .panel-title a {
+        font-family: @sourceSansProFont;
+        font-size: 18px;
+        color: @blackColor;
+        line-height: 24px;
+        letter-spacing: 0.01em;
+      }
+    }
+
+    .panel-heading + .panel-collapse > .panel-body {
+      border: none;
+      box-shadow: none;
+
+      font-family: @sourceSansProFont;
+      font-size: 14px;
+      color: @grayColor;
+      line-height: 20px;
+      letter-spacing: 0.01em;
+
+      a {
+        color: @blueColor;
+        font-weight: 700;
+      }
+    }
+
+  }
+}

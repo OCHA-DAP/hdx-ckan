@@ -28,7 +28,8 @@
         }
         if (nextActiveEl) {
             $('.hdx-faq-sidebar li a').removeClass('active');
-            var targetEl = $('#menu-' + nextActiveEl.attr('id'));
+            var menuItemId = nextActiveEl.attr('id').replace('body-', 'menu-');
+            var targetEl = $('#' + menuItemId);
             targetEl.addClass('active');
         }
     }
@@ -36,7 +37,7 @@
     function sticky_menu() {
         var window_top = $(window).scrollTop();
         var marker_top = $('#hdx-faq-sidebar-wrapper').offset().top;
-        if (window_top > marker_top) {
+        if (window_top + 10 > marker_top) {
             $('#hdx-faq-sidebar').addClass('sticky');
         }
         else {

@@ -1,13 +1,13 @@
 
 {% for section in data %}
-    <p>
+    <p class="mTop60 mBottom15">
         <a class="section-flag" id='body-{{ section.id }}' href="javascript:void(0)"> {{ section.title }} </a>
     </p>
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group hdx-panel-group" id="accordion" role="tablist" aria-multiselectable="false">
         {% for question in section.questions %}
             {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
             {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
-            <div class="panel panel-default">
+            <div class="panel">
                 <div class="panel-heading" role="tab" id="{{ q_id }}">
                     <h4 class="panel-title">
                         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#{{ a_id }}"
