@@ -306,7 +306,8 @@ class ValidationController(ckan.controllers.user.UserController):
             # Update token for user
             token = get_action('token_show_by_id')(context, data_dict)
             data_dict['user_id'] = token['user_id']
-            get_action('user_extra_update')(context, data_dict)
+            #removed because it is saved in next step. User is allowed to click on /validate link several times
+            # get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
             return OnbUserNotFound
         except exceptions.Exception, e:
@@ -315,7 +316,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         user = model.User.get(data_dict['user_id'])
         template_data = ue_helpers.get_user_extra(user_id=data_dict['user_id'])
-        # template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
+        template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
         template_data['data']['email'] = user.email
         template_data['data']['name'] = user.name
         return render('home/index.html', extra_vars=template_data)
@@ -350,10 +351,6 @@ class ValidationController(ckan.controllers.user.UserController):
             if error_summary == CaptchaNotValid:
                 return OnbCaptchaErr
             return self.error_message(error_summary)
-        # except NotAuthorized, e:
-        #     if e.message and e.message.get('email'):
-        #         return self.error_message(e.message.get('email')[0])
-        #     return OnbNotAuth
         except exceptions.Exception, e:
             error_summary = e.error_summary
             return self.error_message(error_summary)
@@ -363,8 +360,11 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             token_dict = get_action('token_show')(context, data_dict)
             data_dict['token'] = token_dict['token']
-            get_action('token_update')(context, data_dict)
             get_action('user_update')(context, data_dict)
+            get_action('token_update')(context, data_dict)
+
+            ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
+            get_action('user_extra_update')(context, ue_dict)
 
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_DETAILS)
             get_action('user_extra_update')(context, ue_dict)
@@ -402,8 +402,6 @@ class ValidationController(ckan.controllers.user.UserController):
         except exceptions.Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
-        # if not c.user:
-        #     pass
         c.user = save_user
         return OnbSuccess
 
@@ -425,15 +423,11 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_extra_update')(context, ue_dict)
         except NotAuthorized:
             return OnbNotAuth
-            # abort(401, _('Unauthorized to create user %s') % '')
         except NotFound, e:
             return OnbUserNotFound
-            # abort(404, _('User not found'))
         except DataError:
             return OnbIntegrityErr
-            # abort(400, _(u'Integrity Error'))
         except ValidationError, e:
-            # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
         except exceptions.Exception, e:
