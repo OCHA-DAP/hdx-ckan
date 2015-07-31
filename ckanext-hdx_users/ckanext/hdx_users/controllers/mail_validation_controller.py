@@ -306,7 +306,7 @@ class ValidationController(ckan.controllers.user.UserController):
             # Update token for user
             token = get_action('token_show_by_id')(context, data_dict)
             data_dict['user_id'] = token['user_id']
-            #removed because it is saved in next step. User is allowed to click on /validate link several times
+            # removed because it is saved in next step. User is allowed to click on /validate link several times
             # get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
             return OnbUserNotFound
@@ -631,12 +631,20 @@ class ValidationController(ckan.controllers.user.UserController):
         except NotAuthorized:
             abort(401, _('Unauthorized to register as a user.'))
         # hack to disable check if user is logged in
-        save_user = c.user
-        c.user = None
-        result = self.new(data, errors, error_summary)
-        c.user = save_user
+        # save_user = c.user
+        # c.user = None
+        # result = self.new(data, errors, error_summary)
+        # c.user = save_user
+        if c.user:
+            # #1799 Don't offer the registration form if already logged in
+            return render('user/logout_first.html')
 
-        return result
+        template_data = {}
+        if not c.user:
+            template_data = ue_helpers.get_register(True, "")
+        return render('home/index.html', extra_vars=template_data)
+
+        # return result
 
     def post_register(self):
         """
@@ -651,98 +659,102 @@ class ValidationController(ckan.controllers.user.UserController):
         else:
             return render('user/logout_first.html')
 
-    def new(self, data=None, errors=None, error_summary=None):
-        '''GET to display a form for registering a new user.
-           or POST the form data to actually do the user registration.
-        '''
+    # def new(self, data=None, errors=None, error_summary=None):
+    #     '''GET to display a form for registering a new user.
+    #        or POST the form data to actually do the user registration.
+    #     '''
+    #
+    #     temp_schema = self._new_form_to_db_schema()
+    #     if temp_schema.has_key('name'):
+    #         temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+    #                                temp_schema['name']]
+    #
+    #     context = {'model': model, 'session': model.Session,
+    #                'user': c.user or c.author,
+    #                'auth_user_obj': c.userobj,
+    #                'schema': temp_schema,
+    #                'save': 'save' in request.params}
+    #
+    #     try:
+    #         check_access('user_create', context)
+    #     except NotAuthorized:
+    #         abort(401, _('Unauthorized to create a user'))
+    #
+    #     if context['save'] and not data:
+    #         return self._save_new(context)
+    #
+    #     if c.user and not data:
+    #         # #1799 Don't offer the registration form if already logged in
+    #         return render('user/logout_first.html')
 
-        temp_schema = self._new_form_to_db_schema()
-        if temp_schema.has_key('name'):
-            temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
-                                   temp_schema['name']]
+        # data = data or {}
+        # errors = errors or {}
+        # error_summary = error_summary or {}
+        # vars = {'data': data, 'errors': errors,
+        #         'error_summary': error_summary,
+        #         'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'auth_user_obj': c.userobj,
-                   'schema': temp_schema,
-                   'save': 'save' in request.params}
+        # c.is_sysadmin = new_authz.is_sysadmin(c.user)
+        # c.form = render(self.new_user_form, extra_vars=vars)
 
-        try:
-            check_access('user_create', context)
-        except NotAuthorized:
-            abort(401, _('Unauthorized to create a user'))
 
-        if context['save'] and not data:
-            return self._save_new(context)
 
-        if c.user and not data:
-            # #1799 Don't offer the registration form if already logged in
-            return render('user/logout_first.html')
 
-        data = data or {}
-        errors = errors or {}
-        error_summary = error_summary or {}
-        vars = {'data': data, 'errors': errors,
-                'error_summary': error_summary,
-                'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
+        # return render('user/new.html')
 
-        c.is_sysadmin = new_authz.is_sysadmin(c.user)
-        c.form = render(self.new_user_form, extra_vars=vars)
-        return render('user/new.html')
-
-    def _save_new(self, context):
-        try:
-            data_dict = logic.clean_dict(unflatten(
-                logic.tuplize_dict(logic.parse_params(request.params))))
-            context['message'] = data_dict.get('log_message', '')
-            captcha.check_recaptcha(request)
-            user = get_action('user_create')(context, data_dict)
-            token = get_action('token_create')(context, user)
-            user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
-                                                                   'extras': ue_helpers.get_default_extras()})
-            # print user_extra
-
-        except NotAuthorized:
-            abort(401, _('Unauthorized to create user %s') % '')
-        except NotFound, e:
-            abort(404, _('User not found'))
-        except DataError:
-            abort(400, _(u'Integrity Error'))
-        except captcha.CaptchaError:
-            error_msg = _(u'Bad Captcha. Please try again.')
-            h.flash_error(error_msg)
-            return self.new(data_dict)
-        except ValidationError, e:
-            errors = e.error_dict
-            error_summary = e.error_summary
-            return self.new(data_dict, errors, error_summary)
-        if not c.user:
-            # Send validation email
-            self.send_validation_email(user, token)
-
-            # Redirect to a URL picked up by repoze.who which performs the
-            # login
-            # login_url = self._get_repoze_handler('login_handler_path')
-
-            post_register_url = h.url_for(
-                controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-                action='post_register')
-
-            # We need to pass the logged in URL as came_from parameter
-            # otherwise we lose the language setting
-            came_from = h.url_for(controller='user', action='logged_in',
-                                  __ckan_no_root=True)
-            redirect_url = '{0}?came_from={1}&user={2}'
-            h.redirect_to(redirect_url.format(
-                post_register_url,
-                came_from, user['id']))
-        else:
-            # #1799 User has managed to register whilst logged in - warn user
-            # they are not re-logged in as new user.
-            h.flash_success(_('User "%s" is now registered but you are still '
-                              'logged in as "%s" from before') %
-                            (data_dict['name'], c.user))
-            return render('user/logout_first.html')
+    # def _save_new(self, context):
+    #     try:
+    #         data_dict = logic.clean_dict(unflatten(
+    #             logic.tuplize_dict(logic.parse_params(request.params))))
+    #         context['message'] = data_dict.get('log_message', '')
+    #         captcha.check_recaptcha(request)
+    #         user = get_action('user_create')(context, data_dict)
+    #         token = get_action('token_create')(context, user)
+    #         user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
+    #                                                                'extras': ue_helpers.get_default_extras()})
+    #         # print user_extra
+    #
+    #     except NotAuthorized:
+    #         abort(401, _('Unauthorized to create user %s') % '')
+    #     except NotFound, e:
+    #         abort(404, _('User not found'))
+    #     except DataError:
+    #         abort(400, _(u'Integrity Error'))
+    #     except captcha.CaptchaError:
+    #         error_msg = _(u'Bad Captcha. Please try again.')
+    #         h.flash_error(error_msg)
+    #         return self.new(data_dict)
+    #     except ValidationError, e:
+    #         errors = e.error_dict
+    #         error_summary = e.error_summary
+    #         return self.new(data_dict, errors, error_summary)
+    #     if not c.user:
+    #         # Send validation email
+    #         self.send_validation_email(user, token)
+    #
+    #         # Redirect to a URL picked up by repoze.who which performs the
+    #         # login
+    #         # login_url = self._get_repoze_handler('login_handler_path')
+    #
+    #         post_register_url = h.url_for(
+    #             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+    #             action='post_register')
+    #
+    #         # We need to pass the logged in URL as came_from parameter
+    #         # otherwise we lose the language setting
+    #         came_from = h.url_for(controller='user', action='logged_in',
+    #                               __ckan_no_root=True)
+    #         redirect_url = '{0}?came_from={1}&user={2}'
+    #         h.redirect_to(redirect_url.format(
+    #             post_register_url,
+    #             came_from, user['id']))
+    #     else:
+    #         # #1799 User has managed to register whilst logged in - warn user
+    #         # they are not re-logged in as new user.
+    #         h.flash_success(_('User "%s" is now registered but you are still '
+    #                           'logged in as "%s" from before') %
+    #                         (data_dict['name'], c.user))
+    #         return render('user/logout_first.html')
 
     def validation_resend(self, id):
         # Get user by id

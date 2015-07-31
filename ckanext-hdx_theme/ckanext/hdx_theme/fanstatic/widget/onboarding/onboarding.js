@@ -113,5 +113,11 @@ $(document).ready(function(){
         return;
     }
 
+    var userRegister = $("#user-register").text();
+    if (userRegister && userRegister != ""){
+        showOnboardingWidget('#signupPopup');
+        return;
+    }
+
 
 });
