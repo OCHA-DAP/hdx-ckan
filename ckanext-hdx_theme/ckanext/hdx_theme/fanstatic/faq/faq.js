@@ -1,0 +1,78 @@
+(function() {
+    function scroll_to_menu() {
+        var window_top = $(window).scrollTop();
+        var window_bottom = window_top + $(window).height();
+        var lowestAfterWindow = null;
+        var highestBeforeWindow = null;
+        var nextActiveEl = null;
+        var sections = $('.section-flag');
+        for (var i=0; i<sections.length; i++ ) {
+            var el = $(sections[i]);
+            var section_top = el.offset().top;
+
+            var isHighestBeforeWindow = false, isLowestAfterWindowAndVisible= false;
+            isHighestBeforeWindow = window_top > section_top
+                && (!highestBeforeWindow || section_top > highestBeforeWindow);
+            if ( isHighestBeforeWindow )
+                highestBeforeWindow = section_top;
+            else {
+                var isVisible = window_top < section_top && window_bottom > section_top;
+                isLowestAfterWindowAndVisible = isVisible && (!lowestAfterWindow || section_top < lowestAfterWindow);
+                if ( isLowestAfterWindowAndVisible )
+                    lowestAfterWindow = section_top;
+            }
+
+            if ( isHighestBeforeWindow || isLowestAfterWindowAndVisible ) {
+                nextActiveEl = el;
+            }
+        }
+        if (nextActiveEl) {
+            $('.hdx-faq-sidebar li a').removeClass('active');
+            var menuItemId = nextActiveEl.attr('id').replace('body-', 'menu-');
+            var targetEl = $('#' + menuItemId);
+            targetEl.addClass('active');
+        }
+    }
+
+    function sticky_menu() {
+        var window_top = $(window).scrollTop();
+        var marker_top = $('#hdx-faq-sidebar-wrapper').offset().top;
+        if (window_top + 10 > marker_top) {
+            $('#hdx-faq-sidebar').addClass('sticky');
+        }
+        else {
+            $('#hdx-faq-sidebar').removeClass('sticky');
+        }
+    }
+
+    function add_menu_click_events() {
+
+        function scrollTo() {
+            var targetId = $(this).attr('href');
+
+            $('html, body').animate({
+                'scrollTop': $(targetId).offset().top - 40
+            }, 700);
+            return false;
+        }
+
+        var menuAnchors = $('.hdx-faq-sidebar li a');
+        for (var i=0; i<menuAnchors.length; i++) {
+            aEl = $(menuAnchors[i]);
+            aEl.click(scrollTo);
+        }
+
+    }
+
+    $(window).scroll(scroll_to_menu);
+    $(window).scroll(sticky_menu);
+    scroll_to_menu();
+    sticky_menu();
+    add_menu_click_events();
+}).call(this);
+
+
+function showFaqWidget(id) {
+    $(id).show();
+    return false;
+}

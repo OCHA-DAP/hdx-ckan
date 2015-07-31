@@ -17,7 +17,7 @@
                 <input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
             {% endfor %}
         {% endif %}
-          <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
+          <input id="q" type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
           <button type="submit" value="search">
             <i class="glyphicon glyphicon-search"></i>
             <span>{{ _('Submit') }}</span>

@@ -140,12 +140,15 @@
             <span class="table-valign-content">
               <div class="">
                 <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
+                  <div id="input-search">
                   <div class="input-prepend input-append">
                     <i class="icon-search"></i>
-                    <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. IDP Colombia') }}">
+                    <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. IDP Colombia') }}">
                     {% set filter_icon_class = 'icon-close_filter_button' if c.filters_are_selected else 'icon-open_filter_button' %}
                     <i id="search_filter_btn" class="{{ filter_icon_class }} filter-icon"  title="{{ _('Filters') }}"></i>
                   </div>
+                  <div id="search-ahead"></div>
+                </div>
                 </form>
               </div>
             </span>
@@ -163,23 +166,25 @@
                           <li><a href="/ebola">{{ _('Ebola') }}</a></li>
                       </ul>
                   </li>
+                  <li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>
+                  <li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>
                 {% endblock %}
               </ul>
             </span>
           </span>
-          <span class="mL30 table-valign pull-left">
-            <span class="table-valign-content">
-              <a id="feedback-button" href="http://docs.hdx.rwlabs.org/get-involved/" title="Send feedback to hdx.feedback@gmail.com.">
-                Feedback
-              </a>
-            </span>
-          </span>
+          <!--<span class="mL30 table-valign pull-left">-->
+            <!--<span class="table-valign-content">-->
+              <!--<a id="feedback-button" href="http://docs.hdx.rwlabs.org/get-involved/" title="Send feedback to hdx.feedback@gmail.com.">-->
+                <!--Feedback-->
+              <!--</a>-->
+            <!--</span>-->
+          <!--</span>-->
           <span class="mL45 table-valign pull-right">
             <span class="table-valign-content">
               <a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">
                 <div class="submitData">
                   {{ _("Share data") }}
-                  <img src="/images/homepage/attachment.svg" style="height: 21px; margin-left: 20px;" />
+                  <!--<img src="/images/homepage/attachment.svg" style="height: 21px; margin-left: 20px;" />-->
                 </div>
               </a>
             </span>

@@ -218,6 +218,12 @@ a:focus,
 .btn-empty-black:focus {
   color: #000000;
 }
+.btn-blue-on-white,
+.btn-blue-on-white:hover,
+.btn-blue-on-white:focus {
+  color: #007ce0;
+  background-color: #ffffff;
+}
 .resource-item .hdx-btn-group {
   position: absolute;
   top: 14px;
@@ -509,6 +515,29 @@ body {
   content: '\25bc';
   margin-left: 3px;
   font-size: 13px;
+}
+.mainLinks > li #faq-label:after {
+  content: '';
+}
+.mainLinks > li #feedback-label:after {
+  content: '';
+}
+.mainLinks > li #faq-label:before {
+  content: '|';
+  font-size: 13px;
+  margin-right: 15px;
+}
+.mainLinks > li #feedback-label:before {
+  content: '|';
+  font-size: 13px;
+  margin-right: 15px;
+}
+.mainLinks > li #faq-label {
+  font-family: 'Gotham-Book', sans-serif;
+}
+.mainLinks > li #feedback-label {
+  font-family: 'Gotham-Book', sans-serif;
+  margin-left: 0px;
 }
 .mainLinks > li:first-child > a {
   margin-left: 0;

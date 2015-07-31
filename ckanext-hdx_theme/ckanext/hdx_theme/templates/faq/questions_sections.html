@@ -1,0 +1,30 @@
+
+{% for section in data %}
+    <p class="mTop60 mBottom15">
+        <a class="section-flag" id='body-{{ section.id }}' href="javascript:void(0)"> {{ section.title }} </a>
+    </p>
+    <div class="panel-group hdx-panel-group" id="accordion-{{ section.id }}" role="tablist" aria-multiselectable="false">
+        {% for question in section.questions %}
+            {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
+            {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
+            <div class="panel">
+                <div class="panel-heading" role="tab" id="{{ q_id }}">
+                    <h4 class="panel-title">
+                        <a role="button" data-toggle="collapse" data-parent=".hdx-panel-group" href="#{{ a_id }}"
+                           aria-expanded="false" aria-controls="{{ a_id }}">
+                            {{ question.q | safe }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="{{ a_id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{ q_id }}">
+                    <div class="panel-body">
+                        {{ question.a | safe }}
+                    </div>
+                </div>
+            </div>
+         {% endfor %}
+
+    </div>
+
+{% endfor %}
+

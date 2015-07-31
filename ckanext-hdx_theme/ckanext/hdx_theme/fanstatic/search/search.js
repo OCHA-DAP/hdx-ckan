@@ -22,4 +22,26 @@ $('document').ready(function(){
 		$('#search-recs').html(html);
 	}
 
+	$('#q').keydown(function(){
+		var search = index.search($(this).val());
+		if(search.length >0){
+			var html ="<ul>";
+			var limit = search.length > 5 ? 5 : search.length;
+			for(i=0; i<limit; i++){
+				html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link">'+feature_index[search[i]['ref']]['title']+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
+			
+		}
+			html += '</ul>';
+			$('#search-ahead').html(html);
+			$('#search-ahead').show();
+		}else{
+			$('#search-ahead').html('');
+			$('#search-ahead').hide();
+		}
+	});
+
+	$('#search-ahead').on('click', "li", function(){
+		window.location = $(this).attr('data-href');
+	});
+
 });
