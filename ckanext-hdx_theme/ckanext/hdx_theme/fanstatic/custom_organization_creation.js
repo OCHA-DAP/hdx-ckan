@@ -35,22 +35,22 @@ showInput: true});
 	//On form submit
 	$('.create-org-btn').click(function(){
 		//Set timestamp
-		$('#field-modified_at').val(new Date().getTime())
+		$('#field-modified_at').val(new Date().getTime());
 		if($('#field-custom_org').is(':checked')){
-            var use_org_color = "false"
+            var use_org_color = "false";
             if($('#use_org_color').is(':checked'))
-                use_org_color = "true"
+                use_org_color = "true";
 			var customization = {
 				'highlight_color':$('#field-highlight-color').val(),
 				'topline_dataset':$('#field-topline-dataset').val(),
 				'topline_resource':$('#field-topline-resource').val(),
                 'use_org_color':use_org_color
-			}
+			};
 			$('#customization-json').val(JSON.stringify(customization));
 
 			//Build visualization slug
-			var visualization = {}
-			var arrays = []
+			var visualization = {};
+			var arrays = [];
             var viz_type = $('#visualization-select').val();
 			$('.visualization_config').each(function(){
 				//if this is an array, perserve it.
@@ -70,7 +70,7 @@ showInput: true});
 		}
         $('#mc-embedded-subscribe-form').remove();
         $('.header-search-form').remove(); //This is weird and incredibly anal of FF >.>
-		$('form').submit();
+		$('#req-create-org-form').submit();
 	});
 });
 
