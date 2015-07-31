@@ -1,0 +1,60 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Frequently Asked Questions") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('FAQ'), controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show') }}</li>
+{% endblock %}
+
+{% block pre_primary %}
+    {%- block faqwidget %}
+        {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup", topics=data.topics, fullname=data.fullname, email=data.email) }}
+        {{ h.snippet('widget/faq/done.html', id="faqDonePopup") }}
+    {% endblock -%}
+    <div class="row top-banner">
+        <div class="col-xs-12">
+            <div class="top-banner-text-wrapper">
+                <div class="top-banner-title">
+                   {{ _('Frequently Asked Questions') }}
+                </div>
+                <div class="top-banner-more mTop60">
+                    {{ _("Don't see an answer you are looking for ?") }}
+                </div>
+                <div class="top-banner-more-button-wrapper mTop30">
+                    <a class="btn hdx-btn btn-blue-on-white" onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">
+                        {{ _("Contact us") }}
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block primary %}
+    {% snippet 'faq/questions_sections.html', data=data.faq_data %}
+{% endblock %}
+
+{% block secondary %}
+    <div id="hdx-faq-sidebar-wrapper" class="mTop60">
+    <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+        <ul class="nav">
+        {% for section in data.faq_data %}
+            <li>
+                <a id='menu-{{ section.id }}' href="#body-{{ section.id }}"> {{ section.title }} </a>
+            </li>
+        {% endfor %}
+        </ul>
+        <p class="no-answer-found mTop30">
+            <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
+        </p>
+    </div>
+    </div>
+{% endblock %}
+
+
+{%- block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/faq/faq.css' %}
+    {% resource 'hdx_theme/faq/faq.js' %}
+{% endblock %}

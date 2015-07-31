@@ -155,6 +155,7 @@ smtp.starttls = False
 
 #hdx.orgrequest.email = hdx.feedback@gmail.com
 hdx.orgrequest.sendmails = true
+hdx.faqrequest.email = hdx.feedback@gmail.com
 hdx.cache.onstartup = true
 hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
