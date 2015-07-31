@@ -140,12 +140,15 @@
             <span class="table-valign-content">
               <div class="">
                 <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
+                  <div id="input-search">
                   <div class="input-prepend input-append">
                     <i class="icon-search"></i>
-                    <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. IDP Colombia') }}">
+                    <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. IDP Colombia') }}">
                     {% set filter_icon_class = 'icon-close_filter_button' if c.filters_are_selected else 'icon-open_filter_button' %}
                     <i id="search_filter_btn" class="{{ filter_icon_class }} filter-icon"  title="{{ _('Filters') }}"></i>
                   </div>
+                  <div id="search-ahead"></div>
+                </div>
                 </form>
               </div>
             </span>
