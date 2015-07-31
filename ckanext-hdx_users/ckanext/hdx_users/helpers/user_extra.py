@@ -56,6 +56,9 @@ def get_user_extra(user_id=None):
 def get_login(success=True, message=None):
     return get_current_step_dict(user_model.HDX_LOGIN, success, message)
 
+def get_register(success=True, message=None):
+    return get_current_step_dict(user_model.HDX_REGISTER, success, message)
+
 def get_new_login(success=True, message=None):
     return get_current_step_dict(user_model.HDX_FIRST_LOGIN, success, message)
 
