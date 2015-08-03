@@ -66,6 +66,17 @@
 
     $(window).scroll(scroll_to_menu);
     $(window).scroll(sticky_menu);
+
+    $('.hdx-panel-group .panel-heading').click(
+        function (e) {
+            if ( e.target.tagName.toLowerCase() != 'a') {
+                //var collapsible = $(this).siblings()[0];
+                //$(collapsible).collapse('toggle');
+                $(this).find('h4 a')[0].click();
+            }
+        }
+    );
+
     scroll_to_menu();
     sticky_menu();
     add_menu_click_events();

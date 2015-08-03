@@ -23,12 +23,13 @@ $('document').ready(function(){
 	}
 
 	$('#q').keydown(function(){
-		var search = index.search($(this).val());
+		var q = $(this).val()
+		var search = index.search(q);
 		if(search.length >0){
 			var html ="<ul>";
 			var limit = search.length > 5 ? 5 : search.length;
 			for(i=0; i<limit; i++){
-				html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link">'+feature_index[search[i]['ref']]['title']+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
+				html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link">'+process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 			
 		}
 			html += '</ul>';
@@ -45,3 +46,13 @@ $('document').ready(function(){
 	});
 
 });
+
+function process_title(title, q){
+	if(title.length>40){
+		title = title.substring(0,40);
+		title = title+'...'
+	}
+	var re = new RegExp(q, "gi");
+	title = title.replace(re, '<strong>$&</strong>');
+	return title
+}
