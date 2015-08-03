@@ -214,9 +214,9 @@
     position:absolute;
     z-index: 99999999;
     top:42px;
-    left:14px;
+    left:0px;
     background: rgba(255,255,255,1);
-  width: 95%;
+  width: 160%;
   border-top: 3px solid #007CE0; /*@blueColor*/
   box-shadow: 5px 5px 5px #ccc;
   display:none;
@@ -240,7 +240,6 @@
 
 .ahead-link{
     text-align:left;
-    font-weight: bold;
     color:#333333; /* @darkGrayColor */
 }
 
