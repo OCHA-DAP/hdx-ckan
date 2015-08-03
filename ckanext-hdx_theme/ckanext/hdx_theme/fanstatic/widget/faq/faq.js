@@ -47,7 +47,6 @@ function showFaqWidget(id) {
         return error;
     }
 
-
     return false;
 }
 
