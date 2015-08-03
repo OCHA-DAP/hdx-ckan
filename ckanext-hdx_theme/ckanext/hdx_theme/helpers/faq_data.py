@@ -7,11 +7,11 @@ popular = {
         },
         {
             'q': 'How do I share data on HDX?',
-            'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with appropriate privileges) before you can contribute data. If you have data to share, you can either request to create a new organisation or ask to join an existing one. (See more under Organisations above.)',
+            'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with appropriate privileges) before you can contribute data. If you have data to share, you can either request to create a new organisation or ask to join an existing one. (See more under Organisations.)',
         },
         {
             'q': 'How does search work on HDX?',
-            'a': 'Searching for datasets on HDX is done in two ways: by searching for terms that you type into the search bar found at the top of almost every page on HDX, and by filtering a list of search results.<p>Entering a search term causes HDX to look for matching terms in the titles, descriptions, locations and tags of a dataset. The resulting list of items can be further filtered by clicking on the blue filter icon at the top of the page (in the search bar).  You can filter by location, tag, organisation, license and format.</p>',
+            'a': 'Searching for datasets on HDX is done in two ways: by searching for terms that you type into the search bar found at the top of almost every page on HDX, and by filtering a list of search results.<br/><br/><p>Entering a search term causes HDX to look for matching terms in the titles, descriptions, locations and tags of a dataset. The resulting list of items can be further filtered by clicking on the blue filter icon at the top of the page (in the search bar).  You can filter by location, tag, organisation, license and format.</p>',
         },
     ]
 
@@ -26,7 +26,7 @@ about = {
         },
         {
             'q': 'Who manages HDX?',
-            'a': 'The <a href="http://www.unocha.org/">United Nations Office for the Coordination of Humanitarian Affairs</a>(OCHA) manages HDX. OCHA is part of the United Nations Secretariat,responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.',
+            'a': 'The <a href="http://www.unocha.org/">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) manages HDX. OCHA is part of the United Nations Secretariat,responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.',
         },
         {
             'q': 'How does HDX define humanitarian data?',
@@ -42,7 +42,7 @@ about = {
         },
         {
             'q': 'Has HDX been featured in the media?',
-            'a': 'Yes. The following articles have been written about HDX: <br/> <p>The Guardian - <a href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data Exchange Helps Humanitarians Act Fast and Effectively</a></p><p>Fast Company - <a href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the Candy Crush of Data is Saving Lives in Nepal</a></p><p>Forbes - <a href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN Deploys New Tech to Make Relief Faster in Nepal</a></p><p>The Independent - <a href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a></p>',
+            'a': 'Yes. The following articles have been written about HDX:<br/><br/><p>The Guardian - <a href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data Exchange Helps Humanitarians Act Fast and Effectively</a></p><p>Fast Company - <a href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the Candy Crush of Data is Saving Lives in Nepal</a></p><p>Forbes - <a href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN Deploys New Tech to Make Relief Faster in Nepal</a></p><p>The Independent - <a href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a></p>',
         },
         {
             'q': 'What browsers are best to use for HDX?',
@@ -61,7 +61,7 @@ user_registration = {
         },
         {
             'q': 'What are the benefits of being a registered user?',
-            'a': 'Anyone can view and download the data from the site, but registered users can access more features. After signing up you can: 1) follow the latest changes to data, locations, organisations, topics and crises; 2) share datasets publicly or privately, and join organisations to get access to private datasets*; 3) add data visualizations as gallery items alongside datasets*; 4) contact data contributors (coming soon). <p>*You need to be affiliated with an organisation to access these features.</p>',
+            'a': 'Anyone can view and download the data from the site, but registered users can access more features. After signing up you can: 1) follow the latest changes to data, locations, organisations, topics and crises; 2) share datasets publicly or privately, and join organisations to get access to private datasets*; 3) add data visualizations as gallery items alongside datasets*; 4) contact data contributors (coming soon). <br/><br/><p>*You need to be affiliated with an organisation to access these features.</p>',
         },
         {
             'q': 'What does it mean to \'follow\' data?',
@@ -138,11 +138,11 @@ sharing_data = {
         },
         {
             'q': 'What are the recommended data formats?',
-            'a': 'We define data as information that software can read and analyse. We encourage contributions in any common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel formats, and for geographic data in zipped shapefile, kml and geojson formats.<p>A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian information that are not related to the data you are sharing, please visit our companion sites <a href="http://reliefweb.int/">ReliefWeb</a> and <a href="http://www.humanitarianresponse.info/">HumanitarianResponse</a>.</p>',
+            'a': 'We define data as information that software can read and analyse. We encourage contributions in any common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel formats, and for geographic data in zipped shapefile, kml and geojson formats.<br/><br/><p>A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian information that are not related to the data you are sharing, please visit our companion sites <a href="http://reliefweb.int/">ReliefWeb</a> and <a href="http://www.humanitarianresponse.info/">HumanitarianResponse</a>.</p>',
         },
         {
             'q': 'What are the recommended best practices for naming datasets and resources?',
-            'a': 'For datasets: the keywords in your dataset title are matched to the search terms users enter when looking for data in HDX. Avoid using abbreviations in the title that may not be familiar to all users. Also avoid using words such as current, latest or previous when referring to the time period (e.g., latest 3W), as these terms become misleading as the dataset ages. The following is a good example of a dataset title: \'Who is Doing What Where in Afghanistan, Jan - Dec 2014\'.<p>For resources: by default, the resource name is the name of the uploaded file. However, you can change this if needed to make it more clear to users.</p><p>For zipped shapefiles: we recommend the filename be name_of_the_file.shp.zip.  However, the system does not require this construction.</p>',
+            'a': 'For datasets: the keywords in your dataset title are matched to the search terms users enter when looking for data in HDX. Avoid using abbreviations in the title that may not be familiar to all users. Also avoid using words such as current, latest or previous when referring to the time period (e.g., latest 3W), as these terms become misleading as the dataset ages. The following is a good example of a dataset title: \'Who is Doing What Where in Afghanistan, Jan - Dec 2014\'.<br/><br/><p>For resources: by default, the resource name is the name of the uploaded file. However, you can change this if needed to make it more clear to users.</p><p>For zipped shapefiles: we recommend the filename be name_of_the_file.shp.zip.  However, the system does not require this construction.</p>',
         },
         {
             'q': 'Is there a limit on file size for the data that I upload?',
@@ -154,11 +154,11 @@ sharing_data = {
         },
         {
             'q': 'How do I share a live Google Sheet?',
-            'a': 'To include a link to a Google Sheet, you must first set the sheet\'s sharing permissions so that it is either publicly visible or at least accessible to anyone who has the link. We recommend creating at least two separate resources for each Google Sheet: 1) a link to the sheet itself in the regular Google Drive interface; and 2) a direct-download link to an Excel or CSV version of the sheet, so that users can preview it in HDX. The version in HDX will update automatically as you make changes to the original Google Sheet.<p>To obtain the direct download link, download the sheet to your own computer in Excel or CSV format, then open your web browser\'s \'Downloads\' screen and copy the link from there.</p>',
+            'a': 'To include a link to a Google Sheet, you must first set the sheet\'s sharing permissions so that it is either publicly visible or at least accessible to anyone who has the link. We recommend creating at least two separate resources for each Google Sheet: 1) a link to the sheet itself in the regular Google Drive interface; and 2) a direct-download link to an Excel or CSV version of the sheet, so that users can preview it in HDX. The version in HDX will update automatically as you make changes to the original Google Sheet.<br/><br/><p>To obtain the direct download link, download the sheet to your own computer in Excel or CSV format, then open your web browser\'s \'Downloads\' screen and copy the link from there.</p>',
         },
         {
             'q': 'How do I share a live spreadsheet from Dropbox?',
-            'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share link\', following the <a href="https://www.dropbox.com/en/help/167">instructions in the Dropbox help centre</a>. You will then received a special link that allows anyone to download the file.<p>Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks something like this:</p><p> https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=0</p><p>For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' so that it looks like this:</p><p>https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=1</p><p>The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. Be careful not to move or rename the file after you share it.</p>',
+            'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share link\', following the <a href="https://www.dropbox.com/en/help/167">instructions in the Dropbox help centre</a>. You will then received a special link that allows anyone to download the file.<br/></br><p>Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks something like this:<br/> https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=0</p><p>For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' so that it looks like this:<br/>https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=1</p><p>The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. Be careful not to move or rename the file after you share it.</p>',
         },
         {
             'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
@@ -172,7 +172,7 @@ geodata = {
     'questions': [
         {
             'q': 'How can I generate a map with my geographic data?',
-            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format.  Ensure that the \'format\' field on the resource creation form also has one of the above formats. Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> that show the preview feature.<p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
+            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format.  Ensure that the \'format\' field on the resource creation form also has one of the above formats. Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> that show the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
         },
         {
             'q': 'Why is the geodata preview only working for one layer in my resource?',
@@ -190,7 +190,7 @@ search = {
     'questions': [
         {
             'q': 'How does search work on HDX?',
-            'a': 'Searching for datasets on HDX is done in two ways: by searching for terms that you type into the search bar found at the top of almost every page on HDX, and by filtering a list of search results.<p>Entering a search term causes HDX to look for matching terms in the titles, descriptions, locations and tags of a dataset. The resulting list of items can be further filtered by clicking on the blue filter icon at the top of the page (in the search bar).  You can filter by location, tag, organisation, license and format.</p>',
+            'a': 'Searching for datasets on HDX is done in two ways: by searching for terms that you type into the search bar found at the top of almost every page on HDX, and by filtering a list of search results.<br/><br/><p>Entering a search term causes HDX to look for matching terms in the titles, descriptions, locations and tags of a dataset. The resulting list of items can be further filtered by clicking on the blue filter icon at the top of the page (in the search bar).  You can filter by location, tag, organisation, license and format.</p>',
         },
         {
             'q': 'How do I find the Common Operational Datasets in HDX?',
@@ -222,7 +222,7 @@ hdx_api = {
     'questions': [
         {
             'q': 'How do I access the HDX API?',
-            'a': '<a href="https://data.hdx.rwlabs.org/api/3/action/help_show?name=help_show">HDX has a publicly accessible API</a>. HDX is built on top of <a href="http://ckan.org/">CKAN</a>, an open-source framework designed for data cataloging. The CKAN official documentation shows how the API works, and it contains a number of helpful examples: <a href="http://docs.ckan.org/en/ckan-2.3/api/index.html">http://docs.ckan.org/en/ckan-2.3/api/index.html</a><p>HDX supports both the core <a href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> and, for some datasets, the CKAN Datastore API. For more information, please e-mail hdx.feedback@gmail.com. We will be happy to assist you.</p>',
+            'a': '<a href="https://data.hdx.rwlabs.org/api/3/action/help_show?name=help_show">HDX has a publicly accessible API</a>. HDX is built on top of <a href="http://ckan.org/">CKAN</a>, an open-source framework designed for data cataloging. The CKAN official documentation shows how the API works, and it contains a number of helpful examples: <a href="http://docs.ckan.org/en/ckan-2.3/api/index.html">http://docs.ckan.org/en/ckan-2.3/api/index.html</a><br/><br/><p>HDX supports both the core <a href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> and, for some datasets, the CKAN Datastore API. For more information, please e-mail hdx.feedback@gmail.com. We will be happy to assist you.</p>',
         },
     ]
 }
@@ -232,7 +232,7 @@ hxl = {
     'questions': [
         {
             'q': 'What is the Humanitarian Exchange Language?',
-            'a': 'The Humanitarian Exchange Language (HXL) is a simple standard for messy data. It is based on spreadsheet formats such as CSV or Excel, but it adds hashtags with semantic information to allow software to validate, clean, merge and analyse data more easily.<p>HDX will be adding features for HXL-tagged data in the future. To learn more about HXL and who\'s currently using it, visit the <a href="http://hxlstandard.org/">HXL standard site</a>.</p>',
+            'a': 'The Humanitarian Exchange Language (HXL) is a simple standard for messy data. It is based on spreadsheet formats such as CSV or Excel, but it adds hashtags with semantic information to allow software to validate, clean, merge and analyse data more easily.<br/><br/><p>HDX will be adding features for HXL-tagged data in the future. To learn more about HXL and who\'s currently using it, visit the <a href="http://hxlstandard.org/">HXL standard site</a>.</p>',
         },
     ]
 }
