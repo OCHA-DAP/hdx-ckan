@@ -84,6 +84,7 @@
   box-shadow: none;
   background-color: inherit;
   padding-top: 30px;
+  cursor: pointer;
 }
 .hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title a {
   font-family: 'Source Sans Pro', sans-serif;
