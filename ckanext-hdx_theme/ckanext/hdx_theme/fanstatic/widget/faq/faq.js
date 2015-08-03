@@ -1,9 +1,9 @@
 function showFaqWidget(id) {
+
     $(id).show();
 
 
-
-    function _triggerInputDataClass($this){
+    function _faqTriggerInputDataClass($this){
         if ($this.val() === "")
             $this.removeClass("input-content");
         else
@@ -12,28 +12,29 @@ function showFaqWidget(id) {
 
     $(id).find('input[type="password"], input[type="text"], textarea').each(
         function(idx, el){
-            _triggerInputDataClass($(el));
+            _faqTriggerInputDataClass($(el));
         }
     );
+
     $(id).find('input[type="password"], input[type="text"], textarea').change(
         function(){
             var $this = $(this);
-            _triggerInputDataClass($this);
+            _faqTriggerInputDataClass($this);
         }
     );
     $(id).find('input[type="password"], input[type="text"], textarea').on("keyup",
         function(){
             var $this = $(this);
-            _triggerInputDataClass($this);
+            _faqTriggerInputDataClass($this);
         }
     );
 
     $(id).find('input[type="submit"]').on("click", function(){
-        var result = precheckForm(id);
+        var result = faqPrecheckForm(id);
         return !result;
     });
 
-    function precheckForm(id){
+    function faqPrecheckForm(id){
         var error = false;
         $(id).find("input.required, textarea.required, select.required").each(function(idx, el){
             var $el = $(el);

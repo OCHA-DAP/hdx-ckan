@@ -81,9 +81,3 @@
     sticky_menu();
     add_menu_click_events();
 }).call(this);
-
-
-function showFaqWidget(id) {
-    $(id).show();
-    return false;
-}
