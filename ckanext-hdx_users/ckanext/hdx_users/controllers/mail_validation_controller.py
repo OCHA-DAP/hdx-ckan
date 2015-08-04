@@ -395,8 +395,12 @@ class ValidationController(ckan.controllers.user.UserController):
         except DataError:
             return OnbIntegrityErr
         except ValidationError, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
+            error_summary = ''
+            if 'Name' in e.error_summary:
+                error_summary += str(e.error_summary.get('Name'))
+            if 'Password' in e.error_summary:
+                error_summary += str(e.error_summary.get('Password'))
+            return self.error_message(error_summary or e.error_summary)
         except IntegrityError:
             return OnbExistingUsername
         except exceptions.Exception, e:
@@ -659,48 +663,48 @@ class ValidationController(ckan.controllers.user.UserController):
         else:
             return render('user/logout_first.html')
 
-    # def new(self, data=None, errors=None, error_summary=None):
-    #     '''GET to display a form for registering a new user.
-    #        or POST the form data to actually do the user registration.
-    #     '''
-    #
-    #     temp_schema = self._new_form_to_db_schema()
-    #     if temp_schema.has_key('name'):
-    #         temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
-    #                                temp_schema['name']]
-    #
-    #     context = {'model': model, 'session': model.Session,
-    #                'user': c.user or c.author,
-    #                'auth_user_obj': c.userobj,
-    #                'schema': temp_schema,
-    #                'save': 'save' in request.params}
-    #
-    #     try:
-    #         check_access('user_create', context)
-    #     except NotAuthorized:
-    #         abort(401, _('Unauthorized to create a user'))
-    #
-    #     if context['save'] and not data:
-    #         return self._save_new(context)
-    #
-    #     if c.user and not data:
-    #         # #1799 Don't offer the registration form if already logged in
-    #         return render('user/logout_first.html')
+            # def new(self, data=None, errors=None, error_summary=None):
+            #     '''GET to display a form for registering a new user.
+            #        or POST the form data to actually do the user registration.
+            #     '''
+            #
+            #     temp_schema = self._new_form_to_db_schema()
+            #     if temp_schema.has_key('name'):
+            #         temp_schema['name'] = [name_validator_with_changed_msg if var == name_validator else var for var in
+            #                                temp_schema['name']]
+            #
+            #     context = {'model': model, 'session': model.Session,
+            #                'user': c.user or c.author,
+            #                'auth_user_obj': c.userobj,
+            #                'schema': temp_schema,
+            #                'save': 'save' in request.params}
+            #
+            #     try:
+            #         check_access('user_create', context)
+            #     except NotAuthorized:
+            #         abort(401, _('Unauthorized to create a user'))
+            #
+            #     if context['save'] and not data:
+            #         return self._save_new(context)
+            #
+            #     if c.user and not data:
+            #         # #1799 Don't offer the registration form if already logged in
+            #         return render('user/logout_first.html')
 
-        # data = data or {}
-        # errors = errors or {}
-        # error_summary = error_summary or {}
-        # vars = {'data': data, 'errors': errors,
-        #         'error_summary': error_summary,
-        #         'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
+            # data = data or {}
+            # errors = errors or {}
+            # error_summary = error_summary or {}
+            # vars = {'data': data, 'errors': errors,
+            #         'error_summary': error_summary,
+            #         'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey')}
 
-        # c.is_sysadmin = new_authz.is_sysadmin(c.user)
-        # c.form = render(self.new_user_form, extra_vars=vars)
-
-
+            # c.is_sysadmin = new_authz.is_sysadmin(c.user)
+            # c.form = render(self.new_user_form, extra_vars=vars)
 
 
-        # return render('user/new.html')
+
+
+            # return render('user/new.html')
 
     # def _save_new(self, context):
     #     try:
