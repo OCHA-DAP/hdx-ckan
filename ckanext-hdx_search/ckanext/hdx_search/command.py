@@ -3,6 +3,7 @@ from ckan.model import Session
 import ckan.lib.helpers as h
 import json
 import os
+from pylons import config
 
 class FeatureSearchCommand(p.toolkit.CkanCommand):
     '''
