@@ -140,8 +140,18 @@ def hdx_group_update(context, data_dict):
     lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
 
+def hdx_group_delete(context, data_dict):
+    result = core.delete.group_delete(context,data_dict)
+    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    return result
+
 def hdx_organization_create(context, data_dict):
     result = core.create.organization_create(context,data_dict)
+    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    return result
+
+def hdx_organization_delete(context, data_dict):
+    result = core.delete.organization_delete(context,data_dict)
     lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
 

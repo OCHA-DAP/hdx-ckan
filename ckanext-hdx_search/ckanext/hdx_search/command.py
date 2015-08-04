@@ -42,10 +42,10 @@ def buildIndex(path):
         '''
         index = list()
         crises = config.get('hdx.crises').split(", ")
-        groups = Session.execute('select name, title, is_organization from "group"')
+        groups = Session.execute('select name, title, is_organization from "group" where state=\'active\'')
         for name, title, is_org in groups:
             if is_org:
-                page_type = 'organization'
+                page_type = 'organisation'
                 url = h.url_for(controller='organization',
                                     action='read',
                                     id=name,
@@ -53,7 +53,7 @@ def buildIndex(path):
             else:
                 if name in crises:
                     continue
-                page_type = "country"
+                page_type = "location"
                 
 
                 url = h.url_for(controller='group',

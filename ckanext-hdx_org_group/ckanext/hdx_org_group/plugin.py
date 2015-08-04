@@ -39,8 +39,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'hdx_datasets_for_group': get_actions.hdx_datasets_for_group,
             'organization_update': hdx_org_actions.hdx_organization_update,
             'organization_create': hdx_org_actions.hdx_organization_create,
+            'organization_delete': hdx_org_actions.hdx_organization_delete,
             'group_update': hdx_org_actions.hdx_group_update,
-            'group_create': hdx_org_actions.hdx_group_create
+            'group_create': hdx_org_actions.hdx_group_create,
+            'group_delete': hdx_org_actions.hdx_group_delete
         }
 
     # def get_auth_functions(self):
