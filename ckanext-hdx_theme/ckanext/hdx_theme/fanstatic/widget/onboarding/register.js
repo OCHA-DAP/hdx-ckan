@@ -15,7 +15,9 @@ $(document).ready(function(){
                 if (result.error.message == "Captcha is not valid"){
                     $iframe.css("border", "1px solid red");
                 } else {
-                    alert("Can't register: " + JSON.stringify(result.error.message));
+                    alert("Can't register: " + result.error.message);
+                    grecaptcha.reset();
+
                 }
             }
         });
