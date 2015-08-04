@@ -29,13 +29,13 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
         self._load_config(load_site_user=False)
         if cmd == 'build':
             print 'Collecting Feature Pages...'
-            self.buildIndex()
+            buildIndex('../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
             print 'Index successfully built...'
         else:
             print 'Error: command "{0}" not recognized'.format(cmd)
             print self.usage
 
-    def buildIndex(self):
+def buildIndex(path):
         '''
         Grab all Organizations, Groups, and Vocabulary Topics and write a
         json file for lunr.js to search against
@@ -83,7 +83,7 @@ class FeatureSearchCommand(p.toolkit.CkanCommand):
         #                             qualified=True)
         #     index.append({'title':name.capitalize(), 'url': url, 'type': 'topic'})
 
-        dir_path = os.path.abspath('../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search') 
+        dir_path = os.path.abspath(path) 
         f = open(dir_path+'/feature-index.js', 'w')
         file_body = json.dumps(index)
         file_body = 'var feature_index='+file_body+';'

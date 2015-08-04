@@ -22,6 +22,8 @@ import ckan.lib.uploader as uploader
 import paste.deploy.converters as converters
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as h
+import ckan.logic.action as core
+import ckanext.hdx_search.command as lunr
 from ckan.common import _
 
 
@@ -115,7 +117,7 @@ def _add_custom_less_code(base_color, logo_use_org_color):
 
 def hdx_organization_update(context, data_dict):
     result = hdx_group_or_org_update(context, data_dict, is_org=True)
-
+    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     compile_less(result)
 
     return result
@@ -127,6 +129,21 @@ def remove_image(filename):
         except:
             return False
     return True
+
+def hdx_group_create(context, data_dict):
+    result = core.create.group_create(context,data_dict)
+    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    return result
+
+def hdx_group_update(context, data_dict):
+    result = core.update.group_update(context,data_dict)
+    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    return result
+
+def hdx_organization_create(context, data_dict):
+    result = core.create.organization_create(context,data_dict)
+    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    return result
 
 def hdx_group_or_org_update(context, data_dict, is_org=False):
     # Overriding default so that orgs can have multiple images
