@@ -70,6 +70,7 @@ $(document).ready(function(){
                     $iframe.css("border", "1px solid red");
                 } else {
                     alert("Can't send your request: " + result.error.message);
+                    grecaptcha.reset();
                 }
             }
         });
