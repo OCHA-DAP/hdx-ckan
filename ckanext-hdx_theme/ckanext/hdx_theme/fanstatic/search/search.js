@@ -1,11 +1,17 @@
 $('document').ready(function(){
 	var index = lunr(function () {
     this.field('title', {boost: 10})
+    this.field('crisis', {boost: 1000}) //Little hack to boost the scores of crisis pages
     this.field('url')
     this.ref('id')
   })
 	for(i=0; i<feature_index.length; i++){//This is the part where Lunr is actually not too bright
 		feature_index[i]['id'] = i;
+		if(feature_index[i]['type'] == 'crisis'){
+			feature_index[i]['crisis'] = feature_index[i]['title'];
+		}else{
+			feature_index[i]['crisis'] = '';
+		}
 		index.add(feature_index[i])
 	}
 
