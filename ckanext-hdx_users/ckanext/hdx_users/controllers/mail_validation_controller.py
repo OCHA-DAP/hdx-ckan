@@ -479,7 +479,9 @@ class ValidationController(ckan.controllers.user.UserController):
         '''
         try:
             org_id = request.params.get('org_id', '')
-            msg = request.params.get('message', 'New Onboarding module: create a new organization')
+            org = model.Group.get(org_id)
+            org_name = org.display_name or org.name
+            msg = request.params.get('message', 'please add me to this organization')
             user = hdx_h.hdx_get_user_info(c.user)
             context = {'model': model, 'session': model.Session,
                        'user': c.user}
@@ -491,7 +493,7 @@ class ValidationController(ckan.controllers.user.UserController):
             admins_with_email = [admin for admin in admins if admin['email']]
 
             data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_id,
+                         'email': user['email'], 'organization': org_name,
                          'message': msg, 'admins': admins_with_email}
             get_action('hdx_send_request_membership')(context, data_dict)
 
