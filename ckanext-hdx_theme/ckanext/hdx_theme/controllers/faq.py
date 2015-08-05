@@ -76,7 +76,7 @@ class FaqController(base.BaseController):
                 <html>
                   <head></head>
                   <body>
-                    <p>An user sent a request using contact us form.</p>
+                    <p>A user sent the following question using the FAQ contact us form.</p>
                     <p>Name: {fullname}</p>
                     <p>Email: {email}</p>
                     <p>Section: {topic}</p>
