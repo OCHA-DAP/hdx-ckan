@@ -17,7 +17,7 @@
                 <input type="hidden" class="search" name="{{ key }}" value="{{ value }}">
             {% endfor %}
         {% endif %}
-          <input type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
+          <input id="q" type="text" class="search" name="q" value="{{ query }}" autocomplete="off" placeholder="{{placeholder}}">
           <button type="submit" value="search">
             <i class="glyphicon glyphicon-search"></i>
             <span>{{ _('Submit') }}</span>
@@ -39,6 +39,7 @@
                   {{ title_text }}
               {% else %}
                   {% snippet 'search/snippets/search_result_text.html', query=query, count=count, type=type, tab=tab %}
+                  <div id="search-recs"></div>
               {% endif %}
           </h2>
       {% endif  %}
@@ -99,15 +100,15 @@
       {% endif %}
       <ul class="nav nav-tabs">
         {% block content_primary_nav %}
-        	<li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
+        	{# <li class="mx-tab-item-all {{ 'active' if not tab or tab == 'all' }}">
         		<a href="{{ other_links.all }}">{{_('All')}} [{{indicator_counts + dataset_counts}}]</a>
-        	</li>
-        	<li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
-        		<a href="{{ other_links.indicators }}">{{_('Indicators')}} [{{indicator_counts}}]</a>
-        	</li>
-        	
+        	</li>#}
         	<li class="mx-tab-item-datasets {{ 'active' if not tab or tab == 'datasets' }}">
-        		<a href="{{ other_links.datasets }}">{{_('Datasets')}} [{{dataset_counts}}]</a>
+            <a href="{{ other_links.datasets }}">{{_('Datasets')}} [{{dataset_counts}}]</a>
+          </li>
+
+          <li class="mx-tab-item-indicators {{ 'active' if not tab or tab == 'indicators' }}">
+        		<a href="{{ other_links.indicators }}">{{_('Indicators')}} [{{indicator_counts}}]</a>
         	</li>
         	
         	{# <li class="mx-tab-item-feature-pages {{ 'active' if not tab or tab == 'features' }}">

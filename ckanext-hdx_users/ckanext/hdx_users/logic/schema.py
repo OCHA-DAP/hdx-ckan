@@ -103,7 +103,7 @@ def register_details_user_schema():
 
     schema = {
         'id': [ignore_missing, unicode],
-        'name': [not_empty, unicode],
+        'name': [not_empty, name_validator, user_name_validator, unicode],
         'fullname': [ignore_missing, unicode],
         'password': [user_password_validator, user_password_not_empty, ignore_missing, unicode],
         'email': [not_empty, user_email_validator, unicode],

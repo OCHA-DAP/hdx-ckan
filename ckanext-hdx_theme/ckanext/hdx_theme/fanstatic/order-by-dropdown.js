@@ -21,6 +21,9 @@ function bindOrderChange(){
 function replaceParam(key, value){
     var pathname = window.location.pathname;
     var params = toParams(window.location.search);
+    // Handle corruption of the query
+    params['q'] = params['q'].replace(/\+/g,' ')
+    params['q'] = params['q'].replace(/\%2B/g,' ')
     params[key] = value;
 
 

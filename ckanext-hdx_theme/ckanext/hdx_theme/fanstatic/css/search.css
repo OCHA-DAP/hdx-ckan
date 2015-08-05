@@ -191,3 +191,61 @@
 
 
 /* END - Show full text on hover over select2 options */
+
+/* Styling search recommendations */
+
+#search-recs {
+    margin-top:8px;
+    font-family:'Source Sans Pro', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    color: #888888;
+    letter-spacing: 0.01em;
+}
+
+/* END - Styling search recommendations */
+
+/* Styling Predictive search */
+#input-search{
+    position:relative;
+
+}
+#search-ahead{
+    position:absolute;
+    z-index: 99999999;
+    top:42px;
+    left:0px;
+    background: rgba(255,255,255,1);
+  width: 160%;
+  border-top: 3px solid #007CE0; /*@blueColor*/
+  box-shadow: 5px 5px 5px #ccc;
+  display:none;
+}
+
+#search-ahead ul{
+    list-style: none;
+    margin-bottom: 0px
+}
+
+#search-ahead li{
+    padding: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: -35px;
+}
+
+#search-ahead li:hover{
+    background: #cccccc; /* @lightGrayColor */
+}
+
+.ahead-link{
+    text-align:left;
+    color:#333333; /* @darkGrayColor */
+}
+
+.ahead-type{
+    float:right;
+    text-align: right;
+    margin-top:-20px;
+}
+/* END - Styling predictive search */ 

@@ -36,6 +36,7 @@
         </div>
     </div>
   </div>
+  <input type="hidden" id="terms" value="{{c.q}}">
 {#  <div id="search_filter_btn">Filter<span>+</span></div>#}
 </div>
 
@@ -56,7 +57,6 @@
   {{ super() }}
   {% resource 'hdx_theme/bs_tooltip.js' %}
   {% resource 'hdx_theme/filter' %}
-  {% resource 'hdx_theme/search' %}
   {% resource 'hdx_theme/jquery.highlight' %}
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/hdx_show_more.js' %}
@@ -72,5 +72,5 @@
   			<input type="hidden" name="{{ key }}" value="{{ value }}" />
   		{% endfor %}
   	{% endif %}
-  <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all data') }}">
+  <input type="text" class="searchInput" name="q" id="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search all data') }}">
 {% endblock %}

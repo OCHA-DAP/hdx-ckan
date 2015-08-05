@@ -1,0 +1,109 @@
+.container .twoColumnBackground {
+  background-image: none;
+}
+.hdx-faq-sidebar.sticky {
+  position: fixed;
+  top: 15px;
+}
+.hdx-faq-sidebar .nav li a {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 14px;
+  color: #888888;
+  letter-spacing: 0.01em;
+  padding: 0;
+}
+.hdx-faq-sidebar .nav li a:hover,
+.hdx-faq-sidebar .nav li a.active {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 14px;
+  color: #007ce0;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  padding: 0;
+}
+.hdx-faq-sidebar .no-answer-found a {
+  color: #000000;
+}
+.hdx-faq-sidebar .no-answer-found a:hover {
+  color: #007ce0;
+}
+.hdx-wrapper .section-flag {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 14px;
+  color: #888888;
+  letter-spacing: 0.01em;
+}
+.hdx-wrapper .top-banner {
+  background-color: #FFFFFF;
+  background-image: url("/images/backgrounds/faq_top_f.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% auto;
+  height: 315px;
+  margin-left: -45px;
+  margin-right: -45px;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 90px;
+  width: 50%;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-title {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 36px;
+  color: #FFFFFF;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+.hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more-button-wrapper {
+  text-align: center;
+}
+.hdx-wrapper .hdx-panel-group .panel {
+  border: none;
+  border-bottom: 1px solid #cccccc;
+  box-shadow: none;
+  margin: 0;
+}
+.hdx-wrapper .hdx-panel-group .panel:hover {
+  background-color: #EDF6FD;
+}
+.hdx-wrapper .hdx-panel-group .panel + .panel {
+  margin: 0;
+}
+.hdx-wrapper .hdx-panel-group .panel .panel-heading {
+  height: 74px;
+  border: none;
+  box-shadow: none;
+  background-color: inherit;
+  padding-top: 30px;
+  cursor: pointer;
+}
+.hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title a {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #000000;
+  line-height: 24px;
+  letter-spacing: 0.01em;
+}
+.hdx-wrapper .hdx-panel-group .panel .panel-heading + .panel-collapse > .panel-body {
+  border: none;
+  box-shadow: none;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  color: #888888;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+}
+.hdx-wrapper .hdx-panel-group .panel .panel-heading + .panel-collapse > .panel-body a {
+  color: #007ce0;
+  font-weight: 700;
+}
