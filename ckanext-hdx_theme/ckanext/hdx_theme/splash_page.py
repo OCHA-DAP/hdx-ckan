@@ -1,7 +1,7 @@
 import sys, re
 import ckan.lib.base as base
 from ckan.lib.base import request
-from ckan.lib.base import c,g,h
+from ckan.lib.base import c, g, h
 from ckan.lib.base import model
 from ckan.lib.base import render
 from ckan.lib.base import _
@@ -19,7 +19,6 @@ get_action = logic.get_action
 
 
 class SplashPageController(HomeController):
-
     group_type = 'group'
 
     def index(self):
@@ -41,8 +40,6 @@ class SplashPageController(HomeController):
             context['user_id'] = c.userobj.id
             context['user_is_admin'] = c.userobj.sysadmin
 
-
-
         c.group_package_stuff = caching.cached_get_group_package_stuff()
 
         ##Removing groups without geojson for the map
@@ -55,7 +52,7 @@ class SplashPageController(HomeController):
             '''
             c.group_map.append(gp)
 
-        #print c.group_package_stuff
+        # print c.group_package_stuff
 
         if c.userobj is not None:
             msg = None
@@ -67,13 +64,13 @@ class SplashPageController(HomeController):
                         u' and add your email address and your full name. '
                         u'{site} uses your email address'
                         u' if you need to reset your password.'.format(
-                            link=url, site=g.site_title))
+                    link=url, site=g.site_title))
             elif not c.userobj.email:
                 msg = _('Please <a href="%s">update your profile</a>'
                         ' and add your email address. ') % url + \
-                    _('%s uses your email address'
+                      _('%s uses your email address'
                         ' if you need to reset your password.') \
-                    % g.site_title
+                      % g.site_title
             elif is_google_id and not c.userobj.fullname:
                 msg = _('Please <a href="%s">update your profile</a>'
                         ' and add your full name.') % (url)
@@ -99,16 +96,29 @@ class SplashPageController(HomeController):
     def about(self, page):
         title = {'license': _('Data Licenses'),
                  'terms': _('Terms of Service')}
-        html =  {'license': 'home/snippets/hdx_licenses.html',
-                 'terms': 'home/snippets/hdx_terms_of_service.html'}
+        html = {'license': 'home/snippets/hdx_licenses.html',
+                'terms': 'home/snippets/hdx_terms_of_service.html'}
 
         titleItem = title.get(page)
         htmlItem = html.get(page)
 
         if titleItem is None:
-            message=_("The requested about page doesn't exist")
+            message = _("The requested about page doesn't exist")
             raise logic.ValidationError({'message': message}, error_summary=message)
 
         extraVars = {'title': titleItem, 'html': htmlItem, 'page': page}
-        return base.render('home/about2.html',  extra_vars = extraVars)
+        return base.render('home/about2.html', extra_vars=extraVars)
 
+    def about_hrinfo(self):
+        title = {'hr_info': _('Legacy HR Info')}
+        html = {'hr_info': 'home/snippets/hdx_hr_info.html'}
+
+        titleItem = title['hr_info']
+        htmlItem = html['hr_info']
+
+        if titleItem is None:
+            message = _("The requested about page doesn't exist")
+            raise logic.ValidationError({'message': message}, error_summary=message)
+
+        extraVars = {'title': titleItem, 'html': htmlItem, 'page': 'hr_info'}
+        return base.render('home/about2.html', extra_vars=extraVars)
