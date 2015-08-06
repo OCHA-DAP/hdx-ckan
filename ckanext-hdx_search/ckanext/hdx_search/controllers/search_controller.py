@@ -44,7 +44,7 @@ ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
 
-SMALL_NUM_OF_ITEMS = 5
+SMALL_NUM_OF_ITEMS = 25 #Should always be 25 right now but may change later
 LARGE_NUM_OF_ITEMS = 25
 
 
