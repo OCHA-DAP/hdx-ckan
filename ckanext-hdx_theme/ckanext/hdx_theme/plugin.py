@@ -85,6 +85,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             '/about/{page}', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about')
 
         map.connect(
+            '/about/license/legacy_hrinfo', controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about_hrinfo')
+
+        map.connect(
             '/widget/topline', controller='ckanext.hdx_theme.controllers.widget_topline:WidgetToplineController', action='show')
         map.connect(
             '/widget/3W', controller='ckanext.hdx_theme.controllers.widget_3W:Widget3WController', action='show')
