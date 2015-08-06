@@ -1,6 +1,8 @@
 import ckan.logic as logic
 import ckan.model as model
 import unicodedata
+import ckanext.hdx_users.model as umodel
+import ckanext.hdx_user_extra.model as ue_model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
@@ -10,7 +12,13 @@ class TestAboutPageController(hdx_test_base.HdxBaseTest):
     #loads missing plugins
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_users hdx_theme')
+        hdx_test_base.load_plugin('hdx_users hdx_user_extra hdx_theme')
+
+    @classmethod
+    def setup_class(cls):
+        super(TestAboutPageController, cls).setup_class()
+        umodel.setup()
+        ue_model.create_table()
 
     def test_resulting_page(self):
         testsysadmin = model.User.by_name('testsysadmin')

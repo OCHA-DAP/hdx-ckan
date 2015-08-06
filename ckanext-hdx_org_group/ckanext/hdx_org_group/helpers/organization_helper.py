@@ -186,7 +186,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     except:
         data_dict['customization'] = {}
 
-    
+
     #If we're removing the image
     if 'clear_image_sq' in data_dict and data_dict['clear_image_sq']:
         remove_image(customization['image_sq'])
@@ -198,7 +198,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
         customization['image_rect'] = ''
 
-    
+
     if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
         #If old image was uploaded remove it
         if customization['image_sq']:

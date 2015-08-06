@@ -18,7 +18,7 @@ class TestOrgAuth(hdx_test_base.HdxBaseTest):
     
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_theme')
+        hdx_test_base.load_plugin('hdx_org_group')
 
     def test_create_org(self):
         user = model.User.by_name('tester')

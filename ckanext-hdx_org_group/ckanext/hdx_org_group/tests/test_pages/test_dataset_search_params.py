@@ -20,7 +20,7 @@ class TestDatasetSearchParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_package hdx_theme')
+        hdx_test_base.load_plugin('hdx_org_group hdx_package')
 
     def test_search_params(self):
         url = h.url_for(

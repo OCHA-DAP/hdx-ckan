@@ -11,6 +11,9 @@ import ckan.lib.helpers as h
 import ckan.model as model
 import unicodedata
 
+import ckanext.hdx_users.model as umodel
+import ckanext.hdx_user_extra.model as ue_model
+
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 package = {
@@ -32,14 +35,20 @@ package = {
 
 
 class TestDatasetOutput(hdx_test_base.HdxBaseTest):
-    #loads missing plugins
+    # loads missing plugins
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_package hdx_users hdx_theme')
+        hdx_test_base.load_plugin('hdx_package hdx_users hdx_user_extra hdx_theme')
 
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
+
+    @classmethod
+    def setup_class(cls):
+        super(TestDatasetOutput, cls).setup_class()
+        umodel.setup()
+        ue_model.create_table()
 
     def test_deleted_badge_appears(self):
         global package
@@ -55,14 +64,15 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
                                                apikey=testsysadmin.apikey, id=dataset_name)
 
         deleted_page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        #print deleted_page.response
+        # print deleted_page.response
         assert 'Deleted' in str(deleted_page.response), 'Page needs to have deleted badge'
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None
         url = h.url_for(controller='package', action='read', id=package_id)
         if apikey:
-            page = self.app.get(url, headers={'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii','ignore')})
+            page = self.app.get(url, headers={
+                'Authorization': unicodedata.normalize('NFKD', apikey).encode('ascii', 'ignore')})
         else:
             page = self.app.get(url)
         return page
