@@ -41,7 +41,10 @@ def buildIndex(path):
         json file for lunr.js to search against
         '''
         index = list()
-        crises = config.get('hdx.crises').split(", ")
+        try:
+            crises = config.get('hdx.crises').split(", ")
+        except:
+            crises = ['ebola', 'nepal-earthquake']
         groups = Session.execute('select name, title, is_organization from "group" where state=\'active\'')
         for name, title, is_org in groups:
             if is_org:

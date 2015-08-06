@@ -21,7 +21,7 @@ class TestHDXPrivateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest)
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_package hdx_theme')
+        hdx_test_base.load_plugin('hdx_package hdx_users hdx_theme')
 
     def test_hdx_access_to_private_resource(self):
 
