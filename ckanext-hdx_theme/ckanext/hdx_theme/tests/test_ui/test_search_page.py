@@ -30,17 +30,13 @@ class TestSearchPage(hdx_test_base.HdxBaseTest):
 
     def test_active_tab(self):
         all_page = self._getSearchPage('')
-        assert '<li class="mx-tab-item-all active">' in str(all_page.response), 'Page needs to have all tab selected'
+        assert '<li class="mx-tab-item-datasets active">' in str(all_page.response), 'Page needs to have all tab selected'
         assert '<li class="mx-tab-item-indicators active">' not in str(
             all_page.response), 'Page needs to have all tab selected'
         assert '<li class="mx-tab-item-feature-pages active">' not in str(
             all_page.response), 'Page needs to have all tab selected'
-        assert '<li class="mx-tab-item-datasets active">' not in str(
-            all_page.response), 'Page needs to have all tab selected'
-
+       
         indicator_page = self._getSearchPage('', 1)
-        assert '<li class="mx-tab-item-all active">' not in str(
-            indicator_page.response), 'Page needs to have indicators tab selected'
         assert '<li class="mx-tab-item-indicators active">' in str(
             indicator_page.response), 'Page needs to have indicators tab selected'
         assert '<li class="mx-tab-item-feature-pages active">' not in str(
@@ -49,8 +45,6 @@ class TestSearchPage(hdx_test_base.HdxBaseTest):
             indicator_page.response), 'Page needs to have indicators tab selected'
 
         dataset_page = self._getSearchPage('', 0)
-        assert '<li class="mx-tab-item-all active">' not in str(
-            dataset_page.response), 'Page needs to have datasets tab selected'
         assert '<li class="mx-tab-item-indicators active">' not in str(
             dataset_page.response), 'Page needs to have datasets tab selected'
         assert '<li class="mx-tab-item-feature-pages active">' not in str(
