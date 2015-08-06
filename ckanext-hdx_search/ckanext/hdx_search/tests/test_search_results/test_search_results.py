@@ -54,7 +54,7 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         self.app.get(url)
 
         assert indicator_counts == 2, '2 indicator'
-        assert dataset_counts == 1, '1 datasets'
+        assert dataset_counts == 3, '3 datasets'
 
         # Testing search on indicators tab
         url = h.url_for(
@@ -62,6 +62,6 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         self.app.get(url)
 
         assert indicator_counts == 2, '2 indicator'
-        assert dataset_counts == 1, '1 datasets'
+        assert dataset_counts == 3, '3 datasets'
 
         search_controller.HDXSearchController._performing_search = performing_search_original
