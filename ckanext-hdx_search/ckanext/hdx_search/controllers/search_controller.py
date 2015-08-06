@@ -94,7 +94,7 @@ def extract_counts(result):
         indicator_no = result['facets']['extras_indicator']['1']
     else:
         indicator_no = 0
-    dataset_no = total - indicator_no
+    dataset_no = total
     return (dataset_no, indicator_no)
 
 
