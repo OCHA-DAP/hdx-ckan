@@ -21,24 +21,26 @@ class TestPermaLinkDisplay(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
     def _load_plugins(cls):
         hdx_test_base.load_plugin('hdx_package hdx_users hdx_user_extra hdx_theme')
 
-    def test_hdx_access_to_private_resource(self):
-        testsysadmin = model.User.by_name('testsysadmin')
-        context = {
-            'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-        package = self._get_action('package_show')(
-            context, {'id': 'test_private_dataset_1'})
+    ## NO LONGER NEEDED
 
-        resource = self._get_action('resource_show')(
-            context, {'id': package['resources'][0]['id']})
-        perma_link = h.url_for(controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
-                               action='perma_file', id='test_private_dataset_1', resource_id=resource['id'])
+    # def test_hdx_access_to_private_resource(self):
+    #     testsysadmin = model.User.by_name('testsysadmin')
+    #     context = {
+    #         'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+    #     package = self._get_action('package_show')(
+    #         context, {'id': 'test_private_dataset_1'})
 
-        test_dataset_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-                                     action='read', id='test_private_dataset_1')
+    #     resource = self._get_action('resource_show')(
+    #         context, {'id': package['resources'][0]['id']})
+    #     perma_link = h.url_for(controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
+    #                            action='perma_file', id='test_private_dataset_1', resource_id=resource['id'])
 
-        try:
-            result = self.app.get(
-                test_dataset_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
-            assert perma_link in str(result)
-        except Exception, e:
-            assert False, str(e)
+    #     test_dataset_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
+    #                                  action='read', id='test_private_dataset_1')
+
+    #     try:
+    #         result = self.app.get(
+    #             test_dataset_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+    #         assert perma_link in str(result)
+    #     except Exception, e:
+    #         assert False, str(e)
