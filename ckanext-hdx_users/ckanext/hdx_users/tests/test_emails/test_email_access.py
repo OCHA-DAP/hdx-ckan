@@ -13,7 +13,6 @@ import ckan.tests as tests
 import ckan.lib.helpers as h
 import ckanext.hdx_user_extra.model as ue_model
 from ckan.tests import CreateTestData
-import mock
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
