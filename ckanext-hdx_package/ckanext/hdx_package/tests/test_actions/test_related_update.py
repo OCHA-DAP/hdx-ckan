@@ -13,6 +13,8 @@ import ckan.model as model
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckan.lib.helpers as h
 
+import ckanext.hdx_user_extra.model as ue_model
+
 log = logging.getLogger(__name__)
 
 
@@ -23,11 +25,16 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_package hdx_theme')
+        hdx_test_base.load_plugin('hdx_package hdx_users hdx_user_extra hdx_theme')
 
     @classmethod
     def _get_action(cls, action_name):
         return tk.get_action(action_name)
+
+    @classmethod
+    def setup_class(cls):
+        super(TestHDXPackageUpdate, cls).setup_class()
+        ue_model.create_table()
 
     def test_related_permissions(self):
         new = h.url_for(controller='related',
