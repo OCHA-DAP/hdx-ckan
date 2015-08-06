@@ -116,8 +116,10 @@ def _add_custom_less_code(base_color, logo_use_org_color):
 
 
 def hdx_organization_update(context, data_dict):
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = hdx_group_or_org_update(context, data_dict, is_org=True)
-    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    if not test:
+        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     compile_less(result)
 
     return result
@@ -131,28 +133,39 @@ def remove_image(filename):
     return True
 
 def hdx_group_create(context, data_dict):
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core.create.group_create(context,data_dict)
-    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    if not test:
+        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
 
 def hdx_group_update(context, data_dict):
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core.update.group_update(context,data_dict)
-    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    if not test:
+        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
 
 def hdx_group_delete(context, data_dict):
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core.delete.group_delete(context,data_dict)
-    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    if not test:
+        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
 
 def hdx_organization_create(context, data_dict):
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core.create.organization_create(context,data_dict)
-    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    if not test:
+        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    
     return result
 
 def hdx_organization_delete(context, data_dict):
+    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = core.delete.organization_delete(context,data_dict)
-    lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+    if not test:
+        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
 
 def hdx_group_or_org_update(context, data_dict, is_org=False):

@@ -29,6 +29,9 @@ fl_notes.txt
 # custom style
 ckan/public/base/less/custom.less
 
+# lunr index
+feature-index.js
+
 # nosetest coverage output
 .coverage
 htmlcov/*
