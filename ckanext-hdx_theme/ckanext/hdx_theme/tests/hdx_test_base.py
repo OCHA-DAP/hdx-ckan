@@ -24,7 +24,7 @@ def _get_test_app():
 
 def load_plugin(plugin):
     plugins = set(config['ckan.plugins'].strip().split())
-    plugins.add(plugin.strip())
+    plugins.update(plugin.strip().split())
     config['ckan.plugins'] = ' '.join(plugins)
 
 

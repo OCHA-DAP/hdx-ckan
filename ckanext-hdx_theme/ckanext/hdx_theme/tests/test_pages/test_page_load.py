@@ -10,6 +10,9 @@ import logging as logging
 import ckan.model as model
 import ckan.lib.helpers as h
 
+import ckanext.hdx_users.model as umodel
+import ckanext.hdx_user_extra.model as ue_model
+
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 pages = [
@@ -49,7 +52,13 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_users hdx_theme')
+            'hdx_org_group hdx_package hdx_users hdx_user_extra hdx_theme')
+
+    @classmethod
+    def setup_class(cls):
+        super(TestPageLoad, cls).setup_class()
+        umodel.setup()
+        ue_model.create_table()
 
     def test_page_load(self):
         global pages

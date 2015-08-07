@@ -44,7 +44,7 @@ ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
 
-SMALL_NUM_OF_ITEMS = 5
+SMALL_NUM_OF_ITEMS = 25 #Should always be 25 right now but may change later
 LARGE_NUM_OF_ITEMS = 25
 
 
@@ -94,7 +94,7 @@ def extract_counts(result):
         indicator_no = result['facets']['extras_indicator']['1']
     else:
         indicator_no = 0
-    dataset_no = total - indicator_no
+    dataset_no = total
     return (dataset_no, indicator_no)
 
 
