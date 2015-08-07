@@ -348,6 +348,8 @@ class HDXSearchController(PackageController):
             'q': q,
             'fq': fq.strip(),
             'facet.field': facet_keys,
+            # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
+            'facet.limit': 2000,
             'rows': limit,
             'start': (page - 1) * limit,
             'sort': sort_by,
