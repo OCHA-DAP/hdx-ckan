@@ -4,6 +4,8 @@ import ckan.lib.helpers as h
 import json
 import os
 from pylons import config
+import logging as logging
+log = logging.getLogger(__name__)
 
 class FeatureSearchCommand(p.toolkit.CkanCommand):
     '''
@@ -86,7 +88,11 @@ def buildIndex(path):
         #                             qualified=True)
         #     index.append({'title':name.capitalize(), 'url': url, 'type': 'topic'})
 
-        dir_path = os.path.abspath(path) 
+        print path
+        log.error(path)
+        dir_path = os.path.abspath(path)
+        print dir_path
+        log.error(dir_path)
         f = open(dir_path+'/feature-index.js', 'w')
         file_body = json.dumps(index)
         file_body = 'var feature_index='+file_body+';'
