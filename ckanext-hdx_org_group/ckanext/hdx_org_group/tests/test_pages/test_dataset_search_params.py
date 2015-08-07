@@ -29,7 +29,7 @@ class TestDatasetSearchParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest
         result = self.app.get(url)
         page = str(result.response)
 
-        begin_str = '<form class="list-items search-form"'
+        begin_str = '<form class="section site-search simple-input"'
         end_str = '</form>'
         search_item = 'name="q"'
 
