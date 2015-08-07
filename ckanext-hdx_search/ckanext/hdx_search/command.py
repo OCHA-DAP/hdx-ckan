@@ -90,9 +90,14 @@ def buildIndex(path):
 
         print path
         log.error(path)
+        # dir_path = os.getcwd()
         dir_path = os.path.abspath(path)
+        # dir_path = '/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search'
         print dir_path
         log.error(dir_path)
+        print os.getcwd()
+        log.error(os.getcwd())
+
         f = open(dir_path+'/feature-index.js', 'w')
         file_body = json.dumps(index)
         file_body = 'var feature_index='+file_body+';'
