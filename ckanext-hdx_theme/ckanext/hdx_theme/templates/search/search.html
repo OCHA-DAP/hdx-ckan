@@ -15,7 +15,7 @@
           <div id="filter_container" class="mTB35 col-xs-8">
             <div class="row">
               {% for facet in c.facet_titles %}
-                {{h.snippet('snippets/facet_list_new.html', title=c.facet_titles[facet], name=facet ,hide_empty=True)}}
+                {{h.snippet('snippets/facet_list_new.html', title=c.facet_titles[facet], name=facet ,hide_empty=False)}}
               {% endfor %}
             </div>
           </div>
