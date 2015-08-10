@@ -619,6 +619,10 @@ body {
   width: 100%;
   color: #ffffff;
 }
+
+.secondary input{
+  color: #333;
+}
 /* END Style default Primary */
 /* Change the default style for ul items */
 ul.hdx-bs3 {
