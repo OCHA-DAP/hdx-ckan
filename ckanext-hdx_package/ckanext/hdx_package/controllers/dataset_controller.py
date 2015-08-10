@@ -191,6 +191,10 @@ class DatasetController(PackageController):
         """
         Force user to pick an organization before creating a dataset
         """
+        #If user not logged in, redirect
+        if not c.user:
+            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='contribute'))
+
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
         c.organizations_available = helpers.hdx_organizations_available_with_roles()
         if c.organizations_available and len(c.organizations_available) > 0:
