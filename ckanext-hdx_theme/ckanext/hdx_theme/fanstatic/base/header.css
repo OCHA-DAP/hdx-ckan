@@ -619,8 +619,7 @@ body {
   width: 100%;
   color: #ffffff;
 }
-
-.secondary input{
+.secondary input {
   color: #333;
 }
 /* END Style default Primary */
@@ -682,15 +681,17 @@ ul.hdx-bs3 {
   line-height: 31px;
   vertical-align: middle;
   display: block;
+  margin-bottom: 5px;
 }
 .resource-social a i {
   font-size: 31px;
   width: 31px;
   padding-right: 5px;
+  vertical-align: middle;
 }
 .resource-social a span {
   font-size: 14px;
-  vertical-align: bottom;
+  vertical-align: middle;
   line-height: 25px;
 }
 .resource-social a:hover {
