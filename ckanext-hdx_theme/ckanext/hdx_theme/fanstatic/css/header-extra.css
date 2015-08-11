@@ -954,3 +954,12 @@ span.is-more a.more-link, .more-link {
   background-color: #f2dede;
   border-color: #ebccd1;
 }
+
+.secondary .simple-input .field .btn-search {
+    margin-right: 12px;
+}
+
+.secondary .nav-simple > li, .nav-aside > li {
+    padding: 7px 19px;
+    width:95%;
+}
