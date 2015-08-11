@@ -24,9 +24,6 @@
                   </div>
                 {% endif %}
             </div>
-            <div class="col-xs-12 align-bottom-right mTop20">
-                {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='indicator-actions followButtonContainer pull-left' %}
-            </div>
           </div>
         </div>
         <div class="col-xs-4 mTop35">
@@ -38,6 +35,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div class="col-xs-12 align-bottom-right mTop20 mBottom15">
+            {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='indicator-actions followButtonContainer pull-right' %}
         </div>
       </div>
 
