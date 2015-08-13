@@ -262,9 +262,11 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         suffix = '#datasets-section'
 
         search_extras = {}
-        ext_indicator = request.params.get('ext_indicator', None)
-        if ext_indicator:
-            search_extras['ext_indicator'] = ext_indicator
+        ext_indicator = request.params.get('ext_indicator', '0')
+        # if ext_indicator:
+        search_extras['ext_indicator'] = ext_indicator
+        # else:
+        #     search_extras['ext_indicator'] = '0'
 
         #limit = self._allowed_num_of_items(search_extras)
         limit = 8
