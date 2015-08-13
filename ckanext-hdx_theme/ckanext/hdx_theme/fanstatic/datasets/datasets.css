@@ -44,7 +44,7 @@
 #hdx-dataset {
   right: 30%;
   left: 30%;
-  width: 40%;
+  width: 35%;
   height: 215px;
   background: #ffffff;
 }
@@ -52,4 +52,7 @@
   background: #007ce0;
   color: #fff;
   height: 100px;
+}
+.info-wrapper .empty .info-item-name {
+  color: #007ce0;
 }

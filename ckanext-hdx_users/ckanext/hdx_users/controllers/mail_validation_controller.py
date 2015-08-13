@@ -21,7 +21,7 @@ import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.lib.captcha as captcha
-import ckan.new_authz as new_authz
+# import ckan.new_authz as new_authz
 import pylons.configuration as configuration
 import re
 import json
@@ -41,8 +41,8 @@ import logging as logging
 import urllib2 as urllib2
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 from sqlalchemy.exc import IntegrityError
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+# from email.mime.text import MIMEText
+# from email.mime.multipart import MIMEMultipart
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
