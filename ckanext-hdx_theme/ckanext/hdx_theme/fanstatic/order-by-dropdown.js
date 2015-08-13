@@ -22,12 +22,11 @@ function replaceParam(key, value){
     var pathname = window.location.pathname;
     var params = toParams(window.location.search);
     // Handle corruption of the query
-    params['q'] = params['q'].replace(/\+/g,' ')
-    params['q'] = params['q'].replace(/\%2B/g,' ')
+    $.each(params, function(k,v){
+        params[k] = params[k].replace(/\+/g,' ')
+        params[k] = params[k].replace(/\%2B/g,' ')
+    });
     params[key] = value;
-
-
-
     return pathname + "?" + jQuery.param(params, true);
 }
 
