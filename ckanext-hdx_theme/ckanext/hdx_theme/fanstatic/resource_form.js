@@ -9,6 +9,7 @@ $(document).ready(function(){
  				$('#field-name').parent().append('<div class="error-explanation alert alert-error" id="error-license"><p>Please give this file a name.</p></div>');
  				return false;
  			}else{
+				$("#loadingScreen").show();
  				return true;
  			}
  		});

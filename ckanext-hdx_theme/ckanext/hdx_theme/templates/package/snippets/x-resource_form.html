@@ -9,6 +9,8 @@
 {% resource 'hdx_theme/hdx-resource-upload-field.js' %}
 {% resource 'hdx_theme/datasets/dataset_create.css' %}
 
+{{ h.snippet('widget/loading/loading.html', id="loadingScreen", message="Uploading ... this can take up to a few minutes") }}
+
 {% block secondary %}
 {% endblock %}
 
