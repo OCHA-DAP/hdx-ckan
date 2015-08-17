@@ -5,6 +5,8 @@ Created on Jul 07, 2015
 '''
 import json
 import urllib
+import urlparse
+import os
 from string import lower
 from pylons import config
 
@@ -23,6 +25,17 @@ _get_or_bust = logic.get_or_bust
 get_action = logic.get_action
 
 
+def detect_format_from_extension(url):
+    if url:
+        split_url = urlparse.urlsplit(url)
+        if split_url.path:
+            file_name = os.path.basename(split_url.path)
+            possible_extension = file_name.split(".")[-1].lower()
+            if '.' in file_name and possible_extension:
+                return possible_extension
+    return None
+
+
 def _get_shape_info_as_json(gis_data):
     resource_id = gis_data['resource_id']
     resource_id = resource_id if resource_id and resource_id.strip() else 'new'
@@ -39,7 +52,14 @@ def _get_shape_info_as_json(gis_data):
 
 
 def add_init_shape_info_data_if_needed(resource_data):
-    if lower(resource_data.get('format', '')) in GIS_FORMATS:
+
+    # If this is the first time that a resource has been uploaded it might not have a format.
+    # The format detection only happens during the actual 'create' action.
+    # That's why we're applying the same format detection function to name and url in case there's no format provided.
+    file_format = lower(resource_data.get('format', '')) or detect_format_from_extension(
+        resource_data['name']) or detect_format_from_extension(resource_data['url'])
+
+    if file_format in GIS_FORMATS:
         shape_info = json.dumps({
             'state': 'processing',
             'message': 'The processing of the geo-preview has started',
@@ -70,11 +90,11 @@ def do_geo_transformation_process(result_dict):
     # This is needed because the URL is not always correctly set in the received dictionary
     if result_dict.get('url_type', '') == 'upload' and 'http' not in url:
         url = h.url_for(controller='package',
-                  action='resource_download',
-                  id=result_dict['package_id'],
-                  resource_id=result_dict['id'],
-                  filename=url,
-                  qualified=True)
+                        action='resource_download',
+                        id=result_dict['package_id'],
+                        resource_id=result_dict['id'],
+                        filename=url,
+                        qualified=True)
     # result_dict = get_action('resource_show')(context, {'id': resource_dict['id']})
 
     dataset_id = _get_or_bust(result_dict, 'package_id')
