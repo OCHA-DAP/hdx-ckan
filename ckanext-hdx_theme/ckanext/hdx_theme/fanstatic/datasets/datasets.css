@@ -44,15 +44,20 @@
 #hdx-dataset {
   right: 30%;
   left: 30%;
-  width: 35%;
-  height: 215px;
+  width: 350px;
+  height: 190px;
   background: #ffffff;
 }
 #hdx-dataset .modal-header {
   background: #007ce0;
   color: #fff;
-  height: 100px;
+  height: 60px;
 }
+
+#hdx-dataset h3{
+  margin-top: 0px;
+}
+
 .info-wrapper .empty .info-item-name {
   color: #007ce0;
 }
