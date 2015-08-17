@@ -114,7 +114,8 @@ def munge_tag(tag):
 def munge_filename(filename):
     filename = substitute_ascii_equivalents(filename)
     filename = filename.strip()
-    filename = re.sub(r'[^a-zA-Z0-9.\- ]', '', filename).replace(' ', '-')
+    ### HDX HACK (unawaiting PR acceptance)
+    filename = re.sub(r'[^a-zA-Z0-9_.\- ]', '', filename).replace(' ', '-')
     filename = _munge_to_length(filename, 3, 100)
     return filename
 
