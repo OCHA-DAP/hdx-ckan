@@ -46,6 +46,10 @@ def sort_results_case_insensitive(results, sort_by):
             return sorted(results, key=lambda x: x.get('title', '').lower(), reverse=True)
     return results
 
+def get_featured_orgs():
+    # ONE DAY THIS FEATURE WILL COME
+    return list()
+
 
 def hdx_get_group_activity_list(context, data_dict):
     from ckanext.hdx_package.helpers import helpers as hdx_package_helpers
