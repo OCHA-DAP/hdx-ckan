@@ -47,6 +47,11 @@ $('document').ready(function(){
 		}
 	});
 
+	$('#q').blur(function(){
+		$('#search-ahead').html('');
+		$('#search-ahead').hide();
+	});
+
 	$('#search-ahead').on('click', "li", function(){
 		window.location = $(this).attr('data-href');
 	});
