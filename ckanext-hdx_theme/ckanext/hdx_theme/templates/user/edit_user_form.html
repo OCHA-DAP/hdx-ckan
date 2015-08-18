@@ -1,5 +1,6 @@
 {% import 'macros/form.html' as form %}
-
+<div class="paddingLeftHack">
+  <div class="mTop35">
 <form class="dataset-form form-horizontal" method="post" action="{{ action }}">
   {{ form.errors(error_summary) }}
 
@@ -42,3 +43,5 @@
     <button class="btn btn-primary" type="submit" name="save">{{ _('Update Profile') }}</button>
   </div>
 </form>
+</div>
+</div>
