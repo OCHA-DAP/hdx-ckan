@@ -49,7 +49,7 @@ class HDXOrganizationController(org.OrganizationController):
         user = c.user or c.author
         q = c.q = request.params.get('q', '')
         page = request.params.get('page', 1)
-        limit = request.params.get('limit', 25)
+        limit = int(request.params.get('limit', 25))
         sort_option = request.params.get('sort', 'title asc')
 
 
