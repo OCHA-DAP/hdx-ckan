@@ -62,6 +62,7 @@ Example:
         #}
 
           {% block package_search_results_datasets %}
+
               {% if my_c.tab=='datasets' %}
                   {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items) }}
               {% elif my_c.tab=='all' %}

@@ -115,6 +115,12 @@
             {% endblock %}
           {% endif %}
         </div>
+        <div class="header-user-box pull-right">
+          <ul class="mainLinks mainLinks-gray" style="position: absolute; right: 315px;">
+            <li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>
+            <li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -161,6 +167,7 @@
               <ul class="mainLinks">
                 {% block header_site_navigation_tabs %}
                   <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
+                  <li><a href="/group">{{ _('Locations') }}</a></li>
                   <li><a href="/browse">{{ _('Browse') }}</a></li>
                   <li style="position: relative">
                       <a id="crises-label" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">{{ _('Crises') }}</a>
@@ -169,8 +176,8 @@
                           <li><a href="/ebola">{{ _('Ebola') }}</a></li>
                       </ul>
                   </li>
-                  <li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>
-                  <li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>
+                  <!--<li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>-->
+                  <!--<li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>-->
                 {% endblock %}
               </ul>
             </span>

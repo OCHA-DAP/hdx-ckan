@@ -18,7 +18,7 @@ $('document').ready(function(){
 	results = index.search($('#terms').attr('value'));
 	if(results.length > 0){//Don't show if we don't have any good matches
 		var html = "You might also like:"
-		var limit = results.length > 4 ? 4 : results.length;
+		var limit = results.length > 5 ? 5 : results.length;
 		for(i=0; i<limit; i++){
 			html += ' <a href="'+feature_index[results[i]['ref']]['url']+'">'+feature_index[results[i]['ref']]['title']+'</a> '+feature_index[results[i]['ref']]['type']+' page';
 			if(i<limit-1){

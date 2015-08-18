@@ -79,7 +79,7 @@
         (_('Last Modified'), 'metadata_modified desc') ]
       %}
       {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}
-      {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}	
+      {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}
       {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_option, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
   </div>
 	{% endblock %}
