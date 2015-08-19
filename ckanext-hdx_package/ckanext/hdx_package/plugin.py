@@ -168,6 +168,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
             'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
+            'data_update_frequency': [tk.get_validator('ignore_missing'),
+                              tk.get_converter('convert_to_extras')]
         })
 
         schema['resources'].update(
@@ -233,6 +235,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'subnational': [tk.get_converter('convert_from_extras'),
                               tk.get_validator('ignore_missing')],
             'quality': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+            'data_update_frequency': [tk.get_converter('convert_from_extras'),
+                              tk.get_validator('ignore_missing')]
         })
         return schema
 
