@@ -123,13 +123,6 @@
     width: 1260px;
 }
 
-.organization-heading{
-    text-decoration: none;
-    font-size: 18px;
-    margin-top: -5px;
-    margin-bottom: -5px;
-    font-weight: bold;
-}
 
 .leaflet-container .leaflet-top-pane {
     pointer-events: none;

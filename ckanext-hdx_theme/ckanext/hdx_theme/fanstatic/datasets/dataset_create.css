@@ -61,9 +61,6 @@ input[type=checkbox] {
 .simple-dataset-control {
   width: 370px;
 }
-.dataset-form-field-wrapper {
-  width: 670px;
-}
 .dataset-form-field-wrapper .control-full textarea {
   height: 120px;
 }
