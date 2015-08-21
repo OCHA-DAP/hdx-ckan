@@ -1,0 +1,47 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.organization-heading {
+  text-decoration: none;
+  font-size: 18px;
+  margin-top: -5px;
+  margin-bottom: -5px;
+  font-weight: bold;
+}
+.dataset-item {
+  margin: 0;
+  border-bottom: 1px solid #eeeeee;
+}
+.list-header .list-header-showall {
+  color: #333333;
+}
+.list-header .list-header-showall > span {
+  margin-right: 10px;
+}
+.list-header .list-header-showall > span:before {
+  content: "|";
+  color: #888888;
+  margin-right: 10px;
+}
+.list-header .list-header-showall > span:first-child:before {
+  content: "";
+}
+.header-search {
+  line-height: 18px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #888888;
+  padding: 7px 6px;
+  width: 450px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+}
+.header-search:focus {
+  outline: none;
+}

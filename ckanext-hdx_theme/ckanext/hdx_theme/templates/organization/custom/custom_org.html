@@ -201,6 +201,9 @@
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">
+                    {% if data.visualization.config.type == 'ROEA' %}
+                        {{ _("Key Figures and") }}
+                    {% endif %}
                     {{ _("Interactive Data") }}
                 </span>
             </div>
@@ -208,7 +211,8 @@
         </div>
             {% set viz_title = data.visualization.config.title or '' %}
             {% set data_link_url = data.visualization.config.data_link_url or '#' %}
-            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            {% if data.visualization.config.type != 'ROEA' %}
+                <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="mTop20 mBottom20">
                     <div class="pull-left visualization-title">
                         {{viz_title}}
@@ -223,6 +227,7 @@
                 </div>
                 <input type="hidden" id="visualization-data" value="{{ h.json_dumps(data.visualization.config) }}">
             </div>
+            {% endif %}
         <div style="display: none" id="wfp-viz-base-url">{{ data.visualization.basemap_url }}</div>
         <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
         <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
@@ -251,6 +256,41 @@
                             </div>
                         </div>
                         <div id="hdx-3W-where"></div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if data.visualization.config.type == 'ROEA' %}
+            <div id="hdx-roea" class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <!--<p>Use the tabs to browse the different risk indexes for the region. 1 is low risk (lighter) and 10 is high risk (darker).  Click the map to filter the statistics for selected countries.</p>-->
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <div class="hdx-roea-viz" id="hdx-roea-numbers">
+                            <div class="hdx-roea-number">
+                                <div class="hdx-roea-title">Funding</div>
+                                <div id="hdx-roea-funding"></div>
+                            </div>
+                            <div class="hdx-roea-number">
+                                <div class="hdx-roea-title">Refugees</div>
+                                <div id="hdx-roea-refugees"></div>
+                            </div>
+                            <div class="hdx-roea-number">
+                                <div class="hdx-roea-title">IDPs</div>
+                                <div id="hdx-roea-idps"></div>
+                            </div>
+                            <div class="hdx-roea-number">
+                                <div class="hdx-roea-title">Food insecure</div>
+                                <div id="hdx-roea-food"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-8">
+                        <div><div id="overall" class="hdx-roea-active tab">Overall</div><div id="hazard" class="hdx-roea-inactive tab">Hazard</div><div id="vulnerability" class="hdx-roea-inactive tab">Vulnerability</div><div id="coping" class="hdx-roea-inactive tab">Coping</div></div>
+                        <div class="hdx-roea-viz" id="hdx-roea-where"></div>
                     </div>
                 </div>
             </div>
@@ -328,6 +368,10 @@
     {% if data.visualization.config_type == '3W-dashboard' %}
       {% resource 'hdx_theme/leaflet' %}
       {% resource 'hdx_theme/custom-vis-3w' %}
+    {% endif %}
+    {% if data.visualization.config_type == 'ROEA' %}
+      {% resource 'hdx_theme/leaflet' %}
+      {% resource 'hdx_theme/custom-vis-roea' %}
     {% endif %}
     {% if data.visualization.config_type == 'WFP' %}
       {% resource 'hdx_theme/leaflet' %}

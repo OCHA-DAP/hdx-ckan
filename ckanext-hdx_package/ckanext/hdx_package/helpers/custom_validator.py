@@ -9,6 +9,8 @@ import ckan.lib.navl.dictization_functions as df
 import urlparse
 import os
 
+import ckanext.hdx_package.helpers.geopreview as geopreview
+
 from ckan.common import _
 
 missing = df.missing
@@ -52,14 +54,10 @@ def detect_format(key, data, errors, context):
     current_format = data.get(key)
     if not current_format:
         url = data.get((key[0], key[1], 'url'))
-        if url:
-            split_url = urlparse.urlsplit(url)
-            if split_url.path:
-                file_name = os.path.basename(split_url.path)
-                possible_extension = file_name.split(".")[-1].lower()
-                if '.' in file_name and possible_extension:
-                    data[key] = possible_extension
-                    return possible_extension
+        file_format = geopreview.detect_format_from_extension(url)
+        if file_format:
+            data[key] = file_format
+            return file_format
         raise df.Invalid(_('No format provided and none could be automatically deduced'))
 
     return current_format
