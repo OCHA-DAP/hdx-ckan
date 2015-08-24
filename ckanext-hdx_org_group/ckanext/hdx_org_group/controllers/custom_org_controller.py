@@ -84,6 +84,12 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             'type': visualization.get('visualization-select', '')
         }
 
+        if visualization.get('visualization-select', '') == 'ROEA':
+            config.update({
+                'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id', '') + "&limit=10000000",
+                'geo': h.url_for('perma_storage_file', id=visualization.get('dataset_id_2', ''), resource_id=visualization.get('resource_id_2', ''))
+            })
+
         if visualization.get('visualization-select', '') == 'WFP':
             config.update({
                 'embedded': "true",

@@ -181,25 +181,6 @@ function generateROEADashboard(config,data,geom){
     }    
 }
 
-
-//load data
-
-var dataCall = $.ajax({ 
-    type: 'GET', 
-    url: config.dataURL, 
-    dataType: 'json',
-});
-
-//load geometry
-
-var geomCall = $.ajax({ 
-    type: 'GET', 
-    url: config.geoURL, 
-    dataType: 'json',
-});
-
-//when both ready construct dashboard
-
 var tempData = [
   {
     "YEAR":2011,
@@ -1219,9 +1200,26 @@ var tempGeo = {
 };
 
 $(document).ready(function(){
-    generateROEADashboard(config, tempData, tempGeo);
+    //generateROEADashboard(config, tempData, tempGeo);
+
+    var visConfig = JSON.parse($('#visualization-data').val());
+
+    //load data
+    var dataCall = $.ajax({
+        type: 'GET',
+        url: visConfig.data,
+        dataType: 'json',
+    });
+
+    //load geometry
+    var geomCall = $.ajax({
+        type: 'GET',
+        url: visConfig.geo,
+        dataType: 'json',
+    });
+    //when both ready construct dashboard
+    $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
+        generateROEADashboard(config,dataArgs[0],geomArgs[0]);
+    });
 });
 
-//$.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
-//    generateROEADashboard(config,dataArgs[0],geomArgs[0]);
-//});
