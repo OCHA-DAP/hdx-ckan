@@ -36,9 +36,21 @@
 
 <div class="org-control-container">
     <div class="control-group control-full org-control field-with-info">
-        <label class="control-label" for="field-geo-id">{{_('Geojson ID')}}</label>
+        <label class="control-label" for="field-dataset-geo-id">{{_('Geojson Dataset ID')}}</label>
         <div class="controls ">
-            <input id="field-geo-id" type="text" name="viz-geo-id" value="{{visualization['viz-geo-id']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+            <input id="field-dataset-geo-id" type="text" name="viz-geo-dataset-id" value="{{visualization['viz-geo-dataset-id']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Dataset ID containing the geojson to be displayed on the map')}}</div>
+    </div>
+</div>
+
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-geo-resource-id">{{_('Geojson Resource ID')}}</label>
+        <div class="controls ">
+            <input id="field-geo-resource-id" type="text" name="viz-geo-resource-id" value="{{visualization['viz-geo-resource-id']}}" placeholder="" class="visualization_config" viz-type="ROEA">
         </div>
     </div>
     <div class="org-control-info info-field">
