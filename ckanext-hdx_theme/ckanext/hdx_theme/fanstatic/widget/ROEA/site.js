@@ -2,7 +2,7 @@ var config = {
     dataURL:'data/data.json',
     geoURL:'data/geom.geojson',
     colors:['#FFFFFF','#BFDAEC','#80B5DA','#4190C7','#026BB5']
-}
+};
 
 function generateROEADashboard(config,data,geom){
     var cf = crossfilter(data);
@@ -49,7 +49,7 @@ function generateROEADashboard(config,data,geom){
             })   
         .featureKeyAccessor(function(feature){
             return feature.id;
-        }).popup(function(id, feature){
+        }).popup(function(feature){
             return 'Click to filter <br />'+feature.properties.name;
         })
         .renderPopup(true);
@@ -127,6 +127,15 @@ function generateROEADashboard(config,data,geom){
     var map = mapChart.map();
     map.scrollWheelZoom.disable();
     zoomToGeom(geom);
+
+    L.tileLayer($('#mapbox-baselayer-url-div').text(), {
+        attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
+        maxZoom: 7
+    }).addTo(map);
+
+    L.tileLayer($('#mapbox-labelslayer-url-div').text(), {
+        maxZoom: 7
+    }).addTo(map);
 
     $('#overall').on('click',function(){
         mapChart.group(overallGroup);
