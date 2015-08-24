@@ -1,23 +1,47 @@
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-viz-title">{{_('Title')}}</label>
-    <div class="controls ">
-        <input id="field-viz-title" type="text" name="viz-title" value="{{visualization['viz-title']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-viz-title">{{_('Title')}}</label>
+        <div class="controls ">
+            <input id="field-viz-title" type="text" name="viz-title" value="{{visualization['viz-title']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
+    <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Give this visualization a title.')}}</div>
-      </div>
+    </div>
 </div>
 
 <div class="org-control-container">
-  <div class="control-group control-full org-control field-with-info">
-    <label class="control-label" for="field-data-link-url">{{_('Datastore ID:')}}</label>
-    <div class="controls ">
-    <input id="field-data-link-url" type="text" name="viz-data-link-url" value="{{visualization['viz-data-link-url']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-data-link-url">{{_('Data Link URL')}}</label>
+        <div class="controls ">
+            <input id="field-data-link-url" type="text" name="viz-data-link-url" value="{{visualization['viz-data-link-url']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+        </div>
     </div>
-  </div>
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Source datastore ID for the visualization')}}</div>
-      </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Source Data URL for map.')}}</div>
+    </div>
+</div>
+
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-resource-id">{{_('Resource ID')}}</label>
+        <div class="controls ">
+            <input id="field-resource-id" type="text" name="viz-resource-id" value="{{visualization['viz-resource-id']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Resource ID containing the data to be displayed on ROEA visualization')}}</div>
+    </div>
+</div>
+
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-geo-id">{{_('Geojson ID')}}</label>
+        <div class="controls ">
+            <input id="field-geo-id" type="text" name="viz-geo-id" value="{{visualization['viz-geo-id']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Resource ID containing the geojson to be displayed on the map')}}</div>
+    </div>
 </div>
