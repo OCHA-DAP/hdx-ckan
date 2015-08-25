@@ -162,7 +162,7 @@ sharing_data = {
         },
         {
             'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
-            'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or on a Geonode). However, the metadata and activity stream will not automatically indicate the updated date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date of the dataset are only updated automatically if the resource is stored on HDX. We are working to improve this functionality, so please bear with us!',
+            'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or on a GeoNode). However, the metadata and activity stream will not automatically indicate the updated date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date of the dataset are only updated automatically if the resource is stored on HDX. We are working to improve this functionality, so please bear with us!',
         },
     ]
 }
@@ -179,8 +179,8 @@ geodata = {
             'a': 'To generate a map preview, a dataset can have multiple resources but each resource can only include one layer within it. Resources with multiple layers (e.g., multiple shapefiles in a single zip file) are not supported. In this case, the system will only create a preview of the first layer in the resource. If you would like all of the layers to display, you need to create a separate resource for each layer.',
         },
         {
-            'q': 'Is HDX integrated with any Geonodes?',
-            'a': 'HDX has some datasets that are links to data stored on Geonodes, such as the <a target="_blank"  href="http://ebolageonode.org/">Ebola Geonode</a>, the <a target="_blank"  href="http://geonode.salahumanitaria.co/">Sala Humanitaria Geonode</a>, and the <a target="_blank"  href="http://geonode.state.gov/">U.S. Department of State Geonode</a>. These links are currently maintained manually. Updates to downloadable resources on a Geonode will be reflected in the download from HDX. Updates to metadata or descriptions are only captured if the dataset owner updates them manually on HDX.',
+            'q': 'Is HDX integrated with any GeoNodes?',
+            'a': 'HDX has some datasets that are links to data stored on GeoNodes, such as the <a target="_blank"  href="http://ebolageonode.org/">Ebola GeoNode</a>, the <a target="_blank"  href="http://geonode.salahumanitaria.co/">Sala Humanitaria GeoNode</a>, and the <a target="_blank"  href="http://geonode.state.gov/">U.S. Department of State GeoNode</a>. These links are currently maintained manually. Updates to downloadable resources on a GeoNode will be reflected in the download from HDX. Updates to metadata or descriptions are only captured if the dataset owner updates them manually on HDX.',
         },
     ]
 }
