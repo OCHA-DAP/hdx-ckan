@@ -49,7 +49,7 @@ function generateROEADashboard(config,data,geom){
             })   
         .featureKeyAccessor(function(feature){
             return feature.id;
-        }).popup(function(feature){
+        }).popup(function(id, feature){
             return 'Click to filter <br />'+feature.properties.name;
         })
         .renderPopup(true);
@@ -115,6 +115,8 @@ function generateROEADashboard(config,data,geom){
                 output = '<span class="hdx-roea-value">'+d3.format("0,000")(output.slice(0, -1) * 1000)+'</span>';
             } else if(output.slice(-1)=='M'){
                 output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> million</span>';
+            } else if(output.slice(-1)=='G'){
+                output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> billion</span>';
             } else {
                 output = '<span class="hdx-roea-value">'+d3.format(".3s")(d)+'</span>';
             }            
