@@ -11,8 +11,6 @@ import ckan.model as model
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
-
-
 def get_packages():
     packages = [
         {
