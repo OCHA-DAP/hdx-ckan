@@ -49,79 +49,50 @@ function generateROEADashboard(config,data,geom){
             })   
         .featureKeyAccessor(function(feature){
             return feature.id;
-        }).popup(function(id, feature){
+        }).popup(function(feature){
             return 'Click to filter <br />'+feature.properties.name;
         })
         .renderPopup(true);
 
+    var formatNumber = function (d) {
+        var output = d3.format(".3s")(d);
+        if (output.slice(-1) == 'k') {
+            output = '<span class="hdx-roea-value">' + d3.format("0,000")(output.slice(0, -1) * 1000) + '</span>';
+        } else if (output.slice(-1) == 'M') {
+            output = '<span class="hdx-roea-value">' + output.slice(0, -1) + '</span><span class="hdx-roea-small"> million</span>';
+        } else if (output.slice(-1) == 'G') {
+            output = '<span class="hdx-roea-value">' + output.slice(0, -1) + '</span><span class="hdx-roea-small"> billion</span>';
+        } else {
+            output = '<span class="hdx-roea-value">' + d3.format(".3s")(d) + '</span>';
+        }
+        return '<span class="hdx-roea-small">$</span>' + output;
+    };
     var fundingND = dc.numberDisplay("#hdx-roea-funding")
         .valueAccessor(function(d){
             return d;
         })
-        .formatNumber(function(d){
-            var output = d3.format(".3s")(d);
-            if(output.slice(-1)=='k'){
-                output = '<span class="hdx-roea-value">'+d3.format("0,000")(output.slice(0, -1) * 1000)+'</span>';
-            } else if(output.slice(-1)=='M'){
-                output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> million</span>';
-            } else {
-                output = '<span class="hdx-roea-value">'+d3.format(".3s")(d)+'</span>';
-            }            
-            return '<span class="hdx-roea-small">$</span>'+output;
-        })                                
+        .formatNumber(formatNumber)
         .group(fundingGroup);
 
     var refugeesND = dc.numberDisplay("#hdx-roea-refugees")
         .valueAccessor(function(d){
             return d;
         })
-        .formatNumber(function(d){
-            var output = d3.format(".3s")(d);
-            if(output.slice(-1)=='k'){
-                output = '<span class="hdx-roea-value">'+d3.format("0,000")(output.slice(0, -1) * 1000)+'</span>';
-            } else if(output.slice(-1)=='M'){
-                output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> million</span>';
-            } else {
-                output = '<span class="hdx-roea-value">'+d3.format(".3s")(d)+'</span>';
-            }            
-            return output;
-        })             
+        .formatNumber(formatNumber)
         .group(refugeesGroup);
 
     var ipdsND = dc.numberDisplay("#hdx-roea-idps")
         .valueAccessor(function(d){
             return d;
         })
-        .formatNumber(function(d){
-            var output = d3.format(".3s")(d);
-            if(output.slice(-1)=='k'){
-                output = '<span class="hdx-roea-value">'+d3.format("0,000")(output.slice(0, -1) * 1000)+'</span>';
-            } else if(output.slice(-1)=='M'){
-                output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> million</span>';
-            } else {
-                output = '<span class="hdx-roea-value">'+d3.format(".3s")(d)+'</span>';
-            }            
-            return output;
-        })                
+        .formatNumber(formatNumber)
         .group(idpsGroup);
 
     var fsND = dc.numberDisplay("#hdx-roea-food")
         .valueAccessor(function(d){
             return d;
         })
-        .formatNumber(function(d){
-            var output = d3.format(".3s")(d);
-            if(output.slice(-1)=='k'){
-                output = '<span class="hdx-roea-value">'+d3.format("0,000")(output.slice(0, -1) * 1000)+'</span>';
-            } else if(output.slice(-1)=='M'){
-                output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> million</span>';
-            } else if(output.slice(-1)=='G'){
-                output = '<span class="hdx-roea-value">'+output.slice(0, -1)+'</span><span class="hdx-roea-small"> billion</span>';
-            } else {
-                output = '<span class="hdx-roea-value">'+d3.format(".3s")(d)+'</span>';
-            }            
-            return output;
-        })        
+        .formatNumber(formatNumber)
         .group(fsGroup);                        
 
     dc.renderAll();
