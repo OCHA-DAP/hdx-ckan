@@ -19,7 +19,7 @@
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">{{ _("Organisations") }} [{{c.page.item_count}}]</span>
                 <span class="mL30">
-                    <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} organisations ...">
+                    <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} organisations ..." value="{{request.params.get('q')}}">
                 </span>
                 {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
                 {% set sort_param = request.params.get('sort') %}
