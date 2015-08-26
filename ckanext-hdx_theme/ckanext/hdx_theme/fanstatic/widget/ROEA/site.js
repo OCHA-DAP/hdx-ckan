@@ -49,7 +49,7 @@ function generateROEADashboard(config,data,geom){
             })   
         .featureKeyAccessor(function(feature){
             return feature.id;
-        }).popup(function(feature){
+        }).popup(function(id, feature){
             return 'Click to filter <br />'+feature.properties.name;
         })
         .renderPopup(true);
