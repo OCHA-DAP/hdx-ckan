@@ -5,7 +5,7 @@
 <div class="homepage-header-user-bg">
   <div class="container">
     <div class="row paddingRowHack header-user-bg">
-      <div class="span12 paddingLeftHack paddingRightHack">
+      <div class="col-xs-12 paddingLeftHack paddingRightHack" style="position: relative;">
         {% if data %}
           {% set step = data.current_step %}
           {% if step == "hdx_login" %}
@@ -115,6 +115,12 @@
             {% endblock %}
           {% endif %}
         </div>
+        <div class="header-user-box pull-right">
+          <ul class="mainLinks mainLinks-gray" style="position: absolute; right: 237px;">
+            <li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>
+            <li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -156,32 +162,6 @@
               </div>
             </span>
           </span>
-          <span class="table-valign pull-left">
-            <span class="table-valign-content">
-              <ul class="mainLinks">
-                {% block header_site_navigation_tabs %}
-                  <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
-                  <li><a href="/browse">{{ _('Browse') }}</a></li>
-                  <li style="position: relative">
-                      <a id="crises-label" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">{{ _('Crises') }}</a>
-                      <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-                          <li><a href="{{ h.url_for('show_custom_country', id='nepal-earthquake') }}">{{ _('Nepal Earthquake') }}</a></li>
-                          <li><a href="/ebola">{{ _('Ebola') }}</a></li>
-                      </ul>
-                  </li>
-                  <li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>
-                  <li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>
-                {% endblock %}
-              </ul>
-            </span>
-          </span>
-          <!--<span class="mL30 table-valign pull-left">-->
-            <!--<span class="table-valign-content">-->
-              <!--<a id="feedback-button" href="http://docs.hdx.rwlabs.org/get-involved/" title="Send feedback to hdx.feedback@gmail.com.">-->
-                <!--Feedback-->
-              <!--</a>-->
-            <!--</span>-->
-          <!--</span>-->
           <span class="mL45 table-valign pull-right">
             <span class="table-valign-content">
               <a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">
@@ -192,6 +172,27 @@
               </a>
             </span>
           </span>
+          <span class="table-valign pull-right">
+  <span class="table-valign-content">
+    <ul class="mainLinks">
+      {% block header_site_navigation_tabs %}
+        <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
+        <li><a href="/group">{{ _('Locations') }}</a></li>
+        <li><a href="/organization">{{ _('Organisations') }}</a></li>
+        <li style="position: relative">
+            <a id="crises-label" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">{{ _('Crises') }}</a>
+            <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+                <li><a href="{{ h.url_for('show_custom_country', id='nepal-earthquake') }}">{{ _('Nepal Earthquake') }}</a></li>
+                <li><a href="/ebola">{{ _('Ebola') }}</a></li>
+            </ul>
+        </li>
+        <!--<li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>-->
+        <!--<li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>-->
+      {% endblock %}
+    </ul>
+  </span>
+</span>
+
         </div>
       </div>
     </div>

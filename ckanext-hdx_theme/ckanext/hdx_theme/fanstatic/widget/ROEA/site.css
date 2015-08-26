@@ -1,0 +1,97 @@
+#hdx-roea .dc-chart g.row text {
+    fill: black;
+    font-size:0.8em;
+}
+
+#hdx-roea .dc-chart .pie-slice {
+    fill:black;
+}
+
+#hdx-roea .x-axis-label{
+    font-size:0.8em;
+}
+
+#hdx-roea .dc-chart g.selected path {
+    stroke-width:1px !important;
+}
+
+#hdx-roea #hdx-roea-where{
+    height:400px;
+    width:100%;
+}
+
+#hdx-roea .hdx-roea-number {
+    width:100%;
+    height:110px;
+    display:block;
+    border-bottom:1px solid #bbb;
+}
+
+#hdx-roea .hdx-roea-title {
+    font-family: 'Gotham-Bold', sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    margin-bottom: 10px;
+    color: #333333;
+    line-height: 20px;
+    height: 25px;
+    padding-top:5px;
+}
+
+#hdx-roea .hdx-roea-value {
+    font-family: 'Gotham-Light', sans-serif;
+    font-weight: 200;
+    font-size: 56px;
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+#hdx-roea .hdx-roea-small {
+    font-family: 'Gotham-Light', sans-serif;
+    font-weight: 200;
+    font-size: 28px;
+    letter-spacing: 0.01em;
+    line-height: 1;
+}
+
+#hdx-roea .hdx-roea-active {
+    width:100px;
+    height:40px;
+    border-left: 1px solid #bbb;
+    border-top: 1px solid #bbb;
+    border-right: 1px solid #bbb;
+    border-bottom: 0px solid #bbb;
+    display:inline-block;
+    border-radius: 5px 5px 0px 0px;
+    text-align:center;
+    vertical-align:center;
+    padding-top:10px;
+}
+
+#hdx-roea .hdx-roea-inactive {
+    width:100px;
+    height:40px;
+    border-bottom: 1px solid #bbb;
+    display:inline-block;
+    vertical-align:center;
+    text-align:center;
+    padding-top:10px;
+}
+
+#hdx-roea .tab {
+    cursor:pointer;
+}
+
+#hdx-roea .hdx-3w-info{
+    padding:5px;
+    background-color:white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    font-size:2em;
+ }
+
+.number-display{
+    color: #000000;
+}

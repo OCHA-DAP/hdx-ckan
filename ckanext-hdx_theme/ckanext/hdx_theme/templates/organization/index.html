@@ -4,47 +4,85 @@
 {% block subtitle %}{{ _('Organisations') }}{% endblock %}
 
 {% block breadcrumb_content %}
-  <li class="active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
+<li class="active">{% link_for _('Organisations'), controller='organization', action='index' %}</li>
 {% endblock %}
 
-{% block page_header %}{% endblock %}
-{% block page_primary_action %}
-    {# if is_sys_admin %}
-    	{% link_for _('Add Organisation'), controller='organization', action='new', class_='btn btn-primary'%}
-    {% else %}
-    	{% if logged_in %}
-   		 	<a href="/organization/request_new?from=organization" class="btn btn-primary">{{ _("+ Request New Organisation")}}</a>
-    	{% endif %}
-  	{% endif #}
-{% endblock %}
 
-{% block primary_content_inner %}
-      <h1 class="hide-heading">{% block page_heading %}{{ _('Organisations') }}{% endblock %}</h1>
-      {% block organizations_search_form %}
-        {% set sorting_option = c.sort_by_selected or 'title asc' %}
-        {% snippet 'snippets/search_form.html', type='organization', query=c.q, sorting_selected=sorting_option, count=c.page.item_count, placeholder=_('Search organisations...'), show_empty=request.params %}
-      {% endblock %}
-      {% block organizations_list %}
-      {% if c.page.items or request.params %}
-        {% snippet "organization/snippets/organization_list.html", organizations=c.page.items %}
-      {% else %}
-        <p class="empty">
-          {{ _('There are currently no organisations for this site') }}.
-          {% if h.check_access('organization_create') %}
-            {% link_for _('How about creating one?'), controller='organization', action='new' %}</a>.
-          {% endif %}
-        </p>
-      {% endif %}
-      {% endblock %}
-    {% block page_pagination %}
-        <div class="paddingRowHack">
-            <div class="paddingLeftHack">
-                {{ c.page.pager() }}
+{% block primary_content %}
+
+    <div class="list-items search-form">
+        <h2>All Organisations</h2>
+    </div>
+
+    <div id="organizationsSection" class="row list-items module paddingRowHack">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">{{ _("Organisations") }} [{{c.page.item_count}}]</span>
+                <span class="mL30">
+                    {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
+                    <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} organisations ..." value="{{searchValue}}">
+                </span>
+                {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+                {% set sort_param = request.params.get('sort') %}
+                {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+                <div class="form-select control-group control-order-by pull-right">
+                    <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+                    <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
+                        <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+                            <span class="dropdown-toggle-text">
+                            {% for label, value in sorting %}
+                            {% if sorting_selected == value %} {{ label }} {% endif %}
+                            {% endfor %}
+                            </span>
+                            <b class="caret"></b>
+                        </button>
+                        <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+                            {% for label, value in sorting %}
+                                {% if label and value %}
+                                    <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <span class="mL15 list-header-showall pull-right mR45">
+                    {% set limits = [25, 50, 100] %}
+                    {% set limit_param = request.params.get('limit') %}
+                    {% set limit_selected = limit_param if limit_param else 25 %}
+
+                    Show
+                    {% for value in limits %}
+                        {% if limit_selected|int == value %}
+                            <span>{{ value }}</span>
+                        {% else %}
+                            <span><a href="#">{{value}}</a></span>
+                        {% endif %}
+                    {% endfor %}
+                </span>
             </div>
+            <div>
+                <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+                    {% for organization in c.page.items %}
+                        {% snippet 'browse/snippets/org_item.html', organization=organization %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% block page_pagination %}
+            {{ c.page.pager() }}
+            {% endblock %}
         </div>
-    {% endblock %}
+    </div>
 {% endblock %}
 
-{% block secondary_content %}
-  {% snippet "organization/snippets/helper.html", logged_in = logged_in, is_sys_admin = is_sys_admin %}
+{% block secondary %}
+{% endblock %}
+
+{% block scripts2 %}
+  {{ super() }}
+    {% resource 'hdx_theme/search' %}
+    {% resource 'hdx_theme/organization/organizations.css' %}
+    {% resource 'hdx_theme/organization/organizations.js' %}
+    {% resource 'hdx_theme/browse' %}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
 {% endblock %}

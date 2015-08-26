@@ -157,6 +157,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            # 'methodology': 'methodology test',
                            'more_info': 'more_info test',
                            # 'terms_of_use': 'terms_of_use test',
+                           'data_update_frequency': '7'
                            }
 
         self._get_action('hdx_package_update_metadata')(

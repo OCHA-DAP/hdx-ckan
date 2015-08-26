@@ -7,5 +7,5 @@
   prepareMap(countDatasets);
   prepareCountryList(countDatasets);
 
-  initSortingWidget();
+  //initSortingWidget();
 }).call(this);
