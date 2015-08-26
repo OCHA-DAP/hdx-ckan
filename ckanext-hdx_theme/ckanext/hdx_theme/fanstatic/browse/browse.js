@@ -187,7 +187,7 @@ function prepareCount() {
   return countDatasets;
 }
 
-function scrollTo(anchor){
+function hdxScrollTo(anchor){
   $('html, body').animate({
     scrollTop: $(anchor).offset().top - 40
   }, 700);
