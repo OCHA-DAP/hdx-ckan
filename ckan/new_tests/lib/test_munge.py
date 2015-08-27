@@ -13,6 +13,7 @@ class TestMungeFilename(object):
         ('s', 's__'),  # too short
         ('random:other%character&', 'randomothercharacter'),
         (u'u with umlaut \xfc', 'u-with-umlaut-u'),
+        ('under_scores_are_fun', 'under_scores_are_fun'),
         ('2014-11-10 12:24:05.340603my_image.jpeg',
          '2014-11-10-122405.340603myimage.jpeg')
     ]
