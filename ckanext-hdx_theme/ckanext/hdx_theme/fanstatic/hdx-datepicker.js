@@ -3,9 +3,6 @@
 ckan.module('hdx_datepicker', function ($, _) {
   return {
     initialize: function () {
-    	var originalDateString 	= null;
-    	if (this.options.alt_field_id) 
-    		originalDateString	= $('#'+this.options.alt_field_id).val()
 		this.el.datepicker(
 			{
 				onSelect: this._onSelect,
@@ -13,9 +10,28 @@ ckan.module('hdx_datepicker', function ($, _) {
 			    
 			}
 		);
-    	
-    	if (originalDateString)
-    		this.el.datepicker('setDate', originalDateString);
+
+		var dateStr = null;
+    	if (this.options.original_value) {
+			try {
+				var range = this.options.original_value.split("-");
+				if (range.length > 1) {
+					if (this.options.type == 'start-period') {
+						dateStr = range[0];
+						this.el.datepicker("option", "maxDate", range[1]);
+					}
+					else if (this.options.type == 'end-period') {
+						dateStr = range[1];
+						this.el.datepicker("option", "minDate", range[0]);
+					}
+				}
+				else if (this.options.type == 'single')
+					dateStr = this.options.original_value;
+			}
+			catch(e){;}
+		}
+		this.el.datepicker('setDate', dateStr);
+
     	this.el.datepicker("option","dateFormat","MM d, yy");
     	
     	if ( this.options.alt_field_id) {
@@ -45,7 +61,7 @@ ckan.module('hdx_datepicker', function ($, _) {
     	
     	if ( this.options.topic ) {
     		var selectedDate = this.el.datepicker('getDate');
-    		this.sandbox.publish(this.options.topic,{action: 'clicked', source: this.options.group, date: selectedDate });
+    		this.sandbox.publish(this.options.topic,{action: 'clicked', source: this.options.group, sourceType:this.options.type, date: selectedDate });
     	}
     },
     _onAnotherGroupDateChange: function (message) {
@@ -55,7 +71,7 @@ ckan.module('hdx_datepicker', function ($, _) {
     		this.el.datepicker("option","maxDate",null);
     		this.el.datepicker("option","minDate",null);
     	}
-    	else {
+    	else if (this.options.type != message.sourceType) {
     		if (this.options.type == 'start-period') {
     			this.el.datepicker("option","maxDate",message.date);
     		}
@@ -69,7 +85,8 @@ ckan.module('hdx_datepicker', function ($, _) {
     	topic: null,
     	show_years_months: 'true',
     	type: null,
-    	alt_field_id: null
+    	alt_field_id: null,
+		original_value: null
     }
   };
 });
