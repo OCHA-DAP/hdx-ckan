@@ -15,7 +15,11 @@
 {% block breadcrumb_content_selected %}{% endblock %}
 
 {% block breadcrumb_content %}
-  {{ super() }}
+ <li>{{ h.nav_link(_('Datasets'), 
+    controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search',  ext_indicator=0) }}</li>
+    <li><a href="{{ h.url_for(controller='package',
+                                               action='read',
+                                               id=pkg.id) }}">{{pkg.title|truncate(30)}}</a></li>
   <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 

@@ -257,7 +257,8 @@ def hdx_package_update_metadata(context, data_dict):
                       'indicator_type', 'indicator_type_code',
                       'more_info',
                       'last_data_update_date',
-                      'groups']
+                      'groups',
+                      'data_update_frequency']
 
     package = _get_action('package_show')(context, data_dict)
     requested_groups = [el.get('id', el.get('name','')) for el in data_dict.get('groups',[])]

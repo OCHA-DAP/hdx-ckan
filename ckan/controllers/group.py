@@ -313,6 +313,7 @@ class GroupController(base.BaseController):
                 'q': q,
                 'fq': fq,
                 'facet.field': facets.keys(),
+                'facet.limit': 2000,
                 'rows': limit,
                 'sort': sort_by,
                 'start': (page - 1) * limit,

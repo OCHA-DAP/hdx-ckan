@@ -47,7 +47,7 @@
   .header-user-box, .header-user-box > span > a {
     .gothamBoldFont(12px);
     .uppercase;
-    line-height: 25px;
+    //line-height: 25px;
     color: @extraLightGrayColor;
     i {
       display: none;
@@ -232,6 +232,19 @@
 
 
 /* Style links inside header-nav, main navigation links */
+.mainLinks.mainLinks-gray {
+  > li {
+    > a {
+      .gothamBookFont(12px);
+      color: @lightGrayColor;
+      line-height: 1;
+
+      &:hover, &:focus {
+        color: @lightGrayColor;
+      }
+    }
+  }
+}
 .mainLinks {
   padding-left: 25px;
   margin: 0;
@@ -277,31 +290,6 @@
       content: '\25bc';
       margin-left: 3px;
       font-size: 13px;
-    }
-
-    #faq-label:after {
-      content: '';
-    }
-    #feedback-label:after {
-      content: '';
-    }
-
-    #faq-label:before {
-      content: '|';
-      font-size: 13px;
-      margin-right: 15px;
-    }
-    #feedback-label:before {
-      content: '|';
-      font-size: 13px;
-      margin-right: 15px;
-    }
-    #faq-label {
-      font-family: @gothamBookFont;
-    }
-    #feedback-label {
-      font-family: @gothamBookFont;
-      margin-left: 0px;
     }
 
   }

@@ -86,6 +86,7 @@ $(document).ready(function(){
 		}
 		$('#mc-embedded-subscribe-form').remove();
 		$('.header-search-form').remove(); //This is weird and incredibly anal of FF >.>
-		$('form').submit();
+		// don't need to submit a form element...it will submit all the form elements on Chrome
+		$('#create-group-form').submit();
 	});
 });

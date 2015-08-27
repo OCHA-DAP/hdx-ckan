@@ -29,7 +29,7 @@
     }
 
     .search-list .dataset-item:last-of-type{
-        border-bottom: 1px solid #cccccc;
+        border-bottom: none;
     }
 
     .search-list .dataset-item .dataset-heading {

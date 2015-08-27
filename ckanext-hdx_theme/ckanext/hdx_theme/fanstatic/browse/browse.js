@@ -1,4 +1,4 @@
-function prepareCountryList() {
+function prepareCountryList(countDatasets) {
   var columns = [['A', 'B', 'C'], ['D', 'E', 'F', 'G', 'H'], ['I', 'J', 'K', 'L'], ['M', 'N', 'O', 'P'], ['Q', 'R', 'S', 'T'], ['U', 'V', 'Y', 'Z']];
   $('#option_map').click(function() {
     $(this).addClass('selected');
@@ -52,7 +52,7 @@ function prepareCountryList() {
   });
 }
 
-function prepareMap(){
+function prepareMap(countDatasets){
   var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref;
   //mapID = 'yumiendo.ijchbik8';
   openURL = function(url) {
@@ -167,8 +167,8 @@ function prepareMap(){
   topLayer.setZIndex(1);
 }
 
-var countDatasets = {};
 function prepareCount() {
+  var countDatasets = {};
   var datasetCounts = $("#datasetCounts");
   var dataPlain = datasetCounts.text();
   datasetCounts.remove();
@@ -184,9 +184,10 @@ function prepareCount() {
     newItem.indicator_count = item.indicator_count;
     countDatasets[code] = newItem;
   }
+  return countDatasets;
 }
 
-function scrollTo(anchor){
+function hdxScrollTo(anchor){
   $('html, body').animate({
     scrollTop: $(anchor).offset().top - 40
   }, 700);
@@ -224,16 +225,4 @@ function browse_by_menu() {
     }
   }
 }
-
-(function() {
-  //fixed page menu
-  $(window).scroll(browse_by_menu);
-  browse_by_menu();
-
-  prepareCount();
-  prepareMap();
-  prepareCountryList();
-
-  initSortingWidget();
-}).call(this);
 

@@ -27,6 +27,18 @@
     font-weight: bold;
 }
 
+
+#followee-filter .btn .caret {
+    margin-left: 5px;
+    position: relative;
+    top: 8px;
+}
+
+#followee-filter .popover .inited {
+    border-radius: 0;
+}
+
+
 .nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
 	color: #007CE0;
     background-color: #007CE0;
