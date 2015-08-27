@@ -29,7 +29,6 @@ c = common.c
 request = common.request
 _ = common._
 
-
 log = logging.getLogger(__name__)
 OrderedDict = collections.OrderedDict
 
@@ -51,7 +50,6 @@ indicators_4_charts_list = [
     ('PVW040', 'mdgs')
 ]
 
-
 indicators_4_charts = [el[0] for el in indicators_4_charts_list]
 
 indicators_4_top_line_list = [
@@ -65,12 +63,11 @@ indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 
 class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
-
     def country_read(self, id):
 
         self.get_country(id)
 
-        #country_uuid = c.group_dict.get('id', id)
+        # country_uuid = c.group_dict.get('id', id)
         country_code = c.group_dict.get('name', id)
 
         self.get_dataset_results(country_code)
@@ -192,7 +189,6 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                 # el['datasetUpdateDate'] = top_line_extra.get(
                 #     'datasetUpdateDate')
 
-
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,
     #                'user': c.user or c.author,
@@ -240,7 +236,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                 'name': f['display_name'],
                 'url': h.url_for(controller='user', action='read', id=f['name'])
             } for f in followers
-        ]
+            ]
 
         return followers_list
 
@@ -252,7 +248,7 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
                 'name': topic,
                 'url': h.url_for(controller='package', action='search', vocab_Topics=topic)
             } for topic in topics_by_freq.keys()
-        ]
+            ]
 
         return topic_list
 
@@ -265,10 +261,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         ext_indicator = request.params.get('ext_indicator', '0')
         # if ext_indicator:
         search_extras['ext_indicator'] = ext_indicator
-        # else:
-        #     search_extras['ext_indicator'] = '0'
 
-        #limit = self._allowed_num_of_items(search_extras)
+        # limit = self._allowed_num_of_items(search_extras)
         limit = 8
         page = self._page_number()
         params_nopage = {
