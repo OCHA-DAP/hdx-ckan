@@ -799,7 +799,8 @@ class DatasetController(PackageController):
                 name = resource['name']
                 result[name] = {
                     'url': res_pbf_url,
-                    'bounding_box': shp_info['bounding_box']
+                    'bounding_box': shp_info['bounding_box'],
+                    'layer_fields': shp_info.get('layer_fields', [])
                 }
         return result
 

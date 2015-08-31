@@ -53,11 +53,9 @@
   color: #fff;
   height: 60px;
 }
-
-#hdx-dataset h3{
+#hdx-dataset h3 {
   margin-top: 0px;
 }
-
 .info-wrapper .empty .info-item-name {
   color: #007ce0;
 }

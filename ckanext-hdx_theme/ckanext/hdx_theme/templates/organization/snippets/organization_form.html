@@ -131,7 +131,7 @@
 
 
 <div class="org-control-container" style="margin-bottom:30px;">
-    <label class="control-label" for="field-custom_org" style="display: inline-block;">{{ _("Background logo same as base color ") }}</label>
+    <label class="control-label" for="use_org_color" style="display: inline-block;">{{ _("Background logo same as base color ") }}</label>
     <div class="controls" style="display:inline-block">
         <input type="checkbox" name="use_org_color" id="use_org_color" value="true" {% if is_use_org_color=='true' %}checked{% endif %} style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
     </div>
@@ -259,7 +259,8 @@
           <a class="btn btn-danger pull-left" href="{% url_for controller='organization', action='delete', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
-    <button class="mL15 btn btn-primary create-org-btn" name="save" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
+      <input type="hidden" name="save" value="save">
+    <button class="mL15 btn btn-primary create-org-btn" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
   </div>
 </div>
   {% endblock %}

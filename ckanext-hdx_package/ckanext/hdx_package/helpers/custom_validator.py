@@ -24,8 +24,9 @@ def groups_not_empty(key, data, errors, context):
     """
     # All the extra logic here is needed to deal with the multi-step wizard used for creating a new dataset
     # We need to make sure that the validation only runs at the last step of the wizard
-    allow_partial_update = context.get('allow_partial_update', False)
-    allow_state_change = context.get('allow_state_change', False)
+
+    # allow_partial_update = context.get('allow_partial_update', False)
+    # allow_state_change = context.get('allow_state_change', False)
     groups_found = False
     first_phase = False
 
@@ -36,7 +37,7 @@ def groups_not_empty(key, data, errors, context):
                 first_phase = True
                 break
 
-    if not first_phase and (allow_partial_update != allow_state_change):
+    if not first_phase:
         for data_key, data_value in data.items():
             if data_key[0] == 'groups' and data_key[2] == 'id' and data_value != '-1':
                 groups_found = True
@@ -44,6 +45,7 @@ def groups_not_empty(key, data, errors, context):
         if not groups_found:
             errors[key].append(_('Missing value'))
             raise StopOnError
+    return None
 
 
 def detect_format(key, data, errors, context):

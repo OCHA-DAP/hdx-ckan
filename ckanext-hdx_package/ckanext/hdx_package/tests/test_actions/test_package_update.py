@@ -68,6 +68,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             "name": "test_activity_3",
             "notes": "This is a test activity",
             "title": "Test Activity 3",
+            "groups": [{"name": "roger"}]
         }
 
         resource = {
@@ -80,8 +81,11 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         testsysadmin = model.User.by_name('testsysadmin')
 
+        # Real username is still needed even with ignore_auth otherwise
+        # some fields ( like groups ) will not be saved
         context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'nouser'}
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
         self._get_action('package_create')(context, package)
 
         self._get_action('resource_create')(context, resource)
@@ -107,6 +111,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             "name": "test_activity_2",
             "notes": "This is a test activity",
             "title": "Test Activity 2",
+            "groups": [{"name": "roger"}]
         }
         testsysadmin = model.User.by_name('testsysadmin')
 
