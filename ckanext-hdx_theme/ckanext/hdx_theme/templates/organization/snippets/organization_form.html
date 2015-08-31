@@ -259,7 +259,8 @@
           <a class="btn btn-danger pull-left" href="{% url_for controller='organization', action='delete', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
         {% endif %}
       {% endblock %}
-    <button class="mL15 btn btn-primary create-org-btn" name="save" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
+      <input type="hidden" name="save" value="save">
+    <button class="mL15 btn btn-primary create-org-btn" type="submit">{% block save_text %}{{ _('Submit') }}{% endblock %}</button>
   </div>
 </div>
   {% endblock %}
