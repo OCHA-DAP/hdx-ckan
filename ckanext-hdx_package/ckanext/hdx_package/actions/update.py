@@ -33,3 +33,5 @@ def resource_update(context, data_dict):
 
     if do_geo_preview and lower(data_dict.get('format', '')) in geopreview.GIS_FORMATS:
         geopreview.do_geo_transformation_process(result_dict)
+
+    return result_dict
