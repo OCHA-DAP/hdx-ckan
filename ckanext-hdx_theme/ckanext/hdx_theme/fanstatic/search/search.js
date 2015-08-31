@@ -47,15 +47,14 @@ $('document').ready(function(){
 		}
 	});
 
+	$('#search-ahead').on('mousedown', "li", function(){
+		window.location = $(this).attr('data-href');
+	});
+
 	$('#q').blur(function(){
 		$('#search-ahead').html('');
 		$('#search-ahead').hide();
 	});
-
-	$('#search-ahead').on('click', "li", function(){
-		window.location = $(this).attr('data-href');
-	});
-
 });
 
 function process_title(title, q){

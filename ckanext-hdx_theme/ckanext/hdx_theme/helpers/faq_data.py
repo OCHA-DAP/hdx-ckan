@@ -3,7 +3,7 @@ popular = {
     'questions': [
         {
             'q': 'What is the Humanitarian Data Exchange?',
-            'a': 'The Humanitarian Data Exchange (HDX) is an open platform for sharing data. The goal of HDX is to make humanitarian data easy to find and use for analysis. Launched in July 2014, HDX has been accessed by users in over 200 countries and territories.  Watch our HDX <a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">launch animation</a> or <a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">introductory screencast</a> to get started.',
+            'a': 'The Humanitarian Data Exchange (HDX) is an open platform for sharing data. The goal of HDX is to make humanitarian data easy to find and use for analysis. Launched in July 2014, HDX has been accessed by users in over 200 countries and territories.  Watch our HDX <a target="_blank"  href="https://www.youtube.com/watch?v=hCVyiZhYb4M">launch animation</a> or <a target="_blank"  href="https://www.youtube.com/watch?v=P8XDNmcQI0o">introductory screencast</a> to get started.',
         },
         {
             'q': 'How do I share data on HDX?',
@@ -22,11 +22,11 @@ about = {
     'questions': [
         {
             'q': 'What is the Humanitarian Data Exchange?',
-            'a': 'The Humanitarian Data Exchange (HDX) is an open platform for sharing data. The goal of HDX is to make humanitarian data easy to find and use for analysis. Launched in July 2014, HDX has been accessed by users in over 200 countries and territories.  Watch our HDX <a href="https://www.youtube.com/watch?v=hCVyiZhYb4M">launch animation</a> or <a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">introductory screencast</a> to get started.',
+            'a': 'The Humanitarian Data Exchange (HDX) is an open platform for sharing data. The goal of HDX is to make humanitarian data easy to find and use for analysis. Launched in July 2014, HDX has been accessed by users in over 200 countries and territories.  Watch our HDX <a target="_blank"  href="https://www.youtube.com/watch?v=hCVyiZhYb4M">launch animation</a> or <a target="_blank"  href="https://www.youtube.com/watch?v=P8XDNmcQI0o">introductory screencast</a> to get started.',
         },
         {
             'q': 'Who manages HDX?',
-            'a': 'The <a href="http://www.unocha.org/">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) manages HDX. OCHA is part of the United Nations Secretariat,responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.',
+            'a': 'The <a target="_blank"  href="http://www.unocha.org/">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) manages HDX. OCHA is part of the United Nations Secretariat,responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.',
         },
         {
             'q': 'How does HDX define humanitarian data?',
@@ -38,11 +38,11 @@ about = {
         },
         {
             'q': 'Is HDX open source?',
-            'a': 'Yes. HDX uses an open-source software called <a href="http://ckan.org/">CKAN</a> for our technical back-end. We partner with <a href="https://scraperwiki.com/">ScraperWiki</a> for data transformation and operations support. You can find all of our code on <a href="https://github.com/OCHA-DAP">GitHub</a>.',
+            'a': 'Yes. HDX uses an open-source software called <a target="_blank"  href="http://ckan.org/">CKAN</a> for our technical back-end. We partner with <a target="_blank"  href="https://scraperwiki.com/">ScraperWiki</a> for data transformation and operations support. You can find all of our code on <a target="_blank"  href="https://github.com/OCHA-DAP">GitHub</a>.',
         },
         {
             'q': 'Has HDX been featured in the media?',
-            'a': 'Yes. The following articles have been written about HDX:<br/><br/><p>The Guardian - <a href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data Exchange Helps Humanitarians Act Fast and Effectively</a></p><p>Fast Company - <a href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the Candy Crush of Data is Saving Lives in Nepal</a></p><p>Forbes - <a href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN Deploys New Tech to Make Relief Faster in Nepal</a></p><p>The Independent - <a href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a></p>',
+            'a': 'Yes. The following articles have been written about HDX:<br/><br/><p>The Guardian - <a target="_blank"  href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data Exchange Helps Humanitarians Act Fast and Effectively</a></p><p>Fast Company - <a target="_blank"  href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the Candy Crush of Data is Saving Lives in Nepal</a></p><p>Forbes - <a target="_blank"  href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN Deploys New Tech to Make Relief Faster in Nepal</a></p><p>The Independent - <a target="_blank"  href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a></p>',
         },
         {
             'q': 'What browsers are best to use for HDX?',
@@ -138,7 +138,7 @@ sharing_data = {
         },
         {
             'q': 'What are the recommended data formats?',
-            'a': 'We define data as information that software can read and analyse. We encourage contributions in any common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel formats, and for geographic data in zipped shapefile, kml and geojson formats.<br/><br/><p>A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian information that are not related to the data you are sharing, please visit our companion sites <a href="http://reliefweb.int/">ReliefWeb</a> and <a href="http://www.humanitarianresponse.info/">HumanitarianResponse</a>.</p>',
+            'a': 'We define data as information that software can read and analyse. We encourage contributions in any common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel formats, and for geographic data in zipped shapefile, kml and geojson formats.<br/><br/><p>A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian information that are not related to the data you are sharing, please visit our companion sites <a target="_blank"  href="http://reliefweb.int/">ReliefWeb</a> and <a target="_blank"  href="http://www.humanitarianresponse.info/">HumanitarianResponse</a>.</p>',
         },
         {
             'q': 'What are the recommended best practices for naming datasets and resources?',
@@ -158,11 +158,11 @@ sharing_data = {
         },
         {
             'q': 'How do I share a live spreadsheet from Dropbox?',
-            'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share link\', following the <a href="https://www.dropbox.com/en/help/167">instructions in the Dropbox help centre</a>. You will then received a special link that allows anyone to download the file.<br/></br><p>Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks something like this:<br/> https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=0</p><p>For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' so that it looks like this:<br/>https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=1</p><p>The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. Be careful not to move or rename the file after you share it.</p>',
+            'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share link\', following the <a target="_blank"  href="https://www.dropbox.com/en/help/167">instructions in the Dropbox help centre</a>. You will then received a special link that allows anyone to download the file.<br/></br><p>Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks something like this:<br/> https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=0</p><p>For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' so that it looks like this:<br/>https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=1</p><p>The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. Be careful not to move or rename the file after you share it.</p>',
         },
         {
             'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
-            'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or on a Geonode). However, the metadata and activity stream will not automatically indicate the updated date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date of the dataset are only updated automatically if the resource is stored on HDX. We are working to improve this functionality, so please bear with us!',
+            'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or on a GeoNode). However, the metadata and activity stream will not automatically indicate the updated date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date of the dataset are only updated automatically if the resource is stored on HDX. We are working to improve this functionality, so please bear with us!',
         },
     ]
 }
@@ -179,8 +179,8 @@ geodata = {
             'a': 'To generate a map preview, a dataset can have multiple resources but each resource can only include one layer within it. Resources with multiple layers (e.g., multiple shapefiles in a single zip file) are not supported. In this case, the system will only create a preview of the first layer in the resource. If you would like all of the layers to display, you need to create a separate resource for each layer.',
         },
         {
-            'q': 'Is HDX integrated with any Geonodes?',
-            'a': 'HDX has some datasets that are links to data stored on Geonodes, such as the <a href="http://ebolageonode.org/">Ebola Geonode</a>, the <a href="http://geonode.salahumanitaria.co/">Sala Humanitaria Geonode</a>, and the <a href="http://geonode.state.gov/">U.S. Department of State Geonode</a>. These links are currently maintained manually. Updates to downloadable resources on a Geonode will be reflected in the download from HDX. Updates to metadata or descriptions are only captured if the dataset owner updates them manually on HDX.',
+            'q': 'Is HDX integrated with any GeoNodes?',
+            'a': 'HDX has some datasets that are links to data stored on GeoNodes, such as the <a target="_blank"  href="http://ebolageonode.org/">Ebola GeoNode</a>, the <a target="_blank"  href="http://geonode.salahumanitaria.co/">Sala Humanitaria GeoNode</a>, and the <a target="_blank"  href="http://geonode.state.gov/">U.S. Department of State GeoNode</a>. These links are currently maintained manually. Updates to downloadable resources on a GeoNode will be reflected in the download from HDX. Updates to metadata or descriptions are only captured if the dataset owner updates them manually on HDX.',
         },
     ]
 }
@@ -204,11 +204,11 @@ metadata_and_data_quality = {
     'questions': [
         {
             'q': 'What metadata do I need to include when sharing data?',
-            'a': 'All data on HDX must include a minimum set of metadata fields. You can read our <a href="http://docs.hdx.rwlabs.org/providing-metadata-for-your-datasets-on-hdx/">Guide to Metadata</a> to learn more. We encourage data contributors to include as much metadata as possible to make their data easier to understand and use for analysis.',
+            'a': 'All data on HDX must include a minimum set of metadata fields. You can read our <a target="_blank"  href="http://docs.hdx.rwlabs.org/providing-metadata-for-your-datasets-on-hdx/">Guide to Metadata</a> to learn more. We encourage data contributors to include as much metadata as possible to make their data easier to understand and use for analysis.',
         },
         {
             'q': 'How does HDX ensure data quality?',
-            'a': 'Data quality is important to us, so we manually review every new dataset for relevance, accuracy, timeliness, interpretability and comparability. We contact data contributors if we have any concerns or suggestions for improvement. You can learn more about our definition of the dimensions of data quality and our quality-assurance processes <a href="http://docs.hdx.rwlabs.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
+            'a': 'Data quality is important to us, so we manually review every new dataset for relevance, accuracy, timeliness, interpretability and comparability. We contact data contributors if we have any concerns or suggestions for improvement. You can learn more about our definition of the dimensions of data quality and our quality-assurance processes <a target="_blank"  href="http://docs.hdx.rwlabs.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
         },
         {
             'q': 'Does HDX make any changes to my dataset?',
@@ -222,7 +222,7 @@ hdx_api = {
     'questions': [
         {
             'q': 'How do I access the HDX API?',
-            'a': '<a href="https://data.hdx.rwlabs.org/api/3/action/help_show?name=help_show">HDX has a publicly accessible API</a>. HDX is built on top of <a href="http://ckan.org/">CKAN</a>, an open-source framework designed for data cataloging. The CKAN official documentation shows how the API works, and it contains a number of helpful examples: <a href="http://docs.ckan.org/en/ckan-2.3/api/index.html">http://docs.ckan.org/en/ckan-2.3/api/index.html</a><br/><br/><p>HDX supports both the core <a href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> and, for some datasets, the CKAN Datastore API. For more information, please e-mail hdx.feedback@gmail.com. We will be happy to assist you.</p>',
+            'a': '<a href="https://data.hdx.rwlabs.org/api/3/action/help_show?name=help_show">HDX has a publicly accessible API</a>. HDX is built on top of <a target="_blank"  href="http://ckan.org/">CKAN</a>, an open-source framework designed for data cataloging. The CKAN official documentation shows how the API works, and it contains a number of helpful examples: <a target="_blank"  href="http://docs.ckan.org/en/ckan-2.3/api/index.html">http://docs.ckan.org/en/ckan-2.3/api/index.html</a><br/><br/><p>HDX supports both the core <a target="_blank"  href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> and, for some datasets, the CKAN Datastore API. For more information, please e-mail hdx.feedback@gmail.com. We will be happy to assist you.</p>',
         },
     ]
 }
@@ -232,7 +232,7 @@ hxl = {
     'questions': [
         {
             'q': 'What is the Humanitarian Exchange Language?',
-            'a': 'The Humanitarian Exchange Language (HXL) is a simple standard for messy data. It is based on spreadsheet formats such as CSV or Excel, but it adds hashtags with semantic information to allow software to validate, clean, merge and analyse data more easily.<br/><br/><p>HDX will be adding features for HXL-tagged data in the future. To learn more about HXL and who\'s currently using it, visit the <a href="http://hxlstandard.org/">HXL standard site</a>.</p>',
+            'a': 'The Humanitarian Exchange Language (HXL) is a simple standard for messy data. It is based on spreadsheet formats such as CSV or Excel, but it adds hashtags with semantic information to allow software to validate, clean, merge and analyse data more easily.<br/><br/><p>HDX will be adding features for HXL-tagged data in the future. To learn more about HXL and who\'s currently using it, visit the <a target="_blank"  href="http://hxlstandard.org/">HXL standard site</a>.</p>',
         },
     ]
 }
@@ -246,7 +246,7 @@ data_policy = {
         },
         {
             'q': 'What data licences do you offer?',
-            'a': 'HDX promotes the use of licenses developed by the <a href="http://creativecommons.org/">Creative Commons Foundation</a> and the <a href="http://opendatacommons.org">Open Data Foundation</a>. The main difference between the two classes of licences is that the Creative Commons licences were developed for sharing creative works in general, while the Open Data Commons licences were developed more specifically for sharing databases. See the full list of licences <a href="https://data.hdx.rwlabs.org/about/license">here</a>.',
+            'a': 'HDX promotes the use of licenses developed by the <a target="_blank"  href="http://creativecommons.org/">Creative Commons Foundation</a> and the <a target="_blank"  href="http://opendatacommons.org">Open Data Foundation</a>. The main difference between the two classes of licences is that the Creative Commons licences were developed for sharing creative works in general, while the Open Data Commons licences were developed more specifically for sharing databases. See the full list of licences <a href="https://data.hdx.rwlabs.org/about/license">here</a>.',
         },
     ]
 }
@@ -256,7 +256,7 @@ contact = {
     'questions': [
         {
             'q': 'How do I contact the HDX team?',
-            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also reach us on Twitter at <a href="https://twitter.com/humdata">@humdata</a>. Sign up to receive our blog posts <a href="http://unocha.us2.list-manage.com/subscribe?u=83487eb1105d72ff2427e4bd7&id=6fd988326c">here</a>.',
+            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also reach us on Twitter at <a href="https://twitter.com/humdata">@humdata</a>. Sign up to receive our blog posts <a target="_blank"  href="http://unocha.us2.list-manage.com/subscribe?u=83487eb1105d72ff2427e4bd7&id=6fd988326c">here</a>.',
         },
     ]
 }
