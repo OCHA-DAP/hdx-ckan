@@ -6,6 +6,8 @@ Created on Jun 26, 2015
 
 import logging
 import mock
+import ckan.lib.helpers as h
+import ckan.model as model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -135,3 +137,14 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         assert 'member_count' in template_data['data']
         assert template_data['data']['member_count'] == 4
+
+    def test_edit_custom_orgs(self):
+        url = h.url_for(
+            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='edit', id='hdx-test-org')
+        testsysadmin = model.User.by_name('testsysadmin')
+        result = self.app.get(url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        assert 'id="customization-trigger"' in str(result.response)
+
+        testadmin = model.User.by_name('janedoe3')
+        result = self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
+        assert 'id="customization-trigger"' not in str(result.response)

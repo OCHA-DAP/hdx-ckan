@@ -71,7 +71,7 @@
         <input type="checkbox" {% if custom_org %}checked{% endif %} name="custom_org" id="field-custom_org" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;"/>
         </div>
     </div>
-{% endif %}
+
 
 <div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
 <div class="org-control-container">
@@ -190,7 +190,7 @@
 </div>
 <input type="hidden" name="visualization_config" id="visualization-json">
 <input type="hidden" name="customization" id="customization-json">
-
+{% endif %}
 <input type="hidden" name="modified_at" id="field-modified_at">
 </div>
 
