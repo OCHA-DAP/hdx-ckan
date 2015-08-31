@@ -31,7 +31,9 @@ def detect_format_from_extension(url):
         if split_url.path:
             file_name = os.path.basename(split_url.path)
             possible_extension = file_name.split(".")[-1].lower()
-            if '.' in file_name and possible_extension:
+            if file_name.endswith('.shp.zip'):
+                return 'zipped shapefile'
+            elif '.' in file_name and possible_extension:
                 return possible_extension
     return None
 
