@@ -2,6 +2,14 @@ function closeCurrentWidget(self){
     $(self).parents(".popup").hide();
 }
 
+function notYou(){
+    $('#field-login').val('');
+    $('#field-login').removeClass('input-content');
+    $('#username-static, #login-photo-gravatar').hide();
+    $('#username-form-field, #login-photo-default').show();
+    $('#field-login').focus();
+}
+
 function showOnboardingWidget(id){
     $(id).show();
     $(id).find("input[type!='button']:visible:first").focus();
@@ -104,6 +112,7 @@ $(document).ready(function(){
         errMsg.text(loginError);
         $("#field-login").addClass("error");
         $("#field-password").addClass("error");
+        notYou();
         errMsg.show();
 
     }
