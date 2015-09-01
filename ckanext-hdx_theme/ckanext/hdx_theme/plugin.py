@@ -151,6 +151,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'load_json': hdx_helpers.load_json,
             'json_dumps': json.dumps,
             'hdx_less_default': hdx_helpers.hdx_less_default,
+            'hdx_popular': hdx_helpers.hdx_popular,
         }
 
     def get_actions(self):
