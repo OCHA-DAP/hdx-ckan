@@ -12,6 +12,18 @@
 
 <div class="org-control-container">
     <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-data-source">{{_('Source')}}</label>
+        <div class="controls ">
+            <input id="field-data-source" type="text" name="viz-data-source" value="{{visualization['viz-data-source']}}" placeholder="" class="visualization_config" viz-type="ROEA">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Source for data')}}</div>
+    </div>
+</div>
+
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
         <label class="control-label" for="field-data-link-url">{{_('Data Link URL')}}</label>
         <div class="controls ">
             <input id="field-data-link-url" type="text" name="viz-data-link-url" value="{{visualization['viz-data-link-url']}}" placeholder="" class="visualization_config" viz-type="ROEA">
