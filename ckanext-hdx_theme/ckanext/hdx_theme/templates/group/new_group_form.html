@@ -53,7 +53,7 @@ overriding the form blocks depending on the current context
         <input type="checkbox" {% if custom_loc %}checked{% endif %} name="custom_loc" id="field-custom_loc" value="1" style="margin-left:10px; margin-bottom:5px; margin-top:-10px;">
         </div>
     </div>
-{% endif %}
+
 
 <div id="customization-fields" {% if not custom_loc %}style="display:none"{% endif %}>
 <div class="org-control-container">
@@ -80,6 +80,7 @@ overriding the form blocks depending on the current context
 
 <input type="hidden" name="customization" value="" id="customization-json">
 </div>
+{% endif %}
 
   {% if action == "edit" %}{{ super() }}{% endif %}
 {% endblock %}
