@@ -21,6 +21,7 @@ import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
+import ckanext.hdx_package.actions.get as hdx_get
 
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
@@ -251,6 +252,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
             'hdx_package_update_metadata': update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
+            'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create,
             'resource_create': hdx_create.resource_create,
@@ -272,7 +274,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
-                'package_update': authorize.package_update}
+                'package_update': authorize.package_update,
+                'hdx_resource_id_list': authorize.hdx_resource_id_list}
 
     def make_middleware(self, app, config):
         run_on_startup()
