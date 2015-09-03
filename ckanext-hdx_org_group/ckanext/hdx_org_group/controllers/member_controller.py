@@ -107,8 +107,11 @@ class HDXOrgMemberController(org.OrganizationController):
                     flash_message = None
                     if email:
                         # Check if email is used
-                        user_dict = model.User.by_email(email)
+                        user_dict = model.User.by_email(email.strip())
                         if user_dict:
+                            #Is user deleted?
+                            if user_dict[0].state == 'deleted':
+                                abort(401, _('This user no longer has an account on HDX %s') % '')
                             # Add user
                             data_dict['username'] = user_dict[0].name
                             flash_message = 'That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role']

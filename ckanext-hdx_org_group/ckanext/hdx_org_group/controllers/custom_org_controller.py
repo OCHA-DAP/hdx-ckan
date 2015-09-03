@@ -86,8 +86,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         if visualization.get('visualization-select', '') == 'ROEA':
             config.update({
-                'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id', '') + "&limit=10000000",
-                'geo': h.url_for('perma_storage_file', id=visualization.get('viz-geo-dataset-id', ''), resource_id=visualization.get('viz-geo-resource-id', '')),
+                'data': "/api/action/datastore_search?resource_id=" + visualization.get('viz-resource-id',
+                                                                                        '') + "&limit=10000000",
+                'geo': h.url_for('perma_storage_file', id=visualization.get('viz-geo-dataset-id', ''),
+                                 resource_id=visualization.get('viz-geo-resource-id', '')),
                 'source': visualization.get('viz-data-source', '')
             })
 
@@ -205,7 +207,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     'request_membership': allow_req_membership
                 },
                 'show_admin_menu': allow_add_dataset or allow_edit,
-                'show_visualization': True,
+                'show_visualization': False if 'Choose Visualization Type' == viz_config['type'] else True,
                 'visualization': {
                     'config': viz_config,
                     'config_type': viz_config['type'],
@@ -220,8 +222,9 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         }
 
-        template_data['data']['show_visualization'] = \
-            hdx_helpers.check_all_str_fields_not_empty(template_data['data']['visualization'],
+        if template_data['data']['show_visualization']:
+            template_data['data']['show_visualization'] = \
+                hdx_helpers.check_all_str_fields_not_empty(template_data['data']['visualization'],
                                                        'Visualization config field "{}" is empty',
                                                        skipped_keys=['config'],
                                                        errors=errors)

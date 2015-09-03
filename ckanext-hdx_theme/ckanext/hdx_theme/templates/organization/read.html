@@ -85,10 +85,12 @@
 	{% endblock %}
 
 	{% block packages_list %}
-	<div class="paddingLeftHack">
       {% if c.page.items %}
+      <div>
         {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
+    </div>
         {% else %}
+        <div class="paddingLeftHack">
 		  	<div class="big-message">
 			    <p>
 			      {{ _('There are no datasets currently uploaded to this organisation.') }}
