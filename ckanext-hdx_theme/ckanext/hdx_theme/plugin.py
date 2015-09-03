@@ -152,6 +152,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'json_dumps': json.dumps,
             'hdx_less_default': hdx_helpers.hdx_less_default,
             'hdx_popular': hdx_helpers.hdx_popular,
+            'hdx_escape': hdx_helpers.hdx_escape,
         }
 
     def get_actions(self):
