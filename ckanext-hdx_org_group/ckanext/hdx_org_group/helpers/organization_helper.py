@@ -16,16 +16,23 @@ import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.navl.dictization_functions
+import ckanext.hdx_crisis.dao.data_access as data_access
 import ckan.model as model
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.uploader as uploader
 import paste.deploy.converters as converters
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as h
+import ckan.lib.helpers as helpers
 import ckan.logic.action as core
 import ckanext.hdx_search.command as lunr
+import shlex
+import subprocess
+import random
+from datetime import datetime, timedelta
 from ckan.common import _
 
+BUCKET = uploader.get_storage_path() +'/storage/uploads/group/'
 
 log = logging.getLogger(__name__)
 
@@ -46,10 +53,102 @@ def sort_results_case_insensitive(results, sort_by):
             return sorted(results, key=lambda x: x.get('title', '').lower(), reverse=True)
     return results
 
-def get_featured_orgs():
-    # ONE DAY THIS FEATURE WILL COME
-    return list()
+def get_featured_orgs(user, userobj):
+    orgs = list()
+    #Pull resource with data on our featured orgs
+    resource_id = "cc16afda-ed2e-4e0c-af71-e26932a8aefb"
+    #featured_config = get_featured_orgs_config(user, userobj, resource_id)
+    
+    ##################
+    ## Dummy data to be removed later after feedback from data team
+    ###################
+    featured_config = [{u'org_name': u'wfp', u'highlight_asset_type': u'dataset', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}, {u'org_name': u'ocha-afghanistan', u'highlight_asset_type': u'topline', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#topline', u'_id': 2}, {u'org_name': u'somalia-ngo-consortium', u'highlight_asset_type': u'dataset', u'highlight_asset_id': u'3w-matrix-for-somalia-ngo-consortium', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#visualization', u'_id': 3}]
+    #######################
+    for cfg in featured_config:
+        if len(orgs) < 3: #Just in case
+        #Check for screencap
+            file_path = BUCKET+cfg['org_name']+'_thumbnail.png'
+            exists = os.path.isfile(file_path)
+            timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
+            expire = timestamp - timedelta(days=1)
+            if not exists or timestamp > expire:
+                #Build new screencap
+                command = 'capturejs -l --uri "'+config['ckan.site_url']+helpers.url_for('organization_read', id=cfg['org_name'])+'" --output '+file_path+' --selector "'+cfg['screen_cap_asset_selector']+'"'
+                args =  shlex.split(command)
+                subprocess.Popen(args)
+        #Get org dicts themselves
+            context = {'model': model, 'session': model.Session,
+                   'user': user, 'for_view': True,
+                   'auth_user_obj': userobj}
+            if cfg['highlight_asset_type'] == 'dataset' and not cfg['highlight_asset_id']:
+                org_dict = get_action('organization_show')(context, {'id':cfg['org_name'], 'include_datasets': True})
+            else:
+                org_dict = get_action('organization_show')(context, {'id':cfg['org_name']})
+        #Build highlight data
+            org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
+            org_dict['featured_org_thumbnail'] = "/image/"+cfg['org_name']+'_thumbnail.png'
+            orgs.append(org_dict)
+    return orgs
 
+def get_featured_org_highlight(context, org_dict, config):
+    if config['highlight_asset_type'] == 'dataset':
+        if config['highlight_asset_id']:
+            try:
+                return {'data': get_action('package_show')(context, {'id':config['highlight_asset_id']})}
+            except:
+                return {'data': {}}
+        else:
+            #select a dataset at random (sort of)
+            if len(org_dict['packages']) > 0:
+                return {'data':random.choice(org_dict['packages'])}
+            else:
+                return {'data':{}}
+    else:
+        topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if el.get('key', '') == 'topline_resource']
+        if config['highlight_asset_row_code']:
+            top_line_src_dict = {
+                'top-line-numbers': {
+                'resource_id': config['highlight_asset_id'] if config['highlight_asset_id'] else topline_default
+                }
+            }
+            datastore_access = data_access.DataAccess(top_line_src_dict)
+            datastore_access.fetch_data(context)
+            top_line_items = datastore_access.get_top_line_items()
+            if len(top_line_items) > 0:
+                            return {'data':top_line_items[config['highlight_asset_row_code']]}
+            else:
+                return {'data':{}}
+
+        else:
+            #select a line at random
+            top_line_src_dict = {
+                'top-line-numbers': {
+                'resource_id': config['highlight_asset_id'] if config['highlight_asset_id'] else topline_default
+                }
+            }
+            datastore_access = data_access.DataAccess(top_line_src_dict)
+            datastore_access.fetch_data(context)
+            top_line_items = datastore_access.get_top_line_items()
+            if len(top_line_items) > 0:
+                return {'data':random.choice(top_line_items)}
+            else:
+                return {'data':{}}
+
+
+def get_featured_orgs_config(user, userobj, resource_id):
+    context = {'model': model, 'session': model.Session,
+                   'user': user, 'for_view': True,
+                   'auth_user_obj': userobj}
+    featured_org_dict = {
+            'datastore_config': {
+                'resource_id': resource_id
+        }
+    }
+    datastore_access = data_access.DataAccess(featured_org_dict)
+    datastore_access.fetch_data_generic(context)
+    org_items = datastore_access.get_top_line_items()
+
+    return org_items
 
 def hdx_get_group_activity_list(context, data_dict):
     from ckanext.hdx_package.helpers import helpers as hdx_package_helpers
