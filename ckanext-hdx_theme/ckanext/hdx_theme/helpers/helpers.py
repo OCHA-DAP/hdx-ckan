@@ -26,7 +26,7 @@ import urlparse as urlparse
 import pylons.config as config
 
 from ckan.common import (
-    _, ungettext, c, request,json,
+    _, ungettext, c, request, json,
 )
 
 log = logging.getLogger(__name__)
@@ -228,16 +228,15 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
                                                 message=kw['message']))
         return h.literal(newResult)
 
+
 def hdx_build_nav_no_icon(menu_item, title, **kw):
     htmlResult = str(h.build_nav_icon(menu_item, title, **kw))
     print htmlResult
-    start = htmlResult.find('<i ') -1
+    start = htmlResult.find('<i ') - 1
     end = htmlResult.find('</i>') + 4
-    newResult = htmlResult[0:start]+' class="no-icon">'+htmlResult[end:]
+    newResult = htmlResult[0:start] + ' class="no-icon">' + htmlResult[end:]
     print newResult
     return h.literal(newResult)
-
-
 
 
 def hdx_linked_user(user, maxlength=0):
@@ -517,9 +516,9 @@ def hdx_resource_preview(resource, package):
         return False
 
     return h.snippet("dataviewer/snippets/data_preview.html",
-                   embed=directly,
-                   resource_url=url,
-                   raw_resource_url=https_load(resource.get('url')))
+                     embed=directly,
+                     resource_url=url,
+                     raw_resource_url=https_load(resource.get('url')))
 
 
 def https_load(url):
@@ -560,3 +559,8 @@ def hdx_popular(type_, number, min=1, title=None):
     elif not title:
         raise Exception('popular() did not recieve a valid type_ or title')
     return snippet('snippets/popular.html', title=title, number=number, min=min)
+
+
+def hdx_escape(item):
+    import re
+    return re.sub("u&#39;([^']*)&#39;",r'\1', str(item))
