@@ -56,7 +56,7 @@ def sort_results_case_insensitive(results, sort_by):
 def get_featured_orgs(user, userobj):
     orgs = list()
     #Pull resource with data on our featured orgs
-    resource_id = "cc16afda-ed2e-4e0c-af71-e26932a8aefb"
+    resource_id = "cc16afda-ed2e-4e0c-af71-e26932a8aefb" #Move this to common_config once data team has set things up
     #featured_config = get_featured_orgs_config(user, userobj, resource_id)
     
     ##################
@@ -94,15 +94,17 @@ def get_featured_org_highlight(context, org_dict, config):
     if config['highlight_asset_type'] == 'dataset':
         if config['highlight_asset_id']:
             try:
-                return {'data': get_action('package_show')(context, {'id':config['highlight_asset_id']})}
+                choice = get_action('package_show')(context, {'id':config['highlight_asset_id']})
+                return {'link':helpers.url_for('dataset_read', id=choice['id']), 'description':'Popular Dataset: ', 'type':'dataset', 'title':choice['title']}
             except:
-                return {'data': {}}
+                return {'link':'', 'description':'', 'type':'dataset', 'title':''}
         else:
             #select a dataset at random (sort of)
             if len(org_dict['packages']) > 0:
-                return {'data':random.choice(org_dict['packages'])}
+                choice = random.choice(org_dict['packages'])
+                return {'link':helpers.url_for('dataset_read', id=choice['name']), 'description':'Popular Dataset: ', 'type':'dataset', 'title':choice['title']}
             else:
-                return {'data':{}}
+                return {'link':'', 'description':'', 'type':'dataset', 'title':''}
     else:
         topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if el.get('key', '') == 'topline_resource']
         if config['highlight_asset_row_code']:
@@ -115,9 +117,10 @@ def get_featured_org_highlight(context, org_dict, config):
             datastore_access.fetch_data(context)
             top_line_items = datastore_access.get_top_line_items()
             if len(top_line_items) > 0:
-                            return {'data':top_line_items[config['highlight_asset_row_code']]}
+                choice = top_line_items[config['highlight_asset_row_code']]
+                return {'link':'', 'description':'Key Figures: ', 'type':'topline', 'title':choice['title']}
             else:
-                return {'data':{}}
+                return {'link':'', 'description':'', 'type':'topline', 'title':''}
 
         else:
             #select a line at random
@@ -130,9 +133,10 @@ def get_featured_org_highlight(context, org_dict, config):
             datastore_access.fetch_data(context)
             top_line_items = datastore_access.get_top_line_items()
             if len(top_line_items) > 0:
-                return {'data':random.choice(top_line_items)}
+                choice = random.choice(top_line_items)
+                return {'link':'', 'description':'Key Figures: ', 'type':'topline', 'title':choice['title']}
             else:
-                return {'data':{}}
+                return {'link':'', 'description':'', 'type':'topline', 'title':''}
 
 
 def get_featured_orgs_config(user, userobj, resource_id):
