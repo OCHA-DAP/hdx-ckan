@@ -162,8 +162,7 @@ class HDXOrganizationController(org.OrganizationController):
                    'parent': request.params.get('parent', None)
                    }
         data_dict = {'id': id}
-
-        
+    
         if context['save'] and not data:
             return self._save_edit(id, context)
 
