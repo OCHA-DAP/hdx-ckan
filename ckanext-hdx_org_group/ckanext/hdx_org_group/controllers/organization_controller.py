@@ -44,7 +44,6 @@ class HDXOrganizationController(org.OrganizationController):
         if c.userobj:
             context['user_id'] = c.userobj.id
             context['user_is_admin'] = c.userobj.sysadmin
-
         
         user = c.user or c.author
         q = c.q = request.params.get('q', '')
@@ -63,7 +62,7 @@ class HDXOrganizationController(org.OrganizationController):
 
         all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
 
-        c.featured_orgs = helper.get_featured_orgs()
+        c.featured_orgs = helper.get_featured_orgs(c.user, c.userobj)
 
         def pager_url(q=None, page=None):
             if sort_option:
@@ -81,51 +80,6 @@ class HDXOrganizationController(org.OrganizationController):
         )
 
         return base.render('organization/index.html')
-
-        # group_type = self._guess_group_type()
-
-        # context = {'model': model, 'session': model.Session,
-        #            'user': c.user or c.author, 'for_view': True,
-        #            'with_private': False}
-
-        # q = c.q = request.params.get('q', '')
-        # data_dict = {'all_fields': True, 'q': q}
-        # sort_by = c.sort_by_selected = request.params.get('sort')
-        # if sort_by:
-        #     data_dict['sort'] = sort_by
-        # else:
-        #     data_dict['sort'] = 'title asc'
-        # try:
-        #     self._check_access('site_read', context)
-        # except NotAuthorized:
-        #     abort(401, _('Not authorized to see this page'))
-
-        # # pass user info to context as needed to view private datasets of
-        # # orgs correctly
-        # if c.userobj:
-        #     context['user_id'] = c.userobj.id
-        #     context['user_is_admin'] = c.userobj.sysadmin
-
-        # results = self._action('organization_list')(context, data_dict)
-
-        # results = helper.sort_results_case_insensitive(results, sort_by)
-
-        # def pager_url(q=None, page=None):
-        #     if sort_by:
-        #         url = h.url_for(
-        #             'organizations_index', page=page, sort=sort_by)
-        #     else:
-        #         url = h.url_for('organizations_index', page=page)
-        #     return url
-
-
-        # c.page = h.Page(
-        #     collection=results,
-        #     page=request.params.get('page', 1),
-        #     url=pager_url,
-        #     items_per_page=21
-        # )
-        # return render(self._index_template(group_type))
 
 
     def read(self, id, limit=20):

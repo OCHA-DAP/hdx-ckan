@@ -41,7 +41,6 @@ class ImageController(storage.StorageController):
     def _download_file(self, label):
         file_path = BUCKET+label
         exists = os.path.isfile(file_path)
-        print file_path
         if not exists:
             # handle erroneous trailing slash by redirecting to url w/o slash
             if label.endswith('/'):
