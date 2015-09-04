@@ -42,7 +42,11 @@
                                 </div>
 
                                 <div class="feature-highlight">
-                                    Highlight text
+                                    {% if item.highlight.link == '' %}
+                                    {{item.highlight.description}} {{item.highlight.title}}
+                                    {% else %}
+                                    <a href="{{item.highlight.link}}">{{item.highlight.description}} {{item.highlight.title}}</a>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="feature-content">

@@ -73,9 +73,7 @@ def get_featured_orgs(user, userobj):
             expire = timestamp - timedelta(days=1)
             if not exists or timestamp > expire:
                 #Build new screencap
-                command = 'capturejs -l --uri "'+config['ckan.site_url']+helpers.url_for('organization_read', id=cfg['org_name'])+'" --output '+file_path+' --selector "'+cfg['screen_cap_asset_selector']+'"'
-                args =  shlex.split(command)
-                subprocess.Popen(args)
+                trigger_screencap(file_path, cfg)
         #Get org dicts themselves
             context = {'model': model, 'session': model.Session,
                    'user': user, 'for_view': True,
@@ -89,6 +87,15 @@ def get_featured_orgs(user, userobj):
             org_dict['featured_org_thumbnail'] = "/image/"+cfg['org_name']+'_thumbnail.png'
             orgs.append(org_dict)
     return orgs
+
+def trigger_screencap(file_path, cfg):
+    try:
+        command = 'capturejs -l --uri "'+config['ckan.site_url']+helpers.url_for('organization_read', id=cfg['org_name'])+'" --output '+file_path+' --selector "'+cfg['screen_cap_asset_selector']+'"'
+        args =  shlex.split(command)
+        subprocess.Popen(args)
+        return True
+    except:
+        return False
 
 def get_featured_org_highlight(context, org_dict, config):
     if config['highlight_asset_type'] == 'dataset':
