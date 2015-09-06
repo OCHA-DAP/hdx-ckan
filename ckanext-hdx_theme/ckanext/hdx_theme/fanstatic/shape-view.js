@@ -63,6 +63,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
                 }
                 return layerName + '_label';
             }
+
         });
         mvtSource.myFitBounds = function() {
             options.map.fitBounds(bounds);
@@ -146,10 +147,10 @@ function getData(options){
     };
     var defaultPointStyle = {
         color: 'rgba(255, 73, 61, 0.6)',
-        radius: 5,
+        radius: 8,
         selected: {
             color: 'rgba(255, 73, 61, 1)',
-            radius: 7
+            radius: 9
         }
     };
 
@@ -196,6 +197,8 @@ function getData(options){
             e.layer.myFitBounds();
         });
     });
+
+
 
     //addLayersToMap(options, []);
 }
