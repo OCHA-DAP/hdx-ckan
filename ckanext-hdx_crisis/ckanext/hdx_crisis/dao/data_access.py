@@ -65,6 +65,24 @@ class DataAccess:
     def _post_process(self):
         pass
 
+    def fetch_data_generic(self, context):
+        '''
+        fetch_data but not specific to topline numbers
+        :param context:
+        :return:
+        '''
+        datastore_config = self.resources_dict['datastore_config']
+        datastore_resource_id = datastore_config['resource_id']
+
+        self.results = self._fetch_items_from_datastore(
+            context, datastore_resource_id, True,
+            datastore_config.get('sql', None), DataAccess.SORT_FIELD)
+        self.results_dict = {
+            item[DataAccess.UNIQUE_ID_COL]: item for item in self.results
+            if DataAccess.UNIQUE_ID_COL in item
+            }
+
+
     def fetch_data(self, context):
         '''
         Getting data and fetching setting "results" and "results_dict" with data
