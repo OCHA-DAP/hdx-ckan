@@ -34,6 +34,8 @@ showInput: true});
 
 	//On form submit
 	$('.create-org-btn').click(function(){
+        //Do not allow empty spaces to count as text
+        $('#field-description').val($('#field-description').val().trim());
 		//Set timestamp
 		$('#field-modified_at').val(new Date().getTime());
 		if($('#field-custom_org').is(':checked')){
