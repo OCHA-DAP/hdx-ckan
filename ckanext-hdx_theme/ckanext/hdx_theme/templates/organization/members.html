@@ -28,7 +28,7 @@
 {% block primary_content_inner %}
 <ul class="list-items dataset-list unstyled">
 {% for user_id, user, translated_role, role in c.members %}
-	 {% snippet 'organization/snippets/member_item.html', id=user_id, 
+	 {% snippet 'organization/snippets/member_item.html', id=user_id,
 	 	translated_role= translated_role, role=role, roles=roles, group_id=c.group_dict.id, authorized=authorized %}
 {% endfor %}
 </ul>
@@ -70,4 +70,5 @@
 
 {% block scripts2 %}
   {% resource 'hdx_theme/organization/members.js' %}
+  {% resource 'hdx_theme/search' %}
 {% endblock %}

@@ -18,7 +18,7 @@
     		{% endif %}
 	      </span>
     </div>
-    <div class="info-secondary-data">{{ _('updated on') }} {{ h.render_datetime(c.group_dict.metadata_modified or c.group_dict.metadata_created or c.group_dict.created, with_hours=False) }}</div>
+    <div class="info-secondary-data">{{ _('Joined on') }} {{ h.render_datetime(c.group_dict.created or c.group_dict.metadata_created, with_hours=False) }}</div>
 </div>
 {% endblock %}
 
@@ -85,10 +85,12 @@
 	{% endblock %}
 
 	{% block packages_list %}
-	<div class="paddingLeftHack">
       {% if c.page.items %}
+      <div>
         {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
+    </div>
         {% else %}
+        <div class="paddingLeftHack">
 		  	<div class="big-message">
 			    <p>
 			      {{ _('There are no datasets currently uploaded to this organisation.') }}

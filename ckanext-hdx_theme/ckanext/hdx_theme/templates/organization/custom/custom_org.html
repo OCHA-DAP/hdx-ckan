@@ -162,7 +162,7 @@
         </div>
     </div>
 
-    <div id="floatingLogoAnchor" class="row paddingRowHack whiteBackground">
+    <div id="floatingLogoAnchor" id="topline" class="row paddingRowHack whiteBackground">
         {% if data.top_line_items %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="list-header crisis-list-header">
@@ -185,7 +185,6 @@
             </div>
         {% endif %}
     </div>
-
     {% if data.show_visualization %}
     <div class="row paddingRowHack whiteBackground">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
@@ -241,6 +240,7 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div id="visualization"></div>
                     <div class="col-xs-4" id="hdx-3W-who"><p>Who (Top 15)</p></div>
                     <div class="col-xs-4" id="hdx-3W-what"><p>What (Top 15)</p></div>
                     <div class="col-xs-4">
@@ -269,6 +269,8 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-4">
+                        <button class="reset btn btn-primary" id="reset">Reset Chart</button>
+                        <p id="hdx-roea-datalink"></p>
                         <div class="hdx-roea-viz" id="hdx-roea-numbers">
                             <div class="hdx-roea-number">
                                 <div class="hdx-roea-title">Funding</div>
@@ -289,7 +291,7 @@
                         </div>
                     </div>
                     <div class="col-xs-8">
-                        <div><div id="overall" class="hdx-roea-active tab">Overall</div><div id="hazard" class="hdx-roea-inactive tab">Hazard</div><div id="vulnerability" class="hdx-roea-inactive tab">Vulnerability</div><div id="coping" class="hdx-roea-inactive tab">Coping</div></div>
+                        <div><div id="overall" class="hdx-roea-active tab">Overall</div><div id="hazard" class="hdx-roea-inactive tab">Hazard</div><div id="vulnerability" class="hdx-roea-inactive tab">Vulnerability</div><div id="coping" class="hdx-roea-inactive tab">Lack of Coping Cap</div></div>
                         <div class="hdx-roea-viz" id="hdx-roea-where"></div>
                     </div>
                 </div>

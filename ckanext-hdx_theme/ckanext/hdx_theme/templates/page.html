@@ -55,7 +55,7 @@
                 <div class="flash-messages paddingLeftHack paddingRightHack">
                   {% for message in flash_messages %}
                     <div class="alert fade in {{ message.category }}">
-                      {{ h.literal(message) }}
+                      {{ h.hdx_escape(h.literal(message)) }}
                     </div>
                   {% endfor %}
                   <div style="clear: both"></div>

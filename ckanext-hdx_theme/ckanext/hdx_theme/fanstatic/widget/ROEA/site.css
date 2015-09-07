@@ -16,7 +16,7 @@
 }
 
 #hdx-roea #hdx-roea-where{
-    height:400px;
+    height:474px;
     width:100%;
 }
 
@@ -56,7 +56,7 @@
 }
 
 #hdx-roea .hdx-roea-active {
-    width:100px;
+    width:150px;
     height:40px;
     border-left: 1px solid #bbb;
     border-top: 1px solid #bbb;
@@ -70,7 +70,7 @@
 }
 
 #hdx-roea .hdx-roea-inactive {
-    width:100px;
+    width:150px;
     height:40px;
     border-bottom: 1px solid #bbb;
     display:inline-block;
@@ -91,7 +91,10 @@
     border-radius: 5px;
     font-size:2em;
  }
-
 .number-display{
     color: #000000;
+}
+
+#reset {
+    margin-bottom:10px;
 }

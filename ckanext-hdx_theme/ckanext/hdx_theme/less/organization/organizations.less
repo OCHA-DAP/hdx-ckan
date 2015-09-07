@@ -44,3 +44,61 @@
     outline: none;
   }
 }
+
+.featured-org {
+  border: 1px solid @extraLightGrayColor;
+
+  @featurePadding: 20px;
+  .feature-header {
+    @headerHeight: 220px;
+    @logoHeight: 75px;
+    position: relative;
+
+
+    .org-thumbnail{
+      overflow: hidden;
+      height: @headerHeight;
+      width: 100%;
+
+      img {
+        height: @headerHeight;
+      }
+    }
+
+    .logo-box{
+      position: absolute;
+      top: @headerHeight - @logoHeight + @featurePadding;
+      right: @featurePadding;
+
+      max-height: @logoHeight;
+      &.table-valign{
+        .org-logo(@logoHeight, @logoHeight, 60px, 60px);
+      }
+    }
+
+    .feature-highlight {
+      padding: 5px 15px;
+      background-color: @orangeColor;
+      position: absolute;
+      top: 0;
+      color: @whiteColor;
+    }
+
+  }
+
+  .feature-content{
+    padding: @featurePadding;
+
+    .organization-heading a {
+      color: @blackColor;
+    }
+
+    .last-update {
+      color: @grayColor;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+  }
+
+}
