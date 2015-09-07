@@ -53,7 +53,7 @@
 }
 .featured-org .feature-header .org-thumbnail {
   overflow: hidden;
-  height: 220px;
+  height: 200px;
   width: 100%;
 }
 .featured-org .feature-header .org-thumbnail img {
@@ -61,7 +61,7 @@
 }
 .featured-org .feature-header .logo-box {
   position: absolute;
-  top: 165px;
+  top: 145px;
   right: 20px;
   max-height: 75px;
 }
@@ -75,20 +75,32 @@
   max-width: 60px;
 }
 .featured-org .feature-header .feature-highlight {
-  padding: 5px 15px;
+  padding: 10px 15px;
   background-color: #f2645a;
   position: absolute;
   top: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 13px;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+.featured-org .feature-header .feature-highlight a {
   color: #ffffff;
 }
 .featured-org .feature-content {
   padding: 20px;
 }
+.featured-org .feature-content .list-items {
+  margin-top: 3px;
+}
 .featured-org .feature-content .organization-heading a {
   color: #000000;
 }
 .featured-org .feature-content .last-update {
-  color: #888888;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  color: #333333;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  font-size: 12px;
 }
