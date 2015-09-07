@@ -42,10 +42,12 @@
                                 </div>
 
                                 <div class="feature-highlight">
-                                    {% if item.highlight.link == '' %}
-                                    {{item.highlight.description}} {{item.highlight.title}}
-                                    {% else %}
-                                    <a href="{{item.highlight.link}}">{{item.highlight.description}} {{item.highlight.title}}</a>
+                                    {% if item.highlight.link != '' %}
+                                        <a href="{{item.highlight.link}}">
+                                    {% endif %}
+                                        {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
+                                    {% if item.highlight.link != '' %}
+                                        </a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -79,7 +81,7 @@
                                     {% set updated_time = res[1] %}
                                     {% set f_updated_time = h.render_datetime(updated_time) %}
 
-                                    <strong>Last update on</strong>: {{ f_updated_time }}
+                                    Last update on {{ f_updated_time }}
                                 </div>
                                 <div class="dataset-description">
                                     {% if item.description %}

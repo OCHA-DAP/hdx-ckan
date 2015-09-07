@@ -50,7 +50,7 @@
 
   @featurePadding: 20px;
   .feature-header {
-    @headerHeight: 220px;
+    @headerHeight: 200px;
     @logoHeight: 75px;
     position: relative;
 
@@ -61,7 +61,7 @@
       width: 100%;
 
       img {
-        height: @headerHeight;
+        height: @headerHeight + 20px;
       }
     }
 
@@ -77,11 +77,17 @@
     }
 
     .feature-highlight {
-      padding: 5px 15px;
+      padding: 10px 15px;
       background-color: @orangeColor;
       position: absolute;
       top: 0;
+      .sourceSansProFont(400, 12px);
+      line-height: 13px;
+      .letter-spacing-1();
       color: @whiteColor;
+      a {
+        color: @whiteColor;
+      }
     }
 
   }
@@ -89,14 +95,19 @@
   .feature-content{
     padding: @featurePadding;
 
+    .list-items{
+      margin-top: 3px;
+    }
+
     .organization-heading a {
       color: @blackColor;
     }
 
     .last-update {
-      color: @grayColor;
-      margin-top: 5px;
-      margin-bottom: 5px;
+      color: @darkGrayColor;
+      margin-top: 7px;
+      margin-bottom: 7px;
+      font-size: 12px;
     }
 
   }
