@@ -69,11 +69,12 @@ def get_featured_orgs(user, userobj):
         #Check for screencap
             file_path = BUCKET+cfg['org_name']+'_thumbnail.png'
             exists = os.path.isfile(file_path)
-            timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
-            expire = timestamp - timedelta(days=1)
+            if exists:
+                timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
+                expire = timestamp - timedelta(days=1)
             if not exists or timestamp > expire:
                 #Build new screencap
-                trigger_screencap(file_path, cfg)
+                capturejs = trigger_screencap(file_path, cfg)
         #Get org dicts themselves
             context = {'model': model, 'session': model.Session,
                    'user': user, 'for_view': True,
@@ -84,11 +85,16 @@ def get_featured_orgs(user, userobj):
                 org_dict = get_action('organization_show')(context, {'id':cfg['org_name']})
         #Build highlight data
             org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
-            org_dict['featured_org_thumbnail'] = "/image/"+cfg['org_name']+'_thumbnail.png'
+            if exists and capturejs:
+                org_dict['featured_org_thumbnail'] = "/image/"+cfg['org_name']+'_thumbnail.png'
+            else:
+                org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder"+str(len(orgs))+".png"
             orgs.append(org_dict)
     return orgs
 
 def trigger_screencap(file_path, cfg):
+    if not cfg['screen_cap_asset_selector']: #If there's no selector set just don't bother
+        return False
     try:
         command = 'capturejs -l --uri "'+config['ckan.site_url']+helpers.url_for('organization_read', id=cfg['org_name'])+'" --output '+file_path+' --selector "'+cfg['screen_cap_asset_selector']+'"'
         args =  shlex.split(command)
