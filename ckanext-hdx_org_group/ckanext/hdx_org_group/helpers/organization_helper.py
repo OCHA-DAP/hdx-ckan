@@ -32,7 +32,7 @@ import random
 from datetime import datetime, timedelta
 from ckan.common import _
 
-BUCKET = uploader.get_storage_path() +'/storage/uploads/group/'
+BUCKET = uploader.get_storage_path() + '/storage/uploads/group/'
 
 log = logging.getLogger(__name__)
 
@@ -53,73 +53,80 @@ def sort_results_case_insensitive(results, sort_by):
             return sorted(results, key=lambda x: x.get('title', '').lower(), reverse=True)
     return results
 
+
 def get_featured_orgs(user, userobj):
     orgs = list()
-    #Pull resource with data on our featured orgs
-    resource_id = config.get('hdx.featured_org_config') #Move this to common_config once data team has set things up
+    # Pull resource with data on our featured orgs
+    resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
     featured_config = get_featured_orgs_config(user, userobj, resource_id)
-    
+
     #######################
     for cfg in featured_config:
-        if len(orgs) < 3: #Just in case
-        #Check for screencap
-            file_path = BUCKET+cfg['org_name']+'_thumbnail.png'
+        if len(orgs) < 3:  # Just in case
+            # Check for screencap
+            file_path = BUCKET + cfg.get('org_name') + '_thumbnail.png'
             exists = os.path.isfile(file_path)
             if exists:
                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
                 expire = timestamp - timedelta(days=1)
             if not exists or timestamp > expire:
-                #Build new screencap
+                # Build new screencap
                 capturejs = trigger_screencap(file_path, cfg)
-        #Get org dicts themselves
+                # Get org dicts themselves
             context = {'model': model, 'session': model.Session,
-                   'user': user, 'for_view': True,
-                   'auth_user_obj': userobj}
-            if cfg['highlight_asset_type'] == 'dataset' and not cfg['highlight_asset_id']:
-                org_dict = get_action('organization_show')(context, {'id':cfg['org_name'], 'include_datasets': True})
+                       'user': user, 'for_view': True,
+                       'auth_user_obj': userobj}
+            if cfg.get('highlight_asset_type') == 'dataset' and not cfg.get('highlight_asset_id'):
+                org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name'), 'include_datasets': True})
             else:
-                org_dict = get_action('organization_show')(context, {'id':cfg['org_name']})
-        #Build highlight data
+                org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
+                # Build highlight data
             org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
             if exists and capturejs:
-                org_dict['featured_org_thumbnail'] = "/image/"+cfg['org_name']+'_thumbnail.png'
+                org_dict['featured_org_thumbnail'] = "/image/" + cfg['org_name'] + '_thumbnail.png'
             else:
-                org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder"+str(len(orgs))+".png"
+                org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder" + str(len(orgs)) + ".png"
             orgs.append(org_dict)
     return orgs
 
+
 def trigger_screencap(file_path, cfg):
-    if not cfg['screen_cap_asset_selector']: #If there's no selector set just don't bother
+    if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
         return False
     try:
-        command = 'capturejs -l --uri "'+config['ckan.site_url']+helpers.url_for('organization_read', id=cfg['org_name'])+'" --output '+file_path+' --selector "'+cfg['screen_cap_asset_selector']+'"'
-        args =  shlex.split(command)
+        command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
+            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"'
+        args = shlex.split(command)
         subprocess.Popen(args)
         return True
     except:
         return False
 
+
 def get_featured_org_highlight(context, org_dict, config):
-    if config['highlight_asset_type'] == 'dataset':
-        if config['highlight_asset_id']:
+    if config.get('highlight_asset_type') == 'dataset':
+        if config.get('highlight_asset_id'):
             try:
-                choice = get_action('package_show')(context, {'id':config['highlight_asset_id']})
-                return {'link':helpers.url_for('dataset_read', id=choice['id']), 'description':'Popular Dataset: ', 'type':'dataset', 'title':choice['title']}
+                choice = get_action('package_show')(context, {'id': config['highlight_asset_id']})
+                return {'link': helpers.url_for('dataset_read', id=choice['id']), 'description': 'Popular Dataset: ',
+                        'type': 'dataset', 'title': choice['title']}
             except:
-                return {'link':'', 'description':'', 'type':'dataset', 'title':''}
+                return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
         else:
-            #select a dataset at random (sort of)
+            # select a dataset at random (sort of)
             if len(org_dict['packages']) > 0:
                 choice = random.choice(org_dict['packages'])
-                return {'link':helpers.url_for('dataset_read', id=choice['name']), 'description':'Popular Dataset: ', 'type':'dataset', 'title':choice['title']}
+                return {'link': helpers.url_for('dataset_read', id=choice['name']), 'description': 'Popular Dataset: ',
+                        'type': 'dataset', 'title': choice['title']}
             else:
-                return {'link':'', 'description':'', 'type':'dataset', 'title':''}
+                return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
     else:
-        topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if el.get('key', '') == 'topline_resource']
-        if config['highlight_asset_row_code']:
+        topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if
+                                     el.get('key', '') == 'topline_resource']
+        if config.get('highlight_asset_row_code'):
             top_line_src_dict = {
                 'top-line-numbers': {
-                'resource_id': config['highlight_asset_id'] if config['highlight_asset_id'] else topline_default
+                    'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
                 }
             }
             datastore_access = data_access.DataAccess(top_line_src_dict)
@@ -127,15 +134,15 @@ def get_featured_org_highlight(context, org_dict, config):
             top_line_items = datastore_access.get_top_line_items()
             if len(top_line_items) > 0:
                 choice = top_line_items[config['highlight_asset_row_code']]
-                return {'link':'', 'description':'Key Figures: ', 'type':'topline', 'title':choice['title']}
+                return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
             else:
-                return {'link':'', 'description':'', 'type':'topline', 'title':''}
+                return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
 
         else:
-            #select a line at random
+            # select a line at random
             top_line_src_dict = {
                 'top-line-numbers': {
-                'resource_id': config['highlight_asset_id'] if config['highlight_asset_id'] else topline_default
+                    'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
                 }
             }
             datastore_access = data_access.DataAccess(top_line_src_dict)
@@ -143,18 +150,18 @@ def get_featured_org_highlight(context, org_dict, config):
             top_line_items = datastore_access.get_top_line_items()
             if len(top_line_items) > 0:
                 choice = random.choice(top_line_items)
-                return {'link':'', 'description':'Key Figures: ', 'type':'topline', 'title':choice['title']}
+                return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
             else:
-                return {'link':'', 'description':'', 'type':'topline', 'title':''}
+                return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
 
 
 def get_featured_orgs_config(user, userobj, resource_id):
     context = {'model': model, 'session': model.Session,
-                   'user': user, 'for_view': True,
-                   'auth_user_obj': userobj}
+               'user': user, 'for_view': True,
+               'auth_user_obj': userobj}
     featured_org_dict = {
-            'datastore_config': {
-                'resource_id': resource_id
+        'datastore_config': {
+            'resource_id': resource_id
         }
     }
     datastore_access = data_access.DataAccess(featured_org_dict)
@@ -162,6 +169,7 @@ def get_featured_orgs_config(user, userobj, resource_id):
     org_items = datastore_access.get_top_line_items()
 
     return org_items
+
 
 def hdx_get_group_activity_list(context, data_dict):
     from ckanext.hdx_package.helpers import helpers as hdx_package_helpers
@@ -223,6 +231,7 @@ def compile_less(result, translate_func=None):
                 compilation_result = compiler.compile_less()
                 result['less_compilation'] = compilation_result
 
+
 def _add_custom_less_code(base_color, logo_use_org_color):
     # Add base color definition
     less_code = '\n\r@wfpBlueColor: ' + base_color + ';\n\r'
@@ -240,49 +249,56 @@ def hdx_organization_update(context, data_dict):
 
     return result
 
+
 def remove_image(filename):
     if not filename.startswith('http'):
         try:
-            os.remove(uploader.get_storage_path() +'/storage/uploads/group/'+filename)
+            os.remove(uploader.get_storage_path() + '/storage/uploads/group/' + filename)
         except:
             return False
     return True
 
+
 def hdx_group_create(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.create.group_create(context,data_dict)
+    result = core.create.group_create(context, data_dict)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
+
 
 def hdx_group_update(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.update.group_update(context,data_dict)
+    result = core.update.group_update(context, data_dict)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
+
 
 def hdx_group_delete(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.delete.group_delete(context,data_dict)
+    result = core.delete.group_delete(context, data_dict)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
+
 
 def hdx_organization_create(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.create.organization_create(context,data_dict)
+    result = core.create.organization_create(context, data_dict)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-    
+
     return result
+
 
 def hdx_organization_delete(context, data_dict):
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.delete.organization_delete(context,data_dict)
+    result = core.delete.organization_delete(context, data_dict)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
+
 
 def hdx_group_or_org_update(context, data_dict, is_org=False):
     # Overriding default so that orgs can have multiple images
@@ -299,16 +315,16 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     # get the schema
     group_plugin = lib_plugins.lookup_group_plugin(group.type)
     try:
-        schema = group_plugin.form_to_db_schema_options({'type':'update',
-                                               'api':'api_version' in context,
-                                               'context': context})
+        schema = group_plugin.form_to_db_schema_options({'type': 'update',
+                                                         'api': 'api_version' in context,
+                                                         'context': context})
     except AttributeError:
         schema = group_plugin.form_to_db_schema()
 
     try:
         customization = json.loads(group.extras['customization'])
     except:
-        customization = {'image_sq':'','image_rect':''}
+        customization = {'image_sq': '', 'image_rect': ''}
 
     try:
         data_dict['customization'] = json.loads(data_dict['customization'])
@@ -316,7 +332,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization'] = {}
 
 
-    #If we're removing the image
+    # If we're removing the image
     if 'clear_image_sq' in data_dict and data_dict['clear_image_sq']:
         remove_image(customization['image_sq'])
         data_dict['customization']['image_sq'] = ''
@@ -327,22 +343,22 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
         customization['image_rect'] = ''
 
-
     if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
-        #If old image was uploaded remove it
+        # If old image was uploaded remove it
         if customization['image_sq']:
             remove_image(customization['image_sq'])
 
         upload1 = uploader.Upload('group', customization['image_sq'])
         upload1.update_data_dict(data_dict, 'image_sq',
-                           'image_sq_upload', 'clear_upload')
+                                 'image_sq_upload', 'clear_upload')
 
-    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict['image_rect_upload'] != None:
+    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict[
+        'image_rect_upload'] != None:
         if customization['image_rect']:
             remove_image(customization['image_rect'])
         upload2 = uploader.Upload('group', customization['image_rect'])
         upload2.update_data_dict(data_dict, 'image_rect',
-                           'image_rect_upload', 'clear_upload')
+                                 'image_rect_upload', 'clear_upload')
 
     storage_path = uploader.get_storage_path()
     ##Rearrange things the way we need them
@@ -363,8 +379,6 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
 
     data_dict['customization'] = json.dumps(data_dict['customization'])
-
-
 
     if is_org:
         check_access('organization_update', context, data_dict)
@@ -400,9 +414,9 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     # when editing an org we do not want to update the packages if using the
     # new templates.
     if ((not is_org)
-            and not converters.asbool(
-                config.get('ckan.legacy_templates', False))
-            and 'api_version' not in context):
+        and not converters.asbool(
+            config.get('ckan.legacy_templates', False))
+        and 'api_version' not in context):
         context['prevent_packages_update'] = True
     group = model_save.group_dict_save(data, context)
 
@@ -420,10 +434,10 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         activity_type = 'changed group'
 
     activity_dict = {
-            'user_id': model.User.by_name(user.decode('utf8')).id,
-            'object_id': group.id,
-            'activity_type': activity_type,
-            }
+        'user_id': model.User.by_name(user.decode('utf8')).id,
+        'object_id': group.id,
+        'activity_type': activity_type,
+    }
     # Handle 'deleted' groups.
     # When the user marks a group as deleted this comes through here as
     # a 'changed' group activity. We detect this and change it to a 'deleted'
@@ -440,8 +454,8 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
             activity_dict['activity_type'] = 'deleted group'
     if activity_dict is not None:
         activity_dict['data'] = {
-                'group': dictization.table_dictize(group, context)
-                }
+            'group': dictization.table_dictize(group, context)
+        }
         activity_create_context = {
             'model': model,
             'user': user,
@@ -465,7 +479,6 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
 
     if not context.get('defer_commit'):
         model.repo.commit()
-
 
     return model_dictize.group_dictize(group, context)
 
