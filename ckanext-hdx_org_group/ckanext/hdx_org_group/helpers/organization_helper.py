@@ -56,13 +56,9 @@ def sort_results_case_insensitive(results, sort_by):
 def get_featured_orgs(user, userobj):
     orgs = list()
     #Pull resource with data on our featured orgs
-    resource_id = "cc16afda-ed2e-4e0c-af71-e26932a8aefb" #Move this to common_config once data team has set things up
-    #featured_config = get_featured_orgs_config(user, userobj, resource_id)
+    resource_id = config.get('hdx.featured_org_config') #Move this to common_config once data team has set things up
+    featured_config = get_featured_orgs_config(user, userobj, resource_id)
     
-    ##################
-    ## Dummy data to be removed later after feedback from data team
-    ###################
-    featured_config = [{u'org_name': u'wfp', u'highlight_asset_type': u'dataset', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}, {u'org_name': u'ocha-afghanistan', u'highlight_asset_type': u'topline', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#topline', u'_id': 2}, {u'org_name': u'somalia-ngo-consortium', u'highlight_asset_type': u'dataset', u'highlight_asset_id': u'3w-matrix-for-somalia-ngo-consortium', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#visualization', u'_id': 3}]
     #######################
     for cfg in featured_config:
         if len(orgs) < 3: #Just in case
