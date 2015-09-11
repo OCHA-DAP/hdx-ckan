@@ -26,12 +26,13 @@
                             <div class="feature-header">
                                 {% set customization = h.load_json(h.get_pkg_dict_extra(item, 'customization')) %}
                                 {% set image_sq = h.url_for('image_serve', label=customization.image_sq) %}
+                                {% set logo_extra_style = "background-color: #ffffff; border: 1px solid #eeeeee;" if customization.use_org_color == "false" else "background-color: " + customization.highlight_color %}
                                 <a {% if item.highlight.link != '' %} href="{{item.highlight.link}}" {% endif %}>
                                     <div class="org-thumbnail" style="background-color: {{customization.highlight_color}}">
                                         <img src="{{ item.featured_org_thumbnail }}" />
                                     </div>
                                 </a>
-                                <div class="logo-box" style="background-color: {{customization.highlight_color}}">
+                                <div class="logo-box" style="{{ logo_extra_style }}">
                                     <a href="{{h.url_for(controller='organization', action='read', id=item.name)}}">
                                         <div class="table-valign">
                                             <div class="table-valign-content">
