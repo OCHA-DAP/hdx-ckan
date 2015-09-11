@@ -60,9 +60,9 @@ def get_featured_orgs(user, userobj):
     resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
     featured_config = get_featured_orgs_config(user, userobj, resource_id)
 
-    #######################
     for cfg in featured_config:
-        if len(orgs) < 3:  # Just in case
+        # getting the first 3 rows/organizations
+        if len(orgs) < 3:
             # Check for screencap
             file_path = BUCKET + cfg.get('org_name') + '_thumbnail.png'
             exists = os.path.isfile(file_path)
@@ -76,11 +76,11 @@ def get_featured_orgs(user, userobj):
             context = {'model': model, 'session': model.Session,
                        'user': user, 'for_view': True,
                        'auth_user_obj': userobj}
-            if cfg.get('highlight_asset_type') == 'dataset' and not cfg.get('highlight_asset_id'):
-                org_dict = get_action('organization_show')(context,
-                                                           {'id': cfg.get('org_name'), 'include_datasets': True})
-            else:
-                org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
+            # if cfg.get('highlight_asset_type') == 'dataset' and not cfg.get('highlight_asset_id'):
+            #     org_dict = get_action('organization_show')(context,
+            #                                                {'id': cfg.get('org_name'), 'include_datasets': True})
+            # else:
+            org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
                 # Build highlight data
             org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
             if exists and capturejs:
