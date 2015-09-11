@@ -54,7 +54,7 @@ def sort_results_case_insensitive(results, sort_by):
     return results
 
 
-def get_featured_orgs(user, userobj):
+def get_featured_orgs(user, userobj, reset_thumbnails='false'):
     orgs = list()
     # Pull resource with data on our featured orgs
     resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
@@ -71,11 +71,10 @@ def get_featured_orgs(user, userobj):
                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
                 expire = timestamp + timedelta(days=1)
                 expired = datetime.utcnow() > expire
-            if not exists or expired:
+            if not exists or expired or reset_thumbnails == 'true':
                 # Build new screencap
                 trigger_screencap(file_path, cfg)
                 # check again if file exists
-
 
             context = {'model': model, 'session': model.Session,
                        'user': user, 'for_view': True,
