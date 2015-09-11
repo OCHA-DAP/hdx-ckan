@@ -170,12 +170,12 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         os.remove(file_path)
 
     def test_feature_assembly(self):
-        cfg = {u'org_name': u'hdx-test-org', u'highlight_asset_type': u'dataset', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}
+        cfg = {u'org_name': u'hdx-test-org', u'highlight_asset_type': u'key figures', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}
         userobj = model.User.by_name('testsysadmin')
         context = {'model': model, 'session': model.Session,
                    'user': 'testsysadmin', 'for_view': True,
                    'auth_user_obj': userobj}
         org_dict = self._get_action('group_show')(context, {'id':'roger'})
         results = helper.get_featured_org_highlight(context, org_dict, cfg)
-        assert results['description'] == "Popular Dataset: "
-        assert results['link'] in ['/dataset/'+p['name'] for p in org_dict['packages']]
+        assert results['description'] == "Key Figures: "
+        # assert results['link'] in ['/dataset/'+p['name'] for p in org_dict['packages']]
