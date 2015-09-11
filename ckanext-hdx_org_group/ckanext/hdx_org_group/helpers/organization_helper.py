@@ -66,24 +66,28 @@ def get_featured_orgs(user, userobj):
             # Check for screencap
             file_path = BUCKET + cfg.get('org_name') + '_thumbnail.png'
             exists = os.path.isfile(file_path)
+            expired = False
             if exists:
                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
-                expire = timestamp - timedelta(days=1)
-            if not exists or timestamp > expire:
+                expire = timestamp + timedelta(days=1)
+                expired = datetime.utcnow() > expire
+            if not exists or expired:
                 # Build new screencap
-                capturejs = trigger_screencap(file_path, cfg)
-                # Get org dicts themselves
+                trigger_screencap(file_path, cfg)
+                # check again if file exists
+
+
             context = {'model': model, 'session': model.Session,
                        'user': user, 'for_view': True,
                        'auth_user_obj': userobj}
-            # if cfg.get('highlight_asset_type') == 'dataset' and not cfg.get('highlight_asset_id'):
-            #     org_dict = get_action('organization_show')(context,
-            #                                                {'id': cfg.get('org_name'), 'include_datasets': True})
-            # else:
             org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
-                # Build highlight data
+
+            # Build highlight data
             org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
-            if exists and capturejs:
+
+            # checking again here if the file was generated
+            exists = os.path.isfile(file_path)
+            if exists:
                 org_dict['featured_org_thumbnail'] = "/image/" + cfg['org_name'] + '_thumbnail.png'
             else:
                 org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder" + str(len(orgs)) + ".png"
