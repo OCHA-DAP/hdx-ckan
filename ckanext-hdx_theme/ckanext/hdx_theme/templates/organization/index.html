@@ -40,16 +40,17 @@
                                         </a>
                                     </div>
                                 </div>
-
-                                <div class="feature-highlight">
-                                    {% if item.highlight.link != '' %}
-                                        <a href="{{item.highlight.link}}">
-                                    {% endif %}
-                                        {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
-                                    {% if item.highlight.link != '' %}
-                                        </a>
-                                    {% endif %}
-                                </div>
+                                {% if item.highlight.description != '' %}
+                                    <div class="feature-highlight">
+                                        {% if item.highlight.link != '' %}
+                                            <a href="{{item.highlight.link}}">
+                                        {% endif %}
+                                            {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
+                                        {% if item.highlight.link != '' %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="feature-content">
                                 <h3 class="list-items organization-heading">

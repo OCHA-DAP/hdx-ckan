@@ -9,7 +9,7 @@ Example:
 {% resource 'hdx_theme/hdx_autocomplete.js' %}
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
-  <div id="{{ modal_div_id }}" class="modal fade" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  <div id="{{ modal_div_id }}" class="modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
 	  <div class="modal-dialog">
 	  <div class="modal-content hdx-modal">
 		<div class="modal-header">
@@ -27,8 +27,11 @@ Example:
 				{{ form.input('username', id='field-username', label=_('User'), placeholder=_('Username'), value='', error='', classes=['control-medium'], attrs=format_attrs) }}
 			{% endif %}
 
-			{% set format_attrs = {'data-module': 'hdx_autocomplete', 'style':'width: 300px;'} %}
-			{{ form.select('role', label=_('Role'), options=roles, selected=role, error='', attrs=format_attrs) }}
+            <select id="role" name="role" data-module="hdx_autocomplete" style="width: 100%">
+              {% for option in roles %}
+                <option value="{{ option.value }}"{% if option.value == role %} selected{% endif %}>{{ option.text or option.value }}</option>
+              {% endfor %}
+            </select>
 		</div>
 		<div class="modal-footer">
 			<button class="btn hdx-btn org-btn">{{ _('Submit') }}</button>
