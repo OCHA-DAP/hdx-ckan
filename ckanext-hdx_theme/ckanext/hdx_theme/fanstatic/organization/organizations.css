@@ -58,6 +58,7 @@
 }
 .featured-org .feature-header .org-thumbnail img {
   height: 220px;
+  opacity: 0.9;
 }
 .featured-org .feature-header .logo-box {
   position: absolute;
@@ -65,23 +66,24 @@
   right: 20px;
   max-height: 75px;
 }
-.featured-org .feature-header .logo-box.table-valign {
+.featured-org .feature-header .logo-box .table-valign {
   width: 75px;
   height: 75px;
   text-align: center;
 }
-.featured-org .feature-header .logo-box.table-valign img {
+.featured-org .feature-header .logo-box .table-valign img {
   max-height: 60px;
   max-width: 60px;
 }
 .featured-org .feature-header .feature-highlight {
-  padding: 10px 15px;
-  background-color: #f2645a;
+  width: 100%;
+  padding: 7px 15px;
+  background-color: rgba(242, 100, 90, 0.9);
   position: absolute;
   top: 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 13px;
   letter-spacing: 0.01em;
   color: #ffffff;
@@ -103,4 +105,7 @@
   margin-top: 7px;
   margin-bottom: 7px;
   font-size: 12px;
+}
+.featured-org .feature-content .dataset-description {
+  min-height: 40px;
 }
