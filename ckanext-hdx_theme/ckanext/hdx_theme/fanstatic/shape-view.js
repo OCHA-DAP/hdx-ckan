@@ -166,9 +166,11 @@ function getData(options){
     info.update = function (props) {
         var innerData = "";
         if (props){
-            for (var key in props){
-                var value = props[key];
-                innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
+            for (var key in props) {
+                if (key != 'ogc_fid') {
+                    var value = props[key];
+                    innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
+                }
             }
         }
         this._div.innerHTML = '<h4>' + "Shape info" + '</h4>' +  (props ? '<table>' + innerData + '</table>' : 'Click on a shape');
