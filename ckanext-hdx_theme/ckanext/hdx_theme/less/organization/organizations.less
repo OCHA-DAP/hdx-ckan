@@ -44,3 +44,78 @@
     outline: none;
   }
 }
+
+.featured-org {
+  border: 1px solid @extraLightGrayColor;
+
+  @featurePadding: 20px;
+  .feature-header {
+    @headerHeight: 200px;
+    @logoHeight: 75px;
+    position: relative;
+
+
+    .org-thumbnail{
+      overflow: hidden;
+      height: @headerHeight;
+      width: 100%;
+
+      img {
+        height: @headerHeight + 20px;
+        opacity: 0.9;
+      }
+    }
+
+    .logo-box{
+      position: absolute;
+      top: @headerHeight - @logoHeight + @featurePadding;
+      right: @featurePadding;
+
+      max-height: @logoHeight;
+      .table-valign{
+        .org-logo(@logoHeight, @logoHeight, 60px, 60px);
+      }
+    }
+
+    .feature-highlight {
+      width: 100%;
+      padding: 7px 15px;
+      background-color: fade(@orangeColor, 90%);
+      position: absolute;
+      top: 0;
+      .sourceSansProFont(400, 11px);
+      line-height: 13px;
+      .letter-spacing-1();
+      color: @whiteColor;
+      a {
+        color: @whiteColor;
+      }
+    }
+
+  }
+
+  .feature-content{
+    padding: @featurePadding;
+
+    .list-items{
+      margin-top: 3px;
+    }
+
+    .organization-heading a {
+      color: @blackColor;
+    }
+
+    .last-update {
+      color: @darkGrayColor;
+      margin-top: 7px;
+      margin-bottom: 7px;
+      font-size: 12px;
+    }
+    
+    .dataset-description {
+      min-height: 40px;
+    }
+
+  }
+
+}
