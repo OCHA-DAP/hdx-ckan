@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  $('#share_button').click(function(e){
+  $('.share_button').click(function(e){
     $.ajax({
       url: $(this).attr('short-path'),
       data:{'url':$(this).attr('target-url'), },
