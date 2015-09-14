@@ -10,9 +10,6 @@ import logging as logging
 import ckan.model as model
 import ckan.lib.helpers as h
 
-import ckanext.hdx_users.model as umodel
-import ckanext.hdx_user_extra.model as ue_model
-
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 pages = [
@@ -56,6 +53,10 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
 
     @classmethod
     def setup_class(cls):
+
+        import ckanext.hdx_users.model as umodel
+        import ckanext.hdx_user_extra.model as ue_model
+
         super(TestPageLoad, cls).setup_class()
         umodel.setup()
         ue_model.create_table()

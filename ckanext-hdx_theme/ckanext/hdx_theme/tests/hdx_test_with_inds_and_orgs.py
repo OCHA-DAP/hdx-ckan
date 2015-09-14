@@ -11,8 +11,6 @@ import ckan.model as model
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 
-
-
 def get_packages():
     packages = [
         {
@@ -84,7 +82,7 @@ def get_organization():
                     'title': 'Hdx Test Org',
                     'org_url': 'http://test-org.test',
                     'description': 'This is a test organization',
-                    'users': [{'name': 'testsysadmin'}]}
+                    'users': [{'name': 'testsysadmin'}, {'name':'janedoe3'}]}
     return organization
 
 

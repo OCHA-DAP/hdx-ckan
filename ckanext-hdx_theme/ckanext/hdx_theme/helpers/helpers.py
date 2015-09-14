@@ -1,29 +1,33 @@
-from ckan.controllers import group
+# from ckan.controllers import group
 import ckan.lib.helpers as h
-from ckan.common import (
-    c, request
-)
-import sqlalchemy
+# from ckan.common import (
+#     c, request
+# )
+# import sqlalchemy
 import ckan.model as model
 import ckan.lib.base as base
 import ckan.logic as logic
 import datetime
 import ckanext.hdx_theme.version as version
 import count
-import json
+# import json
 import logging
 import ckan.plugins.toolkit as tk
-import re
+# import re
 import ckan.new_authz as new_authz
 import re
 import ckan.lib.datapreview as datapreview
 
-import ckanext.hdx_theme.helpers.counting_actions as counting
+# import ckanext.hdx_theme.helpers.counting_actions as counting
 
-from webhelpers.html import escape, HTML, literal, url_escape
-from ckan.common import _
+# from webhelpers.html import escape, HTML, literal, url_escape
+# from ckan.common import _
 import urlparse as urlparse
 import pylons.config as config
+
+from ckan.common import (
+    _, ungettext, c, request, json,
+)
 
 log = logging.getLogger(__name__)
 
@@ -224,16 +228,15 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
                                                 message=kw['message']))
         return h.literal(newResult)
 
+
 def hdx_build_nav_no_icon(menu_item, title, **kw):
     htmlResult = str(h.build_nav_icon(menu_item, title, **kw))
     print htmlResult
-    start = htmlResult.find('<i ') -1
+    start = htmlResult.find('<i ') - 1
     end = htmlResult.find('</i>') + 4
-    newResult = htmlResult[0:start]+' class="no-icon">'+htmlResult[end:]
+    newResult = htmlResult[0:start] + ' class="no-icon">' + htmlResult[end:]
     print newResult
     return h.literal(newResult)
-
-
 
 
 def hdx_linked_user(user, maxlength=0):
@@ -513,9 +516,9 @@ def hdx_resource_preview(resource, package):
         return False
 
     return h.snippet("dataviewer/snippets/data_preview.html",
-                   embed=directly,
-                   resource_url=url,
-                   raw_resource_url=https_load(resource.get('url')))
+                     embed=directly,
+                     resource_url=url,
+                     raw_resource_url=https_load(resource.get('url')))
 
 
 def https_load(url):
@@ -542,3 +545,22 @@ def check_all_str_fields_not_empty(dictionary, warning_template, skipped_keys=[]
 def add_error(type, message, errors):
     if isinstance(errors, list):
         errors.append({'_type': type, 'message': message})
+
+
+def hdx_popular(type_, number, min=1, title=None):
+    ''' display a popular icon. '''
+    from ckan.lib.helpers import snippet as snippet
+    if type_ == 'views':
+        title = ungettext('{number} view', '{number} views', number)
+    elif type_ == 'recent views':
+        title = ungettext('{number} recent view', '{number} recent views', number)
+    elif type_ == 'downloads':
+        title = ungettext('{number} download', '{number} downloads', number)
+    elif not title:
+        raise Exception('popular() did not recieve a valid type_ or title')
+    return snippet('snippets/popular.html', title=title, number=number, min=min)
+
+
+def hdx_escape(item):
+    import re
+    return re.sub("u&#39;([^']*)&#39;",r'\1', str(item))

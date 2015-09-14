@@ -9,6 +9,7 @@
 {% block primary_content %}
   <article class="module">
     <div class="module-content">
+      <div class="paddingLeftHack mTop35">
       <h1 class="page-heading">
         {% block page_heading %}{{ _('Users') }}{% endblock %}
       </h1>
@@ -21,7 +22,7 @@
         {% endblock %}
       </ul>
       {% endblock %}
-    </div>
+    </div></div>
     {% block page_pagination %}
     {{ c.page.pager(q=c.q, order_by=c.order_by) }}
     {% endblock %}

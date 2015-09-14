@@ -29,23 +29,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
     var ymax = bboxArray[1].split(" ")[1];
     var bounds = [[ymin, xmin], [ymax, xmax]];
 
-    var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
-    var splitString = "/postgis/";
-    var splitPosition = fieldsInfo.indexOf(splitString);
-    fieldsInfo = fieldsInfo.substr(0, splitPosition) + "/tables/" + fieldsInfo.substr(splitPosition + splitString.length);
-
-    var promise = $.getJSON(fieldsInfo + "?format=geojson", function (data) {
-        var extraFields = "";
-        if (data.columns) {
-            for (var i = 0; i < data.columns.length; i++) {
-                var column = data.columns[i];
-                var escaped_column_name = encodeURIComponent(column.column_name);
-                if (column.data_type == "character varying") {
-                    extraFields += ',"' + escaped_column_name+'"';
-                }
-            }
-        }
-
+    function createLayer(extraFields) {
         var mvtSource = new L.TileLayer.MVTSource({
             url: value + "?fields=ogc_fid" + extraFields,
             //debug: true,
@@ -79,6 +63,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
                 }
                 return layerName + '_label';
             }
+
         });
         mvtSource.myFitBounds = function() {
             options.map.fitBounds(bounds);
@@ -90,8 +75,47 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
         }
 
         layers[key] = mvtSource;
+    }
 
-    });
+    var promise = null;
+    var layer_fields = layer_data['layer_fields'];
+    if (layer_fields && layer_fields.length > 0) {
+        // New way in which the fields are stored in 'shape_info' in CKAN
+
+        var extraFields = "";
+        for (var i = 0; i < layer_fields.length; i++) {
+            var field = layer_fields[i];
+            if ( field['field_name'] != 'ogc_fid' && field['data_type'] == 'character varying') {
+                var escaped_field_name = encodeURIComponent(field['field_name']);
+                extraFields += ',"' + escaped_field_name + '"';
+            }
+        }
+        createLayer(extraFields)
+    }
+    else {
+        // Still supporting the old way for backwards compatibility - fetching fields from spatial server
+
+        var fieldsInfo = value.substr(0, value.indexOf("/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf"));
+        var splitString = "/postgis/";
+        var splitPosition = fieldsInfo.indexOf(splitString);
+        fieldsInfo = fieldsInfo.substr(0, splitPosition) + "/tables/" + fieldsInfo.substr(splitPosition + splitString.length);
+
+
+        promise = $.getJSON(fieldsInfo + "?format=geojson", function (data) {
+            var extraFields = "";
+            if (data.columns) {
+                for (var i = 0; i < data.columns.length; i++) {
+                    var column = data.columns[i];
+                    var escaped_column_name = encodeURIComponent(column.column_name);
+                    if (column.data_type == "character varying") {
+                        extraFields += ',"' + escaped_column_name+'"';
+                    }
+                }
+            }
+
+            createLayer(extraFields)
+        });
+    }
     return promise;
 }
 function getData(options){
@@ -123,10 +147,10 @@ function getData(options){
     };
     var defaultPointStyle = {
         color: 'rgba(255, 73, 61, 0.6)',
-        radius: 5,
+        radius: 8,
         selected: {
             color: 'rgba(255, 73, 61, 1)',
-            radius: 7
+            radius: 9
         }
     };
 
@@ -163,7 +187,8 @@ function getData(options){
         if (!firstAdded){
             firstAdded = true;
         }
-        promises.push(promise);
+        if (promise)
+            promises.push(promise);
     }
 
     $.when.apply($, promises).done(function(sources){
@@ -172,6 +197,8 @@ function getData(options){
             e.layer.myFitBounds();
         });
     });
+
+
 
     //addLayersToMap(options, []);
 }
