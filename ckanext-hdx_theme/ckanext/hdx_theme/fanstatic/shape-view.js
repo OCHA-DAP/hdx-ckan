@@ -20,6 +20,8 @@ var options = {
 };
 
 function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key) {
+    var ALLOWED_COLUMN_TYPES = ["character varying", "integer"];
+
     var value = layer_data['url'];
 
     var bboxArray = layer_data['bounding_box'].replace("BOX(", "").replace(")", "").split(",");
@@ -85,7 +87,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
         var extraFields = "";
         for (var i = 0; i < layer_fields.length; i++) {
             var field = layer_fields[i];
-            if ( field['field_name'] != 'ogc_fid' && field['data_type'] == 'character varying') {
+            if ( field['field_name'] != 'ogc_fid' && ALLOWED_COLUMN_TYPES.indexOf(field['data_type']) >= 0) {
                 var escaped_field_name = encodeURIComponent(field['field_name']);
                 extraFields += ',"' + escaped_field_name + '"';
             }
@@ -107,7 +109,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
                 for (var i = 0; i < data.columns.length; i++) {
                     var column = data.columns[i];
                     var escaped_column_name = encodeURIComponent(column.column_name);
-                    if (column.data_type == "character varying") {
+                    if ( ALLOWED_COLUMN_TYPES.indexOf(column.data_type) >= 0 ) {
                         extraFields += ',"' + escaped_column_name+'"';
                     }
                 }
