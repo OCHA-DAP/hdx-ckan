@@ -29,6 +29,7 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return False
 
     def before_map(self, map):
+        map.redirect('/user/', '/user')
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='register')
