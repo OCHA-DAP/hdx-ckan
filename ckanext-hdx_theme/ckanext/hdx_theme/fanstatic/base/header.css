@@ -806,6 +806,8 @@ ul.hdx-bs3 {
   width: initial;
 }
 .modal.in .modal-dialog .modal-content {
+  min-width: 370px;
+  min-height: 360px;
   border-radius: 6px;
   overflow: hidden;
   position: relative;
@@ -828,7 +830,8 @@ ul.hdx-bs3 {
   opacity: 1;
 }
 .modal.in .modal-dialog .modal-content .modal-body {
-  padding: 20px 30px 0;
+  min-height: 193px;
+  padding: 30px 30px 0;
 }
 .modal.in .modal-dialog .modal-content .modal-body .nav-tabs {
   border-color: #cccccc;
@@ -847,10 +850,16 @@ ul.hdx-bs3 {
   border-radius: 3px;
   border: 1px solid #ffffff;
 }
+.modal.in .modal-dialog .modal-content .modal-body input[type="text"]:disabled {
+  background-color: #eeeeee;
+}
 .modal.in .modal-dialog .modal-content .modal-footer {
   padding: 30px;
   box-shadow: none;
   border-top: none;
+  position: relative;
+  bottom: 0;
+  right: 0;
 }
 .modal.in .modal-dialog .modal-content .modal-footer .btn-large {
   min-width: 150px;
@@ -861,3 +870,33 @@ ul.hdx-bs3 {
   color: #000000;
 }
 /* END Style Modal Dialogs */
+/* Style placeholders */
+::-webkit-input-placeholder {
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  opacity: 1;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+}
+/* END Style placeholders */

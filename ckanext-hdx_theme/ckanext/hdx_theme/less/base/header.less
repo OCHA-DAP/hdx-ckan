@@ -528,13 +528,19 @@
     -webkit-transform: translate(-50%, -50%); /* Safari */
     width: initial;
 
+    @modalContentHeight: 360px;
     .modal-content{
+      min-width: 370px;
+      min-height: @modalContentHeight;
+
       .notification-widget-style();
       .modal-header{
         .notification-title-style();
       }
       .modal-body{
-        padding: 20px 30px 0;
+        min-height: @modalContentHeight - 65px - 102px;
+
+        padding: 30px 30px 0;
         .nav-tabs {
           border-color: @lightGrayColor;
           h4{
@@ -553,12 +559,19 @@
           border-radius: 3px;
           border: 1px solid #ffffff;
 
+          &:disabled{
+            background-color: @extraLightGrayColor;
+          }
         }
       }
       .modal-footer{
         padding: 30px;
         box-shadow: none;
         border-top: none;
+
+        position: relative;
+        bottom: 0;
+        right: 0;
 
         .btn-large {
           min-width: 150px;
@@ -575,3 +588,35 @@
   }
 }
 /* END Style Modal Dialogs */
+
+/* Style placeholders */
+  ::-webkit-input-placeholder {
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  :-ms-input-placeholder {
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+  }
+/* END Style placeholders */
