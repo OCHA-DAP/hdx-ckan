@@ -7,6 +7,7 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
         heading: _('Please Confirm Action'),
         content: _('Are you sure you want to perform this action?'),
         confirm: _('Confirm'),
+        delete: null,
         cancel: _('Cancel')
       },
       template: [
@@ -87,7 +88,17 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
 
         element.find('h3').text(this.i18n('heading'));
         element.find('.modal-body').text(this.i18n('content'));
-        element.find('.btn-primary').text(this.i18n('confirm'));
+        var mainButton = element.find('.btn-primary');
+        if (this.i18n('delete')){
+          mainButton.text(this.i18n('delete'));
+          mainButton.removeClass('btn-primary');
+          mainButton.addClass('btn-danger');
+        } else {
+          mainButton.text(this.i18n('confirm'));
+        }
+
+
+
         element.find('.btn-cancel').text(this.i18n('cancel'));
       }
       return this.modal;
