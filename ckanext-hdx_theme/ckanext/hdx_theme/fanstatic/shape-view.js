@@ -202,7 +202,9 @@ function getData(options){
         });
     });
 
-
+    $('.map-info').mousedown(
+      function(event) {event.stopPropagation();}
+    );
 
     //addLayersToMap(options, []);
 }
