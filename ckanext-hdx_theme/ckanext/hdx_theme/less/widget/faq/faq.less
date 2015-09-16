@@ -13,7 +13,7 @@
 @inputPadding: @paddingSmall;
 
 @widgetHeight: @baseHeight;
-@textAreaHeight: 120px;
+@textAreaHeight: 100px;
 
 #faq-msg {
   height: @textAreaHeight;
@@ -30,6 +30,10 @@
 #faq-send-message {
   overflow: scroll;
   height: 400px;
+
+  .captcha{
+    overflow: hidden;
+  }
 }
 
 #faqSendMsgPopup{

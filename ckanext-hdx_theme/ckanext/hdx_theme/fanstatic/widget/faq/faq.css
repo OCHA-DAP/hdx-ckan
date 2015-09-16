@@ -1,9 +1,9 @@
 #faq-msg {
-  height: 120px;
+  height: 100px;
   padding: 14px 20px;
 }
 #faq-msg ~ label {
-  bottom: 76px;
+  bottom: 56px;
 }
 #faq-msg.input-content ~ label {
   bottom: 6px;
@@ -11,6 +11,9 @@
 #faq-send-message {
   overflow: scroll;
   height: 400px;
+}
+#faq-send-message .captcha {
+  overflow: hidden;
 }
 #faqSendMsgPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;
