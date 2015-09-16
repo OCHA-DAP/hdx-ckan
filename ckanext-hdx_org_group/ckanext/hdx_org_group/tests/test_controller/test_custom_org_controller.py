@@ -5,10 +5,12 @@ Created on Jun 26, 2015
 '''
 
 import logging
+from time import sleep
 import mock
 import os
 import ckan.lib.helpers as h
 import ckan.model as model
+
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -153,10 +155,16 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert 'id="customization-trigger"' not in str(result.response)
 
     def test_capturejs(self):
-        cfg = {'org_name':'hdx-test-org','screen_cap_asset_selector':'content'}
+        userobj = model.User.by_name('testsysadmin')
+        context = {'model': model, 'session': model.Session,
+                   'user': 'testsysadmin', 'for_view': True,
+                   'auth_user_obj': userobj}
+        org_dict = self._get_action('group_list')(context, {})
+        cfg = {'org_name':org_dict[0],'screen_cap_asset_selector':'content'}
         file_path = uploader.get_storage_path() +'/storage/uploads/group/'+cfg['org_name']+'_thumbnail.png'
         cap = helper.trigger_screencap(file_path, cfg)
         assert cap == True #No error
+        sleep(5)
         assert os.path.isfile(file_path) #File exists
         #Delete file
         os.remove(file_path)
@@ -165,8 +173,9 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         cfg = {u'org_name': u'hdx-test-org', u'highlight_asset_type': u'dataset', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}
         userobj = model.User.by_name('testsysadmin')
         context = {'model': model, 'session': model.Session,
-                   'user': user, 'for_view': True,
+                   'user': 'testsysadmin', 'for_view': True,
                    'auth_user_obj': userobj}
+        org_dict = self._get_action('group_show')(context, {'id':'roger'})
         results = helper.get_featured_org_highlight(context, org_dict, cfg)
         assert results['description'] == "Popular Dataset: "
-        assert results['link'] == h.url_for('package_read', id='test_private_dataset_1')
+        assert results['link'] in ['/dataset/'+p['name'] for p in org_dict['packages']]
