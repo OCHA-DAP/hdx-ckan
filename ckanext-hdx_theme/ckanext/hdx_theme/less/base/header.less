@@ -43,6 +43,12 @@
     }
 /* END Body Background */
 
+.searchPlaceholderStyle(){
+  color: @searchPlaceholderColor;
+  .sourceSansProFont(400, 18px);
+  line-height: 28px;
+}
+
 .newHeader{
   .header-user-box, .header-user-box > span > a {
     .gothamBoldFont(12px);
@@ -166,12 +172,6 @@
       line-height: 28px;
       outline: none;
       color: @searchTextColor;
-    }
-
-    .searchPlaceholderStyle(){
-      color: @searchPlaceholderColor;
-      .sourceSansProFont(400, 18px);
-      line-height: 28px;
     }
 
     input::-webkit-input-placeholder, input:-ms-input-placeholder{
@@ -501,3 +501,122 @@
     }
 
 /* END search_form.html customisations */
+
+/* Style Modal Dialogs */
+@import "../widget/onboarding/notification-mixins";
+
+.modal.in {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  //background-color: rgba(1,1,1,0.3);
+  z-index: 1041;
+  @notificationPaddingSize: 20px;
+  @notificationLineHeight: 20px;
+  @notificationTitleHeight: 2*@notificationPaddingSize + @notificationLineHeight;
+
+
+  .modal-dialog{
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%); /* IE 9 */
+    -webkit-transform: translate(-50%, -50%); /* Safari */
+    width: initial;
+
+    @modalContentHeight: 360px;
+    .modal-content{
+      min-width: 370px;
+      min-height: @modalContentHeight;
+
+      .notification-widget-style();
+      .modal-header{
+        .notification-title-style();
+      }
+      .modal-body{
+        min-height: @modalContentHeight - 65px - 102px;
+
+        padding: 30px 30px 0;
+        .nav-tabs {
+          border-color: @lightGrayColor;
+          h4{
+            margin: 0;
+          }
+        }
+
+        input[type="text"]{
+          height: 44px;
+          line-height: 14px;
+          border-color: #ffffff;
+          box-shadow: none;
+          padding-left: 15px;
+          font-size: 14px;
+          color: #000000;
+          border-radius: 3px;
+          border: 1px solid #ffffff;
+
+          &:disabled{
+            background-color: @extraLightGrayColor;
+          }
+        }
+      }
+      .modal-footer{
+        padding: 30px;
+        box-shadow: none;
+        border-top: none;
+
+        position: relative;
+        bottom: 0;
+        right: 0;
+
+        .btn-large {
+          min-width: 150px;
+          &.btn-empty {
+            min-width: 0;
+            margin-right: 30px;
+            color: @blackColor;
+          }
+
+        }
+
+      }
+    }
+  }
+}
+/* END Style Modal Dialogs */
+
+/* Style placeholders */
+  ::-webkit-input-placeholder {
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+    opacity: 1;
+  }
+
+  :-ms-input-placeholder {
+    color: #cccccc;
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 700;
+  }
+/* END Style placeholders */

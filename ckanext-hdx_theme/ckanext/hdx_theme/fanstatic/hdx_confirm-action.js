@@ -7,20 +7,21 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
         heading: _('Please Confirm Action'),
         content: _('Are you sure you want to perform this action?'),
         confirm: _('Confirm'),
+        delete: null,
         cancel: _('Cancel')
       },
       template: [
-        '<div class="modal fade">',
+        '<div class="modal">',
         '<div class="modal-dialog">',
-		'<div class="modal-content hdx-modal">',
+		'<div class="modal-content">',
         '<div class="modal-header">',
         '<button type="button" class="close" data-dismiss="modal">×</button>',
-        '<h3></h3>',
+        '<h3 class="modal-title"></h3>',
         '</div>',
         '<div class="modal-body"></div>',
         '<div class="modal-footer">',
-        '<button class="btn btn-cancel"></button>',
-        '<button class="btn btn-primary"></button>',
+        '<button class="btn btn-empty btn-large btn-cancel"></button>',
+        '<button class="btn btn-primary btn-large"></button>',
         '</div>',
         '</div>',
         '</div>',
@@ -87,7 +88,17 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
 
         element.find('h3').text(this.i18n('heading'));
         element.find('.modal-body').text(this.i18n('content'));
-        element.find('.btn-primary').text(this.i18n('confirm'));
+        var mainButton = element.find('.btn-primary');
+        if (this.i18n('delete')){
+          mainButton.text(this.i18n('delete'));
+          mainButton.removeClass('btn-primary');
+          mainButton.addClass('btn-danger');
+        } else {
+          mainButton.text(this.i18n('confirm'));
+        }
+
+
+
         element.find('.btn-cancel').text(this.i18n('cancel'));
       }
       return this.modal;
