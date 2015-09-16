@@ -1,34 +1,4 @@
 /* Homepage */
-    ::-webkit-input-placeholder {
-        color: #cccccc;
-        font-size: 16px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
-    }
-
-    :-moz-placeholder { /* Firefox 18- */
-        color: #cccccc;
-        font-size: 16px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
-        opacity: 1;
-    }
-
-    ::-moz-placeholder {  /* Firefox 19+ */
-        color: #cccccc;
-        font-size: 16px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
-        opacity: 1;
-    }
-
-    :-ms-input-placeholder {
-        color: #cccccc;
-        font-size: 16px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
-    }
-
     .homepage-main{
         background-color: #1ebfb3;
         background-image: url("/images/homepage/map.png");

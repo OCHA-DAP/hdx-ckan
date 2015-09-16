@@ -1,9 +1,9 @@
 #faq-msg {
-  height: 120px;
+  height: 80px;
   padding: 14px 20px;
 }
 #faq-msg ~ label {
-  bottom: 76px;
+  bottom: 36px;
 }
 #faq-msg.input-content ~ label {
   bottom: 6px;
