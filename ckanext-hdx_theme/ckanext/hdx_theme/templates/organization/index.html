@@ -64,7 +64,7 @@
                                             {% set num_of_pack = item.packages|length %}
                                         {% endif %}
                                         <span class="sspBold14">
-                                            <a class="sspBold14" href="{{ h.url_for(item.type + '_read', action='read', id=item.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                                            <a class="sspBold14" href="{{ h.url_for(item.type + '_read', action='read', id=item.name, sort='metadata_modified desc')}}#datasets-section">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
                                         </span>
                                     {% else %}
                                         <span class="sspBold14">{{ _('0 Datasets') }}</span>
@@ -88,7 +88,7 @@
                                     {% if item.description %}
                                         <div class="list-items content">
                                             {% set notes = h.markdown_extract(item.description, extract_length=0) %}
-                                            {% set notes_small = h.markdown_extract(item.description, extract_length=140) %}
+                                            {% set notes_small = h.markdown_extract(item.description, extract_length=95) %}
                                             {{notes_small|urlize}}
                                             {% if notes|length > notes_small|length %}
                                               {{ h.link_to("MORE", h.url_for(controller='organization', action='read', id=item.name)) }}

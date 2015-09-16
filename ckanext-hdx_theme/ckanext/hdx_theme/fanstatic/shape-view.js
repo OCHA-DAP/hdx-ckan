@@ -20,6 +20,8 @@ var options = {
 };
 
 function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key) {
+    var ALLOWED_COLUMN_TYPES = ["character varying", "integer"];
+
     var value = layer_data['url'];
 
     var bboxArray = layer_data['bounding_box'].replace("BOX(", "").replace(")", "").split(",");
@@ -85,7 +87,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
         var extraFields = "";
         for (var i = 0; i < layer_fields.length; i++) {
             var field = layer_fields[i];
-            if ( field['field_name'] != 'ogc_fid' && field['data_type'] == 'character varying') {
+            if ( field['field_name'] != 'ogc_fid' && ALLOWED_COLUMN_TYPES.indexOf(field['data_type']) >= 0) {
                 var escaped_field_name = encodeURIComponent(field['field_name']);
                 extraFields += ',"' + escaped_field_name + '"';
             }
@@ -107,7 +109,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
                 for (var i = 0; i < data.columns.length; i++) {
                     var column = data.columns[i];
                     var escaped_column_name = encodeURIComponent(column.column_name);
-                    if (column.data_type == "character varying") {
+                    if ( ALLOWED_COLUMN_TYPES.indexOf(column.data_type) >= 0 ) {
                         extraFields += ',"' + escaped_column_name+'"';
                     }
                 }
@@ -166,9 +168,11 @@ function getData(options){
     info.update = function (props) {
         var innerData = "";
         if (props){
-            for (var key in props){
-                var value = props[key];
-                innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
+            for (var key in props) {
+                if (key != 'ogc_fid') {
+                    var value = props[key];
+                    innerData += '<tr><td style="text-align: right;">' + key + '</td><td>&nbsp;&nbsp; <b>' + value + '</b><td></tr>';
+                }
             }
         }
         this._div.innerHTML = '<h4>' + "Shape info" + '</h4>' +  (props ? '<table>' + innerData + '</table>' : 'Click on a shape');
@@ -198,7 +202,9 @@ function getData(options){
         });
     });
 
-
+    $('.map-info').mousedown(
+      function(event) {event.stopPropagation();}
+    );
 
     //addLayersToMap(options, []);
 }

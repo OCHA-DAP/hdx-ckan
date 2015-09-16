@@ -1,4 +1,5 @@
 import logging, re
+import unicodedata
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 
@@ -75,6 +76,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
                 new_format = hdx_package_helper.hdx_unified_resource_format(format)
                 new_formats.append(new_format)
             pkg_dict['res_format'] = new_formats
+        pkg_dict['title_string'] = unicodedata.normalize("NFKD", pkg_dict['title'])
         return pkg_dict
 
     def get_actions(self):

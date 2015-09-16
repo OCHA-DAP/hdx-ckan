@@ -51,6 +51,8 @@ class HDXOrganizationController(org.OrganizationController):
         limit = int(request.params.get('limit', 25))
         sort_option = request.params.get('sort', 'title asc')
 
+        reset_thumbnails = request.params.get('reset_thumbnails', 'false')
+
 
         data_dict = {
             'all_fields': True,
@@ -62,7 +64,7 @@ class HDXOrganizationController(org.OrganizationController):
 
         all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
 
-        c.featured_orgs = helper.get_featured_orgs(c.user, c.userobj)
+        c.featured_orgs = helper.get_featured_orgs(c.user, c.userobj, reset_thumbnails)
 
         def pager_url(q=None, page=None):
             if sort_option:

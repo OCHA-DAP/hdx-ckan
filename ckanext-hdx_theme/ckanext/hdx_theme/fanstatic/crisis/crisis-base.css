@@ -33,6 +33,8 @@
     background: rgba(51,51,51,0.5);
     box-shadow: 0 0 15px rgba(0,0,0,0.2);
     border-radius: 5px;
+    max-height: 320px;
+    overflow-y: auto;
 }
 .map-info h4 {
     font: 'Source Sans Pro';

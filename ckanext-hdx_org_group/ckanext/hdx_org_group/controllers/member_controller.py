@@ -111,7 +111,8 @@ class HDXOrgMemberController(org.OrganizationController):
                         if user_dict:
                             #Is user deleted?
                             if user_dict[0].state == 'deleted':
-                                abort(401, _('This user no longer has an account on HDX %s') % '')
+                                h.flash_error(_('This user no longer has an account on HDX'))
+                                self._redirect_to(controller='group', action='members', id=id)
                             # Add user
                             data_dict['username'] = user_dict[0].name
                             flash_message = 'That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role']

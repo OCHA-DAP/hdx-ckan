@@ -54,35 +54,39 @@ def sort_results_case_insensitive(results, sort_by):
     return results
 
 
-def get_featured_orgs(user, userobj):
+def get_featured_orgs(user, userobj, reset_thumbnails='false'):
     orgs = list()
     # Pull resource with data on our featured orgs
     resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
     featured_config = get_featured_orgs_config(user, userobj, resource_id)
 
-    #######################
     for cfg in featured_config:
-        if len(orgs) < 3:  # Just in case
+        # getting the first 3 rows/organizations
+        if len(orgs) < 3:
             # Check for screencap
             file_path = BUCKET + cfg.get('org_name') + '_thumbnail.png'
             exists = os.path.isfile(file_path)
+            expired = False
             if exists:
                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
-                expire = timestamp - timedelta(days=1)
-            if not exists or timestamp > expire:
+                expire = timestamp + timedelta(days=1)
+                expired = datetime.utcnow() > expire
+            if not exists or expired or reset_thumbnails == 'true':
                 # Build new screencap
-                capturejs = trigger_screencap(file_path, cfg)
-                # Get org dicts themselves
+                trigger_screencap(file_path, cfg)
+                # check again if file exists
+
             context = {'model': model, 'session': model.Session,
                        'user': user, 'for_view': True,
                        'auth_user_obj': userobj}
-            if cfg.get('highlight_asset_type') == 'dataset' and not cfg.get('highlight_asset_id'):
-                org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name'), 'include_datasets': True})
-            else:
-                org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
-                # Build highlight data
+            org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
+
+            # Build highlight data
             org_dict['highlight'] = get_featured_org_highlight(context, org_dict, cfg)
-            if exists and capturejs:
+
+            # checking again here if the file was generated
+            exists = os.path.isfile(file_path)
+            if exists:
                 org_dict['featured_org_thumbnail'] = "/image/" + cfg['org_name'] + '_thumbnail.png'
             else:
                 org_dict['featured_org_thumbnail'] = "/images/featured_orgs_placeholder" + str(len(orgs)) + ".png"
@@ -103,56 +107,80 @@ def trigger_screencap(file_path, cfg):
         return False
 
 
-def get_featured_org_highlight(context, org_dict, config):
-    if config.get('highlight_asset_type') == 'dataset':
-        if config.get('highlight_asset_id'):
-            try:
-                choice = get_action('package_show')(context, {'id': config['highlight_asset_id']})
-                return {'link': helpers.url_for('dataset_read', id=choice['id']), 'description': 'Popular Dataset: ',
-                        'type': 'dataset', 'title': choice['title']}
-            except:
-                return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
-        else:
-            # select a dataset at random (sort of)
-            if len(org_dict['packages']) > 0:
-                choice = random.choice(org_dict['packages'])
-                return {'link': helpers.url_for('dataset_read', id=choice['name']), 'description': 'Popular Dataset: ',
-                        'type': 'dataset', 'title': choice['title']}
-            else:
-                return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
-    else:
-        topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if
-                                     el.get('key', '') == 'topline_resource']
-        if config.get('highlight_asset_row_code'):
-            top_line_src_dict = {
-                'top-line-numbers': {
-                    'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
-                }
-            }
-            datastore_access = data_access.DataAccess(top_line_src_dict)
-            datastore_access.fetch_data(context)
-            top_line_items = datastore_access.get_top_line_items()
-            if len(top_line_items) > 0:
-                choice = top_line_items[config['highlight_asset_row_code']]
-                return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
-            else:
-                return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
+def get_viz_title_from_extras(org_dict):
+    try:
+        for item in org_dict.get('extras'):
+            if item.get('key') == 'visualization_config':
+                return json.loads(item.get('value')).get('viz-title')
+    except:
+        return None
+    return None
 
-        else:
-            # select a line at random
-            top_line_src_dict = {
-                'top-line-numbers': {
-                    'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
-                }
-            }
-            datastore_access = data_access.DataAccess(top_line_src_dict)
-            datastore_access.fetch_data(context)
-            top_line_items = datastore_access.get_top_line_items()
-            if len(top_line_items) > 0:
-                choice = random.choice(top_line_items)
-                return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
-            else:
-                return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
+
+# def get_featured_org_highlight(context, org_dict, config):
+#     if config.get('highlight_asset_type') == 'dataset':
+#         if config.get('highlight_asset_id'):
+#             try:
+#                 choice = get_action('package_show')(context, {'id': config['highlight_asset_id']})
+#                 return {'link': helpers.url_for('dataset_read', id=choice['id']), 'description': 'Popular Dataset: ',
+#                         'type': 'dataset', 'title': choice['title']}
+#             except:
+#                 return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
+#         else:
+#             # select a dataset at random (sort of)
+#             if len(org_dict['packages']) > 0:
+#                 choice = random.choice(org_dict['packages'])
+#                 return {'link': helpers.url_for('dataset_read', id=choice['name']), 'description': 'Popular Dataset: ',
+#                         'type': 'dataset', 'title': choice['title']}
+#             else:
+#                 return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
+#     else:
+#         topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if
+#                                      el.get('key', '') == 'topline_resource']
+#         if config.get('highlight_asset_row_code'):
+#             top_line_src_dict = {
+#                 'top-line-numbers': {
+#                     'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
+#                 }
+#             }
+#             datastore_access = data_access.DataAccess(top_line_src_dict)
+#             datastore_access.fetch_data(context)
+#             top_line_items = datastore_access.get_top_line_items()
+#             if len(top_line_items) > 0:
+#                 choice = top_line_items[config['highlight_asset_row_code']]
+#                 return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
+#             else:
+#                 return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
+#
+#         else:
+#             # select a line at random
+#             top_line_src_dict = {
+#                 'top-line-numbers': {
+#                     'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
+#                 }
+#             }
+#             datastore_access = data_access.DataAccess(top_line_src_dict)
+#             datastore_access.fetch_data(context)
+#             top_line_items = datastore_access.get_top_line_items()
+#             if len(top_line_items) > 0:
+#                 choice = random.choice(top_line_items)
+#                 return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
+#             else:
+#                 return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
+
+
+def get_featured_org_highlight(context, org_dict, config):
+    link = helpers.url_for('organization_read', id=org_dict.get('name'))
+    title = ''
+    description = ''
+    if config.get('highlight_asset_type').strip().lower() == 'key figures':
+        description = 'Key Figures'
+        link += '#key-figures'
+    if config.get('highlight_asset_type').strip().lower() == 'interactive data':
+        description = 'Interactive Data: '
+        link += '#interactive-data'
+        title = get_viz_title_from_extras(org_dict)
+    return {'link': link, 'description': description, 'type': config.get('highlight_asset_type'), 'title': title}
 
 
 def get_featured_orgs_config(user, userobj, resource_id):
