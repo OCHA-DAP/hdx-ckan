@@ -8,7 +8,7 @@ Example:
 
 {% import 'macros/form.html' as form %}
 
-  <div id="{{ modal_div_id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  <div id="{{ modal_div_id }}" class="modal" tabindex="-1" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
 	<form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
 		<div class="modal-dialog">
 		<div class="modal-content hdx-modal">
@@ -26,14 +26,14 @@ Example:
 				<div class="hdx-modal-text-body">{{ body }}</div>
 			</div>
 			<div class="modal-footer">
-				<button class="btn hdx-btn hdx-submit-btn">
+				<button class="btn btn-empty btn-large" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+				<button class="btn btn-danger btn-large">
 					{% if header %}
 						{{ confirm_btn_label }}
 					{% else %}
 						{{ _('Confirm')  }}
 					{% endif %}
 				</button>
-				<button class="btn hdx-btn" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
 			</div>
 		</div>
 		</div>

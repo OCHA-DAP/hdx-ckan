@@ -9,7 +9,7 @@ Example:
 {% resource 'hdx_theme/hdx_autocomplete.js' %}
 
 <form class="dataset-form form-horizontal" method='post' action="{{ form_url }}">
-  <div id="{{ modal_div_id }}" class="modal fade" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
+  <div id="{{ modal_div_id }}" class="modal" role="dialog" aria-labelledby="{{ modal_div_id }}-label" aria-hidden="true">
       <div class="modal-dialog">
       <div class="modal-content hdx-modal hdx-has-tabs">
         <div class="modal-header">
@@ -26,28 +26,22 @@ Example:
             <!-- Tab panes -->
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="existing">
-
-                    <div>
+                    <div class="mBottom20">
                         <span>
                           {{ _('If you wish to add an existing user, search for their username below.') }}
                         </span>
                     </div>
-                    <div class="control-group control-medium">
-                        <label class="control-label" for="username">
-                            {{ _('User') }}
-                        </label>
-
-                        <div class="controls">
-                            {% if user %}
-                                <input type="hidden" name="username" value="{{ user.name }}"/>
-                                <input id="username" name="username" type="text" value="{{ user.name }}"
-                                       disabled="True" class="control-medium">
-                            {% else %}
-                                <input id="username" type="text" name="username" placeholder="Username"
-                                       value="" class="control-medium" data-module="hdx_autocomplete"
-                                       data-module-source="/api/2/util/user/autocomplete?q=?">
-                            {% endif %}
-                        </div>
+                    <div>
+                        {% if user %}
+                            <input type="hidden" name="username" value="{{ user.name }}"/>
+                            <input id="username" name="username" type="text" value="{{ user.name }}"
+                                   disabled="True" class="control-medium">
+                        {% else %}
+                            <input id="username" type="text" name="username" placeholder="Username"
+                                   value="" class="control-medium" data-module="hdx_autocomplete"
+                                   style="width: 100%"
+                                   data-module-source="/api/2/util/user/autocomplete?q=?">
+                        {% endif %}
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="new">
@@ -57,25 +51,23 @@ Example:
                     </span>
 
                     </div>
-                    <div class="control-group control-medium">
-                        <label class="control-label" for="email">
-                            {{ _('Email') }}
-                        </label>
-
-                        <div class="controls">
-                            <input id="email" type="text" name="email" placeholder="Email address"
-                                   class="control-medium" style="height: 44px; line-height: 14px; border:0px;s">
-                        </div>
+                    <div>
+                        <input id="email" type="text" name="email" placeholder="Email address"
+                               class="mTop20" style="width: 100%;">
                     </div>
                 </div>
             </div>
             <br>
-            {% set format_attrs = {'data-module': 'hdx_autocomplete', 'style':'width: 300px;'} %}
-        {{ form.select('role', label=_('Role'), options=roles, selected=role, error='', attrs=format_attrs) }}
+
+            <select id="role" name="role" data-module="hdx_autocomplete" style="width: 100%">
+              {% for option in roles %}
+                <option value="{{ option.value }}"{% if option.value == role %} selected{% endif %}>{{ option.text or option.value }}</option>
+              {% endfor %}
+            </select>
         </div>
         <div class="modal-footer">
-            <button class="btn hdx-btn org-btn">{{ _('Submit') }}</button>
-            <button class="btn hdx-btn" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+            <button class="btn btn-empty btn-large" data-dismiss="modal" aria-hidden="true">{{ _('Cancel') }}</button>
+            <button class="btn btn-primary btn-large">{{ _('Confirm') }}</button>
         </div>
       </div>
       </div>
