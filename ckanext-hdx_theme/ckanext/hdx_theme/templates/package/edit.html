@@ -5,10 +5,10 @@
 
 {% block breadcrumb_content_selected %}{% endblock %}
 
-{% block breadcrumb_content %}
+{# {% block breadcrumb_content %}
   {{ super() }}
   <li class="active">{% link_for _('Edit'), controller='package', action='edit', id=pkg.name %}</li>
-{% endblock %}
+{% endblock %}  #}
 
 {% block resources_module %}
   {% snippet 'package/snippets/resources.html', pkg=pkg, action='resource_edit' %}
