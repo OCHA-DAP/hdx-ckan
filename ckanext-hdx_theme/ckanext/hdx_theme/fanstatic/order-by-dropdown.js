@@ -25,6 +25,10 @@ function replaceParam(key, value){
     $.each(params, function(k,v){
         params[k] = params[k].replace(/\+/g,' ')
         params[k] = params[k].replace(/\%2B/g,' ')
+        //reset page on resort
+        if(k == 'page'){
+            params[k] = 1
+        }
     });
     params[key] = value;
     return pathname + "?" + jQuery.param(params, true);
