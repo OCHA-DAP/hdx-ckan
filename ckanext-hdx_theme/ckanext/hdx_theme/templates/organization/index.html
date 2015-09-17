@@ -113,7 +113,7 @@
                     {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
                     <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} organisations ..." value="{{searchValue}}">
                 </span>
-                {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+                {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
                 {% set sort_param = request.params.get('sort') %}
                 {% set sorting_selected = sort_param if sort_param else 'title asc' %}
                 <div class="form-select control-group control-order-by pull-right">
