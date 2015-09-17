@@ -53,7 +53,7 @@ Example:
                         </div>
                         <div class="checkbox-style mTop10"><input id="field-remember" name="remember" type="checkbox" value="63072000"><label for="field-remember">Remember me</label> </div>
                         <div class="mTop10"><input class="full-width btn btn-primary btn-large" type="submit" value="Login"> </div>
-                        <div class="member center mTop10"><a href="{{ h.url_for(controller='user', action='request_reset') }}">Forgot your password?</a></div>
+                        <div class="member center mTop10"><a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#recoverPopup');">Forgot your password?</a></div>
                         <div class="member center">Not a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#signupPopup');">Register</a></div>
                     </div>
                 </div>
