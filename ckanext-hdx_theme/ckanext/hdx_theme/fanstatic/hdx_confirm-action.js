@@ -91,7 +91,6 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
         var mainButton = element.find('.btn-primary');
         if (this.i18n('delete')){
           mainButton.text(this.i18n('delete'));
-          mainButton.removeClass('btn-primary');
           mainButton.addClass('btn-danger');
         } else {
           mainButton.text(this.i18n('confirm'));
