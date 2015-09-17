@@ -74,6 +74,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
+    def after_map(self, map):
+        map.connect('dataset_edit', '/dataset/edit/{id}',
+                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='edit')
+        return map
+
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                     action='file')
