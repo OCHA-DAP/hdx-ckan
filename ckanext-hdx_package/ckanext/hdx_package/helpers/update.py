@@ -285,7 +285,7 @@ def hdx_resource_update_metadata(context, data_dict):
     This function first loads the resource via resource_show() and then modifies the respective dict. 
     '''
 
-    # Below params are need in context so that the URL of the resource is not
+    # Below params are needed in context so that the URL of the resource is not
     # transformed to a real URL for an uploaded file
     # ( for uploaded files the url field is the filename )
     context['use_cache'] = False
@@ -305,5 +305,41 @@ def hdx_resource_update_metadata(context, data_dict):
         # geopreview transformation
         context['do_geo_preview'] = False
         resource = _get_action('resource_update')(context, resource)
+
+    return resource
+
+
+def hdx_resource_delete_metadata(context, data_dict):
+    '''
+    Removes an entry from the resources extras
+    :param id: id of the resource that will be modified
+    :type id: str
+    :param field_list: list of field names that should be removed
+    :type field_list: list
+    '''
+
+    # Below params are needed in context so that the URL of the resource is not
+    # transformed to a real URL for an uploaded file
+    # ( for uploaded files the url field is the filename )
+    context['use_cache'] = False
+    context['for_edit'] = True
+
+    allowed_fields = ['shape']
+
+    resource_was_modified = False
+    field_list = data_dict.get('field_list', [])
+    resource = None
+    if field_list and len(field_list) > 0:
+        resource = _get_action('resource_show')(context, data_dict)
+        for field in field_list:
+            if field in allowed_fields:
+                del resource[field]
+                resource_was_modified = True
+
+        if resource_was_modified:
+            # we don't want the resource update to generate another
+            # geopreview transformation
+            context['do_geo_preview'] = False
+            resource = _get_action('resource_update')(context, resource)
 
     return resource
