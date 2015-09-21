@@ -5,8 +5,10 @@ Created on Dec 24, 2014
 '''
 
 import logging as logging
+import pylons.config as config
 
 import ckan.model as model
+from ckan.common import c
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -75,3 +77,77 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert True
         except:
             assert False, 'Exception when deleting nonexistent field'
+
+    def test_resource_create(self):
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        dataset = self._get_action('package_show')(context, {'id': 'test_dataset_1'})
+
+        resource = {
+            'package_id': dataset['id'],
+            'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/test_file.geojson',
+            'resource_type': 'file.upload',
+            'format': 'GeoJSON',
+            'name': 'resource_create_test1.geojson'
+        }
+
+        r1 = self._get_action('resource_create')(context, resource)
+        for key, value in resource.iteritems():
+            assert value == r1.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
+        assert 'shape_info' not in r1, "shape_info should be missing since 'hdx.gis.layer_import_url' config is missing"
+
+        config['hdx.gis.layer_import_url'] = 'http://import.local/'
+        resource['name'] = 'resource_create_test2.geojson'
+
+        r2 = self._get_action('resource_create')(context, resource)
+        assert 'shape_info' in r2, "shape_info should exist since 'hdx.gis.layer_import_url' config is set"
+        del resource['shape_info']
+        for key, value in resource.iteritems():
+            assert value == r2.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
+
+        context['do_geo_preview'] = False
+        r3 = self._get_action('resource_create')(context, resource)
+        assert 'shape_info' not in r3, "shape_info should be missing since 'do_geo_preview' is False"
+        for key, value in resource.iteritems():
+            assert value == r3.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
+
+        del config['hdx.gis.layer_import_url']
+
+        assert 'hdx.gis.layer_import_url' not in config
+
+    def test_resource_update(self):
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        dataset = self._get_action('package_show')(context, {'id': 'test_dataset_1'})
+
+        resource = {
+            'package_id': dataset['id'],
+            'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/test_file.geojson',
+            'resource_type': 'file.upload',
+            'format': 'GeoJSON',
+            'name': 'resource_create_test2.geojson'
+        }
+
+        resource_data = self._get_action('resource_create')(context, resource)
+
+        r1 = self._get_action('resource_update')(context, resource_data)
+        for key, value in resource.iteritems():
+            assert value == r1.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
+        assert 'shape_info' not in r1, "shape_info should be missing since 'hdx.gis.layer_import_url' config is missing"
+
+        config['hdx.gis.layer_import_url'] = 'http://import.local/'
+        context['do_geo_preview'] = False
+
+        r2 = self._get_action('resource_update')(context, resource_data)
+        assert 'shape_info' not in r2, "shape_info should be missing since 'do_geo_preview' is False"
+        for key, value in resource.iteritems():
+            assert value == r2.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
+
+        context['do_geo_preview'] = True
+        r3 = self._get_action('resource_update')(context, resource_data)
+        assert 'shape_info' in r3, "shape_info should exist since 'hdx.gis.layer_import_url' config is set"
+        del resource_data['shape_info']
+        for key, value in resource.iteritems():
+            assert value == r3.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
