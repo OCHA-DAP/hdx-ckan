@@ -146,8 +146,8 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             assert value == r2.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
 
         context['do_geo_preview'] = True
-        r3 = self._get_action('resource_create')(context, resource)
+        r3 = self._get_action('resource_update')(context, resource_data)
         assert 'shape_info' in r3, "shape_info should exist since 'hdx.gis.layer_import_url' config is set"
-        del resource['shape_info']
+        del resource_data['shape_info']
         for key, value in resource.iteritems():
             assert value == r3.get(key), "The pair {} - {} should appear in the resource data".format(key, value)
