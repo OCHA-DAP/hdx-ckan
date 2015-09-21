@@ -22,13 +22,13 @@ def resource_create(context, data_dict):
     It was modified to trigger the geopreview creation process.
     '''
 
-    do_geo_preview = config.get('hdx.gis.layer_import_url')
+    do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url')
     if do_geo_preview:
         geopreview.add_init_shape_info_data_if_needed(data_dict)
 
     result_dict = core_create.resource_create(context, data_dict)
 
     if do_geo_preview and lower(result_dict.get('format', '')) in geopreview.GIS_FORMATS:
-        geopreview.do_geo_transformation_process(result_dict)
+        geopreview.do_geo_transformation_process(context, result_dict)
 
     return result_dict
