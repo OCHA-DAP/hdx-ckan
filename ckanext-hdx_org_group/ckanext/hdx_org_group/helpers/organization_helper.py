@@ -32,7 +32,7 @@ import random
 from datetime import datetime, timedelta
 from ckan.common import _
 
-BUCKET = uploader.get_storage_path() + '/storage/uploads/group/'
+BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 
 log = logging.getLogger(__name__)
 
