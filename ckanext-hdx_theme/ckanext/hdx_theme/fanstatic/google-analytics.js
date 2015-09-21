@@ -10,8 +10,8 @@ ga('create', 'UA-48221887-3', 'auto');
 //ga('create', 'UA-48221887-3', {
 //  'cookieDomain': 'none'
 //});
-if ( $('.mx-ga-dimension-organization').length ) {
-    var orgDimensionValue = $('.mx-ga-dimension-organization').text().trim();
+if ( document.getElementsByClassName("mx-ga-dimension-organization").length ) {
+    var orgDimensionValue = document.getElementsByClassName("mx-ga-dimension-organization")[0].text.trim();
     ga('set', 'dimension1', orgDimensionValue);
 }
 ga('send', 'pageview');
