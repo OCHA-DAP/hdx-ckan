@@ -291,7 +291,7 @@ def hdx_resource_update_metadata(context, data_dict):
     context['use_cache'] = False
     context['for_edit'] = True
 
-    allowed_fields = ['last_data_update_date', 'shape_info']
+    allowed_fields = ['last_data_update_date', 'shape_info', 'test_field']
 
     resource_was_modified = False
     resource = _get_action('resource_show')(context, data_dict)
@@ -311,7 +311,9 @@ def hdx_resource_update_metadata(context, data_dict):
 
 def hdx_resource_delete_metadata(context, data_dict):
     '''
-    Removes an entry from the resources extras
+    Removes an entry from the resources extras.
+    Nothing happens if the field to be removed doesn't exist in the resource. 
+
     :param id: id of the resource that will be modified
     :type id: str
     :param field_list: list of field names that should be removed
@@ -324,7 +326,7 @@ def hdx_resource_delete_metadata(context, data_dict):
     context['use_cache'] = False
     context['for_edit'] = True
 
-    allowed_fields = ['shape']
+    allowed_fields = ['shape', 'test_field']
 
     resource_was_modified = False
     field_list = data_dict.get('field_list', [])
@@ -332,7 +334,7 @@ def hdx_resource_delete_metadata(context, data_dict):
     if field_list and len(field_list) > 0:
         resource = _get_action('resource_show')(context, data_dict)
         for field in field_list:
-            if field in allowed_fields:
+            if field in allowed_fields and field in resource:
                 del resource[field]
                 resource_was_modified = True
 

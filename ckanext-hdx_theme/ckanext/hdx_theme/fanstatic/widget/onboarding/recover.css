@@ -1,0 +1,49 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.notification-widget {
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.notification-widget .notification-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #007ce0;
+  letter-spacing: 0.01em;
+  line-height: 20px;
+  padding: 20px;
+}
+.notification-widget .notification-title .close {
+  margin-left: 20px;
+  float: right;
+  top: 0;
+  color: #ffffff;
+  opacity: 1;
+}
+.notification-widget .notification-message {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #007ce0;
+  letter-spacing: 0.01em;
+}
+.recover-widget {
+  position: relative;
+  width: 370px;
+  height: 300px;
+  background-color: #eeeeee;
+  padding: 20px;
+}
+.recover-widget .bottom-actions {
+  position: absolute;
+  bottom: 20px;
+  width: 330px;
+}

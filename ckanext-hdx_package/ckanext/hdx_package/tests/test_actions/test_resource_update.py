@@ -45,3 +45,33 @@ class TestHDXUpdateResource(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         assert original != modified, '{} should have been changed by action'.format(
             field)
+
+    def test_resource_delete_metadata(self):
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        package = self._get_action('package_show')(
+            context, {'id': 'test_private_dataset_1'})
+
+        resource = self._get_action('resource_show')(
+            context, {'id': package['resources'][0]['id']})
+
+        resource_v2 = self._get_action('hdx_resource_update_metadata')(
+            context, {'id': resource['id'], 'test_field': 'test_extra_value'})
+
+        # resource_v2 = self._get_action('resource_show')(
+        #     context, {'id': package['resources'][0]['id']})
+
+        assert len(resource_v2) - len(resource) == 1, "Test added just one field to the resource"
+
+        resource_v3 = self._get_action('hdx_resource_delete_metadata')(
+            context, {'id': resource['id'], 'field_list': ['test_field']})
+
+        assert len(resource_v3) - len(resource) == 0, "Resources should be identical"
+
+        try:
+            resource_v4 = self._get_action('hdx_resource_delete_metadata')(
+                context, {'id': resource['id'], 'field_list': ['shape']})
+            assert True
+        except:
+            assert False, 'Exception when deleting nonexistent field'

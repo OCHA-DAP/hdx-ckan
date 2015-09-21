@@ -230,13 +230,16 @@ def hdx_build_nav_icon_with_message(menu_item, title, **kw):
 
 
 def hdx_build_nav_no_icon(menu_item, title, **kw):
-    htmlResult = str(h.build_nav_icon(menu_item, title, **kw))
-    print htmlResult
-    start = htmlResult.find('<i ') - 1
-    end = htmlResult.find('</i>') + 4
-    newResult = htmlResult[0:start] + ' class="no-icon">' + htmlResult[end:]
-    print newResult
-    return h.literal(newResult)
+    html_result = str(h.build_nav_icon(menu_item, title, **kw))
+    print html_result
+    start = html_result.find('<i ') - 1
+    end = html_result.find('</i>') + 4
+    if start > 0:
+        new_result = html_result[0:start] + ' class="no-icon">' + html_result[end:]
+    else:
+        new_result = html_result
+    print new_result
+    return h.literal(new_result)
 
 
 def hdx_linked_user(user, maxlength=0):
