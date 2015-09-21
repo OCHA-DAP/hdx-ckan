@@ -374,6 +374,14 @@ a:focus,
   -webkit-border-radius: 0 3px 0 0;
   -moz-border-radius: 0 3px 0 0;
   border-radius: 0 3px 0 0;
+  padding: 0;
+  margin: 0;
+}
+.page-header.page-header-gray {
+  border-bottom-color: #cccccc;
+}
+.page-header.page-header-gray .nav-tabs a:hover {
+  background-color: inherit;
 }
 .page-header .nav-tabs {
   margin-bottom: -3px;
@@ -381,6 +389,12 @@ a:focus,
 /* END Alter page-header style */
 .nav-tabs {
   border-bottom: 3px solid #eeeeee;
+}
+.nav-tabs.nav-tabs-gray {
+  border-bottom-color: #cccccc;
+}
+.nav-tabs.nav-tabs-gray > li.active > a {
+  background-color: inherit;
 }
 .nav-tabs > li {
   margin-bottom: -3px;
@@ -402,6 +416,7 @@ a:focus,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   border: none;
+  background-color: inherit;
   border-bottom: 3px solid #0088ff;
   color: #0088ff;
 }
@@ -474,6 +489,7 @@ a:focus,
   text-align: left;
   padding-left: 0;
   padding-right: 0;
+  box-shadow: none;
   width: auto;
   color: #007ce0;
 }

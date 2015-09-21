@@ -25,9 +25,9 @@
 
 
 {% block page_header %}
-  <header class="module-content page-header paddingRowHack" style="width: 915px;">
+  <header class="paddingRowHack page-header page-header-gray">
     <div class="paddingLeftHack paddingRightHack">
-      <ul class="no_icons nav nav-tabs">
+      <ul class="no_icons nav nav-tabs nav-tabs-gray">
         {% block content_primary_nav %}
           {{ h.hdx_build_nav_no_icon('dataset_edit', _('Edit metadata'), id=pkg.name) }}
           {{ h.hdx_build_nav_no_icon('dataset_resources', _('Resources'), id=pkg.name) }}
