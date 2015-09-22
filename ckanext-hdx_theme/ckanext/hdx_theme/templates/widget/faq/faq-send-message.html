@@ -26,29 +26,33 @@ Example:
 
 {% block right_content %}
     <div id="faq-send-message">
-        <!--<div class="bold-regular-text">Please fill out the following: </div>-->
         <form id="faq-send-message-form">
-            <select class="required" id="topics-selector" name="topic">
-                <option id="" value="">Your question is regarding ...</option>
-                {% for key, value in topics.iteritems() %}
-                    <option id="{{key}}" value="{{value}}">{{value}}</option>
-                {% endfor %}
-            </select>
-            <div class="mTop15 control">
-                <input id="fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
-                <label for="fullname">Your name</label>
-            </div>
-            <div class="mTop15 control">
-                <input id="email" name="email" class="full-width required" type="text" value="{{email}}">
-                <label for="email">Your email address</label>
-            </div>
-            <div class="mTop15 control">
-                <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
-                <label for="faq-msg">Your question</label>
-            </div>
-            <div class="mTop15 captcha">
-                <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
-                        style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);-webkit-transform-origin:0 0;"></div>
+            <div class="row" style="overflow: hidden; height: 400px;">
+                <div class="col-xs-12">
+                    <!--<div class="bold-regular-text">Please fill out the following: </div>-->
+                    <select class="required" id="topics-selector" name="topic">
+                        <option id="" value="">Your question is regarding ...</option>
+                        {% for key, value in topics.iteritems() %}
+                            <option id="{{key}}" value="{{value}}">{{value}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="mTop15 control">
+                        <input id="fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
+                        <label for="fullname">Your name</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <input id="email" name="email" class="full-width required" type="text" value="{{email}}">
+                        <label for="email">Your email address</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
+                        <label for="faq-msg">Your question</label>
+                    </div>
+                    <div class="mTop15 captcha">
+                        <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
+                                style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
+                    </div>
+                </div>
             </div>
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
