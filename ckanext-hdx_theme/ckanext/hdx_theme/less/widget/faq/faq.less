@@ -28,17 +28,23 @@
 }
 
 #faq-send-message {
-  overflow: scroll;
-  height: 400px;
-
   .captcha{
     overflow: hidden;
   }
 }
 
 #faqSendMsgPopup{
-  .two-column-widget .two-column-left {
-    background-color: #1ebfb3;
+  .two-column-widget {
+    .two-column-left {
+      background-color: #1ebfb3;
+      height: @widgetHeight;
+    }
+
+    @extraPaddingTwoColumnRight: 50px;
+    .two-column-right {
+      height: @widgetHeight;
+      padding: @paddingLarge;
+    }
   }
 }
 
