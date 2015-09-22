@@ -15,6 +15,8 @@ import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.controllers.country_controller as ctrlr
 
+import ckanext.hdx_org_group.helpers.organization_helper as helper
+
 json = common.json
 get_action = logic.get_action
 _get_or_bust = logic.get_or_bust
@@ -54,9 +56,9 @@ def hdx_datasets_for_group(context, data_dict):
 
     page = int(data_dict.get('page', 1))
     new_data_dict = {'sort': sort_option,
-                 'rows': limit,
-                 'start': (page-1) * limit,
-                 }
+                     'rows': limit,
+                     'start': (page - 1) * limit,
+                     }
     type = data_dict.get('type', None)
     if type == 'indicators':
         new_data_dict['ext_indicator'] = u'1'
@@ -94,7 +96,7 @@ def hdx_topline_num_for_group(context, data_dict):
     datastore_id = custom_dict.get('topline_resource', None)
 
     if group_info.get('custom_loc', False) and datastore_id:
-        #source is datastore
+        # source is datastore
         crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
         crisis_data_access.fetch_data(context)
         top_line_items = crisis_data_access.get_top_line_items()
@@ -138,7 +140,7 @@ def hdx_light_group_show(context, data_dict):
     group = model.Group.get(id)
     if not group:
         raise NotFound
-    #group_dict['group'] = group
+    # group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
     group_dict['image_url'] = group.image_url
@@ -154,8 +156,8 @@ def hdx_light_group_show(context, data_dict):
         value = dictized["value"]
         result_list.append(dictized)
 
-        #Keeping the above for backwards compatibility
-        group_dict[name]= dictized["value"]
+        # Keeping the above for backwards compatibility
+        group_dict[name] = dictized["value"]
 
     group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
     return group_dict
@@ -177,3 +179,11 @@ def get_group(id):
         custom_dict = {}
 
     return group_info, custom_dict
+
+
+@logic.side_effect_free
+def hdx_get_featured_orgs(context, data_dict):
+
+    logic.check_access('hdx_generate_thumbnails', context, data_dict)
+
+    return helper.get_featured_orgs(context, data_dict)

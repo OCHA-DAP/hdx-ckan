@@ -58,11 +58,15 @@ def sort_results_case_insensitive(results, sort_by):
     return results
 
 
-def get_featured_orgs(user, userobj, reset_thumbnails='false'):
+def get_featured_orgs(context, data_dict):
     orgs = list()
     # Pull resource with data on our featured orgs
     resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
+    user = context.get('user')
+    userobj = context.get('auth_user_obj')
+    reset_thumbnails = data_dict.get('reset_thumbnails', 'false')
     featured_config = get_featured_orgs_config(user, userobj, resource_id)
+
 
     for cfg in featured_config:
         # getting the first 3 rows/organizations
@@ -77,12 +81,13 @@ def get_featured_orgs(user, userobj, reset_thumbnails='false'):
                 expired = datetime.utcnow() > expire
             if not exists or expired or reset_thumbnails == 'true':
                 # Build new screencap
+                log.info("Triggering screenshot for " + cfg.get('org_name'))
                 trigger_screencap(file_path, cfg)
                 # check again if file exists
 
-            context = {'model': model, 'session': model.Session,
-                       'user': user, 'for_view': True,
-                       'auth_user_obj': userobj}
+            # context = {'model': model, 'session': model.Session,
+            #            'user': user, 'for_view': True,
+            #            'auth_user_obj': userobj}
             org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
 
             # Build highlight data
