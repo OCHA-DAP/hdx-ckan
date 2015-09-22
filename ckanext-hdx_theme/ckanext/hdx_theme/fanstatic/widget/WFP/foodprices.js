@@ -827,6 +827,7 @@ function getCountryIDs(){
               results.push(e.adm0_id);
           });
           addCountriesToMap(results);
+          killLoadingEmbeddable("#wfp-visualization-wrapper");
       }
     });     
 }
