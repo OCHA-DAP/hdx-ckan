@@ -99,7 +99,7 @@ def trigger_screencap(file_path, cfg):
         return False
     try:
         command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
-            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"'
+            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --timeout 10000'
         args = shlex.split(command)
         subprocess.Popen(args)
         return True
