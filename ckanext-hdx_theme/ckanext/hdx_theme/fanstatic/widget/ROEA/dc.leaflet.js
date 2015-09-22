@@ -663,7 +663,7 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
             };
 
         _info.update = function (name) {
-                this._div.innerHTML = (name ? name: 'Hover for country name and risk index');
+                this._div.innerHTML = (name ? name: 'Hover on country to see risk value');
             };
 
         _info.addTo(_chart.map());
@@ -767,7 +767,12 @@ dc.leafletChoroplethChart = function (parent, chartGroup) {
         }
         var filter = e.target.key;
         dc.events.trigger(function () {
-            _chart.filter(filter);
+            if(_chart.filters()[0]==filter){
+                _chart.filter(null);
+            } else {
+                _chart.filter(null);
+                _chart.filter(filter);
+            }
             dc.redrawAll(_chart.chartGroup());
         });
     };
