@@ -8,15 +8,16 @@
 #faq-msg.input-content ~ label {
   bottom: 6px;
 }
-#faq-send-message {
-  overflow: scroll;
-  height: 400px;
-}
 #faq-send-message .captcha {
   overflow: hidden;
 }
 #faqSendMsgPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;
+  height: 560px;
+}
+#faqSendMsgPopup .two-column-widget .two-column-right {
+  height: 560px;
+  padding: 60px;
 }
 #faqDonePopup .notification-widget .notification-title {
   text-align: center;
