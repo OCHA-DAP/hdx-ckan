@@ -4,11 +4,13 @@ import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
 
 import ckanext.hdx_org_group.actions.get as get_actions
+import ckanext.hdx_org_group.actions.authorize as authorize
 
 log = logging.getLogger(__name__)
 
 
 class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganizationForm):
+    plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IGroupForm, inherit=False)
@@ -42,8 +44,13 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'organization_delete': hdx_org_actions.hdx_organization_delete,
             'group_update': hdx_org_actions.hdx_group_update,
             'group_create': hdx_org_actions.hdx_group_create,
-            'group_delete': hdx_org_actions.hdx_group_delete
+            'group_delete': hdx_org_actions.hdx_group_delete,
+            'hdx_get_featured_orgs': get_actions.hdx_get_featured_orgs,
         }
+
+    def get_auth_functions(self):
+        return {'hdx_generate_thumbnails': authorize.hdx_generate_thumbnails}
+
 
     # def get_auth_functions(self):
     #     return {
