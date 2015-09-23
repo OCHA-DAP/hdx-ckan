@@ -16,8 +16,44 @@
   src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
 }
 @font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
+  font-family: 'Gotham-Bold';
+  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
+}
+@font-face {
   font-family: 'Gotham-Book';
   src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Book';
+  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
+}
+@font-face {
+  font-family: 'Gotham-Light';
+  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
 }
 @font-face {
   font-family: 'Gotham-Light';
@@ -28,8 +64,44 @@
   src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
 }
 @font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
+  font-family: 'Gotham-Thin';
+  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
+}
+@font-face {
   font-family: 'Gotham-Black';
   src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Black';
+  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
+}
+@font-face {
+  font-family: 'Gotham-Medium';
+  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
 }
 @font-face {
   font-family: 'Gotham-Medium';
@@ -101,6 +173,14 @@ a:focus,
   -webkit-border-radius: 0 3px 0 0;
   -moz-border-radius: 0 3px 0 0;
   border-radius: 0 3px 0 0;
+  padding: 0;
+  margin: 0;
+}
+.page-header.page-header-gray {
+  border-bottom-color: #cccccc;
+}
+.page-header.page-header-gray .nav-tabs a:hover {
+  background-color: inherit;
 }
 .page-header .nav-tabs {
   margin-bottom: -3px;
@@ -108,6 +188,12 @@ a:focus,
 /* END Alter page-header style */
 .nav-tabs {
   border-bottom: 3px solid #eeeeee;
+}
+.nav-tabs.nav-tabs-gray {
+  border-bottom-color: #cccccc;
+}
+.nav-tabs.nav-tabs-gray > li.active > a {
+  background-color: inherit;
 }
 .nav-tabs > li {
   margin-bottom: -3px;
@@ -129,6 +215,7 @@ a:focus,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   border: none;
+  background-color: inherit;
   border-bottom: 3px solid #f2645a;
   color: #f2645a;
 }
@@ -201,6 +288,7 @@ a:focus,
   text-align: left;
   padding-left: 0;
   padding-right: 0;
+  box-shadow: none;
   width: auto;
   color: #007ce0;
 }
@@ -705,3 +793,126 @@ ul.hdx-bs3 {
   margin-bottom: 25px;
 }
 /* END search_form.html customisations */
+/* Style Modal Dialogs */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.modal.in {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1041;
+}
+.modal.in .modal-dialog {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  /* IE 9 */
+  -webkit-transform: translate(-50%, -50%);
+  /* Safari */
+  width: initial;
+}
+.modal.in .modal-dialog .modal-content {
+  min-width: 370px;
+  min-height: 360px;
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.modal.in .modal-dialog .modal-content .modal-header {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #007ce0;
+  letter-spacing: 0.01em;
+  line-height: 20px;
+  padding: 20px;
+}
+.modal.in .modal-dialog .modal-content .modal-header .close {
+  margin-left: 20px;
+  float: right;
+  top: 0;
+  color: #ffffff;
+  opacity: 1;
+}
+.modal.in .modal-dialog .modal-content .modal-body {
+  min-height: 193px;
+  padding: 30px 30px 0;
+}
+.modal.in .modal-dialog .modal-content .modal-body .nav-tabs {
+  border-color: #cccccc;
+}
+.modal.in .modal-dialog .modal-content .modal-body .nav-tabs h4 {
+  margin: 0;
+}
+.modal.in .modal-dialog .modal-content .modal-body input[type="text"] {
+  height: 44px;
+  line-height: 14px;
+  border-color: #ffffff;
+  box-shadow: none;
+  padding-left: 15px;
+  font-size: 14px;
+  color: #000000;
+  border-radius: 3px;
+  border: 1px solid #ffffff;
+}
+.modal.in .modal-dialog .modal-content .modal-body input[type="text"]:disabled {
+  background-color: #eeeeee;
+}
+.modal.in .modal-dialog .modal-content .modal-footer {
+  padding: 30px;
+  box-shadow: none;
+  border-top: none;
+  position: relative;
+  bottom: 0;
+  right: 0;
+}
+.modal.in .modal-dialog .modal-content .modal-footer .btn-large {
+  min-width: 150px;
+}
+.modal.in .modal-dialog .modal-content .modal-footer .btn-large.btn-empty {
+  min-width: 0;
+  margin-right: 30px;
+  color: #000000;
+}
+/* END Style Modal Dialogs */
+/* Style placeholders */
+::-webkit-input-placeholder {
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+}
+:-moz-placeholder {
+  /* Firefox 18- */
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  opacity: 1;
+}
+::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  color: #cccccc;
+  font-size: 16px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+}
+/* END Style placeholders */

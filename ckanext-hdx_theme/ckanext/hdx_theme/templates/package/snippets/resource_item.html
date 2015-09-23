@@ -23,7 +23,11 @@
 
   <div class="description">
     {% if res.description %}
-      <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>
+      {% if url_is_edit %}
+          <div>{{ h.render_markdown(res.description) }}</div>
+      {% else %}
+          <span data-module="hdx_show_more" style="visibility:hidden" data-module-points="100"><div>{{ h.render_markdown(res.description) }}</div></span>
+      {% endif %}
     {% else %}
       <span class="empty">{{ _('No description for this resource') }}</span>
     {% endif %}
@@ -71,7 +75,7 @@
 
 
             {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
-              target_url=resource_dwd_url,
+              target_url=res.url,
               icon=true,
               class="btn btn-secondary hdx-btn resource-url-analytics ga-share", button_id=button_id %}
 

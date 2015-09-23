@@ -54,15 +54,39 @@
     @logoHeight: 75px;
     position: relative;
 
+    a {
+      &:hover{
+        .org-thumbnail img{
+          opacity: 1;
+        }
+        .feature-highlight {
+          background-color: fade(@orangeColor, 100%);
+        }
+      }
 
-    .org-thumbnail{
-      overflow: hidden;
-      height: @headerHeight;
-      width: 100%;
+      .org-thumbnail{
+        overflow: hidden;
+        height: @headerHeight;
+        width: 100%;
 
-      img {
-        height: @headerHeight + 20px;
-        opacity: 0.9;
+        img {
+          height: @headerHeight + 20px;
+          opacity: 0.9;
+        }
+      }
+      .feature-highlight {
+        width: 100%;
+        padding: 7px 15px;
+        background-color: fade(@orangeColor, 90%);
+        position: absolute;
+        top: 0;
+        .sourceSansProFont(400, 11px);
+        line-height: 13px;
+        .letter-spacing-1();
+        color: @whiteColor;
+        a {
+          color: @whiteColor;
+        }
       }
     }
 
@@ -76,22 +100,6 @@
         .org-logo(@logoHeight, @logoHeight, 60px, 60px);
       }
     }
-
-    .feature-highlight {
-      width: 100%;
-      padding: 7px 15px;
-      background-color: fade(@orangeColor, 90%);
-      position: absolute;
-      top: 0;
-      .sourceSansProFont(400, 11px);
-      line-height: 13px;
-      .letter-spacing-1();
-      color: @whiteColor;
-      a {
-        color: @whiteColor;
-      }
-    }
-
   }
 
   .feature-content{

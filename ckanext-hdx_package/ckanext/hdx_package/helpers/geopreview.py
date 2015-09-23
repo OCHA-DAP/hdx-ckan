@@ -19,7 +19,8 @@ from ckan.common import c
 ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
 GEOJSON_FORMAT = 'geojson'
 KML_FORMAT = 'kml'
-GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT, KML_FORMAT]
+KMZ_FORMAT = 'kmz'
+GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT, KML_FORMAT, KMZ_FORMAT]
 
 _get_or_bust = logic.get_or_bust
 get_action = logic.get_action
@@ -73,7 +74,7 @@ def add_init_shape_info_data_if_needed(resource_data):
         resource_data['shape_info'] = shape_info
 
 
-def do_geo_transformation_process(result_dict):
+def do_geo_transformation_process(context, result_dict):
     '''
     :param context:
     :type context:
@@ -83,9 +84,11 @@ def do_geo_transformation_process(result_dict):
     :rtype: bool
     '''
 
-    context = {'model': model, 'session': model.Session,
+    user = context.get('user') or c.user or c.author
+
+    ctx = {'model': model, 'session': model.Session,
                'api_version': 3, 'for_edit': True,
-               'user': c.user or c.author, 'auth_user_obj': c.userobj}
+               'user': user}
 
     url = result_dict['url']
 
@@ -111,5 +114,5 @@ def do_geo_transformation_process(result_dict):
     shape_info = json.loads(shape_info_json)
     if shape_info.get('error_type') in ['transformation-init-problem', 'ckan-generated-error']:
         result_dict['shape_info'] = shape_info_json
-        context['do_geo_preview'] = False
-        get_action('resource_update')(context, result_dict)
+        ctx['do_geo_preview'] = False
+        get_action('resource_update')(ctx, result_dict)

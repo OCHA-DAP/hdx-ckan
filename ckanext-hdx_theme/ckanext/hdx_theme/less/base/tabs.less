@@ -12,6 +12,18 @@
   -webkit-border-radius: 0 3px 0 0;
   -moz-border-radius: 0 3px 0 0;
   border-radius: 0 3px 0 0;
+  padding: 0;
+  margin: 0;
+
+  &.page-header-gray{
+    border-bottom-color: @lightGrayColor;
+
+    .nav-tabs{
+      a:hover {
+        background-color: inherit;
+      }
+    }
+  }
 
   .nav-tabs {
     margin-bottom: -@navTabsBorderHeight; //reset default CKAN style
@@ -22,6 +34,13 @@
 
 .nav-tabs{
   border-bottom: @navTabsBorderHeight solid @extraLightGrayColor;
+
+  &.nav-tabs-gray{
+    border-bottom-color: @lightGrayColor;
+    > li.active > a {
+      background-color: inherit;
+    }
+  }
 
   > li {
     margin-bottom: -@navTabsBorderHeight;
@@ -45,6 +64,7 @@
       &:hover,
       &:focus {
         border: none;
+        background-color: inherit;
         border-bottom: @navTabsBorderHeight solid @navTabsActiveColor;
         color: @navTabsActiveColor;
       }

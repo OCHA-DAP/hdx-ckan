@@ -1,0 +1,21 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "notification";
+@import "onboarding-variables";
+
+@recoverHeight: 360px - @notificationTitleHeight;
+
+.recover-widget {
+  position: relative;
+  width: @popupWidth;
+  height: @recoverHeight;
+  background-color: @extraLightGrayColor;
+
+  padding: @notificationPaddingSize;
+
+  .bottom-actions {
+    position: absolute;
+    bottom: @notificationPaddingSize;
+    width: @popupWidth - 2*@notificationPaddingSize;
+  }
+}

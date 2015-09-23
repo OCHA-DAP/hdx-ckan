@@ -9,6 +9,7 @@
 """
 import datetime
 import dateutil
+import json
 
 import ckan.controllers.user as ckan_user
 import ckan.lib.helpers as h
@@ -18,6 +19,7 @@ from ckan.common import _, c, g, request
 import ckan.logic as logic
 from pylons import config
 import ckan.model as model
+import mail_validation_controller as hdx_mail_c
 
 render = base.render
 
@@ -25,46 +27,43 @@ get_action = logic.get_action
 NotAuthorized = logic.NotAuthorized
 NotFound = logic.NotFound
 check_access = logic.check_access
+OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
+
 
 class LoginController(ckan_user.UserController):
-
     def request_reset(self):
         """
         Email password reset instructions to user
         """
         context = {'model': model, 'session': model.Session, 'user': c.user,
                    'auth_user_obj': c.userobj}
-        data_dict = {'id': request.params.get('user')}
         try:
             check_access('request_reset', context)
         except NotAuthorized:
-            abort(401, _('Unauthorized to request reset password.'))
+            base.abort(401, _('Unauthorized to request reset password.'))
 
         if request.method == 'POST':
-            id = request.params.get('user')
+            user_id = request.params.get('user')
 
             context = {'model': model,
                        'user': c.user}
 
-            data_dict = {'id': id}
+            data_dict = {'id': user_id}
             user_obj = None
             try:
-                user_dict = get_action('user_show')(context, data_dict)
+                get_action('user_show')(context, data_dict)
                 user_obj = context['user_obj']
             except NotFound:
-                h.flash_error(_('No such user: %s') % id)
+                return hdx_mail_c.OnbUserNotFound
 
             if user_obj:
                 try:
                     mailer.send_reset_link(user_obj)
-                    h.flash_success(_('Please check your inbox for '
-                                    'a reset code.'))
-                    h.redirect_to(controller='user',
-                              action='login', came_from=None)
+                    return hdx_mail_c.OnbSuccess
                 except mailer.MailerException, e:
-                    h.flash_error(_('Could not send reset link: %s') %
-                                  unicode(e))
-        return render('user/request_reset.html')
+                    return OnbResetLinkErr
+        # return render('user/request_reset.html')
+        return render('home/index.html')
 
     def logged_in(self):
         """
@@ -87,13 +86,14 @@ class LoginController(ckan_user.UserController):
                 ) - dateutil.parser.parse(user_dict['created'])
             else:
                 time_passed = None
-            if not (user_dict['number_created_packages'] > 0 or user_dict['number_of_edits'] > 0) and time_passed and time_passed.days < 3:
-                #/dataset/new
+            if not (user_dict['number_created_packages'] > 0 or user_dict[
+                'number_of_edits'] > 0) and time_passed and time_passed.days < 3:
+                # /dataset/new
                 contribute_url = h.url_for(controller='package', action='new')
                 # message = ''' Now that you've registered an account , you can <a href="%s">start adding datasets</a>.
                 #    If you want to associate this dataset with an organization, either click on "My Organizations" below
                 #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
-                #h.flash_success(_(message), True)
+                # h.flash_success(_(message), True)
                 return h.redirect_to(controller='user', action='dashboard_organizations')
             else:
                 h.flash_success(_("%s is now logged in") %

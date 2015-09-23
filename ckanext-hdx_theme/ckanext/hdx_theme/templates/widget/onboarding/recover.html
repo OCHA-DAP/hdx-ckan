@@ -1,0 +1,36 @@
+{#
+Recover Password widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/onboarding/recover.html', id="recoverPopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/recover.css' %}
+{% resource 'hdx_theme/widget/onboarding/recover.js' %}
+{% set class = "popup-onboarding" %}
+{% set title = "Forgot your password?" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+<form id="recover-form" onsubmit="return false;">
+    <div class="recover-widget">
+        <div>Enter your username or email below and we will send you an email with a link to enter a new password.</div>
+        <div class="mTop20">
+            <div class="control">
+                <input id="field-recover-id" name="user" class="full-width required" type="text">
+                <label for="field-recover-id">Username or Email</label>
+            </div>
+            <div class="error-message" style="display: none;">
+            </div>
+        </div>
+        <div class="mTop10 bottom-actions">
+
+                <input class="btn btn-primary btn-large pull-right" type="submit" value="Reset">
+                <input class="btn btn-empty btn-empty-black btn-large pull-right mR30" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
+       ` </div>
+    </div>
+</form>
+{% endblock %}

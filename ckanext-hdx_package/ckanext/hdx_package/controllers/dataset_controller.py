@@ -858,7 +858,8 @@ class DatasetController(PackageController):
 
         try:
             short = item['id']
-        except:
+        except Exception as e:
+            log.warning('There was a problem shortening url {}. Shortener response: {}'.format(url, r.text))
             short = url
         return self._finish(200, {'url': short}, content_type='json')
 

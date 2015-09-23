@@ -74,6 +74,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
+    def after_map(self, map):
+        map.connect('dataset_edit', '/dataset/edit/{id}',
+                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='edit')
+        return map
+
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}', controller='ckanext.hdx_package.controllers.storage_controller:FileDownloadController',
                     action='file')
@@ -252,6 +257,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
             'hdx_package_update_metadata': update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
+            'hdx_resource_delete_metadata': update.hdx_resource_delete_metadata,
             'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create,
