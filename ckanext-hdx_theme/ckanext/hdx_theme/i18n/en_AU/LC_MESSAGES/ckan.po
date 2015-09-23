@@ -3215,7 +3215,7 @@ msgstr "Add Related Item"
 
 #: ckan/templates/package/resource_edit_base.html:17
 msgid "All resources"
-msgstr ""
+msgstr "All files"
 
 #: ckan/templates/package/resource_edit_base.html:19
 msgid "View resource"
