@@ -916,3 +916,12 @@ ul.hdx-bs3 {
   font-weight: 700;
 }
 /* END Style placeholders */
+/* Style dataset icons */
+.label-icons span {
+  height: 15px;
+  font-size: 15px;
+  color: #888888;
+  margin-right: 15px;
+  padding-top: 3px;
+}
+/* END Style dataset icons */
