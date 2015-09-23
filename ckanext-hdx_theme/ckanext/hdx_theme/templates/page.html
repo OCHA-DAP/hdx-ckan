@@ -8,6 +8,21 @@
   file.
   #}
   {%- block header %}
+    {% if data %}
+      {% set step = data.current_step %}
+      {% if step == "hdx_login" %}
+        <div id="user-login" style="display: none;">User login</div>
+        {% if not data.success %}
+          <div id="login-error" style="display: none;">{{ data.message }}</div>
+        {% endif %}
+      {% endif %}
+      {% if step == "hdx_logout" %}
+        <div id="user-logout" style="display: none;">{{data.message}}</div>
+      {% endif %}
+      {% if step == "hdx_register" %}
+        <div id="user-register" style="display: none;">User Register</div>
+      {% endif %}
+    {% endif %}
     {% if c.userobj %}
       {% set data = h.get_user_extra(c.userobj.id) %}
       {% if data is not string %}
@@ -15,7 +30,7 @@
       {% else %}
         {% set step = 'hdx_onboarding_details' %}
       {% endif %}
-      {% if step != null %}
+      {% if step %}
         {{ h.snippet('widget/onboarding/registered.html', id="registeredPopup") }}
         {{ h.snippet('widget/onboarding/follow.html', id="followPopup") }}
         {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
