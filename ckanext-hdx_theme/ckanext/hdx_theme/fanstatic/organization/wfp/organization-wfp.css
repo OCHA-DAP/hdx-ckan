@@ -664,7 +664,7 @@ body {
 /* HEADER Search Widget  */
 .header-nav-search {
   height: 55px;
-  margin-left: 50px;
+  margin-left: 15px;
   width: 350px;
   border-bottom: 3px solid #888888;
   margin-bottom: -3px;
