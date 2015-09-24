@@ -109,7 +109,7 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
                 for (var i = 0; i < data.columns.length; i++) {
                     var column = data.columns[i];
                     var escaped_column_name = encodeURIComponent(column.column_name);
-                    if ( ALLOWED_COLUMN_TYPES.indexOf(column.data_type) >= 0 ) {
+                    if ( column.column_name != 'ogc_fid' && ALLOWED_COLUMN_TYPES.indexOf(column.data_type) >= 0 ) {
                         extraFields += ',"' + escaped_column_name+'"';
                     }
                 }
