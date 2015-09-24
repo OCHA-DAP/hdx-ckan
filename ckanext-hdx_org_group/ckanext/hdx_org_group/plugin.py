@@ -45,11 +45,11 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'group_update': hdx_org_actions.hdx_group_update,
             'group_create': hdx_org_actions.hdx_group_create,
             'group_delete': hdx_org_actions.hdx_group_delete,
-            'hdx_get_featured_orgs': get_actions.hdx_get_featured_orgs,
+            'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
         }
 
     def get_auth_functions(self):
-        return {'hdx_generate_thumbnails': authorize.hdx_generate_thumbnails}
+        return {'hdx_trigger_screencap': authorize.hdx_trigger_screencap}
 
 
     # def get_auth_functions(self):

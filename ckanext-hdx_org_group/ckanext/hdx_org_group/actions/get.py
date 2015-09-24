@@ -15,7 +15,12 @@ import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.controllers.country_controller as ctrlr
 
+import ckan.lib.helpers as helpers
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+
+import shlex
+import subprocess
+import random
 
 json = common.json
 get_action = logic.get_action
@@ -181,9 +186,35 @@ def get_group(id):
     return group_info, custom_dict
 
 
+# @logic.side_effect_free
+# def hdx_get_featured_orgs(context, data_dict):
+#
+#     logic.check_access('hdx_generate_thumbnails', context, data_dict)
+#
+#     return helper.get_featured_orgs(context, data_dict)
+
 @logic.side_effect_free
-def hdx_get_featured_orgs(context, data_dict):
-
-    logic.check_access('hdx_generate_thumbnails', context, data_dict)
-
-    return helper.get_featured_orgs(context, data_dict)
+def hdx_trigger_screencap(context, data_dict):
+    cfg = context['cfg']
+    file_path = context['file_path']
+    # checking if user is sysadmin
+    sysadmin = False
+    if data_dict.get('reset_thumbnails', 'false') == 'true':
+        try:
+            logic.check_access('hdx_trigger_screencap', context, data_dict)
+            sysadmin = True
+        except:
+            return False
+    if not sysadmin and not context.get('reset', False):
+        return False
+    if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
+        return False
+    try:
+        command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
+            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
+        print command
+        args = shlex.split(command)
+        subprocess.Popen(args)
+        return True
+    except:
+        return False

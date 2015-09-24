@@ -65,10 +65,7 @@ class HDXOrganizationController(org.OrganizationController):
 
         all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
 
-        try:
-            c.featured_orgs = get_action('hdx_get_featured_orgs')(context, data_dict)
-        except NotAuthorized:
-            abort(401, _('Not authorized! You need to be a sysadmin to run it.'))
+        c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
 
         def pager_url(q=None, page=None):
             if sort_option:
