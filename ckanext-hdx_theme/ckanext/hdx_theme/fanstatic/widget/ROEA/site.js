@@ -224,6 +224,7 @@ $(document).ready(function(){
             }
         }
         generateROEADashboard(config, dataArgs[0].result.records, geom);
+        killLoadingEmbeddable("#hdx-roea");
     });
     $("#hdx-roea-datalink").html(visConfig.source+' <a href="'+visConfig.data_link_url+'">Data</a></p>');
     $('#reset').click(function(){reset();});

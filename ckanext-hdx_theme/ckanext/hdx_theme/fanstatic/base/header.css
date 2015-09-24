@@ -463,7 +463,7 @@ body {
 /* HEADER Search Widget  */
 .header-nav-search {
   height: 55px;
-  margin-left: 50px;
+  margin-left: 15px;
   width: 350px;
   border-bottom: 3px solid #888888;
   margin-bottom: -3px;
@@ -916,3 +916,12 @@ ul.hdx-bs3 {
   font-weight: 700;
 }
 /* END Style placeholders */
+/* Style dataset icons */
+.label-icons span {
+  height: 15px;
+  font-size: 15px;
+  color: #888888;
+  margin-right: 15px;
+  padding-top: 3px;
+}
+/* END Style dataset icons */

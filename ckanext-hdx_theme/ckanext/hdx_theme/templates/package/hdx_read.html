@@ -12,19 +12,15 @@
     {% block title_and_actions %}
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
       <div class="row">
-        <div class="col-xs-12 mTop35">
+        <div class="col-xs-12 mTop35 mBottom30">
           <h1 class="itemTitle">
             {{ pkg.title or pkg.name }}
-             {% if pkg.state.startswith('draft') %}
-              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
-            {% elif pkg.state.startswith('deleted') %}
-              <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
-            {% endif %}
+            {% snippet 'package/snippets/package_status_labels.html', pkg=pkg %}
           </h1>
         </div>
       </div>
-      <div class="row mBottom15">
-        <div class="col-xs-12">
+      <div class="row mBottom30">
+        <div class="col-xs-12 mBottom20">
             {% if c.pkg_notes_formatted %}
               <div class="notes embedded-content">
                 {{ c.pkg_notes_formatted }}
@@ -32,6 +28,9 @@
             {% endif %}
         </div>
         <div class="col-xs-12 align-bottom-right">
+            <div class="pull-left dataset-resources ">
+                {% snippet 'search/snippets/package_icons.html', package=pkg%}
+            </div>
             {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='indicator-actions followButtonContainer pull-right' %}
         </div>
       </div>
