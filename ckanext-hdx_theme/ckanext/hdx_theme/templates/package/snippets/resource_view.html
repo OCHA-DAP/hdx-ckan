@@ -24,12 +24,12 @@
           </a>
         </p>
         <p id="data-view-error" class="collapse"></p>
-        <p>
+        {#<p>
           <a href="{{ raw_resource_url }}" class="btn btn-large resource-url-analytics" target="_blank" tracking-type="{{resource['url_type']}}">
             <i class="icon-large icon-download"></i>
             {{ _('Download resource') }}
           </a>
-        </p>
+        </p>#}
       </div>
       {% if not to_preview %}
         {% set current_filters = request.str_GET.get('filters') %}

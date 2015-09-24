@@ -30,7 +30,7 @@
       <div class="module-content">
         <div class="actions">
           {% block resource_actions %}
-          <ul>
+          <ul class="mTop10">
             {% block resource_actions_inner %}
             {% if h.check_access('package_update', {'id':pkg.id }) %}
               <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn' %}</li>
