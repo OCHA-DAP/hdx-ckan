@@ -11,27 +11,33 @@
 {% endblock %}
 
 {% block primary %}
+  <h2 class="sspBold28 black">
+    {% block page_heading %}
+      {{ _('Dashboard') }}
+    {% endblock %}
+  </h2>
+
   <article class="module">
     {% block page_header %}
-      <header class="module-content page-header paddingRowHack">
+      <header class="page-header paddingRowHack">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
           {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_groups', _('My Locations'), class_='hdx-tab-button') }}
         </ul>
+        <div class="pull-right paddingRightHack">
+          {% block page_header_inner %}
+
+          {% endblock %}
+        </div>
       </header>
     {% endblock %}
     <div class="module-content mTop35">
       {% block primary_content_inner %}
         <div data-module="dashboard">
           {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
-          <h2 class="page-heading sspBold28 black">
-            {% block page_heading %}
-            {{ _('Newsfeed') }}
-            {% endblock %}
-            <small class="grey">{{ _('Activity from items that you follow') }}</small>
-          </h2>
+
           {% block activity_stream %}
          	{{ c.dashboard_activity_stream }}
           {% endblock %}
