@@ -31,6 +31,9 @@
                                     <div class="org-thumbnail" style="background-color: {{customization.highlight_color}}">
                                         <img src="{{ item.featured_org_thumbnail }}" />
                                     </div>
+                                    <div class="feature-highlight">
+                                        {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
+                                    </div>
                                 </a>
                                 <div class="logo-box" style="{{ logo_extra_style }}">
                                     <a href="{{h.url_for(controller='organization', action='read', id=item.name)}}">
@@ -45,11 +48,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                <a {% if item.highlight.link != '' %} href="{{item.highlight.link}}" {% endif %}>
-                                    <div class="feature-highlight">
-                                        {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
-                                    </div>
-                                </a>
                             </div>
                             <div class="feature-content">
                                 <h3 class="list-items organization-heading">

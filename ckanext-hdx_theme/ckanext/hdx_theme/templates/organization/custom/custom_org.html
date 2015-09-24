@@ -234,6 +234,7 @@
         <div style="display: none" id="wfp-viz-embed-datastore">{{ data.visualization.config.datastore_id }}</div>
         {% if data.visualization.config.type == '3W-dashboard' %}
             <div id="hdx-3w-visualization-wrapper" class="col-xs-12 paddingLeftHack paddingRightHack">
+                {{ h.snippet('widget/loading/loadingEmbeddable.html', id="loadingScreen", message="Loading...this might take a few seconds") }}
                 <div id="header" class="row">
                     <div class="col-md-8">
                         <p id="description"></p>
@@ -262,9 +263,10 @@
         {% endif %}
         {% if data.visualization.config.type == 'ROEA' %}
             <div id="hdx-roea" class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
+                {{ h.snippet('widget/loading/loadingEmbeddable.html', id="loadingScreen", message="Loading...this might take a few seconds") }}
                 <div class="row">
                     <div class="col-xs-12">
-                        <!--<p>Use the tabs to browse the different risk indexes for the region. 1 is low risk (lighter) and 10 is high risk (darker).  Click the map to filter the statistics for selected countries.</p>-->
+                        <p>Use the tabs to browse the different risk indexes for the region. 1 is low risk (lighter) and 10 is high risk (darker).  Click the map to filter the statistics for selected countries. The risk indexes are from the INFORM risk assessment.  INFORM is a global, open-source risk assessment for humanitarian crises and disasters. It can support decisions about prevention, preparedness and response.</p>
                     </div>
                 </div>
                 <div class="row">
@@ -299,6 +301,7 @@
         {% endif %}
         {% if data.visualization.config_type == 'WFP' %}
             <div id="wfp-visualization-wrapper" class="col-xs-12 paddingLeftHack paddingRightHack">
+                {{ h.snippet('widget/loading/loadingEmbeddable.html', id="loadingScreen", message="Loading...this might take a few seconds") }}
                 <div class="row">
                     <div id="header" class="col-md-12 rightcol">
                         <p>Click a country to explore prices for different products</p>

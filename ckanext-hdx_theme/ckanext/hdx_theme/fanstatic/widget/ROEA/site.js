@@ -1,12 +1,15 @@
 var config = {
     dataURL:'data/data.json',
     geoURL:'data/geom.geojson',
-    colors:['#FFFFFF','#BFDAEC','#80B5DA','#4190C7','#026BB5'],
+    colors:['#FFFFFF','#d0d1e6','#a6bddb','#74a9cf','#2b8cbe','#045a8d'],
     source:'Text Source',
     link:'http://linktodata'
 };
 
 function generateROEADashboard(config,data,geom){
+
+    //remove rwanda and burundi
+
     var cf = crossfilter(data);
 
     var whereDimension= cf.dimension(function(d){return d.NAME;});
@@ -37,15 +40,15 @@ function generateROEADashboard(config,data,geom){
         .colorAccessor(function (d) {
             var c=0;
             if(d>8){
-                c=4;
+                c=5;
             } else if (d>7) {
+                c=4;
+            } else if (d>6) {
                 c=3;
             } else if (d>5) {
                 c=2;
-            } else if (d>4) {
-                c=1;
             } else {
-                c=0
+                c=1;
             } 
             return c;
             })   
@@ -57,17 +60,22 @@ function generateROEADashboard(config,data,geom){
         .renderPopup(true);
 
     var formatNumber = function (d) {
-        var output = d3.format(".4s")(d);
-        if (output.slice(-1) == 'k') {
-            output = '<span class="hdx-roea-value">' + d3.format("0,000")(output.slice(0, -1) * 1000) + '</span>';
-        } else if (output.slice(-1) == 'M') {
-            output = '<span class="hdx-roea-value">'+d3.format(".1f")(output.slice(0, -1))+'</span><span class="hdx-roea-small"> million</span>';
-        } else if (output.slice(-1) == 'G') {
-            output = '<span class="hdx-roea-value">' + output.slice(0, -1) + '</span><span class="hdx-roea-small"> billion</span>';
+        if (d > 0) {
+            var output = d3.format(".4s")(d);
+            if (output.slice(-1) == 'k') {
+                output = Math.round(output.slice(0, -1) * 1000);
+                output = '<span class="hdx-roea-value">' + d3.format("0,000")(output) + '</span>';
+            } else if (output.slice(-1) == 'M') {
+                output = '<span class="hdx-roea-value">' + d3.format(".1f")(output.slice(0, -1)) + '</span><span class="hdx-roea-small"> million</span>';
+            } else if (output.slice(-1) == 'G') {
+                output = '<span class="hdx-roea-value">' + output.slice(0, -1) + '</span><span class="hdx-roea-small"> billion</span>';
+            } else {
+                output = '<span class="hdx-roea-value">' + d3.format(".3s")(d) + '</span>';
+            }
+            return output;
         } else {
-            output = '<span class="hdx-roea-value">' + d3.format(".3s")(d) + '</span>';
+            return '<span class="hdx-roea-value">n/a</span>';
         }
-        return output;
     };
 
     var formatNumberDollar = function(d){
@@ -107,6 +115,25 @@ function generateROEADashboard(config,data,geom){
     map = mapChart.map();
     map.scrollWheelZoom.disable();
     zoomToGeom(geom);
+
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+
+        var div = L.DomUtil.create('div', 'info legend'),
+            labels = ['0 - 5','5.01 - 6','6.01 - 7','7.01 - 8','8.01+'];
+
+        div.innerHTML = 'Risk Score<br />';
+        for (var i = 0; i < labels.length; i++) {
+            div.innerHTML +=
+                '<i style="background:' + config.colors[4-i] + '"></i> ' + labels[4-i] +'<br />';
+        }
+
+        return div;
+    };
+
+    legend.addTo(map);
+
 
     L.tileLayer($('#mapbox-baselayer-url-div').text(), {
         attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
@@ -191,7 +218,13 @@ $(document).ready(function(){
     //when both ready construct dashboard
     $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
         geom = geomArgs[0];
+        for(var i= dataArgs[0].length-1;i>-1;i--){
+            if(dataArgs[0][i].NAME=='RWA'||dataArgs[0][i].NAME=='BRN'){
+                dataArgs[0].splice(i, 1);
+            }
+        }
         generateROEADashboard(config, dataArgs[0].result.records, geom);
+        killLoadingEmbeddable("#hdx-roea");
     });
     $("#hdx-roea-datalink").html(visConfig.source+' <a href="'+visConfig.data_link_url+'">Data</a></p>');
     $('#reset').click(function(){reset();});
