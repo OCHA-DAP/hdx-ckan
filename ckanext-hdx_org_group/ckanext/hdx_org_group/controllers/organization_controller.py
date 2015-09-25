@@ -56,7 +56,7 @@ class HDXOrganizationController(org.OrganizationController):
 
         data_dict = {
             'all_fields': True,
-            'sort': sort_option,
+            'sort': sort_option if sort_option in ['title asc', 'title desc'] else 'title asc', #Custom sorts will throw an error here
             'q':q
         }
 
