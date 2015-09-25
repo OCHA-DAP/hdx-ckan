@@ -156,6 +156,7 @@ $(document).ready(
                 e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
             });
             generate3WComponent(config,dataArgs[0],geom);
+            killLoadingEmbeddable("#hdx-3w-visualization-wrapper");
         });
     }
 );

@@ -44,8 +44,8 @@ class HDXOrganizationController(org.OrganizationController):
         if c.userobj:
             context['user_id'] = c.userobj.id
             context['user_is_admin'] = c.userobj.sysadmin
+            context['auth_user_obj'] = c.userobj
         
-        user = c.user or c.author
         q = c.q = request.params.get('q', '')
         page = request.params.get('page', 1)
         limit = int(request.params.get('limit', 25))
@@ -56,15 +56,16 @@ class HDXOrganizationController(org.OrganizationController):
 
         data_dict = {
             'all_fields': True,
-            'sort': sort_option,
+            'sort': sort_option if sort_option in ['title asc', 'title desc'] else 'title asc', #Custom sorts will throw an error here
             'q':q
+            'reset_thumbnails': reset_thumbnails,
         }
 
         all_orgs = get_action('organization_list')(context, data_dict)
 
         all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
 
-        c.featured_orgs = helper.get_featured_orgs(c.user, c.userobj, reset_thumbnails)
+        c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
 
         def pager_url(q=None, page=None):
             if sort_option:
