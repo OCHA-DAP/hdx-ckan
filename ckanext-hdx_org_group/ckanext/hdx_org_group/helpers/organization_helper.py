@@ -58,11 +58,15 @@ def sort_results_case_insensitive(results, sort_by):
     return results
 
 
-def get_featured_orgs(user, userobj, reset_thumbnails='false'):
+def hdx_get_featured_orgs(context, data_dict):
     orgs = list()
     # Pull resource with data on our featured orgs
     resource_id = config.get('hdx.featured_org_config')  # Move this to common_config once data team has set things up
+    user = context.get('user')
+    userobj = context.get('auth_user_obj')
+    reset_thumbnails = data_dict.get('reset_thumbnails', 'false')
     featured_config = get_featured_orgs_config(user, userobj, resource_id)
+
 
     for cfg in featured_config:
         # getting the first 3 rows/organizations
@@ -75,14 +79,20 @@ def get_featured_orgs(user, userobj, reset_thumbnails='false'):
                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
                 expire = timestamp + timedelta(days=1)
                 expired = datetime.utcnow() > expire
-            if not exists or expired or reset_thumbnails == 'true':
+            reset = not exists or expired
+            if reset or reset_thumbnails == 'true':
                 # Build new screencap
-                trigger_screencap(file_path, cfg)
+                context['reset'] = reset
+                context['file_path'] = file_path
+                context['cfg'] = cfg
+                log.info("Triggering screenshot for " + cfg.get('org_name'))
+                get_action('hdx_trigger_screencap')(context, data_dict)
+                # trigger_screencap(file_path, cfg)
                 # check again if file exists
 
-            context = {'model': model, 'session': model.Session,
-                       'user': user, 'for_view': True,
-                       'auth_user_obj': userobj}
+            # context = {'model': model, 'session': model.Session,
+            #            'user': user, 'for_view': True,
+            #            'auth_user_obj': userobj}
             org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
 
             # Build highlight data
@@ -98,17 +108,17 @@ def get_featured_orgs(user, userobj, reset_thumbnails='false'):
     return orgs
 
 
-def trigger_screencap(file_path, cfg):
-    if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
-        return False
-    try:
-        command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
-            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
-        args = shlex.split(command)
-        subprocess.Popen(args)
-        return True
-    except:
-        return False
+# def trigger_screencap(file_path, cfg):
+#     if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
+#         return False
+#     try:
+#         command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
+#             'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --timeout 10000'
+#         args = shlex.split(command)
+#         subprocess.Popen(args)
+#         return True
+#     except:
+#         return False
 
 
 def get_viz_title_from_extras(org_dict):

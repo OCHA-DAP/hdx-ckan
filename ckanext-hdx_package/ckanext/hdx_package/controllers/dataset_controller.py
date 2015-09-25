@@ -953,7 +953,6 @@ class DatasetController(PackageController):
         :rtype:
         '''
         result = super(DatasetController, self).resource_download(id, resource_id)
-
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
