@@ -67,7 +67,6 @@ def hdx_get_featured_orgs(context, data_dict):
     reset_thumbnails = data_dict.get('reset_thumbnails', 'false')
     featured_config = get_featured_orgs_config(user, userobj, resource_id)
 
-
     for cfg in featured_config:
         # getting the first 3 rows/organizations
         if len(orgs) < 3:
