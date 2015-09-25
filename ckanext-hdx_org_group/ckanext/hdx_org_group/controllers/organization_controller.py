@@ -28,7 +28,6 @@ get_action = logic.get_action
 
 
 class HDXOrganizationController(org.OrganizationController):
-
     def index(self):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -45,7 +44,7 @@ class HDXOrganizationController(org.OrganizationController):
             context['user_id'] = c.userobj.id
             context['user_is_admin'] = c.userobj.sysadmin
             context['auth_user_obj'] = c.userobj
-        
+
         q = c.q = request.params.get('q', '')
         page = request.params.get('page', 1)
         limit = int(request.params.get('limit', 25))
@@ -53,11 +52,11 @@ class HDXOrganizationController(org.OrganizationController):
 
         reset_thumbnails = request.params.get('reset_thumbnails', 'false')
 
-
         data_dict = {
             'all_fields': True,
-            'sort': sort_option if sort_option in ['title asc', 'title desc'] else 'title asc', #Custom sorts will throw an error here
-            'q':q
+            'sort': sort_option if sort_option in ['title asc', 'title desc'] else 'title asc',
+            # Custom sorts will throw an error here
+            'q': q,
             'reset_thumbnails': reset_thumbnails,
         }
 
@@ -84,7 +83,6 @@ class HDXOrganizationController(org.OrganizationController):
 
         return base.render('organization/index.html')
 
-
     def read(self, id, limit=20):
         group_type = self._get_group_type(id.split('@')[0])
         if group_type != self.group_type:
@@ -110,7 +108,7 @@ class HDXOrganizationController(org.OrganizationController):
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
 
-        #If custom_org set to true, redirect to the correct route
+        # If custom_org set to true, redirect to the correct route
         if self.custom_org_test(c.group_dict['extras']):
             Org = custom_org.CustomOrgController()
             return Org.org_read(id)
@@ -118,12 +116,10 @@ class HDXOrganizationController(org.OrganizationController):
             self._read(id, limit)
             return render(self._read_template(c.group_dict['type']))
 
-
     def custom_org_test(self, org):
         if [o.get('value', None) for o in org if o.get('key', '') == 'custom_org']:
             return True
         return False
-
 
     def new(self, data=None, errors=None, error_summary=None):
         group_type = self._guess_group_type(True)
@@ -165,7 +161,7 @@ class HDXOrganizationController(org.OrganizationController):
                    'parent': request.params.get('parent', None)
                    }
         data_dict = {'id': id}
-    
+
         if context['save'] and not data:
             return self._save_edit(id, context)
 
@@ -195,4 +191,3 @@ class HDXOrganizationController(org.OrganizationController):
         self._setup_template_variables(context, data, group_type=group_type)
         c.form = render(self._group_form(group_type), extra_vars=vars)
         return render(self._edit_template(c.group.type))
-
