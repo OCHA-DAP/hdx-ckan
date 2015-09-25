@@ -186,13 +186,6 @@ def get_group(id):
     return group_info, custom_dict
 
 
-# @logic.side_effect_free
-# def hdx_get_featured_orgs(context, data_dict):
-#
-#     logic.check_access('hdx_generate_thumbnails', context, data_dict)
-#
-#     return helper.get_featured_orgs(context, data_dict)
-
 @logic.side_effect_free
 def hdx_trigger_screencap(context, data_dict):
     cfg = context['cfg']

@@ -77,7 +77,7 @@ def hdx_get_featured_orgs(context, data_dict):
             expired = False
             if exists:
                 timestamp = datetime.fromtimestamp(os.path.getmtime(file_path))
-                expire = timestamp + timedelta(days=1)
+                expire = timestamp + timedelta(days=7)
                 expired = datetime.utcnow() > expire
             reset = not exists or expired
             if reset or reset_thumbnails == 'true':
