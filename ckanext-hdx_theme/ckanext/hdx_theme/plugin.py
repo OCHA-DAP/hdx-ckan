@@ -50,7 +50,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         '''
         # we want the filename that of the function caller but they will
         # have used one of the available helper functions
-        frame, filename, line_number, function_name, lines, index =\
+        frame, filename, line_number, function_name, lines, index = \
             inspect.getouterframes(inspect.currentframe())[1]
 
         this_dir = os.path.dirname(filename)
@@ -58,14 +58,28 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         import ckan.lib.fanstatic_resources
         ckan.lib.fanstatic_resources.create_library(name, absolute_path, False)
 
-
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
         #self._add_resource('fanstatic', 'hdx_theme')
         toolkit.add_resource('fanstatic', 'hdx_theme')
+        # Add configs needed for checks
+        self.__add_gis_layer_config_for_checks(config)
+        self.__add_spatial_config_for_checks(config)
 
+    def __add_gis_layer_config_for_checks(self, config):
+        gis_layer_api = config.get('hdx.gis.layer_import_url', '')
+        api_index = gis_layer_api.find('/api')
+        gis_layer_base_api = gis_layer_api[0:api_index]
+        config['hdx_checks.gis_layer_base_url'] = gis_layer_base_api
+
+    def __add_spatial_config_for_checks(self, config):
+        search_str = '/services'
+        spatial_url = config.get('hdx.gis.resource_pbf_url', '')
+        url_index = spatial_url.find(search_str)
+        spatial_check_url = spatial_url[0:url_index+len(search_str)] + '/tables'
+        config['hdx_checks.spatial_checks_url'] = spatial_check_url
 
     def before_map(self, map):
         map.connect(
@@ -184,6 +198,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_request_membership': auth.hdx_send_request_membership
         }
 
-    # def make_middleware(self, app, config):
-    #     run_on_startup()
-    #     return app
+        # def make_middleware(self, app, config):
+        #     run_on_startup()
+        #     return app
