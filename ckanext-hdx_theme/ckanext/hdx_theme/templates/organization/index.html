@@ -14,93 +14,91 @@
         <h2>All Organisations</h2>
     </div>
 
-    <div id="featuredSection" class="row list-items paddingRowHack">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="list-header crisis-list-header">
-                <span class="mL15 list-header-title">{{ _("Featured Organisations") }}</span>
-            </div>
-            <div class="row mTB35">
-                {% for item in c.featured_orgs %}
-                    <div class="col-xs-4">
-                        <div class="featured-org">
-                            <div class="feature-header">
-                                {% set customization = h.load_json(h.get_pkg_dict_extra(item, 'customization')) %}
-                                {% set image_sq = h.url_for('image_serve', label=customization.image_sq) %}
-                                {% set logo_extra_style = "background-color: #ffffff; border: 1px solid #eeeeee;" if customization.use_org_color == "false" else "background-color: " + customization.highlight_color %}
-                                <a {% if item.highlight.link != '' %} href="{{item.highlight.link}}" {% endif %}>
-                                    <div class="org-thumbnail" style="background-color: {{customization.highlight_color}}">
-                                        <img src="{{ item.featured_org_thumbnail }}" />
-                                    </div>
-                                    <div class="feature-highlight">
-                                        {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
-                                    </div>
-                                </a>
-                                <div class="logo-box" style="{{ logo_extra_style }}">
-                                    <a href="{{h.url_for(controller='organization', action='read', id=item.name)}}">
-                                        <div class="table-valign">
-                                            <div class="table-valign-content">
-                                                {% if image_sq %}
-                                                    <img class="org-logo" src="{{ image_sq }}" alt="{{ _('small logo') }}">
-                                                {% else %}
-                                                    <img class="org-logo" src="https://placehold.it/75x75" />
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    </a>
+    <div id="featuredSection">
+        <div class="list-header crisis-list-header">
+            <span class="mL15 list-header-title">{{ _("Featured Organisations") }}</span>
+        </div>
+        <div class="row mTB35">
+            {% for item in c.featured_orgs %}
+                <div class="col-xs-4">
+                    <div class="featured-org">
+                        <div class="feature-header">
+                            {% set customization = h.load_json(h.get_pkg_dict_extra(item, 'customization')) %}
+                            {% set image_sq = h.url_for('image_serve', label=customization.image_sq) %}
+                            {% set logo_extra_style = "background-color: #ffffff; border: 1px solid #eeeeee;" if customization.use_org_color == "false" else "background-color: " + customization.highlight_color %}
+                            <a {% if item.highlight.link != '' %} href="{{item.highlight.link}}" {% endif %}>
+                                <div class="org-thumbnail" style="background-color: {{customization.highlight_color}}">
+                                    <img src="{{ item.featured_org_thumbnail }}" />
                                 </div>
-                            </div>
-                            <div class="feature-content">
-                                <h3 class="list-items organization-heading">
-                                  {{ h.link_to(item.display_name, h.url_for(controller='organization', action='read', id=item.name)) }}
-                                </h3>
-                                <div class="list-items">
-                                    {% if item.packages %}
-                                        {% if item.packages is number %}
-                                            {% set num_of_pack = item.packages %}
-                                        {% else %}
-                                            {% set num_of_pack = item.packages|length %}
-                                        {% endif %}
-                                        <span class="sspBold14">
-                                            <a class="sspBold14" href="{{ h.url_for(item.type + '_read', action='read', id=item.name, sort='metadata_modified desc')}}#datasets-section">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
-                                        </span>
-                                    {% else %}
-                                        <span class="sspBold14">{{ _('0 Datasets') }}</span>
-                                    {% endif %}
-                                    -
-                                    {% set followers = h.get_group_followers(item.id) %}
-                                    {% set members = h.get_group_members(item.id) %}
-                                    {% set group_members_url = h.url_for(controller='organization', action='members', id=item.name or item.title, sort='metadata_modified desc') %}
-                                    <span class="sspBold14">{{members}} {{ _('Members') }}</span>
-                                    -
-                                    <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+                                <div class="feature-highlight">
+                                    {{item.highlight.description}}<strong>{{item.highlight.title}}</strong>
                                 </div>
-                                <div class="last-update">
-                                    {% set res = h.get_last_modifier_user(g_id=item.id, get_timestamp=True) %}
-                                    {% set updated_time = res[1] %}
-                                    {% set f_updated_time = h.render_datetime(updated_time) %}
-
-                                    Last update on {{ f_updated_time }}
-                                </div>
-                                <div class="dataset-description">
-                                    {% if item.description %}
-                                        <div class="list-items content">
-                                            {% set notes = h.markdown_extract(item.description, extract_length=0) %}
-                                            {% set notes_small = h.markdown_extract(item.description, extract_length=95) %}
-                                            {{notes_small|urlize}}
-                                            {% if notes|length > notes_small|length %}
-                                              {{ h.link_to("MORE", h.url_for(controller='organization', action='read', id=item.name)) }}
+                            </a>
+                            <div class="logo-box" style="{{ logo_extra_style }}">
+                                <a href="{{h.url_for(controller='organization', action='read', id=item.name)}}">
+                                    <div class="table-valign">
+                                        <div class="table-valign-content">
+                                            {% if image_sq %}
+                                                <img class="org-logo" src="{{ image_sq }}" alt="{{ _('small logo') }}">
+                                            {% else %}
+                                                <img class="org-logo" src="https://placehold.it/75x75" />
                                             {% endif %}
                                         </div>
-                                    {% else %}
-                                        <div class="list-items content empty">{{ _('This organization has no description') }}</div>
-                                    {% endif %}
-                                </div>
-
+                                    </div>
+                                </a>
                             </div>
                         </div>
+                        <div class="feature-content">
+                            <h3 class="list-items organization-heading">
+                              {{ h.link_to(item.display_name, h.url_for(controller='organization', action='read', id=item.name)) }}
+                            </h3>
+                            <div class="list-items">
+                                {% if item.packages %}
+                                    {% if item.packages is number %}
+                                        {% set num_of_pack = item.packages %}
+                                    {% else %}
+                                        {% set num_of_pack = item.packages|length %}
+                                    {% endif %}
+                                    <span class="sspBold14">
+                                        <a class="sspBold14" href="{{ h.url_for(item.type + '_read', action='read', id=item.name, sort='metadata_modified desc')}}#datasets-section">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                                    </span>
+                                {% else %}
+                                    <span class="sspBold14">{{ _('0 Datasets') }}</span>
+                                {% endif %}
+                                -
+                                {% set followers = h.get_group_followers(item.id) %}
+                                {% set members = h.get_group_members(item.id) %}
+                                {% set group_members_url = h.url_for(controller='organization', action='members', id=item.name or item.title, sort='metadata_modified desc') %}
+                                <span class="sspBold14">{{members}} {{ _('Members') }}</span>
+                                -
+                                <span class="sspBold14">{{ followers }} {% if followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+                            </div>
+                            <div class="last-update">
+                                {% set res = h.get_last_modifier_user(g_id=item.id, get_timestamp=True) %}
+                                {% set updated_time = res[1] %}
+                                {% set f_updated_time = h.render_datetime(updated_time) %}
+
+                                Last update on {{ f_updated_time }}
+                            </div>
+                            <div class="dataset-description">
+                                {% if item.description %}
+                                    <div class="list-items content">
+                                        {% set notes = h.markdown_extract(item.description, extract_length=0) %}
+                                        {% set notes_small = h.markdown_extract(item.description, extract_length=95) %}
+                                        {{notes_small|urlize}}
+                                        {% if notes|length > notes_small|length %}
+                                          {{ h.link_to("MORE", h.url_for(controller='organization', action='read', id=item.name)) }}
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <div class="list-items content empty">{{ _('This organization has no description') }}</div>
+                                {% endif %}
+                            </div>
+
+                        </div>
                     </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
     <div id="organizationsSection" class="row list-items module paddingRowHack">
