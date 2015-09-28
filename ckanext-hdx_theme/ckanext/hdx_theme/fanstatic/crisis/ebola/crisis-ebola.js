@@ -96,7 +96,7 @@ function drawDistricts(map){
       values: totalDeathsPerPop
     },
     newConfirms:{
-      name: 'New cases last week',
+      name: 'New Confirmed Cases',
       threshold: [1, 5, 10, 50],
       values: newConfirms
     }
