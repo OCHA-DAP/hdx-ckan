@@ -55,6 +55,8 @@ def sort_results_case_insensitive(results, sort_by):
             return sorted(results, key=lambda x: x.get('packages', 0), reverse=True)
         elif sort_by == 'datasets asc':
             return sorted(results, key=lambda x: x.get('packages', 0))
+        elif sort_by == 'popularity':
+            pass
     return results
 
 
