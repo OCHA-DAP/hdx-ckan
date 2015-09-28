@@ -94,7 +94,13 @@ function drawDistricts(map){
       name: 'Cumulative Deaths per 100,000 people',
       threshold: [0.1, 20, 40, 80],
       values: totalDeathsPerPop
+    },
+    newConfirms:{
+      name: 'New Confirmed Cases',
+      threshold: [1, 5, 10, 50],
+      values: newConfirms
     }
+
   };
 
   function getStyle(values, threshold){
