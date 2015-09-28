@@ -19,6 +19,7 @@ import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.update as hdx_update
+import ckanext.hdx_package.actions.delete as hdx_delete
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 import ckanext.hdx_package.actions.get as hdx_get
@@ -262,7 +263,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_actions.package_create,
             'resource_create': hdx_create.resource_create,
-            'resource_update': hdx_update.resource_update
+            'resource_update': hdx_update.resource_update,
+            'package_purge': hdx_delete.hdx_dataset_purge
         }
 
     def before_show(self, resource_dict):
