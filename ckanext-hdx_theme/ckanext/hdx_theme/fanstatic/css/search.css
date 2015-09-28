@@ -116,6 +116,11 @@
         letter-spacing: 0.01em;
         margin-left: 5px;
     }
+
+    .search-list .dataset-item .hdx-ds-title-icon {
+        font-size: 12px;
+        margin-left: 5px;
+    }
     /* .dataset-item .dataset-others li.label-icons {
 
     }
