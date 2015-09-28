@@ -23,18 +23,28 @@
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
       <div class="row">
-        <div class="col-xs-12 mTop35">
+        <div class="col-xs-12 mTop35 mBottom30">
           <h1 class="itemTitle">
             {{ pkg.title or pkg.name }}
-             {% if pkg.state.startswith('draft') %}
-              <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
-            {% elif pkg.state.startswith('deleted') %}
-              <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
-            {% endif %}
+            {% snippet 'package/snippets/package_status_labels.html', pkg=pkg %}
           </h1>
         </div>
       </div>
       <!-- here -->
+      <div class="row">
+        <div class="col-xs-12 align-bottom-right">
+          <div class="pull-left dataset-resources ">
+              {% snippet 'search/snippets/package_icons.html', package=pkg %}
+          </div>
+          {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=True, classes='indicator-actions followButtonContainer pull-right' %}
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="mTop30" style="border-bottom: 1px solid #dddddd;">
+      </div>
+    </div>
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
       {% block pre_primary_content %}
         {% snippet "indicator/snippets/read_pre_primary.html", pkg = pkg %}
       {% endblock %}
@@ -65,7 +75,7 @@
 {% endblock %}
 
 {% block primary %}
-  <div class="mL30">
+  <div class="mL30 mTop20">
     {% block package_notes %}
         {% if c.pkg_notes_formatted %}
           <div class="notes embedded-content">

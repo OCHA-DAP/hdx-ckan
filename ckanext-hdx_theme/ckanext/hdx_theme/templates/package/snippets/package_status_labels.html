@@ -1,0 +1,8 @@
+{% if pkg.state.startswith('draft') %}
+  <span style="vertical-align: middle;" class="label label-info">{{ _('Draft') }}</span>
+{% elif pkg.state.startswith('deleted') %}
+  <span style="vertical-align: middle;" class="label label-danger">{{ _('Deleted') }}</span>
+{% endif %}
+{% if pkg.private %}
+   <span style="font-size: 18px;" class="mLR10 glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+{% endif %}

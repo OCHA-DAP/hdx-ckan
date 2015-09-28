@@ -35,6 +35,7 @@
     .search-list .dataset-item .dataset-heading {
         margin-bottom: 0;
         line-height: 1;
+        font-size: 14px;
     }
     .search-list .dataset-item .dataset-heading a {
         font-family: 'Source Sans Pro', sans-serif;
@@ -115,6 +116,11 @@
         letter-spacing: 0.01em;
         margin-left: 5px;
     }
+
+    .search-list .dataset-item .hdx-ds-title-icon {
+        font-size: 12px;
+        margin-left: 5px;
+    }
     /* .dataset-item .dataset-others li.label-icons {
 
     }
@@ -126,17 +132,10 @@
     .search-list .dataset-item .dataset-others ul.dataset-resources li + li.label-icons:before {
     	content: "|";
         margin-left: 15px;
+        margin-right: 15px;
     }
     
     
-    .search-list .dataset-item .dataset-others .label-icons span{
-        height: 15px;
-        font-size: 15px;
-        color: #888888;
-        margin-left: 15px;
-        padding-top: 3px;
-    }
-
     .search-list .dataset-content .pre-icon .icon {
         color: #007ce0;
         font-size: 20px;
