@@ -9,6 +9,9 @@ import logging as logging
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
+import ckan.tests as tests
+import json
+import ckanext.hdx_search.actions.actions as actions
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
@@ -74,6 +77,15 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
                      'description': u'', 'name': 'col'}]
         sorted_features = search.sort_features(features)
         assert sorted_features[0]['name'] == 'world'
+
+    def test_populate_related_items_count(self):
+        #Run random search
+        user = model.User.by_name('testsysadmin')
+        context = {'model': model, 'session': model.Session,
+                     'user': user.name, 'auth_user_obj': user}
+        query = tests.call_action_api(self.app, 'package_search', q='test')
+        populate = actions.populate_related_items_count(context,{'pkg_dict_list':query['results']})
+        assert not populate
 
         # Not using the hdx_actions.package_search anymore so commenting this test out
 
