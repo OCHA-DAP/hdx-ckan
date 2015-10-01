@@ -108,11 +108,29 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
 
     def test_create_validation_token(self):
         res = self._create_user()
-
         user = model.User.get('valid@example.com')
         assert user
         token = umodel.ValidationToken.get(user.id)
         assert token
+
+    def test_token_update_action(self):
+        res = self._create_user()
+        user = model.User.get('valid@example.com')
+        token = umodel.ValidationToken.get(user.id)
+        admin = model.User.by_name('testsysadmin')
+        allowed = tests.call_action_api(self.app, 'token_update', token=token.token, apikey=admin.apikey,
+                              status=200)
+        assert allowed['valid']
+    
+    def test_token_update_action_fails(self):
+        res = self._create_user()
+        user = model.User.get('valid@example.com')
+        token = umodel.ValidationToken.get(user.id)
+        not_this_user = model.User.by_name('tester')
+        allowed = tests.call_action_api(self.app, 'token_update', token=token.token, apikey=not_this_user.apikey,
+                              status=403)
+        assert 'Access denied' in allowed['message']
+
 
     def test_delete_user(self):
         res = self._create_user()
@@ -122,8 +140,7 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         offset2 = h.url_for(controller='user', action='delete', id=user.id)
         res2 = self.app.get(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
-        print res2
-
+        
         profile_url = h.url_for(controller='user', action='read', id='valid@example.com')
 
         profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(

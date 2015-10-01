@@ -32,6 +32,7 @@ import ckan.plugins as p
 import exceptions as exceptions
 
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
+import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
 # import ckan.lib.dictization.model_dictize as model_dictize
@@ -167,7 +168,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
             # IAuthenticator too buggy, doing this instead
             try:
-                token = get_action('token_show')(context, user_dict)
+                token = tokens.token_show(context, user_dict)
             except NotFound, e:
                 token = {'valid': True}  # Until we figure out what to do with existing users
             except:
@@ -304,7 +305,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         try:
             # Update token for user
-            token = get_action('token_show_by_id')(context, data_dict)
+            token = tokens.token_show_by_id(context, data_dict)
             data_dict['user_id'] = token['user_id']
             # removed because it is saved in next step. User is allowed to click on /validate link several times
             # get_action('user_extra_update')(context, data_dict)
@@ -339,26 +340,26 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema}
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
-        try:
-            captcha_response = data_dict.get('g-recaptcha-response', None)
-            if not self.is_valid_captcha(response=captcha_response):
-                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
-            check_access('user_update', context, data_dict)
-        except NotAuthorized:
-            return OnbNotAuth
-        except ValidationError, e:
-            error_summary = e.error_summary
-            if error_summary == CaptchaNotValid:
-                return OnbCaptchaErr
-            return self.error_message(error_summary)
-        except exceptions.Exception, e:
-            error_summary = e.error_summary
-            return self.error_message(error_summary)
-        # hack to disable check if user is logged in
+        # try:
+        #     captcha_response = data_dict.get('g-recaptcha-response', None)
+        #     if not self.is_valid_captcha(response=captcha_response):
+        #         raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+        #     check_access('user_update', context, data_dict)
+        # except NotAuthorized:
+        #     return OnbNotAuth
+        # except ValidationError, e:
+        #     error_summary = e.error_summary
+        #     if error_summary == CaptchaNotValid:
+        #         return OnbCaptchaErr
+        #     return self.error_message(error_summary)
+        # except exceptions.Exception, e:
+        #     error_summary = e.error_summary
+        #     return self.error_message(error_summary)
+        # # hack to disable check if user is logged in
         save_user = c.user
         c.user = None
         try:
-            token_dict = get_action('token_show')(context, data_dict)
+            token_dict = tokens.token_show(context, data_dict)
             data_dict['token'] = token_dict['token']
             get_action('user_update')(context, data_dict)
             get_action('token_update')(context, data_dict)
@@ -779,7 +780,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         # Get token for user
         try:
-            token = get_action('token_show')(context, data_dict)
+            token = tokens.token_show(context, data_dict)
         except NotFound, e:
             abort(404, _('User not found'))
         except:
