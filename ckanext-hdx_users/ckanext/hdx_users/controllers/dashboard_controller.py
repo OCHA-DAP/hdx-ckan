@@ -26,7 +26,6 @@ from ckan.common import _, c, g, request
 
 log = logging.getLogger(__name__)
 
-
 abort = base.abort
 render = base.render
 validate = base.validate
@@ -59,7 +58,7 @@ class DashboardController(uc.UserController):
                 'user': c.user or c.author, 'auth_user_obj': c.userobj,
                 'for_view': True
             }
-            
+
             data_dict = {'id': filter_id}
             followee = None
 
@@ -67,7 +66,7 @@ class DashboardController(uc.UserController):
                 'dataset': 'package_show',
                 'user': 'user_show',
                 'group': 'group_show',
-                'organization' : 'organization_show' #ADD BY HDX
+                'organization': 'organization_show'  # ADD BY HDX
             }
             action_function = logic.get_action(
                 action_functions.get(filter_type))
@@ -91,7 +90,7 @@ class DashboardController(uc.UserController):
                 }
 
         return {
-            'filter_type': filter_type  if filter_type else 'dashboard', #CHANGED BY HDX
+            'filter_type': filter_type if filter_type else 'dashboard',  # CHANGED BY HDX
             'q': q,
             'context': _('Everything'),
             'selected_id': False,
@@ -142,7 +141,7 @@ class DashboardController(uc.UserController):
         c.about_formatted = h.render_markdown(user_dict['about'])
 
     def dashboard_activity_stream(self, user_id, filter_type=None, filter_id=None,
-                              offset=0):
+                                  offset=0):
         '''Return the dashboard activity stream of the current user.
 
         :param user_id: the id of the user
@@ -165,14 +164,13 @@ class DashboardController(uc.UserController):
                 'dataset': 'package_activity_list_html',
                 'user': 'user_activity_list_html',
                 'group': 'group_activity_list_html',
-                'organization': 'organization_activity_list_html' #ADDED BY HDX
+                'organization': 'organization_activity_list_html'  # ADDED BY HDX
             }
             action_function = logic.get_action(action_functions.get(filter_type))
             return action_function(context, {'id': filter_id, 'offset': offset})
         else:
             return logic.get_action('dashboard_activity_list_html')(
                 context, {'offset': offset})
-
 
     def dashboard(self, id=None, offset=0):
         """
@@ -190,7 +188,7 @@ class DashboardController(uc.UserController):
         filter_id = request.params.get('name', u'')
         try:
             if filter_type == 'group':
-                c.group_dict = logic.get_action('organization_show')(context, {'id': filter_id})#patch for db entries
+                c.group_dict = logic.get_action('organization_show')(context, {'id': filter_id})  # patch for db entries
                 if c.group_dict['is_organization']:
                     filter_type = 'organization'
         except:
@@ -211,7 +209,7 @@ class DashboardController(uc.UserController):
         Dashboard tab for datasets. Modified to add the ability to change
         the order and ultimately filter datasets displayed
         """
-        context = {'model': model, 'session': model.Session,'for_view': True, 
+        context = {'model': model, 'session': model.Session, 'for_view': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
         data_dict = {'user_obj': c.userobj}
 
@@ -227,6 +225,8 @@ class DashboardController(uc.UserController):
         c.is_sysadmin = new_authz.is_sysadmin(c.user)
         try:
             user_dict = get_action('hdx_user_show')(context, data_dict)
+            c.active_datasets = [dataset for dataset in user_dict.get('datasets', []) if
+                               dataset.get('state', 'deleted') == 'active']
         except NotFound:
             abort(404, _('User not found'))
         except NotAuthorized:
@@ -234,16 +234,17 @@ class DashboardController(uc.UserController):
         c.user_dict = user_dict
         c.is_myself = user_dict['name'] == c.user
         c.about_formatted = h.render_markdown(user_dict['about'])
-        
-#         c.page = user_dict['total_count']
+
+        #         c.page = user_dict['total_count']
 
         params_nopage = [(k, v) for k, v in request.params.items() if k != 'page']
+
         def pager_url(q=None, page=None):
             params = list(params_nopage)
             params.append(('page', page))
             url = h.url_for('user_dashboard_datasets')
             return package.url_with_params(url, params)
-        
+
         c.page = h.Page(
             collection=[],
             page=page,
@@ -251,5 +252,5 @@ class DashboardController(uc.UserController):
             item_count=user_dict['total_count'],
             items_per_page=limit
         )
-        
+
         return render('user/dashboard_datasets.html')

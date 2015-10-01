@@ -10,7 +10,7 @@ import mock
 import os
 import ckan.lib.helpers as h
 import ckan.model as model
-
+from pylons import config
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
@@ -66,7 +66,6 @@ top_line_items = [
 
 
 class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
-
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin('hdx_org_group hdx_package hdx_theme')
@@ -145,7 +144,8 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     def test_edit_custom_orgs(self):
         url = h.url_for(
-            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='edit', id='hdx-test-org')
+            controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+            action='edit', id='hdx-test-org')
         testsysadmin = model.User.by_name('testsysadmin')
         result = self.app.get(url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert 'id="customization-trigger"' in str(result.response)
@@ -160,22 +160,30 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
                    'user': 'testsysadmin', 'for_view': True,
                    'auth_user_obj': userobj}
         org_dict = self._get_action('group_list')(context, {})
-        cfg = {'org_name':org_dict[0],'screen_cap_asset_selector':'content'}
-        file_path = uploader.get_storage_path() +'/storage/uploads/group/'+cfg['org_name']+'_thumbnail.png'
-        cap = helper.trigger_screencap(file_path, cfg)
-        assert cap == True #No error
-        sleep(5)
-        assert os.path.isfile(file_path) #File exists
-        #Delete file
+        cfg = {'org_name': org_dict[0], 'screen_cap_asset_selector': 'content'}
+        file_path = str(uploader.get_storage_path()) + '/storage/uploads/group/' + cfg.get(
+            'org_name') + '_thumbnail.png'
+        data_dict = {}
+        data_dict['reset_thumbnails'] = 'true'
+        context['reset'] = True
+        context['file_path'] = file_path
+        context['cfg'] = cfg
+        cap = self._get_action('hdx_trigger_screencap')(context, data_dict)
+
+        assert cap == True  # No error
+        # not a great idea. we should move the screencap to a sync method
+        sleep(10)
+        assert os.path.isfile(file_path)  # File exists
+        # Delete file
         os.remove(file_path)
 
     def test_feature_assembly(self):
-        cfg = {u'org_name': u'hdx-test-org', u'highlight_asset_type': u'key figures', u'highlight_asset_id': u'', u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}
+        cfg = {u'org_name': u'hdx-test-org', u'highlight_asset_type': u'key figures', u'highlight_asset_id': u'',
+               u'highlight_asset_row_code': u'', u'screen_cap_asset_selector': u'#map', u'_id': 1}
         userobj = model.User.by_name('testsysadmin')
         context = {'model': model, 'session': model.Session,
                    'user': 'testsysadmin', 'for_view': True,
                    'auth_user_obj': userobj}
-        org_dict = self._get_action('group_show')(context, {'id':'roger'})
+        org_dict = self._get_action('group_show')(context, {'id': 'roger'})
         results = helper.get_featured_org_highlight(context, org_dict, cfg)
         assert results['description'] == "Key Figures"
-        # assert results['link'] in ['/dataset/'+p['name'] for p in org_dict['packages']]

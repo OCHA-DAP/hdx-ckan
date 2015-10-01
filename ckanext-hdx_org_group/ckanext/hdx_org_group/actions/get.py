@@ -15,6 +15,13 @@ import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.controllers.country_controller as ctrlr
 
+import ckan.lib.helpers as helpers
+import ckanext.hdx_org_group.helpers.organization_helper as helper
+
+import shlex
+import subprocess
+import random
+
 json = common.json
 get_action = logic.get_action
 _get_or_bust = logic.get_or_bust
@@ -54,9 +61,9 @@ def hdx_datasets_for_group(context, data_dict):
 
     page = int(data_dict.get('page', 1))
     new_data_dict = {'sort': sort_option,
-                 'rows': limit,
-                 'start': (page-1) * limit,
-                 }
+                     'rows': limit,
+                     'start': (page - 1) * limit,
+                     }
     type = data_dict.get('type', None)
     if type == 'indicators':
         new_data_dict['ext_indicator'] = u'1'
@@ -94,7 +101,7 @@ def hdx_topline_num_for_group(context, data_dict):
     datastore_id = custom_dict.get('topline_resource', None)
 
     if group_info.get('custom_loc', False) and datastore_id:
-        #source is datastore
+        # source is datastore
         crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
         crisis_data_access.fetch_data(context)
         top_line_items = crisis_data_access.get_top_line_items()
@@ -138,7 +145,7 @@ def hdx_light_group_show(context, data_dict):
     group = model.Group.get(id)
     if not group:
         raise NotFound
-    #group_dict['group'] = group
+    # group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
     group_dict['image_url'] = group.image_url
@@ -154,8 +161,8 @@ def hdx_light_group_show(context, data_dict):
         value = dictized["value"]
         result_list.append(dictized)
 
-        #Keeping the above for backwards compatibility
-        group_dict[name]= dictized["value"]
+        # Keeping the above for backwards compatibility
+        group_dict[name] = dictized["value"]
 
     group_dict['extras'] = sorted(result_list, key=lambda x: x["key"])
     return group_dict
@@ -177,3 +184,30 @@ def get_group(id):
         custom_dict = {}
 
     return group_info, custom_dict
+
+
+@logic.side_effect_free
+def hdx_trigger_screencap(context, data_dict):
+    cfg = context['cfg']
+    file_path = context['file_path']
+    # checking if user is sysadmin
+    sysadmin = False
+    if data_dict.get('reset_thumbnails', 'false') == 'true':
+        try:
+            logic.check_access('hdx_trigger_screencap', context, data_dict)
+            sysadmin = True
+        except:
+            return False
+    if not sysadmin and not context.get('reset', False):
+        return False
+    if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
+        return False
+    try:
+        command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
+            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
+        print command
+        args = shlex.split(command)
+        subprocess.Popen(args)
+        return True
+    except:
+        return False
