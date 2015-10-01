@@ -66,12 +66,12 @@ class HDXOrganizationController(org.OrganizationController):
 
         c.featured_orgs = helper.get_featured_orgs(c.user, c.userobj, reset_thumbnails)
 
-        def pager_url(q=None, page=None):
+        def pager_url(page=None):
             if sort_option:
                 url = h.url_for(
-                    'organizations_index', page=page, sort=sort_option, limit=limit)
+                    'organizations_index', q=q, page=page, sort=sort_option, limit=limit)+'#organisations'
             else:
-                url = h.url_for('organizations_index', page=page, limit=limit)
+                url = h.url_for('organizations_index', q=q, page=page, limit=limit)+'#organisations'
             return url
 
         c.page = h.Page(
