@@ -78,7 +78,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         search_str = '/services'
         spatial_url = config.get('hdx.gis.resource_pbf_url', '')
         url_index = spatial_url.find(search_str)
-        spatial_check_url = spatial_url[0:url_index+len(search_str)] + '/tables'
+        spatial_check_url = spatial_url[0:url_index+len(search_str)]
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
 
     def before_map(self, map):

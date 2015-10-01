@@ -18,7 +18,7 @@
     "module_name": "ckanext.hdx_service_checker.checks.checks",
     "class_name": "HttpResponseTextCheck",
     "url": "#{hdx_checks.spatial_checks_url}",
-    "included_text": "pre_"
+    "included_text": "geoprocessing"
   },
   {
     "name": "Redis monitor check (includes redis and worker)",
