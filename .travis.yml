@@ -1,9 +1,10 @@
 sudo: required
 
-services:
-  - docker
+#services:
+#  - docker
 
 before_install:
+  - curl -sSL https://get.docker.com/ | sudo sh
   - sudo pip install docker-compose
 
 script:
