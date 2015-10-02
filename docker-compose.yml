@@ -1,0 +1,32 @@
+# copyleft 2015 teodorescu.serban@gmail.com
+
+################################################
+
+solr:
+  image: ${HDX_IMG_BASE}solr:latest
+  hostname: solr
+
+dbckan:
+  image: ${HDX_IMG_BASE}psql-ckan:latest
+  hostname: dbckan
+
+ckan:
+  image: ${HDX_IMG_BASE}ckan:latest
+  hostname: ckan
+  environment:
+    - HDX_CKAN_API_KEY=${HDX_CKAN_API_KEY}
+    - HDX_CKAN_BRANCH=${HDX_CKAN_BRANCH}
+    - HDX_CKAN_RECAPTCHA_KEY=${HDX_CKAN_RECAPTCHA_KEY}
+    - HDX_CKANDB_ADDR=db
+    - HDX_CKANDB_PORT=5432
+    - HDX_CKANDB_DB=${HDX_CKANDB_DB}
+    - HDX_CKANDB_USER=${HDX_CKANDB_USER}
+    - HDX_CKANDB_PASS=${HDX_CKANDB_PASS}
+    - HDX_CKANDB_USER_DATASTORE=${HDX_CKANDB_USER_DATASTORE}
+    - HDX_CKANDB_DB_DATASTORE=${HDX_CKANDB_DB_DATASTORE}
+    - HDX_DOMAIN=${HDX_DOMAIN}
+    - HDX_FILESTORE=/srv/filestore
+    - HDX_PREFIX=${HDX_PREFIX}
+    - HDX_SOLR_ADDR=solr
+    - HDX_SOLR_PORT=5893
+    - HDX_TYPE=${HDX_TYPE}
