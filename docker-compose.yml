@@ -6,13 +6,16 @@ solr:
   image: ${HDX_IMG_BASE}solr:latest
   hostname: solr
 
-dbckan:
+db:
   image: ${HDX_IMG_BASE}psql-ckan:latest
-  hostname: dbckan
+  hostname: db
 
 ckan:
   image: ${HDX_IMG_BASE}ckan:latest
   hostname: ckan
+  links:
+    - solr
+    - db
   environment:
     - HDX_CKAN_API_KEY=${HDX_CKAN_API_KEY}
     - HDX_CKAN_BRANCH=${HDX_CKAN_BRANCH}
