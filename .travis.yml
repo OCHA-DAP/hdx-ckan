@@ -1,11 +1,11 @@
 sudo: required
 
-#services:
-#  - docker
+services:
+  - docker
 
 before_install:
-  - sudo apt-get install -y linux-image-virtual linux-image-extra-virtual
-  - curl -sSL https://get.docker.com/ | sudo sh
+#  - sudo apt-get install -y linux-image-virtual linux-image-extra-virtual
+#  - curl -sSL https://get.docker.com/ | sudo sh
   - sudo pip install docker-compose
 
 script:
@@ -15,7 +15,8 @@ script:
   - docker-compose ps
   - docker-compose up -d ckan
   - docker-compose ps
-  - sudo docker exec -t hdxckan_ckan_1 ls
+#  - sudo docker exec -t hdxckan_ckan_1 ls
+  - docker ps
 #  - docker exec -t hdxckan_ckan_1 hdxckantool update
 #  - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
 #  - docker exec -t hdxckan_ckan_1 hdxckantool test
