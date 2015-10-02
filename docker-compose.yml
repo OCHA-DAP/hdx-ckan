@@ -16,6 +16,8 @@ ckan:
   links:
     - solr
     - db
+  volumes:
+    - ".:/srv/ckan"
   environment:
     - HDX_CKAN_API_KEY=${HDX_CKAN_API_KEY}
     - HDX_CKAN_BRANCH=${HDX_CKAN_BRANCH}

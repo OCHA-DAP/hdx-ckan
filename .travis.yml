@@ -7,10 +7,14 @@ before_install:
   - sudo pip install docker-compose
 
 script:
-  - ls -lah
-  - pwd
-  - docker-compose up -d db solr
-  - docker-compose ps
+#  - ls -lah
+#  - pwd
+#  - docker-compose up -d db solr
+#  - docker-compose ps
+  - docker-compose up -d ckan
+  - docker exec hdxckan_ckan_1 hdxckantool update
+  - docker exec hdxckan_ckan_1 hdxckantool plugins dev
+  - docker exec hdxckan_ckan_1 hdxckantool test
 
 #  - docker exec dockerpgbackups_dbbackup_1 ls
 #  - docker exec dockerpgbackups_dbbackup_1 date --set="2012-6-29 10:59.59 PM"
