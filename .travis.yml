@@ -13,7 +13,7 @@ script:
   - docker-compose ps
   - docker-compose up -d ckan
   - docker-compose ps
-  - docker exec -t hdxckan_ckan_1 ls
+  - sudo docker exec -t hdxckan_ckan_1 ls
 #  - docker exec -t hdxckan_ckan_1 hdxckantool update
 #  - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
 #  - docker exec -t hdxckan_ckan_1 hdxckantool test
