@@ -12,7 +12,7 @@ script:
 #  - ls -lah
 #  - pwd
 #  - docker-compose up -d db solr
-  - docker-compose ps
+#  - docker-compose ps
   - docker-compose up -d ckan
   - docker-compose ps
 #  - sudo docker exec -t hdxckan_ckan_1 ls

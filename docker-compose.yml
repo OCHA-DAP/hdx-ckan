@@ -13,6 +13,7 @@ db:
 ckan:
   image: teodorescuserban/hdx-ckan:latest
   hostname: ckan
+  privileged: true
   links:
     - solr
     - db
