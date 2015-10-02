@@ -3,15 +3,15 @@
 ################################################
 
 solr:
-  image: ${HDX_IMG_BASE}solr:latest
+  image: teodorescuserban/hdx-solr:latest
   hostname: solr
 
 db:
-  image: ${HDX_IMG_BASE}psql-ckan:latest
+  image: teodorescuserban/hdx-psql-ckan:latest
   hostname: db
 
 ckan:
-  image: ${HDX_IMG_BASE}ckan:latest
+  image: teodorescuserban/hdx-ckan:latest
   hostname: ckan
   links:
     - solr

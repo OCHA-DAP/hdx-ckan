@@ -8,7 +8,7 @@ before_install:
 
 script:
   - ls -lah
-  - export HDX_IMG_BASE=teodorescuserban/hdx-
+  - pwd
   - docker-compose up -d db solr
   - docker-compose ps
 
