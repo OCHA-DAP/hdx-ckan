@@ -1,7 +1,7 @@
 #
 # ckan - Pylons testing environment configuration
 #
-###
+####
 [server:main]
 use = egg:Paste#http
 host = 0.0.0.0
