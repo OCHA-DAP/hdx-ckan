@@ -3,6 +3,10 @@
 {% set res = c.resource %}
 {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
 
+{# The line below is for google analytics #}
+{% block ga_dimension1 %}{{ c.package.organization.title }}{% endblock %}
+{% block ga_dimension2 %}{{ c.ga_dataset_type }}{% endblock %}
+
 {% block head_extras -%}
   {{ super() }}
   {% set description = h.markdown_extract(res.description, extract_length=200) if res.description else h.markdown_extract(c.package.notes, extract_length=200) %}
@@ -37,7 +41,7 @@
             {% endif %}
             {% if res.url and h.is_url(res.url) %}
               <li>
-                <a class="btn hdx-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
+                <a class="btn hdx-btn ga-download resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}

@@ -678,6 +678,9 @@ class DatasetController(PackageController):
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
 
+        # set dataset type for google analytics - modified by HDX
+        c.ga_dataset_type = self._determine_dataset_type(c.pkg_dict)
+
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
         c.hdx_activities = get_action(
@@ -734,6 +737,17 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    def _determine_dataset_type(self, pkg_dict):
+        type = 'default'
+        tags = [tag.get('name', '') for tag in pkg_dict.get('tags', [])]
+
+        if int(pkg_dict.get('indicator', 0)) == 1:
+            type = 'indicator'
+        if 'cod' in tags:
+            type = 'cod-'+type
+
+        return type
 
     def _get_org_extras(self, org_id):
         """
@@ -1038,6 +1052,9 @@ class DatasetController(PackageController):
         resource_views = get_action('resource_view_list')(
             context, {'id': resource_id})
         c.resource['has_views'] = len(resource_views) > 0
+
+        # set dataset type for google analytics - modified by HDX
+        c.ga_dataset_type = self._determine_dataset_type(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')
