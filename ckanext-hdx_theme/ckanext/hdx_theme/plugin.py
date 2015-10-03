@@ -176,7 +176,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'cached_group_list': hdx_actions.cached_group_list,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
-            'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
+            # 'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
             'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
