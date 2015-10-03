@@ -2,8 +2,10 @@
 
 function setUpResourcesTracking(){
   $('.ga-download').on('click', function(){
-    var rTitle = $(this).parents(".resource-item").find(".heading").attr("title");
-    var dTitle = $(".itemTitle").text().trim();
+    //var rTitle = $(this).parents(".resource-item").find(".heading").attr("title");
+    //var dTitle = $(".itemTitle").text().trim();
+    var rTitle = $(this).find(".ga-download-resource-title").text().trim();
+    var dTitle = $(this).find(".ga-download-dataset-title").text().trim();
     ga('send', 'event', 'resource', 'download', rTitle + " (" + dTitle +")");
     ga('send', 'event', 'dataset', 'resource-download', dTitle);
   });

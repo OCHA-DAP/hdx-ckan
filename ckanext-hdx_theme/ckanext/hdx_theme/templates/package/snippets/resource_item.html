@@ -67,6 +67,8 @@
 
             <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
+                <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
+                <span class="ga-download-dataset-title" style="display: none">{{ pkg.title }}</span>
             </a>
 
             {% set button_id = 'social-btn-' + res.id %}
