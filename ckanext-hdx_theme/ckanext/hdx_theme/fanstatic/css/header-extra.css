@@ -441,61 +441,6 @@
     
 /* END Common Classes */
 
-/* Label style (eg. tags) */
-    .label{
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        color: #FFFFFF;
-        display: inline-block;
-        margin-right: 6px;
-        margin-bottom: 4px;
-        padding: 3px 10px;
-        text-transform: uppercase;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 20px;
-        min-width: 0;
-        vertical-align: middle;
-    }
-
-    .label.label-small{
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 9px;
-        letter-spacing: 0.01em;
-        line-height: 16px;
-        margin-right: 0;
-        padding: 0 5px;
-        margin-bottom: 3px;
-    }
-
-    /* Pill styling - seem to be the similar to labels, but gray and with a button*/
-        .pill {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #ffffff;
-            text-transform: uppercase;
-
-            padding: 5px 15px;
-            margin-right: 20px;
-            margin-bottom: 20px;
-
-            background-color: #888888;
-            border-radius: 0;
-        }
-
-        .pill .icon-remove, .pill .glyphicon-remove {
-            cursor: pointer;
-            margin-left: 20px;
-
-        }
-    /* END Pill styling */
-
-/* END Label style */
-
 /* Style Select2 Dropdown */
     .select2-container {
         display: block;
@@ -929,10 +874,6 @@ span.is-more a.more-link, .more-link {
         margin: 0;
         list-style: none;
     }
-    .dataset-resources {
-        margin-top: 8px;
-        padding: 0;
-    }
 
 /* END FIX Org Page */
 
@@ -950,9 +891,9 @@ span.is-more a.more-link, .more-link {
 /* END OLD Resource Edit Form*/
 
 .alert-error {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
 }
 
 .secondary .simple-input .field .btn-search {

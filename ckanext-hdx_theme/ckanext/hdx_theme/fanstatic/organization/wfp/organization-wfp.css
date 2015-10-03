@@ -551,6 +551,9 @@ a:focus,
 }
 /* END Button style*/
 /* Order DropDown style */
+.control-order-by {
+  float: right;
+}
 .control-order-by label {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
@@ -587,6 +590,516 @@ a:focus,
   color: #005299;
 }
 /* END DropDown style */
+.ckan-icon {
+  display: inline-block;
+  vertical-align: text-bottom;
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-repeat: no-repeat;
+  background-position: 16px 16px;
+}
+/* Style dataset labels */
+.dataset-resources {
+  margin-top: 8px;
+  padding: 0;
+}
+.dataset-resources li {
+  display: inline;
+}
+.dataset-resources li a {
+  background-color: #aaaaaa;
+}
+/* Label style (eg. tags) */
+.label {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  color: #FFFFFF;
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  min-width: 0;
+  vertical-align: middle;
+}
+.label.label-small {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.01em;
+  line-height: 16px;
+  margin-right: 0;
+  padding: 0 5px;
+  margin-bottom: 3px;
+}
+/* Pill styling - seem to be the similar to labels, but gray and with a button*/
+.pill {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  text-transform: uppercase;
+  padding: 5px 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background-color: #888888;
+  border-radius: 0;
+}
+.pill .icon-remove,
+.pill .glyphicon-remove {
+  cursor: pointer;
+  margin-left: 20px;
+}
+/* END Pill styling */
+/* END Label style */
+.label[data-format=html],
+.label[data-format*=html] {
+  background-color: #55a1ce;
+}
+.label[data-format=json],
+.label[data-format*=json] {
+  background-color: #ef7100;
+}
+.label[data-format=xml],
+.label[data-format*=xml] {
+  background-color: #ef7100;
+}
+.label[data-format=text],
+.label[data-format*=text] {
+  background-color: #74cbec;
+}
+.label[data-format=csv],
+.label[data-format*=csv] {
+  background-color: #dfb100;
+}
+.label[data-format=xls],
+.label[data-format*=xls] {
+  background-color: #2db55d;
+}
+.label[data-format=zip],
+.label[data-format*=zip] {
+  background-color: #686868;
+}
+.label[data-format=api],
+.label[data-format*=api] {
+  background-color: #ec96be;
+}
+.label[data-format=pdf],
+.label[data-format*=pdf] {
+  background-color: #e0051e;
+}
+.label[data-format=rdf],
+.label[data-format*=rdf],
+.label[data-format*=nquad],
+.label[data-format*=ntriples],
+.label[data-format*=turtle] {
+  background-color: #0b4498;
+}
+/* END Style dataset labels */
+.resource-item {
+  position: relative;
+  padding: 10px 10px 10px 60px;
+  margin-bottom: 0px;
+}
+.resource-item .format-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.format-label {
+  display: inline-block;
+  vertical-align: text-bottom;
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-repeat: no-repeat;
+  background-position: 16px 16px;
+  text-indent: -900em;
+  background: url("../../../../base/images/sprite-resource-icons.png") no-repeat 0 0;
+}
+.format-label {
+  width: 32px;
+  height: 35px;
+  background-position: 0px -62px;
+}
+.format-label[data-format=rdf],
+.format-label[data-format*=rdf] {
+  width: 32px;
+  height: 35px;
+  background-position: -32px -62px;
+}
+.format-label[data-format=pdf],
+.format-label[data-format*=pdf] {
+  width: 32px;
+  height: 35px;
+  background-position: -64px -62px;
+}
+.format-label[data-format=api],
+.format-label[data-format*=api] {
+  width: 32px;
+  height: 35px;
+  background-position: -96px -62px;
+}
+.format-label[data-format=zip],
+.format-label[data-format*=zip] {
+  width: 32px;
+  height: 35px;
+  background-position: -128px -62px;
+}
+.format-label[data-format=xls],
+.format-label[data-format*=xls] {
+  width: 32px;
+  height: 35px;
+  background-position: -160px -62px;
+}
+.format-label[data-format=csv],
+.format-label[data-format*=csv] {
+  width: 32px;
+  height: 35px;
+  background-position: -192px -62px;
+}
+.format-label[data-format=txt],
+.format-label[data-format*=txt] {
+  width: 32px;
+  height: 35px;
+  background-position: -224px -62px;
+}
+.format-label[data-format=xml],
+.format-label[data-format*=xml] {
+  width: 32px;
+  height: 35px;
+  background-position: -256px -62px;
+}
+.format-label[data-format=json],
+.format-label[data-format*=json] {
+  width: 32px;
+  height: 35px;
+  background-position: -288px -62px;
+}
+.format-label[data-format=html],
+.format-label[data-format*=html] {
+  width: 32px;
+  height: 35px;
+  background-position: -320px -62px;
+}
+/*These styles will be probably be deprecated after next sprint*/
+/* style the filter items present in the left side dark section*/
+.secondary .nav-simple .nav-item {
+  padding: 0;
+  margin: 0;
+}
+.secondary .nav-simple .nav-item.active {
+  background-color: #8ca0a6;
+}
+.secondary .nav-simple .nav-item.active a:after {
+  content: "x";
+  float: right;
+}
+/* END style the filter items present in the left side dark section*/
+/* style search form present in the dataset lists*/
+.search-form {
+  margin-bottom: 20px;
+  padding-bottom: 25px;
+}
+.search-form .search-input {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-form .search-input input {
+  margin: 0;
+  width: 100%;
+  height: auto;
+}
+.search-form .search-input button {
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  right: 10px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+.search-form .search-input button span {
+  display: none;
+}
+.search-form .search-input.search-giant input {
+  font-size: 16px;
+  padding: 15px;
+}
+.search-form .search-input.search-giant button {
+  margin-top: -15px;
+  right: 15px;
+  height: 30px;
+}
+.search-form .search-input.search-giant button i {
+  font-size: 28px;
+  width: 28px;
+}
+.search-form .control-order-by label,
+.search-form .control-order-by select {
+  display: inline;
+}
+.search-form .control-order-by select {
+  width: 160px;
+  margin: 0;
+}
+.search-form h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+.search-form .filter-list {
+  line-height: 32px;
+  margin: 10px 0 0 0;
+}
+.search-form .filter-list .pill {
+  line-height: 21px;
+}
+.search-form .filter-list .extra {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: normal;
+}
+.search-form.no-bottom-border {
+  border-bottom-width: 0;
+  margin-bottom: 0;
+}
+/* END style search form*/
+.js .js-hide {
+  display: none;
+}
+.js .js-hide.active {
+  display: block;
+}
+.btn,
+label {
+  font-weight: bold;
+}
+label {
+  cursor: pointer;
+  font-size: 14px;
+}
+label:after {
+  content: ":";
+}
+label.radio:after,
+label.checkbox:after {
+  content: "";
+}
+input[type=radio],
+input[type=checkbox] {
+  position: relative;
+  top: 7px;
+  padding: 0;
+  margin: 0;
+}
+input[type=radio].checkbox-onown,
+input[type=checkbox].checkbox-onown {
+  top: 0;
+}
+select {
+  padding: 4px;
+}
+textarea {
+  max-width: 100%;
+}
+.control-group .btn {
+  position: relative;
+  top: -2px;
+}
+.control-full input,
+.control-full select,
+.control-full textarea {
+  height: auto;
+  width: 100%;
+}
+.control-medium input,
+.control-medium select,
+.control-medium textarea {
+  width: 320px;
+}
+@media (max-width: 768px) {
+  .control-medium input,
+  .control-medium select,
+  .control-medium textarea {
+    width: 100%;
+    min-height: 28px;
+  }
+}
+.form-actions .control-required-message {
+  float: left;
+  margin-left: 20px;
+  margin-bottom: 0;
+  line-height: 30px;
+}
+.form-actions .control-required-message:first-child {
+  margin-left: 0;
+}
+.form-actions {
+  background: none;
+  margin-left: -25px;
+  margin-right: -25px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+@media (min-width: 768px) {
+  .form-actions {
+    text-align: right;
+  }
+}
+.form-horizontal .control-label {
+  width: 120px;
+}
+.form-horizontal .controls {
+  margin-left: 130px;
+}
+.form-horizontal .control-medium .info-block.info-inline {
+  width: 165px;
+}
+.form-horizontal .info-block:before {
+  font-size: 2.2em;
+  position: absolute;
+  left: 0;
+  top: 2px;
+}
+.form-horizontal .info-inline:before {
+  top: 8px;
+}
+.info-block .icon-large,
+.info-inline .icon-large {
+  float: left;
+  font-size: 22px;
+  margin-right: 15px;
+}
+.form-horizontal .form-actions {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+.form-inline input {
+  padding-bottom: 9px;
+}
+.form-inline select {
+  margin-top: 0;
+}
+.form-inline .btn {
+  margin-left: 5px;
+}
+.form-narrow label {
+  margin-bottom: 0;
+}
+.form-narrow select {
+  width: 100%;
+}
+.form-narrow .form-actions {
+  margin-left: -15px;
+  margin-right: -15px;
+  padding: 10px 15px 0;
+}
+.form-select label {
+  margin-right: 5px;
+}
+.simple-input label,
+.simple-input button {
+  display: none;
+}
+.simple-input .field {
+  position: relative;
+}
+.simple-input .field input {
+  width: 100%;
+  height: auto;
+  margin: 0 -7px;
+  padding: 7px 5px;
+}
+.simple-input .field .btn-search {
+  position: absolute;
+  display: block;
+  height: 17px;
+  width: 17px;
+  padding: 0;
+  top: 50%;
+  right: 0;
+  margin-top: -10px;
+  background-color: transparent;
+  border: none;
+  color: #999;
+}
+.simple-input .field .btn-search:hover {
+  color: #000;
+}
+.editor textarea {
+  border-radius: 3px 3px 0 0;
+  border-bottom: none;
+}
+.editor .editor-info-block {
+  border-radius: 3px 3px 0 0;
+  display: block;
+  float: none;
+  padding: 4px 10px;
+  background: #ebebeb;
+  width: auto;
+  border: 1px solid #cccccc;
+  border-top: none;
+  font-size: 11px;
+  color: #282828;
+}
+.editor .editor-info-block a {
+  text-decoration: none;
+}
+@media (max-width: 768px) {
+  [data-module="custom-fields"] .input-prepend .add-on {
+    display: block;
+  }
+}
+@media (max-width: 480px) {
+  [data-module="custom-fields"] .input-prepend {
+    width: 100%;
+  }
+  [data-module="custom-fields"] .control-custom input {
+    width: 100%;
+    min-height: 28px;
+  }
+}
+.control-medium .error-block {
+  width: 318px;
+}
+.control-full .error-block {
+  width: auto;
+}
+.control-group.error .input-prepend .error-block,
+.control-custom.error .error-block {
+  width: auto;
+}
+.control-custom.error .error-block {
+  width: 401px;
+}
+.control-select.error .error-block {
+  width: 196px;
+}
+.control-full .select2-container {
+  max-width: 100%;
+}
+.btn-mini {
+  padding: 0 6px;
+  font-size: 10.5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
 /* Body Background */
 body {
   background-size: cover;
@@ -596,6 +1109,30 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 /* END Body Background */
+h1 {
+  font-size: 28px;
+}
+h2 {
+  font-size: 21px;
+}
+h3 {
+  font-size: 18px;
+}
+h4 {
+  font-size: 14px;
+}
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.5;
+}
+h1 small,
+h2 small,
+h3 small,
+h4 small {
+  font-size: 14px;
+}
 .newHeader .header-user-box,
 .newHeader .header-user-box > span > a {
   font-family: 'Gotham-Bold', sans-serif;
@@ -682,7 +1219,6 @@ body {
   line-height: 28px;
 }
 .header-nav-search .header-search-form .filter-icon {
-  margin-right: 20px;
   visibility: hidden;
   color: #007ce0;
   font-size: 20px;
@@ -832,15 +1368,31 @@ body {
   padding: 0;
 }
 .toolbarRow .toolbar .breadcrumb {
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #888888;
   line-height: 20px;
   text-transform: uppercase;
 }
 .toolbarRow .toolbar .breadcrumb > li {
   text-shadow: none;
+}
+.toolbarRow .toolbar .breadcrumb > li:after {
+  content: " / ";
+}
+.toolbarRow .toolbar .breadcrumb > li.active:after {
+  content: "";
+}
+.toolbarRow .toolbar .breadcrumb > li.active a {
+  color: #333333;
+  font-weight: bold;
+}
+.toolbarRow .toolbar .breadcrumb > li a {
+  color: #333333;
 }
 .toolbarRow .toolbar .breadcrumb > li + li::before {
   content: "";
@@ -1126,6 +1678,42 @@ ul.hdx-bs3 {
   padding-top: 3px;
 }
 /* END Style dataset icons */
+/* Style Dashboard - Newsfeed list */
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+  background: transparent url('../../../../base/images/dotted.png') 14px 0 repeat-y;
+}
+.activity .load-less {
+  margin-bottom: 15px;
+}
+.activity .item .actor .gravatar {
+  position: absolute;
+  top: 0;
+  left: 40px;
+  border-radius: 100px;
+}
+/* END Style Dashboard - Newsfeed list */
+.hide-heading {
+  display: none;
+}
+/* Style Sysadmin settings*/
+.user-list {
+  margin: 0;
+  list-style: none;
+}
+.user-list li {
+  margin: 0 0 10px 0;
+}
+.user-list .gravatar {
+  vertical-align: -4px;
+  margin-right: 3px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+}
+/* END Style Sysadmin settings*/
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;

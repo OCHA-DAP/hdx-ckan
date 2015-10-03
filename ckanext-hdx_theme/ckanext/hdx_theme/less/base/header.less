@@ -11,6 +11,12 @@
 @import "tabs"; //used in a lot of places
 @import "buttons";
 @import "orderby";
+@import "dataset-labels";
+
+//Do remove :)
+@import "deprecated";
+@import "forms-deprecated";
+
 
 @hdxLogoUrl: "@{imagePath}/homepage/logo-beta.svg";
 
@@ -47,6 +53,31 @@
   color: @searchPlaceholderColor;
   .sourceSansProFont(400, 18px);
   line-height: 28px;
+}
+
+h1 {
+  font-size: 28px;
+}
+h2 {
+  font-size: 21px;
+}
+h3 {
+  font-size: 18px;
+}
+h4 {
+  font-size: 14px;
+}
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.5;
+}
+h1 small,
+h2 small,
+h3 small,
+h4 small {
+  font-size: 14px;
 }
 
 .newHeader{
@@ -148,7 +179,7 @@
     }
 
     .filter-icon{
-      margin-right: 20px;
+      //margin-right: 20px;
       visibility: hidden;
 
       color: @blueColor;
@@ -314,12 +345,30 @@
     padding: 0;
 
     .breadcrumb{
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
       .sourceSansProFont(400, 12px);
-      color: @grayColor;
       line-height: @toolbarHeight;
       .uppercase;
       > li {
         text-shadow: none;
+        &:after{
+          content: " / ";
+        }
+        &.active {
+          &:after{
+            content: "";
+          }
+          a {
+            color: @darkGrayColor;
+            font-weight: bold;
+          }
+        }
+        a {
+          color: @darkGrayColor;
+        }
       }
       > li + li::before {
         content: "";
@@ -631,3 +680,48 @@
   padding-top: 3px;
 }
 /* END Style dataset icons */
+
+/* Style Dashboard - Newsfeed list */
+
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+  background: transparent url('../../../../base/images/dotted.png') 14px 0 repeat-y;
+
+  .load-less{
+    margin-bottom: 15px;
+  }
+
+  .item .actor .gravatar {
+    position: absolute;
+    top: 0;
+    left: 40px;
+    border-radius: 100px;
+  }
+}
+/* END Style Dashboard - Newsfeed list */
+
+.hide-heading {
+    display: none;
+}
+
+/* Style Sysadmin settings*/
+.user-list {
+  margin: 0;
+  list-style: none;
+
+  li {
+    margin: 0 0 10px 0;
+  }
+
+  .gravatar {
+    vertical-align: -4px;
+    margin-right: 3px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+  }
+}
+/* END Style Sysadmin settings*/
+
