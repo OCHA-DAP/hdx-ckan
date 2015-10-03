@@ -355,6 +355,11 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     if group is None:
         raise NotFound('Group was not found.')
 
+    if is_org:
+        check_access('organization_update', context, data_dict)
+    else:
+        check_access('group_update', context, data_dict)
+
     # get the schema
     group_plugin = lib_plugins.lookup_group_plugin(group.type)
     try:
@@ -422,11 +427,6 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
 
     data_dict['customization'] = json.dumps(data_dict['customization'])
-
-    if is_org:
-        check_access('organization_update', context, data_dict)
-    else:
-        check_access('group_update', context, data_dict)
 
     if 'api_version' not in context:
         # old plugins do not support passing the schema so we need
