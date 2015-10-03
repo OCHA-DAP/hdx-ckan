@@ -303,41 +303,31 @@ def remove_image(filename):
 
 
 def hdx_group_create(context, data_dict):
-    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.create.group_create(context, data_dict)
-    if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-    return result
+    return _run_core_group_org_action(context, data_dict, core.create.group_create)
 
 
 def hdx_group_update(context, data_dict):
-    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.update.group_update(context, data_dict)
-    if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-    return result
+    return _run_core_group_org_action(context, data_dict, core.update.group_update)
 
 
 def hdx_group_delete(context, data_dict):
-    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.delete.group_delete(context, data_dict)
-    if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-    return result
+    return _run_core_group_org_action(context, data_dict, core.delete.group_delete)
 
 
 def hdx_organization_create(context, data_dict):
-    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.create.organization_create(context, data_dict)
-    if not test:
-        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
-
-    return result
+    return _run_core_group_org_action(context, data_dict, core.create.organization_create)
 
 
 def hdx_organization_delete(context, data_dict):
+    return _run_core_group_org_action(context, data_dict, core.delete.organization_delete)
+
+
+def _run_core_group_org_action(context, data_dict, core_action):
+    '''
+    Runs core ckan action with lunr update
+    '''
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
-    result = core.delete.organization_delete(context, data_dict)
+    result = core_action(context, data_dict)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     return result
