@@ -341,22 +341,22 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema}
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
-        # try:
-        #     captcha_response = data_dict.get('g-recaptcha-response', None)
-        #     if not self.is_valid_captcha(response=captcha_response):
-        #         raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
-        #     check_access('user_update', context, data_dict)
-        # except NotAuthorized:
-        #     return OnbNotAuth
-        # except ValidationError, e:
-        #     error_summary = e.error_summary
-        #     if error_summary == CaptchaNotValid:
-        #         return OnbCaptchaErr
-        #     return self.error_message(error_summary)
-        # except exceptions.Exception, e:
-        #     error_summary = e.error_summary
-        #     return self.error_message(error_summary)
-        # # hack to disable check if user is logged in
+        try:
+            captcha_response = data_dict.get('g-recaptcha-response', None)
+            if not self.is_valid_captcha(response=captcha_response):
+                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            check_access('user_update', context, data_dict)
+        except NotAuthorized:
+            return OnbNotAuth
+        except ValidationError, e:
+            error_summary = e.error_summary
+            if error_summary == CaptchaNotValid:
+                return OnbCaptchaErr
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+        # hack to disable check if user is logged in
         save_user = c.user
         c.user = None
         try:
