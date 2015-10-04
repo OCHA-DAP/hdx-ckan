@@ -113,24 +113,6 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         token = umodel.ValidationToken.get(user.id)
         assert token
 
-    def test_token_update_action(self):
-        res = self._create_user()
-        user = model.User.get('valid@example.com')
-        token = umodel.ValidationToken.get(user.id)
-        admin = model.User.by_name('testsysadmin')
-        allowed = tests.call_action_api(self.app, 'token_update', token=token.token, apikey=admin.apikey,
-                              status=200)
-        assert allowed['valid']
-    
-    def test_token_update_action_fails(self):
-        res = self._create_user()
-        user = model.User.get('valid@example.com')
-        token = umodel.ValidationToken.get(user.id)
-        not_this_user = model.User.by_name('tester')
-        allowed = tests.call_action_api(self.app, 'token_update', token=token.token, apikey=not_this_user.apikey,
-                              status=403)
-        assert 'Access denied' in allowed['message']
-
 
     def test_delete_user(self):
         res = self._create_user()

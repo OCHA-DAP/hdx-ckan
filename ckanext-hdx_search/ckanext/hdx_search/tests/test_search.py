@@ -85,7 +85,7 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
                      'user': user.name, 'auth_user_obj': user}
         query = tests.call_action_api(self.app, 'package_search', q='test')
         populate = actions.populate_related_items_count(context,{'pkg_dict_list':query['results']})
-        assert not populate
+        assert populate[0]['related_count'] >= 0
 
         # Not using the hdx_actions.package_search anymore so commenting this test out
 

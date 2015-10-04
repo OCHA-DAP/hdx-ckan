@@ -18,3 +18,4 @@ def populate_related_items_count(context, data_dict):
         _check_access('package_show',context, pkg_dict)
         rel_items = get_action('related_list')(context, {'id': pkg_dict['id']})
         pkg_dict['related_count'] = len(rel_items)
+    return pkg_dict_list
