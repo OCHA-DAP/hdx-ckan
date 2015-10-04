@@ -1,0 +1,36 @@
+[
+  {
+    "name": "CPS check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx.rest.indicator.endpoint}?l=ROU",
+    "included_text": "indicatorTypeName"
+  },
+  {
+    "name": "Dataproxy check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx.datapreview.url}",
+    "included_text": "read the dataproxy API"
+  },
+  {
+    "name": "Spatial server check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx_checks.spatial_checks_url}",
+    "included_text": "geoprocessing"
+  },
+  {
+    "name": "Redis monitor check (includes redis and worker)",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx_checks.gis_layer_base_url}/monitor/workers.json",
+    "included_text": "\"state\""
+  },
+  {
+    "name": "GIS Layer remote check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "ProxyForRemoteCheck",
+    "url": "#{hdx_checks.gis_layer_base_url}/api/run-checks"
+  }
+]

@@ -24,8 +24,5 @@
     {% if popular %}
       <span class="icon-fire" title="{{ _('Popular: ') }} {{ package.tracking_summary.total }}{{ _(' downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
     {% endif %}
-    {% if package.private and show_private %}
-       <span class="glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-    {% endif %}
   </li>
 {% endif %}
