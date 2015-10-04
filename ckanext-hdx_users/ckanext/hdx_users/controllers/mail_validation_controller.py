@@ -234,6 +234,7 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema, 'save': 'save' in request.params}
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
         if 'email' in data_dict:
+            data_dict['email'] = data_dict['email'].lower() #force all emails to be lowercase
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
             data_dict['name'] = md5.hexdigest()
