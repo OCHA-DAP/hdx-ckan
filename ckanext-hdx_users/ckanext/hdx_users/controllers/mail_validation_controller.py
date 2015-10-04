@@ -362,7 +362,7 @@ class ValidationController(ckan.controllers.user.UserController):
             token_dict = tokens.token_show(context, data_dict)
             data_dict['token'] = token_dict['token']
             get_action('user_update')(context, data_dict)
-            get_action('token_update')(context, data_dict)
+            tokens.token_update(context, data_dict)
 
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
             get_action('user_extra_update')(context, ue_dict)
