@@ -27,7 +27,7 @@ script:
   - docker exec -t hdxckan_ckan_1 hdxckantool update
   - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
   - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
-  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && paster db create -c /srv/prod.ini"
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan; paster db upgrade -c /srv/prod.ini"
   - docker exec -t hdxckan_ckan_1 hdxckantool feature
   - docker exec -t hdxckan_ckan_1 hdxckantool less compile
   - docker exec -t hdxckan_ckan_1 hdxckantool restart
