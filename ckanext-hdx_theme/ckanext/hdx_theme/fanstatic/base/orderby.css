@@ -7,6 +7,9 @@
   vertical-align: middle;
 }
 /* Order DropDown style */
+.control-order-by {
+  float: right;
+}
 .control-order-by label {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;

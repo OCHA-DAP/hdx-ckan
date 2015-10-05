@@ -1,7 +1,11 @@
 /* Style Resources List */
-.resource-item .description{
-	text-align: justify;
-	max-width: 450px;
-}
+    .resource-list{
+        list-style: none;
+    }
+
+	.resource-item .description{
+		text-align: justify;
+		max-width: 450px;
+	}
 /* END Style Resources List*/
 
