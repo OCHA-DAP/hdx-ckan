@@ -8,19 +8,10 @@ services:
   - docker
 
 before_install:
-#  - sudo apt-get install -y linux-image-virtual linux-image-extra-virtual
-#  - curl -sSL https://get.docker.com/ | sudo sh
   - sudo pip install docker-compose
 
 script:
-#  - ls -lah
-#  - pwd
-#  - docker-compose up -d db solr
-#  - docker-compose ps
   - docker-compose up -d
-#  - wait 10
-#  - docker-compose ps
-#  - docker exec -t hdxckan_ckan_1 env
   - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && python setup.py develop"
   - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r requirements.txt"
   - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r dev-requirements.txt"
@@ -31,10 +22,5 @@ script:
   - docker exec -t hdxckan_ckan_1 hdxckantool feature
   - docker exec -t hdxckan_ckan_1 hdxckantool less compile
   - docker exec -t hdxckan_ckan_1 hdxckantool restart
+  - docker exec -t hdxckan_ckan_1 node -g install capturejs
   - docker exec -t hdxckan_ckan_1 hdxckantool test
-
-#  - docker exec dockerpgbackups_dbbackup_1 ls
-#  - docker exec dockerpgbackups_dbbackup_1 date --set="2012-6-29 10:59.59 PM"
-#  - wait 4
-#  - ls -lah backups/*
-#  - if [[ ! -f "backups/2012/June/foo.dmp" ]]; then exit 1; fi
