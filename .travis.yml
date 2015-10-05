@@ -18,7 +18,7 @@ script:
 #  - docker-compose ps
 #  - docker exec -t hdxckan_ckan_1 env
   - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && python setup.py develop"
-  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r requirements.txt
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r requirements.txt"
   - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r dev-requirements.txt"
   - docker exec -t hdxckan_ckan_1 hdxckantool update
   - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
