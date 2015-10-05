@@ -4,6 +4,10 @@
 
 {% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 
+{# The line below is for google analytics #}
+{% block ga_dimension1 %}{{ pkg.organization.title }}{% endblock %}
+{% block ga_dimension2 %}{{ c.ga_dataset_type }}{% endblock %}
+
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}
       {% if pkg.indicator %}
