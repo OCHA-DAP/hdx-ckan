@@ -665,6 +665,9 @@ class DatasetController(PackageController):
         try:
             if int(c.pkg_dict['indicator']):
                 c.pkg_dict['graph'] = '{}'
+                c.pkg_dict['indicator'] = 1
+            else:
+                c.pkg_dict['indicator'] = 0
         except:
             # If there's no indicator value it isn't an indicator
             c.pkg_dict['indicator'] = 0
