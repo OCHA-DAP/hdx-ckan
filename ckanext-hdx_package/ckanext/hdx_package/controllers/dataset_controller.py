@@ -827,16 +827,16 @@ class DatasetController(PackageController):
     #     urls_dict = {'shape_source_url': url, 'convert_url': ogre_url+'/convert'}
     #     g_json = get_action('hdx_get_shape_geojson')({}, urls_dict)
     #     return g_json
-
-    def _get_shape_info_as_json(self, gis_data):
-        resource_id = gis_data['resource_id']
-        resource_id = resource_id if resource_id and resource_id.strip() else 'new'
-
-        layer_import_url = config.get('hdx.gis.layer_import_url')
-        gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
-                    resource_id).replace("{resource_download_url}", gis_data['url'])
-        result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
-        return result
+    #
+    # def _get_shape_info_as_json(self, gis_data):
+    #     resource_id = gis_data['resource_id']
+    #     resource_id = resource_id if resource_id and resource_id.strip() else 'new'
+    #
+    #     layer_import_url = config.get('hdx.gis.layer_import_url')
+    #     gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
+    #                 resource_id).replace("{resource_download_url}", gis_data['url'])
+    #     result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
+    #     return result
 
     def _resource_preview(self, data_dict):
         """
