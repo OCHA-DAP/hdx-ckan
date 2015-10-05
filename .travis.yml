@@ -21,6 +21,8 @@ script:
   - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
   - docker exec -t hdxckan_ckan_1 ls -l /srv/
   - docker exec -t hdxckan_ckan_1 ls -l /srv/ckan
+  - docker exec -t hdxckan_ckan_1 cat /root/.pgpass
+  - docker exec -t hdxckan_ckan_1 cat /srv/ckan/hdx-test-core.ini
   - docker exec -t hdxckan_ckan_1 hdxckantool test
 
 #  - docker exec dockerpgbackups_dbbackup_1 ls
