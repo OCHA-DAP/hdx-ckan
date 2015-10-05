@@ -13,16 +13,14 @@ script:
 #  - pwd
 #  - docker-compose up -d db solr
 #  - docker-compose ps
-  - docker-compose up -d ckan
-  - docker-compose ps
-  - docker exec -t hdxckan_ckan_1 env
-  - docker exec -t hdxckan_ckan_1 hdxckantool update
-  - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
-  - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
-  - docker exec -t hdxckan_ckan_1 ls -l /srv/
-  - docker exec -t hdxckan_ckan_1 ls -l /srv/ckan
-  - docker exec -t hdxckan_ckan_1 cat /root/.pgpass
-  - docker exec -t hdxckan_ckan_1 cat /srv/ckan/hdx-test-core.ini
+  - docker-compose up -d
+  - wait 10
+#  - docker-compose ps
+#  - docker exec -t hdxckan_ckan_1 env
+#  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && python setup.py develop"
+#  - docker exec -t hdxckan_ckan_1 hdxckantool update
+#  - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
+#  - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
   - docker exec -t hdxckan_ckan_1 hdxckantool test
 
 #  - docker exec dockerpgbackups_dbbackup_1 ls

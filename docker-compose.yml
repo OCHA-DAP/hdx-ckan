@@ -34,5 +34,5 @@ ckan:
     - HDX_FILESTORE=/srv/filestore
     - HDX_PREFIX=${HDX_PREFIX}
     - HDX_SOLR_ADDR=solr
-    - HDX_SOLR_PORT=5893
+    - HDX_SOLR_PORT=8983
     - HDX_TYPE=${HDX_TYPE}

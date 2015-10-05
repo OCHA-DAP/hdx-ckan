@@ -6,6 +6,7 @@ ckanext/hdx_package/plugin.py
 ckanext/hdx_package/actions/__init__.py
 ckanext/hdx_package/actions/authorize.py
 ckanext/hdx_package/actions/create.py
+ckanext/hdx_package/actions/get.py
 ckanext/hdx_package/actions/update.py
 ckanext/hdx_package/controllers/__init__.py
 ckanext/hdx_package/controllers/dataset_controller.py
@@ -22,6 +23,7 @@ ckanext/hdx_package/helpers/update.py
 ckanext/hdx_package/tests/__init__.py
 ckanext/hdx_package/tests/test_metadata_fields.py
 ckanext/hdx_package/tests/test_actions/__init__.py
+ckanext/hdx_package/tests/test_actions/test_package_create.py
 ckanext/hdx_package/tests/test_actions/test_package_update.py
 ckanext/hdx_package/tests/test_actions/test_private_resource.py
 ckanext/hdx_package/tests/test_actions/test_related_update.py
