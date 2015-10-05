@@ -1,25 +1,26 @@
-language: python
-python:
-  - "2.6"
-  - "2.7"
-env:
-  - PGVERSION=9.1
-  - PGVERSION=8.4
-matrix:
-  exclude:
-    - python: "2.7"
-      env: PGVERSION=8.4
-    - python: "2.6"
-      env: PGVERSION=9.1
-install: ./bin/travis-install-dependencies
-script: ./bin/travis-run-tests
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#ckan"
-    on_success: never
-    on_failure: change
-    template:
-      - "%{repository} %{branch} %{commit} %{build_url} %{author}: %{message}"
-after_success:
-  - coveralls
+sudo: required
+
+branches:
+  only:
+    - serban_travis_tests
+
+services:
+  - docker
+
+before_install:
+  - sudo pip install docker-compose
+
+script:
+  - docker-compose up -d
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && python setup.py develop"
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r requirements.txt"
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r dev-requirements.txt"
+  - docker exec -t hdxckan_ckan_1 hdxckantool update
+  - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
+  - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan; paster db upgrade -c /srv/prod.ini"
+  - docker exec -t hdxckan_ckan_1 hdxckantool feature
+  - docker exec -t hdxckan_ckan_1 hdxckantool less compile
+  - docker exec -t hdxckan_ckan_1 hdxckantool restart
+  - docker exec -t hdxckan_ckan_1 npm -g install capturejs
+  - docker exec -t hdxckan_ckan_1 hdxckantool test

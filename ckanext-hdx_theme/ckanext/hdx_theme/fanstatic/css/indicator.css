@@ -43,7 +43,7 @@
 	
 	.table-bordered.table-condensed.mTop20 tbody tr td.dataset-details{
 	   text-align:justify;
-	   width: 100%;
+	   /*width: 100%;*/
 	}
 	
 	.metadata-link a, .metadata-link a:hover, .metadata-link a:focus {

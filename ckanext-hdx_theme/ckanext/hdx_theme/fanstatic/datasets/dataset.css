@@ -97,7 +97,7 @@
 
 /* Style Resources List */
     .resource-list{
-
+        list-style: none;
     }
 
     .resource-item{

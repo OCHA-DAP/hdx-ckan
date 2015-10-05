@@ -1,0 +1,224 @@
+@baseImagePath: "../../../../base/images";
+@formatMediumX: 32px;
+@formatMediumY: 35px;
+@formatMediumOffsetX: -@formatMediumX;
+@formatMediumOffsetY: -62px;
+
+.ckan-icon {
+  //.ie7-restore-right-whitespace;
+  display: inline-block;
+  vertical-align: text-bottom;
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url("@{baseImagePath}/sprite-ckan-icons.png");
+  background-repeat: no-repeat;
+  background-position: 16px 16px;
+}
+
+.ckan-icon-background-position(@offset, @size) {
+  @w: "@{size}X";
+  @h: "@{size}Y";
+  @x: "@{size}OffsetX";
+  @y: "@{size}OffsetY";
+  width: @@w;
+  height: @@h;
+  background-position: (@@x * @offset) @@y;
+}
+
+
+/* Style dataset labels */
+.dataset-resources {
+  margin-top: 8px;
+  padding: 0;
+  li {
+    display: inline;
+    a {
+      background-color: #aaaaaa;
+    }
+  }
+}
+/* Label style (eg. tags) */
+.label{
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  color: #FFFFFF;
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  min-width: 0;
+  vertical-align: middle;
+}
+
+.label.label-small{
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.01em;
+  line-height: 16px;
+  margin-right: 0;
+  padding: 0 5px;
+  margin-bottom: 3px;
+}
+
+  /* Pill styling - seem to be the similar to labels, but gray and with a button*/
+  .pill {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffffff;
+    text-transform: uppercase;
+
+    padding: 5px 15px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+
+    background-color: #888888;
+    border-radius: 0;
+  }
+
+  .pill .icon-remove, .pill .glyphicon-remove {
+    cursor: pointer;
+    margin-left: 20px;
+
+  }
+/* END Pill styling */
+
+/* END Label style */
+
+
+.label[data-format=html],
+.label[data-format*=html] {
+  background-color: #55a1ce;
+}
+
+.label[data-format=json],
+.label[data-format*=json] {
+  background-color: #ef7100;
+}
+
+.label[data-format=xml],
+.label[data-format*=xml] {
+  background-color: #ef7100;
+}
+
+.label[data-format=text],
+.label[data-format*=text] {
+  background-color: #74cbec;
+}
+
+.label[data-format=csv],
+.label[data-format*=csv] {
+  background-color: #dfb100;
+}
+
+.label[data-format=xls],
+.label[data-format*=xls] {
+  background-color: #2db55d;
+}
+
+.label[data-format=zip],
+.label[data-format*=zip] {
+  background-color: #686868;
+}
+
+.label[data-format=api],
+.label[data-format*=api] {
+  background-color: #ec96be;
+}
+
+.label[data-format=pdf],
+.label[data-format*=pdf] {
+  background-color: #e0051e;
+}
+
+.label[data-format=rdf],
+.label[data-format*=rdf],
+.label[data-format*=nquad],
+.label[data-format*=ntriples],
+.label[data-format*=turtle] {
+  background-color: #0b4498;
+}
+/* END Style dataset labels */
+
+
+.resource-item{
+  position: relative;
+  padding: 10px 10px 10px 60px;
+  margin-bottom: 0px;
+
+  .format-label {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+  }
+}
+
+.format-label {
+  .ckan-icon;
+
+  text-indent: -900em;
+  background: url("@{baseImagePath}/sprite-resource-icons.png") no-repeat 0 0;
+}
+
+.format-label {
+  .ckan-icon-background-position(0, "formatMedium");
+}
+
+.format-label[data-format=rdf],
+.format-label[data-format*=rdf] {
+  .ckan-icon-background-position(1, "formatMedium");
+}
+
+.format-label[data-format=pdf],
+.format-label[data-format*=pdf] {
+  .ckan-icon-background-position(2, "formatMedium");
+}
+
+.format-label[data-format=api],
+.format-label[data-format*=api] {
+  .ckan-icon-background-position(3, "formatMedium");
+}
+
+.format-label[data-format=zip],
+.format-label[data-format*=zip] {
+  .ckan-icon-background-position(4, "formatMedium");
+}
+
+.format-label[data-format=xls],
+.format-label[data-format*=xls] {
+  .ckan-icon-background-position(5, "formatMedium");
+}
+
+.format-label[data-format=csv],
+.format-label[data-format*=csv] {
+  .ckan-icon-background-position(6, "formatMedium");
+}
+
+.format-label[data-format=txt],
+.format-label[data-format*=txt] {
+  .ckan-icon-background-position(7, "formatMedium");
+}
+
+.format-label[data-format=xml],
+.format-label[data-format*=xml] {
+  .ckan-icon-background-position(8, "formatMedium");
+}
+
+.format-label[data-format=json],
+.format-label[data-format*=json] {
+  .ckan-icon-background-position(9, "formatMedium");
+}
+
+.format-label[data-format=html],
+.format-label[data-format*=html] {
+  .ckan-icon-background-position(10, "formatMedium");
+}
