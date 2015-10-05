@@ -1,0 +1,4 @@
+{# show poular icon #}
+{% if number >= min %}
+<span class="popular icon-fire" title="{{ _('Popular: ') }} {{ title.format(number=number) }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+{% endif %}
