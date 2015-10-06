@@ -86,8 +86,6 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'token_create': create.token_create,
-            'token_show': get.token_show,
-            'token_show_by_id': get.token_show_by_id,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list
         }
