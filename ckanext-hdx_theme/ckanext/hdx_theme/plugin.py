@@ -9,9 +9,11 @@ import version
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
+
 import inspect
 import os
 import json
+import urlparse
 
 
 # def run_on_startup():
@@ -72,6 +74,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         gis_layer_api = config.get('hdx.gis.layer_import_url', '')
         api_index = gis_layer_api.find('/api')
         gis_layer_base_api = gis_layer_api[0:api_index]
+        gis_layer_base_api = self._create_full_URL(gis_layer_base_api)
         config['hdx_checks.gis_layer_base_url'] = gis_layer_base_api
 
     def __add_spatial_config_for_checks(self, config):
@@ -79,7 +82,30 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         spatial_url = config.get('hdx.gis.resource_pbf_url', '')
         url_index = spatial_url.find(search_str)
         spatial_check_url = spatial_url[0:url_index+len(search_str)]
+        spatial_check_url = self._create_full_URL(spatial_check_url)
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
+
+
+    def _create_full_URL(self, url):
+        '''
+        Different URLs specified in prod.ini might be relative URLs or be
+        protocol independent.
+        This function tries to guess the full URL.
+
+        :param url: the url to be modified if needed
+        :type url: str
+        '''
+        urlobj = urlparse.urlparse(url)
+        if not urlobj.netloc:
+            base_url = config.get('ckan.site_url')
+            base_urlobj = urlparse.urlparse(base_url)
+            urlobj = urlobj._replace(scheme=base_urlobj.scheme)
+            urlobj = urlobj._replace(netloc=base_urlobj.netloc)
+
+        if not urlobj.scheme:
+            urlobj = urlobj._replace(scheme='https')
+
+        return urlobj.geturl()
 
     def before_map(self, map):
         map.connect(
