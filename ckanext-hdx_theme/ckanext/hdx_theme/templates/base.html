@@ -29,13 +29,17 @@
       //});
       var dimension1Org = '{% block ga_dimension1 %}{% endblock %}';
       if ( dimension1Org ) {
-{#          var orgDimensionValue = document.getElementsByClassName("mx-ga-dimension-organization")[0].text.trim();#}
           ga('set', 'dimension1', dimension1Org);
       }
-      var dimension2DsType = '{% block ga_dimension2 %}{% endblock %}';
-      if ( dimension2DsType ) {
-{#          var orgDimensionValue = document.getElementsByClassName("mx-ga-dimension-organization")[0].text.trim();#}
-          ga('set', 'dimension2', dimension2DsType);
+
+      var dimension2Type = '{% block ga_dimension2 %}{% endblock %}';
+      if ( dimension2Type ) {
+          ga('set', 'dimension2', dimension2Type);
+      }
+
+      var dimension3Location = '{% block ga_dimension3 %}{% endblock %}';
+      if ( dimension3Location ) {
+          ga('set', 'dimension3', dimension3Location);
       }
       ga('send', 'pageview');
 

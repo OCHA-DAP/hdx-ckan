@@ -682,7 +682,8 @@ class DatasetController(PackageController):
         template = template[:template.index('.') + 1] + format
 
         # set dataset type for google analytics - modified by HDX
-        c.ga_dataset_type = self._determine_dataset_type(c.pkg_dict)
+        c.ga_dataset_type = self._google_analytics_dataset_type(c.pkg_dict)
+        c.ga_location = self._google_analytics_location(c.pkg_dict)
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
@@ -741,16 +742,31 @@ class DatasetController(PackageController):
 
         assert False, "We should never get here"
 
-    def _determine_dataset_type(self, pkg_dict):
-        type = 'default'
+    def _google_analytics_dataset_type(self, pkg_dict):
+        type = 'standard'
         tags = [tag.get('name', '') for tag in pkg_dict.get('tags', [])]
 
         if int(pkg_dict.get('indicator', 0)) == 1:
             type = 'indicator'
         if 'cod' in tags:
-            type = 'cod-'+type
+            type = 'cod~indicator' if type == 'indicator' else 'cod'
 
         return type
+
+    def _google_analytics_location(self, pkg_dict):
+        limit = 15
+        locations = pkg_dict.get('groups', [])
+        if len(locations) >= limit:
+            result = 'many'
+        else:
+            locations = [item.get('name', '') for item in locations]
+            locations.sort()
+            result = "~".join(locations)
+
+        if not result:
+            result = 'none'
+
+        return result
 
     def _get_org_extras(self, org_id):
         """
@@ -1057,7 +1073,8 @@ class DatasetController(PackageController):
         c.resource['has_views'] = len(resource_views) > 0
 
         # set dataset type for google analytics - modified by HDX
-        c.ga_dataset_type = self._determine_dataset_type(c.package)
+        c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
+        c.ga_locations = self._google_analytics_location(c.pkg_dict)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')

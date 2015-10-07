@@ -6,6 +6,7 @@
 {# The line below is for google analytics #}
 {% block ga_dimension1 %}{{ c.package.organization.title }}{% endblock %}
 {% block ga_dimension2 %}{{ c.ga_dataset_type }}{% endblock %}
+{% block ga_dimension3 %}{{ c.ga_location }}{% endblock %}
 
 {% block head_extras -%}
   {{ super() }}
