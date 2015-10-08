@@ -67,8 +67,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         #self._add_resource('fanstatic', 'hdx_theme')
         toolkit.add_resource('fanstatic', 'hdx_theme')
         # Add configs needed for checks
+        self.__add_dataproxy_url_for_checks(config)
         self.__add_gis_layer_config_for_checks(config)
         self.__add_spatial_config_for_checks(config)
+
+    def __add_dataproxy_url_for_checks(self, config):
+        dataproxy_url = config.get('hdx.datapreview.url', '')
+        dataproxy_url = self._create_full_URL(dataproxy_url)
+        config['hdx_checks.dataproxy_url'] = dataproxy_url
 
     def __add_gis_layer_config_for_checks(self, config):
         gis_layer_api = config.get('hdx.gis.layer_import_url', '')
@@ -84,7 +90,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         spatial_check_url = spatial_url[0:url_index+len(search_str)]
         spatial_check_url = self._create_full_URL(spatial_check_url)
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
-
 
     def _create_full_URL(self, url):
         '''

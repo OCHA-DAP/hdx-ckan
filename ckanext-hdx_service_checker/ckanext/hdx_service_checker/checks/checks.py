@@ -37,7 +37,7 @@ class HttpStatusCodeCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = requests.get(url)
+            r = requests.get(url, verify=False)
             status = str(r.status_code)
             if status in accepted_codes:
                 self.result = 'Passed'
@@ -75,7 +75,7 @@ class HttpResponseTextCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = requests.get(url)
+            r = requests.get(url, verify=False)
 
             if included_text in r.text:
                 self.result = 'Passed'
@@ -111,7 +111,7 @@ class ProxyForRemoteCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = requests.get(url)
+            r = requests.get(url, verify=False)
             response = r.json()
             if 'result' in response:
                 self.subchecks = response['result']
