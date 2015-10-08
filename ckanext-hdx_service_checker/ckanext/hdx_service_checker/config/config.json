@@ -10,7 +10,7 @@
     "name": "Dataproxy check",
     "module_name": "ckanext.hdx_service_checker.checks.checks",
     "class_name": "HttpResponseTextCheck",
-    "url": "#{hdx.datapreview.url}",
+    "url": "#{hdx_checks.dataproxy_url}",
     "included_text": "read the dataproxy API"
   },
   {
