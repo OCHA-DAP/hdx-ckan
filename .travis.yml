@@ -23,4 +23,5 @@ script:
   - docker exec -t hdxckan_ckan_1 hdxckantool less compile
   - docker exec -t hdxckan_ckan_1 hdxckantool restart
   - docker exec -t hdxckan_ckan_1 npm -g install capturejs
+  - docker exec -t hdxckan_ckan_1 netstat -lnt
   - docker exec -t hdxckan_ckan_1 hdxckantool test
