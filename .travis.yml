@@ -22,6 +22,7 @@ script:
   - docker exec -t hdxckan_ckan_1 hdxckantool feature
   - docker exec -t hdxckan_ckan_1 hdxckantool less compile
   - docker exec -t hdxckan_ckan_1 hdxckantool restart
+  - sleep 10
 #  - docker exec -t hdxckan_ckan_1 npm -g install capturejs
   - docker exec -t hdxckan_ckan_1 netstat -lnt
   - docker exec -t hdxckan_ckan_1 curl http://localhost:5000/organization/david
