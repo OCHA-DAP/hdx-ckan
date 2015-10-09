@@ -1,9 +1,5 @@
 sudo: required
 
-#branches:
-#  only:
-#    - serban_travis_tests
-
 services:
   - docker
 
