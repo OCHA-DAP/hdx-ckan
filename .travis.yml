@@ -26,5 +26,6 @@ script:
 #  - docker exec -t hdxckan_ckan_1 npm -g install capturejs
 #  - docker exec -t hdxckan_ckan_1 netstat -lnt
 #  - docker exec -t hdxckan_ckan_1 curl http://localhost:5000/organization/david
-  - docker exec -t hdxckan_ckan_1 capturejs -l --uri "http://localhost:5000/organization/david" --output /srv/filestore/storage/uploads/group/david_thumbnail.png --selector "content" --renderdelay 10000
+  - docker exec -t hdxckan_ckan_1 mkdir -p /srv/filestore/storage/uploads/group
+#  - docker exec -t hdxckan_ckan_1 capturejs -l --uri "http://localhost:5000/organization/david" --output /srv/filestore/storage/uploads/group/david_thumbnail.png --selector "content" --renderdelay 10000
   - docker exec -t hdxckan_ckan_1 hdxckantool test
