@@ -55,60 +55,60 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
-
-
-def search_for_all(context, data_dict):
-    '''This search is independent of the tab in which the user
-       currently is.
-       The result is used for finding counts for datasets, indicators and totals
-    '''
-    facet_fields = data_dict.get('facet.field', [])
-    facet_fields.append('extras_indicator')
-    sort = data_dict.get('sort', None)
-    if not sort:
-        sort = 'score desc'
-
-    q = data_dict.get('q', None)
-    search = {
-        'q': data_dict.get('q', None),
-        'fq': data_dict.get('fq', None),
-        'facet.field': facet_fields,
-        'facet.limit': 1000,
-        'rows': 1,  # since this is just for facets,counts and one indicator, 1 should be enough
-        'sort': 'extras_indicator desc, ' + sort,
-    }
-    #     if tab == 'indicators':
-    #         search['extras'] = {'ext_indicator': 1}
-    #     elif tab == 'datasets':
-    #         search['extras'] = {'ext_indicator': 0}
-    result = get_action('package_search')(context, search)
-    return result
-
-
-def extract_counts(result):
-    ''' Extracts the counts from a search_for_all() result '''
-
-    total = result['count']
-    if '1' in result['facets']['extras_indicator']:
-        indicator_no = result['facets']['extras_indicator']['1']
-    else:
-        indicator_no = 0
-    # dataset_no = total  - this is a wrong fix
-    dataset_no = total - indicator_no
-    return (dataset_no, indicator_no)
-
-
-def extract_one_indicator(result):
-    ''' Extracts the first indicator from a search_for_all() result '''
-
-    if len(result['results']) > 0 \
-            and result['results'][0] \
-            and 'indicator' in result['results'][0] \
-            and result['results'][0]['indicator'] == '1':
-        indicator = [result['results'][0]]
-    else:
-        indicator = None
-    return indicator
+#
+#
+# def search_for_all(context, data_dict):
+#     '''This search is independent of the tab in which the user
+#        currently is.
+#        The result is used for finding counts for datasets, indicators and totals
+#     '''
+#     facet_fields = data_dict.get('facet.field', [])
+#     facet_fields.append('extras_indicator')
+#     sort = data_dict.get('sort', None)
+#     if not sort:
+#         sort = 'score desc'
+#
+#     q = data_dict.get('q', None)
+#     search = {
+#         'q': data_dict.get('q', None),
+#         'fq': data_dict.get('fq', None),
+#         'facet.field': facet_fields,
+#         'facet.limit': 1000,
+#         'rows': 1,  # since this is just for facets,counts and one indicator, 1 should be enough
+#         'sort': 'extras_indicator desc, ' + sort,
+#     }
+#     #     if tab == 'indicators':
+#     #         search['extras'] = {'ext_indicator': 1}
+#     #     elif tab == 'datasets':
+#     #         search['extras'] = {'ext_indicator': 0}
+#     result = get_action('package_search')(context, search)
+#     return result
+#
+#
+# def extract_counts(result):
+#     ''' Extracts the counts from a search_for_all() result '''
+#
+#     total = result['count']
+#     if '1' in result['facets']['extras_indicator']:
+#         indicator_no = result['facets']['extras_indicator']['1']
+#     else:
+#         indicator_no = 0
+#     # dataset_no = total  - this is a wrong fix
+#     dataset_no = total - indicator_no
+#     return (dataset_no, indicator_no)
+#
+#
+# def extract_one_indicator(result):
+#     ''' Extracts the first indicator from a search_for_all() result '''
+#
+#     if len(result['results']) > 0 \
+#             and result['results'][0] \
+#             and 'indicator' in result['results'][0] \
+#             and result['results'][0]['indicator'] == '1':
+#         indicator = [result['results'][0]]
+#     else:
+#         indicator = None
+#     return indicator
 
 
 def sort_features(features):
@@ -358,54 +358,8 @@ class HDXSearchController(PackageController):
             log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
                 str(data_dict), str(query), datetime.datetime.now()))
 
-        all_result = search_for_all(context, data_dict)
-        c.dataset_counts, c.indicator_counts = extract_counts(all_result)
-
-        c.count = c.dataset_counts + c.indicator_counts
-        if not c.count:
-            log.warn('Dataset counts are zero for data_dict: {}. all_results dict is: {}. Query time {}'.format(
-                str(data_dict), str(query), datetime.datetime.now()))
-
-        if c.tab == "all":
-            # c.features = isolate_features(
-            #     context, query['search_facets'], q, c.tab)
-            c.indicator = extract_one_indicator(all_result)
-            if c.indicator:
-                get_action('populate_related_items_count')(
-                    context, {'pkg_dict_list': c.indicator})
-            c.facets = all_result['facets']
-            c.search_facets = all_result['search_facets']
-        else:
-            c.facets = query['facets']
-            c.search_facets = query['search_facets']
-
-        #             if c.tab == 'features':
-        #                 c.features, c.count = isolate_features(
-        # context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
-
-
-        #             if c.tab == 'features':
-        #                 c.page = h.Page(
-        #                     collection=c.features,
-        #                     page=page,
-        #                     url=pager_url,
-        #                     item_count=c.count,
-        #                     items_per_page=limit
-        #                 )
-        # c.facets = query['facets']
-        # c.search_facets = query['search_facets']
-        #                 c.page.items = c.features
-        #             else:
-        #                 c.page = h.Page(
-        #                     collection=query['results'],
-        #                     page=page,
-        #                     url=pager_url,
-        #                     item_count=query['count'],
-        #                     items_per_page=limit
-        #                 )
-        # c.facets = query['facets']
-        # c.search_facets = query['search_facets']
-        #                 c.page.items = query['results']
+        c.facets = query['facets']
+        c.search_facets = query['search_facets']
 
         get_action('populate_related_items_count')(
             context, {'pkg_dict_list': query['results']})
@@ -420,7 +374,9 @@ class HDXSearchController(PackageController):
         c.page.items = query['results']
         c.sort_by_selected = query['sort']
 
-        return query, all_result
+        c.count = c.item_count = query['count']
+
+        return query
 
     def _decide_adding_dataset_criteria(self, data_dict):
         # For all tab, only paginate datasets

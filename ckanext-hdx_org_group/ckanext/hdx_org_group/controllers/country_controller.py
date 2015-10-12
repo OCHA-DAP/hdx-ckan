@@ -73,8 +73,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         self.get_dataset_results(country_code)
         # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
-        (query, all_results) = self.get_dataset_search_results(country_code)
-        vocab_topics_dict = all_results.get(
+        query = self.get_dataset_search_results(country_code)
+        vocab_topics_dict = query.get(
             'facets', {}).get('vocab_Topics', {})
         c.cont_browsing = self.get_cont_browsing(
             c.group_dict, vocab_topics_dict)
@@ -281,10 +281,10 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': country_code})
-        (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
+        query = self._performing_search('', fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
-        return query, all_results
+        return query
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         super(CountryController, self)._set_other_links(

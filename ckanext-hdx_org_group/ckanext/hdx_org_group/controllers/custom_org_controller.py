@@ -151,16 +151,16 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         req_params = self.process_req_params(org_id, request.params)
 
         activities = None
-        facets = {}
+        # facets = {}
         # query_placeholder = ''
         try:
-            tab_results, all_results = self.get_dataset_search_results(
+            tab_results = self.get_dataset_search_results(
                 org_id, request.params)
             tab = self.get_tab_name()
             # query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
-            facets = self.get_facet_information(
-                tab_results, all_results, tab, req_params)
+            # facets = self.get_facet_information(
+            #     tab_results, all_results, tab, req_params)
             if tab == 'activities':
                 activities = self.get_activity_stream(org_info.get('id', org_id))
         except Exception, e:
@@ -189,7 +189,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'follower_count': follower_count,
                 'top_line_items': top_line_items,
                 'search_results': {
-                    'facets': facets,
+                    # 'facets': facets,
                     'activities': activities,
                     # 'query_placeholder': query_placeholder
                 },
@@ -448,10 +448,10 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': org_code})
-        (query, all_results) = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
-                                                       search_extras, pager_url, context)
+        query = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
+                                        search_extras, pager_url, context)
 
-        return query, all_results
+        return query
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         super(CustomOrgController, self)._set_other_links(
