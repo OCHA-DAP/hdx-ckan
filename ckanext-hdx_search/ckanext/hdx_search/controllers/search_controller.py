@@ -302,7 +302,9 @@ class HDXSearchController(PackageController):
 
             c.facet_titles = facets
 
-            self._which_tab_is_selected(search_extras)
+            # Line below to be removed after refactoring
+            c.tab = 'all'
+
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
                                     search_extras, pager_url, context)
 
@@ -333,18 +335,6 @@ class HDXSearchController(PackageController):
 
         # return render(self._search_template(package_type))
         return self._search_template()
-
-    def _which_tab_is_selected(self, search_extras):
-        c.tab = 'datasets'
-        if 'ext_indicator' in search_extras:
-            if int(search_extras['ext_indicator']) == 1:
-                c.tab = 'indicators'
-            elif int(search_extras['ext_indicator']) == 0:
-                c.tab = 'datasets'
-        elif 'ext_feature' in search_extras:
-            c.tab = 'features'
-        elif 'ext_activities' in search_extras:
-            c.tab = 'activities'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):
@@ -493,8 +483,8 @@ class HDXSearchController(PackageController):
 
         c.remove_field = remove_field
 
-    def _get_named_route(self):
-        return 'search'
+    # def _get_named_route(self):
+    #     return 'search'
 
     def _page_number(self):
         try:
@@ -510,8 +500,8 @@ class HDXSearchController(PackageController):
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         url_param_list = ['sort', 'q', 'organization', 'tags',
-                          'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters'];
-        named_route = self._get_named_route()
+                          'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters']
+        # named_route = self._get_named_route()
         params = {}
 
         for k, v in request.params.items():
@@ -524,25 +514,25 @@ class HDXSearchController(PackageController):
         if other_params_dict:
             params.update(other_params_dict)
 
-        c.other_links = {}
-        c.other_links['all'] = h.url_for(named_route, **params) + suffix
-        params_copy = params.copy()
-        params_copy['ext_indicator'] = 1
-        c.other_links['indicators'] = h.url_for(
-            named_route, **params_copy) + suffix
-        params_copy['ext_indicator'] = 0
-        c.other_links['datasets'] = h.url_for(
-            named_route, **params_copy) + suffix
-
-        params_copy = params.copy()
-        params_copy['ext_feature'] = 1
-        c.other_links['features'] = h.url_for(
-            named_route, **params_copy) + suffix
-
-        params_copy = params.copy()
-        params_copy['ext_activities'] = 1
-        c.other_links['activities'] = h.url_for(
-            named_route, **params_copy) + suffix
+        # c.other_links = {}
+        # c.other_links['all'] = h.url_for(named_route, **params) + suffix
+        # params_copy = params.copy()
+        # params_copy['ext_indicator'] = 1
+        # c.other_links['indicators'] = h.url_for(
+        #     named_route, **params_copy) + suffix
+        # params_copy['ext_indicator'] = 0
+        # c.other_links['datasets'] = h.url_for(
+        #     named_route, **params_copy) + suffix
+        #
+        # params_copy = params.copy()
+        # params_copy['ext_feature'] = 1
+        # c.other_links['features'] = h.url_for(
+        #     named_route, **params_copy) + suffix
+        #
+        # params_copy = params.copy()
+        # params_copy['ext_activities'] = 1
+        # c.other_links['activities'] = h.url_for(
+        #     named_route, **params_copy) + suffix
 
         #         c.other_links['params'] = params
         c.other_links['params_noq'] = {k: v for k, v in params.items()

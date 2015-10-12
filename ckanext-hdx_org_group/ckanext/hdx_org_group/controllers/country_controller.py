@@ -281,7 +281,6 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': country_code})
-        self._which_tab_is_selected(search_extras)
         (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
@@ -290,8 +289,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
     def _set_other_links(self, suffix='', other_params_dict=None):
         super(CountryController, self)._set_other_links(
             suffix=suffix, other_params_dict=other_params_dict)
-        c.other_links['advanced_search'] = h.url_for(
-            'search', groups=other_params_dict['id'])
+        # c.other_links['advanced_search'] = h.url_for(
+        #     'search', groups=other_params_dict['id'])
 
     def _get_named_route(self):
         return 'country_read'

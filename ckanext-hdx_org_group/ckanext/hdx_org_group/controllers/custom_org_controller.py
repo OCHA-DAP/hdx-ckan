@@ -152,12 +152,12 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         activities = None
         facets = {}
-        query_placeholder = ''
+        # query_placeholder = ''
         try:
             tab_results, all_results = self.get_dataset_search_results(
                 org_id, request.params)
             tab = self.get_tab_name()
-            query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
+            # query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
             facets = self.get_facet_information(
                 tab_results, all_results, tab, req_params)
@@ -191,7 +191,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'search_results': {
                     'facets': facets,
                     'activities': activities,
-                    'query_placeholder': query_placeholder
+                    # 'query_placeholder': query_placeholder
                 },
                 'links': {
                     'edit': h.url_for('organization_edit', id=org_id),
@@ -343,67 +343,67 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     req_params[k] = [v]
         return req_params
 
-    def get_facet_information(self, tab_results, all_results, tab, req_params):
-        search_facets = None
-        result_facets = collections.OrderedDict()
-        if tab == 'indicators' or tab == 'datasets':
-            search_facets = tab_results['search_facets']
-        else:
-            search_facets = all_results['search_facets']
+    # def get_facet_information(self, tab_results, all_results, tab, req_params):
+    #     search_facets = None
+    #     result_facets = collections.OrderedDict()
+    #     if tab == 'indicators' or tab == 'datasets':
+    #         search_facets = tab_results['search_facets']
+    #     else:
+    #         search_facets = all_results['search_facets']
+    #
+    #     self._add_facet(result_facets, search_facets, 'groups', _('Locations'))
+    #     self._add_facet(result_facets, search_facets, 'tags', _('Tags'))
+    #     self._add_facet(
+    #         result_facets, search_facets, 'res_format', _('Formats'))
+    #     self._add_facet(
+    #         result_facets, search_facets, 'license_id', _('Licenses'))
+    #
+    #     # self._populate_facet_links(result_facets, req_params)
+    #
+    #     return result_facets
+    #
+    # def _add_facet(self, facet_dict, search_facets, facet_code, facet_name):
+    #     if facet_code in search_facets:
+    #         facet_dict[facet_name] = {
+    #             'value_items': search_facets.get(facet_code, {}).get('items', []),
+    #             'code': search_facets.get(facet_code, {}).get('title', '')
+    #         }
+    #         facet_dict[facet_name]['count'] = len(
+    #             facet_dict[facet_name]['value_items'])
 
-        self._add_facet(result_facets, search_facets, 'groups', _('Locations'))
-        self._add_facet(result_facets, search_facets, 'tags', _('Tags'))
-        self._add_facet(
-            result_facets, search_facets, 'res_format', _('Formats'))
-        self._add_facet(
-            result_facets, search_facets, 'license_id', _('Licenses'))
-
-        self._populate_facet_links(result_facets, req_params)
-
-        return result_facets
-
-    def _add_facet(self, facet_dict, search_facets, facet_code, facet_name):
-        if facet_code in search_facets:
-            facet_dict[facet_name] = {
-                'value_items': search_facets.get(facet_code, {}).get('items', []),
-                'code': search_facets.get(facet_code, {}).get('title', '')
-            }
-            facet_dict[facet_name]['count'] = len(
-                facet_dict[facet_name]['value_items'])
-
-    def _populate_facet_links(self, facets, params):
-        for facet in facets.itervalues():
-            params_copy = params.copy()
-            code = facet['code']
-            if code in params:
-                facet['is_used'] = True
-                params_copy.pop(code)
-                facet['clear_link'] = h.url_for(
-                    self._get_named_route(), **params_copy) + suffix
-            else:
-                facet['is_used'] = False
-
-            for item in facet['value_items']:
-                params_item_copy = params.copy()
-                if code in params:
-                    if item['name'] in params[code]:
-                        # user already filtered by this item
-                        params_item_copy[code] = [
-                            el for el in params_item_copy[code] if el != item['name']]
-                        item['remove_link'] = h.url_for(
-                            self._get_named_route(), **params_item_copy) + suffix
-                        item['is_used'] = True
-                    else:
-                        params_item_copy[code] = params_item_copy[
-                                                     code] + [item['name']]
-                        item['filter_link'] = h.url_for(
-                            self._get_named_route(), **params_item_copy) + suffix
-                        item['is_used'] = False
-                else:
-                    params_item_copy[code] = [item['name']]
-                    item['filter_link'] = h.url_for(
-                        self._get_named_route(), **params_item_copy) + suffix
-                    item['is_used'] = False
+    # def _populate_facet_links(self, facets, params):
+    #     for facet in facets.itervalues():
+    #         params_copy = params.copy()
+    #         code = facet['code']
+    #         if code in params:
+    #             facet['is_used'] = True
+    #             params_copy.pop(code)
+    #             facet['clear_link'] = h.url_for(
+    #                 self._get_named_route(), **params_copy) + suffix
+    #         else:
+    #             facet['is_used'] = False
+    #
+    #         for item in facet['value_items']:
+    #             params_item_copy = params.copy()
+    #             if code in params:
+    #                 if item['name'] in params[code]:
+    #                     # user already filtered by this item
+    #                     params_item_copy[code] = [
+    #                         el for el in params_item_copy[code] if el != item['name']]
+    #                     item['remove_link'] = h.url_for(
+    #                         self._get_named_route(), **params_item_copy) + suffix
+    #                     item['is_used'] = True
+    #                 else:
+    #                     params_item_copy[code] = params_item_copy[
+    #                                                  code] + [item['name']]
+    #                     item['filter_link'] = h.url_for(
+    #                         self._get_named_route(), **params_item_copy) + suffix
+    #                     item['is_used'] = False
+    #             else:
+    #                 params_item_copy[code] = [item['name']]
+    #                 item['filter_link'] = h.url_for(
+    #                     self._get_named_route(), **params_item_copy) + suffix
+    #                 item['is_used'] = False
 
     def get_dataset_search_results(self, org_code, req_params):
         facets = ['groups', 'tags', 'res_format',
@@ -448,7 +448,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
 
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': org_code})
-        self._which_tab_is_selected(search_extras)
         (query, all_results) = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
@@ -457,11 +456,11 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
     def _set_other_links(self, suffix='', other_params_dict=None):
         super(CustomOrgController, self)._set_other_links(
             suffix=suffix, other_params_dict=other_params_dict)
-        c.other_links['advanced_search'] = h.url_for(
-            'search', organization=other_params_dict['id'])
+        # c.other_links['advanced_search'] = h.url_for(
+        #     'search', organization=other_params_dict['id'])
 
-    def _get_named_route(self):
-        return 'organization_read'
+    # def _get_named_route(self):
+    #     return 'organization_read'
 
     def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,
@@ -474,24 +473,24 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             'hdx_get_group_activity_list')(context, act_data_dict)
         return result
 
-    def generate_query_placeholder(self, tab, dataset_count, indicator_count):
-        static_prefix = _('Search')
-        static_suffix = '...'
-        body = ''
-
-        if tab == 'all':
-            body = hdx_helpers.hdx_show_singular_plural(dataset_count + indicator_count,
-                                                        _('indicator / dataset'),
-                                                        _('indicators & datasets'), True)
-        elif tab == 'indicators':
-            body = hdx_helpers.hdx_show_singular_plural(indicator_count, _('indicator'), _('indicators'), True)
-        elif tab == 'datasets':
-            body = hdx_helpers.hdx_show_singular_plural(dataset_count, _('dataset'), _('datasets'), True)
-        else:
-            return ''
-
-        response = static_prefix + " " + body + " " + static_suffix
-        return response
+    # def generate_query_placeholder(self, tab, dataset_count, indicator_count):
+    #     static_prefix = _('Search')
+    #     static_suffix = '...'
+    #     body = ''
+    #
+    #     if tab == 'all':
+    #         body = hdx_helpers.hdx_show_singular_plural(dataset_count + indicator_count,
+    #                                                     _('indicator / dataset'),
+    #                                                     _('indicators & datasets'), True)
+    #     elif tab == 'indicators':
+    #         body = hdx_helpers.hdx_show_singular_plural(indicator_count, _('indicator'), _('indicators'), True)
+    #     elif tab == 'datasets':
+    #         body = hdx_helpers.hdx_show_singular_plural(dataset_count, _('dataset'), _('datasets'), True)
+    #     else:
+    #         return ''
+    #
+    #     response = static_prefix + " " + body + " " + static_suffix
+    #     return response
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
