@@ -696,7 +696,7 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
                 c.downloads_count += resource['tracking_summary']['total']
-
+        c.pkg_dict['tracking_summary']['total'] = c.downloads_count #Force consistancy
         followers = get_action('dataset_follower_list')({'ignore_auth': True},
                                                         {'id': c.pkg_dict['id']})
         if followers and len(followers) > 0:
