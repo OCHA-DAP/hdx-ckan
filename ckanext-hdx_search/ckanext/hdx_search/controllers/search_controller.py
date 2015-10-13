@@ -334,6 +334,7 @@ class HDXSearchController(PackageController):
                                        package_type=package_type)
 
         # return render(self._search_template(package_type))
+        c.full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles)
         return self._search_template()
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
@@ -489,3 +490,63 @@ class HDXSearchController(PackageController):
                                        if k not in ['q', '_show_filters', 'id']}
         c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
                                               if k not in ['sort', 'q', 'id']}
+
+    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations):
+        '''
+        Sample return
+        {
+          'tags':
+          {
+            'display_name': u'Tags',
+            'name': 'tags',
+            'items': [
+              {
+                'count': 1,
+                'selected': True,
+                'display_name': 'africa',
+                'name': 'africa'
+              },
+              {
+                'count': 1,
+                'selected': False,
+                'display_name': 'environment',
+                'name': 'environment'
+              },
+            ]
+          }
+          .................
+        }
+        :param existing_facets: possible facets for this search
+        :type existing_facets: dict
+        :param selected_facets: facets that have been selected
+        :type selected_facets: dict
+        :param title_translations: translation of the facet categories
+        :type title_translations: dict
+        :return: facet information
+        :rtype: OrderedDict
+        '''
+
+        result = OrderedDict()
+
+        for category_key, category_title in title_translations.items():
+            item_list = existing_facets.get(category_key, {}).get('items', [])
+            sorted_item_list = []
+            for item in item_list:
+                selected = item.get('name', '') in selected_facets.get(category_key, [])
+                new_item = {
+                    'count': item.get('count', 0),
+                    'name': item.get('name', ''),
+                    'display_name': item.get('display_name', ''),
+                    'selected': selected
+                }
+                sorted_item_list.append(new_item)
+
+            sorted_item_list.sort(key=lambda x: x.get('display_name'))
+
+            result[category_key] = {
+                'name': category_key,
+                'display_name': category_title,
+                'items': sorted_item_list
+            }
+
+        return result
