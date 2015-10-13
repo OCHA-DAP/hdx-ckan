@@ -16,7 +16,7 @@ import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.helpers as h
 
-import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
+import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 
@@ -62,7 +62,7 @@ indicators_4_top_line_list = [
 indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 
-class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
+class CountryController(group.GroupController, search_controller.HDXSearchController):
     def country_read(self, id):
 
         self.get_country(id)

@@ -350,8 +350,6 @@ class HDXSearchController(PackageController):
             'extras': search_extras
         }
 
-        self._decide_adding_dataset_criteria(data_dict)
-
         query = get_action('package_search')(context, data_dict)
 
         if not query.get('results', None):
@@ -378,10 +376,6 @@ class HDXSearchController(PackageController):
 
         return query
 
-    def _decide_adding_dataset_criteria(self, data_dict):
-        # For all tab, only paginate datasets
-        if c.tab == "all":
-            data_dict['extras']['ext_indicator'] = 0
 
     def _allowed_num_of_items(self, search_extras):
         '''
@@ -470,7 +464,6 @@ class HDXSearchController(PackageController):
         if other_params_dict:
             params.update(other_params_dict)
 
-        # c.other_links = {}
         # c.other_links['all'] = h.url_for(named_route, **params) + suffix
         # params_copy = params.copy()
         # params_copy['ext_indicator'] = 1
@@ -491,6 +484,7 @@ class HDXSearchController(PackageController):
         #     named_route, **params_copy) + suffix
 
         #         c.other_links['params'] = params
+        c.other_links = {}
         c.other_links['params_noq'] = {k: v for k, v in params.items()
                                        if k not in ['q', '_show_filters', 'id']}
         c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
