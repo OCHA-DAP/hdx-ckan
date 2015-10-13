@@ -43,8 +43,7 @@ ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
 
-SMALL_NUM_OF_ITEMS = 25  # Should always be 25 right now but may change later
-LARGE_NUM_OF_ITEMS = 25
+NUM_OF_ITEMS = 25
 
 
 def _encode_params(params):
@@ -265,7 +264,7 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            limit = self._allowed_num_of_items(search_extras)
+            limit = request.params.get('page_size', NUM_OF_ITEMS)
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
@@ -376,23 +375,6 @@ class HDXSearchController(PackageController):
         c.count = c.item_count = query['count']
 
         return query
-
-
-    def _allowed_num_of_items(self, search_extras):
-        '''
-        In case we show an indicator (or feature - not used anymore)
-        in the ALL tab of the search result page we need to show a
-        smaller number of items in the result body.
-
-        :param search_extras:
-        :type search_extras:
-        :return: How many items should be displayed in the result list
-        :rtype: int
-        '''
-        if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
-            return LARGE_NUM_OF_ITEMS
-        else:
-            return SMALL_NUM_OF_ITEMS
 
     def _search_template(self):
         return render('search/search.html')
