@@ -54,7 +54,7 @@ Example:
          #}
 
           {# TODO: this should be replaced with indicator_list.html from above to show the indicator previews #}
-          {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items, full_facet_info=c.full_facet_info) }}
+          {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items, full_facet_info=c.full_facet_info, page_size=c.page_size) }}
       {% endblock %}
     </div>
 

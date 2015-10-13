@@ -264,7 +264,7 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            limit = request.params.get('page_size', NUM_OF_ITEMS)
+            c.page_size = limit = request.params.get('page_size', NUM_OF_ITEMS)
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
@@ -472,6 +472,11 @@ class HDXSearchController(PackageController):
                                        if k not in ['q', '_show_filters', 'id']}
         c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
                                               if k not in ['sort', 'q', 'id']}
+        c.other_links['current_page_url'] = self._current_url()
+
+    def _current_url(self):
+        url = h.url_for('search')
+        return url
 
     def _prepare_facets_info(self, existing_facets, selected_facets, title_translations):
         '''
