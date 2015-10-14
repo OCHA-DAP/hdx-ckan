@@ -80,6 +80,7 @@ Example:
               </span>
             </div>
           {% endif %}
+
           {% if my_c.tab=='all' or my_c.tab=='datasets' %}
             {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items) }}
           {% endif %}

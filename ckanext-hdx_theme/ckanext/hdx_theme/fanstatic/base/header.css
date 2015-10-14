@@ -1136,6 +1136,7 @@ textarea {
 .list-header-filters .ms-choice .placeholder {
   font-weight: 400;
   color: #007ce0;
+  padding: 0 10px;
 }
 .list-header-filters .ms-drop {
   overflow: visible;
