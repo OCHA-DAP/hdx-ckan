@@ -16,6 +16,7 @@
   font-size: 12px;
   color: #888888;
   letter-spacing: 0.03em;
+  line-height: 20px;
 }
 .control-order-by .orderDropdown {
   display: inline;
@@ -26,6 +27,7 @@
   color: #007ce0;
   text-align: left;
   margin-top: -4px;
+  padding: 0;
 }
 .control-order-by .orderDropdown .dropdown-toggle .caret {
   margin-top: 6px;

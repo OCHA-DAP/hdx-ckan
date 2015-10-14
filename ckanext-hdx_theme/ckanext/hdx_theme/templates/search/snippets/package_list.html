@@ -14,16 +14,150 @@ Example:
   {% snippet 'snippets/package_list.html', packages=c.datasets, show_my_links=false %}
 
 #}
+{% resource 'hdx_theme/dataset-search' %}
+
 {% if packages %}
-  <div class="search-list">
-    <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
-      {% for package in packages %}
-        {% if (not package.indicator) or package.indicator=="0" %}
-          {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link %}
-        {% endif %}
-      {% endfor %}
-    </ul>
+  <div class="list-header">
+      <span class="list-header-title">{{ _("Data") }} [{{c.page.item_count}}]</span>
+      <span class="mL30">
+          {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
+          <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
+      </span>
+      <span class="mL45 list-header-showall">
+          {% set limits = [25, 50, 100] %}
+          {% set limit_param = request.params.get('limit') %}
+          {% set limit_selected = limit_param if limit_param else 25 %}
+
+          Show
+          {% for value in limits %}
+              {% if limit_selected|int == value %}
+                  <span>{{ value }}</span>
+              {% else %}
+                  <span><a href="#">{{value}}</a></span>
+              {% endif %}
+          {% endfor %}
+      </span>
+
+
+      {% set sorting = [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
+      {% set sort_param = request.params.get('sort') %}
+      {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+      <div class="form-select control-group control-order-by pull-right">
+          <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+          <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
+              <a id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+                  <span class="dropdown-toggle-text">
+                  {% for label, value in sorting %}
+                  {% if sorting_selected == value %} {{ label }} {% endif %}
+                  {% endfor %}
+                  </span>
+                  <b class="caret" style="vertical-align: baseline;"></b>
+              </a>
+              <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+                  {% for label, value in sorting %}
+                      {% if label and value %}
+                          <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                      {% endif %}
+                  {% endfor %}
+              </ul>
+          </div>
+      </div>
   </div>
+<div class="list-header-filters">
+    <span class="filters-title uppercase">{{ _("Filter by") }}:</span>
+    <select style="display: none; width: 140px;" class="filter-item" title="Locations" multiple="multiple">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option10">Option 10</option>
+        <option value="option11">Option 11</option>
+        <option value="option12">Option 12</option>
+    </select>
+    <select style="display: none; width: 140px;" class="filter-item" title="Organisations" multiple="multiple">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option10">Option 10</option>
+        <option value="option11">Option 11</option>
+        <option value="option12">Option 12</option>
+    </select>
+    <select style="display: none; width: 140px;" class="filter-item" title="Tags" multiple="multiple">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option10">Option 10</option>
+        <option value="option11">Option 11</option>
+        <option value="option12">Option 12</option>
+    </select>
+    <select style="display: none; width: 140px;" class="filter-item" title="Licenses" multiple="multiple">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option10">Option 10</option>
+        <option value="option11">Option 11</option>
+        <option value="option12">Option 12</option>
+    </select>
+    <select style="display: none; width: 140px;" class="filter-item" title="Format" multiple="multiple">
+        <option value="option1">Option 1</option>
+        <option value="option2">Option 2</option>
+        <option value="option3">Option 3</option>
+        <option value="option4">Option 4</option>
+        <option value="option5">Option 5</option>
+        <option value="option6">Option 6</option>
+        <option value="option7">Option 7</option>
+        <option value="option8">Option 8</option>
+        <option value="option9">Option 9</option>
+        <option value="option10">Option 10</option>
+        <option value="option11">Option 11</option>
+        <option value="option12">Option 12</option>
+    </select>
+    <span class="mL15">
+        <input id="show-indicators" name="show-indicators" class="checkbox-filter" type="checkbox">
+        <label for="show-indicators">Only show indicators</label>
+    </span>
+    <span class="mL15">
+        <input id="show-cods" name="show-cods" class="checkbox-filter" type="checkbox">
+        <label for="show-cods" title="{{ _("The Common Operational Datasets(CODs) are critical datasets that are used to support...") }}" data-module="bs_tooltip" data-toggle="tooltip">Only show CODs[?]</label>
+    </span>
+    <div class="filters-actions list-header-showall pull-right">
+        <span><a class="main-action" href="#">Apply</a></span>
+        <span><a href="#">Reset</a></span>
+    </div>
+</div>
+
+<div class="search-list">
+    <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+        {% for package in packages %}
+        {% if (not package.indicator) or package.indicator=="0" %}
+        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link %}
+        {% endif %}
+        {% endfor %}
+    </ul>
+</div>
 {% endif %}
 
 
