@@ -264,7 +264,12 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            c.page_size = limit = request.params.get('page_size', NUM_OF_ITEMS)
+            try:
+                limit = int(request.params.get('page_size', NUM_OF_ITEMS))
+            except:
+                limit = NUM_OF_ITEMS
+
+            c.page_size = limit
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
