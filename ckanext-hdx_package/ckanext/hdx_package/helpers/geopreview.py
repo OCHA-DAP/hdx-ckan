@@ -3,6 +3,9 @@ Created on Jul 07, 2015
 
 @author: alexandru-m-g
 '''
+import logging
+import requests
+import sys
 import json
 import urllib
 import urlparse
@@ -15,6 +18,8 @@ import ckan.model as model
 import ckan.lib.helpers as h
 
 from ckan.common import c
+
+log = logging.getLogger(__name__)
 
 ZIPPED_SHAPEFILE_FORMAT = 'zipped shapefile'
 GEOJSON_FORMAT = 'geojson'
@@ -41,7 +46,6 @@ def detect_format_from_extension(url):
 
 def _get_shape_info_as_json(gis_data):
     resource_id = gis_data['resource_id']
-    resource_id = resource_id if resource_id and resource_id.strip() else 'new'
 
     layer_import_url = config.get('hdx.gis.layer_import_url')
     encoded_download_url = urllib.quote_plus(gis_data['url'])
@@ -50,8 +54,25 @@ def _get_shape_info_as_json(gis_data):
     # gis_url = layer_import_url.replace("{dataset_id}", gis_data['dataset_id']).replace("{resource_id}",
     #                                                                                    resource_id).replace(
     #     "{resource_download_url}", gis_data['url'])
-    result = get_action('hdx_get_shape_info')({}, {"gis_url": gis_url})
+    result = _make_geopreview_request(gis_url)
     return result
+
+
+def _make_geopreview_request(gis_url):
+    try:
+        response = requests.get(gis_url, allow_redirects=True)
+        shape_info = response.text if hasattr(response, 'text') else ''
+    except:
+        log.error("Error retrieving the shape info content")
+        log.error(sys.exc_info()[0])
+        shape_info = json.dumps({
+            'state': 'failure',
+            'message': 'Error retrieving the shape info content',
+            'layer_id': 'None',
+            'error_type': 'ckan-generated-error',
+            'error_class': 'None'
+        })
+    return shape_info
 
 
 def add_init_shape_info_data_if_needed(resource_data):

@@ -16,7 +16,7 @@ import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.helpers as h
 
-import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
+import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 
@@ -62,7 +62,7 @@ indicators_4_top_line_list = [
 indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 
-class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
+class CountryController(group.GroupController, search_controller.HDXSearchController):
     def country_read(self, id):
 
         self.get_country(id)
@@ -73,8 +73,8 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
         self.get_dataset_results(country_code)
         # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
-        (query, all_results) = self.get_dataset_search_results(country_code)
-        vocab_topics_dict = all_results.get(
+        query = self.get_dataset_search_results(country_code)
+        vocab_topics_dict = query.get(
             'facets', {}).get('vocab_Topics', {})
         c.cont_browsing = self.get_cont_browsing(
             c.group_dict, vocab_topics_dict)
@@ -281,17 +281,16 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         self._set_other_links(
             suffix=suffix, other_params_dict={'id': country_code})
-        self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
+        query = self._performing_search('', fq, facets, limit, page, sort_by,
                                                        search_extras, pager_url, context)
 
-        return query, all_results
+        return query
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         super(CountryController, self)._set_other_links(
             suffix=suffix, other_params_dict=other_params_dict)
-        c.other_links['advanced_search'] = h.url_for(
-            'search', groups=other_params_dict['id'])
+        # c.other_links['advanced_search'] = h.url_for(
+        #     'search', groups=other_params_dict['id'])
 
     def _get_named_route(self):
         return 'country_read'

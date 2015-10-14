@@ -9,9 +9,11 @@ import version
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
+
 import inspect
 import os
 import json
+import urlparse
 
 
 # def run_on_startup():
@@ -65,13 +67,20 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         #self._add_resource('fanstatic', 'hdx_theme')
         toolkit.add_resource('fanstatic', 'hdx_theme')
         # Add configs needed for checks
+        self.__add_dataproxy_url_for_checks(config)
         self.__add_gis_layer_config_for_checks(config)
         self.__add_spatial_config_for_checks(config)
+
+    def __add_dataproxy_url_for_checks(self, config):
+        dataproxy_url = config.get('hdx.datapreview.url', '')
+        dataproxy_url = self._create_full_URL(dataproxy_url)
+        config['hdx_checks.dataproxy_url'] = dataproxy_url
 
     def __add_gis_layer_config_for_checks(self, config):
         gis_layer_api = config.get('hdx.gis.layer_import_url', '')
         api_index = gis_layer_api.find('/api')
         gis_layer_base_api = gis_layer_api[0:api_index]
+        gis_layer_base_api = self._create_full_URL(gis_layer_base_api)
         config['hdx_checks.gis_layer_base_url'] = gis_layer_base_api
 
     def __add_spatial_config_for_checks(self, config):
@@ -79,7 +88,29 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         spatial_url = config.get('hdx.gis.resource_pbf_url', '')
         url_index = spatial_url.find(search_str)
         spatial_check_url = spatial_url[0:url_index+len(search_str)]
+        spatial_check_url = self._create_full_URL(spatial_check_url)
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
+
+    def _create_full_URL(self, url):
+        '''
+        Different URLs specified in prod.ini might be relative URLs or be
+        protocol independent.
+        This function tries to guess the full URL.
+
+        :param url: the url to be modified if needed
+        :type url: str
+        '''
+        urlobj = urlparse.urlparse(url)
+        if not urlobj.netloc:
+            base_url = config.get('ckan.site_url')
+            base_urlobj = urlparse.urlparse(base_url)
+            urlobj = urlobj._replace(scheme=base_urlobj.scheme)
+            urlobj = urlobj._replace(netloc=base_urlobj.netloc)
+
+        if not urlobj.scheme:
+            urlobj = urlobj._replace(scheme='https')
+
+        return urlobj.geturl()
 
     def before_map(self, map):
         map.connect(
@@ -176,14 +207,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'cached_group_list': hdx_actions.cached_group_list,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
-            'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
+            # 'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
             'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
             'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             'hdx_user_show': hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values,
             # 'hdx_get_shape_geojson': hdx_actions.hdx_get_shape_geojson,
-            'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
+            # 'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
             'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list

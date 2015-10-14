@@ -35,43 +35,26 @@ Example:
       {% endblock %}
 
       {% block package_search_results_list %}
+        {#
           {% block package_search_results_indicators %}
               {% if my_c.tab=='indicators' %}
                   {{ h.snippet('search/snippets/indicator_list.html', query=my_c.q, packages=my_c.page.items, tab=my_c.tab, show_preview_on_first=False) }}
               {% endif %}
           {% endblock %}
 
-        {#
-        {% block package_search_results_features %}
-          {% if my_c.tab=='all' or my_c.tab=='features' %}
-            <div class="list-header">,
-              <span class="mL15 list-header-title">
-                Feature Pages
-              </span>
-              {% if my_c.tab=='all' and my_c.features %}
-                  <span class="mL15 list-header-showall">
-                    <a href="{{ my_c.other_links.features }}">{{ _("Show all feature pages") }}</a>
-                  </span>
-              {% endif %}
-              <span class="pull-right list-header-actions">
-              </span>
-            </div>
-            {{ h.snippet('search/snippets/feature_list.html', query=my_c.q, packages=my_c.features) }}
-          {% endif %}
-        {% endblock %}
-        #}
-
           {% block package_search_results_datasets %}
 
               {% if my_c.tab=='datasets' %}
-                  {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items) }}
+
               {% elif my_c.tab=='all' %}
                   {{ h.snippet('search/snippets/indicator_list.html',
                             query=my_c.q, packages=my_c.page.items, show_preview_on_first=False) }}
               {% endif %}
           {% endblock %}
+         #}
 
-
+          {# TODO: this should be replaced with indicator_list.html from above to show the indicator previews #}
+          {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items, full_facet_info=c.full_facet_info, page_size=c.page_size) }}
       {% endblock %}
     </div>
 
