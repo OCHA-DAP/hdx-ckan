@@ -245,7 +245,7 @@ class HDXSearchController(PackageController):
             # c.fields_grouped will contain a dict of params containing
             # a list of values eg {'tags':['tag1', 'tag2']}
             c.fields_grouped = {}
-            search_extras = {'ext_indicator': '0'}
+            search_extras = {}
             # limit = g.datasets_per_page
 
             fq = ''
@@ -506,6 +506,8 @@ class HDXSearchController(PackageController):
               },
             ]
           }
+          'num_of_indicators': 10,
+          'num_of_cods': 0
           .................
         }
         :param existing_facets: possible facets for this search
@@ -520,25 +522,37 @@ class HDXSearchController(PackageController):
 
         result = OrderedDict()
 
+        num_of_indicators = 0
+        num_of_cods = 0
         for category_key, category_title in title_translations.items():
             item_list = existing_facets.get(category_key, {}).get('items', [])
-            sorted_item_list = []
-            for item in item_list:
-                selected = item.get('name', '') in selected_facets.get(category_key, [])
-                new_item = {
-                    'count': item.get('count', 0),
-                    'name': item.get('name', ''),
-                    'display_name': item.get('display_name', ''),
-                    'selected': selected
+
+            # We're only interested in the number of items of the "indicator" facet
+            if category_key == 'indicator':
+                num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+            else:
+                sorted_item_list = []
+                for item in item_list:
+                    selected = item.get('name', '') in selected_facets.get(category_key, [])
+                    new_item = {
+                        'count': item.get('count', 0),
+                        'name': item.get('name', ''),
+                        'display_name': item.get('display_name', ''),
+                        'selected': selected
+                    }
+                    sorted_item_list.append(new_item)
+                    if category_key == 'tags' and new_item['name'] == 'cod':
+                        num_of_cods = new_item['count']
+
+                sorted_item_list.sort(key=lambda x: x.get('display_name'))
+
+                result[category_key] = {
+                    'name': category_key,
+                    'display_name': category_title,
+                    'items': sorted_item_list
                 }
-                sorted_item_list.append(new_item)
 
-            sorted_item_list.sort(key=lambda x: x.get('display_name'))
-
-            result[category_key] = {
-                'name': category_key,
-                'display_name': category_title,
-                'items': sorted_item_list
-            }
+        result['num_of_indicators'] = num_of_indicators
+        result['num_of_cods'] = num_of_cods
 
         return result

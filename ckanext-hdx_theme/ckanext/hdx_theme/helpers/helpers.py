@@ -54,8 +54,8 @@ def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
         facet, limit, exclude_active=exclude_active)
     filtered_no_items = c.search_facets.get(facet)['items'].__len__()
-    total_no_items = json.loads(
-        count.CountController.list[facet](count.CountController()))['count']
+    # total_no_items = json.loads(
+    #     count.CountController.list[facet](count.CountController()))['count']
     # if filtered_no_items <= 50 and filtered_no_items < total_no_items:
     #     no_items = filtered_no_items
     # else:

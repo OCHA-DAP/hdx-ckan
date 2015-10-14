@@ -2,6 +2,7 @@ import logging, re
 import unicodedata
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+from ckan.common import _
 
 import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
@@ -20,6 +21,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IFacets, inherit=True)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -83,3 +85,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {
             'populate_related_items_count': actions.populate_related_items_count
         }
+
+    def dataset_facets(self, facets_dict, package_type):
+        facets_dict['indicator'] = _('Indicators')
+
+        return facets_dict
