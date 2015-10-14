@@ -269,7 +269,7 @@ class HDXSearchController(PackageController):
             except:
                 limit = NUM_OF_ITEMS
 
-            c.page_size = limit
+            c.ext_page_size = limit
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
