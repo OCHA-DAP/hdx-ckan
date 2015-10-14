@@ -265,7 +265,7 @@ class HDXSearchController(PackageController):
             self._set_filters_are_selected_flag()
 
             try:
-                limit = int(request.params.get('page_size', NUM_OF_ITEMS))
+                limit = int(request.params.get('ext_page_size', NUM_OF_ITEMS))
             except:
                 limit = NUM_OF_ITEMS
 
