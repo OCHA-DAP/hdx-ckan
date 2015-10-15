@@ -487,28 +487,31 @@ class HDXSearchController(PackageController):
         '''
         Sample return
         {
-          'tags':
+          'facets':
           {
-            'display_name': u'Tags',
-            'name': 'tags',
-            'items': [
+              'tags':
               {
-                'count': 1,
-                'selected': True,
-                'display_name': 'africa',
-                'name': 'africa'
-              },
-              {
-                'count': 1,
-                'selected': False,
-                'display_name': 'environment',
-                'name': 'environment'
-              },
-            ]
-          }
+                'display_name': u'Tags',
+                'name': 'tags',
+                'items': [
+                  {
+                    'count': 1,
+                    'selected': True,
+                    'display_name': 'africa',
+                    'name': 'africa'
+                  },
+                  {
+                    'count': 1,
+                    'selected': False,
+                    'display_name': 'environment',
+                    'name': 'environment'
+                  },
+                ]
+              }
+              .................
+          },
           'num_of_indicators': 10,
           'num_of_cods': 0
-          .................
         }
         :param existing_facets: possible facets for this search
         :type existing_facets: dict
