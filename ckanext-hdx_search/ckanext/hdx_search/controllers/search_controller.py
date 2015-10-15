@@ -521,6 +521,7 @@ class HDXSearchController(PackageController):
         '''
 
         result = OrderedDict()
+        result['facets'] = OrderedDict()
 
         num_of_indicators = 0
         num_of_cods = 0
@@ -546,7 +547,7 @@ class HDXSearchController(PackageController):
 
                 sorted_item_list.sort(key=lambda x: x.get('display_name'))
 
-                result[category_key] = {
+                result['facets'][category_key] = {
                     'name': category_key,
                     'display_name': category_title,
                     'items': sorted_item_list
