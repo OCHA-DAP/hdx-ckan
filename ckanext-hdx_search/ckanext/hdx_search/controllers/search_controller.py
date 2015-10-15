@@ -17,7 +17,7 @@ import ckan.plugins as p
 from ckan.common import OrderedDict, _, json, request, c, g, response
 
 from ckan.controllers.package import PackageController
-import ckanext.hdx_search.actions.actions as hdx_actions
+from ckan.controllers.api import CONTENT_TYPES
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -109,63 +109,63 @@ def url_with_params(url, params):
 #         indicator = None
 #     return indicator
 
-
-def sort_features(features):
-    return sorted(features, key=lambda x: x['count'], reverse=True)
-
-
-@maintain.deprecated('Showing features in search results has been deprecated')
-def isolate_features(context, facets, q, tab, skip=0, limit=25):
-    ''' Showing features in search results has been deprecated.
-        Deprecated since 25.01.2015 - hdx 0.6.5
-    '''
-    import difflib
-    import random
-
-    try:
-        all_topics = get_action('tag_list')(
-            context, {'vocabulary_id': 'Topics'})
-    except NotFound, e:
-        all_topics = []
-        log.error('ERROR getting vocabulary named Topics: %r' %
-                  str(e.extra_msg))
-
-    extract = dict()
-    tags = list()
-    features = list()
-    for o in facets['organization']['items']:
-        tags.append(o['name'])
-        extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
-                              'url': h.url_for(controller='organization', action='read', id=o['name']),
-                              'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
-
-    for p in facets['vocab_Topics']['items']:
-        tags.append(p['name'])
-        extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
-                              'url': h.url_for(
-                                  controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                  action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '',
-                              'feature_type': 'topic', 'count': p['count']}
-
-    for g in facets['groups']['items']:
-        tags.append(g['name'])
-        extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
-                              'url': h.url_for(controller='group', action='read', id=g['name']),
-                              'description': g['description'], 'feature_type': 'country', 'count': g['count']}
-
-    if tab == 'all' and len(tags) > 3:
-        if q:
-            selected = difflib.get_close_matches(q, tags, cutoff=0.1, n=3)
-        else:
-            selected = random.sample(tags, 3)
-    else:
-        selected = tags
-    for s in selected:
-        features.append(extract[s])
-    if tab == 'features':
-        feature_list = sort_features(features)
-        return (feature_list[skip:skip + limit], len(features))
-    return features
+#
+# def sort_features(features):
+#     return sorted(features, key=lambda x: x['count'], reverse=True)
+#
+#
+# @maintain.deprecated('Showing features in search results has been deprecated')
+# def isolate_features(context, facets, q, tab, skip=0, limit=25):
+#     ''' Showing features in search results has been deprecated.
+#         Deprecated since 25.01.2015 - hdx 0.6.5
+#     '''
+#     import difflib
+#     import random
+#
+#     try:
+#         all_topics = get_action('tag_list')(
+#             context, {'vocabulary_id': 'Topics'})
+#     except NotFound, e:
+#         all_topics = []
+#         log.error('ERROR getting vocabulary named Topics: %r' %
+#                   str(e.extra_msg))
+#
+#     extract = dict()
+#     tags = list()
+#     features = list()
+#     for o in facets['organization']['items']:
+#         tags.append(o['name'])
+#         extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
+#                               'url': h.url_for(controller='organization', action='read', id=o['name']),
+#                               'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
+#
+#     for p in facets['vocab_Topics']['items']:
+#         tags.append(p['name'])
+#         extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
+#                               'url': h.url_for(
+#                                   controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+#                                   action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '',
+#                               'feature_type': 'topic', 'count': p['count']}
+#
+#     for g in facets['groups']['items']:
+#         tags.append(g['name'])
+#         extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
+#                               'url': h.url_for(controller='group', action='read', id=g['name']),
+#                               'description': g['description'], 'feature_type': 'country', 'count': g['count']}
+#
+#     if tab == 'all' and len(tags) > 3:
+#         if q:
+#             selected = difflib.get_close_matches(q, tags, cutoff=0.1, n=3)
+#         else:
+#             selected = random.sample(tags, 3)
+#     else:
+#         selected = tags
+#     for s in selected:
+#         features.append(extract[s])
+#     if tab == 'features':
+#         feature_list = sort_features(features)
+#         return (feature_list[skip:skip + limit], len(features))
+#     return features
 
 
 class HDXSearchController(PackageController):
@@ -173,6 +173,9 @@ class HDXSearchController(PackageController):
         from ckan.lib.search import SearchError
 
         package_type = self._guess_package_type()
+
+        # If we're only interested in the facet numbers a json will be returned with the numbers
+        facet_only_request = request.params.get('ext_only_facets') == 'true'
 
         if package_type == 'search':
             package_type = 'dataset'
@@ -200,10 +203,10 @@ class HDXSearchController(PackageController):
         #
         # c.drill_down_url = drill_down_url
 
-        self._set_remove_field_function()
+        # self._set_remove_field_function()
 
         sort_by = request.params.get('sort', None)
-        params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
+        # params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
         # The sort_by function seems to not be used anymore
 
@@ -265,7 +268,7 @@ class HDXSearchController(PackageController):
             self._set_filters_are_selected_flag()
 
             try:
-                limit = int(request.params.get('ext_page_size', NUM_OF_ITEMS))
+                limit = 1 if facet_only_request else int(request.params.get('ext_page_size', NUM_OF_ITEMS))
             except:
                 limit = NUM_OF_ITEMS
 
@@ -306,7 +309,7 @@ class HDXSearchController(PackageController):
 
             c.facet_titles = facets
 
-            # Line below to be removed after refactoring
+            # TODO Line below to be removed after refactoring
             c.tab = 'all'
 
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
@@ -334,12 +337,15 @@ class HDXSearchController(PackageController):
             'facets',
             'Use `c.search_facets` instead.')
 
-        self._setup_template_variables(context, {},
-                                       package_type=package_type)
-
         # return render(self._search_template(package_type))
-        c.full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles)
-        return self._search_template()
+        c.full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count)
+        if facet_only_request:
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            self._setup_template_variables(context, {},
+                                       package_type=package_type)
+            return self._search_template()
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):
@@ -407,19 +413,19 @@ class HDXSearchController(PackageController):
         else:
             c.filters_are_selected = False
 
-    def _set_remove_field_function(self):
-        '''
-        Defines the method that is used to generate the URL for a search result
-        with the specific key(s) removed. For example the function will be used
-        to generate the link when clicking on a remove filter link.
-        '''
-
-        def remove_field(key, value=None, replace=None):
-            return h.remove_url_param(key, value=value, replace=replace,
-                                      controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                      action='search')
-
-        c.remove_field = remove_field
+    # def _set_remove_field_function(self):
+    #     '''
+    #     Defines the method that is used to generate the URL for a search result
+    #     with the specific key(s) removed. For example the function will be used
+    #     to generate the link when clicking on a remove filter link.
+    #     '''
+    #
+    #     def remove_field(key, value=None, replace=None):
+    #         return h.remove_url_param(key, value=value, replace=replace,
+    #                                   controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+    #                                   action='search')
+    #
+    #     c.remove_field = remove_field
 
     # def _get_named_route(self):
     #     return 'search'
@@ -483,7 +489,7 @@ class HDXSearchController(PackageController):
         url = h.url_for('search')
         return url
 
-    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations):
+    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations, total_count):
         '''
         Sample return
         {
@@ -558,5 +564,6 @@ class HDXSearchController(PackageController):
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
+        result['num_of_total_items'] = total_count
 
         return result
