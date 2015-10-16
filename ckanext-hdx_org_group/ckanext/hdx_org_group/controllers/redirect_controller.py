@@ -11,5 +11,6 @@ import ckan.lib.helpers as h
 class RedirectController(base.BaseController):
     def redirect_to_org_list(self, id=None):
         h.redirect_to(controller='organization', action='index')
-        
-        
+
+    def redirect_to_group_list(self):
+        h.redirect_to(controller='group', action='index')
