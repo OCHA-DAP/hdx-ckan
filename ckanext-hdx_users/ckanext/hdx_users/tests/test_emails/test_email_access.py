@@ -108,11 +108,11 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
 
     def test_create_validation_token(self):
         res = self._create_user()
-
         user = model.User.get('valid@example.com')
         assert user
         token = umodel.ValidationToken.get(user.id)
         assert token
+
 
     def test_delete_user(self):
         res = self._create_user()
@@ -122,8 +122,7 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         offset2 = h.url_for(controller='user', action='delete', id=user.id)
         res2 = self.app.get(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
             'NFKD', admin.apikey).encode('ascii', 'ignore')})
-        print res2
-
+        
         profile_url = h.url_for(controller='user', action='read', id='valid@example.com')
 
         profile_result = self.app.get(profile_url, headers={'Authorization': unicodedata.normalize(

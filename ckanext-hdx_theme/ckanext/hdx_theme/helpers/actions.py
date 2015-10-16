@@ -1,6 +1,4 @@
-# import json
 import logging
-# import datetime
 import os
 import sys
 import requests
@@ -13,9 +11,6 @@ import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
-# import ckan.model.misc as misc
-# import ckan.plugins as plugins
-# import ckan.lib.plugins as lib_plugins
 import ckan.new_authz as new_authz
 import beaker.cache as bcache
 import ckan.model as model
@@ -191,11 +186,10 @@ def _create_user_dict(user_obj, **kw):
     return result
 
 
-def hdx_get_sys_admins(context, data_dict):
-    # TODO: check access that user is logged in
-    q = model.Session.query(model.User).filter(model.User.sysadmin == True)
-    return [{'name': m.name, 'display_name': m.fullname or m.name, 'email': m.email} for m in q.all()]
-    # return q.all();
+# def hdx_get_sys_admins(context, data_dict):
+#     # TODO: check access that user is logged in
+#     q = model.Session.query(model.User).filter(model.User.sysadmin == True)
+#     return [{'name': m.name, 'display_name': m.fullname or m.name, 'email': m.email} for m in q.all()]
 
 
 def hdx_send_new_org_request(context, data_dict):
@@ -423,24 +417,6 @@ def _add_to_filter_list(src, param_name, filter_list):
             filter_list.append('{}={}'.format(param_name, src))
 
     return filter_list
-
-
-def hdx_get_shape_info(context, data_dict):
-    try:
-        gis_url = data_dict.get('gis_url', None)
-        response = requests.get(gis_url, allow_redirects=True)
-        shape_info = response.text if hasattr(response, 'text') else ''
-    except:
-        log.error("Error retrieving the shape info content")
-        log.error(sys.exc_info()[0])
-        shape_info = json.dumps({
-            'state': 'failure',
-            'message': 'Error retrieving the shape info content',
-            'layer_id': 'None',
-            'error_type': 'ckan-generated-error',
-            'error_class': 'None'
-        })
-    return shape_info
 
 
 # def hdx_get_shape_geojson(context, data_dict):

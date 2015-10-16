@@ -1,0 +1,202 @@
+.ckan-icon {
+  display: inline-block;
+  vertical-align: text-bottom;
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-repeat: no-repeat;
+  background-position: 16px 16px;
+}
+/* Style dataset labels */
+.dataset-resources {
+  margin-top: 8px;
+  padding: 0;
+}
+.dataset-resources li {
+  display: inline;
+}
+.dataset-resources li a {
+  background-color: #aaaaaa;
+}
+/* Label style (eg. tags) */
+.label {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  color: #FFFFFF;
+  display: inline-block;
+  margin-right: 6px;
+  margin-bottom: 4px;
+  padding: 3px 10px;
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  min-width: 0;
+  vertical-align: middle;
+}
+.label.label-small {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  letter-spacing: 0.01em;
+  line-height: 16px;
+  margin-right: 0;
+  padding: 0 5px;
+  margin-bottom: 3px;
+}
+/* Pill styling - seem to be the similar to labels, but gray and with a button*/
+.pill {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #ffffff;
+  text-transform: uppercase;
+  padding: 5px 15px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background-color: #888888;
+  border-radius: 0;
+}
+.pill .icon-remove,
+.pill .glyphicon-remove {
+  cursor: pointer;
+  margin-left: 20px;
+}
+/* END Pill styling */
+/* END Label style */
+.label[data-format=html],
+.label[data-format*=html] {
+  background-color: #55a1ce;
+}
+.label[data-format=json],
+.label[data-format*=json] {
+  background-color: #ef7100;
+}
+.label[data-format=xml],
+.label[data-format*=xml] {
+  background-color: #ef7100;
+}
+.label[data-format=text],
+.label[data-format*=text] {
+  background-color: #74cbec;
+}
+.label[data-format=csv],
+.label[data-format*=csv] {
+  background-color: #dfb100;
+}
+.label[data-format=xls],
+.label[data-format*=xls] {
+  background-color: #2db55d;
+}
+.label[data-format=zip],
+.label[data-format*=zip] {
+  background-color: #686868;
+}
+.label[data-format=api],
+.label[data-format*=api] {
+  background-color: #ec96be;
+}
+.label[data-format=pdf],
+.label[data-format*=pdf] {
+  background-color: #e0051e;
+}
+.label[data-format=rdf],
+.label[data-format*=rdf],
+.label[data-format*=nquad],
+.label[data-format*=ntriples],
+.label[data-format*=turtle] {
+  background-color: #0b4498;
+}
+/* END Style dataset labels */
+.resource-item {
+  position: relative;
+  padding: 10px 10px 10px 60px;
+  margin-bottom: 0px;
+}
+.resource-item .format-label {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+.format-label {
+  display: inline-block;
+  vertical-align: text-bottom;
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  background-image: url("../../../../base/images/sprite-ckan-icons.png");
+  background-repeat: no-repeat;
+  background-position: 16px 16px;
+  text-indent: -900em;
+  background: url("../../../../base/images/sprite-resource-icons.png") no-repeat 0 0;
+}
+.format-label {
+  width: 32px;
+  height: 35px;
+  background-position: 0px -62px;
+}
+.format-label[data-format=rdf],
+.format-label[data-format*=rdf] {
+  width: 32px;
+  height: 35px;
+  background-position: -32px -62px;
+}
+.format-label[data-format=pdf],
+.format-label[data-format*=pdf] {
+  width: 32px;
+  height: 35px;
+  background-position: -64px -62px;
+}
+.format-label[data-format=api],
+.format-label[data-format*=api] {
+  width: 32px;
+  height: 35px;
+  background-position: -96px -62px;
+}
+.format-label[data-format=zip],
+.format-label[data-format*=zip] {
+  width: 32px;
+  height: 35px;
+  background-position: -128px -62px;
+}
+.format-label[data-format=xls],
+.format-label[data-format*=xls] {
+  width: 32px;
+  height: 35px;
+  background-position: -160px -62px;
+}
+.format-label[data-format=csv],
+.format-label[data-format*=csv] {
+  width: 32px;
+  height: 35px;
+  background-position: -192px -62px;
+}
+.format-label[data-format=txt],
+.format-label[data-format*=txt] {
+  width: 32px;
+  height: 35px;
+  background-position: -224px -62px;
+}
+.format-label[data-format=xml],
+.format-label[data-format*=xml] {
+  width: 32px;
+  height: 35px;
+  background-position: -256px -62px;
+}
+.format-label[data-format=json],
+.format-label[data-format*=json] {
+  width: 32px;
+  height: 35px;
+  background-position: -288px -62px;
+}
+.format-label[data-format=html],
+.format-label[data-format*=html] {
+  width: 32px;
+  height: 35px;
+  background-position: -320px -62px;
+}
