@@ -315,6 +315,7 @@ def hdx_group_delete(context, data_dict):
 
 
 def hdx_organization_create(context, data_dict):
+    data_dict['type'] = 'organization'
     test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
     result = hdx_group_or_org_create(context, data_dict, is_org=True)
     if not test:
