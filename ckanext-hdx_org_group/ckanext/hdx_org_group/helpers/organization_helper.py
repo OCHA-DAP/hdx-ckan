@@ -528,6 +528,11 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     session = context['session']
     data_dict['is_organization'] = is_org
 
+    if is_org:
+        check_access('organization_create', context, data_dict)
+    else:
+        check_access('group_create', context, data_dict)
+
     # get the schema
     group_type = data_dict.get('type')
     group_plugin = lib_plugins.lookup_group_plugin(group_type)
