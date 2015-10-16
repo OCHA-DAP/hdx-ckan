@@ -1074,7 +1074,7 @@ class DatasetController(PackageController):
 
         # set dataset type for google analytics - modified by HDX
         c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
-        c.ga_locations = self._google_analytics_location(c.pkg_dict)
+        c.ga_location = self._google_analytics_location(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')
