@@ -19,6 +19,8 @@ import sqlalchemy
 import logging
 import json
 
+from sqlalchemy.orm import load_only
+
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
 _check_access = logic.check_access
@@ -241,6 +243,14 @@ def package_search(context, data_dict):
         'sort': data_dict['sort']
     }
 
+    org_group_keys = []
+    for key, value in facets.items():
+        if key in ('groups', 'organization'):
+            org_group_keys.extend(value.keys())
+
+    groups = session.query(model.Group).options(load_only("name", "title")).filter(model.Group.name.in_(org_group_keys)).all()
+    group_display_names = {g.name: g.display_name for g in groups}
+
     # Transform facets into a more useful data structure.
     restructured_facets = {}
     for key, value in facets.items():
@@ -248,11 +258,12 @@ def package_search(context, data_dict):
             'title': key,
             'items': []
         }
+
         for key_, value_ in value.items():
             new_facet_dict = {}
             new_facet_dict['name'] = key_
             if key in ('groups', 'organization'):
-                new_facet_dict['display_name'] = caching.find_display_name_for_group(key_)
+                new_facet_dict['display_name'] = group_display_names.get(key_, key_)
             elif key == 'license_id':
                 license = model.Package.get_license_register().get(key_)
                 if license:
