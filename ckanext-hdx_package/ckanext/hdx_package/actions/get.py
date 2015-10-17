@@ -41,7 +41,7 @@ def package_search(context, data_dict):
     '''
 
     THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN
-    IT CACHES THE GROUPS AND ORG DISPALY NAMES
+    IT USES ONLY ONE SQLALCHEMY QUERY TO GET ORG AND GROUP DISPLAY_NAMES
 
     Searches for packages satisfying a given search criteria.
 
@@ -206,17 +206,19 @@ def package_search(context, data_dict):
         for package in query.results:
             # get the package object
             package, package_dict = package['id'], package.get(data_source)
-            pkg_query = session.query(model.Package)\
-                .filter(model.Package.id == package)\
-                .filter(model.Package.state == u'active')
-            pkg = pkg_query.first()
-
-            ## if the index has got a package that is not in ckan then
-            ## ignore it.
-            if not pkg:
-                log.warning('package %s in index but not in database'
-                            % package)
-                continue
+            # COMMENTING BELOW CODE FRAGMENT OUT ACCORDING TO A CHANGE DONE IN
+            # CKAN CORE https://github.com/ckan/ckan/commit/463bc3e3422ad60a5a00148167115485d93c1bbb#diff-4494aaf212251212949348df94158668
+            # pkg_query = session.query(model.Package)\
+            #     .filter(model.Package.id == package)\
+            #     .filter(model.Package.state == u'active')
+            # pkg = pkg_query.first()
+            #
+            # ## if the index has got a package that is not in ckan then
+            # ## ignore it.
+            # if not pkg:
+            #     log.warning('package %s in index but not in database'
+            #                 % package)
+            #     continue
             ## use data in search index if there
             if package_dict:
                 ## the package_dict still needs translating when being viewed
@@ -226,8 +228,8 @@ def package_search(context, data_dict):
                             plugins.IPackageController):
                         package_dict = item.before_view(package_dict)
                 results.append(package_dict)
-            else:
-                results.append(model_dictize.package_dictize(pkg, context))
+            # else:
+            #     results.append(model_dictize.package_dictize(pkg, context))
 
         count = query.count
         facets = query.facets
@@ -248,8 +250,8 @@ def package_search(context, data_dict):
         if key in ('groups', 'organization'):
             org_group_keys.extend(value.keys())
 
-    groups = session.query(model.Group).options(load_only("name", "title")).filter(model.Group.name.in_(org_group_keys)).all()
-    group_display_names = {g.name: g.display_name for g in groups}
+    groups = session.query(model.Group.name, model.Group.title).filter(model.Group.name.in_(org_group_keys)).all()
+    group_display_names = {g.name: g.title for g in groups}
 
     # Transform facets into a more useful data structure.
     restructured_facets = {}
