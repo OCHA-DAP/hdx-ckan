@@ -5,6 +5,7 @@ Created on Jun 2, 2014
 '''
 
 import ckan.plugins.toolkit as tk
+import ckan.model as model
 import beaker.cache as bcache
 import unicodedata
 
@@ -14,6 +15,14 @@ import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 bcache.cache_regions.update({
         'hdx_memory_cache':{
             'expire': 86400, # 1 days
+            'type':'memory',
+            'key_length': 250
+        }
+    })
+
+bcache.cache_regions.update({
+        'group_names_memory_cache':{
+            'expire': 600, # 10 mins
             'type':'memory',
             'key_length': 250
         }
@@ -59,3 +68,19 @@ def invalidate_group_caches():
         invalidate_func()
         
 group_invalidation_functions = [invalidate_cached_group_list, invalidate_cached_get_group_package_stuff]
+
+
+@bcache.cache_region('group_names_memory_cache', 'find_display_name_for_group')
+def find_display_name_for_group(name):
+    '''
+    This is used in package_search() to speed up the display name
+    :param name: name of the org or group
+    :type name: str
+    :return: The display_name of the org or group
+    :rtype: str
+    '''
+    group = model.Group.get(name)
+    if group:
+       return group.display_name
+    else:
+        return name
