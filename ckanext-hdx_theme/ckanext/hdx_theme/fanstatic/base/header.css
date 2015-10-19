@@ -1148,9 +1148,10 @@ textarea {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  padding: 10px;
+  padding: 10px 0;
 }
 .list-header-filters .ms-drop .ms-search {
+  padding: 0 10px;
   line-height: 30px;
 }
 .list-header-filters .ms-drop .ms-search input {
@@ -1177,15 +1178,32 @@ textarea {
   transform: rotate(45deg);
   transform-origin: 20% 40%;
 }
-.list-header-filters .ms-drop ul label {
+.list-header-filters .ms-drop ul {
+  padding: 0 8px;
+  margin-top: 10px;
+}
+.list-header-filters .ms-drop ul li {
+  padding: 0 5px;
+}
+.list-header-filters .ms-drop ul li:hover {
+  background-color: #edf6fd;
+}
+.list-header-filters .ms-drop ul li label {
+  margin: 2px 0;
+  width: 170px;
   font-size: 12px;
   font-weight: 400;
 }
-.list-header-filters .ms-drop ul label:after {
+.list-header-filters .ms-drop ul li label:after {
   content: "";
 }
-.list-header-filters .ms-drop ul label input {
-  top: 0;
+.list-header-filters .ms-drop ul li label input {
+  top: -1px;
+}
+.list-header-filters .ms-drop ul li span {
+  float: right;
+  font-size: 10px;
+  line-height: 24px;
 }
 .list-header-filters .filters-actions {
   font-family: 'Gotham-Book', sans-serif;
@@ -1193,17 +1211,44 @@ textarea {
   font-size: 12px;
   color: #007ce0;
 }
-.list-header-filters .filters-actions .main-action {
+.list-header-filters .filters-actions .loading .loading-image {
+  visibility: visible;
+}
+.list-header-filters .filters-actions .loading .main-action,
+.list-header-filters .filters-actions.error .main-action {
+  color: #888888;
+  cursor: not-allowed;
+}
+.list-header-filters .filters-actions .row {
+  line-height: 1;
+}
+.list-header-filters .filters-actions .loading-image {
+  margin-bottom: -37px;
+  visibility: hidden;
+}
+.list-header-filters .filters-actions .list-header-showall {
+  margin-top: 19px;
+  text-align: right;
+}
+.list-header-filters .filters-actions.error .filter-results {
+  color: #f2645a;
+}
+.list-header-filters .filters-actions .filter-results {
+  margin-top: 6px;
+  font-size: 10px;
+  text-align: right;
+}
+.list-header-filters .filters-actions .filter-action-item .main-action {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
 }
-.list-header-filters .filters-actions > span:before {
+.list-header-filters .filters-actions .filter-action-item:before {
   content: "|";
   margin-left: 2px;
   margin-right: 5px;
 }
-.list-header-filters .filters-actions > span:first-child:before {
+.list-header-filters .filters-actions .filter-action-item:first-child:before {
   content: "";
   margin: 0;
 }

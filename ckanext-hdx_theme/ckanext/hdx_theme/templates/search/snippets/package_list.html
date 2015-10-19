@@ -24,9 +24,9 @@ Example:
           {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
           <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
       </span>
-      <span class="mL45 list-header-showall">
+      <span class="mL45 list-header-showall filter-pagination">
           {% set limits = [25, 50, 100] %}
-          {% set limit_param = request.params.get('limit') %}
+          {% set limit_param = request.params.get('ext_page_size') %}
           {% set limit_selected = limit_param if limit_param else 25 %}
 
           Show
@@ -73,26 +73,49 @@ Example:
 <div class="list-header-filters">
     <span class="filters-title uppercase">{{ _("Filter by") }}:</span>
     <form style="display: inline;">
-        {% for id in full_facet_info %}
-        {% set facet = full_facet_info.get(id) %}
+
+        {% set facet_list = full_facet_info.get('facets') %}
+        {% for id in facet_list %}
+        {% set facet = facet_list.get(id) %}
         <select name="{{id}}" style="display: none; width: 140px;" class="filter-item" title="{{ facet.get('display_name') }}" multiple="multiple">
             {% for option in facet.get('items') %}
-            <option value="{{option.name}}">{{option.display_name}}</option>
+            <option value="{{option.name}}" count="{{option.count}}" {% if option.selected %}selected="selected"{% endif %}>{{option.display_name}}</option>
             {% endfor %}
         </select>
+        <div name="{{id}}_initial_values" style="display: none;">
+            {% for option in facet.get('items') %}
+            <option value="{{option.name}}" count="{{option.count}}" {% if option.selected %}selected="selected"{% endif %}>{{option.display_name}}</option>
+            {% endfor %}
+        </div>
         {% endfor %}
 
         <span class="mL15">
-            <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox">
+            {% set ext_indicator = request.params.get('ext_indicator') %}
+            <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox" {% if ext_indicator == "1" %} checked="checked" {% endif %}>
             <label for="show-indicators">Only show indicators</label>
         </span>
         <span class="mL15">
-            <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox">
+            {% set ext_cod = request.params.get('ext_cod') %}
+            <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if ext_cod == "1" %} checked="checked" {% endif %}>
             <label for="show-cods" title="{{ _("The Common Operational Datasets(CODs) are critical datasets that are used to support...") }}" data-module="bs_tooltip" data-toggle="tooltip">Only show CODs[?]</label>
         </span>
         <div class="filters-actions list-header-showall pull-right">
-            <span><a class="main-action" href="#">Apply</a></span>
-            <span><a class="reset-action" href="#">Reset</a></span>
+            <div class="row">
+                <div class="col-xs-12 loading-div">
+                    <img class="loading-image" src="base/images/loading-spinner.gif">
+                    <div class="pull-right list-header-showall">
+                        <span class="filter-action-item"><a class="main-action" href="#">Apply</a></span>
+                        <span class="filter-action-item"><a class="reset-action" href="#">Reset</a></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="filter-results">
+                        <span class="filter-results-number">{{c.page.item_count}}</span> results found
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

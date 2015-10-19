@@ -138,9 +138,10 @@
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
-    padding: 10px;
+    padding: 10px 0;
 
     .ms-search {
+      padding: 0 10px;
       line-height: @filterItemHeight;
       input {
         background: #FFF url('../vendor/multiple-select-1.1.0/multiple-select.png') no-repeat 100% -19px;
@@ -171,14 +172,30 @@
     }
 
     ul {
-      label {
-        font-size: 12px;
-        font-weight: 400;
-        &:after {
-          content: "";
+      padding: 0 8px;
+      margin-top: 10px;
+      li {
+        padding: 0 5px;
+        &:hover {
+          background-color: @extraLightBlueColor;
         }
-        input {
-          top: 0;
+        label {
+          margin: 2px 0;
+          width: 170px;
+          font-size: 12px;
+          font-weight: 400;
+          &:after {
+            content: "";
+          }
+
+          input {
+            top: -1px;
+          }
+        }
+        span {
+          float: right;
+          font-size: 10px;
+          line-height: 24px;
         }
       }
     }
@@ -187,11 +204,52 @@
   .filters-actions{
     .gothamBookFont(12px);
     color: @blueColor;
-    .main-action {
-      .gothamBoldFont(12px);
+
+    .loading {
+      .loading-image{
+        visibility: visible;
+      }
     }
 
-    > span {
+    .loading, &.error{
+      .main-action{
+        color: @grayColor;
+        cursor: not-allowed;
+      }
+    }
+
+    .row{
+      line-height: 1;
+    }
+
+    .loading-image{
+      margin-bottom: -37px;
+      visibility: hidden;
+    }
+
+
+    .list-header-showall{
+      margin-top: 19px;
+      //line-height: 1;
+      text-align: right;
+    }
+
+    &.error {
+      .filter-results {
+        color: @orangeColor;
+      }
+    }
+    .filter-results {
+      //line-height: 1;
+      margin-top: 6px;
+      font-size: 10px;
+      text-align: right;
+    }
+    .filter-action-item{
+      .main-action {
+        .gothamBoldFont(12px);
+      }
+
       &:before {
         content: "|";
         margin-left: 2px;
@@ -202,6 +260,7 @@
         margin: 0;
       }
     }
+
 
   }
 

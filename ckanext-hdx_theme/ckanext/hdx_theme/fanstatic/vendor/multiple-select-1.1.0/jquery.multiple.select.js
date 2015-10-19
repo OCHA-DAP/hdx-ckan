@@ -117,6 +117,7 @@
             if ($elm.is('option')) {
                 var value = $elm.val(),
                     text = $elm.text(),
+                    count = $elm.attr('count'),
                     selected = $elm.prop('selected'),
                     style = this.options.styler(value) ? ' style="' + this.options.styler(value) + '"' : '';
 
@@ -131,6 +132,7 @@
                                 '/> ',
                             text,
                         '</label>',
+                        '<span>' + count + '</span>',
                     '</li>'
                 );
             } else if (!group && $elm.is('optgroup')) {
