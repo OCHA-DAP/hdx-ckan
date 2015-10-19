@@ -806,10 +806,6 @@ a:focus,
 .js .js-hide.active {
   display: block;
 }
-.btn,
-label {
-  font-weight: bold;
-}
 label {
   cursor: pointer;
   font-size: 14px;
@@ -1355,7 +1351,7 @@ h4 small {
 .header-nav-search {
   height: 55px;
   margin-left: 15px;
-  width: 350px;
+  width: 310px;
   border-bottom: 3px solid #888888;
   margin-bottom: -3px;
 }
@@ -1383,7 +1379,7 @@ h4 small {
   text-shadow: none;
   box-shadow: none;
   transition: none;
-  width: 250px;
+  width: 248px;
   margin: 0;
   padding: 0;
   height: 28px;
@@ -1460,7 +1456,7 @@ h4 small {
   color: #cccccc;
 }
 .mainLinks {
-  padding-left: 25px;
+  padding-left: 20px;
   margin: 0;
 }
 .mainLinks > li {
