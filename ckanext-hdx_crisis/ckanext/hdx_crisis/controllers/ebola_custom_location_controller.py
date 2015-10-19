@@ -19,12 +19,14 @@ import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_crisis.dao.ebola_crisis_data_access as ebola_crisis_data_access
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
+from ckan.controllers.api import CONTENT_TYPES
+
 EbolaCrisisDataAccess = ebola_crisis_data_access.EbolaCrisisDataAccess
 
 render = base.render
 c = common.c
 request = common.request
-reponse = common.response
+response = common.response
 get_action = logic.get_action
 json = common.json
 _ = common._
@@ -41,8 +43,13 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
     '''
 
     def read(self):
-        template_data = self._generate_ebola_template_data()
-        return render('crisis/crisis-ebola.html', extra_vars=template_data)
+        if (self._is_facet_only_request()):
+            c.full_facet_info = self._generate_dataset_results()
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            template_data = self._generate_ebola_template_data()
+            return render('crisis/crisis-ebola.html', extra_vars=template_data)
 
     def _generate_ebola_template_data(self):
         '''
@@ -93,7 +100,6 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
 
         package_type = 'dataset'
         full_facet_info = self._search(package_type, pager_url)
-        full_facet_info.get('facets', {}).pop('groups', {})
 
         c.other_links['current_page_url'] = h.url_for('show_crisis')
 
