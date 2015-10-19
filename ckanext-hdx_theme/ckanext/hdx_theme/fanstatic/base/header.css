@@ -806,10 +806,6 @@ a:focus,
 .js .js-hide.active {
   display: block;
 }
-.btn,
-label {
-  font-weight: bold;
-}
 label {
   cursor: pointer;
   font-size: 14px;
