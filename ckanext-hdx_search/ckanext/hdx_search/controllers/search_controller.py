@@ -336,6 +336,7 @@ class HDXSearchController(PackageController):
             c.page = h.Page(collection=[])
         c.search_facets_limits = {}
         for facet in c.search_facets.keys():
+            limit = 1000
             try:
                 limit = int(request.params.get('_%s_limit' % facet,
                                                1000))

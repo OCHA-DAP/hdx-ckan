@@ -37,7 +37,10 @@
           </span>
 
         </div>
-        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.items) }}
+        {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items,
+                full_facet_info=c.full_facet_info,
+                ext_page_size=c.ext_page_size, sorting_selected=c.sort_by_selected,
+                other_links=c.other_links) }}
 	{% endblock %}
 	</div>
 	{% block page_pagination %}

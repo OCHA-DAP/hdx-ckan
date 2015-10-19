@@ -74,7 +74,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         if self._is_facet_only_request():
             c.full_facet_info = self.get_dataset_search_results(country_code)
             c.full_facet_info.get('facets', {}).pop('vocab_Topics', {})
-            c.full_facet_info.get('facets', {}).pop('groups', {})
             response.headers['Content-Type'] = CONTENT_TYPES['json']
             return json.dumps(c.full_facet_info)
         else:
@@ -83,7 +82,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
-            c.full_facet_info.get('facets', {}).pop('groups', {})
             vocab_topics_list = c.full_facet_info.get(
                 'facets', {}).pop('vocab_Topics', {}).get('items', [])
             c.cont_browsing = self.get_cont_browsing(
@@ -276,15 +274,12 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             params['page'] = page
             return h.url_for('country_read', id=country_code, **params) + suffix
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
-
         fq = 'groups:"{}"'.format(country_code)
         facets = {
             'vocab_Topics': _('Topics')
         }
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets)
+        c.full_facet_info.get('facets', {}).pop('groups', {})
 
         c.other_links['current_page_url'] = h.url_for('country_read', id=country_code)
 
