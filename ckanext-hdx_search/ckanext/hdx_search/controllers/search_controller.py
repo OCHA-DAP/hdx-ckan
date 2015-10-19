@@ -170,16 +170,6 @@ def url_with_params(url, params):
 
 class HDXSearchController(PackageController):
     def search(self):
-        from ckan.lib.search import SearchError
-
-        package_type = self._guess_package_type()
-
-        # If we're only interested in the facet numbers a json will be returned with the numbers
-        facet_only_request = request.params.get('ext_only_facets') == 'true'
-
-        if package_type == 'search':
-            package_type = 'dataset'
-
         try:
             context = {'model': model, 'user': c.user or c.author,
                        'auth_user_obj': c.userobj}
@@ -187,13 +177,38 @@ class HDXSearchController(PackageController):
         except NotAuthorized:
             abort(401, _('Not authorized to see this page'))
 
+        package_type = self._guess_package_type()
+
+        if package_type == 'search':
+            package_type = 'dataset'
+
+        params_nopage = self._params_nopage()
+        c.search_url_params = urlencode(_encode_params(params_nopage))
+
+        def pager_url(q=None, page=None):
+            params = list(params_nopage)
+            params.append(('page', page))
+            return self._search_url(params, package_type)
+
+        c.full_facet_info = self._search(package_type, pager_url)
+
+        # If we're only interested in the facet numbers a json will be returned with the numbers
+        if self._is_facet_only_request():
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            self._setup_template_variables(context, {},
+                                           package_type=package_type)
+            return self._search_template()
+
+    def _search(self, package_type, pager_url, additional_fq='', additional_facets=None):
+        from ckan.lib.search import SearchError
+
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', u'')
         c.query_error = False
 
         page = self._page_number()
-
-        params_nopage = self._params_nopage()
 
         # Commenting below parts as it doesn't seem to be used
         # def drill_down_url(alternative_url=None, **by):
@@ -235,12 +250,7 @@ class HDXSearchController(PackageController):
             c.sort_by_fields = [field.split()[0]
                                 for field in sort_by.split(',')]
 
-        def pager_url(q=None, page=None):
-            params = list(params_nopage)
-            params.append(('page', page))
-            return self._search_url(params, package_type)
 
-        c.search_url_params = urlencode(_encode_params(params_nopage))
         self._set_other_links()
 
         try:
@@ -251,7 +261,7 @@ class HDXSearchController(PackageController):
             search_extras = {}
             # limit = g.datasets_per_page
 
-            fq = ''
+            fq = additional_fq
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
@@ -268,7 +278,7 @@ class HDXSearchController(PackageController):
             self._set_filters_are_selected_flag()
 
             try:
-                limit = 1 if facet_only_request else int(request.params.get('ext_page_size', NUM_OF_ITEMS))
+                limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', NUM_OF_ITEMS))
             except:
                 limit = NUM_OF_ITEMS
 
@@ -307,6 +317,9 @@ class HDXSearchController(PackageController):
             for plugin in p.PluginImplementations(p.IFacets):
                 facets = plugin.dataset_facets(facets, package_type)
 
+            if additional_facets:
+                facets.update(additional_facets)
+
             c.facet_titles = facets
 
             # TODO Line below to be removed after refactoring
@@ -338,14 +351,11 @@ class HDXSearchController(PackageController):
             'Use `c.search_facets` instead.')
 
         # return render(self._search_template(package_type))
-        c.full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count)
-        if facet_only_request:
-            response.headers['Content-Type'] = CONTENT_TYPES['json']
-            return json.dumps(c.full_facet_info)
-        else:
-            self._setup_template_variables(context, {},
-                                       package_type=package_type)
-            return self._search_template()
+        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count)
+        return full_facet_info
+
+    def _is_facet_only_request(self):
+        return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):

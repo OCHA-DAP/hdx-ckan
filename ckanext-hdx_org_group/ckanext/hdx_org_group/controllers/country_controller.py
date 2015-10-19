@@ -20,6 +20,8 @@ import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 
+from ckan.controllers.api import CONTENT_TYPES
+
 render = base.render
 abort = base.abort
 NotFound = logic.NotFound
@@ -28,6 +30,7 @@ get_action = logic.get_action
 c = common.c
 request = common.request
 _ = common._
+response = common.response
 
 log = logging.getLogger(__name__)
 OrderedDict = collections.OrderedDict
@@ -64,26 +67,33 @@ indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
     def country_read(self, id):
-
         self.get_country(id)
 
-        # country_uuid = c.group_dict.get('id', id)
         country_code = c.group_dict.get('name', id)
 
-        self.get_dataset_results(country_code)
-        # c.hdx_group_activities = self.get_activity_stream(country_uuid)
+        if self._is_facet_only_request():
+            c.full_facet_info = self.get_dataset_search_results(country_code)
+            c.full_facet_info.get('facets', {}).pop('vocab_Topics', {})
+            c.full_facet_info.get('facets', {}).pop('groups', {})
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
 
-        query = self.get_dataset_search_results(country_code)
-        vocab_topics_dict = query.get(
-            'facets', {}).get('vocab_Topics', {})
-        c.cont_browsing = self.get_cont_browsing(
-            c.group_dict, vocab_topics_dict)
+            self.get_dataset_results(country_code)
+            # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
-        c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
+            c.full_facet_info = self.get_dataset_search_results(country_code)
+            c.full_facet_info.get('facets', {}).pop('groups', {})
+            vocab_topics_list = c.full_facet_info.get(
+                'facets', {}).pop('vocab_Topics', {}).get('items', [])
+            c.cont_browsing = self.get_cont_browsing(
+                c.group_dict, vocab_topics_list)
 
-        result = render('country/country.html')
+            c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
 
-        return result
+            result = render('country/country.html')
+
+            return result
 
     def get_country(self, id):
         if group_type != self.group_type:
@@ -199,11 +209,11 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
     #         'hdx_get_group_activity_list')(context, act_data_dict)
     #     return result
 
-    def get_cont_browsing(self, group_dict, vocab_topics_dict):
+    def get_cont_browsing(self, group_dict, vocab_topics_list):
         cont_browsing_dict = {
             'websites': self._process_websites(group_dict),
             'followers': self._get_followers(group_dict['id']),
-            'topics': self._get_topics(vocab_topics_dict)
+            'topics': self._get_topics(vocab_topics_list)
 
         }
         return cont_browsing_dict
@@ -240,35 +250,26 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         return followers_list
 
-    def _get_topics(self, vocab_topics_dict):
-        topics_by_freq = OrderedDict(
-            sorted(vocab_topics_dict.items(), key=lambda x: x[1]))
+    def _get_topics(self, vocab_topics_list):
         topic_list = [
             {
-                'name': topic,
-                'url': h.url_for(controller='package', action='search', vocab_Topics=topic)
-            } for topic in topics_by_freq.keys()
-            ]
+                'name': topic.get('name', ''),
+                'url': h.url_for(controller='package', action='search', vocab_Topics=topic.get('name')),
+                'count': topic.get('count', 0)
+            } for topic in vocab_topics_list
+        ]
+
+        topic_list.sort(key=lambda x: x.get('count', 0), reverse=True)
 
         return topic_list
 
     def get_dataset_search_results(self, country_code):
-        fq = u'groups:"{}" +dataset_type:dataset'.format(country_code)
-        facets = ['vocab_Topics']
+        package_type = 'dataset'
+
         suffix = '#datasets-section'
 
-        search_extras = {}
-        ext_indicator = request.params.get('ext_indicator', '0')
-        # if ext_indicator:
-        search_extras['ext_indicator'] = ext_indicator
-
-        # limit = self._allowed_num_of_items(search_extras)
-        limit = 8
-        page = self._page_number()
         params_nopage = {
             k: v for k, v in request.params.items() if k != 'page'}
-
-        sort_by = request.params.get('sort', None)
 
         def pager_url(q=None, page=None):
             params = params_nopage
@@ -279,18 +280,12 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}
 
-        self._set_other_links(
-            suffix=suffix, other_params_dict={'id': country_code})
-        query = self._performing_search('', fq, facets, limit, page, sort_by,
-                                                       search_extras, pager_url, context)
+        fq = 'groups:"{}"'.format(country_code)
+        facets = {
+            'vocab_Topics': _('Topics')
+        }
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets)
 
-        return query
+        c.other_links['current_page_url'] = h.url_for('country_read', id=country_code)
 
-    def _set_other_links(self, suffix='', other_params_dict=None):
-        super(CountryController, self)._set_other_links(
-            suffix=suffix, other_params_dict=other_params_dict)
-        # c.other_links['advanced_search'] = h.url_for(
-        #     'search', groups=other_params_dict['id'])
-
-    def _get_named_route(self):
-        return 'country_read'
+        return full_facet_info
