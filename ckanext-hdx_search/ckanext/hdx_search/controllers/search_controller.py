@@ -332,6 +332,7 @@ class HDXSearchController(PackageController):
                                        package_type=package_type)
 
         # return render(self._search_template(package_type))
+        c.search = True
         return self._search_template()
 
     def _which_tab_is_selected(self, search_extras):
