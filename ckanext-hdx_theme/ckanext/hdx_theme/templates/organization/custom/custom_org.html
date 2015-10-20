@@ -341,10 +341,10 @@
         </div>
         <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
             <div class="row">
-                <div class="col-xs-3 section-left">
+                {# <div class="col-xs-3 section-left">
                     {% snippet 'search/snippets/search_facets.html', facets=data.search_results.facets %}
-                </div>
-                <div class="col-xs-9 section-right">
+                </div>  #}
+                <div class="col-xs-12 section-right">
                     {% snippet 'search/snippets/search_results_wrapper_for_wfp.html',
                             tracking_enabled=g.tracking_enabled, my_c=c, search_results = data.search_results %}
                 </div>

@@ -201,7 +201,7 @@ class HDXSearchController(PackageController):
                                            package_type=package_type)
             return self._search_template()
 
-    def _search(self, package_type, pager_url, additional_fq='', additional_facets=None):
+    def _search(self, package_type, pager_url, additional_fq='', additional_facets=None, ignore_capacity_check=False):
         from ckan.lib.search import SearchError
 
         # unicode format (decoded from utf8)
@@ -287,6 +287,9 @@ class HDXSearchController(PackageController):
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
                        'auth_user_obj': c.userobj}
+
+            if ignore_capacity_check:
+                context['ignore_capacity_check'] = ignore_capacity_check
 
             if package_type and package_type != 'dataset':
                 # Only show datasets of this particular type

@@ -14,7 +14,7 @@ import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.new_authz as new_authz
 
-import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
+import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
@@ -53,7 +53,7 @@ def _get_embed_url(viz_config):
     return url
 
 
-class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
+class CustomOrgController(org.OrganizationController, search_controller.HDXSearchController):
     def org_read(self, id):
 
         org_info = self.get_org(id)
@@ -154,9 +154,9 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         # facets = {}
         # query_placeholder = ''
         try:
-            tab_results = self.get_dataset_search_results(
+            c.full_facet_info = self.get_dataset_search_results(
                 org_id, request.params)
-            tab = self.get_tab_name()
+            c.tab = tab = self.get_tab_name()
             # query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
             # facets = self.get_facet_information(
@@ -406,61 +406,37 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
     #                 item['is_used'] = False
 
     def get_dataset_search_results(self, org_code, req_params):
-        facets = ['groups', 'tags', 'res_format',
-                  'license_id', 'extras_indicator']
 
-        fq = u'organization:"{}" +dataset_type:dataset'.format(org_code)
-        for (param, value) in req_params.items():
-            is_fq_param = param in facets and param != 'ext_indicator'
-            if is_fq_param and len(value):
-                fq += u' {}:"{}"'.format(param, value)
+        user = c.user or c.author
+        ignore_capacity_check = False
+        is_org_member = (user and
+                         new_authz.has_user_permission_for_group_or_org(org_code, user, 'read'))
+        if is_org_member:
+            ignore_capacity_check = True
 
-        search_extras = {}
-        ext_indicator = req_params.get('ext_indicator', None)
-        if ext_indicator:
-            search_extras['ext_indicator'] = ext_indicator
+        package_type = 'dataset'
 
-        ext_activities = req_params.get('ext_activities', None)
-        if ext_activities:
-            search_extras['ext_activities'] = ext_activities
+        suffix = '#datasets-section'
 
-        # limit = self._allowed_num_of_items(search_extras)
-        limit = 8
-        page = self._page_number()
-        params_nopage = {k: v for k, v in req_params.items() if k != 'page'}
-
-        sort_by = req_params.get('sort', None)
+        params_nopage = {
+            k: v for k, v in request.params.items() if k != 'page'}
 
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
-            params['id'] = org_code
-            return h.url_for('organization_read', **params) + suffix
+            return h.url_for('organization_read', id=org_code, **params) + suffix
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+        fq = 'organization:"{}"'.format(org_code)
+        facets = {
+            'vocab_Topics': _('Topics')
+        }
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets,
+                                       ignore_capacity_check=ignore_capacity_check)
+        full_facet_info.get('facets', {}).pop('organization', {})
 
-        is_org_member = (context.get('user', None) and
-                         new_authz.has_user_permission_for_group_or_org(org_code, context.get('user'), 'read'))
-        if is_org_member:
-            context['ignore_capacity_check'] = True
+        c.other_links['current_page_url'] = h.url_for('organization_read', id=org_code)
 
-        self._set_other_links(
-            suffix=suffix, other_params_dict={'id': org_code})
-        query = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
-                                        search_extras, pager_url, context)
-
-        return query
-
-    def _set_other_links(self, suffix='', other_params_dict=None):
-        super(CustomOrgController, self)._set_other_links(
-            suffix=suffix, other_params_dict=other_params_dict)
-        # c.other_links['advanced_search'] = h.url_for(
-        #     'search', organization=other_params_dict['id'])
-
-    # def _get_named_route(self):
-    #     return 'organization_read'
+        return full_facet_info
 
     def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,
