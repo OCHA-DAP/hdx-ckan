@@ -281,7 +281,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         if not c.user:
             # Send validation email
-            self.send_validation_email(user, token)
+            tokens.send_validation_email(user, token)
 
         c.user = save_user
         return OnbSuccess
@@ -788,7 +788,7 @@ class ValidationController(ckan.controllers.user.UserController):
             abort(500, _('Error'))
 
         # Send Validation email
-        self.send_validation_email(user, token)
+        tokens.send_validation_email(user, token)
 
         post_register_url = h.url_for(
             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
@@ -797,31 +797,6 @@ class ValidationController(ckan.controllers.user.UserController):
         h.redirect_to(redirect_url.format(
             post_register_url,
             user['id']))
-
-    def send_validation_email(self, user, token):
-        validate_link = h.url_for(
-            controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-            action='validate',
-            token=token['token'])
-        link = '{0}{1}'
-        subject = "Please verify your email address"
-        print 'Validate link: ' + validate_link
-        html = """\
-        <html>
-          <head></head>
-          <body>
-            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
-            <p><a href="{link}">Verify Email</a></p>
-          </body>
-        </html>
-        """.format(link=link.format(config['ckan.site_url'], validate_link))
-
-        try:
-            # mailer.mail_recipient(user['name'], user['email'], subject, body)
-            hdx_mailer.mail_recipient('User', user['email'], subject, html)
-            return True
-        except:
-            return False
 
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
