@@ -23,7 +23,7 @@ function updateFilters(){
                 facetDiv.html(newHtml);
             }
         }
-        $(".list-header-filters .filter-item").multipleSelect('refresh');
+        $(".list-header-filters select.filter-item").multipleSelect('refresh');
         $(".list-header-filters .filters-actions .filter-results-number").text(results);
         var filterResults = $(".list-header-filters .filters-actions");
         if (results == 0)
@@ -37,7 +37,7 @@ function updateFilters(){
 }
 
 function getFilterUrl(onlyFilter) {
-    var params = $("select.filter-item").serialize();
+    var params = $(".list-header-filters .filter-item, #headerSearch").serialize();
     $("input.checkbox-filter:checked").each(function (idx, el) {
         if (params !== "") {
             params += "&";
@@ -76,8 +76,6 @@ $(document).ready(function(){
             multipleWidth: 225,
             filter: true,
             onClick: function(view){
-                console.log(">>>" + view.label + '(' + view.value + ') ' +
-                    (view.checked ? 'checked' : 'unchecked'));
                 updateFilters();
             }
         });
@@ -91,21 +89,29 @@ $(document).ready(function(){
     $(".filter-pagination a").on("click", function(){
         var $this = $(this);
         var value = $this.text();
-        window.location.href = replaceParam("ext_page_size", value);
+        var href = replaceParam("ext_page_size", value);
+        window.location.href = href + "#dataset-filter-start";
     });
 
     determineEnabledFirstTime();
 
     //$(".list-header-filters select.filter-item").attr("style", "");
-    $(".list-header-filters form").submit(function(event){
+    $("#headerSearch").change(function(){
+        updateFilters();
+    });
+
+    $(".list-header-filters form").submit(function(){
         //
         var $this = $(this);
 
         var url = getFilterUrl(false);
-        event.preventDefault();
-        window.location = url;
+        var filtersActions = $(".list-header-filters .filters-actions .loading-div");
+        filtersActions.addClass("loading");
+
+        window.location.href = url + "#dataset-filter-start";
+        return false;
     });
-    $(".list-header-filters a.reset-action").click(function(){
+    $(".list-header-filters a.reset-action").click(function(event){
         $(this).closest("form").resetForm();
         $(this).closest("form").find('select').each(function(idx, el){
             $el = $(el);
@@ -116,11 +122,12 @@ $(document).ready(function(){
         });
         updateFilters();
         determineEnabledFirstTime(true);
-        return false;
+        event.preventDefault();
     });
 
-    $(".list-header-filters a.main-action").click(function(){
+    $(".list-header-filters a.main-action").click(function(event){
         $(this).closest("form").submit();
+        event.preventDefault();
     });
 });
 

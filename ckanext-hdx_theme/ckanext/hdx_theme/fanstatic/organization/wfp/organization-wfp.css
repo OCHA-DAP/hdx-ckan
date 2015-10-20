@@ -1487,6 +1487,7 @@ textarea {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
+  cursor: pointer;
 }
 .list-header-filters .filters-actions .filter-action-item:before {
   content: "|";

@@ -18,11 +18,11 @@ Example:
 
 {% if packages %}
 <div id="base-filter-location" style="display: none;">{{other_links.get('current_page_url')}}</div>
-<div class="list-header">
+<div id="dataset-filter-start" class="list-header">
     <span class="list-header-title">{{ _("Data") }} [{{c.page.item_count}}]</span>
       <span class="mL30">
           {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
-          <input id="headerSearch" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
+          <input id="headerSearch" name="q" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
       </span>
       <span class="mL45 list-header-showall filter-pagination">
           {% set limits = [25, 50, 100] %}
@@ -48,10 +48,10 @@ Example:
     (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
     %}
     {% set sort_param = request.params.get('sort') %}
-    {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+    {% set sorting_selected = sort_param if sort_param else 'title_case_insensitive asc' %}
     <div class="form-select control-group control-order-by pull-right">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-        <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
+        <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">
             <a id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
                   <span class="dropdown-toggle-text">
                   {% for label, value in sorting %}
@@ -73,7 +73,7 @@ Example:
 <div class="list-header-filters">
     <span class="filters-title uppercase">{{ _("Filter by") }}:</span>
     <form style="display: inline;">
-
+        <input class="filter-item" type="hidden" name="sort" value="{{sorting_selected}}">
         {% set facet_list = full_facet_info.get('facets') %}
         {% for id in facet_list %}
         {% set facet = facet_list.get(id) %}
@@ -102,7 +102,7 @@ Example:
         <div class="filters-actions list-header-showall pull-right">
             <div class="row">
                 <div class="col-xs-12 loading-div">
-                    <img class="loading-image" src="base/images/loading-spinner.gif">
+                    <img class="loading-image" src="/images/filter_loading.gif">
                     <div class="pull-right list-header-showall">
                         <span class="filter-action-item"><a class="main-action" href="#">Apply</a></span>
                         <span class="filter-action-item"><a class="reset-action" href="#">Reset</a></span>
