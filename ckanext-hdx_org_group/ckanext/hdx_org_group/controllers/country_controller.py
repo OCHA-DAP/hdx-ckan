@@ -279,7 +279,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             'vocab_Topics': _('Topics')
         }
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets)
-        c.full_facet_info.get('facets', {}).pop('groups', {})
+        full_facet_info.get('facets', {}).pop('groups', {})
 
         c.other_links['current_page_url'] = h.url_for('country_read', id=country_code)
 
