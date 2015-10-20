@@ -65,6 +65,7 @@ class LoginController(ckan_user.UserController):
                 OnbErr
             if not token['valid']:
             # redirect to validation page
+                tokens.send_validation_email(user_obj, token)
                 return OnbValidationErr 
             if user_obj:
                 try:

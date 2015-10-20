@@ -32,8 +32,10 @@
                 <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
                   {{ last_user.fullname }}
                 </a>
-              {% endif %}  - Updated {{f_updated_time}}{% if package.dataset_date%}{% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
-| Dataset date: {{dataset_date}}{% endif %}{% endblock %}
+              {% endif %}  - Updated {{f_updated_time}}{% if package.dataset_date%}
+              {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
+              {% if dataset_date %}
+| Dataset date: {{dataset_date}}{% endif %}{% endif %}{% endblock %}
             {% endblock %}
           </div>
           <div class="dataset-actions">

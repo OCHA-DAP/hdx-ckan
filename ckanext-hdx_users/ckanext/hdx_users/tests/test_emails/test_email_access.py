@@ -113,6 +113,14 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         token = umodel.ValidationToken.get(user.id)
         assert token
 
+    def test_no_duplicate_tokens(self):
+        res = self._create_user()
+        try:
+            res2 = self._create_user()
+            assert False
+        except:
+            assert True
+
 
     def test_delete_user(self):
         res = self._create_user()
