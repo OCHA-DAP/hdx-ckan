@@ -9,7 +9,7 @@
 
 {% block breadcrumb_content %}
   <li class="active">{{ h.nav_link(_('Datasets'),
-  	controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search', highlight_actions = 'new index') }}</li>
+  	controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search', highlight_actions = 'new index') }}</li>
 {% endblock %}
 
 {% block primary_content %}
