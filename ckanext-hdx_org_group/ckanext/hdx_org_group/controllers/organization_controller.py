@@ -4,16 +4,23 @@ Created on Jan 13, 2015
 @author: alexandru-m-g
 '''
 
+import json
+
 import ckan.controllers.organization as org
 import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.base as base
+import ckan.common as common
+import ckan.new_authz as new_authz
 
 from ckan.common import c, request, _
 import ckan.lib.helpers as h
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
+import ckanext.hdx_search.controllers.search_controller as search_controller
+
+from ckan.controllers.api import CONTENT_TYPES
 
 abort = base.abort
 render = base.render
@@ -26,8 +33,9 @@ clean_dict = logic.clean_dict
 parse_params = logic.parse_params
 get_action = logic.get_action
 
+response = common.response
 
-class HDXOrganizationController(org.OrganizationController):
+class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True,
@@ -113,8 +121,70 @@ class HDXOrganizationController(org.OrganizationController):
             Org = custom_org.CustomOrgController()
             return Org.org_read(id)
         else:
-            self._read(id, limit)
-            return render(self._read_template(c.group_dict['type']))
+            org_info = self._get_org(id)
+            c.full_facet_info = self._get_dataset_search_results(org_info['name'])
+            if self._is_facet_only_request():
+                response.headers['Content-Type'] = CONTENT_TYPES['json']
+                return json.dumps(c.full_facet_info)
+            else:
+                self._read(id, limit)
+                return render(self._read_template(c.group_dict['type']))
+
+    def _get_org(self, org_id):
+        group_type = 'organization'
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author,
+                   'schema': self._db_to_form_schema(group_type=group_type),
+                   'for_view': True}
+        data_dict = {'id': org_id}
+
+        try:
+            context['include_datasets'] = False
+            result = get_action(
+                'hdx_light_group_show')(context, data_dict)
+
+            return result
+
+        except NotFound:
+            abort(404, _('Org not found'))
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read org %s') % id)
+
+        return {}
+
+    def _get_dataset_search_results(self, org_code):
+
+        user = c.user or c.author
+        ignore_capacity_check = False
+        is_org_member = (user and
+                         new_authz.has_user_permission_for_group_or_org(org_code, user, 'read'))
+        if is_org_member:
+            ignore_capacity_check = True
+
+        package_type = 'dataset'
+
+        suffix = '#datasets-section'
+
+        params_nopage = {
+            k: v for k, v in request.params.items() if k != 'page'}
+
+        def pager_url(q=None, page=None):
+            params = params_nopage
+            params['page'] = page
+            return h.url_for('organization_read', id=org_code, **params) + suffix
+
+        fq = 'organization:"{}"'.format(org_code)
+        facets = {
+            'vocab_Topics': _('Topics')
+        }
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets,
+                                       ignore_capacity_check=ignore_capacity_check)
+        full_facet_info.get('facets', {}).pop('organization', {})
+
+        c.other_links['current_page_url'] = h.url_for('organization_read', id=org_code)
+
+        return full_facet_info
 
     def custom_org_test(self, org):
         if [o.get('value', None) for o in org if o.get('key', '') == 'custom_org']:
