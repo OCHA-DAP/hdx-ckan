@@ -139,8 +139,11 @@ def get_dataset_date_format(date):
         drange = [date]
     dates = []
     for d in drange:
-        dt = datetime.datetime.strptime(d, '%m/%d/%Y')
-        dates.append(dt.strftime('%b %-d, %Y'))
+        try:
+            dt = datetime.datetime.strptime(d, '%m/%d/%Y')
+            dates.append(dt.strftime('%b %-d, %Y'))
+        except:
+            return False
     return '-'.join(dates)
 
 def get_group_followers(grp_id):
