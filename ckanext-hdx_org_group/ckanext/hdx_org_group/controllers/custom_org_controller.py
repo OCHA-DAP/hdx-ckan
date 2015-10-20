@@ -62,7 +62,6 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
         if self._is_facet_only_request():
             c.full_facet_info = self.get_dataset_search_results(org_info['name'])
-            c.full_facet_info.get('facets', {}).pop('vocab_Topics', {})
             response.headers['Content-Type'] = CONTENT_TYPES['json']
             return json.dumps(c.full_facet_info)
         else:
