@@ -264,7 +264,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_create': hdx_actions.package_create,
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
-            'package_purge': hdx_delete.hdx_dataset_purge
+            'package_purge': hdx_delete.hdx_dataset_purge,
+            'package_search': hdx_get.package_search
         }
 
     def before_show(self, resource_dict):
