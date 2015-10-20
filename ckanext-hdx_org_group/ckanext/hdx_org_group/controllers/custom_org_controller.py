@@ -22,6 +22,7 @@ import ckan.controllers.organization as org
 import ckanext.hdx_theme.helpers.less as less
 from urllib import urlencode
 from pylons import config
+from ckan.controllers.api import CONTENT_TYPES
 
 render = base.render
 abort = base.abort
@@ -30,6 +31,7 @@ NotAuthorized = logic.NotAuthorized
 get_action = logic.get_action
 c = common.c
 request = common.request
+response = common.response
 _ = common._
 
 log = logging.getLogger(__name__)
@@ -58,18 +60,24 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
         org_info = self.get_org(id)
 
-        template_data = self.generate_template_data(org_info)
+        if self._is_facet_only_request():
+            c.full_facet_info = self.get_dataset_search_results(org_info['name'])
+            c.full_facet_info.get('facets', {}).pop('vocab_Topics', {})
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            template_data = self.generate_template_data(org_info)
 
-        css_dest_dir = '/organization/' + org_info['name']
+            css_dest_dir = '/organization/' + org_info['name']
 
-        template_data['style'] = {
-            'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
-        }
+            template_data['style'] = {
+                'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
+            }
 
-        result = render(
-            'organization/custom/custom_org.html', extra_vars=template_data)
+            result = render(
+                'organization/custom/custom_org.html', extra_vars=template_data)
 
-        return result
+            return result
 
     def assemble_viz_config(self, vis_json_config):
         try:
@@ -154,8 +162,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         # facets = {}
         # query_placeholder = ''
         try:
-            c.full_facet_info = self.get_dataset_search_results(
-                org_id, request.params)
+            c.full_facet_info = self.get_dataset_search_results(org_id)
             c.tab = tab = self.get_tab_name()
             # query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
@@ -405,7 +412,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
     #                     self._get_named_route(), **params_item_copy) + suffix
     #                 item['is_used'] = False
 
-    def get_dataset_search_results(self, org_code, req_params):
+    def get_dataset_search_results(self, org_code):
 
         user = c.user or c.author
         ignore_capacity_check = False
