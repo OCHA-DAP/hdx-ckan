@@ -63,11 +63,11 @@
                             <ul class="mainLinks org-info-links">
                                 <li>
                                     <a
-                                            {% if data.permissions.view_members %}
-                                                href="{{ data.links.members }}"
-                                            {% else %}
-                                                href="#" class="disabled"
-                                            {% endif %} >
+                                        {% if data.permissions.view_members %}
+                                            href="{{ data.links.members }}"
+                                        {% else %}
+                                            href="#" class="disabled"
+                                        {% endif %} >
                                         {{ data.member_count }} {{ _('Members') }}
                                     </a>
                                 </li>
@@ -332,23 +332,9 @@
     {% endif %}
 
     <div class="row paddingRowHack whiteBackground">
-        <div id="datasets-section" class="col-xs-12 paddingLeftHack paddingRightHack">
-            <div class="list-header crisis-list-header">
-                <span class="mL15 list-header-title">
-                    {{ _("Data & Activity") }}
-                </span>
-            </div>
-        </div>
-        <div class="col-xs-12 paddingLeftHack paddingRightHack mTop35">
-            <div class="row">
-                {# <div class="col-xs-3 section-left">
-                    {% snippet 'search/snippets/search_facets.html', facets=data.search_results.facets %}
-                </div>  #}
-                <div class="col-xs-12 section-right">
-                    {% snippet 'search/snippets/search_results_wrapper_for_wfp.html',
-                            tracking_enabled=g.tracking_enabled, my_c=c, search_results = data.search_results %}
-                </div>
-            </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            {% snippet 'search/snippets/search_results_wrapper.html',
+                    tracking_enabled=g.tracking_enabled, my_c=c %}
         </div>
     </div>
 

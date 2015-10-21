@@ -15,6 +15,7 @@ Example:
 
 #}
 {% resource 'hdx_theme/dataset-search' %}
+{% resource 'hdx_theme/jquery.highlight' %}
 
 {% if packages %}
 <div id="base-filter-location" style="display: none;">{{other_links.get('current_page_url')}}</div>
@@ -48,7 +49,7 @@ Example:
     (_('Popular'), 'views_recent desc') if g.tracking_enabled else (false, false) ]
     %}
     {% set sort_param = request.params.get('sort') %}
-    {% set sorting_selected = sort_param if sort_param else 'title_case_insensitive asc' %}
+    {% set sorting_selected = sort_param if sort_param else 'score desc, metadata_modified desc' %}
     <div class="form-select control-group control-order-by pull-right">
         <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
         <div class="dropdown orderDropdown" data-module-additional="#dataset-filter-start">
