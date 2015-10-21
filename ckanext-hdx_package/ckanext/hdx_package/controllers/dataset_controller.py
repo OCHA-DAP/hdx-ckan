@@ -885,7 +885,7 @@ class DatasetController(PackageController):
 
         params = request.params.items()
         url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url",
+        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key="+config.get('hdx.google.dev_key',''),
                           data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
         item = r.json()
 
