@@ -2,6 +2,7 @@ import ckanext.hdx_users.model as umodel
 import ckan.logic as logic
 import pylons.config as config
 import ckan.lib.helpers as h
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 NotFound = logic.NotFound
 
