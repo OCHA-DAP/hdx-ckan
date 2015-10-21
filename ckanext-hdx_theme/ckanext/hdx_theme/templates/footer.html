@@ -3,13 +3,14 @@
     <div class="row paddingRowHack" style="background-color: rgb(54,54,54);">
       <div class="span12 col-xs-12 paddingLeftHack paddingRightHack">
         <div class="row">
-          <div class="span6 col-xs-6">
+          <div class="span6 col-xs-7">
             <div class="row">
               <div class="span6 col-xs-12">
                 <ul class="mainLinks">
                   <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
                   <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
                   <li><a href="/faq">{{ _('Faq') }}</a></li>
+                  <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>
                   <li><a href="http://docs.hdx.rwlabs.org/blog">{{ _('Blog') }}</a></li>
                   <li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Contact') }}</a></li>
                 </ul>
@@ -53,7 +54,7 @@
             </div>
 
           </div>
-          <div class="offset2 span1 col-xs-offset-2 col-xs-1">
+          <div class="offset2 span1 col-xs-offset-1 col-xs-1">
             <div class="pull-right ccIcon">
               <i class="icon-cc" style="color: white; font-size: 40px; margin-right: 30px;"></i>
             </div>

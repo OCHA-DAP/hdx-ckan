@@ -80,11 +80,11 @@
                     {% if ci %}
                     <div class="col-xs-12">
                         <div class="row auto-graph graph-item-wrapper">
-                            <div class="col-xs-12 graph-title">
+                            <div class="col-xs-12">
                                 {% set data_link_url = ci.data_link_url or "#" %}
-                                <div style="float: left;">{{ ci.title }}</div>
+                                <div class="graph-title pull-left">{{ ci.title }}</div>
                                 <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
-                                <div class="graph-info-label" style="float: left;">
+                                <div class="graph-info-label pull-left">
                                     <a>
                                         {{ _("Info") }}
                                         <div class="map-info legend source-list" style="display: none;"></div>

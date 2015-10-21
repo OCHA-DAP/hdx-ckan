@@ -17,7 +17,7 @@ import ckan.plugins as p
 from ckan.common import OrderedDict, _, json, request, c, g, response
 
 from ckan.controllers.package import PackageController
-import ckanext.hdx_search.actions.actions as hdx_actions
+from ckan.controllers.api import CONTENT_TYPES
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -43,8 +43,7 @@ ValidationError = logic.ValidationError
 check_access = logic.check_access
 get_action = logic.get_action
 
-SMALL_NUM_OF_ITEMS = 25  # Should always be 25 right now but may change later
-LARGE_NUM_OF_ITEMS = 25
+NUM_OF_ITEMS = 25
 
 
 def _encode_params(params):
@@ -55,129 +54,122 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
+#
+#
+# def search_for_all(context, data_dict):
+#     '''This search is independent of the tab in which the user
+#        currently is.
+#        The result is used for finding counts for datasets, indicators and totals
+#     '''
+#     facet_fields = data_dict.get('facet.field', [])
+#     facet_fields.append('extras_indicator')
+#     sort = data_dict.get('sort', None)
+#     if not sort:
+#         sort = 'score desc'
+#
+#     q = data_dict.get('q', None)
+#     search = {
+#         'q': data_dict.get('q', None),
+#         'fq': data_dict.get('fq', None),
+#         'facet.field': facet_fields,
+#         'facet.limit': 1000,
+#         'rows': 1,  # since this is just for facets,counts and one indicator, 1 should be enough
+#         'sort': 'extras_indicator desc, ' + sort,
+#     }
+#     #     if tab == 'indicators':
+#     #         search['extras'] = {'ext_indicator': 1}
+#     #     elif tab == 'datasets':
+#     #         search['extras'] = {'ext_indicator': 0}
+#     result = get_action('package_search')(context, search)
+#     return result
+#
+#
+# def extract_counts(result):
+#     ''' Extracts the counts from a search_for_all() result '''
+#
+#     total = result['count']
+#     if '1' in result['facets']['extras_indicator']:
+#         indicator_no = result['facets']['extras_indicator']['1']
+#     else:
+#         indicator_no = 0
+#     # dataset_no = total  - this is a wrong fix
+#     dataset_no = total - indicator_no
+#     return (dataset_no, indicator_no)
+#
+#
+# def extract_one_indicator(result):
+#     ''' Extracts the first indicator from a search_for_all() result '''
+#
+#     if len(result['results']) > 0 \
+#             and result['results'][0] \
+#             and 'indicator' in result['results'][0] \
+#             and result['results'][0]['indicator'] == '1':
+#         indicator = [result['results'][0]]
+#     else:
+#         indicator = None
+#     return indicator
 
-
-def search_for_all(context, data_dict):
-    '''This search is independent of the tab in which the user
-       currently is.
-       The result is used for finding counts for datasets, indicators and totals
-    '''
-    facet_fields = data_dict.get('facet.field', [])
-    facet_fields.append('extras_indicator')
-    sort = data_dict.get('sort', None)
-    if not sort:
-        sort = 'score desc'
-
-    q = data_dict.get('q', None)
-    search = {
-        'q': data_dict.get('q', None),
-        'fq': data_dict.get('fq', None),
-        'facet.field': facet_fields,
-        'facet.limit': 1000,
-        'rows': 1,  # since this is just for facets,counts and one indicator, 1 should be enough
-        'sort': 'extras_indicator desc, ' + sort,
-    }
-    #     if tab == 'indicators':
-    #         search['extras'] = {'ext_indicator': 1}
-    #     elif tab == 'datasets':
-    #         search['extras'] = {'ext_indicator': 0}
-    result = get_action('package_search')(context, search)
-    return result
-
-
-def extract_counts(result):
-    ''' Extracts the counts from a search_for_all() result '''
-
-    total = result['count']
-    if '1' in result['facets']['extras_indicator']:
-        indicator_no = result['facets']['extras_indicator']['1']
-    else:
-        indicator_no = 0
-    # dataset_no = total  - this is a wrong fix
-    dataset_no = total - indicator_no
-    return (dataset_no, indicator_no)
-
-
-def extract_one_indicator(result):
-    ''' Extracts the first indicator from a search_for_all() result '''
-
-    if len(result['results']) > 0 \
-            and result['results'][0] \
-            and 'indicator' in result['results'][0] \
-            and result['results'][0]['indicator'] == '1':
-        indicator = [result['results'][0]]
-    else:
-        indicator = None
-    return indicator
-
-
-def sort_features(features):
-    return sorted(features, key=lambda x: x['count'], reverse=True)
-
-
-@maintain.deprecated('Showing features in search results has been deprecated')
-def isolate_features(context, facets, q, tab, skip=0, limit=25):
-    ''' Showing features in search results has been deprecated.
-        Deprecated since 25.01.2015 - hdx 0.6.5
-    '''
-    import difflib
-    import random
-
-    try:
-        all_topics = get_action('tag_list')(
-            context, {'vocabulary_id': 'Topics'})
-    except NotFound, e:
-        all_topics = []
-        log.error('ERROR getting vocabulary named Topics: %r' %
-                  str(e.extra_msg))
-
-    extract = dict()
-    tags = list()
-    features = list()
-    for o in facets['organization']['items']:
-        tags.append(o['name'])
-        extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
-                              'url': h.url_for(controller='organization', action='read', id=o['name']),
-                              'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
-
-    for p in facets['vocab_Topics']['items']:
-        tags.append(p['name'])
-        extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
-                              'url': h.url_for(
-                                  controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                  action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '',
-                              'feature_type': 'topic', 'count': p['count']}
-
-    for g in facets['groups']['items']:
-        tags.append(g['name'])
-        extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
-                              'url': h.url_for(controller='group', action='read', id=g['name']),
-                              'description': g['description'], 'feature_type': 'country', 'count': g['count']}
-
-    if tab == 'all' and len(tags) > 3:
-        if q:
-            selected = difflib.get_close_matches(q, tags, cutoff=0.1, n=3)
-        else:
-            selected = random.sample(tags, 3)
-    else:
-        selected = tags
-    for s in selected:
-        features.append(extract[s])
-    if tab == 'features':
-        feature_list = sort_features(features)
-        return (feature_list[skip:skip + limit], len(features))
-    return features
+#
+# def sort_features(features):
+#     return sorted(features, key=lambda x: x['count'], reverse=True)
+#
+#
+# @maintain.deprecated('Showing features in search results has been deprecated')
+# def isolate_features(context, facets, q, tab, skip=0, limit=25):
+#     ''' Showing features in search results has been deprecated.
+#         Deprecated since 25.01.2015 - hdx 0.6.5
+#     '''
+#     import difflib
+#     import random
+#
+#     try:
+#         all_topics = get_action('tag_list')(
+#             context, {'vocabulary_id': 'Topics'})
+#     except NotFound, e:
+#         all_topics = []
+#         log.error('ERROR getting vocabulary named Topics: %r' %
+#                   str(e.extra_msg))
+#
+#     extract = dict()
+#     tags = list()
+#     features = list()
+#     for o in facets['organization']['items']:
+#         tags.append(o['name'])
+#         extract[o['name']] = {'name': o['name'], 'display_name': o['display_name'],
+#                               'url': h.url_for(controller='organization', action='read', id=o['name']),
+#                               'description': o['description'], 'feature_type': 'organization', 'count': o['count']}
+#
+#     for p in facets['vocab_Topics']['items']:
+#         tags.append(p['name'])
+#         extract[p['name']] = {'name': p['name'], 'display_name': p['name'],
+#                               'url': h.url_for(
+#                                   controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+#                                   action='search', vocab_Topics=p['name']), 'description': '', 'last_update': '',
+#                               'feature_type': 'topic', 'count': p['count']}
+#
+#     for g in facets['groups']['items']:
+#         tags.append(g['name'])
+#         extract[g['name']] = {'name': g['name'], 'display_name': g['display_name'],
+#                               'url': h.url_for(controller='group', action='read', id=g['name']),
+#                               'description': g['description'], 'feature_type': 'country', 'count': g['count']}
+#
+#     if tab == 'all' and len(tags) > 3:
+#         if q:
+#             selected = difflib.get_close_matches(q, tags, cutoff=0.1, n=3)
+#         else:
+#             selected = random.sample(tags, 3)
+#     else:
+#         selected = tags
+#     for s in selected:
+#         features.append(extract[s])
+#     if tab == 'features':
+#         feature_list = sort_features(features)
+#         return (feature_list[skip:skip + limit], len(features))
+#     return features
 
 
 class HDXSearchController(PackageController):
     def search(self):
-        from ckan.lib.search import SearchError
-
-        package_type = self._guess_package_type()
-
-        if package_type == 'search':
-            package_type = 'dataset'
-
         try:
             context = {'model': model, 'user': c.user or c.author,
                        'auth_user_obj': c.userobj}
@@ -185,13 +177,38 @@ class HDXSearchController(PackageController):
         except NotAuthorized:
             abort(401, _('Not authorized to see this page'))
 
+        package_type = self._guess_package_type()
+
+        if package_type == 'search':
+            package_type = 'dataset'
+
+        params_nopage = self._params_nopage()
+        c.search_url_params = urlencode(_encode_params(params_nopage))
+
+        def pager_url(q=None, page=None):
+            params = list(params_nopage)
+            params.append(('page', page))
+            return self._search_url(params, package_type)
+
+        c.full_facet_info = self._search(package_type, pager_url)
+
+        # If we're only interested in the facet numbers a json will be returned with the numbers
+        if self._is_facet_only_request():
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            self._setup_template_variables(context, {},
+                                           package_type=package_type)
+            return self._search_template()
+
+    def _search(self, package_type, pager_url, additional_fq='', additional_facets=None, ignore_capacity_check=False):
+        from ckan.lib.search import SearchError
+
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', u'')
         c.query_error = False
 
         page = self._page_number()
-
-        params_nopage = self._params_nopage()
 
         # Commenting below parts as it doesn't seem to be used
         # def drill_down_url(alternative_url=None, **by):
@@ -201,10 +218,10 @@ class HDXSearchController(PackageController):
         #
         # c.drill_down_url = drill_down_url
 
-        self._set_remove_field_function()
+        # self._set_remove_field_function()
 
         sort_by = request.params.get('sort', None)
-        params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
+        # params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
         # The sort_by function seems to not be used anymore
 
@@ -233,12 +250,7 @@ class HDXSearchController(PackageController):
             c.sort_by_fields = [field.split()[0]
                                 for field in sort_by.split(',')]
 
-        def pager_url(q=None, page=None):
-            params = list(params_nopage)
-            params.append(('page', page))
-            return self._search_url(params, package_type)
 
-        c.search_url_params = urlencode(_encode_params(params_nopage))
         self._set_other_links()
 
         try:
@@ -246,10 +258,10 @@ class HDXSearchController(PackageController):
             # c.fields_grouped will contain a dict of params containing
             # a list of values eg {'tags':['tag1', 'tag2']}
             c.fields_grouped = {}
-            search_extras = {'ext_indicator': '0'}
+            search_extras = {}
             # limit = g.datasets_per_page
 
-            fq = ''
+            fq = additional_fq
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
@@ -265,11 +277,19 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            limit = self._allowed_num_of_items(search_extras)
+            try:
+                limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', NUM_OF_ITEMS))
+            except:
+                limit = NUM_OF_ITEMS
+
+            c.ext_page_size = limit
 
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'for_view': True,
                        'auth_user_obj': c.userobj}
+
+            if ignore_capacity_check:
+                context['ignore_capacity_check'] = ignore_capacity_check
 
             if package_type and package_type != 'dataset':
                 # Only show datasets of this particular type
@@ -300,9 +320,14 @@ class HDXSearchController(PackageController):
             for plugin in p.PluginImplementations(p.IFacets):
                 facets = plugin.dataset_facets(facets, package_type)
 
+            if additional_facets:
+                facets.update(additional_facets)
+
             c.facet_titles = facets
 
-            self._which_tab_is_selected(search_extras)
+            # TODO Line below to be removed after refactoring
+            c.tab = 'all'
+
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
                                     search_extras, pager_url, context)
 
@@ -314,6 +339,7 @@ class HDXSearchController(PackageController):
             c.page = h.Page(collection=[])
         c.search_facets_limits = {}
         for facet in c.search_facets.keys():
+            limit = 1000
             try:
                 limit = int(request.params.get('_%s_limit' % facet,
                                                1000))
@@ -328,24 +354,12 @@ class HDXSearchController(PackageController):
             'facets',
             'Use `c.search_facets` instead.')
 
-        self._setup_template_variables(context, {},
-                                       package_type=package_type)
-
         # return render(self._search_template(package_type))
-        c.search = True
-        return self._search_template()
+        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count)
+        return full_facet_info
 
-    def _which_tab_is_selected(self, search_extras):
-        c.tab = 'datasets'
-        if 'ext_indicator' in search_extras:
-            if int(search_extras['ext_indicator']) == 1:
-                c.tab = 'indicators'
-            elif int(search_extras['ext_indicator']) == 0:
-                c.tab = 'datasets'
-        elif 'ext_feature' in search_extras:
-            c.tab = 'features'
-        elif 'ext_activities' in search_extras:
-            c.tab = 'activities'
+    def _is_facet_only_request(self):
+        return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):
@@ -361,62 +375,14 @@ class HDXSearchController(PackageController):
             'extras': search_extras
         }
 
-        self._decide_adding_dataset_criteria(data_dict)
-
         query = get_action('package_search')(context, data_dict)
 
         if not query.get('results', None):
             log.warn('No query results found for data_dict: {}. Query dict is: {}. Query time {}'.format(
                 str(data_dict), str(query), datetime.datetime.now()))
 
-        all_result = search_for_all(context, data_dict)
-        c.dataset_counts, c.indicator_counts = extract_counts(all_result)
-
-        c.count = c.dataset_counts + c.indicator_counts
-        if not c.count:
-            log.warn('Dataset counts are zero for data_dict: {}. all_results dict is: {}. Query time {}'.format(
-                str(data_dict), str(query), datetime.datetime.now()))
-
-        if c.tab == "all":
-            # c.features = isolate_features(
-            #     context, query['search_facets'], q, c.tab)
-            c.indicator = extract_one_indicator(all_result)
-            if c.indicator:
-                get_action('populate_related_items_count')(
-                    context, {'pkg_dict_list': c.indicator})
-            c.facets = all_result['facets']
-            c.search_facets = all_result['search_facets']
-        else:
-            c.facets = query['facets']
-            c.search_facets = query['search_facets']
-
-        #             if c.tab == 'features':
-        #                 c.features, c.count = isolate_features(
-        # context, query['search_facets'], q, c.tab, ((page - 1) * limit), limit)
-
-
-        #             if c.tab == 'features':
-        #                 c.page = h.Page(
-        #                     collection=c.features,
-        #                     page=page,
-        #                     url=pager_url,
-        #                     item_count=c.count,
-        #                     items_per_page=limit
-        #                 )
-        # c.facets = query['facets']
-        # c.search_facets = query['search_facets']
-        #                 c.page.items = c.features
-        #             else:
-        #                 c.page = h.Page(
-        #                     collection=query['results'],
-        #                     page=page,
-        #                     url=pager_url,
-        #                     item_count=query['count'],
-        #                     items_per_page=limit
-        #                 )
-        # c.facets = query['facets']
-        # c.search_facets = query['search_facets']
-        #                 c.page.items = query['results']
+        c.facets = query['facets']
+        c.search_facets = query['search_facets']
 
         get_action('populate_related_items_count')(
             context, {'pkg_dict_list': query['results']})
@@ -431,28 +397,9 @@ class HDXSearchController(PackageController):
         c.page.items = query['results']
         c.sort_by_selected = query['sort']
 
-        return query, all_result
+        c.count = c.item_count = query['count']
 
-    def _decide_adding_dataset_criteria(self, data_dict):
-        # For all tab, only paginate datasets
-        if c.tab == "all":
-            data_dict['extras']['ext_indicator'] = 0
-
-    def _allowed_num_of_items(self, search_extras):
-        '''
-        In case we show an indicator (or feature - not used anymore)
-        in the ALL tab of the search result page we need to show a
-        smaller number of items in the result body.
-
-        :param search_extras:
-        :type search_extras:
-        :return: How many items should be displayed in the result list
-        :rtype: int
-        '''
-        if 'ext_indicator' in search_extras or 'ext_feature' in search_extras:
-            return LARGE_NUM_OF_ITEMS
-        else:
-            return SMALL_NUM_OF_ITEMS
+        return query
 
     def _search_template(self):
         return render('search/search.html')
@@ -480,22 +427,22 @@ class HDXSearchController(PackageController):
         else:
             c.filters_are_selected = False
 
-    def _set_remove_field_function(self):
-        '''
-        Defines the method that is used to generate the URL for a search result
-        with the specific key(s) removed. For example the function will be used
-        to generate the link when clicking on a remove filter link.
-        '''
+    # def _set_remove_field_function(self):
+    #     '''
+    #     Defines the method that is used to generate the URL for a search result
+    #     with the specific key(s) removed. For example the function will be used
+    #     to generate the link when clicking on a remove filter link.
+    #     '''
+    #
+    #     def remove_field(key, value=None, replace=None):
+    #         return h.remove_url_param(key, value=value, replace=replace,
+    #                                   controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
+    #                                   action='search')
+    #
+    #     c.remove_field = remove_field
 
-        def remove_field(key, value=None, replace=None):
-            return h.remove_url_param(key, value=value, replace=replace,
-                                      controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController',
-                                      action='search')
-
-        c.remove_field = remove_field
-
-    def _get_named_route(self):
-        return 'search'
+    # def _get_named_route(self):
+    #     return 'search'
 
     def _page_number(self):
         try:
@@ -511,8 +458,8 @@ class HDXSearchController(PackageController):
 
     def _set_other_links(self, suffix='', other_params_dict=None):
         url_param_list = ['sort', 'q', 'organization', 'tags',
-                          'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters'];
-        named_route = self._get_named_route()
+                          'vocab_Topics', 'license_id', 'groups', 'res_format', '_show_filters']
+        # named_route = self._get_named_route()
         params = {}
 
         for k, v in request.params.items():
@@ -525,28 +472,112 @@ class HDXSearchController(PackageController):
         if other_params_dict:
             params.update(other_params_dict)
 
-        c.other_links = {}
-        c.other_links['all'] = h.url_for(named_route, **params) + suffix
-        params_copy = params.copy()
-        params_copy['ext_indicator'] = 1
-        c.other_links['indicators'] = h.url_for(
-            named_route, **params_copy) + suffix
-        params_copy['ext_indicator'] = 0
-        c.other_links['datasets'] = h.url_for(
-            named_route, **params_copy) + suffix
-
-        params_copy = params.copy()
-        params_copy['ext_feature'] = 1
-        c.other_links['features'] = h.url_for(
-            named_route, **params_copy) + suffix
-
-        params_copy = params.copy()
-        params_copy['ext_activities'] = 1
-        c.other_links['activities'] = h.url_for(
-            named_route, **params_copy) + suffix
+        # c.other_links['all'] = h.url_for(named_route, **params) + suffix
+        # params_copy = params.copy()
+        # params_copy['ext_indicator'] = 1
+        # c.other_links['indicators'] = h.url_for(
+        #     named_route, **params_copy) + suffix
+        # params_copy['ext_indicator'] = 0
+        # c.other_links['datasets'] = h.url_for(
+        #     named_route, **params_copy) + suffix
+        #
+        # params_copy = params.copy()
+        # params_copy['ext_feature'] = 1
+        # c.other_links['features'] = h.url_for(
+        #     named_route, **params_copy) + suffix
+        #
+        # params_copy = params.copy()
+        # params_copy['ext_activities'] = 1
+        # c.other_links['activities'] = h.url_for(
+        #     named_route, **params_copy) + suffix
 
         #         c.other_links['params'] = params
+        c.other_links = {}
         c.other_links['params_noq'] = {k: v for k, v in params.items()
                                        if k not in ['q', '_show_filters', 'id']}
         c.other_links['params_nosort_noq'] = {k: v for k, v in params.items()
                                               if k not in ['sort', 'q', 'id']}
+        c.other_links['current_page_url'] = self._current_url()
+
+    def _current_url(self):
+        url = h.url_for('search')
+        return url
+
+    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations, total_count):
+        '''
+        Sample return
+        {
+          'facets':
+          {
+              'tags':
+              {
+                'display_name': u'Tags',
+                'name': 'tags',
+                'items': [
+                  {
+                    'count': 1,
+                    'selected': True,
+                    'display_name': 'africa',
+                    'name': 'africa'
+                  },
+                  {
+                    'count': 1,
+                    'selected': False,
+                    'display_name': 'environment',
+                    'name': 'environment'
+                  },
+                ]
+              }
+              .................
+          },
+          'num_of_indicators': 10,
+          'num_of_cods': 0
+        }
+        :param existing_facets: possible facets for this search
+        :type existing_facets: dict
+        :param selected_facets: facets that have been selected
+        :type selected_facets: dict
+        :param title_translations: translation of the facet categories
+        :type title_translations: dict
+        :return: facet information
+        :rtype: OrderedDict
+        '''
+
+        result = OrderedDict()
+        result['facets'] = OrderedDict()
+
+        num_of_indicators = 0
+        num_of_cods = 0
+        for category_key, category_title in title_translations.items():
+            item_list = existing_facets.get(category_key, {}).get('items', [])
+
+            # We're only interested in the number of items of the "indicator" facet
+            if category_key == 'indicator':
+                num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+            else:
+                sorted_item_list = []
+                for item in item_list:
+                    selected = item.get('name', '') in selected_facets.get(category_key, [])
+                    new_item = {
+                        'count': item.get('count', 0),
+                        'name': item.get('name', ''),
+                        'display_name': item.get('display_name', ''),
+                        'selected': selected
+                    }
+                    sorted_item_list.append(new_item)
+                    if category_key == 'tags' and new_item['name'] == 'cod':
+                        num_of_cods = new_item['count']
+
+                sorted_item_list.sort(key=lambda x: x.get('display_name'))
+
+                result['facets'][category_key] = {
+                    'name': category_key,
+                    'display_name': category_title,
+                    'items': sorted_item_list
+                }
+
+        result['num_of_indicators'] = num_of_indicators
+        result['num_of_cods'] = num_of_cods
+        result['num_of_total_items'] = total_count
+
+        return result

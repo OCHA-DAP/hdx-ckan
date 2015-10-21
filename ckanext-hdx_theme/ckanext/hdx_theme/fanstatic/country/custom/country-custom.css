@@ -15,7 +15,7 @@
   margin-bottom: 10px;
   margin-left: 45px;
 }
-.graph-title .graph-info-label {
+.graph-title ~ .graph-info-label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 12px;

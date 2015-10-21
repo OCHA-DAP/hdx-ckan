@@ -1,45 +1,55 @@
 {% extends "organization/read_base.html" %}
 
-  	 {% set can_create_dataset = h.check_access('package_create', {'organization_id': c.group_dict.id, 'owner_org': c.group_dict.id}) %}
-     {% set can_edit = h.check_access('organization_update', {'id': c.group_dict.id}) %}
-     {% set can_actions = can_create_dataset or can_edit %}
+{% set can_create_dataset = h.check_access('package_create', {'organization_id': c.group_dict.id, 'owner_org': c.group_dict.id}) %}
+{% set can_edit = h.check_access('organization_update', {'id': c.group_dict.id}) %}
+{% set can_actions = can_create_dataset or can_edit %}
 
 {% block item_title_contrib %}
-<div class="paddingLeftHack">
-    <div class="mTop35">
-      <h1 class="itemTitle">
-        {{ c.group_dict.display_name or c.group_dict.title or c.group_dict.name }}
-      </h1>
-      
-	      <span class="followButtonContainer pull-right">
-	      	{{ h.follow_button('group', c.group_dict.id) }}<br/><br/>
-		 	{% if can_create_dataset %}
-	        	{% link_for _('+ Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='btn hdx-btn org-edit-btn' %}
-    		{% endif %}
-	      </span>
-    </div>
-    <div class="info-secondary-data">{{ _('Joined on') }} {{ h.render_datetime(c.group_dict.created or c.group_dict.metadata_created, with_hours=False) }}</div>
-</div>
+	<div>
+		<ul style="list-style: none; padding: 0;">
+			{% snippet 'browse/snippets/org_item_read.html', organization=c.group_dict %}
+		</ul>
+	</div>
+	<div>
+		<span class="followButtonContainer">
+			{% snippet 'indicator/snippets/share_button.html', title=c.group_dict.display_name, placement="right", button_class="social_share_trigger" %}
+			{{ h.follow_button('group', c.group_dict.id) }}
+			{% if can_create_dataset or can_edit %}
+				<span class="admin-menu">
+					<span class="dropdown">
+						<a href="#" class="btn btn-inverted dropdown-toggle dropdown-toggle-org" data-toggle="dropdown">
+							<span class="dropdown-toggle-text">ADMIN</span>
+							<b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu" role="menu">
+							{% if can_create_dataset %}
+							<li>
+								{% link_for _('Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='' %}
+							</li>
+							{% endif %}
+							{% if can_edit %}
+							<li>
+								{% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='' %}
+							</li>
+							{% endif %}
+						</ul>
+					</span>
+				</span>
+			{% endif %}
+		</span>
+	</div>
 {% endblock %}
 
 {% block page_header %}
-<div class="paddingLeftHack">
-	<header class="module-content page-header paddingRowHack mBottom10">
+<div>
+	<header class="module-content page-header paddingRowHack mTop20 mBottom10">
 		<ul class="nav nav-tabs paddingLeftHack paddingRightHack">
 		   {% block content_primary_nav %}
-				<li class="active">
-					{% link_for _('Datasets'), controller='organization', action='read', id=c.group_dict.name, class_='hdx-tab-button' %}
-				</li>
+			   	{{ h.build_nav_icon('organization_read', _('Datasets'), id=c.group_dict.name, class_='hdx-tab-button') }}
 			   	{{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
 		   {% endblock %}
 		</ul>
 	</header>
-	
-	{% if can_edit %}
-		<div class="content_action">
-			{% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='btn hdx-btn org-edit-btn' %}
-		</div>
-  	{% endif %}
 </div>
 {% endblock %}
 
@@ -49,48 +59,17 @@
 
 {% block primary_content_inner %}
 	{% block package_notes %}
-	<div class="paddingLeftHack">
-	    {% if c.group_dict.description %}
-	      <div class="notes embedded-content mBottom15">
-          {{ h.render_markdown(c.group_dict.description) }}
-	        {% set org_url = h.hdx_get_extras_element(c.group_dict.extras) %}
-		  	{% if org_url != '' %}
-		      	<span>
-		      		&nbsp;&nbsp;&nbsp;{{ _('More info') }}
-		      		<a class="info-item-name" href="{{ org_url }}" target="_blank">{{ c.group_dict.title or c.group_dict.name }} {{_('Website')}}</a>
-		      	</span>
- 	        {% endif %}
-	      </div>
-	    {% endif %}
-	</div>
     {% endblock %}
     {% block groups_search_form %}
-    <div class="paddingLeftHack">
-      {% set facets = {
-        'fields': c.fields_grouped,
-        'search': c.search_facets,
-        'titles': c.facet_titles,
-        'translated_fields': c.translated_fields,
-        'remove_field': c.remove_field }
-      %}
-      {% set sorting = [
-        (_('Name Ascending'), 'title_string asc'),
-        (_('Name Descending'), 'title_string desc'),
-        (_('Last Modified'), 'metadata_modified desc') ]
-      %}
-      {% set search_text=_('Search within') ~ ' '~ c.group.title ~'\'s ' ~ _('datasets...') %}
-      {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}
-      {% snippet 'snippets/search_form.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_option, count=c.page.item_count, facets=facets, placeholder=search_text, show_empty=request.params %}
-  </div>
 	{% endblock %}
 
 	{% block packages_list %}
       {% if c.page.items %}
-      <div>
-        {{ h.snippet('snippets/package_list.html', packages=c.page.items) }}
-    </div>
-        {% else %}
-        <div class="paddingLeftHack">
+		<div>
+			{% snippet 'search/snippets/search_results_wrapper.html', tracking_enabled=g.tracking_enabled, my_c=c %}
+		</div>
+  	  {% else %}
+        <div>
 		  	<div class="big-message">
 			    <p>
 			      {{ _('There are no datasets currently uploaded to this organisation.') }}
@@ -101,16 +80,11 @@
 				  {% endif %}
 			    </p>
 		    </div>
+		</div>
       {% endif %}
-  </div>
-  {% endblock %}
+    {% endblock %}
   {% block page_pagination %}
-    {{ c.page.pager(q=c.q) }}
   {% endblock %}
 {% endblock %}
 
-{% block organization_facets %}
-  {% for facet in c.facet_titles %}
-      {{ h.snippet('snippets/facet_list.html', title=c.facet_titles[facet], name=facet, extras={'id':c.group_dict.id}) }}
-  {% endfor %}
-{% endblock %}
+{% block secondary %}{% endblock %}
