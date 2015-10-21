@@ -132,6 +132,19 @@ def get_last_revision_timestamp_group(group_id):
         return h.render_datetime(activity.timestamp)
     return None
 
+def get_dataset_date_format(date):
+    #Is this a range?
+    drange = date.split('-')
+    if len(drange) != 2:
+        drange = [date]
+    dates = []
+    for d in drange:
+        try:
+            dt = datetime.datetime.strptime(d, '%m/%d/%Y')
+            dates.append(dt.strftime('%b %-d, %Y'))
+        except:
+            return False
+    return '-'.join(dates)
 
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(

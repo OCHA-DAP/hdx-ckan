@@ -198,6 +198,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_less_default': hdx_helpers.hdx_less_default,
             'hdx_popular': hdx_helpers.hdx_popular,
             'hdx_escape': hdx_helpers.hdx_escape,
+            'get_dataset_date_format': hdx_helpers.get_dataset_date_format
         }
 
     def get_actions(self):
