@@ -23,15 +23,15 @@ function replaceParam(key, value){
     var params = toParams(window.location.search);
     // Handle corruption of the query
     $.each(params, function(k,v){
-        //params[k] = params[k].replace(/\+/g,' ');
-        //params[k] = params[k].replace(/\%2B/g,' ');
         //reset page on resort
         if(k == 'page'){
             params[k] = 1
         }
     });
     params[key] = value;
-    return pathname + "?" + jQuery.param(params, true);
+    var ret = pathname + "?" + jQuery.param(params, true);
+
+    return encodeURIComponent(ret);
 }
 
 function toParams(searchUrl) {
