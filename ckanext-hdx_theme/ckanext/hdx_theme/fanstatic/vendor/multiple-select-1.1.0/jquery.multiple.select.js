@@ -378,12 +378,15 @@
                 text = $.trim(this.$searchInput.val()).toLowerCase();
             if (text.length === 0) {
                 this.$selectItems.parent().show();
+                this.$selectItems.parent().siblings().show();
                 this.$disableItems.parent().show();
                 this.$selectGroups.parent().show();
             } else {
                 this.$selectItems.each(function() {
                     var $parent = $(this).parent();
-                    $parent[$parent.text().toLowerCase().indexOf(text) < 0 ? 'hide' : 'show']();
+                    var s = ($parent.text().toLowerCase().indexOf(text) < 0 ? 'hide' : 'show');
+                    $parent[s]();
+                    $parent.siblings()[s]();
                 });
                 this.$disableItems.parent().hide();
                 this.$selectGroups.each(function() {
