@@ -50,7 +50,7 @@ def groups_not_empty(key, data, errors, context):
 
 def detect_format(key, data, errors, context):
     '''
-    resource name should not be empty
+    resource url should not be empty
     '''
 
     current_format = data.get(key)

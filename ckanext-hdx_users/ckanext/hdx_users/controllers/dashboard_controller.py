@@ -209,15 +209,12 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         the order and ultimately filter datasets displayed
         """
 
-        if self._is_facet_only_request():
-            c.full_facet_info = self._get_dataset_search_results()
-            response.headers['Content-Type'] = CONTENT_TYPES['json']
-            return json.dumps(c.full_facet_info)
-
         context = {'model': model, 'session': model.Session, 'for_view': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    # Do NOT fetch the datasets we will fetch via package_search
-                   'return_minimal': True
+                   'return_minimal': True,  # This is being deprecated
+                   'include_num_followers': False,
+                   'include_datasets': False
                    }
         data_dict = {'user_obj': c.userobj}
 
@@ -239,17 +236,22 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             abort(404, _('User not found'))
         except NotAuthorized:
             abort(401, _('Not authorized to see this page'))
-        c.user_dict = user_dict
-        c.is_myself = user_dict['name'] == c.user
-        c.about_formatted = h.render_markdown(user_dict['about'])
 
-        c.full_facet_info = self._get_dataset_search_results()
+        if self._is_facet_only_request():
+            c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
 
-        return render('user/dashboard_datasets.html')
+        else:
+            c.user_dict = user_dict
+            c.is_myself = user_dict['name'] == c.user
+            c.about_formatted = h.render_markdown(user_dict['about'])
 
-    def _get_dataset_search_results(self):
+            c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
 
-        user = c.user or c.author
+            return render('user/dashboard_datasets.html')
+
+    def _get_dataset_search_results(self, user_id):
 
         ignore_capacity_check = False
         if c.is_myself:
@@ -267,7 +269,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             params['page'] = page
             return h.url_for('user_dashboard_datasets', **params) + suffix
 
-        fq = 'extras_package_creator:"{}"'.format(user)
+        fq = 'creator_user_id:"{}"'.format(user_id)
 
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
                                        ignore_capacity_check=ignore_capacity_check)
