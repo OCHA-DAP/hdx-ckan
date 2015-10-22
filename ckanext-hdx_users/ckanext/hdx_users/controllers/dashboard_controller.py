@@ -3,10 +3,8 @@
     for usersand user profiles. Overrides functions found in user.py
 
 """
-import ckan.controllers.user as uc
 import logging
-from urllib import quote
-from urlparse import urlparse
+import json
 
 from pylons import config
 
@@ -15,14 +13,14 @@ import ckan.model as model
 import ckan.lib.helpers as h
 import ckan.new_authz as new_authz
 import ckan.logic as logic
-import ckan.logic.schema as schema
-import ckan.lib.captcha as captcha
-import ckan.lib.mailer as mailer
+import ckan.common as common
 import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.plugins as p
-import ckan.controllers.package as package
+import ckan.controllers.user as uc
+from ckan.controllers.api import CONTENT_TYPES
 
 from ckan.common import _, c, g, request
+
+import ckanext.hdx_search.controllers.search_controller as search_controller
 
 log = logging.getLogger(__name__)
 
@@ -39,8 +37,9 @@ ValidationError = logic.ValidationError
 DataError = dictization_functions.DataError
 unflatten = dictization_functions.unflatten
 
+response = common.response
 
-class DashboardController(uc.UserController):
+class DashboardController(uc.UserController, search_controller.HDXSearchController):
     def _get_dashboard_context(self, filter_type=None, filter_id=None, q=None):
         '''Return a dict needed by the dashboard view to determine context.'''
 
@@ -209,8 +208,17 @@ class DashboardController(uc.UserController):
         Dashboard tab for datasets. Modified to add the ability to change
         the order and ultimately filter datasets displayed
         """
+
+        if self._is_facet_only_request():
+            c.full_facet_info = self._get_dataset_search_results()
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+
         context = {'model': model, 'session': model.Session, 'for_view': True,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj}
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   # Do NOT fetch the datasets we will fetch via package_search
+                   'return_minimal': True
+                   }
         data_dict = {'user_obj': c.userobj}
 
         try:
@@ -235,22 +243,35 @@ class DashboardController(uc.UserController):
         c.is_myself = user_dict['name'] == c.user
         c.about_formatted = h.render_markdown(user_dict['about'])
 
-        #         c.page = user_dict['total_count']
-
-        params_nopage = [(k, v) for k, v in request.params.items() if k != 'page']
-
-        def pager_url(q=None, page=None):
-            params = list(params_nopage)
-            params.append(('page', page))
-            url = h.url_for('user_dashboard_datasets')
-            return package.url_with_params(url, params)
-
-        c.page = h.Page(
-            collection=[],
-            page=page,
-            url=pager_url,
-            item_count=user_dict['total_count'],
-            items_per_page=limit
-        )
+        c.full_facet_info = self._get_dataset_search_results()
 
         return render('user/dashboard_datasets.html')
+
+    def _get_dataset_search_results(self):
+
+        user = c.user or c.author
+
+        ignore_capacity_check = False
+        if c.is_myself:
+            ignore_capacity_check = True
+
+        package_type = 'dataset'
+
+        suffix = '#datasets-section'
+
+        params_nopage = {
+            k: v for k, v in request.params.items() if k != 'page'}
+
+        def pager_url(q=None, page=None):
+            params = params_nopage
+            params['page'] = page
+            return h.url_for('user_dashboard_datasets', **params) + suffix
+
+        fq = 'extras_package_creator:"{}"'.format(user)
+
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
+                                       ignore_capacity_check=ignore_capacity_check)
+
+        c.other_links['current_page_url'] = h.url_for('user_dashboard_datasets')
+
+        return full_facet_info
