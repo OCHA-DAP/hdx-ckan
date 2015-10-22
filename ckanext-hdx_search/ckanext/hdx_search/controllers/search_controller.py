@@ -327,7 +327,8 @@ class HDXSearchController(PackageController):
 
             # TODO Line below to be removed after refactoring
             c.tab = 'all'
-
+            if request.params.get('ext_cod', '0') == '1':
+                fq += ' tags:cod'
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
                                     search_extras, pager_url, context)
 

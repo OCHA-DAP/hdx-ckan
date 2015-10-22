@@ -237,6 +237,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         except NotAuthorized:
             abort(401, _('Not authorized to see this page'))
 
+        c.is_myself = user_dict['name'] == c.user
         if self._is_facet_only_request():
             c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
             response.headers['Content-Type'] = CONTENT_TYPES['json']
@@ -244,7 +245,6 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
         else:
             c.user_dict = user_dict
-            c.is_myself = user_dict['name'] == c.user
             c.about_formatted = h.render_markdown(user_dict['about'])
 
             c.full_facet_info = self._get_dataset_search_results(user_dict['id'])
