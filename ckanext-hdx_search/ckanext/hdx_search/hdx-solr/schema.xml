@@ -111,6 +111,7 @@
     <field name="tags" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="groups" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="organization" type="string" indexed="true" stored="true"/>
+    <field name="creator_user_id" type="string" indexed="true" stored="true"/>
 
     <field name="capacity" type="string" indexed="true" stored="true" multiValued="false"/>
 
