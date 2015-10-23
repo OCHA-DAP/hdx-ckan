@@ -29,7 +29,8 @@ function replaceParam(key, value){
         }
     });
     params[key] = value;
-    var ret = pathname + "?" + jQuery.param(params, true);
+    var parameters = decodeURIComponent(jQuery.param(params, true));
+    var ret = pathname + "?" + parameters;
     return ret;
 }
 
