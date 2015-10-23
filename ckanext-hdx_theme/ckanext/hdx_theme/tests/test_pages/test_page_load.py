@@ -49,7 +49,7 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_users hdx_user_extra hdx_theme')
+            'hdx_search hdx_org_group hdx_package hdx_users hdx_user_extra hdx_theme')
 
     @classmethod
     def setup_class(cls):
