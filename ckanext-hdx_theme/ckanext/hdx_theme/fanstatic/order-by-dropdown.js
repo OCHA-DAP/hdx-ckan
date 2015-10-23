@@ -30,14 +30,15 @@ function replaceParam(key, value){
     });
     params[key] = value;
     var ret = pathname + "?" + jQuery.param(params, true);
-
-    return encodeURIComponent(ret);
+    return ret;
 }
 
 function toParams(searchUrl) {
     var result = {};
     if(searchUrl == '')
         return result;
+
+    searchUrl = decodeURIComponent(searchUrl);
 
     var queryString = searchUrl.substr(1);
     var params = queryString.split("&");

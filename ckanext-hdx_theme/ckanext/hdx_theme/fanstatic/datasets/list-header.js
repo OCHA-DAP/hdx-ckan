@@ -91,6 +91,7 @@ $(document).ready(function(){
         var value = $this.text();
         var href = replaceParam("ext_page_size", value);
         window.location.href = href + "#dataset-filter-start";
+        return false;
     });
 
     determineEnabledFirstTime();
