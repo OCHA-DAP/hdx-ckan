@@ -91,6 +91,7 @@ $(document).ready(function(){
         var value = $this.text();
         var href = replaceParam("ext_page_size", value);
         window.location.href = href + "#dataset-filter-start";
+        return false;
     });
 
     determineEnabledFirstTime();
@@ -106,9 +107,11 @@ $(document).ready(function(){
 
         var url = getFilterUrl(false);
         var filtersActions = $(".list-header-filters .filters-actions .loading-div");
-        filtersActions.addClass("loading");
 
-        window.location.href = url + "#dataset-filter-start";
+        if ((window.location.pathname + window.location.search) != url){
+            filtersActions.addClass("loading");
+            window.location.href = url + "#dataset-filter-start";
+        }
         return false;
     });
     $(".list-header-filters a.reset-action").click(function(event){
