@@ -28,8 +28,9 @@ def performing_search_wrapper(self, *args):
     global indicator_counts
     global dataset_counts
     ret = performing_search_original(self, *args)
-    indicator_counts = c.indicator_counts
-    dataset_counts = c.dataset_counts
+    facet_item_list = c.search_facets.get('indicator', {}).get('items', [])
+    indicator_counts = next((item.get('count', 0) for item in facet_item_list if item.get('name', '') == '1'), 0)
+    dataset_counts = c.count - indicator_counts
     return ret
 
 
@@ -54,15 +55,15 @@ class TestHDXSearchResults(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         self.app.get(url)
 
         assert indicator_counts == 2, '2 indicator'
-        assert dataset_counts == 1, '3 datasets'
+        assert dataset_counts == 1, '1 dataset, 3 in total'
 
-        # Testing search on indicators tab
+        # Testing search with indicator filter
         url = h.url_for(
             'search', q='hdxtest', ext_indicator='1')
         self.app.get(url)
 
         assert indicator_counts == 2, '2 indicator'
-        assert dataset_counts == 1, '3 datasets'
+        assert dataset_counts == 0, '0 datasets because of the filter'
 
         search_controller.HDXSearchController._performing_search = performing_search_original
 

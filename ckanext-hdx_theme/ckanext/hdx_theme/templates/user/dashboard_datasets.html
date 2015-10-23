@@ -54,12 +54,15 @@
   {# This is a little different because the query is run through SQLAlchemy, not Solr #}
 
   <div style="min-height: 120px;">
-    {% if c.active_datasets %}
-      {{ h.snippet('search/snippets/package_list.html', packages=c.active_datasets, show_edit_link = true) }}
+    {% if c.page.items %}
+      {{ h.snippet('search/snippets/package_list.html',
+                query=c.q, packages=c.page.items, full_facet_info=c.full_facet_info,
+                ext_page_size=c.ext_page_size, sorting_selected=c.sort_by_selected,
+                other_links=c.other_links) }}
       {{ c.page.pager() }}
     {% else %}
       <p class="empty">
-        {{ _('You haven\'t created any datasets.') }}
+        {{ _("You haven\'t created any datasets.") }}
         {# Users must go to a country before creating a new collection so I commented out the part below.
           {% if h.check_access('package_create') %}
             {% link_for _('Create one now?'), controller='package', action='new' %}
