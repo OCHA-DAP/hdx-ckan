@@ -67,7 +67,7 @@
 
   @filterItemHeight: 30px;
   @filterItemWidth: 130px;
-  @filterItemSelectorWidth: 225px;
+  @filterItemSelectorWidth: 245px;
 
   .filter-item{
     width: @filterItemWidth;
@@ -126,8 +126,25 @@
       color: @blueColor;
       padding: 0 10px;
     }
+
+    > div {
+      top: 11px;
+      right: 6px;
+      width: auto;
+      height: auto;
+      background: none;
+      border-left-width: 7px;
+      border-right-width: 7px;
+      border-top-width: 7px;
+      margin: 0;
+      &.open{
+        border-top: none;
+        border-bottom: 7px solid @blueColor;
+      }
+    }
   }
 
+  @msDropPadding: 15px;
   .ms-drop {
     overflow: visible;
     line-height: 20px;
@@ -138,10 +155,10 @@
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     border-radius: 0;
-    padding: 10px 0;
+    padding: @msDropPadding 0;
 
     .ms-search {
-      padding: 0 10px;
+      padding: 0 @msDropPadding;
       line-height: @filterItemHeight;
       input {
         background: #FFF url('../vendor/multiple-select-1.1.0/multiple-select.png') no-repeat 100% -19px;
@@ -172,7 +189,7 @@
     }
 
     ul {
-      padding: 0 8px;
+      padding: 0 18px;
       margin-top: 10px;
       li {
         padding: 0 5px;
