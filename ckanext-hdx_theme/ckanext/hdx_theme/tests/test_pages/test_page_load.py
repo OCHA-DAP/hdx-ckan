@@ -14,38 +14,37 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
 pages = [
     {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
-        'action': 'register', 'usertype': None},
+     'action': 'register', 'usertype': None},
     {'controller': 'user',
-        'action': 'login', 'usertype': None},
+     'action': 'login', 'usertype': None},
     {'controller': 'ckanext.hdx_users.controllers.login_controller:LoginController',
-        'action': 'contribute', 'usertype': None},
+     'action': 'contribute', 'usertype': None},
     {'controller': 'package',
-        'action': 'search', 'usertype': 'all'},
+     'action': 'search', 'usertype': 'all'},
     {'controller': 'group',
-        'action': 'index', 'usertype': 'all'},
+     'action': 'index', 'usertype': 'all'},
     {'controller': 'organization',
-        'action': 'index', 'usertype': 'all'},
+     'action': 'index', 'usertype': 'all'},
     {'controller': 'home',
-        'action': 'about', 'usertype': 'all'},
+     'action': 'about', 'usertype': 'all'},
     {'controller': 'user',
-        'action': 'dashboard_organizations', 'usertype': 'all'},
+     'action': 'dashboard_organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        'action': 'dashboard', 'usertype': 'all'},
+     'action': 'dashboard', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
-        'action': 'dashboard_datasets', 'usertype': 'all'},
+     'action': 'dashboard_datasets', 'usertype': 'all'},
     {'controller': 'user',
-        'action': 'dashboard_groups', 'usertype': 'all'},
+     'action': 'dashboard_groups', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
-        'action': 'preselect', 'usertype': 'all'},
+     'action': 'preselect', 'usertype': 'all'},
     {'controller': 'user',
-        'action': 'dashboard_groups', 'usertype': 'all'},
+     'action': 'dashboard_groups', 'usertype': 'all'},
     {'controller': 'user', 'action': 'read',
-        'has_id': True, 'usertype': 'all'}
+     'has_id': True, 'usertype': 'all'}
 ]
 
 
 class TestPageLoad(hdx_test_base.HdxBaseTest):
-
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
@@ -85,8 +84,7 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
 
     def _try_page_load(self, controller, action, username, id=None):
         result = None
-        url = h.url_for(
-            controller=controller, action=action, id=id)
+        url = h.url_for(controller=controller, action=action, id=id)
         if username:
             user = model.User.by_name(username)
             result = self.app.get(url, headers={'Authorization': unicodedata.normalize(
