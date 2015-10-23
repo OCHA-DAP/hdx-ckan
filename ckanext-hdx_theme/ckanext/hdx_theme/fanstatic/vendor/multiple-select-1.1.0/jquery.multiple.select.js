@@ -19,7 +19,7 @@
 
         this.$parent = $('<div class="ms-parent"></div>');
         this.$choice = $('<button type="button" class="ms-choice"><span class="placeholder">' +
-            options.placeholder + '</span><div></div></button>');
+            options.placeholder + '</span><div class="caret"></div></button>');
         this.$drop = $('<div class="ms-drop ' + options.position + '"></div>');
         this.$el.after(this.$parent);
         this.$parent.append(this.$choice);
