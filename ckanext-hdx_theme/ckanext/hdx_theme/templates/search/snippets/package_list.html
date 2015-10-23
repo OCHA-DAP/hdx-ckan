@@ -93,12 +93,12 @@ Example:
         <span class="mL15">
             {% set ext_indicator = request.params.get('ext_indicator') %}
             <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox" {% if ext_indicator == "1" %} checked="checked" {% endif %}>
-            <label for="show-indicators">Only show indicators</label>
+            <label for="show-indicators" title="{{ _('An indicator is comparable across countries and has gone through a QA process') }}" data-module="bs_tooltip" data-toggle="tooltip">Only show indicators[?]</label>
         </span>
         <span class="mL15">
             {% set ext_cod = request.params.get('ext_cod') %}
             <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if ext_cod == "1" %} checked="checked" {% endif %}>
-            <label for="show-cods" title="{{ _("The Common Operational Datasets(CODs) are critical datasets that are used to support...") }}" data-module="bs_tooltip" data-toggle="tooltip">Only show CODs[?]</label>
+            <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">Only show CODs[?]</label>
         </span>
         <div class="filters-actions list-header-showall pull-right">
             <div class="row">
