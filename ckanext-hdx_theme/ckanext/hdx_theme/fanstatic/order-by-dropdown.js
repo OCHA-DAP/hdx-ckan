@@ -51,12 +51,12 @@ function toParams(searchUrl) {
         var value = keyPair[1];
 
         if(result[key] == undefined)
-            result[key] = value
+            result[key] = value;
         else{
             if(result[key] instanceof Array) //current var is an array just push another to it
-                result[key].push(value)
+                result[key].push(value);
             else{ //duplicate var, then it must store as an array
-                result[key] = [result[key]]
+                result[key] = [result[key]];
                 result[key].push(value)
             }
         }

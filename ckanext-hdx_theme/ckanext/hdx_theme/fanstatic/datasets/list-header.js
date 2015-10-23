@@ -107,9 +107,11 @@ $(document).ready(function(){
 
         var url = getFilterUrl(false);
         var filtersActions = $(".list-header-filters .filters-actions .loading-div");
-        filtersActions.addClass("loading");
 
-        window.location.href = url + "#dataset-filter-start";
+        if ((window.location.pathname + window.location.search) != url){
+            filtersActions.addClass("loading");
+            window.location.href = url + "#dataset-filter-start";
+        }
         return false;
     });
     $(".list-header-filters a.reset-action").click(function(event){
