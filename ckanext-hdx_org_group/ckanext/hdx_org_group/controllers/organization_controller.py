@@ -127,7 +127,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 response.headers['Content-Type'] = CONTENT_TYPES['json']
                 return json.dumps(c.full_facet_info)
             else:
-                self._read(id, limit)
+                # self._read(id, limit)
                 return render(self._read_template(c.group_dict['type']))
 
     def _get_org(self, org_id):
