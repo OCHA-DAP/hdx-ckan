@@ -532,7 +532,10 @@ class HDXSearchController(PackageController):
               .................
           },
           'num_of_indicators': 10,
-          'num_of_cods': 0
+          'num_of_cods': 0,
+          'num_of_total_items': 1000,
+          'query_selected': False #if there was any query in this request
+          'filters_selected': True #if there was any filter in this request
         }
         :param existing_facets: possible facets for this search
         :type existing_facets: dict
