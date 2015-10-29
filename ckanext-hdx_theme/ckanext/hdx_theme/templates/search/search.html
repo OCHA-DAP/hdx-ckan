@@ -14,6 +14,7 @@
 
 {% block primary_content %}
     {% block search_results_wrapper %}
+        <div id="search-recs"></div>
         {% snippet 'search/snippets/search_results_wrapper.html',
                             tracking_enabled=g.tracking_enabled, my_c=c %}
 
