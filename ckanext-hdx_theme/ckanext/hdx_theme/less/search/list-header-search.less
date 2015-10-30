@@ -22,7 +22,6 @@
     color: @darkGrayColor;
   }
 
-
   .header-search {
     line-height: 18px;
     .sourceSansProFont(400, 14px);
@@ -38,23 +37,68 @@
     }
   }
 
+  .dropdown.orderDropdown{
+    .dropdown-toggle{
+      cursor: pointer;
+    }
+  }
+
   .list-header-showall {
     color: @darkGrayColor;
     > span {
-
-      margin-right: 10px;
       &:before {
         content: "|";
         color: @grayColor;
+        margin-left: 10px;
         margin-right: 10px;
       }
       &:first-child:before {
         content: "";
+        margin-right: 0;
+      }
+      input[type="radio"] {
+        position: absolute;
+        visibility: hidden;
+
+        &:checked {
+          ~ label {
+            color: #000000;
+            cursor: default;
+          }
+        }
+
+        ~ label {
+          .sourceSansProFont(400, 14px);
+          color: @blueColor;
+          cursor: pointer;
+          &:after {
+            content: "";
+          }
+        }
       }
     }
   }
 
 }
+
+.list-header.list-header-min {
+  ~ .list-header-filters{
+    display: none;
+  }
+
+  ~ .list-header-apply{
+    display: none;
+  }
+
+  .header-search {
+    visibility: hidden;
+  }
+
+  .filters-actions {
+    visibility: hidden;
+  }
+}
+
 
 .list-header-filters{
   .list-header-mixin();
@@ -219,12 +263,15 @@
   }
 
   .filters-actions{
+    padding-left: 10px;
+
     .gothamBookFont(12px);
     color: @blueColor;
 
     .loading {
       .loading-image{
         visibility: visible;
+        margin-right: 3px;
       }
     }
 
@@ -280,6 +327,68 @@
     }
 
 
+  }
+
+}
+
+.list-header-apply {
+  .list-header-mixin();
+  background-color: @extraLightGrayColor;
+  height: 30px;
+  line-height: 29px;
+  display: none;
+
+  .filter-results {
+    color: @blueColor;
+    .gothamBoldFont(13px);
+
+    &.error {
+      color: @orangeColor;
+
+      ~ .loading-div {
+        .main-action{
+          display: none;
+        }
+        .or-text{
+          display: none;
+        }
+        .reset-action {
+          background: @orangeColor;
+          color: #ffffff;
+          padding: 2px 6px;
+        }
+      }
+    }
+  }
+
+  .filter-action-item {
+    .btn {
+      padding: 2px 6px;
+      text-transform: none;
+      margin-top: -2px;
+      &.main-action{
+        background-color: @blueColor;
+      }
+      &.reset-action{
+        .gothamBoldFont(12px);
+        background: transparent;
+        color: @blueColor;
+        padding: 2px 0px;
+      }
+    }
+
+  }
+
+  .loading-image {
+    display: none;
+
+    &.loading{
+      display: block;
+      padding-top: 12px;
+      ~ .filters-actions {
+        display: none;
+      }
+    }
   }
 
 }
