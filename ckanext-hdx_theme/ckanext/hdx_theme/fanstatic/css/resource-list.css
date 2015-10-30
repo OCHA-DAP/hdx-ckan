@@ -7,5 +7,12 @@
 		text-align: justify;
 		max-width: 450px;
 	}
+
+	.format-filesize-label{
+		font-family: "SourceSansPro-Regular", sans;
+		font-size: 14pt;
+		font-weight: normal;
+		color: #000;
+	}
 /* END Style Resources List*/
 
