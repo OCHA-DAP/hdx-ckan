@@ -339,6 +339,10 @@ class HDXNewViewsPlugin(plugins.SingletonPlugin):
                 },
                 {
                     'value': 'area',
+                    'text': p.toolkit._('Line Area Chart')
+                },
+                {
+                    'value': 'line',
                     'text': p.toolkit._('Line Chart')
                 },
             ],
