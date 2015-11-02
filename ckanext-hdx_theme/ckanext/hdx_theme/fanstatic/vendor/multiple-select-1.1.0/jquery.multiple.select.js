@@ -228,6 +228,7 @@
             }
             if (this.options.filter) {
                 this.$searchInput.val('');
+                this.$searchInput.focus();
                 this.filter();
             }
             this.options.onOpen();

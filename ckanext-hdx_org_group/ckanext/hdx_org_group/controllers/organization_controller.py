@@ -100,7 +100,10 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                    'user': c.user or c.author,
                    'schema': self._db_to_form_schema(group_type=group_type),
                    'for_view': True}
-        data_dict = {'id': id}
+        data_dict = {
+            'id': id,
+            'include_datasets': False  # This is needed in case we use group_show() instead of hdx_light_group_show()
+        }
 
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', '')
@@ -109,8 +112,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             # Do not query for the group datasets when dictizing, as they will
             # be ignored and get requested on the controller anyway
             context['include_datasets'] = False
-            c.group_dict = self._action('group_show')(context, data_dict)
-            c.group = context['group']
+            c.group_dict = self._action('hdx_light_group_show')(context, data_dict)
+            # c.group = context['group']
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
@@ -123,11 +126,16 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         else:
             org_info = self._get_org(id)
             c.full_facet_info = self._get_dataset_search_results(org_info['name'])
+
+            # setting the count with the value that was populated from search_controller so that templates find it
+            c.group_dict['packages'] = c.count
+            c.group_dict['type'] = 'organization'
+
             if self._is_facet_only_request():
                 response.headers['Content-Type'] = CONTENT_TYPES['json']
                 return json.dumps(c.full_facet_info)
             else:
-                self._read(id, limit)
+                # self._read(id, limit)
                 return render(self._read_template(c.group_dict['type']))
 
     def _get_org(self, org_id):
