@@ -180,6 +180,12 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'for_view': True}
         data_dict = {'id': id, 'user_obj': c.userobj, 'offset': offset}
+        try:
+            user_dict = get_action('user_show')(context, data_dict)
+        except NotFound:
+            came_from = h.url_for(controller='user', action='dashboard', __ckan_no_root=True)
+            h.redirect_to(controller='user',
+                              action='login', came_from=came_from)
         self._setup_template_variables(context, data_dict)
 
         q = request.params.get('q', u'')
@@ -217,6 +223,13 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
                    'include_datasets': False
                    }
         data_dict = {'user_obj': c.userobj}
+
+        try:
+            user_dict = get_action('user_show')(context, data_dict)
+        except NotFound:
+            came_from = h.url_for(controller='user', action='dashboard_datasets', __ckan_no_root=True)
+            h.redirect_to(controller='user',
+                              action='login', came_from=came_from)
 
         try:
             page = int(request.params.get('page', 1))
