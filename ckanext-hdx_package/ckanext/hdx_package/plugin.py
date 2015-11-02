@@ -4,12 +4,13 @@ Created on Apr 10, 2014
 @author:alexandru-m-g
 '''
 import logging
+from routes.mapper import SubMapper
+import pylons.config as config
+import json
+
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-from routes.mapper import SubMapper
-import pylons.config as config
-
 import ckan.plugins as p
 import ckan.plugins.toolkit as toolkit
 import ckan.model as model
@@ -297,7 +298,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return app
 
 
-class HDXNewViewsPlugin(plugins.SingletonPlugin):
+class HDXChartViewsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IResourceView, inherit=True)
 
     def info(self):
@@ -313,7 +314,7 @@ class HDXNewViewsPlugin(plugins.SingletonPlugin):
         }
         return {
             'name': 'hdx_chart_view',
-            'title': 'HDX Chart',
+            'title': 'Line / Bar Chart',
             'filterable': False,
             'preview_enabled': True,
             'icon': 'bar-chart',
@@ -382,3 +383,42 @@ class HDXNewViewsPlugin(plugins.SingletonPlugin):
         data = {'resource_id': resource['id'], 'limit': 0}
         fields = toolkit.get_action('datastore_search')({}, data)['fields']
         return [{'value': col['id'], 'text': col['id']} for col in fields if col != '_id']
+
+
+class HDXGeopreviewPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IResourceView, inherit=True)
+
+    def info(self):
+        return {
+            'name': 'hdx_geopreview_view',
+            'title': 'HDX Geopreview',
+            'filterable': False,
+            'preview_enabled': True,
+            'requires_datastore': False,
+            'iframed': True,
+            'default_title': p.toolkit._('Geopreview')
+        }
+
+    def can_view(self, data_dict):
+        from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+
+        resource = data_dict.get('resource', {})
+        format = resource.get('format')
+        format = format.lower() if format else ''
+        return format in GIS_FORMATS
+
+    def setup_template_variables(self, context, data_dict):
+        from ckanext.hdx_package.controllers.dataset_controller import DatasetController
+
+        shape_info = DatasetController._process_shapes([data_dict['resource']])
+
+        return {
+            'shape_info': json.dumps(shape_info)
+        }
+
+    def view_template(self, context, data_dict):
+        return 'new_views/geopreview_view.html'
+
+    def form_template(self, context, data_dict):
+        return 'new_views/geopreview_view_form.html'
+
