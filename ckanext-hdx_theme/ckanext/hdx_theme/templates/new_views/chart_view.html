@@ -2,31 +2,25 @@
 
 {% block page %}
 
-    <div class="row">
-        {% set ci = chart_info %}
-        {% if ci %}
-            <div class="col-xs-12">
-                <div class="row auto-graph graph-item-wrapper">
-                    <div class="col-xs-12">
-                        {% set data_link_url = ci.data_link_url or "#" %}
-                        <div class="graph-title pull-left">{{ ci.title }}</div>
-                        <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
-                        <div class="graph-info-label pull-left">
-                            <a>
-                                {{ _("Info") }}
-                                <div class="map-info legend source-list" style="display: none;"></div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="col-xs-12">
-                        <div class="graph-data" style="display: none;">
-                            {{ h.json_dumps(ci) }}
-                        </div>
-                    </div>
+    {% set ci = chart_info %}
+    {% if ci %}
+        <div class="auto-graph graph-item-wrapper">
+            <div>
+                {% set data_link_url = ci.data_link_url or "#" %}
+                <div class="graph-title pull-left">{{ ci.title }}</div>
+                <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
+                <div class="graph-info-label pull-left">
+                    <a>
+                        {{ _("Info") }}
+                        <div class="map-info legend source-list" style="display: none;"></div>
+                    </a>
                 </div>
             </div>
-        {% endif %}
-    </div>
+            <div class="graph-data" style="display: none;">
+                {{ h.json_dumps(ci) }}
+            </div>
+        </div>
+    {% endif %}
 
     {% resource 'hdx_theme/d3' %}
     {% resource 'hdx_theme/c3' %}
