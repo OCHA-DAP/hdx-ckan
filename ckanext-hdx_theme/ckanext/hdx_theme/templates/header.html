@@ -125,7 +125,11 @@
                   <div id="input-search">
                   <div class="input-prepend input-append">
                     <i class="icon-search"></i>
-                    <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('eg. IDP Colombia') }}">
+                    <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
+                    {% if c.full_facet_info %}
+                      {% set filter_icon_class = 'icon-close_filter_button' if c.full_facet_info.get("filters_selected") or c.full_facet_info.get("query_selected") else 'icon-open_filter_button' %}
+                      <i id="search_filter_btn" class="{{ filter_icon_class }} filter-icon"  title="{{ _('Filters') }}"></i>
+                    {% endif %}
                   </div>
                   <div id="search-ahead"></div>
                 </div>
@@ -137,7 +141,7 @@
             <span class="table-valign-content">
               <a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">
                 <div class="submitData">
-                  {{ _("Share data") }}
+                  {{ _("Add data") }}
                   <!--<img src="/images/homepage/attachment.svg" style="height: 21px; margin-left: 20px;" />-->
                 </div>
               </a>

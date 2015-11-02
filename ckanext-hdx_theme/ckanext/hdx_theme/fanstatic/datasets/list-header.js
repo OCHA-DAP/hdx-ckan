@@ -1,5 +1,8 @@
 function updateFilters(){
-    var filtersActions = $(".list-header-filters .filters-actions .loading-div");
+
+    $(".list-header-apply").show(500);
+
+    var filtersActions = $(".list-header-apply .loading-image");
     filtersActions.addClass("loading");
     var url = getFilterUrl(true);
     var data = null;
@@ -24,8 +27,8 @@ function updateFilters(){
             }
         }
         $(".list-header-filters select.filter-item").multipleSelect('refresh');
-        $(".list-header-filters .filters-actions .filter-results-number").text(results);
-        var filterResults = $(".list-header-filters .filters-actions");
+        $(".list-header-apply .filter-results-number").text(results);
+        var filterResults = $(".list-header-apply .filter-results");
         if (results == 0)
             filterResults.addClass("error");
         else
@@ -37,7 +40,7 @@ function updateFilters(){
 }
 
 function getFilterUrl(onlyFilter) {
-    var params = $(".list-header-filters .filter-item, #headerSearch").serialize();
+    var params = $(".list-header-filters .filter-item, #headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort").serialize();
     $("input.checkbox-filter:checked").each(function (idx, el) {
         if (params !== "") {
             params += "&";
@@ -86,13 +89,25 @@ $(document).ready(function(){
         updateFilters();
     });
 
-    $(".filter-pagination a").on("click", function(){
+    $(".filter-pagination label").on("click", function(){
+        updateFilters();
+    });
+
+    var dropdown = $(".dropdown.orderDropdown li a");
+    dropdown.unbind('click');
+    dropdown.on('click', function(event){
         var $this = $(this);
-        var value = $this.text();
-        var href = replaceParam("ext_page_size", value);
-        window.location.href = href + "#dataset-filter-start";
+        var value = $this.attr("val");
+        var text = $this.text();
+
+        $("#header-search-sort").val(value);
+        $("#header-search-sort ~ .dropdown-toggle-text").text(text);
+
+        updateFilters();
+        event.preventDefault();
         return false;
     });
+
 
     determineEnabledFirstTime();
 
@@ -101,12 +116,12 @@ $(document).ready(function(){
         updateFilters();
     });
 
-    $(".list-header-filters form").submit(function(){
+    $("#dataset-filter-form").submit(function(){
         //
         var $this = $(this);
 
         var url = getFilterUrl(false);
-        var filtersActions = $(".list-header-filters .filters-actions .loading-div");
+        var filtersActions = $(".list-header-apply .loading-div");
 
         if ((window.location.pathname + window.location.search) != url){
             filtersActions.addClass("loading");
@@ -114,7 +129,7 @@ $(document).ready(function(){
         }
         return false;
     });
-    $(".list-header-filters a.reset-action").click(function(event){
+    $(".list-header-apply a.reset-action").click(function(event){
         $(this).closest("form").resetForm();
         $(this).closest("form").find('select').each(function(idx, el){
             $el = $(el);
@@ -123,12 +138,16 @@ $(document).ready(function(){
             var html = $el.siblings("div[name='"+name+"']").html();
             $el.html(html);
         });
+        $("#header-search-sort").val($("#header-search-sort_initial_values").val());
+        $("#header-search-sort ~ .dropdown-toggle-text").text($("#header-search-sort_initial_values").attr("label"));
+
         updateFilters();
         determineEnabledFirstTime(true);
         event.preventDefault();
+        $(".list-header-apply").hide(500);
     });
 
-    $(".list-header-filters a.main-action").click(function(event){
+    $(".list-header-apply a.main-action").click(function(event){
         $(this).closest("form").submit();
         event.preventDefault();
     });
