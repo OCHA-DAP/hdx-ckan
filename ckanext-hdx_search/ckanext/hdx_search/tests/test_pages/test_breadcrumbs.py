@@ -40,5 +40,4 @@ class TestBreadcrumbs(hdx_test_base.HdxBaseTest):
         end_str = '</ol>'
         search_strings = ['<a href="/dataset">Datasets</a>']
 
-        hdx_test_util.are_strings_in_text(
-            page, search_strings, begin_str, end_str)
+        hdx_test_util.are_strings_in_text(page, search_strings, begin_str, end_str)
