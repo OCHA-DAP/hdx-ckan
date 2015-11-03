@@ -50,10 +50,10 @@ class LoginController(ckan_user.UserController):
 
             context = {'model': model,
                        'user': c.user}
- 
+
             user_obj = None
             try:
-                data_dict = get_action('user_show')(context, {'id':user_id})
+                data_dict = get_action('user_show')(context, {'id': user_id})
                 user_obj = context['user_obj']
             except NotFound:
                 return hdx_mail_c.OnbUserNotFound
@@ -63,10 +63,12 @@ class LoginController(ckan_user.UserController):
                 token = {'valid': True}  # Until we figure out what to do with existing users
             except:
                 OnbErr
+
             if not token['valid']:
-            # redirect to validation page
-                tokens.send_validation_email(user_obj, token)
-                return OnbValidationErr 
+                # redirect to validation page
+                if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
+                    return hdx_mail_c.OnbSuccess
+                return OnbErr
             if user_obj:
                 try:
                     mailer.send_reset_link(user_obj)
