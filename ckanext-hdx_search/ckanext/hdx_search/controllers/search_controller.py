@@ -558,16 +558,18 @@ class HDXSearchController(PackageController):
             else:
                 sorted_item_list = []
                 for item in item_list:
-                    selected = item.get('name', '') in selected_facets.get(category_key, [])
-                    new_item = {
-                        'count': item.get('count', 0),
-                        'name': item.get('name', ''),
-                        'display_name': item.get('display_name', ''),
-                        'selected': selected
-                    }
-                    sorted_item_list.append(new_item)
-                    if category_key == 'tags' and new_item['name'] == 'cod':
-                        num_of_cods = new_item['count']
+                    item_name = item.get('name', '')
+                    if item_name and item_name.strip():
+                        selected = item_name in selected_facets.get(category_key, [])
+                        new_item = {
+                            'count': item.get('count', 0),
+                            'name': item_name,
+                            'display_name': item.get('display_name', ''),
+                            'selected': selected
+                        }
+                        sorted_item_list.append(new_item)
+                        if category_key == 'tags' and new_item['name'] == 'cod':
+                            num_of_cods = new_item['count']
 
                 sorted_item_list.sort(key=lambda x: x.get('display_name'))
 
