@@ -16,39 +16,43 @@
   {# endif #}
   {% endif %}
 {% endblock %}
-{% block page_header_inner %}
-  {% set sorting = [
-        (_('Name Ascending'), 'title asc'),
-        (_('Name Descending'), 'title desc'),
-        (_('Last Modified'), 'metadata_modified desc') ]
-      %}
-  {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}
-  {% resource 'hdx_theme/order-by-dropdown.js' %}
-  {% if sorting %}
-    <form class="list-items search-form" method="get" data-module="select-switch" style="margin-top: 10px;">
-      <div class="form-select control-group control-order-by mTop10">
-        <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-        <div class="dropdown orderDropdown">
-          <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
-            <span class="dropdown-toggle-text">
+
+{#
+  {% block page_header_inner %}
+    {% set sorting = [
+          (_('Name Ascending'), 'title asc'),
+          (_('Name Descending'), 'title desc'),
+          (_('Last Modified'), 'metadata_modified desc') ]
+        %}
+    {% set sorting_option = c.sort_by_selected or 'metadata_modified desc' %}
+    {% resource 'hdx_theme/order-by-dropdown.js' %}
+    {% if sorting %}
+      <form class="list-items search-form" method="get" data-module="select-switch" style="margin-top: 10px;">
+        <div class="form-select control-group control-order-by mTop10">
+          <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+          <div class="dropdown orderDropdown">
+            <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown">
+              <span class="dropdown-toggle-text">
+                {% for label, value in sorting %}
+                    {% if sorting_option == value %} {{ label }} {% endif %}
+                {% endfor %}
+              </span>
+              <b class="caret"></b>
+            </button>
+            <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
               {% for label, value in sorting %}
-                  {% if sorting_option == value %} {{ label }} {% endif %}
+                {% if label and value %}
+                  <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                {% endif %}
               {% endfor %}
-            </span>
-            <b class="caret"></b>
-          </button>
-          <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
-            {% for label, value in sorting %}
-              {% if label and value %}
-                <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
-              {% endif %}
-            {% endfor %}
-          </ul>
+            </ul>
+          </div>
         </div>
-      </div>
-    </form>
-  {% endif %}
-{% endblock %}
+      </form>
+    {% endif %}
+  {% endblock %}
+
+#}
 
 {% block primary_content_inner %}
   {# This is a little different because the query is run through SQLAlchemy, not Solr #}
