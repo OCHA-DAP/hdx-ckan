@@ -22,7 +22,7 @@
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<organization>'} %}
 		<div class="org-control-info  info-field">
-			<div class="org-info-label">{{_('Be as specific as possible (i.e. don\'t just say WFP, say WFP-Colombia)')}}</div>
+			<div class="org-info-label">{{_("Be as specific as possible (i.e. don\'t just say WFP, say WFP-Colombia)")}}</div>
 		</div>
 	</div>
     {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
@@ -73,7 +73,7 @@
     </div>
 
 
-<div id="customization-fields" {% if not custom_org %}style="display:none"{% endif %}>
+<div id="customization-fields" class="{% if not custom_org %}element-invisible{% endif %}">
 <div class="org-control-container">
   <h1 class="h1-title uppercase">
           2. {{ _('Custom Styles') }}
@@ -125,7 +125,7 @@
 <div class="org-control-container" style="margin-top:30px;">
 {{ form.input('highlight_color', label=_('Base Color'), id='field-highlight-color', type='text', value=customizations['highlight_color'], classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('Pick the color which this page\'s color scheme will be based on.' )}}</div>
+        <div class="org-info-label">{{_("Pick the color which this page\'s color scheme will be based on." )}}</div>
       </div>
 </div>
 
