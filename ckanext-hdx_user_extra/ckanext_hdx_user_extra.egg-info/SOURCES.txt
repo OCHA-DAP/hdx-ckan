@@ -5,6 +5,7 @@ ckanext/hdx_user_extra/command.py
 ckanext/hdx_user_extra/model.py
 ckanext/hdx_user_extra/plugin.py
 ckanext/hdx_user_extra/actions/__init__.py
+ckanext/hdx_user_extra/actions/authorize.py
 ckanext/hdx_user_extra/actions/create.py
 ckanext/hdx_user_extra/actions/get.py
 ckanext/hdx_user_extra/actions/update.py
