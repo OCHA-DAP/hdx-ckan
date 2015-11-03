@@ -1,0 +1,37 @@
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-vis-url">{{_('Visualization URL')}}</label>
+    <div class="controls ">
+    <input id="field-vis-url" type="text" name="vis-url" value="{{visualization['vis-url']}}" placeholder="" class="visualization_config" viz-type="embedded">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Visualization URL to be embedded')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-vis-title">{{_('Title')}}</label>
+    <div class="controls ">
+    <input id="field-vis-title" type="text" name="vis-title" value="{{visualization['vis-title']}}" placeholder="" class="visualization_config" viz-type="embedded">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Give this visualization a title.')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-data-link-url">{{_('Data Link URL')}}</label>
+    <div class="controls ">
+    <input id="field-data-link-url" type="text" name="vis-data-link-url" value="{{visualization['vis-data-link-url']}}" placeholder="" class="visualization_config" viz-type="embedded">
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Source Data URL for map.')}}</div>
+      </div>
+</div>
+
+
