@@ -173,25 +173,26 @@
 <div class="controls">
   <label class="control-label" for="visualization-select">Visualization Type</label>
           <select id="visualization-select" name="visualization-select" style="width:95%;" class="visualization_config">
-            <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
-            <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option>
-            <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option>
-            <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
+              <option {% if visualization['visualization-select'] is not defined %}selected{%endif%}>Choose Visualization Type</option>
+              <option value="3W-dashboard" {% if visualization['visualization-select'] == '3W-dashboard' %}selected{% endif %}>3W Dashboard</option>
+              <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option>
+              <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
+              <option value="embedded" {% if visualization['visualization-select'] == 'embedded' %}selected{% endif %}>Embedded</option>
           </select>
 </div>
 </div>
 
 <div class="visualization-div" id="3W-dashboard" {% if visualization['visualization-select'] != '3W-dashboard' %}style="display:none;"{% endif %}>
-{% snippet 'snippets/visualization/3w.html',
-                            visualization=visualization %}
+{% snippet 'snippets/visualization/3w.html', visualization=visualization %}
 </div>
 <div class="visualization-div" id="ROEA" {% if visualization['visualization-select'] != 'ROEA' %}style="display:none;"{% endif %}>
-{% snippet 'snippets/visualization/roea.html',
-                            visualization=visualization %}
+{% snippet 'snippets/visualization/roea.html',visualization=visualization %}
 </div>
 <div class="visualization-div" id="WFP" {% if visualization['visualization-select'] != 'WFP' %}style="display:none;"{% endif %}>
-{% snippet 'snippets/visualization/wfp.html',
-                            visualization=visualization %}
+{% snippet 'snippets/visualization/wfp.html',visualization=visualization %}
+</div>
+<div class="visualization-div" id="embedded" {% if visualization['visualization-select'] != 'embedded' %}style="display:none;"{% endif %}>
+{% snippet 'snippets/visualization/embedded.html',visualization=visualization %}
 </div>
 <input type="hidden" name="visualization_config" id="visualization-json">
 <input type="hidden" name="customization" id="customization-json">
