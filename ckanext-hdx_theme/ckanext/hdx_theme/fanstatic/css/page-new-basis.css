@@ -88,3 +88,14 @@
 	}
 
 /* END - continuous browsing */
+
+/**
+ * Hide elements visually, but keep them available for screen-readers.
+ *
+ */
+.element-invisible {
+	position: absolute !important;
+	clip: rect(1px, 1px, 1px, 1px);
+	overflow: hidden;
+	height: 1px;
+}
