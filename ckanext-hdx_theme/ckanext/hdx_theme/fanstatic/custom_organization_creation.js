@@ -7,12 +7,13 @@ $(document).ready(function(){
 	$('.visualization_colors').spectrum({preferredFormat: "hex",
 showInput: true});
 	//When checkbox is clicked toogle customization fields
-	$('#customization-trigger').click(function(e){
-		$('#customization-fields').toggle();
-		if($('#customization-fields').is(':visible')){
-			$('#field-custom_org').prop('checked', true);
-		}else{
-			$('#field-custom_org').prop('checked', false);
+	$('#field-custom_org').change(function(e){
+        if ( $('#field-custom_org').is(':checked') ){
+            // Actually means the checkbox will be unchecked after finishing to process the event
+            $('#customization-fields').removeClass('element-invisible');
+        }
+		else{
+            $('#customization-fields').addClass('element-invisible');
 		}
 	});
 
@@ -20,7 +21,7 @@ showInput: true});
         var this_div = $(this).val();
         $('.visualization-div').hide();
         $('#'+this_div).show();
-    })
+    });
 
 	$('#field-highlight-color').change(function(){
 		color = this.value;
