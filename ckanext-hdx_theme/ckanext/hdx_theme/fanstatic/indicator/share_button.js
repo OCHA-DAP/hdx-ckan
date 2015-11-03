@@ -7,7 +7,7 @@ $(document).ready(function(){
     }).done(function(msg){
       $('.resource-social a').each(function(){
           var link = $(this).attr('href');
-          $(this).attr('href', link.replace("XXXX", msg['url']));
+          $(this).attr('href', link.replace("data.hdx.rwlabs.org", msg['url']));
       });
     });
     return false;

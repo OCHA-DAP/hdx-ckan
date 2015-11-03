@@ -356,7 +356,7 @@ class HDXSearchController(PackageController):
             'Use `c.search_facets` instead.')
 
         # return render(self._search_template(package_type))
-        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count)
+        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count, c.q)
         return full_facet_info
 
     def _is_facet_only_request(self):
@@ -504,7 +504,7 @@ class HDXSearchController(PackageController):
         url = h.url_for('search')
         return url
 
-    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations, total_count):
+    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations, total_count, query):
         '''
         Sample return
         {
@@ -532,7 +532,10 @@ class HDXSearchController(PackageController):
               .................
           },
           'num_of_indicators': 10,
-          'num_of_cods': 0
+          'num_of_cods': 0,
+          'num_of_total_items': 1000,
+          'query_selected': False #if there was any query in this request
+          'filters_selected': True #if there was any filter in this request
         }
         :param existing_facets: possible facets for this search
         :type existing_facets: dict
@@ -546,6 +549,7 @@ class HDXSearchController(PackageController):
 
         result = OrderedDict()
         result['facets'] = OrderedDict()
+        result['filters_selected'] = False
 
         num_of_indicators = 0
         num_of_cods = 0
@@ -561,6 +565,8 @@ class HDXSearchController(PackageController):
                     item_name = item.get('name', '')
                     if item_name and item_name.strip():
                         selected = item_name in selected_facets.get(category_key, [])
+                        if selected and not result['filters_selected']:
+                            result['filters_selected'] = selected
                         new_item = {
                             'count': item.get('count', 0),
                             'name': item_name,
@@ -582,5 +588,7 @@ class HDXSearchController(PackageController):
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
         result['num_of_total_items'] = total_count
+
+        result['query_selected'] = True if query and query.strip() else False
 
         return result

@@ -234,7 +234,7 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema, 'save': 'save' in request.params}
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
         if 'email' in data_dict:
-            data_dict['email'] = data_dict['email'].lower() #force all emails to be lowercase
+            data_dict['email'] = data_dict['email'].lower()  # force all emails to be lowercase
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
             data_dict['name'] = md5.hexdigest()
@@ -259,6 +259,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
             user = get_action('user_create')(context, data_dict)
             token = get_action('token_create')(context, user)
+            context['auth_user_obj'] = context['user_obj']
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
                                                                    'extras': ue_helpers.get_initial_extras()})
 
@@ -423,7 +424,7 @@ class ValidationController(ckan.controllers.user.UserController):
         name = c.user or data_dict['id']
         user_obj = model.User.get(name)
         user_id = user_obj.id
-        context = {'model': model, 'session': model.Session, 'user': user_obj.name}
+        context = {'model': model, 'session': model.Session, 'user': user_obj.name, 'auth_user_obj': c.userobj}
         try:
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
             get_action('user_extra_update')(context, ue_dict)
@@ -446,12 +447,12 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 5a: user can request to create a new organization
         :return:
         '''
-        context = {'model': model, 'session': model.Session,
+        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
                    'user': c.user}
         try:
             check_access('hdx_send_new_org_request', context)
-        except logic.NotAuthorized:
-            base.abort(401, _('Unauthorized to send a new org request'))
+        except NotAuthorized:
+            return OnbNotAuth
 
         try:
             user = model.User.get(context['user'])
@@ -479,14 +480,21 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 5b: user can request membership to an existing organization
         :return:
         '''
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user, 'auth_user_obj': c.userobj}
+        try:
+            check_access('hdx_send_new_org_request', context)
+        except NotAuthorized:
+            return OnbNotAuth
+
         try:
             org_id = request.params.get('org_id', '')
             org = model.Group.get(org_id)
             org_name = org.display_name or org.name
             msg = request.params.get('message', 'please add me to this organization')
             user = hdx_h.hdx_get_user_info(c.user)
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user}
+
             org_admins = get_action('member_list')(context, {'id': org_id, 'capacity': 'admin', 'object_type': 'user'})
             admins = []
             for admin_tuple in org_admins:
@@ -514,11 +522,16 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 6: user can invite friends by email to access HDX
         :return:
         '''
-        if not c.user:
+
+        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
+                   'user': c.user}
+        try:
+            check_access('hdx_basic_user_info', context)
+        except NotAuthorized:
             return OnbNotAuth
         try:
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user}
+            if not c.user:
+                return OnbNotAuth
             usr = c.userobj.display_name or c.user
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)

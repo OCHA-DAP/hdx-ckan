@@ -8,6 +8,22 @@
 
 {% resource 'hdx_theme/css/hdx-icons.css' %}
 {% resource 'hdx_theme/indicator/share_button.js' %}
+{#
+<span class="pull-left" style="font-size: 28px;" id="{{ dataset_social }}">
+  <a href="https://plus.google.com/share?url=XXXX" target="_blank">
+	<i class="icon-gplus" style="color: #e15440;"></i>
+  </a>
+  <a href="https://twitter.com/share?url=XXXX" target="_blank">
+	<i class="icon-twitter" style="color: #03b3ee;"></i>
+  </a>
+  <a href="https://www.facebook.com/sharer.php?u=XXXX" target="_blank">
+	<i class="icon-fb" style="color: #3067a3;"></i>
+  </a>
+  <a href="mailto:?subject={{ title }}&body=XXXX" target="_blank">
+	<i class="icon-mail-01" style="color: #767676;"></i>
+  </a>
+</span>
+#}
 
 <a href="javascript:void(0);" target-url="{{url}}" short-path="{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}" class="share_button {{ class }} {{ button_class }}" data-module-placement="{{ placement }}"  data-module="bs_popover" data-module-social_div_id="{{ dataset_social }}"
    data-module-social_wrapper_div_id="{{ dataset_social_wrapper }}" title="{{ panel_title }}" onclick="return false;">
@@ -19,29 +35,17 @@
 </a>
 {# DON'T CHANGE THE XXXX IT'S A PLACEHOLDER THE JS NEEDS #}
 <span id="{{ dataset_social_wrapper }}" class="popover-wrapper"></span>
-<div style="display:none" id="{{ dataset_social }}">
-	<div class="resource-social">
-	  <a href="https://plus.google.com/share?url=XXXX" target="_blank">
-		<i class="icon-gplus"></i>
-	    <span> Google+ </span>
-	  </a>
-	</div>
-	<div class="resource-social">
-	  <a href="https://twitter.com/share?url=XXXX" target="_blank">
-		<i class="icon-twitter"></i>
-  		<span> Twitter </span>
-	  </a>
-	</div>
-	<div class="resource-social" >
-	  <a href="https://www.facebook.com/sharer.php?u=XXXX" target="_blank">
-		<i class="icon-fb"></i>
-	    <span> Facebook </span>
-	  </a>
-	</div>
-	<div class="resource-social" >
-	  <a href="mailto:?subject={{ title }}&body=XXXX" target="_blank">
-		<i class="icon-mail-01"></i>
-	    <span> {{ _('Email') }} </span>
-	  </a>
-	</div>
-</div>
+<span style="display: none;" class="pull-left resource-social" id="{{ dataset_social }}">
+	<a style="font-size: 28px;" href="https://plus.google.com/share?url=data.hdx.rwlabs.org" target="_blank" title="Google Plus">
+		<i class="icon-gplus" style="color: #e15440;"></i>
+	</a>
+	<a style="font-size: 28px;" href="https://twitter.com/share?url=data.hdx.rwlabs.org" target="_blank" title="Twitter">
+		<i class="icon-twitter" style="color: #03b3ee;"></i>
+	</a>
+	<a style="font-size: 28px;" href="https://www.facebook.com/sharer.php?u=data.hdx.rwlabs.org" target="_blank" title="Facebook">
+		<i class="icon-fb" style="color: #3067a3;"></i>
+	</a>
+	<a style="font-size: 28px;" href="mailto:?subject={{ title }}&body=data.hdx.rwlabs.org" target="_blank" title="E-Mail">
+		<i class="icon-mail-01" style="color: #767676;"></i>
+	</a>
+</span>

@@ -24,7 +24,7 @@ Example:
           {{ h.snippet('search/snippets/package_list.html',
                 query=my_c.q, packages=my_c.page.items, full_facet_info=c.full_facet_info,
                 ext_page_size=c.ext_page_size, sorting_selected=my_c.sort_by_selected,
-                other_links=my_c.other_links) }}
+                other_links=my_c.other_links, display_min=display_min) }}
       {% endblock %}
     </div>
 

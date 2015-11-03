@@ -15,7 +15,7 @@ $('document').ready(function(){
 		index.add(feature_index[i])
 	}
 
-	results = index.search($('#terms').attr('value'));
+	results = index.search($('#input-search input').attr('value'));
 	if(results.length > 0){//Don't show if we don't have any good matches
 		var html = "You might also like:"
 		var limit = results.length > 5 ? 5 : results.length;
