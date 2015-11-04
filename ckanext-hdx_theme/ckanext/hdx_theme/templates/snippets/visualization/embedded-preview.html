@@ -2,7 +2,7 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="field-vis-title">{{_('Title')}}</label>
     <div class="controls ">
-        <input id="field-vis-title" type="text" name="vis-title" value="{{visualization['vis-title']}}" placeholder="" class="visualization_config" viz-type="embedded"/>
+        <input id="field-vis-title" type="text" name="vis-title" value="{{visualization['vis-title']}}" placeholder="" class="visualization_config" viz-type="embedded-preview"/>
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -14,7 +14,7 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="field-data-link-url">{{_('Data Link URL')}}</label>
     <div class="controls ">
-        <input id="field-data-link-url" type="text" name="vis-data-link-url" value="{{visualization['vis-data-link-url']}}" placeholder="" class="visualization_config" viz-type="embedded"/>
+        <input id="field-data-link-url" type="text" name="vis-data-link-url" value="{{visualization['vis-data-link-url']}}" placeholder="" class="visualization_config" viz-type="embedded-preview"/>
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -26,7 +26,7 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="field-vis-url">{{_('Visualization URL')}}</label>
     <div class="controls ">
-        <input id="field-vis-url" type="text" name="vis-url" value="{{visualization['vis-url']}}" placeholder="" class="visualization_config" viz-type="embedded"/>
+        <input id="field-vis-url" type="text" name="vis-url" value="{{visualization['vis-url']}}" placeholder="" class="visualization_config" viz-type="embedded-preview"/>
     </div>
   </div>
       <div class="org-control-info info-field">
@@ -38,10 +38,34 @@
   <div class="control-group control-full org-control field-with-info">
     <label class="control-label" for="field-vis-preview-selector">{{_('Visualization Preview Selector')}}</label>
     <div class="controls ">
-        <input id="field-vis-preview-selector" type="text" name="vis-preview-selector" value="{{visualization['vis-preview-selector']}}" placeholder="" class="visualization_config" viz-type="embedded"/>
+        <input id="field-vis-preview-selector" type="text" name="vis-preview-selector" value="{{visualization['vis-preview-selector']}}" placeholder="" class="visualization_config" viz-type="embedded-preview"/>
     </div>
   </div>
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Visualization preview selector used to create the thumbnail')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-vis-height">{{_('Visualization Height')}}</label>
+    <div class="controls ">
+        <input id="field-vis-height" type="text" name="vis-height" value="{{visualization['vis-height']}}" placeholder="" class="visualization_config" viz-type="embedded-preview"/>
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Visualization height on HDX. Leave empty to use the default value')}}</div>
+      </div>
+</div>
+
+<div class="org-control-container">
+  <div class="control-group control-full org-control field-with-info">
+    <label class="control-label" for="field-vis-width">{{_('Visualization Width')}}</label>
+    <div class="controls ">
+        <input id="field-vis-width" type="text" name="vis-width" value="{{visualization['vis-width']}}" placeholder="" class="visualization_config" viz-type="embedded-preview"/>
+    </div>
+  </div>
+      <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Visualization width on HDX. Leave empty to use the default value')}}</div>
       </div>
 </div>

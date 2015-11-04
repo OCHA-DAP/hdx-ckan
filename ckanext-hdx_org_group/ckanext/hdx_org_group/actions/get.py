@@ -16,7 +16,7 @@ import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.controllers.country_controller as ctrlr
 
 import ckan.lib.helpers as helpers
-import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
 import shlex
 import subprocess
@@ -202,12 +202,15 @@ def hdx_trigger_screencap(context, data_dict):
         return False
     if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
         return False
-    try:
-        command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
-            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
-        print command
-        args = shlex.split(command)
-        subprocess.Popen(args)
-        return True
-    except:
-        return False
+
+    return org_helper.hdx_capturejs(config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg['org_name']),
+                                    file_path, cfg['screen_cap_asset_selector'])
+    # try:
+    #     command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
+    #         'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
+    #     print command
+    #     args = shlex.split(command)
+    #     subprocess.Popen(args)
+    #     return True
+    # except:
+    #     return False
