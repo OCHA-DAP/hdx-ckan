@@ -101,7 +101,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                 'source': visualization.get('viz-data-source', '')
             })
 
-        if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded_preview':
+        if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded-preview':
             config.update({
                 'title': visualization.get('vis-title', ''),
                 'data_link_url': visualization.get('vis-data-link-url', '#'),
