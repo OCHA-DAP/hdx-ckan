@@ -100,6 +100,16 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                 'source': visualization.get('viz-data-source', '')
             })
 
+        if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded_preview':
+            config.update({
+                'title': visualization.get('vis-title', ''),
+                'data_link_url': visualization.get('vis-data-link-url', '#'),
+                'vis_url': visualization.get('vis-url', '#'),
+                'height': visualization.get('vis-height', ''),
+                'width': visualization.get('vis-width', ''),
+                'selector': visualization.get('vis-preview-selector', '')
+            })
+
         if visualization.get('visualization-select', '') == 'WFP':
             config.update({
                 'embedded': "true",
