@@ -132,6 +132,16 @@ def get_viz_title_from_extras(org_dict):
     return None
 
 
+def get_value_dict_from_extras(org_dict, key='visualization_config'):
+    try:
+        for item in org_dict.get('extras'):
+            if item.get('key') == key:
+                return json.loads(item.get('value'))
+    except:
+        return None
+    return None
+
+
 # def get_featured_org_highlight(context, org_dict, config):
 #     if config.get('highlight_asset_type') == 'dataset':
 #         if config.get('highlight_asset_id'):
@@ -288,9 +298,24 @@ def hdx_organization_update(context, data_dict):
     result = hdx_group_or_org_update(context, data_dict, is_org=True)
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
+
     compile_less(result)
 
+    hdx_generate_embedded_preview(result)
     return result
+
+
+def hdx_generate_embedded_preview(result):
+    org_name = result.get('name') or result.get('id')
+    vis_config = get_value_dict_from_extras(result, 'visualization_config')
+    if vis_config.get('visualization-select') == 'embedded-preview':
+        selector = vis_config.get('vis-preview-selector', None)
+        url = vis_config.get('vis-url')
+        file_path = BUCKET + org_name + '_embedded_preview.png'
+        hdx_capturejs(url, file_path, selector, renderdelay=15000)
+        return True
+    return False
+
 
 
 def remove_image(filename):
@@ -321,6 +346,8 @@ def hdx_organization_create(context, data_dict):
     if not test:
         lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
     compile_less(result)
+
+    hdx_generate_embedded_preview(result)
     return result
 
 
@@ -387,7 +414,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
         customization['image_rect'] = ''
 
-    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
+    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload']:
         # If old image was uploaded remove it
         if customization['image_sq']:
             remove_image(customization['image_sq'])
@@ -396,8 +423,7 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         upload1.update_data_dict(data_dict, 'image_sq',
                                  'image_sq_upload', 'clear_upload')
 
-    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict[
-        'image_rect_upload'] != None:
+    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict['image_rect_upload']:
         if customization['image_rect']:
             remove_image(customization['image_rect'])
         upload2 = uploader.Upload('group', customization['image_rect'])
@@ -544,10 +570,10 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
     except AttributeError:
         schema = group_plugin.form_to_db_schema()
 
-    try:
-        customization = json.loads(group.extras['customization'])
-    except:
-        customization = {'image_sq': '', 'image_rect': ''}
+    # try:
+    #     customization = json.loads(group.extras['customization'])
+    # except:
+    customization = {'image_sq': '', 'image_rect': ''}
 
     try:
         data_dict['customization'] = json.loads(data_dict['customization'])
@@ -699,3 +725,14 @@ def recompile_everything(context):
         for org_name in orgs:
             org = get_action('hdx_light_group_show')(context, {'id': org_name})
             compile_less(org, translate_func=lambda str: str)
+
+
+def hdx_capturejs(uri, output_file, selector, renderdelay=10000):
+    try:
+        command = 'capturejs -l --uri "' + uri + '" --output ' + output_file + ' --selector "' + selector + '"' + ' --renderdelay ' + str(renderdelay)
+        print command
+        args = shlex.split(command)
+        subprocess.Popen(args)
+        return True
+    except:
+        return False

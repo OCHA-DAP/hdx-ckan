@@ -4,8 +4,7 @@ $(document).ready(function(){
 		preferredFormat: "hex",
 		showInput: true,
 });
-	$('.visualization_colors').spectrum({preferredFormat: "hex",
-showInput: true});
+	$('.visualization_colors').spectrum({preferredFormat: "hex",showInput: true});
 	//When checkbox is clicked toogle customization fields
 	$('#customization-trigger').click(function(e){
 		$('#customization-fields').toggle();
