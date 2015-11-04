@@ -96,4 +96,4 @@ def _mail_recipient(recipient_name, recipient_email,
 def mail_recipient(recipient_name, recipient_email, subject,
                    body, headers={}):
     return _mail_recipient(recipient_name, recipient_email,
-                           g.site_title, g.site_url, subject, body, headers=headers)
+                           'HDX', g.site_url, subject, body, headers=headers)

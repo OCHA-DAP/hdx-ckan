@@ -3,8 +3,13 @@ import ckan.logic as logic
 import pylons.config as config
 import ckan.lib.helpers as h
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import exceptions as exceptions
+import logging as logging
+
+log = logging.getLogger(__name__)
 
 NotFound = logic.NotFound
+
 
 def token_show(context, user):
     id = user.get('id')
@@ -21,6 +26,7 @@ def token_show_by_id(context, data_dict):
         raise NotFound
     return token_obj.as_dict()
 
+
 def token_update(context, data_dict):
     token = data_dict.get('token')
     token_obj = umodel.ValidationToken.get_by_token(token=token)
@@ -32,15 +38,16 @@ def token_update(context, data_dict):
     session.commit()
     return token_obj.as_dict()
 
+
 def send_validation_email(user, token):
-        validate_link = h.url_for(
-            controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-            action='validate',
-            token=token['token'])
-        link = '{0}{1}'
-        subject = "Please verify your email address"
-        print 'Validate link: ' + validate_link
-        html = """\
+    validate_link = h.url_for(
+        controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        action='validate',
+        token=token['token'])
+    link = '{0}{1}'
+    subject = "Please verify your email for HDX registration"
+    print 'Validate link: ' + validate_link
+    html = """\
         <html>
           <head></head>
           <body>
@@ -50,9 +57,10 @@ def send_validation_email(user, token):
         </html>
         """.format(link=link.format(config['ckan.site_url'], validate_link))
 
-        try:
-            # mailer.mail_recipient(user['name'], user['email'], subject, body)
-            hdx_mailer.mail_recipient('User', user['email'], subject, html)
-            return True
-        except:
-            return False
+    try:
+        hdx_mailer.mail_recipient('User', user['email'], subject, html)
+        return True
+    except exceptions.Exception, e:
+        error_summary = str(e)
+        log.error(error_summary)
+        return False
