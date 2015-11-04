@@ -84,7 +84,7 @@ class FaqController(base.BaseController):
                   </body>
                 </html>
                 """.format(fullname=fullname, email=email, topic=topic, msg=msg)
-            hdx_mailer.mail_recipient('Humanitarian Data Exchange', hdx_email, subject, html)
+            hdx_mailer.mail_recipient('HDX', hdx_email, subject, html)
 
         except exceptions.Exception, e:
             error_summary = str(e)
