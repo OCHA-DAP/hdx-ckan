@@ -37,6 +37,7 @@ def hdx_resource_id_list(context, data_dict):
     return ids
 
 
+@logic.side_effect_free
 def package_search(context, data_dict):
     '''
 
