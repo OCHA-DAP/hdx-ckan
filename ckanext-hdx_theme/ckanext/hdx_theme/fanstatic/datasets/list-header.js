@@ -8,8 +8,12 @@ function updateFilters(){
     var data = null;
     $.getJSON(url, data, function(data){
         var results = 0;
+        var indicators = 0;
+        var cods = 0;
         if (data){
             results = data.num_of_total_items;
+            indicators = data.num_of_indicators;
+            cods = data.num_of_cods;
             for (var facetId in data.facets){
                 var facet = data.facets[facetId];
                 var facetDiv = $(".list-header-filters select[name='"+facetId+"']");
@@ -26,6 +30,9 @@ function updateFilters(){
                 facetDiv.html(newHtml);
             }
         }
+        $("#show-cods").prop("disabled", cods == 0);
+        $("#show-indicators").prop("disabled", indicators == 0);
+
         $(".list-header-filters select.filter-item").multipleSelect('refresh');
         $(".list-header-apply .filter-results-number").text(results);
         var filterResults = $(".list-header-apply .filter-results");
