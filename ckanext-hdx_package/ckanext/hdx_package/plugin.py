@@ -248,8 +248,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return schema
 
     def get_helpers(self):
-        return {'list_of_all_groups': cached_group_list,
-                'hdx_find_license_name': hdx_helpers.hdx_find_license_name}
+        return {
+            'list_of_all_groups': cached_group_list,
+            'hdx_find_license_name': hdx_helpers.hdx_find_license_name,
+            'filesize_format': hdx_helpers.filesize_format
+        }
 
     def get_actions(self):
         from ckanext.hdx_package.helpers import helpers as hdx_actions

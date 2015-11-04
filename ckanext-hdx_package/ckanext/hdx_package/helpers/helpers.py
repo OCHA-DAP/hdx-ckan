@@ -527,3 +527,17 @@ def hdx_unified_resource_format(format):
     else:
         format_new = format_clean
     return format_new
+
+
+def filesize_format(size_in_bytes):
+    try:
+        d = 1024.0
+        size = int(size_in_bytes)
+        for unit in ['b', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+            if size < d:
+                return "%3.1f%s" % (size, unit)
+            size /= d
+        return "%.1f%s" % (size, 'Yi')
+    except Exception, e:
+        log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
+        return size_in_bytes
