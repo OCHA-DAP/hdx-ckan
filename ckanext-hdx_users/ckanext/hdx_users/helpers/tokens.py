@@ -45,7 +45,7 @@ def send_validation_email(user, token):
         action='validate',
         token=token['token'])
     link = '{0}{1}'
-    subject = "Please verify your email address"
+    subject = "Please verify your email for HDX registration"
     print 'Validate link: ' + validate_link
     html = """\
         <html>
