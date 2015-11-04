@@ -178,6 +178,7 @@
               <option value="ROEA" {% if visualization['visualization-select'] == 'ROEA' %}selected{% endif %}>ROEA</option>
               <option value="WFP" {% if visualization['visualization-select'] == 'WFP' %}selected{% endif %}>WFP</option>
               <option value="embedded" {% if visualization['visualization-select'] == 'embedded' %}selected{% endif %}>Embedded</option>
+              <option value="preview-embedded" {% if visualization['visualization-select'] == 'embedded-preview' %}selected{% endif %}>Embedded with Preview</option>
           </select>
 </div>
 </div>
@@ -194,6 +195,10 @@
 <div class="visualization-div" id="embedded" {% if visualization['visualization-select'] != 'embedded' %}style="display:none;"{% endif %}>
 {% snippet 'snippets/visualization/embedded.html',visualization=visualization %}
 </div>
+<div class="visualization-div" id="embedded-preview" {% if visualization['visualization-select'] != 'embedded-preview' %}style="display:none;"{% endif %}>
+{% snippet 'snippets/visualization/embedded-preview.html',visualization=visualization %}
+</div>
+
 <input type="hidden" name="visualization_config" id="visualization-json">
 <input type="hidden" name="customization" id="customization-json">
 {% endif %}
