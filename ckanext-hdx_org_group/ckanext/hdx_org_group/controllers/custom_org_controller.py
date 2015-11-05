@@ -109,7 +109,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                 'height': visualization.get('vis-height', ''),
                 'width': visualization.get('vis-width', ''),
                 'selector': visualization.get('vis-preview-selector', ''),
-                'embedded-preview': org_helper.BUCKET + org_id + '_embedded_preview.png'
+                'embedded_preview': org_helper.BUCKET + org_id + '_embedded_preview.png'
             })
 
         if visualization.get('visualization-select', '') == 'WFP':
