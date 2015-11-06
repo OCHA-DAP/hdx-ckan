@@ -1359,6 +1359,7 @@ textarea {
   padding: 0;
   padding-right: 15px;
   background-color: #eeeeee;
+  padding-left: 15px;
 }
 .list-header-filters .filters-title {
   font-family: 'Gotham-Bold', sans-serif;
@@ -1560,6 +1561,7 @@ textarea {
   height: 30px;
   line-height: 29px;
   display: none;
+  padding-left: 15px;
 }
 .list-header-apply .filter-results {
   color: #007ce0;
