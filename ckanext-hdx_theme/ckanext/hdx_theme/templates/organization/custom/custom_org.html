@@ -215,7 +215,9 @@
                 <div class="mTop20 mBottom20">
                     <div class="pull-left visualization-title">
                         {{viz_title}}
-                        <span> <a target="new" href="{{data_link_url}}">Data</a></span>
+                        {% if data_link_url != '' %}
+                            <span> <a target="new" href="{{data_link_url}}">Data</a></span>
+                        {% endif %}
                     </div>
 
                     {% if data.visualization.config.type != 'embedded' and data.visualization.config.type != 'embedded-preview' %}
@@ -273,9 +275,11 @@
         {% endif %}
         {% if data.visualization.config.type == 'embedded-preview' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
-                <div style="width: {{ data.visualization.config.width }}; height: {{ data.visualization.config.height }}">
-                    <a href="{{ data.visualization.config.vis_url }}" target="_blank">
-                        <img height="100%" width="100%" src="{{ data.visualization.config.embedded_preview }}"/>
+                <div style="width: {{ data.visualization.config.width }}; height: {{ data.visualization.config.height }};">
+                    <a href="{{ data.visualization.config.vis_url }}"
+                       target="_blank">
+                        <div style="height: {{ data.visualization.config.height }}; width: {{ data.visualization.config.width }}; background: url({{ data.visualization.config.embedded_preview }}) no-repeat center center fixed; background-size: cover;">
+                        </div>
                     </a>
                 </div>
             </div>
