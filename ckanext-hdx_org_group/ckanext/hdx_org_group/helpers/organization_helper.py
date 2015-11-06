@@ -88,12 +88,7 @@ def hdx_get_featured_orgs(context, data_dict):
                 context['cfg'] = cfg
                 log.info("Triggering screenshot for " + cfg.get('org_name'))
                 get_action('hdx_trigger_screencap')(context, data_dict)
-                # trigger_screencap(file_path, cfg)
-                # check again if file exists
 
-            # context = {'model': model, 'session': model.Session,
-            #            'user': user, 'for_view': True,
-            #            'auth_user_obj': userobj}
             org_dict = get_action('organization_show')(context, {'id': cfg.get('org_name')})
 
             # Build highlight data
@@ -109,19 +104,6 @@ def hdx_get_featured_orgs(context, data_dict):
     return orgs
 
 
-# def trigger_screencap(file_path, cfg):
-#     if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
-#         return False
-#     try:
-#         command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
-#             'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --timeout 10000'
-#         args = shlex.split(command)
-#         subprocess.Popen(args)
-#         return True
-#     except:
-#         return False
-
-
 def get_viz_title_from_extras(org_dict):
     try:
         for item in org_dict.get('extras'):
@@ -130,58 +112,6 @@ def get_viz_title_from_extras(org_dict):
     except:
         return None
     return None
-
-
-# def get_featured_org_highlight(context, org_dict, config):
-#     if config.get('highlight_asset_type') == 'dataset':
-#         if config.get('highlight_asset_id'):
-#             try:
-#                 choice = get_action('package_show')(context, {'id': config['highlight_asset_id']})
-#                 return {'link': helpers.url_for('dataset_read', id=choice['id']), 'description': 'Popular Dataset: ',
-#                         'type': 'dataset', 'title': choice['title']}
-#             except:
-#                 return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
-#         else:
-#             # select a dataset at random (sort of)
-#             if len(org_dict['packages']) > 0:
-#                 choice = random.choice(org_dict['packages'])
-#                 return {'link': helpers.url_for('dataset_read', id=choice['name']), 'description': 'Popular Dataset: ',
-#                         'type': 'dataset', 'title': choice['title']}
-#             else:
-#                 return {'link': '', 'description': '', 'type': 'dataset', 'title': ''}
-#     else:
-#         topline_default = org_url = [el.get('value', None) for el in org_dict.get('extras', []) if
-#                                      el.get('key', '') == 'topline_resource']
-#         if config.get('highlight_asset_row_code'):
-#             top_line_src_dict = {
-#                 'top-line-numbers': {
-#                     'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
-#                 }
-#             }
-#             datastore_access = data_access.DataAccess(top_line_src_dict)
-#             datastore_access.fetch_data(context)
-#             top_line_items = datastore_access.get_top_line_items()
-#             if len(top_line_items) > 0:
-#                 choice = top_line_items[config['highlight_asset_row_code']]
-#                 return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
-#             else:
-#                 return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
-#
-#         else:
-#             # select a line at random
-#             top_line_src_dict = {
-#                 'top-line-numbers': {
-#                     'resource_id': config['highlight_asset_id'] if config.get('highlight_asset_id') else topline_default
-#                 }
-#             }
-#             datastore_access = data_access.DataAccess(top_line_src_dict)
-#             datastore_access.fetch_data(context)
-#             top_line_items = datastore_access.get_top_line_items()
-#             if len(top_line_items) > 0:
-#                 choice = random.choice(top_line_items)
-#                 return {'link': '', 'description': 'Key Figures: ', 'type': 'topline', 'title': choice['title']}
-#             else:
-#                 return {'link': '', 'description': '', 'type': 'topline', 'title': ''}
 
 
 def get_featured_org_highlight(context, org_dict, config):

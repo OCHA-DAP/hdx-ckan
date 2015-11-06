@@ -9,7 +9,7 @@ $(document).ready(function(){
         if (event.keyCode == '13'){
             var $this = $(this);
             var value = $this.val();
-            window.location.href = replaceParam("q", value);
+            window.location.href = replaceParam("q", value) + "#headerSearch";
             event.preventDefault();
         }
     });
