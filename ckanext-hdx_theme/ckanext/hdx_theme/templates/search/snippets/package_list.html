@@ -24,7 +24,7 @@ Example:
 <form id="dataset-filter-form" style="display: inline;">
     <div id="base-filter-location" style="display: none;">{{other_links.get('current_page_url')}}</div>
     <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
-        <span class="list-header-title">{{ _("Data") }} [{{c.page.item_count}}]</span>
+        <span class="mL15 list-header-title">{{ _("Data") }} [{{c.page.item_count}}]</span>
           <span class="mL30">
               {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
               <input id="headerSearch" name="q" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
@@ -150,5 +150,9 @@ Example:
         {% endfor %}
     </ul>
 </div>
+{% else %}
+    <div class="list-items search-form">
+        <h2>Sorry no datasets found for "{{ request.params.get('q') }}"</h2>
+    </div>
 {% endif %}
 
