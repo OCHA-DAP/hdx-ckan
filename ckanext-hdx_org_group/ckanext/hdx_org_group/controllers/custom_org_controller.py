@@ -104,12 +104,12 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded-preview':
             config.update({
                 'title': visualization.get('vis-title', ''),
-                'data_link_url': visualization.get('vis-data-link-url', '#'),
-                'vis_url': visualization.get('vis-url', '#'),
-                'height': visualization.get('vis-height', ''),
-                'width': visualization.get('vis-width', ''),
+                'data_link_url': visualization.get('vis-data-link-url', ''),
+                'vis_url': visualization.get('vis-url', ''),
+                'height': visualization.get('vis-height', '600px') if visualization.get('vis-height', '600px') != '' else '600px',
+                'width': visualization.get('vis-width', '100%') if visualization.get('vis-width', '100%') != '' else '100%',
                 'selector': visualization.get('vis-preview-selector', ''),
-                'embedded-preview': org_helper.BUCKET + org_id + '_embedded_preview.png'
+                'embedded_preview': h.url_for('image_serve', label=org_id + '_embedded_preview.png')
             })
 
         if visualization.get('visualization-select', '') == 'WFP':

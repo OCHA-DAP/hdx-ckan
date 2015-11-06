@@ -215,7 +215,7 @@
                 <div class="mTop20 mBottom20">
                     <div class="pull-left visualization-title">
                         {{viz_title}}
-                        {% if data_link_url != '' %}
+                        {% if data_link_url != '' and data_link_url !='#' %}
                             <span> <a target="new" href="{{data_link_url}}">Data</a></span>
                         {% endif %}
                     </div>
@@ -278,7 +278,7 @@
                 <div style="width: {{ data.visualization.config.width }}; height: {{ data.visualization.config.height }};">
                     <a href="{{ data.visualization.config.vis_url }}"
                        target="_blank">
-                        <div style="height: {{ data.visualization.config.height }}; width: {{ data.visualization.config.width }}; background: url({{ data.visualization.config.embedded_preview }}) no-repeat center center fixed; background-size: cover;">
+                        <div style="height: {{ data.visualization.config.height }}; width: {{ data.visualization.config.width }}; background: url({{ data.visualization.config.embedded_preview }}) no-repeat center center fixed; background-size: 80%;">
                         </div>
                     </a>
                 </div>
