@@ -13,7 +13,8 @@
   border-bottom: 1px solid #cccccc;
   vertical-align: middle;
   line-height: 49px;
-  padding: 0 15px;
+  padding: 0;
+  padding-right: 15px;
   background-color: #edf6fd;
 }
 .list-header .list-header-title {
@@ -29,7 +30,7 @@
   font-size: 14px;
   color: #888888;
   padding: 7px 6px;
-  width: 450px;
+  width: 400px;
   border: 1px solid #cccccc;
   border-radius: 6px;
 }
@@ -87,7 +88,8 @@
   border-bottom: 1px solid #cccccc;
   vertical-align: middle;
   line-height: 49px;
-  padding: 0 15px;
+  padding: 0;
+  padding-right: 15px;
   background-color: #eeeeee;
 }
 .list-header-filters .filters-title {
@@ -284,7 +286,8 @@
   border-bottom: 1px solid #cccccc;
   vertical-align: middle;
   line-height: 49px;
-  padding: 0 15px;
+  padding: 0;
+  padding-right: 15px;
   background-color: #eeeeee;
   height: 30px;
   line-height: 29px;
