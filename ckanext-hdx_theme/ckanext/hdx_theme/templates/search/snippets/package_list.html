@@ -150,5 +150,9 @@ Example:
         {% endfor %}
     </ul>
 </div>
+{% else %}
+    <div class="list-items search-form">
+        <h2>Sorry no datasets found for "{{ request.params.get('q') }}"</h2>
+    </div>
 {% endif %}
 
