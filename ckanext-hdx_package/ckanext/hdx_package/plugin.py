@@ -391,7 +391,7 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
     def info(self):
         return {
             'name': 'hdx_geopreview_view',
-            'title': 'HDX Geopreview',
+            'title': 'Geopreview',
             'filterable': False,
             'preview_enabled': True,
             'requires_datastore': False,
