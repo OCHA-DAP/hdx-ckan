@@ -108,6 +108,8 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
                            search_extras, pager_url, context):
 
-        c.q = 'ebola'
+        # c.q = 'ebola'
+        fq = fq or ''
+        fq = u'ebola ' + fq
         return super(EbolaCustomLocationController, self)._performing_search(c.q, fq, facet_keys, limit, page, sort_by,
                                                                              search_extras, pager_url, context)
