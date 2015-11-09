@@ -210,19 +210,25 @@
         </div>
             {% set viz_title = data.visualization.config.title or '' %}
             {% set data_link_url = data.visualization.config.data_link_url or '#' %}
-            {% if data.visualization.config.type != 'ROEA' %}
+            {% if data.visualization.config.type != 'ROEA'  %}
                 <div class="col-xs-12 paddingLeftHack paddingRightHack">
                 <div class="mTop20 mBottom20">
                     <div class="pull-left visualization-title">
                         {{viz_title}}
-                        <span> <a target="new" href="{{data_link_url}}">Data</a></span>
+                        {% if data_link_url != '' and data_link_url !='#' %}
+                            <span> <a target="new" href="{{data_link_url}}">Data</a></span>
+                        {% endif %}
                     </div>
-                    <div class="pull-right">
-                        <ul class="mainLinks visualization-links">
-                            <li><a id="embedPopupTrigger" href="#">{{ _("Embed") }}</a></li>
-                            <!--<li><a href="#">{{ _("Save as image") }}</a></li>-->
-                        </ul>
-                    </div>
+
+                    {% if data.visualization.config.type != 'embedded' and data.visualization.config.type != 'embedded-preview' %}
+
+                        <div class="pull-right">
+                            <ul class="mainLinks visualization-links">
+                                <li><a id="embedPopupTrigger" href="#">{{ _("Embed") }}</a></li>
+                                <!--<li><a href="#">{{ _("Save as image") }}</a></li>-->
+                            </ul>
+                        </div>
+                    {% endif %}
                 </div>
                 <input type="hidden" id="visualization-data" value="{{ h.json_dumps(data.visualization.config) }}">
             </div>
@@ -258,6 +264,23 @@
                         </div>
                         <div id="hdx-3W-where"></div>
                     </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if data.visualization.config.type == 'embedded' %}
+            <div class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
+                <iframe src="{{ data.visualization.config.vis_url }}" frameborder="0" width="{{ data.visualization.config.width }}" height="{{ data.visualization.config.height }}"></iframe>
+            </div>
+        {% endif %}
+        {% if data.visualization.config.type == 'embedded-preview' %}
+            <div class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
+                <div style="width: {{ data.visualization.config.width }}; height: {{ data.visualization.config.height }};">
+                    <a href="{{ data.visualization.config.vis_url }}"
+                       target="_blank">
+                        <div style="height: {{ data.visualization.config.height }}; width: {{ data.visualization.config.width }}; background: url({{ data.visualization.config.embedded_preview }}) no-repeat center center fixed; background-size: 80%;">
+                        </div>
+                    </a>
                 </div>
             </div>
         {% endif %}
