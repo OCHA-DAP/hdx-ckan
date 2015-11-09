@@ -688,32 +688,21 @@ a:focus,
   display: inline-block;
   vertical-align: middle;
 }
-.btn.hdx-btn.ga-preview,
-.btn.hdx-btn.ga-edit {
+.btn.hdx-btn.resource-btn {
   background-color: #888888;
   color: white;
   border: 0;
   line-height: 35px;
-  padding: 0 20px;
+  margin-left: 10px;
   text-transform: uppercase;
-  margin-left: 10px;
   border-radius: 4px;
+  padding: 0 20px;
 }
-.btn.hdx-btn.ga-share,
-.btn.hdx-btn.ga-download {
-  background-image: none;
-  text-shadow: none;
-  background-color: #888888;
-  color: white;
-  border: 0;
-  line-height: 35px;
+.btn.hdx-btn.resource-btn.resource-icon-btn {
   width: 35px;
-  border-radius: 4px;
   padding: 0;
-  margin-left: 10px;
 }
-.btn.hdx-btn.ga-share img,
-.btn.hdx-btn.ga-download img {
+.btn.hdx-btn.resource-icon-btn img {
   width: 14px;
   margin-bottom: 5px;
 }
@@ -2224,6 +2213,11 @@ ul.hdx-bs3 {
   border-radius: 100px;
 }
 /* END Style Sysadmin settings*/
+/* Actions button list */
+.actions li {
+  display: inline-block;
+}
+/* END - Actions button list */
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;

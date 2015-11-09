@@ -35,14 +35,14 @@
       <div class="module-content">
         <div class="actions">
           {% block resource_actions %}
-          <ul class="mTop10">
+          <ul class="mTop10 pull-right">
             {% block resource_actions_inner %}
             {% if h.check_access('package_update', {'id':pkg.id }) %}
-              <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn' %}</li>
+              <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn resource-btn' %}</li>
             {% endif %}
             {% if res.url and h.is_url(res.url) %}
               <li>
-                <a class="btn hdx-btn ga-download resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
+                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}

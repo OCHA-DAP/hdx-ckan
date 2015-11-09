@@ -57,18 +57,18 @@
         {% block resource_item_explore_links %}
 
             {% if res.has_views and is_not_zipped and res.format|lower not in ['xlsx'] %}
-                <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
+                <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview resource-btn">
                     {{ _('Preview') }}
                 </a>
             {% endif %}
 
             {%  if can_edit %}
-                <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit">
+                <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit resource-btn">
                     {{ _('Update') }}
                 </a>
             {% endif %}
 
-            <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
+            <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download resource-btn resource-icon-btn" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
                 <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
                 <span class="ga-download-dataset-title" style="display: none">{{ pkg.title }}</span>
@@ -82,7 +82,7 @@
             {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
               target_url=res.url,
               icon=true,
-              class="btn btn-secondary hdx-btn resource-url-analytics ga-share", button_id=button_id %}
+              class="btn btn-secondary hdx-btn resource-url-analytics ga-share resource-btn resource-icon-btn", button_id=button_id %}
 
         {% endblock %}
     </div>
