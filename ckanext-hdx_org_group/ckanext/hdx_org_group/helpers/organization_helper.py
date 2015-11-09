@@ -238,7 +238,7 @@ def hdx_organization_update(context, data_dict):
 def hdx_generate_embedded_preview(result):
     org_name = result.get('name') or result.get('id')
     vis_config = get_value_dict_from_extras(result, 'visualization_config')
-    if vis_config.get('visualization-select') == 'embedded-preview':
+    if vis_config and vis_config.get('visualization-select') == 'embedded-preview':
         selector = vis_config.get('vis-preview-selector', None)
         url = vis_config.get('vis-url')
         file_path = BUCKET + org_name + '_embedded_preview.png'
