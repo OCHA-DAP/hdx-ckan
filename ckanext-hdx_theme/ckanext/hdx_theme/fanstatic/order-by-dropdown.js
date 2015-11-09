@@ -23,21 +23,23 @@ function replaceParam(key, value){
     var params = toParams(window.location.search);
     // Handle corruption of the query
     $.each(params, function(k,v){
-        params[k] = params[k].replace(/\+/g,' ')
-        params[k] = params[k].replace(/\%2B/g,' ')
         //reset page on resort
         if(k == 'page'){
             params[k] = 1
         }
     });
     params[key] = value;
-    return pathname + "?" + jQuery.param(params, true);
+    var parameters = decodeURIComponent(jQuery.param(params, true));
+    var ret = pathname + "?" + parameters;
+    return ret;
 }
 
 function toParams(searchUrl) {
     var result = {};
     if(searchUrl == '')
         return result;
+
+    searchUrl = decodeURIComponent(searchUrl);
 
     var queryString = searchUrl.substr(1);
     var params = queryString.split("&");
@@ -49,12 +51,12 @@ function toParams(searchUrl) {
         var value = keyPair[1];
 
         if(result[key] == undefined)
-            result[key] = value
+            result[key] = value;
         else{
             if(result[key] instanceof Array) //current var is an array just push another to it
-                result[key].push(value)
+                result[key].push(value);
             else{ //duplicate var, then it must store as an array
-                result[key] = [result[key]]
+                result[key] = [result[key]];
                 result[key].push(value)
             }
         }

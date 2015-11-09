@@ -5,9 +5,9 @@ $(document).ready(function(){
       data:{'url':$(this).attr('target-url'), },
       type: 'POST'
     }).done(function(msg){
-      $('.resource-social a').each(function(){
+      $('.change-link-wrapper a').each(function(){
           var link = $(this).attr('href');
-          $(this).attr('href', link.replace("XXXX", msg['url']));
+          $(this).attr('href', link.replace("data.hdx.rwlabs.org", msg['url']));
       });
     });
     return false;

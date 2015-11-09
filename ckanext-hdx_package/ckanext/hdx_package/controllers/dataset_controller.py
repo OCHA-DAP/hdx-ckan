@@ -696,7 +696,7 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
                 c.downloads_count += resource['tracking_summary']['total']
-
+        c.pkg_dict['tracking_summary']['total'] = c.downloads_count #Force consistancy
         followers = get_action('dataset_follower_list')({'ignore_auth': True},
                                                         {'id': c.pkg_dict['id']})
         if followers and len(followers) > 0:
@@ -885,7 +885,7 @@ class DatasetController(PackageController):
 
         params = request.params.items()
         url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url",
+        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key="+config.get('hdx.google.dev_key',''),
                           data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
         item = r.json()
 

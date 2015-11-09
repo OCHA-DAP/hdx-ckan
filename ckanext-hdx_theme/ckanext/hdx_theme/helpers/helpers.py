@@ -54,8 +54,8 @@ def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
         facet, limit, exclude_active=exclude_active)
     filtered_no_items = c.search_facets.get(facet)['items'].__len__()
-    total_no_items = json.loads(
-        count.CountController.list[facet](count.CountController()))['count']
+    # total_no_items = json.loads(
+    #     count.CountController.list[facet](count.CountController()))['count']
     # if filtered_no_items <= 50 and filtered_no_items < total_no_items:
     #     no_items = filtered_no_items
     # else:
@@ -132,6 +132,19 @@ def get_last_revision_timestamp_group(group_id):
         return h.render_datetime(activity.timestamp)
     return None
 
+def get_dataset_date_format(date):
+    #Is this a range?
+    drange = date.split('-')
+    if len(drange) != 2:
+        drange = [date]
+    dates = []
+    for d in drange:
+        try:
+            dt = datetime.datetime.strptime(d, '%m/%d/%Y')
+            dates.append(dt.strftime('%b %-d, %Y'))
+        except:
+            return False
+    return '-'.join(dates)
 
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(

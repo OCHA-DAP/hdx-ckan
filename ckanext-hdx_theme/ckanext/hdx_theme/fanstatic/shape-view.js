@@ -20,7 +20,7 @@ var options = {
 };
 
 function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key) {
-    var ALLOWED_COLUMN_TYPES = ["character varying", "integer"];
+    var ALLOWED_COLUMN_TYPES = ["character varying", "integer", "numeric"];
 
     var value = layer_data['url'];
 

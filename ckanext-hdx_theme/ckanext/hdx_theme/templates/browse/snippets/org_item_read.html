@@ -1,0 +1,15 @@
+{% extends "browse/snippets/org_item.html" %}
+
+{% set org_url = h.hdx_get_extras_element(organization.extras) %}
+
+{% block org_title %}
+    <h1 class="itemTitle">
+        {{ organization.display_name or organization.title or organization.name }}
+    </h1>
+{% endblock %}
+{% block links %}
+    {{ super() }}
+    -
+    <a class="sspBold14" href="{{ org_url }}" target="_blank">{{_('Visit Website')}}</a>
+{% endblock %}
+{% block indent_item %}{% endblock %}

@@ -20,6 +20,7 @@ import ckan.logic as logic
 from pylons import config
 import ckan.model as model
 import mail_validation_controller as hdx_mail_c
+import ckanext.hdx_users.helpers.tokens as tokens
 
 render = base.render
 
@@ -27,6 +28,8 @@ get_action = logic.get_action
 NotAuthorized = logic.NotAuthorized
 NotFound = logic.NotFound
 check_access = logic.check_access
+OnbErr = json.dumps({'success': False, 'error': {'message': _('Something went wrong. Please contact support.')}})
+OnbValidationErr = json.dumps({'success': False, 'error': {'message': _('You have not yet validated your email.')}})
 OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
 
 
@@ -48,14 +51,24 @@ class LoginController(ckan_user.UserController):
             context = {'model': model,
                        'user': c.user}
 
-            data_dict = {'id': user_id}
             user_obj = None
             try:
-                get_action('user_show')(context, data_dict)
+                data_dict = get_action('user_show')(context, {'id': user_id})
                 user_obj = context['user_obj']
             except NotFound:
                 return hdx_mail_c.OnbUserNotFound
+            try:
+                token = tokens.token_show(context, data_dict)
+            except NotFound, e:
+                token = {'valid': True}  # Until we figure out what to do with existing users
+            except:
+                OnbErr
 
+            if not token['valid']:
+                # redirect to validation page
+                if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
+                    return hdx_mail_c.OnbSuccess
+                return OnbErr
             if user_obj:
                 try:
                     mailer.send_reset_link(user_obj)

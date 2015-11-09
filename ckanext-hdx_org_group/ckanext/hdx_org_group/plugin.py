@@ -120,6 +120,12 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         return None
 
+    def after_map(self, map):
+        map.connect('organization_read', '/organization/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='read')
+        return map
+
+
     def before_map(self, map):
         map.connect('organization_bulk_process',
                     '/organization/bulk_process/{org_id}', controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
@@ -151,6 +157,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         #map.connect('browse_list', '/browse',
         #            controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
+
+        map.connect('browse_list', '/browse',
+                    controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_group_list')
+
         map.connect('group_index', '/group', controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
                   highlight_actions='index search')
         

@@ -6,6 +6,7 @@ from ckan.lib.base import _
 from ckan.common import c
 import ckan.plugins.toolkit as tk
 
+
 ## ORGS
 def _simple_logged_in_auth(fail_message):
     logged_in = new_authz.auth_is_loggedin_user()
@@ -14,6 +15,7 @@ def _simple_logged_in_auth(fail_message):
     else:
         return {'success': False,
                 'msg': fail_message}
+
 
 ## ORGS
 @logic.auth_sysadmins_check
@@ -33,15 +35,18 @@ def hdx_basic_user_info(context, data_dict):
     return _simple_logged_in_auth(_("You must be logged in to access basic \
                             organization member info."))
 
+
 ## ORGS
 def hdx_send_new_org_request(context, data_dict):
     return _simple_logged_in_auth(_("You must be logged in to send a new \
                             organization request."))
 
+
 ## ORGS
 def hdx_send_editor_request_for_org(context, data_dict):
     return _simple_logged_in_auth(_("You must be logged in to send a request \
                             for being an editor."))
+
 
 ## ORGS
 def hdx_send_request_membership(context, data_dict):

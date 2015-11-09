@@ -112,3 +112,13 @@ dt.uppercase {
     margin-left: 10px;
     padding: 4px 12px;
 }
+
+.list-items.dataset-item {
+    margin: 0;
+}
+
+.btn.dropdown-toggle-org .caret{
+  margin-top: 5px;
+  margin-left: 5px;
+  border-top-color: #888888;
+}

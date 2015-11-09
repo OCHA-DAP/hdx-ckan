@@ -5,6 +5,8 @@ Created on July 2nd, 2015
 '''
 
 import ckanext.hdx_user_extra.model as ue_model
+import ckan.logic as logic
+_check_access = logic.check_access
 
 
 def user_extra_create(context, data_dict):
@@ -16,6 +18,7 @@ def user_extra_create(context, data_dict):
     '''
     result = []
     model = context['model']
+    _check_access('user_extra_create', context, data_dict)
     for extras in data_dict['extras']:
         user_extra = ue_model.UserExtra(user_id=data_dict['user_id'], key=extras['key'], value=extras['value'])
         model.Session.add(user_extra)

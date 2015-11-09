@@ -33,14 +33,11 @@ Example:
         {% endblock %}
       {% endblock %}
 
-      {% block package_search_results_datasets %}
-          {% if my_c.tab=='datasets' %}
-              {{ h.snippet('search/snippets/package_list.html', query=my_c.q, packages=my_c.page.items) }}
-          {% elif my_c.tab=='all' %}
-              {{ h.snippet('search/snippets/indicator_list.html',
-                        query=my_c.q, packages=my_c.page.items, show_preview_on_first=False) }}
-          {% elif my_c.tab=='activities' %}
+      {% block package_search_results_list %}
+          {%if my_c.tab=='activities' %}
           	  {{ h.snippet('indicator/snippets/activity_stream_items.html', activities = search_results.activities['activities'], offset = search_results.activities['offset']) }}
+          {% else %}
+              {{ super() }}
           {% endif %}
       {% endblock %}
       
