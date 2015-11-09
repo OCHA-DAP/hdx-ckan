@@ -8,11 +8,13 @@
   border-bottom: @listBorderHeight solid @lightGrayColor;
   vertical-align: middle;
   line-height: @listHeaderHeight - @listBorderHeight;
-  padding: 0 15px;
+  padding: 0;
+  padding-right: 15px;
 }
 
 /* List header */
 .list-header {
+
   margin-top: 25px;
   .list-header-mixin();
   background-color: @extraLightBlueColor;
@@ -27,7 +29,7 @@
     .sourceSansProFont(400, 14px);
     color: @grayColor;
     padding: 7px 6px;
-    width: 450px;
+    width: 400px;
 
     border: 1px solid @lightGrayColor;
     border-radius: 6px;
@@ -103,6 +105,7 @@
 .list-header-filters{
   .list-header-mixin();
   background-color: @extraLightGrayColor;
+  padding-left: 15px;
 
   .filters-title {
     .gothamBoldFont(12px);
@@ -337,6 +340,7 @@
   height: 30px;
   line-height: 29px;
   display: none;
+  padding-left: 15px;
 
   .filter-results {
     color: @blueColor;
