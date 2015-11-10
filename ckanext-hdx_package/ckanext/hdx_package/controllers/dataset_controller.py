@@ -721,17 +721,22 @@ class DatasetController(PackageController):
         if 'resources' in c.pkg_dict:
             has_shapes = self._has_shapes(c.pkg_dict['resources'])
         try:
+            org_dict = c.pkg_dict.get('organization') or {}
+            org_id = org_dict.get('id', None)
+            org_info_dict = self._get_org_extras(org_id)
+            if org_info_dict.get('custom_org', False):
+                self._process_customizations(org_info_dict.get('customization', None))
             if has_shapes:
                 c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                 return render('indicator/hdx-shape-read.html')
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
-                org_dict = c.pkg_dict.get('organization') or {}
-                org_id = org_dict.get('id', None)
-                org_info_dict = self._get_org_extras(org_id)
+                # org_dict = c.pkg_dict.get('organization') or {}
+                # org_id = org_dict.get('id', None)
+                # org_info_dict = self._get_org_extras(org_id)
                 if org_info_dict.get('custom_org', False):
-                    self._process_customizations(org_info_dict.get('customization', None))
+                    # self._process_customizations(org_info_dict.get('customization', None))
                     return render('package/custom_hdx_read.html')
                 return render('package/hdx_read.html')
         except ckan.lib.render.TemplateNotFound:
