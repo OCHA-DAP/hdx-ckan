@@ -4,7 +4,7 @@ Created on Sep 02, 2015
 @author: alexandru-m-g
 '''
 
-from pylons import config
+import os
 
 import ckan.logic as logic
 import ckan.model as model
@@ -12,14 +12,13 @@ import ckan.plugins as plugins
 import ckan.lib.navl.dictization_functions
 import ckan.lib.search as search
 import ckan.lib.dictization.model_dictize as model_dictize
-
-import ckanext.hdx_package.helpers.caching as caching
+import ckan.logic.action.get as logic_get
 
 import sqlalchemy
 import logging
 import json
 
-from sqlalchemy.orm import load_only
+from ckan.lib import uploader
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -291,3 +290,37 @@ def package_search(context, data_dict):
             key=lambda facet: facet['display_name'], reverse=True)
 
     return search_results
+
+
+@logic.side_effect_free
+def resource_show(context, data_dict):
+    resource_dict = logic_get.resource_show(context, data_dict)
+
+    if not resource_dict.get('size'):
+        resource_dict['size'] = __get_resource_filesize(resource_dict)
+
+    return resource_dict
+
+
+@logic.side_effect_free
+def package_show(context, data_dict):
+    package_dict = logic_get.package_show(context, data_dict)
+
+    for resource_dict in package_dict.get('resources', []):
+        if not resource_dict.get('size'):
+            resource_dict['size'] = __get_resource_filesize(resource_dict)
+
+    return package_dict
+
+
+def __get_resource_filesize(resource_dict):
+    if resource_dict.get('url_type') == 'upload':
+        value = None
+        try:
+            upload = uploader.ResourceUpload(resource_dict)
+            value = os.path.getsize(upload.get_path(resource_dict['id']))
+        except Exception as e:
+            log.warn(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
+                                                                                      str(e)))
+        return value
+    return None
