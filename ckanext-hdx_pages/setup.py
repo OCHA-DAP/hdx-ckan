@@ -78,6 +78,6 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        hdx_pages=ckanext.hdx_pages.plugin:Hdx_PagesPlugin
+        hdx_pages=ckanext.hdx_pages.plugin:HdxPagesPlugin
     ''',
 )
