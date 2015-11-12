@@ -27,7 +27,7 @@ class Page(DomainObject):
         self.sections = sections
 
     @classmethod
-    def get(cls, id, key):
+    def get(cls, id):
         '''Returns a group object referenced by its id or name.'''
         query = meta.Session.query(cls).filter(cls.id == id)
         page = query.first()

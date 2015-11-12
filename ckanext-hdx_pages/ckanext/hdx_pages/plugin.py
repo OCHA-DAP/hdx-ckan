@@ -2,6 +2,7 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
 import ckanext.hdx_pages.actions.create as create
+import ckanext.hdx_pages.actions.delete as delete
 import ckanext.hdx_pages.actions.auth as auth
 
 
@@ -28,6 +29,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'page_create': create.page_create,
+            'page_delete': delete.page_delete
         }
 
     def get_auth_functions(self):
