@@ -3,6 +3,7 @@ import ckan.plugins.toolkit as toolkit
 
 import ckanext.hdx_pages.actions.create as create
 import ckanext.hdx_pages.actions.delete as delete
+import ckanext.hdx_pages.actions.update as update
 import ckanext.hdx_pages.actions.get as get
 import ckanext.hdx_pages.actions.auth as auth
 
@@ -31,6 +32,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
         return {
             'page_create': create.page_create,
             'page_delete': delete.page_delete,
+            'page_update': update.page_update,
             'page_show': get.page_show
         }
 
