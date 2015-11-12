@@ -1,11 +1,14 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
+import ckanext.hdx_pages.actions.create as create
+
 
 class HdxPagesPlugin(plugins.SingletonPlugin):
 
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IActions, inherit=True)
 
     def update_config(self, config_):
         # toolkit.add_template_directory(config_, 'templates')
@@ -19,3 +22,8 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
                     )
 
         return map
+
+    def get_actions(self):
+        return {
+            'page_create': create.page_create,
+        }
