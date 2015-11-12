@@ -48,6 +48,7 @@ class Page(DomainObject):
 page_table = Table('page', meta.metadata,
                    Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                    Column('name', types.UnicodeText, nullable=False, unique=True, index=True),
+                   Column('title', types.UnicodeText, nullable=False),
                    Column('description', types.UnicodeText, nullable=True),
                    Column('type', types.UnicodeText),
                    Column('sections', types.UnicodeText),
