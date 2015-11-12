@@ -5,7 +5,10 @@ import ckanext.hdx_pages.helpers.dictize as dictize
 
 
 def page_create(context, data_dict):
+
     model = context['model']
+
+    logic.check_access('page_create', context, data_dict)
 
     try:
         page = pages_model.Page(name=data_dict['name'], title=data_dict.get('title'),
