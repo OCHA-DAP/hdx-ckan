@@ -1,5 +1,6 @@
 import ckanext.hdx_pages.model as pages_model
 
+
 def page_dictize(page):
     '''
 

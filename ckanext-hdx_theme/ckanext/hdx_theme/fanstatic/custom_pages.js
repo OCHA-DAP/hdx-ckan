@@ -6,9 +6,10 @@ ckan.module('hdx_custom_pages', function ($, _) {
             $.proxyAll(this, /_on/);
 
             this.field_config = {
+                "empty":[],
                 "map":["data-url","max-height"],
-                "key-figures":["data-url","description","source"],
-                "interactive-data":["data-url","title-of-visualization","max-height","description","source"],
+                "key-figures":["data-url","description","sources"],
+                "interactive-data":["data-url","title-of-visualization","max-height","description","sources"],
                 "data-list":["data-url"]
             };
 
@@ -23,11 +24,32 @@ ckan.module('hdx_custom_pages', function ($, _) {
 
         },
         _onPageTypeChange: function (event) {
-            alert(this.value)
+            //alert(this.value);
         },
         _onSectionTypeChange: function (event) {
             var id = event.data.section_id;
-            alert(this.value)
+            var sType = event.data.obj.val();
+            //if(sType == 'empty' || sType==null )
+            //    return;
+            var fields = $('#section_'+id).find('.hdx-section-field');
+            for( var _i=0; _i<fields.length; _i++){
+                var field = fields[_i];
+                var inputs = $(field).find('input');
+                var name = inputs[0].getAttribute("id").replace("field-section-"+id+"-", "");
+                if(this.field_config[sType].indexOf(name) == -1){
+                    //el invisible
+                    $(field).removeClass("hdx-visible-element");
+                    if(! $(field).hasClass('hdx-invisible-element') )
+                        $(field).addClass("hdx-invisible-element");
+                }
+                else{
+                    //element visible
+                    $(field).removeClass("hdx-invisible-element");
+                    if(! $(field).hasClass('hdx-visible-element') )
+                        $(field).addClass("hdx-visible-element");
+                }
+
+            }
         },
         _onDelSectionClick: function (event) {
             var id = event.data.section_id;
@@ -46,13 +68,17 @@ ckan.module('hdx_custom_pages', function ($, _) {
                 $(templateFields[_i]).attr("name",name);
             }
 
+            //delete section button
             var sDelBtn = $('#del_section');
             sDelBtn.attr('id','del_section_'+this.counter);
             sDelBtn.attr('name','del_section_'+this.counter);
             sDelBtn.on('click',  {"section_id":this.counter}, this._onDelSectionClick);
 
+            //select section type dropdown
             var sType = $('#field-section-'+this.counter+'-type');
-            sType.on('change',  {"section_id":this.counter}, this._onSectionTypeChange);
+            sType.on('change',  {"section_id":this.counter, "obj": sType}, this._onSectionTypeChange);
+
+            $('#hdx_counter').val(this.counter);
 
             this.counter++;
         },
