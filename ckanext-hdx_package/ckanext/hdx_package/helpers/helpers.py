@@ -3,29 +3,25 @@ import ckan.lib.helpers as h
 from ckan.common import (
     c, request
 )
-import sqlalchemy
 import ckan.model as model
 import ckan.lib.base as base
 import ckan.logic as logic
-import datetime
 import json
 import logging
 import ckan.plugins.toolkit as tk
-import re
 import ckan.new_authz as new_authz
 import ckan.lib.activity_streams as activity_streams
 import ckan.model.package as package
 import ckan.model.misc as misc
 import ckan.lib.plugins as lib_plugins
-import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckan.lib.dictization.model_save as model_save
 import ckan.plugins as plugins
 
 from ckan.logic.action.create import _validate
 
-from webhelpers.html import escape, HTML, literal, url_escape
 from ckan.common import _, c, request, response
-from ckan.model.tag import PackageTag, Tag
+
+from ckan.lib import formatters
 
 get_action = logic.get_action
 log = logging.getLogger(__name__)
@@ -533,6 +529,10 @@ def filesize_format(size_in_bytes):
     try:
         d = 1024.0
         size = int(size_in_bytes)
+
+        # value = formatters.localised_filesize(size_in_bytes)
+        # return value
+
         for unit in ['b', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
             if size < d:
                 return "%3.1f%s" % (size, unit)

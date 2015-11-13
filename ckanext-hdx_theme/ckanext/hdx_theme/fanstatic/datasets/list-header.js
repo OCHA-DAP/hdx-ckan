@@ -1,4 +1,10 @@
-function updateFilters(){
+function updateFilters(forceApply){
+
+    if (forceApply){
+        //only for order by drop down and show N items
+        $("#dataset-filter-form").submit();
+            return;
+    }
 
     $(".list-header-apply").show(500);
 
@@ -96,8 +102,8 @@ $(document).ready(function(){
         updateFilters();
     });
 
-    $(".filter-pagination label").on("click", function(){
-        updateFilters();
+    $(".filter-pagination input").change(function(){
+        updateFilters(true);
     });
 
     var dropdown = $(".dropdown.orderDropdown li a");
@@ -110,7 +116,7 @@ $(document).ready(function(){
         $("#header-search-sort").val(value);
         $("#header-search-sort ~ .dropdown-toggle-text").text(text);
 
-        updateFilters();
+        updateFilters(true);
         event.preventDefault();
         return false;
     });

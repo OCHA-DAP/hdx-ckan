@@ -23,6 +23,7 @@ import ckanext.hdx_theme.helpers.less as less
 from urllib import urlencode
 from pylons import config
 from ckan.controllers.api import CONTENT_TYPES
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 
 render = base.render
 abort = base.abort
@@ -78,7 +79,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
             return result
 
-    def assemble_viz_config(self, vis_json_config):
+    def assemble_viz_config(self, vis_json_config, org_id=None):
         try:
             visualization = json.loads(vis_json_config)
         except Exception, e:
@@ -98,6 +99,17 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                 'geo': h.url_for('perma_storage_file', id=visualization.get('viz-geo-dataset-id', ''),
                                  resource_id=visualization.get('viz-geo-resource-id', '')),
                 'source': visualization.get('viz-data-source', '')
+            })
+
+        if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded-preview':
+            config.update({
+                'title': visualization.get('vis-title', ''),
+                'data_link_url': visualization.get('vis-data-link-url', ''),
+                'vis_url': visualization.get('vis-url', ''),
+                'height': visualization.get('vis-height', '600px') if visualization.get('vis-height', '600px') != '' else '600px',
+                'width': visualization.get('vis-width', '100%') if visualization.get('vis-width', '100%') != '' else '100%',
+                'selector': visualization.get('vis-preview-selector', ''),
+                'embedded_preview': h.url_for('image_serve', label=org_id + '_embedded_preview.png')
             })
 
         if visualization.get('visualization-select', '') == 'WFP':
@@ -181,7 +193,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                                               {'organization_id': org_info['id'],
                                                'owner_org': org_info['id']})
 
-        viz_config = self.assemble_viz_config(org_info['visualization_config'])
+        viz_config = self.assemble_viz_config(org_info['visualization_config'], org_id)
 
         follower_count = get_action('group_follower_count')(
             {'model': model, 'session': model.Session},
