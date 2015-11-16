@@ -1,4 +1,7 @@
 import ckan.lib.base as base
+import ckan.logic as logic
+import ckan.model as model
+
 from ckan.common import _, c, g, request, response
 
 
@@ -19,5 +22,14 @@ class PagesController(base.BaseController):
     def edit(self, id):
         return None
 
-    def read(self, type, name):
-        return None
+    def read(self, id, type):
+        context = {
+            'model': model, 'session': model.Session,
+            'user': c.user or c.author
+        }
+        page_dict = logic.get_action('page_show')(context, {'id': id})
+
+        if not type or type != page_dict.get('type'):
+            base.abort(404, _('Wrong page type'))
+        else:
+            return base.render('pages/read_page.html')
