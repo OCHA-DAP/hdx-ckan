@@ -11,6 +11,7 @@ get_action = logic.get_action
 check_access = logic.check_access
 NotAuthorized = logic.NotAuthorized
 
+
 class PagesController(base.BaseController):
     def new(self, data=None, errors=None, error_summary=None):
         errors = errors or {}
@@ -26,13 +27,13 @@ class PagesController(base.BaseController):
             context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
             try:
                 check_access('page_create', context, {})
-                #TODO exceptions
+                # TODO exceptions
             except NotAuthorized:
                 return mail_validation_controller.OnbNotAuth
             except Exception, e:
                 error_summary = e.error_summary
                 return self.error_message(error_summary)
-            sections_no = int(request.params.get("hdx_counter"))
+            sections_no = int(request.params.get("hdx_counter")) + 1
             sections = []
             for _i in range(0, sections_no):
                 if "field-section-" + str(_i) + "-type" in request.params:
