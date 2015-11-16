@@ -1,14 +1,11 @@
-import json
 import ckan.lib.base as base
 from ckan.common import _, c, g, request, response
 import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_users.controllers.mail_validation_controller as mail_validation_controller
 
+from ckan.common import _, c, g, request, response
 
-get_action = logic.get_action
-check_access = logic.check_access
-NotAuthorized = logic.NotAuthorized
 
 class PagesController(base.BaseController):
     def new(self, data=None, errors=None, error_summary=None):
@@ -59,5 +56,14 @@ class PagesController(base.BaseController):
     def edit(self, id):
         return None
 
-    def read(self, type, name):
-        return None
+    def read(self, id, type):
+        context = {
+            'model': model, 'session': model.Session,
+            'user': c.user or c.author
+        }
+        page_dict = logic.get_action('page_show')(context, {'id': id})
+
+        if not type or type != page_dict.get('type'):
+            base.abort(404, _('Wrong page type'))
+        else:
+            return base.render('pages/read_page.html')
