@@ -4,14 +4,19 @@ Created on Apr 10, 2014
 @author:alexandru-m-g
 '''
 import logging
+from routes.mapper import SubMapper
+import pylons.config as config
+import json
+
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
-from routes.mapper import SubMapper
-import pylons.config as config
+import ckan.plugins as p
+import ckan.plugins.toolkit as toolkit
 import ckan.model as model
 import ckan.model.package as package
 import ckan.model.license as license
+
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
@@ -25,6 +30,8 @@ import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 import ckanext.hdx_package.actions.get as hdx_get
 
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+
+ignore_empty = p.toolkit.get_validator('ignore_empty')
 
 
 def run_on_startup():
@@ -294,3 +301,129 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def make_middleware(self, app, config):
         run_on_startup()
         return app
+
+
+class HDXChartViewsPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IResourceView, inherit=True)
+
+    def info(self):
+        schema = {
+            'chart_type': [],
+            'x_axis_label': [ignore_empty],
+            'y_axis_label': [],
+            'x_column': [],
+            'y_column': [],
+            'chart_data_source': [],
+            'data_link_url': [],
+            'data_label': []
+        }
+        return {
+            'name': 'hdx_chart_view',
+            'title': 'Line / Bar Chart',
+            'filterable': False,
+            'preview_enabled': True,
+            'icon': 'bar-chart',
+            'requires_datastore': True,
+            'iframed': True,
+            'schema': schema,
+            'default_title': p.toolkit._('HDX New Chart')
+        }
+
+    def can_view(self, data_dict):
+        resource = data_dict['resource']
+        return (resource.get('datastore_active') or
+                resource.get('url') == '_datastore_only_resource')
+
+    def setup_template_variables(self, context, data_dict):
+
+        return {
+            'datastore_columns': self._datastore_cols(data_dict['resource']),
+            'chart_type': [
+                {
+                    'value': 'bar',
+                    'text': p.toolkit._('Bar Chart')
+                },
+                {
+                    'value': 'area',
+                    'text': p.toolkit._('Line Area Chart')
+                },
+                {
+                    'value': 'line',
+                    'text': p.toolkit._('Line Chart')
+                },
+            ],
+            'chart_info': self._format_settings_for_chart(data_dict['resource'], data_dict['resource_view'])
+        }
+
+    def view_template(self, context, data_dict):
+        return 'new_views/chart_view.html'
+
+    def form_template(self, context, data_dict):
+        return 'new_views/chart_view_form.html'
+
+    def _format_settings_for_chart(self, resource_dict, resource_view_dict):
+        result = {
+            'title': resource_view_dict.get('title'),
+            'title_x': resource_view_dict.get('x_axis_label'),
+            'title_y': resource_view_dict.get('y_axis_label'),
+            'type': resource_view_dict.get('chart_type'),
+            'sources': [
+                {
+                    'label_x': resource_view_dict.get('data_label'),
+                    'column_x': resource_view_dict.get('x_column'),
+                    'column_y': resource_view_dict.get('y_column'),
+                    'data_link_url': resource_view_dict.get('data_link_url'),
+                    'source': resource_view_dict.get('chart_data_source'),
+                    'datastore_id': resource_dict.get('id'),
+                    'source_type': 'ckan'
+                }
+            ]
+        }
+        return result
+
+    def _datastore_cols(self, resource):
+        '''
+        Returns a list of columns found in this resource's datastore
+        '''
+        data = {'resource_id': resource['id'], 'limit': 0}
+        fields = toolkit.get_action('datastore_search')({}, data)['fields']
+        return [{'value': col['id'], 'text': col['id']} for col in fields if col != '_id']
+
+
+class HDXGeopreviewPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IResourceView, inherit=True)
+
+    def info(self):
+        return {
+            'name': 'hdx_geopreview_view',
+            'title': 'Geopreview',
+            'filterable': False,
+            'preview_enabled': True,
+            'requires_datastore': False,
+            'iframed': True,
+            'default_title': p.toolkit._('Geopreview')
+        }
+
+    def can_view(self, data_dict):
+        from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+
+        resource = data_dict.get('resource', {})
+        format = resource.get('format')
+        format = format.lower() if format else ''
+        return format in GIS_FORMATS
+
+    def setup_template_variables(self, context, data_dict):
+        from ckanext.hdx_package.controllers.dataset_controller import DatasetController
+
+        shape_info = DatasetController._process_shapes([data_dict['resource']])
+
+        return {
+            'shape_info': json.dumps(shape_info)
+        }
+
+    def view_template(self, context, data_dict):
+        return 'new_views/geopreview_view.html'
+
+    def form_template(self, context, data_dict):
+        return 'new_views/geopreview_view_form.html'
+

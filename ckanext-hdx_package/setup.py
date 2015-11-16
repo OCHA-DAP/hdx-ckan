@@ -25,6 +25,8 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_package=ckanext.hdx_package.plugin:HDXPackagePlugin
+        hdx_chart_views=ckanext.hdx_package.plugin:HDXChartViewsPlugin
+        hdx_geopreview_view=ckanext.hdx_package.plugin:HDXGeopreviewPlugin
 
         [paste.paster_command]
         hdx-migrate = ckanext.hdx_package.command:MigrateCommand
