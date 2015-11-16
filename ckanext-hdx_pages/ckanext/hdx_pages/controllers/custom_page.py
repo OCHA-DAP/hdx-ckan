@@ -1,3 +1,4 @@
+import json
 import ckan.lib.base as base
 from ckan.common import _, c, g, request, response
 import ckan.logic as logic
@@ -6,6 +7,9 @@ import ckanext.hdx_users.controllers.mail_validation_controller as mail_validati
 
 from ckan.common import _, c, g, request, response
 
+get_action = logic.get_action
+check_access = logic.check_access
+NotAuthorized = logic.NotAuthorized
 
 class PagesController(base.BaseController):
     def new(self, data=None, errors=None, error_summary=None):
