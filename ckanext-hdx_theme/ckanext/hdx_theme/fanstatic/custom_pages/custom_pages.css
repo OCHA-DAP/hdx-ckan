@@ -1,0 +1,6 @@
+.hdx-visible-element {
+  display: inherit;
+}
+.hdx-invisible-element {
+  display: none;
+}
