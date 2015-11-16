@@ -1,5 +1,9 @@
 {% extends "page.html" %}
 
+{% block breadcrumb_content %}
+    <li class="active">{% link_for _('Locations'), controller='group', action='index' %}</li>
+{% endblock %}
+
 {% block primary_content %}
     <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
     <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
