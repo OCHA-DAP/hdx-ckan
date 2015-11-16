@@ -23,7 +23,7 @@ class PagesController(base.BaseController):
         vars = {'data': data, 'data_dict': data_dict, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
 
-        if request.POST and 'save_custom_page' in request.params:
+        if request.POST and 'save_custom_page' in request.params and not data:
             context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
             try:
                 check_access('page_create', context, {})
@@ -54,7 +54,12 @@ class PagesController(base.BaseController):
                 "description": "",
                 "sections": json.dumps(sections),
             }
-            get_action('page_create')(context, page_dict)
+            try:
+                get_action('page_create')(context, page_dict)
+            except logic.ValidationError, e:
+                errors = e.error_dict
+                error_summary = e.error_summary
+                return self.new(page_dict, errors, error_summary)
 
         return base.render('pages/edit_page.html', extra_vars=vars)
 
