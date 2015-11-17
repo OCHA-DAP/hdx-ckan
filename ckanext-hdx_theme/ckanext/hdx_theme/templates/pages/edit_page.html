@@ -1,10 +1,13 @@
 {% extends "page.html" %}
 {% import 'macros/form.html' as form %}
 
-{% block secondary %}{% endblock %}
+{% block secondary %}
+
+{% endblock %}
 
 {% block primary %}
 <div id="section-container" data-module="hdx_custom_pages">
+    {{data}}--{{data_dict}}
     <form id="create-page-form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
         <div class="row">
             {{ form.input('title', id='field-title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
@@ -20,9 +23,9 @@
         <div class="row">
             <label>This page is located under</label>
             <br/>
-            <input id="hdx_crises_type" type="radio" name="type" value="crisis"  /><label for="hdx_crises_type">Crisis (URL:{{full_domain_crisis}})</label>
+            <input id="hdx_crises_type" type="radio" name="type" value="crisis"  {{data.crisis}}/><label for="hdx_crises_type">Crisis (URL:{{full_domain_crisis}})</label>
             <br/>
-            <input id="hdx_dashboard_type" type="radio" name="type" value="dashboard" /><label for="hdx_dashboard_type">Dashboard (URL:{{full_domain_dashboard}})</label>
+            <input id="hdx_dashboard_type" type="radio" name="type" value="dashboard" {{data.dashboard}} /><label for="hdx_dashboard_type">Dashboard (URL:{{full_domain_dashboard}})</label>
         </div>
         <div id="sections" class="row">
 
@@ -45,13 +48,12 @@
 
 
 
-    <div class="row" id="section_template">
+    <div class="row hdx-invisible-element" id="section_template">
         {{ form.select('field-section-template-type', id='field-section-template-type', label=_('Section'), options=data_dict['content_type'], selected="empty", error=errors.type) }}
-        {{ form.input('field-section-template-data-url', id='field-section-template-data-url', label=_('Data URL'), placeholder=_('Enter URL'), error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
-        {{ form.input('field-section-template-title-of-visualization', id='field-section-template-title-of-visualization', label=_('Title of Visualization'), placeholder=_('Title of Visualization (optional)'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
+        {{ form.input('field-section-template-data-url', id='field-section-template-data-url', label=_('Data URL'), placeholder=_('Enter URL'), error=errors.data_url, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
+        {{ form.input('field-section-template-section-title', id='field-section-template-section-title', label=_('Title of Visualization'), placeholder=_('Title of Visualization (optional)'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
+        {{ form.input('field-section-template-section-description', id='field-section-template-section-description', label=_('Description (optional)'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
         {{ form.input('field-section-template-max-height', id='field-section-template-max-height', label=_('Max Height'), placeholder=_('400px recommended'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
-        {{ form.input('field-section-template-description', id='field-section-template-description', label=_('Description (optional)'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
-        {{ form.input('field-section-template-sources', id='field-section-template-sources', label=_('Source(s)'), placeholder=_('Data Source (if more than one, separate by comma ","'), value=data.title, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
         <br/>
         <input id="del_section" type="button" name="del_section" value="Delete Section"/>
         <br/>

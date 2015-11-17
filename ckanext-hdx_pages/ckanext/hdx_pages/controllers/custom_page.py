@@ -5,15 +5,23 @@ import ckan.logic as logic
 import ckan.model as model
 import ckanext.hdx_users.controllers.mail_validation_controller as mail_validation_controller
 
-from ckan.common import _, c, g, request, response
-
 get_action = logic.get_action
 check_access = logic.check_access
 NotAuthorized = logic.NotAuthorized
+abort = base.abort
+
+checked = 'checked="checked"'
 
 
 class PagesController(base.BaseController):
     def new(self, data=None, errors=None, error_summary=None):
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        try:
+            check_access('page_create', context, {})
+            # TODO exceptions
+        except NotAuthorized:
+            abort(401, _('Not authorized to see this page'))
+
         errors = errors or {}
         data_dict = {'content_type': [{'value': 'empty', 'text': _('Select content type')},
                                       {'value': 'map', 'text': _('Map')},
@@ -23,37 +31,33 @@ class PagesController(base.BaseController):
         vars = {'data': data, 'data_dict': data_dict, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
 
+
+        # saving a new page
         if request.POST and 'save_custom_page' in request.params and not data:
-            context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+
             try:
                 check_access('page_create', context, {})
                 # TODO exceptions
             except NotAuthorized:
-                return mail_validation_controller.OnbNotAuth
+                abort(401, _('Not authorized to see this page'))
             except Exception, e:
                 error_summary = e.error_summary
                 return self.error_message(error_summary)
-            sections_no = int(request.params.get("hdx_counter")) + 1
+            sections_no = int(request.params.get("hdx_counter") or "-1") + 1
             sections = []
             for _i in range(0, sections_no):
                 if "field-section-" + str(_i) + "-type" in request.params:
                     section = {
                         "type": request.params.get("field-section-" + str(_i) + "-type"),
                         "data-url": request.params.get("field-section-" + str(_i) + "-data-url"),
-                        "title-of-visualization": request.params.get(
-                            "field-section-" + str(_i) + "-title-of-visualization"),
+                        "section-title": request.params.get("field-section-" + str(_i) + "-section-title"),
                         "max-height": request.params.get("field-section-" + str(_i) + "-max-height"),
-                        "description": request.params.get("field-section-" + str(_i) + "-description"),
-                        "sources": request.params.get("field-section-" + str(_i) + "-sources"),
+                        "description": request.params.get("field-section-" + str(_i) + "-section-description"),
                     }
                     sections.append(section)
-            page_dict = {
-                "name": request.params.get("name"),
-                "title": request.params.get("title"),
-                "type": request.params.get("type"),
-                "description": "",
-                "sections": json.dumps(sections),
-            }
+            page_dict = {"name": request.params.get("name"), "title": request.params.get("title"),
+                         "type": request.params.get("type"), "description": "", "sections": json.dumps(sections),
+                         request.params.get("type"): checked}
             try:
                 get_action('page_create')(context, page_dict)
             except logic.ValidationError, e:
