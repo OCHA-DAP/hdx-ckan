@@ -2,6 +2,7 @@ import ckan.logic as logic
 
 import ckanext.hdx_pages.model as pages_model
 import ckanext.hdx_pages.helpers.dictize as dictize
+import ckanext.hdx_pages.actions.validation as validation
 
 from ckan.common import _
 
@@ -12,15 +13,7 @@ def page_create(context, data_dict):
 
     logic.check_access('page_create', context, data_dict)
 
-    try:
-        existing_page = logic.get_action('page_show')(context, {'id': data_dict['name']})
-        if existing_page:
-            message = _('Page name already exists')
-            ex = logic.ValidationError({'name': [message]})
-            raise ex
-    except logic.NotFound, e:
-        # This is good: means there's no page with the same name.
-        pass
+    validation.page_name_validator(data_dict, context)
 
     try:
         page = pages_model.Page(name=data_dict['name'], title=data_dict.get('title'),
