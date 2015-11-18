@@ -331,7 +331,6 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
     except:
         data_dict['customization'] = {}
 
-
     # If we're removing the image
     if 'clear_image_sq' in data_dict and data_dict['clear_image_sq']:
         remove_image(customization['image_sq'])
@@ -343,7 +342,9 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         data_dict['customization']['image_rect'] = ''
         customization['image_rect'] = ''
 
-    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload']:
+    if 'image_sq_upload' in data_dict and data_dict['image_sq_upload'] != '' and data_dict['image_sq_upload'] != None:
+        # Although weird, the FieldStorage instance has a boolean value of False so we need to compare to None
+
         # If old image was uploaded remove it
         if customization['image_sq']:
             remove_image(customization['image_sq'])
@@ -352,7 +353,10 @@ def hdx_group_or_org_update(context, data_dict, is_org=False):
         upload1.update_data_dict(data_dict, 'image_sq',
                                  'image_sq_upload', 'clear_upload')
 
-    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' and data_dict['image_rect_upload']:
+    if 'image_rect_upload' in data_dict and data_dict['image_rect_upload'] != '' \
+            and data_dict['image_rect_upload'] != None:
+        # Although weird, the FieldStorage instance has a boolean value of False so we need to compare to None
+
         if customization['image_rect']:
             remove_image(customization['image_rect'])
         upload2 = uploader.Upload('group', customization['image_rect'])
