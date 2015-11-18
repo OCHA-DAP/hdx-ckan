@@ -1,9 +1,14 @@
 import json
 import ckan.lib.base as base
-from ckan.common import _, c, g, request, response
 import ckan.logic as logic
 import ckan.model as model
-import ckanext.hdx_users.controllers.mail_validation_controller as mail_validation_controller
+import ckan.lib.helpers as h
+
+from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
+
+from ckan.common import _, c, g, request, response
+from ckan.controllers.api import CONTENT_TYPES
+from urlparse import parse_qs, urlparse
 
 get_action = logic.get_action
 check_access = logic.check_access
@@ -13,7 +18,7 @@ abort = base.abort
 checked = 'checked="checked"'
 
 
-class PagesController(base.BaseController):
+class PagesController(HDXSearchController):
     def new(self, data=None, errors=None, error_summary=None):
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
         try:
@@ -30,7 +35,6 @@ class PagesController(base.BaseController):
                                       {'value': 'data-list', 'text': _('Data List')}]}
         vars = {'data': data, 'data_dict': data_dict, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
-
 
         # saving a new page
         if request.POST and 'save_custom_page' in request.params and not data:
@@ -79,6 +83,17 @@ class PagesController(base.BaseController):
 
         if page_dict.get('sections'):
             sections = json.loads(page_dict['sections'])
+            for section in sections:
+                PagesController._compute_iframe_style(section)
+                if section.get('type', '') == 'data-list':
+                    saved_filters = PagesController._find_dataset_filters(section.get('data-url', ''))
+                    c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
+
+                    # In case this is an AJAX request return JSON
+                    if self._is_facet_only_request():
+                        c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
+                        response.headers['Content-Type'] = CONTENT_TYPES['json']
+                        return json.dumps(c.full_facet_info)
             page_dict['sections'] = sections
 
         vars = {
@@ -91,3 +106,50 @@ class PagesController(base.BaseController):
             base.abort(404, _('Wrong page type'))
         else:
             return base.render('pages/read_page.html', extra_vars=vars)
+
+    @staticmethod
+    def _find_dataset_filters(url):
+        filters = parse_qs(urlparse(url).query)
+        return filters
+
+    @staticmethod
+    def _compute_iframe_style(section):
+        style = 'width: 100%; '
+        max_height = section.get('max-height')
+        height = max_height if max_height else '400px'
+        style += 'max-height: {}; '.format(max_height) if max_height else ''
+        style += 'height: {}; '.format(height)
+        section['style'] = style
+
+    def _generate_dataset_results(self, page_id, type, saved_filters):
+
+        params_nopage = {
+            k: v for k, v in request.params.items() if k != 'page'}
+
+        def pager_url(q=None, page=None):
+            params = params_nopage
+            params['page'] = page
+            url = h.url_for('read_page', id=page_id, type=type, **params) + '#datasets-section'
+            return url
+
+        fq = ''
+        search_params = {}
+        for key, values_list in saved_filters.items():
+            if key == 'q':
+                fq = '"{}" {}'.format(values_list[0], fq)
+            elif key in get_default_facet_titles().keys():
+                for value in values_list:
+                    fq += '%s:"%s" ' % (key, value)
+            elif key == 'sort':
+                search_params['default_sort_by'] = values_list[0]
+            elif key == 'ext_page_size':
+                search_params['num_of_items'] = values_list[0]
+
+        search_params['additional_fq'] = fq
+
+        package_type = 'dataset'
+        full_facet_info = self._search(package_type, pager_url, **search_params)
+
+        c.other_links['current_page_url'] = h.url_for('read_page', id=page_id, type=type)
+
+        return full_facet_info

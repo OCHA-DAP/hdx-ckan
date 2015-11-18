@@ -3,9 +3,9 @@
 {% block secondary %}{% endblock %}
 
 {% block primary %}
-    <header class="mx-header">
     <div class="row paddingRowHack intro-section">
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <header class="mx-header">
             <div class="row">
                 <div class="col-xs-8">
                     <div class="row">
@@ -16,23 +16,65 @@
                     </div>
                 </div>
             </div>
+            </header>
             {% for section in data.sections %}
                 <section>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="list-header crisis-list-header">
-                            <span class="mL15 list-header-title">{{ section.get('title-of-visualization') }}</span>
+                    {% if section.type == 'data-list' %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                {% block package_search_results %}
+                                    <section class="list-items module">
+                                        <div class="list-items module-content mT35">
+                                            {% block package_search_results_list %}
+                                                {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items,
+                                                        full_facet_info=c.full_facet_info,
+                                                        ext_page_size=c.ext_page_size, sorting_selected=c.sort_by_selected,
+                                                        other_links=c.other_links) }}
+                                            {% endblock %}
+                                        </div>
+                                        {% block page_pagination %}
+                                            {{ c.page.pager(q=c.q) }}
+                                        {% endblock %}
+                                    </section>
+                                {% endblock %}
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <span>{{ section.description }}</span>
-                    </div>
-                </div>
+                    {% else %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="list-header crisis-list-header">
+                                    <span class="mL15 list-header-title">{{ section.get('section-title') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <span>{{ section.description }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="data-viewer-error">
+                                </div>
+                                <iframe data-module="data-viewer" frameborder="0" style="{{ section.style }}"
+                                        src="{{ section.get('data-url') }}">
+                                </iframe>
+                            </div>
+                        </div>
+                    {% endif %}
                 </section>
             {% endfor %}
         </div>
     </div>
-    </header>
+{% endblock %}
+
+
+{% block scripts2 %}
+    {{ super() }}
+    {% resource 'hdx_theme/bs_tooltip.js' %}
+    {% resource 'hdx_theme/search' %}
+    {% resource 'hdx_theme/jquery.highlight' %}
+    {% resource 'hdx_theme/jquery.expander' %}
+    {% resource 'hdx_theme/hdx_show_more.js' %}
+    {% resource 'base/modules/data-viewer.js' %}
 {% endblock %}

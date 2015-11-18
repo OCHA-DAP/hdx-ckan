@@ -46,6 +46,16 @@ get_action = logic.get_action
 NUM_OF_ITEMS = 25
 
 
+def get_default_facet_titles():
+    return {
+        'organization': _('Organizations'),
+        'groups': _('Groups'),
+        'tags': _('Tags'),
+        'res_format': _('Formats'),
+        'license_id': _('Licenses'),
+    }
+
+
 def _encode_params(params):
     return [(k, v.encode('utf-8') if isinstance(v, basestring) else str(v))
             for k, v in params]
@@ -201,7 +211,10 @@ class HDXSearchController(PackageController):
                                            package_type=package_type)
             return self._search_template()
 
-    def _search(self, package_type, pager_url, additional_fq='', additional_facets=None, ignore_capacity_check=False):
+    def _search(self, package_type, pager_url,
+                additional_fq='', additional_facets=None,
+                default_sort_by=None, num_of_items=NUM_OF_ITEMS,
+                ignore_capacity_check=False):
         from ckan.lib.search import SearchError
 
         # unicode format (decoded from utf8)
@@ -219,8 +232,8 @@ class HDXSearchController(PackageController):
         # c.drill_down_url = drill_down_url
 
         # self._set_remove_field_function()
-
-        sort_by = request.params.get('sort', None)
+        req_sort_by = request.params.get('sort', None)
+        sort_by = req_sort_by if req_sort_by else default_sort_by
         # params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
         # The sort_by function seems to not be used anymore
@@ -250,7 +263,6 @@ class HDXSearchController(PackageController):
             c.sort_by_fields = [field.split()[0]
                                 for field in sort_by.split(',')]
 
-
         self._set_other_links()
 
         try:
@@ -278,9 +290,9 @@ class HDXSearchController(PackageController):
             self._set_filters_are_selected_flag()
 
             try:
-                limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', NUM_OF_ITEMS))
+                limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
             except:
-                limit = NUM_OF_ITEMS
+                limit = num_of_items
 
             c.ext_page_size = limit
 
@@ -302,13 +314,7 @@ class HDXSearchController(PackageController):
 
             facets = OrderedDict()
 
-            default_facet_titles = {
-                'organization': _('Organizations'),
-                'groups': _('Groups'),
-                'tags': _('Tags'),
-                'res_format': _('Formats'),
-                'license_id': _('Licenses'),
-            }
+            default_facet_titles = get_default_facet_titles()
 
             for facet in g.facets:
                 if facet in default_facet_titles:
