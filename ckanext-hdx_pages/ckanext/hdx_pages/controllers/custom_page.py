@@ -73,7 +73,17 @@ class PagesController(base.BaseController):
         }
         page_dict = logic.get_action('page_show')(context, {'id': id})
 
+        if page_dict.get('sections'):
+            sections = json.loads(page_dict['sections'])
+            page_dict['sections'] = sections
+
+        vars = {
+            'data': page_dict,
+            'errors': {},
+            'error_summary': {},
+        }
+
         if not type or type != page_dict.get('type'):
             base.abort(404, _('Wrong page type'))
         else:
-            return base.render('pages/read_page.html')
+            return base.render('pages/read_page.html', extra_vars=vars)

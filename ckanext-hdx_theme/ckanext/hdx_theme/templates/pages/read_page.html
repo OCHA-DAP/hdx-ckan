@@ -1,1 +1,38 @@
-DUMMY VIEW PAGE
+{% extends "page.html" %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+    <header class="mx-header">
+    <div class="row paddingRowHack intro-section">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h1 class="mTop35 itemTitle">{{ data.title }}</h1>
+                            <div class="notes embedded-content">{{ data.description }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% for section in data.sections %}
+                <section>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="list-header crisis-list-header">
+                            <span class="mL15 list-header-title">{{ section.get('title-of-visualization') }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <span>{{ section.description }}</span>
+                    </div>
+                </div>
+                </section>
+            {% endfor %}
+        </div>
+    </div>
+    </header>
+{% endblock %}
