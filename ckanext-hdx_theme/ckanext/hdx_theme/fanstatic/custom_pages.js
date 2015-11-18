@@ -7,10 +7,10 @@ ckan.module('hdx_custom_pages', function ($, _) {
 
             this.field_config = {
                 "empty":[],
-                "map":["data-url","max-height"],
-                "key-figures":["data-url","description","sources"],
-                "interactive-data":["data-url","title-of-visualization","max-height","description","sources"],
-                "data-list":["data-url"]
+                "map":["data-url","section-title","max-height"],
+                "key-figures":["data-url","section-title","section-description"],
+                "interactive-data":["data-url","section-title","section-description","max-height"],
+                "data-list":["data-url", "section-title"]
             };
 
             var c = $('#hdx_counter').val();
@@ -39,13 +39,13 @@ ckan.module('hdx_custom_pages', function ($, _) {
                 if(this.field_config[sType].indexOf(name) == -1){
                     //el invisible
                     $(field).removeClass("hdx-visible-element");
-                    if(! $(field).hasClass('hdx-invisible-element') )
+                    if(! $(field).hasClass("hdx-invisible-element") )
                         $(field).addClass("hdx-invisible-element");
                 }
                 else{
                     //element visible
                     $(field).removeClass("hdx-invisible-element");
-                    if(! $(field).hasClass('hdx-visible-element') )
+                    if(! $(field).hasClass("hdx-visible-element") )
                         $(field).addClass("hdx-visible-element");
                 }
 
@@ -59,6 +59,10 @@ ckan.module('hdx_custom_pages', function ($, _) {
             var newSection = $('#section_template').clone();
             var label = "section_" + this.counter;
             newSection.attr("id", label);
+            if( $(newSection).hasClass("hdx-invisible-element") ) {
+                $(newSection).removeClass("hdx-invisible-element");
+                $(newSection).addClass("hdx-visible-element");
+            }
             $('#sections').append(newSection);
             var templateFields = newSection.find('[id^=field-section-template-]');
             for( var _i=0; _i<templateFields.length; _i++){
