@@ -13,12 +13,13 @@ abort = base.abort
 checked = 'checked="checked"'
 
 section_types = {
-    "empty":'',
-    "map":_('Map'),
-    "key_figures":_('Key Figures'),
-    "interactive_data":_('Interactive Data'),
-    "data_list":_('Data')
+    "empty": '',
+    "map": _('Map'),
+    "key_figures": _('Key Figures'),
+    "interactive_data": _('Interactive Data'),
+    "data_list": _('Data')
 }
+
 
 class PagesController(base.BaseController):
     def new(self, data=None, errors=None, error_summary=None):
@@ -138,11 +139,14 @@ class PagesController(base.BaseController):
         for _i in range(0, sections_no):
             if "field_section_" + str(_i) + "_type" in request.params and request.params.get("field_section_" + str(_i) + "_type") != 'empty':
                 _title = self._get_default_title(request.params.get("field_section_" + str(_i) + "_type"), request.params.get("field_section_" + str(_i) + "_section_title"))
+                size = request.params.get("field_section_" + str(_i) + "_max_height")
+                # if size and size == '':
+                #     size = '400px'
                 section = {
                     "type": request.params.get("field_section_" + str(_i) + "_type"),
                     "data_url": request.params.get("field_section_" + str(_i) + "_data_url"),
                     "section_title": _title,
-                    "max_height": request.params.get("field_section_" + str(_i) + "_max_height"),
+                    "max_height": size,
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
                 }
                 sections.append(section)

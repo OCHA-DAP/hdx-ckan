@@ -21,7 +21,7 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="list-header crisis-list-header">
-                            <span class="mL15 list-header-title">{{ section.get('title-of-visualization') }}</span>
+                            <span class="mL15 list-header-title">{{ section.get('section_title') }}</span>
                         </div>
                     </div>
                 </div>
@@ -30,6 +30,12 @@
                         <span>{{ section.description }}</span>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <iframe src="{{ section.get('data_url') }}" frameborder="0" width="100%" height="{{ section.get('max_height') }}"></iframe>
+                    </div>
+                </div>
+
                 </section>
             {% endfor %}
         </div>
