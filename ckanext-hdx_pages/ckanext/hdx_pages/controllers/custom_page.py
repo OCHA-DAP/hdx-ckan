@@ -12,6 +12,13 @@ abort = base.abort
 
 checked = 'checked="checked"'
 
+section_types = {
+    "empty":'',
+    "map":_('Map'),
+    "key_figures":_('Key Figures'),
+    "interactive_data":_('Interactive Data'),
+    "data_list":_('Data')
+}
 
 class PagesController(base.BaseController):
     def new(self, data=None, errors=None, error_summary=None):
@@ -57,8 +64,13 @@ class PagesController(base.BaseController):
         except NotAuthorized:
             abort(401, _('Not authorized to edit this page'))
 
+        # checking pressed button
+        active_page = request.params.get('save_custom_page')
+        draft_page = request.params.get('save_as_draft_custom_page')
+        state = active_page or draft_page
+
         # saving a new page
-        if request.POST and 'save_custom_page' in request.params and not data:
+        if request.POST and state and not data:
             try:
                 check_access('page_update', context, {})
             except NotAuthorized:
@@ -125,10 +137,11 @@ class PagesController(base.BaseController):
         sections = []
         for _i in range(0, sections_no):
             if "field_section_" + str(_i) + "_type" in request.params and request.params.get("field_section_" + str(_i) + "_type") != 'empty':
+                _title = self._get_default_title(request.params.get("field_section_" + str(_i) + "_type"), request.params.get("field_section_" + str(_i) + "_section_title"))
                 section = {
                     "type": request.params.get("field_section_" + str(_i) + "_type"),
                     "data_url": request.params.get("field_section_" + str(_i) + "_data_url"),
-                    "section_title": request.params.get("field_section_" + str(_i) + "_section_title"),
+                    "section_title": _title,
                     "max_height": request.params.get("field_section_" + str(_i) + "_max_height"),
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
                 }
@@ -136,7 +149,8 @@ class PagesController(base.BaseController):
         page_dict = {"name": request.params.get("name"), "title": request.params.get("title"),
                      "type": request.params.get("type"), "description": "", "sections": json.dumps(sections),
                      request.params.get("type") or 'crisis': checked, "hdx_counter": len(sections),
-                     "id": request.params.get("hdx_page_id")}
+                     "id": request.params.get("hdx_page_id"),
+                     'state': request.params.get("save_custom_page") or request.params.get("save_as_draft_custom_page")}
         return page_dict
 
     def _init_extra_vars_edit(self, extra_vars):
@@ -146,3 +160,8 @@ class PagesController(base.BaseController):
         _data[_type] = checked
         _data['hdx_counter'] = len(_data['sections'])
         _data['hdx_page_id'] = _data.get('id')
+
+    def _get_default_title(self, type, title):
+        if title is None or title == '':
+            return section_types.get(type, '')
+        return ''

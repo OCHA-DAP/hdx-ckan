@@ -45,7 +45,7 @@
                     {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=errors['max_height'], classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
 
                     <br/>
-                    <input id="{{s_del}}" type="button" name="{{s_del}}" value="Delete Section"/>
+                    <button id="{{s_del}}" type="button" name="{{s_del}}" value="del_section">Delete This Section</button>
                     <br/>
                     <hr/>
                     <br/>
@@ -53,11 +53,12 @@
             {% endfor %}
         </div>
         <div class="row">
-            <input id="add_section" type="button" name="add_section" value="addsection"/>
+            <button id="add_section" type="button" name="add_section" value="add_section">Add More Sections</button>
         </div>
 
         <div class="row">
-            <input id="save_custom_page" type="submit" name="save_custom_page" value="save_custom_page"/>
+            <button class="btn btn-primary" id="save_custom_page" type="submit" name="save_custom_page" value="active">Save This Page</button>
+            <button class="btn btn-primary" id="save_as_draft_custom_page" type="submit" name="save_as_draft_custom_page" value="draft">Save As Draft</button>
         </div>
 
 
@@ -78,7 +79,7 @@
         {{ form.input('field_section_template_section_description', id='field_section_template_section_description', label=_('Description (optional)'), placeholder=_('eg. Description of the section'), classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
         {{ form.input('field_section_template_max_height', id='field_section_template_max_height', label=_('Max Height'), placeholder=_('400px recommended'), classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
         <br/>
-        <input id="del_section" type="button" name="del_section" value="Delete Section"/>
+        <button id="del_section" type="button" name="del_section" value="del_section">Delete This Section</button>
         <br/>
         <hr/>
         <br/>
