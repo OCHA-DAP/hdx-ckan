@@ -110,8 +110,8 @@ class PagesController(HDXSearchController):
             sections = json.loads(page_dict['sections'])
             for section in sections:
                 PagesController._compute_iframe_style(section)
-                if section.get('type', '') == 'data-list':
-                    saved_filters = PagesController._find_dataset_filters(section.get('data-url', ''))
+                if section.get('type', '') == 'data_list':
+                    saved_filters = PagesController._find_dataset_filters(section.get('data_url', ''))
                     c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
 
                     # In case this is an AJAX request return JSON

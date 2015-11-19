@@ -19,7 +19,7 @@
             </header>
             {% for section in data.sections %}
                 <section>
-                    {% if section.type == 'data-list' %}
+                    {% if section.type == 'data_list' %}
                         <div class="row">
                             <div class="col-xs-12">
                                 {% block package_search_results %}
@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="list-header crisis-list-header">
-                                    <span class="mL15 list-header-title">{{ section.get('section-title') }}</span>
+                                    <span class="mL15 list-header-title">{{ section.get('section_title') }}</span>
                                 </div>
                             </div>
                         </div>
@@ -57,7 +57,7 @@
                                 <div class="data-viewer-error">
                                 </div>
                                 <iframe data-module="data-viewer" frameborder="0" style="{{ section.style }}"
-                                        src="{{ section.get('data-url') }}">
+                                        src="{{ section.get('data_url') }}">
                                 </iframe>
                             </div>
                         </div>
