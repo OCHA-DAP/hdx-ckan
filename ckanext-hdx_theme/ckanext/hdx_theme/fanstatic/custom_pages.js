@@ -1,6 +1,28 @@
 "use strict";
 
 ckan.module('hdx_custom_pages', function ($, _) {
+    function displayingFormFieldsBySType(id, sType) {
+        var fields = $('#section_' + id).find('.hdx-section-field');
+        for (var _i = 0; _i < fields.length; _i++) {
+            var field = fields[_i];
+            var inputs = $(field).find('input');
+            var name = inputs[0].getAttribute("id").replace("field-section-" + id + "-", "");
+            if (this.field_config[sType].indexOf(name) == -1) {
+                //el invisible
+                $(field).removeClass("hdx-visible-element");
+                if (!$(field).hasClass("hdx-invisible-element"))
+                    $(field).addClass("hdx-invisible-element");
+            }
+            else {
+                //element visible
+                $(field).removeClass("hdx-invisible-element");
+                if (!$(field).hasClass("hdx-visible-element"))
+                    $(field).addClass("hdx-visible-element");
+            }
+
+        }
+    }
+
     return {
         initialize: function () {
             $.proxyAll(this, /_on/);
@@ -16,11 +38,24 @@ ckan.module('hdx_custom_pages', function ($, _) {
             var c = $('#hdx_counter').val();
             if (!c)
                 this.counter = 0;
-            else
+            else{
                 this.counter = c;
+                for( var _i=0; _i< c; _i++){
+                    //delete button
+                    var sDelBtn = $('#del_section_'+_i);
+                    sDelBtn.on('click',  {"section_id":_i}, this._onDelSectionClick);
+
+                    //select section type dropdown
+                    var sType = $('#field-section-'+_i+'-type');
+                    displayingFormFieldsBySType.call(this, _i, sType.val());
+                    sType.on('change',  {"section_id":_i, "obj": sType}, this._onSectionTypeChange);
+                }
+            }
 
             $('input[name=field-type]').on('change', this._onPageTypeChange);
             $('#add_section').on('click', this._onAddSectionClick);
+
+
 
         },
         _onPageTypeChange: function (event) {
@@ -28,28 +63,10 @@ ckan.module('hdx_custom_pages', function ($, _) {
         },
         _onSectionTypeChange: function (event) {
             var id = event.data.section_id;
-            var sType = event.data.obj.val();
+            var sTypeValue = event.data.obj.val();
             //if(sType == 'empty' || sType==null )
             //    return;
-            var fields = $('#section_'+id).find('.hdx-section-field');
-            for( var _i=0; _i<fields.length; _i++){
-                var field = fields[_i];
-                var inputs = $(field).find('input');
-                var name = inputs[0].getAttribute("id").replace("field-section-"+id+"-", "");
-                if(this.field_config[sType].indexOf(name) == -1){
-                    //el invisible
-                    $(field).removeClass("hdx-visible-element");
-                    if(! $(field).hasClass("hdx-invisible-element") )
-                        $(field).addClass("hdx-invisible-element");
-                }
-                else{
-                    //element visible
-                    $(field).removeClass("hdx-invisible-element");
-                    if(! $(field).hasClass("hdx-visible-element") )
-                        $(field).addClass("hdx-visible-element");
-                }
-
-            }
+            displayingFormFieldsBySType.call(this, id, sTypeValue);
         },
         _onDelSectionClick: function (event) {
             var id = event.data.section_id;

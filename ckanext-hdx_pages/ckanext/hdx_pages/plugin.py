@@ -25,11 +25,14 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                     action='new',
                     )
+        map.connect('edit_page', '/page/edit/{id}',
+                    controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                    action='edit',
+                    )
         map.connect('read_page', '/page/{type}/{id}',
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                     action='read',
                     )
-
         return map
 
     def get_actions(self):
