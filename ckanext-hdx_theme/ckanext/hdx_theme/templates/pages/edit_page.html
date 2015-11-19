@@ -7,7 +7,6 @@
 
 {% block primary %}
 <div id="section_container" data-module="hdx_custom_pages">
-    {{data}}--{{data_dict}}
     <form id="create_page_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
         <div class="row">
             {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'control-large'], attrs={'data-module': 'slug-preview-target'}) }}
