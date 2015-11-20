@@ -4,3 +4,14 @@
 .hdx-invisible-element {
   display: none;
 }
+.form-header {
+  background-color: #007ce0;
+}
+.cp-content-background {
+  background-color: #eeeeee;
+}
+.cp-hr {
+  background-color: #999999;
+  border: 0 none;
+  height: 1px;
+}

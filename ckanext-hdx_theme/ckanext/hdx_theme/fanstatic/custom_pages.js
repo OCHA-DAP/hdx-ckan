@@ -74,6 +74,8 @@ ckan.module('hdx_custom_pages', function ($, _) {
         _onDelSectionClick: function (event) {
             var id = event.data.section_id;
             $('#section_'+ id).remove();
+            event.preventDefault();
+            return false;
         },
         _onAddSectionClick: function (e) {
             var newSection = $('#section_template').clone();
