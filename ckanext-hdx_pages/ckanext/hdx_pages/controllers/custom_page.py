@@ -33,7 +33,6 @@ class PagesController(HDXSearchController):
 
         try:
             check_access('page_create', context, {})
-            # TODO exceptions
         except NotAuthorized:
             abort(401, _('Not authorized to see this page'))
 
@@ -66,34 +65,38 @@ class PagesController(HDXSearchController):
 
         try:
             check_access('page_update', context, {})
-            # TODO exceptions
         except NotAuthorized:
             abort(401, _('Not authorized to edit this page'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
         draft_page = request.params.get('save_as_draft_custom_page')
+        delete_page = request.params.get('delete_custom_page')
         state = active_page or draft_page
 
         # saving a new page
-        if request.POST and state and not data:
-            try:
-                check_access('page_update', context, {})
-            except NotAuthorized:
-                abort(401, _('Not authorized to edit this page'))
-            except Exception, e:
-                error_summary = e.error_summary
-                return self.error_message(error_summary)
+        if request.POST and (state or delete_page) and not data:
+            if state:
+                try:
+                    check_access('page_update', context, {})
+                except NotAuthorized:
+                    abort(401, _('Not authorized to edit this page'))
+                except Exception, e:
+                    error_summary = e.error_summary
+                    return self.error_message(error_summary)
 
-            page_dict = self._populate_sections()
-            try:
-                updated_page = get_action('page_update')(context, page_dict)
-            except logic.ValidationError, e:
-                errors = e.error_dict
-                error_summary = e.error_summary
-                return self.edit(id, page_dict, errors, error_summary)
-            h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
-                          id=updated_page.get('name') or updated_page.get('id'), type=updated_page.get('type'))
+                page_dict = self._populate_sections()
+                try:
+                    updated_page = get_action('page_update')(context, page_dict)
+                except logic.ValidationError, e:
+                    errors = e.error_dict
+                    error_summary = e.error_summary
+                    return self.edit(id, page_dict, errors, error_summary)
+                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
+                              id=updated_page.get('name') or updated_page.get('id'), type=updated_page.get('type'))
+            elif delete_page:
+                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='delete',
+                              id=id)
         else:
             extra_vars['data'] = logic.get_action('page_show')(context, {'id': id})
             self._init_extra_vars_edit(extra_vars)
@@ -105,6 +108,12 @@ class PagesController(HDXSearchController):
             'model': model, 'session': model.Session,
             'user': c.user or c.author
         }
+
+        try:
+            check_access('page_update', context, {'id': id})
+        except NotAuthorized:
+            abort(401, _('Not authorized to edit this page'))
+
         page_dict = logic.get_action('page_show')(context, {'id': id})
 
         if page_dict.get('sections'):
@@ -132,6 +141,20 @@ class PagesController(HDXSearchController):
             base.abort(404, _('Wrong page type'))
         else:
             return base.render('pages/read_page.html', extra_vars=vars)
+
+    def delete(self, id):
+        context = {
+            'model': model, 'session': model.Session,
+            'user': c.user or c.author
+        }
+        page_dict = logic.get_action('page_delete')(context, {'id': id})
+
+        vars = {
+            'data': page_dict,
+            'errors': {},
+            'error_summary': {},
+        }
+        return base.render('home/index.html', extra_vars=vars)
 
     @staticmethod
     def _find_dataset_filters(url):

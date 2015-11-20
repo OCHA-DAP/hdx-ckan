@@ -6,16 +6,16 @@
 {% block primary %}
 <div id="section_container" data-module="hdx_custom_pages">
     <form id="create_page_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
-        <div class="paddingRowHack form-header" style="height: 30px;">
+        <div class="paddingRowHack cp-content-background" >
             <div class="paddingLeftHack paddingRightHack">
-                <div class="row">
+                <div class="row  form-header" >
                     <div class="col-xs-12">
                         <span>1 Create custom page - please fill out all required fields > 2 Review and Submit</span>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="paddingRowHack cp-content-background">
+        <div class="paddingRowHack cp-content-background pTopBottom35">
             <div class="paddingLeftHack paddingRightHack">
                 <div class="row">
                     <div class="col-xs-3">
@@ -88,7 +88,7 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <button id="add_section" type="button" name="add_section" value="add_section">Add More Sections</button>
+                                <button id="add_section" type="button" name="add_section" value="add_section" class="btn btn-primary pull-left">+ Add More Sections</button>
                             </div>
                         </div>
                     </div>
@@ -99,8 +99,9 @@
             <div class="paddingLeftHack paddingRightHack">
                 <div class="row">
                     <div class="col-xs-12">
-                        <button class="btn btn-primary" id="save_custom_page" type="submit" name="save_custom_page" value="active">Save This Page</button>
-                        <button class="btn btn-primary" id="save_as_draft_custom_page" type="submit" name="save_as_draft_custom_page" value="draft">Save As Draft</button>
+                        <button class="btn btn btn-danger pull-left" id="delete_custom_page" name="delete_custom_page" value="delete">Delete This Page</button>
+                        <button class="btn btn-primary pull-right" id="save_custom_page" type="submit" name="save_custom_page" value="active">Save This Page</button>
+                        <button class="btn btn-primary pull-right mR30" id="save_as_draft_custom_page" type="submit" name="save_as_draft_custom_page" value="draft">Save As Draft</button>
                         <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{data.hdx_counter}}"/>
                         <input type="hidden" id="hdx_page_id" name="hdx_page_id" value="{{data.hdx_page_id}}"/>
                     </div>

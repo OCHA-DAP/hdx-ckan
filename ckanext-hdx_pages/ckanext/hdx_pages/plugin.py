@@ -29,6 +29,10 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                     action='edit',
                     )
+        map.connect('delete_page', '/page/delete/{id}',
+                    controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                    action='delete',
+                    )
         map.connect('read_page', '/page/{type}/{id}',
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                     action='read',
