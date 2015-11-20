@@ -3,7 +3,6 @@
 //geom is geojson file
 
 function generate3WComponent(config,data,geom){
-
     var lookup = genLookup(geom,config);
 
     $('#title').html(config.title);
@@ -23,6 +22,24 @@ function generate3WComponent(config,data,geom){
     var whoDimension = cf.dimension(function(d){ return d[config.whoFieldName]; });
     var whatDimension = cf.dimension(function(d){ return d[config.whatFieldName]; });
     var whereDimension = cf.dimension(function(d){ return d[config.whereFieldName]; });
+
+    var startDimension, endDimension, firstDate, lastDate, baseDate, startDate, minDate, maxDate, paused = true;
+    var slider = $("#4w").find("input.slider");
+
+    if (config.startFieldName && config.endFieldName){
+        startDimension = cf.dimension(function(d){return new Date(d[config.startFieldName]);});
+        endDimension = cf.dimension(function(d){return new Date(d[config.endFieldName]);});
+
+        firstDate = new Date(startDimension.bottom(1)[0].Start);
+        lastDate = new Date(endDimension.top(1)[0].End);
+        baseDate = new Date('1/1/1970');
+        var now = moment(new Date());
+        startDate = now.diff(baseDate, 'days');
+        minDate = moment(firstDate).diff(baseDate, 'days');
+        maxDate = moment(lastDate).diff(baseDate, 'days');
+    }
+
+
 
     var whoGroup = whoDimension.group();
     var whatGroup = whatDimension.group();
@@ -105,8 +122,12 @@ function generate3WComponent(config,data,geom){
         .attr('text-anchor', 'middle')
         .attr('x', whatWidth/2)
         .attr('y', 400)
-        .text('Activities');  
+        .text('Activities');
 
+    if (startDimension && endDimension){
+        initSlider();
+        $("#4w").show();
+    }
 
     function zoomToGeom(geom){
         var bounds = d3.geo.bounds(geom);
@@ -120,6 +141,93 @@ function generate3WComponent(config,data,geom){
         });
         return lookup;
     }
+
+    function initSlider() {
+        var $value, count;
+        count = $('.slider').length;
+        $value = $('#value')[0];
+
+        slider.attr("min", minDate);
+        slider.attr("max", maxDate);
+        slider.attr("value", startDate);
+        slider.rangeslider({
+            polyfill: false,
+            onInit: function() {
+                updateValue($value, this.value);
+                updateCharts(this.value);
+            },
+            onSlide: function(pos, value) {
+                if (this.grabPos) {
+                    updateValue($value, value);
+                }
+            },
+            onSlideEnd: function(pos, value) {updatedaCharts(this.value)}
+        });
+
+        $("#4w").find(".play").click(function(){
+            var playIcon = $(this).find(".glyphicon-play");
+            var pauseIcon = $(this).find(".glyphicon-pause");
+
+            if (paused){
+                pauseIcon.show();
+                playIcon.hide();
+                paused = false;
+                play();
+            } else {
+                pauseIcon.hide();
+                playIcon.show();
+                pause();
+            }
+        })
+    }
+
+    function play(value) {
+        var step = 30
+            , delay = 2000;
+        if (value == null){
+            value = parseInt(slider.val()) + step;
+        }
+        if ((value <= maxDate) && !paused) {
+            slider.val(value).change();
+            updateCharts(value);
+            return setTimeout((function() {
+                play(value + step);
+            }), delay);
+        } else if (value > maxDate && !paused) {
+            slider.val(minDate).change();
+            updateCharts(minDate);
+            value = minDate;
+            return setTimeout((function() {
+                play(value + step);
+            }), delay);
+        }
+    }
+
+    function updateCharts(value) {
+        dc.filterAll();
+        var m = moment(baseDate).add('days', value);
+        endDimension.filterRange([m.toDate(), Infinity]);
+        startDimension.filterRange([baseDate, (m.add('d', 1)).toDate()]);
+        dc.redrawAll();
+    }
+
+    function updateValue(e, value) {
+        var m = moment(baseDate).add('days', value);
+        e.textContent = m.format("l");
+        //window.value = value
+    }
+
+    function pause() {
+        paused = true;
+    }
+
+    function reset() {
+        slider.val(minDate).change();
+        updateCharts(minDate);
+        $('.play').removeClass('hide');
+        $('.pause').addClass('hide');
+    }
+
 }
 
 $(document).ready(
@@ -145,8 +253,9 @@ $(document).ready(
 
         //when both ready construct 3W
         $.when(dataCall, geomCall).then(function(dataArgs, geomArgs){
+            var data = dataArgs[0];
             if(config.datatype=='datastore'){
-                dataArgs[0] = dataArgs[0]['result']['records']
+                data = data['result']['records']
             }
             if(config.geotype=='datastore'){
                 geomArgs[0] = geomArgs[0]['result']['records']
@@ -155,7 +264,7 @@ $(document).ready(
             geom.features.forEach(function(e){
                 e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
             });
-            generate3WComponent(config,dataArgs[0],geom);
+            generate3WComponent(config, data,geom);
             killLoadingEmbeddable("#hdx-3w-visualization-wrapper");
         });
     }
