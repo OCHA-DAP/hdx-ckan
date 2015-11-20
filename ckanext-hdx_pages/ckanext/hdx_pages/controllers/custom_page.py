@@ -164,7 +164,7 @@ class PagesController(HDXSearchController):
     @staticmethod
     def _compute_iframe_style(section):
         style = 'width: 100%; '
-        max_height = section.get('max-height')
+        max_height = section.get('max_height')
         height = max_height if max_height else '400px'
         style += 'max-height: {}; '.format(max_height) if max_height else ''
         style += 'height: {}; '.format(height)
@@ -250,6 +250,7 @@ class PagesController(HDXSearchController):
         _data[_type] = checked
         _data['hdx_counter'] = len(_data['sections'])
         _data['hdx_page_id'] = _data.get('id')
+        _data['mode'] = 'edit'
 
     def _get_default_title(self, type, title):
         if title is None or title == '':

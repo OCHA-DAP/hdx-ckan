@@ -70,20 +70,26 @@
                                 {% set s_description = 'field_section_'+_i+'_section_description' %}
                                 {% set s_max_height = 'field_section_'+_i+'_max_height' %}
                                 {% set s_del = 'del_section_'+_i %}
-                                <div class="col-xs-12 hdx-visible-element" id="{{s_id}}" >
+                                <div class="col-xs-12 hdx-visible-element pTopBottom15" id="{{s_id}}" >
                                     <div class="row">
                                         <div class="col-xs-9">
-                                            {{ form.select(s_type, id=s_type, label=_('Section'), options=data_dict['content_type'], selected=section.type, error=errors.type) }}
-                                            {{ form.input(s_data_url, id=s_data_url, label=_('Data URL'), placeholder=_('Enter URL'), value=section.data_url, error=errors.data_url, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
-                                            {{ form.input(s_title, id=s_title, label=_('Title of Section'), placeholder=_('If missing will have the default value'), value=section.section_title, error=errors.section_title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
-                                            {{ form.input(s_description, id=s_description, label=_('Description (optional)'), placeholder=_('eg. Description of the section'), value=section.description, error=errors.title, classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
-                                            {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=errors['max_height'], classes=['control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field']) }}
+                                            {{ form.select(s_type, id=s_type, label=_('Section'), options=data_dict['content_type'], selected=section.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control'})}}
+                                            {{ form.input(s_data_url, id=s_data_url, label=_('Data URL'), placeholder=_('Enter URL'), value=section.data_url, error=errors.data_url, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
+                                            {{ form.input(s_title, id=s_title, label=_('Title of Section'), placeholder=_('If missing will have the default value'), value=section.section_title, error=errors.section_title, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
+                                            {{ form.input(s_description, id=s_description, label=_('Description (optional)'), placeholder=_('eg. Description of the section'), value=section.description, error=errors.title, classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
+                                            {{ form.input(s_max_height, id=s_max_height, label=_('Max Height'), placeholder=_('400px recommended'), value=section.max_height, error=errors['max_height'], classes=['form-group', 'control-full', 'control-large', 'hdx-invisible-element', 'hdx-section-field'], attrs={'class':'form-control'}) }}
                                         </div>
                                         <div class="col-xs-3">
                                             <a href="#" id="{{s_del}}" name="{{s_del}}">Delete This Section</a>
                                         </div>
                                     </div>
+                                    <div class="row mTop20">
+                                        <div class="col-xs-12">
+                                            <hr class="cp-hr"/>
+                                        </div>
+                                    </div>
                                 </div>
+
                             {% endfor %}
                         </div>
                         <div class="row">
@@ -99,7 +105,9 @@
             <div class="paddingLeftHack paddingRightHack">
                 <div class="row">
                     <div class="col-xs-12">
-                        <button class="btn btn btn-danger pull-left" id="delete_custom_page" name="delete_custom_page" value="delete">Delete This Page</button>
+                        {% if data.mode and data.mode=='edit' %}
+                            <button class="btn btn btn-danger pull-left" id="delete_custom_page" name="delete_custom_page" value="delete">Delete This Page</button>
+                        {% endif %}
                         <button class="btn btn-primary pull-right" id="save_custom_page" type="submit" name="save_custom_page" value="active">Save This Page</button>
                         <button class="btn btn-primary pull-right mR30" id="save_as_draft_custom_page" type="submit" name="save_as_draft_custom_page" value="draft">Save As Draft</button>
                         <input type="hidden" id="hdx_counter" name="hdx_counter" value="{{data.hdx_counter}}"/>
@@ -109,7 +117,7 @@
             </div>
         </div>
     </form>
-    <div class="col-xs-12 hdx-invisible-element" id="section_template">
+    <div class="col-xs-12 hdx-invisible-element pTopBottom15" id="section_template">
         <div class="row">
             <div class="col-xs-9">
                 {{ form.select('field_section_template_type', id='field_section_template_type', label=_('Section'), options=data_dict['content_type'], selected="empty", error=errors.type, classes=['form-group'], attrs={'class':'form-control'})}}
@@ -120,6 +128,11 @@
             </div>
             <div class="col-xs-3">
                 <a href="#" id="del_section" type="button" name="del_section">Delete This Section</a>
+            </div>
+        </div>
+        <div class="row mTop10">
+            <div class="col-xs-12">
+                <hr class="cp-hr"/>
             </div>
         </div>
     </div>
