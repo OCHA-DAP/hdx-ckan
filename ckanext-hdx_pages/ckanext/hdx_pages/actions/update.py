@@ -25,6 +25,7 @@ def page_update(context, data_dict):
         page.title = data_dict['title']
         page.description = data_dict.get('description')
         page.type = data_dict.get('type')
+        page.state = data_dict.get('state')
         page.sections = data_dict.get('sections')
         page.modified = datetime.datetime.now()
 
