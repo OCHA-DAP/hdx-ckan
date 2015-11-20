@@ -377,6 +377,17 @@
         padding-bottom: 35px;
     }
 
+    .pTopBottom10{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .pTopBottom15{
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+
     .pTopBottom80{
         padding-top: 80px;
         padding-bottom: 80px;

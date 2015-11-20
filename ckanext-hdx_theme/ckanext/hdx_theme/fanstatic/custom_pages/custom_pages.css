@@ -6,6 +6,13 @@
 }
 .form-header {
   background-color: #007ce0;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  letter-spacing: 0;
+  text-shadow: none;
+  color: #ffffff;
+  height: 30px;
 }
 .cp-content-background {
   background-color: #eeeeee;

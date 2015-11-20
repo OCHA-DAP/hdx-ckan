@@ -58,8 +58,6 @@ ckan.module('hdx_custom_pages', function ($, _) {
             $('input[name=field_type]').on('change', this._onPageTypeChange);
             $('#add_section').on('click', this._onAddSectionClick);
 
-
-
         },
         _onPageTypeChange: function (event) {
             //alert(this.value);
