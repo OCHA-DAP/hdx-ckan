@@ -45,6 +45,8 @@ json_config_3w = '''
             "where-column-2": "DIS_CODE",
             "who-column": "Organisation",
             "what-column": "Sector",
+            "start-column": "2000",
+            "end-column": "2015",
             "colors": ["red", "green", "blue"]
         }
         '''
@@ -105,6 +107,8 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'whereFieldName': 'DIST_NO',
             'whoFieldName': 'Organisation',
             'whatFieldName': 'Sector',
+            'startFieldName': '2000',
+            'endFieldName': '2015',
             'nameAttribute': 'DIST_NAME',
             'colors': ["red", "green", "blue"]
         }
