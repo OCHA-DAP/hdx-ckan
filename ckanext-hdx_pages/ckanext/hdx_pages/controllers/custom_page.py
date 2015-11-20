@@ -25,6 +25,7 @@ section_types = {
     "data_list": _('Data')
 }
 
+
 class PagesController(HDXSearchController):
     def new(self, data=None, errors=None, error_summary=None):
 
@@ -230,4 +231,4 @@ class PagesController(HDXSearchController):
     def _get_default_title(self, type, title):
         if title is None or title == '':
             return section_types.get(type, '')
-        return ''
+        return title
