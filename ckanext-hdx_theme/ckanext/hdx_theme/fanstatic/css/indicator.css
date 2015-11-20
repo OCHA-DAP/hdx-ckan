@@ -6,9 +6,9 @@
     }
 /* END Override background for two column layout */
 
-	
+
 /* BEGIN indicator information */
-	
+
 	.notes.embedded-content {
 	    font-family: 'Source Sans Pro',sans-serif;
 	    font-size: 14px;
@@ -16,7 +16,7 @@
 	    max-width: none;
 	    text-align:justify;
 	}
-	
+
 	.additional-info table, .additional-info table th, .additional-info table td, .additional-info table tr {
 	    border: 0 none;
 	    border-radius: 0 !important;
@@ -28,24 +28,24 @@
 	    font-weight: 400;
 	    height: 38px;
 	}
-	
+
 	.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
   	  border-top: none;
 	}
 	.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
     	border: none;
 	}
-	
+
 	.table-bordered.table-condensed.mTop20 tbody tr th.dataset-label {
     	max-width: 200px;
     	width: 175px
 	}
-	
+
 	.table-bordered.table-condensed.mTop20 tbody tr td.dataset-details{
 	   text-align:justify;
 	   /*width: 100%;*/
 	}
-	
+
 	.metadata-link a, .metadata-link a:hover, .metadata-link a:focus {
 	   	font-family: 'Source Sans Pro', sans-serif;
 	    font-weight: 400;
@@ -55,12 +55,12 @@
 	    opacity: 1;
 	    text-decoration: none;
 	}
-	
+
 	.tag-wrapper {
         margin-right: 0;
         float: left;
     }
-        
+
     .tag-wrapper .tag{
         background-color: #f2645a;
         font-family: 'Source Sans Pro', sans-serif;
@@ -70,7 +70,7 @@
 	    opacity: 1;
 	    text-decoration: none;
     }
-    
+
     .tag-wrapper .tag:hover, .tag-wrapper .tag:focus {
         background-color: #ce554d;
         border: none;
@@ -89,7 +89,7 @@
 	    font-weight: bold;
 	    letter-spacing: 0.03em;
 	}
-	
+
 	span.is-more p{
 		margin: 0px;
 		display: inline;
@@ -178,7 +178,7 @@
 }
 
 .custom-dataset .indicator-actions a.btn.hdx-btn {
-	margin-left: 0px;
+	/*margin-left: 0px;*/
     /*margin-right: 12px;*/
 }
 
