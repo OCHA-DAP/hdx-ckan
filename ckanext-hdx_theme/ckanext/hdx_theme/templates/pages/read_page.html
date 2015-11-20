@@ -15,8 +15,8 @@
             <div class="row">
                 <div class="col-xs-8">
                     <div class="row">
-                        <div class="col-xs-12">
-                            <h1 class="mTop35 itemTitle">{{ data.title }}</h1>
+                        <div class="col-xs-12 mTop35 ">
+                            <h1 class="itemTitle">{{ data.title }}</h1>
                             <div class="notes embedded-content">{{ data.description }}</div>
                         </div>
                     </div>
@@ -53,11 +53,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        {% if section.description %}
                         <div class="row">
                             <div class="col-xs-12">
                                 <span>{{ section.description }}</span>
                             </div>
                         </div>
+                        {% endif %}
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="data-viewer-error">
