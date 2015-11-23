@@ -36,26 +36,33 @@ class PagesController(HDXSearchController):
         except NotAuthorized:
             abort(401, _('Not authorized to see this page'))
 
+        # checking pressed button
+        active_page = request.params.get('save_custom_page')
+        draft_page = request.params.get('save_as_draft_custom_page')
+        state = active_page or draft_page
+
         # saving a new page
-        if request.POST and 'save_custom_page' in request.params and not data:
-            try:
-                check_access('page_create', context, {})
-            except NotAuthorized:
-                abort(401, _('Not authorized to see this page'))
-            except Exception, e:
-                error_summary = e.error_summary
-                return self.error_message(error_summary)
+        if request.POST and state and not data:
 
-            page_dict = self._populate_sections()
+            if state:
+                try:
+                    check_access('page_create', context, {})
+                except NotAuthorized:
+                    abort(401, _('Not authorized to see this page'))
+                except Exception, e:
+                    error_summary = e.error_summary
+                    return self.error_message(error_summary)
 
-            try:
-                created_page = get_action('page_create')(context, page_dict)
-            except logic.ValidationError, e:
-                errors = e.error_dict
-                error_summary = e.error_summary
-                return self.new(page_dict, errors, error_summary)
-            h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
-                          id=created_page.get("name") or created_page.get("id"), type=created_page.get("type"))
+                page_dict = self._populate_sections()
+
+                try:
+                    created_page = get_action('page_create')(context, page_dict)
+                except logic.ValidationError, e:
+                    errors = e.error_dict
+                    error_summary = e.error_summary
+                    return self.new(page_dict, errors, error_summary)
+                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
+                              id=created_page.get("name") or created_page.get("id"), type=created_page.get("type"))
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 

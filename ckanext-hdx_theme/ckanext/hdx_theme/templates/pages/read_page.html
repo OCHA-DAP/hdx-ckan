@@ -17,7 +17,7 @@
                     <div class="row">
                         <div class="col-xs-12 mTop35 ">
                             <h1 class="itemTitle">{{ data.title }}</h1>
-                            {% if data.state != 'active' %}
+                            {% if data.state != 'active' and data.state %}
                                 <div><span class="label label-small label-default">{{ data.state }}</span></div>
                             {% endif %}
                             <div class="notes embedded-content">{{ data.description }}</div>
