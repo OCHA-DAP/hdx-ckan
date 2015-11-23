@@ -25,8 +25,6 @@ from ckan.logic.validators import (package_id_not_changed,
                                    no_http,
                                    tag_not_uppercase,
                                    user_name_validator,
-                                   ## HDX HACK - ADD user_email_validator
-                                   user_email_validator,
                                    user_password_validator,
                                    user_both_passwords_entered,
                                    user_passwords_match,
@@ -73,6 +71,7 @@ from ckan.logic.converters import (convert_user_name_or_id_to_id,
 from formencode.validators import OneOf
 import ckan.model
 import ckan.lib.maintain as maintain
+
 
 def default_resource_schema():
 
@@ -425,6 +424,8 @@ def default_update_relationship_schema():
 
 def default_user_schema():
     ## HDX HACK - ADD user_email_validator
+    import ckan.plugins.toolkit as tk
+    user_email_validator = tk.get_validator('user_email_validator')
     schema = {
         'id': [ignore_missing, unicode],
         'name': [not_empty, name_validator, user_name_validator, unicode],
