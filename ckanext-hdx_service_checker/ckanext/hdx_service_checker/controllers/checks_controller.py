@@ -2,7 +2,7 @@ import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
 
-from ckan.common import c
+from ckan.common import c, _
 
 
 class ChecksController(base.BaseController):
@@ -11,7 +11,11 @@ class ChecksController(base.BaseController):
             'model': model, 'session': model.Session,
             'user': c.user or c.author, 'auth_user_obj': c.userobj
         }
-        result = logic.get_action('run_checks')(context, {})
+        try:
+            result = logic.get_action('run_checks')(context, {})
+        except logic.NotAuthorized:
+            base.abort(401, _('Not authorized to see this page'))
+
         self._compute_render_color(result)
         return base.render("show_check_results.html", extra_vars={'data': result, 'errors': {}})
 

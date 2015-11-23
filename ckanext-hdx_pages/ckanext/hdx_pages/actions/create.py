@@ -18,7 +18,8 @@ def page_create(context, data_dict):
     try:
         page = pages_model.Page(name=data_dict['name'], title=data_dict.get('title'),
                                 description=data_dict.get('description'),
-                                type=data_dict.get('type'), sections=data_dict.get('sections'))
+                                type=data_dict.get('type'), state=data_dict.get('state'),
+                                sections=data_dict.get('sections'))
         model.Session.add(page)
         model.Session.commit()
 

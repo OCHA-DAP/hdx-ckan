@@ -110,11 +110,9 @@ class PagesController(HDXSearchController):
         }
 
         try:
-            check_access('page_update', context, {'id': id})
+            page_dict = logic.get_action('page_show')(context, {'id': id})
         except NotAuthorized:
-            abort(401, _('Not authorized to edit this page'))
-
-        page_dict = logic.get_action('page_show')(context, {'id': id})
+            abort(401, _('Not authorized to see this page'))
 
         if page_dict.get('sections'):
             sections = json.loads(page_dict['sections'])

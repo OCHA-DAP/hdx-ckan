@@ -18,4 +18,7 @@ def page_show(context, data_dict):
     page = pages_model.Page.get(id=data_dict['id'])
     if page is None:
         raise NotFound
-    return dictize.page_dictize(page)
+    page_dict = dictize.page_dictize(page)
+    logic.check_access('page_create', context, page_dict)
+
+    return page_dict

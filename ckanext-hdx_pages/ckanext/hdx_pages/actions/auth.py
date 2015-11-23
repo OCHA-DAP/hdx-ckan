@@ -14,3 +14,10 @@ def page_update(context, data_dict):
 
 def page_delete(context, data_dict):
     return page_create(context, data_dict)
+
+
+def page_show(context, data_dict):
+    if data_dict.get('state', '') == 'active':
+        return {'success': True}
+    else:
+        return {'success': False, 'msg': _('Only sysadmins can view non-active custom pages')}

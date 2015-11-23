@@ -18,11 +18,12 @@ class Page(DomainObject):
     User extra information
     '''
 
-    def __init__(self, name, title, description, type, sections, modified=None):
+    def __init__(self, name, title, description, type, state, sections, modified=None):
         self.name = name
         self.title = title
         self.description = description
         self.type = type
+        self.state = state
         self.modified = modified
         self.sections = sections
 
@@ -51,6 +52,7 @@ page_table = Table('page', meta.metadata,
                    Column('title', types.UnicodeText, nullable=False),
                    Column('description', types.UnicodeText, nullable=True),
                    Column('type', types.UnicodeText),
+                   Column('state', types.UnicodeText),
                    Column('sections', types.UnicodeText),
                    Column('modified', types.DateTime, default=datetime.datetime.now, nullable=False),
                    )
