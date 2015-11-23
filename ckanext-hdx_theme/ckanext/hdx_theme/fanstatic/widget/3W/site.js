@@ -161,7 +161,7 @@ function generate3WComponent(config,data,geom){
                     updateValue($value, value);
                 }
             },
-            onSlideEnd: function(pos, value) {updatedaCharts(this.value)}
+            onSlideEnd: function(pos, value) {updateCharts(this.value)}
         });
 
         $("#4w").find(".play").click(function(){
@@ -264,6 +264,7 @@ $(document).ready(
             geom.features.forEach(function(e){
                 e.properties[config.joinAttribute] = String(e.properties[config.joinAttribute]);
             });
+
             generate3WComponent(config, data,geom);
             killLoadingEmbeddable("#hdx-3w-visualization-wrapper");
         });
