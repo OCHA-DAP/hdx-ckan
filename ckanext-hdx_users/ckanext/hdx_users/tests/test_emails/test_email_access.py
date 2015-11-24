@@ -20,6 +20,15 @@ import ckanext.hdx_user_extra.model as ue_model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
+from ckan.tests.mock_mail_server import SmtpServerHarness
+from ckan.tests.pylons_controller import PylonsTestCase
+from pylons import config
+import ckan.lib.mailer as mailer
+import hashlib
+from email.mime.text import MIMEText
+from ckan.new_tests import factories
+import ckan.plugins as ckan_plugins
+
 
 class TestEmailAccess(hdx_test_base.HdxBaseTest):
     @classmethod
@@ -125,7 +134,6 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         except:
             assert True
 
-
     def test_delete_user(self):
         res = self._create_user()
 
@@ -201,7 +209,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
         params_one = {'email': 'valid@example.com'}
-        params_two = {'email': 'Valid@example.com'}
+        params_two = {'email': 'VALID@example.com'}
         # create 1
         self.app.post(url, params_one)
         # create 2
@@ -231,6 +239,145 @@ class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
         res = json.loads(self.app.post(url, params).body)
         assert_equal(res['error']['message'],
                      u'Email address is not valid')
+
+
+class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
+
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin(
+            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+
+    @classmethod
+    def setup_class(cls):
+        smtp_server = config.get('smtp.test_server')
+        if smtp_server:
+            host, port = smtp_server.split(':')
+            port = int(port) + int(str(hashlib.md5(cls.__name__).hexdigest())[0], 16)
+            config['smtp.test_server'] = '%s:%s' % (host, port)
+        SmtpServerHarness.setup_class()
+        PylonsTestCase.setup_class()
+        cls._load_plugins()
+        cls.app = hdx_test_base._get_test_app()
+
+    @classmethod
+    def teardown_class(cls):
+        SmtpServerHarness.teardown_class()
+        model.repo.rebuild_db()
+
+    def setup(self):
+        test_helpers.reset_db()
+        test_helpers.search.clear()
+        self.clear_smtp_messages()
+
+    def test_send_reset_email_for_email(self):
+        '''Password reset email is sent for valid user email'''
+        bob_user = factories.User(name='bob', email='bob@example.com')
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                        action='request_reset')
+        params = {
+            'user': bob_user['email']
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_true(res['success'])
+
+        # an email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 1)
+
+        # check it went to the mock smtp server
+        msg = msgs[0]
+        assert_equal(msg[1], config['smtp.mail_from'])
+        assert_equal(msg[2], [bob_user['email']])
+        assert_true('Reset' in msg[3])
+
+    def test_send_reset_email_for_username(self):
+        '''Password reset email is sent for valid user name'''
+        bob_user = factories.User(name='bob', email='bob@example.com')
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                        action='request_reset')
+        params = {
+            'user': bob_user['name']
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_true(res['success'])
+
+        # an email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 1)
+
+        # check it went to the mock smtp server
+        msg = msgs[0]
+        assert_equal(msg[1], config['smtp.mail_from'])
+        assert_equal(msg[2], [bob_user['email']])
+        assert_true('Reset' in msg[3])
+
+    def test_send_reset_email_for_email_different_case(self):
+        '''Password reset email is sent for valid user email (with some
+        uppercase in local part).'''
+        bob_user = factories.User(name='bob', email='bob@example.com')
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                        action='request_reset')
+        params = {
+            'user': 'BOB@example.com'
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_true(res['success'])
+
+        # an email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 1)
+
+        # check it went to the mock smtp server
+        msg = msgs[0]
+        assert_equal(msg[1], config['smtp.mail_from'])
+        assert_equal(msg[2], [bob_user['email']])
+        assert_true('Reset' in msg[3])
+
+    def test_no_send_reset_email_for_non_user(self):
+        '''Password reset email is not sent for a valid email but no account'''
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                        action='request_reset')
+
+        # user doesn't exist
+        params = {
+            'user': 'bob@example.com'
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_false(res['success'])
+
+        # no email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
 
     #TODO create user according to the last onboarding. Note CAPTCHA!
     # def test_login_not_valid(self):

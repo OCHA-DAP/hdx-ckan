@@ -419,19 +419,13 @@ def default_update_relationship_schema():
 
     return schema
 
-
-
-
 def default_user_schema():
-    ## HDX HACK - ADD user_email_validator
-    import ckan.plugins.toolkit as tk
-    user_email_validator = tk.get_validator('user_email_validator')
     schema = {
         'id': [ignore_missing, unicode],
         'name': [not_empty, name_validator, user_name_validator, unicode],
         'fullname': [ignore_missing, unicode],
         'password': [user_password_validator, user_password_not_empty, ignore_missing, unicode],
-        'email': [not_empty, user_email_validator, unicode],
+        'email': [not_empty, unicode],
         'about': [ignore_missing, user_about_validator, unicode],
         'created': [ignore],
         'openid': [ignore_missing],
@@ -441,6 +435,17 @@ def default_user_schema():
         'activity_streams_email_notifications': [ignore_missing],
         'state': [ignore_missing],
     }
+
+    ## HDX HACK - ADD user_email_validator
+    try:
+        import ckan.plugins.toolkit as tk
+        user_email_validator = tk.get_validator('user_email_validator')
+    except tk.UnknownValidator:
+        pass
+    else:
+        schema['email'] = [not_empty, user_email_validator, unicode]
+    ## END HDX HACK
+
     return schema
 
 def user_new_form_schema():
