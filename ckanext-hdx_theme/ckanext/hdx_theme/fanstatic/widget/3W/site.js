@@ -149,7 +149,7 @@ function generate3WComponent(config,data,geom){
 
         slider.attr("min", minDate);
         slider.attr("max", maxDate);
-        slider.attr("value", startDate);
+        slider.attr("value", minDate);
         slider.rangeslider({
             polyfill: false,
             onInit: function() {
