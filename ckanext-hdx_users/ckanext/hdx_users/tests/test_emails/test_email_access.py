@@ -6,28 +6,27 @@ Created on Dec 8, 2014
 
 import unicodedata
 import json
-import logging as logging
+import hashlib
+
+from pylons import config
 from nose.tools import (assert_equal,
                         assert_true,
                         assert_false,
                         assert_not_equal)
+
 import ckan.model as model
 import ckanext.hdx_users.model as umodel
 import ckan.tests as tests
 import ckan.new_tests.helpers as test_helpers
 import ckan.lib.helpers as h
 import ckanext.hdx_user_extra.model as ue_model
-
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-
 from ckan.tests.mock_mail_server import SmtpServerHarness
 from ckan.tests.pylons_controller import PylonsTestCase
-from pylons import config
-import ckan.lib.mailer as mailer
-import hashlib
-from email.mime.text import MIMEText
 from ckan.new_tests import factories
-import ckan.plugins as ckan_plugins
+
+webtest_submit = test_helpers.webtest_submit
+submit_and_follow = test_helpers.submit_and_follow
 
 
 class TestEmailAccess(hdx_test_base.HdxBaseTest):
@@ -170,6 +169,10 @@ class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
         hdx_test_base.load_plugin(
             'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
 
+    def setup(self):
+        test_helpers.reset_db()
+        test_helpers.search.clear()
+
     def test_create_user(self):
         '''Creating a new user is successful.'''
         user_list = test_helpers.call_action('user_list')
@@ -239,6 +242,140 @@ class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
         res = json.loads(self.app.post(url, params).body)
         assert_equal(res['error']['message'],
                      u'Email address is not valid')
+
+
+class TestEditUserEmail(hdx_test_base.HdxBaseTest):
+
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin(
+            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+
+    def setup(self):
+        test_helpers.reset_db()
+        test_helpers.search.clear()
+
+    def test_edit_email(self):
+        '''Editing an existing user's email is successful.'''
+        sue_user = factories.User(name='sue', email='sue@example.com')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for(controller='user', action='edit'),
+            extra_environ=env,
+        )
+        # existing values in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['name'].value, sue_user['name'])
+        assert_equal(form['fullname'].value, sue_user['fullname'])
+        assert_equal(form['email'].value, sue_user['email'])
+        assert_equal(form['about'].value, sue_user['about'])
+        assert_equal(form['activity_streams_email_notifications'].value, None)
+        assert_equal(form['password1'].value, '')
+        assert_equal(form['password2'].value, '')
+
+        # new email value
+        form['email'] = 'new@example.com'
+        response = submit_and_follow(self.app, form, env, 'save')
+
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'new@example.com')
+
+    def test_edit_email_to_existing(self):
+        '''Editing to an existing user's email is unsuccessful.'''
+        factories.User(name='existing', email='existing@example.com')
+        sue_user = factories.User(name='sue', email='sue@example.com')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for(controller='user', action='edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new email value
+        form['email'] = 'existing@example.com'
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # error message in response
+        assert_true('Email: That login email is not available.' in response)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'sue@example.com')
+
+    def test_edit_email_invalid_format(self):
+        '''Editing with an invalid email format is unsuccessful.'''
+        sue_user = factories.User(name='sue', email='sue@example.com')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for(controller='user', action='edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new invalid email value
+        form['email'] = 'invalid.com'
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # error message in response
+        assert_true('Email: Email address is not valid' in response)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'sue@example.com')
+
+    def test_edit_email_saved_as_lowercase(self):
+        '''Editing with an email in uppercase will be saved as lowercase.'''
+        sue_user = factories.User(name='sue', email='sue@example.com')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for(controller='user', action='edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new invalid email value
+        form['email'] = 'UPPER@example.com'
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'upper@example.com')
+
+    def test_edit_email_differently_case_existing(self):
+        '''Editing with an existing user's email will be unsuccessful, even is
+        differently cased.'''
+        factories.User(name='existing', email='existing@example.com')
+        sue_user = factories.User(name='sue', email='sue@example.com')
+
+        env = {'REMOTE_USER': sue_user['name'].encode('ascii')}
+        response = self.app.get(
+            url=h.url_for(controller='user', action='edit'),
+            extra_environ=env,
+        )
+        # existing email in the form
+        form = response.forms['user-edit-form']
+        assert_equal(form['email'].value, sue_user['email'])
+
+        # new email value
+        form['email'] = 'EXISTING@example.com'
+        response = webtest_submit(form, 'save', extra_environ=env)
+
+        # error message in response
+        assert_true('Email: That login email is not available.' in response)
+
+        # sue user email hasn't changed.
+        user = model.Session.query(model.User).get(sue_user['id'])
+        assert_equal(user.email, 'sue@example.com')
 
 
 class TestPasswordReset(SmtpServerHarness, PylonsTestCase):

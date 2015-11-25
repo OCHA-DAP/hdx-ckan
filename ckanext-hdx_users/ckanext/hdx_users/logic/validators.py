@@ -4,6 +4,8 @@ import ckan.plugins.toolkit as tk
 def user_email_validator(key, data, errors, context):
     '''HDX valiator for emails as identifiers.'''
     model = context['model']
+    # Convert email to lowercase
+    data[key] = data[key].lower()
     email = data[key]
 
     from validate_email import validate_email
@@ -24,3 +26,5 @@ def user_email_validator(key, data, errors, context):
                 # and not updating the user name, so don't return an error.
                 return
         errors[key].append(tk._('That login email is not available.'))
+
+    return
