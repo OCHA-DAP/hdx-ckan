@@ -34,11 +34,15 @@ function generate3WComponent(config,data,geom){
     }
 
     if (config.startFieldName && config.endFieldName){
-        startDimension = cf.dimension(function(d){return new Date(d[config.startFieldName]);});
-        endDimension = cf.dimension(function(d){return new Date(d[config.endFieldName]);});
+        startDimension = cf.dimension(function(d){
+            return moment(d[config.startFieldName], dateFormat).toDate();
+        });
+        endDimension = cf.dimension(function(d){
+            return moment(d[config.endFieldName], dateFormat).toDate();
+        });
 
-        firstDate = startDimension.bottom(1)[0].Start;
-        lastDate = endDimension.top(1)[0].End;
+        firstDate = startDimension.bottom(1)[0][config.startFieldName];
+        lastDate = endDimension.top(1)[0][config.endFieldName];
         baseDate = new Date('1/1/1970');
         var now = moment(new Date());
         startDate = now.diff(baseDate, 'days');
