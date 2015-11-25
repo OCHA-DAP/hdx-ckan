@@ -186,6 +186,20 @@
     </div>
 </div>
 
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-format-column">{{_('Which column contains date format for start and end period?')}}</label>
+
+        <div class="controls ">
+            <input id="field-format-column" type="text" name="format-column" value="{{visualization['format-column']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Date format.')}} </div>
+    </div>
+</div>
+
 {% if visualization['colors'] is not defined %}
 {% set colors = ['#81d4fa','#4fc3f7','#29b6f6','#03a9f4','#039be5','#0288d1','#0277bd','#01579b'] %}
 {% else %}
