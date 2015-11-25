@@ -21,7 +21,7 @@ function generate3WComponent(config,data,geom){
 
     var whoDimension = cf.dimension(function(d){ return d[config.whoFieldName]; });
     var whatDimension = cf.dimension(function(d){ return d[config.whatFieldName]; });
-    var whereDimension = cf.dimension(function(d){ return d[config.whereFieldName]; });
+    var whereDimension = cf.dimension(function(d){ return d[config.whereFieldName].toLowerCase(); });
 
     var startDimension, endDimension, firstDate, lastDate, baseDate, startDate, minDate, maxDate, paused = true;
     var slider = $("#4w").find("input.slider");
@@ -99,7 +99,7 @@ function generate3WComponent(config,data,geom){
                 }
             })
             .featureKeyAccessor(function(feature){
-                return feature.properties[config.joinAttribute];
+                return feature.properties[config.joinAttribute].toLowerCase();
             })
             .popup(function(d){
                 return lookup[d.key];
@@ -142,7 +142,7 @@ function generate3WComponent(config,data,geom){
     function genLookup(geojson,config){
         var lookup = {};
         geojson.features.forEach(function(e){
-            lookup[e.properties[config.joinAttribute]] = String(e.properties[config.nameAttribute]);
+            lookup[e.properties[config.joinAttribute]] = String(e.properties[config.nameAttribute]).toLowerCase();
         });
         return lookup;
     }
