@@ -427,3 +427,37 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
     def form_template(self, context, data_dict):
         return 'new_views/geopreview_view_form.html'
 
+
+class HDXKeyFiguresPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IResourceView, inherit=True)
+
+    def info(self):
+        return {
+            'name': 'hdx_key_figures_view',
+            'title': 'Key Figures',
+            'filterable': False,
+            'preview_enabled': True,
+            'requires_datastore': True,
+            'iframed': True,
+            'default_title': p.toolkit._('Key Figures')
+        }
+
+    def can_view(self, data_dict):
+        resource = data_dict['resource']
+        return (resource.get('datastore_active') or
+                resource.get('url') == '_datastore_only_resource')
+
+    def setup_template_variables(self, context, data_dict):
+        import ckanext.hdx_crisis.dao.location_data_access as location_data_access
+        id = data_dict['resource']['id']
+        key_figures = location_data_access.get_formatted_topline_numbers(id)
+
+        return {
+            'key_figures': key_figures
+        }
+
+    def view_template(self, context, data_dict):
+        return 'new_views/key_figures_view.html'
+
+    def form_template(self, context, data_dict):
+        return 'new_views/key_figures_view_form.html'
