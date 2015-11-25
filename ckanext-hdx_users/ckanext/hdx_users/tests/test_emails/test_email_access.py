@@ -169,6 +169,12 @@ class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
         hdx_test_base.load_plugin(
             'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
 
+    @classmethod
+    def setup_class(cls):
+        super(TestUserEmailRegistration, cls).setup_class()
+        umodel.setup()
+        ue_model.create_table()
+
     def setup(self):
         test_helpers.reset_db()
         test_helpers.search.clear()
@@ -250,6 +256,12 @@ class TestEditUserEmail(hdx_test_base.HdxBaseTest):
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
             'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+
+    @classmethod
+    def setup_class(cls):
+        super(TestEditUserEmail, cls).setup_class()
+        umodel.setup()
+        ue_model.create_table()
 
     def setup(self):
         test_helpers.reset_db()
