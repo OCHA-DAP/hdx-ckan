@@ -147,6 +147,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
                                'whereFieldName': visualization.get('where-column', ''),
                                'startFieldName': visualization.get('start-column', ''),
                                'endFieldName': visualization.get('end-column', ''),
+                               'formatFieldName': visualization.get('format-column', ''),
                                'geotype': geotype,
                                'geo': geo,
                                'joinAttribute': visualization.get('where-column-2', ''),

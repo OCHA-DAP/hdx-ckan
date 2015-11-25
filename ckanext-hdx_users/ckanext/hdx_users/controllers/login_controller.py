@@ -1,11 +1,11 @@
 """
-    Handles modifications to registration and login flow. 
+    Handles modifications to registration and login flow.
     Including password reset, logging in and redirecting user
     to the correct contribute page when not logged in.
 
     This is different from modifications to the registration
     and login flow made to add email validation to account
-    creation. That class is in mail_validation_controller.py 
+    creation. That class is in mail_validation_controller.py
 """
 import datetime
 import dateutil
@@ -46,7 +46,8 @@ class LoginController(ckan_user.UserController):
             base.abort(401, _('Unauthorized to request reset password.'))
 
         if request.method == 'POST':
-            user_id = request.params.get('user')
+            # user_id should be lowercase (for name and email)
+            user_id = request.params.get('user').lower()
 
             context = {'model': model,
                        'user': c.user}
