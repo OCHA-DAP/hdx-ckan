@@ -26,17 +26,22 @@ function generate3WComponent(config,data,geom){
     var startDimension, endDimension, firstDate, lastDate, baseDate, startDate, minDate, maxDate, paused = true;
     var slider = $("#4w").find("input.slider");
 
+    var dateFormat = config.formatFieldName;
+    if (dateFormat == null){
+        dateFormat = "MM/DD/YYYY";
+    }
+
     if (config.startFieldName && config.endFieldName){
         startDimension = cf.dimension(function(d){return new Date(d[config.startFieldName]);});
         endDimension = cf.dimension(function(d){return new Date(d[config.endFieldName]);});
 
-        firstDate = new Date(startDimension.bottom(1)[0].Start);
-        lastDate = new Date(endDimension.top(1)[0].End);
+        firstDate = startDimension.bottom(1)[0].Start;
+        lastDate = endDimension.top(1)[0].End;
         baseDate = new Date('1/1/1970');
         var now = moment(new Date());
         startDate = now.diff(baseDate, 'days');
-        minDate = moment(firstDate).diff(baseDate, 'days');
-        maxDate = moment(lastDate).diff(baseDate, 'days');
+        minDate = moment(firstDate, dateFormat).diff(baseDate, 'days');
+        maxDate = moment(lastDate, dateFormat).diff(baseDate, 'days');
     }
 
 
