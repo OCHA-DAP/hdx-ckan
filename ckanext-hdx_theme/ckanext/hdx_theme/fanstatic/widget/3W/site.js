@@ -148,7 +148,7 @@ function generate3WComponent(config,data,geom){
     function genLookup(geojson,config){
         var lookup = {};
         geojson.features.forEach(function(e){
-            lookup[e.properties[config.joinAttribute]] = String(e.properties[config.nameAttribute]);
+            lookup[e.properties[config.joinAttribute].toLowerCase()] = String(e.properties[config.nameAttribute]);
         });
         return lookup;
     }
