@@ -533,7 +533,7 @@ def filesize_format(size_in_bytes):
         # value = formatters.localised_filesize(size_in_bytes)
         # return value
 
-        for unit in ['b', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+        for unit in ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
             if size < d:
                 return "%3.1f%s" % (size, unit)
             size /= d
