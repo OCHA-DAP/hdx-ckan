@@ -16,6 +16,7 @@ import ckan.plugins.toolkit as toolkit
 import ckan.model as model
 import ckan.model.package as package
 import ckan.model.license as license
+import ckan.logic as logic
 
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.helpers.caching as caching
@@ -461,3 +462,66 @@ class HDXKeyFiguresPlugin(plugins.SingletonPlugin):
 
     def form_template(self, context, data_dict):
         return 'new_views/key_figures_view_form.html'
+
+
+class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
+    plugins.implements(plugins.IResourceView, inherit=True)
+
+    def info(self):
+        schema = {
+            'district_name_column': [],
+            'values_resource_id': [],
+            'values_column_name': [],
+            'map_join_column': [],
+            'values_join_column': [],
+            'threshold': []
+        }
+        return {
+            'name': 'hdx_choropleth_map_view',
+            'title': 'Choropleth Map',
+            'schema': schema,
+            'filterable': False,
+            'preview_enabled': True,
+            'requires_datastore': False,
+            'iframed': True,
+            'default_title': p.toolkit._('Choropleth Map')
+        }
+
+    def can_view(self, data_dict):
+        resource = data_dict.get('resource', {})
+        format = resource.get('format')
+        format = format.lower() if format else ''
+
+        return format == 'geojson'
+
+    def setup_template_variables(self, context, data_dict):
+
+        resource_view_dict = data_dict['resource_view']
+        values_resource_id = resource_view_dict.get('values_resource_id')
+
+        values_res_dict = logic.get_action('resource_show')(context, {'id': values_resource_id})
+
+        return {
+            'map': {
+                'map_datatype_2': 'filestore',
+                'map_district_name_column': resource_view_dict.get('district_name_column'),
+                'map_datatype_1': 'datastore',
+                'map_dataset_id_1': values_res_dict.get('package_id'),
+                'map_dataset_id_2': data_dict['resource'].get('package_id'),
+                'map_resource_id_2': data_dict['resource'].get('id'),
+                'map_resource_id_1': values_resource_id,
+                'map_title': 'Number of IDPs per 100,000 inhabitants as of Apr 2015',
+                'map_values': resource_view_dict.get('values_column_name'),
+                'map_column_2': resource_view_dict.get('map_join_column'),
+                'map_column_1': resource_view_dict.get('values_join_column'),
+                'is_crisis': 'false',
+                'basemap_url': 'default',
+                'map_threshold': resource_view_dict.get('threshold'),
+            }
+        }
+
+    def view_template(self, context, data_dict):
+        return 'new_views/choropleth_map_view.html'
+
+    def form_template(self, context, data_dict):
+        return 'new_views/choropleth_map_view_form.html'

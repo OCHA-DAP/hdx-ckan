@@ -28,6 +28,7 @@ setup(
         hdx_chart_views=ckanext.hdx_package.plugin:HDXChartViewsPlugin
         hdx_geopreview_view=ckanext.hdx_package.plugin:HDXGeopreviewPlugin
         hdx_key_figures_view=ckanext.hdx_package.plugin:HDXKeyFiguresPlugin
+        hdx_choropleth_map_view=ckanext.hdx_package.plugin:HDXChoroplethMapPlugin
 
 
         [paste.paster_command]
