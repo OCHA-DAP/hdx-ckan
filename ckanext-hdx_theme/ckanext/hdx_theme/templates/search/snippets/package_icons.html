@@ -27,7 +27,7 @@
         <span class="icon-fire" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
       {% else %}
       {# Dataset page #}
-        <span class="icon-fire" title="{{ _('Popular: ') }} {{ package.tracking_summary.total }}{{ _(' downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+        {{ h.hdx_popular('recent views', package.tracking_summary.recent, min=10) }}
       {% endif %}
     {% endif %}
   </li>
