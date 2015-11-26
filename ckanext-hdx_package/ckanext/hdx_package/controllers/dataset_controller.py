@@ -205,7 +205,7 @@ class DatasetController(PackageController):
     def new(self, data=None, errors=None, error_summary=None):
         """
         Creates a new dataset, modified to create two page flow
-        (no longer needed) and to force users to join an org 
+        (no longer needed) and to force users to join an org
         (still needed)
         """
         # Is the user a member of any orgs? If not make them join one first
@@ -696,7 +696,6 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
                 c.downloads_count += resource['tracking_summary']['total']
-        c.pkg_dict['tracking_summary']['total'] = c.downloads_count #Force consistancy
         followers = get_action('dataset_follower_list')({'ignore_auth': True},
                                                         {'id': c.pkg_dict['id']})
         if followers and len(followers) > 0:
@@ -794,7 +793,7 @@ class DatasetController(PackageController):
 
     def _process_customizations(self, json_string):
         """
-        Process settings for datasets belonging to custom layouts 
+        Process settings for datasets belonging to custom layouts
         """
         c.logo_config = {
           'background_color': '#fafafa',
@@ -852,7 +851,7 @@ class DatasetController(PackageController):
     #     urls_dict = {'url': resource}
     #     g_json = get_action('hdx_get_json_from_resource')({}, urls_dict)
     #     return g_json
-    # 
+    #
     # @staticmethod
     # def _get_geojson(url):
     #     """
@@ -940,7 +939,7 @@ class DatasetController(PackageController):
         try:
             pkg_dict = get_action('package_update')(context, data_dict)
         except:
-            self._finish(500, {'success': False, 'message':"Oops! We can't do this right now. Something went wrong."}, content_type='json') 
+            self._finish(500, {'success': False, 'message':"Oops! We can't do this right now. Something went wrong."}, content_type='json')
         return self._finish(200, {'success': True, 'status': status, 'text': text}, content_type='json')
 
 
