@@ -47,6 +47,7 @@ json_config_3w = '''
             "what-column": "Sector",
             "start-column": "2000",
             "end-column": "2015",
+            "format-column": "YYYY/MM/DD",
             "colors": ["red", "green", "blue"]
         }
         '''
@@ -109,6 +110,7 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'whatFieldName': 'Sector',
             'startFieldName': '2000',
             'endFieldName': '2015',
+            'formatFieldName': 'YYYY/MM/DD',
             'nameAttribute': 'DIST_NAME',
             'colors': ["red", "green", "blue"]
         }
