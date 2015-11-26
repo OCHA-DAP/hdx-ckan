@@ -362,7 +362,8 @@ class HDXSearchController(PackageController):
             'Use `c.search_facets` instead.')
 
         # return render(self._search_template(package_type))
-        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, c.facet_titles, c.count, c.q)
+        full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, c.facet_titles,
+                                                    c.count, c.q)
         return full_facet_info
 
     def _is_facet_only_request(self):
@@ -510,7 +511,7 @@ class HDXSearchController(PackageController):
         url = h.url_for('search')
         return url
 
-    def _prepare_facets_info(self, existing_facets, selected_facets, title_translations, total_count, query):
+    def _prepare_facets_info(self, existing_facets, selected_facets, search_extras, title_translations, total_count, query):
         '''
         Sample return
         {
@@ -547,6 +548,8 @@ class HDXSearchController(PackageController):
         :type existing_facets: dict
         :param selected_facets: facets that have been selected
         :type selected_facets: dict
+        :param search_extras: extra search parameters given on the search page: "ext_"
+        :type search_extras: dict
         :param title_translations: translation of the facet categories
         :type title_translations: dict
         :return: facet information
@@ -556,6 +559,9 @@ class HDXSearchController(PackageController):
         result = OrderedDict()
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
+
+        if 'ext_cod' in search_extras or 'ext_indicator' in search_extras:
+            result['filters_selected'] = True
 
         num_of_indicators = 0
         num_of_cods = 0
