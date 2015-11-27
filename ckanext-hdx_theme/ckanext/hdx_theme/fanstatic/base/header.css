@@ -269,6 +269,7 @@ a:focus,
 /* Order DropDown style */
 .control-order-by {
   float: right;
+  height: inherit;
 }
 .control-order-by label {
   font-family: 'Gotham-Bold', sans-serif;
