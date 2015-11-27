@@ -29,11 +29,7 @@ webtest_submit = test_helpers.webtest_submit
 submit_and_follow = test_helpers.submit_and_follow
 
 
-class TestEmailAccess(hdx_test_base.HdxBaseTest):
-    @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
     @classmethod
     def setup_class(cls):
@@ -162,12 +158,7 @@ class TestEmailAccess(hdx_test_base.HdxBaseTest):
         return res
 
 
-class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
-
-    @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
     @classmethod
     def setup_class(cls):
@@ -250,12 +241,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxBaseTest):
                      u'Email address is not valid')
 
 
-class TestEditUserEmail(hdx_test_base.HdxBaseTest):
-
-    @classmethod
-    def _load_plugins(cls):
-        hdx_test_base.load_plugin(
-            'hdx_org_group hdx_package hdx_mail_validate hdx_users hdx_user_extra hdx_theme')
+class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
     @classmethod
     def setup_class(cls):

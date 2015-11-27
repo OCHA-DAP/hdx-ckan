@@ -56,3 +56,12 @@ class HdxBaseTest(object):
 
         config.clear()
         config.update(cls.original_config)
+
+
+class HdxFunctionalBaseTest(HdxBaseTest):
+
+    '''A base class for functional testing that loads all hdx_* extensions.'''
+
+    @classmethod
+    def _load_plugins(cls):
+        load_plugin('hdx_service_checker hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme')
