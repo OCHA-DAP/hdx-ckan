@@ -65,7 +65,7 @@
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #007ce0;
+  color: #007CE0;
   cursor: pointer;
 }
 .list-header .list-header-showall > span input[type="radio"] ~ label:after {
@@ -132,7 +132,7 @@
   height: 30px;
   line-height: 30px;
   border: 1px solid #cccccc;
-  color: #007ce0;
+  color: #007CE0;
   background-color: #fff;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -143,11 +143,11 @@
 .list-header-filters .ms-choice:focus,
 .list-header-filters .ms-choice.open {
   outline: none;
-  border-color: #007ce0;
+  border-color: #007CE0;
 }
 .list-header-filters .ms-choice .placeholder {
   font-weight: 400;
-  color: #007ce0;
+  color: #007CE0;
   padding: 0 10px;
 }
 .list-header-filters .ms-choice > div {
@@ -163,7 +163,7 @@
 }
 .list-header-filters .ms-choice > div.open {
   border-top: none;
-  border-bottom: 7px solid #007ce0;
+  border-bottom: 7px solid #007CE0;
 }
 .list-header-filters .ms-drop {
   overflow: visible;
@@ -171,7 +171,7 @@
   width: 245px !important;
   margin-left: -57.5px;
   margin-top: 10px;
-  border: 1px solid #007ce0;
+  border: 1px solid #007CE0;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -182,12 +182,12 @@
   line-height: 30px;
 }
 .list-header-filters .ms-drop .ms-search input {
-  background: #ffffff url('../vendor/multiple-select-1.1.0/multiple-select.png') no-repeat 100% -19px;
+  background: #FFF url('../vendor/multiple-select-1.1.0/multiple-select.png') no-repeat 100% -19px;
 }
 .list-header-filters .ms-drop .nice-arrow {
-  border-top: 1px solid #007ce0;
-  border-left: 1px solid #007ce0;
-  background-color: #ffffff;
+  border-top: 1px solid #007CE0;
+  border-left: 1px solid #007CE0;
+  background-color: #fff;
   height: 10px;
   width: 10px;
   position: absolute;
@@ -206,7 +206,7 @@
   transform-origin: 20% 40%;
 }
 .list-header-filters .ms-drop ul {
-  padding: 0 18px;
+  padding: 0 14px;
   margin-top: 10px;
 }
 .list-header-filters .ms-drop ul li {
@@ -237,7 +237,7 @@
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #007ce0;
+  color: #007CE0;
 }
 .list-header-filters .filters-actions .loading .loading-image {
   visibility: visible;
@@ -296,7 +296,7 @@
   padding-left: 15px;
 }
 .list-header-apply .filter-results {
-  color: #007ce0;
+  color: #007CE0;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 13px;
@@ -321,14 +321,14 @@
   margin-top: -2px;
 }
 .list-header-apply .filter-action-item .btn.main-action {
-  background-color: #007ce0;
+  background-color: #007CE0;
 }
 .list-header-apply .filter-action-item .btn.reset-action {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
   background: transparent;
-  color: #007ce0;
+  color: #007CE0;
   padding: 2px 0px;
 }
 .list-header-apply .loading-image {
