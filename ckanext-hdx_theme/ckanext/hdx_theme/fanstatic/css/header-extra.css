@@ -458,6 +458,7 @@
 /* Style Select2 Dropdown */
     .select2-container {
         display: block;
+        padding: 0;
     }
 
     .select2-container.required.error > .select2-choice {

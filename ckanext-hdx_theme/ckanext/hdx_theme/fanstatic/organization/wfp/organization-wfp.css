@@ -609,6 +609,7 @@ a:focus,
 .btn:focus,
 .btn.active {
   background-color: #888888;
+  border-color: #888888;
   opacity: 0.7;
   box-shadow: none;
   color: #ffffff;
@@ -1599,6 +1600,112 @@ textarea {
   display: none;
 }
 /* END List header */
+.hdx-form label:after {
+  content: "";
+}
+.hdx-form .form-group.required .control-label:after {
+  content: "*";
+  color: #f2645a;
+  font-size: 16px;
+}
+.hdx-form .form-group .control-label {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+.hdx-form .form-group .control-label:after {
+  content: "";
+}
+.hdx-form .form-group .radio,
+.hdx-form .form-group .checkbox {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+.hdx-form .form-group .radio input,
+.hdx-form .form-group .checkbox input {
+  margin-top: 4px;
+  top: 0;
+}
+.hdx-form .form-group .form-control {
+  background-color: #ffffff;
+  height: 44px;
+  border-color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+}
+.hdx-form .form-group .form-control.select2-container {
+  border: none;
+}
+.hdx-form .form-group .form-control.select2-container .select2-choice {
+  border-color: #cccccc;
+}
+.hdx-form .form-group .form-control.select2-container .select2-choice .select2-arrow {
+  background-color: #ffffff;
+  border: none;
+}
+.hdx-form .form-group .form-control.select2-container .select2-choice .select2-arrow b {
+  border-top-color: #888888;
+}
+.hdx-form .form-group .form-control.select2-container .select2-choice > .select2-chosen {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #333333;
+}
+.hdx-form .form-group .form-control.select2-dropdown-open .select2-choice {
+  border-color: #007ce0;
+}
+.hdx-form .form-group .form-control:focus {
+  border-color: #007ce0;
+}
+.hdx-form .form-group .form-control::-webkit-input-placeholder {
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+}
+.hdx-form .form-group .form-control:-moz-placeholder {
+  /* Firefox 18- */
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  opacity: 1;
+}
+.hdx-form .form-group .form-control::-moz-placeholder {
+  /* Firefox 19+ */
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  opacity: 1;
+}
+.hdx-form .form-group .form-control:-ms-input-placeholder {
+  color: #cccccc;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+}
+.hdx-form .form-horizontal .form-group {
+  margin-left: 0;
+  margin-right: 0;
+}
+.hdx-form .form-horizontal .controls {
+  margin-left: 170px;
+}
+.hdx-form .form-horizontal .control-label {
+  float: left;
+  text-align: left;
+  padding-top: 15px;
+  width: 160px;
+}
+.hdx-form .form-horizontal .checkbox {
+  padding-top: 0;
+}
 /* Body Background */
 body {
   background-size: cover;
