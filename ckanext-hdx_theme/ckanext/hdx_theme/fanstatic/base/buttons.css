@@ -23,6 +23,7 @@
 .btn:focus,
 .btn.active {
   background-color: #888888;
+  border-color: #888888;
   opacity: 0.7;
   box-shadow: none;
   color: #ffffff;

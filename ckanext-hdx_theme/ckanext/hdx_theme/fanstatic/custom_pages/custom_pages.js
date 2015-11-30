@@ -83,6 +83,7 @@ ckan.module('hdx_custom_pages', function ($, _) {
                 $(newSection).removeClass("hdx-invisible-element");
                 $(newSection).addClass("hdx-visible-element");
             }
+            newSection.find("select").select2();
             $('#sections').append(newSection);
             var templateFields = newSection.find('[id^=field_section_template_]');
             for( var _i=0; _i<templateFields.length; _i++){
