@@ -43,3 +43,4 @@ wsgiref==0.1.2
 zope.interface==4.1.1
 validate_email==1.2
 pyDNS==2.3.6
+ijson==2.2

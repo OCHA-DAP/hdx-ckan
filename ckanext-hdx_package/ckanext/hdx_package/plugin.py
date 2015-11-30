@@ -7,7 +7,8 @@ import logging
 from routes.mapper import SubMapper
 import pylons.config as config
 import json
-
+import ijson
+import io
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
@@ -31,6 +32,10 @@ import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
 import ckanext.hdx_package.actions.get as hdx_get
 
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+
+from ckan.lib import uploader
+
+log = logging.getLogger(__name__)
 
 ignore_empty = p.toolkit.get_validator('ignore_empty')
 
@@ -469,6 +474,7 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
 
     def info(self):
         schema = {
+            'map_name': [],
             'district_name_column': [],
             'values_resource_id': [],
             'values_column_name': [],
@@ -494,31 +500,70 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
 
         return format == 'geojson'
 
+    def _detect_fields_in_geojson(self, resource_dict):
+        geo_columns_dict = {}
+        try:
+            upload = uploader.ResourceUpload(resource_dict)
+            with io.open(upload.get_path(resource_dict['id']), 'rb') as f, io.TextIOWrapper(f,
+                                                                                            encoding='utf-8-sig') as tf:
+                parser = ijson.parse(tf)
+
+                geo_columns = set()
+                i = 0
+                for prefix, event, value in parser:
+                    if prefix == u'features.item.properties' and event == u'map_key':
+                        geo_columns.add(value)
+                        i += 1
+
+                    if i > 10:
+                        break
+                    pass
+                geo_columns_dict = [{'value': item, 'text': item} for item in sorted(geo_columns)]
+        except Exception as e:
+            log.warn(u'Error accessing resource size for resource {}: {}'.format(resource_dict.get('name', ''),
+                                                                                 str(e)))
+            geo_columns_dict = {}
+        return geo_columns_dict
+
     def setup_template_variables(self, context, data_dict):
 
+        geo_columns_dict = self._detect_fields_in_geojson(data_dict['resource'])
+
         resource_view_dict = data_dict['resource_view']
+
         values_resource_id = resource_view_dict.get('values_resource_id')
+        if values_resource_id:
 
-        values_res_dict = logic.get_action('resource_show')(context, {'id': values_resource_id})
+            values_res_dict = logic.get_action('resource_show')(context, {'id': values_resource_id})
 
-        return {
-            'map': {
-                'map_datatype_2': 'filestore',
-                'map_district_name_column': resource_view_dict.get('district_name_column'),
-                'map_datatype_1': 'datastore',
-                'map_dataset_id_1': values_res_dict.get('package_id'),
-                'map_dataset_id_2': data_dict['resource'].get('package_id'),
-                'map_resource_id_2': data_dict['resource'].get('id'),
-                'map_resource_id_1': values_resource_id,
-                'map_title': 'Number of IDPs per 100,000 inhabitants as of Apr 2015',
-                'map_values': resource_view_dict.get('values_column_name'),
-                'map_column_2': resource_view_dict.get('map_join_column'),
-                'map_column_1': resource_view_dict.get('values_join_column'),
-                'is_crisis': 'false',
-                'basemap_url': 'default',
-                'map_threshold': resource_view_dict.get('threshold'),
+            return {
+                'map': {
+                    'map_datatype_2': 'filestore',
+                    'map_district_name_column': resource_view_dict.get('district_name_column'),
+                    'map_datatype_1': 'datastore',
+                    'map_dataset_id_1': values_res_dict.get('package_id'),
+                    'map_dataset_id_2': data_dict['resource'].get('package_id'),
+                    'map_resource_id_2': data_dict['resource'].get('id'),
+                    'map_resource_id_1': values_resource_id,
+                    'map_title': resource_view_dict.get('map_name'),
+                    'map_values': resource_view_dict.get('values_column_name'),
+                    'map_column_2': resource_view_dict.get('map_join_column'),
+                    'map_column_1': resource_view_dict.get('values_join_column'),
+                    'is_crisis': 'false',
+                    'basemap_url': 'default',
+                    'map_threshold': resource_view_dict.get('threshold'),
+                },
+                'formdata': {
+                    'map_columns': geo_columns_dict
+                }
+
             }
-        }
+        else:
+            return {
+                'formdata': {
+                    'map_columns': geo_columns_dict
+                }
+            }
 
     def view_template(self, context, data_dict):
         return 'new_views/choropleth_map_view.html'
