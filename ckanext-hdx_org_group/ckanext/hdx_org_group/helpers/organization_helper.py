@@ -189,7 +189,7 @@ def hdx_get_group_activity_list(context, data_dict):
 
 def compile_less(result, translate_func=None):
     if 'extras' in result:
-        base_color = '#0088FF'  # default value
+        base_color = '#007CE0'  # default value
         logo_use_org_color = "false"
         less_code_list = None
         for el in result['extras']:
@@ -199,10 +199,10 @@ def compile_less(result, translate_func=None):
                 variables = el.get('value', None)
                 try:
                     variables = json.loads(variables)
-                    base_color = variables.get('highlight_color', '#0088FF') or '#0088FF'
+                    base_color = variables.get('highlight_color', '#007CE0') or '#007CE0'
                     logo_use_org_color = variables.get('use_org_color', 'false')
                 except:
-                    base_color = '#0088FF'
+                    base_color = '#007CE0'
         if less_code_list:
             less_code = less_code_list.strip()
             if less_code:

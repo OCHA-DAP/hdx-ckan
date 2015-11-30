@@ -307,7 +307,7 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
 
 def hdx_less_default():
     return """
-@bodyBackgroundColor: @wfpBlueColor;
+@bodyBackgroundColor: @greenColor;
 @navTabsActiveColor: @wfpBlueColor;
 @orderByDropdownColor: @wfpBlueColor;
 @defaultLinkColor: @wfpBlueColor;
