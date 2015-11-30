@@ -65,6 +65,12 @@
   float: left;
   color: #ffffff;
 }
+.cp-sample-text {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  text-transform: uppercase;
+}
 .cp-form h3 {
   color: #007ce0;
   font-family: 'Source Sans Pro', sans-serif;
