@@ -1,83 +1,11 @@
-@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
 /*
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
+@import url(//fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
 @font-face {
   font-family: 'Gotham-Bold';
   src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Bold';
-  src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
-}
-@font-face {
-  font-family: 'Gotham-Book';
-  src: url('/fonts/Gotham_OTF/Gotham-Book.otf');
 }
 @font-face {
   font-family: 'Gotham-Book';
@@ -88,140 +16,12 @@
   src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
 }
 @font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Light';
-  src: url('/fonts/Gotham_OTF/Gotham-Light.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
-  font-family: 'Gotham-Thin';
-  src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
-}
-@font-face {
   font-family: 'Gotham-Thin';
   src: url('/fonts/Gotham_OTF/Gotham-Thin.otf');
 }
 @font-face {
   font-family: 'Gotham-Black';
   src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Black';
-  src: url('/fonts/Gotham_OTF/Gotham-Black.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
-}
-@font-face {
-  font-family: 'Gotham-Medium';
-  src: url('/fonts/Gotham_OTF/Gotham-Medium.otf');
 }
 @font-face {
   font-family: 'Gotham-Medium';
@@ -230,7 +30,7 @@
 /* Default link style */
 a,
 .dataset-heading a {
-  color: #007ce0;
+  color: #007CE0;
   text-decoration: none;
 }
 a:hover,
@@ -241,6 +41,14 @@ a:focus,
   text-decoration: none;
 }
 /* END Default link style */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
 .pagination,
 .module .pagination {
   background: #eeeeee;
@@ -268,8 +76,8 @@ a:focus,
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: #000000;
-  background-color: #ffffff;
+  color: #000;
+  background-color: #fff;
   border: none;
   margin-left: -2px;
   display: inline-block;
@@ -280,7 +88,7 @@ a:focus,
 .pagination li.active a,
 .module .pagination li.active a {
   background-color: #1ebfb3;
-  color: #ffffff;
+  color: #fff;
 }
 .pagination li.disabled a,
 .module .pagination li.disabled a {
@@ -354,7 +162,7 @@ a:focus,
   text-shadow: none;
   border: 1px solid inherit;
   background-color: #888888;
-  color: #ffffff;
+  color: #fff;
 }
 .btn:hover,
 .btn:focus,
@@ -363,7 +171,7 @@ a:focus,
   border-color: #888888;
   opacity: 0.7;
   box-shadow: none;
-  color: #ffffff;
+  color: #fff;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
@@ -373,23 +181,23 @@ a:focus,
 .btn.hdx-btn.org-btn {
   min-width: 100px;
   margin-left: 0;
-  background-color: #007ce0;
-  color: #ffffff;
+  background-color: #007CE0;
+  color: #fff;
 }
 .btn-inverted {
   color: #888888;
-  background-color: #ffffff;
+  background-color: #fff;
   border: 1px solid #cccccc;
   box-shadow: none;
 }
 .btn-inverted:hover,
 .btn-inverted:focus {
-  background-color: #ffffff;
+  background-color: #fff;
   opacity: 0.7;
   color: #888888;
 }
 .btn-demo {
-  border: 2px solid #ffffff;
+  border: 2px solid #fff;
   border-radius: 5px;
   padding: 8px 10px;
   margin-right: 20px;
@@ -397,8 +205,8 @@ a:focus,
   box-shadow: none;
 }
 .btn-primary {
-  background-color: #007ce0;
-  color: #ffffff;
+  background-color: #007CE0;
+  color: #fff;
 }
 .btn-danger {
   background-color: #f2645a;
@@ -411,27 +219,27 @@ a:focus,
   padding-right: 0;
   box-shadow: none;
   width: auto;
-  color: #007ce0;
+  color: #007CE0;
 }
 .btn-empty:hover,
 .btn-empty-black:hover,
 .btn-empty:focus,
 .btn-empty-black:focus {
-  color: #007ce0;
+  color: #007CE0;
   background: none;
 }
 .btn-empty-black {
-  color: #000000;
+  color: #000;
 }
 .btn-empty-black:hover,
 .btn-empty-black:focus {
-  color: #000000;
+  color: #000;
 }
 .btn-blue-on-white,
 .btn-blue-on-white:hover,
 .btn-blue-on-white:focus {
-  color: #007ce0;
-  background-color: #ffffff;
+  color: #007CE0;
+  background-color: #fff;
 }
 .resource-item .hdx-btn-group {
   position: absolute;
@@ -462,6 +270,7 @@ a:focus,
 /* Order DropDown style */
 .control-order-by {
   float: right;
+  height: inherit;
 }
 .control-order-by label {
   font-family: 'Gotham-Bold', sans-serif;
@@ -475,9 +284,9 @@ a:focus,
   display: inline;
 }
 .control-order-by .orderDropdown .dropdown-toggle {
-  background-color: #ffffff;
+  background-color: #fff;
   border: none;
-  color: #007ce0;
+  color: #007CE0;
   text-align: left;
   margin-top: -4px;
   padding: 0;
@@ -493,7 +302,7 @@ a:focus,
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #007ce0;
+  color: #007CE0;
   letter-spacing: 0.03em;
 }
 .control-order-by .orderDropdown .dropdown-toggle-text:hover,
@@ -561,6 +370,7 @@ a:focus,
   padding: 5px 15px;
   margin-right: 20px;
   margin-bottom: 20px;
+  display: inline-block;
   background-color: #888888;
   border-radius: 0;
 }
@@ -959,7 +769,7 @@ textarea {
   padding: 4px 10px;
   background: #ebebeb;
   width: auto;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-top: none;
   font-size: 11px;
   color: #282828;
@@ -1006,14 +816,6 @@ textarea {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   border-radius: 3px;
-}
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
 }
 /* List header */
 .list-header {
@@ -1074,7 +876,7 @@ textarea {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #007ce0;
+  color: #007CE0;
   cursor: pointer;
 }
 .list-header .list-header-showall > span input[type="radio"] ~ label:after {
@@ -1141,7 +943,7 @@ textarea {
   height: 30px;
   line-height: 30px;
   border: 1px solid #cccccc;
-  color: #007ce0;
+  color: #007CE0;
   background-color: #fff;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
@@ -1152,11 +954,11 @@ textarea {
 .list-header-filters .ms-choice:focus,
 .list-header-filters .ms-choice.open {
   outline: none;
-  border-color: #007ce0;
+  border-color: #007CE0;
 }
 .list-header-filters .ms-choice .placeholder {
   font-weight: 400;
-  color: #007ce0;
+  color: #007CE0;
   padding: 0 10px;
 }
 .list-header-filters .ms-choice > div {
@@ -1172,7 +974,7 @@ textarea {
 }
 .list-header-filters .ms-choice > div.open {
   border-top: none;
-  border-bottom: 7px solid #007ce0;
+  border-bottom: 7px solid #007CE0;
 }
 .list-header-filters .ms-drop {
   overflow: visible;
@@ -1180,7 +982,7 @@ textarea {
   width: 245px !important;
   margin-left: -57.5px;
   margin-top: 10px;
-  border: 1px solid #007ce0;
+  border: 1px solid #007CE0;
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
@@ -1191,12 +993,12 @@ textarea {
   line-height: 30px;
 }
 .list-header-filters .ms-drop .ms-search input {
-  background: #ffffff url('../vendor/multiple-select-1.1.0/multiple-select.png') no-repeat 100% -19px;
+  background: #FFF url('../vendor/multiple-select-1.1.0/multiple-select.png') no-repeat 100% -19px;
 }
 .list-header-filters .ms-drop .nice-arrow {
-  border-top: 1px solid #007ce0;
-  border-left: 1px solid #007ce0;
-  background-color: #ffffff;
+  border-top: 1px solid #007CE0;
+  border-left: 1px solid #007CE0;
+  background-color: #fff;
   height: 10px;
   width: 10px;
   position: absolute;
@@ -1215,7 +1017,7 @@ textarea {
   transform-origin: 20% 40%;
 }
 .list-header-filters .ms-drop ul {
-  padding: 0 18px;
+  padding: 0 14px;
   margin-top: 10px;
 }
 .list-header-filters .ms-drop ul li {
@@ -1246,7 +1048,7 @@ textarea {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 12px;
-  color: #007ce0;
+  color: #007CE0;
 }
 .list-header-filters .filters-actions .loading .loading-image {
   visibility: visible;
@@ -1305,7 +1107,7 @@ textarea {
   padding-left: 15px;
 }
 .list-header-apply .filter-results {
-  color: #007ce0;
+  color: #007CE0;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 13px;
@@ -1330,14 +1132,14 @@ textarea {
   margin-top: -2px;
 }
 .list-header-apply .filter-action-item .btn.main-action {
-  background-color: #007ce0;
+  background-color: #007CE0;
 }
 .list-header-apply .filter-action-item .btn.reset-action {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 12px;
   background: transparent;
-  color: #007ce0;
+  color: #007CE0;
   padding: 2px 0px;
 }
 .list-header-apply .loading-image {
@@ -1506,7 +1308,7 @@ h4 small {
   color: #f2645a;
 }
 .newHeader .header-nav-bg {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .newHeader .header-nav-border {
   border-bottom: 3px solid #cccccc;
@@ -1529,7 +1331,7 @@ h4 small {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #ffffff;
+  color: #fff;
   text-transform: uppercase;
 }
 .newHeader #feedback-button {
@@ -1542,7 +1344,7 @@ h4 small {
   font-size: 12px;
   line-height: 31px;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #fff;
   text-shadow: none;
   text-decoration: none;
 }
@@ -1551,8 +1353,8 @@ h4 small {
 }
 .newHeader .dropdown-menu > li > a:hover,
 .newHeader .dropdown-menu > li > a:focus {
-  color: #ffffff;
-  background-color: #007ce0;
+  color: #fff;
+  background-color: #007CE0;
   background-image: none;
 }
 /* HEADER Search Widget  */
@@ -1577,7 +1379,7 @@ h4 small {
 }
 .header-nav-search .header-search-form .filter-icon {
   visibility: hidden;
-  color: #007ce0;
+  color: #007CE0;
   font-size: 20px;
   cursor: pointer;
 }
@@ -1597,7 +1399,7 @@ h4 small {
   font-size: 18px;
   line-height: 28px;
   outline: none;
-  color: #000000;
+  color: #000;
 }
 .header-nav-search .header-search-form input::-webkit-input-placeholder,
 .header-nav-search .header-search-form input:-ms-input-placeholder {
@@ -1760,7 +1562,7 @@ h4 small {
 .caret {
   border-left: 9px solid transparent;
   border-right: 9px solid transparent;
-  border-top: 9px solid #007ce0;
+  border-top: 9px solid #007CE0;
   vertical-align: top;
 }
 /* END Style Caret */
@@ -1904,14 +1706,6 @@ ul.hdx-bs3 {
 }
 /* END search_form.html customisations */
 /* Style Modal Dialogs */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .modal.in {
   position: fixed;
   top: 0;
@@ -1942,8 +1736,8 @@ ul.hdx-bs3 {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: #ffffff;
-  background-color: #007ce0;
+  color: #fff;
+  background-color: #007CE0;
   letter-spacing: 0.01em;
   line-height: 20px;
   padding: 20px;
@@ -1952,7 +1746,7 @@ ul.hdx-bs3 {
   margin-left: 20px;
   float: right;
   top: 0;
-  color: #ffffff;
+  color: #fff;
   opacity: 1;
 }
 .modal.in .modal-dialog .modal-content .modal-body {
@@ -1993,7 +1787,7 @@ ul.hdx-bs3 {
 .modal.in .modal-dialog .modal-content .modal-footer .btn-large.btn-empty {
   min-width: 0;
   margin-right: 30px;
-  color: #000000;
+  color: #000;
 }
 /* END Style Modal Dialogs */
 /* Style placeholders */
