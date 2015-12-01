@@ -1,3 +1,4 @@
+import ckan.logic as logic
 from ckan.lib.base import _
 
 
@@ -16,6 +17,7 @@ def page_delete(context, data_dict):
     return page_create(context, data_dict)
 
 
+@logic.auth_allow_anonymous_access
 def page_show(context, data_dict):
     if data_dict.get('state', '') == 'active':
         return {'success': True}

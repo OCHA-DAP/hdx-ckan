@@ -19,6 +19,6 @@ def page_show(context, data_dict):
     if page is None:
         raise NotFound
     page_dict = dictize.page_dictize(page)
-    logic.check_access('page_create', context, page_dict)
+    logic.check_access('page_show', context, page_dict)
 
     return page_dict

@@ -51,5 +51,6 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
         return {
             'page_create': auth.page_create,
             'page_update': auth.page_update,
-            'page_delete': auth.page_delete
+            'page_delete': auth.page_delete,
+            'page_show': auth.page_show
         }
