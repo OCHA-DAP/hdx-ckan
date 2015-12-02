@@ -16,16 +16,19 @@ Example:
 
 {% resource 'hdx_theme/login_form.js' %}
 
-<form action="{{ action }}" method="post" class="form-horizontal login-form">
-  {{ form.errors(errors=error_summary) }}
+<form action="{{ action }}" method="post" class="hdx-form login-form">
+  <div class="form-horizontal">
+    {{ form.errors(errors=error_summary) }}
 
-  {{ form.input('login', label=_("Username or Email"), id='field-login', value="", error=username_error, classes=["control-medium"]) }}
+    {{ form.input('login', label=_("Username or Email"), id='field-login', value="", error=username_error, classes=["form-group", "control-medium"], attrs={'class':'form-control'}) }}
 
-  {{ form.input('password', label=_("Password"), id='field-password', type="password", value="", error=password_error, classes=["control-medium"]) }}
+    {{ form.input('password', label=_("Password"), id='field-password', type="password", value="", error=password_error, classes=["form-group", "control-medium"], attrs={'class':'form-control'}) }}
 
-  {{ form.checkbox('remember', label=_("Remember me"), id='field-remember', checked=false, value="63072000") }}
+    {{ form.checkbox('remember', label=_("Remember me"), id='field-remember', checked=false, value="63072000", classes=["form-group"]) }}
 
-  <div class="form-actions">
-    <button class="btn btn-primary" type="submit">{{ _('Login') }}</button>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ _('Login') }}</button>
+    </div>
   </div>
+
 </form>

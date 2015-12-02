@@ -815,20 +815,20 @@ class DatasetController(PackageController):
                 return True
         return False
 
-    def _has_shape_info(self, resource):
+    @classmethod
+    def _has_shape_info(cls, resource):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
             shp_info = json.loads(resource['shape_info'])
             if shp_info.get('state', '') == 'success':
                 return True
         return False
 
-    def _process_shapes(self, resources):
+    @classmethod
+    def _process_shapes(cls, resources):
         result = {}
-        context = {'model': model, 'session': model.Session,
-           'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
         for resource in resources:
-            if self._has_shape_info(resource):
+            if cls._has_shape_info(resource):
                 res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
                 shp_info = json.loads(resource['shape_info'])
 

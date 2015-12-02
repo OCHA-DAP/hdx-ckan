@@ -99,17 +99,12 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
             return url
 
         package_type = 'dataset'
-        full_facet_info = self._search(package_type, pager_url)
+
+        fq = u'ebola '
+
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
 
         c.other_links['current_page_url'] = h.url_for('show_crisis')
 
         return full_facet_info
 
-    def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
-                           search_extras, pager_url, context):
-
-        # c.q = 'ebola'
-        fq = fq or ''
-        fq = u'ebola ' + fq
-        return super(EbolaCustomLocationController, self)._performing_search(c.q, fq, facet_keys, limit, page, sort_by,
-                                                                             search_extras, pager_url, context)
