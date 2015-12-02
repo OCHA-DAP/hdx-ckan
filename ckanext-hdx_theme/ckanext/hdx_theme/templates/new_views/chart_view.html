@@ -5,7 +5,7 @@
     {% set ci = chart_info %}
     {% if ci %}
         <div class="auto-graph graph-item-wrapper">
-            <div>
+            <div class="clearfix">
                 {% set data_link_url = ci.data_link_url or "#" %}
                 <div class="graph-title pull-left">{{ ci.title }}</div>
                 <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
@@ -22,8 +22,11 @@
         </div>
     {% endif %}
 
+    {% resource 'hdx_theme/base/fonts.css' %}
+
     {% resource 'hdx_theme/d3' %}
     {% resource 'hdx_theme/c3' %}
+    {% resource 'hdx_theme/crisis-base' %}
     {% resource 'hdx_theme/country-custom' %}
 
 {% endblock %}
