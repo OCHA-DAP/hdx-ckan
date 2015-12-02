@@ -1,0 +1,125 @@
+@import "variables";
+@import "mixins";
+
+@formElementHeight: 44px;
+@labelFontSize: 13px;
+@labelLineHeight: 14px;
+@labelMaxWidth: 160px;
+
+.hdx-form {
+  label:after {
+    content: "";
+  }
+
+  .form-group {
+
+    &.required {
+      .control-label:after {
+        content: "*";
+        color: @orangeColor;
+        font-size: @labelFontSize + 3px;
+      }
+    }
+    .control-label {
+      .gothamLightFont(@labelFontSize);
+      line-height: @labelLineHeight;
+      text-transform: uppercase;
+
+      &:after{
+        content: "";
+      }
+    }
+
+    .radio, .checkbox {
+      margin-top: 0;
+      margin-bottom: 5px;
+
+      input {
+        margin-top: 4px;
+        top: 0;
+      }
+    }
+
+    .form-control {
+      background-color: @whiteColor;
+      height: @formElementHeight;
+      border-color: @lightGrayColor;
+      .sourceSansProFont(400, 14px);
+      color: @darkGrayColor;
+
+      &.select2-container{
+        border: none;
+        .select2-choice {
+          border-color: @lightGrayColor;
+          .select2-arrow {
+            background-color: @whiteColor;
+            border:none;
+            b {
+              border-top-color: @grayColor;
+            }
+          }
+
+          > .select2-chosen {
+            .sourceSansProFont(400, 14px);
+            color: @darkGrayColor;
+          }
+        }
+
+
+      }
+      &.select2-dropdown-open {
+        .select2-choice{
+          border-color: @blueColor;
+        }
+      }
+
+      &:focus {
+        border-color: @blueColor;
+      }
+
+      &::-webkit-input-placeholder {
+        color: #cccccc;
+        .sourceSansProFont(300, 15px);
+      }
+
+      &:-moz-placeholder { /* Firefox 18- */
+        color: #cccccc;
+        .sourceSansProFont(300, 15px);
+        opacity: 1;
+      }
+
+      &::-moz-placeholder {  /* Firefox 19+ */
+        color: #cccccc;
+        .sourceSansProFont(300, 15px);
+        opacity: 1;
+      }
+
+
+      &:-ms-input-placeholder {
+        color: #cccccc;
+        .sourceSansProFont(300, 15px);
+      }
+
+    }
+  }
+
+  .form-horizontal {
+    .form-group {
+      margin-left: 0;
+      margin-right: 0;
+    }
+    .controls {
+      margin-left: @labelMaxWidth + 10px;
+    }
+    .control-label {
+      float: left;
+      text-align: left;
+      padding-top: (@formElementHeight - @labelLineHeight)/2;
+      width: @labelMaxWidth;
+    }
+
+    .checkbox {
+      padding-top: 0;
+    }
+  }
+}
