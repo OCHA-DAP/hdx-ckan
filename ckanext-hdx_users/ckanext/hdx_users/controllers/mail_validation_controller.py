@@ -74,7 +74,7 @@ OnbSuccess = json.dumps({'success': True})
 
 
 def name_validator_with_changed_msg(val, context):
-    """This is just a wrapper function around the validator.name_validator function. 
+    """This is just a wrapper function around the validator.name_validator function.
         The wrapper function just changes the message in case the name_match doesn't match.
         The only purpose for still calling that function here is to keep the link visible and
         in case of a ckan upgrade to still be able to raise any new Invalid exceptions
@@ -234,7 +234,6 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema, 'save': 'save' in request.params}
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
         if 'email' in data_dict:
-            data_dict['email'] = data_dict['email'].lower()  # force all emails to be lowercase
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
             data_dict['name'] = md5.hexdigest()

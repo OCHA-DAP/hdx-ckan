@@ -5,6 +5,7 @@ import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
+import ckanext.hdx_users.logic.validators as hdx_validators
 
 
 def user_create(context, data_dict=None):
@@ -100,6 +101,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IValidators)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -170,3 +172,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     def get_actions(self):
         return {}
+
+    def get_validators(self):
+        return {
+            'user_email_validator': hdx_validators.user_email_validator
+        }

@@ -461,6 +461,7 @@ a:focus,
 /* Order DropDown style */
 .control-order-by {
   float: right;
+  height: inherit;
 }
 .control-order-by label {
   font-family: 'Gotham-Bold', sans-serif;
@@ -560,6 +561,7 @@ a:focus,
   padding: 5px 15px;
   margin-right: 20px;
   margin-bottom: 20px;
+  display: inline-block;
   background-color: #888888;
   border-radius: 0;
 }
@@ -1214,7 +1216,7 @@ textarea {
   transform-origin: 20% 40%;
 }
 .list-header-filters .ms-drop ul {
-  padding: 0 18px;
+  padding: 0 14px;
   margin-top: 10px;
 }
 .list-header-filters .ms-drop ul li {
