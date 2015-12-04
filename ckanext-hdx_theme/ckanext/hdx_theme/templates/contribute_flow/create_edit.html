@@ -1,5 +1,294 @@
 {% extends "page.html" %}
 
-{% block primary %}
-    THIS IS A DUMMY PAGE !!
+{% import 'macros/form.html' as form %}
+
+{% set data = {'maintainer':'test2'} %}
+{% set errors = {} %}
+{% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
+
+{% block page %}
+<div class="hdx-form container">
+    <div class="hdx-form-breadcrumb paddingRowHack">
+        <ol class="breadcrumb paddingLeftHack paddingRightHack">
+            <li class="active">
+                Add Details - <span class="small">Please fill out all required fields</span>
+            </li>
+        </ol>
+    </div>
+    <div class="paddingRowHack background-gray">
+        <div class="paddingLeftHack paddingRightHack">
+            <form>
+                <div class="row form-section">
+                    <div class="col-xs-3">
+                        <h3>Your files</h3>
+                        <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="label-title-style mBottom10"><span>#</span> Resources <small>(drag and drop to sort)</small></div>
+
+                        <div class="drag-drop-component">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            Resource ##
+                                            <ul class="list-horizontal">
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name=privacy" value="public" />
+                                                        Upload file
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name=privacy" value="public" />
+                                                        Upload file2
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Dropbox
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Google Drive
+                                                </li>
+                                            </ul>
+
+                                            <span class="pull-right">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    {{ form.input('file_name', id='field_file_name', placeholder=_('File name'), value=data.file_name, error=errors.file_name, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    {{ form.select('type', id='field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    {{ form.textarea('notes', id='field_notes',value=data.notes, placeholder=_('Add note'), error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 68px;'}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="drag-drop-area">Drop file to overwrite or <a>Browse</a></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="drag-drop-component">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            Resource ##
+                                            <ul class="list-horizontal">
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name=privacy" value="public" />
+                                                        Upload file
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name=privacy" value="public" />
+                                                        Upload file2
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Dropbox
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Google Drive
+                                                </li>
+                                            </ul>
+
+                                            <span class="pull-right">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    {{ form.input('file_name', id='field_file_name', placeholder=_('File name'), value=data.file_name, error=errors.file_name, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    {{ form.select('type', id='field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    {{ form.textarea('notes', id='field_notes',value=data.notes, placeholder=_('Add note'), error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 68px;'}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="drag-drop-area">Drop file to overwrite or <a>Browse</a></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="drag-drop-component">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            Resource ##
+                                            <ul class="list-horizontal">
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name=privacy" value="public" />
+                                                        Upload file
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name=privacy" value="public" />
+                                                        Upload file2
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Dropbox
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Google Drive
+                                                </li>
+                                            </ul>
+
+                                            <span class="pull-right">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                    {{ form.input('file_name', id='field_file_name', placeholder=_('File name'), value=data.file_name, error=errors.file_name, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    {{ form.select('type', id='field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    {{ form.textarea('notes', id='field_notes',value=data.notes, placeholder=_('Add note'), error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 68px;'}) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="drag-drop-area">Drop file to overwrite or <a>Browse</a></div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <input type="button" class="btn btn-primary btn-lg" value="Add more resources"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr class="form-hr"/>
+                    </div>
+                </div>
+                <div class="row form-section">
+                    <div class="col-xs-3">
+                        <h3>Privacy Settings</h3>
+                        <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                    </div>
+                    <div class="col-xs-9">
+                        <div class="form-group">
+                            <label class="control-label">This dataset is</label>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name=privacy" value="private" />
+                                    <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name=privacy" value="public" />
+                                    <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr class="form-hr"/>
+                    </div>
+                </div>
+                <div class="row form-section">
+                    <div class="col-xs-3">
+                        <h3>Dataset title & description</h3>
+                        <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                    </div>
+                    <div class="col-xs-9">
+                        {{ form.input('title', id='field_title', label=_('Title of the dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
+                        {{ form.markdown('description', id='field_description', label=_('Description (optional)'), placeholder=_('Description of dataset'), value=data.description, error=errors.description, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+                        TODO: Add two checkboxes here
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <hr class="form-hr"/>
+                    </div>
+                </div>
+                <div class="row form-horizontal form-section">
+                    <div class="col-xs-3">
+                        <h3>Metadata</h3>
+                        <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                    </div>
+                    <div class="col-xs-9">
+                        {{ form.input('source', id='field_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.source, error=errors.source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                        {{ form.select('organisation', id='field_organisation', label=_('Organisation'), options=test_options, selected=data.organisation, error=errors.organisation, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
+                        {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=test_options, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        {{ form.input('date', id='field_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.date, error=errors.date, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                        tODO: Add date
+                        {{ form.select('location', id='field_location', label=_('Location'), options=test_options, selected=data.location, error=errors.location, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
+                        {{ form.select('methodology', id='field_methodology', label=_('Methodology'), options=test_options, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        {{ form.select('update', id='field_update', label=_('Update frequency (?)'), options=test_options, selected=data.update, error=errors.update, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        {{ form.textarea('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+                        {{ form.select('tag', id='field_tag', label=_('Tags'), options=test_options, selected=data.tag, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="paddingRowHack background-white">
+        <div class="paddingLeftHack paddingRightHack">
+            <div class="pTopBottom35">
+                <input type="button" class="btn btn-danger btn-lg" value="Delete this entry"/>
+                <input type="button" class="btn btn-primary btn-lg pull-right" value="Submit"/>
+                <input type="button" class="btn btn-inverse btn-lg pull-right" value="See preview"/>
+            </div>
+        </div>
+    </div>
+
+
+</div>
 {% endblock %}

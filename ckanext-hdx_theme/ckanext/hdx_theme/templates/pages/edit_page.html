@@ -3,23 +3,25 @@
 
 {% block secondary %}{% endblock %}
 {% block toolbar %}
-<div class="cp-breadcrumb paddingRowHack">
-    <ol class="breadcrumb paddingLeftHack paddingRightHack">
-        <li class="active">
-            <div class="circle pull-left">1</div> Create custom page - <span class="small">Please fill out all required fields</span>
-        </li>
-        <li>
-            <div class="circle pull-left">2</div> Review and Submit
-        </li>
-    </ol>
+<div class="hdx-form">
+    <div class="hdx-form-breadcrumb paddingRowHack">
+        <ol class="breadcrumb paddingLeftHack paddingRightHack">
+            <li class="active">
+                <div class="circle pull-left">1</div> Create custom page - <span class="small">Please fill out all required fields</span>
+            </li>
+            <li>
+                <div class="circle pull-left">2</div> Review and Submit
+            </li>
+        </ol>
+    </div>
 </div>
 {% endblock %}
 {% block primary %}
-    <div id="section_container" data-module="hdx_custom_pages">
+<div id="section_container" data-module="hdx_custom_pages">
     <form id="create_page_form" class="cp-form hdx-form" method="post" enctype="multipart/form-data" data-module="basic-form">
-        <div class="paddingRowHack cp-content-background pTopBottom35">
+        <div class="paddingRowHack background-gray pTopBottom35">
             <div class="paddingLeftHack paddingRightHack">
-                <div class="row">
+                <div class="row form-section">
                     <div class="col-xs-3">
                         <h3>How this page works</h3>
                         <p> You can use this form to create a custom page for different sections of the site (such as crisis page)</p>
@@ -53,14 +55,14 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <hr class="cp-hr"/>
+                        <hr class="form-hr"/>
                     </div>
                 </div>
-                <div class="row mTop15 form-horizontal">
+                <div class="row mTop15 form-horizontal form-section">
                     <div class="col-xs-3">
                         <h3>Design a page in section</h3>
                         <p> Custom page can be designed in section. Each section can display map, key figures, interactive data, data list or custom content (with your own header) by selecting section content type and entering corresponding fields.</p>
-                        <div class="cp-sample-text">Sample page - reference only</div>
+                        <div class="sample-text">Sample page - reference only</div>
                         <img style="width: 100%;" src="/images/new-page-section-sample.png" />
                     </div>
                     <div class="col-xs-9">
@@ -89,7 +91,7 @@
                                     </div>
                                     <div class="row mTop20">
                                         <div class="col-xs-12">
-                                            <hr class="cp-hr"/>
+                                            <hr class="form-hr"/>
                                         </div>
                                     </div>
                                 </div>
@@ -136,7 +138,7 @@
         </div>
         <div class="row mTop10">
             <div class="col-xs-12">
-                <hr class="cp-hr"/>
+                <hr class="form-hr"/>
             </div>
         </div>
     </div>
