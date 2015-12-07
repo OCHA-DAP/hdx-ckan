@@ -1,9 +1,11 @@
 import json
+import uuid
 
 import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
 import ckan.lib.navl.dictization_functions as dict_fns
+import ckan.lib.helpers as h
 
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
@@ -59,9 +61,11 @@ class ContributeFlowController(base.BaseController):
 
             dataset_id = data_dict.get('id')
 
+            pkg_dict = {}
             if dataset_id:
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:
+                self._autofill_mandatory_fields(data_dict)
                 pkg_dict = logic.get_action('package_create')(context, data_dict)
 
             return (pkg_dict, {}, {})
@@ -86,12 +90,37 @@ class ContributeFlowController(base.BaseController):
 
     def _autofill_mandatory_fields(self, data_dict):
         '''
+        Adds to the data_dict the missing mandatory fields
 
-        :param data_dict: dictionary with parameters coming from
-        :type data_dict:
-        :return:
-        :rtype:
+        :param data_dict: dictionary with request parameters
+        :type data_dict: dict
         '''
+
+        if 'private' not in data_dict:
+            data_dict['private'] = 'False'
+
+        if 'name' not in data_dict:
+            random_string = str(uuid.uuid4()).replace('-', '')
+            user = c.user or c.author
+            name = '{}_{}'.format(user, random_string)
+            data_dict['name'] = name
+
+        if 'license' not in data_dict:
+            data_dict['license'] = 'cc-by'
+
+        if 'notes' not in data_dict:
+            data_dict['notes'] = ''
+
+        org_id = data_dict.get('owner_org')
+        source = data_dict.get('dataset_source')
+        if not org_id or not source:
+            orgs = h.organizations_available('create_dataset')
+            if len(orgs) == 0:
+                abort(404, _('The user needs to belong to at least 1 organisation'))
+            else:
+                org = orgs[1]
+                data_dict['owner_org'] = org_id if org_id else org.get('id')
+                data_dict['dataset_source'] = source if source else org.get('title')
 
     def _find_user_organization(self):
         pass
