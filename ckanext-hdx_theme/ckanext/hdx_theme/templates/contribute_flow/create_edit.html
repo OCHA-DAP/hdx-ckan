@@ -17,7 +17,7 @@
     </div>
     <div class="paddingRowHack background-gray">
         <div class="paddingLeftHack paddingRightHack">
-            <form>
+             <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
                 <div class="row form-section">
                     <div class="col-xs-3">
                         <h3>Your files</h3>
@@ -247,9 +247,18 @@
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
                     <div class="col-xs-9">
-                        {{ form.input('title', id='field_title', label=_('Title of the dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
-                        {{ form.markdown('description', id='field_description', label=_('Description (optional)'), placeholder=_('Description of dataset'), value=data.description, error=errors.description, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                        TODO: Add two checkboxes here
+                        {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
+
+                        {% set prefix = h.url_for(controller='package', action='read', id='') %}
+                        {% set domain = h.url_for(controller='package', action='read', id='', qualified=true) %}
+                        {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+                        {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
+                        {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
+
+                        {{ form.markdown('notes', id='field_notes', label=_('Description (optional)'), placeholder=_('Description of dataset'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+
+                        {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational, error=errors.subnational, classes=['form-group'], attrs={}) }}
+                        {{ form.checkbox('quality', id='field_quality', label=_('Dataset\'s quality has been confirmed'), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}) }}
                     </div>
                 </div>
                 <div class="row">
@@ -263,13 +272,32 @@
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
                     <div class="col-xs-9">
-                        {{ form.input('source', id='field_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.source, error=errors.source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
-                        {{ form.select('organisation', id='field_organisation', label=_('Organisation'), options=test_options, selected=data.organisation, error=errors.organisation, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
-                        {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=test_options, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
-                        {{ form.input('date', id='field_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.date, error=errors.date, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                        {{ form.input('dataset_source', id='field_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.source, error=errors.source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+
+                        {% set organisations = h.hdx_organisation_list() %}
+                        {{ form.select('organisation', id='field_organisation', label=_('Organisation'), options=organisations, selected=data.organisation, error=errors.organisation, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
+
+                        {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=maintainers, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
+
+                        {{ form.input('dataset_date', id='field_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
                         tODO: Add date
-                        {{ form.select('location', id='field_location', label=_('Location'), options=test_options, selected=data.location, error=errors.location, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
-                        {{ form.select('methodology', id='field_methodology', label=_('Methodology'), options=test_options, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
+
+                        {% set locations = h.hdx_location_list() %}
+                        {{ form.select('location', id='field_location', label=_('Location'), options=locations, selected=data.location, error=errors.location, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
+
+
+                        {% set licenses = h.hdx_license_list() %}
+                        {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        <div id="license-other-define" {% if data.license_id != 'Other' %}style="display:none;"{% endif %}>
+                            {{ form.markdown('license_other', id='field_license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+                        </div>
+
+                        {% set methodologies = h.hdx_methodology_list() %}
+                        {{ form.select('methodology', id='field_methodology', label=_('Methodology'), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        <div id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
+                            {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+                        </div>
+
                         {{ form.select('update', id='field_update', label=_('Update frequency (?)'), options=test_options, selected=data.update, error=errors.update, classes=['form-group'], attrs={'class':'form-control'}) }}
                         {{ form.textarea('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                         {{ form.select('tag', id='field_tag', label=_('Tags'), options=test_options, selected=data.tag, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
@@ -291,4 +319,8 @@
 
 
 </div>
+{% endblock %}
+
+{% block scripts2 %}
+    {{ super() }}
 {% endblock %}
