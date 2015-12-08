@@ -279,8 +279,15 @@
 
                         {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=maintainers, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
 
-                        {{ form.input('dataset_date', id='field_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
-                        tODO: Add date
+
+                        {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
+                        'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
+                        'data-module-alt_field_id': 'field-dataset_date',
+                        'data-module-original_value': '{{ data.dataset_date }}', 'class':'form-control' } %}
+                        {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Date of Dataset'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
+                        <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+
+
 
                         {% set locations = h.hdx_location_list() %}
                         {{ form.select('location', id='field_location', label=_('Location'), options=locations, selected=data.location, error=errors.location, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
@@ -333,5 +340,7 @@
 
 {% block scripts2 %}
     {{ super() }}
+    {% resource 'hdx_theme/jquery.ui.datepicker.js' %}
+    {% resource 'hdx_theme/hdx-datepicker.js' %}
     {% resource 'hdx_theme/hdx_autocomplete.js' %}
 {% endblock %}
