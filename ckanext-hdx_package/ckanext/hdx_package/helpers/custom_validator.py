@@ -6,12 +6,10 @@ Created on Apr 11, 2014
 
 import logging
 import ckan.lib.navl.dictization_functions as df
-import urlparse
-import os
 
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
-from ckan.common import _
+from ckan.common import _, c
 
 missing = df.missing
 StopOnError = df.StopOnError
@@ -63,3 +61,14 @@ def detect_format(key, data, errors, context):
         raise df.Invalid(_('No format provided and none could be automatically deduced'))
 
     return current_format
+
+
+def find_package_creator(key, data, errors, context):
+    current_creator = data.get(key)
+    if not current_creator:
+        user = c.user or c.author
+        if user:
+            data[key] = user
+            current_creator = user
+
+    return current_creator
