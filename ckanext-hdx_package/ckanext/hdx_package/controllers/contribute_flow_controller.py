@@ -159,15 +159,25 @@ class ContributeFlowController(base.BaseController):
             data_dict['notes'] = ''
 
         org_id = data_dict.get('owner_org')
-        source = data_dict.get('dataset_source')
-        if not org_id or not source:
+        selected_org = None
+        if not org_id:
             orgs = h.organizations_available('create_dataset')
             if len(orgs) == 0:
                 raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
             else:
-                org = orgs[1]
-                data_dict['owner_org'] = org_id if org_id else org.get('id')
-                data_dict['dataset_source'] = source if source else org.get('title')
+                selected_org = orgs[1]
+                org_id = selected_org.get('id')
+                data_dict['owner_org'] = org_id
+
+        source = data_dict.get('dataset_source')
+        if not source:
+            if selected_org:
+                source = selected_org.get('title')
+            else:
+                context = {'user': c.user}
+                selected_org = logic.get_action('organization_show')(context, {'id': org_id, 'include_datasets': False})
+                source = selected_org.get('title')
+            data_dict['dataset_source'] = source
 
 
 class NoOrganization(logic.ActionError):

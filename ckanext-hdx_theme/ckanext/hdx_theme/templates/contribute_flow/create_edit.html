@@ -7,7 +7,7 @@
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
 
 {% block page %}
-<div class="hdx-form container">
+<div class="hdx-form container" data-module="contribute_flow_main">
     <div class="hdx-form-breadcrumb paddingRowHack">
         <ol class="breadcrumb paddingLeftHack paddingRightHack">
             <li class="active">
@@ -258,7 +258,7 @@
                         {{ form.markdown('notes', id='field_notes', label=_('Description (optional)'), placeholder=_('Description of dataset'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
 
                         {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational, error=errors.subnational, classes=['form-group'], attrs={}) }}
-                        {{ form.checkbox('quality', id='field_quality', label=_('Dataset\'s quality has been confirmed'), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}) }}
+                        {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}) }}
                     </div>
                 </div>
                 <div class="row">
@@ -275,7 +275,7 @@
                         {{ form.input('dataset_source', id='field_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.source, error=errors.source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
 
                         {% set organisations = h.hdx_organisation_list() %}
-                        {{ form.select('organisation', id='field_organisation', label=_('Organisation'), options=organisations, selected=data.organisation, error=errors.organisation, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
+                        {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
 
                         {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=maintainers, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
 
@@ -343,4 +343,5 @@
     {% resource 'hdx_theme/jquery.ui.datepicker.js' %}
     {% resource 'hdx_theme/hdx-datepicker.js' %}
     {% resource 'hdx_theme/hdx_autocomplete.js' %}
+    {% resource 'hdx_theme/contribute-flow' %}
 {% endblock %}
