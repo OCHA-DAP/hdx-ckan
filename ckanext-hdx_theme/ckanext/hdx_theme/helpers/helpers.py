@@ -607,3 +607,12 @@ def hdx_organisation_list():
     orgs = h.organizations_available('create_dataset')
     orgs_dict_list = [{'value': org.get('id'), 'text': org.get('title')} for org in orgs]
     return orgs_dict_list
+
+
+def hdx_tag_list():
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        tags = logic.get_action('tag_list')(context, {})
+        tags_dict_list = [{'value': tag, 'text': tag} for tag in tags]
+        return tags_dict_list
+    return []

@@ -223,13 +223,13 @@
                             <label class="control-label">This dataset is</label>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name=privacy" value="private" />
+                                    <input type="radio" name="private" value="true" {% if "true" == data.private %}selected="selected"{% endif %} />
                                     <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input type="radio" name=privacy" value="public" />
+                                    <input type="radio" name="private" value="false" {% if "false" == data.private %}selected="selected"{% endif %}/>
                                     <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                 </label>
                             </div>
@@ -300,27 +300,38 @@
 
                         {{ form.select('update', id='field_update', label=_('Update frequency (?)'), options=test_options, selected=data.update, error=errors.update, classes=['form-group'], attrs={'class':'form-control'}) }}
                         {{ form.textarea('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                        {{ form.select('tag', id='field_tag', label=_('Tags'), options=test_options, selected=data.tag, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
 
+                        {# replaced with ajax one below
+                            {% set tags = h.hdx_tag_list() %}
+                            {{ form.select('tag_string', id='field_tags', label=_('Tags'), options=tags, selected=data.tag_string, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
+                        #}
+
+                        {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
+                          'class':'form-control choices-orange', 'multiple':'true',
+                          'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
+                        {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
+
+                        TODO author, author_email, maintainer_email as hidden ?
                     </div>
                 </div>
-            </form>
+
         </div>
     </div>
     <div class="paddingRowHack background-white">
         <div class="paddingLeftHack paddingRightHack">
             <div class="pTopBottom35">
                 <input type="button" class="btn btn-danger btn-lg" value="Delete this entry"/>
-                <input type="button" class="btn btn-primary btn-lg pull-right" value="Submit"/>
+                <input type="submit" class="btn btn-primary btn-lg pull-right" value="Submit"/>
                 <input type="button" class="btn btn-inverse btn-lg pull-right" value="See preview"/>
             </div>
         </div>
     </div>
-
+</form>
 
 </div>
 {% endblock %}
 
 {% block scripts2 %}
     {{ super() }}
+    {% resource 'hdx_theme/hdx_autocomplete.js' %}
 {% endblock %}

@@ -203,6 +203,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_license_list': hdx_helpers.hdx_license_list,
             'hdx_location_list': hdx_helpers.hdx_location_list,
             'hdx_organisation_list': hdx_helpers.hdx_organisation_list,
+            'hdx_tag_list': hdx_helpers.hdx_tag_list,
+
         }
 
     def get_actions(self):
