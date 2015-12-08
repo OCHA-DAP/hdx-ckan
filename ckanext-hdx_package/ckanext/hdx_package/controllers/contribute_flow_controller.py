@@ -152,8 +152,8 @@ class ContributeFlowController(base.BaseController):
             name = '{}_{}'.format(user, random_string)
             data_dict['name'] = name
 
-        if 'license' not in data_dict:
-            data_dict['license'] = 'cc-by'
+        if 'license_id' not in data_dict:
+            data_dict['license_id'] = 'cc-by'
 
         if 'notes' not in data_dict:
             data_dict['notes'] = ''
