@@ -14,6 +14,9 @@ ckan.module('contribute_flow_main', function($, _) {
                                     contributeGlobal._datasetId = data.data.id;
                                     deferred.resolve(data.data.id);
                                 }
+                                else {
+                                    deferred.resolve(null);
+                                }
                             }
                         );
                     }
