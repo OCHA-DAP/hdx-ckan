@@ -5,6 +5,7 @@ ckan.module('contribute_flow_main', function($, _) {
 		initialize : function() {
             var formId = this.options.form_id;
             var dataset_id = this.options.dataset_id;
+            var request_url = this.options.request_url;
             var contributeGlobal = {
                 'getDatasetIdPromise': function() {
                     var deferred = new $.Deferred();
@@ -16,7 +17,7 @@ ckan.module('contribute_flow_main', function($, _) {
                             deferred.resolve(this._datasetId);
                         }
                         else {  // We're in the "new" mode and we need to create the initial dataseet
-                            var promise = $.post('/contribute/new', this.getFormValues());
+                            var promise = $.post(request_url, this.getFormValues('generate-dataset-id-json'));
                             $.when(promise).done(function (data, status, xhr) {
                                     if (data.data && data.data.id) {
                                         contributeGlobal._datasetId = data.data.id;
@@ -34,12 +35,16 @@ ckan.module('contribute_flow_main', function($, _) {
                     }
                     return deferred.promise();
                 },
-                'getFormValues': function() {
+                'saveDatasetForm': function() {
+                    var promise = $.post(request_url, this.getFormValues('update-dataset-json'));
+                    return promise;
+                },
+                'getFormValues': function(save_mode) {
                     var formSelector = "#" + formId;
                     var modifiedFormDataArray = [
                         {
                             'name':'save',
-                            'value': 'generate-dataset-id-json'
+                            'value': save_mode
                         }
                     ];
                     var formDataArray = $("#create_dataset_form").serializeArray();
@@ -57,6 +62,7 @@ ckan.module('contribute_flow_main', function($, _) {
         },
         options: {
             form_id: 'create_dataset_form',
+            request_url: '/contribute/new',
             dataset_id: null
         }
 
