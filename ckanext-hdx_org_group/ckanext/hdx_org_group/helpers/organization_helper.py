@@ -108,7 +108,8 @@ def get_viz_title_from_extras(org_dict):
     try:
         for item in org_dict.get('extras'):
             if item.get('key') == 'visualization_config':
-                return json.loads(item.get('value')).get('viz-title')
+                result = json.loads(item.get('value')).get('vis-title') or json.loads(item.get('value')).get('viz-title')
+                return result
     except:
         return None
     return None
@@ -652,7 +653,6 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
 
     log.debug('Created object %s' % group.name)
     return model_dictize.group_dictize(group, context)
-
 
 
 def recompile_everything(context):
