@@ -17,8 +17,10 @@ ckan.module('contribute_flow_main', function($, _) {
                             deferred.resolve(this._datasetId);
                         }
                         else {  // We're in the "new" mode and we need to create the initial dataseet
-                            var promise = $.post(request_url, this.getFormValues('generate-dataset-id-json'));
-                            $.when(promise).done(function (data, status, xhr) {
+                            var formDataArray = this.getFormValues('generate-dataset-id-json');
+                            var promise = $.post(request_url, $.param(formDataArray));
+                            $.when(promise).done(
+                                function (data, status, xhr) {
                                     if (data.data && data.data.id) {
                                         contributeGlobal._datasetId = data.data.id;
                                         deferred.resolve(data.data.id);
@@ -36,8 +38,21 @@ ckan.module('contribute_flow_main', function($, _) {
                     return deferred.promise();
                 },
                 'saveDatasetForm': function() {
-                    var promise = $.post(request_url, this.getFormValues('update-dataset-json'));
-                    return promise;
+                    var formDataArray = this.getFormValues('update-dataset-json');
+                    var datasetIdPromise = this.getDatasetIdPromise();
+                    var deferred = new $.Deferred();
+                    $.when(datasetIdPromise).done(
+                        function(datasetId){
+                            formDataArray.push({'name':'id', 'value': datasetId});
+                            $.post(request_url, formDataArray,
+                                function(data, status, xhr) {
+                                    deferred.resolve(data, status, xhr);
+                                }
+                            );
+                        }
+                    );
+
+                    return deferred.promise();
                 },
                 'getFormValues': function(save_mode) {
                     var formSelector = "#" + formId;
@@ -54,7 +69,7 @@ ckan.module('contribute_flow_main', function($, _) {
                             modifiedFormDataArray.push(item);
                         }
                     }
-                    return $.param(modifiedFormDataArray);
+                    return modifiedFormDataArray;
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;
