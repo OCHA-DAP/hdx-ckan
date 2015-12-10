@@ -27,7 +27,12 @@
                     </div>
                     <div class="col-xs-9">
 
-                        {{ form.errors(error_summary) }}
+                        <div id="hdx_error" class="error-explanation alert alert-error hdx-visible-element">
+                            <p>{{ _('The form contains invalid entries:') }}</p>
+                            <ul>
+                              <li data-field-label="type of error">type of error: error</li>
+                            </ul>
+                        </div>
 
                         <div class="label-title-style mBottom10"><span>#</span> Resources <small>(drag and drop to sort)</small></div>
 
