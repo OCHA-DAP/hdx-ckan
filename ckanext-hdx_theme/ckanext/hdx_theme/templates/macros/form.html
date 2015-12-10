@@ -266,7 +266,7 @@ Example:
     {% endif %}
     <div class="controls{{ " " ~ control_classes | join(' ') }}">
       {{ caller() }}
-      {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
+      <span class="error-block">{% if error and error is iterable %}{{ error|join(', ') }}{% endif %}</span>
       {{ extra_html }}
     </div>
   </div>

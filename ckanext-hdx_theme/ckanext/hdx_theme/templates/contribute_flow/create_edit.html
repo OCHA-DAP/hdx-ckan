@@ -2,20 +2,22 @@
 
 {% import 'macros/form.html' as form %}
 
-{% set data = {'maintainer':'test2'} %}
+{% set data = data if data else h.generate_mandatory_fields()  %}
 {% set errors = {} %}
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
 
+{% block bodytag %} class="contribute-body" {% endblock %}
+
 {% block page %}
-<div class="hdx-form container" data-module="contribute_flow_main">
-    <div class="hdx-form-breadcrumb paddingRowHack">
+<div class="hdx-form container-fluid" data-module="contribute_flow_main">
+    <div class="hdx-form-breadcrumb row paddingRowHack">
         <ol class="breadcrumb paddingLeftHack paddingRightHack">
             <li class="active">
                 Add Details - <span class="small">Please fill out all required fields</span>
             </li>
         </ol>
     </div>
-    <div class="paddingRowHack background-gray">
+    <div class="row paddingRowHack background-gray">
         <div class="paddingLeftHack paddingRightHack">
              <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
                 <div class="row form-section">
@@ -23,7 +25,16 @@
                         <h3>Your files</h3>
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
+
                     <div class="col-xs-9" id="resource-app">
+
+                        <div id="hdx_error" class="error-explanation alert alert-error hdx-visible-element">
+                            <p>{{ _('The form contains invalid entries:') }}</p>
+                            <ul>
+                              <li data-field-label="type of error">type of error: error</li>
+                            </ul>
+                        </div>
+
                         <div class="label-title-style mBottom10"><span>#</span> Resources <small>(drag and drop to sort)</small></div>
 
                         <script type="text/template" id="resource-item-tmpl">
@@ -191,6 +202,7 @@
 <!--                         <div class="drag-drop-component">
                             <div class="row">
                                 <div class="col-xs-12">
+
                                     <div class="row">
                                         <div class="col-xs-12">
                                             Resource ##
@@ -434,12 +446,14 @@
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
                     <div class="col-xs-9">
-                        {{ form.input('dataset_source', id='field_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.source, error=errors.source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                        {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
 
                         {% set organisations = h.hdx_organisation_list() %}
                         {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
 
-                        {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=maintainers, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
+                        'data-module-source': '/api/2/util/user/autocomplete?q=?', 'class':'form-control' } %}
+                        {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
 
 
                         {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
@@ -486,7 +500,7 @@
 
         </div>
     </div>
-    <div class="paddingRowHack background-white">
+    <div class="row paddingRowHack background-white">
         <div class="paddingLeftHack paddingRightHack">
             <div class="pTopBottom35">
                 <input type="button" class="btn btn-danger btn-lg" value="Delete this entry"/>
@@ -502,8 +516,5 @@
 
 {% block scripts2 %}
     {{ super() }}
-    {% resource 'hdx_theme/jquery.ui.datepicker.js' %}
-    {% resource 'hdx_theme/hdx-datepicker.js' %}
-    {% resource 'hdx_theme/hdx_autocomplete.js' %}
     {% resource 'hdx_theme/contribute-flow' %}
 {% endblock %}

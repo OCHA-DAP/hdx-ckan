@@ -406,6 +406,11 @@ h4 small {
     }
 
     .paddingRowHack{
+        &.row {
+          margin-left: -@gutterSmallSize;
+          margin-right: -@gutterSmallSize;
+        }
+
         margin-left: -@containerMarginSize;
         margin-right: -@containerMarginSize;
     }

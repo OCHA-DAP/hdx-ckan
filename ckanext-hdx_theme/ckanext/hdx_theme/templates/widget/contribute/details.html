@@ -1,0 +1,18 @@
+{#
+Shows the details popup
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/contribute/details.html', id="detailsPopup") }}
+#}
+{% resource 'hdx_theme/popup' %}
+{% resource 'hdx_theme/contribute' %}
+{% extends "widget/popup/popup.html" %}
+{% set class = "popup-contribute" %}
+
+{% block all_content %}
+<div class="details-content">
+</div>
+{% endblock %}

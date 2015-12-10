@@ -1,0 +1,21 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+
+
+.popup.popup-contribute{
+  .content {
+    //min-width: @containerRealSize*0.9;
+    width: 90%;
+    max-width: @containerSize;
+    height: 90%;
+    .details-content{
+      height: 100%;
+      iframe {
+        border: none;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+}
