@@ -1,13 +1,14 @@
 import re
+import uuid
+
+import json
+import logging
+
 import ckan.lib.helpers as h
-from ckan.common import (
-    c, request
-)
 import ckan.model as model
 import ckan.lib.base as base
 import ckan.logic as logic
-import json
-import logging
+
 import ckan.plugins.toolkit as tk
 import ckan.new_authz as new_authz
 import ckan.lib.activity_streams as activity_streams
@@ -17,11 +18,10 @@ import ckan.lib.plugins as lib_plugins
 import ckan.lib.dictization.model_save as model_save
 import ckan.plugins as plugins
 
-from ckan.logic.action.create import _validate
 
 from ckan.common import _, c, request, response
+from ckanext.hdx_package.exceptions import NoOrganization
 
-from ckan.lib import formatters
 
 get_action = logic.get_action
 log = logging.getLogger(__name__)
@@ -542,3 +542,33 @@ def filesize_format(size_in_bytes):
     except Exception, e:
         log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
         return size_in_bytes
+
+
+def generate_mandatory_fields():
+    '''
+
+    :return: dataset dict with mandatory fields filled
+    :rtype: dict
+    '''
+
+    user = c.user or c.author
+
+    random_string = str(uuid.uuid4()).replace('-', '')
+    dataset_name = '{}_{}'.format(user, random_string)
+
+    selected_org = None
+    orgs = h.organizations_available('create_dataset')
+    if len(orgs) == 0:
+        raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
+    else:
+        selected_org = orgs[1]
+
+    data_dict = {
+        'private': True,
+        'name': dataset_name,
+        'title': dataset_name,
+        'license_id': 'cc-by',
+        'owner_org': selected_org.get('id'),
+        'dataset_source': selected_org.get('title'),
+    }
+    return data_dict

@@ -2,7 +2,7 @@
 
 {% import 'macros/form.html' as form %}
 
-{# set data = {'maintainer':'test2'} #}
+{% set data = data if data else h.generate_mandatory_fields()  %}
 {% set errors = {} %}
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
 
@@ -284,7 +284,7 @@
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
                     <div class="col-xs-9">
-                        {{ form.input('dataset_source', id='field_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.source, error=errors.source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                        {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
 
                         {% set organisations = h.hdx_organisation_list() %}
                         {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}

@@ -10,6 +10,7 @@ import ckan.lib.helpers as h
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
 from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_package.exceptions import NoOrganization
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -124,7 +125,6 @@ class ContributeFlowController(base.BaseController):
             if dataset_id:
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:
-                self._autofill_mandatory_fields(data_dict)
                 pkg_dict = logic.get_action('package_create')(context, data_dict)
 
             return (pkg_dict, {}, {})
@@ -135,50 +135,45 @@ class ContributeFlowController(base.BaseController):
 
             return data_dict, errors, error_summary
 
-    def _autofill_mandatory_fields(self, data_dict):
-        '''
-        Adds to the data_dict the missing mandatory fields
-
-        :param data_dict: dictionary with request parameters
-        :type data_dict: dict
-        '''
-
-        if 'private' not in data_dict:
-            data_dict['private'] = 'True'
-
-        if 'name' not in data_dict:
-            random_string = str(uuid.uuid4()).replace('-', '')
-            user = c.user or c.author
-            name = '{}_{}'.format(user, random_string)
-            data_dict['name'] = name
-
-        if 'license_id' not in data_dict:
-            data_dict['license_id'] = 'cc-by'
-
-        if 'notes' not in data_dict:
-            data_dict['notes'] = ''
-
-        org_id = data_dict.get('owner_org')
-        selected_org = None
-        if not org_id:
-            orgs = h.organizations_available('create_dataset')
-            if len(orgs) == 0:
-                raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
-            else:
-                selected_org = orgs[1]
-                org_id = selected_org.get('id')
-                data_dict['owner_org'] = org_id
-
-        source = data_dict.get('dataset_source')
-        if not source:
-            if selected_org:
-                source = selected_org.get('title')
-            else:
-                context = {'user': c.user}
-                selected_org = logic.get_action('organization_show')(context, {'id': org_id, 'include_datasets': False})
-                source = selected_org.get('title')
-            data_dict['dataset_source'] = source
+    # def _autofill_mandatory_fields(self, data_dict):
+    #     '''
+    #     Adds to the data_dict the missing mandatory fields
+    #
+    #     :param data_dict: dictionary with request parameters
+    #     :type data_dict: dict
+    #     '''
+    #
+    #     if 'private' not in data_dict:
+    #         data_dict['private'] = 'True'
+    #
+    #     if 'name' not in data_dict:
+    #         random_string = str(uuid.uuid4()).replace('-', '')
+    #         user = c.user or c.author
+    #         name = '{}_{}'.format(user, random_string)
+    #         data_dict['name'] = name
+    #
+    #     if 'license_id' not in data_dict:
+    #         data_dict['license_id'] = 'cc-by'
+    #
+    #     org_id = data_dict.get('owner_org')
+    #     selected_org = None
+    #     if not org_id:
+    #         orgs = h.organizations_available('create_dataset')
+    #         if len(orgs) == 0:
+    #             raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
+    #         else:
+    #             selected_org = orgs[1]
+    #             org_id = selected_org.get('id')
+    #             data_dict['owner_org'] = org_id
+    #
+    #     source = data_dict.get('dataset_source')
+    #     if not source:
+    #         if selected_org:
+    #             source = selected_org.get('title')
+    #         else:
+    #             context = {'user': c.user}
+    #             selected_org = logic.get_action('organization_show')(context, {'id': org_id, 'include_datasets': False})
+    #             source = selected_org.get('title')
+    #         data_dict['dataset_source'] = source
 
 
-class NoOrganization(logic.ActionError):
-    pass
