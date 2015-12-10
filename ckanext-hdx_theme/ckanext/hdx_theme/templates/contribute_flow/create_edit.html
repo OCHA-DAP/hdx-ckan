@@ -6,16 +6,18 @@
 {% set errors = {} %}
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
 
+{% block bodytag %} class="contribute-body" {% endblock %}
+
 {% block page %}
-<div class="hdx-form container" data-module="contribute_flow_main">
-    <div class="hdx-form-breadcrumb paddingRowHack">
+<div class="hdx-form container-fluid" data-module="contribute_flow_main">
+    <div class="hdx-form-breadcrumb row paddingRowHack">
         <ol class="breadcrumb paddingLeftHack paddingRightHack">
             <li class="active">
                 Add Details - <span class="small">Please fill out all required fields</span>
             </li>
         </ol>
     </div>
-    <div class="paddingRowHack background-gray">
+    <div class="row paddingRowHack background-gray">
         <div class="paddingLeftHack paddingRightHack">
              <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
                 <div class="row form-section">
@@ -330,7 +332,7 @@
 
         </div>
     </div>
-    <div class="paddingRowHack background-white">
+    <div class="row paddingRowHack background-white">
         <div class="paddingLeftHack paddingRightHack">
             <div class="pTopBottom35">
                 <input type="button" class="btn btn-danger btn-lg" value="Delete this entry"/>

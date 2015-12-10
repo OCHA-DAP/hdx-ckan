@@ -6,6 +6,9 @@
   display: table-cell;
   vertical-align: middle;
 }
+body.contribute-body {
+  min-width: 100%;
+}
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }

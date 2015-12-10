@@ -139,7 +139,8 @@
           </span>
           <span class="table-valign pull-right" style="margin-left: 20px;">
             <span class="table-valign-content">
-              <a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">
+              <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}">
+              <!--<a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">-->
                 <div class="submitData">
                   {{ _("Add data") }}
                   <!--<img src="/images/homepage/attachment.svg" style="height: 21px; margin-left: 20px;" />-->

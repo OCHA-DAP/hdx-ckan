@@ -1353,6 +1353,9 @@ textarea {
   display: none;
 }
 /* END List header */
+body.contribute-body {
+  min-width: 100%;
+}
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }
@@ -1962,6 +1965,10 @@ h4 small {
 .paddingRowHack {
   margin-left: -45px;
   margin-right: -45px;
+}
+.paddingRowHack.row {
+  margin-left: -15px;
+  margin-right: -15px;
 }
 .paddingRowHack .paddingLeftHack {
   padding-left: 45px;
