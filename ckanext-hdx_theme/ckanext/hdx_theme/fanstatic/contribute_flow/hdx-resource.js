@@ -200,5 +200,5 @@ $(function($){
     });
 
     var sandbox = ckan.sandbox();
-    window.app = new AppView({sandbox: sandbox});
+    var app = new AppView({sandbox: sandbox});
 }($));
