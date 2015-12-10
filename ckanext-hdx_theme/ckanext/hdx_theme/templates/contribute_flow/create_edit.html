@@ -23,10 +23,172 @@
                         <h3>Your files</h3>
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
-                    <div class="col-xs-9">
+                    <div class="col-xs-9" id="resource-app">
                         <div class="label-title-style mBottom10"><span>#</span> Resources <small>(drag and drop to sort)</small></div>
 
-                        <div class="drag-drop-component">
+                        <script type="text/template" id="resource-item-tmpl">
+                            <div class="drag-drop-component">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            Resource <%= position + 1 %>
+                                            <ul class="list-horizontal">
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name="<%= id %>-upload_type" value="public">
+                                                        Upload file
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name="<%= id %>-upload_type" value="public">
+                                                        Upload file2
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Dropbox
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Google Drive
+                                                </li>
+                                                <li>
+                                                    <button type="button" class="update_resource">Update</button>
+                                                </li>
+                                            </ul>
+
+                                            <span class="pull-right">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                  <div class="control-group form-group control-full">
+                                                    <div class="controls ">
+                                                    <input id="<%= id %>-field-url" type="text" name="url" value="<%= url %>" placeholder="eg. http://example.com/population-jan-2011.json" class="form-control">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                  <div class="control-group form-group required">
+                                                    <div class="controls ">
+                                                    <input id="<%= id %>-field_name" type="text" name="name" value="<%= name %>" placeholder="File name" class="form-control">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                {{ form.select('type', id='field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                  <div class="control-group form-group control-full">
+                                                    <div class="controls ">
+                                                    <textarea id="<%= id %>-field_notes" name="notes" cols="20" rows="5" placeholder="Add note" style="height: 68px;" class="form-control"><%= description %></textarea>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="drag-drop-area">Drop file to overwrite or <a>Browse</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </script>
+
+                        <div id="resource-list"></div>
+
+                        <div id="resource-create">
+                         <div class="drag-drop-component">
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            New Resource
+                                            <ul class="list-horizontal">
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name="new-upload_type" value="public">
+                                                        Upload file
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <label>
+                                                        <input type="radio" name="new-upload_type" value="public">
+                                                        Upload file2
+                                                    </label>
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Dropbox
+                                                </li>
+                                                <li>
+                                                    <i class="glyphicon glyphicon-collapse-down"></i>
+                                                    Google Drive
+                                                </li>
+                                                <li>
+                                                    <button id="create_resource" type="button">Create</button>
+                                                </li>
+                                            </ul>
+
+                                            <span class="pull-right">
+                                                <i class="glyphicon glyphicon-trash"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                  <div class="control-group form-group control-full">
+                                                    <div class="controls ">
+                                                    <input id="new-field_url" type="text" name="url" value="" placeholder="eg. http://example.com/population-jan-2011.json" class="form-control">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-8">
+                                                  <div class="control-group form-group required">
+                                                    <div class="controls ">
+                                                    <input id="new-field_name" type="text" name="name" value="" placeholder="File name" class="form-control">
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                {{ form.select('type', id='new-field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                  <div class="control-group form-group control-full">
+                                                    <div class="controls ">
+                                                    <textarea id="new-field_notes" name="notes" cols="20" rows="5" placeholder="Add note" style="height: 68px;" class="form-control"></textarea>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="drag-drop-area">Drop file to overwrite or <a>Browse</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+<!--                         <div class="drag-drop-component">
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="row">
@@ -201,7 +363,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div>
                             <input type="button" class="btn btn-primary btn-lg" value="Add more resources"/>

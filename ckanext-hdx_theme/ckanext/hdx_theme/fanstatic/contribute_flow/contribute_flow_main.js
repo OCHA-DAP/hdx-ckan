@@ -3,6 +3,7 @@
 ckan.module('contribute_flow_main', function($, _) {
 	return {
 		initialize : function() {
+            var sandbox = this.sandbox;
             var formId = this.options.form_id;
             var dataset_id = this.options.dataset_id;
             var request_url = this.options.request_url;
@@ -73,7 +74,7 @@ ckan.module('contribute_flow_main', function($, _) {
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;
-
+            sandbox.publish('hdx-contribute-global-created', window.hdxContributeGlobal);
         },
         options: {
             form_id: 'create_dataset_form',
