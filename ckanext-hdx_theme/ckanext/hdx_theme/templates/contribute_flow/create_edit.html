@@ -351,3 +351,8 @@
 
 </div>
 {% endblock %}
+
+{% block scripts2 %}
+    {{ super() }}
+    {% resource 'hdx_theme/contribute-flow' %}
+{% endblock %}
