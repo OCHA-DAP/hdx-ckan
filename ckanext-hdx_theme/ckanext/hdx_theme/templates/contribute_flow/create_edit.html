@@ -24,11 +24,15 @@
                         <p> You can add more resources as needed by clicking on "Add more resources"</p>
                     </div>
                     <div class="col-xs-9">
+
+                        {{ form.errors(error_summary) }}
+
                         <div class="label-title-style mBottom10"><span>#</span> Resources <small>(drag and drop to sort)</small></div>
 
                         <div class="drag-drop-component">
                             <div class="row">
                                 <div class="col-xs-12">
+
                                     <div class="row">
                                         <div class="col-xs-12">
                                             Resource ##
@@ -277,7 +281,9 @@
                         {% set organisations = h.hdx_organisation_list() %}
                         {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
 
-                        {{ form.select('maintainer', id='field_maintainer', label=_('Maintainer'), options=maintainers, selected=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs={'class':'form-control'}) }}
+                        {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
+                        'data-module-source': '/api/2/util/user/autocomplete?q=?', 'class':'form-control' } %}
+                        {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
 
 
                         {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
