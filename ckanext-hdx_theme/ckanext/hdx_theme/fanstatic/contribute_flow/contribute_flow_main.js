@@ -74,6 +74,15 @@ ckan.module('contribute_flow_main', function($, _) {
             };
             window.hdxContributeGlobal = contributeGlobal;
 
+            // Submit the form via Ajax
+            $("#" + formId).submit(
+              function(e) {
+                  contributeGlobal.saveDatasetForm();
+                  e.preventDefault();
+              }
+            );
+
+
         },
         options: {
             form_id: 'create_dataset_form',
