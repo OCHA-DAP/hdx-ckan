@@ -49,6 +49,8 @@ class ContributeFlowController(base.BaseController):
                 if id:
                     # show dataset in case of edit
                     dataset_dict = logic.get_action('package_show')(context, {'id': id})
+                    self.process_groups(dataset_dict)
+                    self.process_tags(dataset_dict)
 
         except logic.NotAuthorized, e:
             status_code = 401
@@ -79,6 +81,14 @@ class ContributeFlowController(base.BaseController):
 
         return self._prepare_and_render(save_type=save_type, data=dataset_dict, errors=errors,
                                         error_summary=error_summary)
+
+    def process_groups(self, dataset_dict):
+        if dataset_dict and not dataset_dict.get('locations'):
+            dataset_dict['locations'] = [item.get('id') for item in dataset_dict.get("groups")]
+
+    def process_tags(self, dataset_dict):
+        if dataset_dict and not dataset_dict.get('tag_string'):
+            dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
 
     def _abort(self, save_type, status_code, message):
         if '-json' in save_type:
@@ -116,12 +126,14 @@ class ContributeFlowController(base.BaseController):
 
             data_dict['type'] = package_type
             del data_dict['save']
-
             context['message'] = data_dict.get('log_message', '')
 
             dataset_id = data_dict.get('id')
 
             pkg_dict = {}
+
+            self.process_locations(data_dict)
+
             if dataset_id:
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:
@@ -134,6 +146,13 @@ class ContributeFlowController(base.BaseController):
             error_summary = e.error_summary
 
             return data_dict, errors, error_summary
+
+    def process_locations(self, data_dict):
+        locations = data_dict.get("locations")
+        groups = []
+        for item in locations:
+            groups.append({'id': item})
+        data_dict['groups'] = groups
 
     # def _autofill_mandatory_fields(self, data_dict):
     #     '''

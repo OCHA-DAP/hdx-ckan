@@ -561,7 +561,7 @@ def generate_mandatory_fields():
     if len(orgs) == 0:
         raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
     else:
-        selected_org = orgs[1]
+        selected_org = orgs[0]
 
     data_dict = {
         'private': True,
@@ -570,5 +570,6 @@ def generate_mandatory_fields():
         'license_id': 'cc-by',
         'owner_org': selected_org.get('id'),
         'dataset_source': selected_org.get('title'),
+        'maintainer': user,
     }
     return data_dict

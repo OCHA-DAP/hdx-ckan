@@ -489,13 +489,14 @@
 
 
 
-                                {% set locations = h.hdx_location_list() %}
-                                <div data-module="hdx_form_element_manager" data-module-element_name="location">
-                                {{ form.select('location', id='field_location', label=_('Location'), options=locations, selected=data.location, error=errors.location, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
+                                {% set location_list = h.hdx_location_list() %}
+                                <div data-module="hdx_form_element_manager" data-module-element_name="locations">
+                                {{ form.select('locations', id='field_locations', label=_('Location'), options=location_list, selected=data.locations, error=errors.locations, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
                                 </div>
 
 
                                 {% set licenses = h.hdx_license_list() %}
+
                                 <div data-module="hdx_form_element_manager" data-module-element_name="license_id">
                                     {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
                                 </div>
@@ -528,7 +529,7 @@
                                   'class':'form-control choices-orange', 'multiple':'true',
                                   'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
                                 <div data-module="hdx_form_element_manager" data-module-element_name="tag_string">
-                                {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
+                                {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
                                 </div>
 
                                 TODO author, author_email, maintainer_email as hidden ?
