@@ -6,7 +6,7 @@
 {% set errors = {} %}
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
 
-{% block bodytag %} class="contribute-body" {% endblock %}
+{% block bodytag %} {{ super() }} class="contribute-body" {% endblock %}
 
 {% block page %}
 <div class="hdx-form container-fluid" data-module="contribute_flow_main">
