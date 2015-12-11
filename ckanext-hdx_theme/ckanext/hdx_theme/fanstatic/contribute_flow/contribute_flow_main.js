@@ -5,6 +5,7 @@ ckan.module('contribute_flow_main', function($, _) {
 		initialize : function() {
             var sandbox = this.sandbox;
             var formId = this.options.form_id;
+            var formBodyId = this.options.form_body_id;
             var dataset_id = this.options.dataset_id;
             var request_url = this.options.request_url;
             var contributeGlobal = {
@@ -58,14 +59,14 @@ ckan.module('contribute_flow_main', function($, _) {
                     return deferred.promise();
                 },
                 'getFormValues': function(save_mode) {
-                    var formSelector = "#" + formId;
+                    var formSelector = "#" + formBodyId;
                     var modifiedFormDataArray = [
                         {
                             'name':'save',
                             'value': save_mode
                         }
                     ];
-                    var formDataArray = $("#create_dataset_form").serializeArray();
+                    var formDataArray = $(formSelector).find(':input').serializeArray();
                     for (var i=0; i<formDataArray.length; i++) {
                         var item = formDataArray[i];
                         if (item.value) {
@@ -110,6 +111,7 @@ ckan.module('contribute_flow_main', function($, _) {
         },
         options: {
             form_id: 'create_dataset_form',
+            form_body_id: 'contribute-flow-form-body',
             request_url: '/contribute/new',
             dataset_id: null
         }
