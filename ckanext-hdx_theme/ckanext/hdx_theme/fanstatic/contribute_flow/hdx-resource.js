@@ -21,6 +21,11 @@ $(function(){
         // A model for CKAN resoruces. Most of the stuff here to get line
         // Backbone verbs with the CKAN api endpoints.
 
+        defaults: {
+            'action_btn_label': 'Update',
+            'action_btn_class': 'update_resource'
+        },
+
         methodToURL: {
             'create': '/api/action/resource_create',
             'read': '/api/action/resource_show?id=',
@@ -111,7 +116,9 @@ $(function(){
         template: _.template($('#resource-item-tmpl').html()),
 
         events: {
-            'click .update_resource': 'onUpdate'
+            'click .update_resource': 'onUpdate',
+            'click .create_resource': 'onCreate',
+            'change .resource_file_field': 'onFileChange'
         },
 
         render: function() {
@@ -137,6 +144,36 @@ $(function(){
                     console.log(response.responseJSON.error);
                 }.bind(this)
             });
+        },
+
+        onFileChange: function(e) {
+            // If a file has been selected, populate the file name field.
+            var file_name = $(e.currentTarget).val().split(/^C:\\fakepath\\/).pop();
+            if (file_name) {
+                this.$('.resource_url_field').val(file_name);
+            }
+            console.log(file_name);
+        },
+
+        createResource: function(package_id, collection) {
+            // Get the serialised create form.
+            var create_form_array = this.$(':input').serializeArray();
+            // Serialize in the correct JSON format.
+            var form_data = {package_id: package_id, format: 'txt'};
+            _.map(create_form_array, function(x){form_data[x.name] = x.value;});
+            var json_data = JSON.stringify(form_data);
+
+            collection.create(form_data, {
+                wait: true,
+                success: function(model, response, options) {
+                    this.$(':input').val('');
+                }.bind(this),
+                error: function(model, response, options) {
+                    // ::TODO:: Handle validation errors returned by server here.
+                    console.log('Could not create the resource');
+                    console.log(response.responseJSON.error);
+                }.bind(this)
+            });
         }
 
     });
@@ -148,7 +185,7 @@ $(function(){
         el: '#resource-app',
 
         events: {
-            'click #create_resource': 'onCreate',
+            'click .create_resource': 'onCreate',
         },
 
         initialize: function(options) {
@@ -161,6 +198,7 @@ $(function(){
                 // ... when ready, get the contribute_global object.
                 this.contribute_global = global;
             }.bind(this));
+            this._setUpCreateResourceEl();
         },
 
         onCreate: function(e) {
@@ -168,37 +206,32 @@ $(function(){
             $.when(this.contribute_global.getDatasetIdPromise()).done(function(id){
                 if (this.datasetId === undefined) this.datasetId = id;
                 if (this.resourceListView === undefined) this._setUp(id);
-                this._createResource(this.datasetId);
+                this.resourceCreateView.createResource(this.datasetId, this.resourceListView.collection);
             }.bind(this));
+        },
+
+        _setUpCreateResourceEl: function() {
+            var data = {
+                id: 'new',
+                position: 'new',
+                url: '',
+                format: '',
+                description: '',
+                action_btn_label: 'Create',
+                action_btn_class: 'create_resource'
+            };
+            var newResourceModel = new Resource(data);
+            this.resourceCreateView = new ResourceItemView({model: newResourceModel});
+            // this.resourceCreateView.el = this.create_el;
+            this.create_el.append(this.resourceCreateView.render().$el);
         },
 
         _setUp: function(package_id) {
             var resources = new PackageResources({package_id: package_id});
             this.resourceListView = new PackageResourcesListView({collection: resources});
-        },
-
-        _createResource: function(package_id) {
-            // Get the serialised create form.
-            var create_form_array = this.create_el.find(':input').serializeArray();
-            // Serialize in the correct JSON format.
-            var form_data = {package_id: package_id, format: 'txt'};
-            _.map(create_form_array, function(x){form_data[x.name] = x.value;});
-            var json_data = JSON.stringify(form_data);
-
-            this.resourceListView.collection.create(form_data, {
-                wait: true,
-                success: function(model, response, options) {
-                    this.create_el.find(':input').val('');
-                }.bind(this),
-                error: function(model, response, options) {
-                    // ::TODO:: Handle validation errors returned by server here.
-                    console.log('Could not create the resource');
-                    console.log(response.responseJSON.error);
-                }.bind(this)
-            });
         }
     });
 
     var sandbox = ckan.sandbox();
-    var app = new AppView({sandbox: sandbox});
+    this.app = new AppView({sandbox: sandbox});
 }());
