@@ -44,7 +44,9 @@ ckan.module('contribute_flow_main', function($, _) {
                     var deferred = new $.Deferred();
                     $.when(datasetIdPromise).done(
                         function(datasetId){
-                            formDataArray.push({'name':'id', 'value': datasetId});
+                            if (datasetId) {
+                                formDataArray.push({'name': 'id', 'value': datasetId});
+                            }
                             $.post(request_url, formDataArray,
                                 function(data, status, xhr) {
                                     deferred.resolve(data, status, xhr);
@@ -79,7 +81,29 @@ ckan.module('contribute_flow_main', function($, _) {
             // Submit the form via Ajax
             $("#" + formId).submit(
               function(e) {
-                  contributeGlobal.saveDatasetForm();
+                  var promise = contributeGlobal.saveDatasetForm();
+                  promise.done(
+                      function(data, status, xhr) {
+                          var resetMessage = { type:'reset' };
+                          sandbox.publish('hdx-form-validation', resetMessage);
+                          if (data.errors) {
+                              for (var key in data.errors ) {
+                                  var errorList = data.errors[key];
+                                  for (var i=0; i<errorList.length; i++) {
+                                      var message = {
+                                          type: 'new',
+                                          elementName: key,
+                                          errorInfo: errorList[i]
+                                      };
+                                      sandbox.publish('hdx-form-validation', message);
+                                  }
+                              }
+                          }
+                          else {
+                              //Form submitted succesfully
+                          }
+                      }
+                  );
                   e.preventDefault();
               }
             );
