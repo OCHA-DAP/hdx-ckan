@@ -97,14 +97,18 @@
                                                       </div>
                                                     </div>
                                                     <div class="col-xs-4">
-                                                    {{ form.select('type', id='field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                        <div class="form-group">
+                                                            <div class="controls">
+                                                            <input class="form-control" id="field-format" type="text" name="format" value="<%= format %>" placeholder="File type"  data-module="autocomplete" data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?" />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-xs-12">
                                                       <div class="control-group form-group control-full">
                                                         <div class="controls ">
-                                                        <textarea id="<%= id %>-field_notes" name="notes" cols="20" rows="5" placeholder="Add note" style="height: 68px;" class="form-control"><%= description %></textarea>
+                                                        <textarea id="<%= id %>-field_notes" name="description" cols="20" rows="5" placeholder="Add description" style="height: 68px;" class="form-control"><%= description %></textarea>
                                                         </div>
                                                       </div>
                                                     </div>
@@ -179,14 +183,18 @@
                                                       </div>
                                                     </div>
                                                     <div class="col-xs-4">
-                                                    {{ form.select('type', id='new-field_type', options=test_options, selected=data.type, error=errors.type, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('File type')}) }}
+                                                        <div class="form-group">
+                                                            <div class="controls">
+                                                                <input class="form-control" id="field-format" type="text" name="format" value="" placeholder="File type"  data-module="autocomplete" data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?" />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-xs-12">
                                                       <div class="control-group form-group control-full">
                                                         <div class="controls ">
-                                                        <textarea id="new-field_notes" name="notes" cols="20" rows="5" placeholder="Add note" style="height: 68px;" class="form-control"></textarea>
+                                                        <textarea id="new-field_notes" name="description" cols="20" rows="5" placeholder="Add description" style="height: 68px;" class="form-control"></textarea>
                                                         </div>
                                                       </div>
                                                     </div>

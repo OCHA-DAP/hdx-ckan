@@ -1,11 +1,11 @@
-$(function($){
+$(function(){
 
     /*
         A Backbone module for work with CKAN Package Resources for the HDX
         Contribute Flow.
 
         TODO:
-        - Format select form widget
+        - Format select form widget for resource update
         - Handle server validation errors on create/update of resources
         - File browse upload
         - upload_type selector: url vs file browse
@@ -201,4 +201,4 @@ $(function($){
 
     var sandbox = ckan.sandbox();
     var app = new AppView({sandbox: sandbox});
-}($));
+}());
