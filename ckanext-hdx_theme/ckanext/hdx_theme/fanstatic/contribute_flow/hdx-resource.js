@@ -21,6 +21,8 @@ $(function(){
         // A model for CKAN resoruces. Most of the stuff here to get line
         // Backbone verbs with the CKAN api endpoints.
 
+        fileAttribute: 'upload',
+
         defaults: {
             'action_btn_label': 'Update',
             'action_btn_class': 'update_resource'
@@ -116,8 +118,7 @@ $(function(){
         template: _.template($('#resource-item-tmpl').html()),
 
         events: {
-            'click .update_resource': 'onUpdate',
-            'click .create_resource': 'onCreate',
+            'click .update_resource': 'onUpdateBtn',
             'change .resource_file_field': 'onFileChange'
         },
 
@@ -127,17 +128,37 @@ $(function(){
             return this;
         },
 
-        onUpdate: function(e) {
+        onUpdateBtn: function(e) {
+            this.updateResource();
+        },
+
+        onFileChange: function(e) {
+            // If a file has been selected, populate the url and file name
+            // fields.
+            var file_name = $(e.currentTarget).val().split(/^C:\\fakepath\\/).pop();
+            if (file_name) {
+                this.$('.resource_url_field').val(file_name);
+            }
+            if (!this.$('.resource_name_field').val()) {
+                this.$('.resource_name_field').val(file_name);
+            }
+        },
+
+        updateResource: function() {
+            // Update the Resource from this view's form fields.
+
             var update_form_array = this.$el.find(':input').serializeArray();
 
             // Serialize in the correct JSON format.
             var form_data = {format: 'txt'};
             _.map(update_form_array, function(x){form_data[x.name] = x.value;});
-            var json_data = JSON.stringify(form_data);
 
+            this.model.set('upload', this.$('.resource_file_field')[0].files[0]);
             this.model.save(form_data, {
                 wait: true,
-                success: function(model, response, options) {}.bind(this),
+                success: function(model, response, options) {
+                    // console.log('successfully updated model');
+                }.bind(this),
                 error: function(model, response, options) {
                     // ::TODO:: Handle validation errors returned by server here.
                     console.log('Could not update the resource');
@@ -146,27 +167,24 @@ $(function(){
             });
         },
 
-        onFileChange: function(e) {
-            // If a file has been selected, populate the file name field.
-            var file_name = $(e.currentTarget).val().split(/^C:\\fakepath\\/).pop();
-            if (file_name) {
-                this.$('.resource_url_field').val(file_name);
-            }
-            console.log(file_name);
-        },
-
         createResource: function(package_id, collection) {
+            // Add a new Resource to the collection arg with data from this
+            // view's form fields.
+
             // Get the serialised create form.
             var create_form_array = this.$(':input').serializeArray();
             // Serialize in the correct JSON format.
             var form_data = {package_id: package_id, format: 'txt'};
             _.map(create_form_array, function(x){form_data[x.name] = x.value;});
-            var json_data = JSON.stringify(form_data);
 
-            collection.create(form_data, {
+            var resource = new Resource(form_data);
+            resource.set('upload', this.$('.resource_file_field')[0].files[0]);
+            resource.save(form_data, {
                 wait: true,
                 success: function(model, response, options) {
+                    // console.log('successfully saved model');
                     this.$(':input').val('');
+                    collection.add(resource);
                 }.bind(this),
                 error: function(model, response, options) {
                     // ::TODO:: Handle validation errors returned by server here.
@@ -175,7 +193,6 @@ $(function(){
                 }.bind(this)
             });
         }
-
     });
 
     var AppView = Backbone.View.extend({
@@ -185,7 +202,7 @@ $(function(){
         el: '#resource-app',
 
         events: {
-            'click .create_resource': 'onCreate',
+            'click .create_resource': 'onCreateBtn',
         },
 
         initialize: function(options) {
@@ -201,7 +218,7 @@ $(function(){
             this._setUpCreateResourceEl();
         },
 
-        onCreate: function(e) {
+        onCreateBtn: function(e) {
             // Get the dataset ID from the global object.
             $.when(this.contribute_global.getDatasetIdPromise()).done(function(id){
                 if (this.datasetId === undefined) this.datasetId = id;

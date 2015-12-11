@@ -53,29 +53,24 @@
                                                 <ul class="list-horizontal">
                                                     <li>
                                                         <label>
-                                                            <input type="radio" name="<%= id %>-upload_type" value="public">
-                                                            Upload file
+                                                            <input type="radio" name="<%= id %>-upload_type" value="public"> Upload file
                                                         </label>
                                                     </li>
                                                     <li>
                                                         <label>
-                                                            <input type="radio" name="<%= id %>-upload_type" value="public">
-                                                            Upload file2
+                                                            <input type="radio" name="<%= id %>-upload_type" value="public"> Upload from URL
                                                         </label>
                                                     </li>
                                                     <li>
-                                                        <i class="glyphicon glyphicon-collapse-down"></i>
-                                                        Dropbox
+                                                        <i class="glyphicon glyphicon-collapse-down"></i> Dropbox
                                                     </li>
                                                     <li>
-                                                        <i class="glyphicon glyphicon-collapse-down"></i>
-                                                        Google Drive
+                                                        <i class="glyphicon glyphicon-collapse-down"></i> Google Drive
                                                     </li>
                                                     <li>
                                                         <button type="button" class="<%= action_btn_class %>"><%= action_btn_label %></button>
                                                     </li>
                                                 </ul>
-
                                                 <span class="pull-right">
                                                     <i class="glyphicon glyphicon-trash"></i>
                                                 </span>
@@ -88,6 +83,15 @@
                                                       <div class="control-group form-group control-full">
                                                         <div class="controls ">
                                                         <input type="text" name="url" value="<%= url %>" placeholder="eg. http://example.com/population-jan-2011.json" class="resource_url_field form-control">
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-xs-12">
+                                                      <div class="control-group form-group control-full">
+                                                        <div class="controls ">
+                                                        <input type="file" name="upload" value="" class="resource_file_field form-control" />
                                                         </div>
                                                       </div>
                                                     </div>
