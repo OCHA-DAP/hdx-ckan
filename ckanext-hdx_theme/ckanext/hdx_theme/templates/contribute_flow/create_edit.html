@@ -9,7 +9,7 @@
 {% block bodytag %} {{ super() }} class="contribute-body" {% endblock %}
 
 {% block page %}
-<div class="hdx-form container-fluid" data-module="contribute_flow_main">
+<div class="hdx-form container-fluid" data-module="contribute_flow_main" {% if data.id  %} data-module-dataset_id="{{ data.id }}" {% endif %}>
     <div class="hdx-form-breadcrumb row paddingRowHack">
         <ol class="breadcrumb paddingLeftHack paddingRightHack">
             <li class="active">
