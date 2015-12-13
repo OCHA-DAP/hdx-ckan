@@ -37,7 +37,8 @@ this.ckan.module('data-viewer', function (jQuery) {
           self._recalibrate();
         }, this.options.timeout);
       } else {
-        this.el.css('height', 600);
+        self._recalibrate();
+        //this.el.css('height', 600);
       }
     },
 

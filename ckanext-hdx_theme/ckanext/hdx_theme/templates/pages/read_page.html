@@ -10,71 +10,30 @@
 
 {% block primary %}
     <div class="row paddingRowHack intro-section">
-        <div class="col-xs-12 paddingLeftHack paddingRightHack">
-            <header class="mx-header">
-            <div class="row">
-                <div class="col-xs-8">
-                    <div class="row">
-                        <div class="col-xs-12 mTop35 ">
-                            <h1 class="itemTitle">{{ data.title }}</h1>
-                            {% if data.state != 'active' and data.state %}
-                                <div><span class="label label-small label-default">{{ data.state }}</span></div>
-                            {% endif %}
-                            <div class="notes embedded-content">{{ data.description }}</div>
+        <div class="{% if not data.title_section %} col-xs-12  paddingLeftHack paddingRightHack {% endif %}">
+            {% if not data.title_section %}
+                <header class="mx-header">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="row">
+                            <div class="col-xs-12 mTop35 ">
+                                <h1 class="itemTitle">{{ data.title }}</h1>
+                                {% if data.state != 'active' and data.state %}
+                                    <div><span class="label label-small label-default">{{ data.state }}</span></div>
+                                {% endif %}
+                                <div class="notes embedded-content">{{ data.description }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            </header>
+                </header>
+             {% else %}
+                {% snippet 'pages/snippets/visualization_title.html', section=data.title_section, data=data, errors=errors, error_summary=error_summary %}
+            {% endif %}
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
             {% for section in data.sections %}
-                <section>
-                    {% if section.type == 'data_list' %}
-                        <div class="row">
-                            <div class="col-xs-12">
-                                {% block package_search_results %}
-                                    <section class="list-items module">
-                                        <div class="list-items module-content mT35">
-                                            {% block package_search_results_list %}
-                                                {{ h.snippet('search/snippets/package_list.html', query=c.q, packages=c.page.items,
-                                                        full_facet_info=c.full_facet_info,
-                                                        ext_page_size=c.ext_page_size, sorting_selected=c.sort_by_selected,
-                                                        other_links=c.other_links) }}
-                                            {% endblock %}
-                                        </div>
-                                        {% block page_pagination %}
-                                            {{ c.page.pager(q=c.q) }}
-                                        {% endblock %}
-                                    </section>
-                                {% endblock %}
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="list-header crisis-list-header">
-                                    <span class="mL15 list-header-title">{{ section.get('section_title') }}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% if section.description %}
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <span>{{ section.description }}</span>
-                            </div>
-                        </div>
-                        {% endif %}
-                        <div class="row">
-                            <div class="col-xs-12">
-                                <div class="data-viewer-error">
-                                </div>
-                                <iframe data-module="data-viewer" frameborder="0" style="{{ section.style }}"
-                                        src="{{ section.get('data_url') }}">
-                                </iframe>
-                            </div>
-                        </div>
-                    {% endif %}
-                </section>
+                  {% snippet 'pages/snippets/section_item.html', section=section, data=data, errors=errors, error_summary=error_summary %}
             {% endfor %}
         </div>
     </div>
@@ -89,4 +48,5 @@
     {% resource 'hdx_theme/jquery.expander' %}
     {% resource 'hdx_theme/hdx_show_more.js' %}
     {% resource 'hdx_theme/modules/data-viewer.js' %}
+    {% resource 'hdx_theme/custom_pages/custom_pages_view.css' %}
 {% endblock %}
