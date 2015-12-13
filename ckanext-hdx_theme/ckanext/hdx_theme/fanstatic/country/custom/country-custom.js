@@ -226,7 +226,7 @@ function autoGraph() {
     });
 }
 
-function fitMap(map, data){
+function fitMap(map, data, confJson){
     //Need to compute Top-Left corner and Bottom-Right corner for polygon.
     var minLat, minLng, maxLat, maxLng;
     var init = false;
@@ -285,9 +285,15 @@ function fitMap(map, data){
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
         maxZoom: 10
     });
-    var computedZoom = map.getZoom();
-    computedZoom++;
-    map.setZoom(computedZoom);
+
+    if (confJson && confJson.max_zoom && confJson.max_zoom!='default') {
+        map.setZoom(confJson.max_zoom);
+    }
+    else {
+        var computedZoom = map.getZoom();
+        computedZoom++;
+        map.setZoom(computedZoom);
+    }
 }
 
 function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
@@ -667,7 +673,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     info = L.control({position: 'topleft'});
 
     if ( confJson.is_crisis != 'true' )
-        fitMap(map, data);
+        fitMap(map, data, confJson);
 
     var choroplethLayer = L.geoJson(data,{
         style: getStyle(values, threshold),

@@ -25,3 +25,5 @@
 
 {{ form.input('threshold', id='field-threshold', label=_('Threshold'), placeholder=_('Thresholds for color grouping'),
     value=data.threshold, error=errors.threshold, classes=['control-full']) }}
+
+{{ form.select('max_zoom', id='field-map-max_zoom', label=_('Max Zoom'), options=formdata.max_zoom_values, selected=data.max_zoom, error=errors.max_zoom) }}
