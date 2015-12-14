@@ -156,13 +156,13 @@
                                         <label class="control-label">This dataset is</label>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="private" value="true" {% if "true" == data.private %}selected="selected"{% endif %} />
+                                                <input type="radio" name="private" value="true" {% if data.private %}checked="checked"{% endif %} />
                                                 <strong>Private</strong> (Only you and other HDX members of your organisation can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="private" value="false" {% if "false" == data.private %}selected="selected"{% endif %}/>
+                                                <input type="radio" name="private" value="false" {% if not data.private %}checked="checked"{% endif %}/>
                                                 <strong>Public</strong> (Anyone can <strong>search</strong>, <strong>view/edit</strong> or <strong>download</strong> this dataset)
                                             </label>
                                         </div>
