@@ -269,7 +269,11 @@ Example:
     {% endif %}
     <div class="controls{{ " " ~ control_classes | join(' ') }}{% if error and error is iterable %} error{% endif %}">
       {{ caller() }}
-      {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
+      {% if error and error is iterable %}
+        <span class="error-block">{{ error|join(', ') }}</span>
+      {% else %}
+        <span class="error-block hdx-invisible-element"></span>
+      {% endif %}
       {{ extra_html }}
     </div>
   </div>

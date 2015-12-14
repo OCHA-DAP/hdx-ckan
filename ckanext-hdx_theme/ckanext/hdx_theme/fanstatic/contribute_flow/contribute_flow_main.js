@@ -87,6 +87,14 @@ ckan.module('contribute_flow_main', function($, _) {
                       function(data, status, xhr) {
                           var resetMessage = { type:'reset' };
                           sandbox.publish('hdx-form-validation', resetMessage);
+                          if (data.error_summary){
+                              var sumMessage = {
+                                  'type': 'new_summary',
+                                  'elementName': 'error_block',
+                                  'errorBlock': data.error_summary
+                              };
+                              sandbox.publish('hdx-form-validation', sumMessage);
+                          }
                           if (data.errors) {
                               for (var key in data.errors ) {
                                   var errorList = data.errors[key];
@@ -101,7 +109,7 @@ ckan.module('contribute_flow_main', function($, _) {
                               }
                           }
                           else {
-                              //Form submitted succesfully
+                              //Form submitted succesfully, go to some URL
                           }
                       }
                   );
