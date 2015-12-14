@@ -149,10 +149,11 @@ class ContributeFlowController(base.BaseController):
 
     def process_locations(self, data_dict):
         locations = data_dict.get("locations")
-        groups = []
-        for item in locations:
-            groups.append({'id': item})
-        data_dict['groups'] = groups
+        if locations:
+            groups = []
+            for item in locations:
+                groups.append({'id': item})
+            data_dict['groups'] = groups
 
     # def _autofill_mandatory_fields(self, data_dict):
     #     '''
