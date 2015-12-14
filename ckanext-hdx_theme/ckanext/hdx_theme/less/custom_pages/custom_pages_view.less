@@ -1,0 +1,32 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.section-body iframe {
+  background-color: @lightGrayColor;
+}
+
+.title-over-wrapper {
+  position: relative;
+
+  .title-over-map {
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.4);
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    line-height: 50px;
+
+    .title-label {
+      color: #000000;
+      margin-top: 80px;
+      font-family: @sourceSansProFont;
+      font-weight: bold;
+      font-size: 28px;
+      letter-spacing: 0.01em;
+      line-height: 50px;
+      text-transform: capitalize;
+    }
+
+  }
+
+}

@@ -134,7 +134,12 @@ class PagesController(HDXSearchController):
                         c.full_facet_info = self._generate_dataset_results(id, type, saved_filters)
                         response.headers['Content-Type'] = CONTENT_TYPES['json']
                         return json.dumps(c.full_facet_info)
+
             page_dict['sections'] = sections
+
+            if len(sections) > 0 and sections[0].get('type', '') == 'map':
+                page_dict['title_section'] = sections[0]
+                del sections[0]
 
         vars = {
             'data': page_dict,

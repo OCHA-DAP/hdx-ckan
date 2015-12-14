@@ -5,7 +5,8 @@
 
 {% if formdata.map_columns %}
     {{ form.select('map_join_column', id='field-map-join-column', label=_('Map Join Column'), options=formdata.map_columns, selected=data.map_join_column, error=errors.map_join_column) }}
-    {{ form.select('district_name_column', id='field-district-name-column', label=_('Map Join Column'), options=formdata.map_columns, selected=data.district_name_column, error=errors.district_name_column) }}
+    {{ form.select('district_name_column', id='field-district-name-column', label=_('District Name Column'), options=formdata.map_columns, selected=data.district_name_column, error=errors.district_name_column) }}
+    {{ form.select('district_name_column', id='field-district-name-column', label=_('District Name Column'), options=formdata.map_columns, selected=data.district_name_column, error=errors.district_name_column) }}
 {% else %}
     {{ form.input('map_join_column', id='field-map-join-column', label=_('Map Join Column'), placeholder=_('Name of the column with the district IDs'),
         value=data.map_join_column, error=errors.map_join_column, classes=['control-full']) }}
@@ -24,3 +25,5 @@
 
 {{ form.input('threshold', id='field-threshold', label=_('Threshold'), placeholder=_('Thresholds for color grouping'),
     value=data.threshold, error=errors.threshold, classes=['control-full']) }}
+
+{{ form.select('max_zoom', id='field-map-max_zoom', label=_('Max Zoom'), options=formdata.max_zoom_values, selected=data.max_zoom, error=errors.max_zoom) }}

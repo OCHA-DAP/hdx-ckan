@@ -480,7 +480,8 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
             'values_column_name': [],
             'map_join_column': [],
             'values_join_column': [],
-            'threshold': []
+            'threshold': [],
+            'max_zoom': []
         }
         return {
             'name': 'hdx_choropleth_map_view',
@@ -527,6 +528,9 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
 
     def setup_template_variables(self, context, data_dict):
 
+        max_zoom_values = [{'value': str(item), 'text': str(item)} for item in range(1, 16)]
+        max_zoom_values.insert(0, {'value': 'default', 'text': p.toolkit._('Default')})
+
         geo_columns_dict = self._detect_fields_in_geojson(data_dict['resource'])
 
         resource_view_dict = data_dict['resource_view']
@@ -552,16 +556,19 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
                     'is_crisis': 'false',
                     'basemap_url': 'default',
                     'map_threshold': resource_view_dict.get('threshold'),
+                    'max_zoom': resource_view_dict.get('max_zoom'),
                 },
                 'formdata': {
-                    'map_columns': geo_columns_dict
+                    'map_columns': geo_columns_dict,
+                    'max_zoom_values': max_zoom_values
                 }
 
             }
         else:
             return {
                 'formdata': {
-                    'map_columns': geo_columns_dict
+                    'map_columns': geo_columns_dict,
+                    'max_zoom_values': max_zoom_values
                 }
             }
 
