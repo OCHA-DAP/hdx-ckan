@@ -108,9 +108,13 @@ body.contribute-body {
 }
 .hdx-form .form-group .error-block {
   color: #f2645a;
+  display: none;
 }
 .hdx-form .form-group .error .form-control {
   border-color: #f2645a;
+}
+.hdx-form .form-group .error .error-block {
+  display: inherit;
 }
 .hdx-form .form-group .radio,
 .hdx-form .form-group .checkbox {
