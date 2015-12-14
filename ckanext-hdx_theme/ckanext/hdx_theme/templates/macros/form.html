@@ -47,8 +47,8 @@ Example:
 {% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false) %}
   {%- set extra_html = caller() if caller -%}
   <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
-    <div class="controls">
-      <label class="checkbox" for="{{ id or name }}">
+    <div class="controls checkbox">
+      <label class="" for="{{ id or name }}">
         <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
         {{ label }}
         {% if is_required %}{{ input_required() }}{% endif %}
@@ -267,9 +267,9 @@ Example:
     {% if label %}
       <label class="control-label" for="{{ for }}">{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
     {% endif %}
-    <div class="controls{{ " " ~ control_classes | join(' ') }}">
+    <div class="controls{{ " " ~ control_classes | join(' ') }}{% if error and error is iterable %} error{% endif %}">
       {{ caller() }}
-      <span class="error-block">{% if error and error is iterable %}{{ error|join(', ') }}{% endif %}</span>
+      {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
       {{ extra_html }}
     </div>
   </div>

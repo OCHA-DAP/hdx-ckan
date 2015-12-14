@@ -8,8 +8,9 @@
 }
 .popup.popup-contribute .content {
   width: 90%;
-  max-width: 1200px;
+  max-width: 1260px;
   height: 90%;
+  padding: 0;
 }
 .popup.popup-contribute .content .details-content {
   height: 100%;

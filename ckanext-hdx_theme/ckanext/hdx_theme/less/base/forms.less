@@ -117,9 +117,23 @@ body.contribute-body{
       }
     }
 
+    .error-block {
+      color: @orangeColor;
+    }
+    .error {
+      .form-control {
+        border-color: @orangeColor;
+      }
+    }
+
     .radio, .checkbox {
       margin-top: 0;
       margin-bottom: 5px;
+      label {
+        &:after{
+          content: "";
+        }
+      }
 
       input {
         margin-top: 4px;
@@ -129,11 +143,11 @@ body.contribute-body{
 
     .form-control {
       background-color: @whiteColor;
-      height: @formElementHeight;
+      min-height: @formElementHeight;
+      height: auto;
       border-color: @lightGrayColor;
       .sourceSansProFont(400, 14px);
       color: @darkGrayColor;
-
 
       &.select2-container{
         border: none;
@@ -261,6 +275,9 @@ body.contribute-body{
       }
 
     }
+
+
+
   }
 
   .form-horizontal {

@@ -1702,10 +1702,20 @@ body.contribute-body {
 .hdx-form .form-group .control-label:after {
   content: "";
 }
+.hdx-form .form-group .error-block {
+  color: #f2645a;
+}
+.hdx-form .form-group .error .form-control {
+  border-color: #f2645a;
+}
 .hdx-form .form-group .radio,
 .hdx-form .form-group .checkbox {
   margin-top: 0;
   margin-bottom: 5px;
+}
+.hdx-form .form-group .radio label:after,
+.hdx-form .form-group .checkbox label:after {
+  content: "";
 }
 .hdx-form .form-group .radio input,
 .hdx-form .form-group .checkbox input {
@@ -1714,7 +1724,8 @@ body.contribute-body {
 }
 .hdx-form .form-group .form-control {
   background-color: #ffffff;
-  height: 44px;
+  min-height: 44px;
+  height: auto;
   border-color: #cccccc;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
@@ -2214,10 +2225,6 @@ h4 small {
 .paddingRowHack {
   margin-left: -45px;
   margin-right: -45px;
-}
-.paddingRowHack.row {
-  margin-left: -15px;
-  margin-right: -15px;
 }
 .paddingRowHack .paddingLeftHack {
   padding-left: 45px;
