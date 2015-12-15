@@ -61,8 +61,8 @@ class PagesController(HDXSearchController):
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.new(page_dict, errors, error_summary)
-                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
-                              id=created_page.get("name") or created_page.get("id"), type=created_page.get("type"))
+                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_' + created_page.get("type"),
+                              id=created_page.get("name") or created_page.get("id"))
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 
@@ -99,8 +99,8 @@ class PagesController(HDXSearchController):
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.edit(id, page_dict, errors, error_summary)
-                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
-                              id=updated_page.get('name') or updated_page.get('id'), type=updated_page.get('type'))
+                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_' + updated_page.get('type'),
+                              id=updated_page.get('name') or updated_page.get('id'))
             elif delete_page:
                 h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='delete',
                               id=id)
@@ -109,6 +109,12 @@ class PagesController(HDXSearchController):
             self._init_extra_vars_edit(extra_vars)
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
+
+    def read_crisis(self, id):
+        return self.read(id, 'crisis')
+
+    def read_dashboard(self, id):
+        return self.read(id, 'dashboard')
 
     def read(self, id, type):
         context = {

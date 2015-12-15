@@ -27,9 +27,9 @@
                     </div>
                     <div class="col-xs-9">
                         {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required', 'control-full', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
-                        {% set prefix = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read', type='...',id='', qualified=true) %}
-                        {% set full_domain_crisis = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read', type='crisis',id='', qualified=true) %}
-                        {% set full_domain_dashboard = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read', type='dashboard',id='', qualified=true) %}
+                        {% set prefix = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_crisis',id='', qualified=true) %}
+                        {% set full_domain_crisis = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_crisis',id='', qualified=true) %}
+                        {% set full_domain_dashboard = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboard',id='', qualified=true) %}
                         {% set domain = prefix|replace("http://", "")|replace("https://", "") %}
                         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<my-page>'} %}
                         {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, attrs=attrs) }}
