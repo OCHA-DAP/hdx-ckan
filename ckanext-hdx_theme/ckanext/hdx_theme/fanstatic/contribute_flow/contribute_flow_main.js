@@ -23,6 +23,7 @@ ckan.module('contribute_flow_main', function($, _) {
                             var promise = $.post(request_url, $.param(formDataArray));
                             $.when(promise).done(
                                 function (data, status, xhr) {
+                                    contributeGlobal.updateValidationUi(data, status, xhr);
                                     if (data.data && data.data.id) {
                                         contributeGlobal._datasetId = data.data.id;
                                         deferred.resolve(data.data.id);
@@ -74,45 +75,44 @@ ckan.module('contribute_flow_main', function($, _) {
                         }
                     }
                     return modifiedFormDataArray;
+                },
+                'updateValidationUi': function (data, status, xhr) {
+                    var resetMessage = {type: 'reset'};
+                    sandbox.publish('hdx-form-validation', resetMessage);
+                    if (data.error_summary && Object.keys(data.error_summary).length > 0) {
+                        var sumMessage = {
+                            'type': 'new_summary',
+                            'elementName': 'error_block',
+                            'errorBlock': data.error_summary
+                        };
+                        sandbox.publish('hdx-form-validation', sumMessage);
+                    }
+                    if (data.errors) {
+                        for (var key in data.errors) {
+                            var errorList = data.errors[key];
+                            for (var i = 0; i < errorList.length; i++) {
+                                var message = {
+                                    type: 'new',
+                                    elementName: key,
+                                    errorInfo: errorList[i]
+                                };
+                                sandbox.publish('hdx-form-validation', message);
+                            }
+                        }
+                    }
+                    else {
+                        //Form submitted succesfully, go to some URL
+                    }
                 }
             };
-            window.hdxContributeGlobal = contributeGlobal;
-            sandbox.publish('hdx-contribute-global-created', window.hdxContributeGlobal);
+            //window.hdxContributeGlobal = contributeGlobal;
+            sandbox.publish('hdx-contribute-global-created', contributeGlobal);
 
             // Submit the form via Ajax
             $("#" + formId).submit(
               function(e) {
                   var promise = contributeGlobal.saveDatasetForm();
-                  promise.done(
-                      function(data, status, xhr) {
-                          var resetMessage = { type:'reset' };
-                          sandbox.publish('hdx-form-validation', resetMessage);
-                          if (data.error_summary){
-                              var sumMessage = {
-                                  'type': 'new_summary',
-                                  'elementName': 'error_block',
-                                  'errorBlock': data.error_summary
-                              };
-                              sandbox.publish('hdx-form-validation', sumMessage);
-                          }
-                          if (data.errors) {
-                              for (var key in data.errors ) {
-                                  var errorList = data.errors[key];
-                                  for (var i=0; i<errorList.length; i++) {
-                                      var message = {
-                                          type: 'new',
-                                          elementName: key,
-                                          errorInfo: errorList[i]
-                                      };
-                                      sandbox.publish('hdx-form-validation', message);
-                                  }
-                              }
-                          }
-                          else {
-                              //Form submitted succesfully, go to some URL
-                          }
-                      }
-                  );
+                  promise.done(contributeGlobal.updateValidationUi);
                   e.preventDefault();
               }
             );
