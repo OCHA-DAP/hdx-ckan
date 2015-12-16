@@ -6,7 +6,6 @@
 {% if formdata.map_columns %}
     {{ form.select('map_join_column', id='field-map-join-column', label=_('Map Join Column'), options=formdata.map_columns, selected=data.map_join_column, error=errors.map_join_column) }}
     {{ form.select('district_name_column', id='field-district-name-column', label=_('District Name Column'), options=formdata.map_columns, selected=data.district_name_column, error=errors.district_name_column) }}
-    {{ form.select('district_name_column', id='field-district-name-column', label=_('District Name Column'), options=formdata.map_columns, selected=data.district_name_column, error=errors.district_name_column) }}
 {% else %}
     {{ form.input('map_join_column', id='field-map-join-column', label=_('Map Join Column'), placeholder=_('Name of the column with the district IDs'),
         value=data.map_join_column, error=errors.map_join_column, classes=['control-full']) }}
