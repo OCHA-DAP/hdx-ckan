@@ -149,9 +149,9 @@ function autoGraph() {
         var timeformat = '%Y-%m-%dT%H:%M:%S';
         for (var sIdx in graphData.sources){
             var source = graphData.sources[sIdx];
-            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source +" - <a target='new' href='"+ source.data_link_url +"'>Data</a></div>";
+            sourceList += "<div><i style='background: "+ colorList[sIdx] +"'></i> "+ source.source;
             if (source.data_link_url) {
-                sourceList += " - <a href='" + source.data_link_url + "'>Data</a></div>";
+                sourceList += " - <a target='_blank' href='" + source.data_link_url + "'>Data</a></div>";
             }
             if ( source['source_type']=='ckan' ) {
                 source["data"] = null;
@@ -226,7 +226,7 @@ function autoGraph() {
     });
 }
 
-function fitMap(map, data){
+function fitMap(map, data, confJson){
     //Need to compute Top-Left corner and Bottom-Right corner for polygon.
     var minLat, minLng, maxLat, maxLng;
     var init = false;
@@ -285,16 +285,25 @@ function fitMap(map, data){
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
         maxZoom: 10
     });
-    var computedZoom = map.getZoom();
-    computedZoom++;
-    map.setZoom(computedZoom);
+
+    if (confJson && confJson.max_zoom && confJson.max_zoom!='default') {
+        map.setZoom(confJson.max_zoom);
+    }
+    else {
+        var computedZoom = map.getZoom();
+        computedZoom++;
+        map.setZoom(computedZoom);
+    }
 }
 
-function processMapValues(data, confJson, pcodeColumnName, valueColumnName){
+function processMapValues(data, confJson, pcodeColumnName, valueColumnName, descriptionColumnName){
     var map = {};
     for (var idx in data){
         var item = data[idx];
-        map[item[pcodeColumnName]] = item[valueColumnName];
+        map[item[pcodeColumnName]] = {
+            'value': item[valueColumnName],
+            'description': descriptionColumnName ? item[descriptionColumnName] : null
+        };
     }
     return map;
 }
@@ -412,6 +421,7 @@ function _addRemoveLayers(layers, choroplethLayerId, legend) {
 function loadMapData(map, confJson, layers){
     var pcodeColumnName = confJson.map_column_1;
     var valueColumnName = confJson.map_values ? confJson.map_values : 'value';
+    var descriptionColumnName =  confJson.map_description_column ? confJson.map_description_column.trim() : null;
 
     var data = null;
     var dataPromise = $.ajax({
@@ -423,7 +433,14 @@ function loadMapData(map, confJson, layers){
         }
     });
     var values = null;
-    var sql = 'SELECT "'+ pcodeColumnName +'", "'+ valueColumnName +'" FROM "'+ confJson.map_resource_id_1 +'"';
+    var sql = null;
+    if ( descriptionColumnName ) {
+        sql = 'SELECT "'+ pcodeColumnName +'", "'+ valueColumnName +'", "' +
+            descriptionColumnName + '" FROM "'+ confJson.map_resource_id_1 +'"';
+    }
+    else {
+        sql = 'SELECT "'+ pcodeColumnName +'", "'+ valueColumnName +'" FROM "'+ confJson.map_resource_id_1 +'"';
+    }
     var urldata = encodeURIComponent(JSON.stringify({sql: sql}));
     var valuesPromise;
     if (confJson.map_datatype_1 == "filestore"){
@@ -442,7 +459,7 @@ function loadMapData(map, confJson, layers){
             url: '/api/3/action/datastore_search_sql',
             data: urldata,
             success: function(result){
-                values = processMapValues(result.result.records, confJson, pcodeColumnName, valueColumnName);
+                values = processMapValues(result.result.records, confJson, pcodeColumnName, valueColumnName, descriptionColumnName);
                 return values;
             }
         });
@@ -613,13 +630,13 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             var pcoderef = feature.properties[confJson.map_column_2];
             if(pcoderef in values) {
                 for (var i = 0; i < threshold.length; i++){
-                    if (values[pcoderef] == 0 && confJson.is_crisis=='true'){
+                    if (values[pcoderef].value == 0 && confJson.is_crisis=='true'){
                         var tmpColor = internalGetColor(newcolor[threshold.length], i);
                         tmpColor["fillOpacity"] = 0;
                         return tmpColor;
                     }
 
-                    if (values[pcoderef] < threshold[i])
+                    if (values[pcoderef].value < threshold[i])
                         return internalGetColor(newcolor[threshold.length], i);
                 }
                 return internalGetColor(newcolor[threshold.length], threshold.length);
@@ -667,7 +684,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
     info = L.control({position: 'topleft'});
 
     if ( confJson.is_crisis != 'true' )
-        fitMap(map, data);
+        fitMap(map, data, confJson);
 
     var choroplethLayer = L.geoJson(data,{
         style: getStyle(values, threshold),
@@ -699,7 +716,12 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
                     var titleField = confJson.map_district_name_column ? confJson.map_district_name_column : 'admin1Name';
                     var titleValue = properties[titleField] ;
                     var updateValue = values[properties[confJson.map_column_2]];
-                    info.update(confJson.map_title, [{'key': 'Name', 'value': titleValue}, {'key': 'Value', 'value': updateValue}]);
+
+                    var infoUpdateList = [{'key': 'Name', 'value': titleValue}];
+                    if ('description' in updateValue && updateValue.description )
+                        infoUpdateList.push({'key': 'Description', 'value': updateValue.description});
+                    infoUpdateList.push({'key': 'Value', 'value': updateValue.value});
+                    info.update(confJson.map_title, infoUpdateList);
                 });
                 // Create a mouseout event that undoes the mouseover changes
                 layer.on("mouseout", function (e) {
@@ -759,36 +781,39 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     info.addTo(map);
 
-    var legend = L.control({position: 'bottomleft'});
+    var returnValue = {info: info};
+    if (confJson.show_legend != 'false') {
+        var legend = L.control({position: 'bottomleft'});
 
-    legend.onAdd = function (map) {
-        this._div = L.DomUtil.create('div', 'map-info legend');
-        return this._div;
-    };
-    legend.update = function (){
-        this._div.innerHTML = '<div><i style="background: ' + newcolor[threshold.length][0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
-        for (var i = 0; i < threshold.length; i++) {
-            this._div.innerHTML +=
-                '<div><i style="background:' + newcolor[threshold.length][i+1] + '"></i> ' +
-                threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '</div>' : '+</div>');
-        }
-    };
-    legend.updateLayer = function (layer){
-        //for (l in layers)
-        //    if (layers[l]['name'] == layer){
-        //         this._layer = l;
-        //        this.update();
-        //        return;
-        //    }
+        legend.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'map-info legend');
+            return this._div;
+        };
+        legend.update = function () {
+            this._div.innerHTML = '<div><i style="background: ' + newcolor[threshold.length][0] + '"></i> 0&ndash;' + threshold[0] + '</div>';
+            for (var i = 0; i < threshold.length; i++) {
+                this._div.innerHTML +=
+                    '<div><i style="background:' + newcolor[threshold.length][i + 1] + '"></i> ' +
+                    threshold[i] + (threshold[i + 1] ? '&ndash;' + threshold[i + 1] + '</div>' : '+</div>');
+            }
+        };
+        legend.updateLayer = function (layer) {
+            //for (l in layers)
+            //    if (layers[l]['name'] == layer){
+            //         this._layer = l;
+            //        this.update();
+            //        return;
+            //    }
 
-        this.update();
-        this._layer = null;
-    };
-    legend.addTo(map);
-    legend.updateLayer();
+            this.update();
+            this._layer = null;
+        };
+        legend.addTo(map);
+        legend.updateLayer();
+
+        returnValue['legend'] = legend;
+    }
     info.updateLayer();
-    return {
-        info: info,
-        legend: legend
-    };
+
+    return returnValue;
 }
