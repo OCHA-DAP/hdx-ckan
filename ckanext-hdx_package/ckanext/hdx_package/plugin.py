@@ -478,10 +478,12 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
             'district_name_column': [],
             'values_resource_id': [],
             'values_column_name': [],
+            'values_description_column': [],
             'map_join_column': [],
             'values_join_column': [],
             'threshold': [],
-            'max_zoom': []
+            'max_zoom': [],
+            'show_legend': []
         }
         return {
             'name': 'hdx_choropleth_map_view',
@@ -531,6 +533,17 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
         max_zoom_values = [{'value': str(item), 'text': str(item)} for item in range(1, 16)]
         max_zoom_values.insert(0, {'value': 'default', 'text': p.toolkit._('Default')})
 
+        show_legend_values = [
+            {
+                'value': 'true',
+                'text': p.toolkit._('Yes')
+            },
+            {
+                'value': 'false',
+                'text': p.toolkit._('No')
+            }
+        ]
+
         geo_columns_dict = self._detect_fields_in_geojson(data_dict['resource'])
 
         resource_view_dict = data_dict['resource_view']
@@ -553,14 +566,17 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
                     'map_values': resource_view_dict.get('values_column_name'),
                     'map_column_2': resource_view_dict.get('map_join_column'),
                     'map_column_1': resource_view_dict.get('values_join_column'),
+                    'map_description_column': resource_view_dict.get('values_description_column'),
                     'is_crisis': 'false',
                     'basemap_url': 'default',
                     'map_threshold': resource_view_dict.get('threshold'),
                     'max_zoom': resource_view_dict.get('max_zoom'),
+                    'show_legend': resource_view_dict.get('show_legend'),
                 },
                 'formdata': {
                     'map_columns': geo_columns_dict,
-                    'max_zoom_values': max_zoom_values
+                    'max_zoom_values': max_zoom_values,
+                    'show_legend_values': show_legend_values
                 }
 
             }
@@ -568,7 +584,8 @@ class HDXChoroplethMapPlugin(plugins.SingletonPlugin):
             return {
                 'formdata': {
                     'map_columns': geo_columns_dict,
-                    'max_zoom_values': max_zoom_values
+                    'max_zoom_values': max_zoom_values,
+                    'show_legend_values': show_legend_values
                 }
             }
 
