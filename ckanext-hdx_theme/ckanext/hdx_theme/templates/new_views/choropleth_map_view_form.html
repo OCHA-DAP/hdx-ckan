@@ -22,7 +22,12 @@
 {{ form.input('values_column_name', id='field-values-column-name', label=_('Values Column Name'), placeholder=_('The name of the datastore column which holds the values for the map'),
     value=data.values_column_name, error=errors.values_column_name, classes=['control-full']) }}
 
+{{ form.input('values_description_column', id='field-values-description-column', label=_('Values Description Column'), placeholder=_('The name of the datastore column which holds a description for the value'),
+    value=data.values_description_column, error=errors.values_description_column, classes=['control-full']) }}
+
 {{ form.input('threshold', id='field-threshold', label=_('Threshold'), placeholder=_('Thresholds for color grouping'),
     value=data.threshold, error=errors.threshold, classes=['control-full']) }}
 
 {{ form.select('max_zoom', id='field-map-max_zoom', label=_('Max Zoom'), options=formdata.max_zoom_values, selected=data.max_zoom, error=errors.max_zoom) }}
+
+{{ form.select('show_legend', id='field-show-legend', label=_('Show Legend'), options=formdata.show_legend_values, selected=data.show_legend, error=errors.show_legend) }}
