@@ -1,0 +1,32 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.section-body iframe {
+  background-color: #cccccc;
+}
+.title-over-wrapper {
+  position: relative;
+}
+.title-over-wrapper .title-over-map {
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.4);
+  position: absolute;
+  bottom: 5px;
+  width: 100%;
+  line-height: 50px;
+}
+.title-over-wrapper .title-over-map .title-label {
+  color: #000000;
+  margin-top: 80px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: bold;
+  font-size: 28px;
+  letter-spacing: 0.01em;
+  line-height: 50px;
+  text-transform: capitalize;
+}

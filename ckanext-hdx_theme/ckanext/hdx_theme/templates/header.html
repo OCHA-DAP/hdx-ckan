@@ -159,6 +159,7 @@
                         <span id="crises-label" >{{ _('Crises') }}</span>
                       </a>
                       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+                          <li><a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a></li>
                           <li><a href="{{ h.url_for('show_custom_country', id='nepal-earthquake') }}">{{ _('Nepal Earthquake') }}</a></li>
                           <li><a href="/ebola">{{ _('Ebola') }}</a></li>
                       </ul>

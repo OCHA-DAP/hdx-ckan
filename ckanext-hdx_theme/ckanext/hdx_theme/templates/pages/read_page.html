@@ -1,0 +1,52 @@
+{% extends "page.html" %}
+
+{% block breadcrumb_content %}
+    <li><a>{{ data.type }}</a></li>
+    <li class="active">{{ h.nav_link(data.title, controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+        action='read', id=data.name, type=data.type) }}</li>
+{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+    <div class="row paddingRowHack intro-section">
+        <div class="{% if not data.title_section %} col-xs-12  paddingLeftHack paddingRightHack {% endif %}">
+            {% if not data.title_section %}
+                <header class="mx-header">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="row">
+                            <div class="col-xs-12 mTop35 ">
+                                <h1 class="itemTitle">{{ data.title }}</h1>
+                                {% if data.state != 'active' and data.state %}
+                                    <div><span class="label label-small label-default">{{ data.state }}</span></div>
+                                {% endif %}
+                                <div class="notes embedded-content">{{ data.description }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </header>
+             {% else %}
+                {% snippet 'pages/snippets/visualization_title.html', section=data.title_section, data=data, errors=errors, error_summary=error_summary %}
+            {% endif %}
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            {% for section in data.sections %}
+                  {% snippet 'pages/snippets/section_item.html', section=section, data=data, errors=errors, error_summary=error_summary %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts2 %}
+    {{ super() }}
+    {% resource 'hdx_theme/bs_tooltip.js' %}
+    {% resource 'hdx_theme/search' %}
+    {% resource 'hdx_theme/jquery.highlight' %}
+    {% resource 'hdx_theme/jquery.expander' %}
+    {% resource 'hdx_theme/hdx_show_more.js' %}
+    {% resource 'hdx_theme/modules/data-viewer.js' %}
+    {% resource 'hdx_theme/custom_pages/custom_pages_view.css' %}
+{% endblock %}

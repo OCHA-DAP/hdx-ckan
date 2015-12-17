@@ -84,7 +84,7 @@
       <div class="col-xs-6">
         <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
           {% block description %}
-            {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
+            {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
             {% if notes %}
             	<span data-module="hdx_show_more" style="visibility:hidden"><div>{{ notes|urlize }}</div></span>
             {% else %}

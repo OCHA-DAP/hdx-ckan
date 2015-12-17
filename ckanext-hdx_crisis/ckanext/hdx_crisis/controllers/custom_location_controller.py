@@ -9,14 +9,12 @@ import logging
 import math
 
 import ckan.lib.base as base
-import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
 import ckan.controllers.group as group
 import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.actions.get as hdx_org_get
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_crisis.config.crisis_config as crisis_config
 import ckanext.hdx_search.controllers.search_controller as search_controller
@@ -31,7 +29,6 @@ json = common.json
 _ = common._
 request = common.request
 response = common.response
-LocationDataAccess = location_data_access.LocationDataAccess
 log = logging.getLogger(__name__)
 
 IndicatorAccess = indicator_access.IndicatorAccess
@@ -85,7 +82,7 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
         top_line_items = []
         try:
             top_line_resource_id = self._get_top_line_datastore_id(custom_dict)
-            top_line_items = self.get_topline_numbers(top_line_resource_id)
+            top_line_items = location_data_access.get_formatted_topline_numbers(top_line_resource_id)
         except Exception, e:
             log.warning(e)
             helpers.add_error('Fetching data problem', str(e), errors)
@@ -126,25 +123,6 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
 
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
-
-    def get_topline_numbers(self, top_line_resource_id):
-        '''
-        Compute topline numbers items
-        :param top_line_resource_id:
-        :return:
-        '''
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
-
-        loc_data_access = LocationDataAccess(top_line_resource_id)
-        loc_data_access.fetch_data(context)
-        top_line_items = loc_data_access.get_top_line_items()
-
-        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
-        formatter.format_results()
-
-        return top_line_items
 
     def _ckan_src_chart_config(self, chart_config, chart_type):
         '''

@@ -184,7 +184,7 @@
 /* Search widget style */
     /*Also used on the homepage*/
     .form-search .input-append .searchInput{
-        width: 246px;
+        width: 265px;
         height: 45px;
         border-radius: 6px 0 0 6px;
         background-color: white;
@@ -377,6 +377,17 @@
         padding-bottom: 35px;
     }
 
+    .pTopBottom10{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .pTopBottom15{
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+
     .pTopBottom80{
         padding-top: 80px;
         padding-bottom: 80px;
@@ -447,6 +458,7 @@
 /* Style Select2 Dropdown */
     .select2-container {
         display: block;
+        padding: 0;
     }
 
     .select2-container.required.error > .select2-choice {

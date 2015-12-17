@@ -1,0 +1,29 @@
+{#
+Snippet for rendering visualization with title over it
+
+Example:
+
+{% snippet 'pages/snippets/visualization_title.html', section=section, data=data, errors=errors, error_summary=error_summary %}
+
+#}
+
+<section>
+    <div class="row">
+        <div class="col-xs-12 section-body">
+            <div class="data-viewer-error">
+            </div>
+            <iframe data-module="data-viewer" frameborder="0" style="{{ section.style }}"
+                    src="{{ section.get('data_url') }}">
+            </iframe>
+            <div class="title-over-wrapper">
+                <div class="title-over-map">
+                    <span class="mL45 title-label">{{ data.title }}</span>
+                    <span class="mR45 pull-right followButtonContainer">
+                        {% snippet 'indicator/snippets/share_button.html', title=data.title, placement="left", button_class="social_share_trigger" %}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
