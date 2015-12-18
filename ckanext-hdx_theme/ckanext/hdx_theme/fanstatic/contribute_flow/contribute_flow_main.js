@@ -185,6 +185,11 @@ ckan.module('contribute_flow_main', function($, _) {
             window.hdxContributeGlobal = contributeGlobal;
             sandbox.publish('hdx-contribute-global-created', contributeGlobal);
 
+            Sortable.create(document.getElementById("resource-list"), {
+                animation: 250,
+                ghostClass: "drag-drop-ghost"
+            });
+
             // Submit the form via Ajax
             $("#" + this.options.form_id).submit(
               function(e) {

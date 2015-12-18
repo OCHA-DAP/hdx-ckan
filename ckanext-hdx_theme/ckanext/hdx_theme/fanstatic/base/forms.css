@@ -300,6 +300,9 @@ ul.list-horizontal li:first-child:before {
   margin-bottom: 10px;
   background-color: #ffffff;
 }
+.drag-drop-component.drag-drop-ghost {
+  opacity: 0.4;
+}
 .drag-drop-component .drag-drop-area {
   border-radius: 6px;
   border: 3px dashed #cccccc;

@@ -114,7 +114,8 @@ $(function(){
     var ResourceItemView = Backbone.View.extend({
 
         // A template view for each Resource.
-
+        tagName: 'div',
+        className: 'drag-drop-component',
         template: _.template($('#resource-item-tmpl').html()),
 
         events: {
