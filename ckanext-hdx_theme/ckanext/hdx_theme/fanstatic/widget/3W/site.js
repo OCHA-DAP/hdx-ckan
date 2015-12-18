@@ -47,12 +47,14 @@ function generate3WComponent(config,data,geom){
 
         firstDate = startDimension.bottom(1)[0][config.startFieldName];
         lastDate = endDimension.top(1)[0][config.endFieldName];
-        dateExtent = [firstDate, lastDate];
+        var minDateMoment = moment(firstDate, dateFormat);
+        var maxDateMoment = moment(lastDate, dateFormat);
+        dateExtent = [minDateMoment.toDate(), maxDateMoment.toDate()];
         baseDate = new Date('1/1/1970');
         var now = moment(new Date());
         startDate = now.diff(baseDate, 'days');
-        minDate = moment(firstDate, dateFormat).diff(baseDate, 'days');
-        maxDate = moment(lastDate, dateFormat).diff(baseDate, 'days');
+        minDate = minDateMoment.diff(baseDate, 'days');
+        maxDate = maxDateMoment.diff(baseDate, 'days');
     }
 
 
@@ -155,7 +157,7 @@ function generate3WComponent(config,data,geom){
             ["%Y", function() {return true}]
         ]);
 
-        whenWidth = $(sliderSelector).width();
+        whenWidth = $(whenSelector).parent().width();
         whenHeight = 50;
         margin = {top: 0, bottom: whenHeight * 1.3, left: 15, right: 15};
         axisWidth = whenWidth - margin.left - margin.right;
