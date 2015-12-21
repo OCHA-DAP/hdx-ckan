@@ -182,12 +182,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                         tk.get_converter('convert_to_extras')],
             'dataset_source': [tk.get_validator('not_empty'),
                                tk.get_converter('convert_to_extras')],
-            'dataset_date': [tk.get_validator('ignore_missing'),
+            'dataset_date': [tk.get_validator('not_empty'),
                              tk.get_converter('convert_to_extras')],
-            'methodology': [tk.get_validator('ignore_missing'),
+            'methodology': [tk.get_validator('not_empty'),
                             tk.get_converter('convert_to_extras')],
             'methodology_other': [tk.get_validator('ignore_missing'),
                                   tk.get_converter('convert_to_extras')],
+            'license_id': [tk.get_validator('not_empty'), unicode],
             'license_other': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
             'solr_additions': [tk.get_validator('ignore_missing'),
@@ -196,7 +197,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
             'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
-            'data_update_frequency': [tk.get_validator('ignore_missing'),
+            'data_update_frequency': [tk.get_validator('not_empty'),
                               tk.get_converter('convert_to_extras')]
         })
 
@@ -319,9 +320,17 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return app
 
     def validate(self, context, data_dict, schema, action):
-        private = False if data_dict.get('private') == 'False' else True
+        '''
+            We're using a different validation schema if the dataset is private !
+        '''
+        private = False if data_dict.get('private','').lower() == 'false' else True
         if private:
             schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
+            schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+            schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+            schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
+                                               tk.get_converter('convert_to_extras')]
+
             if 'groups_list' in schema:
                 del schema['groups_list']
 

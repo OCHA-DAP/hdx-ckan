@@ -180,7 +180,7 @@
                                     <p> You can add more resources as needed by clicking on "Add more resources"</p>
                                 </div>
                                 <div class="col-xs-9">
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="title">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private">
                                     {{ form.input('title', id='field_title', label=_('Title of dataset'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
                                     </div>
 
@@ -189,15 +189,15 @@
                                     {% set domain = domain|replace("http://", "")|replace("https://", "") %}
                                     {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<dataset>'} %}
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="name">
-                                    {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs) }}
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="name" data-module-required="private">
+                                    {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-dataset'), value=data.name, error=errors.name, attrs=attrs, classes=['form-group', 'required']) }}
                                     </div>
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="notes">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="notes" data-module-required="public">
                                     {{ form.markdown('notes', id='field_notes', label=_('Description (optional)'), placeholder=_('Description of dataset'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                     </div>
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="subnational">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="subnational" data-module-required="public">
                                     {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational, error=errors.subnational, classes=['form-group'], attrs={}) }}
                                     </div>
 
@@ -217,12 +217,12 @@
                                     <p> You can add more resources as needed by clicking on "Add more resources"</p>
                                 </div>
                                 <div class="col-xs-7">
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source">
-                                    {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['form-group', 'required'], attrs={'class':'form-control'}) }}
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source" data-module-required="private">
+                                    {{ form.input('dataset_source', id='field_dataset_source', label=_('Source'), placeholder=_('Who collected the data?'), value=data.dataset_source, error=errors.dataset_source, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
 
                                     {% set organisations = h.hdx_organisation_list() %}
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="owner_org">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private">
                                     {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
                                     </div>
 
@@ -238,22 +238,22 @@
                                     'data-module-alt_field_id': 'field-dataset_date',
                                     'data-module-original_value': '{{ data.dataset_date }}', 'class':'form-control' } %}
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="ui_dataset_date">
-                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Date of Dataset'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
+                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Date of Dataset'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group'], attrs=dataset_date_attrs) }}
                                     <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
                                     </div>
 
 
 
                                     {% set location_list = h.hdx_location_list() %}
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="locations">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" data-module-required="public">
                                     {{ form.select('locations', id='field_locations', label=_('Location'), options=location_list, selected=data.locations, error=errors.locations, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
                                     </div>
 
 
                                     {% set licenses = h.hdx_license_list() %}
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="license_id">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="license_id" data-module-required="private">
                                         {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
                                     <div data-module="hdx_form_element_manager" data-module-element_name="license_other" id="license-other-define" {% if data.license_id != 'Other' %}style="display:none;"{% endif %}>
@@ -261,14 +261,14 @@
                                     </div>
 
                                     {% set methodologies = h.hdx_methodology_list() %}
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="methodology">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public">
                                         {{ form.select('methodology', id='field_methodology', label=_('Methodology'), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
                                     <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
                                         {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                     </div>
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="update">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
                                     {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), options=test_options, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
 

@@ -130,10 +130,12 @@ class ContributeFlowController(base.BaseController):
 
             dataset_id = data_dict.get('id')
 
-            pkg_dict = {}
-
             self.process_locations(data_dict)
 
+            if 'private' not in data_dict:
+                data_dict['private'] = 'True'
+
+            pkg_dict = {}
             if dataset_id:
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:

@@ -4,7 +4,6 @@ ckan.module('contribute_flow_main', function($, _) {
 	return {
 		initialize : function() {
             var sandbox = this.sandbox;
-            var formId = this.options.form_id;
             var formBodyId = this.options.form_body_id;
             var dataset_id = this.options.dataset_id;
             var request_url = this.options.request_url;
@@ -109,13 +108,57 @@ ckan.module('contribute_flow_main', function($, _) {
             sandbox.publish('hdx-contribute-global-created', contributeGlobal);
 
             // Submit the form via Ajax
-            $("#" + formId).submit(
+            $("#" + this.options.form_id).submit(
               function(e) {
                   var promise = contributeGlobal.saveDatasetForm();
                   promise.done(contributeGlobal.updateValidationUi);
                   e.preventDefault();
               }
             );
+
+            // Initialize private/public logic
+            this.managePrivateField();
+        },
+        managePrivateField: function() {
+            var sandbox = this.sandbox;
+            var privateVal = null;
+            var privateEl = null;
+            var privateRadioEls = $("input[name='private']");
+            for (var i=0; i<privateRadioEls.length; i++) {
+                var radioEl = $(privateRadioEls[i]);
+                if (radioEl.prop('checked')) {
+                    privateVal = radioEl.val();
+                }
+                if (radioEl.val() == "true") {
+                    privateEl = radioEl;
+                }
+            }
+            if (privateVal == null) {
+                privateVal = "false";
+                // If no checkbox is selected assume it's a private dataset
+                // this is logic is reflected in the contribute controller as well
+                privateEl.prop('checked', true);
+            }
+
+            sandbox.publish('hdx-form-validation', {
+                    'type': 'private_changed',
+                    'newValue': privateEl == 'false' ? 'public' : 'private'
+                }
+            );
+
+            privateRadioEls.change(
+                function (event) {
+                    if ($(this).prop('checked')){
+                        var message = {
+                            'type': 'private_changed',
+                            'newValue': $(this).val() == 'false' ? 'public' : 'private'
+                        };
+                        sandbox.publish('hdx-form-validation', message);
+                    }
+
+                }
+            );
+
         },
         options: {
             form_id: 'create_dataset_form',
