@@ -256,6 +256,9 @@ def hdx_send_request_membership(context, data_dict):
                         mail=data_dict['email'], org=data_dict['organization'],
                         msg=data_dict.get('message', ''))
 
+
+    # new_body = _('')
+
     hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
 
 
