@@ -256,10 +256,25 @@ def hdx_send_request_membership(context, data_dict):
                         mail=data_dict['email'], org=data_dict['organization'],
                         msg=data_dict.get('message', ''))
 
+    org_obj = model.Group.get(data_dict['organization'])
 
-    # new_body = _('')
+    org_add_member_url = (config['ckan.site_url'] + '/organization/members/{org_name}#add-member-div').format(org_name=org_obj.name)
+    new_body = _('Dear HDX_XXX\n\n'
+                 'You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX.\n\n'
+                 'If you know this user and would like to add them to your organisation, please log on to HDX and click on the ADD MEMBER link for your organisation at {org_add_member_url} . Enter \'{user_username}\' in the username box and assign one of the following roles to the user:\n'
+                 '- Admin: The user can add, edit and delete datasets, as well as manage organisation membership.\n'
+                 '- Editor:The user can add, edit and delete datasets, but not manage organisation membership.\n'
+                 '- Member: The user can view the organisation\'s private datasets, but not add new datasets or manage membership\n\n'
+                 'You can ignore this message if you do not wish to add the user to your organisation.\n\n'
+                 'This email is the only notification you will receive from HDX regarding this user\'s request to join your organisation. The message has been sent to all the admins of the {org_title} organisation.\n\n'
+                 'You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.\n\n'
+                 'Best wishes,\n'
+                 ' the HDX Team\n'
+                 ).format(org_title=org_obj.display_name, user_fullname=data_dict['display_name'], user_email=data_dict['email'], org_add_member_url=org_add_member_url, user_username=data_dict['name'])
 
-    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+    # changed made to send customized emails to each admin
+    for admin in data_dict['admins']:
+        hdx_mail.send_mail([admin], _('New Request Membership'), body)
 
 
 def hdx_user_show(context, data_dict):
