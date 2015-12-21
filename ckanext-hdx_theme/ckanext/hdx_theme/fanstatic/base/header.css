@@ -1650,6 +1650,10 @@ ul.list-horizontal li:first-child:before {
 .drag-drop-component.drag-drop-ghost {
   opacity: 0.4;
 }
+.drag-drop-component .cloud-img {
+  height: 21px;
+  margin-right: 3px;
+}
 .drag-drop-component .drag-drop-area {
   border-radius: 6px;
   border: 3px dashed #cccccc;
