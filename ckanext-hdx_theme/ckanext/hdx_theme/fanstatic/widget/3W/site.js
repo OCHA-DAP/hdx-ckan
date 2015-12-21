@@ -144,8 +144,8 @@ function generate3WComponent(config,data,geom){
         .text('Activities');
 
     if (startDimension && endDimension){
-        initSlider();
         $("#4w").show();
+        initSlider();
     }
 
     function drawAxis() {
