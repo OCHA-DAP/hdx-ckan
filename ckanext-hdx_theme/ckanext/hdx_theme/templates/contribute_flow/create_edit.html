@@ -92,15 +92,6 @@
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <div class="col-xs-12">
-                                                          <div class="control-group form-group control-full">
-                                                            <div class="controls ">
-                                                            <input type="file" name="upload" value="" class="resource_file_field form-control" />
-                                                            </div>
-                                                          </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
                                                         <div class="col-xs-8">
                                                           <div class="control-group form-group required">
                                                             <div class="controls ">
@@ -127,7 +118,16 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-xs-3">
-                                                    <div class="drag-drop-area">Drop file to overwrite or <a>Browse</a></div>
+                                                    <div class="drag-drop-area">
+                                                        Drop file to overwrite or
+                                                        <label class="browse-button">
+                                                            <span>
+                                                                Browse
+                                                            </span>
+                                                            <input type="file" name="upload" style="" value="" class="resource_file_field form-control" />
+                                                        </label>
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -139,7 +139,7 @@
                                 <div id="resource-create"></div>
 
                                 <div>
-                                    <input type="button" class="btn btn-primary btn-lg" value="Add more resources"/>
+                                    <input class="add_new_resource" type="button" class="btn btn-primary btn-lg" value="Add more resources"/>
                                 </div>
                             </div>
                         </div>

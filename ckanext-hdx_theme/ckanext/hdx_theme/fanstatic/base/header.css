@@ -1662,6 +1662,28 @@ ul.list-horizontal li:first-child:before {
   letter-spacing: 0.03em;
   text-align: center;
 }
+.drag-drop-component .drag-drop-area .browse-button {
+  color: #007ce0;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.drag-drop-component .drag-drop-area .browse-button:after {
+  content: none;
+}
+.drag-drop-component .drag-drop-area .browse-button span {
+  position: relative;
+  z-index: 100;
+}
+.drag-drop-component .drag-drop-area .browse-button input[type="file"] {
+  position: absolute;
+  z-index: 99;
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+  padding: 0;
+  top: 0;
+}
 /* Body Background */
 body {
   background-size: cover;

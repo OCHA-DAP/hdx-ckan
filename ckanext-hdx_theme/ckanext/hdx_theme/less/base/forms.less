@@ -352,5 +352,30 @@ ul.list-horizontal {
     color: @grayColor;
     .letter-spacing-3();
     text-align: center;
+
+    .browse-button {
+      color: @blueColor;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+
+      &:after {
+        content: none;
+      }
+
+      span{
+        position: relative;
+        z-index: 100;
+      }
+      input[type="file"]{
+        position: absolute;
+        z-index: 99;
+        height: 1px;
+        width: 1px;
+        opacity: 0;
+        padding: 0;
+        top: 0;
+      }
+    }
   }
 }
