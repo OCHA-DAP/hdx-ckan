@@ -37,7 +37,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                     action='read_crisis',
                     )
-        map.connect('read_dashboard', '/dashboard/{id}',
+        map.connect('read_dashboard', '/analytics/{id}',
                     controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                     action='read_dashboard',
                     )

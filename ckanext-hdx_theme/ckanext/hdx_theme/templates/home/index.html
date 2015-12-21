@@ -59,7 +59,7 @@
                   {{ self.home_search() }}
                   <div>
                     <p class="exampleSearch">
-                      {{ _("e.g.") }} <a href="{% url_for 'show_custom_country', id='nepal-earthquake' %}">{{ _("Nepal Earthquake") }}</a>
+                      {{ _("e.g.") }} <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>
                       {{ _("or") }} <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>
                     </p>
                   </div>
