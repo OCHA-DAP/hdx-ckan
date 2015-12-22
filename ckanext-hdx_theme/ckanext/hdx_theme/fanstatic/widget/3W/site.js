@@ -62,7 +62,7 @@ function generate3WComponent(config,data,geom){
     var whoGroup = whoDimension.group();
     var whatGroup = whatDimension.group();
     var whereGroup = whereDimension.group();
-    var whenGroup = startDimension.group();
+    //var whenGroup = startDimension.group();
     var all = cf.groupAll();
 
     var whoWidth = $(whoContainerId).width();
@@ -179,7 +179,7 @@ function generate3WComponent(config,data,geom){
             .append('g')
             .attr('transform', "translate(" + margin.left + ", " + margin.right + ")");
 
-        console.log(whenAxis)
+        console.log(whenAxis);
         whenAxis.append('g')
             .attr('class', 'x axis')
             .attr('transform', "translate(0, " + axisHeight + ")")
