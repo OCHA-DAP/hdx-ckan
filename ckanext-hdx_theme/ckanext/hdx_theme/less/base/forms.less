@@ -13,6 +13,8 @@ body.contribute-body{
 
 
 .hdx-form {
+  color: @darkGrayColor;
+
   .background-gray {
     background-color: @extraLightGrayColor;
   }
@@ -37,6 +39,10 @@ body.contribute-body{
       color: @blueColor;
       .sourceSansProFont(400, 18px);
       margin: 0;
+
+      & ~ p {
+        color: @grayColor;
+      }
     }
 
     .sample-text {
@@ -345,6 +351,19 @@ ul.list-horizontal {
   .cloud-img {
     height: 21px;
     margin-right: 3px;
+  }
+
+  label.control-label {
+    color: inherit;
+    font-weight: inherit;
+  }
+
+  .list-horizontal {
+    li.or-separator {
+      &:before {
+        content: "or";
+      }
+    }
   }
 
   .drag-drop-area{

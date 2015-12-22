@@ -82,12 +82,12 @@ Examples:
   {{ form.select('year', label=_('Year'), options={2010: 2010, 2011: 2011}, selected=2011, error=errors.year) }}
 
 #}
-{% macro select(name, id='', label='', options='', selected='', error='', classes=[], attrs={}, is_required=false) %}
+{% macro select(name, id='', label='', placeholder='', options='', selected='', error='', classes=[], attrs={}, is_required=false) %}
   {% set classes = (classes|list) %}
   {% do classes.append('control-select') %}
   {%- set extra_html = caller() if caller -%}
   {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <select id="{{ id or name }}" name="{{ name }}" {{ attributes(attrs) }}>
+    <select id="{{ id or name }}" name="{{ name }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>
       {% for option in options %}
           {% if attrs['multiple'] == 'true' %}
             <option value="{{ option.value }}" {% if option.value in selected %} selected="selected"{% endif %}>{{ option.text or option.value }}</option>

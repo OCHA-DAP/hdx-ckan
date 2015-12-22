@@ -9,6 +9,9 @@
 body.contribute-body {
   min-width: 100%;
 }
+.hdx-form {
+  color: #333333;
+}
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }
@@ -31,6 +34,9 @@ body.contribute-body {
   font-weight: 400;
   font-size: 18px;
   margin: 0;
+}
+.hdx-form .form-section h3 ~ p {
+  color: #888888;
 }
 .hdx-form .form-section .sample-text {
   font-family: 'Gotham-Light', sans-serif;
@@ -306,6 +312,13 @@ ul.list-horizontal li:first-child:before {
 .drag-drop-component .cloud-img {
   height: 21px;
   margin-right: 3px;
+}
+.drag-drop-component label.control-label {
+  color: inherit;
+  font-weight: inherit;
+}
+.drag-drop-component .list-horizontal li.or-separator:before {
+  content: "or";
 }
 .drag-drop-component .drag-drop-area {
   border-radius: 6px;

@@ -56,19 +56,19 @@
                                                     } %>
                                                     <ul class="list-horizontal">
                                                         <li>
-                                                            <label>
+                                                            <label class="control-label">
                                                                 <input type="radio" name="<%= id %>-upload_type" value="public"> Upload file
                                                             </label>
                                                         </li>
                                                         <li>
-                                                            <label>
-                                                                <input type="radio" name="<%= id %>-upload_type" value="public"> Upload from URL
+                                                            <label class="control-label">
+                                                                <input type="radio" name="<%= id %>-upload_type" value="public"> Import from URL
                                                             </label>
                                                         </li>
-                                                        <li>
+                                                        <li class="or-separator">
                                                             <img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox
                                                         </li>
-                                                        <li>
+                                                        <li class="or-separator">
                                                             <img class="cloud-img" src="/images/icons/drive.png" /> Google Drive
                                                         </li>
                                                         <li>
@@ -152,7 +152,7 @@
                             <div class="row form-section">
                                 <div class="col-xs-3">
                                     <h3>Privacy Settings</h3>
-                                    <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                                    <p> You have a choice of sharing your dataset publicly or restricting access to other members of your organisation(s).</p>
                                 </div>
                                 <div class="col-xs-9">
                                     <div class="form-group">
@@ -180,7 +180,15 @@
                             <div class="row form-section">
                                 <div class="col-xs-3">
                                     <h3>Dataset title & description</h3>
-                                    <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                                    <p>
+                                        <strong>Title of dataset</strong><br/>
+                                        The keywords in your dataset title are matched to search term users enter when looking for data in HDX.
+                                        Avoid using abbreviations in the title which may not be familiar to all users. Also, avoid using words such
+                                        as current, latest or previous when referring to the time period(e.g. Latest 3W) as these terms become
+                                        misleading as the dataset ages.
+                                        <br/><br/>
+                                        Example dataset title: <strong>Who is Doing What Where in Afghanistan, Jan-Dec2015</strong>
+                                    </p>
                                 </div>
                                 <div class="col-xs-9">
                                     <div data-module="hdx_form_element_manager" data-module-element_name="title" data-module-required="private">
@@ -217,7 +225,7 @@
                             <div class="row form-horizontal form-section">
                                 <div class="col-xs-3">
                                     <h3>Metadata</h3>
-                                    <p> You can add more resources as needed by clicking on "Add more resources"</p>
+                                    <p> <strong>TBD</strong> </p>
                                 </div>
                                 <div class="col-xs-7">
                                     <div data-module="hdx_form_element_manager" data-module-element_name="dataset_source" data-module-required="private">
@@ -232,7 +240,7 @@
                                     {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
                                     'data-module-source': '/api/2/util/user/autocomplete?q=?', 'class':'form-control' } %}
                                     <div data-module="hdx_form_element_manager" data-module-element_name="maintainer">
-                                    {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
+                                    {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
                                     </div>
 
 
@@ -242,7 +250,7 @@
                                     'data-module-original_value': '{{ data.dataset_date }}', 'class':'form-control' } %}
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
-                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Date of Dataset'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group'], attrs=dataset_date_attrs) }}
+                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
                                     <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
                                     </div>
 
@@ -265,14 +273,14 @@
 
                                     {% set methodologies = h.hdx_methodology_list() %}
                                     <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public">
-                                        {{ form.select('methodology', id='field_methodology', label=_('Methodology'), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                        {{ form.select('methodology', id='field_methodology', label=_('Methodology'), placeholder=_("Select methodology"), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
                                     <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
                                         {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                     </div>
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                    {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), options=test_options, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                    {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), placeholder=_("How often does this data update?"), options=test_options, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="caveats">
