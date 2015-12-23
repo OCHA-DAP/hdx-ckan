@@ -62,7 +62,7 @@ function generate3WComponent(config,data,geom){
     var whoGroup = whoDimension.group();
     var whatGroup = whatDimension.group();
     var whereGroup = whereDimension.group();
-    var whenGroup = startDimension.group();
+    //var whenGroup = startDimension.group();
     var all = cf.groupAll();
 
     var whoWidth = $(whoContainerId).width();
