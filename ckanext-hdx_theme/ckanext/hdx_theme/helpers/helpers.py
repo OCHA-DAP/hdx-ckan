@@ -132,8 +132,9 @@ def get_last_revision_timestamp_group(group_id):
         return h.render_datetime(activity.timestamp)
     return None
 
+
 def get_dataset_date_format(date):
-    #Is this a range?
+    # Is this a range?
     drange = date.split('-')
     if len(drange) != 2:
         drange = [date]
@@ -145,6 +146,7 @@ def get_dataset_date_format(date):
         except:
             return False
     return '-'.join(dates)
+
 
 def get_group_followers(grp_id):
     result = logic.get_action('group_follower_count')(
@@ -579,4 +581,38 @@ def hdx_popular(type_, number, min=1, title=None):
 
 def hdx_escape(item):
     import re
-    return re.sub("u&#39;([^']*)&#39;",r'\1', str(item))
+    return re.sub("u&#39;([^']*)&#39;", r'\1', str(item))
+
+
+def hdx_license_list():
+    license_touple_list = base.model.Package.get_license_options()
+    license_dict_list = [{'value': _id, 'text': _title} for _title, _id in license_touple_list]
+    return license_dict_list
+
+
+def hdx_methodology_list():
+    result = [{}, {'value': 'Census', 'text': 'Census'}, {'value': 'Sample Survey', 'text': 'Sample Survey'},
+              {'value': 'Direct Observational Data/Anecdotal Data', 'text': 'Direct Observational Data/Anecdotal Data'},
+              {'value': 'Registry', 'text': 'Registry'}, {'value': 'Other', 'text': 'Other'}]
+    return result
+
+
+def hdx_location_list():
+    locations = logic.get_action('cached_group_list')({}, {})
+    locations_dict_list = [{'value': loc.get('id'), 'text': loc.get('title')} for loc in locations]
+    return locations_dict_list
+
+
+def hdx_organisation_list():
+    orgs = h.organizations_available('create_dataset')
+    orgs_dict_list = [{'value': org.get('id'), 'text': org.get('title')} for org in orgs]
+    return orgs_dict_list
+
+
+def hdx_tag_list():
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        tags = logic.get_action('tag_list')(context, {})
+        tags_dict_list = [{'value': tag, 'text': tag} for tag in tags]
+        return tags_dict_list
+    return []

@@ -133,6 +133,13 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
         
         #map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
+        # map.connect('/contribute/new',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='new')
+        # map.connect('/contribute/edit/{id}',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='edit')
+
         return map
 
     def is_fallback(self):
@@ -147,7 +154,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema.update({
             # Notes == description. Makes description required
             'notes': [tk.get_validator('not_empty')],
-            'package_creator': [tk.get_validator('not_empty'),
+            'package_creator': [ tk.get_validator('find_package_creator'),
+                                tk.get_validator('not_empty'),
                                 tk.get_converter('convert_to_extras')],
             'groups_list': [vd.groups_not_empty],
             'indicator': [tk.get_validator('ignore_missing'),
@@ -296,7 +304,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def get_validators(self):
         return {
-            'hdx_detect_format': vd.detect_format
+            'hdx_detect_format': vd.detect_format,
+            'find_package_creator': vd.find_package_creator
         }
 
     def get_auth_functions(self):
@@ -307,6 +316,15 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def make_middleware(self, app, config):
         run_on_startup()
         return app
+
+    # def validate(self, context, data_dict, schema, action):
+    #     private = False if data_dict.get('private') == 'False' else True
+    #     if private:
+    #         schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
+    #         if 'groups_list' in schema:
+    #             del schema['groups_list']
+    #
+    #     return toolkit.navl_validate(data_dict, schema, context)
 
 
 class HDXChartViewsPlugin(plugins.SingletonPlugin):

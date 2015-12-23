@@ -400,7 +400,8 @@ def package_create(context, data_dict):
                 # to ensure they still work
                 package_plugin.check_data_dict(data_dict)
 
-    data, errors = _validate(data_dict, schema, context)
+    data, errors = lib_plugins.plugin_validate(
+        package_plugin, context, data_dict, schema, 'package_create')
     if 'tags' in data:
         data['tags'] = get_tag_vocabulary(data['tags'])
     if 'groups' in data:
@@ -430,7 +431,7 @@ def package_create(context, data_dict):
 
     pkg = model_save.package_dict_save(data, context)
     model.setup_default_user_roles(pkg, admins)
-    # Needed to let extensions know the package id
+    # Needed to let extensions know the package and resources ids
     model.Session.flush()
     data['id'] = pkg.id
     if data.get('resources'):
