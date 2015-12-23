@@ -144,7 +144,7 @@
       <div class="row">
         <div class="{{ form_field_wrapper_classes }}">
           <div class="control-group">
-            {% set methodology, methodology_other = h. methodology_bk_compat(data.methodology, data.methodology_other, False) %}
+            {% set methodology, methodology_other = h.methodology_bk_compat(data.methodology, data.methodology_other, False) %}
             {% set error = errors.methodology %}
             <label class="control-label" for="field-methodology">{{ _("Methodology") }}</label>
             <div class="controls" id="mx-dataset-methodology">
