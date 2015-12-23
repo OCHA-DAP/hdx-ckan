@@ -323,16 +323,18 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         '''
             We're using a different validation schema if the dataset is private !
         '''
-        private = False if data_dict.get('private','').lower() == 'false' else True
-        if private:
-            schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
-            schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-            schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-            schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
-                                               tk.get_converter('convert_to_extras')]
+        if action in ['package_create', 'package_update']:
+            private = False if str(data_dict.get('private','')).lower() == 'false' else True
 
-            if 'groups_list' in schema:
-                del schema['groups_list']
+            if private:
+                schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
+                schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+                schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+                schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
+                                                   tk.get_converter('convert_to_extras')]
+
+                if 'groups_list' in schema:
+                    del schema['groups_list']
 
         return toolkit.navl_validate(data_dict, schema, context)
 

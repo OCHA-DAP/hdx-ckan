@@ -4,15 +4,24 @@ Created on Jun 16, 2014
 @author: alexandru-m-g
 '''
 
+import webtest
+import logging
 import ckan.lib.create_test_data as ctd
 import ckan.config as ckanconfig
-import webtest
 import ckan.model as model
 import ckan.lib.search as search
+import ckan.logic as logic
 
 import ckan.new_tests.helpers as helpers
 
+import ckanext.hdx_package.helpers.helpers as hdx_actions
+
 from pylons import config
+
+
+log = logging.getLogger(__name__)
+
+original_package_create = hdx_actions.package_create
 
 
 def _get_test_app():
@@ -47,6 +56,9 @@ class HdxBaseTest(object):
 
         search.clear()
         helpers.reset_db()
+
+        cls.replace_package_create()
+
         cls._create_test_data()
 
     @classmethod
@@ -56,6 +68,24 @@ class HdxBaseTest(object):
 
         config.clear()
         config.update(cls.original_config)
+        logic._actions['package_create'] = original_package_create
+
+    @classmethod
+    def replace_package_create(cls):
+        def package_create_wrapper(context, data_dict):
+            if not data_dict.get('license_id'):
+                data_dict['license_id'] = 'cc'
+
+            private = False if str(data_dict.get('private','')).lower() == 'false' else True
+            if not private:
+                if not data_dict.get('data_update_frequency'):
+                    data_dict['data_update_frequency'] = '0'
+                if not data_dict.get('dataset_date'):
+                    data_dict['dataset_date'] = '11/11/2011'
+                if not data_dict.get('methodology'):
+                    data_dict['methodology'] = 'Automatically inserted test methodology'
+            return original_package_create(context, data_dict)
+        logic._actions['package_create'] = package_create_wrapper
 
 
 class HdxFunctionalBaseTest(HdxBaseTest):

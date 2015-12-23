@@ -55,12 +55,12 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         try:
             self._get_action('package_create')(context, package)
             assert False, 'It should not be possible to create a package without group'
-        except logic.ValidationError:
+        except logic.ValidationError, e:
             assert True, 'It should not be possible to create a package without group'
 
         try:
             package['groups'] = [{"name": "roger"}]
             self._get_action('package_create')(context, package)
             assert True
-        except logic.ValidationError:
+        except logic.ValidationError, e:
             assert False

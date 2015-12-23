@@ -102,6 +102,9 @@ ckan.module('contribute_flow_main', function($, _) {
                     else {
                         //Form submitted succesfully, go to some URL
                     }
+                },
+                'getSaveReadyPromise':  function() {
+
                 }
             };
             //window.hdxContributeGlobal = contributeGlobal;

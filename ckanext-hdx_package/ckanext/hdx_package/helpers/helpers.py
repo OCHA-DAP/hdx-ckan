@@ -405,7 +405,10 @@ def package_create(context, data_dict):
     if 'tags' in data:
         data['tags'] = get_tag_vocabulary(data['tags'])
     if 'groups' in data:
-         data['extras'].append({'key':'solr_additions','value':build_additions(data['groups'])})
+        additions = {'key':'solr_additions','value':build_additions(data['groups'])}
+        if not 'extras' in data:
+            data['extras'] = []
+        data['extras'].append(additions)
 
     log.debug('package_create validate_errs=%r user=%s package=%s data=%r',
               errors, context.get('user'),
