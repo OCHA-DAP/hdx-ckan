@@ -3,6 +3,7 @@
 ckan.module('contribute_flow_main', function($, _) {
 	return {
 		initialize : function() {
+            var moduleLog = this.moduleLog;
             var sandbox = this.sandbox;
             var formBodyId = this.options.form_body_id;
             var dataset_id = this.options.dataset_id;
@@ -86,7 +87,7 @@ ckan.module('contribute_flow_main', function($, _) {
                         };
                         sandbox.publish('hdx-form-validation', sumMessage);
                     }
-                    if (data.errors) {
+                    if (data.errors && Object.keys(data.errors).length > 0) {
                         for (var key in data.errors) {
                             var errorList = data.errors[key];
                             for (var i = 0; i < errorList.length; i++) {
@@ -99,22 +100,56 @@ ckan.module('contribute_flow_main', function($, _) {
                             }
                         }
                     }
-                    else {
-                        //Form submitted succesfully, go to some URL
+                },
+                'afterBodyFormSave': function (data, status, xhr) {
+                    // Even if there are no errors we need to update the validation UI (hide previous errors)
+                    contributeGlobal.updateValidationUi(data, status, xhr);
+
+                    if (!data.errors || Object.keys(data.errors).length == 0) {
+                        if (!contributeGlobal.resourceSaveReadyDeferred) {
+                            contributeGlobal.resourceSaveReadyDeferred = new $.Deferred();
+                        }
+                        contributeGlobal._datasetName = data.data.name;
+                        contributeGlobal.resourceSaveReadyDeferred.resolve(data.data.id);
+                        contributeGlobal.resourceSaveReadyDeferred = null;
                     }
                 },
-                'getSaveReadyPromise':  function() {
-
+                'resourceSaveReadyDeferred': null,
+                'getResourceSaveStartPromise':  function() {
+                    /**
+                     * returns a promise which gets fulfilled when the body of the form
+                     * is saved successfully.
+                     * NOTE: If saving the resources fails you'll need to
+                     * get another promise !
+                     *
+                     */
+                    if (!this.resourceSaveReadyDeferred) {
+                        this.resourceSaveReadyDeferred = new $.Deferred();
+                    }
+                    return this.resourceSaveReadyDeferred.promise();
+                },
+                'browseToDataset': function() {
+                    /**
+                     * This function should be called at the end of the saving process,
+                     * after the resources have been saved succesfully
+                     */
+                    if ( this._datasetName ) {
+                        var promise = this.getDatasetIdPromise();
+                        window.location.href = '/dataset/' + this._datasetName;
+                    }
+                    else {
+                        moduleLog.log('Cannot browse to dataset because name is missing');
+                    }
                 }
             };
-            //window.hdxContributeGlobal = contributeGlobal;
+            window.hdxContributeGlobal = contributeGlobal;
             sandbox.publish('hdx-contribute-global-created', contributeGlobal);
 
             // Submit the form via Ajax
             $("#" + this.options.form_id).submit(
               function(e) {
                   var promise = contributeGlobal.saveDatasetForm();
-                  promise.done(contributeGlobal.updateValidationUi);
+                  promise.done(contributeGlobal.afterBodyFormSave);
                   e.preventDefault();
               }
             );
@@ -162,6 +197,9 @@ ckan.module('contribute_flow_main', function($, _) {
                 }
             );
 
+        },
+        moduleLog: function (message) {
+            //console.log(message);
         },
         options: {
             form_id: 'create_dataset_form',
