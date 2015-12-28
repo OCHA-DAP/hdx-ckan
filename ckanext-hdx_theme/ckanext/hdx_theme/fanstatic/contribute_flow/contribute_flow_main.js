@@ -7,7 +7,8 @@ ckan.module('contribute_flow_main', function($, _) {
             var sandbox = this.sandbox;
             var formBodyId = this.options.form_body_id;
             var dataset_id = this.options.dataset_id;
-            var request_url = this.options.request_url;
+            var validateUrl = this.options.validate_url;
+            var requestUrl = window.location.pathname;
             var contributeGlobal = {
                 'getDatasetIdPromise': function() {
                     var deferred = new $.Deferred();
@@ -18,21 +19,22 @@ ckan.module('contribute_flow_main', function($, _) {
                             this._datasetId = dataset_id;
                             deferred.resolve(this._datasetId);
                         }
-                        else {  // We're in the "new" mode and we need to create the initial dataseet
-                            var formDataArray = this.getFormValues('generate-dataset-id-json');
-                            var promise = $.post(request_url, $.param(formDataArray));
-                            $.when(promise).done(
-                                function (data, status, xhr) {
-                                    contributeGlobal.updateValidationUi(data, status, xhr);
-                                    if (data.data && data.data.id) {
-                                        contributeGlobal._datasetId = data.data.id;
-                                        deferred.resolve(data.data.id);
-                                    }
-                                    else {
-                                        deferred.resolve(null);
-                                    }
-                                }
-                            );
+                        else {  // We're in the "new" mode
+                            deferred.resolve(null);
+                            //var formDataArray = this.getFormValues('generate-dataset-id-json');
+                            //var promise = $.post(requestUrl, $.param(formDataArray));
+                            //$.when(promise).done(
+                            //    function (data, status, xhr) {
+                            //        contributeGlobal.updateValidationUi(data, status, xhr);
+                            //        if (data.data && data.data.id) {
+                            //            contributeGlobal._datasetId = data.data.id;
+                            //            deferred.resolve(data.data.id);
+                            //        }
+                            //        else {
+                            //            deferred.resolve(null);
+                            //        }
+                            //    }
+                            //);
                         }
                     }
                     else { // We already have the dataset ID
@@ -40,20 +42,42 @@ ckan.module('contribute_flow_main', function($, _) {
                     }
                     return deferred.promise();
                 },
+                'validate': function() {
+                    var deferred = new $.Deferred();
+                    var formDataArray = this.getFormValues('validate-json');
+                    $.post(validateUrl, formDataArray,
+                        function (data, status, xhr) {
+                            contributeGlobal.updateValidationUi(data, status, xhr);
+                            deferred.resolve(contributeGlobal.validateSucceeded(data, status))
+                            moduleLog('Validation finished');
+                        }
+                    );
+                    return deferred.promise();
+                },
                 'saveDatasetForm': function() {
-                    var formDataArray = this.getFormValues('update-dataset-json');
+                    var validatePromise = this.validate();
                     var datasetIdPromise = this.getDatasetIdPromise();
                     var deferred = new $.Deferred();
-                    $.when(datasetIdPromise).done(
-                        function(datasetId){
-                            if (datasetId) {
-                                formDataArray.push({'name': 'id', 'value': datasetId});
-                            }
-                            $.post(request_url, formDataArray,
-                                function(data, status, xhr) {
-                                    deferred.resolve(data, status, xhr);
+                    $.when(validatePromise, datasetIdPromise).done(
+                        function(validateSucceeded, datasetId){
+                            moduleLog('In saveDatasetForm() function. Got validateSucceeded: ' +
+                                validateSucceeded + ' and datasetId:' + datasetId);
+                            if (validateSucceeded) {
+                                var formDataArray;
+                                if (datasetId) {
+                                    formDataArray = contributeGlobal.getFormValues('update-dataset-json');
+                                    formDataArray.push({'name': 'id', 'value': datasetId});
                                 }
-                            );
+                                else{
+                                    formDataArray = contributeGlobal.getFormValues('new-dataset-json');
+                                }
+                                $.post(requestUrl, formDataArray,
+                                    function(data, status, xhr) {
+                                        contributeGlobal.updateInnerState(data, status);
+                                        deferred.resolve(data, status, xhr);
+                                    }
+                                );
+                            }
                         }
                     );
 
@@ -75,6 +99,16 @@ ckan.module('contribute_flow_main', function($, _) {
                         }
                     }
                     return modifiedFormDataArray;
+                },
+                'updateInnerState': function (data, status) {
+                    if ( this.validateSucceeded(data, status)) {
+                        if ( !this.hasOwnProperty('_datasetId') && data.data && data.data.id) {
+                            this._datasetId = data.data.id;
+                        }
+                        if ( data.data && data.data.name ) {
+                            this._datasetName = data.data.name;
+                        }
+                    }
                 },
                 'updateValidationUi': function (data, status, xhr) {
                     var resetMessage = {type: 'reset'};
@@ -105,11 +139,10 @@ ckan.module('contribute_flow_main', function($, _) {
                     // Even if there are no errors we need to update the validation UI (hide previous errors)
                     contributeGlobal.updateValidationUi(data, status, xhr);
 
-                    if (!data.errors || Object.keys(data.errors).length == 0) {
+                    if ( contributeGlobal.validateSucceeded(data, status) ) {
                         if (!contributeGlobal.resourceSaveReadyDeferred) {
                             contributeGlobal.resourceSaveReadyDeferred = new $.Deferred();
                         }
-                        contributeGlobal._datasetName = data.data.name;
                         contributeGlobal.resourceSaveReadyDeferred.resolve(data.data.id);
                         contributeGlobal.resourceSaveReadyDeferred = null;
                     }
@@ -139,6 +172,11 @@ ckan.module('contribute_flow_main', function($, _) {
                     else {
                         moduleLog.log('Cannot browse to dataset because name is missing');
                     }
+                },
+                'validateSucceeded': function(data, status) {
+                    var validated = status == 'success' &&
+                        (!data.errors || Object.keys(data.errors).length == 0) ;
+                    return validated;
                 },
                 'setResourceModelList': function (resourceModelList) {
                     this.resourceModelList = resourceModelList;
@@ -206,7 +244,7 @@ ckan.module('contribute_flow_main', function($, _) {
         options: {
             form_id: 'create_dataset_form',
             form_body_id: 'contribute-flow-form-body',
-            request_url: '/contribute/new',
+            'validate_url': '/contribute/validate',
             dataset_id: null
         }
 

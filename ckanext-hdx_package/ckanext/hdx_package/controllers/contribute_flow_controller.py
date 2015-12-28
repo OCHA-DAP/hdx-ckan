@@ -121,33 +121,50 @@ class ContributeFlowController(base.BaseController):
     def _save_or_update(self, context, package_type=None):
         data_dict = {}
         try:
-            data_dict = clean_dict(dict_fns.unflatten(
-                tuplize_dict(parse_params(request.POST))))
-
-            data_dict['type'] = package_type
-            del data_dict['save']
-            context['message'] = data_dict.get('log_message', '')
-
-            dataset_id = data_dict.get('id')
-
-            self.process_locations(data_dict)
-
-            if 'private' not in data_dict:
-                data_dict['private'] = 'True'
+            data_dict = self._prepare_data_for_saving(context, data_dict, package_type)
 
             pkg_dict = {}
-            if dataset_id:
+            if data_dict.get('id'):
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:
                 pkg_dict = logic.get_action('package_create')(context, data_dict)
 
-            return (pkg_dict, {}, {})
+            return pkg_dict, {}, {}
 
         except logic.ValidationError, e:
-            errors = e.error_dict
-            error_summary = e.error_summary
+            return data_dict, e.error_dict, e.error_summary
 
-            return data_dict, errors, error_summary
+    def _prepare_data_for_saving(self, context, data_dict, package_type):
+        data_dict = clean_dict(dict_fns.unflatten(
+            tuplize_dict(parse_params(request.POST))))
+        data_dict['type'] = package_type
+
+        del data_dict['save']
+
+        context['message'] = data_dict.get('log_message', '')
+        self.process_locations(data_dict)
+
+        if 'private' not in data_dict:
+            data_dict['private'] = 'True'
+
+        return data_dict
+
+    def validate(self, package_type=None):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   'save': 'save' in request.params}
+        data_dict = {}
+        save_type = request.POST.get('save')
+        try:
+            data_dict = self._prepare_data_for_saving(context, data_dict, package_type)
+            pkg_dict = logic.get_action('package_validate')(context, data_dict)
+            return self._prepare_and_render(save_type=save_type, data=pkg_dict, errors={},
+                                        error_summary={})
+
+        except logic.ValidationError, e:
+            return self._prepare_and_render(save_type=save_type, data=data_dict, errors=e.error_dict,
+                                        error_summary=e.error_summary)
+
 
     def process_locations(self, data_dict):
         locations = data_dict.get("locations")

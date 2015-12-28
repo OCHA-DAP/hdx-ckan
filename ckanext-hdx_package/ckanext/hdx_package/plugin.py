@@ -139,6 +139,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('/contribute/edit/{id}',
                     controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
                     action='edit')
+        map.connect('/contribute/validate',
+                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+                    action='validate')
 
         return map
 
@@ -294,6 +297,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_purge': hdx_delete.hdx_dataset_purge,
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
+            'package_validate': hdx_get.package_validate
         }
 
     def before_show(self, resource_dict):

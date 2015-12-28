@@ -13,12 +13,15 @@ import ckan.lib.navl.dictization_functions
 import ckan.lib.search as search
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.logic.action.get as logic_get
+import ckan.lib.plugins as lib_plugins
+
 
 import sqlalchemy
 import logging
 import json
 
 from ckan.lib import uploader
+from ckan.common import _
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -324,3 +327,38 @@ def __get_resource_filesize(resource_dict):
                                                                                       str(e)))
         return value
     return None
+
+
+@logic.side_effect_free
+def package_validate(context, data_dict):
+    model = context['model']
+    name_or_id = data_dict.get("id") or data_dict['name']
+
+    pkg = model.Package.get(name_or_id)
+
+    if pkg is None:
+        action = 'package_create'
+        type = data_dict.get('type', 'dataset')
+    else:
+        action = 'package_update'
+        type = pkg.type
+        context["package"] = pkg
+        data_dict["id"] = pkg.id
+
+    logic.check_access(action, context, data_dict)
+    package_plugin = lib_plugins.lookup_package_plugin(type)
+
+    if 'schema' in context:
+        schema = context['schema']
+    else:
+        schema = package_plugin.update_package_schema()
+
+    data, errors = lib_plugins.plugin_validate(
+        package_plugin, context, data_dict, schema, action)
+
+    if errors:
+        raise ValidationError(errors)
+
+    if 'groups_list' in data:
+        del data['groups_list']
+    return data
