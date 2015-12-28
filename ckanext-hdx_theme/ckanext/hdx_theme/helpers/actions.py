@@ -29,6 +29,18 @@ _get_or_bust = tk.get_or_bust
 
 log = logging.getLogger(__name__)
 
+send_request_membership_mail_template = str(
+    'You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX.\n\n'
+    'If you know this user and would like to add them to your organisation, please log on to HDX and click on the ADD MEMBER link for your organisation at {org_add_member_url} . Enter \'{user_username}\' in the username box and assign one of the following roles to the user:\n'
+    '- Admin: The user can add, edit and delete datasets, as well as manage organisation membership.\n'
+    '- Editor:The user can add, edit and delete datasets, but not manage organisation membership.\n'
+    '- Member: The user can view the organisation\'s private datasets, but not add new datasets or manage membership\n\n'
+    'You can ignore this message if you do not wish to add the user to your organisation.\n\n'
+    'This email is the only notification you will receive from HDX regarding this user\'s request to join your organisation. The message has been sent to all the admins of the {org_title} organisation.\n\n'
+    'You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.\n\n'
+    'Best wishes,\n'
+    ' the HDX Team\n')
+
 
 def organization_list_for_user(context, data_dict):
     '''Return the list of organizations that the user is a member of.
@@ -245,36 +257,32 @@ def hdx_send_editor_request_for_org(context, data_dict):
 def hdx_send_request_membership(context, data_dict):
     _check_access('hdx_send_request_membership', context, data_dict)
 
-    body = _('New request membership\n' \
-             'Full Name: {fn}\n' \
-             'Username: {username}\n' \
-             'Email: {mail}\n' \
-             'Organization: {org}\n' \
-             'Message from user: {msg}\n' \
-             '(This is an automated mail)' \
-             '').format(fn=data_dict['display_name'], username=data_dict['name'],
-                        mail=data_dict['email'], org=data_dict['organization'],
-                        msg=data_dict.get('message', ''))
+    # body = _('New request membership\n' \
+    #          'Full Name: {fn}\n' \
+    #          'Username: {username}\n' \
+    #          'Email: {mail}\n' \
+    #          'Organization: {org}\n' \
+    #          'Message from user: {msg}\n' \
+    #          '(This is an automated mail)' \
+    #          '').format(fn=data_dict['display_name'], username=data_dict['name'],
+    #                     mail=data_dict['email'], org=data_dict['organization'],
+    #                     msg=data_dict.get('message', ''))
 
     org_obj = model.Group.get(data_dict['organization'])
 
-    org_add_member_url = (config['ckan.site_url'] + '/organization/members/{org_name}#add-member-div').format(org_name=org_obj.name)
-    new_body = _('Dear HDX_XXX\n\n'
-                 'You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX.\n\n'
-                 'If you know this user and would like to add them to your organisation, please log on to HDX and click on the ADD MEMBER link for your organisation at {org_add_member_url} . Enter \'{user_username}\' in the username box and assign one of the following roles to the user:\n'
-                 '- Admin: The user can add, edit and delete datasets, as well as manage organisation membership.\n'
-                 '- Editor:The user can add, edit and delete datasets, but not manage organisation membership.\n'
-                 '- Member: The user can view the organisation\'s private datasets, but not add new datasets or manage membership\n\n'
-                 'You can ignore this message if you do not wish to add the user to your organisation.\n\n'
-                 'This email is the only notification you will receive from HDX regarding this user\'s request to join your organisation. The message has been sent to all the admins of the {org_title} organisation.\n\n'
-                 'You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.\n\n'
-                 'Best wishes,\n'
-                 ' the HDX Team\n'
-                 ).format(org_title=org_obj.display_name, user_fullname=data_dict['display_name'], user_email=data_dict['email'], org_add_member_url=org_add_member_url, user_username=data_dict['name'])
+    org_add_member_url = (config['ckan.site_url'] + '/organization/members/{org_name}#add-member-div').format(
+        org_name=org_obj.name)
+
+    body = send_request_membership_mail_template.format(org_title=org_obj.display_name,
+                                                        user_fullname=data_dict.get('display_name'),
+                                                        user_email=data_dict.get('email'),
+                                                        org_add_member_url=org_add_member_url,
+                                                        user_username=data_dict.get('name'))
+    subject = '{user_fullname} sent a request to join your organisation on HDX'.format(user_fullname=data_dict.get('display_name'))
 
     # changed made to send customized emails to each admin
-    for admin in data_dict['admins']:
-        hdx_mail.send_mail([admin], _('New Request Membership'), body)
+    for admin in data_dict.get('admins'):
+        hdx_mail.send_mail([admin], subject, body)
 
 
 def hdx_user_show(context, data_dict):
@@ -326,8 +334,10 @@ def hdx_user_show(context, data_dict):
     print data_dict.get('sort', None)
     sort = data_dict.get('sort', 'metadata_modified desc')
     user_dict['datasets'] = []
-    dataset_q = model.Session.query(model.Package).join(model.PackageRole).filter_by(user=user_obj, role=model.Role.ADMIN
-    ).order_by(sort).offset(offset).limit(limit)
+    dataset_q = model.Session.query(model.Package).join(model.PackageRole).filter_by(user=user_obj,
+                                                                                     role=model.Role.ADMIN
+                                                                                     ).order_by(sort).offset(
+        offset).limit(limit)
 
     dataset_q_counter = model.Session.query(model.Package).join(model.PackageRole
                                                                 ).filter_by(user=user_obj, role=model.Role.ADMIN
@@ -437,48 +447,48 @@ def _add_to_filter_list(src, param_name, filter_list):
     return filter_list
 
 
-# def hdx_get_shape_geojson(context, data_dict):
-#     err_json_content = {'errors': "No valid file"}
-#     if 'shape_source_url' not in data_dict:
-#         return err_json_content
-#     json_content = err_json_content
-#     tmp_dir = config.get('cache_dir', '/tmp/')
-#     tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
-#     try:
-#         shape_source_url = data_dict.get('shape_source_url', None)
-#         if shape_source_url is None:
-#             raise
-#         shape_src_response = requests.get(shape_source_url, allow_redirects=True)
-#         urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
-#         ogre_url = config.get('hdx.ogre.url')
-#         convert_url = data_dict.get('convert_url', ogre_url + '/convert')
-#         shape_data = {'upload': open(tmp_file, 'rb')}
-#         log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
-#         try:
-#             json_resp = requests.post(convert_url, files=shape_data)
-#         except:
-#             log.error("There was an error with the HTTP request")
-#             log.error(sys.exc_info()[0])
-#             raise
-#         json_content = json.loads(json_resp.content)
-#         os.remove(tmp_file)
-#         if 'errors' in json_content and json_content['errors']:
-#             log.error('There are errors in json file, error message: ' + str(json_content['errors']))
-#             raise
-#     except:
-#         log.error("Error retrieving the json content")
-#         log.error(sys.exc_info()[0])
-#         return err_json_content
-#     return json_content
-#
-#
-# def hdx_get_json_from_resource(context, data_dict):
-#     try:
-#         if 'url' not in data_dict:
-#             return None
-#         url = data_dict['url']
-#         resource_response = requests.get(url, allow_redirects=True)
-#         res = json.loads(resource_response.content)
-#     except:
-#         res = None
-#     return res
+    # def hdx_get_shape_geojson(context, data_dict):
+    #     err_json_content = {'errors': "No valid file"}
+    #     if 'shape_source_url' not in data_dict:
+    #         return err_json_content
+    #     json_content = err_json_content
+    #     tmp_dir = config.get('cache_dir', '/tmp/')
+    #     tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
+    #     try:
+    #         shape_source_url = data_dict.get('shape_source_url', None)
+    #         if shape_source_url is None:
+    #             raise
+    #         shape_src_response = requests.get(shape_source_url, allow_redirects=True)
+    #         urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
+    #         ogre_url = config.get('hdx.ogre.url')
+    #         convert_url = data_dict.get('convert_url', ogre_url + '/convert')
+    #         shape_data = {'upload': open(tmp_file, 'rb')}
+    #         log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
+    #         try:
+    #             json_resp = requests.post(convert_url, files=shape_data)
+    #         except:
+    #             log.error("There was an error with the HTTP request")
+    #             log.error(sys.exc_info()[0])
+    #             raise
+    #         json_content = json.loads(json_resp.content)
+    #         os.remove(tmp_file)
+    #         if 'errors' in json_content and json_content['errors']:
+    #             log.error('There are errors in json file, error message: ' + str(json_content['errors']))
+    #             raise
+    #     except:
+    #         log.error("Error retrieving the json content")
+    #         log.error(sys.exc_info()[0])
+    #         return err_json_content
+    #     return json_content
+    #
+    #
+    # def hdx_get_json_from_resource(context, data_dict):
+    #     try:
+    #         if 'url' not in data_dict:
+    #             return None
+    #         url = data_dict['url']
+    #         resource_response = requests.get(url, allow_redirects=True)
+    #         res = json.loads(resource_response.content)
+    #     except:
+    #         res = None
+    #     return res
