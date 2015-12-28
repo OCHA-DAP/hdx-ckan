@@ -133,12 +133,12 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
         
         #map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
-        map.connect('/contribute/new',
-                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-                    action='new')
-        map.connect('/contribute/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-                    action='edit')
+        # map.connect('/contribute/new',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='new')
+        # map.connect('/contribute/edit/{id}',
+        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+        #             action='edit')
 
         return map
 
@@ -317,14 +317,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         run_on_startup()
         return app
 
-    def validate(self, context, data_dict, schema, action):
-        private = False if data_dict.get('private') == 'False' else True
-        if private:
-            schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
-            if 'groups_list' in schema:
-                del schema['groups_list']
-
-        return toolkit.navl_validate(data_dict, schema, context)
+    # def validate(self, context, data_dict, schema, action):
+    #     private = False if data_dict.get('private') == 'False' else True
+    #     if private:
+    #         schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
+    #         if 'groups_list' in schema:
+    #             del schema['groups_list']
+    #
+    #     return toolkit.navl_validate(data_dict, schema, context)
 
 
 class HDXChartViewsPlugin(plugins.SingletonPlugin):
