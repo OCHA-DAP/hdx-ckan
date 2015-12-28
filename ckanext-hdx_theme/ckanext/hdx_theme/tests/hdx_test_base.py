@@ -38,6 +38,13 @@ def load_plugin(plugin):
 
 
 class HdxBaseTest(object):
+    '''
+    NOTE: Since more fields have been made mandatory for a dataset the process of creating test
+    data at the beginning of a test suit was failing.
+    Therefore the package_create action is now wrapped while running the tests to automatically
+    populate some missing fields.
+    See replace_package_create ()
+    '''
 
     @classmethod
     def _create_test_data(cls):
@@ -72,6 +79,11 @@ class HdxBaseTest(object):
 
     @classmethod
     def replace_package_create(cls):
+        '''
+        overrride this with an empty function in your class if you want the original
+        package_create function that does not automatically populate some of the mandatory
+        fields. ( More info in the class description )
+        '''
         def package_create_wrapper(context, data_dict):
             if not data_dict.get('license_id'):
                 data_dict['license_id'] = 'cc'

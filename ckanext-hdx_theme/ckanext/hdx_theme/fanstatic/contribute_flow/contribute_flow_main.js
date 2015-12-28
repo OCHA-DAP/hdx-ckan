@@ -130,8 +130,7 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'browseToDataset': function() {
                     /**
-                     * This function should be called at the end of the saving process,
-                     * after the resources have been saved succesfully
+                     *
                      */
                     if ( this._datasetName ) {
                         var promise = this.getDatasetIdPromise();
