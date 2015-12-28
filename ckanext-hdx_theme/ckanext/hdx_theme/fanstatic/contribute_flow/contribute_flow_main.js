@@ -139,6 +139,9 @@ ckan.module('contribute_flow_main', function($, _) {
                     else {
                         moduleLog.log('Cannot browse to dataset because name is missing');
                     }
+                },
+                'setResourceModelList': function (resourceModelList) {
+                    this.resourceModelList = resourceModelList;
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;
