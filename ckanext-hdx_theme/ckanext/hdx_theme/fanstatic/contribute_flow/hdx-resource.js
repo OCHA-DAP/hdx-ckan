@@ -119,7 +119,7 @@ $(function(){
 
         // A template view for each Resource.
         tagName: 'div',
-        className: 'drag-drop-component',
+        className: 'drag-drop-component source-file',
         template: _.template($('#resource-item-tmpl').html()),
 
         events: {
