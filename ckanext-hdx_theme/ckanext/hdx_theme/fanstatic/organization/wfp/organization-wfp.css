@@ -1935,7 +1935,6 @@ ul.list-horizontal li:first-child:before {
   color: #007ce0;
   cursor: pointer;
   position: relative;
-  overflow: hidden;
 }
 .drag-drop-component .drag-drop-area .browse-button:after {
   content: none;

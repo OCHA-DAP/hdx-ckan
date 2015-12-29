@@ -125,13 +125,21 @@ $(function(){
         events: {
             'click .update_resource': 'onUpdateBtn',
             'click .delete_resource': 'onDeleteBtn',
-            'change .resource_file_field': 'onFileChange'
+            'change .resource_file_field': 'onFileChange',
+            'change input[type=radio].resource-source': 'onSourceChange'
         },
 
         render: function() {
             var html = this.template(this.model.toJSON());
             this.$el.html(html);
             return this;
+        },
+
+        onSourceChange: function(e){
+            this.$el.removeClass("source-url");
+            this.$el.removeClass("source-file");
+            this.$el.removeClass("source-file-selected");
+            this.$el.addClass("source-" + e.target.value);
         },
 
         onUpdateBtn: function(e) {
@@ -145,6 +153,8 @@ $(function(){
         onFileChange: function(e) {
             // If a file has been selected, populate the url and file name
             // fields.
+            this.$el.removeClass("source-file");
+            this.$el.addClass("source-file-selected");
             var file_name = $(e.currentTarget).val().split(/^C:\\fakepath\\/).pop();
             if (file_name) {
                 this.$('.resource_url_field').val(file_name);

@@ -1,0 +1,22 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.drag-drop-component.source-file .source-file-fields {
+  display: none;
+}
+.drag-drop-component.source-file .source-file-upload {
+  width: 100% !important;
+  margin-bottom: 15px;
+}
+.drag-drop-component.source-file .source-file-upload .drag-drop-area .overwrite-text {
+  display: none;
+}
+.drag-drop-component.source-url .source-file-fields,
+.drag-drop-component.source-url .source-file-upload {
+  display: none;
+}

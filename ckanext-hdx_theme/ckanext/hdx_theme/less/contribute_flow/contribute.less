@@ -1,0 +1,28 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.drag-drop-component{
+
+  &.source-file {
+    .source-file-fields {
+      display: none;
+    }
+    .source-file-upload {
+      width: 100% !important;
+      margin-bottom: 15px;
+      .drag-drop-area {
+        .overwrite-text {
+          display: none;
+        }
+      }
+    }
+  }
+  &.source-file-selected {
+
+  }
+  &.source-url {
+    .source-file-fields, .source-file-upload {
+      display: none;
+    }
+  }
+}
