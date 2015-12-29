@@ -165,10 +165,10 @@ class ContributeFlowController(base.BaseController):
             return self._prepare_and_render(save_type=save_type, data=data_dict, errors=e.error_dict,
                                         error_summary=e.error_summary)
 
-
     def process_locations(self, data_dict):
         locations = data_dict.get("locations")
         if locations:
+            locations = [locations] if isinstance(locations, basestring) else locations
             groups = []
             for item in locations:
                 groups.append({'id': item})
