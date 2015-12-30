@@ -30,16 +30,16 @@ _get_or_bust = tk.get_or_bust
 log = logging.getLogger(__name__)
 
 send_request_membership_mail_template = str(
-    'You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX. The user included the following message with his/her request: <br/>{user_message}<br/><br/>'
-    'If you know this user and would like to add them to your organisation, please log on to HDX and click on the ADD MEMBER link for your organisation at {org_add_member_url} . Enter \'{user_username}\' in the username box and assign one of the following roles to the user:<br/>'
-    '- Admin: The user can add, edit and delete datasets, as well as manage organisation membership.<br/>'
-    '- Editor:The user can add, edit and delete datasets, but not manage organisation membership.<br/>'
-    '- Member: The user can view the organisation\'s private datasets, but not add new datasets or manage membership<br/><br/>'
-    'You can ignore this message if you do not wish to add the user to your organisation.<br/><br/>'
-    'This email is the only notification you will receive from HDX regarding this user\'s request to join your organisation. The message has been sent to all the admins of the {org_title} organisation.<br/><br/>'
-    'You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.<br/><br/>'
-    'Best wishes,<br/>'
-    ' the HDX Team<br/>')
+    'You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX. The user included the following message with his/her request: <br/>{user_message} <br/><br/>'
+    'If you know this user and would like to add them to your organisation, please log on to HDX and click on the ADD MEMBER link for your organisation at {org_add_member_url} . Enter \'{user_username}\' in the username box and assign one of the following roles to the user: <br/>'
+    '- Admin: The user can add, edit and delete datasets, as well as manage organisation membership. <br/>'
+    '- Editor: The user can add, edit and delete datasets, but not manage organisation membership. <br/>'
+    '- Member: The user can view the organisation\'s private datasets, but not add new datasets or manage membership. <br/><br/>'
+    'You can ignore this message if you do not wish to add the user to your organisation. <br/><br/>'
+    'This email is the only notification you will receive from HDX regarding this user\'s request to join your organisation. The message has been sent to all the admins of the {org_title} organisation. <br/><br/>'
+    'You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process. <br/><br/>'
+    'Best wishes, <br/>'
+    ' the HDX Team <br/>')
 
 
 def organization_list_for_user(context, data_dict):
