@@ -20,12 +20,11 @@ $(function(){
 
         // A model for CKAN resources. Most of the stuff here to get line
         // Backbone verbs with the CKAN api endpoints.
-
         fileAttribute: 'upload',
 
         defaults: {
-            'action_btn_label': 'Update',
-            'action_btn_class': 'update_resource'
+            //'action_btn_label': 'Update',
+            //'action_btn_class': 'update_resource'
         },
 
         methodToURL: {
@@ -66,12 +65,10 @@ $(function(){
     });
 
     var PackageResources = Backbone.Collection.extend({
-
         // A collection of resources for a package.
-
         model: Resource,
 
-        initialize: function(options) {
+        initialize: function(models, options) {
             this.package_id = options.package_id;
         },
 
@@ -102,21 +99,25 @@ $(function(){
             }
             this.items = [];
             this.listenTo(this.collection, 'sync', this.render);
+            this.listenTo(this.collection, 'add', this.addOne);
         },
 
         render: function() {
-            var $list = this.$el.empty();
-            this.collection.each(function(model) {
-                var item = new ResourceItemView({model: model});
-                this.items.add(item);
-                $list.append(item.render().$el);
+            this.$el.empty();
+            this.collection.each(function(resource) {
+                this.addOne(resource);
             }, this);
             return this;
         },
+
+        addOne: function(resource){
+            console.log(resource);
+            var view = new ResourceItemView({model: resource});
+            this.$el.append(view.render().el);
+        }
     });
 
     var ResourceItemView = Backbone.View.extend({
-
         // A template view for each Resource.
         tagName: 'div',
         className: 'drag-drop-component source-file',
@@ -126,11 +127,18 @@ $(function(){
             'click .update_resource': 'onUpdateBtn',
             'click .delete_resource': 'onDeleteBtn',
             'change .resource_file_field': 'onFileChange',
-            'change input[type=radio].resource-source': 'onSourceChange'
+            'change input[type=radio].resource-source': 'onSourceChange',
+            'change .source-file-fields .form-control': 'onFieldEdit'
+        },
+
+        initialize: function() {
+            this.model.view = this;
+            this.listenTo(this.model, "change", this.render);
+            this.listenTo(this.model, "destroy", this.remove);
         },
 
         render: function() {
-            var html = this.template(this.model.toJSON());
+            var html = this.template(this.model.attributes);
             this.$el.html(html);
             return this;
         },
@@ -150,6 +158,11 @@ $(function(){
             this.deleteResource();
         },
 
+        onFieldEdit: function(e) {
+            this.model.set(e.target.name, e.target.value);
+            console.log(this.model);
+        },
+
         onFileChange: function(e) {
             // If a file has been selected, populate the url and file name
             // fields.
@@ -157,10 +170,10 @@ $(function(){
             this.$el.addClass("source-file-selected");
             var file_name = $(e.currentTarget).val().split(/^C:\\fakepath\\/).pop();
             if (file_name) {
-                this.$('.resource_url_field').val(file_name);
+                this.model.set('url', file_name);
             }
-            if (!this.$('.resource_name_field').val()) {
-                this.$('.resource_name_field').val(file_name);
+            if (!this.model.get('name')) {
+                this.model.set('name', file_name);
             }
         },
 
@@ -207,7 +220,11 @@ $(function(){
                     // console.log('successfully saved model');
                     this.$(':input').val('');
                     //collection.add(resource);
-                    deferred.resolve(true);
+                    if (response.success){
+                        deferred.resolve(response.result.id);
+                    } else {
+                        deffered.reject(response.result);
+                    }
                 }.bind(this),
                 error: function(model, response, options) {
                     // ::TODO:: Handle validation errors returned by server here.
@@ -216,13 +233,14 @@ $(function(){
                 }.bind(this)
             });
 
-            return deferred.promise();
+            return deferred;
         },
 
         deleteResource: function(){
             this.remove();
             //check if resource was created and then
-            //this.model.destroy();
+            if (this.model.id)
+               this.model.destroy();
         }
     });
 
@@ -233,18 +251,16 @@ $(function(){
         el: '#resource-app',
 
         events: {
-            'click .add_new_resource': 'onCreateBtn',
-            'click .create_resource': 'onFileSelected'
+            'click .add_new_resource': 'onCreateBtn'
         },
 
         initialize: function(options) {
             var sandbox = options.sandbox;
-            this.create_el = this.$('#resource-list');
-            this.datasetId = undefined;
             this.resourceListView = undefined;
-
             var package_id = null; //TODO: on edit we should have the package id
-            this._setUp(package_id);
+            var resources = new PackageResources(null, {package_id: package_id});
+            this.resources = resources;
+            this.resourceListView = new PackageResourcesListView({collection: resources});
 
             // Listen for the hdx-contribute-global-created notification...
             sandbox.subscribe('hdx-contribute-global-created', function (global) {
@@ -253,64 +269,44 @@ $(function(){
                 this.contribute_global.setResourceModelList(this.resources);
 
                 global.getResourceSaveStartPromise()
-                    .done(function(){
+                    .then(function(){
                         return this.contribute_global.getDatasetIdPromise();
                     }.bind(this))
-                    .done(function(package_id){
+                    .then(function(package_id){
                         var promiseList = [];
                         this.resources.each(function(model){
                             model.set('package_id', package_id);
-                            console.log(JSON.stringify(model));
-                        });
-                        _.each(this.resourceListView.items,function(view){
-                            var promise = view.createResource(package_id);
+                            //console.log(JSON.stringify(model));
+                            var promise = model.view.createResource(package_id);
                             promiseList.push(promise);
                         });
                         return $.when.apply($, promiseList);
                     }.bind(this))
-                    .done(function(ok){
+                    .then(function(){
                         debugger;
                         this.contribute_global.browseToDataset();
-                    }.bind(this));
+                    }.bind(this),
+                    function (error){
+                        console.error("error while uploading resources");
+                    });
             }.bind(this));
             //this._setUpCreateResourceEl();
         },
 
-        onFileSelected: function(e) {
-             // Get the dataset ID from the global object.
-            $.when(this.contribute_global.getDatasetIdPromise()).done(function(id){
-                if (this.datasetId === undefined) this.datasetId = id;
-                if (this.resourceListView === undefined) this._setUp(id);
-                this.resourceCreateView.createResource(this.datasetId, this.resourceListView.collection);
-            }.bind(this));
-        },
-
         onCreateBtn: function(e) {
-            this._setUpCreateResourceEl();
-        },
-
-        _setUpCreateResourceEl: function() {
             var data = {
-                id: 'new',
-                position: 'new',
+                //id: 'new',
+                position: this.resources.length + 1,
                 url: '',
                 format: '',
                 description: '',
-                action_btn_label: 'Upload',
-                action_btn_class: 'create_resource'
+                //action_btn_label: 'Upload',
+                //action_btn_class: 'create_resource'
             };
             var newResourceModel = new Resource(data);
             this.resources.add(newResourceModel);
-            this.resourceCreateView = new ResourceItemView({model: newResourceModel});
-            this.resourceListView.items.push(this.resourceCreateView);
-            // this.resourceCreateView.el = this.create_el;
-            this.create_el.append(this.resourceCreateView.render().$el);
-        },
 
-        _setUp: function(package_id) {
-            var resources = new PackageResources({package_id: package_id});
-            this.resources = resources;
-            this.resourceListView = new PackageResourcesListView({collection: resources});
+            console.log(this.resources);
         }
     });
 

@@ -52,17 +52,17 @@
                                                     <% if (position === 'new') {
                                                         print('New Resource');
                                                     }else{
-                                                        print('Resource '); print(position + 1);
+                                                        print('Resource '); print(position);
                                                     } %>
                                                     <ul class="list-horizontal">
                                                         <li>
                                                             <label class="control-label">
-                                                                <input type="radio" class="resource-source" name="<%= id %>-upload_type" value="file" checked="checked"> Upload file
+                                                                <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="file" checked="checked"> Upload file
                                                             </label>
                                                         </li>
                                                         <li>
                                                             <label class="control-label">
-                                                                <input type="radio" class="resource-source" name="<%= id %>-upload_type" value="url"> Import from URL
+                                                                <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="url"> Import from URL
                                                             </label>
                                                         </li>
                                                         <li class="or-separator">
