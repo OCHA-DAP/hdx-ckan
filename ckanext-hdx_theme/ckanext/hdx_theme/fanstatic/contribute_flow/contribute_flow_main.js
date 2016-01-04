@@ -167,7 +167,7 @@ ckan.module('contribute_flow_main', function($, _) {
                      */
                     if ( this._datasetName ) {
                         var promise = this.getDatasetIdPromise();
-                        window.location.href = '/dataset/' + this._datasetName;
+                        window.top.location.href = '/dataset/' + this._datasetName;
                     }
                     else {
                         moduleLog.log('Cannot browse to dataset because name is missing');
