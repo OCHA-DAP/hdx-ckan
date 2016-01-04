@@ -283,7 +283,7 @@ $(function(){
                         return $.when.apply($, promiseList);
                     }.bind(this))
                     .then(function(){
-                        debugger;
+                        // debugger;
                         this.contribute_global.browseToDataset();
                     }.bind(this),
                     function (error){
