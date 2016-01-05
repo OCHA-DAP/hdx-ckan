@@ -30,7 +30,7 @@ _get_or_bust = tk.get_or_bust
 log = logging.getLogger(__name__)
 
 send_request_membership_mail_template = str(
-    'You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX. The user included the following message with his/her request: <br/>{user_message} <br/><br/>'
+    '<br/>You are receiving this message because you are an administrator of the {org_title} organisation on HDX and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation on HDX. The user included the following message with his/her request: <br/>{user_message} <br/><br/>'
     'If you know this user and would like to add them to your organisation, please log on to HDX and click on the ADD MEMBER link for your organisation at {org_add_member_url} . Enter \'{user_username}\' in the username box and assign one of the following roles to the user: <br/>'
     '- Admin: The user can add, edit and delete datasets, as well as manage organisation membership. <br/>'
     '- Editor: The user can add, edit and delete datasets, but not manage organisation membership. <br/>'
