@@ -65,11 +65,11 @@
                                                                 <input type="radio" class="resource-source" name="resource<%= position %>-upload_type" value="url"> Import from URL
                                                             </label>
                                                         </li>
-                                                        <li class="or-separator">
-                                                            <img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox
+                                                        <li class="or-separator dropbox">
+                                                            <a href="#"><img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox</a>
                                                         </li>
-                                                        <li class="or-separator">
-                                                            <img class="cloud-img" src="/images/icons/drive.png" /> Google Drive
+                                                        <li class="or-separator googledrive">
+                                                            <a href="#"><img class="cloud-img" src="/images/icons/drive.png" /> Google Drive</a>
                                                         </li>
                                                     </ul>
                                                     <span class="pull-right">
@@ -321,5 +321,6 @@
 
 {% block scripts2 %}
     {{ super() }}
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="2ixptqvj5hknpzs"></script>
     {% resource 'hdx_theme/contribute-flow' %}
 {% endblock %}
