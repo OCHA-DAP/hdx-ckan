@@ -8,6 +8,7 @@ import logging as logging
 import exceptions as exceptions
 import ckan.lib.mailer as mailer
 import pylons.config as config
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 
@@ -19,8 +20,7 @@ def send_mail(recipients, subject, body):
         send_mails = config.get('hdx.orgrequest.sendmails', 'true')
         if 'true' == send_mails:
             for recipient in recipients:
-                mailer.mail_recipient(recipient['display_name'], recipient['email'],
-                    subject, body)
+                hdx_mailer.mail_recipient(recipient['display_name'], recipient['email'], subject, body)
         else:
             log.warn('HDX-CKAN was configured to not send email requests')
     else:
