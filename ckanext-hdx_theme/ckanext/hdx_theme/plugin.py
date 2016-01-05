@@ -204,7 +204,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_location_list': hdx_helpers.hdx_location_list,
             'hdx_organisation_list': hdx_helpers.hdx_organisation_list,
             'hdx_tag_list': hdx_helpers.hdx_tag_list,
-
+            'hdx_frequency_list': hdx_helpers.hdx_frequency_list,
         }
 
     def get_actions(self):

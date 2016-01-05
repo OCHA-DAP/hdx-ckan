@@ -260,7 +260,6 @@
 
 
                                     {% set licenses = h.hdx_license_list() %}
-
                                     <div data-module="hdx_form_element_manager" data-module-element_name="license_id" data-module-required="private">
                                         {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
@@ -276,8 +275,9 @@
                                         {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                     </div>
 
+                                    {% set frequency = h.hdx_frequency_list() %}
                                     <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                    {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), placeholder=_("How often does this data update?"), options=test_options, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                    {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), placeholder=_("How often does this data update?"), options=frequency, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="caveats">

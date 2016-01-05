@@ -616,3 +616,10 @@ def hdx_tag_list():
         tags_dict_list = [{'value': tag, 'text': tag} for tag in tags]
         return tags_dict_list
     return []
+
+
+def hdx_frequency_list():
+    result = [{'value': '0', 'text': '0'}, {'value': '1', 'text': '1'}, {'value': '7', 'text': '7'},
+              {'value': '14', 'text': '14'}, {'value': '30', 'text': '30'}, {'value': '90', 'text': '90'},
+              {'value': '180', 'text': '180'}, {'value': '365', 'text': '365'}, ]
+    return result
