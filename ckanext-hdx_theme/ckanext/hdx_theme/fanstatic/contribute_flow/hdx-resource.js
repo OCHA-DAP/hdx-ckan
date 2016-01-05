@@ -5,20 +5,16 @@ $(function(){
         Contribute Flow.
 
         TODO:
-        - Format select form widget for resource update
         - Handle server validation errors on create/update of resources
-        - File browse upload
-        - upload_type selector: url vs file browse
         - decide what user action submits create/update requests (button
           click?, change events?)
-
     */
 
     // MODELS
 
     var Resource = Backbone.Model.extend({
 
-        // A model for CKAN resources. Most of the stuff here to get line
+        // A model for CKAN resources. Most of the stuff here is to align
         // Backbone verbs with the CKAN api endpoints.
         fileAttribute: 'upload',
 
@@ -111,7 +107,7 @@ $(function(){
         },
 
         addOne: function(resource){
-            console.log(resource);
+            // console.log(resource);
             var view = new ResourceItemView({model: resource});
             this.$el.append(view.render().el);
         }
@@ -128,7 +124,8 @@ $(function(){
             'click .delete_resource': 'onDeleteBtn',
             'change .resource_file_field': 'onFileChange',
             'change input[type=radio].resource-source': 'onSourceChange',
-            'change .source-file-fields .form-control': 'onFieldEdit'
+            'change .source-file-fields .form-control': 'onFieldEdit',
+            'click .dropbox a': 'onDropboxBtn'
         },
 
         initialize: function() {
@@ -144,10 +141,7 @@ $(function(){
         },
 
         onSourceChange: function(e){
-            this.$el.removeClass("source-url");
-            this.$el.removeClass("source-file");
-            this.$el.removeClass("source-file-selected");
-            this.$el.addClass("source-" + e.target.value);
+            this._setUpForSourceType("source-" + e.target.value);
         },
 
         onUpdateBtn: function(e) {
@@ -158,23 +152,20 @@ $(function(){
             this.deleteResource();
         },
 
+        onDropboxBtn: function(e) {
+            this.createDropboxChooser();
+            e.preventDefault();
+        },
+
         onFieldEdit: function(e) {
             this.model.set(e.target.name, e.target.value);
-            console.log(this.model);
+            // console.log(this.model);
         },
 
         onFileChange: function(e) {
-            // If a file has been selected, populate the url and file name
-            // fields.
-            this.$el.removeClass("source-file");
-            this.$el.addClass("source-file-selected");
-            var file_name = $(e.currentTarget).val().split(/^C:\\fakepath\\/).pop();
-            if (file_name) {
-                this.model.set('url', file_name);
-            }
-            if (!this.model.get('name')) {
-                this.model.set('name', file_name);
-            }
+            // If a file has been selected, set up interface with file path.
+            this._setUpWithPath($(e.currentTarget).val(), true);
+            this._setUpForSourceType("source-file-selected");
         },
 
         updateResource: function() {
@@ -241,6 +232,52 @@ $(function(){
             //check if resource was created and then
             if (this.model.id)
                this.model.destroy();
+        },
+
+        createDropboxChooser: function() {
+            options = {
+                success: function(files) {
+                    urls = [];
+                    for (var i=0;i<files.length;i++) {
+                        urls.push(files[i].link);
+                    }
+                    this.cloudFileURLSelected(urls[0]);
+                }.bind(this),
+                linkType: "direct"
+            };
+            Dropbox.choose(options);
+        },
+
+        cloudFileURLSelected: function(url) {
+            this._setUpWithPath(url);
+            this._setUpForSourceType("source-file-selected");
+            // switch resource-source radio to URL input
+            this.$('input:radio.resource-source[value=url]').prop('checked', true);
+        },
+
+        _setUpForSourceType: function(source_class) {
+            // Set up interface for the source type based on source_class.
+            var source_classes = ['source-url', 'source-file', 'source-file-selected'];
+            $.each(source_classes, function(i, v){
+                this.$el.removeClass(v);
+            }.bind(this));
+            this.$el.addClass(source_class);
+        },
+
+        _setUpWithPath: function(path, use_short_url) {
+            // Set up interface for the given path. Either a url, or filepath.
+            // If use_short_url is true, populate the model's `url` with the
+            // filename rather than the full url (used for file uploads).
+            var file_name = path.split('\\').pop().split('/').pop();
+            if (use_short_url) {
+                this.model.set('url', file_name);
+            } else {
+                this.model.set('url', path);
+            }
+
+            if (!this.model.get('name')) {
+                this.model.set('name', file_name);
+            }
         }
     });
 
@@ -306,7 +343,7 @@ $(function(){
             var newResourceModel = new Resource(data);
             this.resources.add(newResourceModel);
 
-            console.log(this.resources);
+            // console.log(this.resources);
         }
     });
 
