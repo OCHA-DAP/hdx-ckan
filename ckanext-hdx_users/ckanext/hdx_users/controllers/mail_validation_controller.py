@@ -490,7 +490,7 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             org_id = request.params.get('org_id', '')
             org = model.Group.get(org_id)
-            org_name = org.display_name or org.name
+            org_name = org.name or org.display_name
             msg = request.params.get('message', 'please add me to this organization')
             user = hdx_h.hdx_get_user_info(c.user)
 
