@@ -257,7 +257,7 @@ $(function(){
                     var file = files[0];
                     this.cloudFileURLSelected(file.link, file.name);
                 }.bind(this),
-                linkType: "direct"
+                linkType: "preview"
             };
             Dropbox.choose(options);
         },
