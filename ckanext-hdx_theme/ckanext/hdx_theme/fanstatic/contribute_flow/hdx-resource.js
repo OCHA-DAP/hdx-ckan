@@ -254,11 +254,8 @@ $(function(){
         createDropboxChooser: function() {
             options = {
                 success: function(files) {
-                    urls = [];
-                    for (var i=0;i<files.length;i++) {
-                        urls.push(files[i].link);
-                    }
-                    this.cloudFileURLSelected(urls[0]);
+                    var file = files[0];
+                    this.cloudFileURLSelected(file.link, file.name);
                 }.bind(this),
                 linkType: "direct"
             };
