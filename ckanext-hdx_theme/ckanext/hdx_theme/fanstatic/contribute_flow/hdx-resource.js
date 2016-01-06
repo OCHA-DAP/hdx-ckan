@@ -125,13 +125,26 @@ $(function(){
             'change .resource_file_field': 'onFileChange',
             'change input[type=radio].resource-source': 'onSourceChange',
             'change .source-file-fields .form-control': 'onFieldEdit',
-            'click .dropbox a': 'onDropboxBtn'
+            'click .dropbox a': 'onDropboxBtn',
+            'click .googledrive a': 'onGoogleDriveBtn'
         },
 
         initialize: function() {
             this.model.view = this;
             this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
+
+            this.googlepicker = this.initGooglePicker();
+        },
+
+        initGooglePicker: function() {
+            var picker = new FilePicker({
+                apiKey: 'AIzaSyDI2YqaXNwndxy6UEisT-5fUeJ2FMtz0VY',
+                clientId: '378410536565-mvin02sm8rbr0f8rq9q9injarh93ego4.apps.googleusercontent.com',
+                scope: 'https://www.googleapis.com/auth/drive.readonly',
+                onSelect: this.cloudFileURLSelected.bind(this)
+            });
+            return picker;
         },
 
         render: function() {
@@ -157,9 +170,13 @@ $(function(){
             e.preventDefault();
         },
 
+        onGoogleDriveBtn: function(e) {
+            this.createGoogleDrivePicker();
+            e.preventDefault();
+        },
+
         onFieldEdit: function(e) {
             this.model.set(e.target.name, e.target.value);
-            // console.log(this.model);
         },
 
         onFileChange: function(e) {
@@ -246,6 +263,10 @@ $(function(){
                 linkType: "direct"
             };
             Dropbox.choose(options);
+        },
+
+        createGoogleDrivePicker: function() {
+            this.googlepicker.open();
         },
 
         cloudFileURLSelected: function(url) {
