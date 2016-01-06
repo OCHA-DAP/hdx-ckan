@@ -269,8 +269,8 @@ $(function(){
             this.googlepicker.open();
         },
 
-        cloudFileURLSelected: function(url) {
-            this._setUpWithPath(url);
+        cloudFileURLSelected: function(url, filename) {
+            this._setUpWithPath(url, false, filename);
             this._setUpForSourceType("source-file-selected");
             // switch resource-source radio to URL input
             this.$('input:radio.resource-source[value=url]').prop('checked', true);
@@ -285,19 +285,16 @@ $(function(){
             this.$el.addClass(source_class);
         },
 
-        _setUpWithPath: function(path, use_short_url) {
+        _setUpWithPath: function(path, use_short_url, filename) {
             // Set up interface for the given path. Either a url, or filepath.
             // If use_short_url is true, populate the model's `url` with the
-            // filename rather than the full url (used for file uploads).
-            var file_name = path.split('\\').pop().split('/').pop();
-            if (use_short_url) {
-                this.model.set('url', file_name);
-            } else {
-                this.model.set('url', path);
-            }
-
+            // filename rather than the full url (used for file uploads). Use
+            // `filename` as the model name if passed.
+            var name = filename || path.split('\\').pop().split('/').pop();
+            var url = use_short_url ? name : path;
+            this.model.set('url', url);
             if (!this.model.get('name')) {
-                this.model.set('name', file_name);
+                this.model.set('name', name);
             }
         }
     });

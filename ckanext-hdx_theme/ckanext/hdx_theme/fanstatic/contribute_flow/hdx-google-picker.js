@@ -44,11 +44,11 @@
     },
 
     _pickerCallback: function(data) {
-      var url;
       if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
         var doc = data[google.picker.Response.DOCUMENTS][0];
-        url = doc[google.picker.Document.URL];
-        this.onSelect(url);
+        var url = doc[google.picker.Document.URL];
+        var filename = doc[google.picker.Document.NAME];
+        this.onSelect(url, filename);
       }
     },
 
