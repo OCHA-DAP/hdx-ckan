@@ -206,8 +206,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema['resources'].update(
             {
-                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('clean_format'),
-                           unicode]
+                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
+                           tk.get_validator('clean_format'), unicode]
             }
         )
 

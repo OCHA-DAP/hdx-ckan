@@ -45,6 +45,9 @@ ckan.module('contribute_flow_main', function($, _) {
                 'validate': function() {
                     var deferred = new $.Deferred();
                     var formDataArray = this.getFormValues('validate-json');
+                    var resourceDataArray = this.generateResourcePostData();
+                    formDataArray = formDataArray.concat(resourceDataArray);
+
                     $.post(validateUrl, formDataArray,
                         function (data, status, xhr) {
                             contributeGlobal.updateValidationUi(data, status, xhr);
@@ -156,6 +159,7 @@ ckan.module('contribute_flow_main', function($, _) {
                      * get another promise !
                      *
                      */
+                    moduleLog('getResourceSaveStartPromise called');
                     if (!this.resourceSaveReadyDeferred) {
                         this.resourceSaveReadyDeferred = new $.Deferred();
                     }
@@ -180,6 +184,37 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'setResourceModelList': function (resourceModelList) {
                     this.resourceModelList = resourceModelList;
+                },
+                'generateResourcePostData': function() {
+                    var resourceModelList = [
+                        {
+                            'url': 'test_url1.txt',
+                            'name': 'name1.txt',
+                            'description': 'Test descrition',
+                            'resource_uploader': 'hdx',
+                            'resource_type': 'file.upload',
+                            'format': 'CSV'
+                        },
+                        {
+                            'url': 'test_url2.txt',
+                            'name': 'name2.txt',
+                            'description': 'Test descrition'
+                        }
+                    ];
+
+                    var result = [];
+                    for (var i=0; i<resourceModelList.length; i++) {
+                        for (var key in resourceModelList[i]) {
+                            var postKey = 'resources__' + i + '__' + key;
+                            result.push(
+                                {
+                                    'name': postKey,
+                                    'value': resourceModelList[i][key]
+                                }
+                            );
+                        }
+                    }
+                    return result;
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;

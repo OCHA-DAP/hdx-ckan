@@ -52,7 +52,7 @@ def detect_format(key, data, errors, context):
     '''
 
     current_format = data.get(key)
-    if not current_format:
+    if not current_format or isinstance(current_format, df.Missing):
         url = data.get((key[0], key[1], 'url'))
         file_format = geopreview.detect_format_from_extension(url)
         if file_format:

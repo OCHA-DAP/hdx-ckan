@@ -1,5 +1,4 @@
 import json
-import uuid
 
 import ckan.lib.base as base
 import ckan.logic as logic
@@ -10,7 +9,7 @@ import ckan.lib.helpers as h
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
 from ckan.controllers.api import CONTENT_TYPES
-from ckanext.hdx_package.exceptions import NoOrganization
+from ckanext.hdx_package.exceptions import WrongResourceParamName, NoOrganization
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -157,13 +156,26 @@ class ContributeFlowController(base.BaseController):
         save_type = request.POST.get('save')
         try:
             data_dict = self._prepare_data_for_saving(context, data_dict, package_type)
+            # data_dict = self.process_resources(data_dict)
+
             pkg_dict = logic.get_action('package_validate')(context, data_dict)
             return self._prepare_and_render(save_type=save_type, data=pkg_dict, errors={},
-                                        error_summary={})
+                                            error_summary={})
 
         except logic.ValidationError, e:
+            error_summary = dict(e.error_summary)
+            if 'Resources' in e.error_summary:
+                error_summary['Resources'] = {
+                    _('Resource {}').format(idx): {key: '; '.join(val)
+                                                   for key, val in err_dict.items()}
+                    for idx, err_dict in enumerate(e.error_dict.get('resources', ())) if err_dict
+                }
             return self._prepare_and_render(save_type=save_type, data=data_dict, errors=e.error_dict,
-                                        error_summary=e.error_summary)
+                                            error_summary=error_summary)
+        except Exception, e:
+            ex_msg = e.message if hasattr(e, 'message') else str(e)
+            return self._prepare_and_render(save_type=save_type, data=data_dict, errors={},
+                                            error_summary={'General Error': ex_msg})
 
     def process_locations(self, data_dict):
         locations = data_dict.get("locations")
@@ -173,6 +185,34 @@ class ContributeFlowController(base.BaseController):
             for item in locations:
                 groups.append({'id': item})
             data_dict['groups'] = groups
+
+    def process_resources(self, data_dict):
+        '''
+        :param data_dict: package dictionary
+        :type data_dict: dict[str, str]
+        :return: new modified dict containing the resources in the correct format for validating
+        :rtype: dict
+        '''
+        resources_dict = {}
+        new_data_dict = {}
+        for key, value in data_dict.items():
+            if key.startswith('resources_'):
+                key_parts = key.split('__')
+                if len(key_parts) == 3:  # 'resources', key, resource number
+                    index = int(key_parts[2])
+                    resource_dict = resources_dict.get(index, {})
+                    resources_dict[index] = resources_dict
+                    resource_dict[key_parts] = value
+                else:
+                    raise WrongResourceParamName('Key {} should have 3 parts'.format(key))
+
+            else:
+                new_data_dict[key] = value
+
+        if resources_dict:
+            new_data_dict['resources'] = [v for k, v in sorted(resources_dict.items(), key=lambda x: x[0])]
+
+        return new_data_dict
 
     # def _autofill_mandatory_fields(self, data_dict):
     #     '''
@@ -211,8 +251,7 @@ class ContributeFlowController(base.BaseController):
     #             source = selected_org.get('title')
     #         else:
     #             context = {'user': c.user}
-    #             selected_org = logic.get_action('organization_show')(context, {'id': org_id, 'include_datasets': False})
+    #             selected_org = logic.get_action('organization_show')(context,
+    #                               {'id': org_id, 'include_datasets': False})
     #             source = selected_org.get('title')
     #         data_dict['dataset_source'] = source
-
-
