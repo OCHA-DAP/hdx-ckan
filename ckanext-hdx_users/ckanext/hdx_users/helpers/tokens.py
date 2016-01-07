@@ -48,13 +48,8 @@ def send_validation_email(user, token):
     subject = "Please verify your email for HDX registration"
     print 'Validate link: ' + validate_link
     html = """\
-        <html>
-          <head></head>
-          <body>
             <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
             <p><a href="{link}">Verify Email</a></p>
-          </body>
-        </html>
         """.format(link=link.format(config['ckan.site_url'], validate_link))
 
     try:
