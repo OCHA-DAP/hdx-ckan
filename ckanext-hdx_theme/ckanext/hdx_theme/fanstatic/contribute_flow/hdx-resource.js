@@ -64,6 +64,7 @@ $(function(){
     var PackageResources = Backbone.Collection.extend({
         // A collection of resources for a package.
         model: Resource,
+        comparator: 'position',
 
         initialize: function(models, options) {
             this.package_id = options.package_id;
@@ -84,6 +85,10 @@ $(function(){
     var PackageResourcesListView = Backbone.View.extend({
         el: '#resource-list',
 
+        events: {
+            'sort-updated': 'onSortOrderChange'
+        },
+
         initialize: function() {
             this.resource_list = this.$('.resources');
             if (this.collection.package_id !== null){
@@ -97,7 +102,18 @@ $(function(){
             }
             this.listenTo(this.collection, 'sync add remove', this.render);
             this.listenTo(this.collection, 'add remove', this.updateTotal);
-            this.listenTo(this.collection, 'remove', this.updatePositions);
+            this.listenTo(this.collection, 'remove', this.onSortOrderChange);
+
+            // Initialize drag n drop sorting
+            Sortable.create(this.resource_list[0], {
+                animation: 250,
+                ghostClass: "drag-drop-ghost",
+                handle: ".drag-handle",
+                onUpdate: function (e){
+                    var item = e.item; // the current dragged HTMLElement
+                    this.$el.trigger('sort-updated');
+                }.bind(this)
+            });
         },
 
         render: function() {
@@ -118,10 +134,19 @@ $(function(){
             this.$('.resources_total').text(total_text);
         },
 
-        updatePositions: function() {
+        onSortOrderChange: function(e) {
+            var has_changed = false;
             this.collection.each(function(resource, i) {
-                resource.set({position: i});
+                var new_pos = resource.view.$el.index();
+                if (resource.get('position') != new_pos) {
+                    has_changed = true;
+                    resource.set({position: new_pos});
+                }
             });
+            if (has_changed) {
+                this.collection.sort();
+                this.render();
+            }
         }
     });
 
@@ -163,7 +188,7 @@ $(function(){
             var html = this.template(this.model.attributes);
             this.$el.html(html);
             if (this.model.get('url')) {
-                this._setUpForSourceType('"source-file-selected"');
+                this._setUpForSourceType('source-file-selected');
             }
             return this;
         },
