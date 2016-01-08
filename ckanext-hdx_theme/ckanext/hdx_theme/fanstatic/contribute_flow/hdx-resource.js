@@ -211,41 +211,6 @@ $(function(){
             });
         },
 
-        createResource: function(package_id, collection) {
-            // Add a new Resource to the collection arg with data from this
-            // view's form fields.
-
-            // Get the serialised create form.
-            //var create_form_array = this.$(':input').serializeArray();
-            // Serialize in the correct JSON format.
-            //var form_data = {package_id: package_id, format: 'txt'};
-            //_.map(create_form_array, function(x){form_data[x.name] = x.value;});
-
-            var deferred = new $.Deferred();
-
-            //var resource = new Resource(form_data);
-            //resource.set('upload', this.$('.resource_file_field')[0].files[0]);
-            this.model.save(null, {
-                success: function(model, response, options) {
-                    // console.log('successfully saved model');
-                    this.$(':input').val('');
-                    //collection.add(resource);
-                    if (response.success){
-                        deferred.resolve(response.result.id);
-                    } else {
-                        deferred.reject(response.result);
-                    }
-                }.bind(this),
-                error: function(model, response, options) {
-                    // ::TODO:: Handle validation errors returned by server here.
-                    console.log('Could not create the resource');
-                    console.log(response.responseJSON.error);
-                }.bind(this)
-            });
-
-            return deferred;
-        },
-
         deleteResource: function(){
             this.remove();
             //check if resource was created and then
@@ -339,8 +304,7 @@ $(function(){
                         var promiseList = [];
                         this.resources.each(function(model){
                             model.set('package_id', package_id);
-                            //console.log(JSON.stringify(model));
-                            var promise = model.view.createResource(package_id);
+                            var promise = model.save();
                             promiseList.push(promise);
                         });
                         return $.when.apply($, promiseList);
