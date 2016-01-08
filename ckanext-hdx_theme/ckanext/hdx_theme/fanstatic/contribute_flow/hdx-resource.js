@@ -142,7 +142,6 @@ $(function(){
                 ghostClass: "drag-drop-ghost",
                 handle: ".drag-handle",
                 onUpdate: function (e){
-                    var item = e.item; // the current dragged HTMLElement
                     this.$el.trigger('sort-updated');
                 }.bind(this)
             });
