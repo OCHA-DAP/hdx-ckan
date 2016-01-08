@@ -323,7 +323,7 @@ $(function(){
         onCreateBtn: function(e) {
             var data = {
                 //id: 'new',
-                position: this.resources.length + 1,
+                position: this.resources.length,
                 url: '',
                 format: '',
                 description: '',
