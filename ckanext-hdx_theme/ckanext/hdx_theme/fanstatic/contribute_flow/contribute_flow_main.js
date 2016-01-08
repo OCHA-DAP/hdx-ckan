@@ -186,30 +186,16 @@ ckan.module('contribute_flow_main', function($, _) {
                     this.resourceModelList = resourceModelList;
                 },
                 'generateResourcePostData': function() {
-                    var resourceModelList = [
-                        {
-                            'url': 'test_url1.txt',
-                            'name': 'name1.txt',
-                            'description': 'Test descrition',
-                            'resource_uploader': 'hdx',
-                            'resource_type': 'file.upload',
-                            'format': 'CSV'
-                        },
-                        {
-                            'url': 'test_url2.txt',
-                            'name': 'name2.txt',
-                            'description': 'Test descrition'
-                        }
-                    ];
+                    var resourceModelList = this.resourceModelList.models;
 
                     var result = [];
                     for (var i=0; i<resourceModelList.length; i++) {
-                        for (var key in resourceModelList[i]) {
+                        for (var key in resourceModelList[i].attributes) {
                             var postKey = 'resources__' + i + '__' + key;
                             result.push(
                                 {
                                     'name': postKey,
-                                    'value': resourceModelList[i][key]
+                                    'value': resourceModelList[i].get(key)
                                 }
                             );
                         }

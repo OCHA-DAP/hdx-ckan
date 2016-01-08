@@ -92,7 +92,7 @@ $(function(){
                 //    model.set('upload', '');
                 //}
                 var promise = model.save();
-                if (index + 1 < this.length) {
+                if (index + 1 < resources.length) {
                     index++;
                     promise.then(saveResources)
                 }
@@ -354,7 +354,9 @@ $(function(){
         onCreateBtn: function(e) {
             var data = {
                 //id: 'new',
-                position: this.resources.length + 1,
+
+                /* Internally the position will start from 0 like in CKAN. In template it is +1 */
+                position: this.resources.length,
                 url: '',
                 format: '',
                 description: '',
