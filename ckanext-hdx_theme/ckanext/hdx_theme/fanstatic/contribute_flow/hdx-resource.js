@@ -32,6 +32,7 @@ $(function(){
         },
 
         sync: function(method, model, options) {
+            // console.log('syncing resource with method: ' + method);
             options = options || {};
             options.emulateHTTP = true;
 
@@ -84,7 +85,8 @@ $(function(){
         el: '#resource-list',
 
         initialize: function() {
-            if (this.collection.package_id != null){
+            this.resource_list = this.$('.resources');
+            if (this.collection.package_id !== null){
                 this.collection.fetch({
                 success: function(){
                     this.render();
@@ -93,23 +95,33 @@ $(function(){
                     console.log('Cannot render: ' + e);
                 }.bind(this)});
             }
-            this.items = [];
-            this.listenTo(this.collection, 'sync', this.render);
-            this.listenTo(this.collection, 'add', this.addOne);
+            this.listenTo(this.collection, 'sync add remove', this.render);
+            this.listenTo(this.collection, 'add remove', this.updateTotal);
+            this.listenTo(this.collection, 'remove', this.updatePositions);
         },
 
         render: function() {
-            this.$el.empty();
+            this.resource_list.empty();
             this.collection.each(function(resource) {
                 this.addOne(resource);
             }, this);
             return this;
         },
 
-        addOne: function(resource){
-            // console.log(resource);
+        addOne: function(resource) {
             var view = new ResourceItemView({model: resource});
-            this.$el.append(view.render().el);
+            this.resource_list.append(view.render().el);
+        },
+
+        updateTotal: function() {
+            var total_text = this.collection.length == 1 ? "1 Resource" : this.collection.length + " Resources";
+            this.$('.resources_total').text(total_text);
+        },
+
+        updatePositions: function() {
+            this.collection.each(function(resource, i) {
+                resource.set({position: i});
+            });
         }
     });
 
@@ -151,7 +163,7 @@ $(function(){
             var html = this.template(this.model.attributes);
             this.$el.html(html);
             if (this.model.get('url')) {
-                this._setUpForSourceType('"source-file-selected"')
+                this._setUpForSourceType('"source-file-selected"');
             }
             return this;
         },
@@ -212,10 +224,12 @@ $(function(){
         },
 
         deleteResource: function(){
-            this.remove();
-            //check if resource was created and then
-            if (this.model.id)
-               this.model.destroy();
+            this.model.collection.remove(this.model);
+            // this.model.destroy();
+            // this.remove();
+            // //check if resource was created and then
+            // if (this.model.id)
+            //    this.model.destroy();
         },
 
         createDropboxChooser: function() {
@@ -278,11 +292,9 @@ $(function(){
             var sandbox = options.sandbox;
             this.resourceListView = undefined;
 
-
             // Listen for the hdx-contribute-global-created notification...
             sandbox.subscribe('hdx-contribute-global-created', function (global) {
                 // ... when ready, get the contribute_global object.
-
                 this.contribute_global = global;
 
                 this.contribute_global.getDatasetIdPromise().then(
@@ -292,7 +304,6 @@ $(function(){
                         this.resourceListView = new PackageResourcesListView({collection: resources});
 
                         this.contribute_global.setResourceModelList(this.resources);
-
                     }.bind(this)
                 );
 
@@ -311,13 +322,12 @@ $(function(){
                     }.bind(this))
                     .then(function(){
                         // debugger;
-                        this.contribute_global.browseToDataset();
+                        // this.contribute_global.browseToDataset();
                     }.bind(this),
                     function (error){
                         console.error("error while uploading resources");
                     });
             }.bind(this));
-            //this._setUpCreateResourceEl();
         },
 
         onCreateBtn: function(e) {
@@ -332,8 +342,6 @@ $(function(){
             };
             var newResourceModel = new Resource(data);
             this.resources.add(newResourceModel);
-
-            // console.log(this.resources);
         }
     });
 
