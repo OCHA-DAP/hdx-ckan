@@ -51,7 +51,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     $.post(validateUrl, formDataArray,
                         function (data, status, xhr) {
                             contributeGlobal.updateValidationUi(data, status, xhr);
-                            deferred.resolve(contributeGlobal.validateSucceeded(data, status))
+                            deferred.resolve(contributeGlobal.validateSucceeded(data, status));
                             moduleLog('Validation finished');
                         }
                     );
