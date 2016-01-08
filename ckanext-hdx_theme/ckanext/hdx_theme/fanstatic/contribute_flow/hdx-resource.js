@@ -76,6 +76,38 @@ $(function(){
 
         parse: function(data) {
             return data.result.resources;
+        },
+
+        'saveAll': function(pkg_id) {
+            var deferred = new $.Deferred();
+            var index = 0;
+            var resources = this;
+
+            var saveResources = function () {
+                /**
+                 * We need to save the resources sequentially to avoid
+                 * race conditions on the server side
+                 */
+                var model = resources.models[index];
+                model.set('package_id', pkg_id);
+                //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
+                //    model.set('upload', '');
+                //}
+                var promise = model.save();
+                if (index + 1 < resources.length) {
+                    index++;
+                    promise.then(saveResources)
+                }
+                else {
+                    promise.then(function(){
+                            deferred.resolve();
+                        }
+                    );
+                }
+            };
+            saveResources();
+
+            return deferred.promise();
         }
     });
 
@@ -296,6 +328,8 @@ $(function(){
             var name = filename || path.split('\\').pop().split('/').pop();
             var url = use_short_url ? name : path;
             this.model.set('upload', this.$('.resource_file_field')[0].files[0]);
+            this.model.set('url_type', 'upload');
+            this.model.set('resource_type', 'file.upload');
             this.model.set('url', url);
             if (!this.model.get('name')) {
                 this.model.set('name', name);
@@ -337,17 +371,14 @@ $(function(){
                         return this.contribute_global.getDatasetIdPromise();
                     }.bind(this))
                     .then(function(package_id){
-                        var promiseList = [];
-                        this.resources.each(function(model){
-                            model.set('package_id', package_id);
-                            var promise = model.save();
-                            promiseList.push(promise);
-                        });
-                        return $.when.apply($, promiseList);
+
+                        return this.resources.saveAll(package_id);
+
                     }.bind(this))
                     .then(function(){
                         // debugger;
-                        // this.contribute_global.browseToDataset();
+                        console.log('Browsing away ');
+                        this.contribute_global.browseToDataset();
                     }.bind(this),
                     function (error){
                         console.error("error while uploading resources");
@@ -358,6 +389,7 @@ $(function(){
         onCreateBtn: function(e) {
             var data = {
                 //id: 'new',
+                /* Internally the position will start from 0 like in CKAN. In template it is +1 */
                 position: this.resources.length,
                 url: '',
                 format: '',
