@@ -124,6 +124,8 @@ class ContributeFlowController(base.BaseController):
 
             pkg_dict = {}
             if data_dict.get('id'):
+                # we allow partial updates to not destroy existing resources
+                context['allow_partial_update'] = True
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:
                 pkg_dict = logic.get_action('package_create')(context, data_dict)
