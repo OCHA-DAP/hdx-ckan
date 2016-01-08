@@ -150,6 +150,9 @@ $(function(){
         render: function() {
             var html = this.template(this.model.attributes);
             this.$el.html(html);
+            if (this.model.get('url')) {
+                this._setUpForSourceType('"source-file-selected"')
+            }
             return this;
         },
 
@@ -213,17 +216,16 @@ $(function(){
             // view's form fields.
 
             // Get the serialised create form.
-            var create_form_array = this.$(':input').serializeArray();
+            //var create_form_array = this.$(':input').serializeArray();
             // Serialize in the correct JSON format.
-            var form_data = {package_id: package_id, format: 'txt'};
-            _.map(create_form_array, function(x){form_data[x.name] = x.value;});
+            //var form_data = {package_id: package_id, format: 'txt'};
+            //_.map(create_form_array, function(x){form_data[x.name] = x.value;});
 
             var deferred = new $.Deferred();
 
-            var resource = new Resource(form_data);
-            resource.set('upload', this.$('.resource_file_field')[0].files[0]);
-            resource.save(form_data, {
-                wait: true,
+            //var resource = new Resource(form_data);
+            //resource.set('upload', this.$('.resource_file_field')[0].files[0]);
+            this.model.save(null, {
                 success: function(model, response, options) {
                     // console.log('successfully saved model');
                     this.$(':input').val('');
@@ -231,7 +233,7 @@ $(function(){
                     if (response.success){
                         deferred.resolve(response.result.id);
                     } else {
-                        deffered.reject(response.result);
+                        deferred.reject(response.result);
                     }
                 }.bind(this),
                 error: function(model, response, options) {
@@ -289,6 +291,7 @@ $(function(){
             // `filename` as the model name if passed.
             var name = filename || path.split('\\').pop().split('/').pop();
             var url = use_short_url ? name : path;
+            this.model.set('upload', this.$('.resource_file_field')[0].files[0]);
             this.model.set('url', url);
             if (!this.model.get('name')) {
                 this.model.set('name', name);
@@ -309,16 +312,24 @@ $(function(){
         initialize: function(options) {
             var sandbox = options.sandbox;
             this.resourceListView = undefined;
-            var package_id = null; //TODO: on edit we should have the package id
-            var resources = new PackageResources(null, {package_id: package_id});
-            this.resources = resources;
-            this.resourceListView = new PackageResourcesListView({collection: resources});
+
 
             // Listen for the hdx-contribute-global-created notification...
             sandbox.subscribe('hdx-contribute-global-created', function (global) {
                 // ... when ready, get the contribute_global object.
+
                 this.contribute_global = global;
-                this.contribute_global.setResourceModelList(this.resources);
+
+                this.contribute_global.getDatasetIdPromise().then(
+                    function(package_id){
+                        var resources = new PackageResources(null, {package_id: package_id});
+                        this.resources = resources;
+                        this.resourceListView = new PackageResourcesListView({collection: resources});
+
+                        this.contribute_global.setResourceModelList(this.resources);
+
+                    }.bind(this)
+                );
 
                 global.getResourceSaveStartPromise()
                     .then(function(){
