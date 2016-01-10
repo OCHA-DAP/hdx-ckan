@@ -260,7 +260,7 @@
 
 
                                     {% set licenses = h.hdx_license_list() %}
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="license_id" data-module-required="private">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private" data-module-broadcast_change="true">
                                         {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
                                     <div data-module="hdx_form_element_manager" data-module-element_name="license_other" id="license-other-define" {% if data.license_id != 'Other' %}style="display:none;"{% endif %}>
@@ -268,7 +268,7 @@
                                     </div>
 
                                     {% set methodologies = h.hdx_methodology_list() %}
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public">
+                                    <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public" data-module-broadcast_change="true">
                                         {{ form.select('methodology', id='field_methodology', label=_('Methodology'), placeholder=_("Select methodology"), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
                                     </div>
                                     <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
