@@ -55,7 +55,7 @@ ckan.module('hdx_form_element_manager', function($, _) {
                 this.sandbox.subscribe('hdx-other-selection',
                     function (message) {
                         /* If we get the message from the correct select element */
-                        moduleLog('Processing broadcast message: ' + JSON.stringify(message));
+                        //moduleLog('Processing broadcast message: ' + JSON.stringify(message));
                         if (elementName.indexOf(message.srcElement) == 0) {
                             if (message.newValue == 'Other' || message.newValue == 'hdx-other')
                                 moduleEl.show();
@@ -86,11 +86,11 @@ ckan.module('hdx_form_element_manager', function($, _) {
                 'srcElement': this.options.element_name,
                 'newValue': newValue
             };
-            this.moduleLog('Broadcasting message: ' + JSON.stringify(message));
+            //this.moduleLog('Broadcasting message: ' + JSON.stringify(message));
             this.sandbox.publish('hdx-other-selection', message);
         },
         moduleLog: function(message) {
-            console.log(message);
+            //console.log(message);
         },
         options: {
             element_name: null,
