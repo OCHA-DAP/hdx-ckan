@@ -574,5 +574,6 @@ def generate_mandatory_fields():
         'owner_org': selected_org.get('id'),
         'dataset_source': selected_org.get('title'),
         'maintainer': user,
+        'subnational': 1,
     }
     return data_dict
