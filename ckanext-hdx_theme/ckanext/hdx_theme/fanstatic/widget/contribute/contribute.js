@@ -1,4 +1,4 @@
-function contributeAddDetails(){
+function contributeAddDetails(datasetId){
     var popup = $("#addDataPopup");
     popup.show();
     //$.ajax({
@@ -10,7 +10,8 @@ function contributeAddDetails(){
     //        popup.find(".details-content").html(result);
     //    }
     //});
-    popup.find(".details-content").html("<iframe src='/contribute/new'></iframe>");
+    var url = datasetId ? '/contribute/edit/'+datasetId : '/contribute/new';
+    popup.find(".details-content").html("<iframe src='" + url + "'></iframe>");
 
     return false;
 }
