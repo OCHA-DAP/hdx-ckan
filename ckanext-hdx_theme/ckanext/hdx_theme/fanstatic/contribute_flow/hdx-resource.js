@@ -105,7 +105,10 @@ $(function(){
                     );
                 }
             };
-            saveResources();
+            if (resources.length)
+                saveResources();
+            else
+                deferred.resolve();
 
             return deferred.promise();
         }
