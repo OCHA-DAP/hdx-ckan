@@ -22,3 +22,6 @@
 .drag-drop-component.source-file .source-file-upload .drag-drop-area .overwrite-text {
   display: none;
 }
+.drag-drop-component.source-file-selected .url-field {
+  display: none;
+}

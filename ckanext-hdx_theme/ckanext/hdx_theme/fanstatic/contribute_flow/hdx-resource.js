@@ -246,7 +246,10 @@ $(function(){
             var html = this.template(this.model.attributes);
             this.$el.html(html);
             if (this.model.get('url')) {
-                this._setUpForSourceType('source-file-selected');
+                if (this.model.get('url_type') == "upload")
+                    this._setUpForSourceType('source-file-selected');
+                else
+                    this._setUpForSourceType('source-url');
             }
             return this;
         },
