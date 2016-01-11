@@ -305,9 +305,19 @@
             <div class="background-white">
                 <div class="paddingLeftHack paddingRightHack">
                     <div class="pTopBottom35">
-                        <input type="button" class="btn btn-danger btn-lg" value="Delete this entry"/>
-                        <input type="submit" class="btn btn-primary btn-lg pull-right" value="Submit"/>
-                        <input type="button" class="btn btn-inverse btn-lg pull-right" value="See preview"/>
+                        {% if data.id %}
+                            {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
+                            <a class="btn btn-danger btn-lg"
+                               href="{% url_for controller='package', action='delete', id=data.id %}"
+                               data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">
+                               {{ _('Delete') }}
+                            </a>
+                        {% endif %}
+                        <div class="pull-right">
+                            <input type="button" class="btn btn-inverse btn-lg" value="See preview"/>
+                            <input type="submit" class="btn btn-primary btn-lg" value="Submit"/>
+                        </div>
+                        <div class="clearfix"></div>
                     </div>
                 </div>
             </div>
