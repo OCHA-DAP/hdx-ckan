@@ -65,6 +65,7 @@ $(function(){
         // A collection of resources for a package.
         model: Resource,
         comparator: 'position',
+        removedModels: [],  // An array for models set to be removed during next sync.
 
         initialize: function(models, options) {
             this.package_id = options.package_id;
@@ -78,7 +79,7 @@ $(function(){
             return data.result.resources;
         },
 
-        'saveAll': function(pkg_id) {
+        saveAll: function(pkg_id) {
             var deferred = new $.Deferred();
             var index = 0;
             var resources = this;
@@ -96,17 +97,45 @@ $(function(){
                 var promise = model.save();
                 if (index + 1 < resources.length) {
                     index++;
-                    promise.then(saveResources)
-                }
-                else {
+                    promise.then(saveResources);
+                } else {
                     promise.then(function(){
-                            deferred.resolve();
-                        }
-                    );
+                        deferred.resolve();
+                    });
                 }
             };
+
             if (resources.length)
                 saveResources();
+            else
+                deferred.resolve();
+
+            return deferred.promise();
+        },
+
+        destroyRemovedModels: function() {
+            // Sequentially destroy all models on the server that are in the
+            // removedModels array, i.e. marked for deletion.
+
+            var deferred = new $.Deferred();
+            var index = 0;
+            var resources = this;
+
+            var destroyResources = function() {
+                var model = resources.removedModels[index];
+                var promise = model.destroy();
+                if (index + 1 < resources.removedModels.length) {
+                    index++;
+                    promise.then(destroyResources);
+                } else {
+                    promise.then(function() {
+                        deferred.resolve();
+                    });
+                }
+            };
+
+            if (resources.removedModels.length)
+                destroyResources();
             else
                 deferred.resolve();
 
@@ -283,12 +312,11 @@ $(function(){
         },
 
         deleteResource: function(){
-            this.model.collection.remove(this.model);
-            // this.model.destroy();
-            // this.remove();
-            // //check if resource was created and then
-            // if (this.model.id)
-            //    this.model.destroy();
+            // Remove model from collection and push it to the removedModels
+            // array. These will be destroyed if the dataset update is
+            // submitted.
+            var collection = this.model.collection;
+            collection.removedModels.push(collection.remove(this.model));
         },
 
         createDropboxChooser: function() {
@@ -373,9 +401,10 @@ $(function(){
                         return this.contribute_global.getDatasetIdPromise();
                     }.bind(this))
                     .then(function(package_id){
-
                         return this.resources.saveAll(package_id);
-
+                    }.bind(this))
+                    .then(function(){
+                        return this.resources.destroyRemovedModels();
                     }.bind(this))
                     .then(function(){
                         // debugger;
