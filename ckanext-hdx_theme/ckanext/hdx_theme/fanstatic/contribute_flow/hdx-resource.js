@@ -419,7 +419,7 @@ $(function(){
                 position: this.resources.length,
                 url: '',
                 format: '',
-                description: '',
+                description: ''
             };
             var newResourceModel = new Resource(data);
             this.resources.add(newResourceModel);
