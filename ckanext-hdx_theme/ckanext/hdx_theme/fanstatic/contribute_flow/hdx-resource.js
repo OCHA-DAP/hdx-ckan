@@ -18,11 +18,6 @@ $(function(){
         // Backbone verbs with the CKAN api endpoints.
         fileAttribute: 'upload',
 
-        defaults: {
-            //'action_btn_label': 'Update',
-            //'action_btn_class': 'update_resource'
-        },
-
         methodToURL: {
             'create': '/api/action/resource_create',
             'read': '/api/action/resource_show?id=',
@@ -425,8 +420,6 @@ $(function(){
                 url: '',
                 format: '',
                 description: '',
-                //action_btn_label: 'Upload',
-                //action_btn_class: 'create_resource'
             };
             var newResourceModel = new Resource(data);
             this.resources.add(newResourceModel);
