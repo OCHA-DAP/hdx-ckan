@@ -282,7 +282,7 @@ $(function(){
 
         onFileChange: function(e) {
             // If a file has been selected, set up interface with file path.
-            this._setUpWithPath($(e.currentTarget).val(), true);
+            this._setUpWithPath($(e.currentTarget).val(), true, null, false);
             this._setUpForSourceType("source-file-selected");
         },
 
@@ -348,16 +348,21 @@ $(function(){
             this.$el.addClass(source_class);
         },
 
-        _setUpWithPath: function(path, use_short_url, filename) {
+        _setUpWithPath: function(path, use_short_url, filename, is_url) {
             // Set up interface for the given path. Either a url, or filepath.
             // If use_short_url is true, populate the model's `url` with the
             // filename rather than the full url (used for file uploads). Use
             // `filename` as the model name if passed.
+
+            is_url = typeof is_url !== 'undefined' ? is_url : true;
+            var resource_type = is_url ? 'api' : 'file.upload';
+            var url_type = is_url ? 'api' : 'upload';
+
             var name = filename || path.split('\\').pop().split('/').pop();
             var url = use_short_url ? name : path;
             this.model.set('upload', this.$('.resource_file_field')[0].files[0]);
-            this.model.set('url_type', 'upload');
-            this.model.set('resource_type', 'file.upload');
+            this.model.set('url_type', url_type);
+            this.model.set('resource_type', resource_type);
             this.model.set('url', url);
             if (!this.model.get('name')) {
                 this.model.set('name', name);
