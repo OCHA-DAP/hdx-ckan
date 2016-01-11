@@ -29,6 +29,9 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
   border-radius: 5px;
 }
+#hdx-3w-visualization-wrapper span {
+  font-size: 1.5em;
+}
 /* Slider Axis*/
 #three-w-slider-axis .axis text {
   font: 14px sans-serif;
@@ -44,8 +47,4 @@
 }
 #three-w-slider-axis {
   width: 100%;
-}
-
-#hdx-3w-visualization-wrapper span {
-  font-size:1.5em;
 }
