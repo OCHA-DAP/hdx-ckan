@@ -5,6 +5,7 @@
 {% set data = data if data else h.generate_mandatory_fields()  %}
 {% set errors = {} %}
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
+{% set user_is_sysadmin = h.check_access('sysadmin') %}
 
 {% block bodytag %} {{ super() }} class="contribute-body" {% endblock %}
 
@@ -209,9 +210,12 @@
                                     {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational, error=errors.subnational, classes=['form-group'], attrs={}) }}
                                     </div>
 
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="quality">
-                                    {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}) }}
-                                    </div>
+                                    {% if user_is_sysadmin %}
+                                        <div data-module="hdx_form_element_manager" data-module-element_name="quality">
+                                        {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}) }}
+                                        </div>
+                                    {% endif %}
+
                                 </div>
                             </div>
                             <div class="row">
@@ -281,7 +285,7 @@
                                     </div>
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="caveats">
-                                    {{ form.textarea('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+                                    {{ form.markdown('caveats', id='field_caveats', label=_('Caveats / Comments'),value=data.caveats, error=errors.caveats, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                     </div>
 
                                     {# replaced with ajax one below
