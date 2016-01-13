@@ -6,8 +6,6 @@ $(function(){
 
         TODO:
         - Handle server validation errors on create/update of resources
-        - decide what user action submits create/update requests (button
-          click?, change events?)
     */
 
     // MODELS
@@ -281,7 +279,9 @@ $(function(){
         },
 
         render: function() {
-            var html = this.template(this.model.attributes);
+            var template_data = _.clone(this.model.attributes);
+            template_data.template_position = this.model.collection.indexOf(this.model);
+            var html = this.template(template_data);
             this.$el.html(html);
             if (this.model.get('url')) {
                 if (this.model.get('url_type') == "upload")
