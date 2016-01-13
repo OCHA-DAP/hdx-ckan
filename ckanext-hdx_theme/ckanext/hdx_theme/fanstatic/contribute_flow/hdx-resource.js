@@ -372,7 +372,7 @@ $(function(){
 
         cloudFileURLSelected: function(url, filename) {
             this._setUpWithPath(url, false, filename);
-            this._setUpForSourceType("source-file-selected");
+            this._setUpForSourceType("source-url");
             // switch resource-source radio to URL input
             this.$('input:radio.resource-source[value=url]').prop('checked', true);
         },
