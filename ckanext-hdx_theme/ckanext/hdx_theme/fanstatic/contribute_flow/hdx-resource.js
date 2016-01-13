@@ -453,7 +453,7 @@ $(function(){
                     .then(function(){
                         // debugger;
                         console.log('Browsing away ');
-                        // this.contribute_global.browseToDataset();
+                        this.contribute_global.browseToDataset();
                     }.bind(this),
                     function (error){
                         console.error("error while uploading resources");
