@@ -12,9 +12,7 @@
 {% block page %}
 
 {% if data.resources %}
-<script id="resource-list-json" type="application/json">
-  {{  h.dump_json(data.resources) }}
-</script>
+<script id="resource-list-json" type="application/json">{{h.escaped_dump_json(data.resources)|safe}}</script>
 {% endif %}
 
 <div class="hdx-form container" data-module="contribute_flow_main" {% if data.id  %} data-module-dataset_id="{{ data.id }}" {% endif %}>

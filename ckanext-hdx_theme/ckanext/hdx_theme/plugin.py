@@ -194,6 +194,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
             'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
             'load_json': hdx_helpers.load_json,
+            'escaped_dump_json': hdx_helpers.escaped_dump_json,
             'json_dumps': json.dumps,
             'hdx_less_default': hdx_helpers.hdx_less_default,
             'hdx_popular': hdx_helpers.hdx_popular,

@@ -61,6 +61,7 @@ $(function(){
         model: Resource,
         comparator: 'position',
         removedModels: [],  // An array for models set to be removed during next sync.
+        orderChanged: false,  // A flag to determine whether the collection order has changed.
 
         initialize: function(models, options) {
             this.package_id = options.package_id;
@@ -135,7 +136,37 @@ $(function(){
                 deferred.resolve();
 
             return deferred.promise();
+        },
+
+        resourceReorder: function() {
+            // If the models in this collection have been reordered, update
+            // them on the server.
+            if (this.orderChanged && this.package_id) {
+                // pluck the resource ids from the models
+                var resource_ids = this.pluck("id");
+
+                url = '/api/action/package_resource_reorder';
+                options = {
+                    url: url,
+                    type: 'POST',
+                    data: JSON.stringify({
+                        id: this.package_id,
+                        order: resource_ids
+                    }),
+                    success: function(model, response, options) {
+                        this.orderChanged = false;  // reset flag
+                    }.bind(this),
+                    error: function(response) {
+                        console.log('Error: could not reorder resources:');
+                        console.log(response.responseJSON.error);
+                    }.bind(this)
+                };
+                return (this.sync || Backbone.sync).call(this, null, this, options);
+            }
+            // Return a resolved promise if we don't need to change the order.
+            return $.when();
         }
+
     });
 
 
@@ -150,17 +181,21 @@ $(function(){
 
         initialize: function() {
             this.resource_list = this.$('.resources');
-            if (this.collection.package_id !== null){
+            // Fetch the collection if we have a package_id and no models.
+            if (this.collection.package_id !== null && this.collection.length === 0){
                 this.collection.fetch({
                 success: function(){
-                    this.render();
+                    // console.log('Fetched the collection.');
                 }.bind(this),
                 error: function(e){
                     console.log('Cannot render: ' + e);
                 }.bind(this)});
+            } else if (this.collection.length > 0) {
+                this.render();
+                this.updateTotal();
             }
-            this.listenTo(this.collection, 'sync add remove', this.render);
-            this.listenTo(this.collection, 'add remove', this.updateTotal);
+            this.listenTo(this.collection, 'sync add remove reset', this.render);
+            this.listenTo(this.collection, 'add remove reset', this.updateTotal);
             this.listenTo(this.collection, 'remove', this.onSortOrderChange);
 
             // Initialize drag n drop sorting
@@ -193,6 +228,8 @@ $(function(){
         },
 
         onSortOrderChange: function(e) {
+            // Sort order may be changed either by drag n drop reordering, or
+            // by removing a resource.
             var has_changed = false;
             this.collection.each(function(resource, i) {
                 var new_pos = resource.view.$el.index();
@@ -202,6 +239,7 @@ $(function(){
                 }
             });
             if (has_changed) {
+                this.collection.orderChanged = true;
                 this.collection.sort();
                 this.render();
             }
@@ -382,6 +420,7 @@ $(function(){
 
         initialize: function(options) {
             var sandbox = options.sandbox;
+            var data = options.data;
             this.resourceListView = undefined;
 
             // Listen for the hdx-contribute-global-created notification...
@@ -391,11 +430,10 @@ $(function(){
 
                 this.contribute_global.getDatasetIdPromise().then(
                     function(package_id){
-                        var resources = new PackageResources(null, {package_id: package_id});
-                        this.resources = resources;
-                        this.resourceListView = new PackageResourcesListView({collection: resources});
+                        this.resourceCollection = new PackageResources(data, {package_id: package_id});
+                        this.resourceListView = new PackageResourcesListView({collection: this.resourceCollection});
 
-                        this.contribute_global.setResourceModelList(this.resources);
+                        this.contribute_global.setResourceModelList(this.resourceCollection);
                     }.bind(this)
                 );
 
@@ -404,15 +442,18 @@ $(function(){
                         return this.contribute_global.getDatasetIdPromise();
                     }.bind(this))
                     .then(function(package_id){
-                        return this.resources.saveAll(package_id);
+                        return this.resourceCollection.saveAll(package_id);
                     }.bind(this))
                     .then(function(){
-                        return this.resources.destroyRemovedModels();
+                        return this.resourceCollection.destroyRemovedModels();
+                    }.bind(this))
+                    .then(function(){
+                        return this.resourceCollection.resourceReorder();
                     }.bind(this))
                     .then(function(){
                         // debugger;
                         console.log('Browsing away ');
-                        this.contribute_global.browseToDataset();
+                        // this.contribute_global.browseToDataset();
                     }.bind(this),
                     function (error){
                         console.error("error while uploading resources");
@@ -424,16 +465,20 @@ $(function(){
             var data = {
                 //id: 'new',
                 /* Internally the position will start from 0 like in CKAN. In template it is +1 */
-                position: this.resources.length,
+                position: this.resourceCollection.length,
                 url: '',
                 format: '',
                 description: ''
             };
             var newResourceModel = new Resource(data);
-            this.resources.add(newResourceModel);
+            this.resourceCollection.add(newResourceModel);
         }
     });
 
     var sandbox = ckan.sandbox();
-    this.app = new AppView({sandbox: sandbox});
+    var initial_resource_data = null;
+    if ($('#resource-list-json').length > 0) {
+        initial_resource_data = JSON.parse($('#resource-list-json').html());
+    }
+    this.app = new AppView({sandbox: sandbox, data: initial_resource_data});
 }());

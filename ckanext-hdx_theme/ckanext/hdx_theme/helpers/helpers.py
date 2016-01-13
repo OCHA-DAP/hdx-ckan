@@ -332,6 +332,11 @@ def load_json(obj, **kw):
     return json.loads(obj, **kw)
 
 
+def escaped_dump_json(obj, **kw):
+    # escapes </ to prevent script tag hacking.
+    return json.dumps(obj, **kw).replace('</', '<\\/')
+
+
 def hdx_group_followee_list():
     context = {'model': model, 'session': model.Session,
                'user': c.user or c.author, 'auth_user_obj': c.userobj,
