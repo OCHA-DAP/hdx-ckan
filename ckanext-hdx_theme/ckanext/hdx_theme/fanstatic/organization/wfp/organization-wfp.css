@@ -2571,6 +2571,9 @@ ul.hdx-bs3 {
   display: inline-block;
 }
 /* END - Actions button list */
+.red {
+  color: #ff0000;
+}
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;
