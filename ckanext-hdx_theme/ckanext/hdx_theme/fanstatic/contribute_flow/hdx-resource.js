@@ -375,6 +375,8 @@ $(function(){
             this._setUpForSourceType("source-url");
             // switch resource-source radio to URL input
             this.$('input:radio.resource-source[value=url]').prop('checked', true);
+            // focus on first text field
+            this.$('input:text')[0].focus();
         },
 
         _setUpForSourceType: function(source_class) {
