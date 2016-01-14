@@ -65,12 +65,15 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
         cases_res_id = config.get('hdx.ebola.datastore.cases')
         appeal_res_id = config.get('hdx.ebola.datastore.appeal')
 
-        crisis_data_access = EbolaCrisisDataAccess(top_line_res_id, cases_res_id, appeal_res_id)
-        crisis_data_access.fetch_data(context)
-        top_line_items = crisis_data_access.get_top_line_items()
+        if top_line_res_id and cases_res_id and appeal_res_id:
+            crisis_data_access = EbolaCrisisDataAccess(top_line_res_id, cases_res_id, appeal_res_id)
+            crisis_data_access.fetch_data(context)
+            top_line_items = crisis_data_access.get_top_line_items()
 
-        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
-        formatter.format_results()
+            formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
+            formatter.format_results()
+        else:
+            top_line_items = []
 
         c.full_facet_info = self._generate_dataset_results()
 
