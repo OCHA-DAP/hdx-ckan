@@ -84,7 +84,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
-    
+
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
@@ -111,7 +111,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
                   action='edit')
 
-        
+
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
@@ -128,10 +128,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'delete',
                           'edit',
                       ])))
-        
+
         map.connect(
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
-        
+
         #map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
         map.connect('/contribute/new',
                     controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
@@ -297,6 +297,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_purge': hdx_delete.hdx_dataset_purge,
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
+            'package_show_edit': hdx_get.package_show_edit,
             'package_validate': hdx_get.package_validate
         }
 

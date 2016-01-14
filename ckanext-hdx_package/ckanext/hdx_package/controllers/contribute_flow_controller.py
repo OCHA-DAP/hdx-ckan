@@ -31,7 +31,7 @@ class ContributeFlowController(base.BaseController):
         dataset_dict = None
         try:
             if id:
-                dataset_dict = logic.get_action('package_show')(context, {'id': id})
+                dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
             logic.check_access(action_name, context, dataset_dict)
         except logic.NotAuthorized:
             abort(401, _('Unauthorized to create a package'))
@@ -51,7 +51,7 @@ class ContributeFlowController(base.BaseController):
             else:
                 if id:
                     # show dataset in case of edit
-                    dataset_dict = logic.get_action('package_show')(context, {'id': id})
+                    # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
 

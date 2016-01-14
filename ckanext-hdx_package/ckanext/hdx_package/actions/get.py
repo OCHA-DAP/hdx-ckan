@@ -316,6 +316,18 @@ def package_show(context, data_dict):
     return package_dict
 
 
+@logic.side_effect_free
+def package_show_edit(context, data_dict):
+    '''A package_show action for editing a package and resources.'''
+
+    # Requires use_cache and for_edit in the context so resource urls for file
+    # uploads don't include the full qualified url path.
+    context['use_cache'] = False
+    context['for_edit'] = True
+
+    return package_show(context, data_dict)
+
+
 def __get_resource_filesize(resource_dict):
     if resource_dict.get('url_type') == 'upload':
         value = None

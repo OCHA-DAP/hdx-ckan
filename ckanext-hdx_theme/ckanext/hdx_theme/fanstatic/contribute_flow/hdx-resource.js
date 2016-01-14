@@ -66,7 +66,7 @@ $(function(){
         },
 
         url: function() {
-            return '/api/action/package_show?id=' + this.package_id;
+            return '/api/action/package_show_edit?id=' + this.package_id;
         },
 
         parse: function(data) {
