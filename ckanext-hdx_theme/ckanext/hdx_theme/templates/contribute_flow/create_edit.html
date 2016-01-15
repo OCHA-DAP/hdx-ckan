@@ -249,17 +249,15 @@
                                     {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
                                     </div>
 
-
+                                    {% set original_value = data.dataset_date %}
                                     {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
                                     'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
                                     'data-module-alt_field_id': 'field-dataset_date',
-                                    'data-module-original_value': '{{ data.dataset_date }}', 'class':'form-control' } %}
-
+                                    'data-module-original_value': original_value, 'class':'form-control' } %}
                                     <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
                                     {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
                                     <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
                                     </div>
-
 
 
                                     {% set location_list = h.hdx_location_list() %}
