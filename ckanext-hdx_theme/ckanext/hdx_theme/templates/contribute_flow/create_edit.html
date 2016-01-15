@@ -88,6 +88,7 @@
                                                           <div class="control-group form-group control-full">
                                                             <div class="controls ">
                                                             <input type="text" name="url" value="<%= url %>" placeholder="eg. http://example.com/population-jan-2011.json" class="resource_url_field form-control">
+                                                            <span class="error-block"></span>
                                                             </div>
                                                           </div>
                                                         </div>
@@ -97,6 +98,7 @@
                                                           <div class="control-group form-group required">
                                                             <div class="controls ">
                                                             <input type="text" name="name" value="<%= name %>" placeholder="File name" class="form-control resource_name_field">
+                                                            <span class="error-block"></span>
                                                             </div>
                                                           </div>
                                                         </div>
@@ -104,6 +106,7 @@
                                                             <div class="form-group">
                                                                 <div class="controls">
                                                                 <input class="form-control resource_format_field" type="text" name="format" value="<%= format %>" placeholder="File type"  data-module="autocomplete" data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?" />
+                                                                <span class="error-block"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -113,6 +116,7 @@
                                                           <div class="control-group form-group control-full">
                                                             <div class="controls ">
                                                             <textarea name="description" cols="20" rows="5" placeholder="Add description" style="height: 68px;" class="form-control resource_description_field"><%= description %></textarea>
+                                                            <span class="error-block"></span>
                                                             </div>
                                                           </div>
                                                         </div>

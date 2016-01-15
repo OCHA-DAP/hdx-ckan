@@ -63,6 +63,16 @@ $(function(){
 
         initialize: function(models, options) {
             this.package_id = options.package_id;
+
+            sandbox.subscribe('hdx-form-validation', function (message) {
+                if (message.elementName == 'error_block' && 'Resources' in message.errorBlock) {
+                    $.each(message.errorBlock.Resources, function(k, o) {
+                        var resource_index = k.split(" ").pop();
+                        var resource_field_errors = o;
+                        this.at(resource_index).view.display_errors(resource_field_errors);
+                    }.bind(this));
+                }
+            }.bind(this));
         },
 
         url: function() {
@@ -290,6 +300,16 @@ $(function(){
                     this._setUpForSourceType('source-url');
             }
             return this;
+        },
+
+        display_errors: function(field_errors) {
+            _.each(field_errors, function(error_text, field_name) {
+                var error_block = this.$("[name='" + field_name + "'] ~ .error-block");
+                error_block.html(error_text);
+                var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
+                parent_el.addClass('error');
+            }.bind(this));
+            this._setUpForSourceType('source-url');
         },
 
         onSourceChange: function(e){
