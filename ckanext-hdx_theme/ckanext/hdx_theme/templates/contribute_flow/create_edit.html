@@ -253,14 +253,54 @@
                                     {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
                                     </div>
 
-                                    {% set original_value = data.dataset_date %}
-                                    {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
-                                    'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
-                                    'data-module-alt_field_id': 'field-dataset_date',
-                                    'data-module-original_value': original_value, 'class':'form-control' } %}
-                                    <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
-                                    {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
-                                    <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+                                    <div class="row">
+                                        <div class="col-xs-6" data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
+                                            {% set original_value = data.dataset_date %}
+                                            {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
+                                            'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
+                                            'data-module-alt_field_id': 'field-dataset_date',
+                                            'data-module-original_value': original_value, 'class':'form-control' } %}
+                                            {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
+                                            <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div class="row">
+                                                    <div class="col-xs-1" style="padding:0">
+                                                        <div class="control-group form-group">
+                                                            <label class="control-label">OR</label>
+                                                        </div>
+                                                    </div>
+
+                                                <div class="col-xs-5" style="padding-right: 0">
+                                                    <div class="form-group">
+                                                        <input type="text" name='ui_date_range1' id='ui_date_range1' onkeydown="return false;"
+                                                               data-module='hdx_datepicker' data-module-group='2' data-module-type="start-period" data-module-topic='date-field-clicked'
+                                                               data-module-alt_field_id='date_range1' data-module-original_value="{{ data.dataset_date }}"
+                                                               label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-group form-control' style="width: 100%;" />
+                                                        <input type="hidden" name='date_range1' id='date_range1' error='{{errors.dataset_date}}' />
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="col-xs-1" style="padding:0">
+                                                        <div class="control-group form-group">
+                                                            <label class="control-label" style="text-align: center">-</label>
+                                                        </div>
+                                                </div>
+
+                                                <div class="col-xs-5" style="padding-left: 0">
+                                                    <div class="form-group">
+                                                        <input type="text" name='ui_date_range2' id='ui_date_range2' onkeydown="return false;"
+                                                               data-module='hdx_datepicker' data-module-group='2' data-module-type="end-period" data-module-topic='date-field-clicked'
+                                                               data-module-alt_field_id='date_range2' data-module-original_value="{{ data.dataset_date }}"
+                                                               label="{{_('Start Date')}}" placeholder="{{_('Start Date')}}" value='' error='{{errors.dataset_date}}' class='form-group form-control' style="width: 100%;" />
+                                                        <input type="hidden" name='date_range2' id='date_range2' error='{{errors.dataset_date}}' />
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
 
 

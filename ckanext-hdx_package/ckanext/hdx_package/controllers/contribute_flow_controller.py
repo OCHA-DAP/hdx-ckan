@@ -148,7 +148,7 @@ class ContributeFlowController(base.BaseController):
 
         context['message'] = data_dict.get('log_message', '')
         self.process_locations(data_dict)
-
+        self.process_dataset_date(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
@@ -261,3 +261,9 @@ class ContributeFlowController(base.BaseController):
     #                               {'id': org_id, 'include_datasets': False})
     #             source = selected_org.get('title')
     #         data_dict['dataset_source'] = source
+
+    def process_dataset_date(self, data_dict):
+        if 'date_range1' in data_dict:
+            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2', data_dict.get('date_range1'))
+        elif 'data_range2' in data_dict:
+                data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
