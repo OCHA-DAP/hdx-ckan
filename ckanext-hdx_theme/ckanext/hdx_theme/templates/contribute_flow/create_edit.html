@@ -212,7 +212,7 @@
                                     </div>
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="notes" data-module-required="public">
-                                    {{ form.markdown('notes', id='field_notes', label=_('Description (optional)'), placeholder=_('Description of dataset'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
+                                    {{ form.markdown('notes', id='field_notes', label=_('Description'), placeholder=_('Description of dataset'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                     </div>
 
                                     <div data-module="hdx_form_element_manager" data-module-element_name="subnational" data-module-required="public">
@@ -253,17 +253,15 @@
                                     {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
                                     </div>
 
-
+                                    {% set original_value = data.dataset_date %}
                                     {% set dataset_date_attrs = {'data-module': 'hdx_datepicker',  'data-module-group': '1',
                                     'data-module-type': 'single', 'data-module-topic': 'date-field-clicked',
                                     'data-module-alt_field_id': 'field-dataset_date',
-                                    'data-module-original_value': '{{ data.dataset_date }}', 'class':'form-control' } %}
-
+                                    'data-module-original_value': original_value, 'class':'form-control' } %}
                                     <div data-module="hdx_form_element_manager" data-module-element_name="dataset_date" data-module-required="public">
                                     {{ form.input('ui_dataset_date', id='field-ui_dataset_date', label=_('Date of dataset'), placeholder=_('Select date'), value=data.dataset_date, error=errors.dataset_date, classes=['form-group', 'required'], attrs=dataset_date_attrs) }}
                                     <input type="hidden" name='dataset_date' id='field-dataset_date' value='{{data.dataset_date}}' error='{{errors.dataset_date}}' />
                                     </div>
-
 
 
                                     {% set location_list = h.hdx_location_list() %}
@@ -309,7 +307,6 @@
                                     {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
                                     </div>
 
-                                    TODO author, author_email, maintainer_email as hidden ?
                                 </div>
                             </div>
                         </section>
