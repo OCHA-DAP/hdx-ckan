@@ -128,6 +128,9 @@ $(function(){
             var destroyResources = function() {
                 var model = resources.removedModels[index];
                 var promise = model.destroy();
+                // `destroy` returns `false` for unpersisted models. Set
+                // `promise` to an immediately resolved promise.
+                if (promise === false) promise = $.when();
                 if (index + 1 < resources.removedModels.length) {
                     index++;
                     promise.then(destroyResources);
