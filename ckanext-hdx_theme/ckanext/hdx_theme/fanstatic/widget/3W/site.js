@@ -116,7 +116,7 @@ function generate3WComponent(config,data,geom){
                 return feature.properties[config.joinAttribute].toLowerCase();
             })
             .popup(function(d){
-                return lookup[d.key];
+                return lookup[d.key] + ", Activities: " + d.value;
             })
             .renderPopup(true);
 
