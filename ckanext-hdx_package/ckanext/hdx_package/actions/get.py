@@ -336,7 +336,7 @@ def __get_resource_filesize(resource_dict):
             value = os.path.getsize(upload.get_path(resource_dict['id']))
         except Exception as e:
             log.warn(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
-                                                                                      str(e)))
+                                                                                         str(e)))
         return value
     return None
 
@@ -344,9 +344,9 @@ def __get_resource_filesize(resource_dict):
 @logic.side_effect_free
 def package_validate(context, data_dict):
     model = context['model']
-    name_or_id = data_dict.get("id") or data_dict['name']
+    name_or_id = data_dict.get("id") or data_dict.get('name')
 
-    pkg = model.Package.get(name_or_id)
+    pkg = model.Package.get(name_or_id) if name_or_id else None
 
     if pkg is None:
         action = 'package_create'
@@ -363,7 +363,8 @@ def package_validate(context, data_dict):
     if 'schema' in context:
         schema = context['schema']
     else:
-        schema = package_plugin.update_package_schema()
+        schema = package_plugin.create_package_schema() if action == 'package_create' \
+            else package_plugin.update_package_schema()
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, action)
