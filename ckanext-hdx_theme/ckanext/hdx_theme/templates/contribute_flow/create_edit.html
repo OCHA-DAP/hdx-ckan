@@ -11,6 +11,8 @@
 
 {% block page %}
 
+{{ h.snippet('widget/contribute/user_waiting.html', id="userWaitingPopup", initial_text=_('Please wait ...'), show_widget=True) }}
+
 {% if data.resources %}
 <script id="resource-list-json" type="application/json">{{h.escaped_dump_json(data.resources)|safe}}</script>
 {% endif %}
@@ -388,3 +390,4 @@
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
     {% resource 'hdx_theme/contribute-flow' %}
 {% endblock %}
+

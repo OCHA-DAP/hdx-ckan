@@ -73,6 +73,7 @@ $(function(){
                     }.bind(this));
                 }
             }.bind(this));
+            this.contribute_global = options.contribute_global;
         },
 
         url: function() {
@@ -93,6 +94,7 @@ $(function(){
                  * We need to save the resources sequentially to avoid
                  * race conditions on the server side
                  */
+                this.contribute_global.controlUserWaitingWidget(true, 'Saving resource ' + (index+1) +  '...');
                 var model = resources.models[index];
                 model.set('package_id', pkg_id);
                 //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
@@ -107,7 +109,7 @@ $(function(){
                         deferred.resolve();
                     });
                 }
-            };
+            }.bind(this);
 
             if (resources.length)
                 saveResources();
@@ -124,6 +126,8 @@ $(function(){
             var deferred = new $.Deferred();
             var index = 0;
             var resources = this;
+
+            this.contribute_global.controlUserWaitingWidget(true, 'Almost done...');
 
             var destroyResources = function() {
                 var model = resources.removedModels[index];
@@ -455,10 +459,12 @@ $(function(){
 
                 this.contribute_global.getDatasetIdPromise().then(
                     function(package_id){
-                        this.resourceCollection = new PackageResources(data, {package_id: package_id});
+                        this.resourceCollection = new PackageResources(data,
+                            {package_id: package_id, contribute_global: this.contribute_global});
                         this.resourceListView = new PackageResourcesListView({collection: this.resourceCollection});
 
                         this.contribute_global.setResourceModelList(this.resourceCollection);
+                        this.contribute_global.controlUserWaitingWidget(false);
                     }.bind(this)
                 );
 

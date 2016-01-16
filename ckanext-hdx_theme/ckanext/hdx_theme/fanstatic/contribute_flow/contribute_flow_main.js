@@ -58,6 +58,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     return deferred.promise();
                 },
                 'saveDatasetForm': function() {
+                    this.controlUserWaitingWidget(true, "Validating...");
                     var validatePromise = this.validate();
                     var datasetIdPromise = this.getDatasetIdPromise();
                     var deferred = new $.Deferred();
@@ -74,6 +75,7 @@ ckan.module('contribute_flow_main', function($, _) {
                                 else{
                                     formDataArray = contributeGlobal.getFormValues('new-dataset-json');
                                 }
+                                contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
                                 $.post(requestUrl, formDataArray,
                                     function(data, status, xhr) {
                                         contributeGlobal.updateInnerState(data, status);
@@ -81,6 +83,8 @@ ckan.module('contribute_flow_main', function($, _) {
                                     }
                                 );
                             }
+                            else
+                                contributeGlobal.controlUserWaitingWidget(false);
                         }
                     );
 
@@ -201,6 +205,13 @@ ckan.module('contribute_flow_main', function($, _) {
                         }
                     }
                     return result;
+                },
+                /**
+                 * @param {boolean} show - show or hide the widget
+                 * @param {string} message - message to be shown
+                 */
+                'controlUserWaitingWidget':  function(show, message) {
+                    sandbox.publish('hdx-user-waiting', {'show': show, 'message': message});
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;
