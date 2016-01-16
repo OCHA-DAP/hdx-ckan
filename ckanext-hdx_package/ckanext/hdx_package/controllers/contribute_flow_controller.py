@@ -165,7 +165,7 @@ class ContributeFlowController(base.BaseController):
             # data_dict = self.process_resources(data_dict)
 
             pkg_dict = logic.get_action('package_validate')(context, data_dict)
-            return self._prepare_and_render(save_type=save_type, data=pkg_dict, errors={},
+            return self._prepare_and_render(save_type=save_type, data=data_dict, errors={},
                                             error_summary={})
 
         except logic.ValidationError, e:
