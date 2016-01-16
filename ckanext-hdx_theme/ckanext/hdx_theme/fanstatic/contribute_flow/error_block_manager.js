@@ -45,6 +45,8 @@ ckan.module('hdx_error_block_manager', function($, _) {
 
                             existingText += newHtml;
                             errorEl.html(existingText);
+
+                            hdxUtil.ui.scrollTo(thisEl);
                         }
                 }
             );
