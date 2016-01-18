@@ -1703,6 +1703,13 @@ ul.list-horizontal li:first-child:before {
   padding: 0;
   top: 0;
 }
+.form-explanation p + p {
+  margin-top: 30px;
+}
+.form-explanation .cloud-img {
+  height: 21px;
+  margin-right: 3px;
+}
 /* Body Background */
 body {
   background-size: cover;

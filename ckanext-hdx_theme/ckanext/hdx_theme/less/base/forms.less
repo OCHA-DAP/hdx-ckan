@@ -7,6 +7,12 @@
 @labelMaxWidth: 160px;
 
 
+.img-height-margin-right(@height, @marginRight) {
+  height: @height;
+  margin-right: @marginRight;
+}
+
+
 body.contribute-body{
   min-width: 100%;
 }
@@ -349,8 +355,7 @@ ul.list-horizontal {
   }
 
   .cloud-img {
-    height: 21px;
-    margin-right: 3px;
+    .img-height-margin-right(21px, 3px);
   }
 
   label.control-label {
@@ -402,4 +407,14 @@ ul.list-horizontal {
       }
     }
   }
+}
+
+.form-explanation {
+  p + p {
+    margin-top: 30px;
+  }
+  .cloud-img {
+    .img-height-margin-right(21px, 3px);
+  }
+
 }

@@ -274,7 +274,9 @@ $(function(){
             'change input[type=radio].resource-source': 'onSourceChange',
             'change .source-file-fields .form-control': 'onFieldEdit',
             'click .dropbox a': 'onDropboxBtn',
-            'click .googledrive a': 'onGoogleDriveBtn'
+            'click .googledrive a': 'onGoogleDriveBtn',
+            'mouseover .dropbox a': 'onDropboxLinkHover',
+            'mouseover .googledrive a': 'onGoogleDriveLinkHover'
         },
 
         initialize: function() {
@@ -283,6 +285,7 @@ $(function(){
             this.listenTo(this.model, "destroy", this.remove);
 
             this.googlepicker = this.initGooglePicker();
+
         },
 
         initGooglePicker: function() {
@@ -306,6 +309,7 @@ $(function(){
                 else
                     this._setUpForSourceType('source-url');
             }
+
             return this;
         },
 
@@ -349,6 +353,27 @@ $(function(){
             // If a file has been selected, set up interface with file path.
             this._setUpWithPath($(e.currentTarget).val(), true, null, false);
             this._setUpForSourceType("source-file-selected");
+        },
+
+        onGoogleDriveLinkHover: function(e){
+          this._initLinkTooltip(e, '_gooogle_drive_link')  ;
+        },
+        onDropboxLinkHover: function(e){
+          this._initLinkTooltip(e, '_dropbox_link')  ;
+        },
+        _initLinkTooltip: function (e, uniqueId) {
+            if ( !this.hasOwnProperty(uniqueId) || !this[uniqueId]) {
+                var el = $(e.currentTarget);
+                e.preventDefault();
+                //console.log ("Initializing for: " +uniqueId + " and el is " + e.currentTarget);
+                this[uniqueId] = true;
+                el.tooltip({
+                    trigger: 'hover',
+                    placement: 'top'
+                });
+                el.tooltip('show');
+
+            }
         },
 
         updateResource: function() {

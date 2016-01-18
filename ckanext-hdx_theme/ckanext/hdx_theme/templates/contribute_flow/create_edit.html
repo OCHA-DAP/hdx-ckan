@@ -31,9 +31,27 @@
             <div class="background-gray">
                 <div class="paddingLeftHack paddingRightHack">
                         <div class="row form-section">
-                            <div class="col-xs-3">
-                                <h3>Your files</h3>
-                                <p>You can add more resources as needed by clicking on "Add more resources".</p>
+                            <div class="col-xs-3 form-explanation">
+                                <h3>{{ _('Your files') }}</h3>
+                                <p>{{ _('You can add more resources as needed by clicking on "Add more resources".') }}</p>
+
+                                <p>
+                                    <img class="cloud-img" src="/images/icons/dropbox.png" />
+                                    <strong>{{ _('Dropbox') }}</strong> <br />
+                                    {% trans %}
+                                        Please be advised that by adding files via Dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link.
+                                    {% endtrans %}
+                                </p>
+
+                                <p>
+                                    <img class="cloud-img" src="/images/icons/drive.png" />
+                                    <strong>{{ _('Google Drive') }}</strong> <br />
+                                    {% trans %}
+                                        In order to add your file(s) from Google Drive, sharing settings of file(s) has to be on so your file(s) becomes viewable on HDX.
+                                    {% endtrans %}
+                                    <br />
+                                    {% trans %} For instructions on how to change, please visit our FAQ. {% endtrans %}
+                                </p>
                             </div>
 
                             <div class="col-xs-9" id="resource-app">
@@ -72,10 +90,16 @@
                                                             </label>
                                                         </li>
                                                         <li class="or-separator dropbox">
-                                                            <a href="#"><img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox</a>
+                                                            <a data-original-title="{{ _('By adding files via dropbox, file sharing setting turns on automatically and becomes viewable by anyone with the link') }}"
+                                                               data-toggle="tooltip" href="#">
+                                                                <img class="cloud-img" src="/images/icons/dropbox.png" /> Dropbox
+                                                            </a>
                                                         </li>
                                                         <li class="or-separator googledrive">
-                                                            <a href="#"><img class="cloud-img" src="/images/icons/drive.png" /> Google Drive</a>
+                                                            <a data-original-title="{{ _('In order to add files via google drive, sharing settings has to be on') }}"
+                                                               data-toggle="tooltip" href="#">
+                                                                <img class="cloud-img" src="/images/icons/drive.png" /> Google Drive
+                                                            </a>
                                                         </li>
                                                     </ul>
                                                     <span class="pull-right">
