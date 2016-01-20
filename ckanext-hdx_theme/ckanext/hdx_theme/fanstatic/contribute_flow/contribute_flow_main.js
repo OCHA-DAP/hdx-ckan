@@ -252,7 +252,7 @@ ckan.module('contribute_flow_main', function($, _) {
 
             sandbox.publish('hdx-form-validation', {
                     'type': 'private_changed',
-                    'newValue': privateEl == 'false' ? 'public' : 'private'
+                    'newValue': privateVal == 'false' ? 'public' : 'private'
                 }
             );
 
