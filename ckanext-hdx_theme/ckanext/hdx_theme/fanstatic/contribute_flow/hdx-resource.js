@@ -275,9 +275,7 @@ $(function(){
             'change input[type=radio].resource-source': 'onSourceChange',
             'change .source-file-fields .form-control': 'onFieldEdit',
             'click .dropbox a': 'onDropboxBtn',
-            'click .googledrive a': 'onGoogleDriveBtn',
-            'mouseover .dropbox a': 'onDropboxLinkHover',
-            'mouseover .googledrive a': 'onGoogleDriveLinkHover'
+            'click .googledrive a': 'onGoogleDriveBtn'
         },
 
         initialize: function() {
@@ -304,6 +302,14 @@ $(function(){
             template_data.template_position = this.model.collection.indexOf(this.model);
             var html = this.template(template_data);
             this.$el.html(html);
+
+            this.$el.find('[data-module]').each(
+                function (i, el) {
+                    //console.log("Initializing ckan module for " + $(el).prop('outerHTML'));
+                    ckan.module.initializeElement(el);
+                }
+            );
+
             if (this.model.get('url')) {
                 if (this.model.get('url_type') == "upload")
                     this._setUpForSourceType('source-file-selected');
@@ -356,26 +362,14 @@ $(function(){
             this._setUpForSourceType("source-file-selected");
         },
 
-        onGoogleDriveLinkHover: function(e){
-          this._initLinkTooltip(e, '_gooogle_drive_link')  ;
-        },
-        onDropboxLinkHover: function(e){
-          this._initLinkTooltip(e, '_dropbox_link')  ;
-        },
-        _initLinkTooltip: function (e, uniqueId) {
-            if ( !this.hasOwnProperty(uniqueId) || !this[uniqueId]) {
-                var el = $(e.currentTarget);
-                e.preventDefault();
-                //console.log ("Initializing for: " +uniqueId + " and el is " + e.currentTarget);
-                this[uniqueId] = true;
-                el.tooltip({
-                    trigger: 'hover',
-                    placement: 'top'
-                });
-                el.tooltip('show');
-
+        onFormatGetsFocus: function(e){
+            console.log('initializing autocomplete for format');
+            if ( !this.hasOwnProperty('formatInitialized') || !this.formatInitialized ){
+                ckan.module.initializeElement(e.currentTarget);
+                this.formatInitialized = true;
             }
         },
+
 
         updateResource: function() {
             // Update the Resource from this view's form fields.
