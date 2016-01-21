@@ -50,6 +50,10 @@ ckan.module('contribute_flow_main', function($, _) {
 
                     $.post(validateUrl, formDataArray,
                         function (data, status, xhr) {
+                            data.error_summary = data.error_summary ? data.error_summary : {};
+                            if (!resourceDataArray || resourceDataArray.length == 0) {
+                                data.error_summary['Resources'] = 'Please add at least 1 resource to the dataset';
+                            }
                             contributeGlobal.updateValidationUi(data, status, xhr);
                             deferred.resolve(contributeGlobal.validateSucceeded(data, status));
                             moduleLog('Validation finished');
@@ -183,7 +187,8 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'validateSucceeded': function(data, status) {
                     var validated = status == 'success' &&
-                        (!data.errors || Object.keys(data.errors).length == 0) ;
+                        (!data.errors || Object.keys(data.errors).length == 0) &&
+                        (!data.error_summary || Object.keys(data.error_summary).length == 0);
                     return validated;
                 },
                 'setResourceModelList': function (resourceModelList) {

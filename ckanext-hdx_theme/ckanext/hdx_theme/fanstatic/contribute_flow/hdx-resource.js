@@ -65,7 +65,8 @@ $(function(){
             this.package_id = options.package_id;
 
             sandbox.subscribe('hdx-form-validation', function (message) {
-                if (message.elementName == 'error_block' && 'Resources' in message.errorBlock) {
+                if (message.elementName == 'error_block' && 'Resources' in message.errorBlock
+                    && $.isArray(message.errorBlock.Resources) ) {
                     $.each(message.errorBlock.Resources, function(k, o) {
                         var resource_index = k.split(" ").pop();
                         var resource_field_errors = o;
