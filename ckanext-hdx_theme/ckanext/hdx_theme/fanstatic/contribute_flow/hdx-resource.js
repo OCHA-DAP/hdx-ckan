@@ -457,9 +457,10 @@ $(function(){
             this.model.set('url_type', url_type);
             this.model.set('resource_type', resource_type);
             this.model.set('url', url);
-            if (!this.model.get('name')) {
-                this.model.set('name', name);
-            }
+            //if (!this.model.get('name')) {
+            //    this.model.set('name', name);
+            //}
+            this.model.set('name', name);
         }
     });
 
