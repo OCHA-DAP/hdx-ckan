@@ -219,6 +219,7 @@ $(function(){
                 animation: 250,
                 ghostClass: "drag-drop-ghost",
                 handle: ".drag-handle",
+                scroll: true,
                 onUpdate: function (e){
                     this.$el.trigger('sort-updated');
                 }.bind(this)
@@ -280,6 +281,28 @@ $(function(){
 
         initialize: function() {
             this.model.view = this;
+            this.$el.attr("draggable", true);
+            var dragGhost;
+            this.el.addEventListener("dragstart", function(e) {
+                dragGhost = document.createElement("div");
+                $(dragGhost).addClass("hdx-form");
+                $(dragGhost).removeClass("drag-drop-ghost");
+                $(dragGhost).css("width", $(e.target).parent().width());
+                dragGhost.appendChild(e.target.cloneNode(true));
+
+                var p = $(e.target).offset();
+                var x = e.pageX - p.left;
+                var y = e.pageY - p.top;
+
+                document.body.appendChild(dragGhost);
+                e.dataTransfer.setDragImage(dragGhost, x, y);
+                e.dataTransfer.ghostImage = dragGhost;
+            }, false);
+
+            this.el.addEventListener("dragend", function(e) {
+                document.body.removeChild(dragGhost);
+            }, false);
+
             this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
 
