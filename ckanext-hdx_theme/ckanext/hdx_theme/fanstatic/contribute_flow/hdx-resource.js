@@ -492,6 +492,16 @@ $(function(){
             'click .add_new_resource': 'onCreateBtn'
         },
 
+        resourceDefaults: function () {
+            return {
+                //id: 'new',
+                /* Internally the position will start from 0 like in CKAN. In template it is +1 */
+                position: this.resourceCollection.length,
+                url: '',
+                format: '',
+                description: ''
+            }
+        },
         initialize: function(options) {
             var sandbox = options.sandbox;
             var data = options.data;
@@ -506,6 +516,12 @@ $(function(){
                     function(package_id){
                         this.resourceCollection = new PackageResources(data,
                             {package_id: package_id, contribute_global: this.contribute_global});
+
+                        /* Have at least one empty resource in the form for a new dataset */
+                        if (this.resourceCollection.length == 0) {
+                            this.resourceCollection.add(new Resource(this.resourceDefaults()));
+                        }
+
                         this.resourceListView = new PackageResourcesListView({collection: this.resourceCollection});
 
                         this.contribute_global.setResourceModelList(this.resourceCollection);
@@ -538,15 +554,7 @@ $(function(){
         },
 
         onCreateBtn: function(e) {
-            var data = {
-                //id: 'new',
-                /* Internally the position will start from 0 like in CKAN. In template it is +1 */
-                position: this.resourceCollection.length,
-                url: '',
-                format: '',
-                description: ''
-            };
-            var newResourceModel = new Resource(data);
+            var newResourceModel = new Resource(this.resourceDefaults());
             this.resourceCollection.add(newResourceModel);
         }
     });
