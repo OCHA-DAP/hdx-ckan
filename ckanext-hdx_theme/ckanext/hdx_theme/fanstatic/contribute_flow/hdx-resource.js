@@ -323,6 +323,7 @@ $(function(){
         render: function() {
             var template_data = _.clone(this.model.attributes);
             template_data.template_position = this.model.collection.indexOf(this.model);
+            template_data.lower_case_format = template_data.format ? template_data.format.toLowerCase() : null;
             var html = this.template(template_data);
             this.$el.html(html);
 

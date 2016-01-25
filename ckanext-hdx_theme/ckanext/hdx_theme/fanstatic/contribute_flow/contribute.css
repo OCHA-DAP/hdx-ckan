@@ -25,3 +25,11 @@
 .drag-drop-component.source-file-selected .url-field {
   display: none;
 }
+.form-group .format-label {
+  position: absolute;
+  margin-left: 5px;
+  margin-top: 3px;
+}
+.form-group .format-label + input {
+  padding-left: 45px;
+}
