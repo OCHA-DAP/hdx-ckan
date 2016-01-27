@@ -19,6 +19,8 @@ import ckan.model.package as package
 import ckan.model.license as license
 import ckan.logic as logic
 
+import ckanext.resourceproxy.plugin as resourceproxy_plugin
+
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
@@ -50,6 +52,9 @@ def run_on_startup():
     if 'true' == compile_less_on_startup:
         org_helper.recompile_everything({'model': model, 'session': model.Session,
                    'user': 'hdx', 'ignore_auth': True})
+
+    # replace original get_proxified_resource_url, check hdx_get_proxified_resource_url for more info
+    resourceproxy_plugin.get_proxified_resource_url = hdx_helpers.hdx_get_proxified_resource_url
 
 
 def _generate_license_list():
