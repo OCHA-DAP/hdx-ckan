@@ -562,10 +562,10 @@ $(function(){
                         this.resourceCollection = new PackageResources(data,
                             {package_id: package_id, contribute_global: this.contribute_global});
 
-                        /* Have at least one empty resource in the form for a new dataset */
-                        if (this.resourceCollection.length == 0) {
-                            this.resourceCollection.add(new Resource(this.resourceDefaults()));
-                        }
+                        ///* Have at least one empty resource in the form for a new dataset */
+                        //if (this.resourceCollection.length == 0) {
+                        //    this.resourceCollection.add(new Resource(this.resourceDefaults()));
+                        //}
 
                         this.resourceListView = new PackageResourcesListView({collection: this.resourceCollection});
 
@@ -604,7 +604,7 @@ $(function(){
             this.resourceCollection.add(newResourceModel);
         },
         onCreateViaDragAndDrop: function(file){
-            var data = this._newResource();
+            var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
             newResourceModel.set("upload", file);
             newResourceModel.set("url_type", "upload");
@@ -638,6 +638,7 @@ $(function(){
                 browseButton = $(".contribute-splash .browse-button input[type='file']");
 
             var handleFiles = function(files){
+                debugger;
                 step1.hide();
                 step2.show();
                 for (var i = 0; i < files.length; i++){
