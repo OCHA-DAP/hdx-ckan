@@ -272,7 +272,7 @@ $(function(){
         events: {
             'click .update_resource': 'onUpdateBtn',
             'click .delete_resource': 'onDeleteBtn',
-            'change .resource_file_field': 'onFileChange',
+            //'change .resource_file_field': 'onFileChange',
             'change input[type=radio].resource-source': 'onSourceChange',
             'change .source-file-fields .form-control': 'onFieldEdit',
             'click .dropbox a': 'onDropboxBtn',
@@ -333,6 +333,7 @@ $(function(){
                     ckan.module.initializeElement(el);
                 }
             );
+            this._setUpDragAndDrop();
 
             if (this.model.get('url')) {
                 if (this.model.get('url_type') == "upload")
@@ -380,9 +381,13 @@ $(function(){
             this.model.set(e.target.name, e.target.value);
         },
 
-        onFileChange: function(e) {
+        //onFileChange: function(e) {
+        //    this._onFileChange($(e.currentTarget).val(), this.$('.resource_file_field')[0].files[0]);
+        //},
+
+        _onFileChange: function(file){
             // If a file has been selected, set up interface with file path.
-            this._setUpWithPath($(e.currentTarget).val(), true, null, false);
+            this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
         },
 
@@ -450,6 +455,45 @@ $(function(){
             this.$('input:text')[0].focus();
         },
 
+        _setUpDragAndDrop: function(){
+            var widget = this.$el.find(".drag-drop-area"),
+                mask = widget.find(".drop-here-mask"),
+                browseButton = this.$el.find(".browse-button input[type='file']");
+
+            var handleFiles = function(files){
+                if (files.length !== 1){
+                    alert("Please choose only one file!");
+                    return;
+                }
+                this._onFileChange(files[0]);
+            }.bind(this);
+
+            widget
+                .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                .on('dragover dragenter', function(e) {
+                    mask.show();
+                    widget.addClass("drop-incoming");
+                });
+            mask
+                .on('dragend dragleave', function(e) {
+                    mask.hide();
+                    widget.removeClass('drop-incoming');
+                })
+                .on('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    widget.removeClass('drop-incoming');
+                    handleFiles(e.originalEvent.dataTransfer.files);
+                });
+            browseButton.on('change', function(e){
+                handleFiles(this.files);
+            })
+
+        },
+
         _setUpForSourceType: function(source_class) {
             // Set up interface for the source type based on source_class.
             var source_classes = ['source-url', 'source-file', 'source-file-selected'];
@@ -459,7 +503,7 @@ $(function(){
             this.$el.addClass(source_class);
         },
 
-        _setUpWithPath: function(path, use_short_url, filename, is_url) {
+        _setUpWithPath: function(path, use_short_url, filename, is_url, file) {
             // Set up interface for the given path. Either a url, or filepath.
             // If use_short_url is true, populate the model's `url` with the
             // filename rather than the full url (used for file uploads). Use
@@ -471,7 +515,8 @@ $(function(){
 
             var name = filename || path.split('\\').pop().split('/').pop();
             var url = use_short_url ? name : path;
-            this.model.set('upload', this.$('.resource_file_field')[0].files[0]);
+            if (file)
+                this.model.set('upload', file);
             this.model.set('url_type', url_type);
             this.model.set('resource_type', resource_type);
             this.model.set('url', url);
@@ -482,11 +527,11 @@ $(function(){
         }
     });
 
-    var AppView = Backbone.View.extend({
+    var ResourceWidgetView = Backbone.View.extend({
 
         // The main app to kick things off, and manage the create widget.
 
-        el: '#resource-app',
+        el: '#resource-widget',
 
         events: {
             'click .add_new_resource': 'onCreateBtn'
@@ -554,8 +599,76 @@ $(function(){
         },
 
         onCreateBtn: function(e) {
-            var newResourceModel = new Resource(this.resourceDefaults());
+            var data = this.resourceDefaults();
+            var newResourceModel = new Resource(data);
             this.resourceCollection.add(newResourceModel);
+        },
+        onCreateViaDragAndDrop: function(file){
+            var data = this._newResource();
+            var newResourceModel = new Resource(data);
+            newResourceModel.set("upload", file);
+            newResourceModel.set("url_type", "upload");
+            newResourceModel.set("name", file.name);
+            newResourceModel.set("url", file.name);
+            this.resourceCollection.add(newResourceModel);
+        }
+    });
+
+    var AppView = Backbone.View.extend({
+        el: '#create-dataset-app',
+        initialize: function(options){
+            var resourceWidget = new ResourceWidgetView({sandbox: sandbox, data: initial_resource_data});
+
+            var isAdvancedUpload = function() {
+                var div = document.createElement('div');
+                return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
+            }();
+
+            if (!isAdvancedUpload){
+                //TODO: remove the drag&drop functionality + texts
+                alert("Drag & drop is not supported in your browser!");
+            }
+
+            var step1 = $(".create-step1"),
+                step2 = $(".create-step2");
+
+
+            var widget = $(".contribute-splash .drop-here"),
+                mask = widget.find(".drop-here-mask"),
+                browseButton = $(".contribute-splash .browse-button input[type='file']");
+
+            var handleFiles = function(files){
+                step1.hide();
+                step2.show();
+                for (var i = 0; i < files.length; i++){
+                    var file = files[i];
+                    resourceWidget.onCreateViaDragAndDrop(file);
+                }
+            };
+
+            widget
+                .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                })
+                .on('dragover dragenter', function(e) {
+                    mask.show();
+                    widget.addClass("drop-incoming");
+                });
+            mask
+                .on('dragend dragleave', function(e) {
+                    mask.hide();
+                    widget.removeClass('drop-incoming');
+                })
+                .on('drop', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    widget.removeClass('drop-incoming');
+                    handleFiles(e.originalEvent.dataTransfer.files);
+                });
+            browseButton.on('change', function(e){
+                handleFiles(this.files);
+            })
         }
     });
 
@@ -565,4 +678,5 @@ $(function(){
         initial_resource_data = JSON.parse($('#resource-list-json').html());
     }
     this.app = new AppView({sandbox: sandbox, data: initial_resource_data});
+
 }());

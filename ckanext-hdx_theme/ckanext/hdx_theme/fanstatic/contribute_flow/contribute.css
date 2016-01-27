@@ -25,6 +25,144 @@
 .drag-drop-component.source-file-selected .url-field {
   display: none;
 }
+.contribute-splash {
+  height: 100%;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
+  position: fixed;
+}
+.contribute-splash .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  color: #888888;
+  opacity: .8;
+}
+.contribute-splash .drop-here {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  transform: translate(-50%, 0);
+  height: 500px;
+  width: 500px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  text-align: center;
+  color: #cccccc;
+  font-size: 18px;
+  padding: 40px;
+  line-height: 1;
+}
+.contribute-splash .drop-here .drop-here-mask {
+  position: absolute;
+  z-index: 99;
+  height: 100%;
+  width: 100%;
+  top: 0;
+}
+.contribute-splash .drop-here .drop-here-content {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+}
+.contribute-splash .drop-here.drop-incoming {
+  background-color: #007ce0;
+  color: #ffffff;
+}
+.contribute-splash .drop-here.drop-incoming .drop-title .title1 {
+  display: none;
+}
+.contribute-splash .drop-here.drop-incoming .drop-title .title2 {
+  display: block;
+}
+.contribute-splash .drop-here.drop-incoming .drop-description .description1 {
+  display: none;
+}
+.contribute-splash .drop-here.drop-incoming .drop-description .description2 {
+  display: block;
+}
+.contribute-splash .drop-here.drop-incoming .drop-size {
+  display: none;
+}
+.contribute-splash .drop-here.drop-incoming .drop-separator {
+  display: none;
+}
+.contribute-splash .drop-here.drop-incoming .drop-alternatives {
+  display: none;
+}
+.contribute-splash .drop-here .cloud {
+  font-size: 160px;
+}
+.contribute-splash .drop-here .drop-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 30px;
+}
+.contribute-splash .drop-here .drop-title .title2 {
+  display: none;
+}
+.contribute-splash .drop-here .drop-description {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  margin-top: 10px;
+}
+.contribute-splash .drop-here .drop-description .description2 {
+  display: none;
+}
+.contribute-splash .drop-here .drop-browse {
+  color: #007ce0;
+}
+.contribute-splash .drop-here .drop-browse span {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  z-index: 1;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.contribute-splash .drop-here .drop-browse .browse-button:after {
+  content: "";
+}
+.contribute-splash .drop-here .drop-size {
+  margin-top: 10px;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+.contribute-splash .drop-here .drop-separator {
+  margin: 10px 0;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+.contribute-splash .drop-details {
+  position: absolute;
+  top: 560px;
+  width: 460px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  text-align: center;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.contribute-splash .drop-details .details-title {
+  color: #000000;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+}
+.contribute-splash .drop-details strong {
+  color: #000000;
+  font-weight: 700;
+}
+.contribute-splash .drop-details a {
+  font-weight: 700;
+}
 .form-group .format-label {
   position: absolute;
   margin-left: 5px;

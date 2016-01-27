@@ -1920,6 +1920,9 @@ ul.list-horizontal li:first-child:before {
   content: "or";
 }
 .drag-drop-component .drag-drop-area {
+  position: relative;
+}
+.drag-drop-component .drag-drop-area .drag-drop-content {
   border-radius: 6px;
   border: 3px dashed #cccccc;
   background-color: #eeeeee;
@@ -1931,10 +1934,36 @@ ul.list-horizontal li:first-child:before {
   letter-spacing: 0.03em;
   text-align: center;
 }
+.drag-drop-component .drag-drop-area .drag-drop-content .drag-text2 {
+  display: none;
+}
+.drag-drop-component .drag-drop-area .drop-here-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content {
+  background-color: #007ce0;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content .drag-text1 {
+  display: none;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content .drag-text2 {
+  display: block;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .browse-button {
+  display: none;
+}
 .drag-drop-component .drag-drop-area .browse-button {
   color: #007ce0;
   cursor: pointer;
   position: relative;
+  margin: 0;
 }
 .drag-drop-component .drag-drop-area .browse-button:after {
   content: none;
