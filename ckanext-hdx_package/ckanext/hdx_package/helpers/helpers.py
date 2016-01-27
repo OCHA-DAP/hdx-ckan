@@ -577,5 +577,5 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
             resource_id=data_dict['resource']['id'])
         log.info('Proxified url is {0}'.format(url))
     else:
-        url = urlparse.urlunparse((None,None) + parsed_url[2:])
+        url = urlparse.urlunparse((None, None) + parsed_url[2:])
     return url
