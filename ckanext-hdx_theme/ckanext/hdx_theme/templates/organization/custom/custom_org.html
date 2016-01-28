@@ -36,7 +36,7 @@
                    data-original-title="Share">
                     {{ _("Share") }}
                 </a>
-                <a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a>
+                <a href="{{ data.org_info.link }}" target="_blank">{{ _('Visit Website') }}</a>
                 {{ h.hdx_follow_button('group', data.org_info.id, follow_extra_text=' ' ) }}
 
                 {% if data.permissions.request_membership %}
@@ -76,7 +76,7 @@
                                         <span>{{ data.follower_count }}</span> {{ _('Followers') }}
                                     </a>
                                 </li>
-                                <li><a href="{{ data.org_info.link }}">{{ _('Visit Website') }}</a></li>
+                                <li><a href="{{ data.org_info.link }}" target="_blank">{{ _('Visit Website') }}</a></li>
                             </ul>
                         </div>
                     </div>
@@ -216,7 +216,7 @@
                     <div class="pull-left visualization-title">
                         {{viz_title}}
                         {% if data_link_url != '' and data_link_url !='#' %}
-                            <span> <a target="new" href="{{data_link_url}}">Data</a></span>
+                            <span> <a target="_blank" href="{{data_link_url}}">Data</a></span>
                         {% endif %}
                     </div>
 
