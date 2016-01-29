@@ -56,7 +56,7 @@
                         </div>
                         <div class="drop-separator"> or import files from: </div>
 
-                        <div class="drop-alternatives"> Dropbox  |  Google Drive  |  APIs/URLs</div>
+                        <div class="drop-alternatives"> <a href="#" class="dropbox">Dropbox</a>  |  <a href="#" class="google-drive">Google Drive</a>  |  <a href="#" class="apis-urls">APIs/URLs</a></div>
                     </span>
                 </span>
 
@@ -473,10 +473,10 @@
 </div>
 {% endblock %}
 
-{% block scripts2 %}
-    {{ super() }}
+{% block scripts %}
     <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="2ixptqvj5hknpzs"></script>
     <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+    {{ super() }}
     {% resource 'hdx_theme/contribute-flow' %}
 {% endblock %}
 

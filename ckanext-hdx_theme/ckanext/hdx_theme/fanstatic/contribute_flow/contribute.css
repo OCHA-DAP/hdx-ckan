@@ -25,6 +25,12 @@
 .drag-drop-component.source-file-selected .url-field {
   display: none;
 }
+.drag-drop-component.source-file-selected .source-file-upload .drag-drop-content {
+  height: 122px;
+}
+.drag-drop-component.source-file-selected .source-file-upload .drag-drop-content .drag-text2 {
+  line-height: 55px;
+}
 .contribute-splash {
   height: 100%;
   width: 100%;
@@ -138,6 +144,11 @@
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
+}
+.contribute-splash .drop-here .drop-alternatives {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
 }
 .contribute-splash .drop-details {
   position: absolute;

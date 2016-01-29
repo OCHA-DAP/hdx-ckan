@@ -263,6 +263,14 @@ $(function(){
         }
     });
 
+    function defaultGoogleDriveOptions() {
+        return {
+            apiKey: 'AIzaSyDI2YqaXNwndxy6UEisT-5fUeJ2FMtz0VY',
+            clientId: '378410536565-mvin02sm8rbr0f8rq9q9injarh93ego4.apps.googleusercontent.com',
+            scope: 'https://www.googleapis.com/auth/drive.readonly',
+        };
+    }
+
     var ResourceItemView = Backbone.View.extend({
         // A template view for each Resource.
         tagName: 'div',
@@ -307,16 +315,12 @@ $(function(){
             this.listenTo(this.model, "destroy", this.remove);
 
             this.googlepicker = this.initGooglePicker();
-
         },
 
         initGooglePicker: function() {
-            var picker = new FilePicker({
-                apiKey: 'AIzaSyDI2YqaXNwndxy6UEisT-5fUeJ2FMtz0VY',
-                clientId: '378410536565-mvin02sm8rbr0f8rq9q9injarh93ego4.apps.googleusercontent.com',
-                scope: 'https://www.googleapis.com/auth/drive.readonly',
-                onSelect: this.cloudFileURLSelected.bind(this)
-            });
+            var options = defaultGoogleDriveOptions();
+            options.onSelect = this.cloudFileURLSelected.bind(this);
+            var picker = new FilePicker(options);
             return picker;
         },
 
@@ -335,7 +339,7 @@ $(function(){
             );
             this._setUpDragAndDrop();
 
-            if (this.model.get('url')) {
+            if (this.model.get('url') !== null) {
                 if (this.model.get('url_type') == "upload")
                     this._setUpForSourceType('source-file-selected');
                 else
@@ -449,8 +453,6 @@ $(function(){
         cloudFileURLSelected: function(url, filename) {
             this._setUpWithPath(url, false, filename);
             this._setUpForSourceType("source-url");
-            // switch resource-source radio to URL input
-            this.$('input:radio.resource-source[value=url]').prop('checked', true);
             // focus on first text field
             this.$('input:text')[0].focus();
         },
@@ -497,6 +499,12 @@ $(function(){
         _setUpForSourceType: function(source_class) {
             // Set up interface for the source type based on source_class.
             var source_classes = ['source-url', 'source-file', 'source-file-selected'];
+
+            if (source_class === "source-url"){
+                // switch resource-source radio to URL input
+                this.$('input:radio.resource-source[value=url]').prop('checked', true);
+            }
+
             $.each(source_classes, function(i, v){
                 this.$el.removeClass(v);
             }.bind(this));
@@ -603,7 +611,7 @@ $(function(){
             var newResourceModel = new Resource(data);
             this.resourceCollection.add(newResourceModel);
         },
-        onCreateViaDragAndDrop: function(file){
+        onFileViaDragAndDrop: function(file){
             var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
             newResourceModel.set("upload", file);
@@ -611,13 +619,27 @@ $(function(){
             newResourceModel.set("name", file.name);
             newResourceModel.set("url", file.name);
             this.resourceCollection.add(newResourceModel);
+        },
+        onURLViaDragAndDrop: function(url, name){
+            var data = this.resourceDefaults();
+            var newResourceModel = new Resource(data);
+            newResourceModel.set("url_type", "api");
+            newResourceModel.set("name", name);
+            newResourceModel.set("url", url);
+            this.resourceCollection.add(newResourceModel);
         }
     });
 
     var AppView = Backbone.View.extend({
         el: '#create-dataset-app',
+        events: {
+            'click .contribute-splash .google-drive': 'onGoogleDriveBtn',
+            'click .contribute-splash .dropbox': 'onDropboxBtn',
+            'click .contribute-splash .apis-urls': 'onApisURLsBtn'
+        },
         initialize: function(options){
-            var resourceWidget = new ResourceWidgetView({sandbox: sandbox, data: initial_resource_data});
+            this.googlepicker = this.initGooglePicker();
+            this.resourceWidget = new ResourceWidgetView({sandbox: sandbox, data: initial_resource_data});
 
             var isAdvancedUpload = function() {
                 var div = document.createElement('div');
@@ -629,23 +651,35 @@ $(function(){
                 alert("Drag & drop is not supported in your browser!");
             }
 
-            var step1 = $(".create-step1"),
-                step2 = $(".create-step2");
+            this.step1 = $(".create-step1");
+            this.step2 = $(".create-step2");
 
+
+            sandbox.subscribe('hdx-contribute-global-created', function (global) {
+                // ... when ready, get the contribute_global object.
+                this.contribute_global = global;
+
+                this.contribute_global.getDatasetIdPromise().then(
+                    function(package_id){
+                        if (package_id != null){
+                            this.step1.hide();
+                            this.step2.show();
+                        }
+                    }.bind(this));
+            }.bind(this));
 
             var widget = $(".contribute-splash .drop-here"),
                 mask = widget.find(".drop-here-mask"),
                 browseButton = $(".contribute-splash .browse-button input[type='file']");
 
             var handleFiles = function(files){
-                debugger;
-                step1.hide();
-                step2.show();
+                this.step1.hide();
+                this.step2.show();
                 for (var i = 0; i < files.length; i++){
                     var file = files[i];
-                    resourceWidget.onCreateViaDragAndDrop(file);
+                    this.resourceWidget.onFileViaDragAndDrop(file);
                 }
-            };
+            }.bind(this);
 
             widget
                 .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
@@ -670,6 +704,44 @@ $(function(){
             browseButton.on('change', function(e){
                 handleFiles(this.files);
             })
+        },
+        initGooglePicker: function() {
+            var options = defaultGoogleDriveOptions();
+            options.onSelect = this.cloudFileURLSelected.bind(this);
+            options.multiselect = true;
+            var picker = new FilePicker(options);
+            return picker;
+        },
+        cloudFileURLSelected: function(url, filename) {
+            this.step1.hide();
+            this.step2.show();
+            this.resourceWidget.onURLViaDragAndDrop(url, filename);
+        },
+        onGoogleDriveBtn: function(e) {
+            this.googlepicker.open();
+            e.preventDefault();
+        },
+        onDropboxBtn: function(e) {
+            options = {
+                success: function(files) {
+                    for (var i = 0; i < files.length; i++){
+                        var file = files[i];
+                        this.resourceWidget.onURLViaDragAndDrop(file.link, file.name);
+                    }
+                    this.step1.hide();
+                    this.step2.show();
+                }.bind(this),
+                multiselect: true,
+                linkType: "direct"
+            };
+            Dropbox.choose(options);
+            e.preventDefault();
+        },
+        onApisURLsBtn: function(e){
+            this.step1.hide();
+            this.step2.show();
+            this.resourceWidget.onURLViaDragAndDrop("", "");
+            e.preventDefault();
         }
     });
 

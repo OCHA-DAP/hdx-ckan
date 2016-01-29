@@ -7,6 +7,7 @@
     this.apiKey = options.apiKey;
     this.clientId = options.clientId;
     this.scope = options.scope;
+    this.multiselect = options.multiselect || false;
 
     // Events
     this.onSelect = options.onSelect;
@@ -38,17 +39,31 @@
         .addView(google.picker.ViewId.DOCS)
         .setDeveloperKey(this.apiKey)
         .setOAuthToken(accessToken)
-        .setCallback(this._pickerCallback.bind(this))
+        .setCallback(this._pickerCallback.bind(this));
+      if (this.multiselect){
+        this.picker.enableFeature(google.picker.Feature.MULTISELECT_ENABLED);
+      }
+      this.picker
         .build()
         .setVisible(true);
+
     },
 
     _pickerCallback: function(data) {
       if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
-        var doc = data[google.picker.Response.DOCUMENTS][0];
-        var url = doc[google.picker.Document.URL];
-        var filename = doc[google.picker.Document.NAME];
-        this.onSelect(url, filename);
+        if (this.multiselect){
+          for (var i = 0; i < data[google.picker.Response.DOCUMENTS].length; i++){
+            var doc = data[google.picker.Response.DOCUMENTS][i];
+            var url = doc[google.picker.Document.URL];
+            var filename = doc[google.picker.Document.NAME];
+            this.onSelect(url, filename);
+          }
+        } else {
+          var doc = data[google.picker.Response.DOCUMENTS][0];
+          var url = doc[google.picker.Document.URL];
+          var filename = doc[google.picker.Document.NAME];
+          this.onSelect(url, filename);
+        }
       }
     },
 
