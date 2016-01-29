@@ -6,9 +6,11 @@
   display: table-cell;
   vertical-align: middle;
 }
+.popup.popup-contribute {
+  z-index: 90000;
+}
 .popup.popup-contribute .content {
-  width: 90%;
-  max-width: 1260px;
+  width: 1260px;
   height: 90%;
   padding: 0;
 }
