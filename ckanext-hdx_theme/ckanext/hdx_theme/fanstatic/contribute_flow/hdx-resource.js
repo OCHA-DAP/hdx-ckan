@@ -506,6 +506,10 @@ $(function(){
             if (source_class === "source-url"){
                 // switch resource-source radio to URL input
                 this.$('input:radio.resource-source[value=url]').prop('checked', true);
+
+                // change the model
+                this.model.set('url_type', 'api');
+                this.model.set('resource_type', 'api');
             }
 
             $.each(source_classes, function(i, v){
