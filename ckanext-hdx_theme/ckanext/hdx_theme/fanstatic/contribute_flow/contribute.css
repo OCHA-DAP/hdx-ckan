@@ -31,19 +31,14 @@
 .drag-drop-component.source-file-selected .source-file-upload .drag-drop-content .drag-text2 {
   line-height: 55px;
 }
+.drag-drop-component.source-url .source-file-upload {
+  display: none;
+}
 .contribute-splash {
   height: 100%;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
-  position: fixed;
-}
-.contribute-splash .close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  font-size: 20px;
-  color: #888888;
-  opacity: .8;
+  min-height: 740px;
 }
 .contribute-splash .drop-here {
   position: absolute;

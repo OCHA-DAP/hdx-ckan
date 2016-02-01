@@ -339,11 +339,14 @@ $(function(){
             );
             this._setUpDragAndDrop();
 
-            if (this.model.get('url') !== null) {
+            var modelUrlType = this.model.get('url_type');
+            if (modelUrlType != null && modelUrlType != "") {
                 if (this.model.get('url_type') == "upload")
                     this._setUpForSourceType('source-file-selected');
                 else
                     this._setUpForSourceType('source-url');
+            } else {
+                this._setUpForSourceType('source-file');
             }
 
             return this;

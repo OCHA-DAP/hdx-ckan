@@ -9,6 +9,15 @@
     width: @containerRealSize + 2*@containerMarginSize;
     height: 90%;
     padding: 0;
+    @contributeMargin: 20px;
+    i.close {
+      position: absolute;
+      top: @contributeMargin;
+      right: @contributeMargin;
+      font-size: @contributeMargin;
+      color: @grayColor;
+      opacity: .8;
+    }
     .details-content{
       height: 100%;
       iframe {

@@ -39,8 +39,11 @@
     }
   }
   &.source-url {
-    .source-file-fields, .source-file-upload {
+    .source-file-fields {
 
+    }
+    .source-file-upload {
+      display: none;
     }
   }
 }
@@ -50,17 +53,9 @@
   height: 100%;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
-  position: fixed; //todo: remove
+  min-height: 740px;
 
   @contributeMargin: 20px;
-  .close {
-    position: absolute;
-    top: @contributeMargin;
-    right: @contributeMargin;
-    font-size: @contributeMargin;
-    color: @grayColor;
-    opacity: .8;
-  }
 
   @dropHereSize: 500px;
   .drop-here {

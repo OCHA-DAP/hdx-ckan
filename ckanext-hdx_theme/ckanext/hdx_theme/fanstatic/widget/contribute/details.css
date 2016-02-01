@@ -14,6 +14,14 @@
   height: 90%;
   padding: 0;
 }
+.popup.popup-contribute .content i.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  color: #888888;
+  opacity: .8;
+}
 .popup.popup-contribute .content .details-content {
   height: 100%;
 }
