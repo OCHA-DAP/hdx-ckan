@@ -16,6 +16,13 @@ ckan.module('hdx_error_block_manager', function($, _) {
                     if (typeof val === 'string')
                         resultingHtml += '<li>' + key + ': ' + val + '</li>';
                     else if (typeof val === 'object') {
+                        // Resource 0 should be actually shown as resource 1
+                        var pat = /Resource\s(\d+)/;
+                        var result = pat.exec(key);
+                        if (result) {
+                            key = "Resource " + (parseInt(result[1]) + 1);
+                        }
+
                         resultingHtml += '<li>' + key + ':';
                         resultingHtml += '<ul>';
                         resultingHtml += generateErrorHtml(val);
