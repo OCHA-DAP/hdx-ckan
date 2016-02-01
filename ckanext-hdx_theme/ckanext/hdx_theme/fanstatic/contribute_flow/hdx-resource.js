@@ -291,7 +291,7 @@ $(function(){
             this.model.view = this;
             this.$el.attr("draggable", true);
             var dragGhost;
-            this.el.addEventListener("dragstart", function(e) {
+            this.$el.find(".drag-handle").on("dragstart", function(e) {
                 dragGhost = document.createElement("div");
                 $(dragGhost).addClass("hdx-form");
                 $(dragGhost).removeClass("drag-drop-ghost");
@@ -307,7 +307,7 @@ $(function(){
                 e.dataTransfer.ghostImage = dragGhost;
             }, false);
 
-            this.el.addEventListener("dragend", function(e) {
+            this.el.addEventListener("dragend dragleave drop", function(e) {
                 document.body.removeChild(dragGhost);
             }, false);
 
