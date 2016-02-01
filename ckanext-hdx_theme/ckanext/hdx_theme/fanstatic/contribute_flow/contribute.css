@@ -177,3 +177,13 @@
 .form-group .format-label + input {
   padding-left: 45px;
 }
+.special-license {
+  position: relative;
+}
+.special-license .license-help {
+  position: absolute;
+  left: 100%;
+  width: 30%;
+  top: 13px;
+  margin-left: 15px;
+}

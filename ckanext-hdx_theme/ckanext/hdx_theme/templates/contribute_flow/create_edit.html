@@ -399,8 +399,9 @@
 
 
                                             {% set licenses = h.hdx_license_list() %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private" data-module-broadcast_change="true">
+                                            <div class="special-license" data-module="hdx_form_element_manager" data-module-element_name="license" data-module-required="private" data-module-broadcast_change="true">
                                                 {{ form.select('license_id', id='field_license_id', label=_('License'), options=licenses, selected=data.license_id, error=errors.license_id, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                                <a href="/about/license" target="_blank" class="license-help">Read more about licenses</a>
                                             </div>
                                             <div data-module="hdx_form_element_manager" data-module-element_name="license_other" id="license-other-define" {% if data.license_id != 'Other' %}style="display:none;"{% endif %}>
                                                 {{ form.markdown('license_other', id='field_license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
