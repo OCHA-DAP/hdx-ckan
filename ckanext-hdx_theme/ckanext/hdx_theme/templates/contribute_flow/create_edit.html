@@ -171,7 +171,6 @@
                                                                 <div class="col-xs-12">
                                                                     <div class="control-group form-group required">
                                                                         <div class="controls ">
-                                                                            <div data-format="<%= lower_case_format %>" class="format-label" property="dc:format">XLSX</div>
                                                                             <input type="text" name="url" value="<%= url %>" placeholder="eg. http://example.com/population-jan-2011.json" class="resource_url_field form-control">
                                                                             <span class="error-block"></span>
                                                                         </div>
@@ -182,8 +181,9 @@
                                                                 <div class="col-xs-8">
                                                                   <div class="control-group form-group required">
                                                                     <div class="controls ">
-                                                                    <input type="text" name="name" value="<%= name %>" placeholder="File name" class="form-control resource_name_field">
-                                                                    <span class="error-block"></span>
+                                                                        <div data-format="<%= lower_case_format %>" class="format-label" property="dc:format"></div>
+                                                                        <input type="text" name="name" value="<%= name %>" placeholder="File name" class="form-control resource_name_field">
+                                                                        <span class="error-block"></span>
                                                                     </div>
                                                                   </div>
                                                                 </div>
