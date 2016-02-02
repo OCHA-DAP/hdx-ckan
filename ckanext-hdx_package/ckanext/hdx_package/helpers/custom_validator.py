@@ -75,3 +75,29 @@ def find_package_creator(key, data, errors, context):
             current_creator = user
 
     return current_creator
+
+
+def general_not_empty_if_other_selected(other_key, other_compare_value):
+    '''
+
+    :param other_key: the key of the field that influences this "_other" field. Ex. 'methodology', 'license_id'
+    :type other_key: str
+    :param other_compare_value: value of "other_key" field that maked this "_other" field mandatory. Ex. 'Other', 'hdx-other'
+    :type other_compare_value: str
+    :return: the validator function
+    :rtype: not_empty_if_other_selected
+    '''
+
+    def not_empty_if_other_selected(key, data, errors, context):
+        value = data.get(key)
+        other_value = data.get((other_key,))
+        if not value and other_value == other_compare_value:
+            errors[key].append(_('Missing value'))
+            raise StopOnError
+        elif other_value != other_compare_value:
+            del data[key]
+
+            # Don't go further in the validation chain. Ex: convert to extras doesn't need to be called
+            raise StopOnError
+
+    return not_empty_if_other_selected

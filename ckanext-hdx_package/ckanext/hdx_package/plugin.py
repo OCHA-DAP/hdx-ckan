@@ -189,10 +189,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                              tk.get_converter('convert_to_extras')],
             'methodology': [tk.get_validator('not_empty'),
                             tk.get_converter('convert_to_extras')],
-            'methodology_other': [tk.get_validator('ignore_missing'),
+            'methodology_other': [tk.get_validator('not_empty_if_methodology_other'),
                                   tk.get_converter('convert_to_extras')],
             'license_id': [tk.get_validator('not_empty'), unicode],
-            'license_other': [tk.get_validator('ignore_missing'),
+            'license_other': [tk.get_validator('not_empty_if_license_other'),
                               tk.get_converter('convert_to_extras')],
             'solr_additions': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
@@ -312,7 +312,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_validators(self):
         return {
             'hdx_detect_format': vd.detect_format,
-            'find_package_creator': vd.find_package_creator
+            'find_package_creator': vd.find_package_creator,
+            'not_empty_if_methodology_other': vd.general_not_empty_if_other_selected('methodology', 'Other'),
+            'not_empty_if_license_other': vd.general_not_empty_if_other_selected('license_id', 'hdx-other')
         }
 
     def get_auth_functions(self):
