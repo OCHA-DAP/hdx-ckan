@@ -6,6 +6,9 @@
   display: table-cell;
   vertical-align: middle;
 }
+.drag-drop-component {
+  position: relative;
+}
 .drag-drop-component .drag-drop-area {
   margin-top: 8px;
 }
@@ -33,6 +36,19 @@
 }
 .drag-drop-component.source-url .source-file-upload {
   display: none;
+}
+html {
+  height: 100%;
+}
+html > .contribute-body {
+  height: 100%;
+}
+html > .contribute-body > .contribute-main {
+  height: 100%;
+}
+html > .contribute-body > .contribute-main > div,
+html > .contribute-body > .contribute-main .create-step1 {
+  height: 100%;
 }
 .contribute-splash {
   height: 100%;

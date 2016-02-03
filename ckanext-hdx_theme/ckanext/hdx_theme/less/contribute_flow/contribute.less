@@ -2,6 +2,7 @@
 @import "../base/mixins";
 
 .drag-drop-component{
+  position: relative;
 
   .drag-drop-area {
     margin-top: 8px;
@@ -48,6 +49,18 @@
   }
 }
 
+html {
+  height: 100%;
+  > .contribute-body {
+    height: 100%;
+    > .contribute-main{
+      height: 100%;
+      > div, .create-step1{
+        height: 100%;
+      }
+    }
+  }
+}
 
 .contribute-splash {
   height: 100%;
