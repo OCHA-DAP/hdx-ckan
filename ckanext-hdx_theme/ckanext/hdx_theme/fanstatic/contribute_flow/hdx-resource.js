@@ -289,37 +289,8 @@ $(function(){
 
         initialize: function() {
             this.model.view = this;
-            this.$el.attr("draggable", true);
             var dragGhost, dragParent;
 
-            //this.el.addEventListener("dragstart", function(e) {
-            //    dragGhost = document.createElement("div");
-            //    $(dragGhost).addClass("hdx-form");
-            //    //$(dragGhost).removeClass("drag-drop-ghost");
-            //    $(dragGhost).css("width", $(e.target).parent().width());
-            //    $(dragGhost).css("height", "200px");
-            //    $(dragGhost).css("position", "absolute");
-            //    $(dragGhost).css("z-index", "-100");
-            //
-            //    dragGhost.appendChild(e.target.cloneNode(true));
-            //    console.log(e.target);
-            //    console.log(dragGhost);
-            //
-            //    var p = $(e.target).offset();
-            //    var x = e.pageX - p.left;
-            //    var y = e.pageY - p.top;
-            //
-            //    e.target.appendChild(dragGhost);
-            //    e.dataTransfer.setDragImage(dragGhost, x, y);
-            //    e.dataTransfer.ghostImage = dragGhost;
-            //    //$(dragGhost).css("display", "none");
-            //}, false);
-            //
-            //this.el.addEventListener("dragend", function(e) {
-            //    console.log("Removing ghost!");
-            //    document.body.removeChild(dragGhost);
-            //}, false);
-            //
             this.el.addEventListener("dragstart", function(e) {
                 dragGhost = document.createElement("div");
                 $(dragGhost).addClass("hdx-form");
