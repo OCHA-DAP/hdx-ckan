@@ -87,8 +87,6 @@ ckan.module('contribute_flow_main', function($, _) {
                                     }
                                 );
                             }
-                            else
-                                contributeGlobal.controlUserWaitingWidget(false);
                         }
                     );
 
@@ -131,6 +129,7 @@ ckan.module('contribute_flow_main', function($, _) {
                             'errorBlock': data.error_summary
                         };
                         sandbox.publish('hdx-form-validation', sumMessage);
+                        contributeGlobal.controlUserWaitingWidget(false);
                     }
                     if (data.errors && Object.keys(data.errors).length > 0) {
                         for (var key in data.errors) {
@@ -144,6 +143,7 @@ ckan.module('contribute_flow_main', function($, _) {
                                 sandbox.publish('hdx-form-validation', message);
                             }
                         }
+                        contributeGlobal.controlUserWaitingWidget(false);
                     }
                 },
                 'afterBodyFormSave': function (data, status, xhr) {
