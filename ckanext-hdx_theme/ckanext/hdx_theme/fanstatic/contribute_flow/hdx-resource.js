@@ -222,6 +222,14 @@ $(function(){
                 scroll: true,
                 onUpdate: function (e){
                     this.$el.trigger('sort-updated');
+                }.bind(this),
+                onStart: function(e){
+                    console.log("Drag Area Disable");
+                    this.$el.find(".drag-drop-component").trigger("drag-area-disable");
+                }.bind(this),
+                onEnd: function(e){
+                    console.log("Drag Area Enable");
+                    this.$el.find(".drag-drop-component").trigger("drag-area-enable");
                 }.bind(this)
             });
         },
@@ -317,6 +325,12 @@ $(function(){
 
             this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
+            this.$el.on("drag-area-disable", function(){
+                this.dragAreaEnabled = false;
+            }.bind(this));
+            this.$el.on("drag-area-enable", function(){
+                this.dragAreaEnabled = true;
+            }.bind(this));
 
             this.googlepicker = this.initGooglePicker();
         },
@@ -483,14 +497,18 @@ $(function(){
                     e.stopPropagation();
                 })
                 .on('dragover dragenter', function(e) {
-                    mask.show();
-                    widget.addClass("drop-incoming");
-                });
+                    if (this.dragAreaEnabled){
+                        mask.show();
+                        widget.addClass("drop-incoming");
+                    }
+                }.bind(this));
             mask
                 .on('dragend dragleave', function(e) {
-                    mask.hide();
-                    widget.removeClass('drop-incoming');
-                })
+                    if (this.dragAreaEnabled){
+                        mask.hide();
+                        widget.removeClass('drop-incoming');
+                    }
+                }.bind(this))
                 .on('drop', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -607,7 +625,6 @@ $(function(){
                         return this.resourceCollection.resourceReorder();
                     }.bind(this))
                     .then(function(){
-                        // debugger;
                         console.log('Browsing away ');
                         this.contribute_global.browseToDataset();
                     }.bind(this),
