@@ -344,9 +344,9 @@ def __get_resource_filesize(resource_dict):
 @logic.side_effect_free
 def package_validate(context, data_dict):
     model = context['model']
-    name_or_id = data_dict.get("id") or data_dict.get('name')
+    id = data_dict.get("id")
 
-    pkg = model.Package.get(name_or_id) if name_or_id else None
+    pkg = model.Package.get(id) if id else None
 
     if pkg is None:
         action = 'package_create'
