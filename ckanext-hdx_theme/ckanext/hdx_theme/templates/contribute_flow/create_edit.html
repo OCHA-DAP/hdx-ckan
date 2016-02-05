@@ -309,10 +309,13 @@
 
                                             {% if user_is_sysadmin %}
                                                 <div data-module="hdx_form_element_manager" data-module-element_name="quality">
-                                                {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}) }}
+                                                    {% set quality_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
+                                                    'data-original-title': 'Has the quality of this dataset been evaluated by our data team?',
+                                                    'data-toggle': 'tooltip'}
+                                                    %}
+                                                {{ form.checkbox('quality', id='field_quality', label=_("Dataset\'s quality has been confirmed"), value='1', checked=data.quality, error=errors.quality, classes=['form-group'], attrs={}, label_attrs=quality_attrs) }}
                                                 </div>
                                             {% endif %}
-
                                         </div>
                                     </div>
                                     <div class="row">

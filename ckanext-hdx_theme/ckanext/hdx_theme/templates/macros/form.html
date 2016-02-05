@@ -44,11 +44,11 @@ Example:
   {{ form.checkbox('remember', checked=true) }}
 
 #}
-{% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false) %}
+{% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false, label_attrs={}) %}
   {%- set extra_html = caller() if caller -%}
   <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
     <div class="controls checkbox">
-      <label class="" for="{{ id or name }}">
+      <label class="" for="{{ id or name }}" {{ attributes(label_attrs) }}>
         <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
         {{ label }}
         {% if is_required %}{{ input_required() }}{% endif %}
