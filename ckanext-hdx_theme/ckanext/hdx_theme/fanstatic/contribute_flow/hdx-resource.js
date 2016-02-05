@@ -709,6 +709,14 @@ $(function(){
                 }
             }.bind(this);
 
+            var handleDropEvent = function(e){
+                console.log("4");
+                e.preventDefault();
+                e.stopPropagation();
+                widget.removeClass('drop-incoming');
+                handleFiles(e.originalEvent.dataTransfer.files);
+            };
+
             widget
                 .on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
                     e.preventDefault();
@@ -717,18 +725,14 @@ $(function(){
                 .on('dragover dragenter', function(e) {
                     mask.show();
                     widget.addClass("drop-incoming");
-                });
+                })
+                .on('drop', handleDropEvent);
             mask
                 .on('dragend dragleave', function(e) {
                     mask.hide();
                     widget.removeClass('drop-incoming');
                 })
-                .on('drop', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    widget.removeClass('drop-incoming');
-                    handleFiles(e.originalEvent.dataTransfer.files);
-                });
+                .on('drop', handleDropEvent);
             browseButton.on('change', function(e){
                 handleFiles(this.files);
             })
