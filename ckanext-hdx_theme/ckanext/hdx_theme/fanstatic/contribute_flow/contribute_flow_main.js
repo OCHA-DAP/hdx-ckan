@@ -44,21 +44,30 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'validate': function() {
                     var deferred = new $.Deferred();
-                    var formDataArray = this.getFormValues('validate-json');
-                    var resourceDataArray = this.generateResourcePostData();
-                    formDataArray = formDataArray.concat(resourceDataArray);
 
-                    $.post(validateUrl, formDataArray,
-                        function (data, status, xhr) {
-                            data.error_summary = data.error_summary ? data.error_summary : {};
-                            if (!resourceDataArray || resourceDataArray.length == 0) {
-                                data.error_summary['Resources'] = 'Please add at least 1 resource to the dataset';
-                            }
-                            contributeGlobal.updateValidationUi(data, status, xhr);
-                            deferred.resolve(contributeGlobal.validateSucceeded(data, status));
-                            moduleLog('Validation finished');
-                        }
+                    this.getDatasetIdPromise().done(
+                        function (datasetId) {
+                            var formDataArray = this.getFormValues('validate-json');
+                            var resourceDataArray = this.generateResourcePostData();
+                            formDataArray = formDataArray.concat(resourceDataArray);
+                            formDataArray.push({'name': 'id', 'value': datasetId});
+
+                            $.post(validateUrl, formDataArray,
+                                function (data, status, xhr) {
+                                    data.error_summary = data.error_summary ? data.error_summary : {};
+                                    if (!resourceDataArray || resourceDataArray.length == 0) {
+                                        data.error_summary['Resources'] = 'Please add at least 1 resource to the dataset';
+                                    }
+                                    contributeGlobal.updateValidationUi(data, status, xhr);
+                                    deferred.resolve(contributeGlobal.validateSucceeded(data, status));
+                                    moduleLog('Validation finished');
+                                }
+                            );
+
+                        }.bind(this)
                     );
+
+
                     return deferred.promise();
                 },
                 'saveDatasetForm': function() {
