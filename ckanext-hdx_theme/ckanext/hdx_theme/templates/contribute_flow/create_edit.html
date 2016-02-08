@@ -2,10 +2,13 @@
 
 {% import 'macros/form.html' as form %}
 
+{% set edit_mode = True if data else False %}
 {% set data = data if data else h.generate_mandatory_fields()  %}
 {% set errors = {} %}
 {% set test_options = [{},{'value':'test', 'text':'Test'}, {'value':'test2', 'text':'Test2'}] %}
 {% set user_is_sysadmin = h.check_access('sysadmin') %}
+
+{% set form_title = _('Edit Details') if edit_mode else _('Add Details') %}
 
 {% block bodytag %} {{ super() }} class="contribute-body" {% endblock %}
 
@@ -73,12 +76,12 @@
 
             </div>
         </div>
-        <div class="hdx-form container create-step2" style="display: none;">
+        <div class="hdx-form container create-step2 {{ 'edit-mode' if edit_mode else '' }}" style="display: none;">
             <div class="paddingRowHack">
                 <div class="hdx-form-breadcrumb">
                     <ol class="breadcrumb paddingLeftHack paddingRightHack">
                         <li class="active">
-                            Add Details - <span class="small">Please fill out all required fields</span>
+                            {{ form_title }} - <span class="small">{{ _('Please fill out all required fields') }}</span>
                         </li>
                     </ol>
                 </div>

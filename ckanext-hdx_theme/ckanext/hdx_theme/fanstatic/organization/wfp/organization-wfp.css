@@ -1649,6 +1649,12 @@ body.contribute-body {
   height: 1px;
   margin: 0 -5px;
 }
+.hdx-form.edit-mode .hdx-form-breadcrumb {
+  background-color: #888888;
+}
+.hdx-form.edit-mode .hdx-form-breadcrumb .breadcrumb {
+  background-color: #888888;
+}
 .hdx-form .hdx-form-breadcrumb {
   padding: 20px 0;
   background-color: #007ce0;

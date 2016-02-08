@@ -10,7 +10,15 @@ function contributeAddDetails(datasetId){
     //        popup.find(".details-content").html(result);
     //    }
     //});
-    var url = datasetId ? '/contribute/edit/'+datasetId : '/contribute/new';
+    var url;
+    if (datasetId) {
+        url = '/contribute/edit/'+datasetId;
+        popup.addClass('edit-mode');
+    }
+    else {
+        url = '/contribute/new';
+        popup.removeClass('edit-mode');
+    }
     popup.find(".details-content").html("<iframe src='" + url + "'></iframe>");
 
     return false;
