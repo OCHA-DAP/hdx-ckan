@@ -174,7 +174,7 @@
                                                                 <div class="col-xs-12">
                                                                     <div class="control-group form-group required">
                                                                         <div class="controls ">
-                                                                            <input type="text" name="url" value="<%= url %>" placeholder="eg. http://example.com/population-jan-2011.json" class="resource_url_field form-control">
+                                                                            <input type="text" name="url" value="<%= url %>" placeholder="eg. http://example.com/population-jan-2011.json *" class="resource_url_field form-control">
                                                                             <span class="error-block"></span>
                                                                         </div>
                                                                     </div>
@@ -185,7 +185,7 @@
                                                                   <div class="control-group form-group required">
                                                                     <div class="controls ">
                                                                         <div data-format="<%= lower_case_format %>" class="format-label" property="dc:format"></div>
-                                                                        <input type="text" name="name" value="<%= name %>" placeholder="File name" class="form-control resource_name_field">
+                                                                        <input type="text" name="name" value="<%= name %>" placeholder="{{ _('File name') }} *" class="form-control resource_name_field">
                                                                         <span class="error-block"></span>
                                                                     </div>
                                                                   </div>
@@ -193,7 +193,7 @@
                                                                 <div class="col-xs-4">
                                                                     <div class="form-group">
                                                                         <div class="controls">
-                                                                        <input class="form-control resource_format_field" type="text" name="format" value="<%= format %>" placeholder="File type"  data-module="autocomplete" data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?" />
+                                                                        <input class="form-control resource_format_field" type="text" name="format" value="<%= format %>" placeholder="{{ _('File type') }} *"  data-module="autocomplete" data-module-source="/api/2/util/resource/format_autocomplete?incomplete=?" />
                                                                         <span class="error-block"></span>
                                                                         </div>
                                                                     </div>
