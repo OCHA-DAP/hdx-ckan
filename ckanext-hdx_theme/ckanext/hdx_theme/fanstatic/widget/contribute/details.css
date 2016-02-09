@@ -22,6 +22,9 @@
   color: #888888;
   opacity: .8;
 }
+.popup.popup-contribute .content i.close.white {
+  color: #ffffff;
+}
 .popup.popup-contribute .content .details-content {
   height: 100%;
 }
@@ -29,7 +32,4 @@
   border: none;
   height: 100%;
   width: 100%;
-}
-.edit-mode.popup.popup-contribute .content i.close {
-  color: #ffffff;
 }

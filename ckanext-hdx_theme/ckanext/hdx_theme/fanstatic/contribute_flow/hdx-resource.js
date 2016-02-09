@@ -669,6 +669,9 @@ $(function(){
             this.googlepicker = this.initGooglePicker();
             this.resourceWidget = new ResourceWidgetView({sandbox: sandbox, data: initial_resource_data});
 
+            /* Make sure that the close X is gray. Could be white if there was an edit action before. */
+            $(".content i.close", window.top.document).removeClass("white");
+
             var isAdvancedUpload = function() {
                 var div = document.createElement('div');
                 return (('draggable' in div) || ('ondragstart' in div && 'ondrop' in div)) && 'FormData' in window && 'FileReader' in window;
@@ -679,10 +682,6 @@ $(function(){
                 alert("Drag & drop is not supported in your browser!");
             }
 
-            this.step1 = $(".create-step1");
-            this.step2 = $(".create-step2");
-
-
             sandbox.subscribe('hdx-contribute-global-created', function (global) {
                 // ... when ready, get the contribute_global object.
                 this.contribute_global = global;
@@ -690,8 +689,7 @@ $(function(){
                 this.contribute_global.getDatasetIdPromise().then(
                     function(package_id){
                         if (package_id != null){
-                            this.step1.hide();
-                            this.step2.show();
+                            this.goToStep2();
                         }
                     }.bind(this));
             }.bind(this));
@@ -701,8 +699,7 @@ $(function(){
                 browseButton = $(".contribute-splash .browse-button input[type='file']");
 
             var handleFiles = function(files){
-                this.step1.hide();
-                this.step2.show();
+                this.goToStep2();
                 for (var i = 0; i < files.length; i++){
                     var file = files[i];
                     this.resourceWidget.onFileViaDragAndDrop(file);
@@ -745,8 +742,7 @@ $(function(){
             return picker;
         },
         cloudFileURLSelected: function(url, filename) {
-            this.step1.hide();
-            this.step2.show();
+            this.goToStep2();
             this.resourceWidget.onURLViaDragAndDrop(url, filename);
         },
         onGoogleDriveBtn: function(e) {
@@ -760,8 +756,7 @@ $(function(){
                         var file = files[i];
                         this.resourceWidget.onURLViaDragAndDrop(file.link, file.name);
                     }
-                    this.step1.hide();
-                    this.step2.show();
+                    this.goToStep2();
                 }.bind(this),
                 multiselect: true,
                 linkType: "direct"
@@ -770,10 +765,14 @@ $(function(){
             e.preventDefault();
         },
         onApisURLsBtn: function(e){
-            this.step1.hide();
-            this.step2.show();
+            this.goToStep2();
             this.resourceWidget.onURLViaDragAndDrop("", "");
             e.preventDefault();
+        },
+        goToStep2: function () {
+            $(".content i.close", window.top.document).addClass("white");
+            $(".create-step1").hide();
+            $(".create-step2").show();
         }
     });
 
