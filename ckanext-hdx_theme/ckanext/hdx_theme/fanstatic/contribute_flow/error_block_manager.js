@@ -9,21 +9,34 @@ ckan.module('hdx_error_block_manager', function($, _) {
             var thisEl = this.el;
             var errorEl = this.el.find('ul');
 
+            var processKey = function (key) {
+                var processedKey = null;
+                if ( this.options.key_mappings.hasOwnProperty(key) ) {
+                    var trnKey = this.options.key_mappings[key];
+                    processedKey = this.i18n(trnKey);
+                }
+                else
+                    processedKey = key;
+
+                return processedKey;
+            }.bind(this);
+
             var generateErrorHtml = function (errorObj) {
                 var resultingHtml = '';
                 for (var key in errorObj) {
                     var val = errorObj[key];
+                    var processedKey = processKey(key);
                     if (typeof val === 'string')
-                        resultingHtml += '<li>' + key + ': ' + val + '</li>';
+                        resultingHtml += '<li>' + processedKey + ': ' + val + '</li>';
                     else if (typeof val === 'object') {
                         // Resource 0 should be actually shown as resource 1
                         var pat = /Resource\s(\d+)/;
-                        var result = pat.exec(key);
+                        var result = pat.exec(processedKey);
                         if (result) {
-                            key = "Resource " + (parseInt(result[1]) + 1);
+                            processedKey = "Resource " + (parseInt(result[1]) + 1);
                         }
 
-                        resultingHtml += '<li>' + key + ':';
+                        resultingHtml += '<li>' + processedKey + ':';
                         resultingHtml += '<ul>';
                         resultingHtml += generateErrorHtml(val);
                         resultingHtml += '</ul>';
@@ -63,7 +76,15 @@ ckan.module('hdx_error_block_manager', function($, _) {
             //console.log(message);
         },
         options: {
-            element_name: null
+            element_name: null,
+            key_mappings: {
+                'Notes': 'description',
+                'Groups list': 'location'
+            },
+            i18n: {
+                description: _('Description'),
+                location: _('Location')
+            }
         }
     };
 });
