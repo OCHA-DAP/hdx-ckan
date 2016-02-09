@@ -8,8 +8,10 @@ ckanext/hdx_theme/version.py
 ckanext/hdx_theme/cli/__init__.py
 ckanext/hdx_theme/cli/cli.py
 ckanext/hdx_theme/controllers/__init__.py
+ckanext/hdx_theme/controllers/faq.py
 ckanext/hdx_theme/controllers/widget.py
 ckanext/hdx_theme/controllers/widget_3W.py
+ckanext/hdx_theme/controllers/widget_WFP.py
 ckanext/hdx_theme/controllers/widget_topline.py
 ckanext/hdx_theme/helpers/__init__.py
 ckanext/hdx_theme/helpers/actions.py
@@ -17,6 +19,7 @@ ckanext/hdx_theme/helpers/auth.py
 ckanext/hdx_theme/helpers/count.py
 ckanext/hdx_theme/helpers/counting_actions.py
 ckanext/hdx_theme/helpers/country_list_hardcoded.py
+ckanext/hdx_theme/helpers/faq_data.py
 ckanext/hdx_theme/helpers/helpers.py
 ckanext/hdx_theme/helpers/less.py
 ckanext/hdx_theme/helpers/top_line_items_formatter.py
