@@ -139,7 +139,14 @@
           </span>
           <span class="table-valign pull-right" style="margin-left: 20px;">
             <span class="table-valign-content">
-              <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}">
+              {% set add_data_obj = h.hdx_check_add_data() %}
+              {% if add_data_obj %}
+                <a href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}">
+              {% else %}
+                  <!-- keeping for the moment the old way just in case. To be removed after good testing -->
+                  <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}">
+              {% endif %}
+              <!--<a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}"> -->
               <!--<a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">-->
                 <div class="submitData">
                   {{ _("Add data") }}

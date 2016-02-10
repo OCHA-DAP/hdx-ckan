@@ -26,14 +26,15 @@ class ContributeFlowController(base.BaseController):
     def new(self, id=None, data=None, errors=None, error_summary=None, action_name='package_create'):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   'save':
-                       'save' in request.params}
+                   'save': 'save' in request.params}
         dataset_dict = None
         try:
             if id:
                 dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
             logic.check_access(action_name, context, dataset_dict)
-        except logic.NotAuthorized:
+        except logic.NotAuthorized, e:
+            if c.userobj or c.user:
+                h.redirect_to('user_dashboard_organizations')
             abort(401, _('Unauthorized to create a package'))
 
         save_type = request.POST.get('save')

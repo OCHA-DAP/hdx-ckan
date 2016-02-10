@@ -577,3 +577,27 @@ def generate_mandatory_fields():
         'subnational': 1,
     }
     return data_dict
+
+
+def hdx_check_add_data():
+    data_dict = {}
+
+    context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   'save': 'save' in request.params}
+    dataset_dict = None
+    try:
+        logic.check_access("package_create", context, dataset_dict)
+    except logic.NotAuthorized, e:
+        if c.userobj or c.user:
+            data_dict['href'] = '/dashboard/organizations'
+            data_dict['onclick'] = ''
+            return data_dict
+        data_dict['href'] = '/contribute'
+        data_dict['onclick'] = ''
+        return data_dict
+
+    data_dict['href'] = '#'
+    data_dict['onclick'] = 'contributeAddDetails()'
+
+    return data_dict

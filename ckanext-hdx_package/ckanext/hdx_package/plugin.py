@@ -277,7 +277,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'list_of_all_groups': cached_group_list,
             'hdx_find_license_name': hdx_helpers.hdx_find_license_name,
             'filesize_format': hdx_helpers.filesize_format,
-            'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields
+            'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
+            'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
         }
 
     def get_actions(self):
