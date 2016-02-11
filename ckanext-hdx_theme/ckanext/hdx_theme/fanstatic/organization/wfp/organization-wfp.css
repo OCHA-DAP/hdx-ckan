@@ -776,6 +776,17 @@ a:focus,
 .dataset-resources li a {
   background-color: #aaaaaa;
 }
+/* Style dataset icons */
+.label-icons span {
+  font-size: 15px;
+  color: #888888;
+  margin-left: 10px;
+  padding-top: 3px;
+}
+.label-icons span.download-counts {
+  font-size: 12px;
+}
+/* END Style dataset icons */
 /* Label style (eg. tags) */
 .label {
   border: none;
@@ -2563,15 +2574,6 @@ ul.hdx-bs3 {
   font-weight: 700;
 }
 /* END Style placeholders */
-/* Style dataset icons */
-.label-icons span {
-  height: 15px;
-  font-size: 15px;
-  color: #888888;
-  margin-right: 15px;
-  padding-top: 3px;
-}
-/* END Style dataset icons */
 /* Style Dashboard - Newsfeed list */
 .activity {
   margin: 10px 0;
