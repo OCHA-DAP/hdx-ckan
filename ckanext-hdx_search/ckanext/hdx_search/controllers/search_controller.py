@@ -19,6 +19,8 @@ from ckan.common import OrderedDict, _, json, request, c, g, response
 from ckan.controllers.package import PackageController
 from ckan.controllers.api import CONTENT_TYPES
 
+from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
+
 _validate = dict_fns.validate
 _check_access = logic.check_access
 
@@ -403,15 +405,12 @@ class HDXSearchController(PackageController):
             items_per_page=limit
         )
 
-        thresholds = [10000, 5000, 2000, 1000, 500, 200, 100, 10]
-
         for dataset in query['results']:
             downloads_list = (res['tracking_summary']['total'] for res in dataset.get('resources', []) if
                               res.get('tracking_summary', {}).get('total'))
             download_sum = sum(downloads_list)
 
-            dataset['approx_total_downloads'] = next(
-                (threshold for threshold in thresholds if download_sum > threshold), None)
+            dataset['approx_total_downloads'] = find_approx_download(download_sum)
 
         c.page.items = query['results']
         c.sort_by_selected = query['sort']

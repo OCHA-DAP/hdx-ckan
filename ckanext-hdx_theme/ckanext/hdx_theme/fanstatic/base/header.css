@@ -537,6 +537,10 @@ a:focus,
 .label-icons span.download-counts {
   font-size: 12px;
 }
+ul.dataset-resources li + li.label-icons {
+  border-left: 1px solid #888888;
+  margin-left: 10px;
+}
 /* END Style dataset icons */
 /* Label style (eg. tags) */
 .label {
