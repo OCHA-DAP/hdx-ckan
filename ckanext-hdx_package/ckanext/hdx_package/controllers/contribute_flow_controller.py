@@ -1,4 +1,5 @@
 import json
+import uuid
 
 import ckan.lib.base as base
 import ckan.logic as logic

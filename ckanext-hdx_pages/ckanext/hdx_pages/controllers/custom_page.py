@@ -61,10 +61,13 @@ class PagesController(HDXSearchController):
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.new(page_dict, errors, error_summary)
-                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
-                              id=created_page.get("name") or created_page.get("id"), type=created_page.get("type"))
+                mapped_action = self.generate_action_name(created_page.get("type"))
+                h.redirect_to(mapped_action, id=created_page.get("name") or created_page.get("id"))
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
+
+    def generate_action_name(self, type):
+        return 'read_crisis' if type == 'crisis' else 'read_dashboard'
 
     def edit(self, id, data=None, errors=None, error_summary=None):
 
@@ -99,8 +102,8 @@ class PagesController(HDXSearchController):
                     errors = e.error_dict
                     error_summary = e.error_summary
                     return self.edit(id, page_dict, errors, error_summary)
-                h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read',
-                              id=updated_page.get('name') or updated_page.get('id'), type=updated_page.get('type'))
+                mapped_action = self.generate_action_name(updated_page.get("type"))
+                h.redirect_to(mapped_action, id=updated_page.get('name') or updated_page.get('id'))
             elif delete_page:
                 h.redirect_to(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='delete',
                               id=id)
@@ -109,6 +112,12 @@ class PagesController(HDXSearchController):
             self._init_extra_vars_edit(extra_vars)
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
+
+    def read_crisis(self, id):
+        return self.read(id, 'crisis')
+
+    def read_dashboard(self, id):
+        return self.read(id, 'analytics')
 
     def read(self, id, type):
         context = {
@@ -185,10 +194,12 @@ class PagesController(HDXSearchController):
         params_nopage = {
             k: v for k, v in request.params.items() if k != 'page'}
 
+        mapping_name = self.generate_action_name(type)
+
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
-            url = h.url_for('read_page', id=page_id, type=type, **params) + '#datasets-section'
+            url = h.url_for(mapping_name, id=page_id, **params) + '#datasets-section'
             return url
 
         fq = ''
@@ -209,7 +220,7 @@ class PagesController(HDXSearchController):
         package_type = 'dataset'
         full_facet_info = self._search(package_type, pager_url, **search_params)
 
-        c.other_links['current_page_url'] = h.url_for('read_page', id=page_id, type=type)
+        c.other_links['current_page_url'] = h.url_for(mapping_name, id=page_id)
 
         return full_facet_info
 

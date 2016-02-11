@@ -1,4 +1,5 @@
 import re
+import urlparse
 import uuid
 
 import json
@@ -16,8 +17,12 @@ import ckan.model.package as package
 import ckan.model.misc as misc
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.dictization.model_save as model_save
+import ckan.lib.datapreview as datapreview
 import ckan.plugins as plugins
 
+from pylons import config
+
+from ckan.logic.action.create import _validate
 
 from ckan.common import _, c, request, response
 from ckanext.hdx_package.exceptions import NoOrganization
@@ -545,6 +550,39 @@ def filesize_format(size_in_bytes):
     except Exception, e:
         log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
         return size_in_bytes
+
+
+def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
+    '''
+    This function replaces the one with the similar name from ckanext.resourceproxy.plugin .
+    Changes:
+    1) Don't look at the protocol when checking if it is the same domain
+    2) Return a domain relative url (without schema, domain or port) for local resources.
+
+    :param data_dict: contains a resource and package dict
+    :type data_dict: dictionary
+    :param proxy_schemes: list of url schemes to proxy for.
+    :type data_dict: list
+    '''
+
+    ckan_url = config.get('ckan.site_url', '//localhost:5000')
+    url = data_dict['resource']['url']
+
+    parsed_url = urlparse.urlparse(url)
+    ckan_parsed_url = urlparse.urlparse(ckan_url)
+    same_domain = True if not parsed_url.hostname or parsed_url.hostname == ckan_parsed_url.hostname else False
+    scheme = parsed_url.scheme
+
+    if not same_domain and scheme in proxy_schemes:
+        url = h.url_for(
+            action='proxy_resource',
+            controller='ckanext.resourceproxy.controller:ProxyController',
+            id=data_dict['package']['name'],
+            resource_id=data_dict['resource']['id'])
+        log.info('Proxified url is {0}'.format(url))
+    else:
+        url = urlparse.urlunparse((None, None) + parsed_url[2:])
+    return url
 
 
 def generate_mandatory_fields():
