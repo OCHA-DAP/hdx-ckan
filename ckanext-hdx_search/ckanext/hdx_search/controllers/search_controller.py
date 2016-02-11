@@ -402,6 +402,17 @@ class HDXSearchController(PackageController):
             item_count=query['count'],
             items_per_page=limit
         )
+
+        thresholds = [10000, 5000, 2000, 1000, 500, 200, 100, 10]
+
+        for dataset in query['results']:
+            downloads_list = (res['tracking_summary']['total'] for res in dataset.get('resources', []) if
+                              res.get('tracking_summary', {}).get('total'))
+            download_sum = sum(downloads_list)
+
+            dataset['approx_total_downloads'] = next(
+                (threshold for threshold in thresholds if download_sum > threshold), None)
+
         c.page.items = query['results']
         c.sort_by_selected = query['sort']
 

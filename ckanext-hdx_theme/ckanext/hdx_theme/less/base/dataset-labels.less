@@ -1,3 +1,5 @@
+@import "variables";
+
 @baseImagePath: "../../../../base/images";
 @formatMediumX: 32px;
 @formatMediumY: 35px;
@@ -39,7 +41,22 @@
     }
   }
 }
+
+/* Style dataset icons */
+.label-icons span{
+  font-size: 15px;
+  color: @grayColor;
+  margin-left: 10px;
+  padding-top: 3px;
+
+  &.download-counts {
+    font-size: 12px;
+  }
+}
+/* END Style dataset icons */
+
 /* Label style (eg. tags) */
+
 .label{
   border: none;
   border-radius: 0;
