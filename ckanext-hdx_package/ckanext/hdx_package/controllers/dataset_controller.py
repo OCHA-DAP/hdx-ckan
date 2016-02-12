@@ -50,7 +50,7 @@ clean_dict = logic.clean_dict
 parse_params = logic.parse_params
 flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
-_check_group_auth = logic.auth.create._check_group_auth
+# _check_group_auth = logic.auth.create._check_group_auth
 
 
 CONTENT_TYPES = {
