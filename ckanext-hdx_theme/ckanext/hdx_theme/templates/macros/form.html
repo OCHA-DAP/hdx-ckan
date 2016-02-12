@@ -44,11 +44,11 @@ Example:
   {{ form.checkbox('remember', checked=true) }}
 
 #}
-{% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false) %}
+{% macro checkbox(name, id='', label='', value='', checked=false, placeholder='', error="", classes=[], attrs={}, is_required=false, label_attrs={}) %}
   {%- set extra_html = caller() if caller -%}
   <div class="control-group{{ " " ~ classes | join(" ") }}{% if error %} error{% endif %}">
-    <div class="controls">
-      <label class="checkbox" for="{{ id or name }}">
+    <div class="controls checkbox">
+      <label class="" for="{{ id or name }}" {{ attributes(label_attrs) }}>
         <input id="{{ id or name }}" type="checkbox" name="{{ name }}" value="{{ value | empty_and_escape }}" {{ "checked " if checked }} {{ attributes(attrs) }} />
         {{ label }}
         {% if is_required %}{{ input_required() }}{% endif %}
@@ -82,15 +82,18 @@ Examples:
   {{ form.select('year', label=_('Year'), options={2010: 2010, 2011: 2011}, selected=2011, error=errors.year) }}
 
 #}
-{% macro select(name, id='', label='', options='', selected='', error='', classes=[], attrs={}, is_required=false) %}
+{% macro select(name, id='', label='', placeholder='', options='', selected='', error='', classes=[], attrs={}, is_required=false, label_attrs={}) %}
   {% set classes = (classes|list) %}
   {% do classes.append('control-select') %}
-
   {%- set extra_html = caller() if caller -%}
-  {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required) %}
-    <select id="{{ id or name }}" name="{{ name }}" {{ attributes(attrs) }}>
+  {% call input_block(id or name, label, error, classes, extra_html=extra_html, is_required=is_required, label_attrs=label_attrs) %}
+    <select id="{{ id or name }}" name="{{ name }}" placeholder="{{ placeholder }}" {{ attributes(attrs) }}>
       {% for option in options %}
-        <option value="{{ option.value }}"{% if option.value == selected %} selected{% endif %}>{{ option.text or option.value }}</option>
+          {% if attrs['multiple'] == 'true' %}
+            <option value="{{ option.value }}" {% if option.value in selected %} selected="selected"{% endif %}>{{ option.text or option.value }}</option>
+          {% else %}
+            <option value="{{ option.value }}" {% if option.value == selected %} selected="selected"{% endif %}>{{ option.text or option.value }}</option>
+          {% endif %}
       {% endfor %}
     </select>
   {% endcall %}
@@ -259,14 +262,14 @@ Example:
   {% endcall %}
 
 #}
-{% macro input_block(for, label="", error="", classes=[], control_classes=[], extra_html="", is_required=false) %}
+{% macro input_block(for, label="", error="", classes=[], control_classes=[], extra_html="", is_required=false, label_attrs={}) %}
   <div class="control-group{{ " error" if error }}{{ " " ~ classes | join(' ') }}">
     {% if label %}
-      <label class="control-label" for="{{ for }}">{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
+      <label class="control-label" for="{{ for }}" {{ attributes(label_attrs) }}>{% if is_required %}<span title="{{ _("This field is required") }}" class="control-required">*</span> {% endif %}{{ label or _('Custom') }}</label>
     {% endif %}
-    <div class="controls{{ " " ~ control_classes | join(' ') }}">
+    <div class="controls{{ " " ~ control_classes | join(' ') }}{% if error and error is iterable %} error{% endif %}">
       {{ caller() }}
-      {% if error and error is iterable %}<span class="error-block">{{ error|join(', ') }}</span>{% endif %}
+      <span class="error-block">{% if error and error is iterable %}{{ error|join(', ') }}{% endif %}</span>
       {{ extra_html }}
     </div>
   </div>

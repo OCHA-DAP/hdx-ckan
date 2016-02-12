@@ -100,10 +100,12 @@ def name_validator_with_changed_msg(val, context):
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
 
-    def new_login(self, error=None):
+    def new_login(self, error=None, info_message=None):
         template_data = {}
         if not c.user:
             template_data = ue_helpers.get_login(True, "")
+        if info_message:
+            template_data['data']['info_message'] = info_message
         return render('home/index.html', extra_vars=template_data)
 
     def first_login(self, error=None):

@@ -50,9 +50,7 @@
         function scrollTo() {
             var targetId = $(this).attr('href');
 
-            $('html, body').animate({
-                'scrollTop': $(targetId).offset().top - 40
-            }, 700);
+            hdxUtil.ui.scrollTo(targetId);
             return false;
         }
 

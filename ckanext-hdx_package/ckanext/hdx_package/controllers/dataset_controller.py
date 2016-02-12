@@ -63,7 +63,14 @@ CONTENT_TYPES = {
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
-#from ckan.controllers.api import ApiController
+
+# These are used for shwoing things like: "1000+ Downloads" for a dataset
+APPROX_DOWNLOAD_THRESHOLDS = [10000, 5000, 2000, 1000, 500, 200, 100, 10]
+
+def find_approx_download(exact_downloads):
+    return next(
+                (threshold for threshold in APPROX_DOWNLOAD_THRESHOLDS if exact_downloads > threshold), None)
+
 
 def clone_dict(old_dict):
     """
@@ -696,6 +703,8 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
                 c.downloads_count += resource['tracking_summary']['total']
+        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.downloads_count)
+
         followers = get_action('dataset_follower_list')({'ignore_auth': True},
                                                         {'id': c.pkg_dict['id']})
         if followers and len(followers) > 0:

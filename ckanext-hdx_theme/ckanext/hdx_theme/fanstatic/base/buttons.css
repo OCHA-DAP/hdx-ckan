@@ -19,6 +19,9 @@
   background-color: #888888;
   color: #ffffff;
 }
+.btn ~ .btn {
+  margin-left: 15px;
+}
 .btn:hover,
 .btn:focus,
 .btn.active {

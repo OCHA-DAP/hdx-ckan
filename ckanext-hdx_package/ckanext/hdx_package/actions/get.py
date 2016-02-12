@@ -13,12 +13,15 @@ import ckan.lib.navl.dictization_functions
 import ckan.lib.search as search
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.logic.action.get as logic_get
+import ckan.lib.plugins as lib_plugins
+
 
 import sqlalchemy
 import logging
 import json
 
 from ckan.lib import uploader
+from ckan.common import _
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -313,6 +316,18 @@ def package_show(context, data_dict):
     return package_dict
 
 
+@logic.side_effect_free
+def package_show_edit(context, data_dict):
+    '''A package_show action for editing a package and resources.'''
+
+    # Requires use_cache and for_edit in the context so resource urls for file
+    # uploads don't include the full qualified url path.
+    context['use_cache'] = False
+    context['for_edit'] = True
+
+    return package_show(context, data_dict)
+
+
 def __get_resource_filesize(resource_dict):
     if resource_dict.get('url_type') == 'upload':
         value = None
@@ -321,6 +336,42 @@ def __get_resource_filesize(resource_dict):
             value = os.path.getsize(upload.get_path(resource_dict['id']))
         except Exception as e:
             log.warn(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
-                                                                                      str(e)))
+                                                                                         str(e)))
         return value
     return None
+
+
+@logic.side_effect_free
+def package_validate(context, data_dict):
+    model = context['model']
+    id = data_dict.get("id")
+
+    pkg = model.Package.get(id) if id else None
+
+    if pkg is None:
+        action = 'package_create'
+        type = data_dict.get('type', 'dataset')
+    else:
+        action = 'package_update'
+        type = pkg.type
+        context["package"] = pkg
+        data_dict["id"] = pkg.id
+
+    logic.check_access(action, context, data_dict)
+    package_plugin = lib_plugins.lookup_package_plugin(type)
+
+    if 'schema' in context:
+        schema = context['schema']
+    else:
+        schema = package_plugin.create_package_schema() if action == 'package_create' \
+            else package_plugin.update_package_schema()
+
+    data, errors = lib_plugins.plugin_validate(
+        package_plugin, context, data_dict, schema, action)
+
+    if errors:
+        raise ValidationError(errors)
+
+    if 'groups_list' in data:
+        del data['groups_list']
+    return data

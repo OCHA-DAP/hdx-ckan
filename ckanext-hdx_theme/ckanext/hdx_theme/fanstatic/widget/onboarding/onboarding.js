@@ -116,6 +116,16 @@ $(document).ready(function(){
         errMsg.show();
 
     }
+
+    //check for login info message
+    var loginInfo = $("#login-info").text();
+    if (loginInfo && loginInfo != ""){
+        var errMsg = $("#login-info-message");
+        errMsg.text(loginInfo);
+        notYou();
+        errMsg.show();
+    }
+
     var userLogin = $("#user-login").text();
     if (userLogin && userLogin != ""){
         showOnboardingWidget("#loginPopup");
