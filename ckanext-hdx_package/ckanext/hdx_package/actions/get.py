@@ -313,6 +313,10 @@ def package_show(context, data_dict):
         if not resource_dict.get('size'):
             resource_dict['size'] = __get_resource_filesize(resource_dict)
 
+    downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
+                              res.get('tracking_summary', {}).get('total'))
+    package_dict['total_res_downloads'] = sum(downloads_list)
+
     return package_dict
 
 

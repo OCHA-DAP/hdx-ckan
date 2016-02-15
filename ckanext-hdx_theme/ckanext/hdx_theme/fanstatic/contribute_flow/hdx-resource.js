@@ -358,8 +358,9 @@ $(function(){
             this._setUpDragAndDrop();
 
             var modelUrlType = this.model.get('url_type');
-            if (modelUrlType != null && modelUrlType != "") {
-                if (this.model.get('url_type') == "upload")
+            var modelResourceType = this.model.get('resource_type');
+            if (modelUrlType || modelResourceType) {
+                if (modelUrlType == 'upload' || modelResourceType == 'file.upload')
                     this._setUpForSourceType('source-file-selected');
                 else
                     this._setUpForSourceType('source-url');
