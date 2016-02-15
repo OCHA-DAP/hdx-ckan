@@ -15,6 +15,9 @@
         {% if not data.success %}
           <div id="login-error" style="display: none;">{{ data.message }}</div>
         {% endif %}
+        {% if data.info_message %}
+          <div id="login-info" style="display: none;">{{ data.info_message }}</div>
+        {% endif %}
       {% endif %}
       {% if step == "hdx_logout" %}
         <div id="user-logout" style="display: none;">{{data.message}}</div>
@@ -37,6 +40,7 @@
         {{ h.snippet('widget/onboarding/invite.html', id="invitePopup") }}
         {{ h.snippet('widget/onboarding/done.html', id="donePopup") }}
       {% endif %}
+      {{ h.snippet('widget/contribute/details.html', id="addDataPopup") }}
     {% else %}
       {{ h.snippet('widget/onboarding/logout.html', id="logoutPopup") }}
       {{ h.snippet('widget/onboarding/login.html', id="loginPopup") }}

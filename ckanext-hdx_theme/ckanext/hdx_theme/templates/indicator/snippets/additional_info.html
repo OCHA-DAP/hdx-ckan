@@ -41,8 +41,15 @@
 		<tr>
 			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
 			<td class="dataset-details">
+				{% if pkg_dict.private %}
+					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
+					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it public') }}</a></div>
+				{% else %}
+					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
+					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
+				{% endif %}
+<!-- changed as per #4056
 				{% set locale = h.dump_json({'content': _('Are you sure? This will affect whether this data is visible to everyone')}) %}
-
 				{% if pkg_dict.private %}
 					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
 					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
@@ -52,6 +59,7 @@
 					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
 					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it private') }}</a></div>
 				{% endif %}
+-->
 			</td>
 		</tr>
 	{% else %}

@@ -356,6 +356,9 @@ a:focus,
   background-color: #888888;
   color: #ffffff;
 }
+.btn ~ .btn {
+  margin-left: 15px;
+}
 .btn:hover,
 .btn:focus,
 .btn.active {
@@ -524,6 +527,21 @@ a:focus,
 .dataset-resources li a {
   background-color: #aaaaaa;
 }
+/* Style dataset icons */
+.label-icons span {
+  font-size: 15px;
+  color: #888888;
+  margin-left: 10px;
+  padding-top: 3px;
+}
+.label-icons span.download-counts {
+  font-size: 12px;
+}
+ul.dataset-resources li + li.label-icons {
+  border-left: 1px solid #888888;
+  margin-left: 10px;
+}
+/* END Style dataset icons */
 /* Label style (eg. tags) */
 .label {
   border: none;
@@ -1353,6 +1371,12 @@ textarea {
   display: none;
 }
 /* END List header */
+body.contribute-body {
+  min-width: 100%;
+}
+.hdx-form {
+  color: #333333;
+}
 .hdx-form .background-gray {
   background-color: #eeeeee;
 }
@@ -1376,6 +1400,9 @@ textarea {
   font-size: 18px;
   margin: 0;
 }
+.hdx-form .form-section h3 ~ p {
+  color: #888888;
+}
 .hdx-form .form-section .sample-text {
   font-family: 'Gotham-Light', sans-serif;
   font-weight: 400;
@@ -1387,6 +1414,12 @@ textarea {
   border: 0 none;
   height: 1px;
   margin: 0 -5px;
+}
+.hdx-form.edit-mode .hdx-form-breadcrumb {
+  background-color: #888888;
+}
+.hdx-form.edit-mode .hdx-form-breadcrumb .breadcrumb {
+  background-color: #888888;
 }
 .hdx-form .hdx-form-breadcrumb {
   padding: 20px 0;
@@ -1450,10 +1483,24 @@ textarea {
 .hdx-form .form-group .control-label:after {
   content: "";
 }
+.hdx-form .form-group .error-block {
+  color: #f2645a;
+  display: none;
+}
+.hdx-form .form-group .error .form-control {
+  border-color: #f2645a;
+}
+.hdx-form .form-group .error .error-block {
+  display: inherit;
+}
 .hdx-form .form-group .radio,
 .hdx-form .form-group .checkbox {
   margin-top: 0;
   margin-bottom: 5px;
+}
+.hdx-form .form-group .radio label:after,
+.hdx-form .form-group .checkbox label:after {
+  content: "";
 }
 .hdx-form .form-group .radio input,
 .hdx-form .form-group .checkbox input {
@@ -1462,7 +1509,8 @@ textarea {
 }
 .hdx-form .form-group .form-control {
   background-color: #ffffff;
-  height: 44px;
+  min-height: 44px;
+  height: auto;
   border-color: #cccccc;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
@@ -1629,7 +1677,24 @@ ul.list-horizontal li:first-child:before {
   margin-bottom: 10px;
   background-color: #ffffff;
 }
+.drag-drop-component.drag-drop-ghost {
+  opacity: 0.4;
+}
+.drag-drop-component .cloud-img {
+  height: 21px;
+  margin-right: 3px;
+}
+.drag-drop-component label.control-label {
+  color: inherit;
+  font-weight: inherit;
+}
+.drag-drop-component .list-horizontal li.or-separator:before {
+  content: "or";
+}
 .drag-drop-component .drag-drop-area {
+  position: relative;
+}
+.drag-drop-component .drag-drop-area .drag-drop-content {
   border-radius: 6px;
   border: 3px dashed #cccccc;
   background-color: #eeeeee;
@@ -1640,6 +1705,60 @@ ul.list-horizontal li:first-child:before {
   color: #888888;
   letter-spacing: 0.03em;
   text-align: center;
+}
+.drag-drop-component .drag-drop-area .drag-drop-content .drag-text2 {
+  display: none;
+}
+.drag-drop-component .drag-drop-area .drop-here-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content {
+  background-color: #007ce0;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content .drag-text1 {
+  display: none;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content .drag-text2 {
+  display: block;
+}
+.drag-drop-component .drag-drop-area.drop-incoming .browse-button {
+  display: none;
+}
+.drag-drop-component .drag-drop-area .browse-button {
+  color: #007ce0;
+  cursor: pointer;
+  position: relative;
+  margin: 0;
+}
+.drag-drop-component .drag-drop-area .browse-button:after {
+  content: none;
+}
+.drag-drop-component .drag-drop-area .browse-button span {
+  position: relative;
+  z-index: 100;
+}
+.drag-drop-component .drag-drop-area .browse-button input[type="file"] {
+  position: absolute;
+  z-index: 99;
+  height: 1px;
+  width: 1px;
+  opacity: 0;
+  padding: 0;
+  top: 0;
+}
+.form-explanation p + p {
+  margin-top: 30px;
+}
+.form-explanation .cloud-img {
+  height: 21px;
+  margin-right: 3px;
 }
 /* Body Background */
 body {
@@ -2210,15 +2329,6 @@ ul.hdx-bs3 {
   font-weight: 700;
 }
 /* END Style placeholders */
-/* Style dataset icons */
-.label-icons span {
-  height: 15px;
-  font-size: 15px;
-  color: #888888;
-  margin-right: 15px;
-  padding-top: 3px;
-}
-/* END Style dataset icons */
 /* Style Dashboard - Newsfeed list */
 .activity {
   margin: 10px 0;
@@ -2260,3 +2370,6 @@ ul.hdx-bs3 {
   display: inline-block;
 }
 /* END - Actions button list */
+.red {
+  color: #ff0000;
+}

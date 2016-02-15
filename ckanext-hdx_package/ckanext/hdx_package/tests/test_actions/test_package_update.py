@@ -23,7 +23,6 @@ package = {
     "package_creator": "test function",
     "private": False,
     "dataset_date": "01/01/1960-12/31/2012",
-    "indicator": "1",
     "caveats": "These are the caveats",
     "license_other": "TEST OTHER LICENSE",
     "methodology": "This is a test methodology",

@@ -164,6 +164,24 @@ sharing_data = {
             'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
             'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or on a GeoNode). However, the metadata and activity stream will not automatically indicate the updated date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date of the dataset are only updated automatically if the resource is stored on HDX. We are working to improve this functionality, so please bear with us!',
         },
+        {
+            'q': 'How do I share files from Google Drive?',
+            'a': '''<p>
+                        You can now connect to Google Drive and select files directly from "Add Data". Unless your file(s) is already publicly accessible or shared with anyone with the link,
+                        the following steps are necessary to make your files viewable by others on HDX.
+                    </p>
+                    <p>
+                        How to turn on sharing settings on Google Drive:
+                        <ol>
+                            <li>Go to Google Drive. </li>
+                            <li>Right click on file(s) you want to share on HDX and select "Share".</li>
+                            <li>In "Sharing with others" window, click on "Advanced" in the bottom right corner.</li>
+                            <li>In "Sharing settings" window, click on "change" under "Who has access".</li>
+                            <li>In the next screen, select "On -Public on the web" or "On - anyone with the link" and make sure "Access:Anyone (no sign-in required)" is set to "can view"</li>
+                        </ol>
+                    </p>'
+                '''
+        },
     ]
 }
 

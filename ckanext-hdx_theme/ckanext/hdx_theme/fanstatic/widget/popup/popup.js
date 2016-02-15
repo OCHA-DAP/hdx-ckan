@@ -1,5 +1,5 @@
 $(document).ready(function(e){
-    $(".popup").on("click", function(){
+    $(".popup:not(.popup-close-only-x)").on("click", function(){
        $(this).hide();
     });
     $(".popup .content").on("click", function(e){

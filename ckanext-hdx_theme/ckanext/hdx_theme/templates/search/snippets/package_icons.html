@@ -4,11 +4,13 @@
 {% if geolocated or visualization or popular or has_related_items or package.subnational
         or package.private or package.quality %}
   <li class="label-icons">
-    {% if geolocated %}
-      <!--
-      <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-      -->
-    {% endif %}
+    {#
+      {% if geolocated %}
+        <!--
+        <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+        -->
+      {% endif %}
+    #}
     {% if visualization %}
       <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
     {% endif %}
@@ -30,5 +32,9 @@
         {{ h.hdx_popular('recent views', package.tracking_summary.recent, min=10) }}
       {% endif %}
     {% endif %}
+
   </li>
+{% endif %}
+{% if package.approx_total_downloads  %}
+  <li class="label-icons"><span class="download-counts">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
 {% endif %}

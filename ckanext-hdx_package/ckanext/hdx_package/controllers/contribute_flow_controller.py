@@ -10,6 +10,7 @@ import ckan.lib.helpers as h
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
 from ckan.controllers.api import CONTENT_TYPES
+from ckanext.hdx_package.exceptions import WrongResourceParamName, NoOrganization
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -27,13 +28,18 @@ class ContributeFlowController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    'save': 'save' in request.params}
+        dataset_dict = None
         try:
-            logic.check_access(action_name, context)
-        except logic.NotAuthorized:
+            if id:
+                dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
+            logic.check_access(action_name, context, dataset_dict)
+        except logic.NotAuthorized, e:
+            if c.userobj or c.user:
+                h.redirect_to('user_dashboard_organizations')
             abort(401, _('Unauthorized to create a package'))
 
         save_type = request.POST.get('save')
-        dataset_dict = None
+
         errors = None
         error_summary = None
 
@@ -47,7 +53,9 @@ class ContributeFlowController(base.BaseController):
             else:
                 if id:
                     # show dataset in case of edit
-                    dataset_dict = logic.get_action('package_show')(context, {'id': id})
+                    # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
+                    self.process_groups(dataset_dict)
+                    self.process_tags(dataset_dict)
 
         except logic.NotAuthorized, e:
             status_code = 401
@@ -78,6 +86,14 @@ class ContributeFlowController(base.BaseController):
 
         return self._prepare_and_render(save_type=save_type, data=dataset_dict, errors=errors,
                                         error_summary=error_summary)
+
+    def process_groups(self, dataset_dict):
+        if dataset_dict and not dataset_dict.get('locations'):
+            dataset_dict['locations'] = [item.get('id') for item in dataset_dict.get("groups")]
+
+    def process_tags(self, dataset_dict):
+        if dataset_dict and not dataset_dict.get('tag_string'):
+            dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
 
     def _abort(self, save_type, status_code, message):
         if '-json' in save_type:
@@ -110,65 +126,146 @@ class ContributeFlowController(base.BaseController):
     def _save_or_update(self, context, package_type=None):
         data_dict = {}
         try:
-            data_dict = clean_dict(dict_fns.unflatten(
-                tuplize_dict(parse_params(request.POST))))
-
-            data_dict['type'] = package_type
-            del data_dict['save']
-
-            context['message'] = data_dict.get('log_message', '')
-
-            dataset_id = data_dict.get('id')
+            data_dict = self._prepare_data_for_saving(context, data_dict, package_type)
 
             pkg_dict = {}
-            if dataset_id:
+            if data_dict.get('id'):
+                # we allow partial updates to not destroy existing resources
+                context['allow_partial_update'] = True
                 pkg_dict = logic.get_action('package_update')(context, data_dict)
             else:
-                self._autofill_mandatory_fields(data_dict)
                 pkg_dict = logic.get_action('package_create')(context, data_dict)
 
-            return (pkg_dict, {}, {})
+            return pkg_dict, {}, {}
 
         except logic.ValidationError, e:
-            errors = e.error_dict
-            error_summary = e.error_summary
+            return data_dict, e.error_dict, e.error_summary
 
-            return data_dict, errors, error_summary
+    def _prepare_data_for_saving(self, context, data_dict, package_type):
+        data_dict = clean_dict(dict_fns.unflatten(
+            tuplize_dict(parse_params(request.POST))))
+        data_dict['type'] = package_type
 
-    def _autofill_mandatory_fields(self, data_dict):
-        '''
-        Adds to the data_dict the missing mandatory fields
+        del data_dict['save']
 
-        :param data_dict: dictionary with request parameters
-        :type data_dict: dict
-        '''
-
+        context['message'] = data_dict.get('log_message', '')
+        self.process_locations(data_dict)
+        self.process_dataset_date(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
-        if 'name' not in data_dict:
-            random_string = str(uuid.uuid4()).replace('-', '')
-            user = c.user or c.author
-            name = '{}_{}'.format(user, random_string)
-            data_dict['name'] = name
+        return data_dict
 
-        if 'license_id' not in data_dict:
-            data_dict['license_id'] = 'cc-by'
+    def validate(self, package_type=None):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   'save': 'save' in request.params}
+        data_dict = {}
+        save_type = request.POST.get('save')
+        try:
+            data_dict = self._prepare_data_for_saving(context, data_dict, package_type)
+            # data_dict = self.process_resources(data_dict)
 
-        if 'notes' not in data_dict:
-            data_dict['notes'] = ''
+            pkg_dict = logic.get_action('package_validate')(context, data_dict)
+            return self._prepare_and_render(save_type=save_type, data=data_dict, errors={},
+                                            error_summary={})
 
-        org_id = data_dict.get('owner_org')
-        source = data_dict.get('dataset_source')
-        if not org_id or not source:
-            orgs = h.organizations_available('create_dataset')
-            if len(orgs) == 0:
-                raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
+        except logic.ValidationError, e:
+            error_summary = dict(e.error_summary)
+            if 'Resources' in e.error_summary:
+                error_summary['Resources'] = {
+                    _('Resource {}').format(idx): {key: '; '.join(val)
+                                                   for key, val in err_dict.items()}
+                    for idx, err_dict in enumerate(e.error_dict.get('resources', ())) if err_dict
+                }
+            return self._prepare_and_render(save_type=save_type, data=data_dict, errors=e.error_dict,
+                                            error_summary=error_summary)
+        except Exception, e:
+            ex_msg = e.message if hasattr(e, 'message') else str(e)
+            return self._prepare_and_render(save_type=save_type, data=data_dict, errors={},
+                                            error_summary={'General Error': ex_msg})
+
+    def process_locations(self, data_dict):
+        locations = data_dict.get("locations")
+        if locations:
+            locations = [locations] if isinstance(locations, basestring) else locations
+            groups = []
+            for item in locations:
+                groups.append({'id': item})
+            data_dict['groups'] = groups
+
+    def process_resources(self, data_dict):
+        '''
+        :param data_dict: package dictionary
+        :type data_dict: dict[str, str]
+        :return: new modified dict containing the resources in the correct format for validating
+        :rtype: dict
+        '''
+        resources_dict = {}
+        new_data_dict = {}
+        for key, value in data_dict.items():
+            if key.startswith('resources_'):
+                key_parts = key.split('__')
+                if len(key_parts) == 3:  # 'resources', key, resource number
+                    index = int(key_parts[2])
+                    resource_dict = resources_dict.get(index, {})
+                    resources_dict[index] = resources_dict
+                    resource_dict[key_parts] = value
+                else:
+                    raise WrongResourceParamName('Key {} should have 3 parts'.format(key))
+
             else:
-                org = orgs[1]
-                data_dict['owner_org'] = org_id if org_id else org.get('id')
-                data_dict['dataset_source'] = source if source else org.get('title')
+                new_data_dict[key] = value
 
+        if resources_dict:
+            new_data_dict['resources'] = [v for k, v in sorted(resources_dict.items(), key=lambda x: x[0])]
 
-class NoOrganization(logic.ActionError):
-    pass
+        return new_data_dict
+
+    # def _autofill_mandatory_fields(self, data_dict):
+    #     '''
+    #     Adds to the data_dict the missing mandatory fields
+    #
+    #     :param data_dict: dictionary with request parameters
+    #     :type data_dict: dict
+    #     '''
+    #
+    #     if 'private' not in data_dict:
+    #         data_dict['private'] = 'True'
+    #
+    #     if 'name' not in data_dict:
+    #         random_string = str(uuid.uuid4()).replace('-', '')
+    #         user = c.user or c.author
+    #         name = '{}_{}'.format(user, random_string)
+    #         data_dict['name'] = name
+    #
+    #     if 'license_id' not in data_dict:
+    #         data_dict['license_id'] = 'cc-by'
+    #
+    #     org_id = data_dict.get('owner_org')
+    #     selected_org = None
+    #     if not org_id:
+    #         orgs = h.organizations_available('create_dataset')
+    #         if len(orgs) == 0:
+    #             raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
+    #         else:
+    #             selected_org = orgs[1]
+    #             org_id = selected_org.get('id')
+    #             data_dict['owner_org'] = org_id
+    #
+    #     source = data_dict.get('dataset_source')
+    #     if not source:
+    #         if selected_org:
+    #             source = selected_org.get('title')
+    #         else:
+    #             context = {'user': c.user}
+    #             selected_org = logic.get_action('organization_show')(context,
+    #                               {'id': org_id, 'include_datasets': False})
+    #             source = selected_org.get('title')
+    #         data_dict['dataset_source'] = source
+
+    def process_dataset_date(self, data_dict):
+        if 'date_range1' in data_dict:
+            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2', data_dict.get('date_range1'))
+        elif 'data_range2' in data_dict:
+                data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')

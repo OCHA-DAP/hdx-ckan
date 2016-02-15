@@ -20,6 +20,21 @@
 .dataset-resources li a {
   background-color: #aaaaaa;
 }
+/* Style dataset icons */
+.label-icons span {
+  font-size: 15px;
+  color: #888888;
+  margin-left: 10px;
+  padding-top: 3px;
+}
+.label-icons span.download-counts {
+  font-size: 12px;
+}
+ul.dataset-resources li + li.label-icons {
+  border-left: 1px solid #888888;
+  margin-left: 10px;
+}
+/* END Style dataset icons */
 /* Label style (eg. tags) */
 .label {
   border: none;

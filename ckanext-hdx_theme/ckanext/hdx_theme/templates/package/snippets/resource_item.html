@@ -62,11 +62,13 @@
                 </a>
             {% endif %}
 
-            {%  if can_edit %}
-                <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit resource-btn">
-                    {{ _('Update') }}
-                </a>
-            {% endif %}
+            {# Commented out with the new contribute flow
+                {%  if can_edit %}
+                    <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit resource-btn">
+                        {{ _('Update') }}
+                    </a>
+                {% endif %}
+             #}
 
             <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download resource-btn resource-icon-btn" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
