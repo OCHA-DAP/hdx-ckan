@@ -34,12 +34,12 @@ overriding the form blocks depending on the current context
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<organization>'} %}
 		<div class="org-control-info  info-field">
-			<div class="org-info-label">{{_('Be as specific as possible (i.e. don\'t just say WFP, say WFP-Colombia)')}}</div>
+			<div class="org-info-label">{{_("Be as specific as possible (i.e. don't just say WFP, say WFP-Colombia)")}}</div>
 		</div>
 	</div>
 	<div class="org-control-container url-align">
     {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
-</div>
+	</div>
 	<div class="org-control-container">
 		{% set org_url_value = h.hdx_get_extras_element(data.extras) %}
 	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
@@ -54,15 +54,15 @@ overriding the form blocks depending on the current context
 	    		{{_('Brief overview of what organisation is for.')}}</div>
 	    </div>
     </div>
-  {% if c.userobj.sysadmin %}
-  <div class="org-control-container" style="margin-top:50px;">
-    {% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}
-      {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
-      <div class="org-control-info info-field">
-        <div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
-      </div>
-  </div>
-  {% endif %}
+	  {% if c.userobj.sysadmin %}
+	  <div class="org-control-container" style="margin-top:50px;">
+		{% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}
+		  {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
+		  <div class="org-control-info info-field">
+			<div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
+		  </div>
+	  </div>
+	  {% endif %}
 
   {% endblock %}
 
@@ -72,7 +72,6 @@ overriding the form blocks depending on the current context
 		2. {{ _('Details about you ') }}
     </h1>
     <p>{{ _('Tell us some basic details about you.') }}</p>
-    </div>
 </div>
 	{% block user_info_fields %}
 			<div class="org-control-container">
@@ -96,7 +95,7 @@ overriding the form blocks depending on the current context
 {% block action_buttons %}
 <div class="org-control-container button-align">
 	  <div class="create-org form-actions">
-		<button class="btn btn-primary create-org-btn" name="save" type="submit">
+		<button class="btn btn-primary" name="save" type="submit">
 			{% block save_text %}{{ _('Request New Organisation') }}{% endblock %}
 		</button>
 	  </div>
