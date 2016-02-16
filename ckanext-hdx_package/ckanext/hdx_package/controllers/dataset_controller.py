@@ -64,12 +64,27 @@ lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
 
-# These are used for shwoing things like: "1000+ Downloads" for a dataset
-APPROX_DOWNLOAD_THRESHOLDS = [10000, 5000, 2000, 1000, 500, 200, 100, 10]
 
 def find_approx_download(exact_downloads):
-    return next(
-                (threshold for threshold in APPROX_DOWNLOAD_THRESHOLDS if exact_downloads > threshold), None)
+    '''
+
+    :param exact_downloads: the total number of downloads
+    :type exact_downloads: int
+    :return: something like 1000+
+    :rtype: int
+    '''
+
+    if exact_downloads >= 10 and exact_downloads < 100:
+        divider = 10
+    # for 9999 we want 9900+
+    elif exact_downloads >= 100 and exact_downloads < 10000:
+        divider = 100
+    elif exact_downloads >= 10000:
+        divider = 1000
+    else:
+        return 0
+
+    return (exact_downloads / divider) * divider
 
 
 def clone_dict(old_dict):
