@@ -95,7 +95,7 @@ organizations = {
             'a': 'Yes. Registered users can be part of several organisations. Only users belonging to an organisation can add data to HDX.',
         },
         {
-            'q': 'I don\'t see my organization.',
+            'q': 'I don\'t see my organisation.',
             'a': 'If your organisation is not listed, you can request to create one (click the \'Add Data\' button) or you may want to join an existing organisation. For instance, there may be a WFP organisation that was created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of organisations by clicking the \"Organisations\" link at the top of any page.',
         },
         {
@@ -112,7 +112,7 @@ organizations = {
         },
         {
             'q': 'How do I create a branded organisation page in HDX?',
-            'a': 'HDX offers custom organisation pages to all organisations on the site. The page includes the organisation\'s logo and colour palette, topline figures, space for a data visualization and the list of datasets. We created our first custom organization pages for <a href="https://data.hdx.rwlabs.org/organization/wfp">WFP</a> and the <a href="https://data.hdx.rwlabs.org/organization/somalia-ngo-consortium">Somalia NGO Consortium</a>. If you would like a custom page, send a request to hdx.feedback@gmail.com.',
+            'a': 'HDX offers custom organisation pages to all organisations on the site. The page includes the organisation\'s logo and colour palette, topline figures, space for a data visualization and the list of datasets. We created our first custom organisation pages for <a href="https://data.hdx.rwlabs.org/organization/wfp">WFP</a> and the <a href="https://data.hdx.rwlabs.org/organization/somalia-ngo-consortium">Somalia NGO Consortium</a>. If you would like a custom page, send a request to hdx.feedback@gmail.com.',
         },
     ]
 }
@@ -125,7 +125,7 @@ sharing_data = {
             'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with appropriate privileges) before you can contribute data. If you have data to share, you can either request to create a new organisation or ask to join an existing one. (See more under Organisations above.)',
         },
         {
-            'q': 'Can I share data privately with my organization\'s members?',
+            'q': 'Can I share data privately with my organisation\'s members?',
             'a': 'Yes. For each dataset that you create, you have a choice of sharing publicly or restricting access to other members of the same organisation. The default visibility is set to private when you upload a new dataset. We encourage the open sharing of data, but we recognize that some data may not be suitable for public release.',
         },
         {
