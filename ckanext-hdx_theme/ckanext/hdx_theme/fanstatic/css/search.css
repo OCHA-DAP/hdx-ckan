@@ -128,14 +128,7 @@
         content: "|";
         margin-left: 15px;
     } */
-    
-    .search-list .dataset-item .dataset-others ul.dataset-resources li + li.label-icons:before {
-    	content: "|";
-        margin-left: 15px;
-        margin-right: 15px;
-    }
-    
-    
+
     .search-list .dataset-content .pre-icon .icon {
         color: #007ce0;
         font-size: 20px;

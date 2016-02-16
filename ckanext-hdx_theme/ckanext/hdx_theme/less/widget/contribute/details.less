@@ -1,0 +1,33 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+
+
+.popup.popup-contribute{
+  z-index: 90000;
+  .content {
+    //min-width: @containerRealSize*0.9;
+    width: @containerRealSize + 2*@containerMarginSize;
+    height: 100%;
+    padding: 0;
+    @contributeMargin: 20px;
+    i.close {
+      position: absolute;
+      top: @contributeMargin;
+      right: @contributeMargin;
+      font-size: @contributeMargin;
+      color: @grayColor;
+      opacity: .8;
+      &.white {
+        color: @whiteColor;
+      }
+    }
+    .details-content{
+      height: 100%;
+      iframe {
+        border: none;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}

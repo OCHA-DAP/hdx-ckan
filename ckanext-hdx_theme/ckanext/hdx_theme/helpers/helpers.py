@@ -332,6 +332,11 @@ def load_json(obj, **kw):
     return json.loads(obj, **kw)
 
 
+def escaped_dump_json(obj, **kw):
+    # escapes </ to prevent script tag hacking.
+    return json.dumps(obj, **kw).replace('</', '<\\/')
+
+
 def hdx_group_followee_list():
     context = {'model': model, 'session': model.Session,
                'user': c.user or c.author, 'auth_user_obj': c.userobj,
@@ -591,7 +596,7 @@ def hdx_license_list():
 
 
 def hdx_methodology_list():
-    result = [{}, {'value': 'Census', 'text': 'Census'}, {'value': 'Sample Survey', 'text': 'Sample Survey'},
+    result = [{'value': 'Census', 'text': 'Census'}, {'value': 'Sample Survey', 'text': 'Sample Survey'},
               {'value': 'Direct Observational Data/Anecdotal Data', 'text': 'Direct Observational Data/Anecdotal Data'},
               {'value': 'Registry', 'text': 'Registry'}, {'value': 'Other', 'text': 'Other'}]
     return result
@@ -616,3 +621,10 @@ def hdx_tag_list():
         tags_dict_list = [{'value': tag, 'text': tag} for tag in tags]
         return tags_dict_list
     return []
+
+
+def hdx_frequency_list():
+    result = [{'value': '0', 'text': 'Never'}, {'value': '1', 'text': 'Every day'}, {'value': '7', 'text': 'Every week'},
+              {'value': '14', 'text': 'Every two weeks'}, {'value': '30', 'text': 'Every month'}, {'value': '90', 'text': 'Every three months'},
+              {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, ]
+    return result

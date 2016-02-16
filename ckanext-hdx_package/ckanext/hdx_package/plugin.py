@@ -19,6 +19,8 @@ import ckan.model.package as package
 import ckan.model.license as license
 import ckan.logic as logic
 
+import ckanext.resourceproxy.plugin as resourceproxy_plugin
+
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
@@ -50,6 +52,9 @@ def run_on_startup():
     if 'true' == compile_less_on_startup:
         org_helper.recompile_everything({'model': model, 'session': model.Session,
                    'user': 'hdx', 'ignore_auth': True})
+
+    # replace original get_proxified_resource_url, check hdx_get_proxified_resource_url for more info
+    resourceproxy_plugin.get_proxified_resource_url = hdx_helpers.hdx_get_proxified_resource_url
 
 
 def _generate_license_list():
@@ -84,7 +89,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
-    
+
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
@@ -111,7 +116,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
                   action='edit')
 
-        
+
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             m.connect('add dataset', '/dataset/new', action='new')
@@ -128,17 +133,20 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                           'delete',
                           'edit',
                       ])))
-        
+
         map.connect(
             '/indicator/{id}', controller='ckanext.hdx_package.controllers.indicator:IndicatorController', action='read')
-        
+
         #map.connect('/api/action/package_create', controller='ckanext.hdx_package.controllers.dataset_controller:HDXApiController', action='package_create', conditions=dict(method=['POST']))
-        # map.connect('/contribute/new',
-        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-        #             action='new')
-        # map.connect('/contribute/edit/{id}',
-        #             controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
-        #             action='edit')
+        map.connect('/contribute/new',
+                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+                    action='new')
+        map.connect('/contribute/edit/{id}',
+                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+                    action='edit')
+        map.connect('/contribute/validate',
+                    controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController',
+                    action='validate')
 
         return map
 
@@ -182,13 +190,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                         tk.get_converter('convert_to_extras')],
             'dataset_source': [tk.get_validator('not_empty'),
                                tk.get_converter('convert_to_extras')],
-            'dataset_date': [tk.get_validator('ignore_missing'),
+            'dataset_date': [tk.get_validator('not_empty'),
                              tk.get_converter('convert_to_extras')],
-            'methodology': [tk.get_validator('ignore_missing'),
+            'methodology': [tk.get_validator('not_empty'),
                             tk.get_converter('convert_to_extras')],
-            'methodology_other': [tk.get_validator('ignore_missing'),
+            'methodology_other': [tk.get_validator('not_empty_if_methodology_other'),
                                   tk.get_converter('convert_to_extras')],
-            'license_other': [tk.get_validator('ignore_missing'),
+            'license_id': [tk.get_validator('not_empty'), unicode],
+            'license_other': [tk.get_validator('not_empty_if_license_other'),
                               tk.get_converter('convert_to_extras')],
             'solr_additions': [tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
@@ -196,14 +205,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
             'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
-            'data_update_frequency': [tk.get_validator('ignore_missing'),
+            'data_update_frequency': [tk.get_validator('not_empty'),
                               tk.get_converter('convert_to_extras')]
         })
 
         schema['resources'].update(
             {
-                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('clean_format'),
-                           unicode]
+                'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
+                           tk.get_validator('clean_format'), unicode]
             }
         )
 
@@ -272,7 +281,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         return {
             'list_of_all_groups': cached_group_list,
             'hdx_find_license_name': hdx_helpers.hdx_find_license_name,
-            'filesize_format': hdx_helpers.filesize_format
+            'filesize_format': hdx_helpers.filesize_format,
+            'generate_mandatory_fields': hdx_helpers.generate_mandatory_fields,
+            'hdx_check_add_data': hdx_helpers.hdx_check_add_data,
         }
 
     def get_actions(self):
@@ -292,6 +303,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_purge': hdx_delete.hdx_dataset_purge,
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
+            'package_show_edit': hdx_get.package_show_edit,
+            'package_validate': hdx_get.package_validate
         }
 
     def before_show(self, resource_dict):
@@ -305,7 +318,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_validators(self):
         return {
             'hdx_detect_format': vd.detect_format,
-            'find_package_creator': vd.find_package_creator
+            'find_package_creator': vd.find_package_creator,
+            'not_empty_if_methodology_other': vd.general_not_empty_if_other_selected('methodology', 'Other'),
+            'not_empty_if_license_other': vd.general_not_empty_if_other_selected('license_id', 'hdx-other')
         }
 
     def get_auth_functions(self):
@@ -317,14 +332,24 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         run_on_startup()
         return app
 
-    # def validate(self, context, data_dict, schema, action):
-    #     private = False if data_dict.get('private') == 'False' else True
-    #     if private:
-    #         schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
-    #         if 'groups_list' in schema:
-    #             del schema['groups_list']
-    #
-    #     return toolkit.navl_validate(data_dict, schema, context)
+    def validate(self, context, data_dict, schema, action):
+        '''
+            We're using a different validation schema if the dataset is private !
+        '''
+        if action in ['package_create', 'package_update']:
+            private = False if str(data_dict.get('private','')).lower() == 'false' else True
+
+            if private:
+                schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
+                schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+                schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+                schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
+                                                   tk.get_converter('convert_to_extras')]
+
+                if 'groups_list' in schema:
+                    del schema['groups_list']
+
+        return toolkit.navl_validate(data_dict, schema, context)
 
 
 class HDXChartViewsPlugin(plugins.SingletonPlugin):

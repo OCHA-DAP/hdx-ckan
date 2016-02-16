@@ -79,10 +79,10 @@ import ckan.lib.maintain as maintain
 
 import ckan.plugins.toolkit as tk
 
-user_email_validator = tk.get_validator('user_email_validator')
-
 
 def register_user_schema():
+
+    user_email_validator = tk.get_validator('user_email_validator')
 
     schema = {
         # 'id': [ignore_missing, unicode],
@@ -103,6 +103,8 @@ def register_user_schema():
 
 
 def register_details_user_schema():
+
+    user_email_validator = tk.get_validator('user_email_validator')
 
     schema = {
         'id': [ignore_missing, unicode],

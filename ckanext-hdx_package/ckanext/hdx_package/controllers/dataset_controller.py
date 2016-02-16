@@ -50,7 +50,7 @@ clean_dict = logic.clean_dict
 parse_params = logic.parse_params
 flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
-_check_group_auth = logic.auth.create._check_group_auth
+# _check_group_auth = logic.auth.create._check_group_auth
 
 
 CONTENT_TYPES = {
@@ -63,7 +63,29 @@ CONTENT_TYPES = {
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
 from ckan.controllers.package import PackageController
-#from ckan.controllers.api import ApiController
+
+
+def find_approx_download(exact_downloads):
+    '''
+
+    :param exact_downloads: the total number of downloads
+    :type exact_downloads: int
+    :return: something like 1000+
+    :rtype: int
+    '''
+
+    if exact_downloads >= 10 and exact_downloads < 100:
+        divider = 10
+    # for 9999 we want 9900+
+    elif exact_downloads >= 100 and exact_downloads < 10000:
+        divider = 100
+    elif exact_downloads >= 10000:
+        divider = 1000
+    else:
+        return 0
+
+    return (exact_downloads / divider) * divider
+
 
 def clone_dict(old_dict):
     """
@@ -696,6 +718,8 @@ class DatasetController(PackageController):
         for resource in c.pkg_dict['resources']:
             if resource['tracking_summary']:
                 c.downloads_count += resource['tracking_summary']['total']
+        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.downloads_count)
+
         followers = get_action('dataset_follower_list')({'ignore_auth': True},
                                                         {'id': c.pkg_dict['id']})
         if followers and len(followers) > 0:

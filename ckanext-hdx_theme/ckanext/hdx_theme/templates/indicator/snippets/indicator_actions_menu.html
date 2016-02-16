@@ -6,7 +6,12 @@
   {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title, direct=true %}
   {{ h.follow_button('dataset', pkg.name) }}
   {% if h.check_access('package_update', {'id':pkg.id }) %}
-    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
+    {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
+    <a class="btn hdx-btn" onclick="contributeAddDetails('{{ pkg.id }}')"
+       {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
+        href="#">
+        {{ _('Edit') }}
+    </a>
   {% endif %}
   {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
     {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=True %}
