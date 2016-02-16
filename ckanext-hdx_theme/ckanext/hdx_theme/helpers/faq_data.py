@@ -26,7 +26,7 @@ about = {
         },
         {
             'q': 'Who manages HDX?',
-            'a': 'The <a target="_blank"  href="http://www.unocha.org/">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) manages HDX. OCHA is part of the United Nations Secretariat,responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in the US, Canada, Europe and Africa.',
+            'a': 'The <a target="_blank"  href="http://www.unocha.org/">United Nations Office for the Coordination of Humanitarian Affairs</a> (OCHA) manages HDX. OCHA is part of the United Nations Secretariat,responsible for bringing together humanitarian actors to ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants. We are based in North America, Europe and Africa.',
         },
         {
             'q': 'How does HDX define humanitarian data?',
@@ -84,23 +84,23 @@ organizations = {
     'questions': [
         {
             'q': 'What is an organisation?',
-            'a': 'Organisations in HDX can be legal entities, such as WFP, or informal groups, such as the Shelter Cluster or IM Working Group for a specific country. Data can only be shared on HDX through an organisation. The HDX team verifies all organisations to ensure they are trusted and have relevant data to share with the HDX user community.',
+            'a': 'Organisations in HDX can be legal entities, such as WFP, or informal groups, such as the Shelter Cluster or Information Management Working Group for a specific country. Data can only be shared on HDX through an organisation. The HDX team verifies all organisations to ensure they are trusted and have relevant data to share with the HDX user community.',
         },
         {
             'q': 'How do I create an organisation?',
-            'a': 'You can request an organisation through the \'Share Data\' button. We ask you to submit the following information: an organisation name, description and link to an organisation-related website. We review this information and then either accept the request or ask for more information, such as a sample dataset.',
+            'a': 'You can request an organisation through the \'Add Data\' button. We ask you to submit the following information: an organisation name, description and link to an organisation-related website. We review this information and then either accept the request or ask for more information, such as a sample dataset.',
         },
         {
             'q': 'Can I be part of more than one organisation?',
-            'a': 'Yes. Registered users can be part of several organisations. When you go to share data, the system will ask you to select which organisation you want to share the data through.',
+            'a': 'Yes. Registered users can be part of several organisations. Only users belonging to an organisation can add data to HDX.',
         },
         {
             'q': 'I don\'t see my organization.',
-            'a': 'If your organisation is not listed, you can request to create one or you may want to join an existing organisation. For instance, there may be a WFP organisation that was created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a separate organisation for a specific location, e.g., WFP Liberia.',
+            'a': 'If your organisation is not listed, you can request to create one (click the \'Add Data\' button) or you may want to join an existing organisation. For instance, there may be a WFP organisation that was created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of organisations by clicking the \"Organisations\" link at the top of any page.',
         },
         {
             'q': 'How does organisation membership work?',
-            'a': 'Organisation membership includes three roles:<ul><li>Administrators, who can add, edit and delete datasets belonging to the organisation and accept or refuse new member requests.</li><li>Editors, who can add, edit and delete datasets belonging to the organisation but cannot manage membership.</li><li>Members, who can view the organisation\'s private datasets, but cannot add new datasets or manage membership.</li></ul><p>The user who requests the creation of an organisation is assigned an administrator role. That person can invite other HDX users into their organisation and assign them one of the three roles above, or registered users on HDX can request membership from the administrator.</p>',
+            'a': 'Organisation membership includes three roles:<ul><li>Administrators, who can add, edit and delete datasets belonging to the organisation and accept or refuse new member requests.</li><li>Editors, who can add, edit and delete datasets belonging to the organisation but cannot manage membership.</li><li>Members, who can view the organisation\'s private datasets, but cannot add new datasets or manage membership.</li></ul><p>The user who requests the creation of an organisation is assigned an administrator role. That person can invite other HDX users into their organisation and assign them one of the three roles above, or registered users on HDX can request membership from the organisation\'s administrator(s).</p>',
         },
         {
             'q': 'How do I request organisation membership?',
@@ -134,11 +134,11 @@ sharing_data = {
         },
         {
             'q': 'How do I edit a dataset?',
-            'a': 'You can only edit a dataset if you are an administrator or editor of your organisation. If you have the appropriate role, you will find an \'Edit\' button just below the dataset description. This will allow you to edit the dataset metadata and the resources. You can also edit a resource through the \'Update\' button beside each resource.',
+            'a': 'You can only edit a dataset if you are an administrator or editor of your organisation. If you have the appropriate role, you will find an \'Edit\' button just below the dataset description. This will allow you to edit the dataset metadata and the resources.',
         },
         {
             'q': 'What are the recommended data formats?',
-            'a': 'We define data as information that software can read and analyse. We encourage contributions in any common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel formats, and for geographic data in zipped shapefile, kml and geojson formats.<br/><br/><p>A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian information that are not related to the data you are sharing, please visit our companion sites <a target="_blank"  href="http://reliefweb.int/">ReliefWeb</a> and <a target="_blank"  href="http://www.humanitarianresponse.info/">HumanitarianResponse</a>.</p>',
+            'a': 'We define data as information that software can read and analyse. We encourage contributions in any common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel (xls only) formats, and for geographic data in zipped shapefile, kml and geojson formats.<br/><br/><p>A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian information that are not related to the data you are sharing, please visit our companion sites <a target="_blank"  href="http://reliefweb.int/">ReliefWeb</a> and <a target="_blank"  href="http://www.humanitarianresponse.info/">HumanitarianResponse</a>. A resource, such as a readme file, could also contain documentation that helps users to understand the dataset.</p>',
         },
         {
             'q': 'What are the recommended best practices for naming datasets and resources?',
@@ -153,34 +153,20 @@ sharing_data = {
             'a': 'Yes. HDX can host the data for you, but it works equally well with a link to data hosted somewhere else on the web. For example, if your organisation already has a system or API that produces data for download, you can simply include a link to that data as a resource in your dataset, and the version on HDX will automatically stay up to date.',
         },
         {
-            'q': 'How do I share a live Google Sheet?',
-            'a': 'To include a link to a Google Sheet, you must first set the sheet\'s sharing permissions so that it is either publicly visible or at least accessible to anyone who has the link. We recommend creating at least two separate resources for each Google Sheet: 1) a link to the sheet itself in the regular Google Drive interface; and 2) a direct-download link to an Excel or CSV version of the sheet, so that users can preview it in HDX. The version in HDX will update automatically as you make changes to the original Google Sheet.<br/><br/><p>To obtain the direct download link, download the sheet to your own computer in Excel or CSV format, then open your web browser\'s \'Downloads\' screen and copy the link from there.</p>',
+            'q': 'Can I drag&drop files from my computer?',
+            'a': 'Yes. HDX allows you to drag and drop files from your computer. First, you need to click on the \"Add Data\" link and then select files from your computer. Drop the files in the designated area. A new dataset form will appear with some fields already pre-filled.',
         },
         {
-            'q': 'How do I share a live spreadsheet from Dropbox?',
-            'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share link\', following the <a target="_blank"  href="https://www.dropbox.com/en/help/167">instructions in the Dropbox help centre</a>. You will then received a special link that allows anyone to download the file.<br/></br><p>Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks something like this:<br/> https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=0</p><p>For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' so that it looks like this:<br/>https://www.dropbox.com/blah/blah/blah/your_file_name.csv?dl=1</p><p>The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. Be careful not to move or rename the file after you share it.</p>',
+            'q': 'How can I share data from my Google Drive?',
+            'a': '<p>First you need to be sure that Google Drive file or files are publicly visible or accessible to anyone who has the link. For instructions on how to change, follow this walk-through. You can click on \"Add Data\" and choose the option to import files from \"Google Drive\". A \"Google Drive\" pop-up will show and help you choose the file/files from your account. The files will not be copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version of the Google document.</p><br/><br/><p>The HDX Resource Picker for Google Drive will only have access to your list of Google Drive files when you are logged into Google Drive.  You can revoke this permission at any time in Google Drive\'s App Manager. However, this will not change the visibility of the Google Drive resources already created on HDX.</p>',
+        },
+        {
+            'q': 'How can I share data from my Dropbox account?',
+            'a': '<p>HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You can click on \"Add Data\" and choose the option to import files from \"Dropbox\". A \"Dropbox\" popup will show and help you choose the file/files from your account.</p><br/><br/><p>You can choose to let Dropbox \"remember me\" when you connect via HDX.  And you can revoke that permission any time in the Dropbox pop-up by clicking the \"sign out\" link on the bottom right of the pop-up.</p>',
         },
         {
             'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
             'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or on a GeoNode). However, the metadata and activity stream will not automatically indicate the updated date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date of the dataset are only updated automatically if the resource is stored on HDX. We are working to improve this functionality, so please bear with us!',
-        },
-        {
-            'q': 'How do I share files from Google Drive?',
-            'a': '''<p>
-                        You can now connect to Google Drive and select files directly from "Add Data". Unless your file(s) is already publicly accessible or shared with anyone with the link,
-                        the following steps are necessary to make your files viewable by others on HDX.
-                    </p>
-                    <p>
-                        How to turn on sharing settings on Google Drive:
-                        <ol>
-                            <li>Go to Google Drive. </li>
-                            <li>Right click on file(s) you want to share on HDX and select "Share".</li>
-                            <li>In "Sharing with others" window, click on "Advanced" in the bottom right corner.</li>
-                            <li>In "Sharing settings" window, click on "change" under "Who has access".</li>
-                            <li>In the next screen, select "On -Public on the web" or "On - anyone with the link" and make sure "Access:Anyone (no sign-in required)" is set to "can view"</li>
-                        </ol>
-                    </p>'
-                '''
         },
     ]
 }
@@ -190,11 +176,11 @@ geodata = {
     'questions': [
         {
             'q': 'How can I generate a map with my geographic data?',
-            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format. Ensure that the \'format\' field on the resource creation form also specifies "zipped shapefile", "kml" or "geojson". Pro tip: HDX will automatically add the correct format if the extenion is ".shp.zip", ".kml", or ".geojson". Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> that show the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
+            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format. Ensure that the \'File type\' field for the resource also has one of the above formats. Pro tip: HDX will automatically add the correct format if the extenion is ".shp.zip", ".kml", or ".geojson". Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> showing the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one HDX dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
         },
         {
             'q': 'Why is the geodata preview only working for one layer in my resource?',
-            'a': 'To generate a map preview, a dataset can have multiple resources but each resource can only include one layer within it. Resources with multiple layers (e.g., multiple shapefiles in a single zip file) are not supported. In this case, the system will only create a preview of the first layer in the resource. If you would like all of the layers to display, you need to create a separate resource for each layer.',
+            'a': 'To generate a map preview, a dataset can have multiple resources but each resource can only include one layer within it. Resources with multiple layers (e.g., multiple shapefiles in a single zip file) are not supported. In this case, the system will only create a preview of the first layer in the resource, however all the layers will still be available in the downloaded file. If you would like all of the layers to display, you need to create a separate resource for each layer.',
         },
         {
             'q': 'Is HDX integrated with any GeoNodes?',
@@ -212,7 +198,7 @@ search = {
         },
         {
             'q': 'How do I find the Common Operational Datasets in HDX?',
-            'a': 'HDX is working with OCHA offices to migrate the Common Operational Datasets (CODs) from the COD Registry on HumanitarianResponse.info to HDX. As we move the data, we will add a \'cod\' tag to the dataset. To narrow your search to just datasets bearing the COD tag, first type your search term in the search bar and submit. Then use the blue filter icon to filter by tags and enter or select \'cod\'. You can also just type \'cod\' into the search bar, but this may also bring up results matching that search term that are not CODs.',
+            'a': 'In 2015, HDX migrated the Common Operational Datasets (CODs) from the COD Registry on HumanitarianResponse.info to HDX. Each of these datasets has a \'cod\' tag. To limit search results to only CODs, open the filter panel (click the blue filter icon) and check the \'Only show CODs\' option.',
         },
     ]
 }
