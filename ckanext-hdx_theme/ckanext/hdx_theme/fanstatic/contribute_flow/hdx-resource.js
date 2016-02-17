@@ -299,6 +299,9 @@ $(function(){
             this.model.view = this;
             var dragGhost, dragParent;
 
+            // Initially users should be able to drag and drop files
+            this.dragAreaEnabled = true;
+
             this.el.addEventListener("dragstart", function(e) {
                 dragGhost = document.createElement("div");
                 $(dragGhost).addClass("hdx-form");
