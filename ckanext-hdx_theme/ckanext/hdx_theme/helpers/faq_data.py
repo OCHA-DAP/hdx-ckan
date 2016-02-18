@@ -6,8 +6,8 @@ popular = {
             'a': 'The Humanitarian Data Exchange (HDX) is an open platform for sharing data. The goal of HDX is to make humanitarian data easy to find and use for analysis. Launched in July 2014, HDX has been accessed by users in over 200 countries and territories.  Watch our HDX <a target="_blank"  href="https://www.youtube.com/watch?v=hCVyiZhYb4M">launch animation</a> or <a target="_blank"  href="https://www.youtube.com/watch?v=P8XDNmcQI0o">introductory screencast</a> to get started.',
         },
         {
-            'q': 'How do I share data on HDX?',
-            'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with appropriate privileges) before you can contribute data. If you have data to share, you can either request to create a new organisation or ask to join an existing one. (See more under Organisations.)',
+            'q': 'How do I add a dataset?',
+            'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate yourself with an organisation. The following slides provide a walk-through of how to add a dataset: <a href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152">https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152</a>',
         },
         {
             'q': 'How does search work on HDX?',
@@ -57,7 +57,7 @@ user_registration = {
     'questions': [
         {
             'q': 'How do I register an account with HDX?',
-            'a': 'You can register by clicking on \'Sign Up\' on the upper-right corner of any HDX page.',
+            'a': 'You can register by clicking on <a href="https://data.hdx.rwlabs.org/user/register">\'Sign Up\'</a> on the upper-right corner of any HDX page.',
         },
         {
             'q': 'What are the benefits of being a registered user?',
@@ -96,7 +96,7 @@ organizations = {
         },
         {
             'q': 'I don\'t see my organisation.',
-            'a': 'If your organisation is not listed, you can request to create one (click the \'Add Data\' button) or you may want to join an existing organisation. For instance, there may be a WFP organisation that was created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of organisations by clicking the \"Organisations\" link at the top of any page.',
+            'a': 'If your organisation is not listed, you can request to create one (click the \'Add Data\' button) or you may want to join an existing organisation. For instance, there may be a WFP organisation that was created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of organisations by clicking the \'Organisations\' link at the top of any page.',
         },
         {
             'q': 'How does organisation membership work?',
@@ -133,8 +133,12 @@ sharing_data = {
             'a': 'A dataset is a collection of related data resources. A resource is an individual file within a dataset. When sharing data, you first create a dataset and then you can add one or more resources to it. A resource can either be a file uploaded to HDX (such as a CSV or XLS file) or a link to another website with a downloadable file. A resource, such as a readme file, could also contain documentation that helps users to understand the dataset.',
         },
         {
+            'q': 'How do I add a dataset?',
+            'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate yourself with an organisation. The following slides provide a walk-through of how to add a dataset: <a href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152">https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152</a>',
+        },
+        {
             'q': 'How do I edit a dataset?',
-            'a': 'You can only edit a dataset if you are an administrator or editor of your organisation. If you have the appropriate role, you will find an \'Edit\' button just below the dataset description. This will allow you to edit the dataset metadata and the resources.',
+            'a': '<p>You can only edit a dataset if you are an administrator or editor of your organisation. If you have the appropriate role, you will find an \'Edit\' button just below the dataset description. This will allow you to edit the dataset metadata and the resources.</p><p>The following slides provide a walk-through of how to edit a dataset: <a href="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/edit#slide=id.g10ad610ac0_0_147">https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/edit#slide=id.g10ad610ac0_0_147</a></p>',
         },
         {
             'q': 'What are the recommended data formats?',
@@ -154,15 +158,15 @@ sharing_data = {
         },
         {
             'q': 'Can I drag&drop files from my computer?',
-            'a': 'Yes. HDX allows you to drag and drop files from your computer. First, you need to click on the \"Add Data\" link and then select files from your computer. Drop the files in the designated area. A new dataset form will appear with some fields already pre-filled.',
+            'a': 'Yes. HDX allows you to drag and drop files from your computer. First, you need to click on the \'Add Data\' link and then select files from your computer. Drop the files in the designated area. A new dataset form will appear with some fields already pre-filled.',
         },
         {
             'q': 'How can I share data from my Google Drive?',
-            'a': '<p>First you need to be sure that Google Drive file or files are publicly visible or accessible to anyone who has the link. For instructions on how to change, follow this walk-through. You can click on \"Add Data\" and choose the option to import files from \"Google Drive\". A \"Google Drive\" pop-up will show and help you choose the file/files from your account. The files will not be copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version of the Google document.</p><p>The HDX Resource Picker for Google Drive will only have access to your list of Google Drive files when you are logged into Google Drive.  You can revoke this permission at any time in <a href="https://security.google.com/settings/security/permissions?pli=1">Google Drive\'s App Manager</a>. However, this will not change the visibility of the Google Drive resources already created on HDX.</p>',
+            'a': '<p>First you need to be sure that the Google Drive file or files are publicly visible or accessible to anyone who has the link. For instructions on how to change, follow this <a href="https://docs.google.com/presentation/d/17ihVuVlVfw3K2_L9u4cL-Lp-RaZNcBw6BJgxGjbWu4o/edit#slide=id.gf01e139c5_1_52">walk-through</a>. You can click on \'Add Data\' and choose the option to import files from \'Google Drive\'. A \'Google Drive\' pop-up will show and help you choose the file/files from your account. The files will not be copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version of the Google document.</p><p>The HDX Resource Picker for Google Drive will only have access to your list of Google Drive files when you are logged into Google Drive.  You can revoke this permission at any time in <a href="https://security.google.com/settings/security/permissions?pli=1">Google Drive\'s App Manager</a>. However, this will not change the visibility of the Google Drive resources already created on HDX.</p>',
         },
         {
             'q': 'How can I share data from my Dropbox account?',
-            'a': '<p>HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You can click on \"Add Data\" and choose the option to import files from \"Dropbox\". A \"Dropbox\" popup will show and help you choose the file/files from your account.</p><p>You can choose to let Dropbox \"remember me\" when you connect via HDX.  And you can revoke that permission any time in the Dropbox pop-up by clicking the \"sign out\" link on the bottom right of the pop-up.</p>',
+            'a': '<p>HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are in CSV or XLS format. You can click on \'Add Data\' and choose the option to import files from \'Dropbox\'. A \'Dropbox\' popup will show and help you choose the file/files from your account.</p><p>You can choose to let Dropbox \'remember me\' when you connect via HDX.  And you can revoke that permission any time in the Dropbox pop-up by clicking the \'sign out\' link on the bottom right of the pop-up.</p>',
         },
         {
             'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
@@ -176,7 +180,7 @@ geodata = {
     'questions': [
         {
             'q': 'How can I generate a map with my geographic data?',
-            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format. Ensure that the \'File type\' field for the resource also has one of the above formats. Pro tip: HDX will automatically add the correct format if the extenion is ".shp.zip", ".kml", or ".geojson". Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> showing the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one HDX dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
+            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format. Ensure that the \'File type\' field for the resource also has one of the above formats. Pro tip: HDX will automatically add the correct format if the extenion is \'.shp.zip\', \'.kml\', or \'.geojson\'. Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> showing the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one HDX dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
         },
         {
             'q': 'Why is the geodata preview only working for one layer in my resource?',
