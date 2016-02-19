@@ -7,7 +7,7 @@ popular = {
         },
         {
             'q': 'How do I add a dataset?',
-            'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate yourself with an organisation. The following slides provide a walk-through of how to add a dataset: <a href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152">https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152</a>',
+            'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate yourself with an organisation. The following slides provide a <a target="_blank"  href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/present#slide=id.gf01e139c5_1_152">walk-through</a> of how to add a dataset.',
         },
         {
             'q': 'How does search work on HDX?',
@@ -134,11 +134,11 @@ sharing_data = {
         },
         {
             'q': 'How do I add a dataset?',
-            'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate yourself with an organisation. The following slides provide a walk-through of how to add a dataset: <a href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152">https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/edit#slide=id.gf01e139c5_1_152</a>',
+            'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate yourself with an organisation. The following slides provide a <a  target="_blank" href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/present#slide=id.gf01e139c5_1_152">walk-through</a> of how to add a dataset.',
         },
         {
             'q': 'How do I edit a dataset?',
-            'a': '<p>You can only edit a dataset if you are an administrator or editor of your organisation. If you have the appropriate role, you will find an \'Edit\' button just below the dataset description. This will allow you to edit the dataset metadata and the resources.</p><p>The following slides provide a walk-through of how to edit a dataset: <a href="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/edit#slide=id.g10ad610ac0_0_147">https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/edit#slide=id.g10ad610ac0_0_147</a></p>',
+            'a': '<p>You can only edit a dataset if you are an administrator or editor of your organisation. If you have the appropriate role, you will find an \'Edit\' button just below the dataset description. This will allow you to edit the dataset metadata and the resources.</p><p>The following slides provide a <a target="_blank" href="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/present#slide=id.g10ad610ac0_0_147">walk-through</a> of how to edit a dataset.</p>',
         },
         {
             'q': 'What are the recommended data formats?',
@@ -162,7 +162,7 @@ sharing_data = {
         },
         {
             'q': 'How can I share data from my Google Drive?',
-            'a': '<p>First you need to be sure that the Google Drive file or files are publicly visible or accessible to anyone who has the link. For instructions on how to change, follow this <a href="https://docs.google.com/presentation/d/17ihVuVlVfw3K2_L9u4cL-Lp-RaZNcBw6BJgxGjbWu4o/edit#slide=id.gf01e139c5_1_52">walk-through</a>. You can click on \'Add Data\' and choose the option to import files from \'Google Drive\'. A \'Google Drive\' pop-up will show and help you choose the file/files from your account. The files will not be copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version of the Google document.</p><p>The HDX Resource Picker for Google Drive will only have access to your list of Google Drive files when you are logged into Google Drive.  You can revoke this permission at any time in <a href="https://security.google.com/settings/security/permissions?pli=1">Google Drive\'s App Manager</a>. However, this will not change the visibility of the Google Drive resources already created on HDX.</p>',
+            'a': '<p>First you need to be sure that the Google Drive file or files are publicly visible or accessible to anyone who has the link. For instructions on how to change, follow this <a target="_blank" href="https://docs.google.com/presentation/d/17ihVuVlVfw3K2_L9u4cL-Lp-RaZNcBw6BJgxGjbWu4o/edit#slide=id.gf01e139c5_1_52">walk-through</a>. You can click on \'Add Data\' and choose the option to import files from \'Google Drive\'. A \'Google Drive\' pop-up will show and help you choose the file/files from your account. The files will not be copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version of the Google document.</p><p>The HDX Resource Picker for Google Drive will only have access to your list of Google Drive files when you are logged into Google Drive.  You can revoke this permission at any time in <a target="_blank" href="https://security.google.com/settings/security/permissions?pli=1">Google Drive\'s App Manager</a>. However, this will not change the visibility of the Google Drive resources already created on HDX.</p>',
         },
         {
             'q': 'How can I share data from my Dropbox account?',
@@ -264,7 +264,7 @@ contact = {
     'questions': [
         {
             'q': 'How do I contact the HDX team?',
-            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also reach us on Twitter at <a href="https://twitter.com/humdata">@humdata</a>. Sign up to receive our blog posts <a target="_blank"  href="http://unocha.us2.list-manage.com/subscribe?u=83487eb1105d72ff2427e4bd7&id=6fd988326c">here</a>.',
+            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also reach us on Twitter at <a target="_blank" href="https://twitter.com/humdata">@humdata</a>. Sign up to receive our blog posts <a target="_blank"  href="http://unocha.us2.list-manage.com/subscribe?u=83487eb1105d72ff2427e4bd7&id=6fd988326c">here</a>.',
         },
     ]
 }
