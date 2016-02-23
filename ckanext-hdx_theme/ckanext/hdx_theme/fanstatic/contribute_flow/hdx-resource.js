@@ -532,6 +532,8 @@ $(function(){
                 // change the model
                 this.model.set('url_type', 'api');
                 this.model.set('resource_type', 'api');
+                this.model.set('upload', null);
+
             }
 
             $.each(source_classes, function(i, v){
