@@ -414,6 +414,7 @@ $(function(){
             // If a file has been selected, set up interface with file path.
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
+            this.render();
         },
 
         onFormatGetsFocus: function(e){
