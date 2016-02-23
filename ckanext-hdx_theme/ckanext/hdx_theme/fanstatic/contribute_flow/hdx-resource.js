@@ -326,7 +326,7 @@ $(function(){
                 //dragParent.removeChild(dragGhost);
             }, false);
 
-            this.listenTo(this.model, "change", this.render);
+            //this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
             this.$el.on("drag-area-disable", function(){
                 this.dragAreaEnabled = false;
@@ -418,6 +418,7 @@ $(function(){
             // If a file has been selected, set up interface with file path.
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
+            this.render();
         },
 
         onFormatGetsFocus: function(e){
@@ -536,6 +537,8 @@ $(function(){
                 // change the model
                 this.model.set('url_type', 'api');
                 this.model.set('resource_type', 'api');
+                this.model.set('upload', null);
+
             }
 
             $.each(source_classes, function(i, v){
