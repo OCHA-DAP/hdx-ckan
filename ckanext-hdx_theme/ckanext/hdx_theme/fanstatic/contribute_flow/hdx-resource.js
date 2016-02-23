@@ -323,7 +323,7 @@ $(function(){
                 //dragParent.removeChild(dragGhost);
             }, false);
 
-            this.listenTo(this.model, "change", this.render);
+            //this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
             this.$el.on("drag-area-disable", function(){
                 this.dragAreaEnabled = false;
