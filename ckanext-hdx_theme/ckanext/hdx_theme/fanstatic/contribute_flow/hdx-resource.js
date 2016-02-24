@@ -534,7 +534,7 @@ $(function(){
 
             if ( currentUrlType && currentUrlType != changedType ) {
                 this.model.set('url', '');
-                this.model.set('upload', null);
+                this.model.unset('upload');
             }
 
             if (source_class === "source-url"){
