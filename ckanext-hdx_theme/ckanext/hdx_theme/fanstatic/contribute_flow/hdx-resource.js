@@ -530,6 +530,14 @@ $(function(){
             // Set up interface for the source type based on source_class.
             var source_classes = ['source-url', 'source-file', 'source-file-selected'];
 
+            var changedType = source_class === "source-url" ? "api" : "upload";
+            var currentUrlType =  this.model.get('url_type');
+
+            if ( currentUrlType && currentUrlType != changedType ) {
+                this.model.set('url', '');
+                this.model.unset('upload');
+            }
+
             if (source_class === "source-url"){
                 // switch resource-source radio to URL input
                 this.$('input:radio.resource-source[value=url]').prop('checked', true);
