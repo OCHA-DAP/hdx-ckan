@@ -376,6 +376,7 @@ $(function(){
             var html = this.template(template_data);
             this.$el.html(html);
 
+            /* Initializing CKAN js modules inside this VIEW */
             this.$el.find('[data-module]').each(
                 function (i, el) {
                     //console.log("Initializing ckan module for " + $(el).prop('outerHTML'));
@@ -405,11 +406,22 @@ $(function(){
                 var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
                 parent_el.addClass('error');
             }.bind(this));
-            this._setUpForSourceType('source-url');
+
+            //this._setUpForSourceType('source-url');
         },
 
         onSourceChange: function(e){
-            this._setUpForSourceType("source-" + e.target.value);
+            var sourceClass = "source-" + e.target.value;
+            var changedType = sourceClass === "source-url" ? "api" : "upload";
+            var currentUrlType =  this.model.get('url_type');
+
+            if ( currentUrlType && currentUrlType != changedType ) {
+                this.model.unset('upload', {silent: true});
+                this.model.unset('url_type', {silent: true});
+                this.model.unset('resource_type', {silent: true});
+                this.model.set('url', '');
+            }
+            this._setUpForSourceType(sourceClass);
         },
 
         onUpdateBtn: function(e) {
@@ -554,17 +566,10 @@ $(function(){
             // Set up interface for the source type based on source_class.
             var source_classes = ['source-url', 'source-file', 'source-file-selected'];
 
-            var changedType = source_class === "source-url" ? "api" : "upload";
-            var currentUrlType =  this.model.get('url_type');
-
-            if ( currentUrlType && currentUrlType != changedType ) {
-                this.model.set('url', '');
-                this.model.unset('upload');
-            }
-
             if (source_class === "source-url"){
                 // switch resource-source radio to URL input
                 this.$('input:radio.resource-source[value=url]').prop('checked', true);
+                this.model.unset('upload', {silent: true});
 
                 // change the model
                 this.model.set('url_type', 'api');
@@ -683,6 +688,7 @@ $(function(){
             var newResourceModel = new Resource(data);
             newResourceModel.set("upload", file);
             newResourceModel.set("url_type", "upload");
+            newResourceModel.set('resource_type', "file.upload");
             newResourceModel.set("name", file.name);
             newResourceModel.set("url", file.name);
             this.resourceCollection.add(newResourceModel);
@@ -691,6 +697,7 @@ $(function(){
             var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
             newResourceModel.set("url_type", "api");
+            newResourceModel.set('resource_type', "api");
             newResourceModel.set("name", name);
             newResourceModel.set("url", url);
             this.resourceCollection.add(newResourceModel);
