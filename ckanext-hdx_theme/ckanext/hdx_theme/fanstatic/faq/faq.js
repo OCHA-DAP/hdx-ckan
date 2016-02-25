@@ -75,6 +75,12 @@
         }
     );
 
+    $(document).ready(function(){
+        if (location.hash) {
+            $(location.hash + " ~ .panel-collapse").collapse('show');
+        }
+    });
+
     scroll_to_menu();
     sticky_menu();
     add_menu_click_events();
