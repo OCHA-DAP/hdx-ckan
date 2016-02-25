@@ -51,6 +51,24 @@ $(function(){
                 ret = data.result;
             }
             return ret;
+        },
+
+        hashResource: function() {
+            var newUpload = this.get('upload') ? 'true' : 'false';
+            var properties = [
+                this.get('name'), this.get('format'), this.get('url'),
+                this.get('description'), this.get('url_type'), this.get('resource_type')
+            ];
+
+            var hashCode = hdxUtil.compute.strListHash(properties);
+
+            console.log('Hash code for ' + this.get('name') + ' is ' + hashCode);
+            return hashCode;
+
+        },
+
+        initialize: function() {
+            this.set('originalHash', this.hashResource());
         }
     });
 
@@ -101,7 +119,13 @@ $(function(){
                 //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
                 //    model.set('upload', '');
                 //}
-                var promise = model.save();
+                var promise;
+                if ( model.get('originalHash') != model.hashResource() ){
+                    promise = model.save();
+                }
+                else {
+                    promise = $.Deferred().resolve().promise();
+                }
                 if (index + 1 < resources.length) {
                     index++;
                     promise.then(saveResources);
