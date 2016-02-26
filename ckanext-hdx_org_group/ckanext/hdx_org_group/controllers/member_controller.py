@@ -13,6 +13,8 @@ import ckan.lib.base as base
 from ckan.common import c, request, _
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 abort = base.abort
 
@@ -25,7 +27,6 @@ parse_params = logic.parse_params
 
 
 class HDXOrgMemberController(org.OrganizationController):
-
     def members(self, id):
         '''
         Modified core method from 'group' controller.
@@ -94,7 +95,7 @@ class HDXOrgMemberController(org.OrganizationController):
         '''
         context = self._get_context()
 
-        #self._check_access('group_delete', context, {'id': id})
+        # self._check_access('group_delete', context, {'id': id})
         try:
             if request.method == 'POST':
 
@@ -102,20 +103,21 @@ class HDXOrgMemberController(org.OrganizationController):
                     tuplize_dict(parse_params(request.params))))
                 data_dict['id'] = id
                 if data_dict.get('email', '').strip() != '' or \
-                        data_dict.get('username', '').strip() != '':
+                                data_dict.get('username', '').strip() != '':
                     email = data_dict.get('email')
                     flash_message = None
                     if email:
                         # Check if email is used
                         user_dict = model.User.by_email(email.strip())
                         if user_dict:
-                            #Is user deleted?
+                            # Is user deleted?
                             if user_dict[0].state == 'deleted':
                                 h.flash_error(_('This user no longer has an account on HDX'))
                                 self._redirect_to(controller='group', action='members', id=id)
                             # Add user
                             data_dict['username'] = user_dict[0].name
-                            flash_message = 'That email is already associated with user '+data_dict['username']+', who has been added as '+data_dict['role']
+                            flash_message = 'That email is already associated with user ' + data_dict[
+                                'username'] + ', who has been added as ' + data_dict['role']
                         else:
                             user_data_dict = {
                                 'email': email,
@@ -124,14 +126,15 @@ class HDXOrgMemberController(org.OrganizationController):
                                 'id': id  # This is something staging/prod need
                             }
                             del data_dict['email']
-                            user_dict = self._action('user_invite')(context,
-                                                                user_data_dict)
+                            user_dict = self._action('user_invite')(context, user_data_dict)
                             data_dict['username'] = user_dict['name']
-                            h.flash_success(email+' has been invited as '+data_dict['role'])
+                            h.flash_success(email + ' has been invited as ' + data_dict['role'])
                     else:
-                        flash_message = data_dict['username']+' has been added as '+data_dict['role']
-                    c.group_dict = self._action(
-                        'group_member_create')(context, data_dict)
+                        flash_message = data_dict['username'] + ' has been added as ' + data_dict['role']
+                    c.group_dict = self._action('group_member_create')(context, data_dict)
+
+                    self.notify_admin_users(context, data_dict)
+
                     h.flash_success(flash_message)
                 else:
                     h.flash_error(_('''You need to either fill the username or
@@ -147,6 +150,24 @@ class HDXOrgMemberController(org.OrganizationController):
         except ValidationError, e:
             h.flash_error(e.error_summary)
         self._redirect_to(controller='group', action='members', id=id)
+
+    def notify_admin_users(self, context, data_dict):
+        org_obj = model.Group.get(data_dict.get('id'))
+        user_obj = model.User.get(data_dict['username'])
+        org_admins = self._action('member_list')(context, {'id': data_dict.get('id'), 'capacity': 'admin',
+                                                           'object_type': 'user'})
+        admins = []
+        for admin_tuple in org_admins:
+            admin_id = admin_tuple[0]
+            admins.append(hdx_h.hdx_get_user_info(admin_id))
+        admins_with_email = [admin for admin in admins if admin['email']]
+        data_dict['message'] = '{user} has been added to {org_name} as {role}'.format(user=user_obj.display_name,
+                                                                                      org_name=org_obj.display_name,
+                                                                                      role=data_dict.get('role'))
+        data_dict['subject'] = 'HDX Notification: new user was added to {org_name}'.format(
+            org_name=org_obj.display_name)
+        data_dict['admins'] = admins_with_email
+        org_helper.notify_admins(data_dict)
 
     def member_delete(self, id):
         ''' This is a modified version of the member_delete from the 

@@ -51,6 +51,24 @@ $(function(){
                 ret = data.result;
             }
             return ret;
+        },
+
+        hashResource: function() {
+            var newUpload = this.get('upload') ? 'true' : 'false';
+            var properties = [
+                this.get('name'), this.get('format'), this.get('url'),
+                this.get('description'), this.get('url_type'), this.get('resource_type')
+            ];
+
+            var hashCode = hdxUtil.compute.strListHash(properties);
+
+            console.log('Hash code for ' + this.get('name') + ' is ' + hashCode);
+            return hashCode;
+
+        },
+
+        initialize: function() {
+            this.set('originalHash', this.hashResource());
         }
     });
 
@@ -101,7 +119,13 @@ $(function(){
                 //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
                 //    model.set('upload', '');
                 //}
-                var promise = model.save();
+                var promise;
+                if ( model.get('originalHash') != model.hashResource() ){
+                    promise = model.save();
+                }
+                else {
+                    promise = $.Deferred().resolve().promise();
+                }
                 if (index + 1 < resources.length) {
                     index++;
                     promise.then(saveResources);
@@ -326,7 +350,7 @@ $(function(){
                 //dragParent.removeChild(dragGhost);
             }, false);
 
-            this.listenTo(this.model, "change", this.render);
+            //this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
             this.$el.on("drag-area-disable", function(){
                 this.dragAreaEnabled = false;
@@ -352,6 +376,7 @@ $(function(){
             var html = this.template(template_data);
             this.$el.html(html);
 
+            /* Initializing CKAN js modules inside this VIEW */
             this.$el.find('[data-module]').each(
                 function (i, el) {
                     //console.log("Initializing ckan module for " + $(el).prop('outerHTML'));
@@ -381,11 +406,22 @@ $(function(){
                 var parent_el = this.$("[name='" + field_name + "']").parent('.controls');
                 parent_el.addClass('error');
             }.bind(this));
-            this._setUpForSourceType('source-url');
+
+            //this._setUpForSourceType('source-url');
         },
 
         onSourceChange: function(e){
-            this._setUpForSourceType("source-" + e.target.value);
+            var sourceClass = "source-" + e.target.value;
+            var changedType = sourceClass === "source-url" ? "api" : "upload";
+            var currentUrlType =  this.model.get('url_type');
+
+            if ( currentUrlType && currentUrlType != changedType ) {
+                this.model.unset('upload', {silent: true});
+                this.model.unset('url_type', {silent: true});
+                this.model.unset('resource_type', {silent: true});
+                this.model.set('url', '');
+            }
+            this._setUpForSourceType(sourceClass);
         },
 
         onUpdateBtn: function(e) {
@@ -418,6 +454,7 @@ $(function(){
             // If a file has been selected, set up interface with file path.
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
+            this.render();
         },
 
         onFormatGetsFocus: function(e){
@@ -532,10 +569,13 @@ $(function(){
             if (source_class === "source-url"){
                 // switch resource-source radio to URL input
                 this.$('input:radio.resource-source[value=url]').prop('checked', true);
+                this.model.unset('upload', {silent: true});
 
                 // change the model
                 this.model.set('url_type', 'api');
                 this.model.set('resource_type', 'api');
+                this.model.set('upload', null);
+
             }
 
             $.each(source_classes, function(i, v){
@@ -648,6 +688,7 @@ $(function(){
             var newResourceModel = new Resource(data);
             newResourceModel.set("upload", file);
             newResourceModel.set("url_type", "upload");
+            newResourceModel.set('resource_type', "file.upload");
             newResourceModel.set("name", file.name);
             newResourceModel.set("url", file.name);
             this.resourceCollection.add(newResourceModel);
@@ -656,6 +697,7 @@ $(function(){
             var data = this.resourceDefaults();
             var newResourceModel = new Resource(data);
             newResourceModel.set("url_type", "api");
+            newResourceModel.set('resource_type', "api");
             newResourceModel.set("name", name);
             newResourceModel.set("url", url);
             this.resourceCollection.add(newResourceModel);
