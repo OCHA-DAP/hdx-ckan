@@ -95,7 +95,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def after_map(self, map):
         map.connect('dataset_edit', '/dataset/edit/{id}',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='edit')
+                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+                    action='show_notification_page')
+
         return map
 
     def before_map(self, map):
@@ -105,8 +107,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     action='resource_download')
         map.connect('dataset_preselect', '/dataset/preselect',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='preselect')
-        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
-                    controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
+        # map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
+        #             controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_edit', ckan_icon='edit')
         map.connect('resource_read', '/dataset/{id}/resource/{resource_id}',
                     controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='resource_read')
         map.connect('shorten_url', '/package/tools/shorten',
@@ -116,10 +118,23 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('related_edit', '/dataset/{id}/related/edit/{related_id}', controller='ckanext.hdx_package.controllers.related_controller:RelatedController',
                   action='edit')
 
-
-
+        map.connect('add dataset', '/dataset/new',
+                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+                    action='new_notification_page')
+        map.connect('dataset_edit', '/dataset/edit/{id}',
+                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+                    action='edit_notification_page')
+        map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}',
+                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+                    action='resource_edit_notification_page', ckan_icon='edit')
+        map.connect('new_resource', '/dataset/new_resource/{id}',
+                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+                    action='resource_new_notification_page')
+        map.connect('dataset_resources', '/dataset/resources/{id}',
+                    controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
+                    action='resources_notification_page')
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
-            m.connect('add dataset', '/dataset/new', action='new')
+            # m.connect('add dataset', '/dataset/new', action='new')
             m.connect(
                 '/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
             m.connect('/dataset/{id}.{format}', action='read')
@@ -128,10 +143,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             m.connect('/dataset/{action}/{id}',
                       requirements=dict(action='|'.join([
                           'new_metadata',
-                          'new_resource',
+                          # 'new_resource',
                           'visibility',
                           'delete',
-                          'edit',
+                          # 'edit',
                       ])))
 
         map.connect(
