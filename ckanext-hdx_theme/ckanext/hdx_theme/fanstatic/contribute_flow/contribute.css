@@ -49,6 +49,7 @@ html > .contribute-body > .contribute-main {
 html > .contribute-body > .contribute-main > div,
 html > .contribute-body > .contribute-main .create-step1 {
   height: 100%;
+  overflow-x: hidden;
 }
 .contribute-splash {
   height: 100%;
