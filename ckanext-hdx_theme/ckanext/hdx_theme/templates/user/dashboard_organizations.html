@@ -7,9 +7,15 @@
   {% set organizations = h.hdx_organizations_available_with_roles() %}
     {% if organizations %}
       <div class="pull-right">
-           <a class="btn btn-primary" href="/organization">{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
-           <a class="btn btn-primary" href="/organization/request_new">{{ _('+ Request New Organisation') }}</a><br/> <br/>
-           {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#creating-an-organization','text':'Request Org'},{'url':'http://docs.hdx.rwlabs.org/screencasts#joining-an-organization','text':'Join Org'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
+        <div>
+        <a class="btn btn-primary" href="/organization">{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
+        </div>
+        <div>
+          <a class="btn btn-primary" href="/organization/request_new">{{ _('+ Request New Organisation') }}</a><br/> <br/>
+        </div>
+        <div>
+            {% snippet "snippets/help_box.html", links=[{'url':'http://docs.hdx.rwlabs.org/screencasts#creating-an-organization','text':'Request Org'},{'url':'http://docs.hdx.rwlabs.org/screencasts#joining-an-organization','text':'Join Org'},{'url':'http://docs.hdx.rwlabs.org/get-involved/','text':'Contact Us'}] %}
+        </div>
     {% endif %}
       </div>
   <div style="min-height: 120px;">
