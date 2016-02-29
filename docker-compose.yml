@@ -36,3 +36,9 @@ ckan:
     - HDX_SOLR_ADDR=solr
     - HDX_SOLR_PORT=8983
     - HDX_TYPE=${HDX_TYPE}
+    - HDX_GISDB_DB=gis
+    - HDX_GISDB_ADDR=127.0.0.1
+    - HDX_GISDB_PORT=5432
+    - HDX_GISDB_USER=gis
+    - HDX_GISDB_PASS=gis
+

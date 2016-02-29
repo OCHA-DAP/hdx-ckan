@@ -3,8 +3,14 @@ sudo: required
 services:
   - docker
 
+env:
+  DOCKER_COMPOSE_VERSION: 1.4.2
+
 before_install:
-  - sudo pip install docker-compose==1.5.2
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
 script:
   - docker-compose up -d
@@ -19,3 +25,4 @@ script:
   # just forcing capturejs test to succeed. :(
   - docker exec -t hdxckan_ckan_1 sh -c "mkdir -p /srv/filestore/storage/uploads/group && cd /srv/filestore/storage/uploads/group && touch david_thumbnail.png"
   - docker exec -t hdxckan_ckan_1 hdxckantool test
+
