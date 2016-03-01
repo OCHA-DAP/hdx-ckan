@@ -14,7 +14,7 @@
     hdxUtil.compute.strHash = function (theString, startHash) {
         var i, chr, len;
         var hash = startHash ? startHash : 0;
-        if (theString.length === 0) return hash;
+        if (!theString || theString.length === 0) return hash;
         for (i = 0, len = theString.length; i < len; i++) {
             chr = theString.charCodeAt(i);
             hash = ((hash << 5) - hash) + chr;
