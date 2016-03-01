@@ -57,7 +57,8 @@ $(function(){
             var newUpload = this.get('upload') ? 'true' : 'false';
             var properties = [
                 this.get('name'), this.get('format'), this.get('url'),
-                this.get('description'), this.get('url_type'), this.get('resource_type')
+                this.get('description'), this.get('url_type'), this.get('resource_type'),
+                newUpload
             ];
 
             var hashCode = hdxUtil.compute.strListHash(properties);
