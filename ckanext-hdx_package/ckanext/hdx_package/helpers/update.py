@@ -105,7 +105,7 @@ def package_update(context, data_dict):
     if 'tags' in data:
         data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
-    pkg = modified_save(context, pkg, data)
+    pkg = modified_save(context, data)
 
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
@@ -149,7 +149,7 @@ def package_update(context, data_dict):
     return output
 
 
-def modified_save(context, pkg, data):
+def modified_save(context, data):
     """
     Wrapper around lib.dictization.model_save.package_dict_save
     """
