@@ -518,6 +518,7 @@ $(function(){
             this._setUpForSourceType("source-url");
             // focus on first text field
             this.$('input:text')[0].focus();
+            this.render();
         },
 
         _setUpDragAndDrop: function(){

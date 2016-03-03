@@ -78,6 +78,10 @@ def package_update(context, data_dict):
                 # to ensure they still work.
                 package_plugin.check_data_dict(data_dict)
 
+    # Inject the existing package_creator as it should not be modifiable
+    if hasattr(pkg, 'extras'):
+        data_dict['package_creator'] = pkg.extras.get('package_creator', data_dict.get('package_creator'))
+
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
     #data, errors = _validate(data_dict, schema, context)
