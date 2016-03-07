@@ -78,6 +78,10 @@ def package_update(context, data_dict):
                 # to ensure they still work.
                 package_plugin.check_data_dict(data_dict)
 
+    # Inject the existing package_creator as it should not be modifiable
+    if hasattr(pkg, 'extras'):
+        data_dict['package_creator'] = pkg.extras.get('package_creator', data_dict.get('package_creator'))
+
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
     #data, errors = _validate(data_dict, schema, context)
@@ -105,7 +109,7 @@ def package_update(context, data_dict):
     if 'tags' in data:
         data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
-    pkg = modified_save(context, pkg, data)
+    pkg = modified_save(context, data)
 
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
@@ -149,7 +153,7 @@ def package_update(context, data_dict):
     return output
 
 
-def modified_save(context, pkg, data):
+def modified_save(context, data):
     """
     Wrapper around lib.dictization.model_save.package_dict_save
     """

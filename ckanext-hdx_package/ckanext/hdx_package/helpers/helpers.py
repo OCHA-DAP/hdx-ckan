@@ -437,7 +437,12 @@ def package_create(context, data_dict):
             admins = [user_obj]
             data['creator_user_id'] = user_obj.id
 
-    pkg = model_save.package_dict_save(data, context)
+    # Replace model_save.package_dict_save() call with our wrapped version to be able to save groups
+    # pkg = model_save.package_dict_save(data, context)
+    from ckanext.hdx_package.helpers.update import modified_save
+    pkg = modified_save(context, data)
+
+
     model.setup_default_user_roles(pkg, admins)
     # Needed to let extensions know the package and resources ids
     model.Session.flush()

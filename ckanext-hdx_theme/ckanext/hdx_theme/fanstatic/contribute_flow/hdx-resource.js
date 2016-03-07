@@ -51,6 +51,25 @@ $(function(){
                 ret = data.result;
             }
             return ret;
+        },
+
+        hashResource: function() {
+            var newUpload = this.get('upload') ? 'true' : 'false';
+            var properties = [
+                this.get('name'), this.get('format'), this.get('url'),
+                this.get('description'), this.get('url_type'), this.get('resource_type'),
+                newUpload
+            ];
+
+            var hashCode = hdxUtil.compute.strListHash(properties);
+
+            console.log('Hash code for ' + this.get('name') + ' is ' + hashCode);
+            return hashCode;
+
+        },
+
+        initialize: function() {
+            this.set('originalHash', this.hashResource());
         }
     });
 
@@ -101,7 +120,13 @@ $(function(){
                 //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
                 //    model.set('upload', '');
                 //}
-                var promise = model.save();
+                var promise;
+                if ( model.get('originalHash') != model.hashResource() ){
+                    promise = model.save();
+                }
+                else {
+                    promise = $.Deferred().resolve().promise();
+                }
                 if (index + 1 < resources.length) {
                     index++;
                     promise.then(saveResources);
@@ -326,7 +351,7 @@ $(function(){
                 //dragParent.removeChild(dragGhost);
             }, false);
 
-            this.listenTo(this.model, "change", this.render);
+            //this.listenTo(this.model, "change", this.render);
             this.listenTo(this.model, "destroy", this.remove);
             this.$el.on("drag-area-disable", function(){
                 this.dragAreaEnabled = false;
@@ -430,6 +455,7 @@ $(function(){
             // If a file has been selected, set up interface with file path.
             this._setUpWithPath(file.name, true, null, false, file);
             this._setUpForSourceType("source-file-selected");
+            this.render();
         },
 
         onFormatGetsFocus: function(e){
@@ -492,6 +518,7 @@ $(function(){
             this._setUpForSourceType("source-url");
             // focus on first text field
             this.$('input:text')[0].focus();
+            this.render();
         },
 
         _setUpDragAndDrop: function(){
@@ -549,6 +576,8 @@ $(function(){
                 // change the model
                 this.model.set('url_type', 'api');
                 this.model.set('resource_type', 'api');
+                this.model.set('upload', null);
+
             }
 
             $.each(source_classes, function(i, v){

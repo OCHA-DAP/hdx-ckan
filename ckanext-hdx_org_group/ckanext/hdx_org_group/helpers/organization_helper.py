@@ -29,6 +29,8 @@ import ckanext.hdx_search.command as lunr
 import shlex
 import subprocess
 import random
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
 from datetime import datetime, timedelta
 from ckan.common import _
 
@@ -108,7 +110,8 @@ def get_viz_title_from_extras(org_dict):
     try:
         for item in org_dict.get('extras'):
             if item.get('key') == 'visualization_config':
-                result = json.loads(item.get('value')).get('vis-title') or json.loads(item.get('value')).get('viz-title')
+                result = json.loads(item.get('value')).get('vis-title') or json.loads(item.get('value')).get(
+                    'viz-title')
                 return result
     except:
         return None
@@ -673,3 +676,16 @@ def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedela
         return True
     except:
         return False
+
+
+def notify_admins(data_dict):
+    try:
+        if data_dict.get('admins'):
+            for admin in data_dict.get('admins'):
+                hdx_mailer.mail_recipient(admin.get('display_name'), admin.get('email'), data_dict.get('subject'),
+                                          data_dict.get('message'))
+    except Exception, e:
+        log.error("Email server error: can not send email to admin users" + e.message)
+        return False
+    log.info("admin users where notified by email")
+    return True
