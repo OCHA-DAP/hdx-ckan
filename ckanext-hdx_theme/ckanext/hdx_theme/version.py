@@ -1,1 +1,1 @@
-hdx_version = 'v0.15.8'
+hdx_version = 'v0.15.9'
