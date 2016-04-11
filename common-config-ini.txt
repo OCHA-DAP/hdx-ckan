@@ -207,3 +207,8 @@ hdx.onboarding.send_confirmation_email = false
 
 # The configuration for running the service checks
 hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
+
+# Map Explorer configs
+hdx.explorer.url = /visualization/explorer
+hdx.explorer.iframe.width = 100%
+hdx.explorer.iframe.height = 800px

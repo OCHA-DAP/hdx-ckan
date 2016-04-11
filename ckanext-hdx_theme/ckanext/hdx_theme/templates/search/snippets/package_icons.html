@@ -38,3 +38,8 @@
 {% if package.approx_total_downloads  %}
   <li class="label-icons"><span class="download-counts">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
 {% endif %}
+
+{% set slice = h.hdx_get_slice(package.name) %}
+{% if slice  %}
+<li class="label-icons"><a href="/explorer?id={{slice}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
+{% endif %}

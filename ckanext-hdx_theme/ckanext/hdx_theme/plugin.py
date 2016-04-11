@@ -144,6 +144,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
+        map.connect('/explorer', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
+
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
         return map
@@ -206,6 +208,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_organisation_list': hdx_helpers.hdx_organisation_list,
             'hdx_tag_list': hdx_helpers.hdx_tag_list,
             'hdx_frequency_list': hdx_helpers.hdx_frequency_list,
+            'hdx_get_slice': hdx_helpers.hdx_get_slice,
         }
 
     def get_actions(self):
