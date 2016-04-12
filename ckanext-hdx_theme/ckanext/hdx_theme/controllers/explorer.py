@@ -1,6 +1,6 @@
 # import requests
 import ckan.lib.base as base
-# from ckan.common import _, c, g, request, response
+from ckan.common import _, c, g, request, response
 # import exceptions as exceptions
 import ckan.logic as logic
 # import json
@@ -18,7 +18,8 @@ class ExplorerController(base.BaseController):
         url = configuration.config.get('hdx.explorer.url')
         height = configuration.config.get('hdx.explorer.iframe.height')
         width = configuration.config.get('hdx.explorer.iframe.width')
-
+        if 'id' in request.params:
+            url += request.params['id']
         template_data = {
             'data': {
                 'url': url,
