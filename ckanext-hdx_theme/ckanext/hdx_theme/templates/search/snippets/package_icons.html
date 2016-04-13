@@ -41,5 +41,5 @@
 
 {% set slice = h.hdx_get_slice(package.name) %}
 {% if slice  %}
-<li class="label-icons"><a href="/explorer?id={{slice}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
+<li class="label-icons"><a href="/explore?id={{slice}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
 {% endif %}
