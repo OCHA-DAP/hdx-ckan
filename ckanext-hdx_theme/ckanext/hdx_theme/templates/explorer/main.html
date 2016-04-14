@@ -11,7 +11,9 @@
 {% endblock %}
 
 {% block primary %}
-    <iframe src="{{data.url}}" frameborder="0" width="{{data.width}}" height="{{data.height}}" class="mTop30"></iframe>
+    <div class="paddingRowHack">
+        <iframe src="{{data.url}}" frameborder="0" width="{{data.width}}" height="{{data.height}}"></iframe>
+    </div>
 {% endblock %}
 
 {% block secondary %}
