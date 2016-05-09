@@ -1,273 +1,325 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
 /* Homepage */
-    .homepage-main{
-        background-color: #1ebfb3;
-        background-image: url("/images/homepage/map.png");
-        background-size: auto 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-        font-family: 'Gotham-Bold',sans-serif;
-        font-weight: 400;
-        /*overflow: hidden;*/
-        /*min-width: 1380px;*/
-    }
-
-    .homepage-background{
-        height: 710px;
-        position: relative;
-        /*min-width: 1260px;*/
-    }
-    .homepage-background .hdx-warning{
-        position: absolute;
-        bottom: 0px;
-        min-width: 1260px;
-        width: 100%;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        background-color: #F2645A;
-    }
-
-    .homepage-background .hdx-warning .hdx-warning-text {
-        width: 1170px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .homepage-background .hdx-warning .hdx-warning-text a{
-        font-family: "Gotham-Light",sans-serif;
-        font-size: 16px;
-        color: #FFFFFF;
-    }
-    .homepage-background .hdx-warning-text .hdx-warning-text-important{
-        font-family: 'Gotham-Bold',sans-serif;
-    }
-
-
-    .homepage-main .leftContent{
-        color: white;
-    }
-
-    .homepage-main .leftContent h1{
-        line-height: 100%;
-        font-size: 48px;
-        font-weight: 400;
-    }
-
-    .homepage-main .leftContent h3{
-        font-size: 18px;
-        text-transform: uppercase;
-        font-weight: 400;
-    }
-
-    .homepage-main .leftContent .hdxDescription{
-        font-family: 'Source Sans Pro', sans-serif;
-        font-size: 14px;
-        line-height: 140%;
-        font-weight: 400;
-    }
-
-    .homepage-main .blankRow{
-        height: 150px;
-    }
-
-    .homepage-main .rightContent .searchBox{
-        width: 360px;
-        height: 250px;
-        background-color: #eeeeee;
-        border-radius: 6px;
-        margin-bottom: 50px;
-    }
-
-    .homepage-main .rightContent .searchBox .firstSearch{
-        margin-top: 24px;
-    }
-
-    .homepage-main .rightContent .searchBox .firstSearch .exampleSearch{
-        font-size: 12px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 400;
-        color: #888888;
-        margin-left: 22px;
-        margin-top: 5px;
-    }
-
-    .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a{
-        color: #007ce0;
-    }
-
-    .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:hover, .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:focus{
-        color: #006abf;
-        text-decoration: none;
-    }
-    .homepage-main .rightContent .searchBox .secondSearch{
-        margin-top: 24px;
-    }
-
-    .homepage-main .rightContent .searchBox .searchHeader{
-        background-color: #ffffff;
-        border-top-left-radius: 6px;
-        border-top-right-radius: 6px;
-    }
-
-    .homepage-main .rightContent .searchBox .searchContent{
-        padding-left: 22px;
-        padding-right: 22px;
-    }
-    .homepage-main .rightContent .searchBox .searchContent .form-search{
-        margin: 0;
-    }
-
-    .homepage-main .rightContent .searchBox .searchHeader p{
-        color: #007ce0;
-        font-size: 16px;
-        text-transform: uppercase;
-        line-height: 60px;
-    }
-
-    .homepage-main .rightContent .selectCountryDropdown .selectCountry {
-        width: 316px;
-        height: 45px;
-        background-color: #ffffff;
-        /*background: url(/images/homepage/select-arrow.png) no-repeat right #ddd;*/
-        border: 0;
-        border-radius: 6px;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 700;
-        color: #cccccc;
-        font-size: 16px;
-        padding-left: 20px;
-        display: block;
-        line-height: 45px;
-        text-align: left;
-    }
-
-    .homepage-main .rightContent .selectCountryDropdown .selectCountry .caret{
-        float: right;
-        margin-right: 10px;
-        margin-top: 18px;
-    }
-    .homepage-main .rightContent .selectCountryDropdown .selectCountry:hover{
-        text-decoration: none;
-    }
-
-    .homepage-main .rightContent .selectCountryDropdown ul li a{
-        color: #cccccc;
-        line-height: 20px;
-    }
-
-    .homepage-main .rightContent .selectCountryDropdown ul li a:hover {
-        background-color: inherit;
-        background-image: none;
-        color: #888888;
-        text-decoration: none;
-    }
-
-    .homepage-main .rightContent .countRow{
-        font-family: 'Gotham-Light', sans-serif;
-        font-weight: 400;
-        color: #ffffff;
-        text-align: center;
-    }
-
-    .homepage-main .rightContent .countRow .itemCount a{
-        font-size: 60px;
-        color: #ffffff;
-        line-height: 100%;
-    }
-
-    .homepage-main .rightContent .countRow .itemCount a:focus, .homepage-main .rightContent .countRow .itemCount a:hover{
-        text-decoration: none;
-        color: #ffffff;
-    }
-
-    .homepage-main .rightContent .countRow .itemName{
-        font-size: 18px;
-        text-transform: uppercase;
-        padding-top: 20px;
-    }
-
-    .homepage-main .rightContent .countRow .hdxTextRow{
-        margin-left: 34px;
-    }
-
-    /* Ugly split for count items*/
-
-        .homepage-main .rightContent .countRow .span6{
-            width: 510px;
-        }
-
-        .homepage-main .rightContent .countRow .span2{
-            margin: 0;
-        }
-
-        .homepage-main .rightContent .countRow .span2:first-child{
-            margin-right: 30px;
-        }
-    /**/
-
-    .homepageHeaderFooterBackground{
-        background-color: #ffffff;
-        /*min-width: 1382px;*/
-    }
-
+header {
+  position: relative;
+  z-index: 10000;
+}
+.homepage-main {
+  background-color: #1ebfb3;
+  background-image: url("/images/homepage/map.png");
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  height: 100vh;
+  margin-top: -78px;
+  padding-top: 78px;
+}
+.homepage-main .leftContent {
+  color: #ffffff;
+  margin-top: 85px;
+}
+.homepage-main .leftContent h1 {
+  line-height: 100%;
+  font-size: 48px;
+  font-weight: 400;
+}
+.homepage-main .leftContent h3 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  margin: 25px 0;
+}
+.homepage-main .leftContent .hdxDescription {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  line-height: 140%;
+  font-weight: 400;
+}
+.homepage-main .leftContent .btn.btn-faq {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #1ebfb3;
+  width: 153px;
+  line-height: 36px;
+  background-color: #ffffff;
+  padding: 0;
+}
+.homepage-main .rightContent {
+  margin-top: 85px;
+}
+.homepage-main .rightContent .searchBox {
+  width: 449px;
+  height: 250px;
+  background-color: #eeeeee;
+  border-radius: 6px;
+}
+.homepage-main .rightContent .searchBox .firstSearch {
+  padding: 22px;
+  padding-bottom: 0;
+}
+.homepage-main .rightContent .searchBox .firstSearch .form-search {
+  position: relative;
+}
+.homepage-main .rightContent .searchBox .firstSearch .form-search .search-ahead {
+  width: 125%;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}
+.homepage-main .rightContent .searchBox .firstSearch .form-search .input-append .searchInput {
+  width: 355px;
+}
+.homepage-main .rightContent .searchBox .firstSearch .exampleSearch {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  margin-bottom: 0;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+.homepage-main .rightContent .searchBox .firstSearch .exampleSearch a {
+  color: #007ce0;
+}
+.homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:hover,
+.homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:focus {
+  color: #007ce0;
+  text-decoration: none;
+}
+.homepage-main .rightContent .searchBox .searchHeader {
+  background-color: #ffffff;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  padding: 22px;
+}
+.homepage-main .rightContent .searchBox .searchHeader p {
+  color: #007ce0;
+  font-size: 16px;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0;
+}
+.homepage-main .rightContent .selectCountryDropdown .selectCountry {
+  width: 316px;
+  height: 45px;
+  background-color: #ffffff;
+  /*background: url(/images/homepage/select-arrow.png) no-repeat right #ddd;*/
+  border: 0;
+  border-radius: 6px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  color: #cccccc;
+  font-size: 16px;
+  padding-left: 20px;
+  display: block;
+  line-height: 45px;
+  text-align: left;
+}
+.homepage-main .rightContent .selectCountryDropdown .selectCountry .caret {
+  float: right;
+  margin-right: 10px;
+  margin-top: 18px;
+}
+.homepage-main .rightContent .selectCountryDropdown .selectCountry:hover {
+  text-decoration: none;
+}
+.homepage-main .rightContent .selectCountryDropdown ul li a {
+  color: #cccccc;
+  line-height: 20px;
+}
+.homepage-main .rightContent .selectCountryDropdown ul li a:hover {
+  background-color: inherit;
+  background-image: none;
+  color: #888888;
+  text-decoration: none;
+}
+.homepage-main .rightContent .countRow {
+  text-align: center;
+  padding: 22px;
+}
+.homepage-main .rightContent .countRow .col-xs-4 {
+  border-right: 1px solid #cccccc;
+}
+.homepage-main .rightContent .countRow .col-xs-4:last-child {
+  border-right: none;
+}
+.homepage-main .rightContent .countRow .itemCount a {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 34px;
+  color: #888888;
+  line-height: 1;
+}
+.homepage-main .rightContent .countRow .itemCount a:focus,
+.homepage-main .rightContent .countRow .itemCount a:hover {
+  text-decoration: none;
+  color: #888888;
+}
+.homepage-main .rightContent .countRow .itemName {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.homepage-main .carousel {
+  position: absolute;
+  bottom: 80px;
+  width: 100%;
+}
+.homepage-main .carousel .carousel-inner {
+  padding-bottom: 40px;
+}
+.homepage-main .carousel .carousel-indicators {
+  bottom: 0;
+}
+.homepage-main .carousel .item .item-center {
+  margin: auto;
+  width: 980px;
+}
+.homepage-main .carousel .item .sub-item {
+  width: 215px;
+  margin-right: 40px;
+  float: left;
+}
+.homepage-main .carousel .item .sub-item:last-child {
+  margin-right: 0;
+}
+.homepage-main .carousel .item .sub-item .sub-item-image {
+  position: relative;
+  height: 150px;
+  margin-bottom: 5px;
+}
+.homepage-main .carousel .item .sub-item .sub-item-image:hover.disabled .sub-item-action {
+  display: none;
+}
+.homepage-main .carousel .item .sub-item .sub-item-image:hover .sub-item-action {
+  display: block;
+}
+.homepage-main .carousel .item .sub-item .sub-item-image .sub-item-action {
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+.homepage-main .carousel .item .sub-item .sub-item-image .sub-item-action a {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f2645a;
+}
+.homepage-main .carousel .item .sub-item .sub-item-image .graphic {
+  max-height: 100%;
+  max-width: 215px;
+}
+.homepage-main .carousel .item .sub-item .sub-item-caption {
+  text-align: center;
+  color: #ffffff;
+}
+.homepage-main .carousel .item .sub-item .sub-item-caption .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  margin: 0;
+}
+.homepage-main .carousel .item .sub-item .sub-item-caption .description {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  margin: 0;
+}
+.homepage-background {
+  height: 710px;
+  position: relative;
+  /*min-width: 1260px;*/
+}
+.homepage-background .hdx-warning {
+  position: absolute;
+  bottom: 0px;
+  min-width: 1260px;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: #F2645A;
+}
+.homepage-background .hdx-warning .hdx-warning-text {
+  width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.homepage-background .hdx-warning .hdx-warning-text a {
+  font-family: "Gotham-Light", sans-serif;
+  font-size: 16px;
+  color: #FFFFFF;
+}
+.homepage-background .hdx-warning-text .hdx-warning-text-important {
+  font-family: 'Gotham-Bold', sans-serif;
+}
+.homepageHeaderFooterBackground {
+  background-color: #ffffff;
+  /*min-width: 1382px;*/
+}
 /* END Homepage */
-
 /* Header Homepage */
-    .header-nav-search{
-        visibility: hidden;
-    }
-
-    .homepage-header-user-bg{
-        background-color: #333333;
-    }
-
-    .homepage-header-nav-border{
-        background-color: #ffffff;
-        border-bottom: 3px solid #cccccc;
-    }
-    .homepage-header-nav-border > div{
-        margin-bottom: -3px;
-    }
-
+.homepage-header-user-bg {
+  background-color: #333333;
+}
+.homepage-header-nav-border {
+  background-color: #ffffff;
+  border-bottom: 3px solid #cccccc;
+}
+.homepage-header-nav-border > div {
+  margin-bottom: -3px;
+}
 /* END Header Homepage */
-
 /* Footer Homepage */
-    /* Set page background to white - on large screens footer was to short - green was showing :) */
-    /*body{*/
-        /*background-color: #ffffff;*/
-    /*}*/
-
-    .newFooter {
-        height: 100px;
-        vertical-align: middle;
-        padding-top: 36px;
-    }
-    .newFooter .text {
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        color: #888888;
-        text-transform: uppercase;
-        margin-left: 40px;
-        line-height: 28px;
-    }
-
-    .newFooter img{
-        height: 28px;
-        margin-left: 15px;
-        background-color: white;
-        opacity: 0.5;
-
-        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
-        transition: opacity 0.3s;
-    }
-
-    .newFooter img:hover, .newFooter img:focus {
-        opacity: 1;
-        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
-        transition: opacity 0.3s;
-    }
-
-    .newFooter .text:first-child{
-        margin-left: 0;
-    }
+/* Set page background to white - on large screens footer was to short - green was showing :) */
+/*body{*/
+/*background-color: #ffffff;*/
+/*}*/
+.newFooter {
+  height: 100px;
+  vertical-align: middle;
+}
+.newFooter .text {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #888888;
+  text-transform: uppercase;
+  margin-left: 40px;
+  line-height: 28px;
+}
+.newFooter .text:first-child {
+  margin-left: 0;
+}
+.newFooter img {
+  height: 28px;
+  margin-left: 15px;
+  background-color: white;
+  opacity: 0.5;
+  -webkit-transition: opacity 0.3s;
+  /* For Safari 3.1 to 6.0 */
+  transition: opacity 0.3s;
+}
+.newFooter img:hover,
+.newFooter img:focus {
+  opacity: 1;
+  -webkit-transition: opacity 0.3s;
+  /* For Safari 3.1 to 6.0 */
+  transition: opacity 0.3s;
+}
 /* END Footer Homepage */
