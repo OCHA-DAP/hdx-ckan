@@ -1,0 +1,358 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+/* Homepage */
+header {
+    //moving the .homepage-main under the header with it's size (78px) so the header should overlap
+    position: relative;
+    z-index: 10000;
+}
+.homepage-main {
+    background-color: @greenColor;
+    background-image: url("/images/homepage/map.png");
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    font-family: @gothamBoldFont;
+    font-weight: 400;
+
+    height: 100vh; //fit page height
+    margin-top: -78px; //move under the header
+    padding-top: 78px;
+
+    .leftContent{
+        color: @whiteColor;
+        margin-top: 85px;
+        h1{
+            line-height: 100%;
+            font-size: 48px;
+            font-weight: 400;
+        }
+        h3{
+            .sourceSansProFont(400, 18px);
+            margin: 25px 0;
+        }
+        .hdxDescription{
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 14px;
+            line-height: 140%;
+            font-weight: 400;
+        }
+        .btn.btn-faq {
+            .gothamBoldFont(14px);
+            color: @greenColor;
+            width: 153px;
+            line-height: 36px; //without 2*border of 1px
+            background-color: @whiteColor;
+            padding: 0;
+        }
+    }
+
+    .rightContent {
+        margin-top: 85px;
+
+        @searchBoxPadding: 22px;
+        @searchBoxRadius: 6px;
+        @searchBoxSize: 405px; //size of the actual search box inside the whole widget
+        .searchBox {
+            width: @searchBoxSize + 2*@searchBoxPadding;
+            height: 250px;
+            background-color: @extraLightGrayColor;
+            border-radius: @searchBoxRadius;
+
+            .firstSearch{
+                padding: @searchBoxPadding;
+                padding-bottom: 0;
+
+                .form-search{
+                    position: relative;
+                    .search-ahead {
+                        width: 125%;
+                        .sourceSansProFont(400, 18px);
+
+                    }
+                    .input-append .searchInput{
+                        width: @searchBoxSize - 50px; //50px is the button size, can't refactor at this point
+                    }
+                }
+                .exampleSearch {
+                    .sourceSansProFont(400, 12px);
+                    color: @grayColor;
+                    margin-bottom: 0;
+                    margin-top: 5px;
+                    margin-left: 5px;
+
+                    a {
+                        color: @blueColor;
+                        &:hover, &:focus {
+                            color: @blueColor;
+                            text-decoration: none;
+                        }
+                    }
+                }
+            }
+
+            .searchHeader{
+                background-color: #ffffff;
+                border-top-left-radius: @searchBoxRadius;
+                border-top-right-radius: @searchBoxRadius;
+                padding: @searchBoxPadding;
+
+                p{
+                    color: #007ce0;
+                    font-size: 16px;
+                    text-transform: uppercase;
+                    line-height: 1;
+                    margin: 0;
+                }
+            }
+        }
+
+        .selectCountryDropdown{
+            .selectCountry {
+                width: 316px;
+                height: 45px;
+                background-color: #ffffff;
+                /*background: url(/images/homepage/select-arrow.png) no-repeat right #ddd;*/
+                border: 0;
+                border-radius: 6px;
+                font-family: 'Source Sans Pro', sans-serif;
+                font-weight: 700;
+                color: #cccccc;
+                font-size: 16px;
+                padding-left: 20px;
+                display: block;
+                line-height: 45px;
+                text-align: left;
+                .caret{
+                    float: right;
+                    margin-right: 10px;
+                    margin-top: 18px;
+                }
+                &:hover{
+                    text-decoration: none;
+                }
+            }
+
+            ul li a{
+                color: #cccccc;
+                line-height: 20px;
+            }
+
+            ul li a:hover {
+                background-color: inherit;
+                background-image: none;
+                color: #888888;
+                text-decoration: none;
+            }
+        }
+
+        .countRow{
+            text-align: center;
+            padding: @searchBoxPadding;
+
+            .col-xs-4 {
+                border-right: 1px solid @lightGrayColor;
+                &:last-child {
+                    border-right: none;
+                }
+            }
+
+            .itemCount a{
+                .gothamLightFont(34px);
+                color: @grayColor;
+                line-height: 1;
+                &:focus, &:hover {
+                    text-decoration: none;
+                    color: @grayColor;
+                }
+            }
+
+            .itemName{
+                .gothamLightFont(12px);
+                text-transform: uppercase;
+            }
+        }
+    }
+
+    .carousel {
+        @carouselImageHeight: 150px;
+        @carouselItemWidth: 215px;
+        @carouselItemMargin: 40px;
+        position: absolute;
+        bottom: 80px;
+        width: 100%;
+
+        .carousel-inner{
+            padding-bottom: 40px;
+            //width: auto;
+            //display: inline-block;
+            //left: 50%;
+            //transform: translate(-50%, 0);
+        }
+
+        .carousel-indicators {
+            bottom: 0;
+        }
+
+        .item {
+            .item-center {
+                margin: auto;
+                width: 4*@carouselItemWidth + 3*@carouselItemMargin;
+            }
+            .sub-item {
+                width: @carouselItemWidth;
+                margin-right: @carouselItemMargin;
+                float: left;
+
+                &:last-child{
+                    margin-right: 0;
+                }
+
+                .sub-item-image{
+                    position: relative;
+                    height: @carouselImageHeight;
+
+                    &:hover {
+                        .sub-item-action{
+                            display: block;
+                        }
+                    }
+                    .sub-item-action {
+                        display: none;
+                        position: absolute;
+                        height: 100%;
+                        width: 100%;
+                        top: 0;
+                        left: 0;
+                        background: rgba(0,0,0, 0.3);
+
+                        a {
+                            position: absolute;
+                            left: 50%;
+                            top: 50%;
+                            transform: translate(-50%, -50%);
+                        }
+                    }
+                    img {
+                        max-height: 100%;
+                        max-width: 215px;
+                    }
+                }
+
+                .sub-item-caption {
+                    text-align: center;
+                    color: @whiteColor;
+                    .title {
+                        .gothamBoldFont(12px);
+                        margin: 0;
+                    }
+                    .description {
+                        .gothamBookFont(12px);
+                        margin: 0;
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+
+.homepage-background{
+    height: 710px;
+    position: relative;
+    /*min-width: 1260px;*/
+
+    .hdx-warning{
+        position: absolute;
+        bottom: 0px;
+        min-width: 1260px;
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        background-color: #F2645A;
+
+        .hdx-warning-text {
+            width: 1170px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hdx-warning-text a{
+            font-family: "Gotham-Light",sans-serif;
+            font-size: 16px;
+            color: #FFFFFF;
+        }
+    }
+
+    .hdx-warning-text .hdx-warning-text-important{
+        font-family: 'Gotham-Bold',sans-serif;
+    }
+}
+
+.homepageHeaderFooterBackground{
+    background-color: #ffffff;
+    /*min-width: 1382px;*/
+}
+/* END Homepage */
+
+/* Header Homepage */
+//.header-nav-search{
+//    visibility: hidden;
+//}
+
+.homepage-header-user-bg{
+    background-color: #333333;
+}
+
+.homepage-header-nav-border{
+    background-color: #ffffff;
+    border-bottom: 3px solid #cccccc;
+}
+.homepage-header-nav-border > div{
+    margin-bottom: -3px;
+}
+/* END Header Homepage */
+
+/* Footer Homepage */
+/* Set page background to white - on large screens footer was to short - green was showing :) */
+/*body{*/
+    /*background-color: #ffffff;*/
+/*}*/
+
+.newFooter {
+    height: 100px;
+    vertical-align: middle;
+
+    .text {
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        color: #888888;
+        text-transform: uppercase;
+        margin-left: 40px;
+        line-height: 28px;
+
+        &:first-child{
+            margin-left: 0;
+        }
+    }
+
+    img{
+        height: 28px;
+        margin-left: 15px;
+        background-color: white;
+        opacity: 0.5;
+
+        -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+        transition: opacity 0.3s;
+
+        &:hover, &:focus {
+            opacity: 1;
+            -webkit-transition: opacity 0.3s; /* For Safari 3.1 to 6.0 */
+            transition: opacity 0.3s;
+        }
+    }
+}
+/* END Footer Homepage */

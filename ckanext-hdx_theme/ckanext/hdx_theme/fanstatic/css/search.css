@@ -175,7 +175,7 @@
     position:relative;
 
 }
-#search-ahead{
+.search-ahead{
     position:absolute;
     z-index: 99999999;
     top:42px;
@@ -187,19 +187,19 @@
   display:none;
 }
 
-#search-ahead ul{
+.search-ahead ul{
     list-style: none;
     margin-bottom: 0px
 }
 
-#search-ahead li{
+.search-ahead li{
     padding: 5px;
     font-size: 18px;
     cursor: pointer;
     margin-left: -35px;
 }
 
-#search-ahead li:hover{
+.search-ahead li:hover{
     background: #cccccc; /* @lightGrayColor */
 }
 
