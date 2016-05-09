@@ -197,6 +197,10 @@ header {
 .homepage-main .carousel .item .sub-item .sub-item-image {
   position: relative;
   height: 150px;
+  margin-bottom: 5px;
+}
+.homepage-main .carousel .item .sub-item .sub-item-image:hover.disabled .sub-item-action {
+  display: none;
 }
 .homepage-main .carousel .item .sub-item .sub-item-image:hover .sub-item-action {
   display: block;
@@ -215,8 +219,9 @@ header {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  background-color: #f2645a;
 }
-.homepage-main .carousel .item .sub-item .sub-item-image img {
+.homepage-main .carousel .item .sub-item .sub-item-image .graphic {
   max-height: 100%;
   max-width: 215px;
 }

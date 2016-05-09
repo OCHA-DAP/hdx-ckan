@@ -212,8 +212,14 @@ header {
                 .sub-item-image{
                     position: relative;
                     height: @carouselImageHeight;
+                    margin-bottom: 5px;
 
                     &:hover {
+                        &.disabled {
+                            .sub-item-action{
+                                display: none;
+                            }
+                        }
                         .sub-item-action{
                             display: block;
                         }
@@ -232,9 +238,10 @@ header {
                             left: 50%;
                             top: 50%;
                             transform: translate(-50%, -50%);
+                            background-color: @orangeColor;
                         }
                     }
-                    img {
+                    .graphic {
                         max-height: 100%;
                         max-width: 215px;
                     }
