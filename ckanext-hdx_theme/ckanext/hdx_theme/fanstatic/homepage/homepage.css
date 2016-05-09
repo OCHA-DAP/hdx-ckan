@@ -19,7 +19,10 @@ header {
   background-position: center;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
+  position: relative;
   height: 100vh;
+  max-height: 1000px;
+  min-height: 800px;
   margin-top: -78px;
   padding-top: 78px;
 }
