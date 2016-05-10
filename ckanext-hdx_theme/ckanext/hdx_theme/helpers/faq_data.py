@@ -34,7 +34,7 @@ about = {
         },
         {
             'q': 'What is the difference between a dataset and an indicator?',
-            'a': 'HDX includes two categories of data - curated indicators and user-contributed datasets. We curate about <a href="https://data.hdx.rwlabs.org/dataset?sort=metadata_modified+desc&ext_indicator=1">130 indicators</a> from multiple sources, ensuring they are comparable across countries and have gone through a quality-control process. We also have <a href="https://data.hdx.rwlabs.org/dataset?sort=metadata_modified+desc&ext_indicator=0">datasets</a> that organisations have shared',
+            'a': 'HDX includes two categories of data - curated indicators and user-contributed datasets. We curate about <a href="https://data.humdata.org/dataset?sort=metadata_modified+desc&ext_indicator=1">130 indicators</a> from multiple sources, ensuring they are comparable across countries and have gone through a quality-control process. We also have <a href="https://data.humdata.org/dataset?sort=metadata_modified+desc&ext_indicator=0">datasets</a> that organisations have shared',
         },
         {
             'q': 'Is HDX open source?',
@@ -57,7 +57,7 @@ user_registration = {
     'questions': [
         {
             'q': 'How do I register an account with HDX?',
-            'a': 'You can register by clicking on <a href="https://data.hdx.rwlabs.org/user/register">\'Sign Up\'</a> on the upper-right corner of any HDX page.',
+            'a': 'You can register by clicking on <a href="https://data.humdata.org/user/register">\'Sign Up\'</a> on the upper-right corner of any HDX page.',
         },
         {
             'q': 'What are the benefits of being a registered user?',
@@ -69,7 +69,7 @@ user_registration = {
         },
         {
             'q': 'What if I forget my username and password?',
-            'a': 'Use our <a href="https://data.hdx.rwlabs.org/user/reset">password recovery form</a> to reset your account details. Enter your username or e-mail and we will send you an e-mail with a link to create a new password.',
+            'a': 'Use our <a href="https://data.humdata.org/user/reset">password recovery form</a> to reset your account details. Enter your username or e-mail and we will send you an e-mail with a link to create a new password.',
         },
         {
             'q': 'I changed my job - what happens to my account?',
@@ -112,7 +112,7 @@ organizations = {
         },
         {
             'q': 'How do I create a branded organisation page in HDX?',
-            'a': 'HDX offers custom organisation pages to all organisations on the site. The page includes the organisation\'s logo and colour palette, topline figures, space for a data visualization and the list of datasets. We created our first custom organisation pages for <a href="https://data.hdx.rwlabs.org/organization/wfp">WFP</a> and the <a href="https://data.hdx.rwlabs.org/organization/somalia-ngo-consortium">Somalia NGO Consortium</a>. If you would like a custom page, send a request to hdx.feedback@gmail.com.',
+            'a': 'HDX offers custom organisation pages to all organisations on the site. The page includes the organisation\'s logo and colour palette, topline figures, space for a data visualization and the list of datasets. We created our first custom organisation pages for <a href="https://data.humdata.org/organization/wfp">WFP</a> and the <a href="https://data.humdata.org/organization/somalia-ngo-consortium">Somalia NGO Consortium</a>. If you would like a custom page, send a request to hdx.feedback@gmail.com.',
         },
     ]
 }
@@ -180,7 +180,7 @@ geodata = {
     'questions': [
         {
             'q': 'How can I generate a map with my geographic data?',
-            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format. Ensure that the \'File type\' field for the resource also has one of the above formats. Pro tip: HDX will automatically add the correct format if the extenion is \'.shp.zip\', \'.kml\', or \'.geojson\'. Here are examples of geodata <a href="https://data.hdx.rwlabs.org/dataset/somalia-schools">points</a>, <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.hdx.rwlabs.org/dataset/health-districts">polygons</a> showing the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one HDX dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.hdx.rwlabs.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
+            'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it recognizes. For a geographic preview to be generated, your data needs to be in either a zipped shapefile, kml or geojson format. Ensure that the \'File type\' field for the resource also has one of the above formats. Pro tip: HDX will automatically add the correct format if the extenion is \'.shp.zip\', \'.kml\', or \'.geojson\'. Here are examples of geodata <a href="https://data.humdata.org/dataset/somalia-schools">points</a>, <a href="https://data.humdata.org/dataset/nigeria-water-courses-cod">lines</a>, and <a href="https://data.humdata.org/dataset/health-districts">polygons</a> showing the preview feature.<br/><br/><p>The preview feature will continue to work when there are multiple geodata resources in a single dataset (i.e., one HDX dataset with many resources attached). The layers icon in the top-right corner of the map enables users to switch between geodata layers. Here is an <a href="https://data.humdata.org/dataset/nigeria-water-courses-cod">example</a>.</p>',
         },
         {
             'q': 'Why is the geodata preview only working for one layer in my resource?',
@@ -230,7 +230,7 @@ hdx_api = {
     'questions': [
         {
             'q': 'How do I access the HDX API?',
-            'a': '<a href="https://data.hdx.rwlabs.org/api/3/action/help_show?name=help_show">HDX has a publicly accessible API</a>. HDX is built on top of <a target="_blank"  href="http://ckan.org/">CKAN</a>, an open-source framework designed for data cataloging. The CKAN official documentation shows how the API works, and it contains a number of helpful examples: <a target="_blank"  href="http://docs.ckan.org/en/ckan-2.3/api/index.html">http://docs.ckan.org/en/ckan-2.3/api/index.html</a><br/><br/><p>HDX supports both the core <a target="_blank"  href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> and, for some datasets, the CKAN Datastore API. For more information, please e-mail hdx.feedback@gmail.com. We will be happy to assist you.</p>',
+            'a': '<a href="https://data.humdata.org/api/3/action/help_show?name=help_show">HDX has a publicly accessible API</a>. HDX is built on top of <a target="_blank"  href="http://ckan.org/">CKAN</a>, an open-source framework designed for data cataloging. The CKAN official documentation shows how the API works, and it contains a number of helpful examples: <a target="_blank"  href="http://docs.ckan.org/en/ckan-2.3/api/index.html">http://docs.ckan.org/en/ckan-2.3/api/index.html</a><br/><br/><p>HDX supports both the core <a target="_blank"  href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> and, for some datasets, the CKAN Datastore API. For more information, please e-mail hdx.feedback@gmail.com. We will be happy to assist you.</p>',
         },
     ]
 }
@@ -250,11 +250,11 @@ data_policy = {
     'questions': [
         {
             'q': 'Does HDX accept personally identifiable information?',
-            'a': 'Yes and no. HDX does not allow personally identifiable information (PII) to be shared in public datasets. All data shared publicly through the platform must be sufficiently aggregated or anonymized so as to prevent identification of people or harm to affected people and the humanitarian community. We do allow private datasets to include PII, such as contact information for humanitarian responders. Read more about our <a href="https://data.hdx.rwlabs.org/about/terms">Terms of Service</a>.',
+            'a': 'Yes and no. HDX does not allow personally identifiable information (PII) to be shared in public datasets. All data shared publicly through the platform must be sufficiently aggregated or anonymized so as to prevent identification of people or harm to affected people and the humanitarian community. We do allow private datasets to include PII, such as contact information for humanitarian responders. Read more about our <a href="https://data.humdata.org/about/terms">Terms of Service</a>.',
         },
         {
             'q': 'What data licences do you offer?',
-            'a': 'HDX promotes the use of licenses developed by the <a target="_blank"  href="http://creativecommons.org/">Creative Commons Foundation</a> and the <a target="_blank"  href="http://opendatacommons.org">Open Data Foundation</a>. The main difference between the two classes of licences is that the Creative Commons licences were developed for sharing creative works in general, while the Open Data Commons licences were developed more specifically for sharing databases. See the full list of licences <a href="https://data.hdx.rwlabs.org/about/license">here</a>.',
+            'a': 'HDX promotes the use of licenses developed by the <a target="_blank"  href="http://creativecommons.org/">Creative Commons Foundation</a> and the <a target="_blank"  href="http://opendatacommons.org">Open Data Foundation</a>. The main difference between the two classes of licences is that the Creative Commons licences were developed for sharing creative works in general, while the Open Data Commons licences were developed more specifically for sharing databases. See the full list of licences <a href="https://data.humdata.org/about/license">here</a>.',
         },
     ]
 }

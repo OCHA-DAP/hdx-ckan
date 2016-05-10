@@ -15,7 +15,7 @@ class WidgetToplineController(widget.WidgetController):
             "notes": "These are cumulative cases of Ebola",
             "sparklines_json": "",
             "source": "WHO",
-            "source_link": "https://data.hdx.rwlabs.org/dataset/ebola-cases-2014",
+            "source_link": "https://data.humdata.org/dataset/ebola-cases-2014",
             "explore": "http://docs.hdx.rwlabs.org/west-africa-ebola-outbreak-visualization/",
             "latest_date": "Jan 07, 2015"
         }
