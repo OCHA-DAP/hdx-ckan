@@ -212,11 +212,11 @@ metadata_and_data_quality = {
     'questions': [
         {
             'q': 'What metadata do I need to include when sharing data?',
-            'a': 'All data on HDX must include a minimum set of metadata fields. You can read our <a target="_blank"  href="http://docs.hdx.rwlabs.org/providing-metadata-for-your-datasets-on-hdx/">Guide to Metadata</a> to learn more. We encourage data contributors to include as much metadata as possible to make their data easier to understand and use for analysis.',
+            'a': 'All data on HDX must include a minimum set of metadata fields. You can read our <a target="_blank"  href="http://docs.humdata.org/providing-metadata-for-your-datasets-on-hdx/">Guide to Metadata</a> to learn more. We encourage data contributors to include as much metadata as possible to make their data easier to understand and use for analysis.',
         },
         {
             'q': 'How does HDX ensure data quality?',
-            'a': 'Data quality is important to us, so we manually review every new dataset for relevance, accuracy, timeliness, interpretability and comparability. We contact data contributors if we have any concerns or suggestions for improvement. You can learn more about our definition of the dimensions of data quality and our quality-assurance processes <a target="_blank"  href="http://docs.hdx.rwlabs.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
+            'a': 'Data quality is important to us, so we manually review every new dataset for relevance, accuracy, timeliness, interpretability and comparability. We contact data contributors if we have any concerns or suggestions for improvement. You can learn more about our definition of the dimensions of data quality and our quality-assurance processes <a target="_blank"  href="http://docs.humdata.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
         },
         {
             'q': 'Does HDX make any changes to my dataset?',

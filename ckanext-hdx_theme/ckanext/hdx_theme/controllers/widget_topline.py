@@ -16,7 +16,7 @@ class WidgetToplineController(widget.WidgetController):
             "sparklines_json": "",
             "source": "WHO",
             "source_link": "https://data.humdata.org/dataset/ebola-cases-2014",
-            "explore": "http://docs.hdx.rwlabs.org/west-africa-ebola-outbreak-visualization/",
+            "explore": "http://docs.humdata.org/west-africa-ebola-outbreak-visualization/",
             "latest_date": "Jan 07, 2015"
         }
     def show(self):
