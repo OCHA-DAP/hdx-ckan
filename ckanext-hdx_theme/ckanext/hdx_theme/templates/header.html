@@ -1,3 +1,12 @@
+{% set dataLink = "/dataset?sort=metadata_modified+desc" %}
+{% set locationLink = "/group" %}
+{% set orgLink = "/organization" %}
+{% set elNinoLink = h.url_for('read_crisis', id='elnino') %}
+{% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
+{% set ebolaLink = "/ebola" %}
+{% set faqLink = "/faq" %}
+
+
 {% block header_wrapper %}
 <div>
 </div>
@@ -165,20 +174,20 @@
             <span class="table-valign-content">
               <ul class="mainLinks">
                 {% block header_site_navigation_tabs %}
-                  <li><a href="/dataset?sort=metadata_modified+desc">{{ _('Data') }}</a></li>
-                  <li><a href="/group">{{ _('Locations') }}</a></li>
-                  <li><a href="/organization">{{ _('Organisations') }}</a></li>
+                  <li><a href="{{ dataLink }}">{{ _('Data') }}</a></li>
+                  <li><a href="{{ locationLink }}">{{ _('Locations') }}</a></li>
+                  <li><a href="{{ orgLink}}">{{ _('Organisations') }}</a></li>
                   <li style="position: relative">
                       <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
                         <span id="crises-label" >{{ _('Crises') }}</span>
                       </a>
                       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-                          <li><a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a></li>
-                          <li><a href="{{ h.url_for('show_custom_country', id='nepal-earthquake') }}">{{ _('Nepal Earthquake') }}</a></li>
-                          <li><a href="/ebola">{{ _('Ebola') }}</a></li>
+                          <li><a href="{{ elNinoLink }}">{{ _('El Nino') }}</a></li>
+                          <li><a href="{{ nepalLink }}">{{ _('Nepal Earthquake') }}</a></li>
+                          <li><a href="{{ ebolaLink }}">{{ _('Ebola') }}</a></li>
                       </ul>
                   </li>
-                  <li><a id="faq-label" href="/faq">{{ _('Faq') }}</a></li>
+                  <li><a id="faq-label" href="{{ faqLink }}">{{ _('Faq') }}</a></li>
                   <!--<li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>-->
                 {% endblock %}
               </ul>
@@ -191,4 +200,55 @@
   </div>
 </div>
 </header>
+
+<!-- MOBILE NAV START -->
+<nav class="mobile-only navbar navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <div class="hdxLogo">
+                <a class="logo" href="/"><div class="logo-img" alt="Humanitarian Data Exchange Logo"></div></a>
+            </div>
+                <div class="header-nav-search table-valign pull-left">
+                    <span class="table-valign-content">
+                        <div class="">
+                            <form class="header-search-form" method="get" action="/search?sort=metadata_modified+desc">
+                                <div id="input-search">
+                                    <div class="input-prepend input-append">
+                                        <i class="icon-search"></i>
+                                        <input type="text" class="searchInput" id="q" name="q" value="" autocomplete="off" placeholder="Search Datasets">
+                                    </div>
+                                    <div id="search-ahead" class="search-ahead"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </span>
+                </div>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ dataLink }}">Data</a></li>
+                <li><a href="{{ locationLink }}">Locations</a></li>
+                <li><a href="{{ orgLink }}">Organisations</a></li>
+                <li class="crisis"><a href="{{ elNinoLink }}"><span>Crisis</span><br>El Nino</a></li>
+                <li class="crisis"><a href="{{ nepalLink }}"><span>Crisis</span><br>Nepal Earthquake</a></li>
+                <li class="crisis"><a href="{{ ebolaLink }}"><span>Crisis</span><br>Ebola</a></li>
+                <li class="sub-nav"><a href="{{ faqLink }}">FAQ</a></li>
+                <li class="sub-nav top-pad">{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
+                <li class="sub-nav">{% link_for _('Terms'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
+                <li class="sub-nav"><a href="http://docs.hdx.rwlabs.org/blog">Blog</a></li>
+                <li class="sub-nav"><a href="http://docs.hdx.rwlabs.org/get-involved/">Contact</a></li>
+                <li class="sub-nav login top-pad"><a onclick="showOnboardingWidget('#loginPopup');" href="#">Login</a> | <a onclick="showOnboardingWidget('#signupPopup');" href="#">Sign up</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- MOBILE NAV END -->
+
 {% endblock %}

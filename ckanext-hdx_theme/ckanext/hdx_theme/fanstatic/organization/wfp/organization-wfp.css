@@ -2632,6 +2632,9 @@ ul.hdx-bs3 {
 .red {
   color: #ff0000;
 }
+nav.mobile-only {
+  display: none;
+}
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;

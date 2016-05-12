@@ -2383,3 +2383,6 @@ ul.hdx-bs3 {
 .red {
   color: #ff0000;
 }
+nav.mobile-only {
+  display: none;
+}
