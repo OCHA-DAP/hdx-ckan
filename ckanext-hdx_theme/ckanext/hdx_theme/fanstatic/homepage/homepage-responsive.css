@@ -1,3 +1,6 @@
+.mobile-carousel {
+  display: none;
+}
 @media (max-width: 1200px) {
   body.home {
     min-width: 100%;
@@ -69,18 +72,21 @@
   body.home .newHeader .submitData {
     padding: 10px;
   }
-  body.home .header-nav span {
+  body.home .newHeader .header-nav span {
     margin-left: 0;
   }
-  body.home .header-nav span.header-nav-search {
+  body.home .newHeader .header-nav span.header-nav-search {
     width: 25%;
   }
-  body.home .header-nav span.header-nav-search .icon-search {
+  body.home .newHeader .header-nav span.header-nav-search .icon-search {
     position: absolute;
   }
-  body.home .header-nav span.header-nav-search .header-search-form input {
+  body.home .newHeader .header-nav span.header-nav-search .header-search-form input {
     text-indent: 44px;
     width: 100%;
+  }
+  body.home .newHeader .header-nav .table-valign {
+    margin-left: 0px !important;
   }
   body.home .mainLinks {
     padding-left: 5px;
@@ -113,6 +119,57 @@
     bottom: auto;
     margin-bottom: 30px;
     position: relative;
+  }
+  body.home .homepage-main .carousel {
+    display: none;
+  }
+  body.home .homepage-main .carousel.mobile-carousel {
+    display: block;
+    min-height: 255px;
+    overflow: hidden;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    display: flex;
+    left: 45px;
+    position: absolute;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item {
+    margin-right: 45px;
+    width: 215px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic {
+    height: 150px;
+    width: 215px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic img,
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic iframe {
+    height: auto;
+    width: 100%;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption {
+    bottom: auto;
+    left: auto;
+    padding: 6px 0;
+    position: relative;
+    right: auto;
+    text-shadow: none;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption h3 {
+    font-family: 'Gotham-Bold', sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    margin: 0;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption p {
+    font-family: 'Gotham-Book', sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .carousel-indicators {
+    display: none;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .carousel-indicators li {
+    margin-right: 5px;
   }
   body.home .newFooter .span12 > .row {
     padding: 40px 20px;
@@ -312,10 +369,23 @@
   body.home .homepage-main .homepage-background .rightContent .countRow .itemName {
     font-size: 10px;
   }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    left: 15px;
+  }
   body.home .newFooter .mainLinks > li > a:after {
     margin-left: 10px;
   }
   body.home .newFooter .span12 > .row > .span6 {
     padding-right: 0;
+  }
+}
+@media (max-width: 414px) {
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    left: 80px;
+  }
+}
+@media (max-width: 320px) {
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    left: 53px;
   }
 }
