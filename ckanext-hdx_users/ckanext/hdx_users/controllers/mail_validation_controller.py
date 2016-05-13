@@ -546,7 +546,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 <html>
                   <head></head>
                   <body>
-                    <p>{fullname} invited you to join the <a href="https://hdx.rwlabs.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
+                    <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
                     <p>You can learn more about HDX by taking this quick {tour_link}</p>
                     <p>Join {hdx_link}</p>
                   </body>
