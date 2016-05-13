@@ -101,6 +101,7 @@ class HDXReqsOrgController(base.BaseController):
                 #from_url = data.get('from','')
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
+                h.redirect_to('user_dashboard_organizations')
             except hdx_mail.NoRecipientException, e:
                 h.flash_error(_(str(e)))
             except logic.ValidationError, e:
@@ -109,13 +110,6 @@ class HDXReqsOrgController(base.BaseController):
             except exceptions.Exception, e:
                 log.error(str(e))
                 h.flash_error(_('Request can not be sent. Contact an administrator'))
-            
-            #Removing this because the form doesn't submit a from parameter
-            h.redirect_to('user_dashboard_organizations')
-            #if from_url and len(from_url) > 0:
-            #    h.redirect_to(from_url)
-            #else:
-            #    h.redirect_to('/error')
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
