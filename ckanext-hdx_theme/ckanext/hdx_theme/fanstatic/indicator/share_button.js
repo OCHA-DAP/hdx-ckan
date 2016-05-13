@@ -7,7 +7,7 @@ $(document).ready(function(){
     }).done(function(msg){
       $('.change-link-wrapper a').each(function(){
           var link = $(this).attr('href');
-          $(this).attr('href', link.replace("data.hdx.rwlabs.org", msg['url']));
+          $(this).attr('href', link.replace("data.humdata.org", msg['url']));
       });
     });
     return false;
@@ -27,7 +27,7 @@ $(document).ready(function(){
     }).done(function(msg){
       var link = button.attr('href');
       console.log(msg);
-      link = link.replace("data.hdx.rwlabs.org", msg['url']);
+      link = link.replace("data.humdata.org", msg['url']);
       console.log("THIS:" + link);
       shareWindow.location.replace(link);
       //window.open(link);

@@ -1,3 +1,5 @@
+@import "variables";
+
 @gutterX: 25px;
 @gutterY: 20px;
 @gutterSmallX: 15px;
@@ -249,6 +251,10 @@ textarea {
   }
 }
 
+.form-section {
+  padding: @formSectionPadding;
+}
+
 .control-medium .error-block {
   width: 318px;
 }
@@ -268,6 +274,15 @@ textarea {
 
 .control-select.error .error-block {
   width: 196px;
+}
+
+.control-group.error .controls.error {
+  input, textarea {
+    border: 1px solid @orangeColor;
+  }
+  .error-block {
+    color: @orangeColor;
+  }
 }
 
 .control-full .select2-container {
