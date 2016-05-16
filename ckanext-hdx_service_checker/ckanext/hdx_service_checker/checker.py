@@ -80,7 +80,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s',
                         datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.StreamHandler()])
     runtime_vars = {
-        'hdx.rest.indicator.endpoint': 'https://manage.hdx.rwlabs.org/public/api2/values',
+        'hdx.rest.indicator.endpoint': 'https://manage.humdata.org/public/api2/values',
         'SOLR_URL': 'http://172.17.42.1:9011/solr/ckan/select?q=health&start=0&rows=1'
     }
     config_file = '/home/alex/PycharmProjects/hdx-ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json'
