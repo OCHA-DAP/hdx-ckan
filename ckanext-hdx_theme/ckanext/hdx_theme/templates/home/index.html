@@ -1,5 +1,129 @@
 {% extends "page.html" %}
 
+{% set carouselItems = [
+      {
+        "title": "New Feature",
+        "description": "Explore Lake Chad Basin Crisis visually via Map Explorer",
+        "graphic": "/images/homepage/map-explorer.gif",
+        "url": "/explore?id=1"
+      },
+      {
+        "title": "Interactive Data",
+        "description": "Yemen - mVAM Food Security Monitoring",
+        "graphic": "/images/homepage/mVAM.png",
+        "url": "/visualization/wfp-indicators/"
+      },
+      {
+        "title": "Interactive Data",
+        "description": "WFP - World Food Programme",
+        "graphic": "/images/homepage/WFP.png",
+        "url": "/organization/wfp"
+      },
+      {
+        "title": "What is HDX?",
+        "description": "Find more about HDX it's goals and features",
+        "graphic": "//www.youtube.com/embed/hCVyiZhYb4M",
+        "embed": true,
+        "url": "/about"
+      },
+      {
+        "title": "New Feature",
+        "description": "Explore Lake Chad Basin Crisis visually via Map Explorer",
+        "graphic": "/images/homepage/map-explorer.gif",
+        "url": "/explore?id=1"
+      },
+      {
+        "title": "Interactive Data",
+        "description": "Yemen - mVAM Food Security Monitoring",
+        "graphic": "/images/homepage/mVAM.png",
+        "url": "/visualization/wfp-indicators/"
+      },
+      {
+        "title": "Interactive Data",
+        "description": "WFP - World Food Programme",
+        "graphic": "/images/homepage/WFP.png",
+        "url": "/organization/wfp"
+      },
+      {
+        "title": "What is HDX?",
+        "description": "Find more about HDX it's goals and features",
+        "graphic": "//www.youtube.com/embed/hCVyiZhYb4M",
+        "embed": true,
+        "url": "/about"
+      }
+    ]
+%}
+
+        <div class="item active">
+          <div class="item-center">
+            <div class="sub-item">
+              <div class="sub-item-image">
+                <img class="graphic" src="/images/homepage/map-explorer.gif">
+                <div class="sub-item-action">
+                  <a href="/explore?id=1" class="btn">Explore</a>
+                </div>
+              </div>
+
+              <a href="/explore?id=1" >
+                <div class="sub-item-caption">
+                  <p class="title">New Feature</p>
+                  <p class="description">Explore Lake Chad Basin Crisis visually via Map Explorer</p>
+                </div>
+              </a>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-image">
+                <img class="graphic" src="/images/homepage/mVAM.png">
+                <div class="sub-item-action">
+                  <a href="/visualization/wfp-indicators/" class="btn">Explore</a>
+                </div>
+              </div>
+
+              <a href="/visualization/wfp-indicators/">
+                <div class="sub-item-caption">
+                  <p class="title">Interactive Data</p>
+                  <p class="description">Yemen - mVAM Food Security Monitoring</p>
+                </div>
+              </a>
+
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-image">
+                <img class="graphic" src="/images/homepage/WFP.png">
+                <div class="sub-item-action">
+                  <a href="/organization/wfp" class="btn">Explore</a>
+                </div>
+              </div>
+
+              <a href="/organization/wfp">
+                <div class="sub-item-caption">
+                  <p class="title">Interactive Data</p>
+                  <p class="description">WFP - World Food Programme</p>
+                </div>
+              </a>
+            </div>
+            <div class="sub-item">
+              <div class="sub-item-image disabled">
+                <div class="graphic">
+                  <iframe width="100%" height="100%" src="//www.youtube.com/embed/hCVyiZhYb4M" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <div class="sub-item-action">
+                  <a href="/about" class="btn">Explore</a>
+                </div>
+              </div>
+
+              <a href="/about">
+                <div class="sub-item-caption">
+                  <p class="title">What is HDX?</p>
+                  <p class="description">Find more about HDX it's goals and features</p>
+                </div>
+              </a>
+
+            </div>
+          </div>
+        </div>
+
+
 {% block flash %}
   {# eat the flash messages so they don't remain in the session #}
   {% set flash_messages = h.flash.pop_messages() %}
@@ -10,12 +134,19 @@
 
 {% block maintag %}{% endblock %}
 
+{% block bodytag %}{{ super() }} class="home"{% endblock %}
+
+{% block meta %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock %}
 
 {% block content %}
 
 {% if (data and data.current_step == 'hdx_onboarding_details') %}
   {{ h.snippet('widget/onboarding/register.html', id="registerPopup", user_id=data.user_id, email=data.email) }}
 {% endif %}
+
 <div class="homepage-main">
   <div class="homepage-background">
     <div class="container">
@@ -32,19 +163,23 @@
                 {{ _("Data Exchange") }}
               </h1>
               <h3>
-                {{ _("Where your data comes to life") }}
+                {{ _("Find, share and use humanitarian data all in one place") }}
               </h3>
-              <p class="hdxDescription">
-                {#
-                {{ _("This is an early version of the HDX Repository. Initially, you will be able to find
-                      global datasets relevant to humanitarian work as well as local datasets from our
-                      three pilot locations - Colombia, Kenya and Yemen. You can also create an
-                      account and add your own data to the repository to share privately or publicly. 
-                      Please have a look around and send us your feedback!") }}
-                      #}
-              </p>
+              <a href="/faq" class="btn btn-faq">{{_("READ OUR FAQ")}}</a>
+              <!--<p class="hdxDescription">-->
+                <!--{#-->
+                <!--{{ _("This is an early version of the HDX Repository. Initially, you will be able to find-->
+                      <!--global datasets relevant to humanitarian work as well as local datasets from our-->
+                      <!--three pilot locations - Colombia, Kenya and Yemen. You can also create an-->
+                      <!--account and add your own data to the repository to share privately or publicly. -->
+                      <!--Please have a look around and send us your feedback!") }}-->
+                      <!--#}-->
+              <!--</p>-->
             </div>
           </div>
+
+
+
 
         </div>
         <div class="col-xs-6 rightContent">
@@ -55,72 +190,62 @@
                   <p>{{ _("Find data") }}</p>
                 </div>
 
-                <div class="searchContent firstSearch">
+                <div class="firstSearch">
                   {{ self.home_search() }}
                   <div>
                     <p class="exampleSearch">
-                      {{ _("e.g.") }} <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>
-                      {{ _("or") }} <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>
+                      {{ _("Trending:") }} <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>,
+                      <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>
                     </p>
                   </div>
                 </div>
-                <div class="searchContent secondSearch">
-                  {{ self.group_select() }}
-                </div>
-              </div>
-            </div>
-            <div class="col-xs-12">
-              <div class="row countRow">
-                <div class="col-xs-12 hdxTextRow ">
+                <div class="countRow">
                   <div class="row">
-                    <div class="col-xs-4">
-                      <div class="row">
-                        <div class="col-xs-12 itemCount">
-                          <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
-                             data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
-                            0
-                          </a>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div id="datasets-count" class="col-xs-12 itemName">
-                          {{ _("Datasets") }}
-                        </div>
+                  <div class="col-xs-4">
+                    <div class="row">
+                      <div class="col-xs-12 itemCount">
+                        <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
+                           data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
+                          0
+                        </a>
                       </div>
                     </div>
-
-                    <div class="col-xs-4">
-                      <div class="row">
-                        <div class="col-xs-12 itemCount">
-                          <a href="{% url_for 'group_index' %}"
-                             data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
-                            0
-                          </a>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-12 itemName">
-                          {{ _("Locations") }}
-                        </div>
+                    <div class="row">
+                      <div id="datasets-count" class="col-xs-12 itemName">
+                        {{ _("Datasets") }}
                       </div>
                     </div>
-
-                    <div class="col-xs-4">
-                      <div class="row">
-                        <div class="col-xs-12 itemCount">
-                          <a href="#"
-                             data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
-                            0
-                          </a>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-xs-12 itemName">
-                          {{ _("Sources") }}
-                        </div>
+                  </div>
+                  <div class="col-xs-4">
+                    <div class="row">
+                      <div class="col-xs-12 itemCount">
+                        <a href="{% url_for 'group_index' %}"
+                           data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
+                          0
+                        </a>
                       </div>
                     </div>
-
+                    <div class="row">
+                      <div class="col-xs-12 itemName">
+                        {{ _("Locations") }}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-4">
+                    <div class="row">
+                      <div class="col-xs-12 itemCount">
+                        <a href="#"
+                           data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
+                          0
+                        </a>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-xs-12 itemName">
+                        {{ _("Sources") }}
+                      </div>
+                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -130,6 +255,7 @@
         </div>
       </div>
     </div>
+
     {#
     IN ORDER TO RE-ENABLE THE TRENDING BANNER warning-bar.js NEEDS TO BE INCLUDED
     BACK IN THE homepage BUNDLE IN resource.config
@@ -142,6 +268,83 @@
     </div>
     #}
   </div>
+<!-- MOBILE CAROUSEL START-->
+<div id="mobileCarousel" class="mobile-carousel carousel slide" data-ride="carousel" data-interval="false">
+    <div class="mobile-carousel-inner" role="listbox">
+        {% for item in carouselItems %}
+          <div class="item">
+              <div class="graphic">
+                  {% if item.embed %}
+                    <iframe width="100%" height="100%" src="{{ item.graphic }}" frameborder="0" allowfullscreen></iframe>
+                  {% else %}
+                    <a href="{{ item.url }}" >
+                      <img src="{{ item.graphic }}">
+                    </a>
+                  {% endif %}
+              </div>
+              <a href="{{ item.url }}" >
+                <div class="carousel-caption">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.description }}</p>
+                </div>
+              </a>
+          </div>
+        {% endfor %}
+
+    </div>
+
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+    </ol>
+</div>
+<!--  MOBILE CAROUSEL END -->
+
+
+  <div id="homepage-carousel" class="carousel slide" data-ride="carousel">
+      <!-- Wrapper for slides -->
+      <div class="carousel-inner" role="listbox">
+
+        {% for item in carouselItems %}
+          {% if (loop.index - 1) is divisibleby 4 %}
+            <div class="item {% if (loop.index - 1) == 0 %}active{% endif %}">
+              <div class="item-center">
+          {% endif %}
+                <div class="sub-item">
+                  <div class="sub-item-image">
+                  {% if item.embed %}
+                    <div class="graphic">
+                      <iframe width="100%" height="100%" src="{{ item.graphic }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                  {% else %}
+                    <img  class="graphic" src="{{ item.graphic }}">
+                  {% endif %}
+                    <div class="sub-item-action">
+                      <a href="{{ item.url }}" class="btn">Explore</a>
+                    </div>
+                  </div>
+
+                  <a href="{{ item.url }}" >
+                    <div class="sub-item-caption">
+                      <p class="title">{{ item.title }}</p>
+                      <p class="description">{{ item.description }}</p>
+                    </div>
+                  </a>
+                </div>
+          {% if (loop.index) is divisibleby 4 %}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        {% for item in carouselItems %}
+          {% if (loop.index - 1) is divisibleby 4 %}
+            <li data-target="#homepage-carousel" data-slide-to="{{ (loop.index - 1) // 4}}" class="{% if (loop.index - 1) == 0 %}active{% endif %}"></li>
+          {% endif %}
+        {% endfor %}
+      </ol>
+    </div>
 </div>
 
 {% endblock %}
@@ -157,47 +360,19 @@
 {% endblock %}
 
 {% block footer %}
-  <div class="homepageHeaderFooterBackground">
-    <footer class="newFooter">
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-12">
-            <span class="text">
-              {{ _("A project by") }}:
-            </span>
-            <a href="http://www.unocha.org"><img src="/images/homepage/logo-ocha.png"/></a>
-            <span class="text">
-              {{ _("Related Sites") }}:
-            </span>
-            <a href="http://www.humanitarianresponse.info"><img src="/images/homepage/logo-humanitarianresponse-tall.png"/></a>
-            <a href="http://reliefweb.int"><img src="/images/homepage/logo-reliefweb.png"/></a>
-            <a href="http://fts.unocha.org/"><img src="/images/homepage/logo-fts.png"/></a>
-            <span class="text">
-              {{ _("Stay connected") }}:
-            </span>
-            <a href="http://www.twitter.com/humdata"><img src="/images/homepage/twitter.png"/></a>
-            <a href="mailto:hdx@un.org"><img src="/images/homepage/email.png"/></a>
-          </div>
-        </div>
-      </div>
-      {% block footer_debug %}
-        {% if g.debug %}
-          {% include 'snippets/debug.html' %}
-        {% endif %}
-      {% endblock %}
-    </footer>
-  </div>
+  {% include "footer-wide.html" %}
 {% endblock %}
 
 
 {% block home_search %}
   <form class="form-search" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
     <div class="input-append">
-      <input type="text" class="searchInput" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
+      <input type="text" class="searchInput" id="q2" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
       <button type="submit" class="button">
         <i class="glyphicon glyphicon-search"></i>
       </button>
     </div>
+    <div class="search-ahead"></div>
   </form>
 {% endblock %}
 

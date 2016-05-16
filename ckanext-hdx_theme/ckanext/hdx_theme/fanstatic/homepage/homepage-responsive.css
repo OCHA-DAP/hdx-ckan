@@ -1,0 +1,391 @@
+.mobile-carousel {
+  display: none;
+}
+@media (max-width: 1200px) {
+  body.home {
+    min-width: 100%;
+  }
+  body.home .container {
+    padding: 0 15px;
+    width: 100%;
+  }
+  body.home .paddingRowHack {
+    margin: 0;
+    padding: 0;
+  }
+  body.home .paddingRowHack .paddingLeftHack {
+    padding-left: 15px;
+  }
+  body.home .paddingRowHack .paddingRightHack {
+    padding-right: 15px;
+  }
+  body.home .header-nav-search {
+    width: 239px;
+  }
+  body.home .header-nav-search .header-search-form .icon-search {
+    margin: 0 10px;
+    position: absolute;
+  }
+  body.home .header-nav-search .header-search-form input {
+    text-indent: 44px;
+    width: 197px;
+  }
+  body.home .newHeader .homepage-header-nav-border > .container {
+    padding: 0;
+  }
+  body.home .newHeader .submitData {
+    padding: 10px 20px;
+  }
+  body.home .mainLinks > li > a:after {
+    margin-left: 10px;
+  }
+  body.home .homepage-main .homepage-background .rightContent .col-xs-offset-2 {
+    margin-left: 25px;
+  }
+  body.home .newFooter .span12 > .row > .span6 {
+    padding-left: 15px;
+  }
+  body.home .newFooter .mainLinks {
+    margin-bottom: 20px;
+  }
+  body.home .newFooter .mainLinks li a {
+    line-height: 24px;
+    margin-left: 0;
+    margin-right: 7px;
+  }
+}
+@media (max-width: 992px) {
+  body.home .hdxLogo {
+    width: 45px;
+  }
+  body.home .hdxLogo .logo .logo-img {
+    background-image: url("/images/homepage/logo-hdx-mobile.svg");
+    background-repeat: no-repeat;
+    background-size: 29px 35px;
+    height: 35px;
+    margin-left: 0;
+    margin-top: 5px;
+    min-width: 29px;
+    min-height: 35px;
+    width: 29px;
+  }
+  body.home .newHeader .submitData {
+    padding: 10px;
+  }
+  body.home .newHeader .header-nav span {
+    margin-left: 0;
+  }
+  body.home .newHeader .header-nav span.header-nav-search {
+    width: 25%;
+  }
+  body.home .newHeader .header-nav span.header-nav-search .icon-search {
+    position: absolute;
+  }
+  body.home .newHeader .header-nav span.header-nav-search .header-search-form input {
+    text-indent: 44px;
+    width: 100%;
+  }
+  body.home .newHeader .header-nav .table-valign {
+    margin-left: 0px !important;
+  }
+  body.home .mainLinks {
+    padding-left: 5px;
+  }
+  body.home .mainLinks > li > a {
+    margin-left: 5px;
+  }
+  body.home .mainLinks > li > a:after {
+    margin-left: 5px;
+  }
+  body.home .homepage-main {
+    height: 100%;
+  }
+  body.home .homepage-main .homepage-background {
+    height: auto;
+    margin-bottom: 45px;
+  }
+  body.home .homepage-main .homepage-background .col-xs-6 {
+    width: 100%;
+  }
+  body.home .homepage-main .homepage-background .rightContent .col-xs-offset-2 {
+    margin-left: 0;
+  }
+  body.home .homepage-main .leftContent,
+  body.home .homepage-main .rightContent {
+    padding-left: 45px;
+    margin-top: 45px;
+  }
+  body.home .homepage-main .carousel {
+    bottom: auto;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  body.home .homepage-main .carousel {
+    display: none;
+  }
+  body.home .homepage-main .carousel.mobile-carousel {
+    display: block;
+    min-height: 255px;
+    overflow: hidden;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    display: flex;
+    left: 45px;
+    position: absolute;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item {
+    margin-right: 45px;
+    width: 215px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic {
+    height: 150px;
+    width: 215px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic img,
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic iframe {
+    height: auto;
+    width: 100%;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption {
+    bottom: auto;
+    left: auto;
+    padding: 6px 0;
+    position: relative;
+    right: auto;
+    text-shadow: none;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption h3 {
+    font-family: 'Gotham-Bold', sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    margin: 0;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption p {
+    font-family: 'Gotham-Book', sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .carousel-indicators {
+    display: none;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .carousel-indicators li {
+    margin-right: 5px;
+  }
+  body.home .newFooter .span12 > .row {
+    padding: 40px 20px;
+  }
+  body.home .newFooter .span12 > .row > .span6 {
+    width: 100%;
+  }
+  body.home .newFooter .span12 > .row > .span6 > .row:last-child {
+    padding-bottom: 40px;
+  }
+  body.home .newFooter .span12 > .row > .span1 {
+    margin-left: 0;
+    width: auto;
+  }
+  body.home .newFooter .span12 > .row > .span1 .icon-cc {
+    margin-right: 0 !important;
+  }
+  body.home .newFooter .span12 > .row > .span3 {
+    width: 75%;
+  }
+  body.home .newFooter .mainLinks li a {
+    line-height: 12px;
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  body.home .newFooter .mainLinks li:last-child a {
+    margin-right: 0;
+  }
+  body.home .newFooter input.email {
+    width: 58% !important;
+  }
+  body.home .newFooter input[type=submit] {
+    margin-left: 15px !important;
+  }
+  body.home .newFooter > div > div:first-child > .container > .row > .span12 {
+    padding-left: 0;
+  }
+}
+@media (max-width: 767px) {
+  body.home {
+    min-width: 100%;
+    width: 100%;
+  }
+  body.home nav.mobile-only {
+    display: block;
+  }
+  body.home .newHeader {
+    display: none;
+  }
+  body.home .container,
+  body.home .navbar-static-top .container,
+  body.home .navbar-fixed-top .container,
+  body.home .navbar-fixed-bottom .container {
+    width: auto;
+    padding: 0 15px;
+  }
+  body.home .navbar-static-top {
+    border-color: #c3cbcb;
+    border-width: 0 0 3px;
+  }
+  body.home .container > .navbar-header {
+    display: flex;
+    margin: 0;
+  }
+  body.home .container > .navbar-header .hdxLogo {
+    width: 15%;
+  }
+  body.home .container > .navbar-header .hdxLogo .logo .logo-img {
+    margin-top: 12px;
+  }
+  body.home .navbar-header,
+  body.home .navbar {
+    background-color: #FFF;
+    min-height: 55px;
+  }
+  body.home .navbar-nav {
+    margin-top: 20px;
+  }
+  body.home .header-nav-search {
+    height: 58px;
+    margin-left: 0;
+    width: 70%;
+  }
+  body.home .header-nav-search .header-search-form input {
+    text-indent: 56px;
+  }
+  body.home .navbar-toggle {
+    margin: 6px 0 0;
+    padding: 16px;
+    position: absolute;
+    right: 0;
+    width: auto;
+  }
+  body.home .navbar-toggle .icon-bar {
+    background-color: #333;
+    border-radius: 0;
+    height: 3px;
+    margin-left: 6px;
+    transform: rotate(45deg);
+    transition: transform 0.3s ease;
+    width: 20px;
+  }
+  body.home .navbar-toggle .icon-bar:last-child {
+    margin-top: -3px;
+    transform: rotate(-45deg);
+  }
+  body.home .navbar-toggle.collapsed .icon-bar {
+    transform: rotate(0deg);
+  }
+  body.home .navbar-toggle.collapsed .icon-bar + .icon-bar {
+    margin-top: 4px;
+  }
+  body.home .nav {
+    margin-bottom: 150px;
+  }
+  body.home .nav > li {
+    margin-top: 6px;
+  }
+  body.home .nav > li > a {
+    color: #FFF;
+    font-family: 'Gotham-Medium', sans-serif;
+    font-size: 18px;
+    line-height: 18px;
+    padding: 3px 30px;
+    text-transform: uppercase;
+  }
+  body.home .nav > li.crisis {
+    margin-top: 0px;
+  }
+  body.home .nav > li.crisis span {
+    font-size: 9px;
+    line-height: 14px;
+  }
+  body.home .nav > li.sub-nav a {
+    font-family: 'Gotham-Book', sans-serif;
+    font-size: 15px;
+    text-transform: none;
+  }
+  body.home .nav > li.top-pad {
+    margin-top: 40px;
+  }
+  body.home .nav > li.login a {
+    display: inline-block;
+    font-family: 'Gotham-Medium', sans-serif;
+    font-size: 12px;
+    padding-right: 5px;
+    text-transform: uppercase;
+  }
+  body.home .nav > li.login a:last-child {
+    padding-left: 5px;
+  }
+  body.home .container > .navbar-collapse {
+    background-color: rgba(0, 0, 3, 0.8);
+    height: 100vh;
+    left: 0;
+    margin: 3px 0 0;
+    position: absolute;
+    width: 100%;
+  }
+  body.home .homepage-main {
+    background-position: 0 242px;
+    background-size: 218% auto;
+  }
+  body.home .homepage-main .homepage-background .container > .row {
+    margin: 0;
+  }
+  body.home .homepage-main .homepage-background .leftContent {
+    margin-top: 15px;
+    padding-left: 0;
+  }
+  body.home .homepage-main .homepage-background .leftContent h1 {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  body.home .homepage-main .homepage-background .leftContent h3 {
+    font-size: 14px;
+  }
+  body.home .homepage-main .homepage-background .rightContent {
+    padding: 0;
+    width: 100%;
+  }
+  body.home .homepage-main .homepage-background .rightContent > .row > div {
+    margin-left: 0;
+    width: 100%;
+  }
+  body.home .homepage-main .homepage-background .rightContent .searchBox {
+    height: 235px;
+    max-width: 449px;
+    width: 100%;
+  }
+  body.home .homepage-main .homepage-background .rightContent .searchBox .firstSearch .form-search .input-append .searchInput {
+    width: 79%;
+  }
+  body.home .homepage-main .homepage-background .rightContent .countRow .itemCount a {
+    font-size: 30px;
+  }
+  body.home .homepage-main .homepage-background .rightContent .countRow .itemName {
+    font-size: 10px;
+  }
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    left: 15px;
+  }
+  body.home .newFooter .mainLinks > li > a:after {
+    margin-left: 10px;
+  }
+  body.home .newFooter .span12 > .row > .span6 {
+    padding-right: 0;
+  }
+}
+@media (max-width: 414px) {
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    left: 80px;
+  }
+}
+@media (max-width: 320px) {
+  body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
+    left: 53px;
+  }
+}
