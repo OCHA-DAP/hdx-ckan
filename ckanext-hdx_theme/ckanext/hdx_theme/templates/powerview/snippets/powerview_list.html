@@ -1,0 +1,15 @@
+{#
+Display a grid of powerview items.
+
+powerviews - A list of powerviews.
+
+Example:
+
+    {% snippet "powerview/snippets/powerview_list.html" %}
+
+#}
+<ul class="list-items dataset-list unstyled" >
+  {% for powerview in powerviews %}
+    {% snippet "powerview/snippets/powerview_item.html", powerview=powerview, position=loop.index %}
+  {% endfor %}
+</ul>

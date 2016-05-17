@@ -6,6 +6,7 @@ import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
 import ckanext.hdx_users.logic.validators as hdx_validators
+import ckanext.hdx_users.controllers.dashboard_controller as hdx_c
 
 
 def user_create(context, data_dict=None):
@@ -122,6 +123,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard_datasets',
                     ckan_icon='sitemap')
+        map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
+                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='dashboard_visualizations',
+                    ckan_icon='sitemap')
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
@@ -157,6 +162,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('user_datasets', '/user/{id:.*}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
+        map.connect('delete_page', '/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='hdx_delete_powerview',)
         return map
 
     def after_map(self, map):
@@ -168,10 +175,16 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard_datasets',
                     ckan_icon='sitemap')
+        map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
+                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='dashboard_visualizations',
+                    ckan_icon='sitemap')
         return map
 
     def get_actions(self):
-        return {}
+        return {
+
+        }
 
     def get_validators(self):
         return {
