@@ -47,4 +47,4 @@ ijson==2.2
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.2
--e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.0.1#egg=ckanext-powerview
+-e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.0.2#egg=ckanext-powerview
