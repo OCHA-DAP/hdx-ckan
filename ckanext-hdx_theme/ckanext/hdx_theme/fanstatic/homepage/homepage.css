@@ -79,6 +79,11 @@ header {
   font-weight: 400;
   font-size: 18px;
 }
+@media (max-width: 767px) {
+  .homepage-main .rightContent .searchBox .firstSearch .form-search .search-ahead {
+    width: 100%;
+  }
+}
 .homepage-main .rightContent .searchBox .firstSearch .form-search .input-append .searchInput {
   width: 355px;
 }
