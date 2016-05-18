@@ -2635,6 +2635,11 @@ ul.hdx-bs3 {
 nav.mobile-only {
   display: none;
 }
+@media (max-width: 767px) {
+  body.home .search-ahead {
+    width: 120%;
+  }
+}
 /* Left - right layout */
 .section-right {
   border-left: 1px solid #eeeeee;

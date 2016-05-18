@@ -48,7 +48,7 @@ $('document').ready(function(){
 		}
 	});
 
-	$('#search-ahead').on('mousedown', "li", function(){
+	$('.search-ahead').on('mousedown', "li", function(){
 		window.location = $(this).attr('data-href');
 	});
 
