@@ -33,8 +33,11 @@ class ExplorerController(base.BaseController):
         url = configuration.config.get('hdx.explorer.url')
         height = configuration.config.get('hdx.explorer.iframe.height')
         width = configuration.config.get('hdx.explorer.iframe.width')
+        site_url = configuration.config.get('ckan.site_url').strip("http:")
         if 'id' in request.params:
             url += request.params['id']
+        if 'load' in request.params:
+            url = site_url+request.params['id']
         template_data = {
             'data': {
                 'url': url,

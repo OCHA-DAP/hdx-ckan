@@ -271,7 +271,11 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         context = {'model': model, 'session': model.Session, 'for_view': True,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj,
                    }
-        data_dict = {'id': c.userobj.id, 'user_obj': c.userobj}
+        if c.userobj:
+            id = c.userobj.id
+        else:
+            id = None
+        data_dict = {'id': id, 'user_obj': c.userobj}
 
         user_dict={}
         #check if user can access this link
