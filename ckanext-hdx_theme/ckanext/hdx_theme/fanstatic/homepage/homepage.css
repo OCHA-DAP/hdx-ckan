@@ -232,6 +232,7 @@ header {
 .homepage-main .carousel .item .sub-item .sub-item-image .graphic {
   max-height: 100%;
   max-width: 215px;
+  height: 100%;
 }
 .homepage-main .carousel .item .sub-item .sub-item-caption {
   text-align: center;
