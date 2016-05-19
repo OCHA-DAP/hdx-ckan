@@ -9,7 +9,8 @@ Example:
 
 #}
 <ul class="list-items dataset-list unstyled" >
+
   {% for powerview in powerviews %}
-    {% snippet "powerview/snippets/powerview_item.html", powerview=powerview, position=loop.index %}
+    {% snippet "powerview/snippets/powerview_item.html", powerview=powerview, position=loop.index, mpx_url_template = mpx_url_template %}
   {% endfor %}
 </ul>

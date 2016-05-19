@@ -27,10 +27,12 @@ def is_mobile_browser(user_agent):
             return True
     return False
 
+
 def get_powerview_load_url(load_id):
     site_url = configuration.config.get('ckan.site_url').strip("http:")
-    result = 'load/'+site_url+'/api/action/powerview_show%3Fid='+load_id
+    result = 'load/' + site_url + '/api/action/powerview_show%3Fid=' + load_id
     return result
+
 
 class ExplorerController(base.BaseController):
     def show(self):
