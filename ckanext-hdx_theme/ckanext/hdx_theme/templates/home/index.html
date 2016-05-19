@@ -196,10 +196,12 @@
                       {{ _("Trending:") }}
                       <!--
                       <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>,
-                      <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>
+
                       -->
                       <a href="/search?q=Ecuador">{{ _('Ecuador') }}</a>,
-                      <a href="/search?q=Ebola">{{ _('Ebola') }}</a>
+                      <a href="/search?q=Ebola">{{ _('Ebola') }}</a>,
+                      <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>,
+                      <a href="{{ h.url_for(controller='organization', action='read', id='ocha-ethiopia', sort='metadata_modified desc') }}">{{ _("OCHA Ethiopia") }}</a>
                     </p>
                   </div>
                 </div>
