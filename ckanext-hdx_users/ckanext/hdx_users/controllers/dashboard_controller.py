@@ -296,7 +296,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             'data': {
                 'user_dict': user_dict,
                 'powerviews': powerviews,
-                'mpx_url_template': config.get('hdx.explorer.url')+mpx.get_powerview_load_url("")
+                'mpx_url_template': config.get('ckan.site_url') + config.get('hdx.explorer.url')+mpx.get_powerview_load_url("")
             }
         }
         return render('user/dashboard_visualizations.html', extra_vars=template_data)

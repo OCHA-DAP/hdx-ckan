@@ -30,11 +30,17 @@ Example:
 	  {% endblock %}
 
 	  {% block actions %}
+          {% set shareable_div_id = "shareable-link-" + powerview.id %}
 	  <div class="list-items mTop20">
 		  <span class="sspBold14"><a class="sspBold14" href="{{url}}">Edit</a></span> -
-		  <span class="sspBold14"><a class="sspBold14" href="#">Get Sharable Link</a></span> -
+		  <span class="sspBold14"><a class="sspBold14" href="javascript:void(0)" onclick="$('#{{shareable_div_id}}').slideToggle()">Get Sharable Link</a></span> -
 		  <span class="sspBold14"><a class="sspBold14" href="{{del_url}}">Delete</a></span>
 	  </div>
+      <div id="{{ shareable_div_id }}" class="shareable-link">
+          <label>Copy the URL below to share your visualisation with your colleagues. Anyone with this link
+            can access your visualisation.</label>
+          <textarea>{{ mpx_url_template }}{{ powerview.id }}</textarea>
+      </div>
 	  {% endblock %}
     </div>
 </li>
