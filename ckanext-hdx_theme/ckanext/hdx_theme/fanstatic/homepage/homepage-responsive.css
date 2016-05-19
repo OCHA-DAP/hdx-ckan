@@ -143,7 +143,7 @@
   }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic img,
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .graphic iframe {
-    height: auto;
+    height: 100%;
     width: 100%;
   }
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner .item .carousel-caption {
