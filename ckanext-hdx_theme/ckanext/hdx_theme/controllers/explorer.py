@@ -27,14 +27,21 @@ def is_mobile_browser(user_agent):
             return True
     return False
 
+def get_powerview_load_url(load_id):
+    site_url = configuration.config.get('ckan.site_url').strip("http:")
+    result = 'load/'+site_url+'/api/action/powerview_show%3Fid='+load_id
+    return result
 
 class ExplorerController(base.BaseController):
     def show(self):
         url = configuration.config.get('hdx.explorer.url')
         height = configuration.config.get('hdx.explorer.iframe.height')
         width = configuration.config.get('hdx.explorer.iframe.width')
+
         if 'id' in request.params:
             url += request.params['id']
+        if 'load' in request.params:
+            url += get_powerview_load_url(request.params['load'])
         template_data = {
             'data': {
                 'url': url,

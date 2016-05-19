@@ -203,7 +203,7 @@ hdx.google.dev_key =
 # hdx.gis.resource_pbf_url = http://localhost:7101/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
 
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
-hdx.onboarding.send_confirmation_email = false
+hdx.onboarding.send_confirmation_email = true
 
 # The configuration for running the service checks
 hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
