@@ -7,7 +7,7 @@
   <div style="min-height: 120px;">
     {% if data.powerviews %}
       <div class="wide">
-        {% snippet "powerview/snippets/powerview_list.html", powerviews=data.powerviews %}
+        {% snippet "powerview/snippets/powerview_list.html", powerviews=data.powerviews, mpx_url_template = data.mpx_url_template %}
       </div>
     {% else %}
     <div class="mL30">

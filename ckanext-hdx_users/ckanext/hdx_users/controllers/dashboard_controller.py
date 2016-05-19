@@ -21,6 +21,7 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckan.common import _, c, g, request
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_theme.controllers.explorer as mpx
 
 log = logging.getLogger(__name__)
 
@@ -277,7 +278,8 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             id = None
         data_dict = {'id': id, 'user_obj': c.userobj}
 
-        user_dict={}
+        user_dict = None
+        powerviews = None
         #check if user can access this link
         try:
             user_dict = get_action('user_show')(context, data_dict)
@@ -293,7 +295,8 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         template_data = {
             'data': {
                 'user_dict': user_dict,
-                'powerviews': powerviews
+                'powerviews': powerviews,
+                'mpx_url_template': config.get('hdx.explorer.url')+mpx.get_powerview_load_url("")
             }
         }
         return render('user/dashboard_visualizations.html', extra_vars=template_data)
