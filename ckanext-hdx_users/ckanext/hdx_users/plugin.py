@@ -162,7 +162,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('user_datasets', '/user/{id:.*}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
-        map.connect('delete_page', '/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+        map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='hdx_delete_powerview',)
         return map
 
