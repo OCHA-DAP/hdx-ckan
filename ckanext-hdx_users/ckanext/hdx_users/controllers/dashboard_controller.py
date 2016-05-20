@@ -21,6 +21,7 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckan.common import _, c, g, request
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_theme.controllers.explorer as mpx
 
 log = logging.getLogger(__name__)
 
@@ -228,8 +229,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             user_dict = get_action('user_show')(context, data_dict)
         except NotFound:
             came_from = h.url_for(controller='user', action='dashboard_datasets', __ckan_no_root=True)
-            h.redirect_to(controller='user',
-                              action='login', came_from=came_from)
+            h.redirect_to(controller='user', action='login', came_from=came_from)
 
         try:
             page = int(request.params.get('page', 1))
@@ -264,6 +264,68 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
             return render('user/dashboard_datasets.html')
 
+    def dashboard_visualizations(self):
+        """
+        Dashboard tab for visualizations.
+        """
+
+        context = {'model': model, 'session': model.Session, 'for_view': True,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   }
+        if c.userobj:
+            id = c.userobj.id
+        else:
+            id = None
+        data_dict = {'id': id, 'user_obj': c.userobj}
+
+        user_dict = None
+        powerviews = None
+        #check if user can access this link
+        try:
+            user_dict = get_action('user_show')(context, data_dict)
+        except NotFound:
+            came_from = h.url_for(controller='user', action='dashboard_visualizations', __ckan_no_root=True)
+            h.redirect_to(controller='user', action='login', came_from=came_from)
+
+        try:
+            powerviews = get_action('powerview_list')(context, data_dict)
+        except NotAuthorized:
+            abort(401, _('Not authorized to see this page'))
+
+        template_data = {
+            'data': {
+                'user_dict': user_dict,
+                'powerviews': powerviews,
+                'mpx_url_template': config.get('ckan.site_url') + config.get('hdx.explorer.url')+mpx.get_powerview_load_url("")
+            }
+        }
+        return render('user/dashboard_visualizations.html', extra_vars=template_data)
+
+    def hdx_delete_powerview(self, id):
+        """
+        Dashboard tab for visualizations.
+        """
+
+        context = {'model': model, 'session': model.Session, 'for_view': True,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   }
+        data_dict = {'id': id, 'user_obj': c.userobj}
+
+        #check if user can access this link
+        # try:
+        #     check_access('powerview_delete', context, data_dict)
+        # except NotAuthorized:
+        #     base.abort(401, _('Unauthorized to request reset password.'))
+
+        try:
+            get_action('powerview_delete')(context, data_dict)
+        except NotAuthorized:
+            abort(401, _('Not authorized to see this page'))
+
+        h.redirect_to(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='dashboard_visualizations')
+        # return self.dashboard_visualizations()
+
+
     def _get_dataset_search_results(self, user_id):
 
         ignore_capacity_check = False
@@ -290,3 +352,5 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         c.other_links['current_page_url'] = h.url_for('user_dashboard_datasets')
 
         return full_facet_info
+
+

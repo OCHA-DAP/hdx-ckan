@@ -1,0 +1,49 @@
+{#
+Renders a media item for a powerview. This should be used in a list.
+
+powerview - A powerview dict.
+
+Example:
+
+    <ul class="media-grid">
+      {% for powerview in powerview %}
+        {% snippet "powerview/snippets/powerview_item.html", powerview=powerview %}
+      {% endfor %}
+    </ul>
+#}
+{% set url="/explore?load="+powerview.id %}
+{% set del_url = h.url_for(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='hdx_delete_powerview', id=powerview.id) %}
+<li class="list-items dataset-item" id="mx-org-item-{{powerview.name}}">
+    <div class="list-items dataset-content">
+      {% block title %}
+   		 <h3 class="list-items dataset-heading">
+   		   <a href="{{url}}" title="{{powerview.title}}" ><span>Lake Chad Basin Crisis: {{powerview.title}}</span></a>
+   		 </h3>
+  	{% endblock %}
+      <div>{{ h.render_datetime(powerview.created) }}</div>
+      {% block description %}
+    	{% if powerview.description %}
+      		<div class="list-items content">{{ powerview.description }}</div>
+    	{% else %}
+      		<div class="list-items content empty">{{ _('This powerview has no description') }}</div>
+    	{% endif %}
+	  {% endblock %}
+
+	  {% block actions %}
+          {% set shareable_div_id = "shareable-link-" + powerview.id %}
+	  <div class="list-items mTop20">
+		  <span class="sspBold14"><a class="sspBold14" href="{{url}}">Edit</a></span> -
+		  <span class="sspBold14"><a class="sspBold14" href="javascript:void(0)" onclick="$('#{{shareable_div_id}}').slideToggle()">Get Sharable Link</a></span> -
+		  <span class="sspBold14"><a class="sspBold14" href="{{del_url}}">Delete</a></span>
+	  </div>
+      <div id="{{ shareable_div_id }}" class="shareable-link">
+          <label>Copy the URL below to share your visualisation with your colleagues. Anyone with this link
+            can access your visualisation.</label>
+          <textarea>{{ mpx_url_template }}{{ powerview.id }}</textarea>
+      </div>
+	  {% endblock %}
+    </div>
+</li>
+{% if position is divisibleby 3 %}
+  <li class="clearfix js-hide"></li>
+{% endif %}

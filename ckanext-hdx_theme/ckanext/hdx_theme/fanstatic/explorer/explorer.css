@@ -1,0 +1,21 @@
+/*
+ *  --- AUTO-GENERATED ---
+ * Please edit the LESS files
+ */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.dataset-resources .explorer-link {
+  color: #007ce0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0;
+  opacity: 1;
+  background-color: #ffffff;
+  padding-left: 10px;
+}
