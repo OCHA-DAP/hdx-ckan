@@ -21,7 +21,7 @@
 @import "forms";
 
 
-@hdxLogoUrl: "@{imagePath}/homepage/logo-beta.svg";
+@hdxLogoUrl: "@{imagePath}/homepage/logo-hdx.svg";
 
 @headerNavHeight: 55px;
 @headerNavBorderHeight: @navBorderHeight;
@@ -726,4 +726,16 @@ h4 small {
 
 .red {
   color: @redColor;
+}
+
+nav{
+	&.mobile-only{
+		display: none;
+	}
+}
+
+@media(max-width: 767px) {
+  body.home .search-ahead {
+    width: 120%;
+  }
 }

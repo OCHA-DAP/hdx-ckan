@@ -20,6 +20,8 @@ import ckan.lib.datapreview as datapreview
 
 # import ckanext.hdx_theme.helpers.counting_actions as counting
 
+import ckanext.hdx_theme.helpers.explorer_data as explorer
+
 # from webhelpers.html import escape, HTML, literal, url_escape
 # from ckan.common import _
 import urlparse as urlparse
@@ -628,3 +630,9 @@ def hdx_frequency_list():
               {'value': '14', 'text': 'Every two weeks'}, {'value': '30', 'text': 'Every month'}, {'value': '90', 'text': 'Every three months'},
               {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, ]
     return result
+
+def hdx_get_slice(id=None, all=False):
+    slices = explorer.explorer_data.get(id)
+    if not all and slices:
+        return slices[0]
+    return slices

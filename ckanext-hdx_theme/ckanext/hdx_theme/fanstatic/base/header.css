@@ -1955,7 +1955,7 @@ h4 small {
   display: block;
 }
 .logo .logo-img {
-  background-image: url("/images/homepage/logo-beta.svg");
+  background-image: url("/images/homepage/logo-hdx.svg");
   background-repeat: no-repeat;
   background-size: 126px 31px;
   width: 126px;
@@ -2382,4 +2382,12 @@ ul.hdx-bs3 {
 /* END - Actions button list */
 .red {
   color: #ff0000;
+}
+nav.mobile-only {
+  display: none;
+}
+@media (max-width: 767px) {
+  body.home .search-ahead {
+    width: 120%;
+  }
 }

@@ -160,4 +160,15 @@ li:nth-child(odd) > div.dsb-activity-item  {
     margin-bottom: 0px;
 }
 
+/* My Visualisations shareable link */
+.shareable-link {
+    display: none;
+}
+.shareable-link textarea{
+    width: 90%;
+    height: 30px;
+    padding: 3px;
+}
+/* END - My Visualisations shareable link */
+
 /* END Dashboard specific Style*/
