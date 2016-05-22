@@ -211,6 +211,6 @@ hdx.onboarding.send_confirmation_email = true
 hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
 
 # Map Explorer configs
-hdx.explorer.url = /mapx/#/
+hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
