@@ -3,6 +3,9 @@
 {% block dashboard_activity_stream_context %}{% endblock %}
 {% block add_action_content %}{% endblock %}
 
+{% block page_header_inner %}
+{% endblock %}
+
 {% block primary_content_inner %}
   {% set organizations = h.hdx_organizations_available_with_roles() %}
     {% if organizations %}
