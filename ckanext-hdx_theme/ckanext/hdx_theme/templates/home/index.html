@@ -22,8 +22,9 @@
       {
         "title": "Film",
         "description": "Making the Invisible Visible",
-        "graphic": "/images/homepage/movie.png",
-        "url": "//data.humdata.org"
+        "graphic": "/images/homepage/movie_small.png",
+        "embed": True,
+        "url": "//youtu.be/7QX5Ji5gl9g"
       },
       {
         "title": "Data Visualization",
@@ -279,13 +280,10 @@
         {% for item in carouselItems %}
           <div class="item">
               <div class="graphic">
-                  {% if item.embed %}
-                    <iframe width="100%" height="100%" src="{{ item.graphic }}" frameborder="0" allowfullscreen></iframe>
-                  {% else %}
-                    <a href="{{ item.url }}" >
+                  {% set link_targe = "_blank" if item.embed else "_self" %}
+                    <a href="{{ item.url }}" target="{{ link_targe }}">
                       <img src="{{ item.graphic }}">
                     </a>
-                  {% endif %}
               </div>
               <a href="{{ item.url }}" >
                 <div class="carousel-caption">
@@ -316,16 +314,14 @@
           {% endif %}
                 <div class="sub-item">
                   <div class="sub-item-image">
-                  {% if item.embed %}
-                    <div class="graphic">
-                      <iframe width="100%" height="100%" src="{{ item.graphic }}" frameborder="0" allowfullscreen></iframe>
-                    </div>
-                  {% else %}
-                    <img  class="graphic" src="{{ item.graphic }}">
-                    <div class="sub-item-action">
-                      <a href="{{ item.url }}" class="btn">Explore</a>
-                    </div>
-                  {% endif %}
+                      <img class="graphic" src="{{ item.graphic }}">
+                      <div class="sub-item-action">
+                          {% if item.embed %}
+                              <a href="{{ item.url }}" class="btn" target="_blank">Watch</a>
+                          {% else %}
+                              <a href="{{ item.url }}" class="btn">Explore</a>
+                          {% endif %}
+                      </div>
                   </div>
 
                   <a href="{{ item.url }}" >
