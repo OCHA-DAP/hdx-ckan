@@ -153,7 +153,7 @@ Example:
 </div>
 {% else %}
     <div class="list-items search-form">
-        {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else '' %}
+        {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
         <h2>Sorry no datasets found {{src_msg}}</h2>
     </div>
 {% endif %}
