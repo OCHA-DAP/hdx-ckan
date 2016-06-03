@@ -4,16 +4,21 @@ Created on Jun 2, 2014
 @author: alexandru-m-g
 '''
 
+import logging
 import ckan.plugins.toolkit as tk
 import beaker.cache as bcache
 import unicodedata
 
 import ckanext.hdx_theme.helpers.country_list_hardcoded as focus_countries
 
+log = logging.getLogger(__name__)
+
 bcache.cache_regions.update({
     'hdx_memory_cache': {
         'expire': 86400,  # 1 days
-        'type': 'memory',
+        'type': 'file',
+        'data_dir': '/tmp/hdxcache/data',
+        'lock_dir': '/tmp/hdxcache/lock',
         'key_length': 250
     }
 })
@@ -25,11 +30,13 @@ def strip_accents(s):
 
 @bcache.cache_region('hdx_memory_cache', 'cached_grp_list')
 def cached_group_list():
+    log.info("Creating cache for group list")
     groups = tk.get_action('group_list')({'user': '127.0.0.1'}, {'all_fields': True})
     return sorted(groups, key=lambda k: strip_accents(k['display_name']))
 
 
 def invalidate_cached_group_list():
+    log.info("Invalidating cache for group list")
     bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_list')
 
 
@@ -44,6 +51,7 @@ def filter_focus_countries(group_package_stuff):
 
 @bcache.cache_region('hdx_memory_cache', 'focus_countries_list')
 def cached_get_group_package_stuff():
+    log.info("Creating cache for focus countries")
     group_package_stuff = tk.get_action('cached_group_list')()
     focus_group_package_stuff = filter_focus_countries(group_package_stuff)
 
@@ -51,6 +59,7 @@ def cached_get_group_package_stuff():
 
 
 def invalidate_cached_get_group_package_stuff():
+    log.info("Invalidating cache for focus countries")
     bcache.region_invalidate(cached_get_group_package_stuff, 'hdx_memory_cache', 'focus_countries_list')
 
 
