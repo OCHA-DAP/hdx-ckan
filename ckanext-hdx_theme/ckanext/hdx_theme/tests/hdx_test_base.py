@@ -15,6 +15,7 @@ import ckan.logic as logic
 import ckan.new_tests.helpers as helpers
 
 import ckanext.hdx_package.helpers.helpers as hdx_actions
+import ckanext.hdx_package.helpers.caching as caching
 
 from pylons import config
 
@@ -67,6 +68,8 @@ class HdxBaseTest(object):
         cls.replace_package_create()
 
         cls._create_test_data()
+
+        caching.invalidate_group_caches()
 
     @classmethod
     def teardown_class(cls):
