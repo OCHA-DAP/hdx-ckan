@@ -46,7 +46,9 @@ html > .contribute-body {
 html > .contribute-body > .contribute-main {
   height: 100%;
 }
-html > .contribute-body > .contribute-main > div,
+html > .contribute-body > .contribute-main > div {
+  height: 100%;
+}
 html > .contribute-body > .contribute-main .create-step1 {
   height: 100%;
   overflow-x: hidden;

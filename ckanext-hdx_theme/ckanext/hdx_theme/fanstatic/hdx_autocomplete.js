@@ -115,7 +115,7 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
     getCompletions: function (string, fn) {
       var parts  = this.options.source.split('?');
       var end    = parts.pop();
-      var source = parts.join('?') + encodeURIComponent(string) + end;
+      var source = parts.join('?') + string + end; //no need to encode as it's done later on by jquery.url
       var client = this.sandbox.client;
       var options = {
         format: function(data) {

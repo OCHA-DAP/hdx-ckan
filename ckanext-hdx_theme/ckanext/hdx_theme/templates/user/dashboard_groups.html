@@ -2,6 +2,9 @@
 
 {% block dashboard_activity_stream_context %}{% endblock %}
 
+{% block page_header_inner %}
+{% endblock %}
+
 {% block add_action_content %}
   {% if h.check_access('group_create') %}
   {% if c.userobj.sysadmin %}

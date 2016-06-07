@@ -19,14 +19,14 @@ Example:
 {% resource 'hdx_theme/jquery.highlight' %}
 
 {% set min_version = full_facet_info.get("filters_selected") or full_facet_info.get("query_selected") %}
-
+{% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
 {% if packages %}
 <form id="dataset-filter-form" style="display: inline;">
     <div id="base-filter-location" style="display: none;">{{other_links.get('current_page_url')}}</div>
     <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
         <span class="mL15 list-header-title">{{ _("Data") }} [{{c.page.item_count}}]</span>
           <span class="mL30">
-              {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
+
               <input id="headerSearch" name="q" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
           </span>
           {% set limits = [25, 50, 100] %}
@@ -143,17 +143,18 @@ Example:
 <div class="search-list">
     <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
         {% for package in packages %}
-        {% if package.indicator and package.indicator == "1" %}
-        {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
-        {% else %}
-        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
-        {% endif %}
+            {% if package.indicator and package.indicator == "1" %}
+                {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
+            {% else %}
+                {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
+            {% endif %}
         {% endfor %}
     </ul>
 </div>
 {% else %}
     <div class="list-items search-form">
-        <h2>Sorry no datasets found for "{{ request.params.get('q') }}"</h2>
+        {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
+        <h2>Sorry no datasets found {{src_msg}}</h2>
     </div>
 {% endif %}
 

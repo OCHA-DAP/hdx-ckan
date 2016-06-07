@@ -14,7 +14,7 @@ before_install:
 
 script:
   - docker-compose up -d
-  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && python setup.py develop"
+  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install --upgrade -r requirements.txt && python setup.py develop"
   - docker exec -t hdxckan_ckan_1 hdxckantool update
   - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
   - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev

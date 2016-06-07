@@ -19,7 +19,7 @@
 
   <article class="module">
     {% block page_header %}
-      <header class="page-header paddingRowHack">
+      <header class="page-header paddingRowHack" style="position: relative;">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
           {{ h.build_nav_icon('user_dashboard', _('Newsfeed'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_datasets', _('My Datasets'), class_='hdx-tab-button') }}
@@ -27,9 +27,9 @@
           {{ h.build_nav_icon('user_dashboard_groups', _('My Locations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_visualizations', _('My Visualizations')) }}
         </ul>
-        <div class="pull-right paddingRightHack">
+        <div class="paddingRightHack" style="position: absolute; top: 0; right: 0">
           {% block page_header_inner %}
-
+            {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
           {% endblock %}
         </div>
       </header>
@@ -37,8 +37,6 @@
     <div class="module-content mTop35">
       {% block primary_content_inner %}
         <div data-module="dashboard">
-          {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
-
           {% block activity_stream %}
          	{{ c.dashboard_activity_stream }}
           {% endblock %}
