@@ -10,6 +10,10 @@
 <!--[if gt IE 8]><!--> <html lang="{{ lang }}"> <!--<![endif]-->
 {%- endblock -%}
 
+{% block mixpanel_init %}
+    {{ h.snippet('snippets/mixpanel.html') }}
+{% endblock %}
+
   {# Allows custom attributes to be added to the <head> tag #}
   <head{% block headtag %}{% endblock %}>
 
@@ -27,22 +31,50 @@
       //ga('create', 'UA-48221887-3', {
       //  'cookieDomain': 'none'
       //});
-      var dimension1Org = '{% block ga_dimension1 %}{% endblock %}';
-      if ( dimension1Org ) {
-          ga('set', 'dimension1', dimension1Org);
-      }
 
-      var dimension2Type = '{% block ga_dimension2 %}{% endblock %}';
-      if ( dimension2Type ) {
-          ga('set', 'dimension2', dimension2Type);
-      }
+      /**
+       * A map holding all the information to be sent to the analytics servers
+       * @type {object}
+       */
+      var analyticsInfo = {
+          'organizationName': '{% block analytics_org_name %}None{% endblock %}',
+          'organizationId': '{% block analytics_org_id %}None{% endblock %}',
+          'groupNames': {% block analytics_group_names %}[]{% endblock %},
+          'groupIds': {% block analytics_group_ids %}[]{% endblock %},
+          'isCod': {% block analytics_is_cod %}false{% endblock %},
+          'isIndicator': {% block analytics_is_indicator %}false{% endblock %},
+          'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
+          'datasetId': '{% block analytics_dataset_id %}None{% endblock %}'
+      };
 
-      var dimension3Location = '{% block ga_dimension3 %}{% endblock %}';
-      if ( dimension3Location ) {
-          ga('set', 'dimension3', dimension3Location);
-      }
-      ga('send', 'pageview');
+      (function() {
+          if (analyticsInfo.organizationName != 'None') {
+              ga('set', 'dimension1', analyticsInfo.organizationName);
+          }
 
+          var dimension2Type = analyticsInfo.isCod ? 'cod' : '';
+          dimension2Type += analyticsInfo.isCod && analyticsInfo.isIndicator ? '~' : '';
+          dimension2Type += analyticsInfo.isIndicator ? 'indicator' : '';
+
+          if (dimension2Type) {
+              ga('set', 'dimension2', dimension2Type);
+          }
+
+          var dimension3Location = analyticsInfo.groupNames.length < 15 ? analyticsInfo.groupNames.join('~') : 'many';
+          if (dimension3Location) {
+              ga('set', 'dimension3', dimension3Location);
+          }
+          ga('send', 'pageview');
+
+          mixpanel.track("page view", {
+              "org name": analyticsInfo.organizationName,
+              "org id": analyticsInfo.organizationId,
+              "group names": analyticsInfo.groupNames,
+              "group ids": analyticsInfo.groupIds,
+              "is cod": analyticsInfo.isCod,
+              "is indicator": analyticsInfo.isIndicator
+          });
+      }());
 
     </script>
 
