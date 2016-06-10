@@ -4,11 +4,20 @@
 
 .popup.popup-contribute{
   z-index: 90000;
+  overflow: auto;
   .content {
     //min-width: @containerRealSize*0.9;
-    width: @containerRealSize + 2*@containerMarginSize;
+    //width: @containerRealSize + 2*@containerMarginSize;
     height: 100%;
     padding: 0;
+
+    position: static;
+    left: auto;
+    top: auto;
+    transform: none;
+    -ms-transform: none;
+    -webkit-transform: none;
+
     @contributeMargin: 20px;
     i.close {
       position: absolute;

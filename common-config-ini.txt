@@ -59,6 +59,8 @@ ckan.auth.create_user_via_api = false
 ckan.auth.create_user_via_web = true
 ckan.auth.roles_that_cascade_to_sub_groups = admin
 
+ckanext.powerview.allow_user_create = true
+
 
 ## Search Settings
 

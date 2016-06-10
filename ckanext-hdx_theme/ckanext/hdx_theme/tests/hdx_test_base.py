@@ -15,6 +15,7 @@ import ckan.logic as logic
 import ckan.new_tests.helpers as helpers
 
 import ckanext.hdx_package.helpers.helpers as hdx_actions
+import ckanext.hdx_package.helpers.caching as caching
 
 from pylons import config
 
@@ -68,6 +69,8 @@ class HdxBaseTest(object):
 
         cls._create_test_data()
 
+        caching.invalidate_group_caches()
+
     @classmethod
     def teardown_class(cls):
         model.Session.remove()
@@ -80,22 +83,27 @@ class HdxBaseTest(object):
     @classmethod
     def replace_package_create(cls):
         '''
-        overrride this with an empty function in your class if you want the original
+        override this with an empty function in your class if you want the original
         package_create function that does not automatically populate some of the mandatory
         fields. ( More info in the class description )
         '''
-        def package_create_wrapper(context, data_dict):
-            if not data_dict.get('license_id'):
-                data_dict['license_id'] = 'cc'
 
-            private = False if str(data_dict.get('private','')).lower() == 'false' else True
-            if not private:
-                if not data_dict.get('data_update_frequency'):
-                    data_dict['data_update_frequency'] = '0'
-                if not data_dict.get('dataset_date'):
-                    data_dict['dataset_date'] = '11/11/2011'
-                if not data_dict.get('methodology'):
-                    data_dict['methodology'] = 'Automatically inserted test methodology'
+        # cls.use_package_create_wrapper flag can be also overwritten temporarily in your test class
+        cls.use_package_create_wrapper = True
+
+        def package_create_wrapper(context, data_dict):
+            if cls.use_package_create_wrapper:
+                if not data_dict.get('license_id'):
+                    data_dict['license_id'] = 'cc'
+
+                private = False if str(data_dict.get('private', '')).lower() == 'false' else True
+                if not private:
+                    if not data_dict.get('data_update_frequency'):
+                        data_dict['data_update_frequency'] = '0'
+                    if not data_dict.get('dataset_date'):
+                        data_dict['dataset_date'] = '11/11/2011'
+                    if not data_dict.get('methodology'):
+                        data_dict['methodology'] = 'Automatically inserted test methodology'
             return original_package_create(context, data_dict)
         logic._actions['package_create'] = package_create_wrapper
 
