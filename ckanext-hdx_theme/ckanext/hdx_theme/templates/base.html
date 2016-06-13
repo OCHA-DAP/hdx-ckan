@@ -44,7 +44,9 @@
           'isCod': {% block analytics_is_cod %}false{% endblock %},
           'isIndicator': {% block analytics_is_indicator %}false{% endblock %},
           'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
-          'datasetId': '{% block analytics_dataset_id %}None{% endblock %}'
+          'datasetId': '{% block analytics_dataset_id %}None{% endblock %}',
+          'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}'
+
       };
 
       (function() {
@@ -67,6 +69,7 @@
           ga('send', 'pageview');
 
           mixpanel.track("page view", {
+              "page title": analyticsInfo.pageTitle,
               "org name": analyticsInfo.organizationName,
               "org id": analyticsInfo.organizationId,
               "group names": analyticsInfo.groupNames,

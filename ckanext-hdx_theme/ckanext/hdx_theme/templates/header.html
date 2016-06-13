@@ -141,6 +141,7 @@
                   <div class="input-prepend input-append">
                     <i class="icon-search"></i>
                     <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
+                    <input type="hidden" value="main-nav" name="ext_search_source" />
                     {% if c.full_facet_info %}
                       {% set filter_icon_class = 'icon-close_filter_button' if c.full_facet_info.get("filters_selected") or c.full_facet_info.get("query_selected") else 'icon-open_filter_button' %}
                       <i id="search_filter_btn" class="{{ filter_icon_class }} filter-icon"  title="{{ _('Filters') }}"></i>
@@ -216,6 +217,7 @@
                                     <div class="input-prepend input-append">
                                         <i class="icon-search"></i>
                                         <input type="text" class="searchInput" id="q" name="q" value="" autocomplete="off" placeholder="Search Datasets">
+                                        <input type="hidden" value="main-nav" name="ext_search_source" />
                                     </div>
                                     <div class="search-ahead"></div>
                                 </div>

@@ -21,7 +21,6 @@ $(document).ready(function() {
     $("#location-dd").find("span").text($(this).text());
   });
 
-  //setUpResourcesTracking(); // directly called now from google-analytics.js
   setUpShareTracking();
   setUpGalleryTracking();
 });

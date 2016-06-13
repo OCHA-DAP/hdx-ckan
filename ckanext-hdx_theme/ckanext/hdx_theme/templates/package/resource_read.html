@@ -3,7 +3,7 @@
 {% set res = c.resource %}
 {% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
 
-{# The line below is for google analytics #}
+{# The lines below are for analytics #}
 {% block analytics_org_name %}{{ c.package.organization.name }}{% endblock %}
 {% block analytics_org_id %}{{ c.package.organization.id }}{% endblock %}
 {% block analytics_is_cod %}{{ c.analytics_is_cod }}{% endblock %}
