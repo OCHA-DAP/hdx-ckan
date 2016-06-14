@@ -27,7 +27,7 @@ $(function setUpSearchTracking() {
                 'isList': true,
                 'mandatory': true
             },
-            'ext_page_size': {
+            /*'ext_page_size': {
                 'name': 'items per page',
                 'isList': false,
                 'mandatory': false
@@ -36,16 +36,21 @@ $(function setUpSearchTracking() {
                 'name': 'sorting',
                 'isList': false,
                 'mandatory': false
+            },*/
+            'ext_cod': {
+                'name': 'cod filter',
+                'isList': false,
+                'mandatory': true
             }
         };
 
         var paramList = formEl.serializeArray();
         var mixpanelEventMeta = {
-            "page title": analyticsInfo.pageTitle,
-            "org name": analyticsInfo.organizationName,
+            "page title": analyticsInfo.pageTitle
+            /*"org name": analyticsInfo.organizationName,
             "org id": analyticsInfo.organizationId,
             "group names": analyticsInfo.groupNames,
-            "group ids": analyticsInfo.groupIds
+            "group ids": analyticsInfo.groupIds*/
         };
         var sendTrackingEvent = false;
         for (var i = 0; i < paramList.length; i++) {
@@ -61,6 +66,9 @@ $(function setUpSearchTracking() {
             var reResult = /ext_search_source=([^&]+)(&|$)/.exec(location.href);
             if (reResult && reResult.length > 1) {
                 mixpanelEventMeta["search box location"] = reResult[1];
+            }
+            else {
+                mixpanelEventMeta["search box location"] = "in-page";
             }
             console.log(JSON.stringify(mixpanelEventMeta));
             mixpanel.track("search", mixpanelEventMeta);
