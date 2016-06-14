@@ -31,6 +31,8 @@ import ckan.new_authz as new_authz
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 
+import ckanext.hdx_package.helpers.analytics as analytics
+
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 
@@ -704,10 +706,9 @@ class DatasetController(PackageController):
         template = template[:template.index('.') + 1] + format
 
         # set dataset type for google analytics - modified by HDX
-        # c.ga_dataset_type = self._google_analytics_dataset_type(c.pkg_dict)
-        c.analytics_is_cod = self._analytics_is_cod(c.pkg_dict)
-        c.analytics_is_indicator = self._analytics_is_indicator(c.pkg_dict)
-        c.analytics_group_names, c.analytics_group_ids = self._analytics_location(c.pkg_dict)
+        c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
+        c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
+        c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
@@ -771,27 +772,6 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
-
-    def _analytics_is_indicator(self, pkg_dict):
-        if int(pkg_dict.get('indicator', 0)) == 1:
-            return 'true'
-        return 'false'
-
-    def _analytics_is_cod(self, pkg_dict):
-        tags = [tag.get('name', '') for tag in pkg_dict.get('tags', [])]
-        if 'cod' in tags:
-            return 'true'
-        return 'false'
-
-    def _analytics_location(self, pkg_dict):
-        locations = pkg_dict.get('groups', [])
-        location_names = []
-        location_ids = []
-        for l in sorted(locations, key=lambda item: item.get('name', '')):
-            location_names.append(l.get('name', ''))
-            location_ids.append(l.get('id', ''))
-
-        return json.dumps(location_names), json.dumps(location_ids)
 
     def _get_org_extras(self, org_id):
         """
