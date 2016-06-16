@@ -20,7 +20,14 @@
   -ms-transform: none;
   -webkit-transform: none;
 }
-.popup.popup-contribute .content i.close {
+.popup.popup-contribute .content .custom-close-container {
+  position: absolute;
+  width: 100%;
+  max-width: 1260px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.popup.popup-contribute .content .custom-close-container i.close {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -28,7 +35,7 @@
   color: #888888;
   opacity: .8;
 }
-.popup.popup-contribute .content i.close.white {
+.popup.popup-contribute .content .custom-close-container i.close.white {
   color: #ffffff;
 }
 .popup.popup-contribute .content .details-content {
