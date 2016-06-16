@@ -7,7 +7,8 @@
   overflow: auto;
   .content {
     //min-width: @containerRealSize*0.9;
-    //width: @containerRealSize + 2*@containerMarginSize;
+    max-width: @containerRealSize + 2*@containerMarginSize;
+
     height: 100%;
     padding: 0;
 
@@ -17,6 +18,8 @@
     transform: none;
     -ms-transform: none;
     -webkit-transform: none;
+    overflow: hidden;
+
 
     @contributeMargin: 20px;
     .custom-close-container{
