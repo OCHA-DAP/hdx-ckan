@@ -684,6 +684,12 @@ class DatasetController(PackageController):
                 context, {'id': resource['id']})
             resource['has_views'] = len(resource_views) > 0
 
+            if helpers.is_ckan_domain(resource['url']):
+                resource['url'] = helpers.make_url_relative(resource['url'])
+
+            if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
+                resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
+
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
         try:
@@ -1079,9 +1085,9 @@ class DatasetController(PackageController):
 
         # set dataset type for google analytics - modified by HDX
         # c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
-        c.analytics_is_cod = self._analytics_is_cod(c.package)
-        c.analytics_is_indicator = self._analytics_is_indicator(c.package)
-        c.analytics_group_names, c.analytics_group_ids = self._analytics_location(c.package)
+        c.analytics_is_cod = analytics.is_cod(c.package)
+        c.analytics_is_indicator = analytics.is_indicator(c.package)
+        c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')
@@ -1101,6 +1107,13 @@ class DatasetController(PackageController):
         vars = {'resource_views': resource_views,
                 'current_resource_view': current_resource_view,
                 'dataset_type': dataset_type}
+
+        download_url = c.resource.get('perma_link') if c.resource.get('perma_link') else c.resource['url']
+        c.resource['original_url'] = download_url
+        c.resource['download_url'] = download_url
+        if helpers.is_ckan_domain(download_url):
+            c.resource['download_url'] = helpers.make_url_relative(download_url)
+
 
         template = self._resource_template(dataset_type)
         return render(template, extra_vars=vars)

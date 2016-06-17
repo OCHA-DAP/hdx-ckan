@@ -565,17 +565,13 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
     2) Return a domain relative url (without schema, domain or port) for local resources.
 
     :param data_dict: contains a resource and package dict
-    :type data_dict: dictionary
+    :type data_dict: dict
     :param proxy_schemes: list of url schemes to proxy for.
     :type data_dict: list
     '''
 
-    ckan_url = config.get('ckan.site_url', '//localhost:5000')
-    url = data_dict['resource']['url']
-
-    parsed_url = urlparse.urlparse(url)
-    ckan_parsed_url = urlparse.urlparse(ckan_url)
-    same_domain = True if not parsed_url.hostname or parsed_url.hostname == ckan_parsed_url.hostname else False
+    same_domain = is_ckan_domain(data_dict['resource']['url'])
+    parsed_url = urlparse.urlparse(data_dict['resource']['url'])
     scheme = parsed_url.scheme
 
     if not same_domain and scheme in proxy_schemes:
@@ -589,6 +585,30 @@ def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
         url = urlparse.urlunparse((None, None) + parsed_url[2:])
     return url
 
+
+def is_ckan_domain(url):
+    '''
+    :param url: url to check whether it's on the same domain as ckan
+    :type url: str
+    :return: True if it's the same domain. False otherwise
+    :rtype: bool
+    '''
+    ckan_url = config.get('ckan.site_url', '//localhost:5000')
+    parsed_url = urlparse.urlparse(url)
+    ckan_parsed_url = urlparse.urlparse(ckan_url)
+    same_domain = True if not parsed_url.hostname or parsed_url.hostname == ckan_parsed_url.hostname else False
+    return same_domain
+
+def make_url_relative(url):
+    '''
+    Transforms something like http://testdomain.com/test to /test
+    :param url: url to check whether it's on the same domain as ckan
+    :type url: str
+    :return: the new url as a string
+    :rtype: str
+    '''
+    parsed_url = urlparse.urlparse(url)
+    return urlparse.urlunparse((None, None) + parsed_url[2:])
 
 def generate_mandatory_fields():
     '''

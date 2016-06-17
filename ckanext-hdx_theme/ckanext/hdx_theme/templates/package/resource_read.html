@@ -1,7 +1,6 @@
 {% extends "package/base.html" %}
 
 {% set res = c.resource %}
-{% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
 
 {# The lines below are for analytics #}
 {% block analytics_org_name %}{{ c.package.organization.name }}{% endblock %}
@@ -49,7 +48,7 @@
              #}
             {% if res.url and h.is_url(res.url) %}
               <li>
-                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
+                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.download_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}
@@ -78,9 +77,9 @@
           {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
           {% block resource_read_url %}
             {% if res.url and h.is_url(res.url) %}
-              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ resource_dwd_url }}" title="{{ resource_dwd_url }}">{{ resource_dwd_url }}</a></p>
+              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.download_url }}" title="{{ res.download_url }}">{{ res.original_url }}</a></p>
             {% elif res.url %}
-              <p class="muted ellipsis">{{ _('URL:') }} {{ resource_dwd_url }}</p>
+              <p class="muted ellipsis">{{ _('URL:') }} {{ res.download_url }}</p>
             {% endif %}
           {% endblock %}
           <div class="prose notes" property="rdfs:label">
