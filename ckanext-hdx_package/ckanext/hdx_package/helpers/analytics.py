@@ -73,6 +73,7 @@ def wrap_resource_download_function():
                 mp = mixpanel.Mixpanel(config.get('hdx.mixpanel.token'))
                 event_dict = {
                     "resource name": resource_dict.get('name'),
+                    "resource id": resource_dict.get('id'),
                     "dataset name": dataset_dict.get('title'),
                     "dataset id": dataset_dict.get('id'),
                     "org name": dataset_dict.get('organization', {}).get('name'),

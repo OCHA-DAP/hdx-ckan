@@ -101,6 +101,7 @@ $(function setUpSearchTracking() {
     function setUpResourcesTracking() {
         $('.ga-download').on('click', function () {
             var rTitle = $(this).find(".ga-download-resource-title").text().trim();
+            var rId = $(this).find(".ga-download-resource-id").text().trim();
             // var dTitle = $(this).find(".ga-download-dataset-title").text().trim();
             var dTitle = analyticsInfo.datasetName;
             ga('send', 'event', 'resource', 'download', rTitle + " (" + dTitle + ")");
@@ -108,6 +109,7 @@ $(function setUpSearchTracking() {
 
             mixpanel.track("resource download", {
                 "resource name": rTitle,
+                "resource id": rId,
                 "dataset name": dTitle,
                 "dataset id": analyticsInfo.datasetId,
                 "page title": analyticsInfo.pageTitle,
