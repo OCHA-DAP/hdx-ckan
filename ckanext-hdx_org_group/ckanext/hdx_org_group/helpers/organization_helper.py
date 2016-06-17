@@ -7,8 +7,16 @@ Created on Jan 14, 2015
 import logging
 import json
 import os
+import shlex
+import subprocess
+from datetime import datetime, timedelta
 
 import pylons.config as config
+import ckanext.hdx_crisis.dao.data_access as data_access
+import ckanext.hdx_theme.helpers.less as less
+import ckanext.hdx_theme.helpers.helpers as h
+import ckanext.hdx_search.command as lunr
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 import ckan.logic as logic
 import ckan.plugins as plugins
@@ -16,22 +24,12 @@ import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
 import ckan.lib.navl.dictization_functions
-import ckanext.hdx_crisis.dao.data_access as data_access
 import ckan.model as model
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.uploader as uploader
 import paste.deploy.converters as converters
-import ckanext.hdx_theme.helpers.less as less
-import ckanext.hdx_theme.helpers.helpers as h
 import ckan.lib.helpers as helpers
 import ckan.logic.action as core
-import ckanext.hdx_search.command as lunr
-import shlex
-import subprocess
-import random
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-
-from datetime import datetime, timedelta
 from ckan.common import _
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
@@ -669,7 +667,7 @@ def recompile_everything(context):
 def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedelay=10000, viewportsize='1200x800'):
     try:
         command = 'capturejs -l --uri "' + uri + '" --output ' + output_file + ' --selector "' + selector + '"' + ' --renderdelay ' + str(
-            renderdelay) + ' --waitcapturedelay ' + str(waitcapturedelay) + ' --viewportsize ' + str(viewportsize)
+            renderdelay) + ' --waitcapturedelay ' + str(waitcapturedelay) + ' --viewportsize ' + str(viewportsize) + ' ; mogrify -resize 40% ' + output_file
         log.info(command)
         args = shlex.split(command)
         subprocess.Popen(args)
