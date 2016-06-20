@@ -33,7 +33,7 @@ repoze.who==2.0
 repoze.who-friendlyform==1.0.8
 requests==2.3.0
 simplejson==3.3.1
-six>=1.7.3
+six==1.7.3
 solrpy==0.9.5
 sqlalchemy-migrate==0.9.1
 sqlparse==0.1.11
@@ -44,7 +44,6 @@ zope.interface==4.1.1
 validate_email==1.2
 pyDNS==2.3.6
 ijson==2.2
-mixpanel>=4.3.0
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.2

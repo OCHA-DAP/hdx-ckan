@@ -204,6 +204,12 @@ hdx.google.dev_key =
 # hdx.gis.layer_import_url = http://localhost:1234/api/add-layer/dataset/{dataset_id}/resource/{resource_id}?resource_download_url={resource_download_url}&url_type={url_type}
 # hdx.gis.resource_pbf_url = http://localhost:7101/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
 
+# Analytics
+hdx.analytics.ga.token = UA-48221887-3
+# This should be overriden in your own prod.ini
+# hdx.analytics.enqueue_url = http://localhost:1234/api/send-analytics
+hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165
+
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
 hdx.onboarding.send_confirmation_email = true
 
@@ -214,6 +220,3 @@ hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_servi
 hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
-
-# Mixpanel
-hdx.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165

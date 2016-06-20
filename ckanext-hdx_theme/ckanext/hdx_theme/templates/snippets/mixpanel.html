@@ -39,6 +39,6 @@
             f.parentNode.insertBefore(a, f)
         }
     })(document, window.mixpanel || []);
-    mixpanel.init("{{ h.hdx_get_ckan_config('hdx.mixpanel.token') }}");
+    mixpanel.init("{{ h.hdx_get_ckan_config('hdx.analytics.mixpanel.token') }}");
 </script>
 <!-- end Mixpanel -->
