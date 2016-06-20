@@ -20,6 +20,9 @@ Example:
 
 {% set min_version = full_facet_info.get("filters_selected") or full_facet_info.get("query_selected") %}
 {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
+
+<div style="display: none;" id="analytics-number-of-results">{{c.page.item_count}}</div>
+
 {% if packages %}
 <form id="dataset-filter-form" style="display: inline;">
     <div id="base-filter-location" style="display: none;">{{other_links.get('current_page_url')}}</div>
@@ -154,6 +157,9 @@ Example:
 {% else %}
     <div class="list-items search-form">
         {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
+        <form id="dataset-filter-form" style="display: none;">
+            <input name="q" type="hidden" value="{{searchValue}}">
+        </form>
         <h2>Sorry no datasets found {{src_msg}}</h2>
     </div>
 {% endif %}

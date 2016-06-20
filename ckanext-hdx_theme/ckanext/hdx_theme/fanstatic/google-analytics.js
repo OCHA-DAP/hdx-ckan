@@ -44,9 +44,12 @@ $(function setUpSearchTracking() {
             }
         };
 
+        var numberOfResults = parseInt($('#analytics-number-of-results').text().trim()) || 0;
+
         var paramList = formEl.serializeArray();
         var mixpanelEventMeta = {
-            "page title": analyticsInfo.pageTitle
+            "page title": analyticsInfo.pageTitle,
+            "number of results": numberOfResults
             /*"org name": analyticsInfo.organizationName,
             "org id": analyticsInfo.organizationId,
             "group names": analyticsInfo.groupNames,
