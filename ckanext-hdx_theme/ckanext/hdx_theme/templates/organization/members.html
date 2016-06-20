@@ -1,5 +1,10 @@
 {% extends "organization/read_base.html" %}
 
+{# The line below is for google analytics #}
+{% block analytics_org_name %}{{ c.group_dict.name }}{% endblock %}
+{% block analytics_org_id %}{{ c.group_dict.id }}{% endblock %}
+
+
 {% set roles=h.hdx_member_roles_list() %}
 {% set authorized = h.check_access('organization_update', {'id': c.group_dict.id}) %}
 
