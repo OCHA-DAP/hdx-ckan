@@ -108,10 +108,10 @@ $(function setUpSearchTracking() {
             ga('send', 'event', 'dataset', 'resource-download', dTitle);
 
             mixpanel.track("resource download", {
-                "event source": "interface",
+                "event source": "web",
                 "resource name": rTitle,
                 "resource id": rId,
-                "dataset name": dTitle,
+                "dataset name": analyticsInfo.datasetName,
                 "dataset id": analyticsInfo.datasetId,
                 "page title": analyticsInfo.pageTitle,
                 "org name": analyticsInfo.organizationName,
