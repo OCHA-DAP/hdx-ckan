@@ -48,16 +48,29 @@
     }
   }
 }
+@media (min-width: @containerRealSize + 2*@containerMarginSize) {
+  body.contribute-body, #create-dataset-app {
+    overflow-x: hidden;
+  }
+}
+body.contribute-body{
+  min-width: @containerRealSize + 2*@containerMarginSize;
+}
 
 html {
   height: 100%;
   > .contribute-body {
-    height: 100%;
+    min-height: 100%;
     > .contribute-main{
       height: 100%;
-      > div, .create-step1{
+      .create-step1{
         height: 100%;
+        min-height: 760px;
         overflow-x: hidden;
+      }
+      > div {
+        height: 100%;
+        min-height: 760px;
       }
     }
   }
@@ -67,7 +80,7 @@ html {
   height: 100%;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
-  min-height: 740px;
+  min-height: 760px;
 
   @contributeMargin: 20px;
 
