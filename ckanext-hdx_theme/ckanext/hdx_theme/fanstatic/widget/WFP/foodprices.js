@@ -486,11 +486,11 @@ function generateTimeCharts(data,cf,title){
         .on("mouseover", function() { price.style("display", null); })
         .on("mouseout", function() { price.style("display", "none"); })
         .on("mousemove",function(d){
-            var x0 = x.invert(d3.mouse(this)[0]),
-                i = bisectDate(data, x0),
-                d0 = data[i - 1],
-                d1 = data[i],
-                d = x0 - d0.key > d1.key - x0 ? d1 : d0;
+            var x0 = x.invert(d3.mouse(this)[0]);
+            var i = bisectDate(data, x0);
+            var d0 = data[i - 1];
+            var d1 = data[i];
+            var d = x0 - d0.key > d1.key - x0 ? d1 : d0;
             price.attr("transform", "translate(" + (x(d.key)+margin.left) + "," + (y(d.value)+margin.top) + ")");
             var value = d.value<100 ? d.value.toPrecision(3) : Math.round(d.value);
             var m_names = new Array('Jan', 'Feb', 'Mar', 
