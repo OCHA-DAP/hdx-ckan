@@ -1,5 +1,10 @@
 {% extends "organization/base_form_page.html" %}
 
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ data.name }}{% endblock %}
+{% block analytics_org_id %}{{ data.id }}{% endblock %}
+
+
 {% block subtitle %}{{ _('Edit Organisation') }}{% endblock %}
 
 {% block page_heading_class %}hide-heading{% endblock %}

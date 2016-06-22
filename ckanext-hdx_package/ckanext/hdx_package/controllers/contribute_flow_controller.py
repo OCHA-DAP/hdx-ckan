@@ -7,6 +7,8 @@ import ckan.model as model
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 
+import ckanext.hdx_package.helpers.analytics as analytics
+
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
 from ckan.controllers.api import CONTENT_TYPES
@@ -110,8 +112,12 @@ class ContributeFlowController(base.BaseController):
     def _prepare_and_render(self, save_type='', data=None, errors=None, error_summary=None):
 
         save_type = save_type if save_type else ''
+
+        analytics_dict = self._generate_analytics_data(data)
+
         template_data = {
             'data': data,
+            'analytics': analytics_dict,
             'errors': errors,
             'error_summary': error_summary,
             'aborted': False
@@ -122,6 +128,20 @@ class ContributeFlowController(base.BaseController):
             return json.dumps(template_data)
         else:
             return base.render('contribute_flow/create_edit.html', extra_vars=template_data)
+
+    def _generate_analytics_data(self, data):
+        # in case of an edit event we populate the analytics info
+        analytics_dict = {}
+        if data and data.get('id'):
+            analytics_dict['is_cod'] = analytics.is_cod(data)
+            analytics_dict['is_indicator'] = analytics.is_indicator(data)
+            analytics_dict['group_names'], analytics_dict['group_ids'] = analytics.extract_locations_in_json(data)
+        else:
+            analytics_dict['is_cod'] = 'false'
+            analytics_dict['is_indicator'] = 'false'
+            analytics_dict['group_names'] = '[]'
+            analytics_dict['group_ids'] = '[]'
+        return analytics_dict
 
     def _save_or_update(self, context, package_type=None):
         data_dict = {}

@@ -5,9 +5,14 @@
 {% block subtitle %}{{ pkg.title or pkg.name }}{% endblock %}
 
 {# The line below is for google analytics #}
-{% block ga_dimension1 %}{{ pkg.organization.title }}{% endblock %}
-{% block ga_dimension2 %}{{ c.ga_dataset_type }}{% endblock %}
-{% block ga_dimension3 %}{{ c.ga_location }}{% endblock %}
+{% block analytics_org_name %}{{ pkg.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ pkg.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ c.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ c.analytics_is_indicator }}{% endblock %}
+{% block analytics_group_names %}{{ c.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ c.analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ pkg.name  }}{% endblock %}
+{% block analytics_dataset_id %}{{ pkg.id }}{% endblock %}
 
 {% block breadcrumb_content %}
 	{% block breadcrum_parent_item %}

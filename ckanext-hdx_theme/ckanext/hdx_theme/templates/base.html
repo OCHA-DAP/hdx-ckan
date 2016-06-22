@@ -10,6 +10,10 @@
 <!--[if gt IE 8]><!--> <html lang="{{ lang }}"> <!--<![endif]-->
 {%- endblock -%}
 
+{% block mixpanel_init %}
+    {{ h.snippet('snippets/mixpanel.html') }}
+{% endblock %}
+
   {# Allows custom attributes to be added to the <head> tag #}
   <head{% block headtag %}{% endblock %}>
 
@@ -20,29 +24,61 @@
       m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      ga('create', 'UA-48221887-3', 'auto');
+      var gaToken = '{{ h.hdx_get_ckan_config('hdx.analytics.ga.token') }}';
+      ga('create', gaToken, 'auto');
 
       //swap the two create calls in order to enable recording data from localhost instances
       //this is useful when testing to see realtime data on the Google Analytics site
       //ga('create', 'UA-48221887-3', {
       //  'cookieDomain': 'none'
       //});
-      var dimension1Org = '{% block ga_dimension1 %}{% endblock %}';
-      if ( dimension1Org ) {
-          ga('set', 'dimension1', dimension1Org);
-      }
 
-      var dimension2Type = '{% block ga_dimension2 %}{% endblock %}';
-      if ( dimension2Type ) {
-          ga('set', 'dimension2', dimension2Type);
-      }
+      /**
+       * A map holding all the information to be sent to the analytics servers
+       * @type {object}
+       */
+      var analyticsInfo = {
+          'organizationName': '{% block analytics_org_name %}None{% endblock %}',
+          'organizationId': '{% block analytics_org_id %}None{% endblock %}',
+          'groupNames': {% block analytics_group_names %}[]{% endblock %},
+          'groupIds': {% block analytics_group_ids %}[]{% endblock %},
+          'isCod': {% block analytics_is_cod %}false{% endblock %},
+          'isIndicator': {% block analytics_is_indicator %}false{% endblock %},
+          'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
+          'datasetId': '{% block analytics_dataset_id %}None{% endblock %}',
+          'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}'
 
-      var dimension3Location = '{% block ga_dimension3 %}{% endblock %}';
-      if ( dimension3Location ) {
-          ga('set', 'dimension3', dimension3Location);
-      }
-      ga('send', 'pageview');
+      };
 
+      (function() {
+          if (analyticsInfo.organizationName != 'None') {
+              ga('set', 'dimension1', analyticsInfo.organizationName);
+          }
+
+          var dimension2Type = analyticsInfo.isCod ? 'cod' : '';
+          dimension2Type += analyticsInfo.isCod && analyticsInfo.isIndicator ? '~' : '';
+          dimension2Type += analyticsInfo.isIndicator ? 'indicator' : '';
+
+          if (dimension2Type) {
+              ga('set', 'dimension2', dimension2Type);
+          }
+
+          var dimension3Location = analyticsInfo.groupNames.length < 15 ? analyticsInfo.groupNames.join('~') : 'many';
+          if (dimension3Location) {
+              ga('set', 'dimension3', dimension3Location);
+          }
+          ga('send', 'pageview');
+
+          mixpanel.track("page view", {
+              "page title": analyticsInfo.pageTitle,
+              "org name": analyticsInfo.organizationName,
+              "org id": analyticsInfo.organizationId,
+              "group names": analyticsInfo.groupNames,
+              "group ids": analyticsInfo.groupIds,
+              "is cod": analyticsInfo.isCod,
+              "is indicator": analyticsInfo.isIndicator
+          });
+      }());
 
     </script>
 
@@ -60,6 +96,7 @@
     #}
     {%- block meta -%}
       <meta charset="utf-8" />
+      <meta name="referrer" content="always">
       {% block meta_generator %}<meta name="generator" content="ckan {{ c.__version__ }}" />{% endblock %}
     {%- endblock -%}
 

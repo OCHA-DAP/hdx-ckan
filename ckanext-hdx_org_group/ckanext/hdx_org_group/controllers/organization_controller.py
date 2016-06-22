@@ -273,7 +273,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         self._setup_template_variables(context, data, group_type=group_type)
         c.form = render(self._group_form(group_type), extra_vars=vars)
-        return render(self._edit_template(c.group.type))
+
+        #  The extra_vars are needed here to send analytics information like org name and id
+        return render(self._edit_template(c.group.type), extra_vars={'data': data})
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:

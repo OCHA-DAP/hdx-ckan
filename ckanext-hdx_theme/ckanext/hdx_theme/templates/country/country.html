@@ -1,5 +1,9 @@
 {% extends "crisis/crisis-base.html" %}
 
+{# The lines below are for analytics #}
+{% block analytics_group_names %}['{{ c.group_dict.name }}']{% endblock %}
+{% block analytics_group_ids %}['{{ c.group_dict.id }}']{% endblock %}
+
 {% block subtitle %}
     {{ c.group_dict.display_name }}
 {% endblock %}

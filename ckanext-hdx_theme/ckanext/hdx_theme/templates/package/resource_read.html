@@ -1,12 +1,16 @@
 {% extends "package/base.html" %}
 
 {% set res = c.resource %}
-{% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
 
-{# The line below is for google analytics #}
-{% block ga_dimension1 %}{{ c.package.organization.title }}{% endblock %}
-{% block ga_dimension2 %}{{ c.ga_dataset_type }}{% endblock %}
-{% block ga_dimension3 %}{{ c.ga_location }}{% endblock %}
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ c.package.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ c.package.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ c.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ c.analytics_is_indicator }}{% endblock %}
+{% block analytics_group_names %}{{ c.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ c.analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ c.package.name  }}{% endblock %}
+{% block analytics_dataset_id %}{{ c.package.id }}{% endblock %}
 
 {% block head_extras -%}
   {{ super() }}
@@ -44,7 +48,7 @@
              #}
             {% if res.url and h.is_url(res.url) %}
               <li>
-                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
+                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.download_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}
@@ -58,7 +62,7 @@
                 #}
                   <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" style="width: 14px;" />
                   <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
-                  <span class="ga-download-dataset-title" style="display: none">{{ c.package.title }}</span>
+                  <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
                 </a>
               </li>
             {% endif %}
@@ -73,9 +77,9 @@
           {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
           {% block resource_read_url %}
             {% if res.url and h.is_url(res.url) %}
-              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ resource_dwd_url }}" title="{{ resource_dwd_url }}">{{ resource_dwd_url }}</a></p>
+              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.download_url }}" title="{{ res.download_url }}">{{ res.original_url }}</a></p>
             {% elif res.url %}
-              <p class="muted ellipsis">{{ _('URL:') }} {{ resource_dwd_url }}</p>
+              <p class="muted ellipsis">{{ _('URL:') }} {{ res.download_url }}</p>
             {% endif %}
           {% endblock %}
           <div class="prose notes" property="rdfs:label">

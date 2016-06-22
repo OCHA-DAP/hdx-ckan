@@ -96,6 +96,7 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
 
         template_data = {
             'data': {
+                'country_id': group_info['id'],
                 'country_name': group_info['name'],
                 'country_title': group_info.get('title', group_info['name']),
                 'topline_chart_sections': self._create_sections(top_line_items, charts_config_data),
