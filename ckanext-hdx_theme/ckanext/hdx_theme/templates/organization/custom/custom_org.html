@@ -1,5 +1,9 @@
 {% extends "page.html" %}
 
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ data.org_info.name }}{% endblock %}
+{% block analytics_org_id %}{{ data.org_info.id }}{% endblock %}
+
 {% block subtitle %}{{ data.org_info.display_name }}{% endblock %}
 
 {% block breadcrumb_content %}

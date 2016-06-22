@@ -31,6 +31,8 @@ import ckan.new_authz as new_authz
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 
+import ckanext.hdx_package.helpers.analytics as analytics
+
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 
@@ -682,6 +684,12 @@ class DatasetController(PackageController):
                 context, {'id': resource['id']})
             resource['has_views'] = len(resource_views) > 0
 
+            if helpers.is_ckan_domain(resource['url']):
+                resource['url'] = helpers.make_url_relative(resource['url'])
+
+            if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
+                resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
+
         # Is this an indicator? Load up graph data
         #c.pkg_dict['indicator'] = 1
         try:
@@ -704,8 +712,9 @@ class DatasetController(PackageController):
         template = template[:template.index('.') + 1] + format
 
         # set dataset type for google analytics - modified by HDX
-        c.ga_dataset_type = self._google_analytics_dataset_type(c.pkg_dict)
-        c.ga_location = self._google_analytics_location(c.pkg_dict)
+        c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
+        c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
+        c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
@@ -769,32 +778,6 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
-
-    def _google_analytics_dataset_type(self, pkg_dict):
-        type = 'standard'
-        tags = [tag.get('name', '') for tag in pkg_dict.get('tags', [])]
-
-        if int(pkg_dict.get('indicator', 0)) == 1:
-            type = 'indicator'
-        if 'cod' in tags:
-            type = 'cod~indicator' if type == 'indicator' else 'cod'
-
-        return type
-
-    def _google_analytics_location(self, pkg_dict):
-        limit = 15
-        locations = pkg_dict.get('groups', [])
-        if len(locations) >= limit:
-            result = 'many'
-        else:
-            locations = [item.get('name', '') for item in locations]
-            locations.sort()
-            result = "~".join(locations)
-
-        if not result:
-            result = 'none'
-
-        return result
 
     def _get_org_extras(self, org_id):
         """
@@ -1101,8 +1084,10 @@ class DatasetController(PackageController):
         c.resource['has_views'] = len(resource_views) > 0
 
         # set dataset type for google analytics - modified by HDX
-        c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
-        c.ga_location = self._google_analytics_location(c.package)
+        # c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
+        c.analytics_is_cod = analytics.is_cod(c.package)
+        c.analytics_is_indicator = analytics.is_indicator(c.package)
+        c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')
@@ -1122,6 +1107,13 @@ class DatasetController(PackageController):
         vars = {'resource_views': resource_views,
                 'current_resource_view': current_resource_view,
                 'dataset_type': dataset_type}
+
+        download_url = c.resource.get('perma_link') if c.resource.get('perma_link') else c.resource['url']
+        c.resource['original_url'] = download_url
+        c.resource['download_url'] = download_url
+        if helpers.is_ckan_domain(download_url):
+            c.resource['download_url'] = helpers.make_url_relative(download_url)
+
 
         template = self._resource_template(dataset_type)
         return render(template, extra_vars=vars)
