@@ -27,7 +27,13 @@
 	</div>
     {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
 	<div class="org-control-container">
-		{% set org_url_value = h.hdx_get_extras_element(data.extras) %}
+
+        {#
+            data.get('org_url') contains the url after a validation fail for a new org.
+            When editing an activity we need to get the url from the org extas
+         #}
+		{% set org_url_value = data.get('org_url') if data.get('org_url') else h.hdx_get_extras_element(data.extras) %}
+
 	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
 	    <div class="org-control-info info-field">
 	    	<div class="org-info-label">{{_('Where can people go to find more about this organisation?')}}</div>
