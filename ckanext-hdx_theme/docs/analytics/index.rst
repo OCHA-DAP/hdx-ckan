@@ -18,3 +18,5 @@ Setup steps
 
    * | there is a new queue for processing analytics requests called **analytics_q**. So we need a rq worker listening on it.
        We can either use a separate worker for each queue or workers that listen on both queues.
+   *  Information about how to run the **rqworker** can be found in
+      `Running the redis queue worker for analytics <http://agartner.bitbucket.org/hdxjobprocessor/README.html#rst-header-running-the-redis-queue-worker-for-analytics>`_
