@@ -3,6 +3,10 @@ Created on Jun 10, 2014
 
 @author: Dan, alexandru-m-g
 '''
+
+import logging as logging
+import exceptions as exceptions
+
 import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.lib.base as base
@@ -11,8 +15,7 @@ from ckan.common import c, request, _
 import ckan.lib.base as base
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckan.model as model
-import logging as logging
-import exceptions as exceptions
+
 
 import ckanext.hdx_theme.util.mail as hdx_mail
 
@@ -90,7 +93,8 @@ class HDXReqsOrgController(base.BaseController):
         errors = {}
         error_summary = {}
         data = {'from': request.params.get('from','')}
-        from_url = ''
+
+        sent_successfully = False
         if 'save' in request.params:
             try:
                 data = self._process_new_org_request()
@@ -98,10 +102,9 @@ class HDXReqsOrgController(base.BaseController):
                 
                 tk.get_action('hdx_send_new_org_request')(context, data)
                 
-                #from_url = data.get('from','')
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
-                h.redirect_to('user_dashboard_organizations')
+                sent_successfully = True
             except hdx_mail.NoRecipientException, e:
                 h.flash_error(_(str(e)))
             except logic.ValidationError, e:
@@ -110,6 +113,8 @@ class HDXReqsOrgController(base.BaseController):
             except exceptions.Exception, e:
                 log.error(str(e))
                 h.flash_error(_('Request can not be sent. Contact an administrator'))
+            if sent_successfully:
+                h.redirect_to('user_dashboard_organizations')
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
