@@ -99,6 +99,36 @@ $(function setUpSearchTracking() {
     }
 });
 
+$(
+    function setupLinkClickEvent() {
+        $(window.document).on("hdx-link-clicked", function(event, data){
+
+            var callback = function () {
+                if (data.destinationUrl){
+                    if (!data.target){
+                        window.location.href = data.destinationUrl;
+                    }
+                    else if (data.target != "_blank") {
+                        window.open(data.destinationUrl, data.target);
+                    }
+                }
+            };
+
+            var metadata = {
+                "page title": analyticsInfo.pageTitle
+            };
+            if (data.destinationUrl){
+                metadata["destionation url"] = data.destinationUrl;
+            }
+            if (data.linkType){
+                metadata["link type"] = data.linkType;
+            }
+
+            mixpanel.track("link click", metadata, callback);
+        });
+    }
+);
+
 
 (function() {
     function setUpResourcesTracking() {
