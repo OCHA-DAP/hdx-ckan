@@ -7,7 +7,8 @@
   overflow: auto;
   .content {
     //min-width: @containerRealSize*0.9;
-    //width: @containerRealSize + 2*@containerMarginSize;
+    max-width: @containerRealSize + 2*@containerMarginSize;
+
     height: 100%;
     padding: 0;
 
@@ -17,19 +18,30 @@
     transform: none;
     -ms-transform: none;
     -webkit-transform: none;
+    overflow: hidden;
+
 
     @contributeMargin: 20px;
-    i.close {
+    .custom-close-container{
       position: absolute;
-      top: @contributeMargin;
-      right: @contributeMargin;
-      font-size: @contributeMargin;
-      color: @grayColor;
-      opacity: .8;
-      &.white {
-        color: @whiteColor;
+      width: 100%;
+      max-width: @containerRealSize + 2*@containerMarginSize;
+      left: 50%;
+      transform: translateX(-50%);
+
+      i.close {
+        position: absolute;
+        top: @contributeMargin;
+        right: @contributeMargin;
+        font-size: @contributeMargin;
+        color: @grayColor;
+        opacity: .8;
+        &.white {
+          color: @whiteColor;
+        }
       }
     }
+
     .details-content{
       height: 100%;
       iframe {

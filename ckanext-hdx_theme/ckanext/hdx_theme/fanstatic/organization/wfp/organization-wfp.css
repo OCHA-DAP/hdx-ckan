@@ -1630,9 +1630,6 @@ textarea {
   display: none;
 }
 /* END List header */
-body.contribute-body {
-  min-width: 100%;
-}
 .hdx-form {
   color: #333333;
 }

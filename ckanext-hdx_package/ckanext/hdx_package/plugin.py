@@ -31,6 +31,7 @@ import ckanext.hdx_package.actions.update as hdx_update
 import ckanext.hdx_package.actions.delete as hdx_delete
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
 import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.actions.get as hdx_get
 
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
@@ -55,6 +56,9 @@ def run_on_startup():
 
     # replace original get_proxified_resource_url, check hdx_get_proxified_resource_url for more info
     resourceproxy_plugin.get_proxified_resource_url = hdx_helpers.hdx_get_proxified_resource_url
+
+    # wrap resource download function so that we can track download events
+    analytics.wrap_resource_download_function()
 
 
 def _generate_license_list():

@@ -1,5 +1,9 @@
 {% extends "crisis/crisis-base.html" %}
 
+{# The lines below are for analytics #}
+{% block analytics_group_names %}['{{ data.country_name }}']{% endblock %}
+{% block analytics_group_ids %}['{{ data.country_id }}']{% endblock %}
+
 {% block subtitle %}{{ data.country_title }}{% endblock %}
 {% block crisis_title %} {{ data.country_title }} {% endblock %}
 {% block crisis_actions %}

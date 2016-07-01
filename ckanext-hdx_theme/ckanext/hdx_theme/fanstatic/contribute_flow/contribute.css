@@ -37,11 +37,20 @@
 .drag-drop-component.source-url .source-file-upload {
   display: none;
 }
+@media (min-width: 1200px - 30px + 2*45px) {
+  body.contribute-body,
+  #create-dataset-app {
+    overflow-x: hidden;
+  }
+}
+body.contribute-body {
+  min-width: 1260px;
+}
 html {
   height: 100%;
 }
 html > .contribute-body {
-  height: 100%;
+  min-height: 100%;
 }
 html > .contribute-body > .contribute-main {
   height: 100%;
@@ -49,13 +58,18 @@ html > .contribute-body > .contribute-main {
 html > .contribute-body > .contribute-main > div,
 html > .contribute-body > .contribute-main .create-step1 {
   height: 100%;
+  min-height: 760px;
   overflow-x: hidden;
+}
+html > .contribute-body > .contribute-main > div {
+  height: 100%;
+  min-height: 760px;
 }
 .contribute-splash {
   height: 100%;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
-  min-height: 740px;
+  min-height: 760px;
 }
 .contribute-splash .drop-here {
   position: absolute;

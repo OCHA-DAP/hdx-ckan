@@ -1,9 +1,11 @@
-import ckan.plugins as p
-from ckan.model import Session
-import ckan.lib.helpers as h
 import json
 import os
 from pylons import config
+
+import ckan.plugins as p
+from ckan.model import Session
+import ckan.lib.helpers as h
+
 
 class FeatureSearchCommand(p.toolkit.CkanCommand):
     '''
@@ -70,9 +72,12 @@ def buildIndex(path):
         ## when new crisis are added
 
         index.append({'title':'Ebola', 'url':h.url_for(controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
-            action='read',qualified=True), 'type':'crisis'})
+                    action='read',qualified=True), 'type':'crisis'})
         index.append({'title':'Nepal Earthquake', 'url':h.url_for(controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
                     action='read', id='nepal-earthquake', qualified=True), 'type':'crisis'})
+        index.append({'title':'El Nino', 'url':h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                    action='read_crisis', id='elnino', qualified=True), 'type':'crisis'})
+
 
 
         ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
