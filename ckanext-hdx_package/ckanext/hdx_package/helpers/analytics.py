@@ -123,7 +123,7 @@ def wrap_resource_download_function():
                     'mixpanel_tracking_id': 'anonymous',
                     'mixpanel_token': config.get('hdx.analytics.mixpanel.token'),
                     'send_mixpanel': True,
-                    'send_ga': True,
+                    'send_ga': False,
                     'mixpanel_meta': {
                         "resource name": resource_dict.get('name'),
                         "resource id": resource_dict.get('id'),
