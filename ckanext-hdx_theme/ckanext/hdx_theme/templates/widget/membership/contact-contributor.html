@@ -1,0 +1,70 @@
+{#
+Membership: Contact Contributor widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/membership/contact-contributor.html',
+            id="contactContributorPopup",
+            title="Dataset title",
+            topics={'1':'Dataset problem'}
+       )
+    }}
+#}
+
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-select-organisation" %}
+{% resource 'hdx_theme/widget/membership/contact-contributor.css' %}
+{% resource 'hdx_theme/widget/membership/contact-contributor.js' %}
+{% extends "widget/onboarding/two-column.html" %}
+
+{% block left_content %}
+    <div>
+        <div class="large-title">{{ _("Contact the contributor") }}</div>
+        <div class="mTop20 large-text">{{ _("Got questions or comments about this dataset?") }}</div>
+        <div class="mTop20 regular-text">
+            {{ _("Use the form to contact the dataset contributor") }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_content %}
+    <div id="contact-contributor">
+        <form id="contact-contributor-form">
+            <div class="row" style="overflow-y: auto; height: 500px;">
+                <div class="col-xs-12">
+                    <strong>[Dataset] {{title}}</strong>
+                    <!--<div class="bold-regular-text">Please fill out the following: </div>-->
+                    <select class="required mTop15" id="topics-selector" name="topic">
+                        <option id="" value="">Your inquiry is regarding ...</option>
+                        {% for key, value in topics.iteritems() %}
+                            <option id="{{key}}" value="{{value}}">{{value}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="mTop15 control">
+                        <input id="fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
+                        <label for="fullname">Your name</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <input id="email" name="email" class="full-width required" type="text" value="{{email}}">
+                        <label for="email">Your email address</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
+                        <label for="faq-msg">Comments</label>
+                    </div>
+                    <div class="mTop15 captcha">
+                        <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
+                                style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-side-actions">
+                <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
+                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+

@@ -1,0 +1,49 @@
+@import "../../base/variables";
+
+@popupWidth: 370px;
+@paddingNormal: 35px;
+@paddingSmall: 20px;
+@paddingLarge: 60px;
+@checkBoxSize: 12px;
+@bigColumnWidth: 445px;
+@baseHeight: 560px;
+@baseLineHeight: 20px;
+
+@inputHeight: 44px;
+@inputPadding: @paddingSmall;
+
+@widgetHeight: @baseHeight;
+@textAreaHeight: 100px;
+
+#faq-msg {
+  height: @textAreaHeight;
+  padding: 14px @paddingSmall;
+  & ~ label{
+    bottom: @textAreaHeight - @inputHeight;
+  }
+  &.input-content ~ label {
+    bottom: 6px;
+  }
+
+}
+
+#faq-send-message {
+  .captcha{
+    overflow: hidden;
+  }
+}
+
+#contactContributorPopup{
+  .two-column-widget {
+    .two-column-left {
+      background-color: #1ebfb3;
+      height: @widgetHeight;
+    }
+
+    @extraPaddingTwoColumnRight: 50px;
+    .two-column-right {
+      height: @widgetHeight;
+      padding: @paddingLarge;
+    }
+  }
+}

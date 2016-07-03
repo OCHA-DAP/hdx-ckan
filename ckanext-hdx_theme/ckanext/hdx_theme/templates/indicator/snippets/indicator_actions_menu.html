@@ -1,6 +1,7 @@
 {% set url = request.url %}
 
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
+{{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=pkg.title, topics={'1':'test'}) }}
 
 <span class="{{ classes }}">
     <ul class="">
@@ -9,7 +10,7 @@
                 <strong class="uppercase">{{ h.hdx_follow_link('dataset', pkg.id, "", "link-separator") }}</strong>
             </li>
             <li>
-                <a href="#" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">
+                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup').show();" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">
                     <i class="icon-envelope"></i>
                     Contact this contributor
                 </a>
