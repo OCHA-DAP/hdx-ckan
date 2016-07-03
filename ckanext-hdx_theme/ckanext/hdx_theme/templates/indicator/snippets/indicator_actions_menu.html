@@ -3,19 +3,51 @@
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
 
 <span class="{{ classes }}">
-  {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title, direct=true %}
-  {{ h.follow_button('dataset', pkg.name) }}
-  {% if h.check_access('package_update', {'id':pkg.id }) %}
-    {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
-    <a class="btn hdx-btn" onclick="contributeAddDetails('{{ pkg.id }}')"
-       {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
-        href="#">
-        {{ _('Edit') }}
-    </a>
-  {% endif %}
-  {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
-    {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=True %}
-  {% endif %}
+    <ul class="">
+        {% if c.user %}
+            <li>
+                <strong class="uppercase">{{ h.hdx_follow_link('dataset', pkg.id, "", "link-separator") }}</strong>
+            </li>
+            <li>
+                <a href="#" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">
+                    <i class="icon-envelope"></i>
+                    Contact this contributor
+                </a>
+            </li>
+        {% endif %}
+        <li>
+            <a href="#" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular dataset including private dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
+                <i class="icon-megahorn"></i>
+                Group message
+            </a>
+        </li>
+        {% if h.check_access('package_update', {'id':pkg.id }) %}
+            {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
+            <li>
+                <a onclick="contributeAddDetails('{{ pkg.id }}')"
+                   {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
+                    href="#">
+                    <i class="icon-edit"></i>
+                    {{ _('Edit') }}
+                </a>
+            </li>
+        {% endif %}
+
+        {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
+            <li class="delete-override">
+                {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=False, icon="icon-rubbish-bin" %}
+            </li>
+        {% endif %}
+        <li>
+            <span>
+                {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title, direct=true, disable_pull_left=true, icon_font_size="24px" %}
+            </span>
+        </li>
+    </ul>
+
+
+  {# h.follow_button('dataset', pkg.name) #}
+
   {#
   <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
           data-toggle="tooltip">Analyse</a>
