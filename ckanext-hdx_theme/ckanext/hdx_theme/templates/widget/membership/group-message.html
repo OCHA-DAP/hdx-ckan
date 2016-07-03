@@ -1,57 +1,61 @@
 {#
-Membership: Contact Contributor widget
+Membership: Group Message widget
 
 Depends on:
     Fanstatic resource bundle "popup"
 
 Example:
-    {{ h.snippet('widget/membership/contact-contributor.html',
+    {{ h.snippet('widget/membership/group-message.html',
             id="contactContributorPopup",
             title="Dataset title",
-            topics={'1':'Dataset problem'}
+            org="Org Name",
+            groups={'1':'Dataset problem'}
        )
     }}
 #}
 
 {% set class = "popup-onboarding" %}
 {% set two_column_class = "two-column-select-organisation" %}
-{% resource 'hdx_theme/widget/membership/contact-contributor.css' %}
-{% resource 'hdx_theme/widget/membership/contact-contributor.js' %}
+{% resource 'hdx_theme/widget/membership/group-message.css' %}
+{% resource 'hdx_theme/widget/membership/group-message.js' %}
 {% extends "widget/onboarding/two-column.html" %}
 
 {% block left_content %}
     <div>
-        <div class="large-title">{{ _("Contact the contributor") }}</div>
-        <div class="mTop20 large-text">{{ _("Got questions or comments about this dataset?") }}</div>
+        <div class="large-title">{{ _("Group Message") }}</div>
+        <div class="mTop20 large-text">
+            {{ _("Use group message to collaborate, communicate or make annoucements to other members of ") }}
+            <strong>{{org}}</strong>
+        </div>
         <div class="mTop20 regular-text">
-            {{ _("Use the form to contact the dataset contributor") }}
+            {{ _("This feature is available for both private and public datasets") }}
         </div>
     </div>
 {% endblock %}
 
 {% block right_content %}
-    <div id="contact-contributor">
-        <form id="contact-contributor-form">
+    <div id="group-message">
+        <form id="group-message-form">
             <div class="row" style="overflow-y: auto; height: 400px;">
                 <div class="col-xs-12">
                     <div class="bold-regular-text">[Dataset] {{ title | truncate(65) }}</div>
-                    <select class="required mTop15" id="contact-contributor-topics-selector" name="topic">
-                        <option id="" value="">{{ _("Your inquiry is regarding ...") }}</option>
-                        {% for key, value in topics.iteritems() %}
-                            <option id="contact-contributor-{{key}}" value="{{value}}">{{value}}</option>
+                    <select class="required mTop15" id="group-message-topics-selector" name="topic">
+                        <option id="" value="">{{ _("Select recipient group(s)") }}</option>
+                        {% for key, value in groups.iteritems() %}
+                            <option id="group-message-{{key}}" value="{{value}}">{{value}}</option>
                         {% endfor %}
                     </select>
                     <div class="mTop15 control">
-                        <input id="contact-contributor-fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
-                        <label for="contact-contributor-fullname">Your name</label>
+                        <input id="group-message-fullname" name="fullname" class="full-width required" type="text" value="{{fullname}}">
+                        <label for="group-message-fullname">Your name</label>
                     </div>
                     <div class="mTop15 control">
-                        <input id="contact-contributor-email" name="email" class="full-width required" type="text" value="{{email}}">
-                        <label for="contact-contributor-email">Your email address</label>
+                        <input id="group-message-email" name="email" class="full-width required" type="text" value="{{email}}">
+                        <label for="group-message-email">Your email address</label>
                     </div>
                     <div class="mTop15 control">
-                        <textarea id="contact-contributor-faq-msg" name="faq-msg" class="full-width required"></textarea>
-                        <label for="contact-contributor-faq-msg">Comments</label>
+                        <textarea id="group-message-faq-msg" name="faq-msg" class="full-width required"></textarea>
+                        <label for="group-message-faq-msg">Comments</label>
                     </div>
                     <div class="mTop15 captcha">
                         <div class="g-recaptcha" data-sitekey="6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto"
