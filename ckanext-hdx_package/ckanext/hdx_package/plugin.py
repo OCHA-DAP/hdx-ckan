@@ -324,7 +324,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,
-            'package_validate': hdx_get.package_validate
+            'package_validate': hdx_get.package_validate,
+            'hdx_count_member_list': hdx_get.hdx_count_member_list,
         }
 
     def before_show(self, resource_dict):

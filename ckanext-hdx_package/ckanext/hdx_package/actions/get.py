@@ -15,7 +15,6 @@ import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.logic.action.get as logic_get
 import ckan.lib.plugins as lib_plugins
 
-
 import sqlalchemy
 import logging
 import json
@@ -27,6 +26,7 @@ _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
 _check_access = logic.check_access
 log = logging.getLogger(__name__)
+get_action = logic.get_action
 
 
 @logic.side_effect_free
@@ -231,8 +231,8 @@ def package_search(context, data_dict):
                             plugins.IPackageController):
                         package_dict = item.before_view(package_dict)
                 results.append(package_dict)
-            # else:
-            #     results.append(model_dictize.package_dictize(pkg, context))
+                # else:
+                #     results.append(model_dictize.package_dictize(pkg, context))
 
         count = query.count
         facets = query.facets
@@ -314,7 +314,7 @@ def package_show(context, data_dict):
             resource_dict['size'] = __get_resource_filesize(resource_dict)
 
     downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
-                              res.get('tracking_summary', {}).get('total'))
+                      res.get('tracking_summary', {}).get('total'))
     package_dict['total_res_downloads'] = sum(downloads_list)
 
     return package_dict
@@ -379,3 +379,33 @@ def package_validate(context, data_dict):
     if 'groups_list' in data:
         del data['groups_list']
     return data
+
+
+@logic.side_effect_free
+def hdx_count_member_list(context, data_dict):
+    result = {}
+    org_members = get_action('member_list')(context, {'id': data_dict.get('org_id'), 'object_type': 'user'})
+
+    a_cnt = 0
+    e_cnt = 0
+    m_cnt = 0
+    user_obj = context.get('auth_user_obj')
+    is_member = user_obj and user_obj.sysadmin
+
+    for m in org_members:
+        if m[2] == 'Admin':
+            a_cnt += 1
+        if m[2] == 'Editor':
+            e_cnt += 1
+        if m[2] == 'Member':
+            m_cnt += 1
+        if not is_member and user_obj:
+            if m[0] == user_obj.id:
+                is_member = True
+    result['is_member'] = is_member
+    result['admins_counter'] = a_cnt
+    result['members_counter'] = m_cnt
+    result['editors_counter'] = e_cnt
+    result['total_counter'] = a_cnt + m_cnt + e_cnt
+
+    return result

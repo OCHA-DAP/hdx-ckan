@@ -1,14 +1,14 @@
 contributor_topics = {
-    '1': 'General question',
-    '2': 'Meta data',
-    '3': 'Report a problem',
-    '4': 'Suggest edits',
+    'general_question': 'General question',
+    'meta_data': 'Meta data',
+    'report_problem': 'Report a problem',
+    'suggest_edits': 'Suggest edits',
 }
 
 group_topics = {
-    '1': 'All members (members, editors, admins)',
-    '2': 'All editors',
-    '3': 'All admins',
+    'all': 'All members (members, editors, admins)',
+    'editors': 'All editors',
+    'admins': 'All admins',
 }
 
 membership_data = {
