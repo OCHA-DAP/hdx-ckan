@@ -164,7 +164,7 @@
               <h3>
                 {{ _("Find, share and use humanitarian data all in one place") }}
               </h3>
-              <a href="/faq" class="btn btn-faq">{{_("LEARN MORE")}}</a>
+              <a data-module="hdx_click_stopper" data-module-link_type="learn more faq" href="/faq" class="btn btn-faq">{{_("LEARN MORE")}}</a>
               <!--<p class="hdxDescription">-->
                 <!--{#-->
                 <!--{{ _("This is an early version of the HDX Repository. Initially, you will be able to find-->
@@ -198,10 +198,10 @@
                       <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>,
 
                       -->
-                      <a href="/search?q=Ecuador">{{ _('Ecuador') }}</a>,
-                      <a href="/search?q=Ebola">{{ _('Ebola') }}</a>,
-                      <a href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>,
-                      <a href="{{ h.url_for(controller='organization', action='read', id='ocha-ethiopia', sort='metadata_modified desc') }}">{{ _("OCHA Ethiopia") }}</a>
+                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Ecuador">{{ _('Ecuador') }}</a>,
+                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Ebola">{{ _('Ebola') }}</a>,
+                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>,
+                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-ethiopia', sort='metadata_modified desc') }}">{{ _("OCHA Ethiopia") }}</a>
                     </p>
                   </div>
                 </div>
@@ -211,7 +211,8 @@
                     <div class="row">
                       <div class="col-xs-12 itemCount">
                         <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
-                           data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
+                           data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
                           0
                         </a>
                       </div>
@@ -226,7 +227,8 @@
                     <div class="row">
                       <div class="col-xs-12 itemCount">
                         <a href="{% url_for 'group_index' %}"
-                           data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
+                           data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='country' %}">
                           0
                         </a>
                       </div>
@@ -241,7 +243,8 @@
                     <div class="row">
                       <div class="col-xs-12 itemCount">
                         <a href="#"
-                           data-module="count" data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
+                           data-module="count hdx_click_stopper" data-module-link_type="find data box"
+                           data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='source' %}">
                           0
                         </a>
                       </div>
@@ -281,7 +284,7 @@
           <div class="item">
               <div class="graphic">
                   {% set link_targe = "_blank" if item.embed else "_self" %}
-                    <a href="{{ item.url }}" target="{{ link_targe }}">
+                    <a href="{{ item.url }}" target="{{ link_targe }}" data-module="hdx_click_stopper" data-module-link_type="carousel">
                       <img src="{{ item.graphic }}">
                     </a>
               </div>
@@ -317,9 +320,9 @@
                       <img class="graphic" src="{{ item.graphic }}">
                       <div class="sub-item-action">
                           {% if item.embed %}
-                              <a href="{{ item.url }}" class="btn" target="_blank">Watch</a>
+                              <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
                           {% else %}
-                              <a href="{{ item.url }}" class="btn">Explore</a>
+                              <a href="{{ item.url }}" class="btn" data-module="hdx_click_stopper" data-module-link_type="carousel">Explore</a>
                           {% endif %}
                       </div>
                   </div>
