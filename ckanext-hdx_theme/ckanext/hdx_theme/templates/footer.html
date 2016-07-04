@@ -13,13 +13,17 @@
                 <div class="span6 col-xs-7">
                   <div class="row">
                     <div class="span6 col-xs-12">
+                      <span data-module="hdx_click_stopper" data-module-link_type="footer"
+                            data-module-selector=".analytics-footer-license" style="display: none;"></span>
+                      <span data-module="hdx_click_stopper" data-module-link_type="footer"
+                            data-module-selector=".analytics-footer-termsofservice" style="display: none;"></span>
                       <ul class="mainLinks">
-                        <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
-                        <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
-                        <li><a href="/faq">{{ _('Faq') }}</a></li>
+                        <li>{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license', class_='analytics-footer-license' %}</li>
+                        <li>{% link_for _('Terms of Service'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms', class_='analytics-footer-termsofservice'  %}</li>
+                        <li><a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">{{ _('Faq') }}</a></li>
                         <!--<li><a href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li> -->
-                        <li><a href="http://docs.humdata.org/blog">{{ _('Blog') }}</a></li>
-                        <li><a href="http://docs.humdata.org/get-involved/">{{ _('Contact') }}</a></li>
+                        <li><a href="http://docs.humdata.org/blog" data-module="hdx_click_stopper" data-module-link_type="footer">{{ _('Blog') }}</a></li>
+                        <li><a href="http://docs.humdata.org/get-involved/" data-module="hdx_click_stopper" data-module-link_type="footer">{{ _('Contact') }}</a></li>
                       </ul>
                     </div>
                   </div>

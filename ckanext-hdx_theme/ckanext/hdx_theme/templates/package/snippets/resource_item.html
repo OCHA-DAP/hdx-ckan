@@ -81,10 +81,12 @@
             {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
 
 
+            {#
             {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
               target_url=res.url,
               icon=true,
               class="btn btn-secondary hdx-btn resource-url-analytics ga-share resource-btn resource-icon-btn", button_id=button_id %}
+            #}
 
         {% endblock %}
     </div>
