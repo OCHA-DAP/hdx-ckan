@@ -36,6 +36,9 @@ import ckanext.hdx_package.helpers.analytics as analytics
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 
+
+from ckanext.hdx_package.helpers.membership_data import membership_data
+
 log = logging.getLogger(__name__)
 
 render = base.render
@@ -749,6 +752,21 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
+        org_members = get_action('member_list')(context, {'id': c.pkg.owner_org, 'object_type': 'user'})
+        is_member = False
+        if c.userobj:
+            if c.userobj.sysadmin:
+                is_member = True
+            for m in org_members:
+                if m[0] == c.userobj.id:
+                    is_member = True
+                    break
+
+
+        c.membership = {
+            'display_group_message': is_member,
+            'data': membership_data
+        }
         has_shapes = False
         if 'resources' in c.pkg_dict:
             has_shapes = self._has_shapes(c.pkg_dict['resources'])
