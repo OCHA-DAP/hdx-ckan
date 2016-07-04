@@ -44,7 +44,7 @@ Example:
                     <select class="required mTop15" id="group-message-topics-selector" name="topic">
                         <option id="" value="">{{ _("Select recipient group(s)") }}</option>
                         {% for key, value in groups.iteritems() %}
-                            <option id="group-message-{{key}}" value="{{value}}">{{value}}</option>
+                            <option id="group-message-{{key}}" value="{{key}}">{{value}}</option>
                         {% endfor %}
                     </select>
                     <div class="mTop15 control">

@@ -1,8 +1,8 @@
 {% set url = request.url %}
 
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
-{{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=pkg.title, topics={'1':'test'}) }}
-{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=pkg.title, org="Test OrG", groups={'1':'test'}) }}
+{{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=pkg.title, topics=c.membership.data.contributor_topics) }}
+{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=pkg.title, org="Test OrG", groups=c.membership.data.group_topics) }}
 
 <span class="{{ classes }}">
     <ul class="">
@@ -17,12 +17,14 @@
                 </a>
             </li>
         {% endif %}
-        <li>
-            <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular dataset including private dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
-                <i class="icon-megahorn"></i>
-                Group message
-            </a>
-        </li>
+        {% if c.membership.display_group_message %}
+            <li>
+                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular dataset including private dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
+                    <i class="icon-megahorn"></i>
+                    Group message
+                </a>
+            </li>
+        {% endif %}
         {% if h.check_access('package_update', {'id':pkg.id }) %}
             {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
             <li>

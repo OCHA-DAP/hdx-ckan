@@ -40,7 +40,7 @@ Example:
                     <select class="required mTop15" id="contact-contributor-topics-selector" name="topic">
                         <option id="" value="">{{ _("Your inquiry is regarding ...") }}</option>
                         {% for key, value in topics.iteritems() %}
-                            <option id="contact-contributor-{{key}}" value="{{value}}">{{value}}</option>
+                            <option id="contact-contributor-{{key}}" value="{{key}}">{{value}}</option>
                         {% endfor %}
                     </select>
                     <div class="mTop15 control">
