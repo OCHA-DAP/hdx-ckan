@@ -137,6 +137,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('dataset_resources', '/dataset/resources/{id}',
                     controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
                     action='resources_notification_page')
+        map.connect('/membership/contact_contributor', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='contact_contributor')
+        map.connect('/membership/contact_members', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='contact_members')
+
+
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             # m.connect('add dataset', '/dataset/new', action='new')
             m.connect(
@@ -325,7 +329,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,
             'package_validate': hdx_get.package_validate,
-            'hdx_count_member_list': hdx_get.hdx_count_member_list,
+            'hdx_member_list': hdx_get.hdx_member_list,
+            'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
         }
 
     def before_show(self, resource_dict):
@@ -347,7 +352,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
                 'package_update': authorize.package_update,
-                'hdx_resource_id_list': authorize.hdx_resource_id_list}
+                'hdx_resource_id_list': authorize.hdx_resource_id_list,
+                'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
+                }
 
     def make_middleware(self, app, config):
         run_on_startup()

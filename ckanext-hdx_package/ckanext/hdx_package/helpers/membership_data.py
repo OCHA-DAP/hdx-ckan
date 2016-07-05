@@ -1,8 +1,8 @@
 contributor_topics = {
-    'general_question': 'General question',
-    'meta_data': 'Meta data',
-    'report_problem': 'Report a problem',
-    'suggest_edits': 'Suggest edits',
+    'General question': 'General question',
+    'Meta data': 'Meta data',
+    'Report a problem': 'Report a problem',
+    'Suggest edits': 'Suggest edits',
 }
 
 group_topics = {

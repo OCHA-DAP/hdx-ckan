@@ -6,7 +6,7 @@ $(document).ready(function(){
         var toMessage = $("#membershipDonePopup").find(".to-message ");
         toMessage.hide();
 
-        $.post('/membership/group-message', $this.serialize(), function(result_data){
+        $.post('/membership/contact_members', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
             if (result.success){
                 closeCurrentWidget($this); showOnboardingWidget('#membershipDonePopup');

@@ -38,6 +38,8 @@ from ckan.controllers.home import CACHE_PARAMETERS
 
 from ckanext.hdx_package.helpers.membership_data import membership_data
 
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
 log = logging.getLogger(__name__)
 
 render = base.render
@@ -55,6 +57,10 @@ parse_params = logic.parse_params
 flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
 # _check_group_auth = logic.auth.create._check_group_auth
+
+MembershipSuccess = json.dumps({'success': True})
+
+
 
 
 CONTENT_TYPES = {
@@ -752,16 +758,8 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
-        # org_members = get_action('member_list')(context, {'id': c.pkg.owner_org, 'object_type': 'user'})
-        # is_member = False
-        # if c.userobj:
-        #     if c.userobj.sysadmin:
-        #         is_member = True
-        #     for m in org_members:
-        #         if m[0] == c.userobj.id:
-        #             is_member = True
-        #             break
-        cnt_members_list = get_action('hdx_count_member_list')(context, {'org_id': c.pkg.owner_org})
+
+        cnt_members_list = get_action('hdx_member_list')(context, {'org_id': c.pkg.owner_org})
 
         template_data = {}
         template_data['contributor_topics'] = membership_data['contributor_topics']
@@ -1190,3 +1188,75 @@ class DatasetController(PackageController):
             abort(401, _('Unauthorized to read resource %s') % id)
         else:
             return render(preview_plugin.preview_template(context, data_dict))
+
+
+    def contact_contributor(self):
+        '''
+        Send a contact request form
+        :return:
+        '''
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': c.user or c.author,
+            'auth_user_obj': c.userobj
+        }
+        data_dict = {}
+        try:
+            data_dict['topic'] = request.params.get('topic')
+            data_dict['fullname'] = request.params.get('fullname')
+            data_dict['email'] = request.params.get('email')
+            data_dict['msg'] = request.params.get('msg')
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            check_access('hdx_send_mail_contributor', context, data_dict)
+        except NotAuthorized:
+            return json.dumps({'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        try:
+            get_action('hdx_send_mail_contributor')(context, data_dict)
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        return MembershipSuccess
+
+    def contact_members(self):
+        '''
+        Send a contact request form
+        :return:
+        '''
+        try:
+            topic = request.params.get('topic')
+            fullname = request.params.get('fullname')
+            email = request.params.get('email')
+            msg = request.params.get('msg')
+            hdx_email = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            # check_access('package_create', context)
+        except ValidationError, e:
+            error_summary = str(e.error_summary)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+
+        try:
+            subject = 'Membership: request from user'
+            html = """\
+                <html>
+                  <head></head>
+                  <body>
+                    <p>A user sent the following question using the Contact Contributor form.</p>
+                    <p>Name: {fullname}</p>
+                    <p>Email: {email}</p>
+                    <p>Section: {topic}</p>
+                    <p>Message: {msg}</p>
+                  </body>
+                </html>
+                """.format(fullname=fullname, email=email, topic=topic, msg=msg)
+            hdx_mailer.mail_recipient('HDX', hdx_email, subject, html)
+
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        return MembershipSuccess

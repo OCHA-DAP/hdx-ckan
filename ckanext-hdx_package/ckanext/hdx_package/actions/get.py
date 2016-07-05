@@ -20,6 +20,7 @@ import logging
 import json
 
 from ckan.lib import uploader
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from ckan.common import _
 
 _validate = ckan.lib.navl.dictization_functions.validate
@@ -382,30 +383,53 @@ def package_validate(context, data_dict):
 
 
 @logic.side_effect_free
-def hdx_count_member_list(context, data_dict):
+def hdx_member_list(context, data_dict):
     result = {}
     org_members = get_action('member_list')(context, {'id': data_dict.get('org_id'), 'object_type': 'user'})
 
-    a_cnt = 0
-    e_cnt = 0
-    m_cnt = 0
+    admins = []
+    editors = []
+    members = []
     user_obj = context.get('auth_user_obj')
     is_member = user_obj and user_obj.sysadmin
 
     for m in org_members:
         if m[2] == 'Admin':
-            a_cnt += 1
+            admins.append(m[0])
         if m[2] == 'Editor':
-            e_cnt += 1
+            editors.append(m[0])
         if m[2] == 'Member':
-            m_cnt += 1
+            members.append(m[0])
         if not is_member and user_obj:
             if m[0] == user_obj.id:
                 is_member = True
     result['is_member'] = is_member
-    result['admins_counter'] = a_cnt
-    result['members_counter'] = m_cnt
-    result['editors_counter'] = e_cnt
-    result['total_counter'] = a_cnt + m_cnt + e_cnt
+    result['admins_counter'] = len(admins)
+    result['members_counter'] = len(members)
+    result['editors_counter'] = len(editors)
+    result['total_counter'] = len(org_members)
+    result['admins'] = admins
+    result['editors'] = editors
+    result['members'] = members
 
     return result
+
+
+def hdx_send_mail_contributor(context, data_dict):
+
+    subject = 'Membership: request from user'
+    html = """\
+        <html>
+          <head></head>
+          <body>
+            <p>A user sent the following question using the Contact Contributor form.</p>
+            <p>Name: {fullname}</p>
+            <p>Email: {email}</p>
+            <p>Section: {topic}</p>
+            <p>Message: {msg}</p>
+          </body>
+        </html>
+        """.format(fullname=data_dict.get('fullname'), email=data_dict.get('email'), topic=data_dict.get('topic'), msg=data_dict.get('msg'))
+    hdx_mailer.mail_recipient('HDX', data_dict.get('hdx_email'), subject, html)
+
+    return None

@@ -42,3 +42,20 @@ def hdx_resource_id_list(context, data_dict=None):
     Only sysadmins are allowed to call this action
     '''
     return {'success': False, 'msg': _('Only sysadmins can get the entire list of resource ids')}
+
+
+def hdx_send_mail_contributor(context, data_dict):
+    '''
+    Only a logged in user has access.
+    '''
+
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    if user_obj:
+        return {
+            'success': True
+        }
+
+    return {
+        'success': False,
+        'msg': _('Not authorized to perform this request')
+    }
