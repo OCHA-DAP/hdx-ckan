@@ -758,21 +758,24 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
-
-        cnt_members_list = get_action('hdx_member_list')(context, {'org_id': c.pkg.owner_org})
-
+        cnt_members_list = {}
         template_data = {}
+        try:
+            cnt_members_list = get_action('hdx_member_list')(context, {'org_id': c.pkg.owner_org})
+        except Exception, e:
+            log.warning("Package " + id + " has no organization" + str(e.args))
+
         template_data['contributor_topics'] = membership_data['contributor_topics']
         template_data['group_topics'] = {}
         template_data['group_topics']['all'] = membership_data['group_topics']['all'] + ' [' + str(
-            cnt_members_list.get('total_counter')) + ']'
+            cnt_members_list.get('total_counter',0)) + ']'
         template_data['group_topics']['admins'] = membership_data['group_topics']['admins'] + ' [' + str(
-            cnt_members_list.get('admins_counter')) + ']'
+            cnt_members_list.get('admins_counter',0)) + ']'
         template_data['group_topics']['editors'] = membership_data['group_topics']['editors'] + ' [' + str(
-            cnt_members_list.get('editors_counter')) + ']'
+            cnt_members_list.get('editors_counter',0)) + ']'
 
         c.membership = {
-            'display_group_message': cnt_members_list.get('is_member'),
+            'display_group_message': cnt_members_list.get('is_member', False),
             'data': template_data,
         }
 
