@@ -30,7 +30,16 @@ package = {
     "notes": "This is a test dataset",
     "title": "Test Dataset 1",
     "indicator": 1,
+    "owner_org": "hdx-test-org",
     "groups": [{"name": "roger"}]
+}
+
+organization = {
+    'name': 'hdx-test-org',
+    'title': 'Hdx Test Org',
+    'org_url': 'http://test-org.test',
+    'description': 'This is a test organization',
+    'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
 }
 
 
@@ -38,7 +47,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     # loads missing plugins
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_package hdx_users hdx_user_extra hdx_theme')
+        hdx_test_base.load_plugin('hdx_org_group hdx_package hdx_users hdx_user_extra hdx_theme')
 
     @classmethod
     def _get_action(cls, action_name):
@@ -52,9 +61,13 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
     def test_deleted_badge_appears(self):
         global package
+        global organization
         testsysadmin = model.User.by_name('testsysadmin')
         dataset_name = package['name']
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        tk.get_action('organization_create')(context, organization)
+
         self._get_action('package_create')(context, package)
 
         page = self._getPackagePage(dataset_name)
