@@ -200,8 +200,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         # create 2
         res = json.loads(self.app.post(url, params).body)
         assert_false(res['success'])
-        assert_equal(res['error']['message'],
-                     u'That login email is not available.')
+        assert_equal(res['error']['message'][0], u'That login email is not available.')
 
     def test_create_user_duplicate_email_case_different(self):
         '''Creating a new user with same email (differently cased) is
@@ -215,8 +214,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         # create 2
         res = json.loads(self.app.post(url, params_two).body)
         assert_false(res['success'])
-        assert_equal(res['error']['message'],
-                     u'That login email is not available.')
+        assert_equal(res['error']['message'][0], u'That login email is not available.')
 
     def test_create_user_email_saved_as_lowercase(self):
         '''A newly created user will have their email transformed to lowercase
@@ -237,8 +235,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         params = {'email': 'invalidexample.com'}
 
         res = json.loads(self.app.post(url, params).body)
-        assert_equal(res['error']['message'],
-                     u'Email address is not valid')
+        assert_equal(res['error']['message'][0], u'Email address is not valid')
 
 
 class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):

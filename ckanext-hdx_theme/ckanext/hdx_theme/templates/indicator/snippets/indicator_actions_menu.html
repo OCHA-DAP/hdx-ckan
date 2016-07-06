@@ -29,7 +29,7 @@
         {% if h.check_access('package_update', {'id':pkg.id }) %}
             {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
             <li>
-                <a onclick="contributeAddDetails('{{ pkg.id }}')"
+                <a title="Edit Dataset" onclick="contributeAddDetails('{{ pkg.id }}')"
                    {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
                     href="#">
                     <i class="icon-edit"></i>
