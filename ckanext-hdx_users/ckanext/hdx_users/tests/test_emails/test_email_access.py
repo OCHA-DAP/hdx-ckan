@@ -30,7 +30,6 @@ submit_and_follow = test_helpers.submit_and_follow
 
 
 class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
-
     @classmethod
     def setup_class(cls):
         super(TestEmailAccess, cls).setup_class()
@@ -101,10 +100,10 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
         user_list = self._get_action('user_list')({
             'model': model, 'session': model.Session}, {})
         assert not self._user_list_has_email(
-            user_list),  'emails should not be visible for guests'
+            user_list), 'emails should not be visible for guests'
         user = self._get_action('user_show')({
             'model': model, 'session': model.Session}, {'id': 'johnfoo'})
-        assert not 'email' in user,  'emails should not be visible for guests'
+        assert not 'email' in user, 'emails should not be visible for guests'
 
     def _user_list_has_email(self, users, current_username=''):
         if users:
@@ -159,7 +158,6 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
 
 
 class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
-
     @classmethod
     def setup_class(cls):
         super(TestUserEmailRegistration, cls).setup_class()
@@ -188,7 +186,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
         user_list = test_helpers.call_action('user_list')
         after_len = len(user_list)
-        assert_equal(after_len, before_len+1)
+        assert_equal(after_len, before_len + 1)
 
     def test_create_user_duplicate_email(self):
         '''Creating a new user with identical email is unsuccessful.'''
@@ -239,7 +237,6 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
 
 class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
-
     @classmethod
     def setup_class(cls):
         super(TestEditUserEmail, cls).setup_class()
@@ -374,7 +371,6 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
 
 
 class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
-
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
@@ -511,36 +507,36 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
         assert_equal(len(msgs), 0)
 
 
-    #TODO create user according to the last onboarding. Note CAPTCHA!
-    # def test_login_not_valid(self):
-    #     offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
-    #     res = self.app.get(offset, status=[200,302])
-    #     fv = res.forms[1]
-    #     fv['name'] = "testingvalid"
-    #     fv['fullname'] = "Valid Test"
-    #     fv['email'] = "valid@example.com"
-    #     fv['password1'] = "password"
-    #     fv['password2'] = "password"
-    #     res = fv.submit('save')
-    #
-    #     user = model.User.by_name('testingvalid')
-    #
-    #     offset = h.url_for(controller='user', action='login')
-    #     res = self.app.get(offset)
-    #     fv = res.forms[1]
-    #     fv['login'] = user.name
-    #     fv['password'] = 'password'
-    #     res = fv.submit()
-    #
-    #     # first get redirected to logged_in
-    #     assert '302' in res.status
-    #     # then get redirected to login
-    #     res = res.follow()
-    #     assert res.headers['Location'].startswith('http://localhost/user/logged_in') or \
-    #            res.header('Location').startswith('/user/logged_in')
-    #     res = res.follow()
-    #     assert res.headers['Location'].startswith('http://localhost/user/logout') or \
-    #            res.header('Location').startswith('/user/logout')
+        # TODO create user according to the last onboarding. Note CAPTCHA!
+        # def test_login_not_valid(self):
+        #     offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
+        #     res = self.app.get(offset, status=[200,302])
+        #     fv = res.forms[1]
+        #     fv['name'] = "testingvalid"
+        #     fv['fullname'] = "Valid Test"
+        #     fv['email'] = "valid@example.com"
+        #     fv['password1'] = "password"
+        #     fv['password2'] = "password"
+        #     res = fv.submit('save')
+        #
+        #     user = model.User.by_name('testingvalid')
+        #
+        #     offset = h.url_for(controller='user', action='login')
+        #     res = self.app.get(offset)
+        #     fv = res.forms[1]
+        #     fv['login'] = user.name
+        #     fv['password'] = 'password'
+        #     res = fv.submit()
+        #
+        #     # first get redirected to logged_in
+        #     assert '302' in res.status
+        #     # then get redirected to login
+        #     res = res.follow()
+        #     assert res.headers['Location'].startswith('http://localhost/user/logged_in') or \
+        #            res.header('Location').startswith('/user/logged_in')
+        #     res = res.follow()
+        #     assert res.headers['Location'].startswith('http://localhost/user/logout') or \
+        #            res.header('Location').startswith('/user/logout')
 
         # def test_validate_account(self):
         #     offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController', action='register')
