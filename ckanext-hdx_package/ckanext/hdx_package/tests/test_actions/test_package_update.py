@@ -129,13 +129,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
 
         context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'nouser'}
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         # self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
         test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                              action='delete', id=package['name'])
-        result = self.app.post(
-            test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
+        result = self.app.post(test_url, extra_environ={'Authorization': str(testsysadmin.apikey)})
         assert '302' in str(result)
 
     def test_hdx_solr_additions(self):
@@ -156,7 +155,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
 
         context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'nouser'}
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
         # self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
@@ -181,8 +180,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            'data_update_frequency': '7'
                            }
 
-        self._get_action('hdx_package_update_metadata')(
-            context, modified_fields)
+        self._get_action('hdx_package_update_metadata')(context, modified_fields)
 
         # tests.call_action_api(self.app, 'package_show', id='test_activity_1',
         #                       apikey=testsysadmin.apikey, status=404)
@@ -196,7 +194,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # from original package or were modified
         for key, value in modified_package.iteritems():
             if key not in modified_fields.keys():
-                if key != 'groups' and key in package:
+                if key != 'groups' and key in package and key != 'owner_org':
                     assert package[key] == value, 'Problem with key {}: has value {} instead of {}'.format(
                         key, value, package[key])
             else:
@@ -211,3 +209,6 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert len(modified_package['groups']) == len(
             package['groups']), 'There should be {} item in groups but instead there is {}'.format(
             len(package['groups']), len(modified_package['groups']))
+
+        org_obj = model.Group.by_name('hdx-test-org')
+        assert modified_package.get('owner_org') == org_obj.id

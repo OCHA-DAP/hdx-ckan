@@ -64,9 +64,10 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
 
         dataset_name = package['name']
-        context = {'model': model, 'session': model.Session, 'user': 'tester'}
+        context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
         self._get_action('organization_create')(context, organization)
+        context['user'] = 'tester'
 
         self._get_action('package_create')(context, package)
         # test that anonymous users can't see the button
