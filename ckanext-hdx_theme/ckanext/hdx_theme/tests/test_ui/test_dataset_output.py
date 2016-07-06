@@ -29,7 +29,6 @@ package = {
     "name": "test_dataset_1",
     "notes": "This is a test dataset",
     "title": "Test Dataset 1",
-    "indicator": 1,
     "owner_org": "hdx-test-org",
     "groups": [{"name": "roger"}]
 }
@@ -66,7 +65,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         dataset_name = package['name']
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
-        tk.get_action('organization_create')(context, organization)
+        self._get_action('organization_create')(context, organization)
 
         self._get_action('package_create')(context, package)
 

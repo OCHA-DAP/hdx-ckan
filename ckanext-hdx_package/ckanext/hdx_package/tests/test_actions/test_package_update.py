@@ -32,7 +32,16 @@ package = {
     "notes": "This is a test activity",
     "title": "Test Activity 1",
     "indicator": 1,
-    "groups": [{"name": "roger"}]
+    "groups": [{"name": "roger"}],
+    "owner_org": "hdx-test-org",
+}
+
+organization = {
+    'name': 'hdx-test-org',
+    'title': 'Hdx Test Org',
+    'org_url': 'http://test-org.test',
+    'description': 'This is a test organization',
+    'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
 }
 
 log = logging.getLogger(__name__)
@@ -41,7 +50,7 @@ log = logging.getLogger(__name__)
 class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_package hdx_users hdx_user_extra hdx_theme')
+        hdx_test_base.load_plugin('hdx_org_group hdx_package hdx_users hdx_user_extra hdx_theme')
 
     @classmethod
     def _get_action(cls, action_name):
@@ -52,6 +61,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         super(TestHDXPackageUpdate, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
+
 
     def test_create_and_upload(self):
         package = {
@@ -67,7 +77,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             "name": "test_activity_3",
             "notes": "This is a test activity",
             "title": "Test Activity 3",
-            "groups": [{"name": "roger"}]
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
         }
 
         resource = {
@@ -84,6 +95,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # some fields ( like groups ) will not be saved
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        self._get_action('organization_create')(context, organization)
 
         self._get_action('package_create')(context, package)
 
@@ -110,12 +123,14 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             "name": "test_activity_2",
             "notes": "This is a test activity",
             "title": "Test Activity 2",
-            "groups": [{"name": "roger"}]
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
         }
         testsysadmin = model.User.by_name('testsysadmin')
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
+        self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
         test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                              action='delete', id=package['name'])
@@ -142,6 +157,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
+
+        self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
         # This is a copy of the hack done in dataset_controller
         self._get_action('package_update')(context, package)
