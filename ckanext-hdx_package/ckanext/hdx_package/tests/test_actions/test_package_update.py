@@ -130,7 +130,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
-        self._get_action('organization_create')(context, organization)
+        # self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
         test_url = h.url_for(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController',
                              action='delete', id=package['name'])
@@ -158,7 +158,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
 
-        self._get_action('organization_create')(context, organization)
+        # self._get_action('organization_create')(context, organization)
         self._get_action('package_create')(context, package)
         # This is a copy of the hack done in dataset_controller
         self._get_action('package_update')(context, package)
