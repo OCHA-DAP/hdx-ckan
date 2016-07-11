@@ -29,7 +29,7 @@ _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 
-_footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Your message may be monitored by the HDX team for internal use: such as improving your user experience, the overall quality of our services and introducing service enhancements for the future.</p>'
+_footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Your message may be monitored by the HDX team for internal use such as improving your user experience and the overall quality of our services.</p>'
 
 
 @logic.side_effect_free
@@ -387,7 +387,10 @@ def package_validate(context, data_dict):
 @logic.side_effect_free
 def hdx_member_list(context, data_dict):
     result = {}
-    org_members = get_action('member_list')(context, {'id': data_dict.get('org_id'), 'object_type': 'user'})
+    try:
+        org_members = get_action('member_list')(context, {'id': data_dict.get('org_id'), 'object_type': 'user'})
+    except Exception, e:
+        return None
 
     admins = []
     editors = []
@@ -413,26 +416,59 @@ def hdx_member_list(context, data_dict):
     result['admins'] = admins
     result['editors'] = editors
     result['members'] = members
+    result['all'] = admins + editors + members
 
     return result
 
 
 def hdx_send_mail_contributor(context, data_dict):
-    subject = '[HDX] {fullname} sent a general question for \"[Dataset] {topic}\"'.format(
-        fullname=data_dict.get('fullname'), topic=data_dict.get('pkg_title'))
+    subject = '[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
+        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title = data_dict.get('pkg_title'))
     html = """\
+            <p>{fullname} - {email}</p>
             <p>{msg}</p>
-            <p>Dataset: <a href=\"https://data.humdata.org{pkg_url}\">{pkg_title}</a>
-        """.format(msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
+            <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
+        """.format(fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
+                   pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
 
-    m_list = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
 
-    admins = m_list.get('admins')
-    recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
-    for admin in admins:
-        user = get_action("user_show")(context, {'id':admin})
-        if user.get('email'):
-            recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
+    recipients_list = []
+    org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
+    if org_members:
+        admins = org_members.get('admins')
+        for admin in admins:
+            user = get_action("user_show")(context, {'id': admin})
+            if user.get('email'):
+                recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
+    recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
+    recipients_list.append({'email': data_dict.get('hdx_email'), 'name': 'HDX'})
+    hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
+                              recipients_list=recipients_list, footer=_footer)
+
+    return None
+
+
+def hdx_send_mail_members(context, data_dict):
+    subject = '[HDX] {fullname} {topic} regarding \"[Dataset] {pkg_title}\"'.format(
+        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title = data_dict.get('pkg_title'))
+    html = """\
+            <p>This message was sent to {topic} of {pkg_owner_org} organization</p>
+            <p>{fullname} - {email}</p>
+            <p>{msg}</p>
+            <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
+        """.format(topic=data_dict.get('topic'), pkg_owner_org=data_dict.get('pkg_owner_org'), fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
+                   pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
+
+    recipients_list = []
+    org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org_id')})
+    if org_members:
+        admins = org_members.get(data_dict.get('topic_key'))
+        for admin in admins:
+            user = get_action("user_show")(context, {'id': admin})
+            if user.get('email'):
+                recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
+    recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
+    recipients_list.append({'email': data_dict.get('hdx_email'), 'name': 'HDX'})
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
                               recipients_list=recipients_list, footer=_footer)
 

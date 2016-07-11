@@ -2,10 +2,12 @@ import ckan.plugins as plugins
 import ckan.logic.auth.create as create
 import ckan.logic.auth.update as update
 from ckan.lib.base import _
+import ckan.logic as logic
 
 import logging
 
 log = logging.getLogger(__name__)
+get_action = logic.get_action
 
 def package_create(context, data_dict=None):
     retvalue = True
@@ -54,6 +56,24 @@ def hdx_send_mail_contributor(context, data_dict):
         return {
             'success': True
         }
+
+    return {
+        'success': False,
+        'msg': _('Not authorized to perform this request')
+    }
+
+def hdx_send_mail_members(context, data_dict):
+    '''
+    Only a logged in user has access and member of dataset's owner_org .
+    '''
+
+    user_obj = context.get('auth_user_obj') or context.get('user_obj')
+    if user_obj:
+        org_members = get_action('hdx_member_list')(context, {'org_id': data_dict.get('org_id')})
+        if org_members and org_members.get('is_member'):
+            return {
+                'success': True
+            }
 
     return {
         'success': False,

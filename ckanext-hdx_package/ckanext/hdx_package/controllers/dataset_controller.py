@@ -1199,6 +1199,7 @@ class DatasetController(PackageController):
         }
         data_dict = {}
         try:
+            check_access('hdx_send_mail_contributor', context, data_dict)
             for k, v in membership_data.get('contributor_topics').iteritems():
                 if v == request.params.get('topic'):
                     data_dict['topic'] = v
@@ -1209,9 +1210,10 @@ class DatasetController(PackageController):
             data_dict['pkg_owner_org'] = request.params.get('pkg_owner_org')
             data_dict['pkg_title'] = request.params.get('pkg_title')
             data_dict['pkg_id'] = request.params.get('pkg_id')
-            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'))
+            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                                             qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
-            check_access('hdx_send_mail_contributor', context, data_dict)
+
         except NotAuthorized:
             return json.dumps(
                 {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
@@ -1230,36 +1232,41 @@ class DatasetController(PackageController):
         Send a contact request form
         :return:
         '''
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': c.user or c.author,
+            'auth_user_obj': c.userobj
+        }
+        data_dict = {}
         try:
-            topic = request.params.get('topic')
-            fullname = request.params.get('fullname')
-            email = request.params.get('email')
-            msg = request.params.get('msg')
-            hdx_email = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
-            # check_access('package_create', context)
-        except ValidationError, e:
-            error_summary = str(e.error_summary)
-            return json.dumps({'success': False, 'error': {'message': error_summary}})
+            org_id = request.params.get('pkg_owner_org')
+            check_access('hdx_send_mail_members', context, {'org_id': org_id})
+            data_dict['topic_key'] = request.params.get('topic')
+            data_dict['topic'] = membership_data.get('group_topics').get(request.params.get('topic'))
+            data_dict['fullname'] = request.params.get('fullname')
+            data_dict['email'] = request.params.get('email')
+            data_dict['msg'] = request.params.get('msg')
+            data_dict['pkg_owner_org_id'] = org_id
+            try:
+                owner_org = get_action("organization_show")(context, {'id': org_id, 'include_datasets': False})
+                data_dict['pkg_owner_org'] = owner_org.get("display_name") or owner_org.get("title")
+            except Exception, e:
+                data_dict['pkg_owner_org'] = org_id
+            data_dict['pkg_title'] = request.params.get('pkg_title')
+            data_dict['pkg_id'] = request.params.get('pkg_id')
+            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                                             qualified=True)
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+
+        except NotAuthorized:
+            return json.dumps(
+                {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
         except Exception, e:
             error_summary = str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
-
         try:
-            subject = 'Membership: request from user'
-            html = """\
-                <html>
-                  <head></head>
-                  <body>
-                    <p>A user sent the following question using the Contact Contributor form.</p>
-                    <p>Name: {fullname}</p>
-                    <p>Email: {email}</p>
-                    <p>Section: {topic}</p>
-                    <p>Message: {msg}</p>
-                  </body>
-                </html>
-                """.format(fullname=fullname, email=email, topic=topic, msg=msg)
-            hdx_mailer.mail_recipient('HDX', hdx_email, subject, html)
-
+            get_action('hdx_send_mail_members')(context, data_dict)
         except Exception, e:
             error_summary = str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
