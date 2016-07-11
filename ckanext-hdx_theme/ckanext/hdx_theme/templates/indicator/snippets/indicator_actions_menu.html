@@ -12,15 +12,15 @@
                 <strong class="uppercase">{{ h.hdx_follow_link('dataset', pkg.id, "", "link-separator") }}</strong>
             </li>
             <li>
-                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">
+                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
                     <i class="icon-envelope"></i>
-                    Contact this contributor
+                    Contact the contributor
                 </a>
             </li>
         {% endif %}
         {% if c.membership.display_group_message %}
             <li>
-                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular dataset including private dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
+                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular dataset including private dataset.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
                     <i class="icon-megahorn"></i>
                     Group message
                 </a>
