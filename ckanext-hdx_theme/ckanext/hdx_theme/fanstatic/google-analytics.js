@@ -193,12 +193,14 @@ $(
             });
         });
 
-        $('.ga-share').on('click', function () {
-            var rTitle = $(this).parents(".resource-item").find(".heading").attr("title");
-            var dTitle = $(".itemTitle").text().trim();
-            ga('send', 'event', 'resource', 'share', rTitle + " (" + dTitle + ")");
-            ga('send', 'event', 'dataset', 'resource-share', dTitle);
-        });
+        // resource sharing was disabled in HDX-4246
+        //
+        // $('.ga-share').on('click', function () {
+        //     var rTitle = $(this).parents(".resource-item").find(".heading").attr("title");
+        //     var dTitle = $(".itemTitle").text().trim();
+        //     ga('send', 'event', 'resource', 'share', rTitle + " (" + dTitle + ")");
+        //     ga('send', 'event', 'dataset', 'resource-share', dTitle);
+        // });
 
         $('.ga-preview').on('click', function () {
             console.log("sending event");
@@ -210,11 +212,37 @@ $(
     }
     setUpResourcesTracking();
 }());
-function setUpShareTracking(){
-  $(".indicator-actions.followButtonContainer a").on('click', function (){
-    var dTitle = $(".itemTitle").text().trim();
-    ga('send', 'event', 'dataset', 'share', dTitle);
-  });
+function setUpShareTracking() {
+    var sendSharingEvent = function () {
+        var sharedItem = $(this).attr('data-shared-item');
+
+        /* This is a hack to identify the "Nepal Earthquake" page as a crises page */
+        if (sharedItem == 'location' && analyticsInfo.pageTitle.toLowerCase() == 'nepal earthquake') {
+            sharedItem = 'crises';
+        }
+
+        // var dTitle = $(".itemTitle").text().trim();
+        ga('send', 'event', sharedItem, 'share', analyticsInfo.pageTitle);
+        var mixpanelMeta = {
+            'page title': analyticsInfo.pageTitle,
+            'shared item': sharedItem,
+            'share type': $(this).attr('data-share-type')
+        };
+
+        mixpanel.track("share", mixpanelMeta);
+    };
+    var analyticsWrapperEl = $('.mx-analytics-wrapper');
+    if (analyticsWrapperEl.length) {
+        /**
+         * There are cases where the share icons for ( google, twitter, facebook, mail ) 
+         * are rendered after this event listener is bound. So we bind it to an existing parent element. 
+         */
+        analyticsWrapperEl.on('click', '.mx-analytics-share',sendSharingEvent);
+    }
+    else {
+        $('.mx-analytics-share').on('click', sendSharingEvent);
+    }
+
 }
 
 function setUpGalleryTracking() {

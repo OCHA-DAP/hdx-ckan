@@ -1,5 +1,7 @@
 {% extends "page.html" %}
 
+{% block subtitle %}{{ data.title }}{% endblock %}
+
 {% block breadcrumb_content %}
     <li><a>{{ data.type }}</a></li>
     <li class="active">{{ h.nav_link(data.title, controller='ckanext.hdx_pages.controllers.custom_page:PagesController',

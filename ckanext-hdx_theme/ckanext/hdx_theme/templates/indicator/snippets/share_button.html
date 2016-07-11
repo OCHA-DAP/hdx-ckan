@@ -6,29 +6,38 @@
 {% set panel_title = panel_title or _('Share') %}
 {% set placement = placement or "left" %}
 {% set direct = direct or false %}
+
+{# It defines the type of entity that is being shared. Used for analytics. Default is 'dataset' #}
+{% set analytics_shared_item = analytics_shared_item or 'dataset' %}
+
 {% resource 'hdx_theme/css/hdx-icons.css' %}
 {% resource 'hdx_theme/indicator/share_button.js' %}
 {% if direct %}
 	<span class="pull-left direct-share-links" style="font-size: 28px; min-width: 130px;" id="{{ dataset_social }}" target-url="{{url}}" short-path="{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}">
-		<a style="font-size: 28px;" href="https://plus.google.com/share?url=data.humdata.org" target="_blank" title="Google Plus">
+		<a style="font-size: 28px;" href="https://plus.google.com/share?url=data.humdata.org" target="_blank" title="Google Plus"
+           class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="google plus">
 			<i class="icon-gplus" style="color: #e15440;"></i>
 			<img style="display: none; padding: 11px 6px; vertical-align: top;" src="/images/filter_loading.gif">
 		</a>
-		<a style="font-size: 28px;" href="https://twitter.com/share?url=data.humdata.org" target="_blank" title="Twitter">
+		<a style="font-size: 28px;" href="https://twitter.com/share?url=data.humdata.org" target="_blank" title="Twitter"
+           data-shared-item="{{ analytics_shared_item }}" data-share-type="twitter">
 			<i class="icon-twitter" style="color: #03b3ee;"></i>
 	        <img style="display: none; padding: 11px 6px; vertical-align: top;" src="/images/filter_loading.gif">
 		</a>
-		<a style="font-size: 28px;" href="https://www.facebook.com/sharer.php?u=data.humdata.org" target="_blank" title="Facebook">
+		<a style="font-size: 28px;" href="https://www.facebook.com/sharer.php?u=data.humdata.org" target="_blank" title="Facebook"
+           class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="facebook">
 			<i class="icon-fb" style="color: #3067a3;"></i>
 	        <img style="display: none; padding: 11px 6px; vertical-align: top;" src="/images/filter_loading.gif">
 		</a>
-		<a style="font-size: 28px;" href="mailto:?subject={{ title }}&body=data.humdata.org" target="_blank" title="E-Mail">
+		<a style="font-size: 28px;" href="mailto:?subject={{ title }}&body=data.humdata.org" target="_blank" title="E-Mail"
+           class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="email">
 			<i class="icon-mail-01" style="color: #767676;"></i>
 	        <img style="display: none; padding: 11px 6px; vertical-align: top;" src="/images/filter_loading.gif">
 		</a>
 	</span>
 {% else %}
-	<a href="javascript:void(0);" target-url="{{url}}" short-path="{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}" class="share_button {{ class }} {{ button_class }}" data-module-placement="{{ placement }}"  data-module="bs_popover" data-module-social_div_id="{{ dataset_social }}"
+	<a href="javascript:void(0);" target-url="{{url}}" short-path="{{ h.url(controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='shorten')}}"
+       class="share_button {{ class }} {{ button_class }}" data-module-placement="{{ placement }}"  data-module="bs_popover" data-module-social_div_id="{{ dataset_social }}"
 	   data-module-social_wrapper_div_id="{{ dataset_social_wrapper }}" title="{{ panel_title }}" onclick="return false;">
 	  {% if icon %}
 		<img src="/images/homepage/share.svg" alt="Share" />
@@ -37,19 +46,23 @@
 	  {% endif %}
 	</a>
 	{# DON'T CHANGE THE 'data.humdata.org' IT'S A PLACEHOLDER THE JS NEEDS #}
-	<span id="{{ dataset_social_wrapper }}" class="popover-wrapper change-link-wrapper"></span>
+	<span id="{{ dataset_social_wrapper }}" class="popover-wrapper change-link-wrapper mx-analytics-wrapper"></span>
 	<span style="display: none;" class="pull-left resource-social change-link-wrapper" id="{{ dataset_social }}">
 		<div style="min-width: 130px;">
-			<a style="font-size: 28px;" href="https://plus.google.com/share?url=data.humdata.org" target="_blank" title="Google Plus">
+			<a style="font-size: 28px;" href="https://plus.google.com/share?url=data.humdata.org" target="_blank" title="Google Plus"
+               class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="google plus">
 				<i class="icon-gplus" style="color: #e15440;"></i>
 			</a>
-			<a style="font-size: 28px;" href="https://twitter.com/share?url=data.humdata.org" target="_blank" title="Twitter">
+			<a style="font-size: 28px;" href="https://twitter.com/share?url=data.humdata.org" target="_blank" title="Twitter"
+               class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="twitter">
 				<i class="icon-twitter" style="color: #03b3ee;"></i>
 			</a>
-			<a style="font-size: 28px;" href="https://www.facebook.com/sharer.php?u=data.humdata.org" target="_blank" title="Facebook">
+			<a style="font-size: 28px;" href="https://www.facebook.com/sharer.php?u=data.humdata.org" target="_blank" title="Facebook"
+               class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="facebook">
 				<i class="icon-fb" style="color: #3067a3;"></i>
 			</a>
-			<a style="font-size: 28px;" href="mailto:?subject={{ title }}&body=data.humdata.org" target="_blank" title="E-Mail">
+			<a style="font-size: 28px;" href="mailto:?subject={{ title }}&body=data.humdata.org" target="_blank" title="E-Mail"
+               class="mx-analytics-share" data-shared-item="{{ analytics_shared_item }}" data-share-type="email">
 				<i class="icon-mail-01" style="color: #767676;"></i>
 			</a>
 		</div>
