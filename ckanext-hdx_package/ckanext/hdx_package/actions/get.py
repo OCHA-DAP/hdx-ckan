@@ -29,6 +29,8 @@ _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 
+_footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Your message may be monitored by the HDX team for internal use: such as improving your user experience, the overall quality of our services and introducing service enhancements for the future.</p>'
+
 
 @logic.side_effect_free
 def hdx_resource_id_list(context, data_dict):
@@ -416,20 +418,22 @@ def hdx_member_list(context, data_dict):
 
 
 def hdx_send_mail_contributor(context, data_dict):
-
-    subject = 'Membership: request from user'
+    subject = '[HDX] {fullname} sent a general question for \"[Dataset] {topic}\"'.format(
+        fullname=data_dict.get('fullname'), topic=data_dict.get('pkg_title'))
     html = """\
-        <html>
-          <head></head>
-          <body>
-            <p>A user sent the following question using the Contact Contributor form.</p>
-            <p>Name: {fullname}</p>
-            <p>Email: {email}</p>
-            <p>Section: {topic}</p>
-            <p>Message: {msg}</p>
-          </body>
-        </html>
-        """.format(fullname=data_dict.get('fullname'), email=data_dict.get('email'), topic=data_dict.get('topic'), msg=data_dict.get('msg'))
-    hdx_mailer.mail_recipient('HDX', data_dict.get('hdx_email'), subject, html)
+            <p>{msg}</p>
+            <p>Dataset: <a href=\"https://data.humdata.org{pkg_url}\">{pkg_title}</a>
+        """.format(msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
+
+    m_list = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
+
+    admins = m_list.get('admins')
+    recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
+    for admin in admins:
+        user = get_action("user_show")(context, {'id':admin})
+        if user.get('email'):
+            recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
+    hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
+                              recipients_list=recipients_list, footer=_footer)
 
     return None

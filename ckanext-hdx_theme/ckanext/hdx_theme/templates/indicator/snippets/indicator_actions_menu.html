@@ -1,8 +1,8 @@
 {% set url = request.url %}
 
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
-{{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=pkg.title, topics=c.membership.data.contributor_topics) }}
-{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=pkg.title, org="Test OrG", groups=c.membership.data.group_topics) }}
+{{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=pkg.title, topics=c.membership.data.contributor_topics, pkg = pkg) }}
+{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=pkg.title, org="Test OrG", groups=c.membership.data.group_topics, pkg = pkg) }}
 {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
 
 <span class="{{ classes }}">

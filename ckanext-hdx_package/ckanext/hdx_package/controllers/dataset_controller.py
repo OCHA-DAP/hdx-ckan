@@ -6,6 +6,7 @@ import logging
 # import datetime
 import cgi
 from string import lower
+from ckan.lib.helpers import url_for
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 
 from ckanext.hdx_package.helpers import helpers
@@ -59,9 +60,6 @@ DataError = ckan.lib.navl.dictization_functions.DataError
 # _check_group_auth = logic.auth.create._check_group_auth
 
 MembershipSuccess = json.dumps({'success': True})
-
-
-
 
 CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
@@ -768,11 +766,11 @@ class DatasetController(PackageController):
         template_data['contributor_topics'] = membership_data['contributor_topics']
         template_data['group_topics'] = {}
         template_data['group_topics']['all'] = membership_data['group_topics']['all'] + ' [' + str(
-            cnt_members_list.get('total_counter',0)) + ']'
+            cnt_members_list.get('total_counter', 0)) + ']'
         template_data['group_topics']['admins'] = membership_data['group_topics']['admins'] + ' [' + str(
-            cnt_members_list.get('admins_counter',0)) + ']'
+            cnt_members_list.get('admins_counter', 0)) + ']'
         template_data['group_topics']['editors'] = membership_data['group_topics']['editors'] + ' [' + str(
-            cnt_members_list.get('editors_counter',0)) + ']'
+            cnt_members_list.get('editors_counter', 0)) + ']'
 
         c.membership = {
             'display_group_message': cnt_members_list.get('is_member', False),
@@ -1188,7 +1186,6 @@ class DatasetController(PackageController):
         else:
             return render(preview_plugin.preview_template(context, data_dict))
 
-
     def contact_contributor(self):
         '''
         Send a contact request form
@@ -1202,14 +1199,22 @@ class DatasetController(PackageController):
         }
         data_dict = {}
         try:
-            data_dict['topic'] = request.params.get('topic')
+            for k, v in membership_data.get('contributor_topics').iteritems():
+                if v == request.params.get('topic'):
+                    data_dict['topic'] = v
+            # data_dict['topic'] = request.params.get('topic')
             data_dict['fullname'] = request.params.get('fullname')
             data_dict['email'] = request.params.get('email')
             data_dict['msg'] = request.params.get('msg')
+            data_dict['pkg_owner_org'] = request.params.get('pkg_owner_org')
+            data_dict['pkg_title'] = request.params.get('pkg_title')
+            data_dict['pkg_id'] = request.params.get('pkg_id')
+            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'))
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
             check_access('hdx_send_mail_contributor', context, data_dict)
         except NotAuthorized:
-            return json.dumps({'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
+            return json.dumps(
+                {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
         except Exception, e:
             error_summary = str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})

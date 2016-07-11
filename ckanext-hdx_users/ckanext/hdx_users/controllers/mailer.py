@@ -20,14 +20,17 @@ class MailerException(Exception):
     pass
 
 
-def add_msg_niceties(recipient_name, body, sender_name, sender_url):
-    footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p>'
-    content = '''Dear {recipient_name},
+def add_msg_niceties(recipient_name, body, sender_name, sender_url, footer=None, show_header=True):
+    if not footer:
+        footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p>'
+    if show_header:
+        header = '''Dear {recipient_name},'''.format(recipient_name=recipient_name)
+    else:
+        header = ''
+    content = '''{header}
     {body}
-    {footer}'''.format(recipient_name=recipient_name, body=body, footer=footer)
-    # return _(u"Dear %s,") % recipient_name \
-    #        + u"\r\n\r\n%s\r\n\r\n" % body \
-    #        + u"\r\n%s" % footer
+    {footer}'''.format(header=header, body=body, footer=footer)
+
     full_html = """
     <html>
       <header></header>
@@ -37,17 +40,25 @@ def add_msg_niceties(recipient_name, body, sender_name, sender_url):
     return full_html
 
 
-def _mail_recipient(recipient_name, recipient_email,
-                    sender_name, sender_url, subject,
-                    body, headers={}):
+def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, subject, body, headers={},
+                    recipients_list=None, footer=None, show_header=True):
     mail_from = config.get('smtp.mail_from')
-    body = add_msg_niceties(recipient_name, body, sender_name, sender_url)
+    body = add_msg_niceties(recipient_name=recipient_name, body=body, sender_name=sender_name, sender_url=sender_url,
+                            footer=footer, show_header=show_header)
     msg = MIMEMultipart('alternative')
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
     msg['From'] = _("%s <%s>") % (sender_name, mail_from)
-    recipient = u"%s <%s>" % (recipient_name, recipient_email)
+    recipient_email_list = []
+    recipient = u""
+    if recipients_list:
+        for r in recipients_list:
+            recipient_email_list.append(r.get('email'))
+            recipient += u"%s <%s>" % (r.get('name'), r.get('email'))
+    else:
+        recipient = u"%s <%s>, " % (recipient_name, recipient_email)
+        recipient_email_list = [recipient_email]
     msg['To'] = Header(recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
@@ -92,7 +103,7 @@ def _mail_recipient(recipient_name, recipient_email,
                                    "smtp.password must be configured as well.")
             smtp_connection.login(smtp_user, smtp_password)
 
-        smtp_connection.sendmail(mail_from, [recipient_email], msg.as_string())
+        smtp_connection.sendmail(mail_from, recipient_email_list, msg.as_string())
         log.info("Sent email to {0}".format(recipient_email))
 
     except smtplib.SMTPException, e:
@@ -103,7 +114,7 @@ def _mail_recipient(recipient_name, recipient_email,
         smtp_connection.quit()
 
 
-def mail_recipient(recipient_name, recipient_email, subject,
-                   body, headers={}):
-    return _mail_recipient(recipient_name, recipient_email,
-                           'HDX', g.site_url, subject, body, headers=headers)
+def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None):
+    return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name='HDX',
+                           sender_url=g.site_url, subject=subject, body=body, headers=headers,
+                           recipients_list=recipients_list, footer=footer, show_header=False)

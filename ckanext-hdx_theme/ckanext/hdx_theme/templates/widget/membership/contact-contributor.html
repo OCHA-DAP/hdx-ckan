@@ -25,7 +25,7 @@ Example:
         <div class="mTop20 large-text">{{ _("Got questions or comments about this dataset?") }}</div>
         <div class="mTop20 regular-text">
             {{ _("Use the form to contact the dataset contributor") }}<br/>
-            {{ _("Your message may be monitored by the HDX team for internal use: such as improving your user experience, the overall quality of our services and introducing service enhancements for the future.") }}
+            {{ _("Your message may be monitored by the HDX team for internal use such as improving your user experience and the overall quality of our services.") }}
         </div>
     </div>
 {% endblock %}
@@ -37,6 +37,10 @@ Example:
                 <div class="col-xs-12">
                     <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">
                         [Dataset] {{ title | truncate(65) }}
+                        <input type="hidden" name="pkg_title" value="{{pkg.title}}">
+                        <input type="hidden" name="pkg_title" value="{{pkg.title}}">
+                        <input type="hidden" name="pkg_owner_org" value="{{pkg.owner_org}}">
+                        <input type="hidden" name="pkg_id" value="{{pkg.name or pkg.id}}">
                     </div>
                     <select class="required mTop15" id="contact-contributor-topics-selector" name="topic">
                         <option id="" value="">{{ _("Your inquiry is regarding ...") }}</option>
