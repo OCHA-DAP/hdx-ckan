@@ -449,7 +449,7 @@ def hdx_send_mail_contributor(context, data_dict):
 
 
 def hdx_send_mail_members(context, data_dict):
-    subject = '[HDX] {fullname} {topic} regarding \"[Dataset] {pkg_title}\"'.format(
+    subject = '[HDX] {fullname} sent a group message regarding \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title = data_dict.get('pkg_title'))
     html = """\
             <p>This message was sent to {topic} of {pkg_owner_org} organization</p>
