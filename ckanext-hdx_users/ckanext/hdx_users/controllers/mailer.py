@@ -55,7 +55,7 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
     if recipients_list:
         for r in recipients_list:
             recipient_email_list.append(r.get('email'))
-            recipient += u"%s <%s>" % (r.get('name'), r.get('email'))
+            recipient += u"%s <%s> , " % (r.get('name'), r.get('email'))
     else:
         recipient = u"%s <%s>, " % (recipient_name, recipient_email)
         recipient_email_list = [recipient_email]

@@ -1200,10 +1200,10 @@ class DatasetController(PackageController):
         data_dict = {}
         try:
             check_access('hdx_send_mail_contributor', context, data_dict)
-            for k, v in membership_data.get('contributor_topics').iteritems():
-                if v == request.params.get('topic'):
-                    data_dict['topic'] = v
-            # data_dict['topic'] = request.params.get('topic')
+            # for k, v in membership_data.get('contributor_topics').iteritems():
+            #     if v == request.params.get('topic'):
+            #         data_dict['topic'] = v
+            data_dict['topic'] = request.params.get('topic')
             data_dict['fullname'] = request.params.get('fullname')
             data_dict['email'] = request.params.get('email')
             data_dict['msg'] = request.params.get('msg')
