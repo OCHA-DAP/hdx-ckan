@@ -425,10 +425,9 @@ def hdx_send_mail_contributor(context, data_dict):
     subject = '[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
     html = """\
-            <p>{fullname} - {email}</p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
-        """.format(fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
+        """.format(msg=data_dict.get('msg'),
                    pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []
@@ -453,11 +452,9 @@ def hdx_send_mail_members(context, data_dict):
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
     html = """\
             <p>This message was sent to {topic} of {pkg_owner_org} organization</p>
-            <p>{fullname} - {email}</p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
-        """.format(topic=data_dict.get('topic'), pkg_owner_org=data_dict.get('pkg_owner_org'),
-                   fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
+        """.format(topic=data_dict.get('topic'), pkg_owner_org=data_dict.get('pkg_owner_org'), msg=data_dict.get('msg'),
                    pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []
