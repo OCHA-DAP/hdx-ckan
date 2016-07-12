@@ -27,9 +27,12 @@ class ContributeFlowController(base.BaseController):
         return self.new(id=id, data=data, errors=errors, error_summary=error_summary, action_name='package_update')
 
     def new(self, id=None, data=None, errors=None, error_summary=None, action_name='package_create'):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
-                   'save': 'save' in request.params}
+        context = {
+            'model': model, 'session': model.Session,
+            'user': c.user or c.author, 'auth_user_obj': c.userobj,
+            'save': 'save' in request.params,
+            'contribute_flow': True
+        }
         dataset_dict = None
         try:
             if id:

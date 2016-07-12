@@ -25,6 +25,7 @@ setup(
     entry_points='''
         [ckan.plugins]
         hdx_package=ckanext.hdx_package.plugin:HDXPackagePlugin
+        hdx_analytics=ckanext.hdx_package.plugin:HDXAnalyticsPlugin
         hdx_chart_views=ckanext.hdx_package.plugin:HDXChartViewsPlugin
         hdx_geopreview_view=ckanext.hdx_package.plugin:HDXGeopreviewPlugin
         hdx_key_figures_view=ckanext.hdx_package.plugin:HDXKeyFiguresPlugin
