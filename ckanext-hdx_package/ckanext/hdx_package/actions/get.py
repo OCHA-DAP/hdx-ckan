@@ -423,14 +423,13 @@ def hdx_member_list(context, data_dict):
 
 def hdx_send_mail_contributor(context, data_dict):
     subject = '[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
-        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title = data_dict.get('pkg_title'))
+        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
     html = """\
             <p>{fullname} - {email}</p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
         """.format(fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
                    pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
-
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org')})
@@ -443,20 +442,22 @@ def hdx_send_mail_contributor(context, data_dict):
     recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
     recipients_list.append({'email': data_dict.get('hdx_email'), 'name': 'HDX'})
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
-                              recipients_list=recipients_list, footer=_footer)
+                              recipients_list=recipients_list, footer=_footer, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'))
 
     return None
 
 
 def hdx_send_mail_members(context, data_dict):
     subject = '[HDX] {fullname} sent a group message regarding \"[Dataset] {pkg_title}\"'.format(
-        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title = data_dict.get('pkg_title'))
+        fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
     html = """\
             <p>This message was sent to {topic} of {pkg_owner_org} organization</p>
             <p>{fullname} - {email}</p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
-        """.format(topic=data_dict.get('topic'), pkg_owner_org=data_dict.get('pkg_owner_org'), fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
+        """.format(topic=data_dict.get('topic'), pkg_owner_org=data_dict.get('pkg_owner_org'),
+                   fullname=data_dict.get('fullname'), email=data_dict.get('email'), msg=data_dict.get('msg'),
                    pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []

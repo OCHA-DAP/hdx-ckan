@@ -20,7 +20,7 @@ class MailerException(Exception):
     pass
 
 
-def add_msg_niceties(recipient_name, body, sender_name, sender_url, footer=None, show_header=True):
+def add_msg_niceties(recipient_name, body, sender_name=None, sender_url=None, footer=None, show_header=True):
     if not footer:
         footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p>'
     if show_header:
@@ -41,7 +41,7 @@ def add_msg_niceties(recipient_name, body, sender_name, sender_url, footer=None,
 
 
 def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, subject, body, headers={},
-                    recipients_list=None, footer=None, show_header=True):
+                    recipients_list=None, footer=None, show_header=True, sender_email=None):
     mail_from = config.get('smtp.mail_from')
     body = add_msg_niceties(recipient_name=recipient_name, body=body, sender_name=sender_name, sender_url=sender_url,
                             footer=footer, show_header=show_header)
@@ -62,6 +62,8 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
     msg['To'] = Header(recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
+    if sender_email:
+        msg['Reply-To'] = Header((u"%s <%s>" % (sender_name, sender_email)), 'utf-8')
     part = MIMEText(body, 'html')
     msg.attach(part)
 
@@ -114,7 +116,8 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
         smtp_connection.quit()
 
 
-def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None):
-    return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name='HDX',
+def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
+                   sender_name='HDX', sender_email=None):
+    return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
                            sender_url=g.site_url, subject=subject, body=body, headers=headers,
-                           recipients_list=recipients_list, footer=footer, show_header=False)
+                           recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email)
