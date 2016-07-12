@@ -468,6 +468,7 @@ def hdx_send_mail_members(context, data_dict):
     recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
     recipients_list.append({'email': data_dict.get('hdx_email'), 'name': 'HDX'})
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
-                              recipients_list=recipients_list, footer=_footer)
+                              recipients_list=recipients_list, footer=_footer, sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'))
 
     return None
