@@ -22,7 +22,7 @@ class MailerException(Exception):
 
 def add_msg_niceties(recipient_name, body, sender_name=None, sender_url=None, footer=None, show_header=True):
     if not footer:
-        footer = '<br><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for our <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p>'
+        footer = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'
     if show_header:
         header = '''Dear {recipient_name},'''.format(recipient_name=recipient_name)
     else:

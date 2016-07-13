@@ -29,7 +29,7 @@ _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 
-_footer = '<br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Your message may be monitored by the HDX team for internal use such as improving your user experience and the overall quality of our services.</p></small>'
+_footer = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Your message may be monitored by the HDX team for internal use such as improving your user experience and the overall quality of our services.</p></small>'
 
 
 @logic.side_effect_free
@@ -452,7 +452,7 @@ def hdx_send_mail_members(context, data_dict):
     subject = '[HDX] {fullname} sent a group message regarding \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
     html = """\
-            <p>This message was sent to {topic} of {pkg_owner_org} </p>
+            <p>This message was sent to {topic} of {pkg_owner_org}. </p>
             <p>{fullname} mentioned: </p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
