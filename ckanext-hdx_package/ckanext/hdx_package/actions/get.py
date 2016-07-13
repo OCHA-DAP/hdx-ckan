@@ -428,7 +428,7 @@ def hdx_send_mail_contributor(context, data_dict):
             <p>{fullname} mentioned: </p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
-        """.format(fullnamne=data_dict.get('fullname'), msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'),
+        """.format(fullname=data_dict.get('fullname'), msg=data_dict.get('msg'), pkg_url=data_dict.get('pkg_url'),
                    pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []
@@ -457,7 +457,7 @@ def hdx_send_mail_members(context, data_dict):
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
         """.format(topic=data_dict.get('topic').lower(), pkg_owner_org=data_dict.get('pkg_owner_org'),
-                   fullnamne=data_dict.get('fullname'), msg=data_dict.get('msg'),
+                   fullname=data_dict.get('fullname'), msg=data_dict.get('msg'),
                    pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []
