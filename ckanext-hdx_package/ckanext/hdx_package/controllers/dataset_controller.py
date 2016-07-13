@@ -772,6 +772,9 @@ class DatasetController(PackageController):
         template_data['group_topics']['editors'] = membership_data['group_topics']['editors'] + ' [' + str(
             cnt_members_list.get('editors_counter', 0)) + ']'
 
+        if c.userobj:
+            template_data['fullname'] = c.userobj.display_name or c.userobj.name or ''
+            template_data['email'] = c.userobj.email or ''
         c.membership = {
             'display_group_message': cnt_members_list.get('is_member', False),
             'data': template_data,
