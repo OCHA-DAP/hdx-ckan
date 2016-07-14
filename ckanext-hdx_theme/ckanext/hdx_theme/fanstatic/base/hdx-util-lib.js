@@ -1,7 +1,8 @@
 (function() {
     var hdxUtil = {
         'ui': {},
-        'compute': {}
+        'compute': {},
+        'analytics': {} // This will be populated from analytics.js
     };
     window.hdxUtil = hdxUtil;
 
