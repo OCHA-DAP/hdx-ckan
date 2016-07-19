@@ -88,7 +88,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert not 'contact-the-contributor' in str(page.response), 'Anonymous users should not see the contact members button'
+        assert not '/contact_hdx' in str(page.response), 'Anonymous users should not see the contact members button'
 
         # test sysadmin can see the button
         page = self._getPackagePage(dataset_name, testsysadmin.apikey)
@@ -115,7 +115,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         context['user'] = 'logged_in'
         user = model.User.by_name('logged_in')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Any loggedin user & not member should NOT see the edit button'
+        assert '/contact_hdx' in str(page.response), 'Any loggedin user & not member should NOT see the edit button'
 
 
         # self._get_action('organization_member_create')(context_sysadmin,
