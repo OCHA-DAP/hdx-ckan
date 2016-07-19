@@ -41,7 +41,7 @@ def add_msg_niceties(recipient_name, body, sender_name=None, sender_url=None, fo
 
 
 def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, subject, body, headers={},
-                    recipients_list=None, footer=None, show_header=True, sender_email=None):
+                    recipients_list=None, footer=None, show_header=True, sender_email=None, bcc_recipients_list=None):
     mail_from = config.get('smtp.mail_from')
     body = add_msg_niceties(recipient_name=recipient_name, body=body, sender_name=sender_name, sender_url=sender_url,
                             footer=footer, show_header=show_header)
@@ -60,6 +60,11 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
         recipient = u"%s <%s>, " % (recipient_name, recipient_email)
         recipient_email_list = [recipient_email]
     msg['To'] = Header(recipient, 'utf-8')
+    bcc_recipient = ''
+    if bcc_recipients_list:
+        for r in bcc_recipients_list:
+            bcc_recipient += u"%s <%s> , " % (r.get('name'), r.get('email'))
+        msg['Bcc'] = Header(bcc_recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     if sender_email:
@@ -117,7 +122,8 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
 
 
 def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
-                   sender_name='HDX', sender_email=None):
+                   sender_name='HDX', sender_email=None, bcc_recipients_list=None):
     return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
                            sender_url=g.site_url, subject=subject, body=body, headers=headers,
-                           recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email)
+                           recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
+                           bcc_recipients_list=bcc_recipients_list)
