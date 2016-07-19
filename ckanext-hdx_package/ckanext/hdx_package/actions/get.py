@@ -29,7 +29,8 @@ _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 
-_footer = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Note: <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
+_footer_contact_contributor = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Note: <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
+_footer_group_message = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'
 
 
 @logic.side_effect_free
@@ -443,7 +444,8 @@ def hdx_send_mail_contributor(context, data_dict):
 
     bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
-                              recipients_list=recipients_list, footer=_footer, sender_name=data_dict.get('fullname'),
+                              recipients_list=recipients_list, footer=_footer_contact_contributor,
+                              sender_name=data_dict.get('fullname'),
                               sender_email=data_dict.get('email'), bcc_recipients_list=bcc_recipients_list)
 
     return None
@@ -469,9 +471,10 @@ def hdx_send_mail_members(context, data_dict):
             if user.get('email'):
                 recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
     recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
-    bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
+    # bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
-                              recipients_list=recipients_list, footer=_footer, sender_name=data_dict.get('fullname'),
-                              sender_email=data_dict.get('email'), bcc_recipients_list=bcc_recipients_list)
+                              recipients_list=recipients_list, footer=_footer_group_message,
+                              sender_name=data_dict.get('fullname'),
+                              sender_email=data_dict.get('email'))
 
     return None

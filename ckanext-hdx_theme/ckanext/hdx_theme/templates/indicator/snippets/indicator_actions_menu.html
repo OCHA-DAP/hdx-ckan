@@ -17,6 +17,13 @@
                     Contact the contributor
                 </a>
             </li>
+        {% else %}
+            <li>
+                <a href="/contact_hdx" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
+                    <i class="icon-envelope"></i>
+                    Contact the contributor
+                </a>
+            </li>
         {% endif %}
         {% if c.membership.display_group_message %}
             <li>
