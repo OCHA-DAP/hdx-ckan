@@ -60,11 +60,12 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
         recipient = u"%s <%s>, " % (recipient_name, recipient_email)
         recipient_email_list = [recipient_email]
     msg['To'] = Header(recipient, 'utf-8')
-    bcc_recipient = ''
+    # bcc_recipient = ''
     if bcc_recipients_list:
         for r in bcc_recipients_list:
-            bcc_recipient += u"%s <%s> , " % (r.get('name'), r.get('email'))
-        msg['Bcc'] = Header(bcc_recipient, 'utf-8')
+            recipient_email_list.append(r.get('email'))
+            # bcc_recipient += u"%s <%s> , " % (r.get('name'), r.get('email'))
+        # msg['Bcc'] = Header(bcc_recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     if sender_email:
