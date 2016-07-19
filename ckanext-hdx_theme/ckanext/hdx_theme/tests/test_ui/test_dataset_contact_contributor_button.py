@@ -60,8 +60,6 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         umodel.setup()
         ue_model.create_table()
 
-
-
     def test_contact_contributor_button_appears(self):
         '''
         testsysadmin - sysadmin
@@ -88,34 +86,36 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert not '/contact_hdx' in str(page.response), 'Anonymous users should not see the contact members button'
+        assert not '/contact_hdx' in str(page.response), 'Anonymous users should not see the contact contributor button'
 
         # test sysadmin can see the button
         page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Sysadmin users should see the contact members button'
+        assert 'contact-the-contributor' in str(page.response), 'Sysadmin users should see contact contributor button'
 
         # test member/owner can see the button
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Member/owner should see the edit button'
+        assert 'contact-the-contributor' in str(
+            page.response), 'Member/owner should see the  contact contributor button'
 
         # test editor can see the button
         context['user'] = 'tester'
         user = model.User.by_name('tester')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Editor should see the edit button'
+        assert 'contact-the-contributor' in str(page.response), 'Editor should see the  contact contributor button'
 
         # test admin can see the button
         context['user'] = 'joeadmin'
         user = model.User.by_name('joeadmin')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'contact-the-contributor' in str(page.response), 'Admin should see the edit button'
+        assert 'contact-the-contributor' in str(page.response), 'Admin should see the  contact contributor button'
 
 
         # any logged in user and not member of organization can NOT see the button
         context['user'] = 'logged_in'
         user = model.User.by_name('logged_in')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert '/contact_hdx' in str(page.response), 'Any loggedin user & not member should NOT see the edit button'
+        assert 'contact-the-contributor' in str(
+            page.response), 'Any loggedin user & not member should NOT see the edit button'
 
 
         # self._get_action('organization_member_create')(context_sysadmin,
