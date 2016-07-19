@@ -86,7 +86,7 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert not '/contact_hdx' in str(page.response), 'Anonymous users should not see the contact contributor button'
+        assert '/contact_hdx' in str(page.response), 'Anonymous users should see the contact_hdx link'
 
         # test sysadmin can see the button
         page = self._getPackagePage(dataset_name, testsysadmin.apikey)
