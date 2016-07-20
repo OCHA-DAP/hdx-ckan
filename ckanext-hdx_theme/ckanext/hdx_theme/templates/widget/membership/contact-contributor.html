@@ -1,0 +1,72 @@
+{#
+Membership: Contact Contributor widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/membership/contact-contributor.html',
+            id="contactContributorPopup",
+            title="Dataset title",
+            topics={'1':'Dataset problem'}
+       )
+    }}
+#}
+
+{% set class = "popup-onboarding" %}
+{% set two_column_class = "two-column-select-organisation" %}
+{% resource 'hdx_theme/widget/membership/contact-contributor.css' %}
+{% resource 'hdx_theme/widget/membership/contact-contributor.js' %}
+{% extends "widget/onboarding/two-column.html" %}
+
+{% block left_content %}
+    <div>
+        <div class="large-title">{{ _("Contact the contributor") }}</div>
+        <div class="mTop20 large-text">{{ _("Do you have questions or comments about this dataset?") }}</div>
+        <div class="mTop20 regular-text">
+            {{ _("Use the form to send a message to the dataset contributor.") }}<br/>
+            {{ _("HDX feedback will be blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please ")}} &nbsp;<a href="http://docs.humdata.org/get-involved/">contact us</a>&nbsp; {{ _("directly should you need further support.") }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block right_content %}
+    <div id="contact-contributor">
+        <form id="contact-contributor-form">
+            <div class="row" style="overflow-y: auto; height: 400px;">
+                <div class="col-xs-12">
+                    <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">
+                        [Dataset] {{ title | truncate(65) }}
+                        <input type="hidden" name="pkg_title" value="{{pkg.title}}">
+                        <input type="hidden" name="pkg_title" value="{{pkg.title}}">
+                        <input type="hidden" name="pkg_owner_org" value="{{pkg.owner_org}}">
+                        <input type="hidden" name="pkg_id" value="{{pkg.name or pkg.id}}">
+                    </div>
+                    <select class="required mTop15" id="contact-contributor-topics-selector" name="topic">
+                        <option id="" value="">{{ _("Your inquiry is regarding ...") }}</option>
+                        {% for key, value in topics.iteritems() %}
+                            <option id="contact-contributor-{{key}}" value="{{key}}">{{value}}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="mTop15 control">
+                        <input id="contact-contributor-fullname" name="fullname" class="full-width required" type="text" value="{{membership_data.fullname}}">
+                        <label for="contact-contributor-fullname">Your name</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <input id="contact-contributor-email" name="email" class="full-width required" type="text" value="{{membership_data.email}}">
+                        <label for="contact-contributor-email">Your email address</label>
+                    </div>
+                    <div class="mTop15 control">
+                        <textarea id="contact-contributor-msg" name="msg" class="full-width required"></textarea>
+                        <label for="contact-contributor-msg">Comments</label>
+                    </div>
+                </div>
+            </div>
+            <div class="right-side-actions">
+                <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
+                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+

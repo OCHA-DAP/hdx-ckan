@@ -245,8 +245,8 @@ class ValidationController(ckan.controllers.user.UserController):
             check_access('user_create', context, data_dict)
             check_access('user_can_register', context, data_dict)
         except NotAuthorized, e:
-            if e.message and e.message.get('email'):
-                return self.error_message(e.message.get('email')[0])
+            if e.args and len(e.args):
+                return self.error_message(self._get_exc_msg_by_key(e, 'email'))
             return OnbNotAuth
         except ValidationError, e:
             # errors = e.error_dict
@@ -287,6 +287,13 @@ class ValidationController(ckan.controllers.user.UserController):
 
         c.user = save_user
         return OnbSuccess
+
+    def _get_exc_msg_by_key(self, e, key):
+        if e and e.args:
+            for arg in e.args:
+                if key in arg:
+                    return arg[key]
+        return None
 
     def validate(self, token):
         '''

@@ -38,8 +38,9 @@ organization = {
     'title': 'Hdx Test Org',
     'org_url': 'http://test-org.test',
     'description': 'This is a test organization',
-    'users': [{'name': 'testsysadmin'}, {'name': 'joeadmin', 'capacity': 'member'},
-              {'name': 'tester', 'capacity': 'editor'}]
+    'users': [{'name': 'joeadmin', 'capacity': 'admin'},
+              {'name': 'tester', 'capacity': 'editor'},
+              {'name': 'visitor', 'capacity': 'member'}]
 }
 
 
@@ -59,9 +60,23 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         umodel.setup()
         ue_model.create_table()
 
-    def test_edit_button_appears(self):
+
+
+    def test_contact_members_button_appears(self):
+        '''
+        testsysadmin - sysadmin
+        visitor - member
+        tester - editor
+        joeadmin - admin
+        logged_in - user which is not member of the org
+
+        Only members (admin, editor, member) and sysadmin should see the button
+
+        :return:
+        '''
+
         global package
-        user = model.User.by_name('tester')
+        user = model.User.by_name('visitor')
         testsysadmin = model.User.by_name('testsysadmin')
 
         dataset_name = package['name']
@@ -69,29 +84,45 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         context_sysadmin = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
         org_obj = self._get_action('organization_create')(context_sysadmin, organization)
-
         self._get_action('package_create')(context, package)
+
         # test that anonymous users can't see the button
         page = self._getPackagePage(dataset_name)
-        assert not 'Edit Dataset' in str(page.response), 'Anonymous users should not see the edit button'
-        # test sysadmin can see edit
-        page = self._getPackagePage(dataset_name, testsysadmin.apikey)
-        assert 'Edit Dataset' in str(page.response), 'Sysadmin''s should see the edit button'
-        # test owner can see edit
-        page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'Edit Dataset' in str(page.response), 'Owner should see the edit button'
+        assert not 'contact-members' in str(page.response), 'Anonymous users should not see the contact members button'
 
-        # test member can NOT see the button
+        # test sysadmin can see the button
+        page = self._getPackagePage(dataset_name, testsysadmin.apikey)
+        assert 'contact-members' in str(page.response), 'Sysadmin users should see the contact members button'
+
+        # test member/owner can see the button
+        page = self._getPackagePage(dataset_name, user.apikey)
+        assert 'contact-members' in str(page.response), 'Member/owner should see the edit button'
+
+        # test editor can see the button
+        context['user'] = 'tester'
+        user = model.User.by_name('tester')
+        page = self._getPackagePage(dataset_name, user.apikey)
+        assert 'contact-members' in str(page.response), 'Editor should see the edit button'
+
+        # test admin can see the button
         context['user'] = 'joeadmin'
         user = model.User.by_name('joeadmin')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'Edit Dataset' not in str(page.response), 'Member should NOT see the edit button'
+        assert 'contact-members' in str(page.response), 'Admin should see the edit button'
 
-        self._get_action('organization_member_create')(context_sysadmin,
-                                                       {'id': org_obj.get('id'), 'username': 'joeadmin',
-                                                        'role': 'editor'})
+
+        # any logged in user and not member of organization can NOT see the button
+        context['user'] = 'logged_in'
+        user = model.User.by_name('logged_in')
         page = self._getPackagePage(dataset_name, user.apikey)
-        assert 'Edit Dataset' in str(page.response), 'Editor should see the edit button'
+        assert 'contact-members' not in str(page.response), 'Any loggedin user & not member should NOT see the edit button'
+
+
+        # self._get_action('organization_member_create')(context_sysadmin,
+        #                                                {'id': org_obj.get('id'), 'username': 'joeadmin',
+        #                                                 'role': 'editor'})
+        # page = self._getPackagePage(dataset_name, user.apikey)
+        # assert 'Edit Dataset' in str(page.response), 'Editor should see the edit button'
 
     def _getPackagePage(self, package_id, apikey=None):
         page = None

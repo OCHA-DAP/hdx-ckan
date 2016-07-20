@@ -1,3 +1,6 @@
+@import "../base/variables";
+@import "../base/mixins";
+
 /* Override background for two column layout */
     .contentBackground.twoColumnBackground{
         background-image: none;
@@ -173,65 +176,48 @@
 
 
 /* Actions */
-.indicator-actions a.btn.hdx-btn {
-	margin-left: 12px;
+.indicator-actions{
+  a.btn.hdx-btn {
+    margin-left: 12px;
+  }
+
+  ul {
+    @listMarginUnit: 16px;
+    list-style: none;
+    li {
+      line-height: @listMarginUnit;
+      .sourceSansProFont(400, 12px);
+
+      display: inline;
+      margin-right: @listMarginUnit;
+
+      &:first-child:before {
+        border: none;
+      }
+
+      &:before {
+        content: "";
+        border-left: 1px solid @grayColor;
+        height: @listMarginUnit;
+        margin-right: @listMarginUnit;
+      }
+
+      &.delete-override{
+        a {
+          color: @orangeColor;
+          text-transform: none;
+        }
+      }
+
+      a {
+        i {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
 }
 
-.custom-dataset .indicator-actions a.btn.hdx-btn {
-	/*margin-left: 0px;*/
-    /*margin-right: 12px;*/
-}
-
-/* .indicator-actions {
-	margin-top: 10px;
-}
-.indicator-actions .dropdown-menu {
-	right: 10px;
-}
-.indicator-actions .dropdown-menu li span {
-	color: #333;
-	padding: 3px 20px;
-}
-.indicator-actions .caret {
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 4px solid;
-    display: inline-block;
-    height: 0;
-    margin-left: 2px;
-    vertical-align: middle;
-    width: 0;
-}
-.indicator-actions .dropdown-toggle, .indicator-actions.open .dropdown-toggle {
-    background-color: #ffffff;
-    border: medium none;
-    color: #007ce0;
-    margin-top: -2px;
-    text-align: left;
-    box-shadow: none;
-}
-
-.dropdown-menu .social-item {
-	line-height: 30px;
-}
-
-.dropdown-menu .social-link.first-link {
-	margin-left: 17px;
-}
-
-.dropdown-menu .social-link {
-	display: inline;
-	padding: 3px;
-}
-.dropdown-menu .social-link:hover {
-	background-color: transparent;
-	opacity: 0.8;
-}
-
-.dropdown-menu .social-link .social-images {
-	height: 20px;
-}
- */
 /* END - Actions */
 
 

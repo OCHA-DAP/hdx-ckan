@@ -132,3 +132,13 @@ class LoginController(ckan_user.UserController):
         tmp = hdx_mail_c.ValidationController()
         return tmp.new_login(info_message='In order to add data, you need to login below or register on HDX')
 
+
+    def contact_hdx(self, error=None):
+        """
+        If the user tries to contact contributor but isn't logged in, directs
+        them to a specific login page.
+        """
+        self.login(error)
+        vars = {'contribute': True}
+        tmp = hdx_mail_c.ValidationController()
+        return tmp.new_login(info_message='In order to contact the contributor, you need to login below or register on HDX')
