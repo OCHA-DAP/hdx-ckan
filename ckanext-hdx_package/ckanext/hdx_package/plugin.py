@@ -57,9 +57,7 @@ def run_on_startup():
     # replace original get_proxified_resource_url, check hdx_get_proxified_resource_url for more info
     resourceproxy_plugin.get_proxified_resource_url = hdx_helpers.hdx_get_proxified_resource_url
 
-    # wrap resource download function so that we can track download events
-    analytics.wrap_resource_download_function()
-
+    # Analytics related things that need to be run on startup are in their own plugin
 
 def _generate_license_list():
     package.Package._license_register = license.LicenseRegister()
@@ -137,6 +135,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('dataset_resources', '/dataset/resources/{id}',
                     controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
                     action='resources_notification_page')
+        map.connect('/membership/contact_contributor', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='contact_contributor')
+        map.connect('/membership/contact_members', controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='contact_members')
+
+
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             # m.connect('add dataset', '/dataset/new', action='new')
             m.connect(
@@ -324,7 +326,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,
-            'package_validate': hdx_get.package_validate
+            'package_validate': hdx_get.package_validate,
+            'hdx_member_list': hdx_get.hdx_member_list,
+            'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
+            'hdx_send_mail_members': hdx_get.hdx_send_mail_members,
         }
 
     def before_show(self, resource_dict):
@@ -346,7 +351,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_auth_functions(self):
         return {'package_create': authorize.package_create,
                 'package_update': authorize.package_update,
-                'hdx_resource_id_list': authorize.hdx_resource_id_list}
+                'hdx_resource_id_list': authorize.hdx_resource_id_list,
+                'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
+                'hdx_send_mail_members': authorize.hdx_send_mail_members,
+                }
 
     def make_middleware(self, app, config):
         run_on_startup()
@@ -370,6 +378,24 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     del schema['groups_list']
 
         return toolkit.navl_validate(data_dict, schema, context)
+
+
+class HDXAnalyticsPlugin(plugins.SingletonPlugin):
+
+    plugins.implements(plugins.IMiddleware, inherit=True)
+    plugins.implements(plugins.IPackageController, inherit=True)
+
+    def run_on_startup(self):
+        # wrap resource download function so that we can track download events
+        analytics.wrap_resource_download_function()
+
+    def make_middleware(self, app, config):
+        self.run_on_startup()
+        return app
+
+    def after_create(self, context, data_dict):
+        if not context.get('contribute_flow'):
+            analytics.DatasetCreatedAnalyticsSender(data_dict).send_to_queue()
 
 
 class HDXChartViewsPlugin(plugins.SingletonPlugin):

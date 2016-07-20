@@ -1,124 +1,111 @@
 @font-face {
-	font-family: 'hdx-icons';
-	src:url('fonts/hdx-icons.eot?jxdc2r');
-	src:url('fonts/hdx-icons.eot?#iefixjxdc2r') format('embedded-opentype'),
-		url('fonts/hdx-icons.woff?jxdc2r') format('woff'),
-		url('fonts/hdx-icons.ttf?jxdc2r') format('truetype'),
-		url('fonts/hdx-icons.svg?jxdc2r#hdx-icons') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'hdx-icons';
+    src:    url('fonts/hdx-icons.eot?5asvol');
+    src:    url('fonts/hdx-icons.eot?5asvol#iefix') format('embedded-opentype'),
+        url('fonts/hdx-icons.ttf?5asvol') format('truetype'),
+        url('fonts/hdx-icons.woff?5asvol') format('woff'),
+        url('fonts/hdx-icons.svg?5asvol#hdx-icons') format('svg');
+    font-weight: normal;
+    font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
-	font-family: 'hdx-icons';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'hdx-icons' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
 
-	/* Better Font Rendering =========== */
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-edit:before {
+    content: "\e900";
+}
+.icon-envelope:before {
+    content: "\e901";
+}
+.icon-megahorn:before {
+    content: "\e902";
+}
+.icon-rubbish-bin:before {
+    content: "\e903";
+}
 .icon-fight:before {
-	content: "\e600";
+    content: "\e600";
 }
-
 .icon-gallery:before {
-	content: "\e601";
+    content: "\e601";
 }
-
 .icon-gplus:before {
-	content: "\e602";
+    content: "\e602";
 }
-
 .icon-quality_checked:before {
-	content: "\e603";
+    content: "\e603";
 }
-
 .icon-subnational:before {
-	content: "\e604";
+    content: "\e604";
 }
-
 .icon-cc:before {
-	content: "\e605";
+    content: "\e605";
 }
-
 .icon-check:before {
-	content: "\e606";
+    content: "\e606";
 }
-
 .icon-close_filter_button:before {
-	content: "\e607";
+    content: "\e607";
 }
-
 .icon-download:before {
-	content: "\e608";
+    content: "\e608";
 }
-
 .icon-earth:before {
-	content: "\e609";
+    content: "\e609";
 }
-
 .icon-expand:before {
-	content: "\e60a";
+    content: "\e60a";
 }
-
 .icon-fb:before {
-	content: "\e60b";
+    content: "\e60b";
 }
-
 .icon-fileupload:before {
-	content: "\e60c";
+    content: "\e60c";
 }
-
 .icon-fire:before {
-	content: "\e60d";
+    content: "\e60d";
 }
-
 .icon-location:before {
-	content: "\e60e";
+    content: "\e60e";
 }
-
 .icon-lock:before {
-	content: "\e60f";
+    content: "\e60f";
 }
-
 .icon-mail-01:before {
-	content: "\e610";
+    content: "\e610";
 }
-
 .icon-open_filter_button:before {
-	content: "\e611";
+    content: "\e611";
 }
-
 .icon-search:before {
-	content: "\e612";
+    content: "\e612";
 }
-
 .icon-share:before {
-	content: "\e613";
+    content: "\e613";
 }
-
 .icon-spanner:before {
-	content: "\e614";
+    content: "\e614";
 }
-
 .icon-tag:before {
-	content: "\e615";
+    content: "\e615";
 }
-
 .icon-twitter:before {
-	content: "\e616";
+    content: "\e616";
 }
-
 .icon-visualize:before {
-	content: "\e617";
+    content: "\e617";
 }
 
-.icon-plus-sign-alt:before {
-  content: "\f0fe";
-}

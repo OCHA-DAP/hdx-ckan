@@ -14,13 +14,26 @@ ckan.module('hdx_click_stopper', function ($, _) {
                 var data = {
                     id: aElement.attr('id'),
                     linkType: this.options.link_type,
-                    destinationUrl: href,
-                    target: target
+                    destinationUrl: href
                 };
 
-                this.sandbox.publish('hdx-click-stopper-bus', data);
+                var promise = hdxUtil.analytics.sendLinkClickEvent(data);
+                promise.done(
+                    /**
+                     * The callback function opens the link after the analytics events are sent.
+                     */
+                    function () {
+                        if (data.destinationUrl) {
+                            console.log("Executing original click action");
+                            if (!target) {
+                                window.location.href = data.destinationUrl;
+                            }
+                            else if (target != "_blank") {
+                                window.open(data.destinationUrl, target);
+                            }
+                    }
+                });
 
-                $(window.document).trigger("hdx-link-clicked", [data]);
             }.bind(this));
         },
         options: {

@@ -3,26 +3,27 @@ Functions for creating and maintaining datasets.
 """
 import logging
 # from urllib import urlencode
-#import datetime
+# import datetime
 import cgi
 from string import lower
+from ckan.lib.helpers import url_for
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 
 from ckanext.hdx_package.helpers import helpers
-#from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
-#from formencode import foreach
+# from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
+# from formencode import foreach
 
 from pylons import config
-#from genshi.template.text import NewTextTemplate
-#from paste.deploy.converters import asbool
+# from genshi.template.text import NewTextTemplate
+# from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
-#import ckan.lib.maintain as maintain
-#import ckan.lib.package_saver as package_saver
-#import ckan.lib.i18n as i18n
+# import ckan.lib.maintain as maintain
+# import ckan.lib.package_saver as package_saver
+# import ckan.lib.i18n as i18n
 import ckan.lib.navl.dictization_functions as dict_fns
-#import ckan.lib.accept as accept
+# import ckan.lib.accept as accept
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.lib.datapreview as datapreview
@@ -35,6 +36,10 @@ import ckanext.hdx_package.helpers.analytics as analytics
 
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
+
+from ckanext.hdx_package.helpers.membership_data import membership_data
+
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 
@@ -54,13 +59,13 @@ flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
 # _check_group_auth = logic.auth.create._check_group_auth
 
+MembershipSuccess = json.dumps({'success': True})
 
 CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
     'html': 'text/html;charset=utf-8',
     'json': 'application/json;charset=utf-8',
 }
-
 
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
@@ -148,7 +153,7 @@ class DatasetController(PackageController):
                     # This is actually an update not a save
                     data_dict['id'] = data_dict['pkg_name']
                     del data_dict['pkg_name']
-                    #data_dict['state'] = 'draft'
+                    # data_dict['state'] = 'draft'
                     # this is actually an edit not a save
                     pkg_dict = get_action('package_update')(context, data_dict)
 
@@ -215,9 +220,10 @@ class DatasetController(PackageController):
         """
         Force user to pick an organization before creating a dataset
         """
-        #If user not logged in, redirect
+        # If user not logged in, redirect
         if not c.user:
-            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='contribute'))
+            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                                      action='contribute'))
 
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
         c.organizations_available = helpers.hdx_organizations_available_with_roles()
@@ -243,7 +249,8 @@ class DatasetController(PackageController):
                 if this_org in user_orgs:
                     return render('organization/request_mem_or_org.html')
         except:
-            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController', action='contribute'))
+            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                                      action='contribute'))
 
         package_type = self._guess_package_type(True)
 
@@ -286,7 +293,7 @@ class DatasetController(PackageController):
                      'error_summary': error_summary,
                      'action': 'new', 'stage': stage,
                      'dataset_type': package_type,
-                    }
+                     }
         c.errors_json = h.json.dumps(errors)
 
         self._setup_template_variables(context, {},
@@ -300,18 +307,18 @@ class DatasetController(PackageController):
             'use of c.form is deprecated. please see '
             'ckan/templates/package/base_form_page.html for an example '
             'of the new way to include the form snippet'
-            )
+        )
         return render(new_template,
                       extra_vars={'form_vars': form_vars,
                                   'form_snippet': form_snippet,
                                   'dataset_type': package_type})
-        #if not request.is_xhr:
+        # if not request.is_xhr:
         #    return render(self._new_template(package_type), extra_vars={'stage': stage, 'data': data})
-        #else:
+        # else:
         #    return self._finish(200, {'validation_fail': 1, 'errors': vars['errors'],
         #                              'error_summary': vars['error_summary']}, content_type='json')
-            # return render(self._new_template(package_type), extra_vars={'stage':
-            # stage})
+        # return render(self._new_template(package_type), extra_vars={'stage':
+        # stage})
 
     # def _get_perma_link(self, dataset_id, resource_id):
     #     """
@@ -605,7 +612,7 @@ class DatasetController(PackageController):
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new',
                 'resource_form_snippet': self._resource_form(package_type),
-                'dataset_type':package_type}
+                'dataset_type': package_type}
         return render('package/resource_edit.html', extra_vars=vars)
 
     def _create_perma_link_if_needed(self, dataset_id, resource):
@@ -674,7 +681,7 @@ class DatasetController(PackageController):
 
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
-            #self._create_perma_link_if_needed(id, resource)
+            # self._create_perma_link_if_needed(id, resource)
 
             # can the resources be previewed?
             resource['can_be_previewed'] = self._resource_preview(
@@ -691,7 +698,7 @@ class DatasetController(PackageController):
                 resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
 
         # Is this an indicator? Load up graph data
-        #c.pkg_dict['indicator'] = 1
+        # c.pkg_dict['indicator'] = 1
         try:
             if int(c.pkg_dict['indicator']):
                 c.pkg_dict['graph'] = '{}'
@@ -706,7 +713,7 @@ class DatasetController(PackageController):
         self._setup_template_variables(context, {'id': id},
                                        package_type=package_type)
 
-        #package_saver.PackageSaver().render_package(c.pkg_dict, context)
+        # package_saver.PackageSaver().render_package(c.pkg_dict, context)
 
         template = self._read_template(package_type)
         template = template[:template.index('.') + 1] + format
@@ -749,6 +756,30 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
+        cnt_members_list = {}
+        template_data = {}
+        try:
+            cnt_members_list = get_action('hdx_member_list')(context, {'org_id': c.pkg.owner_org})
+        except Exception, e:
+            log.warning("Package " + id + " has no organization" + str(e.args))
+
+        template_data['contributor_topics'] = membership_data['contributor_topics']
+        template_data['group_topics'] = {}
+        template_data['group_topics']['all'] = membership_data['group_topics']['all'] + ' [' + str(
+            cnt_members_list.get('total_counter', 0)) + ']'
+        template_data['group_topics']['admins'] = membership_data['group_topics']['admins'] + ' [' + str(
+            cnt_members_list.get('admins_counter', 0)) + ']'
+        template_data['group_topics']['editors'] = membership_data['group_topics']['editors'] + ' [' + str(
+            cnt_members_list.get('editors_counter', 0)) + ']'
+
+        if c.userobj:
+            template_data['fullname'] = c.userobj.display_name or c.userobj.name or ''
+            template_data['email'] = c.userobj.email or ''
+        c.membership = {
+            'display_group_message': cnt_members_list.get('is_member', False),
+            'data': template_data,
+        }
+
         has_shapes = False
         if 'resources' in c.pkg_dict:
             has_shapes = self._has_shapes(c.pkg_dict['resources'])
@@ -764,11 +795,7 @@ class DatasetController(PackageController):
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
-                # org_dict = c.pkg_dict.get('organization') or {}
-                # org_id = org_dict.get('id', None)
-                # org_info_dict = self._get_org_extras(org_id)
                 if org_info_dict.get('custom_org', False):
-                    # self._process_customizations(org_info_dict.get('customization', None))
                     return render('package/custom_hdx_read.html')
                 return render('package/hdx_read.html')
         except ckan.lib.render.TemplateNotFound:
@@ -791,9 +818,9 @@ class DatasetController(PackageController):
                    'for_view': True}
         data_dict = {'id': org_id}
         org_info = get_action(
-                'hdx_light_group_show')(context, data_dict)
+            'hdx_light_group_show')(context, data_dict)
 
-        extras_dict = {item['key']: item['value'] for item in org_info.get('extras',{})}
+        extras_dict = {item['key']: item['value'] for item in org_info.get('extras', {})}
         extras_dict['image_url'] = org_info.get('image_url', None)
 
         return extras_dict
@@ -803,8 +830,8 @@ class DatasetController(PackageController):
         Process settings for datasets belonging to custom layouts
         """
         c.logo_config = {
-          'background_color': '#fafafa',
-          'border_color': '#cccccc'
+            'background_color': '#fafafa',
+            'border_color': '#cccccc'
         }
         if json_string:
             custom_dict = json.loads(json_string)
@@ -896,7 +923,7 @@ class DatasetController(PackageController):
 
         params = request.params.items()
         url = params[0][1]
-        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key="+config.get('hdx.google.dev_key',''),
+        r = requests.post("https://www.googleapis.com/urlshortener/v1/url?key=" + config.get('hdx.google.dev_key', ''),
                           data=json.dumps({'longUrl': url}), headers={'content-type': 'application/json'})
         item = r.json()
 
@@ -937,7 +964,7 @@ class DatasetController(PackageController):
             data_dict = c.pkg_dict
             data_dict['private'] = True
         if data_dict.get('extras', None):
-            del(data_dict['extras'])
+            del (data_dict['extras'])
         if not data_dict.get('dataset_source', None):
             data_dict['dataset_source'] = "Unknown"
         if not data_dict.get('package_creator', None):
@@ -946,9 +973,9 @@ class DatasetController(PackageController):
         try:
             pkg_dict = get_action('package_update')(context, data_dict)
         except:
-            self._finish(500, {'success': False, 'message':"Oops! We can't do this right now. Something went wrong."}, content_type='json')
+            self._finish(500, {'success': False, 'message': "Oops! We can't do this right now. Something went wrong."},
+                         content_type='json')
         return self._finish(200, {'success': True, 'status': status, 'text': text}, content_type='json')
-
 
     # copy from package.py:1094
     def resource_delete(self, id, resource_id):
@@ -1027,7 +1054,7 @@ class DatasetController(PackageController):
 
         try:
             if request.method == 'POST':
-                get_action('package_purge')(context, {'id': id}) #Create new action to fully delete
+                get_action('package_purge')(context, {'id': id})  # Create new action to fully delete
                 h.flash_notice(_('Dataset has been deleted.'))
                 h.redirect_to(controller='user', action='dashboard_datasets')
             c.pkg_dict = get_action('package_show')(context, {'id': id})
@@ -1039,8 +1066,8 @@ class DatasetController(PackageController):
         return render('package/confirm_delete.html',
                       extra_vars={'dataset_type': dataset_type})
 
-#copy from package.py:1183
-#related to issue 2367
+    # copy from package.py:1183
+    # related to issue 2367
     def resource_read(self, id, resource_id):
         """
         Display resource, modified to add permalinks
@@ -1055,7 +1082,7 @@ class DatasetController(PackageController):
             # required for nav menu
             c.pkg = context['package']
             c.pkg_dict = c.package
-            #self._create_perma_link_if_needed(id, c.resource)
+            # self._create_perma_link_if_needed(id, c.resource)
         except NotFound:
             abort(404, _('Resource not found'))
         except NotAuthorized:
@@ -1063,7 +1090,7 @@ class DatasetController(PackageController):
         # get package license info
         license_id = c.package.get('license_id')
         try:
-            c.package['isopen'] = model.Package.\
+            c.package['isopen'] = model.Package. \
                 get_license_register()[license_id].isopen()
         except KeyError:
             c.package['isopen'] = False
@@ -1114,10 +1141,8 @@ class DatasetController(PackageController):
         if helpers.is_ckan_domain(download_url):
             c.resource['download_url'] = helpers.make_url_relative(download_url)
 
-
         template = self._resource_template(dataset_type)
         return render(template, extra_vars=vars)
-
 
     def resource_datapreview(self, id, resource_id):
         '''
@@ -1164,3 +1189,88 @@ class DatasetController(PackageController):
         else:
             return render(preview_plugin.preview_template(context, data_dict))
 
+    def contact_contributor(self):
+        '''
+        Send a contact request form
+        :return:
+        '''
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': c.user or c.author,
+            'auth_user_obj': c.userobj
+        }
+        data_dict = {}
+        try:
+            check_access('hdx_send_mail_contributor', context, data_dict)
+            # for k, v in membership_data.get('contributor_topics').iteritems():
+            #     if v == request.params.get('topic'):
+            #         data_dict['topic'] = v
+            data_dict['topic'] = request.params.get('topic')
+            data_dict['fullname'] = request.params.get('fullname')
+            data_dict['email'] = request.params.get('email')
+            data_dict['msg'] = request.params.get('msg')
+            data_dict['pkg_owner_org'] = request.params.get('pkg_owner_org')
+            data_dict['pkg_title'] = request.params.get('pkg_title')
+            data_dict['pkg_id'] = request.params.get('pkg_id')
+            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                                             qualified=True)
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+
+        except NotAuthorized:
+            return json.dumps(
+                {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        try:
+            get_action('hdx_send_mail_contributor')(context, data_dict)
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        return MembershipSuccess
+
+    def contact_members(self):
+        '''
+        Send a contact request form
+        :return:
+        '''
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': c.user or c.author,
+            'auth_user_obj': c.userobj
+        }
+        data_dict = {}
+        try:
+            org_id = request.params.get('pkg_owner_org')
+            check_access('hdx_send_mail_members', context, {'org_id': org_id})
+            data_dict['topic_key'] = request.params.get('topic')
+            data_dict['topic'] = membership_data.get('group_topics').get(request.params.get('topic'))
+            data_dict['fullname'] = request.params.get('fullname')
+            data_dict['email'] = request.params.get('email')
+            data_dict['msg'] = request.params.get('msg')
+            data_dict['pkg_owner_org_id'] = org_id
+            try:
+                owner_org = get_action("organization_show")(context, {'id': org_id, 'include_datasets': False})
+                data_dict['pkg_owner_org'] = owner_org.get("display_name") or owner_org.get("title")
+            except Exception, e:
+                data_dict['pkg_owner_org'] = org_id
+            data_dict['pkg_title'] = request.params.get('pkg_title')
+            data_dict['pkg_id'] = request.params.get('pkg_id')
+            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                                             qualified=True)
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+
+        except NotAuthorized:
+            return json.dumps(
+                {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        try:
+            get_action('hdx_send_mail_members')(context, data_dict)
+        except Exception, e:
+            error_summary = str(e)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
+        return MembershipSuccess

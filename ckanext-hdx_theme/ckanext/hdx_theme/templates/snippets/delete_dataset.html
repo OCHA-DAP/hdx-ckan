@@ -1,3 +1,8 @@
       {# DELETE THIS ONCE BOOTSTRAP STUFF IS FIGURED OUT#}
       {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset?'), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
-      <a class="{% if button %}btn btn-danger hdx-btn{% else %}my-link uppercase{% endif %}" href="{% url_for controller='package', action='delete', id=pkg.id %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">{{ _('Delete') }}</a>
+      <a class="{% if button %}btn btn-danger hdx-btn{% else %}my-link uppercase{% endif %}" href="{% url_for controller='package', action='delete', id=pkg.id %}" data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">
+            {% if icon %}
+                  <i class="{{icon}}"></i>
+            {% endif %}
+            {{ _('Delete') }}
+      </a>

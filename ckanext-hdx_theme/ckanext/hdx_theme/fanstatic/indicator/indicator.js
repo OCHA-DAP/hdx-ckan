@@ -20,7 +20,6 @@ $(document).ready(function() {
     container.show();
     $("#location-dd").find("span").text($(this).text());
   });
-
-  setUpShareTracking();
+  
   setUpGalleryTracking();
 });
