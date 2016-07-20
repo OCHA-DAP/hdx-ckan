@@ -57,9 +57,7 @@ def run_on_startup():
     # replace original get_proxified_resource_url, check hdx_get_proxified_resource_url for more info
     resourceproxy_plugin.get_proxified_resource_url = hdx_helpers.hdx_get_proxified_resource_url
 
-    # wrap resource download function so that we can track download events
-    analytics.wrap_resource_download_function()
-
+    # Analytics related things that need to be run on startup are in their own plugin
 
 def _generate_license_list():
     package.Package._license_register = license.LicenseRegister()
@@ -380,6 +378,24 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                     del schema['groups_list']
 
         return toolkit.navl_validate(data_dict, schema, context)
+
+
+class HDXAnalyticsPlugin(plugins.SingletonPlugin):
+
+    plugins.implements(plugins.IMiddleware, inherit=True)
+    plugins.implements(plugins.IPackageController, inherit=True)
+
+    def run_on_startup(self):
+        # wrap resource download function so that we can track download events
+        analytics.wrap_resource_download_function()
+
+    def make_middleware(self, app, config):
+        self.run_on_startup()
+        return app
+
+    def after_create(self, context, data_dict):
+        if not context.get('contribute_flow'):
+            analytics.DatasetCreatedAnalyticsSender(data_dict).send_to_queue()
 
 
 class HDXChartViewsPlugin(plugins.SingletonPlugin):

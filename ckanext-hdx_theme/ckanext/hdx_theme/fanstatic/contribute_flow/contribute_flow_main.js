@@ -80,21 +80,30 @@ ckan.module('contribute_flow_main', function($, _) {
                             moduleLog('In saveDatasetForm() function. Got validateSucceeded: ' +
                                 validateSucceeded + ' and datasetId:' + datasetId);
                             if (validateSucceeded) {
+                                var analyticsPromise;
                                 var formDataArray;
-                                if (datasetId) {
+                                if (datasetId) { // updating existing dataset
                                     formDataArray = contributeGlobal.getFormValues('update-dataset-json');
                                     formDataArray.push({'name': 'id', 'value': datasetId});
+
+                                    analyticsPromise = {};
                                 }
-                                else{
+                                else{ // Saving a new dataset
                                     formDataArray = contributeGlobal.getFormValues('new-dataset-json');
+
+                                     /* Send analytics tracking events */
+                                    analyticsPromise = hdxUtil.analytics.sendDatasetCreationEvent();
                                 }
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
-                                $.post(requestUrl, formDataArray,
-                                    function(data, status, xhr) {
-                                        contributeGlobal.updateInnerState(data, status);
-                                        deferred.resolve(data, status, xhr);
-                                    }
-                                );
+
+                                $.when(analyticsPromise).done(function () {
+                                    $.post(requestUrl, formDataArray,
+                                        function (data, status, xhr) {
+                                            contributeGlobal.updateInnerState(data, status);
+                                            deferred.resolve(data, status, xhr);
+                                        }
+                                    );
+                                });
                             }
                         }
                     );

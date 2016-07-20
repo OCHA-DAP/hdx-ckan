@@ -301,21 +301,34 @@ def package_search(context, data_dict):
 
 @logic.side_effect_free
 def resource_show(context, data_dict):
+    '''
+    Wraps the default resource_show and adds additional information like:
+    resource size (for uploaded files) and resource revision timestamp
+    '''
     resource_dict = logic_get.resource_show(context, data_dict)
 
+    # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
     if not resource_dict.get('size'):
         resource_dict['size'] = __get_resource_filesize(resource_dict)
+    if not resource_dict.get('revision_last_updated'):
+        resource_dict['revision_last_updated'] = __get_resource_revison_timesptamp(resource_dict)
 
     return resource_dict
 
 
 @logic.side_effect_free
 def package_show(context, data_dict):
+    '''
+    Wraps the default package_show and adds additional information to the resources:
+    resource size (for uploaded files) and resource revision timestamp
+    '''
     package_dict = logic_get.package_show(context, data_dict)
 
     for resource_dict in package_dict.get('resources', []):
         if not resource_dict.get('size'):
             resource_dict['size'] = __get_resource_filesize(resource_dict)
+        if not resource_dict.get('revision_last_updated'):
+            resource_dict['revision_last_updated'] = __get_resource_revison_timesptamp(resource_dict)
 
     downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
                       res.get('tracking_summary', {}).get('total'))
@@ -346,6 +359,21 @@ def __get_resource_filesize(resource_dict):
             log.warn(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
                                                                                          str(e)))
         return value
+    return None
+
+
+def __get_resource_revison_timesptamp(resource_dict):
+    '''
+    :param resource_dict: the dictized resource information
+    :type resource_dict: dict
+    :return: timestamp of the revision of the resource
+    :rtype: str
+    '''
+    revision_id = resource_dict.get('revision_id')
+    if revision_id:
+        context = {'model': model, 'session': model.Session}
+        revision_dict = logic.get_action('revision_show')(context, {'id': revision_id})
+        return revision_dict.get('timestamp')
     return None
 
 
