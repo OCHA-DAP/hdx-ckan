@@ -39,7 +39,7 @@
   <li class="label-icons"><span class="download-counts">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
 {% endif %}
 
-{% set slice = h.hdx_get_slice(package.name) %}
-{% if slice  %}
-<li class="label-icons"><a href="/explore?id={{slice}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
+{% set layer = h.hdx_get_layer_info(package.name) %}
+{% if layer  %}
+<li class="label-icons"><a href="/explore?crisis={{layer.crisis}}&id={{layer.layer}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
 {% endif %}
