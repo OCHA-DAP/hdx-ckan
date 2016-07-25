@@ -60,20 +60,33 @@ $(document).ready(function(){
         $iframe.css("border", "");
         //$sel = $($("#faq-send-message-form .select2-container.mTop20.required").find("a:first"));
         //$sel.css("border", "");
-        $.post('/faq/contact_us', $this.serialize(), function(result_data){
-            var result = JSON.parse(result_data);
-            if (result.success){
-                closeCurrentWidget($this); showFaqWidget('#faqDonePopup');
-            }
-            else {
-                if (result.error.message == "Captcha is not valid"){
-                    $iframe.css("border", "1px solid red");
-                } else {
-                    alert("Can't send your request: " + result.error.message);
-                    grecaptcha.reset();
+
+        var analyticsPromise =
+            hdxUtil.analytics.sendMessagingEvent('faq', 'faq',
+                $this.find('select[name="topic"]').val(), null, false);
+        var postPromise = $.post('/faq/contact_us', $this.serialize());
+
+        $.when(postPromise, analyticsPromise).then(
+            function (postData, analyticsData) {
+                var result = JSON.parse(postData[0]);
+                if (result.success) {
+                    closeCurrentWidget($this);
+                    showFaqWidget('#faqDonePopup');
                 }
+                else {
+                    if (result.error.message == "Captcha is not valid") {
+                        $iframe.css("border", "1px solid red");
+                    } else {
+                        alert("Can't send your request: " + result.error.message);
+                        grecaptcha.reset();
+                    }
+                }
+            },
+            function(){
+                alert("Can't send your request!");
             }
-        });
+        );
+
         return false;
     });
 

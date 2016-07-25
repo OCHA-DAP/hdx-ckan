@@ -257,10 +257,64 @@ $(
 
         return sendAnalyticsEventsAsync(mixpanelData, gaData);
 
-
     }
 
     hdxUtil.analytics.sendLinkClickEvent = sendLinkClickEvent;
+
+    /**
+     * @param {string} messageSource From what type of page is the message sent from: dataset, faq
+     * @param {string} messageType Type of the msg being sent, for now one of: contact contributor, group message, faq
+     * @param {string} messageSubject The problem type flagged by this message (for now only for "contact contributor")
+     * @param {string} messageTarget Which people will receive this message (for now only for "group message")
+     * @param {boolean} isDatasetPage is the event sent from a dataset page (include dataset meta)
+     * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded
+     */
+    function sendMessagingEvent(messageSource, messageType, messageSubject, messageTarget, isDatasetPage) {
+        var metadata = {
+            'message type': messageType
+        };
+        if (messageSubject) {
+            $.extend(metadata, {'message subject': messageSubject});
+        }
+        if (messageTarget) {
+            $.extend(metadata, {'message target': messageTarget});
+        }
+        if (isDatasetPage) {
+            $.extend(metadata, {
+                "dataset name": analyticsInfo.datasetName,
+                "dataset id": analyticsInfo.datasetId,
+                "page title": analyticsInfo.pageTitle,
+                "org name": analyticsInfo.organizationName,
+                "org id": analyticsInfo.organizationId,
+                "group names": analyticsInfo.groupNames,
+                "group ids": analyticsInfo.groupIds,
+                "is cod": analyticsInfo.isCod,
+                "is indicator": analyticsInfo.isIndicator
+            });
+        }
+
+        var mixpanelData = {
+            "eventName": "message sent",
+            "eventMeta": metadata
+        };
+
+        var label = "on '" + analyticsInfo.pageTitle + "'";
+        if (metadata['message subject']) {
+            label = "subject '" + metadata['message subject'] + "' " + label;
+        }
+        if (metadata['message target']) {
+            label = label + " target '" + metadata['message target'] + "'";
+        }
+
+         var gaData = {
+            "eventCategory": messageSource,
+            "eventAction": "message sent",
+            "eventLabel": label
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+    }
+    hdxUtil.analytics.sendMessagingEvent = sendMessagingEvent;
 
     /**
      * This function will send the analytics events to the server async and will return a promise
