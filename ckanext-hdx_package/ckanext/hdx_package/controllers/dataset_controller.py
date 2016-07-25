@@ -756,6 +756,11 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
+        # Constructing the email body
+        notes = c.pkg_dict.get('notes') if c.pkg_dict.get('notes') else _('No description available')
+        c.pkg_dict['social_mail_body'] = _('Description:%0D%0A') + h.markdown_extract(
+            notes) + ' %0D%0A'
+
         cnt_members_list = {}
         template_data = {}
         try:

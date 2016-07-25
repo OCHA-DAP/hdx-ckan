@@ -52,7 +52,8 @@
         {% endif %}
         <li>
             <span>
-                {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title, direct=true, disable_pull_left=true, icon_font_size="24px" %}
+                {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title,
+                    plain_body=pkg.social_mail_body, direct=true, disable_pull_left=true, icon_font_size="24px" %}
             </span>
         </li>
     </ul>
