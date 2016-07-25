@@ -37,6 +37,7 @@ import ckanext.hdx_package.helpers.analytics as analytics
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 
+from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_package.helpers.membership_data import membership_data
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
@@ -59,7 +60,7 @@ flatten_to_string_key = logic.flatten_to_string_key
 DataError = ckan.lib.navl.dictization_functions.DataError
 # _check_group_auth = logic.auth.create._check_group_auth
 
-MembershipSuccess = json.dumps({'success': True})
+SUCCESS = json.dumps({'success': True})
 
 CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
@@ -1222,18 +1223,20 @@ class DatasetController(PackageController):
                                              qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
 
+            simple_validate_email(data_dict['email'])
+
         except NotAuthorized:
             return json.dumps(
                 {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
         except Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
         try:
             get_action('hdx_send_mail_contributor')(context, data_dict)
         except Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
-        return MembershipSuccess
+        return SUCCESS
 
     def contact_members(self):
         '''
@@ -1267,15 +1270,17 @@ class DatasetController(PackageController):
                                              qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
 
+            simple_validate_email(data_dict['email'])
+
         except NotAuthorized:
             return json.dumps(
                 {'success': False, 'error': {'message': 'You have to log in before sending a contact request'}})
         except Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
         try:
             get_action('hdx_send_mail_members')(context, data_dict)
         except Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
-        return MembershipSuccess
+        return SUCCESS

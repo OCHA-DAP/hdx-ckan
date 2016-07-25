@@ -451,9 +451,9 @@ def hdx_member_list(context, data_dict):
 
 
 def hdx_send_mail_contributor(context, data_dict):
-    subject = '[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
+    subject = u'[HDX] {fullname} {topic} for \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
-    html = """\
+    html = u"""\
             <p>{fullname} sent the following message: </p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
@@ -480,9 +480,9 @@ def hdx_send_mail_contributor(context, data_dict):
 
 
 def hdx_send_mail_members(context, data_dict):
-    subject = '[HDX] {fullname} sent a group message regarding \"[Dataset] {pkg_title}\"'.format(
+    subject = u'[HDX] {fullname} sent a group message regarding \"[Dataset] {pkg_title}\"'.format(
         fullname=data_dict.get('fullname'), topic=data_dict.get('topic'), pkg_title=data_dict.get('pkg_title'))
-    html = """\
+    html = u"""\
             <p>{fullname} sent the following message to {topic} of {pkg_owner_org}: </p>
             <p>{msg}</p>
             <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>

@@ -7,6 +7,8 @@ import json
 import pylons.configuration as configuration
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
+from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_theme.helpers.faq_data import faq_data
 
 get_action = logic.get_action
@@ -58,6 +60,8 @@ class FaqController(base.BaseController):
             msg = request.params.get('faq-msg')
             hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
 
+            simple_validate_email(email)
+
             captcha_response = request.params.get('g-recaptcha-response')
             if not self.is_valid_captcha(response=captcha_response):
                 raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
@@ -67,12 +71,12 @@ class FaqController(base.BaseController):
                 return FaqCaptchaErr
             return self.error_message(error_summary)
         except exceptions.Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return self.error_message(error_summary)
 
         try:
-            subject = 'Faq: request from user'
-            html = """\
+            subject = u'Faq: request from user'
+            html = u"""\
                 <html>
                   <head></head>
                   <body>
@@ -87,7 +91,7 @@ class FaqController(base.BaseController):
             hdx_mailer.mail_recipient('HDX', hdx_email, subject, html)
 
         except exceptions.Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return self.error_message(error_summary)
         return FaqSuccess
 
