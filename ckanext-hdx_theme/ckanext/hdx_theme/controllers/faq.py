@@ -1,10 +1,12 @@
 import requests
-import ckan.lib.base as base
-from ckan.common import _, c, g, request, response
 import exceptions as exceptions
-import ckan.logic as logic
 import json
 import pylons.configuration as configuration
+
+import ckan.lib.base as base
+import ckan.logic as logic
+from ckan.common import _, c, g, request, response
+from ckan.controllers.api import CONTENT_TYPES
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from ckanext.hdx_theme.helpers.faq_data import faq_data
@@ -51,6 +53,7 @@ class FaqController(base.BaseController):
         Send a contact request form
         :return:
         '''
+        response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
             topic = request.params.get('topic')
             fullname = request.params.get('fullname')
