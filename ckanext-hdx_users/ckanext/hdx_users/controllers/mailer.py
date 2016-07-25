@@ -24,14 +24,14 @@ def add_msg_niceties(recipient_name, body, sender_name=None, sender_url=None, fo
     if not footer:
         footer = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'
     if show_header:
-        header = '''Dear {recipient_name},'''.format(recipient_name=recipient_name)
+        header = u'''Dear {recipient_name},'''.format(recipient_name=recipient_name)
     else:
         header = ''
-    content = '''{header}
+    content = u'''{header}
     {body}
     {footer}'''.format(header=header, body=body, footer=footer)
 
-    full_html = """
+    full_html = u"""
     <html>
       <header></header>
       <body>{content}</body>
@@ -49,7 +49,7 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
     msg['Subject'] = subject
-    msg['From'] = _("%s <%s>") % (sender_name, mail_from)
+    msg['From'] = _(u"%s <%s>") % (sender_name, mail_from)
     recipient_email_list = []
     recipient = u""
     if recipients_list:
@@ -70,7 +70,7 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     if sender_email:
         msg['Reply-To'] = Header((u"%s <%s>" % (sender_name, sender_email)), 'utf-8')
-    part = MIMEText(body, 'html')
+    part = MIMEText(body, 'html', 'utf-8')
     msg.attach(part)
 
     # Send the email using Python's smtplib.
