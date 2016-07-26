@@ -13,7 +13,7 @@ $(document).ready(function(){
 
         $.when(postPromise, analyticsPromise).then(
             function (postData, analyticsData) {
-                var result = JSON.parse(postData[0]);
+                var result = postData[0];
                 if (result.success) {
                     closeCurrentWidget($this);
                     showOnboardingWidget('#membershipDonePopup');
