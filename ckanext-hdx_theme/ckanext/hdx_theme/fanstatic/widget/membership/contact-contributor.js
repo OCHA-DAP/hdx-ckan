@@ -6,19 +6,27 @@ $(document).ready(function(){
         var toMessage = $("#membershipDonePopup").find(".to-message ");
         toMessage.hide();
 
-        $.post('/membership/contact_contributor', $this.serialize(), function(result_data){
-            var result = JSON.parse(result_data);
-            if (result.success){
-                closeCurrentWidget($this); showOnboardingWidget('#membershipDonePopup');
-            } else {
-                if (result.error){
-                    alert("Can't send your request: " + result.error.message);
+        var analyticsPromise =
+            hdxUtil.analytics.sendMessagingEvent('dataset', 'contact contributor',
+                $this.find('select[name="topic"]').val(), null, true);
+        var postPromise = $.post('/membership/contact_contributor', $this.serialize());
+
+        $.when(postPromise, analyticsPromise).then(
+            function (postData, analyticsData) {
+                var result = postData[0];
+                if (result.success) {
+                    closeCurrentWidget($this);
+                    showOnboardingWidget('#membershipDonePopup');
+                } else {
+                    if (result.error) {
+                        alert("Can't send your request: " + result.error.message);
+                    }
                 }
-            }
-        })
-            .fail(function(response){
+            },
+            function(){
                 alert("Can't send your request!");
-            });
+            }
+        );
 
         return false;
     });

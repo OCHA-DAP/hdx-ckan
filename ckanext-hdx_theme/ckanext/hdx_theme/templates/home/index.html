@@ -20,11 +20,12 @@
         "url": "//data.humdata.org/organization/ocha-south-sudan"
       },
       {
-        "title": "Film",
-        "description": "Making the Invisible Visible",
-        "graphic": "/images/homepage/movie_small.png",
-        "embed": True,
-        "url": "//youtu.be/7QX5Ji5gl9g"
+        "title": "Blog Post",
+        "description": "New Features",
+        "graphic": "/images/homepage/membership.jpg",
+        "url": "http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/",
+        "buttonText": "Read",
+        "newTab": True
       },
       {
         "title": "Data Visualization",
@@ -45,10 +46,11 @@
         "url": "//data.humdata.org/organization/adeso"
       },
       {
-        "title": "Data Visualization",
-        "description": "Global - Index for Risk Management",
-        "graphic": "/images/homepage/Inform.png",
-        "url": "//data.humdata.org/organization/inform?sort=metadata_modified+desc"
+        "title": "Film",
+        "description": "Making the Invisible Visible",
+        "graphic": "/images/homepage/movie_small.png",
+        "embed": True,
+        "url": "//youtu.be/7QX5Ji5gl9g"
       }
     ]
 %}
@@ -322,7 +324,7 @@
                           {% if item.embed %}
                               <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
                           {% else %}
-                              <a href="{{ item.url }}" class="btn" data-module="hdx_click_stopper" data-module-link_type="carousel">Explore</a>
+                              <a href="{{ item.url }}" class="btn" {% if item.newTab %} target="_blank" {% endif %} data-module="hdx_click_stopper" data-module-link_type="carousel">{% if item.buttonText %} {{ item.buttonText }} {% else %} Explore {% endif %}</a>
                           {% endif %}
                       </div>
                   </div>

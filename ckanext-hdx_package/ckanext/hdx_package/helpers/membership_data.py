@@ -1,6 +1,6 @@
 contributor_topics = {
     'sent a general question': 'General question',
-    'asked about meta data': 'Meta data',
+    'asked about metadata': 'Metadata',
     'reported a problem': 'Report a problem',
     'suggested edits': 'Suggest edits',
 }
