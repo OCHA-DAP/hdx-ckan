@@ -148,6 +148,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
+        map.connect('carouse_settings', '/ckan-admin/carousel/show',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
+
         return map
 
     def create(self, entity):
