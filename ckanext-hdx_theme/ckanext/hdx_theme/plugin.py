@@ -151,6 +151,13 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('carouse_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
+        map.connect('global_file_download', '/global/{filename}',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+                    action='global_file_download')
+
+        map.connect('update_carouse_settings', '/ckan-admin/carousel/update',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
+
         return map
 
     def create(self, entity):
