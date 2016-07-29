@@ -16,7 +16,7 @@ class GlobalFileController(base.BaseController):
             'filename': filename,
             'upload': None
         })
-        filepath = upload.get_path(filename)
+        filepath = upload.get_path()
         fapp = fileapp.FileApp(filepath)
         try:
             status, headers, app_iter = request.call_application(fapp)

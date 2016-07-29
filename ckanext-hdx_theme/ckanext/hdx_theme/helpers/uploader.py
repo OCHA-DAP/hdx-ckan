@@ -1,11 +1,14 @@
 import os
 import cgi
+import logging
 
 import pylons.config as config
 
 import ckan.lib.uploader as uploader
 import ckan.lib.munge as munge
 import ckan.logic as logic
+
+log = logging.getLogger(__name__)
 
 
 class GlobalUpload(object):
@@ -25,7 +28,7 @@ class GlobalUpload(object):
             # errno 17 is file already exists
             if e.errno != 17:
                 raise
-        self.filename = None
+        self.filename = os.path.basename(file_dict.get('filename')) if file_dict.get('filename') else None
 
         upload_field_storage = file_dict.pop('upload', None)
 
@@ -35,8 +38,8 @@ class GlobalUpload(object):
             file_dict['filename'] = self.filename
             self.upload_file = upload_field_storage.file
 
-    def get_path(self, filename):
-        filepath = os.path.join(self.get_directory(), filename)
+    def get_path(self):
+        filepath = os.path.join(self.get_directory(), self.filename)
         return filepath
 
     def get_directory(self):
@@ -50,7 +53,7 @@ class GlobalUpload(object):
             raise GlobalUploadException("No storage_path")
 
         directory = self.get_directory()
-        filepath = self.get_path(self.filename)
+        filepath = self.get_path()
 
         # If a filename has been provided (a file is being uploaded)
         # we write it to the filepath (and overwrite it if it already
@@ -80,6 +83,12 @@ class GlobalUpload(object):
             output_file.close()
             os.rename(tmp_filepath, filepath)
             return
+
+    def delete(self):
+        try:
+            os.remove(self.get_path())
+        except OSError as e:
+            log.error("Unable to remove global file {}".format(self.get_path()))
 
 
 class GlobalUploadException(Exception):

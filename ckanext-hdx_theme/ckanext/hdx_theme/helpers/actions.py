@@ -524,3 +524,23 @@ def hdx_carousel_settings_show(context, data_dict):
         setting_value = INITIAL_CAROUSEL_DATA
 
     return setting_value
+
+def hdx_carousel_settings_update(context, data_dict):
+    '''
+
+    :param 'hdx.carousel.config': a list with the carousel settings
+    :type 'hdx.carousel.config': list
+    :return: The JSON string that is the value of the new 'hdx.carousel.config'
+    :rtype: str
+    '''
+
+    logic.check_access('config_option_update', {}, {})
+
+    settings = data_dict.get('hdx.carousel.config')
+    if settings:
+        settings_json = json.dumps(settings)
+        model.set_system_info('hdx.carousel.config', settings_json)
+        return settings_json
+    else:
+        return None
+
