@@ -38,31 +38,32 @@ class CustomSettingsController(base.BaseController):
             'hdx.carousel.config': settings_list
         }
 
-        settings_json = logic.get_action('hdx_carousel_settings_show')({}, data_dict)
+        settings_json = logic.get_action('hdx_carousel_settings_update')({}, data_dict)
 
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         return settings_json
 
     def _delete_unneeded_files(self, settings_list):
-        links_map = {item.get('graphic_url'): item for item in settings_list if item.get('graphic_url')}
+        links_map = {item.get('graphic'): item for item in settings_list if item.get('graphic')}
         existing_setting_list = logic.get_action('hdx_carousel_settings_show')({}, {})
         for item in existing_setting_list:
-            if not links_map.get(item.get('graphics_url')):
+            if not links_map.get(item.get('graphic')):
                 existing_upload = GlobalUpload({
-                    'filename': item.get('graphics_url'),
+                    'filename': item.get('graphic'),
                     'upload': None
                 })
                 existing_upload.delete()
 
     def _persist_files(self, settings_list):
         for item in settings_list:
-            if item.get('graphic_upload'):
+            # For some reason FieldStorage has the boolean value of false so we compare to None
+            if item.get('graphic_upload') != None:
                 upload = GlobalUpload({
                     'filename': None,
                     'upload': item.get('graphic_upload')
                 })
                 upload.upload()
-                item['graphics_url'] = helpers.url_for('global_file_download', filename=upload.filename)
+                item['graphic'] = helpers.url_for('global_file_download', filename=upload.filename)
                 del item['graphic_upload']
 
     @staticmethod
@@ -75,18 +76,17 @@ class CustomSettingsController(base.BaseController):
         result = []
 
         for i in range(1, 21):
-            title = request.params.get('title_{}', format(i))
+            title = request.params.get('title_{}'.format(i))
             if not title:
                 break
             else:
                 item = {
                     'title': title,
-                    'description': request.params.get('descritpion_{}', format(i)),
-                    'graphic_url': request.params.get('graphic_url_{}', format(i)),
-                    'graphic_upload': request.params.get('graphic_upload_{}', format(i)),
-                    'url': request.params.get('url_{}', format(i))
+                    'description': request.params.get('descritpion_{}'.format(i)),
+                    'graphic': request.params.get('graphic_{}'.format(i)),
+                    'graphic_upload': request.params.get('graphic_upload_{}'.format(i)),
+                    'url': request.params.get('url_{}'.format(i))
                 }
                 result.append(item)
 
         return result
-
