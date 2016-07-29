@@ -21,13 +21,19 @@ class CustomSettingsController(base.BaseController):
 
         setting_value = model.get_system_info('hdx.carousel.config', config.get('hdx.carousel.config'))
         template_data = {
-            'hdx.carousel.config': setting_value
+            'data': {
+                'hdx.carousel.config': setting_value
+            }
         }
 
         return base.render('settings/carousel_settings.html', extra_vars=template_data)
 
     def update(self):
+        logic.check_access('config_option_update', {}, {})
+
         field_storage = request.params.get('image_1')
+        settings_value = request.params.get('hdx.carousel.config')
+
         upload = GlobalUpload({
             'filename': None,
             'upload': field_storage
@@ -35,22 +41,5 @@ class CustomSettingsController(base.BaseController):
 
         upload.upload()
 
+        model.set_system_info('hdx.carousel.config', settings_value)
 
-
-    def global_file_download(self, filename):
-        upload = GlobalUpload({
-            'filename': filename,
-            'upload': None
-        })
-        filepath = upload.get_path(filename)
-        fapp = fileapp.FileApp(filepath)
-        try:
-            status, headers, app_iter = request.call_application(fapp)
-            response.headers.update(dict(headers))
-            content_type, content_enc = mimetypes.guess_type(filename)
-            if content_type:
-                response.headers['Content-Type'] = content_type
-            response.status = status
-            return app_iter
-        except OSError:
-            base.abort(404, _('Resource data not found'))

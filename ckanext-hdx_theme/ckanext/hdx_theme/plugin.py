@@ -152,7 +152,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
         map.connect('global_file_download', '/global/{filename}',
-                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+                    controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
                     action='global_file_download')
 
         map.connect('update_carouse_settings', '/ckan-admin/carousel/update',
@@ -237,6 +237,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             # 'hdx_get_shape_geojson': hdx_actions.hdx_get_shape_geojson,
             # 'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
             'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
+            'hdx_carousel_settings_show': hdx_actions.hdx_carousel_settings_show
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
         }

@@ -1,8 +1,7 @@
 import logging
-import os
-import sys
 import requests
 import datetime
+import json
 
 from pylons import config
 import sqlalchemy
@@ -503,3 +502,25 @@ def _add_to_filter_list(src, param_name, filter_list):
     #     except:
     #         res = None
     #     return res
+
+
+@logic.side_effect_free
+def hdx_carousel_settings_show(context, data_dict):
+    '''
+    :returns: list of dictionaries representing the setting for each carousel item. Returns default if nothing is in db.
+    :rtype: list of dict
+    '''
+    from ckanext.hdx_theme.helpers.initial_carousel_settings import INITIAL_CAROUSEL_DATA
+
+    setting_value = None
+    setting_value_json = model.get_system_info('hdx.carousel.config', config.get('hdx.carousel.config'))
+    if setting_value_json:
+        try:
+            setting_value = json.loads(setting_value)
+        except TypeError as e:
+            log.warn('The "hdx.carousel.config" setting is not a proper json string')
+
+    if not setting_value:
+        setting_value = INITIAL_CAROUSEL_DATA
+
+    return setting_value
