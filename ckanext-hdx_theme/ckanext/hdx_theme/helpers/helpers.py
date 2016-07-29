@@ -631,8 +631,6 @@ def hdx_frequency_list():
               {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, ]
     return result
 
-def hdx_get_slice(id=None, all=False):
-    slices = explorer.explorer_data.get(id)
-    if not all and slices:
-        return slices[0]
-    return slices
+def hdx_get_layer_info(id=None):
+    layer = explorer.explorer_data.get(id)
+    return layer
