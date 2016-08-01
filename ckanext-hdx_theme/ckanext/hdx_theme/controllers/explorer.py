@@ -40,8 +40,8 @@ class ExplorerController(base.BaseController):
         height = configuration.config.get('hdx.explorer.iframe.height')
         width = configuration.config.get('hdx.explorer.iframe.width')
 
-        if 'id' in request.params:
-            url += request.params['id']
+        if 'id' in request.params and 'crisis' in request.params:
+            url += 'name/'+request.params['crisis']+'/layer/'+request.params['id']
         if 'load' in request.params:
             url += get_powerview_load_url(request.params['load'])
         template_data = {

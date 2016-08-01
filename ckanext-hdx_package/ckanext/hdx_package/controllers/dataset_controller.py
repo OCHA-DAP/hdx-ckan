@@ -36,6 +36,7 @@ import ckanext.hdx_package.helpers.analytics as analytics
 
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
+from ckan.controllers.api import CONTENT_TYPES
 
 from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_package.helpers.membership_data import membership_data
@@ -61,12 +62,6 @@ DataError = ckan.lib.navl.dictization_functions.DataError
 # _check_group_auth = logic.auth.create._check_group_auth
 
 SUCCESS = json.dumps({'success': True})
-
-CONTENT_TYPES = {
-    'text': 'text/plain;charset=utf-8',
-    'html': 'text/html;charset=utf-8',
-    'json': 'application/json;charset=utf-8',
-}
 
 lookup_package_plugin = ckan.lib.plugins.lookup_package_plugin
 
@@ -757,6 +752,11 @@ class DatasetController(PackageController):
                           {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
                           {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
+        # Constructing the email body
+        notes = c.pkg_dict.get('notes') if c.pkg_dict.get('notes') else _('No description available')
+        c.pkg_dict['social_mail_body'] = _('Description:%0D%0A') + h.markdown_extract(
+            notes) + ' %0D%0A'
+
         cnt_members_list = {}
         template_data = {}
         try:
@@ -1202,6 +1202,7 @@ class DatasetController(PackageController):
             'auth_user_obj': c.userobj
         }
         data_dict = {}
+        response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
             check_access('hdx_send_mail_contributor', context, data_dict)
             # for k, v in membership_data.get('contributor_topics').iteritems():
@@ -1245,6 +1246,7 @@ class DatasetController(PackageController):
             'auth_user_obj': c.userobj
         }
         data_dict = {}
+        response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
             org_id = request.params.get('pkg_owner_org')
             check_access('hdx_send_mail_members', context, {'org_id': org_id})
