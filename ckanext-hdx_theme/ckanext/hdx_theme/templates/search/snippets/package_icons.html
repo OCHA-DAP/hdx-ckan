@@ -1,8 +1,9 @@
 
 {% set popular = package.tracking_summary and package.tracking_summary.recent >= 10 %}
 {% set has_related_items = package.related_count and package.related_count > 0 %}
+{% set has_quality_checked = package.indicator == '1' or package.quality %}
 {% if geolocated or visualization or popular or has_related_items or package.subnational
-        or package.private or package.quality %}
+        or package.private or has_quality_checked %}
   <li class="label-icons">
     {#
       {% if geolocated %}
@@ -14,7 +15,7 @@
     {% if visualization %}
       <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
     {% endif %}
-    {% if package.indicator=='1' or package.quality %}
+    {% if has_quality_checked %}
       <span class="icon-quality_checked" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
     {% endif %}
     {% if has_related_items %}
@@ -39,7 +40,7 @@
   <li class="label-icons"><span class="download-counts">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
 {% endif %}
 
-{% set slice = h.hdx_get_slice(package.name) %}
-{% if slice  %}
-<li class="label-icons"><a href="/explore?id={{slice}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
+{% set layer = h.hdx_get_layer_info(package.name) %}
+{% if layer  %}
+<li class="label-icons"><a href="/explore?crisis={{layer.crisis}}&id={{layer.layer}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
 {% endif %}
