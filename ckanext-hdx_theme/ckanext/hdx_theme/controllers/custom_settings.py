@@ -142,5 +142,7 @@ class CustomSettingsController(base.BaseController):
                 'new': False if request.params.get('id') else True,
                 'id': request.params.get('id') if request.params.get('id') else unicode(uuid.uuid4())
             }
+            if request.params.get('buttonText'):
+                item['buttonText'] = request.params.get('buttonText')
 
         return item
