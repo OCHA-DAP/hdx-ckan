@@ -155,8 +155,12 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
                     action='global_file_download')
 
-        map.connect('update_carouse_settings', '/ckan-admin/carousel/update',
+        map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
+
+        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+                    action='delete')
 
         return map
 

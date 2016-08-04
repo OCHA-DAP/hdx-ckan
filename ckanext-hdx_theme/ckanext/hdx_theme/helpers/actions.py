@@ -512,18 +512,18 @@ def hdx_carousel_settings_show(context, data_dict):
     '''
     from ckanext.hdx_theme.helpers.initial_carousel_settings import INITIAL_CAROUSEL_DATA
 
-    setting_value = None
+    carousel_settings = []
     setting_value_json = model.get_system_info('hdx.carousel.config', config.get('hdx.carousel.config'))
     if setting_value_json:
         try:
-            setting_value = json.loads(setting_value_json)
+            carousel_settings = json.loads(setting_value_json)
         except TypeError as e:
             log.warn('The "hdx.carousel.config" setting is not a proper json string')
 
-    if not setting_value:
-        setting_value = INITIAL_CAROUSEL_DATA
+    if not carousel_settings and not context.get('not_initial'):
+        carousel_settings = INITIAL_CAROUSEL_DATA
 
-    return setting_value
+    return carousel_settings
 
 
 def hdx_carousel_settings_update(context, data_dict):
