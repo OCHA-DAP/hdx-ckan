@@ -153,7 +153,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
 
-        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete',
+        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
                     action='delete')
 
