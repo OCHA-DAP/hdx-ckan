@@ -13,14 +13,14 @@
             newTab: false,
             //internal state
             graphic_upload_preview: null,
-            tab_open: true
+            tab_open: false
         },
         idAttribute: 'id',
         fileAttribute: 'graphic_upload',
         methodToURL: {
             'create': '/ckan-admin/carousel/update',
             'read': '/ckan-admin/carousel/read',
-            'patch': '/ckan-admin/carousel/update',
+            'patch': '/ckan-admin/carousel/patch',
             'update': '/ckan-admin/carousel/update',
             'delete': '/ckan-admin/carousel/delete'
         },
@@ -37,7 +37,19 @@
             } else if (method == 'delete') {
                 options.url += "/" + model.id;
             }
-            return Backbone.sync.apply(this, arguments);
+
+            var formData = new FormData();
+            var json = model.toJSON();
+            _.each(json, function(value, key){
+                 formData.append(key, value);
+            });
+            options.data = formData;
+            options.emulateJSON = true; // Important because your sending formdata
+            options.processData = false;
+            options.contentType = false;
+
+            return Backbone.Model.prototype.sync.call(this, method, model, options);
+            // return Backbone.sync.apply(this, arguments);
         }
     });
 
@@ -58,7 +70,9 @@
             template_data.template_position = this.model.collection.indexOf(this.model);
             template_data.lower_case_format = template_data.format ? template_data.format.toLowerCase() : null;
             var html = this.template(template_data);
+
             this.$el.html(html);
+            this.$el.find("select").select2();
 
             return this;
         },
@@ -91,7 +105,9 @@
         comparator: 'order',
 
         initialize: function(){
-            this.add(this.fetch());
+            var models = this.fetch();
+            this.add(models);
+            console.log(models);
             this.deletedItems = [];
         },
         save: function () {
@@ -113,7 +129,7 @@
                 var model = this.models[i];
 
                 var saveModel = function(){
-                    return model.save(null, {formData: true});
+                    return model.save(null, {/*formData: true, emulateJSON: true*/});
                 };
 
                 promise = promise.then(saveModel);
@@ -124,10 +140,12 @@
             promise
                 .then(function(){
                     alert("Save ok!");
-                })
+                    location.reload(true);
+                }.bind(this))
                 .fail(function(){
                     alert("Couldn't save, please check logs!");
-                })
+                });
+
         },
         sync: function () { return null; },
         fetch: function () {
@@ -153,6 +171,7 @@
             'sort-updated': 'onSortOrderChanged'
         },
         initialize: function(){
+            console.log("Rendering collection");
             this.collection.view = this;
             this.render();
             this.listenTo(this.collection, 'sync add remove reset', this.render);
@@ -191,7 +210,7 @@
         },
         onNewItem: function(e){
             console.log("Click");
-            this.collection.add(new Item({order: (this.collection.length + 1)}));
+            this.collection.add(new Item({order: (this.collection.length + 1), tab_open: true}));
             return false;
         },
         onSave: function (e){

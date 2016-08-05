@@ -7,7 +7,7 @@
 {% block primary_content_module_margin %}{% endblock %}
 {% block primary_content_inner %}
   <div id="carousel-config-main" data-module="hdx_custom_pages" class="paddingLeftHack">
-    <form id="carousel-config-form" class="cp-form hdx-form" method="post" enctype="multipart/form-data">
+    <div id="carousel-config-form" class="cp-form hdx-form">
         <div class="paddingRowHack">
             <div class="paddingLeftHack paddingRightHack">
                 <div class="row form-section">
@@ -52,7 +52,12 @@
                                                     <div class="thumbnail-container">
                                                         <div class="sub-item">
                                                             <div class="sub-item-image">
-                                                                <img class="graphic" src="<%= graphic_upload_preview || graphic %>">
+                                                                <%
+                                                                    var preview = graphic_upload_preview || graphic;
+                                                                    if (preview){
+                                                                %>
+                                                                    <img class="graphic" src="<%= preview %>">
+                                                                <%  } %>
                                                                 <div class="sub-item-action">
                                                                     <a href="<%= url %>" class="btn"><%= (buttonText?buttonText:"Explore") %></a>
                                                                 </div>
@@ -85,7 +90,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="thumbnail">Thumbnails</label>
+                                                    <label class="control-label" for="thumbnail">Upload new thumbnail</label>
                                                     <div class="controls ">
                                                         <input id="thumbnail" type="file" name="graphic_upload" class="resource_file_field form-control">
                                                         <span class="error-block"></span>
@@ -99,11 +104,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="embed_field">Embed <%= embed %></label>
+                                                    <label class="control-label" for="embed_field">Embed <%= embed %> <small><%= (embed.toString()==="true"?'selected yes':'selected no') %></small></label>
                                                     <div class="controls ">
                                                         <select name="embed" id="embed_field" class="form-control">
-                                                            <option value="true" <%= (embed == "true" ?'selected="selected"':'') %> >Yes</option>
-                                                            <option value="false" <%= (embed == "false" ?'selected="selected"':'') %>>No</option>
+                                                            <option value="true" <%= (embed.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                                            <option value="false" <%= (embed.toString()==="true"?'':'selected="selected"') %>>No</option>
                                                         </select>
                                                         <span class="error-block"></span>
                                                     </div>
@@ -116,11 +121,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="new_window">New Window</label>
+                                                    <label class="control-label" for="new_window">New Window <%= newTab %> <small><%= (newTab.toString()==="true"?'selected yes':'selected no') %></small></label>
                                                     <div class="controls ">
                                                         <select name="newTab" id="new_window" class="form-control">
-                                                            <option value="true" <%= (newTab?'selected="selected"':'') %> >Yes</option>
-                                                            <option value="false" <%= (!newTab?'selected="selected"':'') %>>No</option>
+                                                            <option value="true" <%= (newTab.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                                            <option value="false" <%= (newTab.toString()==="true"?'':'selected="selected"') %>>No</option>
                                                         </select>
                                                         <span class="error-block"></span>
                                                     </div>
@@ -148,7 +153,7 @@
                 </div>
             </div>
         </div>
-    </form>
+    </div>
 
 </div>
 
