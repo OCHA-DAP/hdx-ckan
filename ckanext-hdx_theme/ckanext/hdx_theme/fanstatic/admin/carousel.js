@@ -117,14 +117,6 @@
             this.promise.resolve();
             //delete the removed items
             console.log("DELETING: ");
-            // for (var i = 0; i < this.deletedItems.length; i++){
-            //     var item = this.deletedItems[i];
-            //     var deleteModel = function(){
-            //         return item.destroy();
-            //     };
-            //     promise = promise.then(deleteModel);
-            //     console.log(JSON.stringify(item));
-            // }
             _.each(this.deletedItems, function(model){
                 this.promise = this.promise.then(function(){
                     console.log(JSON.stringify(model));
