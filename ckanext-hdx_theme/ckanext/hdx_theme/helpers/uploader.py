@@ -33,10 +33,23 @@ class GlobalUpload(object):
         upload_field_storage = file_dict.pop('upload', None)
 
         if isinstance(upload_field_storage, cgi.FieldStorage):
-            self.filename = upload_field_storage.filename
+            self._update_filename(upload_field_storage)
             self.filename = munge.munge_filename(self.filename)
             file_dict['filename'] = self.filename
             self.upload_file = upload_field_storage.file
+
+    def _update_filename(self, upload_field_storage):
+        '''
+        If self.filename was specified in constructor but has no extension, try to take it from the uploaded file info
+        :param upload_field_storage:
+        '''
+        if self.filename:
+            splitted = os.path.splitext(self.filename)
+
+            if not splitted[1]:  # If there is no extension
+                self.filename += os.path.splitext(upload_field_storage.filename)[1]
+        else:
+            self.filename = upload_field_storage.filename
 
     def get_path(self):
         filepath = os.path.join(self.get_directory(), self.filename)

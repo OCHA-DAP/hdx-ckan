@@ -111,7 +111,7 @@ class CustomSettingsController(base.BaseController):
         graphic_upload = item.get('graphic_upload')
         if graphic_upload is not None and graphic_upload != 'undefined':
             upload = GlobalUpload({
-                'filename': None,
+                'filename': item.get('id'),
                 'upload': graphic_upload
             })
             upload.upload()
