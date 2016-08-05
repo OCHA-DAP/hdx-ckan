@@ -27,11 +27,11 @@ class CustomSettingsController(base.BaseController):
 
         return base.render('admin/carousel.html', extra_vars=template_data)
 
-    def delete(self):
+    def delete(self, id):
         logic.check_access('config_option_update', {}, {})
-        delete_id = request.params.get('id')
+        # delete_id = request.params.get('id')
         existing_setting_list = logic.get_action('hdx_carousel_settings_show')({'not_initial': True}, {})
-        remove_index, remove_element = self._find_carousel_item_by_id(existing_setting_list, delete_id)
+        remove_index, remove_element = self._find_carousel_item_by_id(existing_setting_list, id)
 
         if remove_index >= 0:
             del existing_setting_list[remove_index]
