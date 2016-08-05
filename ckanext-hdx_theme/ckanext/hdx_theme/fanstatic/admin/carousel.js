@@ -83,6 +83,7 @@
             if (deletedItem.get("id")){ //pre-existing item
                 this.collection.deletedItems.push(deletedItem);
             }
+            this.collection.view.onSortOrderChanged();
             return false;
         }
     });
@@ -135,7 +136,11 @@
                 })
         },
         sync: function () { return null; },
-        fetch: function () { return null; }
+        fetch: function () {
+            var data = $("#carousel-config-saved-data").text();
+            console.log("data: " + data);
+            return false;
+        }
     });
 
     var ItemCollectionView = Backbone.View.extend({
@@ -144,6 +149,7 @@
             'sort-updated': 'onSortOrderChanged'
         },
         initialize: function(){
+            this.collection.view = this;
             this.render();
             this.listenTo(this.collection, 'sync add remove reset', this.render);
         },

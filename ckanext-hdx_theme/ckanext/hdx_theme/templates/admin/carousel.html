@@ -20,6 +20,10 @@
                 </div>
                 <div class="row form-section">
                     <div class="col-xs-12">
+                        <div id="carousel-config-saved-data" style="display: none;">
+                            {{ data['hdx.carousel.config'] }}
+                        </div>
+
                         <script type="text/template" id="carousel-item-tpl">
                             <div class="<%= (tab_open?'col-xs-12':'col-xs-4') %>">
                                 <div class="row carousel-item">

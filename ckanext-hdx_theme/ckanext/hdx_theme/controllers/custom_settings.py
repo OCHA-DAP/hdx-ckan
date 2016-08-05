@@ -1,15 +1,14 @@
+import json
 import logging
 import uuid
-import json
-
-import ckan.lib.base as base
-import ckan.logic as logic
-import ckan.lib.helpers as helpers
-
-from ckan.common import _, c, g, request, response
-from ckan.controllers.api import CONTENT_TYPES
 
 from ckanext.hdx_theme.helpers.uploader import GlobalUpload
+
+import ckan.lib.base as base
+import ckan.lib.helpers as helpers
+import ckan.logic as logic
+from ckan.common import _, request, response
+from ckan.controllers.api import CONTENT_TYPES
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ class CustomSettingsController(base.BaseController):
         setting_value = logic.get_action('hdx_carousel_settings_show')({}, {})
         template_data = {
             'data': {
-                'hdx.carousel.config': setting_value
+                'hdx.carousel.config': json.dumps(setting_value)
             }
         }
 
