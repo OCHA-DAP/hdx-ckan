@@ -41,7 +41,9 @@
             var formData = new FormData();
             var json = model.toJSON();
             _.each(json, function(value, key){
-                 formData.append(key, value);
+                if (value !== null){
+                    formData.append(key, value);
+                }
             });
             options.data = formData;
             options.emulateJSON = true; // Important because your sending formdata
@@ -111,33 +113,34 @@
             this.deletedItems = [];
         },
         save: function () {
-            var promise = $.Deferred();
-            promise.resolve();
+            this.promise = $.Deferred();
+            this.promise.resolve();
             //delete the removed items
             console.log("DELETING: ");
-            for (var i = 0; i < this.deletedItems.length; i++){
-                var item = this.deletedItems[i];
-                var deleteModel = function(){
-                    return item.destroy();
-                };
-                promise = promise.then(deleteModel);
-                console.log(JSON.stringify(item));
-            }
+            // for (var i = 0; i < this.deletedItems.length; i++){
+            //     var item = this.deletedItems[i];
+            //     var deleteModel = function(){
+            //         return item.destroy();
+            //     };
+            //     promise = promise.then(deleteModel);
+            //     console.log(JSON.stringify(item));
+            // }
+            _.each(this.deletedItems, function(model){
+                this.promise = this.promise.then(function(){
+                    console.log(JSON.stringify(model));
+                    return model.destroy();
+                });
+            }, this);
             console.log("SAVING: ");
             //save remaining items
-            for (i = 0; i < this.models.length; i++){
-                var model = this.models[i];
+            _.each(this.models, function(model){
+                this.promise = this.promise.then(function(){
+                    console.log(JSON.stringify(model));
+                    return model.save();
+                });
+            }, this);
 
-                var saveModel = function(){
-                    return model.save(null, {/*formData: true, emulateJSON: true*/});
-                };
-
-                promise = promise.then(saveModel);
-
-                console.log(JSON.stringify(model));
-            }
-
-            promise
+            this.promise
                 .then(function(){
                     alert("Save ok!");
                     location.reload(true);
