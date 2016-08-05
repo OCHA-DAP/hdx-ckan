@@ -522,6 +522,8 @@ def hdx_carousel_settings_show(context, data_dict):
 
     if not carousel_settings and not context.get('not_initial'):
         carousel_settings = INITIAL_CAROUSEL_DATA
+        for i, item in enumerate(carousel_settings):
+            item['order'] = i+1
 
     return carousel_settings
 
@@ -538,10 +540,7 @@ def hdx_carousel_settings_update(context, data_dict):
     logic.check_access('config_option_update', {}, {})
 
     settings = data_dict.get('hdx.carousel.config')
-    if settings:
-        settings_json = json.dumps(settings)
-        model.set_system_info('hdx.carousel.config', settings_json)
-        return settings_json
-    else:
-        return None
+    settings_json = json.dumps(settings)
+    model.set_system_info('hdx.carousel.config', settings_json)
+    return settings_json
 
