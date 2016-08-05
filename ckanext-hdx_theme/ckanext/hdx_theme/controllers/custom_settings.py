@@ -136,8 +136,8 @@ class CustomSettingsController(base.BaseController):
                 'graphic_upload': request.params.get('graphic_upload'),
                 'url': request.params.get('url'),
                 'order': int(request.params.get('order', -1)),
-                'newTab': True if request.params.get('newTab') else False,
-                'embed': True if request.params.get('embed') else False,
+                'newTab': True if request.params.get('newTab') == 'true' else False,
+                'embed': True if request.params.get('embed') == 'true' else False,
                 'new': False if request.params.get('id') else True,
                 'id': request.params.get('id') if request.params.get('id') else unicode(uuid.uuid4())
             }
