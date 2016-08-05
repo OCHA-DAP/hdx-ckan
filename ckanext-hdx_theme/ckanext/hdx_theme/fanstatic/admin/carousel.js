@@ -33,9 +33,9 @@
             options.url = model.methodToURL[method.toLowerCase()];
 
             if (_.contains(['read', 'update', 'patch'], method)) {
-                options.url += model.id;
+                // options.url += model.id;
             } else if (method == 'delete') {
-                options.data = JSON.stringify({id: model.id});
+                options.url += "/" + model.id;
             }
             return Backbone.sync.apply(this, arguments);
         }
@@ -58,9 +58,7 @@
             template_data.template_position = this.model.collection.indexOf(this.model);
             template_data.lower_case_format = template_data.format ? template_data.format.toLowerCase() : null;
             var html = this.template(template_data);
-
             this.$el.html(html);
-            this.$el.find("select").select2();
 
             return this;
         },
@@ -93,12 +91,8 @@
         comparator: 'order',
 
         initialize: function(){
-            this.fetch();
+            this.add(this.fetch());
             this.deletedItems = [];
-        },
-        parse: function (data) {
-            console.log("PArse");
-            return data.results;
         },
         save: function () {
             var promise = $.Deferred();
@@ -108,7 +102,7 @@
             for (var i = 0; i < this.deletedItems.length; i++){
                 var item = this.deletedItems[i];
                 var deleteModel = function(){
-                    return item.destroy(null, {formData: true});
+                    return item.destroy();
                 };
                 promise = promise.then(deleteModel);
                 console.log(JSON.stringify(item));
@@ -138,8 +132,18 @@
         sync: function () { return null; },
         fetch: function () {
             var data = $("#carousel-config-saved-data").text();
-            console.log("data: " + data);
-            return false;
+            return this.parse(data);
+        },
+        parse: function(data){
+            var ret = [];
+            var dataObj = JSON.parse(data);
+            for (var i = 0; i < dataObj.length; i++){
+                var dataItem = dataObj[i];
+                var item = new Item(dataItem);
+                ret.push(item);
+            }
+
+            return ret;
         }
     });
 

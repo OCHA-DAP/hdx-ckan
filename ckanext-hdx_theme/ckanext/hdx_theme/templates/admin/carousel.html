@@ -99,11 +99,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="control-group form-group control-full control-large hdx-section-field">
-                                                    <label class="control-label" for="embed_field">Embed</label>
+                                                    <label class="control-label" for="embed_field">Embed <%= embed %></label>
                                                     <div class="controls ">
                                                         <select name="embed" id="embed_field" class="form-control">
-                                                            <option value="true" <%= (embed?'selected="selected"':'') %> >Yes</option>
-                                                            <option value="false" <%= (!embed?'selected="selected"':'') %>>No</option>
+                                                            <option value="true" <%= (embed == "true" ?'selected="selected"':'') %> >Yes</option>
+                                                            <option value="false" <%= (embed == "false" ?'selected="selected"':'') %>>No</option>
                                                         </select>
                                                         <span class="error-block"></span>
                                                     </div>
