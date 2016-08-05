@@ -26,7 +26,7 @@ class CustomSettingsController(base.BaseController):
             }
         }
 
-        return base.render('settings/carousel_settings.html', extra_vars=template_data)
+        return base.render('admin/carousel.html', extra_vars=template_data)
 
     def delete(self):
         logic.check_access('config_option_update', {}, {})

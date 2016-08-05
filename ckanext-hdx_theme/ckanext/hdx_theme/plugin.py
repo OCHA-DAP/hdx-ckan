@@ -1,19 +1,14 @@
-import ckanext.hdx_package.helpers.licenses as hdx_licenses
-
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
-import ckan.model.package as package
-import ckan.model.license as license
-import pylons.config as config
-import version
+import inspect
+import json
+import os
+import urlparse
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
+import pylons.config as config
 
-import inspect
-import os
-import json
-import urlparse
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
 
 
 # def run_on_startup():
@@ -148,7 +143,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
-        map.connect('carouse_settings', '/ckan-admin/carousel/show',
+        map.connect('carousel_settings', '/ckan-admin/carousel/show',
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
 
         map.connect('global_file_download', '/global/{filename}',
