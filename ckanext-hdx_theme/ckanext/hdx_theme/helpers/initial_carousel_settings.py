@@ -1,8 +1,8 @@
 INITIAL_CAROUSEL_DATA = [
     {
         "title": "New Feature",
-        "description": "Lake Chad Basin - Map Explorer",
-        "graphic": "/images/homepage/map-explorer.gif",
+        "description": "Explore",
+        "graphic": "/images/homepage/map-explorer.png",
         "url": "/explore"
     },
     {
