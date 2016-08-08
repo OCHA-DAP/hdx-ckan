@@ -27,7 +27,7 @@ header {
   padding-top: 78px;
 }
 .homepage-main .leftContent {
-  color: #fff;
+  color: #ffffff;
   margin-top: 85px;
 }
 .homepage-main .leftContent h1 {
@@ -54,7 +54,7 @@ header {
   color: #1ebfb3;
   width: 153px;
   line-height: 36px;
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 0;
 }
 .homepage-main .rightContent {
@@ -97,11 +97,11 @@ header {
   margin-left: 5px;
 }
 .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a {
-  color: #007CE0;
+  color: #007ce0;
 }
 .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:hover,
 .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a:focus {
-  color: #007CE0;
+  color: #007ce0;
   text-decoration: none;
 }
 .homepage-main .rightContent .searchBox .searchHeader {
@@ -236,7 +236,7 @@ header {
 }
 .homepage-main .carousel .item .sub-item .sub-item-caption {
   text-align: center;
-  color: #fff;
+  color: #ffffff;
 }
 .homepage-main .carousel .item .sub-item .sub-item-caption .title {
   font-family: 'Gotham-Bold', sans-serif;
