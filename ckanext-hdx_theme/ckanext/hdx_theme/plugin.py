@@ -1,19 +1,14 @@
-import ckanext.hdx_package.helpers.licenses as hdx_licenses
-
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
-import ckan.model.package as package
-import ckan.model.license as license
-import pylons.config as config
-import version
+import inspect
+import json
+import os
+import urlparse
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
+import pylons.config as config
 
-import inspect
-import os
-import json
-import urlparse
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
 
 
 # def run_on_startup():
@@ -148,6 +143,20 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
 
+        map.connect('carousel_settings', '/ckan-admin/carousel/show',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
+
+        map.connect('global_file_download', '/global/{filename}',
+                    controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
+                    action='global_file_download')
+
+        map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
+
+        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+                    action='delete')
+
         return map
 
     def create(self, entity):
@@ -227,6 +236,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             # 'hdx_get_shape_geojson': hdx_actions.hdx_get_shape_geojson,
             # 'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
             'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
+            'hdx_carousel_settings_show': hdx_actions.hdx_carousel_settings_show,
+            'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
         }

@@ -1,0 +1,134 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+#carousel-config-main .carousel-item {
+  margin-bottom: 20px;
+  border-radius: 6px;
+}
+#carousel-config-main .carousel-item .mini-carousel-item .carousel-item-content > .row {
+  margin: 0 -15px;
+}
+#carousel-config-main .carousel-item .mini-carousel-item .thumbnail-preview {
+  margin: 0;
+}
+#carousel-config-main .carousel-item .mini-carousel-item .thumbnail-preview .sample-text {
+  display: none;
+}
+#carousel-config-main .carousel-item .carousel-item-header {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  background-color: #edf6fd;
+  border: 1px solid #eeeeee;
+  height: 40px;
+  padding: 10px 15px;
+  cursor: all-scroll;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+#carousel-config-main .carousel-item .carousel-item-header .drag-handle {
+  margin-left: -3px;
+}
+#carousel-config-main .carousel-item .carousel-item-header .drag-handle i.glyphicon {
+  color: #888888;
+}
+#carousel-config-main .carousel-item .carousel-item-header .drag-handle i.glyphicon.glyphicon-align-justify {
+  margin-left: -2px;
+  margin-right: 5px;
+}
+#carousel-config-main .carousel-item .carousel-item-header .pull-right .glyphicon {
+  margin-left: 5px;
+  color: #333333;
+}
+#carousel-config-main .carousel-item .carousel-item-header > .row {
+  margin: 0;
+}
+#carousel-config-main .carousel-item .carousel-item-content {
+  background-color: #eeeeee;
+}
+#carousel-config-main .carousel-item .carousel-item-content > .row {
+  margin: 0;
+}
+#carousel-config-main .carousel-item .thumbnail-preview {
+  margin: 15px 0;
+}
+#carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container {
+  height: 275px;
+  padding: 20px 0;
+  width: 100%;
+  border: 1px solid #888888;
+  background-size: cover;
+  background: #1ebfb3 url("/images/homepage/map.png") fixed;
+}
+#carousel-config-main .carousel-item .thumbnail-preview .thumbnail-container .sub-item {
+  width: 215px;
+  margin: auto;
+  float: none;
+}
+#carousel-config-main .carousel-item .sub-item {
+  width: 215px;
+  margin-right: 40px;
+  float: left;
+}
+#carousel-config-main .carousel-item .sub-item:last-child {
+  margin-right: 0;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-image {
+  position: relative;
+  height: 150px;
+  margin-bottom: 5px;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-image:hover.disabled .sub-item-action {
+  display: none;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-image:hover .sub-item-action {
+  display: block;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-image .sub-item-action {
+  display: none;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-image .sub-item-action a {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f2645a;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-image .graphic {
+  max-height: 100%;
+  max-width: 215px;
+  height: 100%;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-caption {
+  text-align: center;
+  color: #fff;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-caption .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  margin: 0;
+}
+#carousel-config-main .carousel-item .sub-item .sub-item-caption .description {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  margin: 0;
+}
+#carousel-config-main .sortable-chosen {
+  opacity: 0.9;
+}
+#carousel-config-main .sortable-ghost {
+  opacity: 0.3;
+}

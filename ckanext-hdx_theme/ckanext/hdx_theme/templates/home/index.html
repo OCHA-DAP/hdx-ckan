@@ -1,59 +1,6 @@
 {% extends "page.html" %}
 
-{% set carouselItems = [
-      {
-        "title": "New Feature",
-        "description": "Explore",
-        "graphic": "/images/homepage/map-explorer.png",
-        "url": "/explore"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Yemen - WFP mVAM, Food Security Monitoring",
-        "graphic": "/images/homepage/mVAM.png",
-        "url": "//data.humdata.org/visualization/wfp-indicators/"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "South Sudan - OCHA, Who is doing What Where (3W)",
-        "graphic": "/images/homepage/south-sudan.png",
-        "url": "//data.humdata.org/organization/ocha-south-sudan"
-      },
-      {
-        "title": "Blog Post",
-        "description": "New Features",
-        "graphic": "/images/homepage/membership.jpg",
-        "url": "http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/",
-        "buttonText": "Read",
-        "newTab": True
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Global - WFP, Food Market Prices",
-        "graphic": "/images/homepage/WFP.png",
-        "url": "//data.humdata.org/organization/wfp"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Kenya, Kakuma Refugee Camp - UNHCR, Who is doing What Where",
-        "graphic": "/images/homepage/KakumaRefugee.png",
-        "url": "//data.humdata.org/organization/unhcr-kenya"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Somalia - Adeso, Who is doing What, Where and When (4W)",
-        "graphic": "/images/homepage/Adeso.png",
-        "url": "//data.humdata.org/organization/adeso"
-      },
-      {
-        "title": "Film",
-        "description": "Making the Invisible Visible",
-        "graphic": "/images/homepage/movie_small.png",
-        "embed": True,
-        "url": "//youtu.be/7QX5Ji5gl9g"
-      }
-    ]
-%}
+{% set carouselItems = data['hdx.carousel.config']%}
 
         <div class="item active">
           <div class="item-center">
@@ -61,11 +8,11 @@
               <div class="sub-item-image">
                 <img class="graphic" src="/images/homepage/map-explorer.gif">
                 <div class="sub-item-action">
-                  <a href="/explore?crisis=lake-chad&layer=1" class="btn">Explore</a>
+                  <a href="/explore?id=1" class="btn">Explore</a>
                 </div>
               </div>
 
-              <a href="/explore?crisis=lake-chad&layer=1" >
+              <a href="/explore?id=1" >
                 <div class="sub-item-caption">
                   <p class="title">New Feature</p>
                   <p class="description">Explore Lake Chad Basin Crisis visually via Map Explorer</p>

@@ -1,0 +1,192 @@
+{% import 'macros/autoform.html' as autoform %}
+{% import 'macros/form.html' as form %}
+
+
+{% extends "admin/base.html" %}
+
+{% block primary_content_module_margin %}{% endblock %}
+{% block primary_content_inner %}
+  <div id="carousel-config-main" data-module="hdx_custom_pages" class="paddingLeftHack">
+    <div id="carousel-config-form" class="cp-form hdx-form">
+        <div class="paddingRowHack">
+            <div class="paddingLeftHack paddingRightHack">
+                <div class="row form-section">
+                    <div class="col-xs-12">
+                        <h3>Configure the homepage carousel items</h3>
+                        <p> On the desktop view the carousel items are split into pages of 4 items, on mobile they are shown one by one.</p>
+                        <div class="sample-text">Sample carousel section - reference only</div>
+                        <img style="width: 100%;" src="/images/homepage-carousel-sample.png" />
+                    </div>
+                </div>
+                <div class="row form-section">
+                    <div class="col-xs-12">
+                        <div id="carousel-config-saved-data" style="display: none;">
+                            {{ data['hdx.carousel.config'] }}
+                        </div>
+
+                        <script type="text/template" id="carousel-item-tpl">
+                            <div class="<%= (tab_open?'col-xs-12':'col-xs-4') %>">
+                                <div class="row carousel-item">
+                                    <div class="col-xs-12">
+                                        <div class="carousel-item-header">
+                                        <div class="row">
+                                            <div class="drag-handle pull-left">
+                                                <!--<i class="glyphicon glyphicon-option-vertical"/><i class="glyphicon glyphicon-option-vertical"/> -->
+                                                Carousel Item <%= order %>
+                                                <input type="hidden" name="id" value="<%= id %>">
+                                                <input type="hidden" name="graphic" value="<%= graphic %>">
+                                            </div>
+                                            <div class="pull-right">
+                                                <a href="#" class="delete-item"><i class="glyphicon glyphicon-trash"></i></a>
+                                                <a href="#" class="toggle-tab-state"><i class="glyphicon <%= (tab_open?'glyphicon-chevron-down':'glyphicon-chevron-up') %> "></i></a>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 <%= (tab_open?'':'mini-carousel-item') %>">
+                                        <div class="carousel-item-content">
+                                        <div class="row">
+                                            <div class="<%= (tab_open?'col-xs-4':'col-xs-12') %>">
+                                                <div class="thumbnail-preview">
+                                                    <div class="sample-text">Preview Item</div>
+                                                    <div class="thumbnail-container">
+                                                        <div class="sub-item">
+                                                            <div class="sub-item-image">
+                                                                <%
+                                                                    var preview = graphic_upload_preview || graphic;
+                                                                    if (preview){
+                                                                %>
+                                                                    <img class="graphic" src="<%= preview %>">
+                                                                <%  } %>
+                                                                <div class="sub-item-action">
+                                                                    <a href="<%= url %>" class="btn"><%= (buttonText?buttonText:"Explore") %></a>
+                                                                </div>
+                                                            </div>
+
+                                                            <a href="<%= url %>" >
+                                                                <div class="sub-item-caption">
+                                                                    <p class="title"><%= title %></p>
+                                                                    <p class="description"><%= description %></p>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-xs-8 <%= (tab_open?'':'hidden') %>">
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="title">Title</label>
+                                                    <div class="controls ">
+                                                        <input id="title" type="text" name="title" value="<%= title %>" placeholder="Title" class="form-control">
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="description">Description (optional)</label>
+                                                    <div class="controls ">
+                                                        <input id="description" type="text" name="description" value="<%= description %>" placeholder="eg. Description of the section" class="form-control">
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="thumbnail">Upload new thumbnail</label>
+                                                    <div class="controls ">
+                                                        <input id="thumbnail" type="file" name="graphic_upload" class="resource_file_field form-control">
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="url_field">URL</label>
+                                                    <div class="controls ">
+                                                        <input id="url_field" type="text" name="url" value="<%= url %>" placeholder="eg. http://... " class="form-control">
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="embed_field">Embed <%= embed %> <small><%= (embed.toString()==="true"?'selected yes':'selected no') %></small></label>
+                                                    <div class="controls ">
+                                                        <select name="embed" id="embed_field" class="form-control">
+                                                            <option value="true" <%= (embed.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                                            <option value="false" <%= (embed.toString()==="true"?'':'selected="selected"') %>>No</option>
+                                                        </select>
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="button_text_field">Button text</label>
+                                                    <div class="controls ">
+                                                        <input id="button_text_field" type="text" name="buttonText" value="<%= buttonText %>" placeholder="eg. http://... " class="form-control">
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="control-group form-group control-full control-large hdx-section-field">
+                                                    <label class="control-label" for="new_window">New Window <%= newTab %> <small><%= (newTab.toString()==="true"?'selected yes':'selected no') %></small></label>
+                                                    <div class="controls ">
+                                                        <select name="newTab" id="new_window" class="form-control">
+                                                            <option value="true" <%= (newTab.toString()==="true"?'selected="selected"':'') %> >Yes</option>
+                                                            <option value="false" <%= (newTab.toString()==="true"?'':'selected="selected"') %>>No</option>
+                                                        </select>
+                                                        <span class="error-block"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </script>
+
+                        <div id="carousel-item-collection" class="row">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 30px;">
+                    <div class="col-xs-12">
+                        <button id="add-carousel-item" class="btn pull-left"> + New Item </button>
+                        <a href="#" class="btn btn-primary pull-right" id="save-carousel">Save</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      {{ _('Homepage Carousel') }}
+    </h2>
+    <div class="module-content">
+      {% block admin_form_help %}
+      {% set about_url = h.url_for(controller='home', action='about') %}
+      {% set home_url = h.url_for(controller='home', action='index') %}
+      {% set docs_url = "http://docs.ckan.org/en/{0}/theming".format(g.ckan_doc_version) %}
+      {% trans %}
+        <h3>A carousel item has the following configuration fields:</h3>
+        <p><strong>Title:</strong> This is the title of .......</p>
+        <p><strong>Description:</strong> Descripe in a short sentence the carousel item.</p>
+        <p><strong>Thumbnail:</strong> This is the image that will be shown on top of the carousel item title.</p>
+        <p><strong>URL:</strong> Carousel item URL</p>
+        <p><strong>Embed:</strong> </p>
+        <p><strong>Button text:</strong> </p>
+        <p><strong>New Window:</strong> </p>
+      {% endtrans %}
+      {% endblock %}
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts2 %}
+    {{ super() }}
+    {% resource 'hdx_theme/custom-pages' %}
+    {% resource 'hdx_theme/carousel-admin' %}
+{% endblock %}
