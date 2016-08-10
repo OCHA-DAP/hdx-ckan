@@ -2,76 +2,6 @@
 
 {% set carouselItems = data['hdx.carousel.config']%}
 
-        <div class="item active">
-          <div class="item-center">
-            <div class="sub-item">
-              <div class="sub-item-image">
-                <img class="graphic" src="/images/homepage/map-explorer.gif">
-                <div class="sub-item-action">
-                  <a href="/explore?id=1" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/explore?id=1" >
-                <div class="sub-item-caption">
-                  <p class="title">New Feature</p>
-                  <p class="description">Explore Lake Chad Basin Crisis visually via Map Explorer</p>
-                </div>
-              </a>
-            </div>
-            <div class="sub-item">
-              <div class="sub-item-image">
-                <img class="graphic" src="/images/homepage/mVAM.png">
-                <div class="sub-item-action">
-                  <a href="/visualization/wfp-indicators/" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/visualization/wfp-indicators/">
-                <div class="sub-item-caption">
-                  <p class="title">Interactive Data</p>
-                  <p class="description">Yemen - mVAM Food Security Monitoring</p>
-                </div>
-              </a>
-
-            </div>
-            <div class="sub-item">
-              <div class="sub-item-image">
-                <img class="graphic" src="/images/homepage/WFP.png">
-                <div class="sub-item-action">
-                  <a href="/organization/wfp" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/organization/wfp">
-                <div class="sub-item-caption">
-                  <p class="title">Interactive Data</p>
-                  <p class="description">WFP - World Food Programme</p>
-                </div>
-              </a>
-            </div>
-            <div class="sub-item">
-              <div class="sub-item-image disabled">
-                <div class="graphic">
-                  <iframe width="100%" height="100%" src="//www.youtube.com/embed/hCVyiZhYb4M" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="sub-item-action">
-                  <a href="/about" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/about">
-                <div class="sub-item-caption">
-                  <p class="title">What is HDX?</p>
-                  <p class="description">Find more about HDX it's goals and features</p>
-                </div>
-              </a>
-
-            </div>
-          </div>
-        </div>
-
-
 {% block flash %}
   {# eat the flash messages so they don't remain in the session #}
   {% set flash_messages = h.flash.pop_messages() %}
@@ -283,7 +213,7 @@
                     </div>
                   </a>
                 </div>
-          {% if (loop.index) is divisibleby 4 %}
+          {% if ((loop.index) is divisibleby 4) or (loop.index == carouselItems|length) %}
               </div>
             </div>
           {% endif %}
