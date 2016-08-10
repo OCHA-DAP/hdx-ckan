@@ -134,7 +134,6 @@
 
             this.promise
                 .then(function(){
-                    alert("Save ok!");
                     location.reload(true);
                 }.bind(this))
                 .fail(function(){
