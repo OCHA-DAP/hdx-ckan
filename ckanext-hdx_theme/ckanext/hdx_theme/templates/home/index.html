@@ -1,6 +1,6 @@
 {% extends "page.html" %}
 
-{% set carouselItems = data['hdx.carousel.config']%}
+{% set carouselItems = h.hdx_get_carousel_list() %}
 
 {% block flash %}
   {# eat the flash messages so they don't remain in the session #}

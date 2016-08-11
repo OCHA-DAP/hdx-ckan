@@ -634,3 +634,6 @@ def hdx_frequency_list():
 def hdx_get_layer_info(id=None):
     layer = explorer.explorer_data.get(id)
     return layer
+
+def hdx_get_carousel_list():
+    return logic.get_action('hdx_carousel_settings_show')({}, {})
