@@ -218,6 +218,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_tag_list': hdx_helpers.hdx_tag_list,
             'hdx_frequency_list': hdx_helpers.hdx_frequency_list,
             'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
+            'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list
         }
 
     def get_actions(self):
