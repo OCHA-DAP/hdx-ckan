@@ -1,0 +1,107 @@
+@import "../base/variables";
+@import "../base/mixins";
+@import "../homepage/homepage-carousel";
+
+#carousel-config-main{
+  @carouselItemRadius: 6px;
+  .carousel-item {
+    margin-bottom: 20px;
+    border-radius: @carouselItemRadius;
+
+    .mini-carousel-item {
+      .carousel-item-content{
+         > .row {
+          margin: 0 -15px;
+        }
+      }
+
+      .thumbnail-preview {
+        margin: 0;
+        .sample-text {
+          display: none;
+        }
+      }
+
+    }
+
+    .carousel-item-header{
+      border-top-left-radius: @carouselItemRadius;
+      border-top-right-radius: @carouselItemRadius;
+      background-color: @extraLightBlueColor;
+      border: 1px solid @extraLightGrayColor;
+      height: 40px;
+      padding: 10px 15px;
+      cursor: all-scroll;
+
+      .gothamBoldFont(14px);
+
+
+      .drag-handle{
+        margin-left: -3px;
+        i.glyphicon {
+          color: @grayColor;
+          &.glyphicon-align-justify{
+            margin-left: -2px;
+            margin-right: 5px;
+          }
+        }
+      }
+
+      .pull-right{
+        .glyphicon{
+          margin-left: 5px;
+          color: @darkGrayColor;
+        }
+      }
+
+      > .row {
+        margin: 0;
+      }
+    }
+
+    .carousel-item-content {
+      background-color: @extraLightGrayColor;
+
+      > .row {
+        margin: 0;
+      }
+    }
+
+    .thumbnail-preview {
+      margin: 15px 0;
+
+      .thumbnail-container{
+        height: 275px;
+        padding: 20px 0;
+        width: 100%;
+
+        border: 1px solid @grayColor;
+        background-size: cover;
+        background: #1ebfb3 url("/images/homepage/map.png") fixed;
+
+        .sub-item{
+          width: 215px;
+          margin: auto;
+          float: none;
+        }
+      }
+    }
+    .homepage-carousel-sub-item();
+
+  }
+
+  .sortable-chosen {
+    opacity: 0.9;
+  }
+
+  .sortable-ghost {
+    opacity: 0.3;
+  }
+}
+
+
+
+
+
+
+

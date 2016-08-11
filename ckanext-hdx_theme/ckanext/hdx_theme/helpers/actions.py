@@ -1,8 +1,7 @@
 import logging
-import os
-import sys
 import requests
 import datetime
+import json
 
 from pylons import config
 import sqlalchemy
@@ -503,3 +502,45 @@ def _add_to_filter_list(src, param_name, filter_list):
     #     except:
     #         res = None
     #     return res
+
+
+@logic.side_effect_free
+def hdx_carousel_settings_show(context, data_dict):
+    '''
+    :returns: list of dictionaries representing the setting for each carousel item. Returns default if nothing is in db.
+    :rtype: list of dict
+    '''
+    from ckanext.hdx_theme.helpers.initial_carousel_settings import INITIAL_CAROUSEL_DATA
+
+    carousel_settings = []
+    setting_value_json = model.get_system_info('hdx.carousel.config', config.get('hdx.carousel.config'))
+    if setting_value_json:
+        try:
+            carousel_settings = json.loads(setting_value_json)
+        except TypeError as e:
+            log.warn('The "hdx.carousel.config" setting is not a proper json string')
+
+    if not carousel_settings and not context.get('not_initial'):
+        carousel_settings = INITIAL_CAROUSEL_DATA
+        for i, item in enumerate(carousel_settings):
+            item['order'] = i+1
+
+    return carousel_settings
+
+
+def hdx_carousel_settings_update(context, data_dict):
+    '''
+
+    :param 'hdx.carousel.config': a list with the carousel settings
+    :type 'hdx.carousel.config': list
+    :return: The JSON string that is the value of the new 'hdx.carousel.config'
+    :rtype: str
+    '''
+
+    logic.check_access('config_option_update', {}, {})
+
+    settings = data_dict.get('hdx.carousel.config')
+    settings_json = json.dumps(settings)
+    model.set_system_info('hdx.carousel.config', settings_json)
+    return settings_json
+

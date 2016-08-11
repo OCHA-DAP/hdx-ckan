@@ -179,7 +179,7 @@
             </div>
           {% endif %}
         {% endblock %}
-        <div class="module-content mTop45">
+        <div class="module-content {% block primary_content_module_margin %} mTop45 {% endblock %}">
           {% if self.page_primary_action() | trim %}
             <div class="page_primary_action">
               {% block page_primary_action %}{% endblock %}
