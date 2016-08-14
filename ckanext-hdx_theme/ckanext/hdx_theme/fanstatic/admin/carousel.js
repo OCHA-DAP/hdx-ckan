@@ -216,7 +216,7 @@
             // Initialize drag n drop sorting
             Sortable.create(this.listView.el, {
                 animation: 250,
-                // handle: ".drag-handle",
+                handle: ".carousel-item-header",
                 scroll: true,
                 onUpdate: function (e){
                     this.listView.$el.trigger('sort-updated');
