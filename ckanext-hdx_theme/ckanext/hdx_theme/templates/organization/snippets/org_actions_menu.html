@@ -1,0 +1,35 @@
+{% extends "indicator/snippets/base_actions_menu.html" %}
+
+{% set panel_title = _('Share Org') %}
+{% set title = "Test title" %}
+{% set contact_topics = {'1':'dsadas'} %}
+{% set group_topics = {'1':'dsdas'} %}
+
+{% set base_type = 'group' %}
+
+{% set pkg = organization %}
+{% set membership = {'display_group_message': True, 'data':{}} %}
+
+
+{% block user_actions %}
+    {% if can_create_dataset %}
+        <li>
+            {% link_for _('Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='' %}
+        </li>
+    {% endif %}
+    {% if can_edit %}
+        <li>
+            {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='' %}
+        </li>
+    {% endif %}
+    {% if request_membership %}
+        <li>
+            <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
+                {{ _("Request Membership") }}
+            </a>
+            {% snippet 'organization/snippets/req_membership_new.html',
+                modal_div_id='req-membership-div', modal_div_class='fade',
+                    form_action=c.request_membership_url %}
+        </li>
+    {% endif %}
+{% endblock %}}
