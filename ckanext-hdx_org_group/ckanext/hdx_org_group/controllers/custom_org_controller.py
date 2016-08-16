@@ -272,51 +272,21 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
         result = org_meta.org_dict
 
-        org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
-
-        json_extra = [el.get('value', None) for el in result.get('extras', []) if
-                      el.get('key', '') == 'customization']
-        jsonstring = json_extra[0] if len(json_extra) == 1 else ''
-        if jsonstring and jsonstring.strip():
-            json_dict = json.loads(jsonstring)
-            top_line_src_info = self._get_top_line_src_info(json_dict)
-            images = self._get_images(json_dict)
-        else:
-            top_line_src_info = (None, None)
-            images = (None, None)
-
         org_dict = {
             'id': result['id'],
             'display_name': result.get('display_name', ''),
             'description': result['description'],
             'name': result['name'],
-            'link': org_url[0] if len(org_url) == 1 else None,
+            'link': org_meta.org_dict.get('extras', {}).get('org_url'),
             'revision_id': result['revision_id'],
-            'topline_resource': top_line_src_info,
-            'modified_at': result.get('modified_at', ''),
-            'image_sq': images[0],
-            'image_rect': images[1],
+            'topline_resource': org_meta.customization.get(''),
+            'modified_at': result.get('modified_at', 'topline_resource'),
+            'image_sq': org_meta.customization.get('image_sq'),
+            'image_rect': org_meta.customization.get('image_rect'),
             'visualization_config': result.get('visualization_config', ''),
         }
 
         return org_dict
-
-
-    def _get_images(self, json_dict):
-        if 'image_sq' in json_dict and 'image_rect' in json_dict:
-            return (json_dict['image_sq'], json_dict['image_rect'])
-        elif 'image_sq' in json_dict:
-            return (json_dict['image_sq'], None)
-        elif 'image_rect' in json_dict:
-            return (None, json_dict['image_rect'])
-
-        return (None, None)
-
-    def _get_top_line_src_info(self, json_dict):
-        if 'topline_resource' in json_dict:
-            return json_dict['topline_resource']
-
-        return (None, None)
 
     def get_top_line_numbers(self, top_line_num_resource):
         context = {'model': model, 'session': model.Session,

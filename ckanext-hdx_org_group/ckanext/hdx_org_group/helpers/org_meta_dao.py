@@ -1,9 +1,12 @@
+import json
 
 import ckan.logic as logic
 import ckan.model as model
 import ckan.new_authz as new_authz
 import ckan.lib.base as base
-from ckan.common import c, request, _
+import ckan.lib.helpers as ckan_helpers
+
+from ckan.common import c
 
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as helpers
@@ -25,6 +28,9 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.members = None
         self.is_custom = False
         self.custom_css_path = None
+        self.customization = None
+        self.custom_rect_logo_url = None
+        self.custom_sq_logo_url = None
 
     def fetch_all(self):
         self.fetch_org_dict()
@@ -88,14 +94,21 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.members_num = len(self.members)
 
     def __process_custom(self):
-        org_extras = self.org_dict.get('extras')
-        if [o.get('value') for o in org_extras if o.get('key', '') == 'custom_org' and o.get('value')]:
-            self.is_custom = True
+        org_extras = {item.get('key'): item.get('value') for item in self.org_dict.get('extras', []) if item.get('key')}
+        self.org_dict['extras'] = org_extras
+
+        self.is_custom = True if org_extras.get('custom_org') else False
 
         if self.is_custom:
+            # Transform the json string representing the customizations to dict
+            self.customization = org_extras['customization'] = json.loads(org_extras.get('customization', '').strip())
+
             css_dest_dir = '/organization/' + self.org_dict['name']
 
             self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'], self.org_dict.get('modified_at'), True)
+            self.custom_sq_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_sq'))
+            self.custom_rect_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_rect'))
+
 
     def as_dict(self):
         return self.__dict__
