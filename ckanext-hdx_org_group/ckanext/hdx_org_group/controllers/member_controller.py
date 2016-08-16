@@ -14,6 +14,7 @@ from ckan.common import c, request, _
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 
 abort = base.abort
@@ -42,6 +43,9 @@ class HDXOrgMemberController(org.OrganizationController):
         q, sort = self._find_filter_params()
         reverse = True if sort == u'title desc' else False
 
+        org_meta = org_meta_dao.OrgMetaDao(id)
+        org_meta.fetch_all()
+
         try:
             member_list = self._action('member_list')(
                 context, {'id': id, 'object_type': 'user',
@@ -53,14 +57,17 @@ class HDXOrgMemberController(org.OrganizationController):
             c_params = {
                 'sort': sort,
                 'members': [a[0:4] for a in member_list],
-                'group_dict': self._action('group_show')(context, data_dict)
+                'org_meta': org_meta
             }
             self._set_c_params(c_params)
         except NotAuthorized:
             base.abort(401, _('Unauthorized to delete group %s') % '')
         except NotFound:
             base.abort(404, _('Group not found'))
-        return self._render_template('group/members.html')
+        if org_meta.is_custom:
+            return self._render_template('group/custom_members.html')
+        else:
+            return self._render_template('group/members.html')
 
     def _get_context(self):
         context = {'model': model, 'session': model.Session,
@@ -70,7 +77,8 @@ class HDXOrgMemberController(org.OrganizationController):
     def _set_c_params(self, params):
         c.sort_by_selected = params.get('sort')
         c.members = params.get('members')
-        c.group_dict = params.get('group_dict')
+        c.org_meta = params.get('org_meta')
+        c.group_dict = c.org_meta.org_dict
 
     def _find_filter_params(self):
         q = c.q = request.params.get('q', '')
@@ -170,8 +178,8 @@ class HDXOrgMemberController(org.OrganizationController):
         org_helper.notify_admins(data_dict)
 
     def member_delete(self, id):
-        ''' This is a modified version of the member_delete from the 
-            ckan group controller. 
+        ''' This is a modified version of the member_delete from the
+            ckan group controller.
             The changes are: ( if you modify this function please add below)
             - flash msg changed to reflect it's an org member ( not group member )
             - the delete confirmation is done with js ( DHTML )

@@ -17,6 +17,7 @@ from ckan.common import c, request, _
 import ckan.lib.helpers as h
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
@@ -96,33 +97,19 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'schema': self._db_to_form_schema(group_type=group_type),
-                   'for_view': True}
-        data_dict = {
-            'id': id,
-            'include_datasets': False  # This is needed in case we use group_show() instead of hdx_light_group_show()
-        }
-
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', '')
 
-        try:
-            # Do not query for the group datasets when dictizing, as they will
-            # be ignored and get requested on the controller anyway
-            context['include_datasets'] = False
-            c.group_dict = self._action('hdx_light_group_show')(context, data_dict)
-            # c.group = context['group']
-        except NotFound:
-            abort(404, _('Group not found'))
-        except NotAuthorized:
-            abort(401, _('Unauthorized to read group %s') % id)
+        c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id)
+        org_meta.fetch_all()
+
+        c.group_dict = org_meta.org_dict
+
 
         # If custom_org set to true, redirect to the correct route
-        if self.custom_org_test(c.group_dict['extras']):
-            Org = custom_org.CustomOrgController()
-            return Org.org_read(id)
+        if org_meta.is_custom:
+            custom_org_controller = custom_org.CustomOrgController()
+            return custom_org_controller.org_read(id, org_meta)
         else:
             org_info = self._get_org(id)
             c.full_facet_info = self._get_dataset_search_results(org_info['name'])
@@ -198,11 +185,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         c.other_links['current_page_url'] = h.url_for('organization_read', id=org_code)
 
         return full_facet_info
-
-    def custom_org_test(self, org):
-        if [o.get('value', None) for o in org if o.get('key', '') == 'custom_org']:
-            return True
-        return False
 
     def new(self, data=None, errors=None, error_summary=None):
         group_type = self._guess_group_type(True)
