@@ -469,3 +469,40 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             result = False
 
         return result
+
+    def activity_stream(self, id, org_meta=None, offset=0):
+        '''
+         Modified core functionality to use the new OrgMetaDao class
+        for fetching information needed on all org-related pages.
+
+        Render this group's public activity stream page.
+
+        :param id:
+        :type id: str
+        :param offset:
+        :type offset: int
+        :param org_meta:
+        :type org_meta: org_meta_dao.OrgMetaDao
+        :return:
+        '''
+
+        if not org_meta:
+            org_meta = org_meta_dao.OrgMetaDao(id)
+        c.org_meta = org_meta
+        org_meta.fetch_all()
+
+        c.group_dict = org_meta.org_dict
+
+
+        # Add the group's activity stream (already rendered to HTML) to the
+        # template context for the group/read.html template to retrieve later.
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True}
+        c.group_activity_stream = self._action('group_activity_list_html')(
+            context, {'id': c.group_dict['id'], 'offset': offset})
+
+        return render(self._activity_template('organization'))
+
+
+    def _activity_template(self, group_type):
+        return  'organization/custom_activity_stream.html'

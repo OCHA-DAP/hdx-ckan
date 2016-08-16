@@ -5,6 +5,7 @@ import ckan.lib.plugins as lib_plugins
 
 import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
+import ckanext.hdx_org_group.controllers.organization_controller as organization_controller
 
 log = logging.getLogger(__name__)
 
@@ -149,6 +150,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             '/organization/member_new/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_new')
         map.connect(
             '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
+
+        map.connect('organization_activity', '/organization/activity/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='activity_stream',
+                    conditions={'function': organization_controller.is_not_custom})
+        map.connect('custom_org_activity', '/organization/activity/{id}',
+                    controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController',
+                    action='activity_stream')
 
         # since the pattern of organization_read is so general it needs to be the last
         # otherwise it will override other /organization routes

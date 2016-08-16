@@ -6,7 +6,7 @@ import ckan.new_authz as new_authz
 import ckan.lib.base as base
 import ckan.lib.helpers as ckan_helpers
 
-from ckan.common import c
+from ckan.common import c, _
 
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as helpers
@@ -32,13 +32,27 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.custom_rect_logo_url = None
         self.custom_sq_logo_url = None
 
+        self._fetched_org_dict = False
+        self._fetched_dataset_info = False
+        self._fetched_followers = False
+        self._fetched_members = False
+
     def fetch_all(self):
-        self.fetch_org_dict()
-        self.fetch_dataset_info()
-        self.fetch_followers()
-        self.fetch_members()
+        if not self._fetched_org_dict:
+            self.fetch_org_dict()
+
+        if not self._fetched_dataset_info:
+            self.fetch_dataset_info()
+
+        if not self._fetched_followers:
+            self.fetch_followers()
+
+        if not self._fetched_members:
+            self.fetch_members()
 
     def fetch_dataset_info(self):
+        self._fetched_dataset_info = True
+
         context = {
             'model': model,
             'session': model.Session,
@@ -67,11 +81,13 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.datasets_num = query['count']
 
     def fetch_org_dict(self):
+        self._fetched_org_dict = True
+
         try:
             context = {
                 'model': model,
                 'session': model.Session,
-                'user': c.user or c.author,
+                # 'user': c.user or c.author,
                 'include_datasets': False,
                 'for_view': True
             }
@@ -84,9 +100,11 @@ class OrgMetaDao(search_controller.HDXSearchController):
             abort(401, _('Unauthorized to read group %s') % id)
 
     def fetch_followers(self):
+        self._fetched_followers = True
         self.followers_num = helpers.get_group_followers(self.id)
 
     def fetch_members(self):
+        self._fetched_members = True
         self.members = logic.get_action('member_list')(
             {'model': model, 'session': model.Session},
             {'id': self.id, 'object_type': 'user'}
@@ -108,7 +126,6 @@ class OrgMetaDao(search_controller.HDXSearchController):
             self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'], self.org_dict.get('modified_at'), True)
             self.custom_sq_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_sq'))
             self.custom_rect_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_rect'))
-
 
     def as_dict(self):
         return self.__dict__
