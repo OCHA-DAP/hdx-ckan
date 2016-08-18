@@ -72,7 +72,8 @@ class HDXOrgMemberController(org.OrganizationController):
                 'sort': sort,
                 'members': [a[0:4] for a in member_list],
                 'member_groups': member_groups,
-                'org_meta': org_meta
+                'org_meta': org_meta,
+                'current_user': self._current_user_info(member_list)
             }
             self._set_c_params(c_params)
         except NotAuthorized:
@@ -84,6 +85,15 @@ class HDXOrgMemberController(org.OrganizationController):
         else:
             return self._render_template('group/members.html')
 
+    def _current_user_info(self, member_list):
+        member_info = hdx_h.hdx_get_user_info(c.userobj.id)
+        member_info['role'] = None
+        for m in member_list:
+            if m[0] == member_info['id']:
+                member_info['role'] = m[3]
+
+        return member_info
+
     def _get_context(self):
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author}
@@ -93,6 +103,7 @@ class HDXOrgMemberController(org.OrganizationController):
         c.sort_by_selected = params.get('sort')
         c.members = params.get('members')
         c.member_groups = params.get('member_groups')
+        c.current_user = params.get('current_user')
         c.org_meta = params.get('org_meta')
         c.group_dict = c.org_meta.org_dict
 
