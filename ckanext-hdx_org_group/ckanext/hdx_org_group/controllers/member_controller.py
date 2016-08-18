@@ -5,6 +5,7 @@ Created on Jun 14, 2014
 
 '''
 
+import logging
 import ckan.controllers.organization as org
 import ckan.model as model
 import ckan.logic as logic
@@ -26,6 +27,7 @@ tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
 parse_params = logic.parse_params
 
+log = logging.getLogger(__name__)
 
 class HDXOrgMemberController(org.OrganizationController):
     def members(self, id):
@@ -110,6 +112,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 data_dict = clean_dict(dict_fns.unflatten(
                     tuplize_dict(parse_params(request.params))))
                 data_dict['id'] = id
+                invited = False
                 if data_dict.get('email', '').strip() != '' or \
                                 data_dict.get('username', '').strip() != '':
                     email = data_dict.get('email')
@@ -135,13 +138,17 @@ class HDXOrgMemberController(org.OrganizationController):
                             }
                             del data_dict['email']
                             user_dict = self._action('user_invite')(context, user_data_dict)
+                            invited = True
                             data_dict['username'] = user_dict['name']
                             h.flash_success(email + ' has been invited as ' + data_dict['role'])
                     else:
                         flash_message = data_dict['username'] + ' has been added as ' + data_dict['role']
                     c.group_dict = self._action('group_member_create')(context, data_dict)
 
-                    self.notify_admin_users(context, data_dict)
+                    user_obj = model.User.get(data_dict['username'])
+                    display_name = user_obj.display_name or user_obj.name
+                    self.notify_admin_users(context, id, None if invited else [display_name],
+                                            [email] if invited else None, data_dict['role'])
 
                     h.flash_success(flash_message)
                 else:
@@ -159,22 +166,97 @@ class HDXOrgMemberController(org.OrganizationController):
             h.flash_error(e.error_summary)
         self._redirect_to(controller='group', action='members', id=id)
 
-    def notify_admin_users(self, context, data_dict):
-        org_obj = model.Group.get(data_dict.get('id'))
-        user_obj = model.User.get(data_dict['username'])
-        org_admins = self._action('member_list')(context, {'id': data_dict.get('id'), 'capacity': 'admin',
+    def bulk_member_new(self, id):
+        context = self._get_context()
+
+        try:
+            req_dict = clean_dict(dict_fns.unflatten(
+                tuplize_dict(parse_params(request.params))))
+            role = req_dict.get('role')
+            emails = req_dict.get('emails', '').strip()
+            new_members = []
+            invited_members = []
+            if emails and role:
+                flash_message = None
+                for email in emails.split(','):
+                    email = email.strip()
+                    if email:
+                        # Check if email is used
+                        user_dict = model.User.by_email(email.strip())
+                        if user_dict:
+                            # Is user deleted?
+                            if user_dict[0].state == 'deleted':
+                                h.flash_error(_('Following user no longer has an account on HDX: ') + email)
+                                continue
+                            log.info('{} already exists as a user'.format(email))
+                            user_data_dict = {
+                                'id': id,
+                                'username': user_dict[0].name,
+                                'role': role
+                            }
+                            self._action('group_member_create')(context, user_data_dict)
+                            member_name = user_dict[0].get('display_name', email)
+                            new_members.append(member_name)
+                            h.flash_success(email + ' has been added as ' + role)
+                        else:
+                            user_data_dict = {
+                                'email': email,
+                                'group_id': id,
+                                'role': role,
+                                'id': id  # This is something staging/prod need
+                            }
+                            user_dict = self._action('user_invite')(context, user_data_dict)
+                            invited_members.append(email)
+                            h.flash_success(email + ' has been invited as ' + role)
+                            log.info('{} was invited as a new user'.format(email))
+
+                    if new_members:
+                        h.flash_success(', '.join(new_members) + _(' were added to the organization.'))
+
+                    if invited_members:
+                        h.flash_success(', '.join(invited_members) +
+                                        _(' were invited to join the organization. An account was created for them.'))
+
+                    self.notify_admin_users(context, id, new_members, invited_members, role)
+
+                    h.flash_success(flash_message)
+            else:
+                h.flash_error(_('''No user or role was specified'''))
+            self._redirect_to(controller='group', action='members', id=id)
+
+        except NotAuthorized:
+            abort(401, _('Unauthorized to add member to group %s') % '')
+        except NotFound:
+            abort(404, _('Group not found'))
+        except ValidationError, e:
+            h.flash_error(e.error_summary)
+        self._redirect_to(controller='group', action='members', id=id)
+
+    def notify_admin_users(self, context, org_id, new_members, invited_memberes, role):
+        org_obj = model.Group.get(org_id)
+        org_admins = self._action('member_list')(context, {'id': org_id, 'capacity': 'admin',
                                                            'object_type': 'user'})
         admins = []
         for admin_tuple in org_admins:
             admin_id = admin_tuple[0]
             admins.append(hdx_h.hdx_get_user_info(admin_id))
         admins_with_email = [admin for admin in admins if admin['email']]
-        data_dict['message'] = '{user} has been added to {org_name} as {role}'.format(user=user_obj.display_name,
-                                                                                      org_name=org_obj.display_name,
-                                                                                      role=data_dict.get('role'))
-        data_dict['subject'] = 'HDX Notification: new user was added to {org_name}'.format(
-            org_name=org_obj.display_name)
-        data_dict['admins'] = admins_with_email
+
+        messages = []
+        if new_members:
+            messages.append(_('The following persons have been added to {} as {}: ')
+                            .format(org_obj.display_name, role)
+                            + ', '.join(new_members))
+        if invited_memberes:
+            messages.append(_('The following persons have been invited to {} as {}: ')
+                            .format(org_obj.display_name, role)
+                            + ', '.join(invited_memberes))
+
+        data_dict = {
+            'message': '\n\n'.join(messages),
+            'subject': 'HDX Notification: new members were added to {}'.format(org_obj.display_name),
+            'admins': admins_with_email
+        }
         org_helper.notify_admins(data_dict)
 
     def member_delete(self, id):
