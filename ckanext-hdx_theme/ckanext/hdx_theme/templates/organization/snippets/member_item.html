@@ -52,13 +52,9 @@ Example:
 				<span class="less-visible mx-member-role">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }} </span>
 			</div>
 			<div class="list-items counter">
-				{% if member.ds_num > 0 %} <a href="#"> {% endif %}
-					<span class="count"> {{ h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) }}</span>
-				{% if member.ds_num > 0 %} </a> {% endif %}
+				<span class="count"> {{ h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) }}</span>
 				-
-				{% if member.org_num > 0 %} <a href="#"> {% endif %}
-					<span class="count"> {{ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) }}</span>
-				{% if member.org_num > 0 %} </a> {% endif %}
+				<span class="count"> {{ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) }}</span>
 				-
 				<span class="count"> {{ h.hdx_show_singular_plural(member.grp_num, _('Countries'),  _('Countries')) }}</span>
 			</div>

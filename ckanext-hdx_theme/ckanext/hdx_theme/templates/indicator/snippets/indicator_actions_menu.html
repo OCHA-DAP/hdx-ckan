@@ -9,6 +9,7 @@
 {% set base_type = "dataset" %}
 
 {% block user_actions %}
+    {{ c.membership }}
     {% if h.check_access('package_update', {'id':pkg.id }) %}
         {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
         <li>
