@@ -54,11 +54,20 @@ class HDXOrgMemberController(org.OrganizationController):
                           'q': q, 'user_info': True}
             )
             member_list.sort(key=lambda y: y[4].lower(), reverse=reverse)
+
+            member_groups = {}
+            for m in member_list:
+                role = m[3]
+                if not member_groups.get(role):
+                    member_groups[role] = []
+                member_groups[role].append(m)
+
             data_dict = {'id': id}
             data_dict['include_datasets'] = False
             c_params = {
                 'sort': sort,
                 'members': [a[0:4] for a in member_list],
+                'member_groups': member_groups,
                 'org_meta': org_meta
             }
             self._set_c_params(c_params)
@@ -79,6 +88,7 @@ class HDXOrgMemberController(org.OrganizationController):
     def _set_c_params(self, params):
         c.sort_by_selected = params.get('sort')
         c.members = params.get('members')
+        c.member_groups = params.get('member_groups')
         c.org_meta = params.get('org_meta')
         c.group_dict = c.org_meta.org_dict
 
