@@ -1,5 +1,9 @@
 {% extends "organization/activity_stream.html" %}
 
+{% block item_title_contrib %}
+    {% snippet 'organization/custom/custom_org_header.html', c=c, data=data %}
+{% endblock %}
+
 {% block custom_styles %}
     {{ super() }}
     <link rel="stylesheet" type="text/css"
