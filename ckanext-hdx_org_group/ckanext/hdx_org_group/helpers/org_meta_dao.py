@@ -32,10 +32,16 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.custom_rect_logo_url = None
         self.custom_sq_logo_url = None
 
+        self.allow_basic_user_info = False
+        self.allow_req_membership = False
+        self.allow_edit = False
+        self.allow_add_dataset = False
+
         self._fetched_org_dict = False
         self._fetched_dataset_info = False
         self._fetched_followers = False
         self._fetched_members = False
+        self._fetched_permissions = False
 
     def fetch_all(self):
         if not self._fetched_org_dict:
@@ -49,6 +55,9 @@ class OrgMetaDao(search_controller.HDXSearchController):
 
         if not self._fetched_members:
             self.fetch_members()
+
+        if not self._fetched_permissions:
+            self.fetch_permissions()
 
     def fetch_dataset_info(self):
         self._fetched_dataset_info = True
@@ -99,6 +108,16 @@ class OrgMetaDao(search_controller.HDXSearchController):
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
 
+    def fetch_permissions(self):
+        self._fetched_permissions = True
+        self.allow_basic_user_info = self.__check_access('hdx_basic_user_info')
+        self.allow_req_membership = not ckan_helpers.user_in_org_or_group(self.id) and self.allow_basic_user_info
+
+        self.allow_edit = self.__check_access('organization_update', {'id': id})
+        self.allow_add_dataset = self.__check_access('package_create',
+                                              {'organization_id': id,
+                                               'owner_org': id})
+
     def fetch_followers(self):
         self._fetched_followers = True
         self.followers_num = helpers.get_group_followers(self.id)
@@ -126,6 +145,20 @@ class OrgMetaDao(search_controller.HDXSearchController):
             self.custom_css_path = less.generate_custom_css_path(css_dest_dir, self.org_dict['name'], self.org_dict.get('modified_at'), True)
             self.custom_sq_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_sq'))
             self.custom_rect_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_rect'))
+
+    @staticmethod
+    def __check_access(action_name, data_dict=None):
+        if data_dict is None:
+            data_dict = {}
+
+        context = {'model': model,
+                   'user': c.user or c.author}
+        try:
+            result = logic.check_access(action_name, context, data_dict)
+        except logic.NotAuthorized:
+            result = False
+
+        return result
 
     def as_dict(self):
         return self.__dict__
