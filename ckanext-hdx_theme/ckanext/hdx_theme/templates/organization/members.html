@@ -186,7 +186,7 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <form class="hdx-form">
+                        <form class="hdx-form" action="/organization/bulk_member_new/{{c.group_dict.id}}">
                             <div class="role-categ uppercase">
                                 Add / invite colleagues to this organisation
                             </div>
@@ -197,15 +197,18 @@
                                     <strong>If you invite member new to HDX</strong> - we will send an invite on your behalf to register on HDX. After signup, org admin will receive the request to join your organisation.
                                 </p>
 
-                                <div class="mBottom20">
-                                    <select name="role" data-title="TESTES" data-placeholder="Select a role" data-allow-clear="true">
-                                        <option></option> <!-- needed by select 2 to show placeholder :) -->
-                                        {% for role_categ in roles %}
-                                            <option value="{{role_categ.value}}">{{role_categ.text}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                                <div style="text-align: right;">
+
+                                {% if not current_member.role == "admin" %}
+                                    <div class="mBottom20">
+                                        <select name="role" data-placeholder="Select a role" data-allow-clear="true">
+                                            <option></option> <!-- needed by select 2 to show placeholder :) -->
+                                            {% for role_categ in roles %}
+                                                <option value="{{role_categ.value}}">{{role_categ.text}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                {% endif %}
+                                <div class="mTop20" style="text-align: right;">
                                     <button type="submit" class="btn hdx-btn btn-primary">Submit</button>
                                 </div>
 
