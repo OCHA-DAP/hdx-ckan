@@ -11,6 +11,7 @@ from ckan.common import c, _
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_package.helpers.membership_data as membership_data
 
 abort = base.abort
 
@@ -31,6 +32,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.customization = None
         self.custom_rect_logo_url = None
         self.custom_sq_logo_url = None
+        self.group_message_topics = {}
 
         self.allow_basic_user_info = False
         self.allow_req_membership = False
@@ -42,6 +44,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self._fetched_followers = False
         self._fetched_members = False
         self._fetched_permissions = False
+        self._fetched_group_message_topics = False
 
     def fetch_all(self):
         if not self._fetched_org_dict:
@@ -58,6 +61,9 @@ class OrgMetaDao(search_controller.HDXSearchController):
 
         if not self._fetched_permissions:
             self.fetch_permissions()
+
+        if not self._fetched_group_message_topics:
+            self.fetch_group_message_topics()
 
     def fetch_dataset_info(self):
         self._fetched_dataset_info = True
@@ -129,6 +135,15 @@ class OrgMetaDao(search_controller.HDXSearchController):
             {'id': self.id, 'object_type': 'user'}
         )
         self.members_num = len(self.members)
+
+    def fetch_group_message_topics(self):
+        group_message_topics = membership_data.get_message_groups(c.user or c.author, self.id)
+        self.group_message_topics = {
+            'display_group_message': bool(group_message_topics),
+            'data': group_message_topics,
+        }
+
+
 
     def __process_custom(self):
         org_extras = {item.get('key'): item.get('value') for item in self.org_dict.get('extras', []) if item.get('key')}

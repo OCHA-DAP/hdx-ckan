@@ -2,8 +2,6 @@
 Functions for creating and maintaining datasets.
 """
 import logging
-# from urllib import urlencode
-# import datetime
 import cgi
 from string import lower
 from ckan.lib.helpers import url_for
@@ -33,13 +31,13 @@ import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.search as search
 
 import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.membership_data as membership_data
 
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.home import CACHE_PARAMETERS
 from ckan.controllers.api import CONTENT_TYPES
 
 from ckanext.hdx_theme.util.mail import simple_validate_email
-from ckanext.hdx_package.helpers.membership_data import membership_data
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
@@ -757,27 +755,17 @@ class DatasetController(PackageController):
         c.pkg_dict['social_mail_body'] = _('Description:%0D%0A') + h.markdown_extract(
             notes) + ' %0D%0A'
 
-        cnt_members_list = {}
-        template_data = {}
-        try:
-            cnt_members_list = get_action('hdx_member_list')(context, {'org_id': c.pkg.owner_org})
-        except Exception, e:
-            log.warning("Package " + id + " has no organization" + str(e.args))
-
-        template_data['contributor_topics'] = membership_data['contributor_topics']
-        template_data['group_topics'] = {}
-        template_data['group_topics']['all'] = membership_data['group_topics']['all'] + ' [' + str(
-            cnt_members_list.get('total_counter', 0)) + ']'
-        template_data['group_topics']['admins'] = membership_data['group_topics']['admins'] + ' [' + str(
-            cnt_members_list.get('admins_counter', 0)) + ']'
-        template_data['group_topics']['editors'] = membership_data['group_topics']['editors'] + ' [' + str(
-            cnt_members_list.get('editors_counter', 0)) + ']'
+        group_message_topics = membership_data.get_message_groups(c.user or c.author, c.pkg.owner_org)
+        template_data = {
+            'group_topics': group_message_topics,
+            'contributor_topics': membership_data.membership_data['contributor_topics']
+        }
 
         if c.userobj:
             template_data['fullname'] = c.userobj.display_name or c.userobj.name or ''
             template_data['email'] = c.userobj.email or ''
         c.membership = {
-            'display_group_message': cnt_members_list.get('is_member', False),
+            'display_group_message': bool(group_message_topics),
             'data': template_data,
         }
 
@@ -1251,7 +1239,7 @@ class DatasetController(PackageController):
             org_id = request.params.get('pkg_owner_org')
             check_access('hdx_send_mail_members', context, {'org_id': org_id})
             data_dict['topic_key'] = request.params.get('topic')
-            data_dict['topic'] = membership_data.get('group_topics').get(request.params.get('topic'))
+            data_dict['topic'] = membership_data.membership_data.get('group_topics').get(request.params.get('topic'))
             data_dict['fullname'] = request.params.get('fullname')
             data_dict['email'] = request.params.get('email')
             data_dict['msg'] = request.params.get('msg')

@@ -2,13 +2,12 @@
 
 {% set panel_title = _('Share Org') %}
 {% set title = "Test title" %}
-{% set contact_topics = {'1':'dsadas'} %}
-{% set group_topics = {'1':'dsdas'} %}
 
 {% set base_type = 'group' %}
 
 {% set pkg = organization %}
-{% set membership = {'display_group_message': True, 'data':{}} %}
+{% set membership = c.org_meta.group_message_topics %}
+{% set group_topics = membership.data %}
 {% set hide_contact_contributor = true %}
 
 
