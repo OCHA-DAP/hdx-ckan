@@ -171,6 +171,7 @@ dt.uppercase {
   opacity: 0;
 }
 .approval-request.request-approved .user-details .approval-actions .approved-message {
+  top: 0;
   opacity: 1;
 }
 .approval-request .image {
@@ -194,9 +195,13 @@ dt.uppercase {
   transition-property: opacity;
   transition-duration: .5s;
   transition-timing-function: linear;
+  z-index: 10;
+  position: relative;
 }
 .approval-request .user-details .approval-actions .approved-message {
   opacity: 0;
+  position: relative;
+  z-index: 9;
   color: #cccccc;
   line-height: 31px;
   position: absolute;

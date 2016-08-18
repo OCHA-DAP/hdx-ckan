@@ -5,18 +5,20 @@ Created on Jun 14, 2014
 
 '''
 
+import collections
 import logging
-import ckan.controllers.organization as org
-import ckan.model as model
-import ckan.logic as logic
-import ckan.lib.base as base
 
-from ckan.common import c, request, _
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+import ckanext.hdx_theme.helpers.helpers as hdx_h
+
+import ckan.controllers.organization as org
+import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
-import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
-import ckanext.hdx_theme.helpers.helpers as hdx_h
+import ckan.logic as logic
+import ckan.model as model
+from ckan.common import c, request, _
 
 abort = base.abort
 
@@ -61,6 +63,8 @@ class HDXOrgMemberController(org.OrganizationController):
                 if not member_groups.get(role):
                     member_groups[role] = []
                 member_groups[role].append(m)
+
+            member_groups = collections.OrderedDict(sorted(member_groups.items()))
 
             data_dict = {'id': id}
             data_dict['include_datasets'] = False

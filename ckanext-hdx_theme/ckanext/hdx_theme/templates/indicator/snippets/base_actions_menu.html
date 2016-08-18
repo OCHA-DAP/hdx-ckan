@@ -4,9 +4,7 @@
 {% set title = title or "title" %}
 {% set contact_topics = contact_topics or {} %}
 {% set group_topics = group_topics or {} %}
-
-
-
+{% set hide_contact_contributor = hide_contact_contributor or false%}
 {% set membership_data = membership.data %}
 
 
@@ -22,19 +20,23 @@
             <li>
                 <strong class="uppercase">{{ h.hdx_follow_link(base_type, pkg.id, "", "link-separator") }}</strong>
             </li>
-            <li>
-                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
-                    <i class="icon-envelope"></i>
-                    Contact the contributor
-                </a>
-            </li>
+            {% if not hide_contact_contributor%}
+                <li>
+                    <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
+                        <i class="icon-envelope"></i>
+                        Contact the contributor
+                    </a>
+                </li>
+            {% endif %}
         {% else %}
-            <li>
-                <a href="/contact_hdx" title="{{ _('TODO: Add description text here') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
-                    <i class="icon-envelope"></i>
-                    Contact the contributor
-                </a>
-            </li>
+            {% if not hide_contact_contributor%}
+                <li>
+                    <a href="/contact_hdx" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
+                        <i class="icon-envelope"></i>
+                        Contact the contributor
+                    </a>
+                </li>
+            {% endif %}
         {% endif %}
         {% if membership.display_group_message %}
             <li>

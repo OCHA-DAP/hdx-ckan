@@ -217,6 +217,7 @@ dt.uppercase {
                     opacity: 0;
                 }
                 .approved-message {
+                    top: 0;
                     opacity: 1;
                 }
             }
@@ -228,7 +229,7 @@ dt.uppercase {
         position: absolute;
     }
     .user-details {
-        margin-left: @approvalRequestImageSize+ @membersRightSideSectionPadding;
+        margin-left: @approvalRequestImageSize + @membersRightSideSectionPadding;
 
         .btn-primary {
             .caret {
@@ -247,10 +248,14 @@ dt.uppercase {
                 transition-property: opacity;
                 transition-duration: .5s;
                 transition-timing-function: linear;
+                z-index: 10;
+                position: relative;
             }
 
             .approved-message {
                 opacity: 0;
+                position: relative;
+                z-index: 9;
                 color: @lightGrayColor;
                 line-height: 31px;
                 position: absolute;
