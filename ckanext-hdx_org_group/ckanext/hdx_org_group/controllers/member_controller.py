@@ -68,12 +68,15 @@ class HDXOrgMemberController(org.OrganizationController):
 
             data_dict = {'id': id}
             data_dict['include_datasets'] = False
+            current_user = self._current_user_info(member_list)
             c_params = {
                 'sort': sort,
                 'members': [a[0:4] for a in member_list],
                 'member_groups': member_groups,
                 'org_meta': org_meta,
-                'current_user': self._current_user_info(member_list)
+                'current_user': current_user,
+                'allow_view_right_side':  c.userobj.sysadmin or bool(current_user.get('role')),
+                'allow_approve': c.userobj.sysadmin or current_user.get('role') == 'admin'
             }
             self._set_c_params(c_params)
         except NotAuthorized:
@@ -103,6 +106,8 @@ class HDXOrgMemberController(org.OrganizationController):
         c.sort_by_selected = params.get('sort')
         c.members = params.get('members')
         c.member_groups = params.get('member_groups')
+        c.allow_view_right_side = params.get('allow_view_right_side')
+        c.allow_approve = params.get('allow_approve')
         c.current_user = params.get('current_user')
         c.org_meta = params.get('org_meta')
         c.group_dict = c.org_meta.org_dict
