@@ -69,14 +69,15 @@ class HDXOrgMemberController(org.OrganizationController):
             data_dict = {'id': id}
             data_dict['include_datasets'] = False
             current_user = self._current_user_info(member_list)
+            is_sysadmin = c.userobj and c.userobj.sysadmin
             c_params = {
                 'sort': sort,
                 'members': [a[0:4] for a in member_list],
                 'member_groups': member_groups,
                 'org_meta': org_meta,
                 'current_user': current_user,
-                'allow_view_right_side':  c.userobj.sysadmin or bool(current_user.get('role')),
-                'allow_approve': c.userobj.sysadmin or current_user.get('role') == 'admin'
+                'allow_view_right_side':  is_sysadmin or bool(current_user.get('role')),
+                'allow_approve': is_sysadmin or current_user.get('role') == 'admin'
             }
             self._set_c_params(c_params)
         except NotAuthorized:
@@ -89,13 +90,15 @@ class HDXOrgMemberController(org.OrganizationController):
             return self._render_template('group/members.html')
 
     def _current_user_info(self, member_list):
-        member_info = hdx_h.hdx_get_user_info(c.userobj.id)
-        member_info['role'] = None
-        for m in member_list:
-            if m[0] == member_info['id']:
-                member_info['role'] = m[3]
+        if c.userobj:
+            member_info = hdx_h.hdx_get_user_info(c.userobj.id)
+            member_info['role'] = None
+            for m in member_list:
+                if m[0] == member_info['id']:
+                    member_info['role'] = m[3]
 
-        return member_info
+            return member_info
+        return {}
 
     def _get_context(self):
         context = {'model': model, 'session': model.Session,
