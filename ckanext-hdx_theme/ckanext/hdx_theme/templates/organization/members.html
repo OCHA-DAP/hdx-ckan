@@ -11,11 +11,6 @@
 {% set authorized = c.allow_approve%}
 {% set is_single_admin = (c.member_groups['admin'] | length) == 1 %}
 {% set current_member = c.current_user %}
-{% set pending_approvals = [
-        {'name':'aidan', 'display_name':'Aidan McGuire', 'requested':''},
-        {'name':'cj', 'display_name':'CJ Hendrix', 'requested':''},
-    ]
-%}
 
 {% block breadcrumb_content %}
   <li>{% link_for _('Organisations'), controller='organization', action='index' %}</li>
@@ -149,21 +144,21 @@
                                 <div class="role-categ uppercase">
                                     Pending approval [X]
                                 </div>
-                                {% for request in pending_approvals %}
+                                {% for request in c.request_list %}
                                 <div class="approval-request">
                                     <div class="image">{{ h.linked_gravatar(request.email_hash, 20) }}</div>
                                     <div class="user-details search-list">
                                         <div class="dataset-item">
                                             <div class="dataset-heading">
                                                     <span>
-                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.name) }}">{{ request.display_name }}</a>
+                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.name) }}">{{ request.user_display_name }}</a>
                                                         |
-                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.name) }}">{{ request.name }}</a>
+                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.name) }}">{{ request.user_name }}</a>
                                                     </span>
                                             </div>
                                             <div class="dataset-updated">
                                                 <div class="updatedNameColor">
-                                                    <span class="less-visible mx-member-role">{{ _('Requested') }} {{ h.render_datetime(request.created) }} </span>
+                                                    <span class="less-visible mx-member-role">{{ _('Requested') }} {{ h.render_datetime(request.revision_last_updated) }} </span>
                                                 </div>
                                             </div>
                                             <div class="approval-actions">

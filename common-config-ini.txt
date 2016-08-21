@@ -220,3 +220,7 @@ hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_servi
 hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
+
+# Org member request configs
+ytp.requests.hide_member_role = false
+ytp.requests.redirect_to_src_page = true

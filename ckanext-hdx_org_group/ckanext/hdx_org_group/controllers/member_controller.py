@@ -77,7 +77,8 @@ class HDXOrgMemberController(org.OrganizationController):
                 'org_meta': org_meta,
                 'current_user': current_user,
                 'allow_view_right_side':  is_sysadmin or bool(current_user.get('role')),
-                'allow_approve': is_sysadmin or current_user.get('role') == 'admin'
+                'allow_approve': is_sysadmin or current_user.get('role') == 'admin',
+                'request_list': self._get_member_requests_for_org(id)
             }
             self._set_c_params(c_params)
         except NotAuthorized:
@@ -88,6 +89,17 @@ class HDXOrgMemberController(org.OrganizationController):
             return self._render_template('group/custom_members.html')
         else:
             return self._render_template('group/members.html')
+
+    def _get_member_requests_for_org(self, org_id):
+        context = self._get_context()
+        req_list = logic.get_action('member_request_list')(context, {'group': org_id})
+        for req in req_list:
+            revision_dict = logic.get_action('revision_show')(context, {'id': req.get('revision_id')})
+            req['revision_last_updated'] = revision_dict.get('timestamp')
+            user_dict = logic.get_action('user_show')(context, {'id': req.get('user_name')})
+            req['user_display_name'] = user_dict.get('display_name', user_dict.get('name'))
+
+        return req_list
 
     def _current_user_info(self, member_list):
         if c.userobj:
@@ -114,6 +126,7 @@ class HDXOrgMemberController(org.OrganizationController):
         c.current_user = params.get('current_user')
         c.org_meta = params.get('org_meta')
         c.group_dict = c.org_meta.org_dict
+        c.request_list = params.get('request_list')
 
     def _find_filter_params(self):
         q = c.q = request.params.get('q', '')

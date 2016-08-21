@@ -29,7 +29,7 @@
             </a>
             {% snippet 'organization/snippets/req_membership_new.html',
                 modal_div_id='req-membership-div', modal_div_class='fade',
-                    form_action=c.request_membership_url %}
+                    form_action=h.url_for('member_request_new'), org_id=c.org_meta.org_dict.id %}
         </li>
     {% endif %}
 {% endblock %}}

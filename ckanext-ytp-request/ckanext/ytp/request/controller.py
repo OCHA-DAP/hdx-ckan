@@ -1,3 +1,7 @@
+from paste.deploy.converters import asbool
+from pylons import config
+from routes.util import redirect_to
+
 from ckan.lib import base
 from ckan import model
 from ckan.logic import NotFound, NotAuthorized, check_access, tuplize_dict, clean_dict, parse_params, ValidationError
@@ -7,6 +11,8 @@ from ckan.lib.base import c, request, render, abort
 from ckan.common import _
 import ckan.lib.navl.dictization_functions as dict_fns
 from ckanext.ytp.request.tools import get_user_member
+
+
 
 
 class YtpRequestController(base.BaseController):
@@ -19,8 +25,9 @@ class YtpRequestController(base.BaseController):
 
     def _get_available_roles(self, user=None, context=None):
         roles = []
+        hide_member_role = asbool(config.get('ytp.requests.hide_member_role', 'true'))
         for role in toolkit.get_action('member_roles_list')(context or self._basic_context(user), {}):
-            if role['value'] != 'member':
+            if not hide_member_role or role['value'] != 'member':
                 roles.append(role)
         return roles
 
@@ -46,15 +53,24 @@ class YtpRequestController(base.BaseController):
         c.roles = self._get_available_roles()
         c.user_role = 'editor'
 
-        c.form = render("request/new_request_form.html", extra_vars=extra_vars)
-        return render("request/new.html")
+        redirect_to_src_page = asbool(config.get('ytp.requests.redirect_to_src_page', 'true'))
+        if redirect_to_src_page:
+            redirect_to(request.referer)
+        else:
+            c.form = render("request/new_request_form.html", extra_vars=extra_vars)
+            return render("request/new.html")
 
     def _save_new(self, context):
         try:
             data_dict = clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(request.params))))
             data_dict['group'] = data_dict['organization']
             member = toolkit.get_action('member_request_create')(context, data_dict)
-            helpers.redirect_to('member_request_show', member_id=member['id'])
+            redirect_to_src_page = asbool(config.get('ytp.requests.redirect_to_src_page', 'true'))
+            if redirect_to_src_page:
+                helpers.flash_success(_('Thank you for your request. The organisation admins were notified.'))
+                redirect_to(request.referer)
+            else:
+                helpers.redirect_to('member_request_show', member_id=member['id'])
         except NotAuthorized:
             abort(401, self.not_auth_message)
         except NotFound:
@@ -64,6 +80,7 @@ class YtpRequestController(base.BaseController):
         except ValidationError, e:
             errors = e.error_dict
             error_summary = e.error_summary
+            helpers.flash_error(_('There was an error saving your request. Please try again.'))
             return self.new(data_dict, errors, error_summary)
 
     def list(self):
