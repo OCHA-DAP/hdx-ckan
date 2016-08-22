@@ -277,7 +277,7 @@ def member_request_list(context, data_dict):
     return _member_list_dictize(members, context)
 
 
-def _process_request(context, member, action):
+def _process_request(context, member, action, new_role=None):
     user = context["user"]
 
     approve = action == 'approve'  # else 'reject' or 'cancel'
@@ -288,6 +288,8 @@ def _process_request(context, member, action):
         raise NotFound
 
     member.state = state
+    if new_role:
+        member.capacity = new_role
     revision = model.repo.new_revision()
     revision.author = user
 
@@ -372,9 +374,12 @@ def member_request_process(context, data_dict):
     :param member: id of the member
     :type member: string
 
+    :param role: role decided by the org admin (optional)
+    :type role: string
+
     :param approve: approve or reject request
-    :type accpet: boolean
+    :type approve: boolean
     '''
     check_access('member_request_process', context, data_dict)
     member = model.Session.query(model.Member).get(data_dict.get("member"))
-    return _process_request(context, member, 'approve' if data_dict.get('approve') else 'reject')
+    return _process_request(context, member, 'approve' if data_dict.get('approve') else 'reject', data_dict.get('role'))
