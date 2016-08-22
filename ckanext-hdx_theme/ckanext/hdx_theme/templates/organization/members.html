@@ -38,7 +38,7 @@
 
         </div>
         <div class="row">
-            <div class="{% if current_member.role or is_sys_admin %} col-xs-8 {% else %} col-xs-12 {% endif %}">
+            <div class="{% if c.allow_view_right_side %} col-xs-8 {% else %} col-xs-12 {% endif %}">
 
                 {% set selected_sorting = c.sort_by_selected or 'title asc' %}
                 {% snippet 'snippets/search_form_new.html', type='members', query=c.q, sorting=sorting, sorting_selected=selected_sorting, count=c.members|length, placeholder=search_text, show_empty=request.params %}
@@ -68,7 +68,7 @@
 
                 {% endfor %}
             </div>
-            {% if current_member.role or is_sys_admin %}
+            {% if c.allow_view_right_side %}
                 <div class="col-xs-4">
                     <div class="row">
                         <div class="col-xs-12">
