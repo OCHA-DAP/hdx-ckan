@@ -11,6 +11,7 @@ import logging
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
 import ckanext.hdx_theme.helpers.helpers as hdx_h
+import ckanext.hdx_theme.util.mail as mailutil
 
 import ckan.controllers.organization as org
 import ckan.lib.base as base
@@ -18,6 +19,7 @@ import ckan.lib.helpers as h
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.logic as logic
 import ckan.model as model
+import ckan.plugins.toolkit as tk
 from ckan.common import c, request, _
 
 abort = base.abort
@@ -213,7 +215,6 @@ class HDXOrgMemberController(org.OrganizationController):
         self._redirect_to(controller='group', action='members', id=id)
 
     def bulk_member_new(self, id):
-        context = self._get_context()
 
         try:
             req_dict = clean_dict(dict_fns.unflatten(
@@ -223,49 +224,44 @@ class HDXOrgMemberController(org.OrganizationController):
             new_members = []
             invited_members = []
             if emails and role:
-                flash_message = None
                 for email in emails.split(','):
+                    context = self._get_context()
                     email = email.strip()
-                    if email:
-                        # Check if email is used
-                        user_dict = model.User.by_email(email.strip())
-                        if user_dict:
-                            # Is user deleted?
-                            if user_dict[0].state == 'deleted':
-                                h.flash_error(_('Following user no longer has an account on HDX: ') + email)
-                                continue
-                            log.info('{} already exists as a user'.format(email))
-                            user_data_dict = {
-                                'id': id,
-                                'username': user_dict[0].name,
-                                'role': role
-                            }
-                            self._action('group_member_create')(context, user_data_dict)
-                            member_name = user_dict[0].get('display_name', email)
-                            new_members.append(member_name)
-                            h.flash_success(email + ' has been added as ' + role)
-                        else:
-                            user_data_dict = {
-                                'email': email,
-                                'group_id': id,
-                                'role': role,
-                                'id': id  # This is something staging/prod need
-                            }
-                            user_dict = self._action('user_invite')(context, user_data_dict)
-                            invited_members.append(email)
-                            h.flash_success(email + ' has been invited as ' + role)
-                            log.info('{} was invited as a new user'.format(email))
+                    try:
+                        if email and mailutil.simple_validate_email(email):
+                            # Check if email is used
+                            user_dict = model.User.by_email(email.strip())
+                            if user_dict:
+                                added = self._add_existing_user_as_member(context, id, role, user_dict[0])
+                                if added:
+                                    new_members.append(user_dict[0].display_name)
+                            else:
+                                user_data_dict = {
+                                    'email': email,
+                                    'group_id': id,
+                                    'role': role,
+                                    'id': id  # This is something staging/prod need
+                                }
+                                user_dict = self._action('user_invite')(context, user_data_dict)
+                                invited_members.append(email)
+                                # h.flash_success(email + ' has been invited as ' + role)
+                                log.info('{} was invited as a new user'.format(email))
+                    except tk.Invalid as e:
+                        h.flash_error(_('Invalid email address provided: ') + email)
 
-                    if new_members:
-                        h.flash_success(', '.join(new_members) + _(' were added to the organization.'))
+                if new_members:
+                    new_members_msg = _(' were added to the organization.') if len(new_members) != 1 else _(
+                        ' was added to the organization.')
+                    h.flash_success(', '.join(new_members) + new_members_msg)
 
-                    if invited_members:
-                        h.flash_success(', '.join(invited_members) +
-                                        _(' were invited to join the organization. An account was created for them.'))
+                if invited_members:
+                    invited_members_msg = _(
+                        ' were invited to join the organization. An account was created for them.') if len(
+                        invited_members) != 1 else _(
+                        ' was invited to join the organization. An account was created for her/him.')
+                    h.flash_success(', '.join(invited_members) + invited_members_msg)
 
-                    self.notify_admin_users(context, id, new_members, invited_members, role)
-
-                    h.flash_success(flash_message)
+                self.notify_admin_users(context, id, new_members, invited_members, role)
             else:
                 h.flash_error(_('''No user or role was specified'''))
             self._redirect_to(controller='group', action='members', id=id)
@@ -277,6 +273,21 @@ class HDXOrgMemberController(org.OrganizationController):
         except ValidationError, e:
             h.flash_error(e.error_summary)
         self._redirect_to(controller='group', action='members', id=id)
+
+    def _add_existing_user_as_member(self, context, org_id, role, user_info):
+        email = user_info.email
+        # Is user deleted?
+        if user_info.state == 'deleted':
+            h.flash_error(_('Following user no longer has an account on HDX: ') + email)
+            return False
+        log.info('{} already exists as a user'.format(email))
+        user_data_dict = {
+            'id': org_id,
+            'username': user_info.name,
+            'role': role
+        }
+        self._action('group_member_create')(context, user_data_dict)
+        return True
 
     def notify_admin_users(self, context, org_id, new_members, invited_memberes, role):
         org_obj = model.Group.get(org_id)

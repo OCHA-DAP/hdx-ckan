@@ -158,6 +158,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect(
             '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
 
+        map.connect('/organization/bulk_member_new/{id}',
+            controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+            action='bulk_member_new')
+
         map.connect('organization_activity', '/organization/activity/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='activity_stream'
