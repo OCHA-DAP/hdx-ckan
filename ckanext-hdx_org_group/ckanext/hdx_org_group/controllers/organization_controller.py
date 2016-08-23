@@ -36,19 +36,19 @@ get_action = logic.get_action
 
 response = common.response
 
-def is_not_custom(environ, result):
-    '''
-    check if location is a custom one and/or contains visual customizations
-    :param environ:
-    :param result:
-    :return:
-    '''
-    org_meta = org_meta_dao.OrgMetaDao(result['id'])
-    org_meta.fetch_org_dict()
-    result['org_meta'] = org_meta
-    if org_meta.is_custom:
-        return False
-    return True
+# def is_not_custom(environ, result):
+#     '''
+#     check if location is a custom one and/or contains visual customizations
+#     :param environ:
+#     :param result:
+#     :return:
+#     '''
+#     org_meta = org_meta_dao.OrgMetaDao(result['id'])
+#     org_meta.fetch_org_dict()
+#     result['org_meta'] = org_meta
+#     if org_meta.is_custom:
+#         return False
+#     return True
 
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
@@ -316,4 +316,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         c.group_activity_stream = self._action('group_activity_list_html')(
             context, {'id': c.group_dict['id'], 'offset': offset})
 
-        return render(self._activity_template('organization'))
+        if org_meta.is_custom:
+            return render(custom_org.CustomOrgController()._activity_template('organization'))
+        else:
+            return render(self._activity_template('organization'))
