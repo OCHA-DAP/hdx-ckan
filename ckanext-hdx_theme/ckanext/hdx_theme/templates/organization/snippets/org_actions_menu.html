@@ -4,6 +4,7 @@
 {% set title = "Test title" %}
 
 {% set base_type = 'group' %}
+{% set base_title = 'organisation' %}
 
 {% set pkg = organization %}
 {% set membership = c.org_meta.group_message_topics %}
@@ -14,7 +15,9 @@
 {% block user_actions %}
     {% if can_create_dataset %}
         <li>
-            {% link_for _('Add Dataset'), controller='package', action='new', organization_id=c.group_dict.id, class_='' %}
+            <a href="#" onclick="contributeAddDetails()">
+                {{_('Add Dataset')}}
+            </a>
         </li>
     {% endif %}
     {% if can_edit %}
@@ -24,7 +27,7 @@
     {% endif %}
     {% if request_membership %}
         <li>
-            <a href="#" class="btn hdx-btn org-btn" data-toggle="modal" data-target="#req-membership-div">
+            <a href="#" class="" data-toggle="modal" data-target="#req-membership-div">
                 {{ _("Request Membership") }}
             </a>
             {% snippet 'organization/snippets/req_membership_new.html',

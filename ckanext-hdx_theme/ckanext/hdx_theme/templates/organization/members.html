@@ -51,7 +51,7 @@
                         <div class="pull-right base-actions-menu">
                             <ul>
                                 <li>
-                                    <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular topics.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
+                                    <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '{{role_name}}s');showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular topics.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
                                         <i class="icon-megahorn"></i>
                                         Group message [?] to all {{ role_name }}s
                                     </a>
@@ -138,11 +138,11 @@
                             </div>
                         </div>
                     </div>
-                    {% if c.allow_approve %}
+                    {% if c.allow_approve and request_list | length > 0 %}
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="role-categ uppercase">
-                                    Pending approval [X]
+                                    Pending approval [{{request_list | length}}]
                                 </div>
                                 {% for request in c.request_list %}
                                 <div class="approval-request">

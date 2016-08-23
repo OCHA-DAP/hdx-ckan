@@ -11,7 +11,7 @@
 
 
 {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, pkg = pkg, membership_data=membership_data) }}
-{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, pkg = pkg, membership_data=membership_data) }}
+{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, pkg = pkg, membership_data=membership_data, base_title=base_title) }}
 {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
 
 <span class="{{ classes }}">
@@ -40,7 +40,7 @@
         {% endif %}
         {% if membership.display_group_message %}
             <li>
-                <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular '+ base_type +' including private '+ base_type +'.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
+                <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular '+ base_type +' including private '+ base_type +'.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
                     <i class="icon-megahorn"></i>
                     Group message
                 </a>

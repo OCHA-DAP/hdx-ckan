@@ -7,6 +7,7 @@
 {% set membership = c.membership %}
 
 {% set base_type = "dataset" %}
+{% set base_title = base_type %}
 
 {% block user_actions %}
     {% if h.check_access('package_update', {'id':pkg.id }) %}
