@@ -138,11 +138,11 @@
                             </div>
                         </div>
                     </div>
-                    {% if c.allow_approve and request_list | length > 0 %}
+                    {% if c.allow_approve and c.request_list | length > 0 %}
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="role-categ uppercase">
-                                    Pending approval [{{request_list | length}}]
+                                    Pending approval [{{c.request_list | length}}]
                                 </div>
                                 {% for request in c.request_list %}
                                 <div class="approval-request">
