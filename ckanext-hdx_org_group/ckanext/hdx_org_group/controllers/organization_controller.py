@@ -132,10 +132,12 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             c.group_dict['packages'] = c.count
             c.group_dict['type'] = 'organization'
 
-            allow_basic_user_info = self.check_access('hdx_basic_user_info')
-            allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
-            c.request_membership = allow_req_membership
-            c.request_membership_url = h.url_for('request_membership', org_id=org_info['id'])
+
+            # This was moved in OrgMetaDao
+            # allow_basic_user_info = self.check_access('hdx_basic_user_info')
+            # allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
+            # c.request_membership = allow_req_membership
+            # c.request_membership_url = h.url_for('request_membership', org_id=org_info['id'])
 
             if self._is_facet_only_request():
                 response.headers['Content-Type'] = CONTENT_TYPES['json']
