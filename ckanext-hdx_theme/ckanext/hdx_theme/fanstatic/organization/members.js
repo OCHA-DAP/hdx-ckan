@@ -9,12 +9,13 @@ $(document).ready(function(){
     var memberId = $(this).attr('data-member-id');
     $.ajax({
       method: "POST",
-      url: "/action/approve",
-      data: {
+      url: "/api/action/member_request_process",
+      data: JSON.stringify({
         "member": memberId,
         "role": role,
         "approve": true
-      },
+      }),
+      contentType: "application/json; charset=utf-8",
       dataType: "json"
     })
       .done(function(){
@@ -29,12 +30,13 @@ $(document).ready(function(){
   $(".approval-actions .action-decline").click(function(){
     var memberId = $(this).attr('data-member-id');
     $.ajax({
-      method: "POST",
-      url: "/action/decline",
-      data: {
+      type: "post",
+      url: "/api/action/member_request_process",
+      data: JSON.stringify({
         "member": memberId,
         "reject": true
-      },
+      }),
+      contentType: "application/json; charset=utf-8",
       dataType: "json"
     })
       .done(function(){
