@@ -10,6 +10,7 @@ import os
 import shlex
 import subprocess
 from datetime import datetime, timedelta
+from sqlalchemy import func
 
 import pylons.config as config
 import ckanext.hdx_crisis.dao.data_access as data_access
@@ -30,7 +31,7 @@ import ckan.lib.uploader as uploader
 import paste.deploy.converters as converters
 import ckan.lib.helpers as helpers
 import ckan.logic.action as core
-from ckan.common import _
+from ckan.common import _, c
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 
@@ -687,3 +688,36 @@ def notify_admins(data_dict):
         return False
     log.info("admin users where notified by email")
     return True
+
+
+def hdx_user_in_org_or_group(group_id, include_pending=False):
+    '''
+    Based on user_in_org_or_group() from ckan.lib.helpers.
+    Added a flag that includes "pending" requests in the check.
+    Useful for not showing the "request membership" option for a user that already has done the request.
+    :param group_id:
+    :type group_id: str
+    :param include_pending: if it should include the "pending" state in the check ( not just the "active") (optional)
+    :type include_pending: bool
+    :return: True if the user belongs to the group or org. Otherwise False
+    :rtype: bool
+    '''
+
+    # we need a user
+    if not c.userobj:
+        return False
+    # sysadmins can do anything
+    if c.userobj.sysadmin:
+        return True
+
+    checked_states = ['active']
+    if include_pending:
+        checked_states.append('pending')
+
+    query = model.Session.query(func.count(model.Member.id))    \
+        .filter(model.Member.state.in_(checked_states)) \
+        .filter(model.Member.table_name == 'user') \
+        .filter(model.Member.group_id == group_id) \
+        .filter(model.Member.table_id == c.userobj.id)
+    length = query.all()[0][0]
+    return  length != 0

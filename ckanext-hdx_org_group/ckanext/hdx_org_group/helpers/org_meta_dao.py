@@ -10,6 +10,7 @@ from ckan.common import c, _
 
 import ckanext.hdx_theme.helpers.less as less
 import ckanext.hdx_theme.helpers.helpers as helpers
+import ckanext.hdx_org_group.helpers.organization_helper as org_helpers
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_package.helpers.membership_data as membership_data
 
@@ -117,7 +118,8 @@ class OrgMetaDao(search_controller.HDXSearchController):
     def fetch_permissions(self):
         self._fetched_permissions = True
         self.allow_basic_user_info = self.__check_access('hdx_basic_user_info')
-        self.allow_req_membership = not ckan_helpers.user_in_org_or_group(self.org_dict['id']) and self.allow_basic_user_info
+        self.allow_req_membership = not org_helpers.hdx_user_in_org_or_group(self.org_dict['id'],
+                                                                             True) and self.allow_basic_user_info
 
         self.allow_edit = self.__check_access('organization_update', {'id': self.id})
         self.allow_add_dataset = self.__check_access('package_create',
