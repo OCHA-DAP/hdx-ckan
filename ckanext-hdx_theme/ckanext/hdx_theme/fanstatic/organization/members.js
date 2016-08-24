@@ -21,7 +21,7 @@ $(document).ready(function(){
       .done(function(){
         $(this).parents('.approval-actions').find('.approved-message .approved-role').text(role);
         $(this).parents('.approval-request').toggleClass('request-approved');
-      })
+      }.bind(this))
       .fail(function(){
         alert("Your request failed!")
       });
@@ -42,7 +42,7 @@ $(document).ready(function(){
       .done(function(){
         $(this).parents('.approval-actions').find('.approved-message').text("Membership request declined!");
         $(this).parents('.approval-request').toggleClass('request-approved');
-      })
+      }.bind(this))
       .fail(function(){
         alert("Your request failed!")
       });
