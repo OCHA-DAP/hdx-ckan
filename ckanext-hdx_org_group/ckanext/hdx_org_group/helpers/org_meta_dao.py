@@ -117,7 +117,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
     def fetch_permissions(self):
         self._fetched_permissions = True
         self.allow_basic_user_info = self.__check_access('hdx_basic_user_info')
-        self.allow_req_membership = not ckan_helpers.user_in_org_or_group(self.id) and self.allow_basic_user_info
+        self.allow_req_membership = not ckan_helpers.user_in_org_or_group(self.org_dict['id']) and self.allow_basic_user_info
 
         self.allow_edit = self.__check_access('organization_update', {'id': self.id})
         self.allow_add_dataset = self.__check_access('package_create',
