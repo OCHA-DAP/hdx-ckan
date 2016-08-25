@@ -161,7 +161,7 @@
                                                         <ul class="dropdown-menu action-approve" role="menu">
                                                             {% for role_categ in roles %}
                                                                 <li>
-                                                                    <a href="#" data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
+                                                                    <a data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
                                                                 </li>
                                                             {% endfor %}
                                                         </ul>
