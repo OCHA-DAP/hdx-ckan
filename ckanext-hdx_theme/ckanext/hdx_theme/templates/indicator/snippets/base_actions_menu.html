@@ -1,0 +1,70 @@
+{% set url = request.url %}
+
+{% set panel_title = panel_title or "panel title" %}
+{% set title = title or "title" %}
+{% set contact_topics = contact_topics or {} %}
+{% set group_topics = group_topics or {} %}
+{% set hide_contact_contributor = hide_contact_contributor or false%}
+{% set membership_data = membership.data %}
+
+
+
+
+{{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, pkg = pkg, membership_data=membership_data) }}
+{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, pkg = pkg, membership_data=membership_data, base_title=base_title) }}
+{{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
+
+<span class="{{ classes }}">
+    <ul class="">
+        {% if c.user %}
+            <li>
+                <strong class="uppercase">{{ h.hdx_follow_link(base_type, pkg.id, "", "link-separator") }}</strong>
+            </li>
+            {% if not hide_contact_contributor%}
+                <li>
+                    <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
+                        <i class="icon-envelope"></i>
+                        Contact the contributor
+                    </a>
+                </li>
+            {% endif %}
+        {% else %}
+            {% if not hide_contact_contributor%}
+                <li>
+                    <a href="/contact_hdx" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
+                        <i class="icon-envelope"></i>
+                        Contact the contributor
+                    </a>
+                </li>
+            {% endif %}
+        {% endif %}
+        {% if membership.display_group_message %}
+            <li>
+                <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular '+ base_type +' including private '+ base_type +'.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
+                    <i class="icon-megahorn"></i>
+                    Group message
+                </a>
+            </li>
+        {% endif %}
+
+        {% block user_actions %}
+        {% endblock %}
+
+        <li>
+            <span>
+                {% snippet 'indicator/snippets/share_button.html', title=title, panel_title=panel_title,
+                    plain_body=pkg.social_mail_body, direct=true, disable_pull_left=true, icon_font_size="24px" %}
+            </span>
+        </li>
+    </ul>
+
+
+  {# h.follow_button('dataset', pkg.name) #}
+
+  {#
+  <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+          data-toggle="tooltip">Analyse</a>
+  <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
+          data-toggle="tooltip"><i class="glyphicon glyphicon-wrench"></i></a>
+  #}
+</span>

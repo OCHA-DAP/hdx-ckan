@@ -202,6 +202,7 @@ def _create_user_dict(user_obj, **kw):
               'created': user_obj.created,
               'name': user_obj.name,
               'email': user_obj.email,
+              'email_hash': user_obj.email_hash,
               'id': user_obj.id}
     result.update(kw)
     return result

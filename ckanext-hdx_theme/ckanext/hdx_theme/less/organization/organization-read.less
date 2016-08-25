@@ -1,0 +1,272 @@
+@import "../base/variables";
+@import "../base/mixins";
+
+.list-items.facet-items:last-child {
+   	border-bottom: 0px;
+}
+
+dt.uppercase {
+    color: @grayColor;
+    .gothamBoldFont(12px);
+}
+
+.member-item{
+    position: relative;
+}
+
+.member-actions {
+	position: absolute;
+	top: 20px;
+	right: 14px;
+	display: inline-block;
+    /*font-size: 0;*/
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Org member search customization */
+.page_primary_action .list-items.search-form {
+  margin: 0;
+}
+
+/* Customizations of modal popups */
+.hdx-modal {
+
+    &.modal-content {
+        background-color: #eee;
+        color: #000;
+        top: 30%;
+    }
+
+    .modal-header {
+        border: 0 none;
+    }
+
+    .modal-footer {
+        box-shadow: 0 1px 0 #ffffff inset;
+    }
+
+
+    .control-label {
+        margin-left: 10px;
+        margin-right: 15px;
+        text-align: left;
+        width: 50px;
+
+        float: left;
+        font-size: 16px;
+    }
+
+    .controls {
+        margin-left: 80px;
+        margin-right: 10px;
+    }
+
+
+    .control-group {
+        margin-top: 10px;
+    }
+
+    .control-medium .controls input {
+        border: 1px solid @lightGrayColor;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+        transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+        padding: 5px;
+        padding-left: 10px;
+        font-size: 16px;
+
+        &[disabled]{
+            background-color: @extraLightGrayColor;
+            cursor: not-allowed;
+        }
+    }
+
+    &.hdx-has-tabs{
+        .modal-body {
+            padding-top: 0px;
+        }
+
+        .tab-content {
+            padding-top: 15px;
+        }
+    }
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus {
+        background-color: inherit;
+    }
+}
+
+.js .hdx-modal .tab-content {
+    display: block;
+}
+/*END - Customizations of modal popups */
+
+.hdx-btn.main-hdx-btn.hdx-btn.add-member{
+    margin-bottom: 10px;
+}
+
+.primary .page_primary_action {
+    margin-left: 40px;
+}
+
+.btn.hdx-btn.main-hdx-btn {
+    margin-left: 10px;
+    padding: 4px 12px;
+}
+
+.list-items.dataset-item {
+    margin: 0;
+}
+
+.btn.dropdown-toggle-org .caret{
+  margin-top: 5px;
+  margin-left: 5px;
+  border-top-color: #888888;
+}
+
+/* Order dropdown on org member pages */
+.dropdown.orderDropdown .dropdown-menu {
+    right: 0;
+    left: auto;
+}
+/* END - Order dropdown on org member pages */
+
+/* Override for members table on 8 columns*/
+.col-xs-8 > .list-items > .list-header {
+    margin-top: 0;
+
+    .header-search {
+        width: 320px;
+    }
+}
+/* end override*/
+
+
+@membersSectionPadding: 30px;
+.role-categ {
+    .gothamBoldFont(12px);
+    color: @grayColor;
+
+    margin-top: @membersSectionPadding;
+    padding-bottom: 5px;
+
+    border-bottom: 1px solid @lightGrayColor;
+}
+
+.current-role {
+    background-color: @darkGrayColor;
+    color: @whiteColor;
+    padding: 5px 10px;
+}
+
+.invite-box {
+    background-color: @extraLightBlueColor;
+    padding: @membersSectionPadding;
+
+
+    textarea {
+        width: 100%;
+        height: 100px;
+        border: none;
+    }
+
+    p {
+        color: @blackColor;
+        margin: 10px 0;
+    }
+}
+
+@membersRightSideSectionPadding: 20px;
+.current-user {
+    margin: @membersRightSideSectionPadding;
+    margin-bottom: 0;
+
+    @userProfileImageSize: 70px;
+    position: relative;
+
+    .image{
+        height: @userProfileImageSize;
+        position: absolute;
+    }
+    .user-details {
+        margin-left: @userProfileImageSize + @membersRightSideSectionPadding;
+
+    }
+}
+
+
+.approval-request {
+    padding: @membersRightSideSectionPadding;
+    @approvalRequestImageSize: 20px;
+    position: relative;
+
+    background-color: @extraLightBeigeColor;
+
+    border-bottom: 1px solid @lightGrayColor;
+
+    transition-property: background;
+    transition-duration: 1s;
+    transition-timing-function: linear;
+
+    &.request-approved{
+        background-color: @whiteColor;
+
+        .user-details{
+            .approval-actions {
+                button{
+                    opacity: 0;
+                }
+                .approved-message {
+                    top: 0;
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .image{
+        height: @approvalRequestImageSize;
+        position: absolute;
+    }
+    .user-details {
+        margin-left: @approvalRequestImageSize + @membersRightSideSectionPadding;
+
+        .btn-primary {
+            .caret {
+                border-top-color: @whiteColor;
+                vertical-align: middle;
+                margin-left: 10px;
+            }
+        }
+
+        .approval-actions{
+            margin-top: 5px;
+            position: relative;
+
+            button {
+                opacity: 1;
+                transition-property: opacity;
+                transition-duration: .5s;
+                transition-timing-function: linear;
+                z-index: 10;
+                position: relative;
+            }
+
+            .approved-message {
+                opacity: 0;
+                position: relative;
+                z-index: 9;
+                color: @lightGrayColor;
+                line-height: 31px;
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                transition-property: opacity;
+                transition-duration: .5s;
+                transition-delay: .5s;
+                transition-timing-function: linear;
+            }
+        }
+    }
+}

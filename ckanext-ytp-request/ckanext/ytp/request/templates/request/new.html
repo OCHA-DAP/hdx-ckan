@@ -1,0 +1,26 @@
+{% extends "request/page.html" %}
+
+{% block actions_content %}
+{% endblock %}
+
+{% block subtitle %}{{ _('New membership request') }}{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1>{% trans %}Request organization membership{% endtrans %}</h1>
+      {% block form %}{{ c.form | safe }}{% endblock %}
+    </div>
+  </section>
+{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow">
+    <h2 class="module-heading"><i class="icon-large icon-info-sign"></i> {{ _('Request organization membership') }}</h2>
+    <div class="module-content">
+      <p>
+        {% trans %}You can request to be a member of the organization.{% endtrans %}
+      </p>
+    </div>
+  </section>
+{% endblock %}

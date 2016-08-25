@@ -1,0 +1,77 @@
+{# This snippet is still used in normal (old-style) org pages #}
+{% import 'macros/form.html' as form %}
+
+{% set placeholder = placeholder if placeholder else _('Search...') %}
+{% set sorting = sorting if sorting else [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
+{% set search_class = search_class if search_class else 'search-giant' %}
+{% set is_display_search_input = display_search_input if display_search_input==False else True %}
+{% set is_dataset = ('dataset' == type) %}
+
+{% resource 'hdx_theme/organization/organizations.js' %}
+
+<form class="list-items search-form" method="get" data-module="select-switch">
+    <div class="list-header crisis-list-header">
+        <span class="mL15 list-header-title">{{ type | capitalize }} [{{count}}]</span>
+
+        {% if is_display_search_input %}
+        {% block search_input %}
+          <span class="mL30">
+              {% set searchValue = request.params.get('q') if request.params.get('q') else query %}
+              <input id="headerSearch" class="header-search search" type="text" name="q" placeholder="Search {{type}} ..." value="{{searchValue}}">
+          </span>
+        {% endblock %}
+        {% endif %}
+
+        {% set sorting = sorting or [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
+        {% set sort_param = request.params.get('sort') %}
+        {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+        <div class="form-select control-group control-order-by pull-right">
+            <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
+            <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
+                <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
+                    <span class="dropdown-toggle-text">
+                    {% for label, value in sorting %}
+                    {% if sorting_selected == value %} {{ label }} {% endif %}
+                    {% endfor %}
+                    </span>
+                    <b class="caret" style="vertical-align: baseline;"></b>
+                </button>
+                <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+                    {% for label, value in sorting %}
+                        {% if label and value %}
+                            <li><a tabindex="-1" val="{{ value }}">{{ label }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% if is_display_limit %}
+          <span class="mL15 list-header-showall pull-right mR45">
+              {% set limits = [25, 50, 100] %}
+              {% set limit_param = request.params.get('limit') %}
+              {% set limit_selected = limit_param if limit_param else 25 %}
+
+              Show
+              {% for value in limits %}
+                  {% if limit_selected|int == value %}
+                      <span>{{ value }}</span>
+                  {% else %}
+                      <span><a href="#">{{value}}</a></span>
+                  {% endif %}
+              {% endfor %}
+          </span>
+        {% endif %}
+    </div>
+</form>
+
+{% if show_empty and count == 0 %}
+  {% trans %}
+    <p class="extra">Please try another search.</p>
+  {% endtrans %}
+{% endif %}
+
+{% if error %}
+  {% trans %}
+    <p><strong>There was an error while searching.</strong> Please try again.</p>
+  {% endtrans %}
+{% endif %}

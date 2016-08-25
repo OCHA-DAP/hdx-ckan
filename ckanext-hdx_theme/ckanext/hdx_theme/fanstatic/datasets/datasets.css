@@ -46,10 +46,10 @@
   left: 30%;
   width: 350px;
   height: 190px;
-  background: #ffffff;
+  background: #fff;
 }
 #hdx-dataset .modal-header {
-  background: #007ce0;
+  background: #007CE0;
   color: #fff;
   height: 60px;
 }
@@ -57,5 +57,5 @@
   margin-top: 0px;
 }
 .info-wrapper .empty .info-item-name {
-  color: #007ce0;
+  color: #007CE0;
 }

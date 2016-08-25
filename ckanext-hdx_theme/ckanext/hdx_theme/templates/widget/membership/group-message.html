@@ -8,7 +8,6 @@ Example:
     {{ h.snippet('widget/membership/group-message.html',
             id="contactContributorPopup",
             title="Dataset title",
-            org="Org Name",
             groups={'1':'Dataset problem'}
        )
     }}
@@ -25,11 +24,9 @@ Example:
         <div class="large-title">{{ _("Group Message") }}</div>
         <div class="mTop20 large-text">
             {{ _("Use group message to communicate and collaborate with other members of your organisation. ") }}
-            <!--<strong>{{org}}</strong>-->
         </div>
         <div class="mTop20 regular-text">
             {{ _("This feature is available for datasets shared publicly or privately by your organisation. It is not visible to anyone outside of your organisation.") }}<br/>
-            <!--{{ _("Your message may be monitored by the HDX team for internal use such as improving your user experience and the overall quality of our services.") }}-->
         </div>
     </div>
 {% endblock %}
@@ -40,8 +37,7 @@ Example:
             <div class="row" style="overflow-y: auto; height: 400px;">
                 <div class="col-xs-12">
                     <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">
-                        [Dataset] {{ title | truncate(65) }}
-                        <input type="hidden" name="pkg_title" value="{{pkg.title}}">
+                        [{{base_title | upper}}] {{ title | truncate(65) }}
                         <input type="hidden" name="pkg_title" value="{{pkg.title}}">
                         <input type="hidden" name="pkg_owner_org" value="{{pkg.owner_org}}">
                         <input type="hidden" name="pkg_id" value="{{pkg.name or pkg.id}}">

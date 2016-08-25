@@ -3,7 +3,7 @@
 Example:
 
   {% snippet 'snippets/widgets/req_membership_new.html' modal_div_id='req-membership-div', modal_div_class='your_class',
-                form_action = url %}
+                form_action = url, org_id = org_id %}
 
 #}
 
@@ -22,5 +22,8 @@ Example:
         <label for="req-membership-text" class="control-label">{{ _('Message') }}</label>
         <textarea class="form-control" name="message"
                   id="req-membership-text" placeholder="{{ _('Please add me to this organisation') }}..."></textarea>
+        <input type="hidden" name="role" value="member" />
+        <input type="hidden" name="organization" value="{{ org_id }}" />
+        <input type="hidden" name="save" value="save" />
     </div>
 {% endblock %}

@@ -17,6 +17,7 @@ from ckan.common import c, request, _
 import ckan.lib.helpers as h
 
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
@@ -34,6 +35,20 @@ parse_params = logic.parse_params
 get_action = logic.get_action
 
 response = common.response
+
+# def is_not_custom(environ, result):
+#     '''
+#     check if location is a custom one and/or contains visual customizations
+#     :param environ:
+#     :param result:
+#     :return:
+#     '''
+#     org_meta = org_meta_dao.OrgMetaDao(result['id'])
+#     org_meta.fetch_org_dict()
+#     result['org_meta'] = org_meta
+#     if org_meta.is_custom:
+#         return False
+#     return True
 
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
@@ -96,33 +111,19 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if group_type != self.group_type:
             abort(404, _('Incorrect group type'))
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'schema': self._db_to_form_schema(group_type=group_type),
-                   'for_view': True}
-        data_dict = {
-            'id': id,
-            'include_datasets': False  # This is needed in case we use group_show() instead of hdx_light_group_show()
-        }
-
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', '')
 
-        try:
-            # Do not query for the group datasets when dictizing, as they will
-            # be ignored and get requested on the controller anyway
-            context['include_datasets'] = False
-            c.group_dict = self._action('hdx_light_group_show')(context, data_dict)
-            # c.group = context['group']
-        except NotFound:
-            abort(404, _('Group not found'))
-        except NotAuthorized:
-            abort(401, _('Unauthorized to read group %s') % id)
+        c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id)
+        org_meta.fetch_all()
+
+        c.group_dict = org_meta.org_dict
+
 
         # If custom_org set to true, redirect to the correct route
-        if self.custom_org_test(c.group_dict['extras']):
-            Org = custom_org.CustomOrgController()
-            return Org.org_read(id)
+        if org_meta.is_custom:
+            custom_org_controller = custom_org.CustomOrgController()
+            return custom_org_controller.org_read(id, org_meta)
         else:
             org_info = self._get_org(id)
             c.full_facet_info = self._get_dataset_search_results(org_info['name'])
@@ -131,10 +132,12 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             c.group_dict['packages'] = c.count
             c.group_dict['type'] = 'organization'
 
-            allow_basic_user_info = self.check_access('hdx_basic_user_info')
-            allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
-            c.request_membership = allow_req_membership
-            c.request_membership_url = h.url_for('request_membership', org_id=org_info['id'])
+
+            # This was moved in OrgMetaDao
+            # allow_basic_user_info = self.check_access('hdx_basic_user_info')
+            # allow_req_membership = not h.user_in_org_or_group(org_info['id']) and allow_basic_user_info
+            # c.request_membership = allow_req_membership
+            # c.request_membership_url = h.url_for('request_membership', org_id=org_info['id'])
 
             if self._is_facet_only_request():
                 response.headers['Content-Type'] = CONTENT_TYPES['json']
@@ -198,11 +201,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         c.other_links['current_page_url'] = h.url_for('organization_read', id=org_code)
 
         return full_facet_info
-
-    def custom_org_test(self, org):
-        if [o.get('value', None) for o in org if o.get('key', '') == 'custom_org']:
-            return True
-        return False
 
     def new(self, data=None, errors=None, error_summary=None):
         group_type = self._guess_group_type(True)
@@ -289,3 +287,38 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             result = False
 
         return result
+
+    def activity_stream(self, id, org_meta=None, offset=0):
+        '''
+         Modified core functionality to use the new OrgMetaDao class
+        for fetching information needed on all org-related pages.
+
+        Render this group's public activity stream page.
+
+        :param id:
+        :type id: str
+        :param offset:
+        :type offset: int
+        :param org_meta:
+        :type org_meta: org_meta_dao.OrgMetaDao
+        :return:
+        '''
+        if not org_meta:
+            org_meta = org_meta_dao.OrgMetaDao(id)
+        c.org_meta = org_meta
+        org_meta.fetch_all()
+
+        c.group_dict = org_meta.org_dict
+
+
+        # Add the group's activity stream (already rendered to HTML) to the
+        # template context for the group/read.html template to retrieve later.
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True}
+        c.group_activity_stream = self._action('group_activity_list_html')(
+            context, {'id': c.group_dict['id'], 'offset': offset})
+
+        if org_meta.is_custom:
+            return render(custom_org.CustomOrgController()._activity_template('organization'))
+        else:
+            return render(self._activity_template('organization'))

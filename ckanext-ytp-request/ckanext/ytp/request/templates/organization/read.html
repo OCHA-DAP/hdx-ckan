@@ -1,0 +1,47 @@
+{% ckan_extends %}
+
+{% block page_primary_action %}
+  <!-- Begin Add Dataset split button -->
+  {% if h.check_access('package_create', {'owner_org': c.group_dict.id}) %}
+    {% resource 'ytp_common_js/ytp_form.js' %}
+    <div class="btn-group">
+      {% link_for _('Add Dataset'), controller='package', action='new', class_='btn btn-primary', icon='plus-sign' %}
+      <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+        <li>
+          <a href="{{ h.url_for(controller='package', action='new', collection_type='Open Data', group=c.group_dict.id) }}">{{ _('Add open data') }}</a>
+        </li>
+        <li>
+          <a href="{{ h.url_for(controller='package', action='new', collection_type='Interoperability Tools', group=c.group_dict.id) }}">{{ _('Add interoperability tools')}}</a>
+        </li>
+        <li>
+          {% if h.check_access('can_create_service') and h.service_database_enabled() %}
+            <a href="{{ h.url_for('service_new') }}">{{ _('Add public service')}} (beta)</a>
+          {% endif %}
+        </li>
+      </ul>
+    </div>
+  {% endif %}
+  <!-- End Add Dataset split button -->
+
+  {% if h.check_access('member_request_create', {'organization_id': c.group_dict.id}) %}
+      <a class="btn btn-primary" href="{{ h.url_for('member_request_new', selected_organization=c.group_dict.name) }}">
+          <i class="icon-circle-arrow-right"></i>
+          {% trans %}Request membership{% endtrans %}
+      </a>
+  {% elif h.check_access('member_request_membership_cancel', {'organization_id': c.group_dict.id}) %}
+      {% set locale = h.dump_json({'content': _('Are you sure you want to end the membership?')}) %}
+      <a class="btn btn-danger" href="{{ h.url_for('member_request_membership_cancel', organization_id=c.group_dict.id) }}" data-module="confirm-action" data-module-i18n="{{ locale }}">
+          <i class="icon-circle-arrow-right"></i>
+          {% trans %}Cancel membership{% endtrans %}
+      </a>
+  {% elif h.check_access('member_request_cancel', {'organization_id': c.group_dict.id}) %}
+      <a class="btn btn-primary" href="{{ h.url_for('member_request_show_organization', organization_id=c.group_dict.id) }}">
+          <i class="icon-circle-arrow-right"></i>
+          {% trans %}Cancel request{% endtrans %}
+      </a>
+  {% endif %}
+{% endblock %}

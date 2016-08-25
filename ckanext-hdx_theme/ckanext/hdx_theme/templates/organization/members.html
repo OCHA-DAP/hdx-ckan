@@ -1,12 +1,16 @@
-{% extends "organization/read_base.html" %}
+{% extends "organization/read.html" %}
 
 {# The line below is for google analytics #}
 {% block analytics_org_name %}{{ c.group_dict.name }}{% endblock %}
 {% block analytics_org_id %}{{ c.group_dict.id }}{% endblock %}
 
+{% set is_sys_admin = c.userobj.sysadmin %}
+
 
 {% set roles=h.hdx_member_roles_list() %}
-{% set authorized = h.check_access('organization_update', {'id': c.group_dict.id}) %}
+{% set authorized = c.allow_approve%}
+{% set is_single_admin = (c.member_groups['admin'] | length) == 1 %}
+{% set current_member = c.current_user %}
 
 {% block breadcrumb_content %}
   <li>{% link_for _('Organisations'), controller='organization', action='index' %}</li>
@@ -14,66 +18,220 @@
   <li class="active">{% link_for _('Members'), controller='organization', action='members', id=c.group_dict.name %}</li>
 {% endblock %}
 
-{% block page_header %}{% endblock %}
-
 {% block subtitle %}{{ _('Members') }} - {{ c.group_dict.display_name }}{% endblock %}
 
 {% block page_primary_action %}
-	{% if authorized %}
-		{% resource 'hdx_theme/trigger_click_hash.js' %}
-		{# link_for _('+ Add Member'), controller='organization', action='member_new', id=c.group_dict.id, class_='btn hdx-btn main-hdx-btn' #}
-		<a data-module="trigger_click_hash" data-module-expected_hash="#add-member"
-	  		href="#add-member-div" data-toggle="modal" class="btn hdx-btn main-hdx-btn add-member">{{ _('+ Add Member') }}</a>
-		{% snippet 'organization/snippets/add_member.html', form_url=h.url_for(controller='organization', action='member_new', id=c.group_dict.id), roles=roles, modal_div_id='add-member-div', authorized=authorized %}
-  	{% endif %}
-  	{% set selected_sorting = c.sort_by_selected or 'title asc' %}
-  	{% snippet 'snippets/search_form.html', type='member', query=c.q, sorting=sorting, sorting_selected=selected_sorting, count=c.members|length, placeholder=search_text, show_empty=request.params %}
 {% endblock %}
 
 {% block primary_content_inner %}
-<ul class="list-items dataset-list unstyled">
-{% for user_id, user, translated_role, role in c.members %}
-	 {% snippet 'organization/snippets/member_item.html', id=user_id,
-	 	translated_role= translated_role, role=role, roles=roles, group_id=c.group_dict.id, authorized=authorized %}
-{% endfor %}
-</ul>
-{# #483 - template is rewritten
-  <h3 class="page-heading">{{ _('{0} members'.format(c.members|length)) }}</h3>
-  <table class="table table-header table-hover table-bordered">
-    <col width="70" />
-    <col width="40" />
-    <col width="20" />
-    <thead>
-      <tr>
-        <th scope="col">{{ _('User') }}</th>
-        <th scope="col">{{ _('Role') }}</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for user_id, user, role in c.members %}
-      <tr>
-        <td class="media">
-          {{ h.linked_user(user_id, maxlength=20) }}
-        </td>
-        <td>{{ role }}</td>
-        <td>
-          {% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
-          <div class="btn-group pull-right">
-            <a class="btn btn-small" href="{% url_for controller='organization', action='member_new', id=c.group_dict.id, user=user_id %}" title="{{ _('Edit') }}">
-              <i class="glyphicon glyphicon-wrench"></i>
-            </a>
-            <a class="btn btn-danger btn-small" href="{% url_for controller='organization', action='member_delete', id=c.group_dict.id, user=user_id %}" data-module="confirm-action" data-module-i18n="{{ locale }}" title="{{ _('Delete') }}">{% block delete_button_text %}<i class="glyphicon glyphicon-remove"></i>{% endblock %}</a>
-          </div>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
- #}
+	{% block package_notes %}
+    {% endblock %}
+    {% block groups_search_form %}
+	{% endblock %}
+
+	{% block packages_list %}
+        <div class="row">
+            <div class="{% if c.allow_view_right_side %} col-xs-8 {% else %} col-xs-12 {% endif %}">
+
+                {% set selected_sorting = c.sort_by_selected or 'title asc' %}
+                {% snippet 'snippets/search_form_new.html', type='members', query=c.q, sorting=sorting, sorting_selected=selected_sorting, count=c.members|length, placeholder=search_text, show_empty=request.params %}
+
+                {% for role_name, member_list in c.member_groups.items() %}
+                    <div class="role-categ">
+                        <span class="uppercase">
+                            {{ role_name }}s [{{member_list | length}}]
+                        </span>
+                        {% if c.org_meta.group_message_info.display_group_message %}
+                        <div class="pull-right base-actions-menu">
+                            <ul>
+                                <li>
+                                    <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '{{role_name}}s');showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular topics.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
+                                        <i class="icon-megahorn"></i>
+                                        Group message [?] to all {{ role_name }}s
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <ul class="search-list list-items dataset-list unstyled" style="padding: 0;">
+                        {% for user_id, user, translated_role, role, user_name in member_list %}
+                             {% snippet 'organization/snippets/member_item.html', id=user_id,
+                                translated_role= translated_role, role=role, roles=roles, group_id=c.group_dict.id, authorized=authorized, is_single_admin=is_single_admin %}
+                        {% endfor %}
+                    </ul>
+
+                {% endfor %}
+            </div>
+            {% if c.allow_view_right_side %}
+                <div class="col-xs-4">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="role-categ uppercase no-margin">
+                                Your role for this organisation:
+                                <span class="current-role"> {{ current_member.role }} </span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="current-user">
+                                <div class="image">{{ h.linked_gravatar(current_member.email_hash, 70) }}</div>
+                                <div class="user-details search-list">
+                                    <div class="dataset-item">
+                                        <div class="dataset-heading">
+                                            <span>
+                                                <a href="{{ h.url_for(controller='user', action='read', id=current_member.name) }}">{{ current_member.display_name }}</a>
+                                                |
+                                                <a href="{{ h.url_for(controller='user', action='read', id=current_member.name) }}">{{ current_member.name }}</a>
+                                            </span>
+                                        </div>
+                                        <div class="dataset-updated">
+                                            <div class="updatedNameColor">
+                                                Your role: {{ current_member.role }}
+                                            </div>
+                                        </div>
+                                        <div class="dataset-updated">
+                                            <div class="updatedNameColor">
+                                                <span class="less-visible mx-member-role">{{ _('Registered') }} {{ h.render_datetime(current_member.created) }} </span>
+                                            </div>
+                                            <div class="list-items counter">
+                                                <span class="count"> {{ h.hdx_show_singular_plural(current_member.ds_num, _('Dataset'), _('Datasets')) }}</span>
+                                                -
+                                                <span class="count"> {{ h.hdx_show_singular_plural(current_member.org_num, _('Organisation'), _('Organisations')) }}</span>
+                                                -
+                                                <span class="count"> {{ h.hdx_show_singular_plural(current_member.grp_num, _('Countries'),  _('Countries')) }}</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            {% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
+                                            <div class="">
+                                                <a class="" href="#edit-member-div-{{current_member.name}}" data-toggle="modal"
+                                                   title="{{ _('Change role') }}">
+                                                    {{ _('Edit profile') }}
+                                                </a>
+                                                {% if current_member.role %}
+                                                    <span class="mLR10">|</span>
+                                                    {% if not (current_member.role == 'admin' and is_single_admin) %}
+                                                        <a class=""
+                                                           href="#confirm-del-member-div-{{current_member.name}}"
+                                                           data-toggle="modal" title="{{ _('Leave this organization') }}">
+                                                            {% block delete_button_text %}{{ _('Leave this organization') }}{% endblock %}
+                                                        </a>
+                                                    {% else %}
+                                                        <small>Please add another admin to be able to leave the organisation</small>
+                                                    {% endif %}
+                                                {% endif %}
+
+                                                {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
+                                                {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
+                                                action='member_delete', id=group_id, user=id),
+                                                body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+current_member.name %}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% if c.allow_approve and c.request_list | length > 0 %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="role-categ uppercase">
+                                    Pending approval [{{c.request_list | length}}]
+                                </div>
+                                {% for request in c.request_list %}
+                                <div class="approval-request">
+                                    <div class="image">{{ h.linked_gravatar(request.email_hash, 20) }}</div>
+                                    <div class="user-details search-list">
+                                        <div class="dataset-item">
+                                            <div class="dataset-heading">
+                                                    <span>
+                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.name) }}">{{ request.user_display_name }}</a>
+                                                        |
+                                                        <a href="{{ h.url_for(controller='user', action='read', id=request.name) }}">{{ request.user_name }}</a>
+                                                    </span>
+                                            </div>
+                                            <div class="dataset-updated">
+                                                <div class="updatedNameColor">
+                                                    <span class="less-visible mx-member-role">{{ _('Requested') }} {{ h.render_datetime(request.revision_last_updated) }} </span>
+                                                </div>
+                                            </div>
+                                            <div class="approval-actions">
+                                                    <span class="dropdown">
+                                                        <button class="btn hdx-btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">{{_("Approve")}} <span class="caret"></span></button>
+                                                        <button class="btn hdx-btn btn-secondary action-decline"  data-member-id="{{request.id}}">{{_("Decline")}}</button>
+                                                        <ul class="dropdown-menu action-approve" role="menu">
+                                                            {% for role_categ in roles %}
+                                                                <li>
+                                                                    <a data-role="{{role_categ.value}}" data-member-id="{{request.id}}">{{ role_categ.text }}</a>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    </span>
+
+
+                                                <div class="approved-message">
+                                                    User has been approved as <span class="approved-role">ROLE</span>.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if c.allow_approve %}
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <form class="hdx-form" action="/organization/bulk_member_new/{{c.group_dict.id}}">
+                                    <div class="role-categ uppercase">
+                                        Add / invite colleagues to this organisation
+                                    </div>
+                                    <div class="invite-box">
+                                        <textarea name="emails" placeholder="Enter email(s) of whom you'd like to add to this organisation. Multiple email addresses can be entered if separated by comma ',' "></textarea>
+                                        <p>
+                                            <strong>If you add user who is already registered on HDX</strong> - user will be added to your organisation after approval by your org admin.
+                                            <strong>If you invite member new to HDX</strong> - we will send an invite on your behalf to register on HDX. After signup, org admin will receive the request to join your organisation.
+                                        </p>
+
+
+                                        {% if c.allow_approve %}
+                                            <div class="mBottom20">
+                                                <select name="role" data-placeholder="Select a role" data-allow-clear="true">
+                                                    <option></option> <!-- needed by select 2 to show placeholder :) -->
+                                                    {% for role_categ in roles %}
+                                                        <option value="{{role_categ.value}}">{{role_categ.text}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        {% endif %}
+                                        <div class="mTop20" style="text-align: right;">
+                                            <button type="submit" class="btn hdx-btn btn-primary">Submit</button>
+                                        </div>
+
+                                    </div>
+                                </form>
+
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endblock %}
+    {% block page_pagination %}
+    {% endblock %}
 {% endblock %}
 
 {% block scripts2 %}
+  {{ super() }}
   {% resource 'hdx_theme/organization/members.js' %}
   {% resource 'hdx_theme/search' %}
+{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+	{% resource 'hdx_theme/dashboard.css' %}
+	{% resource 'hdx_theme/hdx_dashboard.js' %}
 {% endblock %}
