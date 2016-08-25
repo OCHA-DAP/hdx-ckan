@@ -33,7 +33,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.customization = None
         self.custom_rect_logo_url = None
         self.custom_sq_logo_url = None
-        self.group_message_topics = {}
+        self.group_message_info = {}
 
         self.allow_basic_user_info = False
         self.allow_req_membership = False
@@ -140,7 +140,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
 
     def fetch_group_message_topics(self):
         group_message_topics = membership_data.get_message_groups(c.user or c.author, self.id)
-        self.group_message_topics = {
+        self.group_message_info = {
             'display_group_message': bool(group_message_topics),
             'data': {
                 'group_topics': group_message_topics,

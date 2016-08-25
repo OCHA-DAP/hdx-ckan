@@ -41,6 +41,7 @@
                         <span class="uppercase">
                             {{ role_name }}s [{{member_list | length}}]
                         </span>
+                        {% if c.org_meta.group_message_info.display_group_message %}
                         <div class="pull-right base-actions-menu">
                             <ul>
                                 <li>
@@ -51,6 +52,7 @@
                                 </li>
                             </ul>
                         </div>
+                        {% endif %}
                     </div>
                     <ul class="search-list list-items dataset-list unstyled" style="padding: 0;">
                         {% for user_id, user, translated_role, role, user_name in member_list %}
