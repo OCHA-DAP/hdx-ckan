@@ -142,7 +142,12 @@ class OrgMetaDao(search_controller.HDXSearchController):
         group_message_topics = membership_data.get_message_groups(c.user or c.author, self.id)
         self.group_message_topics = {
             'display_group_message': bool(group_message_topics),
-            'data': group_message_topics,
+            'data': {
+                'group_topics': group_message_topics,
+                'fullname': c.userobj.display_name if c.userobj else '',
+                'email': c.userobj.email if c.userobj else ''
+
+            }
         }
 
 
