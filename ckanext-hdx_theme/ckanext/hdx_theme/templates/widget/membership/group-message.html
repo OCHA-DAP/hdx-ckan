@@ -38,9 +38,10 @@ Example:
                 <div class="col-xs-12">
                     <div class="bold-regular-text" title="{{ title }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">
                         [{{base_title | upper}}] {{ title | truncate(65) }}
-                        <input type="hidden" name="pkg_title" value="{{pkg.title}}">
-                        <input type="hidden" name="pkg_owner_org" value="{{pkg.owner_org}}">
-                        <input type="hidden" name="pkg_id" value="{{pkg.name or pkg.id}}">
+                        <input type="hidden" name="source_type" value="{{base_type}}">
+                        <input type="hidden" name="title" value="{{title}}">
+                        <input type="hidden" name="org_id" value="{{org_id}}">
+                        <input type="hidden" name="pkg_id" value="{{pkg_id}}">
                     </div>
                     <select class="required mTop15" id="group-message-topics-selector" name="topic">
                         <option id="" value="">{{ _("Select recipient group(s)") }}</option>

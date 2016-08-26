@@ -8,6 +8,10 @@
 
 {% set base_type = "dataset" %}
 {% set base_title = base_type %}
+{% set org_id = pkg.owner_org %}
+{% set pkg_id = pkg.name or pkg.id %}
+{% set follow_id = pkg_id %}
+{% set plain_body = pkg.social_mail_body %}
 
 {% block user_actions %}
     {% if h.check_access('package_update', {'id':pkg.id }) %}

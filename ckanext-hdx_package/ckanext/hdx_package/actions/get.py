@@ -503,10 +503,12 @@ def hdx_send_mail_members(context, data_dict):
     html = u"""\
             <p>{fullname} sent the following message to {topic} of {pkg_owner_org}: </p>
             <p>{msg}</p>
-            <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
         """.format(fullname=data_dict.get('fullname'), topic=data_dict.get('topic').lower(),
-                   pkg_owner_org=data_dict.get('pkg_owner_org'), msg=data_dict.get('msg'),
-                   pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
+                   pkg_owner_org=data_dict.get('pkg_owner_org'), msg=data_dict.get('msg'))
+
+    if data_dict.get('source_type') == 'dataset':
+        html += u'<p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>'.format(pkg_url=data_dict.get('pkg_url'),
+                                                                            pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org_id')})

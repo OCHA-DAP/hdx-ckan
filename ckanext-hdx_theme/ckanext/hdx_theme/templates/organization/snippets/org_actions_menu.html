@@ -1,16 +1,16 @@
 {% extends "indicator/snippets/base_actions_menu.html" %}
 
 {% set panel_title = _('Share Org') %}
-{% set title = "Test title" %}
+{% set title = organization.title %}
 
 {% set base_type = 'group' %}
 {% set base_title = 'organisation' %}
 
-{% set pkg = organization %}
 {% set membership = c.org_meta.group_message_info %}
 {% set group_topics = membership.data.group_topics %}
 {% set hide_contact_contributor = true %}
-
+{% set org_id = organization.id %}
+{% set follow_id = org_id %}
 
 {% block user_actions %}
     {% if can_create_dataset %}
