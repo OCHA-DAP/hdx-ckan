@@ -1236,7 +1236,9 @@ class DatasetController(PackageController):
         data_dict = {}
         response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
-            org_id = request.params.get('pkg_owner_org')
+            source_type = request.params.get('source_type')
+            data_dict['source_type'] = source_type
+            org_id = request.params.get('org_id')
             check_access('hdx_send_mail_members', context, {'org_id': org_id})
             data_dict['topic_key'] = request.params.get('topic')
             data_dict['topic'] = membership_data.membership_data.get('group_topics').get(request.params.get('topic'))
@@ -1249,10 +1251,11 @@ class DatasetController(PackageController):
                 data_dict['pkg_owner_org'] = owner_org.get("display_name") or owner_org.get("title")
             except Exception, e:
                 data_dict['pkg_owner_org'] = org_id
-            data_dict['pkg_title'] = request.params.get('pkg_title')
-            data_dict['pkg_id'] = request.params.get('pkg_id')
-            data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
-                                             qualified=True)
+            data_dict['title'] = request.params.get('title')
+            if source_type == 'dataset':
+                data_dict['pkg_id'] = request.params.get('pkg_id')
+                data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
+                                                 qualified=True)
             data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
 
             simple_validate_email(data_dict['email'])
