@@ -13,7 +13,7 @@
 {% if not hide_contact_contributor%}
     {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, pkg = pkg, membership_data=membership_data) }}
 {% endif %}
-{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title) }}
+{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title, base_type=base_type) }}
 {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
 
 <span class="{{ classes }}">
@@ -31,7 +31,7 @@
                 </li>
             {% endif %}
         {% else %}
-            {% if not hide_contact_contributor%}
+            {% if not hide_contaact_contributor%}
                 <li>
                     <a href="/contact_hdx" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
                         <i class="icon-envelope"></i>
