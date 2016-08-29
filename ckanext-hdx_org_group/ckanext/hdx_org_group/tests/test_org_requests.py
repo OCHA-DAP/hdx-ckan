@@ -11,6 +11,7 @@ import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.hdx_org_group.tests as org_group_base
 
 log = logging.getLogger(__name__)
 
@@ -24,11 +25,11 @@ def send_mail(recipients, subject, body):
         mail_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}' \
             .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body)
 
-class TestHDXReqsOrgController(hdx_test_base.HdxBaseTest):
+class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
 
     def setup(self):
         global original_send_mail

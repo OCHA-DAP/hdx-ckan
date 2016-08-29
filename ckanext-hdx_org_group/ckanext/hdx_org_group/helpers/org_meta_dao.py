@@ -21,8 +21,11 @@ NotAuthorized = logic.NotAuthorized
 
 
 class OrgMetaDao(search_controller.HDXSearchController):
-    def __init__(self, org_id):
+    def __init__(self, org_id, username, userobj):
         self.id = org_id
+        self._username = username
+        self._userobj = userobj
+
         self.datasets_num = 0
         self.org_dict = None
         self.followers_num = 0
@@ -72,10 +75,10 @@ class OrgMetaDao(search_controller.HDXSearchController):
         context = {
             'model': model,
             'session': model.Session,
-            'user': c.user or c.author,
+            'user': self._username,
         }
 
-        user = c.user or c.author
+        user = self._username
         ignore_capacity_check = False
         is_org_member = (user and
                          new_authz.has_user_permission_for_group_or_org(self.id, user, 'read'))
@@ -139,13 +142,13 @@ class OrgMetaDao(search_controller.HDXSearchController):
         self.members_num = len(self.members)
 
     def fetch_group_message_topics(self):
-        group_message_topics = membership_data.get_message_groups(c.user or c.author, self.id)
+        group_message_topics = membership_data.get_message_groups(self._username, self.id)
         self.group_message_info = {
             'display_group_message': bool(group_message_topics),
             'data': {
                 'group_topics': group_message_topics,
-                'fullname': c.userobj.display_name if c.userobj else '',
-                'email': c.userobj.email if c.userobj else ''
+                'fullname': self._userobj.display_name if self._userobj else '',
+                'email': self._userobj.email if self._userobj else ''
 
             }
         }
@@ -168,13 +171,14 @@ class OrgMetaDao(search_controller.HDXSearchController):
             self.custom_sq_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_sq'))
             self.custom_rect_logo_url = ckan_helpers.url_for('image_serve', label=self.customization.get('image_rect'))
 
-    @staticmethod
-    def __check_access(action_name, data_dict=None):
+    def __check_access(self, action_name, data_dict=None):
         if data_dict is None:
             data_dict = {}
 
-        context = {'model': model,
-                   'user': c.user or c.author}
+        context = {
+            'model': model,
+            'user': self._username
+        }
         try:
             result = logic.check_access(action_name, context, data_dict)
         except logic.NotAuthorized:

@@ -49,7 +49,7 @@ class HDXOrgMemberController(org.OrganizationController):
         q, sort = self._find_filter_params()
         reverse = True if sort == u'title desc' else False
 
-        org_meta = org_meta_dao.OrgMetaDao(id)
+        org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         org_meta.fetch_all()
 
         try:
