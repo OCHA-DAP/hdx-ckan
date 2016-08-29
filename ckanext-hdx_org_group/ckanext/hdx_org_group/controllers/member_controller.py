@@ -202,6 +202,8 @@ class HDXOrgMemberController(org.OrganizationController):
                                             [email] if invited else None, data_dict['role'])
 
                     h.flash_success(flash_message)
+                    org_obj = model.Group.get(id)
+                    analytics.ChangeMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
                 else:
                     h.flash_error(_('''You need to either fill the username or
                         the email of the person you wish to invite'''))
@@ -351,6 +353,10 @@ class HDXOrgMemberController(org.OrganizationController):
                     context, {'id': id, 'user_id': user_id})
                 # modified by HDX
                 h.flash_notice(_('Organization member has been deleted.'))
+
+                org_obj = model.Group.get(id)
+                analytics.RemoveMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
+
                 self._redirect_to(controller='group', action='members', id=id)
             c.user_dict = self._action('user_show')(context, {'id': user_id})
             c.user_id = user_id
