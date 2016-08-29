@@ -10,6 +10,7 @@ import logging
 
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+import ckanext.hdx_org_group.helpers.analytics as analytics
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckanext.hdx_theme.util.mail as mailutil
 
@@ -195,7 +196,9 @@ class HDXOrgMemberController(org.OrganizationController):
 
                     user_obj = model.User.get(data_dict['username'])
                     display_name = user_obj.display_name or user_obj.name
-                    self.notify_admin_users(context, id, None if invited else [display_name],
+
+                    org_obj = model.Group.get(id)
+                    self.notify_admin_users(org_obj, None if invited else [display_name],
                                             [email] if invited else None, data_dict['role'])
 
                     h.flash_success(flash_message)
@@ -261,7 +264,9 @@ class HDXOrgMemberController(org.OrganizationController):
                         ' was invited to join the organization. An account was created for her/him.')
                     h.flash_success(', '.join(invited_members) + invited_members_msg)
 
-                self.notify_admin_users(context, id, new_members, invited_members, role)
+                org_obj = model.Group.get(id)
+                self.notify_admin_users(org_obj, new_members, invited_members, role)
+                self._send_analytics_info(org_obj, new_members, invited_members)
             else:
                 h.flash_error(_('''No user or role was specified'''))
             self._redirect_to(controller='group', action='members', id=id)
@@ -289,9 +294,15 @@ class HDXOrgMemberController(org.OrganizationController):
         self._action('group_member_create')(context, user_data_dict)
         return True
 
-    def notify_admin_users(self, context, org_id, new_members, invited_memberes, role):
-        org_obj = model.Group.get(org_id)
-        org_admins = self._action('member_list')(context, {'id': org_id, 'capacity': 'admin',
+    def _send_analytics_info(self, org_obj, new_members, invited_members):
+        for i in xrange(0, len(new_members) + len(invited_members)):
+            analytics.AddMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
+
+
+    def notify_admin_users(self, org_obj, new_members, invited_memberes, role):
+
+        context = self._get_context()
+        org_admins = self._action('member_list')(context, {'id': org_obj.id, 'capacity': 'admin',
                                                            'object_type': 'user'})
         admins = []
         for admin_tuple in org_admins:
