@@ -114,7 +114,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         # unicode format (decoded from utf8)
         q = c.q = request.params.get('q', '')
 
-        c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id)
+        c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         org_meta.fetch_all()
 
         c.group_dict = org_meta.org_dict
@@ -304,7 +304,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         :return:
         '''
         if not org_meta:
-            org_meta = org_meta_dao.OrgMetaDao(id)
+            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         c.org_meta = org_meta
         org_meta.fetch_all()
 

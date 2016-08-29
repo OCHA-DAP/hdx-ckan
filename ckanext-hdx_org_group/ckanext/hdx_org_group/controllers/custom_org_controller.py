@@ -69,7 +69,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
 
         if not org_meta:
             log.info("No org meta. Should have been created in organization_controller.py. Trying to create one now. ")
-            org_meta = org_meta_dao.OrgMetaDao(id)
+            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
         c.org_meta = org_meta
 
         org_info = self.get_org(org_meta)
