@@ -21,7 +21,8 @@ def get_organization_admins(group_id):
                  filter(model.Member.table_name == "user").filter(model.Member.group_id == group_id).
                  filter(model.Member.state == 'active').filter(model.Member.capacity == 'admin'))
 
-    admins.update(set(model.Session.query(model.User).filter(model.User.sysadmin == True)))  # noqa
+    # HDX change - remove sysadmins
+    # admins.update(set(model.Session.query(model.User).filter(model.User.sysadmin == True)))  # noqa
 
     return admins
 
