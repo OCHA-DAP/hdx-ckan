@@ -29,7 +29,7 @@ _SUBJECT_MEMBERSHIP_APPROVED = '''Organisation membership request on HDX has bee
 _MESSAGE_MEMBERSHIP_APPROVED = \
 '''
 <br/><br/>
-Your membership request to organization %(organization)s with %(role)s access has been approved.
+Your membership request to organisation {organization} with {role} access has been approved.
 <br/><br/>
 Best wishes, <br/>
 the HDX Team <br/>
@@ -40,7 +40,7 @@ _SUBJECT_MEMBERSHIP_REJECTED = '''Organisation membership request on HDX has bee
 _MESSAGE_MEMBERSHIP_REJECTED = \
 '''
 <br/><br/>
-Your membership request to organization %(organization)s with %(role)s access has been rejected.
+Your membership request to organisation {organization} with {role} access has been rejected.
 <br/><br/>
 Best wishes, <br/>
 the HDX Team <br/>
