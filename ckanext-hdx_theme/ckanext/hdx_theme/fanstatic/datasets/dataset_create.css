@@ -46,7 +46,7 @@ input[type=checkbox] {
   padding-top: 0;
 }
 .editor .editor-info-block a {
-  color: #007CE0;
+  color: #007ce0;
 }
 .dataset-form-info-field {
   margin-left: 30px;
@@ -275,7 +275,7 @@ label:after {
 }
 /* Changes for resource views */
 .hdx-view-preview-wrapper {
-  background-color: #fff;
+  background-color: #ffffff;
   margin-bottom: 20px;
 }
 /* END - Changes for resource views */

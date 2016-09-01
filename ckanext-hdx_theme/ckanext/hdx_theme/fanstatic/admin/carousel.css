@@ -6,6 +6,14 @@
   display: table-cell;
   vertical-align: middle;
 }
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
 #carousel-config-main .carousel-item {
   margin-bottom: 20px;
   border-radius: 6px;
@@ -112,7 +120,7 @@
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption {
   text-align: center;
-  color: #fff;
+  color: #ffffff;
 }
 #carousel-config-main .carousel-item .sub-item .sub-item-caption .title {
   font-family: 'Gotham-Bold', sans-serif;

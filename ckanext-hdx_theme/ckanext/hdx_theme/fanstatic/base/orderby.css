@@ -23,9 +23,9 @@
   display: inline;
 }
 .control-order-by .orderDropdown .dropdown-toggle {
-  background-color: #fff;
+  background-color: #ffffff;
   border: none;
-  color: #007CE0;
+  color: #007ce0;
   text-align: left;
   margin-top: -4px;
   padding: 0;
@@ -41,7 +41,7 @@
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #007CE0;
+  color: #007ce0;
   letter-spacing: 0.03em;
 }
 .control-order-by .orderDropdown .dropdown-toggle-text:hover,

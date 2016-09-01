@@ -78,7 +78,7 @@ html > .contribute-body > .contribute-main > div {
   height: 500px;
   width: 500px;
   border-radius: 50%;
-  background-color: #fff;
+  background-color: #ffffff;
   text-align: center;
   color: #cccccc;
   font-size: 18px;
@@ -100,8 +100,8 @@ html > .contribute-body > .contribute-main > div {
   transform: translate(0, -50%);
 }
 .contribute-splash .drop-here.drop-incoming {
-  background-color: #007CE0;
-  color: #fff;
+  background-color: #007ce0;
+  color: #ffffff;
 }
 .contribute-splash .drop-here.drop-incoming .drop-title .title1 {
   display: none;
@@ -145,7 +145,7 @@ html > .contribute-body > .contribute-main > div {
   display: none;
 }
 .contribute-splash .drop-here .drop-browse {
-  color: #007CE0;
+  color: #007ce0;
 }
 .contribute-splash .drop-here .drop-browse span {
   font-family: 'Gotham-Book', sans-serif;
