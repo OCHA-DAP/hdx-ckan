@@ -113,7 +113,7 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity):
         'organization': group_name
     })
     try:
-        mail_user([{'display_name': member_user.display_name or member_user.fullname, 'email': member_user.email}],
+        hdx_mail.send_mail([{'display_name': member_user.display_name or member_user.fullname, 'email': member_user.email}],
                   subject, message)
     except MailerException, e:
         log.error(e)
