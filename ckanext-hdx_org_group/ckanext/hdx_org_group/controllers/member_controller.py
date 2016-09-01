@@ -233,13 +233,13 @@ class HDXOrgMemberController(org.OrganizationController):
                     context = self._get_context()
                     email = email.strip()
                     try:
-                        if email and mailutil.simple_validate_email(email):
+                        if email:
                             # Check if email is used
-                            user_dict = model.User.by_email(email.strip())
+                            user_dict = self._get_user_obj(email)
                             if user_dict:
-                                added = self._add_existing_user_as_member(context, id, role, user_dict[0])
+                                added = self._add_existing_user_as_member(context, id, role, user_dict)
                                 if added:
-                                    new_members.append(user_dict[0].display_name)
+                                    new_members.append(user_dict.display_name)
                             else:
                                 user_data_dict = {
                                     'email': email,
@@ -252,7 +252,7 @@ class HDXOrgMemberController(org.OrganizationController):
                                 # h.flash_success(email + ' has been invited as ' + role)
                                 log.info('{} was invited as a new user'.format(email))
                     except tk.Invalid as e:
-                        h.flash_error(_('Invalid email address provided: ') + email)
+                        h.flash_error(_('Invalid email address or unknown username provided: ') + email)
 
                 if new_members:
                     new_members_msg = _(' were added to the organization.') if len(new_members) != 1 else _(
@@ -280,6 +280,19 @@ class HDXOrgMemberController(org.OrganizationController):
         except ValidationError, e:
             h.flash_error(e.error_summary)
         self._redirect_to(controller='group', action='members', id=id)
+
+    def _get_user_obj(self, mail_or_username):
+        userobj = None
+        try:
+            if mailutil.simple_validate_email(mail_or_username):
+                users = model.User.by_email(mail_or_username)
+                if users:
+                    userobj = users[0]
+        except tk.Invalid as e:
+            userobj = model.User.get(mail_or_username)
+            if not userobj:
+                raise
+        return userobj
 
     def _add_existing_user_as_member(self, context, org_id, role, user_info):
         email = user_info.email

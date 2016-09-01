@@ -1,51 +1,48 @@
-from ckan import model, new_authz
+import logging
+
 from sqlalchemy.sql.expression import or_
+from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
+from pylons import config
+from ckanext.ytp.request.model import MemberExtra
+from pylons import i18n
+
+from ckan import model, new_authz
 from ckan.lib.dictization import model_dictize
 from ckan.logic import NotFound, ValidationError, check_access
 from ckan.common import _, c
 from ckan.lib.mailer import mail_user, MailerException
-import logging
-from ckanext.ytp.request.tools import get_organization_admins, get_ckan_admins
 from ckan.lib import helpers
-from pylons import config
-from ckanext.ytp.request.model import MemberExtra
 from ckan.lib.i18n import set_lang, get_lang
 from ckan.lib.helpers import url_for
-from pylons import i18n
+import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.ytp.request.util as hdx_util
 
 log = logging.getLogger(__name__)
 
-_SUBJECT_MEMBERSHIP_REQUEST = lambda: _("New membership request (%(organization)s)")
-_MESSAGE_MEMBERSHIP_REQUEST = lambda: _("""\
-User %(user)s (%(email)s) has requested membership to organization %(organization)s.
 
-%(link)s
+# _SUBJECT_MEMBERSHIP_REQUEST = lambda: _("New membership request (%(organization)s)")
+# _MESSAGE_MEMBERSHIP_REQUEST = lambda: _("""\
+# User %(user)s (%(email)s) has requested membership to organization %(organization)s.
+#
+# %(link)s
+#
+# Best regards
+#
+# Avoindata.fi support
+# valtori@avoindata.fi
+# """)
 
-Best regards
+# _SUBJECT_MEMBERSHIP_APPROVED = lambda: _("Organization membership approved (%(organization)s)")
+# _MESSAGE_MEMBERSHIP_APPROVED = lambda: _("""\
+# Your membership request to organization %(organization)s with %(role)s access has been approved.
+#
+# Best regards
+#
+# Avoindata.fi support
+# valtori@avoindata.fi
+# """)
 
-Avoindata.fi support
-valtori@avoindata.fi
-""")
 
-_SUBJECT_MEMBERSHIP_APPROVED = lambda: _("Organization membership approved (%(organization)s)")
-_MESSAGE_MEMBERSHIP_APPROVED = lambda: _("""\
-Your membership request to organization %(organization)s with %(role)s access has been approved.
-
-Best regards
-
-Avoindata.fi support
-valtori@avoindata.fi
-""")
-
-_SUBJECT_MEMBERSHIP_REJECTED = lambda: _("Organization membership rejected (%(organization)s)")
-_MESSAGE_MEMBERSHIP_REJECTED = lambda: _("""\
-Your membership request to organization %(organization)s with %(role)s access has been rejected.
-
-Best regards
-
-Avoindata.fi support
-valtori@avoindata.fi
-""")
 
 
 def _get_default_locale():
@@ -66,25 +63,33 @@ def _reset_lang():
         pass
 
 
-def _mail_new_membership_request(locale, admin, group_name, url, user_name, user_email):
+def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=None):
     current_locale = get_lang()
 
     if locale == 'en':
         _reset_lang()
     else:
         set_lang(locale)
-    subject = _SUBJECT_MEMBERSHIP_REQUEST() % {
-        'organization': group_name
-    }
-    message = _MESSAGE_MEMBERSHIP_REQUEST() % {
-        'user': user_name,
-        'email': user_email,
-        'organization': group_name,
-        'link': url
-    }
+    subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(**{
+        'user_fullname': user_obj.display_name
+    })
+
+    user_message = data_dict.get('message') if data_dict else 'Please add me to this organisation'
+    message = hdx_util._MESSAGE_MEMBERSHIP_REQUEST.format(**{
+        'user_fullname': user_obj.display_name,
+        'user_email': user_obj.email,
+        'org_title': group.display_name,
+        'org_add_member_url': (config['ckan.site_url'] + '/organization/members/{org_name}').format(
+            org_name=group.name),
+        'user_username': user_obj.name,
+        'user_message': user_message
+    })
 
     try:
-        mail_user(admin, subject, message)
+        # mail_user(admin, subject, message)
+        # HDX change
+        hdx_mail.send_mail([{'display_name': admin.display_name or admin.fullname, 'email': admin.email}], subject,
+                           message)
     except MailerException, e:
         log.error(e)
     finally:
@@ -100,19 +105,16 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity):
 
     role_name = _(capacity)
 
-    subject_template = _SUBJECT_MEMBERSHIP_APPROVED() if approve else _SUBJECT_MEMBERSHIP_REJECTED()
-    message_template = _MESSAGE_MEMBERSHIP_APPROVED() if approve else _MESSAGE_MEMBERSHIP_REJECTED()
+    subject = hdx_util._SUBJECT_MEMBERSHIP_APPROVED if approve else hdx_util._SUBJECT_MEMBERSHIP_REJECTED
+    message_template = hdx_util._MESSAGE_MEMBERSHIP_APPROVED if approve else hdx_util._MESSAGE_MEMBERSHIP_REJECTED
 
-    subject = subject_template % {
-        'organization': group_name
-    }
-    message = message_template % {
+    message = message_template.format(**{
         'role': role_name,
         'organization': group_name
-    }
-
+    })
     try:
-        mail_user(member_user, subject, message)
+        mail_user([{'display_name': member_user.display_name or member_user.fullname, 'email': member_user.email}],
+                  subject, message)
     except MailerException, e:
         log.error(e)
     finally:
@@ -147,8 +149,10 @@ def _create_member_request(context, data_dict):
 
     userobj = model.User.get(user)
 
-    member = model.Session.query(model.Member).filter(model.Member.table_name == "user").filter(model.Member.table_id == userobj.id) \
-        .filter(model.Member.group_id == group.id).filter(or_(model.Member.state == 'active', model.Member.state == 'pending')).first()
+    member = model.Session.query(model.Member).filter(model.Member.table_name == "user").filter(
+        model.Member.table_id == userobj.id) \
+        .filter(model.Member.group_id == group.id).filter(
+        or_(model.Member.state == 'active', model.Member.state == 'pending')).first()
 
     if member:
         if member.state == 'pending':
@@ -158,7 +162,8 @@ def _create_member_request(context, data_dict):
 
         raise ValidationError({"organization": _("Duplicate organization request")}, {_("Organization"): message})
 
-    member = model.Session.query(model.Member).filter(model.Member.table_name == "user").filter(model.Member.table_id == userobj.id) \
+    member = model.Session.query(model.Member).filter(model.Member.table_name == "user").filter(
+        model.Member.table_id == userobj.id) \
         .filter(model.Member.group_id == group.id).first()
 
     if not member:
@@ -196,10 +201,10 @@ def _create_member_request(context, data_dict):
 
     if role == 'admin':
         for admin in get_ckan_admins():
-            _mail_new_membership_request(locale, admin, group.display_name, url, userobj.display_name, userobj.email)
+            _mail_new_membership_request(locale, admin, group, url, userobj, data_dict)
     else:
         for admin in get_organization_admins(group.id):
-            _mail_new_membership_request(locale, admin, group.display_name, url, userobj.display_name, userobj.email)
+            _mail_new_membership_request(locale, admin, group, url, userobj, data_dict)
 
     return member, changed
 
@@ -255,10 +260,12 @@ def member_request_list(context, data_dict):
     user_object = model.User.get(user)
     sysadmin = new_authz.is_sysadmin(user)
 
-    query = model.Session.query(model.Member).filter(model.Member.table_name == "user").filter(model.Member.state == 'pending')
+    query = model.Session.query(model.Member).filter(model.Member.table_name == "user").filter(
+        model.Member.state == 'pending')
 
     if not sysadmin:
-        admin_in_groups = model.Session.query(model.Member).filter(model.Member.state == "active").filter(model.Member.table_name == "user") \
+        admin_in_groups = model.Session.query(model.Member).filter(model.Member.state == "active").filter(
+            model.Member.table_name == "user") \
             .filter(model.Member.capacity == 'admin').filter(model.Member.table_id == user_object.id)
 
         if admin_in_groups.count() <= 0:
@@ -332,7 +339,8 @@ def member_request_membership_cancel(context, data_dict):
 
     organization_id = data_dict.get("organization_id")
     query = model.Session.query(model.Member).filter(model.Member.state == 'active') \
-        .filter(model.Member.table_name == 'user').filter(model.Member.table_id == c.userobj.id).filter(model.Member.group_id == organization_id)
+        .filter(model.Member.table_name == 'user').filter(model.Member.table_id == c.userobj.id).filter(
+        model.Member.group_id == organization_id)
     member = query.first()
 
     if not member:
@@ -358,8 +366,10 @@ def member_request_cancel(context, data_dict):
         member = model.Session.query(model.Member).get(data_dict.get("member"))
     else:
         organization_id = data_dict.get("organization_id")
-        query = model.Session.query(model.Member).filter(or_(model.Member.state == 'pending', model.Member.state == 'active')) \
-            .filter(model.Member.table_name == 'user').filter(model.Member.table_id == c.userobj.id).filter(model.Member.group_id == organization_id)
+        query = model.Session.query(model.Member).filter(
+            or_(model.Member.state == 'pending', model.Member.state == 'active')) \
+            .filter(model.Member.table_name == 'user').filter(model.Member.table_id == c.userobj.id).filter(
+            model.Member.group_id == organization_id)
         member = query.first()
 
     if not member:

@@ -33,8 +33,8 @@
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: #000;
-  background-color: #fff;
+  color: #000000;
+  background-color: #ffffff;
   border: none;
   margin-left: -2px;
   display: inline-block;
@@ -45,7 +45,7 @@
 .pagination li.active a,
 .module .pagination li.active a {
   background-color: #1ebfb3;
-  color: #fff;
+  color: #ffffff;
 }
 .pagination li.disabled a,
 .module .pagination li.disabled a {

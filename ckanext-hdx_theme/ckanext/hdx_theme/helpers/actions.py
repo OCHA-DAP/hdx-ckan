@@ -1,55 +1,28 @@
 import logging
-import requests
 import datetime
 import json
 
+import requests
 from pylons import config
 import sqlalchemy
+import beaker.cache as bcache
 
 import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.new_authz as new_authz
-import beaker.cache as bcache
 import ckan.model as model
-
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
-import urllib
-import json
-import tempfile
-
+import ckanext.ytp.request.util as hdx_util
 from ckan.common import c, _
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
 
 log = logging.getLogger(__name__)
-
-send_request_membership_mail_template = \
-    '''
-    <br/><br/>You are receiving this message because you are an administrator of the {org_title} organisation on HDX
-    and a user called {user_fullname} whose email address is {user_email} has requested to join your organisation
-    on HDX. The user included the following message with his/her request: <br/>{user_message} <br/><br/>
-    If you know this user and would like to add him/her to your organisation, please log on to HDX and click on the
-    ADD MEMBER link for your organisation at {org_add_member_url} .
-    Enter \'{user_username}\' in the username box and
-    assign one of the following roles to the user: <br/>
-    - Admin: The user can add, edit and delete datasets, as well as manage organisation membership. <br/>
-    - Editor: The user can add, edit and delete datasets, but not manage organisation membership. <br/>
-    - Member: The user can view the organisation\'s private datasets, but not add new datasets or manage membership.
-    <br/><br/>
-    You can ignore this message if you do not wish to add the user to your organisation. <br/><br/>
-    This email is the only notification you will receive from HDX regarding this user\'s request to join your
-    organisation. The message has been sent to all the admins of the {org_title} organisation. <br/><br/>
-    You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.
-    <br/><br/>
-    Best wishes, <br/>
-    the HDX Team <br/>
-    '''
-
 
 def organization_list_for_user(context, data_dict):
     '''Return the list of organizations that the user is a member of.
@@ -267,29 +240,18 @@ def hdx_send_editor_request_for_org(context, data_dict):
 def hdx_send_request_membership(context, data_dict):
     _check_access('hdx_send_request_membership', context, data_dict)
 
-    # body = _('New request membership\n' \
-    #          'Full Name: {fn}\n' \
-    #          'Username: {username}\n' \
-    #          'Email: {mail}\n' \
-    #          'Organization: {org}\n' \
-    #          'Message from user: {msg}\n' \
-    #          '(This is an automated mail)' \
-    #          '').format(fn=data_dict['display_name'], username=data_dict['name'],
-    #                     mail=data_dict['email'], org=data_dict['organization'],
-    #                     msg=data_dict.get('message', ''))
-
     org_obj = model.Group.get(data_dict['organization'])
 
-    org_add_member_url = (config['ckan.site_url'] + '/organization/members/{org_name}#add-member-div').format(
+    org_add_member_url = (config['ckan.site_url'] + '/organization/members/{org_name}').format(
         org_name=org_obj.name)
 
-    body = send_request_membership_mail_template.format(org_title=org_obj.display_name,
-                                                        user_fullname=data_dict.get('display_name'),
-                                                        user_email=data_dict.get('email'),
-                                                        org_add_member_url=org_add_member_url,
-                                                        user_username=data_dict.get('name'),
-                                                        user_message=data_dict.get('message', ''))
-    subject = '{user_fullname} sent a request to join your organisation on HDX'.format(user_fullname=data_dict.get('display_name'))
+    body = hdx_util._MESSAGE_MEMBERSHIP_REQUEST.format(org_title=org_obj.display_name,
+                                                       user_fullname=data_dict.get('display_name'),
+                                                       user_email=data_dict.get('email'),
+                                                       org_add_member_url=org_add_member_url,
+                                                       user_username=data_dict.get('name'),
+                                                       user_message=data_dict.get('message', ''))
+    subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(user_fullname=data_dict.get('display_name'))
 
     # changed made to send customized emails to each admin
     for admin in data_dict.get('admins'):
@@ -524,7 +486,7 @@ def hdx_carousel_settings_show(context, data_dict):
     if not carousel_settings and not context.get('not_initial'):
         carousel_settings = INITIAL_CAROUSEL_DATA
         for i, item in enumerate(carousel_settings):
-            item['order'] = i+1
+            item['order'] = i + 1
 
     return carousel_settings
 
@@ -544,4 +506,3 @@ def hdx_carousel_settings_update(context, data_dict):
     settings_json = json.dumps(settings)
     model.set_system_info('hdx.carousel.config', settings_json)
     return settings_json
-

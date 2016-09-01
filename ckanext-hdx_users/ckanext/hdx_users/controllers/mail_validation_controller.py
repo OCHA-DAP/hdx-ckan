@@ -498,24 +498,18 @@ class ValidationController(ckan.controllers.user.UserController):
 
         try:
             org_id = request.params.get('org_id', '')
-            org = model.Group.get(org_id)
-            org_name = org.name or org.display_name
             msg = request.params.get('message', 'please add me to this organization')
-            user = hdx_h.hdx_get_user_info(c.user)
 
-            org_admins = get_action('member_list')(context, {'id': org_id, 'capacity': 'admin', 'object_type': 'user'})
-            admins = []
-            for admin_tuple in org_admins:
-                admin_id = admin_tuple[0]
-                admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = [admin for admin in admins if admin['email']]
+            data_dict = {
+                'organization': org_id,
+                'message': msg,
+                'save': u'save',
+                'role': u'member',
+                'group': org_id
+            }
+            member = get_action('member_request_create')(context, data_dict)
 
-            data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_name,
-                         'message': msg, 'admins': admins_with_email}
-            get_action('hdx_send_request_membership')(context, data_dict)
-
-            ue_dict = self._get_ue_dict(user['id'], user_model.HDX_ONBOARDING_ORG)
+            ue_dict = self._get_ue_dict(c.userobj.id, user_model.HDX_ONBOARDING_ORG)
             get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException, e:
