@@ -249,7 +249,6 @@ def hdx_send_request_membership(context, data_dict):
                                                        user_fullname=data_dict.get('display_name'),
                                                        user_email=data_dict.get('email'),
                                                        org_add_member_url=org_add_member_url,
-                                                       user_username=data_dict.get('name'),
                                                        user_message=data_dict.get('message', ''))
     subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(user_fullname=data_dict.get('display_name'))
 

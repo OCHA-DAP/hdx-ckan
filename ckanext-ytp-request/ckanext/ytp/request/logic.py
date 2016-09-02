@@ -81,7 +81,6 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
         'org_title': group.display_name,
         'org_add_member_url': (config['ckan.site_url'] + '/organization/members/{org_name}').format(
             org_name=group.name),
-        'user_username': user_obj.name,
         'user_message': user_message
     })
 
