@@ -127,7 +127,7 @@ dt.uppercase {
 }
 .current-role {
   background-color: #333333;
-  color: #ffffff;
+  color: #fff;
   padding: 5px 10px;
 }
 .invite-box {
@@ -140,8 +140,18 @@ dt.uppercase {
   border: none;
 }
 .invite-box p {
-  color: #000000;
+  color: #000;
   margin: 10px 0;
+}
+.invite-box .select2-container .select2-choices .select2-search-choice {
+  line-height: 20px;
+}
+.invite-box .select2-container .select2-choices .select2-search-choice .existing-user {
+  color: #1ebfb3;
+  font-weight: 700;
+}
+.invite-box .select2-container .select2-choices .select2-search-choice .select2-search-choice-close {
+  top: 7px;
 }
 .current-user {
   margin: 20px;
@@ -165,7 +175,7 @@ dt.uppercase {
   transition-timing-function: linear;
 }
 .approval-request.request-approved {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .approval-request.request-approved .user-details .approval-actions button {
   opacity: 0;
@@ -182,7 +192,7 @@ dt.uppercase {
   margin-left: 40px;
 }
 .approval-request .user-details .btn-primary .caret {
-  border-top-color: #ffffff;
+  border-top-color: #fff;
   vertical-align: middle;
   margin-left: 10px;
 }
