@@ -348,6 +348,30 @@ $(
     hdxUtil.analytics.sendMemberAddRejectEvent = sendMemberAddRejectEvent;
 
     /**
+     * Sends an event when a new user is registered
+     */
+    function sendUserRegisteredEvent() {
+        var eventName = "user register";
+        var metadata = {
+            "page title": analyticsInfo.pageTitle
+        };
+
+        var mixpanelData = {
+            "eventName": eventName,
+            "eventMeta": metadata
+        };
+
+        var gaData = {
+            "eventCategory": "user",
+            "eventAction": eventName
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+    }
+
+    hdxUtil.analytics.sendUserRegisteredEvent = sendUserRegisteredEvent;
+
+    /**
      * This function will send the analytics events to the server async and will return a promise
      * which is fulfilled when the events are successfully sent OR when "timeout" seconds have passed
      *

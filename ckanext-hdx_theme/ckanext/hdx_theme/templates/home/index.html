@@ -1,6 +1,7 @@
 {% extends "page.html" %}
 
 {% set carouselItems = h.hdx_get_carousel_list() %}
+{% set page_subtitle = data.page_subtitle or _("Welcome") %}
 
 {% block flash %}
   {# eat the flash messages so they don't remain in the session #}
@@ -8,7 +9,7 @@
 {% endblock %}
 
 
-{% block subtitle %}{{ _("Welcome") }}{% endblock %}
+{% block subtitle %}{{ page_subtitle }}{% endblock %}
 
 {% block maintag %}{% endblock %}
 
