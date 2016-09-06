@@ -1,7 +1,7 @@
 {% extends "page.html" %}
 
 {% set carouselItems = h.hdx_get_carousel_list() %}
-{% set page_subtitle = data.page_subtitle or _("Welcome") %}
+{% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Welcome") %}
 
 {% block flash %}
   {# eat the flash messages so they don't remain in the session #}
