@@ -138,7 +138,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
                 'mixpanel_meta': {
                     "resource name": resource_dict.get('name'),
                     "resource id": resource_dict.get('id'),
-                    "dataset name": dataset_dict.get('title'),
+                    "dataset name": dataset_dict.get('name'),
                     "dataset id": dataset_dict.get('id'),
                     "org name": dataset_dict.get('organization', {}).get('name'),
                     "org id": dataset_dict.get('organization', {}).get('id'),
@@ -146,11 +146,12 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
                     "group ids": location_ids,
                     "is cod": dataset_is_cod,
                     "is indicator": dataset_is_indicator,
+                    'event source': 'direct'
                 },
                 'ga_meta': {
                     'ec': 'resource',  # event category
                     'ea': 'download',  # event action
-                    'el': '{} ({})'.format(resource_dict.get('name'), dataset_title),  # event label
+                    'el': u'{} ({})'.format(resource_dict.get('name'), dataset_title),  # event label
                     'cd1': dataset_dict.get('organization', {}).get('name'),
                     'cd2': _ga_dataset_type(dataset_is_indicator, dataset_is_cod),  # type
                     'cd3': _ga_location(location_names),  # locations
