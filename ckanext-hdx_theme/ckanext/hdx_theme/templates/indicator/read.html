@@ -124,11 +124,13 @@
 {% endblock %}
 
 {% block post_primary %}
+  {# Removed for now as per HDX-4927
   <div class="row paddingRowHack whiteBackground">
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
       {% snippet "indicator/snippets/continuous_browsing.html", type="dataset", pkg = pkg, followers=c.followers, topics = c.topics, related_urls = c.related_urls, downloads_count = c.downloads_count %}
     </div>
   </div>
+  #}
 {% endblock %}
 
 
