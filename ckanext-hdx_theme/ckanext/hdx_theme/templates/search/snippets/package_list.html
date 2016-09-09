@@ -97,13 +97,18 @@ Example:
 
             <span class="mL15">
                 {% set ext_indicator = request.params.get('ext_indicator') %}
-                <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox" {% if full_facet_info.get("num_of_indicators") == 0 %} disabled="disabled" {% endif %}  {% if ext_indicator == "1" %} checked="checked" {% endif %}>
-                <label for="show-indicators" title="{{ _('An indicator is comparable across countries and has gone through a QA process.') }}" data-module="bs_tooltip" data-toggle="tooltip">Only show indicators</label>
+                <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox" {% if ext_indicator == "1" %} checked="checked" {% endif %}>
+                <label for="show-indicators" title="{{ _('An indicator is comparable across countries and has gone through a QA process.') }}" data-module="bs_tooltip" data-toggle="tooltip">HDX curated [?]</label>
             </span>
             <span class="mL15">
                 {% set ext_cod = request.params.get('ext_cod') %}
-                <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if  full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}  {% if ext_cod == "1" %} checked="checked" {% endif %}>
-                <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">Only show CODs[?]</label>
+                <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if ext_cod == "1" %} checked="checked" {% endif %}>
+                <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">CODs [?]</label>
+            </span>
+            <span class="mL15">
+                {% set ext_sub_national = request.params.get('ext_sub_national') %}
+                <input id="show-sub_national" name="ext_sub_national" class="checkbox-filter" type="checkbox" {% if ext_sub_national == "1" %} checked="checked" {% endif %}>
+                <label for="show-sub_national" title="{{ _(' ... ') }}" data-module="bs_tooltip" data-toggle="tooltip">Sub-national [?]</label>
             </span>
             {#
             <div class="filters-actions list-header-showall pull-right">
