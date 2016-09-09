@@ -451,7 +451,8 @@
                                                 {{ form.select('tag_string', id='field_tags', label=_('Tags'), options=tags, selected=data.tag_string, error=errors.tag, classes=['form-group'], attrs={'class':'form-control choices-orange', 'multiple':'true'}) }}
                                             #}
 
-                                            {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '',
+                                            {% set tag_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '',
+                                              'data-module-include-tokenizer': 'true',
                                               'class':'form-control choices-orange', 'multiple':'true',
                                               'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="tag_string">

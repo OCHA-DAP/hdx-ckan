@@ -37,6 +37,7 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
       },
       onlyEmailAsTags: false,
       nonEmailSelectionClass: null,
+      includeTokenizer: false,
       emailSelectionClass: null
     },
 
@@ -79,6 +80,22 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
             }
           }
         };
+      }
+
+      if (this.options.includeTokenizer){
+        settings.tokenizer = function(input, selection, callback) {
+          if (input.indexOf(',') < 0 && input.indexOf(' ') < 0)
+            return;
+
+          var parts = input.split(/,/); // use /,| / if space need to be included as a separator
+          for (var i = 0; i < parts.length; i++) {
+            var part = parts[i];
+            part = part.trim();
+            if (part != ""){
+              callback({id:part,text:part});
+            }
+          }
+        }
       }
 
       if (this.options.nonEmailSelectionClass || this.options.emailSelectionClass){
