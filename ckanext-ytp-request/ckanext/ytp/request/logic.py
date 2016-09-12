@@ -91,7 +91,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
             hdx_mail.send_mail([{'display_name': admin.display_name or admin.fullname, 'email': admin.email}], subject,
                                message)
         else:
-            hdx_mail.send_mail(admin_list, subject, message)
+            hdx_mail.send_mail(admin_list, subject, message, True)
 
     except MailerException, e:
         log.error(e)
