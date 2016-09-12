@@ -174,53 +174,6 @@
     opacity: 0 !important;
 }
 
-
-/* Actions */
-.indicator-actions{
-  a.btn.hdx-btn {
-    margin-left: 12px;
-  }
-
-  ul {
-    @listMarginUnit: 16px;
-    list-style: none;
-    li {
-      line-height: @listMarginUnit;
-      .sourceSansProFont(400, 12px);
-
-      display: inline;
-      margin-right: @listMarginUnit;
-
-      &:first-child:before {
-        border: none;
-      }
-
-      &:before {
-        content: "";
-        border-left: 1px solid @grayColor;
-        height: @listMarginUnit;
-        margin-right: @listMarginUnit;
-      }
-
-      &.delete-override{
-        a {
-          color: @orangeColor;
-          text-transform: none;
-        }
-      }
-
-      a {
-        i {
-          margin-right: 5px;
-        }
-      }
-    }
-  }
-}
-
-/* END - Actions */
-
-
 /* Logo */
 .custom-dataset .org-logo {
     max-height: 65px;

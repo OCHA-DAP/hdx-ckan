@@ -1,0 +1,97 @@
+{% block custom_header %}
+    <div id="floatingLogo" style="display: none;">
+        <div class="logo pull-left table-valign">
+            <div class="table-valign-content">
+                <!-- TODO: add correct image url after functionality is ready  -->
+                {% if c.org_meta.custom_sq_logo_url %}
+                    <img class="org-logo" src="{{ c.org_meta.custom_sq_logo_url }}" alt="{{ _('small logo') }}">
+                {% else %}
+                    <img class="org-logo" src="https://placehold.it/75x75" />
+                {% endif %}
+            </div>
+        </div>
+        <div class="title-share pull-left">
+            <div class="floating-org-title">{{c.org_meta.org_dict.display_name |truncate(60,True)}}</div>
+            <div>
+                <span id="dataset_social_wrapper_floating" class="popover-wrapper mx-analytics-wrapper"></span>
+                <a class="social_share_trigger" href="#" data-module-placement="right" data-module="bs_popover" data-module-social_div_id="dataset_social"
+                   data-module-social_wrapper_div_id="dataset_social_wrapper_floating" title="" onclick="return false;"
+                   data-original-title="Share">
+                    {{ _("Share") }}
+                </a>
+                <a href="{{ c.org_meta.org_dict.link }}" target="_blank">{{ _('Visit Website') }}</a>
+                {{ h.hdx_follow_button('group', c.org_meta.id, follow_extra_text=' ' ) }}
+
+                {% if c.org_meta.allow_req_membership %}
+                    <a href="#" data-toggle="modal" data-target="#req-membership-div">
+                        {{ _("Request Membership") }}
+                    </a>
+                {% endif %}
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row paddingRowHack intro-section">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="org-title">{{c.org_meta.org_dict.display_name}}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 mTop10">
+                            <ul class="mainLinks org-info-links">
+                                <li>
+                                    <a
+                                        {% if c.org_meta.allow_basic_user_info %}
+                                            href="{{ h.url_for('organization_members', id=c.org_meta.id) }}"
+                                        {% else %}
+                                            href="#" class="disabled"
+                                        {% endif %} >
+                                        {{ c.org_meta.members_num }} {{ _('Members') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="followersNumber disabled">
+                                        <span>{{ c.org_meta.followers_num }}</span> {{ _('Followers') }}
+                                    </a>
+                                </li>
+                                <li><a href="{{ c.org_meta.org_dict.link }}" target="_blank">{{ _('Visit Website') }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span data-module="hdx_show_more" data-module-points="320" style="visibility: hidden;" class="org-description">
+                                {{ h.render_markdown(c.org_meta.org_dict.description) }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <div class="pull-left">
+                        <div class="org-logo-large table-valign">
+                            <div class="table-valign-content">
+                                {% if c.org_meta.custom_sq_logo_url %}
+                                    <img src="{{c.org_meta.custom_rect_logo_url}}"/>
+                                {% else %}
+                                    <img src="https://placehold.it/300x125"/>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mTop20">
+                <div class="col-xs-12">
+                    {% snippet "organization/snippets/org_actions_menu.html", request_membership=c.org_meta.allow_req_membership, organization=c.org_meta.org_dict, can_create_dataset=c.org_meta.allow_add_dataset, can_edit=c.org_meta.allow_edit, classes='base-actions-menu followButtonContainer pull-right' %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="floatingLogoAnchor"><!-- anchor for logo --></div>
+
+{% endblock %}

@@ -5,16 +5,18 @@ Created on Jun 23, 2015
 '''
 
 
-import ckan.model as model
 import logging
+import mock
+import ckan.model as model
 import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.lib.mailer as mailer
 
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
+import ckanext.hdx_theme.tests.mock_helper as mock_helper
 import ckanext.hdx_org_group.controllers.member_controller as member_controller
+import ckanext.hdx_org_group.tests as org_group_base
 
 c = common.c
 log = logging.getLogger(__name__)
@@ -26,11 +28,11 @@ c_dict = None
 invited_user = None
 
 
-class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestMembersController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
 
     @classmethod
     def _create_test_data(cls):
@@ -47,8 +49,16 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         ret = [next(user['fullname'] for user in users if user['id'] == member[0]) for member in members]
         return ret
 
-    def test_members(self):
+    @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
+    @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
+    @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
+    def test_members(self, member_c, org_helper_c, theme_c):
         global sort, q
+
+        test_username = 'testsysadmin'
+        mock_helper.populate_mock_as_c(member_c, test_username)
+        mock_helper.populate_mock_as_c(org_helper_c, test_username)
+        mock_helper.populate_mock_as_c(theme_c, test_username)
 
         context = {
             'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -82,7 +92,15 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
         assert len(user_list) == 1, "Only one user should be found for query"
         assert user_list[0] == 'Anna Anderson2'
 
-    def test_members_delete_add(self):
+    @mock.patch('ckanext.hdx_theme.helpers.helpers.c')
+    @mock.patch('ckanext.hdx_org_group.helpers.organization_helper.c')
+    @mock.patch('ckanext.hdx_org_group.controllers.member_controller.c')
+    def test_members_delete_add(self, member_c, org_helper_c, theme_c):
+        test_username = 'testsysadmin'
+        mock_helper.populate_mock_as_c(member_c, test_username)
+        mock_helper.populate_mock_as_c(org_helper_c, test_username)
+        mock_helper.populate_mock_as_c(theme_c, test_username)
+
         url = h.url_for(
             controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
             action='member_delete',

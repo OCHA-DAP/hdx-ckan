@@ -15,10 +15,12 @@ import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 
+
 def send_mail(recipients, subject, body):
     if recipients and len(recipients) > 0:
-        email_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}'\
-            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body)
+        email_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}' \
+            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject,
+                    body=body)
         log.info(email_info)
         send_mails = config.get('hdx.orgrequest.sendmails', 'true')
         if 'true' == send_mails:

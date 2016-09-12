@@ -308,9 +308,9 @@ def resource_show(context, data_dict):
     resource_dict = logic_get.resource_show(context, data_dict)
 
     # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
-    if not resource_dict.get('size'):
+    if _should_manually_load_property_value(context, resource_dict, 'size'):
         resource_dict['size'] = __get_resource_filesize(resource_dict)
-    if not resource_dict.get('revision_last_updated'):
+    if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
         resource_dict['revision_last_updated'] = __get_resource_revison_timesptamp(resource_dict)
 
     return resource_dict
@@ -325,9 +325,9 @@ def package_show(context, data_dict):
     package_dict = logic_get.package_show(context, data_dict)
 
     for resource_dict in package_dict.get('resources', []):
-        if not resource_dict.get('size'):
+        if _should_manually_load_property_value(context, resource_dict, 'size'):
             resource_dict['size'] = __get_resource_filesize(resource_dict)
-        if not resource_dict.get('revision_last_updated'):
+        if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
             resource_dict['revision_last_updated'] = __get_resource_revison_timesptamp(resource_dict)
 
     downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
@@ -335,6 +335,24 @@ def package_show(context, data_dict):
     package_dict['total_res_downloads'] = sum(downloads_list)
 
     return package_dict
+
+
+def _should_manually_load_property_value(context, data_dict, property_name):
+    '''
+    IF use_cache is false OR if the property doesn't exist in the dict we need to load it manually
+    :param context:
+    :type context: dict
+    :param data_dict: the resource_dict for example ( could be the dataset_dict for other properties in the future )
+    :type data_dict: dict
+    :param property_name: the property for which we need to decide if we need to manually load
+    :type property_name: str
+    :return: True if we need to load manually, otherwise False
+    :rtype: bool
+    '''
+    use_cache = context.get('use_cache', True)
+    current_value = data_dict.get(property_name)
+
+    return not (use_cache and current_value)
 
 
 @logic.side_effect_free
@@ -485,10 +503,12 @@ def hdx_send_mail_members(context, data_dict):
     html = u"""\
             <p>{fullname} sent the following message to {topic} of {pkg_owner_org}: </p>
             <p>{msg}</p>
-            <p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>
         """.format(fullname=data_dict.get('fullname'), topic=data_dict.get('topic').lower(),
-                   pkg_owner_org=data_dict.get('pkg_owner_org'), msg=data_dict.get('msg'),
-                   pkg_url=data_dict.get('pkg_url'), pkg_title=data_dict.get('pkg_title'))
+                   pkg_owner_org=data_dict.get('pkg_owner_org'), msg=data_dict.get('msg'))
+
+    if data_dict.get('source_type') == 'dataset':
+        html += u'<p>Dataset: <a href=\"{pkg_url}\">{pkg_title}</a>'.format(pkg_url=data_dict.get('pkg_url'),
+                                                                            pkg_title=data_dict.get('pkg_title'))
 
     recipients_list = []
     org_members = get_action("hdx_member_list")(context, {'org_id': data_dict.get('pkg_owner_org_id')})

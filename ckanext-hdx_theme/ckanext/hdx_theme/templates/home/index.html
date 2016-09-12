@@ -1,129 +1,7 @@
 {% extends "page.html" %}
 
-{% set carouselItems = [
-      {
-        "title": "New Feature",
-        "description": "Lake Chad Basin - Map Explorer",
-        "graphic": "/images/homepage/map-explorer.gif",
-        "url": "/explore?crisis=lake-chad&id=1"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Yemen - WFP mVAM, Food Security Monitoring",
-        "graphic": "/images/homepage/mVAM.png",
-        "url": "//data.humdata.org/visualization/wfp-indicators/"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "South Sudan - OCHA, Who is doing What Where (3W)",
-        "graphic": "/images/homepage/south-sudan.png",
-        "url": "//data.humdata.org/organization/ocha-south-sudan"
-      },
-      {
-        "title": "Blog Post",
-        "description": "New Features",
-        "graphic": "/images/homepage/membership.jpg",
-        "url": "http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/",
-        "buttonText": "Read",
-        "newTab": True
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Global - WFP, Food Market Prices",
-        "graphic": "/images/homepage/WFP.png",
-        "url": "//data.humdata.org/organization/wfp"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Kenya, Kakuma Refugee Camp - UNHCR, Who is doing What Where",
-        "graphic": "/images/homepage/KakumaRefugee.png",
-        "url": "//data.humdata.org/organization/unhcr-kenya"
-      },
-      {
-        "title": "Data Visualization",
-        "description": "Somalia - Adeso, Who is doing What, Where and When (4W)",
-        "graphic": "/images/homepage/Adeso.png",
-        "url": "//data.humdata.org/organization/adeso"
-      },
-      {
-        "title": "Film",
-        "description": "Making the Invisible Visible",
-        "graphic": "/images/homepage/movie_small.png",
-        "embed": True,
-        "url": "//youtu.be/7QX5Ji5gl9g"
-      }
-    ]
-%}
-
-        <div class="item active">
-          <div class="item-center">
-            <div class="sub-item">
-              <div class="sub-item-image">
-                <img class="graphic" src="/images/homepage/map-explorer.gif">
-                <div class="sub-item-action">
-                  <a href="/explore?crisis=lake-chad&layer=1" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/explore?crisis=lake-chad&layer=1" >
-                <div class="sub-item-caption">
-                  <p class="title">New Feature</p>
-                  <p class="description">Explore Lake Chad Basin Crisis visually via Map Explorer</p>
-                </div>
-              </a>
-            </div>
-            <div class="sub-item">
-              <div class="sub-item-image">
-                <img class="graphic" src="/images/homepage/mVAM.png">
-                <div class="sub-item-action">
-                  <a href="/visualization/wfp-indicators/" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/visualization/wfp-indicators/">
-                <div class="sub-item-caption">
-                  <p class="title">Interactive Data</p>
-                  <p class="description">Yemen - mVAM Food Security Monitoring</p>
-                </div>
-              </a>
-
-            </div>
-            <div class="sub-item">
-              <div class="sub-item-image">
-                <img class="graphic" src="/images/homepage/WFP.png">
-                <div class="sub-item-action">
-                  <a href="/organization/wfp" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/organization/wfp">
-                <div class="sub-item-caption">
-                  <p class="title">Interactive Data</p>
-                  <p class="description">WFP - World Food Programme</p>
-                </div>
-              </a>
-            </div>
-            <div class="sub-item">
-              <div class="sub-item-image disabled">
-                <div class="graphic">
-                  <iframe width="100%" height="100%" src="//www.youtube.com/embed/hCVyiZhYb4M" frameborder="0" allowfullscreen></iframe>
-                </div>
-                <div class="sub-item-action">
-                  <a href="/about" class="btn">Explore</a>
-                </div>
-              </div>
-
-              <a href="/about">
-                <div class="sub-item-caption">
-                  <p class="title">What is HDX?</p>
-                  <p class="description">Find more about HDX it's goals and features</p>
-                </div>
-              </a>
-
-            </div>
-          </div>
-        </div>
-
+{% set carouselItems = h.hdx_get_carousel_list() %}
+{% set page_subtitle = data.page_subtitle if data and data.page_subtitle else _("Welcome") %}
 
 {% block flash %}
   {# eat the flash messages so they don't remain in the session #}
@@ -131,7 +9,7 @@
 {% endblock %}
 
 
-{% block subtitle %}{{ _("Welcome") }}{% endblock %}
+{% block subtitle %}{{ page_subtitle }}{% endblock %}
 
 {% block maintag %}{% endblock %}
 
@@ -336,7 +214,7 @@
                     </div>
                   </a>
                 </div>
-          {% if (loop.index) is divisibleby 4 %}
+          {% if ((loop.index) is divisibleby 4) or (loop.index == carouselItems|length) %}
               </div>
             </div>
           {% endif %}

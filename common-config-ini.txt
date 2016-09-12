@@ -80,7 +80,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats resource_proxy text_view recline_view datastore
+ckan.plugins = ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -165,7 +165,7 @@ hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
 hdx.ogre.url = http://ogre:3000
 hdx.datapreview.url = /dataproxy
-hdx.previewmap.url = http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png
+hdx.previewmap.url = //{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.crisismap.url = http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png
 hdx.orgmap.url = //{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
 hdx.mapbox.baselayer.url = https://{s}.tiles.mapbox.com/v3/reliefweb.l43d4f5j/{z}/{x}/{y}.png
@@ -220,3 +220,7 @@ hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_servi
 hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
+
+# Org member request configs
+ytp.requests.hide_member_role = false
+ytp.requests.redirect_to_src_page = true

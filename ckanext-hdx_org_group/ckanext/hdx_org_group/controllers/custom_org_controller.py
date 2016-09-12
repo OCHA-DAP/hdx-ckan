@@ -23,7 +23,7 @@ import ckanext.hdx_theme.helpers.less as less
 from urllib import urlencode
 from pylons import config
 from ckan.controllers.api import CONTENT_TYPES
-import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 
 render = base.render
 abort = base.abort
@@ -57,9 +57,22 @@ def _get_embed_url(viz_config):
 
 
 class CustomOrgController(org.OrganizationController, search_controller.HDXSearchController):
-    def org_read(self, id):
+    def org_read(self, id, org_meta=None):
+        '''
 
-        org_info = self.get_org(id)
+        :param id: The id of the organization
+        :type id: str
+        :param org_meta: Information about the organization
+        :type org_meta: org_meta_dao.OrgMetaDao
+        :return:
+        '''
+
+        if not org_meta:
+            log.info("No org meta. Should have been created in organization_controller.py. Trying to create one now. ")
+            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+        c.org_meta = org_meta
+
+        org_info = self.get_org(org_meta)
 
         if self._is_facet_only_request():
             c.full_facet_info = self.get_dataset_search_results(org_info['name'])
@@ -67,12 +80,6 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             return json.dumps(c.full_facet_info)
         else:
             template_data = self.generate_template_data(org_info)
-
-            css_dest_dir = '/organization/' + org_info['name']
-
-            template_data['style'] = {
-                'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
-            }
 
             result = render(
                 'organization/custom/custom_org.html', extra_vars=template_data)
@@ -254,71 +261,32 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             '; '.join([e.get('message', '') for e in template_data['errors']])
         return template_data
 
-    def get_org(self, org_id):
-        group_type = 'organization'
+    def get_org(self, org_meta):
+        '''
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'schema': self._db_to_form_schema(group_type=group_type),
-                   'for_view': True}
-        data_dict = {'id': org_id}
+        :param org_meta: Information about the organization
+        :type org_meta: org_meta_dao.OrgMetaDao
+        :return: a dict containing more information specific for custom orgs
+        :rtype: dict
+        '''
 
-        try:
-            context['include_datasets'] = False
-            result = get_action(
-                'hdx_light_group_show')(context, data_dict)
+        result = org_meta.org_dict
 
-            org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
+        org_dict = {
+            'id': result['id'],
+            'display_name': result.get('display_name', ''),
+            'description': result['description'],
+            'name': result['name'],
+            'link': org_meta.org_dict.get('extras', {}).get('org_url'),
+            'revision_id': result['revision_id'],
+            'topline_resource': org_meta.customization.get(''),
+            'modified_at': result.get('modified_at', 'topline_resource'),
+            'image_sq': org_meta.customization.get('image_sq'),
+            'image_rect': org_meta.customization.get('image_rect'),
+            'visualization_config': result.get('visualization_config', ''),
+        }
 
-            json_extra = [el.get('value', None) for el in result.get('extras', []) if
-                          el.get('key', '') == 'customization']
-            jsonstring = json_extra[0] if len(json_extra) == 1 else ''
-            if jsonstring and jsonstring.strip():
-                json_dict = json.loads(jsonstring)
-                top_line_src_info = self._get_top_line_src_info(json_dict)
-                images = self._get_images(json_dict)
-            else:
-                top_line_src_info = (None, None)
-                images = (None, None)
-
-            org_dict = {
-                'id': result['id'],
-                'display_name': result.get('display_name', ''),
-                'description': result['description'],
-                'name': result['name'],
-                'link': org_url[0] if len(org_url) == 1 else None,
-                'revision_id': result['revision_id'],
-                'topline_resource': top_line_src_info,
-                'modified_at': result.get('modified_at', ''),
-                'image_sq': images[0],
-                'image_rect': images[1],
-                'visualization_config': result.get('visualization_config', ''),
-            }
-
-            return org_dict
-
-        except NotFound:
-            abort(404, _('Org not found'))
-        except NotAuthorized:
-            abort(401, _('Unauthorized to read org %s') % id)
-
-        return {}
-
-    def _get_images(self, json_dict):
-        if 'image_sq' in json_dict and 'image_rect' in json_dict:
-            return (json_dict['image_sq'], json_dict['image_rect'])
-        elif 'image_sq' in json_dict:
-            return (json_dict['image_sq'], None)
-        elif 'image_rect' in json_dict:
-            return (None, json_dict['image_rect'])
-
-        return (None, None)
-
-    def _get_top_line_src_info(self, json_dict):
-        if 'topline_resource' in json_dict:
-            return json_dict['topline_resource']
-
-        return (None, None)
+        return org_dict
 
     def get_top_line_numbers(self, top_line_num_resource):
         context = {'model': model, 'session': model.Session,
@@ -501,3 +469,6 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             result = False
 
         return result
+
+    def _activity_template(self, group_type):
+        return  'organization/custom_activity_stream.html'

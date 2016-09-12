@@ -1,5 +1,6 @@
 @import "../base/variables";
 @import "../base/mixins";
+@import "homepage-carousel";
 
 /* Homepage */
 header {
@@ -184,95 +185,7 @@ header {
         }
     }
 
-    .carousel {
-        @carouselImageHeight: 150px;
-        @carouselItemWidth: 215px;
-        @carouselItemMargin: 40px;
-        position: absolute;
-        bottom: 80px;
-        width: 100%;
-
-        .carousel-inner{
-            padding-bottom: 40px;
-            //width: auto;
-            //display: inline-block;
-            //left: 50%;
-            //transform: translate(-50%, 0);
-        }
-
-        .carousel-indicators {
-            bottom: 0;
-        }
-
-        .item {
-            .item-center {
-                margin: auto;
-                width: 4*@carouselItemWidth + 3*@carouselItemMargin;
-            }
-            .sub-item {
-                width: @carouselItemWidth;
-                margin-right: @carouselItemMargin;
-                float: left;
-
-                &:last-child{
-                    margin-right: 0;
-                }
-
-                .sub-item-image{
-                    position: relative;
-                    height: @carouselImageHeight;
-                    margin-bottom: 5px;
-
-                    &:hover {
-                        &.disabled {
-                            .sub-item-action{
-                                display: none;
-                            }
-                        }
-                        .sub-item-action{
-                            display: block;
-                        }
-                    }
-                    .sub-item-action {
-                        display: none;
-                        position: absolute;
-                        height: 100%;
-                        width: 100%;
-                        top: 0;
-                        left: 0;
-                        background: rgba(0,0,0, 0.3);
-
-                        a {
-                            position: absolute;
-                            left: 50%;
-                            top: 50%;
-                            transform: translate(-50%, -50%);
-                            background-color: @orangeColor;
-                        }
-                    }
-                    .graphic {
-                        max-height: 100%;
-                        max-width: 215px;
-                        height: 100%;
-                    }
-                }
-
-                .sub-item-caption {
-                    text-align: center;
-                    color: @whiteColor;
-                    .title {
-                        .gothamBoldFont(12px);
-                        margin: 0;
-                    }
-                    .description {
-                        .gothamBookFont(12px);
-                        margin: 0;
-                    }
-                }
-
-            }
-        }
-    }
+    .homepage-carousel();
 }
 
 

@@ -17,7 +17,7 @@ Example:
     <div class="list-items dataset-content">
       {% block title %}
    		 <h3 class="list-items dataset-heading">
-   		   <a href="{{url}}" title="{{powerview.title}}" ><span>Lake Chad Basin Crisis: {{powerview.title}}</span></a>
+   		   <a href="{{url}}" title="{{powerview.title}}" ><span>{{powerview.title}}</span></a>
    		 </h3>
   	{% endblock %}
       <div>{{ h.render_datetime(powerview.created) }}</div>

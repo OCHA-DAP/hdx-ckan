@@ -10,15 +10,16 @@ import ckan.tests as tests
 import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import ckanext.hdx_org_group.tests as org_group_base
 
 log = logging.getLogger(__name__)
 
 
-class TestOrgAuth(hdx_test_base.HdxBaseTest):
+class TestOrgAuth(org_group_base.OrgGroupBaseTest):
     
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
 
     @classmethod
     def _get_action(cls, action_name):
@@ -95,7 +96,11 @@ class TestOrgAuth(hdx_test_base.HdxBaseTest):
                            admins=[],
                            status=403)
 
-class TestGroupAuth(hdx_test_base.HdxBaseTest):
+class TestGroupAuth(org_group_base.OrgGroupBaseTest):
+
+    @classmethod
+    def _load_plugins(cls):
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_theme')
 
     def test_create_country(self):
         user = model.User.by_name('tester')

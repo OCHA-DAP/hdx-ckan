@@ -172,38 +172,6 @@ span.is-more a.more-link,
 #chart-container svg > g:nth-child(3) .c3-axis-x {
   opacity: 0 !important;
 }
-/* Actions */
-.indicator-actions a.btn.hdx-btn {
-  margin-left: 12px;
-}
-.indicator-actions ul {
-  list-style: none;
-}
-.indicator-actions ul li {
-  line-height: 16px;
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  display: inline;
-  margin-right: 16px;
-}
-.indicator-actions ul li:first-child:before {
-  border: none;
-}
-.indicator-actions ul li:before {
-  content: "";
-  border-left: 1px solid #888888;
-  height: 16px;
-  margin-right: 16px;
-}
-.indicator-actions ul li.delete-override a {
-  color: #f2645a;
-  text-transform: none;
-}
-.indicator-actions ul li a i {
-  margin-right: 5px;
-}
-/* END - Actions */
 /* Logo */
 .custom-dataset .org-logo {
   max-height: 65px;

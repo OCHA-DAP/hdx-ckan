@@ -10,7 +10,9 @@ $(document).ready(function(){
             if (result.success) {
                 $this.unbind("submit");
                 $this.attr("action", "/login_generic");
-                $this.submit();
+                hdxUtil.analytics.sendUserRegisteredEvent().then(function(){
+                    $this.submit();
+                });
             } else {
                 if (result.error.message == "Captcha is not valid"){
                     $iframe.css("border", "1px solid red");
