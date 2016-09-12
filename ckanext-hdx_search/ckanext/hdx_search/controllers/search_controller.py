@@ -570,17 +570,23 @@ class HDXSearchController(PackageController):
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
 
-        if 'ext_cod' in search_extras or 'ext_indicator' in search_extras:
-            result['filters_selected'] = True
+        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational']
+
+        for param in checkboxes:
+            if param in search_extras:
+                result['filters_selected'] = True
 
         num_of_indicators = 0
         num_of_cods = 0
+        num_of_subnational = 0
         for category_key, category_title in title_translations.items():
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
             # We're only interested in the number of items of the "indicator" facet
             if category_key == 'indicator':
                 num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+            elif category_key == 'subnational':
+                num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
             else:
                 sorted_item_list = []
                 for item in item_list:
@@ -609,6 +615,7 @@ class HDXSearchController(PackageController):
 
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
+        result['num_of_subnational'] = num_of_subnational
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
