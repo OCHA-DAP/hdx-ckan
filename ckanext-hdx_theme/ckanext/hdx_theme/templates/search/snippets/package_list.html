@@ -106,9 +106,9 @@ Example:
                 <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">CODs [?]</label>
             </span>
             <span class="mL15">
-                {% set ext_sub_national = request.params.get('ext_sub_national') %}
-                <input id="show-sub_national" name="ext_sub_national" class="checkbox-filter" type="checkbox" {% if ext_sub_national == "1" %} checked="checked" {% endif %}>
-                <label for="show-sub_national" title="{{ _(' ... ') }}" data-module="bs_tooltip" data-toggle="tooltip">Sub-national [?]</label>
+                {% set ext_subnational = request.params.get('ext_subnational') %}
+                <input id="show-subnational" name="ext_subnational" class="checkbox-filter" type="checkbox" {% if ext_subnational == "1" %} checked="checked" {% endif %}>
+                <label for="show-subnational" title="{{ _(' ... ') }}" data-module="bs_tooltip" data-toggle="tooltip">Sub-national [?]</label>
             </span>
             {#
             <div class="filters-actions list-header-showall pull-right">
