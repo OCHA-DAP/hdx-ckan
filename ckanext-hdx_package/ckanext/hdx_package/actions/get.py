@@ -485,10 +485,10 @@ def hdx_send_mail_contributor(context, data_dict):
         for admin in admins:
             user = get_action("user_show")(context, {'id': admin})
             if user.get('email'):
-                recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
-    recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
+                recipients_list.append({'email': user.get('email'), 'display_name': user.get('display_name')})
+    recipients_list.append({'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')})
 
-    bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
+    bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
                               recipients_list=recipients_list, footer=_footer_contact_contributor,
                               sender_name=data_dict.get('fullname'),
@@ -517,8 +517,8 @@ def hdx_send_mail_members(context, data_dict):
         for admin in admins:
             user = get_action("user_show")(context, {'id': admin})
             if user.get('email'):
-                recipients_list.append({'email': user.get('email'), 'name': user.get('display_name')})
-    recipients_list.append({'email': data_dict.get('email'), 'name': data_dict.get('fullname')})
+                recipients_list.append({'email': user.get('email'), '_display_name': user.get('display_name')})
+    recipients_list.append({'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')})
     # bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
     hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
                               recipients_list=recipients_list, footer=_footer_group_message,
