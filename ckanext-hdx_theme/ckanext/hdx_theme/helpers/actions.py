@@ -234,7 +234,7 @@ def hdx_send_editor_request_for_org(context, data_dict):
              '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'],
                         org=data_dict['organization'], msg=data_dict.get('message', ''))
 
-    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body, one_email=True)
 
 
 def hdx_send_request_membership(context, data_dict):
@@ -253,8 +253,8 @@ def hdx_send_request_membership(context, data_dict):
     subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(user_fullname=data_dict.get('display_name'))
 
     # changed made to send customized emails to each admin
-    for admin in data_dict.get('admins'):
-        hdx_mail.send_mail([admin], subject, body)
+    # for admin in data_dict.get('admins'):
+    hdx_mail.send_mail([data_dict.get('admins')], subject, body)
 
 
 def hdx_user_show(context, data_dict):

@@ -16,7 +16,7 @@ import ckanext.hdx_users.controllers.mailer as hdx_mailer
 log = logging.getLogger(__name__)
 
 
-def send_mail(recipients, subject, body):
+def send_mail(recipients, subject, body, one_email=False):
     if recipients and len(recipients) > 0:
         email_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}' \
             .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject,
@@ -24,8 +24,15 @@ def send_mail(recipients, subject, body):
         log.info(email_info)
         send_mails = config.get('hdx.orgrequest.sendmails', 'true')
         if 'true' == send_mails:
-            for recipient in recipients:
-                hdx_mailer.mail_recipient(recipient['display_name'], recipient['email'], subject, body)
+            if one_email:
+                new_recipients = []
+                for recipient in recipients:
+                    new_recipients.append({'name': recipient['display_name'], 'email': recipient['email']})
+                    hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=body,
+                                              recipients_list=new_recipients)
+            else:
+                for recipient in recipients:
+                    hdx_mailer.mail_recipient(recipient['display_name'], recipient['email'], subject, body)
         else:
             log.warn('HDX-CKAN was configured to not send email requests')
     else:
