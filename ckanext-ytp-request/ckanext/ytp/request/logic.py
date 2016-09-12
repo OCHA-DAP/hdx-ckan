@@ -95,6 +95,7 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
         set_lang(current_locale)
 
 
+
 def _mail_process_status(locale, member_user, approve, group_name, capacity):
     current_locale = get_lang()
     if locale == 'en':
