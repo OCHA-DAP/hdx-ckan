@@ -317,6 +317,61 @@ $(
     hdxUtil.analytics.sendMessagingEvent = sendMessagingEvent;
 
     /**
+     *
+     * @param addMethod {string} "by request" or "by invitation"
+     * @param rejected {boolean} whether the member was rejected (true) or accepted (false) in the org
+     * @returns {promise}
+     */
+    function sendMemberAddRejectEvent(addMethod, rejected) {
+        var eventName = rejected ? "member rejected" : "member add";
+        var metadata = {
+            "add method": addMethod,
+            "page title": analyticsInfo.pageTitle,
+            "org name": analyticsInfo.organizationName,
+            "org id": analyticsInfo.organizationId
+        };
+
+        var mixpanelData = {
+            "eventName": eventName,
+            "eventMeta": metadata
+        };
+
+        var gaData = {
+            "eventCategory": "organization",
+            "eventAction": eventName,
+            "eventLabel": analyticsInfo.organizationName
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+    }
+
+    hdxUtil.analytics.sendMemberAddRejectEvent = sendMemberAddRejectEvent;
+
+    /**
+     * Sends an event when a new user is registered
+     */
+    function sendUserRegisteredEvent() {
+        var eventName = "user register";
+        var metadata = {
+            "page title": analyticsInfo.pageTitle
+        };
+
+        var mixpanelData = {
+            "eventName": eventName,
+            "eventMeta": metadata
+        };
+
+        var gaData = {
+            "eventCategory": "user",
+            "eventAction": eventName
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+    }
+
+    hdxUtil.analytics.sendUserRegisteredEvent = sendUserRegisteredEvent;
+
+    /**
      * This function will send the analytics events to the server async and will return a promise
      * which is fulfilled when the events are successfully sent OR when "timeout" seconds have passed
      *

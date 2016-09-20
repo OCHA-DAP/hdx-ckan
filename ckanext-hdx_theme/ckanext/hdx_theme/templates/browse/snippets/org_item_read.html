@@ -1,6 +1,6 @@
 {% extends "browse/snippets/org_item.html" %}
 
-{% set org_url = h.hdx_get_extras_element(organization.extras) %}
+{% set org_url = c.org_meta.org_dict.extras.org_url %}
 
 {% block org_title %}
     <h1 class="itemTitle">

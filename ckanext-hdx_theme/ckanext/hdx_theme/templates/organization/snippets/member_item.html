@@ -8,43 +8,64 @@ Example:
 
 {% set member = h.hdx_get_user_info(id) %}
 
+{% snippet 'organization/snippets/edit_member.html', form_url=h.url_for(controller='organization',
+	action='member_new', id=group_id, user=id),
+	user=member.name, role=role, roles=roles, modal_div_id='edit-member-div-'+member.name %}
+
+{% set disable_change = is_single_admin and (role == 'admin') %}
+
 <li class="list-items dataset-item" id="mx-member-item-{{member.name}}">
-	<div class="list-items dataset-content member-item">
-		<h3 class="list-items dataset-heading">
-			{{member.display_name }} 
-		</h3>
-		<div class="member-info-content">
-			{% link_for member.name, controller='user', action='read', id=member.name, class_='info-item-name' %}
-			<span class="less-visible mx-member-role">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }} </span>
+	<div class="list-items dataset-content member-item mTB15 mLR15">
+		<span style="position: absolute;" class="image">{{ h.linked_gravatar(member.email_hash, 20) }}</span>
+
+		<div class="mL30">
+			<div class="dataset-heading">
+
+			<span>
+				<a href="{{ h.url_for(controller='user', action='read', id=member.name) }}">{{ member.display_name }}</a>
+				|
+				<a href="{{ h.url_for(controller='user', action='read', id=member.name) }}">{{ member.name }}</a>
+			</span>
+			<div class="pull-right">
+					{% if authorized %}
+						{% if not disable_change %}
+							{% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
+							  <div class="">
+								<a class="" href="#edit-member-div-{{member.name}}" data-toggle="modal"
+									title="{{ _('Change role') }}">
+								  {{ _('Change role') }}
+								</a>
+								<span class="mLR10">|</span>
+								<a class=""
+									href="#confirm-del-member-div-{{member.name}}"
+									data-toggle="modal" title="{{ _('Remove from this organization') }}">
+									{% block delete_button_text %}{{ _('Remove from this organization') }}{% endblock %}
+								</a>
+
+							  {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
+							  {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
+									action='member_delete', id=group_id, user=id),
+									body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.name %}
+							  </div>
+						{% else %}
+							<div><small>Please add another admin to be able to change this user</small></div>
+						{% endif %}
+					{% endif %}
+				</div>
 		</div>
-		<div class="list-items counter">
-			<span class="count"> {{ h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) }}</span>
-			-
-			<span class="count"> {{ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) }}</span>
-			-
-			<span class="count"> {{ h.hdx_show_singular_plural(member.grp_num, _('Countries'),  _('Countries')) }}</span>
+			<div class="dataset-updated">
+			<div class="updatedNameColor">
+				<span class="less-visible mx-member-role">{{ translated_role }} - {{ _('Registered') }} {{ h.render_datetime(member.created) }} </span>
+			</div>
+			<div class="list-items counter">
+				<span class="count"> {{ h.hdx_show_singular_plural(member.ds_num, _('Dataset'), _('Datasets')) }}</span>
+				-
+				<span class="count"> {{ h.hdx_show_singular_plural(member.org_num, _('Organisation'), _('Organisations')) }}</span>
+				-
+				<span class="count"> {{ h.hdx_show_singular_plural(member.grp_num, _('Countries'),  _('Countries')) }}</span>
+			</div>
 		</div>
-		 {% if authorized %}
-			{% set locale = h.dump_json({'content': _('Are you sure you want to delete this member?')}) %}
-	          <div class="member-actions">
-	            <a class="btn hdx-btn main-hdx-btn" href="#edit-member-div-{{member.name}}" data-toggle="modal" 
-	            	title="{{ _('Edit') }}">
-	              {{ _('Edit') }}
-	            </a>
-	            <a class="btn hdx-btn main-hdx-btn" 
-	            	href="#confirm-del-member-div-{{member.name}}" 
-	            	data-toggle="modal" title="{{ _('Delete') }}">
-	            	{% block delete_button_text %}<span class='glyphicon glyphicon-trash' ></span>{% endblock %}
-	            </a>
-         
-	          {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
-	          {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization', 
-	          		action='member_delete', id=group_id, user=id), 
-	          		body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+member.name %}
-	          </div>
-	          {% snippet 'organization/snippets/edit_member.html', form_url=h.url_for(controller='organization', 
-	          		action='member_new', id=group_id, user=id),
-	          		user=member.name, role=role, roles=roles, modal_div_id='edit-member-div-'+member.name %}
-		{% endif %}
+		</div>
+
 	</div>
 </li>

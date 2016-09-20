@@ -13,9 +13,9 @@ import ckan.model as model
 from pylons import config
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_org_group.controllers.custom_org_controller as controller
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.tests as org_group_base
 import ckan.lib.uploader as uploader
 
 log = logging.getLogger(__name__)
@@ -68,14 +68,14 @@ top_line_items = [
 ]
 
 
-class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_package hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_package hdx_theme')
 
     @classmethod
     def _create_test_data(cls):
-        super(TestMembersController, cls)._create_test_data(create_datasets=True, create_members=True)
+        super(TestCustomOrgController, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_assemble_viz_config(self):
         custom_org_controller = controller.CustomOrgController()

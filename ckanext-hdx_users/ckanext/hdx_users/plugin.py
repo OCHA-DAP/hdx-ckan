@@ -138,6 +138,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     action='contribute')
         map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
                     action='contact_hdx')
+        map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                    action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
         map.connect('/user/edit', controller='user', action='edit')
         map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')

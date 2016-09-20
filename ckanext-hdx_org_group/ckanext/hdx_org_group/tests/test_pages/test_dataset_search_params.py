@@ -9,18 +9,18 @@ import logging as logging
 import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_theme.tests.hdx_test_util as hdx_test_util
+import ckanext.hdx_org_group.tests as org_group_base
 from ckan.lib.helpers import Page
 
 log = logging.getLogger(__name__)
 
 
-class TestDatasetSearchParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestDatasetSearchParams(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_search hdx_org_group hdx_package hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_search hdx_org_group hdx_package hdx_theme')
 
     def test_search_params(self):
         url = h.url_for(
