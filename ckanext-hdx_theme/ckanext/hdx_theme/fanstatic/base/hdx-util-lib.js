@@ -6,9 +6,12 @@
     };
     window.hdxUtil = hdxUtil;
 
-    hdxUtil.ui.scrollTo = function (target) {
+    hdxUtil.ui.scrollTo = function (target, delta) {
+        if (!delta){
+            delta = 40;
+        }
         $('html, body').animate({
-            'scrollTop': $(target).offset().top - 40
+            'scrollTop': $(target).offset().top - delta
         }, 700);
     };
 
