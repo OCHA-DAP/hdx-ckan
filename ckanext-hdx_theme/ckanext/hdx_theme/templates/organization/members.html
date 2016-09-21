@@ -124,7 +124,7 @@
 
                                                 {% set confirm_delete_message = _('Are you sure you want to delete this member?') %}
                                                 {% snippet 'snippets/confirmation_post.html', form_url=h.url_for(controller='organization',
-                                                action='member_delete', id=group_id, user=id),
+                                                action='member_delete', id=c.group_dict.id, user=current_member.id),
                                                 body=confirm_delete_message, modal_div_id='confirm-del-member-div-'+current_member.name %}
                                             </div>
                                         </div>
