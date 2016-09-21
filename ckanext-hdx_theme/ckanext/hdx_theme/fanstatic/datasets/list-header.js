@@ -36,8 +36,8 @@ function updateFilters(forceApply){
                 facetDiv.html(newHtml);
             }
         }
-        $("#show-cods").prop("disabled", cods == 0);
-        $("#show-indicators").prop("disabled", indicators == 0);
+        // $("#show-cods").prop("disabled", cods == 0);
+        // $("#show-indicators").prop("disabled", indicators == 0);
 
         $(".list-header-filters select.filter-item").multipleSelect('refresh');
         $(".list-header-apply .filter-results-number").text(results);
@@ -98,7 +98,7 @@ $(document).ready(function(){
     });
 
     $(".list-header-filters .checkbox-filter").change(function(){
-        determineEnabled(this);
+        // determineEnabled(this);
         updateFilters();
     });
 
@@ -122,7 +122,7 @@ $(document).ready(function(){
     });
 
 
-    determineEnabledFirstTime();
+    // determineEnabledFirstTime();
 
     //$(".list-header-filters select.filter-item").attr("style", "");
     $("#headerSearch").change(function(){
@@ -155,7 +155,7 @@ $(document).ready(function(){
         $("#header-search-sort ~ .dropdown-toggle-text").text($("#header-search-sort_initial_values").attr("label"));
 
         updateFilters();
-        determineEnabledFirstTime(true);
+        // determineEnabledFirstTime(true);
         event.preventDefault();
         $(".list-header-apply").hide(500);
     });
