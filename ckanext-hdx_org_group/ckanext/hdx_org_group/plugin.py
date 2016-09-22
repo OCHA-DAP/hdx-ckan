@@ -50,7 +50,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         }
 
     def get_auth_functions(self):
-        return {'hdx_trigger_screencap': authorize.hdx_trigger_screencap}
+        return {
+            'hdx_trigger_screencap': authorize.hdx_trigger_screencap,
+            'member_delete': authorize.member_delete
+        }
 
 
     # def get_auth_functions(self):
