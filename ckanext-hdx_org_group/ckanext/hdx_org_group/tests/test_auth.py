@@ -68,6 +68,50 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
                               apikey=user.apikey, status=403)
         assert True, 'user shoudn\'t be allowed to add himself as a member'
 
+    def test_remove_self_org_member(self):
+        testsysadmin = model.User.by_name('testsysadmin')
+        user = model.User.by_name('tester')
+        create_result = tests.call_action_api(self.app, 'organization_create',
+                                              name='test_org_e', title='Test Org E',
+                                              apikey=testsysadmin.apikey, status=200)
+
+        tests.call_action_api(self.app, 'organization_member_create',
+                              id=create_result['id'], username='annafan', role='member',
+                              apikey=testsysadmin.apikey, status=200)
+
+        for role in ('editor', 'member'):
+            tests.call_action_api(self.app, 'organization_member_create',
+                                  id=create_result['id'], username='tester', role=role,
+                                  apikey=testsysadmin.apikey, status=200)
+
+            tests.call_action_api(self.app, 'organization_member_delete',
+                                  id=create_result['id'], username='annafan',
+                                  apikey=user.apikey, status=403)
+
+            assert True, 'a {} shouldn\'t be able to remove any other member from the org'.format(role)
+
+            tests.call_action_api(self.app, 'organization_member_delete',
+                              id=create_result['id'], username='tester',
+                              apikey=user.apikey, status=200)
+
+            assert True, 'any member should be able to remove himself from an org'
+
+        tests.call_action_api(self.app, 'organization_member_create',
+                              id=create_result['id'], username='tester', role='admin',
+                              apikey=testsysadmin.apikey, status=200)
+
+        tests.call_action_api(self.app, 'organization_member_delete',
+                              id=create_result['id'], username='annafan',
+                              apikey=user.apikey, status=200)
+        assert True, 'an admin should be able to remove any other member from the org'
+
+        tests.call_action_api(self.app, 'organization_member_delete',
+                              id=create_result['id'], username='tester',
+                              apikey=user.apikey, status=200)
+
+        assert True, 'any member should be able to remove himself from an org'
+
+
     def test_new_org_request_page(self):
         offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
         result = self.app.get(offset)
