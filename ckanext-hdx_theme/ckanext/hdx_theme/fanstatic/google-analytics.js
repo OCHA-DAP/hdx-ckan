@@ -45,6 +45,11 @@ $(
                     'name': 'cod filter',
                     'isList': false,
                     'mandatory': true
+                },
+                'ext_subnational': {
+                    'name': 'subnational filter',
+                    'isList': false,
+                    'mandatory': true
                 }
             };
 
