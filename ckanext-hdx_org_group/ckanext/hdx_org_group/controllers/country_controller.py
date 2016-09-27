@@ -3,23 +3,21 @@ Created on Jan 13, 2015
 
 @author: alexandru-m-g
 '''
-import json
 import collections
-
-import logging
 import datetime as dt
+import json
+import logging
 
-import ckan.lib.base as base
-import ckan.logic as logic
-import ckan.model as model
-import ckan.common as common
-import ckan.controllers.group as group
-import ckan.lib.helpers as h
-
+import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 
+import ckan.common as common
+import ckan.controllers.group as group
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.model as model
 from ckan.controllers.api import CONTENT_TYPES
 
 render = base.render
@@ -84,8 +82,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             c.full_facet_info = self.get_dataset_search_results(country_code)
             vocab_topics_list = c.full_facet_info.get(
                 'facets', {}).pop('vocab_Topics', {}).get('items', [])
-            c.cont_browsing = self.get_cont_browsing(
-                c.group_dict, vocab_topics_list)
+
+            # Removed for now as per HDX-4927
+            # c.cont_browsing = self.get_cont_browsing(
+            #    c.group_dict, vocab_topics_list)
 
             c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
 
@@ -207,59 +207,60 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
     #         'hdx_get_group_activity_list')(context, act_data_dict)
     #     return result
 
-    def get_cont_browsing(self, group_dict, vocab_topics_list):
-        cont_browsing_dict = {
-            'websites': self._process_websites(group_dict),
-            'followers': self._get_followers(group_dict['id']),
-            'topics': self._get_topics(vocab_topics_list)
-
-        }
-        return cont_browsing_dict
-
-    def _process_websites(self, group_dict):
-        site_list = []
-        if 'extras' in group_dict:
-            extras_dict = {el['key']: el['value']
-                           for el in group_dict['extras'] if el['state'] == u'active'}
-
-            if 'relief_web_url' in extras_dict:
-                site_list.append(
-                    {'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
-            site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
-            if 'hr_info_url' in extras_dict:
-                site_list.append(
-                    {'name': _('HumanitarianResponse'), 'url': extras_dict['hr_info_url']})
-            site_list.append(
-                {'name': _('OCHA Financial Tracking Service'),
-                 'url': 'http://fts.unocha.org/'}
-            )
-
-        return site_list
-
-    def _get_followers(self, country_id):
-        followers = get_action('group_follower_list')(
-            {'ignore_auth': True}, {'id': country_id})
-        followers_list = [
-            {
-                'name': f['display_name'],
-                'url': h.url_for(controller='user', action='read', id=f['name'])
-            } for f in followers
-            ]
-
-        return followers_list
-
-    def _get_topics(self, vocab_topics_list):
-        topic_list = [
-            {
-                'name': topic.get('name', ''),
-                'url': h.url_for(controller='package', action='search', vocab_Topics=topic.get('name')),
-                'count': topic.get('count', 0)
-            } for topic in vocab_topics_list
-        ]
-
-        topic_list.sort(key=lambda x: x.get('count', 0), reverse=True)
-
-        return topic_list
+    # Removed for now as per HDX-4927
+    # def get_cont_browsing(self, group_dict, vocab_topics_list):
+    #     cont_browsing_dict = {
+    #         'websites': self._process_websites(group_dict),
+    #         'followers': self._get_followers(group_dict['id']),
+    #         'topics': self._get_topics(vocab_topics_list)
+    #
+    #     }
+    #     return cont_browsing_dict
+    #
+    # def _process_websites(self, group_dict):
+    #     site_list = []
+    #     if 'extras' in group_dict:
+    #         extras_dict = {el['key']: el['value']
+    #                        for el in group_dict['extras'] if el['state'] == u'active'}
+    #
+    #         if 'relief_web_url' in extras_dict:
+    #             site_list.append(
+    #                 {'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
+    #         site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
+    #         if 'hr_info_url' in extras_dict:
+    #             site_list.append(
+    #                 {'name': _('HumanitarianResponse'), 'url': extras_dict['hr_info_url']})
+    #         site_list.append(
+    #             {'name': _('OCHA Financial Tracking Service'),
+    #              'url': 'http://fts.unocha.org/'}
+    #         )
+    #
+    #     return site_list
+    #
+    # def _get_followers(self, country_id):
+    #     followers = get_action('group_follower_list')(
+    #         {'ignore_auth': True}, {'id': country_id})
+    #     followers_list = [
+    #         {
+    #             'name': f['display_name'],
+    #             'url': h.url_for(controller='user', action='read', id=f['name'])
+    #         } for f in followers
+    #         ]
+    #
+    #     return followers_list
+    #
+    # def _get_topics(self, vocab_topics_list):
+    #     topic_list = [
+    #         {
+    #             'name': topic.get('name', ''),
+    #             'url': h.url_for(controller='package', action='search', vocab_Topics=topic.get('name')),
+    #             'count': topic.get('count', 0)
+    #         } for topic in vocab_topics_list
+    #     ]
+    #
+    #     topic_list.sort(key=lambda x: x.get('count', 0), reverse=True)
+    #
+    #     return topic_list
 
     def get_dataset_search_results(self, country_code):
         package_type = 'dataset'

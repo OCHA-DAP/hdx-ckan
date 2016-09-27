@@ -97,13 +97,18 @@ Example:
 
             <span class="mL15">
                 {% set ext_indicator = request.params.get('ext_indicator') %}
-                <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox" {% if full_facet_info.get("num_of_indicators") == 0 %} disabled="disabled" {% endif %}  {% if ext_indicator == "1" %} checked="checked" {% endif %}>
-                <label for="show-indicators" title="{{ _('An indicator is comparable across countries and has gone through a QA process.') }}" data-module="bs_tooltip" data-toggle="tooltip">Only show indicators</label>
+                <input id="show-indicators" name="ext_indicator" class="checkbox-filter" type="checkbox" {% if full_facet_info.get("num_of_indicators") == 0 %} disabled="disabled" {% endif %} {% if ext_indicator == "1" %} checked="checked" {% endif %}>
+                <label for="show-indicators" title="{{ _('HDX Curated datasets hold data that is identified, organised and maintained over time by the HDX Data Team.') }}" data-module="bs_tooltip" data-toggle="tooltip">HDX curated [?]</label>
             </span>
             <span class="mL15">
                 {% set ext_cod = request.params.get('ext_cod') %}
-                <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if  full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}  {% if ext_cod == "1" %} checked="checked" {% endif %}>
-                <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">Only show CODs[?]</label>
+                <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if  full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %} {% if ext_cod == "1" %} checked="checked" {% endif %}>
+                <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">CODs [?]</label>
+            </span>
+            <span class="mL15">
+                {% set ext_subnational = request.params.get('ext_subnational') %}
+                <input id="show-subnational" name="ext_subnational" class="checkbox-filter" type="checkbox" {% if  full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %} {% if ext_subnational == "1" %} checked="checked" {% endif %}>
+                <label for="show-subnational" title="{{ _('Sub national data refers to data that is disaggregated in smaller administrative levels than the national level.') }}" data-module="bs_tooltip" data-toggle="tooltip">Sub-national [?]</label>
             </span>
             {#
             <div class="filters-actions list-header-showall pull-right">

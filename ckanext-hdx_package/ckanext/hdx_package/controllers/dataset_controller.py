@@ -1,45 +1,28 @@
 """
 Functions for creating and maintaining datasets.
 """
-import logging
 import cgi
+import logging
 from string import lower
-from ckan.lib.helpers import url_for
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
-
-from ckanext.hdx_package.helpers import helpers
-# from ckanext.hdx_package.plugin import HDXPackagePlugin as hdx_package
-# from formencode import foreach
-
-from pylons import config
-# from genshi.template.text import NewTextTemplate
-# from paste.deploy.converters import asbool
-
-import ckan.logic as logic
-import ckan.lib.base as base
-# import ckan.lib.maintain as maintain
-# import ckan.lib.package_saver as package_saver
-# import ckan.lib.i18n as i18n
-import ckan.lib.navl.dictization_functions as dict_fns
-# import ckan.lib.accept as accept
-import ckan.lib.helpers as h
-import ckan.model as model
-import ckan.lib.datapreview as datapreview
-import ckan.lib.plugins
-import ckan.new_authz as new_authz
-import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.lib.search as search
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.membership_data as membership_data
-
-from ckan.common import _, json, request, c, g, response
-from ckan.controllers.home import CACHE_PARAMETERS
-from ckan.controllers.api import CONTENT_TYPES
-
+from ckanext.hdx_package.helpers import helpers
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_theme.util.mail import simple_validate_email
+from pylons import config
 
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckan.lib.base as base
+import ckan.lib.datapreview as datapreview
+import ckan.lib.helpers as h
+import ckan.lib.navl.dictization_functions as dict_fns
+import ckan.lib.plugins
+import ckan.logic as logic
+import ckan.model as model
+import ckan.new_authz as new_authz
+from ckan.common import _, json, request, c, g, response
+from ckan.controllers.api import CONTENT_TYPES
+from ckan.controllers.home import CACHE_PARAMETERS
 
 log = logging.getLogger(__name__)
 
@@ -723,32 +706,35 @@ class DatasetController(PackageController):
             'hdx_get_activity_list')(context, act_data_dict)
         c.related_count = c.pkg.related_count
 
-        # count the number of resource downloads
-        c.downloads_count = 0
-        for resource in c.pkg_dict['resources']:
-            if resource['tracking_summary']:
-                c.downloads_count += resource['tracking_summary']['total']
-        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.downloads_count)
+        # Removed for now as per HDX-4927
+        # # count the number of resource downloads
+        # c.downloads_count = 0
+        # for resource in c.pkg_dict['resources']:
+        #     if resource['tracking_summary']:
+        #         c.downloads_count += resource['tracking_summary']['total']
+        # c.pkg_dict['approx_total_downloads'] = find_approx_download(c.downloads_count)
+        #
+        # followers = get_action('dataset_follower_list')({'ignore_auth': True},
+        #                                                 {'id': c.pkg_dict['id']})
+        # if followers and len(followers) > 0:
+        #     c.followers = [{'url': h.url_for(controller='user',
+        #                                      action='read', id=f['name']), 'name': f['fullname'] or f['name']}
+        #                    for f in followers]
 
-        followers = get_action('dataset_follower_list')({'ignore_auth': True},
-                                                        {'id': c.pkg_dict['id']})
-        if followers and len(followers) > 0:
-            c.followers = [{'url': h.url_for(controller='user',
-                                             action='read', id=f['name']), 'name': f['fullname'] or f['name']}
-                           for f in followers]
-        # topics
-        topics_obj = helpers.pkg_topics_list({'id': c.pkg_dict['id']})
-        topics = model_dictize.tag_list_dictize(topics_obj, context)
-
-        if topics and len(topics) > 0:
-            c.topics = [
-                {'url': h.url_for(controller='package', action='search', vocab_Topics=t['name']), 'name': t['name']}
-                for t in topics]
-        # related websites
-        c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
-            'url': 'http://www.unocha.org', 'name': 'UNOCHA'},
-                          {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
-                          {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
+        # Removed for now as per HDX-4927
+        # # topics
+        # topics_obj = helpers.pkg_topics_list({'id': c.pkg_dict['id']})
+        # topics = model_dictize.tag_list_dictize(topics_obj, context)
+        #
+        # if topics and len(topics) > 0:
+        #     c.topics = [
+        #         {'url': h.url_for(controller='package', action='search', vocab_Topics=t['name']), 'name': t['name']}
+        #         for t in topics]
+        # # related websites
+        # c.related_urls = [{'url': 'http://reliefweb.int', 'name': 'ReliefWeb'}, {
+        #     'url': 'http://www.unocha.org', 'name': 'UNOCHA'},
+        #                   {'url': 'http://www.humanitarianresponse.info', 'name': 'HumanitarianResponse'},
+        #                   {'url': 'http://fts.unocha.org', 'name': 'OCHA Financial Tracking Service'}]
 
         # Constructing the email body
         notes = c.pkg_dict.get('notes') if c.pkg_dict.get('notes') else _('No description available')
