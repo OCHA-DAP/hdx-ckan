@@ -168,17 +168,30 @@ def _before_ckan_action(context, resource_dict, source_action):
     :param source_action: either 'resource_action' or 'package_action' - the initial trigger of the create/update
     :type source_action: str
     '''
-    context['hdx_source_action'] = source_action
+
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
-                     and get_shape_info_state(resource_dict) != PROCESSING and not context.get('return_id_only')
+                     and get_shape_info_state(resource_dict) != PROCESSING and not context.get('return_id_only') \
+                     and not context.get('hdx_source_action')
     if do_geo_preview:
+        context['hdx_source_action'] = source_action
         add_init_shape_info_data_if_needed(resource_dict)
 
 
 def _after_ckan_action(context, resource_dict, source_action):
+    '''
+    'source_action' helps to only trigger geopreview process for the resource(s) that are updated.
+    resource_create() calls package_update() and the package could have several resources.
+
+    :param context: context
+    :type context: dict
+    :param resource_dict:
+    :type resource_dict dict
+    :param source_action: either 'resource_action' or 'package_action' - the initial trigger of the create/update
+    :type source_action: str
+    '''
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
                      and get_shape_info_state(resource_dict) == PROCESSING \
-                     and context.get('source_action') == source_action
+                     and context.get('hdx_source_action') == source_action
 
     if do_geo_preview and lower(resource_dict.get('format', '')) in GIS_FORMATS:
         do_geo_transformation_process(context, resource_dict)
