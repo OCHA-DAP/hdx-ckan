@@ -156,16 +156,30 @@ def do_geo_transformation_process(context, result_dict):
         get_action('resource_update')(ctx, result_dict)
 
 
-def _before_ckan_action(context, resource_dict):
+def _before_ckan_action(context, resource_dict, source_action):
+    '''
+    'source_action' helps to only trigger geopreview process for the resource(s) that are updated.
+    resource_create() calls package_update() and the package could have several resources.
+
+    :param context: context
+    :type context: dict
+    :param resource_dict:
+    :type resource_dict dict
+    :param source_action: either 'resource_action' or 'package_action' - the initial trigger of the create/update
+    :type source_action: str
+    '''
+    context['hdx_source_action'] = source_action
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
-                     and get_shape_info_state(resource_dict) != PROCESSING
+                     and get_shape_info_state(resource_dict) != PROCESSING and not context.get('return_id_only')
     if do_geo_preview:
         add_init_shape_info_data_if_needed(resource_dict)
 
 
-def _after_ckan_action(context, resource_dict):
+def _after_ckan_action(context, resource_dict, source_action):
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
-                     and get_shape_info_state(resource_dict) == PROCESSING
+                     and get_shape_info_state(resource_dict) == PROCESSING \
+                     and context.get('source_action') == source_action
+
     if do_geo_preview and lower(resource_dict.get('format', '')) in GIS_FORMATS:
         do_geo_transformation_process(context, resource_dict)
 
@@ -178,11 +192,11 @@ def geopreview_4_resources(original_resource_action):
         It triggers the geopreview creation process.
         '''
 
-        _before_ckan_action(context, resource_dict)
+        _before_ckan_action(context, resource_dict, 'resource_action')
 
         result_dict = original_resource_action(context, resource_dict)
 
-        _after_ckan_action(context, result_dict)
+        _after_ckan_action(context, result_dict, 'resource_action')
 
         return result_dict
 
@@ -194,12 +208,15 @@ def geopreview_4_packages(original_package_action):
     def package_action(context, package_dict):
 
         for resource_dict in package_dict.get('resources', []):
-            _before_ckan_action(context, resource_dict)
+            _before_ckan_action(context, resource_dict, 'package_action')
 
         result_dict = original_package_action(context, package_dict)
 
-        for resource_dict in result_dict.get('resources', []):
-            _after_ckan_action(context, resource_dict)
+        if isinstance(result_dict, dict):
+            for resource_dict in result_dict.get('resources', []):
+                _after_ckan_action(context, resource_dict, 'package_action')
+        else:
+            log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
 
         return result_dict
 
