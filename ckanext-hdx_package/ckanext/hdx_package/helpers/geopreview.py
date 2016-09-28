@@ -27,9 +27,10 @@ KML_FORMAT = 'kml'
 KMZ_FORMAT = 'kmz'
 GIS_FORMATS = [ZIPPED_SHAPEFILE_FORMAT, GEOJSON_FORMAT, KML_FORMAT, KMZ_FORMAT]
 
+PROCESSING = 'processing'
+
 _get_or_bust = logic.get_or_bust
 get_action = logic.get_action
-
 
 def detect_format_from_extension(url):
     if url:
@@ -85,7 +86,7 @@ def add_init_shape_info_data_if_needed(resource_data):
 
     if file_format in GIS_FORMATS:
         shape_info = json.dumps({
-            'state': 'processing',
+            'state': PROCESSING,
             'message': 'The processing of the geo-preview has started',
             'layer_id': 'None',
             'error_type': 'None',
@@ -94,6 +95,22 @@ def add_init_shape_info_data_if_needed(resource_data):
 
         resource_data['shape_info'] = shape_info
 
+def get_shape_info_state(resource_data):
+    '''
+    :param resource_data: a resource dict
+    :type resource_data: dict
+    :return: The current status of the transformation process. None if no "shape_info" property found
+    :rtype: str
+    '''
+
+    shape_info_str = resource_data.get('shape_info')
+    if shape_info_str:
+        try:
+            shape_info = json.loads(shape_info_str)
+            return shape_info.get('state')
+        except ValueError, e:
+            log.error("Couldn't load following string as json: {}".format(shape_info_str))
+    return None
 
 def do_geo_transformation_process(context, result_dict):
     '''
@@ -137,3 +154,53 @@ def do_geo_transformation_process(context, result_dict):
         result_dict['shape_info'] = shape_info_json
         ctx['do_geo_preview'] = False
         get_action('resource_update')(ctx, result_dict)
+
+
+def _before_ckan_action(context, resource_dict):
+    do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
+                     and get_shape_info_state(resource_dict) != PROCESSING
+    if do_geo_preview:
+        add_init_shape_info_data_if_needed(resource_dict)
+
+
+def _after_ckan_action(context, resource_dict):
+    do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
+                     and get_shape_info_state(resource_dict) == PROCESSING
+    if do_geo_preview and lower(resource_dict.get('format', '')) in GIS_FORMATS:
+        do_geo_transformation_process(context, resource_dict)
+
+
+def geopreview_4_resources(original_resource_action):
+
+    def resource_action(context, resource_dict):
+        '''
+        This runs the 'resource_create/resource_update' action from core ckan's create.py / update.py
+        It triggers the geopreview creation process.
+        '''
+
+        _before_ckan_action(context, resource_dict)
+
+        result_dict = original_resource_action(context, resource_dict)
+
+        _after_ckan_action(context, result_dict)
+
+        return result_dict
+
+    return resource_action
+
+
+def geopreview_4_packages(original_package_action):
+
+    def package_action(context, package_dict):
+
+        for resource_dict in package_dict.get('resources', []):
+            _before_ckan_action(context, resource_dict)
+
+        result_dict = original_package_action(context, package_dict)
+
+        for resource_dict in result_dict.get('resources', []):
+            _after_ckan_action(context, resource_dict)
+
+        return result_dict
+
+    return package_action
