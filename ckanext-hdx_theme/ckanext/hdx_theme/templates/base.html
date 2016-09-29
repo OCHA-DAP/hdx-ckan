@@ -59,6 +59,8 @@
           dimension2Type += analyticsInfo.isCod && analyticsInfo.isIndicator ? '~' : '';
           dimension2Type += analyticsInfo.isIndicator ? 'indicator' : '';
 
+          dimension2Type = analyticsInfo.datasetId != 'None' && dimension2Type == '' ? 'standard' : dimension2Type;
+
           if (dimension2Type) {
               ga('set', 'dimension2', dimension2Type);
           }
