@@ -21,11 +21,17 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
         return True
 
     def info(self):
+
+        schema = {
+            "hxl_preview_config": []
+        }
+
         return {
             'name': 'hdx_hxl_preview',
             'title': 'HXL Preview',
             'filterable': False,
             'preview_enabled': True,
+            'schema': schema,
             'requires_datastore': False,
             'iframed': True,
             'default_title': _('HXL Preview')
@@ -33,7 +39,7 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
 
     def setup_template_variables(self, context, data_dict):
         resource_view_dict = data_dict.get('resource_view')
-        resource_dict = data_dict.get('resource_view')
+        resource_dict = data_dict.get('resource')
 
 
 
