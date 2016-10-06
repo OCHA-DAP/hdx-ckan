@@ -65,6 +65,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         self.__add_dataproxy_url_for_checks(config)
         self.__add_gis_layer_config_for_checks(config)
         self.__add_spatial_config_for_checks(config)
+        self.__add_hxl_proxy_url_for_checks(config)
 
     def __add_dataproxy_url_for_checks(self, config):
         dataproxy_url = config.get('hdx.datapreview.url', '')
@@ -85,6 +86,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         spatial_check_url = spatial_url[0:url_index+len(search_str)]
         spatial_check_url = self._create_full_URL(spatial_check_url)
         config['hdx_checks.spatial_checks_url'] = spatial_check_url
+
+    def __add_hxl_proxy_url_for_checks(self, config):
+        hxl_proxy_url = self._create_full_URL('/hxlproxy/data.json?url=test')
+        config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
 
     def _create_full_URL(self, url):
         '''
