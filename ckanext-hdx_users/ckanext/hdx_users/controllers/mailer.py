@@ -114,7 +114,7 @@ def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_
         smtp_connection.quit()
 
 
-def new_mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_email=None, bcc_recipients_list=None, footer=None, headers={}):
+def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_email=None, bcc_recipients_list=None, footer=None, headers={}):
     if recipients_list is None and bcc_recipients_list is None:
         raise MailerException('There are no recipients to send email')
     return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list, footer=footer, headers=headers, sender_email=sender_email)
@@ -124,11 +124,11 @@ def new_mail_recipient(recipients_list, subject, body, sender_name='HDX', sender
     #                        recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
     #                        bcc_recipients_list=bcc_recipients_list)
 
-
-
-def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
-                   sender_name='HDX', sender_email=None, bcc_recipients_list=None):
-    return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
-                           sender_url=g.site_url, subject=subject, body=body, headers=headers,
-                           recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
-                           bcc_recipients_list=bcc_recipients_list)
+#
+#
+# def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
+#                    sender_name='HDX', sender_email=None, bcc_recipients_list=None):
+#     return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
+#                            sender_url=g.site_url, subject=subject, body=body, headers=headers,
+#                            recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
+#                            bcc_recipients_list=bcc_recipients_list)

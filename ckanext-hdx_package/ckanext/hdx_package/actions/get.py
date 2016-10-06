@@ -489,10 +489,10 @@ def hdx_send_mail_contributor(context, data_dict):
     recipients_list.append({'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')})
 
     bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'display_name': 'HDX'}]
-    hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
-                              recipients_list=recipients_list, footer=_footer_contact_contributor,
-                              sender_name=data_dict.get('fullname'),
-                              sender_email=data_dict.get('email'), bcc_recipients_list=bcc_recipients_list)
+
+    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=html,
+                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
+                              bcc_recipients_list=bcc_recipients_list, footer=_footer_contact_contributor)
 
     return None
 
@@ -519,10 +519,9 @@ def hdx_send_mail_members(context, data_dict):
             if user.get('email'):
                 recipients_list.append({'email': user.get('email'), '_display_name': user.get('display_name')})
     recipients_list.append({'email': data_dict.get('email'), 'display_name': data_dict.get('fullname')})
-    # bcc_recipients_list = [{'email': data_dict.get('hdx_email'), 'name': 'HDX'}]
-    hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=html,
-                              recipients_list=recipients_list, footer=_footer_group_message,
-                              sender_name=data_dict.get('fullname'),
-                              sender_email=data_dict.get('email'))
+
+    hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=html,
+                              sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
+                              footer=_footer_group_message)
 
     return None
