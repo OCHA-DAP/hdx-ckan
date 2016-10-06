@@ -19,7 +19,6 @@ CaptchaNotValid = _('Captcha is not valid')
 FaqSuccess = json.dumps({'success': True})
 FaqCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
 
-
 for section in faq_data:
     s_id = ''.join(i if i.isalnum() else '_' for i in section['title'])
     s_id = 'faq-{}'.format(s_id)
@@ -91,7 +90,7 @@ class FaqController(base.BaseController):
                   </body>
                 </html>
                 """.format(fullname=fullname, email=email, topic=topic, msg=msg)
-            hdx_mailer.mail_recipient('HDX', hdx_email, subject, html)
+            hdx_mailer.mail_recipient([{'display_name': 'HDX', 'email': hdx_email}], subject, html)
 
         except exceptions.Exception, e:
             error_summary = e.error or str(e)

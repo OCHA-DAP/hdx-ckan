@@ -25,14 +25,13 @@ def send_mail(recipients, subject, body, one_email=False):
         send_mails = config.get('hdx.orgrequest.sendmails', 'true')
         if 'true' == send_mails:
             if one_email:
-                new_recipients = []
-                for recipient in recipients:
-                    new_recipients.append({'name': recipient['display_name'], 'email': recipient['email']})
-                    hdx_mailer.mail_recipient(recipient_name=None, recipient_email=None, subject=subject, body=body,
-                                              recipients_list=new_recipients)
+                # new_recipients = []
+                # for recipient in recipients:
+                #     new_recipients.append({'name': recipient['display_name'], 'email': recipient['email']})
+                hdx_mailer.mail_recipient(recipients_list=recipients, subject=subject, body=body)
             else:
                 for recipient in recipients:
-                    hdx_mailer.mail_recipient(recipient['display_name'], recipient['email'], subject, body)
+                    hdx_mailer.mail_recipient([recipient], subject, body)
         else:
             log.warn('HDX-CKAN was configured to not send email requests')
     else:
