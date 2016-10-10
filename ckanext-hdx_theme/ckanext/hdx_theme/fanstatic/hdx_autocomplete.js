@@ -84,7 +84,7 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
 
       if (this.options.includeTokenizer){
         settings.tokenizer = function(input, selection, callback) {
-          if (input.indexOf(',') < 0 && input.indexOf(' ') < 0)
+          if (input.indexOf(',') < 0)
             return;
 
           var parts = input.split(/,/); // use /,| / if space need to be included as a separator

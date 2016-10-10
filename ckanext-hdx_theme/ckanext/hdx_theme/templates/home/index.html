@@ -79,6 +79,7 @@
 
                       -->
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?tags=hurricanematthew&sort=metadata_modified+desc">{{ _('Hurricane Matthew') }}</a>,
+                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-haiti', sort='metadata_modified desc') }}">{{ _("OCHA Haiti") }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Ebola">{{ _('Ebola') }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-ethiopia', sort='metadata_modified desc') }}">{{ _("OCHA Ethiopia") }}</a>
