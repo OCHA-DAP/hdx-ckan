@@ -24,34 +24,34 @@ log = logging.getLogger(__name__)
 
 class HDXReqsOrgController(base.BaseController):
 
-    def request_membership(self, org_id):
-        '''
-            user_email, name of user, username, organization name,  list with org-admins emails,
-        '''
-        try:
-            msg = request.params.get('message', '')
-            user = hdx_h.hdx_get_user_info(c.user)
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
-            org_admins = tk.get_action('member_list')(context,{'id':org_id,'capacity':'admin','object_type':'user'})
-            admins=[]
-            for admin_tuple in org_admins:
-                admin_id = admin_tuple[0]
-                admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = [admin for admin in admins if admin['email']]
-
-            data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_id, 
-                         'message': msg, 'admins': admins_with_email}
-            tk.get_action('hdx_send_request_membership')(context, data_dict)
-
-            h.flash_success(_('Message sent'))
-        except hdx_mail.NoRecipientException, e:
-            h.flash_error(_(str(e)))
-        except exceptions.Exception, e:
-            log.error(str(e))
-            h.flash_error(_('Request can not be sent. Contact an administrator.'))
-        h.redirect_to(controller='organization', action='read', id=org_id)
+    # def request_membership(self, org_id):
+    #     '''
+    #         user_email, name of user, username, organization name,  list with org-admins emails,
+    #     '''
+    #     try:
+    #         msg = request.params.get('message', '')
+    #         user = hdx_h.hdx_get_user_info(c.user)
+    #         context = {'model': model, 'session': model.Session,
+    #                    'user': c.user or c.author}
+    #         org_admins = tk.get_action('member_list')(context,{'id':org_id,'capacity':'admin','object_type':'user'})
+    #         admins=[]
+    #         for admin_tuple in org_admins:
+    #             admin_id = admin_tuple[0]
+    #             admins.append(hdx_h.hdx_get_user_info(admin_id))
+    #         admins_with_email = [admin for admin in admins if admin['email']]
+    #
+    #         data_dict = {'display_name': user['display_name'], 'name': user['name'],
+    #                      'email': user['email'], 'organization': org_id,
+    #                      'message': msg, 'admins': admins_with_email}
+    #         tk.get_action('hdx_send_request_membership')(context, data_dict)
+    #
+    #         h.flash_success(_('Message sent'))
+    #     except hdx_mail.NoRecipientException, e:
+    #         h.flash_error(_(str(e)))
+    #     except exceptions.Exception, e:
+    #         log.error(str(e))
+    #         h.flash_error(_('Request can not be sent. Contact an administrator.'))
+    #     h.redirect_to(controller='organization', action='read', id=org_id)
 
     def request_editor_for_org(self, org_id):
         '''
