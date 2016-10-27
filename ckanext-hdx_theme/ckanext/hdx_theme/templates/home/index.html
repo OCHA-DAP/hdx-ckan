@@ -77,12 +77,17 @@
                       <!--
                       <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>,
 
-                      -->
+
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?tags=hurricanematthew&sort=metadata_modified+desc">{{ _('Hurricane Matthew') }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-haiti', sort='metadata_modified desc') }}">{{ _("OCHA Haiti") }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Ebola">{{ _('Ebola') }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>,
                       <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-ethiopia', sort='metadata_modified desc') }}">{{ _("OCHA Ethiopia") }}</a>
+                      -->
+                        <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Syria">{{ _('Syria') }}</a>,
+                        <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Haiti">{{ _('Haiti') }}</a>,
+                        <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='netherlands-red-cross', sort='metadata_modified desc') }}">{{ _('Netherlands Red Cross') }}</a>,
+                        <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='package', action='read', id='iom-dtm-mosul-crisis-baseline-data') }}">{{ _('IOM Mosul') }}</a>
                     </p>
                   </div>
                 </div>
@@ -151,7 +156,7 @@
     {#
     IN ORDER TO RE-ENABLE THE TRENDING BANNER warning-bar.js AND warning-bar.css/less NEEDS TO BE INCLUDED
     BACK IN THE homepage BUNDLE IN resource.config
-    #}
+
     <div class="hdx-warning">
         <div class="hdx-warning-text">
             <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" href="/search?tags=hurricanematthew&sort=metadata_modified+desc">
@@ -159,6 +164,7 @@
             </a>
         </div>
     </div>
+    #}
 
 <!-- MOBILE CAROUSEL START-->
 <div id="mobileCarousel" class="mobile-carousel carousel slide" data-ride="carousel" data-interval="false">
