@@ -22,7 +22,6 @@ from pylons import config
 from ckan.common import _, c, request
 from ckanext.hdx_package.exceptions import NoOrganization
 
-
 get_action = logic.get_action
 log = logging.getLogger(__name__)
 _check_access = logic.check_access
@@ -424,6 +423,7 @@ def generate_mandatory_fields():
     else:
         selected_org = orgs[0]
 
+
     data_dict = {
         'private': True,
         # 'name': dataset_name,
@@ -433,6 +433,7 @@ def generate_mandatory_fields():
         'dataset_source': selected_org.get('title'),
         'maintainer': user,
         'subnational': 1,
+        'data_update_frequency': config.get('hdx.default_frequency', '365'),
     }
     return data_dict
 
