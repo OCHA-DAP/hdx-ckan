@@ -2,8 +2,6 @@ import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
-import ckanext.hdx_hxl_preview.actions.update as update
-
 _ = plugins.toolkit._
 
 log = logging.getLogger(__name__)
