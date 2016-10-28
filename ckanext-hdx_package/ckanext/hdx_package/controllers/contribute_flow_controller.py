@@ -174,6 +174,7 @@ class ContributeFlowController(base.BaseController):
         context['message'] = data_dict.get('log_message', '')
         self.process_locations(data_dict)
         self.process_dataset_date(data_dict)
+        self.process_expected_update_frequency(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
@@ -292,3 +293,7 @@ class ContributeFlowController(base.BaseController):
             data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2', data_dict.get('date_range1'))
         elif 'data_range2' in data_dict:
                 data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
+
+    def process_expected_update_frequency(self, data_dict):
+        if 'data_update_frequency' in data_dict and data_dict.get('data_update_frequency', '-1') == '-1':
+            data_dict['data_update_frequency'] = None

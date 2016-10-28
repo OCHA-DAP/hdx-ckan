@@ -626,9 +626,9 @@ def hdx_tag_list():
 
 
 def hdx_frequency_list():
-    result = [{'value': '0', 'text': 'Never'}, {'value': '1', 'text': 'Every day'}, {'value': '7', 'text': 'Every week'},
+    result = [{'value': '-1', 'text': '-- Please select --'}, {'value': '1', 'text': 'Every day'}, {'value': '7', 'text': 'Every week'},
               {'value': '14', 'text': 'Every two weeks'}, {'value': '30', 'text': 'Every month'}, {'value': '90', 'text': 'Every three months'},
-              {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, ]
+              {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, {'value': '0', 'text': 'Never'}, ]
     return result
 
 def hdx_get_layer_info(id=None):
