@@ -766,13 +766,14 @@ class DatasetController(PackageController):
             if org_info_dict.get('custom_org', False):
                 self._process_customizations(org_info_dict.get('customization', None))
 
-            if has_views.get('type') == 'hdx_geo_preview':
-                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                return render('indicator/hdx-shape-read.html')
-            if has_views.get('type') == 'hdx_hxl_preview':
-                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                c.default_view = has_views.get('default')
-                return render('indicator/hdx-hxl-read.html')
+            if has_views:
+                if has_views.get('type') == 'hdx_geo_preview':
+                    c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                    return render('indicator/hdx-shape-read.html')
+                if has_views.get('type') == 'hdx_hxl_preview':
+                    c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                    c.default_view = has_views.get('default')
+                    return render('indicator/hdx-hxl-read.html')
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
