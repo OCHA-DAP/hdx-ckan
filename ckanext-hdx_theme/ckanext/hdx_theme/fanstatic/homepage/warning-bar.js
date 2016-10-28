@@ -10,26 +10,29 @@ function positionWarningBar() {
 
     var warningBar = $('.hdx-warning');
 
-    var currentPosition = warningBar.css('position');
+    if (warningBar && warningBar.length > 0) {
 
-    if (windowBottom < footerTop) {
-        if ( 'fixed' != currentPosition.toLowerCase() ) {
-            warningBar.css('position', 'fixed');
-        }
-    }
-    else {
-        if ( 'absolute' != currentPosition.toLowerCase() ) {
-            // warningBar.css('position', 'absolute');
-            warningBar[0].style.position = 'absolute';
-        }
-    }
+        var currentPosition = warningBar.css('position');
 
-    // if ( datasetsCountTop > warningBar.offset().top ){
-    //     warningBar.css('visibility', 'hidden');
-    // }
-    // else {
-    //     warningBar.css('visibility', 'visible');
-    // }
+        if (windowBottom < footerTop) {
+            if ('fixed' != currentPosition.toLowerCase()) {
+                warningBar.css('position', 'fixed');
+            }
+        }
+        else {
+            if ('absolute' != currentPosition.toLowerCase()) {
+                // warningBar.css('position', 'absolute');
+                warningBar[0].style.position = 'absolute';
+            }
+        }
+
+        // if ( datasetsCountTop > warningBar.offset().top ){
+        //     warningBar.css('visibility', 'hidden');
+        // }
+        // else {
+        //     warningBar.css('visibility', 'visible');
+        // }
+    }
 }
 $(document).ready(function(){
     var checkMobile = function () {
