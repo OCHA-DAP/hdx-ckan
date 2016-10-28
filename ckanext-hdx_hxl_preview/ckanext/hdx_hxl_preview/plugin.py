@@ -2,13 +2,19 @@ import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
+import ckanext.hdx_hxl_preview.actions.update as update
+
 _ = plugins.toolkit._
 
 log = logging.getLogger(__name__)
 
+ignore_empty = plugins.toolkit.get_validator('ignore_empty')
+
 class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IResourceView, inherit=True)
+
+    plugins.implements(plugins.IActions)
 
     # IConfigurer
 
@@ -17,13 +23,18 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'hdx_hxl_preview')
 
+    def get_actions(self):
+        return {
+            # 'package_hxl_update': update.package_hxl_update
+        }
+
     def can_view(self, data_dict):
         return True
 
     def info(self):
 
         schema = {
-            "hxl_preview_config": []
+            "hxl_preview_config": [ignore_empty]
         }
 
         return {
