@@ -7,10 +7,16 @@
     <div class="row mTop20">
         <div class="col-xs-12">
                 <div class="data-viewer-error"></div>
-                <iframe data-module="data-viewer" frameborder="0" style="" src="{{ c.default_view }}">
-                </iframe>
-            </div>
-        </div>
+                <!--<iframe data-module="data-viewer" frameborder="0" style="" src="{{ c.default_view }}">-->
+                <!--</iframe>-->
+                {% snippet 'package/snippets/resource_view.html',
+                         resource_view=c.default_view.view,
+                         resource=c.default_view.resource,
+                         package=c.package
+                %}
+
+
+
         </div>
     </div>
 {% endblock %}

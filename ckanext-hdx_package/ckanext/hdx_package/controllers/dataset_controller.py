@@ -756,9 +756,9 @@ class DatasetController(PackageController):
             'data': template_data,
         }
 
-        has_views = None
+        _default_view = None
         if 'resources' in c.pkg_dict:
-            has_views = self._has_views(c.pkg_dict['resources'])
+            _default_view = self._has_views(c.pkg_dict['resources'])
         try:
             org_dict = c.pkg_dict.get('organization') or {}
             org_id = org_dict.get('id', None)
@@ -766,13 +766,13 @@ class DatasetController(PackageController):
             if org_info_dict.get('custom_org', False):
                 self._process_customizations(org_info_dict.get('customization', None))
 
-            if has_views:
-                if has_views.get('type') == 'hdx_geo_preview':
+            if _default_view:
+                if _default_view.get('type') == 'hdx_geo_preview':
                     c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                     return render('indicator/hdx-shape-read.html')
-                if has_views.get('type') == 'hdx_hxl_preview':
+                if _default_view.get('type') == 'hdx_hxl_preview':
                     c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                    c.default_view = has_views.get('default')
+                    c.default_view = _default_view
                     return render('indicator/hdx-hxl-read.html')
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
@@ -832,7 +832,8 @@ class DatasetController(PackageController):
                 return {'type': 'hdx_geo_preview', 'default': None}
             _default_view = self._has_hxl_views(resource)
             if _default_view:
-                return {'type': 'hdx_hxl_preview', 'default': _default_view}
+                _default_view['type'] = 'hdx_hxl_preview'
+                return _default_view
         return None
 
     def _has_shape_info(self, resource):
@@ -845,8 +846,12 @@ class DatasetController(PackageController):
     def _has_hxl_views(self, resource):
         for view in resource.get("resource_views"):
             if view.get("view_type") == 'hdx_hxl_preview':
-                return h.url_for("resource_view", id=view.get('package_id'), resource_id=view.get('resource_id'),
-                                 view_id=view.get('id'))
+                return {
+                    "view_url": h.url_for("resource_view", id=view.get('package_id'),
+                                          resource_id=view.get('resource_id'), view_id=view.get('id')),
+                    "view": view,
+                    "resource": resource
+                }
         return None
 
     def _process_shapes(self, resources):
