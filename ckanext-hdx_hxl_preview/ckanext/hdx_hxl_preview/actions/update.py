@@ -72,22 +72,23 @@ def package_hxl_update(context, data_dict):
 
     # context['do_geo_preview'] = False
 
-    for resource in package_dict.get('resources', []):
-        view_list = _get_action('resource_view_list')(context, {'id': resource.get('id')})
-        view = _view_already_exists(view_list)
-        if _check_has_hxl_tags(resource.get('url','')):
-            if not view:
-                resource_view_dict = {
-                    'resource_id': resource.get('id'),
-                    'title': 'HXL Preview',
-                    'description': '',
-                    'view_type': 'hdx_hxl_preview'
-                }
-                new_view = _get_action('resource_view_create')(context, resource_view_dict)
-                new_views.append(new_view)
+    if 'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
+        for resource in package_dict.get('resources', []):
+            view_list = _get_action('resource_view_list')(context, {'id': resource.get('id')})
+            view = _view_already_exists(view_list)
+            if _check_has_hxl_tags(resource.get('url','')):
+                if not view:
+                    resource_view_dict = {
+                        'resource_id': resource.get('id'),
+                        'title': 'HXL Preview',
+                        'description': '',
+                        'view_type': 'hdx_hxl_preview'
+                    }
+                    new_view = _get_action('resource_view_create')(context, resource_view_dict)
+                    new_views.append(new_view)
 
-        elif view:
-            _get_action('resource_view_delete')(context, {'id': view.get('id')})
+            elif view:
+                _get_action('resource_view_delete')(context, {'id': view.get('id')})
 
     return new_views
 
