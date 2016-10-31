@@ -631,6 +631,15 @@ def hdx_frequency_list():
               {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, {'value': '0', 'text': 'Never'}, ]
     return result
 
+def hdx_get_frequency_by_value(value):
+    freqs = hdx_frequency_list()
+    for freq in freqs:
+        if value == freq.get('value'):
+            return freq.get('text')
+    return 'Never'
+
+
+
 def hdx_get_layer_info(id=None):
     layer = explorer.explorer_data.get(id)
     return layer
