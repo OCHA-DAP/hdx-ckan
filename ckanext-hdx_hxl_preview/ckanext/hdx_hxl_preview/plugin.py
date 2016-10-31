@@ -1,6 +1,12 @@
 import logging
+import urllib
+
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+
+import ckanext.hdx_hxl_preview.actions.update as update
+
+from pylons import config
 
 _ = plugins.toolkit._
 
@@ -23,7 +29,7 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
 
     def get_actions(self):
         return {
-            # 'package_hxl_update': update.package_hxl_update
+            'package_hxl_update': update.package_hxl_update
         }
 
     def can_view(self, data_dict):
@@ -42,13 +48,18 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
             'preview_enabled': True,
             'schema': schema,
             'requires_datastore': False,
-            'iframed': True,
+            'iframed': False,
             'default_title': _('HXL Preview')
         }
 
     def setup_template_variables(self, context, data_dict):
         resource_view_dict = data_dict.get('resource_view')
         resource_dict = data_dict.get('resource')
+
+        return {
+            'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),
+            'resource_url': urllib.urlencode({'url': resource_dict.get('url')})
+        }
 
 
 

@@ -221,6 +221,13 @@ hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
 
+# Hxl Proxy
+# This should be overriden in your own prod.ini
+hdx.hxlproxy.url = https://beta-proxy.hxlstandard.org
+
+# HXL Preview
+hdx.hxl_preview_app.url = http://127.0.0.1:4200
+
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
