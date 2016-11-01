@@ -29,7 +29,7 @@ def _check_has_hxl_tags(url):
         'url': url
     }
 
-    r = requests.get(url_wo_params, params=params, timeout=12)
+    r = requests.get(url_wo_params, params=params, timeout=12, verify=False)
     log.info("Querying url: {}".format(r.url))
 
     r.raise_for_status()
