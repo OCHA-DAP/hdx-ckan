@@ -23,8 +23,8 @@ def _check_has_hxl_tags(url):
     ret_val = False
 
     hxl_proxy_url_parts = urlparse.urlsplit(config.get('hdx.hxlproxy.url'))
-
-    url_wo_params = urlparse.urlunsplit(list(hxl_proxy_url_parts[0:2]) + [PROXY_CHECK_PATH,'',''])
+    hxl_path = hxl_proxy_url_parts[2] + PROXY_CHECK_PATH if hxl_proxy_url_parts[2] else PROXY_CHECK_PATH
+    url_wo_params = urlparse.urlunsplit(list(hxl_proxy_url_parts[0:2]) + [hxl_path,'',''])
     params = {
         'url': url
     }
