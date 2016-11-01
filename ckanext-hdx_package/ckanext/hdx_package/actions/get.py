@@ -11,7 +11,6 @@ import ckan.model as model
 import ckan.plugins as plugins
 import ckan.lib.navl.dictization_functions
 import ckan.lib.search as search
-import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.logic.action.get as logic_get
 import ckan.lib.plugins as lib_plugins
 
@@ -21,7 +20,7 @@ import json
 
 from ckan.lib import uploader
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-from ckan.common import _
+from ckanext.hdx_package.helpers import helpers
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -310,8 +309,12 @@ def resource_show(context, data_dict):
     # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
     if _should_manually_load_property_value(context, resource_dict, 'size'):
         resource_dict['size'] = __get_resource_filesize(resource_dict)
+
     if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-        resource_dict['revision_last_updated'] = __get_resource_revison_timesptamp(resource_dict)
+        resource_dict['revision_last_updated'] = __get_resource_revison_timestamp(resource_dict)
+
+    if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
+        resource_dict['hdx_rel_url'] = __get_resource_hdx_relative_url(resource_dict)
 
     return resource_dict
 
@@ -327,8 +330,12 @@ def package_show(context, data_dict):
     for resource_dict in package_dict.get('resources', []):
         if _should_manually_load_property_value(context, resource_dict, 'size'):
             resource_dict['size'] = __get_resource_filesize(resource_dict)
+
         if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-            resource_dict['revision_last_updated'] = __get_resource_revison_timesptamp(resource_dict)
+            resource_dict['revision_last_updated'] = __get_resource_revison_timestamp(resource_dict)
+
+        if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
+            resource_dict['hdx_rel_url'] = __get_resource_hdx_relative_url(resource_dict)
 
     downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
                       res.get('tracking_summary', {}).get('total'))
@@ -380,7 +387,7 @@ def __get_resource_filesize(resource_dict):
     return None
 
 
-def __get_resource_revison_timesptamp(resource_dict):
+def __get_resource_revison_timestamp(resource_dict):
     '''
     :param resource_dict: the dictized resource information
     :type resource_dict: dict
@@ -394,6 +401,12 @@ def __get_resource_revison_timesptamp(resource_dict):
         return revision_dict.get('timestamp')
     return None
 
+
+def __get_resource_hdx_relative_url(resource_dict):
+    if helpers.is_ckan_domain(resource_dict.get('url', '')):
+        return helpers.make_url_relative(resource_dict.get('url', ''))
+
+    return resource_dict.get('url', '')
 
 @logic.side_effect_free
 def package_validate(context, data_dict):

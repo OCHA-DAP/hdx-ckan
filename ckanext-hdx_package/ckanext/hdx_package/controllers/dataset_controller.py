@@ -667,11 +667,11 @@ class DatasetController(PackageController):
             resource['has_views'] = len(resource_views) > 0
             resource['resource_views'] = resource_views
 
-            if helpers.is_ckan_domain(resource['url']):
-                resource['url'] = helpers.make_url_relative(resource['url'])
-
-            if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
-                resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
+            # if helpers.is_ckan_domain(resource['url']):
+            #     resource['url'] = helpers.make_url_relative(resource['url'])
+            #
+            # if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
+            #     resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
 
         # Is this an indicator? Load up graph data
         # c.pkg_dict['indicator'] = 1
@@ -1132,9 +1132,9 @@ class DatasetController(PackageController):
 
         download_url = c.resource.get('perma_link') if c.resource.get('perma_link') else c.resource['url']
         c.resource['original_url'] = download_url
-        c.resource['download_url'] = download_url
-        if helpers.is_ckan_domain(download_url):
-            c.resource['download_url'] = helpers.make_url_relative(download_url)
+        # c.resource['download_url'] = download_url
+        # if helpers.is_ckan_domain(download_url):
+        #     c.resource['download_url'] = helpers.make_url_relative(download_url)
 
         template = self._resource_template(dataset_type)
         return render(template, extra_vars=vars)
