@@ -27,6 +27,10 @@
 		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
     </tr>
 	<tr>
+		<th scope="row" class="dataset-label">{{ _('Expected Update Frequency') }}</th>
+		<td class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</td>
+    </tr>
+	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link mx-country">
 		<span data-module="hdx_show_more" style="visibility:hidden"><div>

@@ -410,6 +410,15 @@
                                             </div>
 
 
+                                            {% set frequencies = h.hdx_frequency_list() %}
+                                            {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
+                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
+                                                    'data-toggle': 'tooltip'}
+                                                    %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
+                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
+                                            </div>
+
                                             {% set location_list = h.hdx_location_list() %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="groups_list" data-module-required="public">
                                             {{ form.select('locations', id='field_locations', label=_('Location'), options=location_list, selected=data.locations, error=errors.locations, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
@@ -435,11 +444,11 @@
 
                                             {% set frequency = h.hdx_frequency_list() %}
                                             {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-                                                    'data-original-title': 'Your best guess of how often this dataset will be updated',
+                                                    'data-original-title': 'How often are you going to update this dataset? HDX will remind you when its time to update.',
                                                     'data-toggle': 'tooltip'}
                                                     %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequency, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
+                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), placeholder=_("How often does this data update?"), options=frequency, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
                                             </div>
 
                                             <div data-module="hdx_form_element_manager" data-module-element_name="caveats">
