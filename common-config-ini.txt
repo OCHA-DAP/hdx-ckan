@@ -226,7 +226,7 @@ hdx.explorer.iframe.height = 750px
 hdx.hxlproxy.url = https://beta-proxy.hxlstandard.org
 
 # HXL Preview
-hdx.hxl_preview_app.url = http://127.0.0.1:4200
+hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
 
 # Org member request configs
 ytp.requests.hide_member_role = false

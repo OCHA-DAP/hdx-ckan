@@ -1,5 +1,6 @@
 import logging
 import urllib
+import urlparse
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
@@ -56,11 +57,19 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
         resource_view_dict = data_dict.get('resource_view')
         resource_dict = data_dict.get('resource')
 
+
         return {
             'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),
-            'resource_url': urllib.urlencode({'url': resource_dict.get('url')})
+            'resource_url': urllib.urlencode({'url': resource_dict.get('url')}),
+            'resource_view_id': urllib.urlencode({'resource_view_id': resource_view_dict.get('id')}),
+            'hdx_domain': urllib.urlencode({'hdx_domain': self.__get_ckan_domain_without_protocol()})
         }
 
+    def __get_ckan_domain_without_protocol(self):
+        ckan_site_url = config.get('ckan.site_url')
+        url_parts = urlparse.urlsplit(ckan_site_url)
+
+        return urlparse.urlunsplit([''] + list(url_parts[1:]))
 
 
     def view_template(self, context, data_dict):
