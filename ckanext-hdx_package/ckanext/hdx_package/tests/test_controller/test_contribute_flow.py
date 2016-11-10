@@ -225,6 +225,50 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         type(self).use_package_create_wrapper = True
 
+    def test_edit_lists(self):
+        '''
+        Tests if the complete removal of tags and locations (both are lists) from a dataset actually gets persisted
+        '''
+
+        type(self).use_package_create_wrapper = False
+        user = model.User.by_name('testsysadmin')
+        user.email = 'test@test.com'
+        auth = {'Authorization': str(user.apikey)}
+
+        post_params = self._get_dataset_post_param('testing-dataset-edit-lists')
+        post_params['tag_string'] = 'list_test_tag'
+
+        post_params["dataset_date"] = "01/01/1960-12/31/2012"
+        post_params['save'] = 'update-dataset-json'
+
+        res = self.app.post('/contribute/new', params=post_params,
+                            extra_environ=auth)
+
+        json_result = json.loads(res.body)
+        assert json_result and not json_result.get('error_summary'), 'There should be no validation error'
+
+        saved_dataset = tk.get_action('package_show')({'model': model}, {'id': 'testing-dataset-edit-lists'})
+
+        assert saved_dataset and len(saved_dataset.get('groups', [])) == 1 and len(saved_dataset.get('tags',[])) == 1
+        assert saved_dataset.get('id')
+
+        post_params['id'] = saved_dataset.get('id')
+        del post_params['tag_string']
+        del post_params['locations']
+        post_params['private'] = 'true'
+
+        res2 = self.app.post('/contribute/edit/{}'.format(post_params.get('id')), params=post_params,
+                             extra_environ=auth)
+
+        json_result2 = json.loads(res2.body)
+        assert json_result2 and not json_result2.get('error_summary'), 'There should be no validation error'
+
+        saved_dataset2 = tk.get_action('package_show')({'model': model, 'ignore_auth': True}, {'id': 'testing-dataset-edit-lists'})
+
+        assert saved_dataset2 and len(saved_dataset2.get('groups', [])) == 0 and len(saved_dataset2.get('tags', [])) == 0
+
+        type(self).use_package_create_wrapper = True
+
 
 class MockedContributeFlowController(contribute_flow_controller.ContributeFlowController):
 
