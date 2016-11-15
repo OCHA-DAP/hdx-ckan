@@ -55,7 +55,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'member_delete': authorize.member_delete
         }
 
-
     # def get_auth_functions(self):
     #     return {
     #             'hdx_basic_user_info': helpers.auth.hdx_basic_user_info,
@@ -78,15 +77,15 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'fts_id': [tk.get_validator('ignore_missing'),
                        tk.get_converter('convert_to_extras')],
             'custom_org': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
+                           tk.get_converter('convert_to_extras')],
             'customization': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
+                              tk.get_converter('convert_to_extras')],
             'less': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
-            'visualization_config':[tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
+                     tk.get_converter('convert_to_extras')],
+            'visualization_config': [tk.get_validator('ignore_missing'),
+                                     tk.get_converter('convert_to_extras')],
             'modified_at': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
+                            tk.get_converter('convert_to_extras')],
         })
         return schema
 
@@ -95,13 +94,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         schema = self._modify_group_schema(schema)
         return schema
 
-#     def check_data_dict(self, data_dict):
-#         return super(HDXOrgFormPlugin, self).check_data_dict(self, data_dict)
+    #     def check_data_dict(self, data_dict):
+    #         return super(HDXOrgFormPlugin, self).check_data_dict(self, data_dict)
 
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
-            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
+            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars[
+                'action'] == 'new':
                 schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
                 schema.update({'description': [tk.get_validator('not_empty')]})
                 schema.update(
@@ -136,34 +136,47 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     action='activity_stream')
         return map
 
-
     def before_map(self, map):
         map.connect('organization_bulk_process',
-                    '/organization/bulk_process/{org_id}', controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
+                    '/organization/bulk_process/{org_id}',
+                    controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
+                    action='redirect_to_org_list')
         map.connect('organization_bulk_process_no_id', '/organization/bulk_process',
-                    controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_org_list')
+                    controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
+                    action='redirect_to_org_list')
         map.connect('organizations_index', '/organization',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='index')
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='index')
         map.connect('organization_new', '/organization/new',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='new')
-        map.connect('organization_edit', '/organization/edit/{id}', controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
-                  action='edit', ckan_icon='edit')
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='new')
+        map.connect('organization_edit', '/organization/edit/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='edit', ckan_icon='edit')
         # map.connect('request_membership', '/organization/{org_id}/request_membership',
         #             controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_membership')
         map.connect('request_editing_rights', '/organization/{org_id}/request_editing_rights',
-                    controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_editor_for_org')
+                    controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+                    action='request_editor_for_org')
         map.connect('/organization/request_new',
-                    controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
+                    controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+                    action='request_new_organization')
         map.connect('organization_members',
-            '/organization/members/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='members')
+                    '/organization/members/{id}',
+                    controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+                    action='members')
         map.connect(
-            '/organization/member_new/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_new')
+            '/organization/member_new/{id}',
+            controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+            action='member_new')
         map.connect(
-            '/organization/member_delete/{id}', controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController', action='member_delete')
+            '/organization/member_delete/{id}',
+            controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+            action='member_delete')
 
         map.connect('/organization/bulk_member_new/{id}',
-            controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
-            action='bulk_member_new')
+                    controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
+                    action='bulk_member_new')
 
         map.connect('organization_activity', '/organization/activity/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
@@ -177,28 +190,34 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         # since the pattern of organization_read is so general it needs to be the last
         # otherwise it will override other /organization routes
         map.connect('organization_read', '/organization/{id}',
-                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController', action='read')
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='read')
 
-        #map.connect('browse_list', '/browse',
+        # map.connect('browse_list', '/browse',
         #            controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
 
         map.connect('browse_list', '/browse',
-                    controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController', action='redirect_to_group_list')
+                    controller='ckanext.hdx_org_group.controllers.redirect_controller:RedirectController',
+                    action='redirect_to_group_list')
 
-        map.connect('group_index', '/group', controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
-                  highlight_actions='index search')
-        
+        map.connect('group_index', '/group',
+                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
+                    highlight_actions='index search')
+
         map.connect('group_new', '/group/new', controller='group', action='new')
         map.connect(
-            'country_read', '/group/{id}', controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+            'country_read', '/group/{id}',
+            controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
 
         map.connect(
-            'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController', action='org_read')
+            'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController',
+            action='org_read')
 
         map.connect(
-            'image_serve', '/image/{label}', controller='ckanext.hdx_org_group.controllers.image_upload_controller:ImageController', action='file')
+            'image_serve', '/image/{label}',
+            controller='ckanext.hdx_org_group.controllers.image_upload_controller:ImageController', action='file')
 
-        #map.connect(
+        # map.connect(
         #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
 
         return map
@@ -219,18 +238,20 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
     def _modify_group_schema(self, schema):
         schema.update({'language_code': [
-                      tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')], })
+            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')], })
         schema.update({'relief_web_url': [
-                      tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
+            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
         schema.update({'hr_info_url': [
-                      tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
+            tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
         schema.update({'geojson': [tk.get_validator(
             'ignore_missing'), tk.get_converter('convert_to_extras')],
-        'custom_loc': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
+            'custom_loc': [tk.get_validator('ignore_missing'),
+                           tk.get_converter('convert_to_extras')],
             'customization': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
-            })
+                              tk.get_converter('convert_to_extras')],
+            'activity_level': [tk.get_validator('ignore_missing'),
+                               tk.get_converter('convert_to_extras')]
+        })
         return schema
 
     def form_to_db_schema(self):
@@ -240,20 +261,26 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
-        if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
+        if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars[
+            'action'] == 'new':
             schema = super(HDXGroupPlugin, self).form_to_db_schema()
             schema.update({'language_code': [
-                          tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
             schema.update({'relief_web_url': [
-                          tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
             schema.update({'hr_info_url': [
-                          tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
             schema.update({'geojson': [tk.get_converter(
                 'convert_from_extras'), tk.get_validator('ignore_missing')]})
             schema.update({'custom_loc': [tk.get_validator(
                 'ignore_missing'), tk.get_converter('convert_to_extras')]})
             schema.update({'customization': [tk.get_validator(
                 'ignore_missing'), tk.get_converter('convert_to_extras')]})
+            schema.update({
+                'activity_level': [
+                    tk.get_converter('convert_from_extras'),
+                    tk.get_validator('ignore_missing')]
+            })
             return schema
         else:
             return None

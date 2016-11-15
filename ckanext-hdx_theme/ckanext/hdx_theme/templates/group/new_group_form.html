@@ -37,6 +37,22 @@ overriding the form blocks depending on the current context
     </div>
   </div>
 
+  {% set activity_level = data.get('activity_level', '') %}
+  <div class="control-group control-full">
+  	<label class="control-label" for="field-activity_level">{{ _("Activity Level")}}</label>
+  	<div class="controls">
+        <select id="field-hr_info_url" name="activity_level">
+            <option value="inactive" {% if activity_level == 'inactive' %}selected="selected"{% endif %}>
+                {{ _('Inactive') }}
+            </option>
+            <option value="active"
+                    {% if activity_level == 'active' %}selected="selected"{% endif %}>
+                {{ _('Active') }}
+            </option>
+        </select>
+  	</div>
+  </div>
+
 {% if h.hdx_get_extras_element(data.extras, value_key="customization") %}
   {% set custom_loc = h.hdx_get_extras_element(data.extras, value_key="custom_loc") %}
 {% set customizations = h.load_json(h.hdx_get_extras_element(data.extras, value_key="customization")) %}
