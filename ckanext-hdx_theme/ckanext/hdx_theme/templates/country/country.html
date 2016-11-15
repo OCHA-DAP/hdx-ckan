@@ -1,34 +1,39 @@
 {% extends "crisis/crisis-base.html" %}
 
 {# The lines below are for analytics #}
-{% block analytics_group_names %}['{{ c.group_dict.name }}']{% endblock %}
-{% block analytics_group_ids %}['{{ c.group_dict.id }}']{% endblock %}
+{% block analytics_group_names %}['{{ data.country_dict.name }}']{% endblock %}
+{% block analytics_group_ids %}['{{ data.country_dict.id }}']{% endblock %}
 
 {% block subtitle %}
-    {{ c.group_dict.display_name }}
+    {{ data.country_dict.display_name }}
 {% endblock %}
 {% block crisis_actions %}
+    <span style="color: red">
+        TEMPORARY: Datasets - {{ data.stats_section.num_of_datasets }},
+        Organizations - {{ data.stats_section.num_of_organizations }}, Cods - {{ data.stats_section.num_of_cods }},
+        Followers - {{ data.stats_section.num_of_followers }}
+    </span>
     <span class="mR45 pull-right" style="line-height: 50px;">
         <span class="followButtonContainer">
-            {{ h.follow_button('group', c.group_dict.id) }}
+            {{ h.follow_button('group', data.country_dict.id) }}
         </span>
         {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title(), analytics_shared_item="location" %}
-        {% if h.check_access('group_update', {'id': c.group_dict.id}) %}
-            {% link_for _('Edit'), controller='group', action='edit', id=c.group_dict.name, class_='btn' %}
+        {% if h.check_access('group_update', {'id': data.country_dict.id}) %}
+            {% link_for _('Edit'), controller='group', action='edit', id=data.country_dict.name, class_='btn' %}
         {% endif %}
     </span>
 {% endblock %}
 
-{% block crisis_title %} {{ c.group_dict.display_name }} {% endblock %}
+{% block crisis_title %} {{ data.country_dict.display_name }} {% endblock %}
 {% block breadcrumb_content %}
     <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
-    <li class="active">{% link_for c.group_dict.display_name, controller='group', action='read', id=c.group_dict.name %}</li>
+    <li class="active">{% link_for data.country_dict.display_name, controller='group', action='read', id=data.country_dict.name %}</li>
 {% endblock %}
 
 {% block crisis_data %}
     <div id="countryMapPolygon" style="display: none;">
-        {% if c.group_dict.geojson %}
-            {{ c.group_dict.geojson | safe }}
+        {% if data.country_dict.geojson %}
+            {{ data.country_dict.geojson | safe }}
         {% endif %}
     </div>
 

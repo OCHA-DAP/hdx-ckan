@@ -65,9 +65,9 @@ indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
     def country_read(self, id):
-        self.get_country(id)
+        country_dict = self.get_country(id)
 
-        country_code = c.group_dict.get('name', id)
+        country_code = country_dict.get('name', id)
 
         if self._is_facet_only_request():
             c.full_facet_info = self.get_dataset_search_results(country_code)
@@ -89,9 +89,36 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
             c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
 
-            result = render('country/country.html')
+            template_data = self.get_template_data(country_dict, c.full_facet_info)
+
+            result = render('country/country.html', extra_vars=template_data)
 
             return result
+
+    def get_template_data(self, country_dict, full_facet_info):
+
+        follower_count = get_action('group_follower_count')(
+            {'model': model, 'session': model.Session},
+            {'id': country_dict['id']}
+        )
+
+        template_data = {
+            'data': {
+                'country_dict': country_dict,
+                'stats_section': {
+                    'num_of_organizations':
+                        len(full_facet_info.get('facets', {}).get('organization', {}).get('items', [])),
+                    'num_of_cods': full_facet_info.get('num_of_cods', 0),
+                    'num_of_datasets': full_facet_info.get('num_of_total_items'),
+                    'num_of_followers': follower_count
+                }
+
+            },
+            'errors': None,
+            'error_summary': '',
+        }
+
+        return template_data
 
     def get_country(self, id):
         if group_type != self.group_type:
@@ -105,9 +132,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         try:
             context['include_datasets'] = False
-            c.group_dict = self._action(
+            group_dict = self._action(
                 'hdx_light_group_show')(context, data_dict)
-            # c.group = context['group']
+
+            return group_dict
 
         except NotFound:
             abort(404, _('Group not found'))
