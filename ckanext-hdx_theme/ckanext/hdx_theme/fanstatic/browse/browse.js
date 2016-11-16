@@ -28,7 +28,7 @@ function prepareCountryList(countDatasets) {
         var country = countDatasets[country_id];
 
         if (country == null || (country.dataset_count == null && country.indicator_count == null)) {
-          $("<div class='country-item inactive'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
+          $("<div class='country-item inactive very-active-country'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
         } else {
           var displayDatasets = 0;
           var displayIndicators = 0;
