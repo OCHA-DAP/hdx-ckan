@@ -28,8 +28,9 @@ function prepareCountryList(countDatasets) {
         var country = countDatasets[country_id];
 
         if (country == null || (country.dataset_count == null && country.indicator_count == null)) {
-          $("<div class='country-item inactive very-active-country'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
+          $("<div class='country-item inactive'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
         } else {
+          console.log(JSON.stringify(country));
           var displayDatasets = 0;
           var displayIndicators = 0;
           if (country.dataset_count != null)
@@ -37,7 +38,9 @@ function prepareCountryList(countDatasets) {
           if (country.indicator_count != null)
             displayIndicators = country.indicator_count;
 
-          var item = $("<div class='country-item'></div>").appendTo(one_char_box);
+          var veryActive = (country.activity_level == "active") ? "very-active-country" : "";
+
+          var item = $("<div class='country-item " + veryActive + "'></div>").appendTo(one_char_box);
           var countryIdLower = country_id.toLowerCase();
           var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayIndicators + "</div><div class='marker-label'>indicators</div></div><div class='line-break'></div><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
         }
@@ -172,7 +175,6 @@ function prepareCount() {
   var datasetCounts = $("#datasetCounts");
   var dataPlain = datasetCounts.text();
   datasetCounts.remove();
-
   var data = JSON.parse(dataPlain);
 
   for (var i in data){
@@ -182,6 +184,7 @@ function prepareCount() {
     newItem.title = item.title;
     newItem.dataset_count = item.dataset_count;
     newItem.indicator_count = item.indicator_count;
+    newItem.activity_level = item.activity_level;
     countDatasets[code] = newItem;
   }
   return countDatasets;
