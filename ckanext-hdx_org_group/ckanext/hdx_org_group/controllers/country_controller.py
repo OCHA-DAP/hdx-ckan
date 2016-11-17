@@ -76,7 +76,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             return json.dumps(c.full_facet_info)
         else:
 
-            self.get_dataset_results(country_code)
+            # self.get_dataset_results(country_code)
             # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
@@ -86,8 +86,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # Removed for now as per HDX-4927
             # c.cont_browsing = self.get_cont_browsing(
             #    c.group_dict, vocab_topics_list)
-
-            c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
 
             template_data = self.get_template_data(country_dict, c.full_facet_info)
 
@@ -102,6 +100,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {'id': country_dict['id']}
         )
 
+        top_line_data_list, chart_data_list = self.get_dataset_results(country_dict.get('name'))
+
         template_data = {
             'data': {
                 'country_dict': country_dict,
@@ -111,6 +111,11 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                     'num_of_cods': full_facet_info.get('num_of_cods', 0),
                     'num_of_datasets': full_facet_info.get('num_of_total_items'),
                     'num_of_followers': follower_count
+                },
+                'widgets': {
+                    'top_line_data_list': top_line_data_list,
+                    'chart_data_list': chart_data_list,
+                    'show': len(top_line_data_list) > 0 or len(chart_data_list) > 0
                 }
 
             },
@@ -160,7 +165,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             el['formatted_value'] = formatters.format_decimal_number(
                 el['value'], 2)
 
-        c.top_line_data_list = sorted_top_line_data
+        # c.top_line_data_list = sorted_top_line_data
 
         top_line_ind_codes = [el['indicatorTypeCode']
                               for el in sorted_top_line_data]
@@ -209,7 +214,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 chart['datasetUpdateDate'] = chart_extra.get(
                     'datasetUpdateDate')
 
-        c.chart_data_list = chart_data_list
+        # c.chart_data_list = chart_data_list
 
         # updating the top line info with links and dates
         for el in sorted_top_line_data:
@@ -225,6 +230,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 # el['datasetUpdateDate'] = top_line_extra.get(
                 #     'datasetUpdateDate')
 
+        return sorted_top_line_data, chart_data_list
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,
     #                'user': c.user or c.author,

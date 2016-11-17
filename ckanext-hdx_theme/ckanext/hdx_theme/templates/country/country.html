@@ -37,7 +37,7 @@
         {% endif %}
     </div>
 
-    {% if c.show_overview %}
+    {% if data.widgets.show %}
     <div class="row">
         <div class="col-xs-4">
             <div class="row topline-numbers">
@@ -47,7 +47,7 @@
 
                 <div class="col-xs-12">
                     <table>
-                        {% for value in c.top_line_data_list %}
+                        {% for value in data.widgets.top_line_data_list %}
                             <tr class="indicator">
                                 <td class="name">
                                     {{ value.indicatorTypeName }}
@@ -75,7 +75,7 @@
             </div>
         </div>
 
-        {% for val in c.chart_data_list %}
+        {% for val in data.widgets.chart_data_list %}
             <div class="col-xs-4">
                 <div class="row topline-charts">
                     <div class="col-xs-12 mTop35 topline-title">
@@ -113,7 +113,7 @@
     <div class="row">
         <div class="col-xs-12">
 			<div class="row">
-                {% if c.show_overview %}
+                {% if data.widgets.show %}
                     <div class="col-xs-12">
                         <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
                     </div>
