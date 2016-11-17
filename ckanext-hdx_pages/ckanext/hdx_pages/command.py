@@ -20,14 +20,19 @@ class InitDBCommand(p.toolkit.CkanCommand):
             return
 
         cmd = self.args[0]
+
         self._load_config(load_site_user=False)
         if cmd == 'initdb':
-            print 'Creating table for user meta information'
+            print 'Creating table for pages.'
             self.initdb()
             print 'Finished'
         elif cmd == 'cleandb':
-            print 'Cleaning table of user meta information.'
+            print 'Cleaning table of pages.'
             self.cleandb()
+            print 'Finished'
+        elif cmd == 'patchdb':
+            print 'Patching table of pages and adding column ' + self.args[1]
+            self.patchdb(self.args[1])
             print 'Finished'
         else:
             print 'Wrong argument, see usage:'
@@ -38,3 +43,6 @@ class InitDBCommand(p.toolkit.CkanCommand):
 
     def cleandb(self):
         pages_model.delete_table()
+
+    def patchdb(self):
+        pages_model.patch_table()

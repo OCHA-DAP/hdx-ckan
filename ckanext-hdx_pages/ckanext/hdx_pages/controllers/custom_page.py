@@ -67,7 +67,7 @@ class PagesController(HDXSearchController):
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 
     def generate_action_name(self, type):
-        return 'read_crisis' if type == 'crisis' else 'read_dashboard'
+        return 'read_event' if type == 'event' else 'read_dashboards'
 
     def edit(self, id, data=None, errors=None, error_summary=None):
 
@@ -113,11 +113,11 @@ class PagesController(HDXSearchController):
 
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 
-    def read_crisis(self, id):
-        return self.read(id, 'crisis')
+    def read_event(self, id):
+        return self.read(id, 'event')
 
-    def read_dashboard(self, id):
-        return self.read(id, 'analytics')
+    def read_dashboards(self, id):
+        return self.read(id, 'dashboards')
 
     def read(self, id, type):
         context = {
@@ -173,6 +173,7 @@ class PagesController(HDXSearchController):
             'errors': {},
             'error_summary': {},
         }
+        # h.redirect_to('/')
         return base.render('home/index.html', extra_vars=vars)
 
     @staticmethod
@@ -235,7 +236,7 @@ class PagesController(HDXSearchController):
         if data:
             data['sections'] = json.loads(data.get('sections', ''))
         else:
-            data = {'crisis': checked, 'hdx_counter': 0}
+            data = {'event': checked, 'ongoing': checked, 'hdx_counter': 0}
         extra_vars = {'data': data, 'data_dict': data_dict, 'errors': errors,
                       'error_summary': error_summary, 'action': 'new'}
         return context, extra_vars
@@ -244,8 +245,10 @@ class PagesController(HDXSearchController):
         sections_no = int(request.params.get("hdx_counter") or "0")
         sections = []
         for _i in range(0, sections_no):
-            if "field_section_" + str(_i) + "_type" in request.params and request.params.get("field_section_" + str(_i) + "_type") != 'empty':
-                _title = self._get_default_title(request.params.get("field_section_" + str(_i) + "_type"), request.params.get("field_section_" + str(_i) + "_section_title"))
+            if "field_section_" + str(_i) + "_type" in request.params and request.params.get(
+                                    "field_section_" + str(_i) + "_type") != 'empty':
+                _title = self._get_default_title(request.params.get("field_section_" + str(_i) + "_type"),
+                                                 request.params.get("field_section_" + str(_i) + "_section_title"))
                 size = request.params.get("field_section_" + str(_i) + "_max_height")
                 # if size and size == '':
                 #     size = '400px'
@@ -257,9 +260,15 @@ class PagesController(HDXSearchController):
                     "description": request.params.get("field_section_" + str(_i) + "_section_description"),
                 }
                 sections.append(section)
-        page_dict = {"name": request.params.get("name"), "title": request.params.get("title"),
-                     "type": request.params.get("type"), "description": "", "sections": json.dumps(sections),
-                     request.params.get("type") or 'crisis': checked, "hdx_counter": len(sections),
+        page_dict = {"name": request.params.get("name"),
+                     "title": request.params.get("title"),
+                     "type": request.params.get("type"),
+                     "status": request.params.get("status"),
+                     "description": "",
+                     "sections": json.dumps(sections),
+                     request.params.get("type") or 'event': checked,
+                     request.params.get("status") or 'ongoing': checked,
+                     "hdx_counter": len(sections),
                      "id": request.params.get("hdx_page_id"),
                      'state': request.params.get("save_custom_page") or request.params.get("save_as_draft_custom_page")}
         return page_dict
@@ -267,8 +276,10 @@ class PagesController(HDXSearchController):
     def _init_extra_vars_edit(self, extra_vars):
         _data = extra_vars.get('data')
         _data['sections'] = json.loads(_data.get('sections', ''))
-        _type = _data['type'] or 'crisis'
+        _type = _data['type'] or 'event'
         _data[_type] = checked
+        _status = _data['status'] or 'ongoing'
+        _data[_status] = checked
         _data['hdx_counter'] = len(_data['sections'])
         _data['hdx_page_id'] = _data.get('id')
         _data['mode'] = 'edit'

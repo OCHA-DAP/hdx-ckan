@@ -17,7 +17,7 @@ def page_update(context, data_dict):
 
     try:
         session = context['session']
-        page = pages_model.Page.get(id=data_dict['id'])
+        page = pages_model.Page.get_by_id(id=data_dict['id'])
         if page is None:
             raise NotFound
 
@@ -27,6 +27,7 @@ def page_update(context, data_dict):
         page.type = data_dict.get('type')
         page.state = data_dict.get('state')
         page.sections = data_dict.get('sections')
+        page.status = data_dict.get('status')
         page.modified = datetime.datetime.now()
 
         session.add(page)

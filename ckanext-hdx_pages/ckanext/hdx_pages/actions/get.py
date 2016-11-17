@@ -15,7 +15,7 @@ def page_show(context, data_dict):
     :rtype: dict
     '''
 
-    page = pages_model.Page.get(id=data_dict['id'])
+    page = pages_model.Page.get_by_id(id=data_dict['id'])
     if page is None:
         raise NotFound
     page_dict = dictize.page_dictize(page)

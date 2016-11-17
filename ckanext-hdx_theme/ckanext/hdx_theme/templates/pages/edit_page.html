@@ -17,6 +17,7 @@
 </div>
 {% endblock %}
 {% block primary %}
+{{data}}
 <div id="section_container" data-module="hdx_custom_pages">
     <form id="create_page_form" class="cp-form hdx-form" method="post" enctype="multipart/form-data" data-module="basic-form">
         <div class="paddingRowHack background-gray pTopBottom35">
@@ -24,14 +25,14 @@
                 <div class="row form-section">
                     <div class="col-xs-3">
                         <h3>How this page works</h3>
-                        <p> You can use this form to create a custom page for different sections of the site (such as crisis page)</p>
+                        <p> You can use this form to create a custom page for different sections of the site (such as event page)</p>
                         <p> When you finish, you have options to <strong>see a preview</strong> (then publish or further edit) or <strong>save as draft</strong> (can be accessed by you and by sysadmins) which lets you come back for further editing</p>
                     </div>
                     <div class="col-xs-9">
                         {{ form.input('title', id='field_title', label=_('Title of the page'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['form-group', 'required', 'control-full', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class':'form-control'}) }}
-                        {% set prefix = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_crisis',id='', qualified=true) %}
-                        {% set full_domain_crisis = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_crisis',id='', qualified=true) %}
-                        {% set full_domain_dashboard = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboard',id='', qualified=true) %}
+                        {% set prefix = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',id='', qualified=true) %}
+                        {% set full_domain_event = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_event',id='', qualified=true) %}
+                        {% set full_domain_dashboards = h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards',id='', qualified=true) %}
                         {% set domain = prefix|replace("http://", "")|replace("https://", "") %}
                         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<my-page>'} %}
                         {{ form.prepend('name', id='field_name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-page'), value=data.name, error=errors.name, attrs=attrs) }}
@@ -40,17 +41,34 @@
                             <label class="control-label">This page is located under</label>
                             <div class="radio">
                                 <label>
-                                    <input id="hdx_crises_type" type="radio" name="type" value="crisis"  {{data.crisis}}/>
-                                    Crisis (URL:{{full_domain_crisis}})
+                                    <input id="hdx_event_type" type="radio" name="type" value="event"  {{data.event}}/>
+                                    Event (URL:{{full_domain_event}})
                                 </label>
                             </div>
                             <div class="radio">
                                 <label>
-                                    <input id="hdx_dashboard_type" type="radio" name="type" value="analytics" {{data.analytics}} />
-                                    Dashboard (URL:{{full_domain_dashboard}})
+                                    <input id="hdx_dashboard_type" type="radio" name="type" value="dashboards" {{data.dashboards}} />
+                                    Dashboards (URL:{{full_domain_dashboards}})
                                 </label>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Status</label>
+                            <div class="radio">
+                                <label>
+                                    <input id="hdx_page_ongoing" type="radio" name="status" value="ongoing"  {{data.ongoing}}/>
+                                    Ongoing
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input id="hdx_page_archived" type="radio" name="status" value="archived" {{data.archived}} />
+                                    Archived
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 <div class="row">
