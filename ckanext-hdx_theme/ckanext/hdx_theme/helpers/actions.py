@@ -401,9 +401,19 @@ def hdx_get_indicator_available_periods(context, data_dict):
 
 @bcache.cache_region('hdx_memory_cache', 'cached_make_rest_api_request')
 def _make_rest_api_request(url):
+    '''
+    Makes a GET response and expect a JSON response
+    :param url:
+    :type url: str
+    :return: json transformed into a dict
+    :rtype: dict
+    '''
     log.info("Requesting indicators:" + url)
 
     response = requests.get(url)
+
+    response.raise_for_status()
+
     return response.json()
 
 

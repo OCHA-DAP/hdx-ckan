@@ -10,13 +10,15 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.dictization as d
+import ckan.lib.helpers as helpers
 
 import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_org_group.controllers.country_controller as ctrlr
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 
-import ckan.lib.helpers as helpers
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+
+from ckanext.hdx_theme.helpers.actions import _make_rest_api_request as make_rest_api_request
 
 import shlex
 import subprocess
@@ -28,7 +30,7 @@ _get_or_bust = logic.get_or_bust
 NotFound = logic.NotFound
 
 IndicatorAccess = indicator_access.IndicatorAccess
-dataseries_list = ctrlr.indicators_4_top_line_list
+dataseries_list = widget_data_service.indicators_4_top_line_list
 
 
 @logic.side_effect_free
@@ -214,3 +216,11 @@ def hdx_trigger_screencap(context, data_dict):
     #     return True
     # except:
     #     return False
+
+
+@logic.side_effect_free
+def hdx_get_locations_info_from_rw(context, data_dict):
+    url = data_dict.get('rw_url')
+    if url:
+        return make_rest_api_request(url)
+    return None

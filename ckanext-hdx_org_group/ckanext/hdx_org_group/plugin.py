@@ -47,6 +47,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'group_create': hdx_org_actions.hdx_group_create,
             'group_delete': hdx_org_actions.hdx_group_delete,
             'hdx_trigger_screencap': get_actions.hdx_trigger_screencap,
+            'hdx_get_locations_info_from_rw': get_actions.hdx_get_locations_info_from_rw,
         }
 
     def get_auth_functions(self):

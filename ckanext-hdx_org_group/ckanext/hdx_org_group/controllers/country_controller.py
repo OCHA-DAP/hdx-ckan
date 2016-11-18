@@ -4,13 +4,8 @@ Created on Jan 13, 2015
 @author: alexandru-m-g
 '''
 import collections
-import datetime as dt
 import json
 import logging
-
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_search.controllers.search_controller as search_controller
-import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 import ckan.common as common
 import ckan.controllers.group as group
@@ -19,6 +14,9 @@ import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.model as model
 from ckan.controllers.api import CONTENT_TYPES
+
+import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 
 render = base.render
 abort = base.abort
@@ -34,33 +32,6 @@ log = logging.getLogger(__name__)
 OrderedDict = collections.OrderedDict
 
 group_type = 'group'
-
-indicators_4_charts_list = [
-    ('PVH140', 'mdgs'),
-    ('PVN010', 'fao-foodsec'),
-    ('PVW010', 'mdgs'),
-    ('PVF020', 'faostat3'),
-    ('PSE160', 'data.undp.org'),
-    ('PCX051', 'mdgs'),
-    ('PVE130', 'mdgs'),
-    ('PCX060', 'mdgs'),
-    ('RW002', 'RW'),
-    ('PVE110', 'data.undp.org'),
-    ('PVN050', 'mdgs'),
-    ('PVN070', 'mdgs'),
-    ('PVW040', 'mdgs')
-]
-
-indicators_4_charts = [el[0] for el in indicators_4_charts_list]
-
-indicators_4_top_line_list = [
-    ('PSP120', 'world-bank'),
-    ('PSP090', 'world-bank'),
-    ('PSE220', 'data.undp.org'),
-    ('PSE030', 'world-bank'),
-    ('CG300', 'world-bank')
-]
-indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
 
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
@@ -100,7 +71,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {'id': country_dict['id']}
         )
 
-        top_line_data_list, chart_data_list = self.get_dataset_results(country_dict.get('name'))
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(country_dict).get_dataset_results()
 
         template_data = {
             'data': {
@@ -147,90 +118,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
 
-    def get_dataset_results(self, country_id):
-
-        top_line_dao = indicator_access.IndicatorAccess(
-            country_id, indicators_4_top_line_list, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
-
-        top_line_results = top_line_dao.fetch_indicator_data_from_cps()
-        top_line_data = top_line_results.get('results', [])
-
-        if not top_line_data:
-            log.warn(
-                'No top line numbers found for country: {}'.format(country_id))
-            top_line_data = []
-        sorted_top_line_data = sorted(top_line_data,
-                                      key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
-        for el in sorted_top_line_data:
-            el['formatted_value'] = formatters.format_decimal_number(
-                el['value'], 2)
-
-        # c.top_line_data_list = sorted_top_line_data
-
-        top_line_ind_codes = [el['indicatorTypeCode']
-                              for el in sorted_top_line_data]
-
-        chart_dao = indicator_access.IndicatorAccess(
-            country_id, indicators_4_charts_list, {'sorting': 'INDICATOR_TYPE_ASC'})
-
-        chart_dao.fetch_indicator_data_from_cps()
-        chart_dataseries_dict = chart_dao.get_structured_data_from_cps()
-        if not chart_dataseries_dict:
-            log.warn('No chart data found for country: {}'.format(country_id))
-            chart_dataseries_dict = {}
-
-        # We can do the steps below because, in this case,
-        # we know that each indicator type has only one source
-        chart_data_dict = {}
-        for key, value in chart_dataseries_dict.iteritems():
-            try:
-                # we're taking the first (and only) soruce
-                new_value = value.itervalues().next()
-                chart_data_dict[key] = new_value
-            except Exception, e:
-                log.warning("Exception while iterating dataseries data: " + e)
-
-
-        # for code in chart_data_dict.keys():
-        #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
-
-        chart_data_list = []
-        for code in indicators_4_charts:
-            if code in chart_data_dict and len(chart_data_list) < 5:
-                chart_data_list.append(chart_data_dict[code])
-
-        chart_ind_codes = [chart['code'] for chart in chart_data_list]
-        shown_dataseries_codes = [(el, '') for el in top_line_ind_codes + chart_ind_codes]
-        shown_dataseries_dao = indicator_access.IndicatorAccess(country_id, shown_dataseries_codes)
-
-        indic_extra_dict = shown_dataseries_dao.fetch_indicator_data_from_ckan()
-
-        for chart in chart_data_list:
-            code = chart['code']
-            chart_extra = indic_extra_dict.get(code, None)
-            chart['data'] = json.dumps(chart['data'])
-            if chart_extra:
-                chart['datasetLink'] = chart_extra.get('datasetLink')
-                chart['datasetUpdateDate'] = chart_extra.get(
-                    'datasetUpdateDate')
-
-        # c.chart_data_list = chart_data_list
-
-        # updating the top line info with links and dates
-        for el in sorted_top_line_data:
-            cps_time = el.get('time', '')
-            if cps_time:
-                el['datasetUpdateDate'] = \
-                    dt.datetime.strptime(cps_time, '%Y-%m-%d').strftime('%b %d, %Y')
-
-            top_line_extra = indic_extra_dict.get(
-                el['indicatorTypeCode'], None)
-            if top_line_extra:
-                el['datasetLink'] = top_line_extra.get('datasetLink')
-                # el['datasetUpdateDate'] = top_line_extra.get(
-                #     'datasetUpdateDate')
-
-        return sorted_top_line_data, chart_data_list
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,
     #                'user': c.user or c.author,
