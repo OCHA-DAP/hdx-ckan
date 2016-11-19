@@ -180,12 +180,43 @@
                   <li><a href="{{ orgLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Organisations') }}</a></li>
                   <li style="position: relative">
                       <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                        <span id="crises-label" >{{ _('Crises') }}</span>
+                        <span id="crises-label" >{{ _('Events') }}</span>
                       </a>
                       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-                          <li><a href="{{ elNinoLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('El Nino') }}</a></li>
-                          <li><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Nepal Earthquake') }}</a></li>
-                          <li><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Ebola') }}</a></li>
+                          <li class="crises-group">
+                              Ongoing
+                              <ul>
+                                  <li>
+                                      <div><a href="{{ elNinoLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('El Nino') }}</a></div>
+                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                  </li>
+                                  <li>
+                                      <div><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Nepal Earthquake') }}</a></div>
+                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                  </li>
+                                  <li>
+                                      <div><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Ebola') }}</a></div>
+                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                  </li>
+                              </ul>
+                          </li>
+                          <li class="crises-group">
+                              Archived
+                              <ul>
+                                  <li>
+                                      <div><a href="{{ elNinoLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('El Nino') }}</a></div>
+                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                  </li>
+                                  <li>
+                                      <div><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Nepal Earthquake') }}</a></div>
+                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                  </li>
+                                  <li>
+                                      <div><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Ebola') }}</a></div>
+                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                  </li>
+                              </ul>
+                          </li>
                       </ul>
                   </li>
                   <li><a id="faq-label" href="{{ faqLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Faq') }}</a></li>
