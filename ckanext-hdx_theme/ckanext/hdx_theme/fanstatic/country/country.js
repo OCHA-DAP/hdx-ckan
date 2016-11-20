@@ -106,6 +106,55 @@ function drawMap() {
 
 }
 
+function c3Sparklines(){
+  $('.sparkline').each(function() {
+    var th = $(this),
+    data = JSON.parse(th.text());
+    th.text("");
+    th.attr("style", "");
+
+    var chart = c3.generate({
+      bindto: this,
+      point: {
+        show: false
+      },
+      legend:{
+        show: false
+      },
+      color: {
+          pattern: ['#007ce0']
+      },
+      data: {
+        json: data,
+        keys: {
+          x: 'formatted_date',
+          value: ['value']
+        },
+        x: 'x',
+        xFormat: '%b %d, %Y' //'%Y-%m-%dT%H:%M:%S'
+      },
+      axis: {
+        x: {
+          show: false,
+          type: 'timeseries',
+          tick: {
+            format: '%b %d, %Y'
+          }
+        },
+        y: {
+          show: false
+        }
+      },
+      tooltip: {
+        format: {
+          value: d3.format(",")
+        }
+      }
+    });
+    });
+}
+
+
 function buildGraphs() {
     $(".topline-charts").each(function (index){
         var element = $(this);
@@ -171,4 +220,5 @@ function buildGraphs() {
 $(document).ready(function() {
     drawMap();
     buildGraphs();
+    c3Sparklines();
 });

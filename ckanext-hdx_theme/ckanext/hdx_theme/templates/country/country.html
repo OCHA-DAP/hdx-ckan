@@ -13,13 +13,13 @@
     {% endblock %}
 {% endblock %}
 
-{% block crisis_title %} {{ data.country_dict.display_name }} {% endblock %}
 {% block breadcrumb_content %}
     <li>{% link_for _('Groups'), controller='group', action='index' %}</li>
     <li class="active">{% link_for data.country_dict.display_name, controller='group', action='read', id=data.country_dict.name %}</li>
 {% endblock %}
 
 {% block crisis_data %}
+    {% set country_active = data.country_dict.activity_level == 'active' %}
     <div id="countryMapPolygon" style="display: none;">
         {% if data.country_dict.geojson %}
             {{ data.country_dict.geojson | safe }}
@@ -72,10 +72,11 @@
         <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="row">
                 {% for value in data.widgets.top_line_data_list %}
-                    <div class="col-xs-3">
+                    <div class="{% if country_active %}col-xs-4{% else %}col-xs-3{% endif %}">
                         {{ h.snippet('crisis/snippets/topline.html',
                             title=value.indicatorTypeName, value=value.formatted_value,
                             unit=value.unitName, source=value.sourceName,
+                            sparkline_json=value.sparklines_json,
                             source_link=value.datasetLink, latest_date=value.datasetUpdateDate) }}
                     </div>
                 {% endfor %}
@@ -83,7 +84,7 @@
         </div>
     </div>
 
-    {% if data.widgets.show %}
+    {% if data.widgets.show and false %}
     <div class="row">
         <div class="col-xs-4">
             <div class="row topline-numbers">
@@ -159,7 +160,7 @@
     <div class="row">
         <div class="col-xs-12">
 			<div class="row">
-                {% if data.widgets.show %}
+                {% if data.widgets.show and false %}
                     <div class="col-xs-12">
                         <div class="mBottom15 mTop15" style="border-bottom: 1px solid #dddddd;"> </div>
                     </div>
