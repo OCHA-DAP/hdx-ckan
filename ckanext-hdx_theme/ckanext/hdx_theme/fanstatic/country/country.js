@@ -1,4 +1,9 @@
 function drawMap() {
+    var crisisMapDiv = $("#crisis-map");
+    if (!crisisMapDiv.length){
+        return;
+    }
+
     var maxZoomValue = 4;
     var map = L.map('crisis-map', { attributionControl: false });
     map.scrollWheelZoom.disable();
@@ -98,6 +103,7 @@ function drawMap() {
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
         maxZoom: maxZoomValue
     });
+
 }
 
 function buildGraphs() {

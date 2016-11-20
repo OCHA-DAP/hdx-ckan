@@ -5,17 +5,18 @@
 {% set contact_topics = contact_topics or {} %}
 {% set group_topics = group_topics or {} %}
 {% set hide_contact_contributor = hide_contact_contributor or false%}
-{% set membership_data = membership.data %}
+{% set hide_membership = hide_membership or false %}
 
 
 
-
-{% if not hide_contact_contributor%}
-    {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, pkg = pkg, membership_data=membership_data) }}
+{% if not hide_membership %}
+    {% set membership_data = membership.data %}
+    {% if not hide_contact_contributor%}
+        {{ h.snippet('widget/membership/contact-contributor.html', id="contactContributorPopup", title=title, topics=contact_topics, pkg = pkg, membership_data=membership_data) }}
+    {% endif %}
+    {{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title, base_type=base_type) }}
+    {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
 {% endif %}
-{{ h.snippet('widget/membership/group-message.html', id="groupMessagePopup", title=title, groups=group_topics, org_id = org_id, pkg_id = pkg_id, membership_data=membership_data, base_title=base_title, base_type=base_type) }}
-{{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
-
 <span class="{{ classes }}">
     <ul class="">
         {% if c.user %}
@@ -40,7 +41,7 @@
                 </li>
             {% endif %}
         {% endif %}
-        {% if membership.display_group_message %}
+        {% if not hide_membership and membership.display_group_message %}
             <li>
                 <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '');showOnboardingWidget('#groupMessagePopup');" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular '+ base_type +' including private '+ base_type +'.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
                     <i class="icon-megahorn"></i>

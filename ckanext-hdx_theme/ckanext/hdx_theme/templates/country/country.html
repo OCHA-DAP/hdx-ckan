@@ -7,21 +7,10 @@
 {% block subtitle %}
     {{ data.country_dict.display_name }}
 {% endblock %}
-{% block crisis_actions %}
-    <span style="color: red">
-        TEMPORARY: Datasets - {{ data.stats_section.num_of_datasets }},
-        Organizations - {{ data.stats_section.num_of_organizations }}, Cods - {{ data.stats_section.num_of_cods }},
-        Followers - {{ data.stats_section.num_of_followers }}
-    </span>
-    <span class="mR45 pull-right" style="line-height: 50px;">
-        <span class="followButtonContainer">
-            {{ h.follow_button('group', data.country_dict.id) }}
-        </span>
-        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title(), analytics_shared_item="location" %}
-        {% if h.check_access('group_update', {'id': data.country_dict.id}) %}
-            {% link_for _('Edit'), controller='group', action='edit', id=data.country_dict.name, class_='btn' %}
-        {% endif %}
-    </span>
+
+{% block crisis_map %}
+    {% block crisis_actions %}
+    {% endblock %}
 {% endblock %}
 
 {% block crisis_title %} {{ data.country_dict.display_name }} {% endblock %}
@@ -35,6 +24,63 @@
         {% if data.country_dict.geojson %}
             {{ data.country_dict.geojson | safe }}
         {% endif %}
+    </div>
+    <div class="row">
+        <div class="list-items dataset-content mTB15">
+            <div class="col-xs-12">
+                <h1 class="country-title">{{ data.country_dict.display_name }}</h1>
+            </div>
+            <div class="col-xs-6 mTop8">
+                <div class="base-actions-menu">
+                    <ul>
+                        <li>
+                            {% set num_of_pack = data.stats_section.num_of_datasets %}
+                            {% if num_of_pack%}
+                                <span class="sspBold14">
+                                    <a class="sspBold14" href="#">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %} / [ {{ data.stats_section.num_of_cods }} CODs ]</a>
+                                </span>
+                            {% else %}
+                                <span class="sspBold14">{{ _('0 Datasets') }}</span>
+                            {% endif %}
+                        </li>
+                        <li>
+                            {% set num_of_followers = data.stats_section.num_of_followers %}
+                            <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+                        </li>
+                        <li>
+                            {% set num_of_orgs = data.stats_section.num_of_organizations %}
+                            <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col-xs-6">
+                {% snippet "country/country_actions_menu.html", country=data.country_dict, can_edit=h.check_access('group_update', {'id': data.country_dict.id}), classes='base-actions-menu followButtonContainer pull-right' %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Key Figures") }}
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div class="row">
+                {% for value in data.widgets.top_line_data_list %}
+                    <div class="col-xs-3">
+                        {{ h.snippet('crisis/snippets/topline.html',
+                            title=value.indicatorTypeName, value=value.formatted_value,
+                            unit=value.unitName, source=value.sourceName,
+                            source_link=value.datasetLink, latest_date=value.datasetUpdateDate) }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
     {% if data.widgets.show %}

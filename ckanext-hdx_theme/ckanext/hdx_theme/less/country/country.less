@@ -1,3 +1,6 @@
+@import "../base/variables";
+@import "../base/mixins";
+
 /* Style topline numbers table*/
 .topline-title{
   font-family: 'Gotham-Bold', sans-serif;
@@ -130,3 +133,14 @@
   margin-top: -10px;
 }
 /* END - Adapting continuous browsing */
+
+h1.country-title {
+  .gothamBoldFont(28px);
+  color: @darkGrayColor;
+}
+
+.base-actions-menu {
+  ul {
+    padding: 0;
+  }
+}

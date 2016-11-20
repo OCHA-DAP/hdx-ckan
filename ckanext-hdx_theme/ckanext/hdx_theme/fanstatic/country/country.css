@@ -1,3 +1,11 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
 /* Style topline numbers table*/
 .topline-title {
   font-family: 'Gotham-Bold', sans-serif;
@@ -105,3 +113,12 @@
   margin-top: -10px;
 }
 /* END - Adapting continuous browsing */
+h1.country-title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 28px;
+  color: #333333;
+}
+.base-actions-menu ul {
+  padding: 0;
+}

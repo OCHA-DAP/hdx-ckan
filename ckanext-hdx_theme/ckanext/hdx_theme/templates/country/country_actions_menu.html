@@ -1,0 +1,22 @@
+{% extends "indicator/snippets/base_actions_menu.html" %}
+
+{% set panel_title = _('Share Country') %}
+{% set title = country.title %}
+
+{% set base_type = 'group' %}
+{% set base_title = 'country' %}
+
+{# set membership = c.org_meta.group_message_info #}
+{# set group_topics = membership.data.group_topics #}
+{% set hide_contact_contributor = true %}
+{% set hide_membership = true %}
+{% set org_id = country.id %}
+{% set follow_id = org_id %}
+
+{% block user_actions %}
+    {% if can_edit %}
+        <li>
+            {% link_for _('Edit'), controller='group', action='edit', id=country.name, class_='' %}
+        </li>
+    {% endif %}
+{% endblock %}
