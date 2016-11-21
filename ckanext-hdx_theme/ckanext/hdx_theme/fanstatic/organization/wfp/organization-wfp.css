@@ -2114,6 +2114,40 @@ h4 small {
   background-color: #007ce0;
   background-image: none;
 }
+.newHeader .crises-menu {
+  padding: 0;
+}
+.newHeader .crises-menu li.crises-group {
+  text-transform: uppercase;
+  color: #888888;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  padding: 10px 20px;
+  border-bottom: 1px solid #eeeeee;
+}
+.newHeader .crises-menu li.crises-group:last-child {
+  border-bottom: none;
+}
+.newHeader .crises-menu li.crises-group ul {
+  padding: 0;
+  list-style: none;
+  text-transform: none;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.newHeader .crises-menu li.crises-group ul li {
+  padding-top: 5px;
+  font-size: 12px;
+}
+.newHeader .crises-menu li.crises-group ul li a {
+  color: #000000;
+  font-size: 14px;
+}
+.newHeader .crises-menu li.crises-group ul li .crises-datasets {
+  line-height: 1;
+}
 /* HEADER Search Widget  */
 .header-nav-search {
   height: 55px;

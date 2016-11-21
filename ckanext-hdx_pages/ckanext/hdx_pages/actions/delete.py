@@ -23,3 +23,5 @@ def page_delete(context, data_dict):
     page.delete()
     model.repo.commit()
     return dictize.page_dictize(page)
+
+

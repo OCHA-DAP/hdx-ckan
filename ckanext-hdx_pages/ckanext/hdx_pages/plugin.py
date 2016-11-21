@@ -7,6 +7,8 @@ import ckanext.hdx_pages.actions.update as update
 import ckanext.hdx_pages.actions.get as get
 import ckanext.hdx_pages.actions.auth as auth
 
+import ckanext.hdx_pages.helpers.helper as helper
+
 
 class HdxPagesPlugin(plugins.SingletonPlugin):
 
@@ -14,6 +16,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
+    plugins.implements(plugins.ITemplateHelpers)
 
     def update_config(self, config_):
         # toolkit.add_template_directory(config_, 'templates')
@@ -48,7 +51,9 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_create': create.page_create,
             'page_delete': delete.page_delete,
             'page_update': update.page_update,
-            'page_show': get.page_show
+            'page_show': get.page_show,
+            'page_group_list': get.page_group_list,
+            'page_list': get.page_list
         }
 
     def get_auth_functions(self):
@@ -57,4 +62,9 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_update': auth.page_update,
             'page_delete': auth.page_delete,
             'page_show': auth.page_show
+        }
+
+    def get_helpers(self):
+        return {
+            'hdx_events_list': helper.hdx_events_list,
         }

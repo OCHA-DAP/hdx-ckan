@@ -68,7 +68,13 @@
                                 </label>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <label class="control-label">Location</label>
+                            {% set group_list = h.hdx_location_list() %}
+                            <div data-module="hdx_form_element_manager" data-module-element_name="groups_list">
+                                {{ form.select('groups', id='field_groups',  options=group_list, selected=data.groups, error=errors.groups, classes=['form-group'], attrs={'class':'form-control', 'multiple':'true'}) }}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">

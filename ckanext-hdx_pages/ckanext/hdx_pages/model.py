@@ -91,9 +91,7 @@ page_table = Table('page', meta.metadata,
 mapper(Page, page_table, extension=[extension.PluginMapperExtension(), ])
 
 
-
 class PageGroupAssociation(PageBaseModel):
-
     @classmethod
     def get_group_ids_for_page(cls, page_id):
         '''
@@ -103,6 +101,7 @@ class PageGroupAssociation(PageBaseModel):
         result = [res[0] for res in associated_group_id_list]
         return result
 
+
 page_group_association_table = Table(
     'page_group_association',
     meta.metadata,
@@ -111,6 +110,8 @@ page_group_association_table = Table(
     Column('page_id', types.UnicodeText,
            ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
 )
+
+meta.mapper(PageGroupAssociation, page_group_association_table)
 
 
 def create_table():

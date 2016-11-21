@@ -1,7 +1,7 @@
 {% set dataLink = "/dataset?sort=metadata_modified+desc" %}
 {% set locationLink = "/group" %}
 {% set orgLink = "/organization" %}
-{% set elNinoLink = h.url_for('read_crisis', id='elnino') %}
+{% set elNinoLink = h.url_for('read_event', id='elnino') %}
 {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
 {% set ebolaLink = "/ebola" %}
 {% set faqLink = "/faq" %}
@@ -183,38 +183,27 @@
                         <span id="crises-label" >{{ _('Events') }}</span>
                       </a>
                       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+                          {% set events = h.hdx_events_list() %}
                           <li class="crises-group">
                               Ongoing
                               <ul>
-                                  <li>
-                                      <div><a href="{{ elNinoLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('El Nino') }}</a></div>
+                                  {% for ev in events.ongoing %}
+                                    <li>
+                                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
                                       <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
-                                  <li>
-                                      <div><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Nepal Earthquake') }}</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
-                                  <li>
-                                      <div><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Ebola') }}</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
+                                    </li>
+                                  {% endfor %}
                               </ul>
                           </li>
                           <li class="crises-group">
                               Archived
                               <ul>
-                                  <li>
-                                      <div><a href="{{ elNinoLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('El Nino') }}</a></div>
+                                  {% for ev in events.archived %}
+                                    <li>
+                                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
                                       <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
-                                  <li>
-                                      <div><a href="{{ nepalLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Nepal Earthquake') }}</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
-                                  <li>
-                                      <div><a href="{{ ebolaLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Ebola') }}</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
+                                    </li>
+                                  {% endfor %}
                               </ul>
                           </li>
                       </ul>

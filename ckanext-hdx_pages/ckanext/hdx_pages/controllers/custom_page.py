@@ -9,12 +9,15 @@ from ckanext.hdx_search.controllers.search_controller import HDXSearchController
 from ckan.common import _, c, g, request, response
 from ckan.controllers.api import CONTENT_TYPES
 from urlparse import parse_qs, urlparse
+import ckan.lib.navl.dictization_functions as dict_fns
 
+tuplize_dict = logic.tuplize_dict
+clean_dict = logic.clean_dict
+parse_params = logic.parse_params
 get_action = logic.get_action
 check_access = logic.check_access
 NotAuthorized = logic.NotAuthorized
 abort = base.abort
-
 checked = 'checked="checked"'
 
 section_types = {
@@ -114,12 +117,12 @@ class PagesController(HDXSearchController):
         return base.render('pages/edit_page.html', extra_vars=extra_vars)
 
     def read_event(self, id):
-        return self.read(id, 'event')
+        return self.read_page(id, 'event')
 
     def read_dashboards(self, id):
-        return self.read(id, 'dashboards')
+        return self.read_page(id, 'dashboards')
 
-    def read(self, id, type):
+    def read_page(self, id, type):
         context = {
             'model': model, 'session': model.Session,
             'user': c.user or c.author
@@ -244,6 +247,9 @@ class PagesController(HDXSearchController):
     def _populate_sections(self):
         sections_no = int(request.params.get("hdx_counter") or "0")
         sections = []
+
+        data_dict_temp = clean_dict(dict_fns.unflatten(tuplize_dict(parse_params(request.POST))))
+
         for _i in range(0, sections_no):
             if "field_section_" + str(_i) + "_type" in request.params and request.params.get(
                                     "field_section_" + str(_i) + "_type") != 'empty':
@@ -266,6 +272,7 @@ class PagesController(HDXSearchController):
                      "status": request.params.get("status"),
                      "description": "",
                      "sections": json.dumps(sections),
+                     "groups": self.process_groups(data_dict_temp.get("groups", [])),
                      request.params.get("type") or 'event': checked,
                      request.params.get("status") or 'ongoing': checked,
                      "hdx_counter": len(sections),
@@ -273,9 +280,13 @@ class PagesController(HDXSearchController):
                      'state': request.params.get("save_custom_page") or request.params.get("save_as_draft_custom_page")}
         return page_dict
 
+    def process_groups(self, groups):
+        return groups if not isinstance(groups, basestring) else [groups]
+
     def _init_extra_vars_edit(self, extra_vars):
         _data = extra_vars.get('data')
         _data['sections'] = json.loads(_data.get('sections', ''))
+        # _data['groups'] = json.loads(_data.get('sections', ''))
         _type = _data['type'] or 'event'
         _data[_type] = checked
         _status = _data['status'] or 'ongoing'
