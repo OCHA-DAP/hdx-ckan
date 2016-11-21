@@ -203,17 +203,19 @@
                                   {% endfor %}
                               </ul>
                           </li>
-                          <li class="crises-group">
-                              Archived
-                              <ul>
-                                  {% for ev in events.archived %}
-                                    <li>
-                                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                    </li>
-                                  {% endfor %}
-                              </ul>
-                          </li>
+                          {% if events.archived %}
+                              <li class="crises-group">
+                                  Archived
+                                  <ul>
+                                      {% for ev in events.archived %}
+                                        <li>
+                                          <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                                          <div class="crises-datasets">[ ## Datasets ]</div>
+                                        </li>
+                                      {% endfor %}
+                                  </ul>
+                              </li>
+                          {% endif %}
                       </ul>
                   </li>
                   <li><a id="faq-label" href="{{ faqLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Faq') }}</a></li>
