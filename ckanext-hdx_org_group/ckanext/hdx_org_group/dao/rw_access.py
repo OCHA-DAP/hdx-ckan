@@ -14,7 +14,10 @@ class RwAccess(object):
         location_list = _get_action('hdx_get_locations_info_from_rw')({}, {'rw_url': self.url})
 
         location = self.__find_current_location(location_list)
-        toplines = self.__transform_to_toplines(location)
+
+        toplines = []
+        if location:
+            toplines = self.__transform_to_toplines(location)
         return toplines
 
     def __find_current_location(self, location_list):
