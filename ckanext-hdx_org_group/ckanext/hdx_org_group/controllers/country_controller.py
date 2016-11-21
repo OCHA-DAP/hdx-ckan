@@ -13,6 +13,7 @@ import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.model as model
+import ckan.lib.helpers as helpers
 from ckan.controllers.api import CONTENT_TYPES
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
@@ -73,10 +74,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(country_dict).get_dataset_results()
 
+        organization_list = self._get_org_list_for_menu_from_facets(full_facet_info)
+
         template_data = {
             'data': {
                 'country_dict': country_dict,
                 'stats_section': {
+                    'organization_list': organization_list,
                     'num_of_organizations':
                         len(full_facet_info.get('facets', {}).get('organization', {}).get('items', [])),
                     'num_of_cods': full_facet_info.get('num_of_cods', 0),
@@ -95,6 +99,18 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         }
 
         return template_data
+
+    def _get_org_list_for_menu_from_facets(self, full_facet_info):
+        org_list = [
+            {
+                'display_name': org.get('display_name'),
+                'name': org.get('name'),
+                'url': helpers.url_for('organization_read', id=org.get('name'))
+            }
+            for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', [])
+        ]
+        return org_list
+
 
     def get_country(self, id):
         if group_type != self.group_type:
