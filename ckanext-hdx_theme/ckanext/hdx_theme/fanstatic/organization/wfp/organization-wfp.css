@@ -2686,6 +2686,9 @@ nav.mobile-only {
   display: inline;
   margin-right: 16px;
 }
+.base-actions-menu ul li:last-child {
+  margin-right: 0;
+}
 .base-actions-menu ul li:first-child:before {
   border: none;
 }

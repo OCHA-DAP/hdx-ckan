@@ -15,5 +15,5 @@ def hdx_events_list():
             else:
                 archived.append(e)
 
-    return {"archived": archived, "ongoing":ongoing}
+    return {"archived": archived, "ongoing": ongoing}
 

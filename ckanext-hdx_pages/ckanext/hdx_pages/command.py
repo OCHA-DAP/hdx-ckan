@@ -31,7 +31,7 @@ class InitDBCommand(p.toolkit.CkanCommand):
             self.cleandb()
             print 'Finished'
         elif cmd == 'patchdb':
-            print 'Patching table of pages and adding column ' + self.args[1]
+            print 'Patching table of pages and adding column '
             self.patchdb(self.args[1])
             print 'Finished'
         else:
