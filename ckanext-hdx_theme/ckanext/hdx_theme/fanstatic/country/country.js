@@ -149,9 +149,12 @@ function c3Sparklines(){
         format: {
           value: d3.format(",")
         }
+      },
+      size: {
+        width: 103
       }
     });
-    });
+  });
 }
 
 
