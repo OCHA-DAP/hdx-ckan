@@ -284,9 +284,15 @@ class PagesController(HDXSearchController):
         return groups if not isinstance(groups, basestring) else [groups]
 
     def _init_extra_vars_edit(self, extra_vars):
+
+        context = {
+            'model': model, 'session': model.Session,
+            'user': c.user or c.author
+        }
+
         _data = extra_vars.get('data')
         _data['sections'] = json.loads(_data.get('sections', ''))
-        # _data['groups'] = json.loads(_data.get('sections', ''))
+        _data['groups'] = logic.get_action('page_group_list')(context, {'id': _data.get('id')})
         _type = _data['type'] or 'event'
         _data[_type] = checked
         _status = _data['status'] or 'ongoing'

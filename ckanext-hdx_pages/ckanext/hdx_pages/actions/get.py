@@ -39,13 +39,17 @@ def page_group_list(context, data_dict):
     # get a list of group ids associated with the page id
     group_id_list = PageGroupAssociation.get_group_ids_for_page(data_dict['id'])
 
-    group_list = []
-    if group_id_list is not None:
-        for grp_id in group_id_list:
-            group = logic.get_action('group_show')(context, {'id': grp_id})
-            group_list.append(group)
+    # group_list = []
+    # if group_id_list is not None:
+    #     for grp_id in group_id_list:
+    #         group = logic.get_action('group_show')(context,
+    #                                                {'id': grp_id, 'include_datasets': False, 'include_extras': False,
+    #                                                 'include_users ': False, 'include_groups': False,
+    #                                                 'include_tags': False, 'include_followers ': False})
+    #         group_list.append(group)
 
-    return group_list
+    return group_id_list
+
 
 @logic.side_effect_free
 def page_list(context, data_dict):
