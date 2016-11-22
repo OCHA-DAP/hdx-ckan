@@ -390,9 +390,8 @@ class ValidationController(ckan.controllers.user.UserController):
                   <head></head>
                   <body>
                     <p>You have successfully registered your account on HDX.</p>
-                    <p>Username: {username}</p>
-                    <p>Password: {password}</p>
-                    <p><a href="{link}">Login</a></p>
+                    <p>Your username is {username}</p>
+                    <p>Please use the following link to <a href="{link}">Login</a></p>
                     <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
                   </body>
                 </html>
