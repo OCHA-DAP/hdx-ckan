@@ -409,7 +409,6 @@
 
                                             </div>
 
-
                                             {% set frequencies = h.hdx_frequency_list() %}
                                             {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
                                                     'data-original-title': 'Your best guess of how often this dataset will be updated',
@@ -440,15 +439,6 @@
                                             </div>
                                             <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
                                                 {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
-                                            </div>
-
-                                            {% set frequency = h.hdx_frequency_list() %}
-                                            {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
-                                                    'data-original-title': 'How often are you going to update this dataset? HDX will remind you when its time to update.',
-                                                    'data-toggle': 'tooltip'}
-                                                    %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Update frequency (?)'), placeholder=_("How often does this data update?"), options=frequency, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
                                             </div>
 
                                             <div data-module="hdx_form_element_manager" data-module-element_name="caveats">
