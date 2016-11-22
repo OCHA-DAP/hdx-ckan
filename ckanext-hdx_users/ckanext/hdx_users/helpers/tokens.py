@@ -53,7 +53,7 @@ def send_validation_email(user, token):
         """.format(link=link.format(config['ckan.site_url'], validate_link))
 
     try:
-        hdx_mailer.mail_recipient('User', user['email'], subject, html)
+        hdx_mailer.mail_recipient([{'display_name': 'User', 'email': user['email']}], subject, html)
         return True
     except exceptions.Exception, e:
         error_summary = str(e)

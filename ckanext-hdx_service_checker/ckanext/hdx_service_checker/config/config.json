@@ -32,5 +32,12 @@
     "module_name": "ckanext.hdx_service_checker.checks.checks",
     "class_name": "ProxyForRemoteCheck",
     "url": "#{hdx_checks.gis_layer_base_url}/api/run-checks"
+  },
+  {
+    "name": "HXL Proxy server check",
+    "module_name": "ckanext.hdx_service_checker.checks.checks",
+    "class_name": "HttpResponseTextCheck",
+    "url": "#{hdx_checks.hxl_proxy_url}",
+    "included_text": "HXL Proxy"
   }
 ]

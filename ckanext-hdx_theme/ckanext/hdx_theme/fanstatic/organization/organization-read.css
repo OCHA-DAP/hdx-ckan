@@ -127,7 +127,7 @@ dt.uppercase {
 }
 .current-role {
   background-color: #333333;
-  color: #fff;
+  color: #ffffff;
   padding: 5px 10px;
 }
 .invite-box {
@@ -140,7 +140,7 @@ dt.uppercase {
   border: none;
 }
 .invite-box p {
-  color: #000;
+  color: #000000;
   margin: 10px 0;
 }
 .invite-box .select2-container .select2-choices .select2-search-choice {
@@ -175,7 +175,7 @@ dt.uppercase {
   transition-timing-function: linear;
 }
 .approval-request.request-approved {
-  background-color: #fff;
+  background-color: #ffffff;
 }
 .approval-request.request-approved .user-details .approval-actions button {
   opacity: 0;
@@ -192,7 +192,7 @@ dt.uppercase {
   margin-left: 40px;
 }
 .approval-request .user-details .btn-primary .caret {
-  border-top-color: #fff;
+  border-top-color: #ffffff;
   vertical-align: middle;
   margin-left: 10px;
 }

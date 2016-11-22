@@ -668,7 +668,8 @@ def recompile_everything(context):
 def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedelay=10000, viewportsize='1200x800'):
     try:
         command = 'capturejs -l --uri "' + uri + '" --output ' + output_file + ' --selector "' + selector + '"' + ' --renderdelay ' + str(
-            renderdelay) + ' --waitcapturedelay ' + str(waitcapturedelay) + ' --viewportsize ' + str(viewportsize) + ' ; mogrify -resize 40% ' + output_file
+            renderdelay) + ' --waitcapturedelay ' + str(waitcapturedelay) + ' --viewportsize ' + str(
+            viewportsize) + ' ; mogrify -resize 40% ' + output_file
         log.info(command)
         args = shlex.split(command)
         subprocess.Popen(args)
@@ -676,13 +677,11 @@ def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedela
     except:
         return False
 
-
 def notify_admins(data_dict):
     try:
         if data_dict.get('admins'):
-            for admin in data_dict.get('admins'):
-                hdx_mailer.mail_recipient(admin.get('display_name'), admin.get('email'), data_dict.get('subject'),
-                                          data_dict.get('message'))
+            # for admin in data_dict.get('admins'):
+            hdx_mailer.mail_recipient(data_dict.get('admins'), data_dict.get('subject'), data_dict.get('message'))
     except Exception, e:
         log.error("Email server error: can not send email to admin users" + e.message)
         return False
@@ -714,10 +713,10 @@ def hdx_user_in_org_or_group(group_id, include_pending=False):
     if include_pending:
         checked_states.append('pending')
 
-    query = model.Session.query(func.count(model.Member.id))    \
+    query = model.Session.query(func.count(model.Member.id)) \
         .filter(model.Member.state.in_(checked_states)) \
         .filter(model.Member.table_name == 'user') \
         .filter(model.Member.group_id == group_id) \
         .filter(model.Member.table_id == c.userobj.id)
     length = query.all()[0][0]
-    return  length != 0
+    return length != 0

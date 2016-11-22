@@ -24,7 +24,6 @@ import ckanext.resourceproxy.plugin as resourceproxy_plugin
 import ckanext.hdx_package.helpers.licenses as hdx_licenses
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.custom_validator as vd
-import ckanext.hdx_package.helpers.update as update
 import ckanext.hdx_package.actions.authorize as authorize
 import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.update as hdx_update
@@ -311,14 +310,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     def get_actions(self):
         from ckanext.hdx_package.helpers import helpers as hdx_actions
         return {
-            'package_update': update.package_update,
+            'package_update': hdx_update.package_update,
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
-            'hdx_package_update_metadata': update.hdx_package_update_metadata,
-            'hdx_resource_update_metadata': update.hdx_resource_update_metadata,
-            'hdx_resource_delete_metadata': update.hdx_resource_delete_metadata,
+            'hdx_package_update_metadata': hdx_update.hdx_package_update_metadata,
+            'hdx_resource_update_metadata': hdx_update.hdx_resource_update_metadata,
+            'hdx_resource_delete_metadata': hdx_update.hdx_resource_delete_metadata,
             'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
-            'package_create': hdx_actions.package_create,
+            'package_create': hdx_create.package_create,
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
             'resource_show': hdx_get.resource_show,

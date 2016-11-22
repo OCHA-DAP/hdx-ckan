@@ -20,16 +20,12 @@ class MailerException(Exception):
     pass
 
 
-def add_msg_niceties(recipient_name, body, sender_name=None, sender_url=None, footer=None, show_header=True):
+def add_msg_niceties(body, footer=None):
     if not footer:
         footer = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'
-    if show_header:
-        header = u'''Dear {recipient_name},'''.format(recipient_name=recipient_name)
-    else:
-        header = ''
-    content = u'''{header}
+    content = u'''
     {body}
-    {footer}'''.format(header=header, body=body, footer=footer)
+    {footer}'''.format(body=body, footer=footer)
 
     full_html = u"""
     <html>
@@ -40,11 +36,10 @@ def add_msg_niceties(recipient_name, body, sender_name=None, sender_url=None, fo
     return full_html
 
 
-def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, subject, body, headers={},
-                    recipients_list=None, footer=None, show_header=True, sender_email=None, bcc_recipients_list=None):
+def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=None, footer=None, headers={},
+                    sender_email=None):
     mail_from = config.get('smtp.mail_from')
-    body = add_msg_niceties(recipient_name=recipient_name, body=body, sender_name=sender_name, sender_url=sender_url,
-                            footer=footer, show_header=show_header)
+    body = add_msg_niceties(body=body, footer=footer)
     msg = MIMEMultipart('alternative')
     for k, v in headers.items(): msg[k] = v
     subject = Header(subject.encode('utf-8'), 'utf-8')
@@ -55,17 +50,14 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
     if recipients_list:
         for r in recipients_list:
             recipient_email_list.append(r.get('email'))
-            recipient += u"%s <%s> , " % (r.get('name'), r.get('email'))
-    else:
-        recipient = u"%s <%s>, " % (recipient_name, recipient_email)
-        recipient_email_list = [recipient_email]
+            recipient += u"%s <%s> , " % (r.get('display_name'), r.get('email'))
+    # else:
+        #no recipient list provided
+
     msg['To'] = Header(recipient, 'utf-8')
-    # bcc_recipient = ''
     if bcc_recipients_list:
         for r in bcc_recipients_list:
             recipient_email_list.append(r.get('email'))
-            # bcc_recipient += u"%s <%s> , " % (r.get('name'), r.get('email'))
-        # msg['Bcc'] = Header(bcc_recipient, 'utf-8')
     msg['Date'] = Utils.formatdate(time())
     msg['X-Mailer'] = "CKAN %s" % ckan.__version__
     if sender_email:
@@ -112,7 +104,7 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
             smtp_connection.login(smtp_user, smtp_password)
 
         smtp_connection.sendmail(mail_from, recipient_email_list, msg.as_string())
-        log.info("Sent email to {0}".format(recipient_email))
+        log.info("Sent email to provided list of recipients")
 
     except smtplib.SMTPException, e:
         msg = '%r' % e
@@ -122,9 +114,21 @@ def _mail_recipient(recipient_name, recipient_email, sender_name, sender_url, su
         smtp_connection.quit()
 
 
-def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
-                   sender_name='HDX', sender_email=None, bcc_recipients_list=None):
-    return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
-                           sender_url=g.site_url, subject=subject, body=body, headers=headers,
-                           recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
-                           bcc_recipients_list=bcc_recipients_list)
+def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_email=None, bcc_recipients_list=None, footer=None, headers={}):
+    if recipients_list is None and bcc_recipients_list is None:
+        raise MailerException('There are no recipients to send email')
+    return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list, footer=footer, headers=headers, sender_email=sender_email)
+
+    # recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
+    #                        sender_url=g.site_url, subject=subject, body=body, headers=headers,
+    #                        recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
+    #                        bcc_recipients_list=bcc_recipients_list)
+
+#
+#
+# def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
+#                    sender_name='HDX', sender_email=None, bcc_recipients_list=None):
+#     return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
+#                            sender_url=g.site_url, subject=subject, body=body, headers=headers,
+#                            recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
+#                            bcc_recipients_list=bcc_recipients_list)
