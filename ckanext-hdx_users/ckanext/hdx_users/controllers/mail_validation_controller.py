@@ -390,15 +390,15 @@ class ValidationController(ckan.controllers.user.UserController):
                   <head></head>
                   <body>
                     <p>You have successfully registered your account on HDX.</p>
-                    <p>Username: {username}</p>
-                    <p>Password: {password}</p>
-                    <p><a href="{link}">Login</a></p>
+                    <p>Your username is {username}</p>
+                    <p>Please use the following link to <a href="{link}">Login</a></p>
                     <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
                   </body>
                 </html>
                 """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
                            tour_link=tour_link)
-                hdx_mailer.mail_recipient(data_dict.get('fullname'), data_dict.get('email'), subject, html)
+                hdx_mailer.mail_recipient(
+                    [{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, html)
 
         except NotAuthorized:
             return OnbNotAuth
@@ -558,7 +558,7 @@ class ValidationController(ckan.controllers.user.UserController):
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
                 if f:
-                    hdx_mailer.mail_recipient(f, f, subject, html)
+                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
 
         except exceptions.Exception, e:
             error_summary = str(e)

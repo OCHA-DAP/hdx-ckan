@@ -132,13 +132,14 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
                            admins=[],
                            status=403)
 
-    def test_request_membership(self):
-        tests.call_action_api(self.app, 'hdx_send_request_membership',
-                           display_name='User Name', name='username', 
-                           email='test@test.com', 
-                           organization='Org Name', message='Some message',
-                           admins=[],
-                           status=403)
+    # TODO need to align with the new membership request YTP extension
+    # def test_request_membership(self):
+    #     tests.call_action_api(self.app, 'hdx_send_request_membership',
+    #                        display_name='User Name', name='username',
+    #                        email='test@test.com',
+    #                        organization='Org Name', message='Some message',
+    #                        admins=[],
+    #                        status=403)
 
 class TestGroupAuth(org_group_base.OrgGroupBaseTest):
 

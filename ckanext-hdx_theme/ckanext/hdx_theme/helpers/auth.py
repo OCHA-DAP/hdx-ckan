@@ -48,7 +48,7 @@ def hdx_send_editor_request_for_org(context, data_dict):
                             for being an editor."))
 
 
-## ORGS
-def hdx_send_request_membership(context, data_dict):
-    return _simple_logged_in_auth(_("You must be logged in to send a  \
-                            membership request."))
+# ## ORGS
+# def hdx_send_request_membership(context, data_dict):
+#     return _simple_logged_in_auth(_("You must be logged in to send a  \
+#                             membership request."))

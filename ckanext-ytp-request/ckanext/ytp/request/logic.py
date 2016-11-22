@@ -63,7 +63,7 @@ def _reset_lang():
         pass
 
 
-def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=None):
+def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=None, admin_list=None):
     current_locale = get_lang()
 
     if locale == 'en':
@@ -87,8 +87,12 @@ def _mail_new_membership_request(locale, admin, group, url, user_obj, data_dict=
     try:
         # mail_user(admin, subject, message)
         # HDX change
-        hdx_mail.send_mail([{'display_name': admin.display_name or admin.fullname, 'email': admin.email}], subject,
-                           message)
+        if admin:
+            hdx_mail.send_mail([{'display_name': admin.display_name or admin.fullname, 'email': admin.email}], subject,
+                               message)
+        else:
+            hdx_mail.send_mail(admin_list, subject, message, True)
+
     except MailerException, e:
         log.error(e)
     finally:
@@ -112,8 +116,9 @@ def _mail_process_status(locale, member_user, approve, group_name, capacity):
         'organization': group_name
     })
     try:
-        hdx_mail.send_mail([{'display_name': member_user.display_name or member_user.fullname, 'email': member_user.email}],
-                  subject, message)
+        hdx_mail.send_mail(
+            [{'display_name': member_user.display_name or member_user.fullname, 'email': member_user.email}],
+            subject, message)
     except MailerException, e:
         log.error(e)
     finally:
@@ -198,13 +203,16 @@ def _create_member_request(context, data_dict):
     if url:
         url = url + url_for('member_request_show', member_id=member.id)
 
+    admin_list = []
     if role == 'admin':
         for admin in get_ckan_admins():
-            _mail_new_membership_request(locale, admin, group, url, userobj, data_dict)
+            admin_list.append({'display_name': admin.display_name, 'email': admin.email})
+            # _mail_new_membership_request(locale, admin, group, url, userobj, data_dict)
     else:
         for admin in get_organization_admins(group.id):
-            _mail_new_membership_request(locale, admin, group, url, userobj, data_dict)
-
+            admin_list.append({'display_name': admin.display_name, 'email': admin.email})
+            # _mail_new_membership_request(locale, admin, group, url, userobj, data_dict)
+    _mail_new_membership_request(locale, None, group, url, userobj, data_dict, admin_list)
     return member, changed
 
 

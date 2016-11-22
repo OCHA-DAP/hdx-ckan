@@ -14,7 +14,7 @@ import ckan.logic as logic
 
 import ckan.new_tests.helpers as helpers
 
-import ckanext.hdx_package.helpers.helpers as hdx_actions
+import ckanext.hdx_package.actions.create as hdx_actions
 import ckanext.hdx_package.helpers.caching as caching
 
 from pylons import config
