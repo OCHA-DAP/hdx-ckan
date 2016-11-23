@@ -110,6 +110,30 @@ def hdx_topline_num_for_group(context, data_dict):
         for item in top_line_items:
             item['source_system'] = 'datastore'
             del item['units']
+    elif group_info.get('activity_level') == 'active':
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+            group_info).get_dataset_results()
+
+        def _parse_integer_value(item):
+            try:
+                value = float(item.get('value', ''))
+            except:
+                value = None
+            return value
+
+        top_line_items = [
+            {
+                'source_system': 'reliefweb crisis app',
+                'code': item.get('indicatorTypeCode', ''),
+                'title': item.get('indicatorTypeName', ''),
+                'source_link': item.get('datasetLink', ''),
+                'source': item.get('sourceName', ''),
+                'value': _parse_integer_value(item),
+                'latest_date': item.get('time', ''),
+                'units': item.get('units', )
+            }
+            for item in top_line_data_list
+        ]
     else:
         # source is CPS
         ckan_site_url = config.get('ckan.site_url')
