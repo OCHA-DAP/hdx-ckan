@@ -160,5 +160,49 @@ h1.country-title {
       right: -18px;
     }
   }
+}
+
+.followers-list-popup.dropdown-menu {
+  position: absolute;
+  left: 50%;
+  margin-top: 15px;
+  transform: translate(-50%, 0);
+  padding: 15px;
+  margin-top: 15px;
+
+  &:before {
+    content: " ";
+    position: absolute;
+    top: -8px;
+    left: 50%;
+
+    border-left: 1px solid @lightGrayColor;
+    border-top: 1px solid @lightGrayColor;
+    height: 15px;
+    width: 15px;
+    background-color: @whiteColor;
+    transform: translate(-50%, 0) rotateZ(45deg);
+  }
+
+  .followers-list {
+    .follower-item {
+      font-size: 14px;
+      white-space: nowrap;
+      margin: 0;
+      margin-bottom: 10px;
+      display: block;
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      &:before {
+        content: none;
+      }
+
+      .image {
+        margin-right: 10px;
+      }
+    }
+  }
 
 }

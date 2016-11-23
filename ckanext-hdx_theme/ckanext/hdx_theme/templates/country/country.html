@@ -37,19 +37,67 @@
                             {% set num_of_pack = data.stats_section.num_of_datasets %}
                             {% if num_of_pack%}
                                 <span class="sspBold14">
-                                    <a class="sspBold14" href="#dataset-filter-start">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %} ({{ data.stats_section.num_of_cods }} CODs)</a>
+                                    <a class="sspBold14" href="#dataset-filter-start">
+                                        {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
+                                    </a>
+                                    {% if data.stats_section.num_of_cods > 0 %}
+                                        (<a href="?ext_cod=1#dataset-filter-start">{{ data.stats_section.num_of_cods }} CODs</a>)
+                                    {% endif %}
+
                                 </span>
                             {% else %}
                                 <span class="sspBold14">{{ _('0 Datasets') }}</span>
                             {% endif %}
                         </li>
                         <li>
+                            {# TODO: #}
+                            {# remove "and false" when enabling the followers dropdown #}
+                            {# #}
+
+                            {% if c.user and false %}
+                                <span class="dropdown dropdown-on-hover">
+                                    <a href="#" data-toggle="dropdown" data-target="#" data-module-trigger="hover focus click" data-module-placement="bottom" title="cosdalkj">
+                            {% endif %}
                             {% set num_of_followers = data.stats_section.num_of_followers %}
-                            <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+                                        <span class="sspBold14">{{ num_of_followers }} {% if num_of_followers != 1 %}{{ _('Followers') }}{% else %}{{ _('Follower') }}{% endif %}</span>
+                            {% if c.user and false %}
+                                    </a>
+                                    <div class="followers-list-popup dropdown-menu bottom">
+                                      <ul class="followers-list">
+                                        <li class="follower-item">
+                                            <a href="https://gravatar.com/" target="_blank" title="Update your avatar at gravatar.com" alt=""><img src="//gravatar.com/avatar/5ca1b02fb7f34474f03aeccc6686ce88?s=20&amp;d=identicon" class="gravatar image" width="20" height="20"></a>
+                                            <a href="/user/amcguire">aidan macguire</a>
+                                            |
+                                            <a href="/user/amcguire">amcguire</a>
+                                        </li>
+                                        <li class="follower-item">
+                                            <a href="https://gravatar.com/" target="_blank" title="Update your avatar at gravatar.com" alt=""><img src="//gravatar.com/avatar/5ca1b02fb7f34474f03aeccc6686ce88?s=20&amp;d=identicon" class="gravatar image" width="20" height="20"></a>
+                                            <a href="/user/amcguire">aidan macguire</a>
+                                            |
+                                            <a href="/user/amcguire">amcguire</a>
+                                        </li>
+
+                                      </ul>
+                                    </div>
+                                </span>
+                            {% endif %}
                         </li>
                         <li>
-                            {% set num_of_orgs = data.stats_section.num_of_organizations %}
-                            <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
+                            <span class="dropdown dropdown-on-hover">
+                                <a href="#" data-toggle="dropdown" data-target="#" data-module-trigger="hover focus click" data-module-placement="bottom" title="cosdalkj">
+                                    {% set num_of_orgs = data.stats_section.num_of_organizations %}
+                                    <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
+                                </a>
+                                <div class="followers-list-popup dropdown-menu bottom">
+                                  <ul class="followers-list">
+                                    {% for org in data.stats_section.organization_list %}
+                                        <li class="follower-item">
+                                            <a href="{{ org.url }}">{{ org.display_name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                  </ul>
+                                </div>
+                            </span>
                         </li>
                     </ul>
 
@@ -169,7 +217,6 @@
                     <div class="col-xs-12">
                         <div class="chart-item"></div>
                     </div>
-                    <div class="col-xs-12 source-name">
                         {{ val.sourceName }}
                         {%  if val.datasetLink %}
                             - <a href="{{ val.datasetLink }}">Data</a>

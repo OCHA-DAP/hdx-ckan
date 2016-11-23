@@ -134,3 +134,38 @@ h1.country-title {
 #key-figures-carousel .carousel-chevron.right {
   right: -18px;
 }
+.followers-list-popup.dropdown-menu {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding: 15px;
+  margin-top: 15px;
+}
+.followers-list-popup.dropdown-menu:before {
+  content: " ";
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  border-left: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  height: 15px;
+  width: 15px;
+  background-color: #ffffff;
+  transform: translate(-50%, 0) rotateZ(45deg);
+}
+.followers-list-popup.dropdown-menu .followers-list .follower-item {
+  font-size: 14px;
+  white-space: nowrap;
+  margin: 0;
+  margin-bottom: 10px;
+  display: block;
+}
+.followers-list-popup.dropdown-menu .followers-list .follower-item:last-child {
+  margin-bottom: 0;
+}
+.followers-list-popup.dropdown-menu .followers-list .follower-item:before {
+  content: none;
+}
+.followers-list-popup.dropdown-menu .followers-list .follower-item .image {
+  margin-right: 10px;
+}
