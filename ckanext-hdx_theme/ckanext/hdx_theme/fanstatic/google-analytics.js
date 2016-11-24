@@ -353,10 +353,11 @@ $(
     hdxUtil.analytics.sendMemberAddRejectEvent = sendMemberAddRejectEvent;
 
     /**
-     * Sends an event when a new user is registered
+     * Sends events related to new user registration: user register, start user register, submit email register
+     * @param eventName {string}
      */
-    function sendUserRegisteredEvent() {
-        var eventName = "user register";
+    function sendUserRegisteredEvent(eventName) {
+        // var eventName = "user register";
         var metadata = {
             "page title": analyticsInfo.pageTitle
         };
