@@ -122,6 +122,8 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
     def __init__(self, package_id, resource_id):
         super(ResourceDownloadAnalyticsSender, self).__init__()
 
+        log.debug('The user IP address was {}'.format(self.user_addr))
+
         try:
             context = {'model': model, 'session': model.Session,
                        'user': c.user or c.author, 'auth_user_obj': c.userobj}

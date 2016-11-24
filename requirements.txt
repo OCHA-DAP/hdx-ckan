@@ -44,6 +44,7 @@ zope.interface==4.1.1
 validate_email==1.2
 pyDNS==2.3.6
 ijson==2.2
+ua-parser==0.7.2
 
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.2

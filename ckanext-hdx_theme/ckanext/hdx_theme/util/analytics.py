@@ -1,11 +1,12 @@
 import logging
 import json
 import requests
+import ua_parser.user_agent_parser as useragent
 
 import pylons.config as config
 
 
-from ckan.common import _, request
+from ckan.common import _, c, request
 
 log = logging.getLogger(__name__)
 
@@ -17,8 +18,18 @@ class AbstractAnalyticsSender(object):
         self.response = None
 
         self.referer_url = request.referer
-        self.remote_addr = request.remote_addr
+        self.user_addr = c.remote_addr
         self.request_url = request.url
+
+        ua_dict = useragent.Parse(request.user_agent)
+
+        if ua_dict:
+            self.ua_browser = ua_dict.get('user_agent', {}).get('family')
+            self.ua_browser_version = ua_dict.get('user_agent', {}).get('major')
+            self.ua_os = ua_dict.get('os', {}).get('family')
+
+        else:
+            log.error('User agent could not be parsed for {}'.format(request.user_agent))
 
     def send_to_queue(self):
         try:
@@ -54,9 +65,13 @@ class AbstractAnalyticsSender(object):
         mixpanel_meta = self.analytics_dict.get('mixpanel_meta')
         self._set_if_not_exists(mixpanel_meta, 'server side', True)
         self._set_if_not_exists(mixpanel_meta, 'referer url', self.referer_url)
+        self._set_if_not_exists(mixpanel_meta, 'ip', self.user_addr)
+        self._set_if_not_exists(mixpanel_meta, '$os', self.ua_os)
+        self._set_if_not_exists(mixpanel_meta, '$browser', self.ua_browser)
+        self._set_if_not_exists(mixpanel_meta, '$browser_version', self.ua_browser_version)
 
         ga_meta = self.analytics_dict.get('ga_meta')
-        self._set_if_not_exists(ga_meta, 'uip', self.remote_addr)
+        self._set_if_not_exists(ga_meta, 'uip', self.user_addr)
         self._set_if_not_exists(ga_meta, 'dl', self.request_url)
         self._set_if_not_exists(ga_meta, 'ds', 'direct')
         self._set_if_not_exists(ga_meta, 'v', '1')
