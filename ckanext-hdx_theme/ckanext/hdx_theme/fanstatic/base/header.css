@@ -2225,7 +2225,7 @@ nav.mobile-only {
   line-height: 16px;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   display: inline;
   margin-right: 16px;
 }
@@ -2247,6 +2247,10 @@ nav.mobile-only {
 }
 .base-actions-menu ul li a i {
   margin-right: 5px;
+}
+.base-actions-menu ul li .direct-share-links {
+  position: relative;
+  bottom: -5px;
 }
 /* END - Actions */
 .no-margin {
