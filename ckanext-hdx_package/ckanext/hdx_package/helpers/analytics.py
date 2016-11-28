@@ -198,14 +198,16 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
         dataset_is_indicator = is_indicator(dataset_dict) == 'true'
         dataset_is_private = is_private(dataset_dict) == 'true'
 
+
+
         self.analytics_dict = {
             'event_name': 'dataset create',
             'mixpanel_meta': {
                 'event source': 'api',
                 'group names': location_names,
                 'group ids': location_ids,
-                'org_name': dataset_dict.get('organization', {}).get('name'),
-                'org_id': dataset_dict.get('organization', {}).get('id'),
+                'org_name': (dataset_dict.get('organization') or {}).get('name'),
+                'org_id': (dataset_dict.get('organization') or {}).get('id'),
                 'is cod': dataset_is_cod,
                 'is indicator': dataset_is_indicator,
                 'is private': dataset_is_private
@@ -215,7 +217,7 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
                 'ea': 'create',  # event action
                 # There is no event label because that would correspond to the page title and this doesn't exist on the
                 # server side
-                'cd1': dataset_dict.get('organization', {}).get('name'),
+                'cd1': (dataset_dict.get('organization') or {}).get('name'),
                 'cd2': _ga_dataset_type(dataset_is_indicator, dataset_is_cod),  # type
                 'cd3': _ga_location(location_names),  # locations
 
