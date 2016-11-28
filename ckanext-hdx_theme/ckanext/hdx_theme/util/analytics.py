@@ -17,20 +17,26 @@ class AbstractAnalyticsSender(object):
         self.analytics_dict = None
         self.response = None
 
-        self.referer_url = request.referer
-        self.user_addr = c.remote_addr
-        self.request_url = request.url
+        try:
+            self.referer_url = request.referer
+            self.user_addr = c.remote_addr
+            self.request_url = request.url
 
-        self.user_agent = request.user_agent if request.user_agent else ''
-        ua_dict = useragent.Parse(self.user_agent)
+            self.user_agent = request.user_agent if request.user_agent else ''
+            ua_dict = useragent.Parse(self.user_agent)
 
-        if ua_dict:
-            self.ua_browser = ua_dict.get('user_agent', {}).get('family')
-            self.ua_browser_version = ua_dict.get('user_agent', {}).get('major')
-            self.ua_os = ua_dict.get('os', {}).get('family')
+            if ua_dict:
+                self.ua_browser = ua_dict.get('user_agent', {}).get('family')
+                self.ua_browser_version = ua_dict.get('user_agent', {}).get('major')
+                self.ua_os = ua_dict.get('os', {}).get('family')
 
-        else:
-            log.error('User agent could not be parsed for {}'.format(request.user_agent))
+            else:
+                log.error('User agent could not be parsed for {}'.format(request.user_agent))
+
+        except Exception, e:
+            log.warn('request specific info could not be found. This is normal for nose tests. Exception is {}'.format(
+                str(e)))
+
 
     def send_to_queue(self):
         try:
