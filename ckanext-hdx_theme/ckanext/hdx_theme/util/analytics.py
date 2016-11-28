@@ -21,7 +21,8 @@ class AbstractAnalyticsSender(object):
         self.user_addr = c.remote_addr
         self.request_url = request.url
 
-        ua_dict = useragent.Parse(request.user_agent)
+        self.user_agent = request.user_agent if request.user_agent else ''
+        ua_dict = useragent.Parse(self.user_agent)
 
         if ua_dict:
             self.ua_browser = ua_dict.get('user_agent', {}).get('family')
@@ -64,6 +65,7 @@ class AbstractAnalyticsSender(object):
 
         mixpanel_meta = self.analytics_dict.get('mixpanel_meta')
         self._set_if_not_exists(mixpanel_meta, 'server side', True)
+        self._set_if_not_exists(mixpanel_meta, 'user agent', self.user_agent)
         self._set_if_not_exists(mixpanel_meta, 'referer url', self.referer_url)
         self._set_if_not_exists(mixpanel_meta, 'ip', self.user_addr)
         self._set_if_not_exists(mixpanel_meta, '$os', self.ua_os)

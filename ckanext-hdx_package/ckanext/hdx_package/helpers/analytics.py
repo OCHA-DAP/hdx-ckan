@@ -29,6 +29,12 @@ def is_cod(pkg_dict):
     return 'false'
 
 
+def is_private(pkg_dict):
+    if pkg_dict.get('private'):
+        return 'true'
+    return 'false'
+
+
 def extract_locations(pkg_dict):
     locations = pkg_dict.get('groups', [])
     location_names = []
@@ -169,6 +175,19 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             log.error('Unexpected error {}'.format(e))
 
 
+
+def analytics_wrapper_4_package_create(original_package_action):
+
+    def package_action(context, package_dict):
+
+        result_dict = original_package_action(context, package_dict)
+        if not context.get('contribute_flow'):
+            DatasetCreatedAnalyticsSender(result_dict).send_to_queue()
+
+        return result_dict
+
+    return package_action
+
 class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
 
     def __init__(self, dataset_dict):
@@ -177,10 +196,20 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
         location_names, location_ids = extract_locations(dataset_dict)
         dataset_is_cod = is_cod(dataset_dict) == 'true'
         dataset_is_indicator = is_indicator(dataset_dict) == 'true'
+        dataset_is_private = is_private(dataset_dict) == 'true'
 
         self.analytics_dict = {
             'event_name': 'dataset create',
-            'mixpanel_meta': {},
+            'mixpanel_meta': {
+                'event source': 'api',
+                'group names': location_names,
+                'group ids': location_ids,
+                'org_name': dataset_dict.get('organization', {}).get('name'),
+                'org_id': dataset_dict.get('organization', {}).get('id'),
+                'is cod': dataset_is_cod,
+                'is indicator': dataset_is_indicator,
+                'is private': dataset_is_private
+            },
             'ga_meta': {
                 'ec': 'dataset',  # event category
                 'ea': 'create',  # event action
