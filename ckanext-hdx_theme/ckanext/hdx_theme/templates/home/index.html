@@ -71,25 +71,17 @@
 
                 <div class="firstSearch">
                   {{ self.home_search() }}
-                  <div>
+                  <div class="exampleSearch">
+                    {#
                     <p class="exampleSearch">
                       {{ _("Trending:") }}
-                      <!--
-                      <a href="{{ h.url_for('read_crisis', id='elnino') }}">{{ _('El Nino') }}</a>,
-
-
-                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?tags=hurricanematthew&sort=metadata_modified+desc">{{ _('Hurricane Matthew') }}</a>,
-                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-haiti', sort='metadata_modified desc') }}">{{ _("OCHA Haiti") }}</a>,
-                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Ebola">{{ _('Ebola') }}</a>,
-                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='wfp', sort='metadata_modified desc') }}">{{ _("WFP") }}</a>,
-                      <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='ocha-ethiopia', sort='metadata_modified desc') }}">{{ _("OCHA Ethiopia") }}</a>
-                      -->
                         <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Syria">{{ _('Syria') }}</a>,
                         <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Haiti">{{ _('Haiti') }}</a>,
                         <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="/search?q=Philippines">{{ _('Philippines') }}</a>,
                         <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='organization', action='read', id='netherlands-red-cross', sort='metadata_modified desc') }}">{{ _('Netherlands Red Cross') }}</a>,
                         <a data-module="hdx_click_stopper" data-module-link_type="trending topic" href="{{ h.url_for(controller='package', action='read', id='iom-dtm-mosul-crisis-baseline-data') }}">{{ _('IOM Mosul') }}</a>
                     </p>
+                     #}
                   </div>
                 </div>
                 <div class="countRow">
