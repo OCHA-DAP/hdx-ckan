@@ -134,6 +134,9 @@ h1.country-title {
 #key-figures-carousel .carousel-chevron.right {
   right: -18px;
 }
+#key-figures-carousel .topline .topline-value {
+  font-size: 52px;
+}
 .followers-list-popup.dropdown-menu {
   position: absolute;
   left: 50%;
