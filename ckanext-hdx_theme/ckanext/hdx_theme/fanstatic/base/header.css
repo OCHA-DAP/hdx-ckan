@@ -1667,6 +1667,7 @@ h4 small {
 }
 .newHeader .crises-menu {
   padding: 0;
+  width: 250px;
 }
 .newHeader .crises-menu li.crises-group {
   text-transform: uppercase;
@@ -1695,6 +1696,9 @@ h4 small {
 .newHeader .crises-menu li.crises-group ul li a {
   color: #000000;
   font-size: 14px;
+}
+.newHeader .crises-menu li.crises-group ul li a:hover {
+  text-decoration: none;
 }
 .newHeader .crises-menu li.crises-group ul li .crises-datasets {
   line-height: 1;
@@ -1842,10 +1846,6 @@ h4 small {
   background-color: #FFFFFF;
   color: #333333;
   text-decoration: underline;
-}
-.mainLinks > li .crises-menu {
-  left: inherit;
-  right: 0px;
 }
 .mainLinks > li #crises-label:after {
   content: '\25bc';
