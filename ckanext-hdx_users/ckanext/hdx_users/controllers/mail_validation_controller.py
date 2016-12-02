@@ -18,6 +18,7 @@ import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
 import dateutil
+import mailchimp
 import pylons.configuration as configuration
 import requests
 from pylons import config
@@ -228,6 +229,9 @@ class ValidationController(ckan.controllers.user.UserController):
         context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
                    'schema': temp_schema, 'save': 'save' in request.params}
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+
+        self._signup_newsletter(data_dict)
+
         if 'email' in data_dict:
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
@@ -280,6 +284,27 @@ class ValidationController(ckan.controllers.user.UserController):
 
         c.user = save_user
         return OnbSuccess
+
+    def _signup_newsletter(self, data):
+        signup = data['signup']
+
+        if (signup == "true"):
+            h.log.info("Will signup to newsletter: " + signup)
+            m = self._get_mailchimp_api()
+            try:
+                m.helper.ping()
+                list_id = configuration.config.get('hdx.mailchimp.list.id')
+                email = {
+                    'email': data['email']
+                }
+                m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
+            except mailchimp.Error:
+                h.log.error(request, "Mailchimp error")
+
+            signup = signup
+
+        return None
+
 
     def _get_exc_msg_by_key(self, e, key):
         if e and e.args:
@@ -836,3 +861,7 @@ class ValidationController(ckan.controllers.user.UserController):
         r = requests.get(url, params=params, verify=True)
         res = json.loads(r.content)
         return 'success' in res and res['success'] == True
+
+
+    def _get_mailchimp_api(self):
+        return mailchimp.Mailchimp(configuration.config.get('hdx.mailchimp.api.key'))
