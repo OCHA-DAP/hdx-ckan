@@ -4,47 +4,39 @@ duplicates methods from registration_controller.py because when
 enabled it will override them when enabled
 """
 import datetime
-import dateutil
-import hashlib
-import requests
-
-from pylons import config
-
-# import ckan.lib.base as base
-import ckan.controllers.user
-from ckan.common import _, c, g, request, response
-import ckan.lib.helpers as h
-import ckan.lib.mailer as mailer
-import ckan.lib.base as base
-import ckan.controllers.user
-import ckan.model as model
-import ckan.logic as logic
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.lib.captcha as captcha
-# import ckan.new_authz as new_authz
-import pylons.configuration as configuration
-import re
-import json
-import ckan.lib.navl.dictization_functions as df
-import ckan.lib.maintain as maintain
-# from urllib import quote
-import ckan.plugins as p
 import exceptions as exceptions
+import hashlib
+import json
+import logging as logging
+import re
+import urllib2 as urllib2
 
-import ckanext.hdx_users.helpers.user_extra as ue_helpers
+import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
+import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
-# import ckan.lib.dictization.model_dictize as model_dictize
-import ckanext.hdx_theme.util.mail as hdx_mail
-import ckanext.hdx_theme.helpers.helpers as hdx_h
-import logging as logging
-import urllib2 as urllib2
-from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
+import dateutil
+import pylons.configuration as configuration
+import requests
+from pylons import config
 from sqlalchemy.exc import IntegrityError
-# from email.mime.text import MIMEText
-# from email.mime.multipart import MIMEMultipart
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
+import ckan.controllers.user
+import ckan.controllers.user
+import ckan.lib.base as base
+import ckan.lib.captcha as captcha
+import ckan.lib.helpers as h
+import ckan.lib.mailer as mailer
+import ckan.lib.maintain as maintain
+import ckan.lib.navl.dictization_functions as df
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckan.logic as logic
+import ckan.model as model
+import ckan.plugins as p
+from ckan.common import _, c, g, request, response
+from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -331,6 +323,7 @@ class ValidationController(ckan.controllers.user.UserController):
         template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
         template_data['data']['email'] = user.email
         template_data['data']['name'] = user.name
+        template_data['capcha_api_key'] = configuration.config.get('ckan.recaptcha.publickey')
         return render('home/index.html', extra_vars=template_data)
 
     def register_details(self, data=None, errors=None, error_summary=None):

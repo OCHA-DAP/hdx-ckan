@@ -1,17 +1,16 @@
-import requests
 import exceptions as exceptions
 import json
+
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import pylons.configuration as configuration
+import requests
+from ckanext.hdx_theme.helpers.faq_data import faq_data
+from ckanext.hdx_theme.util.mail import simple_validate_email
 
 import ckan.lib.base as base
 import ckan.logic as logic
-from ckan.common import _, c, g, request, response
+from ckan.common import _, c, request, response
 from ckan.controllers.api import CONTENT_TYPES
-
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-
-from ckanext.hdx_theme.util.mail import simple_validate_email
-from ckanext.hdx_theme.helpers.faq_data import faq_data
 
 get_action = logic.get_action
 ValidationError = logic.ValidationError
@@ -43,6 +42,7 @@ class FaqController(base.BaseController):
                 'fullname': fullname,
                 'email': email,
             },
+            'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey'),
             'errors': '',
             'error_summary': '',
         }
