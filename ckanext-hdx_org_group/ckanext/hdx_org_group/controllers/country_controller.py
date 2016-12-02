@@ -47,9 +47,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             response.headers['Content-Type'] = CONTENT_TYPES['json']
             return json.dumps(c.full_facet_info)
         else:
-
             # self.get_dataset_results(country_code)
             # c.hdx_group_activities = self.get_activity_stream(country_uuid)
+
+            not_filtered_facet_info = self._get_not_filtered_facet_info(country_dict)
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
             vocab_topics_list = c.full_facet_info.get(
@@ -59,13 +60,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # c.cont_browsing = self.get_cont_browsing(
             #    c.group_dict, vocab_topics_list)
 
-            template_data = self.get_template_data(country_dict, c.full_facet_info)
+            template_data = self.get_template_data(country_dict, not_filtered_facet_info)
 
             result = render('country/country.html', extra_vars=template_data)
 
             return result
 
-    def get_template_data(self, country_dict, full_facet_info):
+    def get_template_data(self, country_dict, not_filtered_facet_info):
 
         follower_count = get_action('group_follower_count')(
             {'model': model, 'session': model.Session},
@@ -74,7 +75,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(country_dict).get_dataset_results()
 
-        organization_list = self._get_org_list_for_menu_from_facets(full_facet_info)
+        organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
 
         template_data = {
             'data': {
@@ -82,9 +83,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'stats_section': {
                     'organization_list': organization_list,
                     'num_of_organizations':
-                        len(full_facet_info.get('facets', {}).get('organization', {}).get('items', [])),
-                    'num_of_cods': full_facet_info.get('num_of_cods', 0),
-                    'num_of_datasets': full_facet_info.get('num_of_total_items'),
+                        len(not_filtered_facet_info.get('facets', {}).get('organization', {}).get('items', [])),
+                    'num_of_cods': not_filtered_facet_info.get('num_of_cods', 0),
+                    'num_of_datasets': not_filtered_facet_info.get('num_of_total_items'),
                     'num_of_followers': follower_count
                 },
                 'widgets': {
@@ -99,6 +100,19 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         }
 
         return template_data
+
+    def _get_not_filtered_facet_info(self, country_dict):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+
+        fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, None, None, None, context)
+        non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
+                                                            {'tags': 'tags', 'organization': 'organization'}, query_result.get('count'), u'')
+
+        return non_filtered_facet_info
+
 
     def _get_org_list_for_menu_from_facets(self, full_facet_info):
         org_list = [
