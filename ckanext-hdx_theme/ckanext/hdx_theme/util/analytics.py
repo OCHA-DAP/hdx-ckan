@@ -19,7 +19,7 @@ class AbstractAnalyticsSender(object):
 
         try:
             self.referer_url = request.referer
-            self.user_addr = c.remote_addr
+            self.user_addr = request.environ.get('HTTP_X_REAL_IP')
             self.request_url = request.url
 
             self.user_agent = request.user_agent if request.user_agent else ''
