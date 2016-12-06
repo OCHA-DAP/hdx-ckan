@@ -130,8 +130,12 @@ class TopLineItemsFormatter:
                     modified_value = self._format_ratio(modified_value)
                 elif unit_getter(r) == 'per100k':
                     modified_value = self._format_per100k(modified_value)
-                elif unit_getter(r) in ('million', 'dollars_million'):
+                elif unit_getter(r) == 'k':
+                    modified_value = self._format_thousand(modified_value)
+                elif unit_getter(r) in ('million', 'dollars_million', 'mln'):
                     modified_value = self._format_million(modified_value)
+                elif unit_getter(r) == 'bln':
+                    modified_value = self._format_billion(modified_value)
                 elif unit_getter(r) == 'count':
                     modified_value = self._format_decimal_number(
                         modified_value)
@@ -155,8 +159,20 @@ class TopLineItemsFormatter:
         formatted_value = self._format_decimal_number(modified_value)
         return formatted_value
 
+    def _format_thousand(self, original_value):
+        modified_value = original_value / 1000.0
+
+        formatted_value = self._format_decimal_number(modified_value)
+        return formatted_value
+
     def _format_million(self, original_value):
         modified_value = original_value / 1000000.0
+
+        formatted_value = self._format_decimal_number(modified_value)
+        return formatted_value
+
+    def _format_billion(self, original_value):
+        modified_value = original_value / 1000000000.0
 
         formatted_value = self._format_decimal_number(modified_value)
         return formatted_value

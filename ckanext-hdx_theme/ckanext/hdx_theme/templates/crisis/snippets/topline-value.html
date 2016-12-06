@@ -29,5 +29,7 @@ Example:
 		<span class="small">%</span>
 	{% elif unit == 'per100k' %}
 		<span class="small"> {{ _('per 100k') }} </span>
+    {% elif unit in ('bln', 'mln', 'k') %}
+        <span class="small"> {{ unit }} </span>
 	{% endif %}
 </div>

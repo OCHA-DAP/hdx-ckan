@@ -53,7 +53,7 @@ class RwAccess(object):
             'indicatorTypeName': figure.get('name'),
             'indicatorTypeCode': figure.get('name'),
             # 'formatted_value': '6,201,521',
-            'value': figure.get('value'),
+            'value': float(figure.get('value')),
             'datasetLink': figure.get('url'),
             'time': figure.get('date'),
             'latest_date': figure.get('date'),
@@ -62,6 +62,14 @@ class RwAccess(object):
             'sparklines': figure.get('values'),
             'units': 'count'
         }
+        value = ret_dict.get('value')
+        if value > 1000000000.0:
+            ret_dict['units'] = ret_dict['unitName'] = 'bln'
+        elif value > 1000000.0:
+            ret_dict['units'] = ret_dict['unitName'] = 'mln'
+        elif value > 1000.0:
+            ret_dict['units'] = ret_dict['unitName'] = 'k'
+
         return ret_dict
 
     @staticmethod
