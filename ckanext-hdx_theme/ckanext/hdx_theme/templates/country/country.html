@@ -37,7 +37,7 @@
                             {% set num_of_pack = data.stats_section.num_of_datasets %}
                             {% if num_of_pack%}
                                 <span class="sspBold14">
-                                    <a class="sspBold14" href="#dataset-filter-start">
+                                    <a class="sspBold14" href="?#dataset-filter-start">
                                         {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
                                     </a>
                                     {% if data.stats_section.num_of_cods > 0 %}
