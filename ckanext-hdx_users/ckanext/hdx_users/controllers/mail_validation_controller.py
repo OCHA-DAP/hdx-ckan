@@ -230,9 +230,9 @@ class ValidationController(ckan.controllers.user.UserController):
                    'schema': temp_schema, 'save': 'save' in request.params}
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
 
-        self._signup_newsletter(data_dict)
-
         if 'email' in data_dict:
+            self._signup_newsletter(data_dict)
+
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
             data_dict['name'] = md5.hexdigest()
@@ -286,22 +286,23 @@ class ValidationController(ckan.controllers.user.UserController):
         return OnbSuccess
 
     def _signup_newsletter(self, data):
-        signup = data['signup']
+        if 'signup' in data:
+            signup = data['signup']
 
-        if (signup == "true"):
-            h.log.info("Will signup to newsletter: " + signup)
-            m = self._get_mailchimp_api()
-            try:
-                m.helper.ping()
-                list_id = configuration.config.get('hdx.mailchimp.list.id')
-                email = {
-                    'email': data['email']
-                }
-                m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
-            except mailchimp.Error:
-                h.log.error(request, "Mailchimp error")
+            if (signup == "true"):
+                h.log.info("Will signup to newsletter: " + signup)
+                m = self._get_mailchimp_api()
+                try:
+                    m.helper.ping()
+                    list_id = configuration.config.get('hdx.mailchimp.list.id')
+                    email = {
+                        'email': data['email']
+                    }
+                    m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
+                except mailchimp.Error:
+                    h.log.error(request, "Mailchimp error")
 
-            signup = signup
+                signup = signup
 
         return None
 
