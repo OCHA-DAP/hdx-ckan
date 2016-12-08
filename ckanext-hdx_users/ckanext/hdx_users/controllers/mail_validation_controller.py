@@ -294,16 +294,16 @@ class ValidationController(ckan.controllers.user.UserController):
                 m = self._get_mailchimp_api()
                 try:
                     m.helper.ping()
-                    list_id = configuration.config.get('hdx.mailchimp.list.id')
-                    email = {
-                        'email': data['email']
-                    }
-                    m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
+                    list_id = configuration.config.get('hdx.mailchimp.list.newsletter')
+                    if (list_id):
+                        email = {
+                            'email': data['email']
+                        }
+                        m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
                 except mailchimp.Error:
                     h.log.error(request, "Mailchimp error")
 
                 signup = signup
-
         return None
 
 
