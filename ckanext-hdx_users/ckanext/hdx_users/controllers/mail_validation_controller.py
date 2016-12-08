@@ -98,6 +98,8 @@ class ValidationController(ckan.controllers.user.UserController):
         if not c.user:
             template_data = ue_helpers.get_login(True, "")
         if info_message:
+            if 'data' not in template_data:
+                template_data['data'] = {}
             template_data['data']['info_message'] = info_message
             template_data['data']['page_subtitle'] = page_subtitle
         return render('home/index.html', extra_vars=template_data)
