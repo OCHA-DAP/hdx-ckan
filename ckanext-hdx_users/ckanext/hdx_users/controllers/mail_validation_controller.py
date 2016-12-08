@@ -98,6 +98,8 @@ class ValidationController(ckan.controllers.user.UserController):
         if not c.user:
             template_data = ue_helpers.get_login(True, "")
         if info_message:
+            if 'data' not in template_data:
+                template_data['data'] = {}
             template_data['data']['info_message'] = info_message
             template_data['data']['page_subtitle'] = page_subtitle
         return render('home/index.html', extra_vars=template_data)
@@ -231,8 +233,6 @@ class ValidationController(ckan.controllers.user.UserController):
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
 
         if 'email' in data_dict:
-            self._signup_newsletter(data_dict)
-
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
             data_dict['name'] = md5.hexdigest()
@@ -260,7 +260,8 @@ class ValidationController(ckan.controllers.user.UserController):
             context['auth_user_obj'] = context['user_obj']
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
                                                                    'extras': ue_helpers.get_initial_extras()})
-
+            if 'email' in data_dict:
+                self._signup_newsletter(data_dict)
         except NotAuthorized:
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')

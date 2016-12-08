@@ -12,6 +12,7 @@ import ckan.lib.plugins as lib_plugins
 import ckan.plugins as plugins
 
 import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.helpers as helpers
 
 from ckan.common import _
@@ -36,6 +37,7 @@ def resource_create(context, data_dict):
     return result_dict
 
 
+@analytics.analytics_wrapper_4_package_create
 @geopreview.geopreview_4_packages
 def package_create(context, data_dict):
     '''Create a new dataset (package).

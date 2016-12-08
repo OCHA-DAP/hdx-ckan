@@ -11,6 +11,10 @@ function notYou(){
 }
 
 function showOnboardingWidget(id){
+    if (id == "#signupPopup") {
+        // we only want to send the analytics event for the sign-up widget
+        hdxUtil.analytics.sendUserRegisteredEvent("start user register");
+    }
     $(id).show();
     $(id).find("input[type!='button']:visible:first").focus();
 
