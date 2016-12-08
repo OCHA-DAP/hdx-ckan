@@ -262,6 +262,7 @@ class ValidationController(ckan.controllers.user.UserController):
                                                                    'extras': ue_helpers.get_initial_extras()})
             if 'email' in data_dict:
                 self._signup_newsletter(data_dict)
+                self._signup_newsuser(data_dict)
         except NotAuthorized:
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')
@@ -307,6 +308,20 @@ class ValidationController(ckan.controllers.user.UserController):
                 signup = signup
         return None
 
+    def _signup_newsuser(self, data):
+        m = self._get_mailchimp_api()
+        try:
+            m.helper.ping()
+            list_id = configuration.config.get('hdx.mailchimp.list.newuser')
+            if (list_id):
+                email = {
+                    'email': data['email']
+                }
+                m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
+        except mailchimp.Error:
+            h.log.error(request, "Mailchimp error")
+
+        return None
 
     def _get_exc_msg_by_key(self, e, key):
         if e and e.args:
