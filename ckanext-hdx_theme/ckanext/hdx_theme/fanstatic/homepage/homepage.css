@@ -95,6 +95,7 @@ header {
   margin-bottom: 0;
   margin-top: 5px;
   margin-left: 5px;
+  height: 20px;
 }
 .homepage-main .rightContent .searchBox .firstSearch .exampleSearch a {
   color: #007ce0;

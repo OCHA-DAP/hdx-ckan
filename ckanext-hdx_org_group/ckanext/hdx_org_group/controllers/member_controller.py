@@ -88,6 +88,9 @@ class HDXOrgMemberController(org.OrganizationController):
             base.abort(401, _('Unauthorized to delete group %s') % '')
         except NotFound:
             base.abort(404, _('Group not found'))
+        except Exception, ex:
+            log.error(str(ex))
+            base.abort(404, _('Server error'))
         if org_meta.is_custom:
             return self._render_template('group/custom_members.html')
         else:

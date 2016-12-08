@@ -92,7 +92,7 @@ ckan.module('contribute_flow_main', function($, _) {
                                     formDataArray = contributeGlobal.getFormValues('new-dataset-json');
 
                                      /* Send analytics tracking events */
-                                    analyticsPromise = hdxUtil.analytics.sendDatasetCreationEvent();
+                                    analyticsPromise = hdxUtil.analytics.sendDatasetCreationEvent(formDataArray);
                                 }
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
 

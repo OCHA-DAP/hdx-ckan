@@ -10,7 +10,7 @@ $(document).ready(function(){
             if (result.success) {
                 $this.unbind("submit");
                 $this.attr("action", "/login_generic");
-                hdxUtil.analytics.sendUserRegisteredEvent().then(function(){
+                hdxUtil.analytics.sendUserRegisteredEvent("user register").then(function(){
                     $this.submit();
                 });
             } else {
