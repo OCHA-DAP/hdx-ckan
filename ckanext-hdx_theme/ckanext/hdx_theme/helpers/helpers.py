@@ -606,13 +606,13 @@ def hdx_methodology_list():
 
 def hdx_location_list():
     locations = logic.get_action('cached_group_list')({}, {})
-    locations_dict_list = [{'value': loc.get('id'), 'text': loc.get('title')} for loc in locations]
+    locations_dict_list = [{'value': loc.get('name'), 'text': loc.get('title')} for loc in locations]
     return locations_dict_list
 
 
 def hdx_organisation_list():
     orgs = h.organizations_available('create_dataset')
-    orgs_dict_list = [{'value': org.get('id'), 'text': org.get('title')} for org in orgs]
+    orgs_dict_list = [{'value': org.get('name'), 'text': org.get('title')} for org in orgs]
     return orgs_dict_list
 
 
