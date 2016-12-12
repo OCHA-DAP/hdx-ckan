@@ -62,7 +62,7 @@ class WidgetDataService(object):
         country_id = self.country_name
 
         top_line_dao = indicator_access.IndicatorAccess(
-            country_id, indicators_4_top_line_list, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
+            country_id, indicators_4_top_line_list, {'periodType': 'LATEST_YEAR_BY_COUNTRY'}, recompute_units=True)
 
         top_line_results = top_line_dao.fetch_indicator_data_from_cps()
         top_line_data = top_line_results.get('results', [])
@@ -73,9 +73,9 @@ class WidgetDataService(object):
             top_line_data = []
         sorted_top_line_data = sorted(top_line_data,
                                       key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
-        for el in sorted_top_line_data:
-            el['formatted_value'] = formatters.format_decimal_number(
-                el['value'], 2)
+
+        formatters.TopLineItemsWithDateFormatter(top_line_data).format_results()
+
 
         # c.top_line_data_list = sorted_top_line_data
 

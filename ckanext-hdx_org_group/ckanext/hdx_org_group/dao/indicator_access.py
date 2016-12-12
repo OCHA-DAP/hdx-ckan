@@ -14,6 +14,7 @@ import ckan.lib.search as search
 import ckan.common as common
 import ckan.lib.helpers as h
 
+import ckanext.hdx_org_group.dao.common_functions as common_functions
 
 abort = base.abort
 get_action = logic.get_action
@@ -21,7 +22,8 @@ _ = common._
 
 class IndicatorAccess(object):
 
-    def __init__(self, country_code, dataseries_list, additional_cps_params_dict={}):
+    def __init__(self, country_code, dataseries_list, additional_cps_params_dict={}, recompute_units=False):
+        self.__recompute_units = recompute_units
         self.__cps_params_dict = {
             'l': country_code.upper(),
             'ds': [el[0] + '___' + el[1] for el in dataseries_list]
@@ -33,7 +35,14 @@ class IndicatorAccess(object):
     def fetch_indicator_data_from_cps(self):
         try:
             self.__cps_data = get_action('hdx_get_indicator_values')({}, self.__cps_params_dict)
-        except:
+            if self.__recompute_units:
+                for element in self.__cps_data.get('results', []):
+                    value = element.get('value')
+                    if value:
+                        unit = common_functions.compute_simplifying_units(value)
+                        element['units'] = element['unitName'] = element['unitCode'] = unit
+
+        except Exception, e:
             self.__cps_data = {}
         return self.__cps_data
 

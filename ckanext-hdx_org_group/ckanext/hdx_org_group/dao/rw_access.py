@@ -1,5 +1,6 @@
 
 import ckan.logic as logic
+import ckanext.hdx_org_group.dao.common_functions as common_functions
 
 from ckanext.hdx_theme.helpers.top_line_items_formatter import TopLineItemsWithDateFormatter
 
@@ -63,12 +64,7 @@ class RwAccess(object):
             'units': 'count'
         }
         value = ret_dict.get('value')
-        if value > 1000000000.0:
-            ret_dict['units'] = ret_dict['unitName'] = 'bln'
-        elif value > 1000000.0:
-            ret_dict['units'] = ret_dict['unitName'] = 'mln'
-        elif value > 1000.0:
-            ret_dict['units'] = ret_dict['unitName'] = 'k'
+        ret_dict['units'] = ret_dict['unitName'] = common_functions.compute_simplifying_units(value)
 
         return ret_dict
 
