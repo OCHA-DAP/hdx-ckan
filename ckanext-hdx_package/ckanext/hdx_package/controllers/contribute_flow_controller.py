@@ -37,6 +37,7 @@ class ContributeFlowController(base.BaseController):
         try:
             if id:
                 dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
+                dataset_dict['owner_org_name'] = dataset_dict.get('organization', {}).get('name')
             logic.check_access(action_name, context, dataset_dict)
         except logic.NotAuthorized, e:
             if c.userobj or c.user:
