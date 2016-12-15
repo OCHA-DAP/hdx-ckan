@@ -350,7 +350,7 @@
 
                                             {% set organisations = h.hdx_organisation_list() %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="owner_org" data-module-required="private">
-                                            {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
+                                            {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
                                             </div>
 
                                             {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
