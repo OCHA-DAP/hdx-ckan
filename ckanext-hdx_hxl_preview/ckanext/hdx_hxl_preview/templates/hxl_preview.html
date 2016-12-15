@@ -1,5 +1,9 @@
 {% resource 'hdx_hxl_preview/hdx_hxl_preview.js' %}
 
-
-<iframe data-module="hdx-hxl-preview" style="width: 100%; border-style: none" src="{{ hxl_preview_app }}/show;{{ resource_url }};{{ hdx_domain }};{{ resource_view_id }}" class="hxl-preview-iframe"></iframe>
-
+<div class="paddingRowHack">
+    <iframe data-module="hdx-hxl-preview"
+            style="width: 100%; border-style: none"
+            src="{{ hxl_preview_app }}/show;{{ resource_url }};{{ hdx_domain }};{{ resource_view_id }}"
+            class="hxl-preview-iframe">
+    </iframe>
+</div>
