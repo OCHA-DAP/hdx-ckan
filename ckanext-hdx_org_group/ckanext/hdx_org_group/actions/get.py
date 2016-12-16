@@ -152,6 +152,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['display_name'] = group_dict['title'] = group.title
     group_dict['description'] = group.description
     group_dict['revision_id'] = group.revision_id
+    group_dict['state'] = group.state
 
     result_list = []
     for name, extra in group._extras.iteritems():
