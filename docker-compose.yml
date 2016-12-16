@@ -2,43 +2,51 @@
 
 ################################################
 
-solr:
-  image: teodorescuserban/hdx-solr:latest
-  hostname: solr
+version: "2"
 
-db:
-  image: teodorescuserban/hdx-psql-ckan:latest
-  hostname: db
+networks:
+  default:
 
-ckan:
-  image: teodorescuserban/hdx-ckan:latest
-  hostname: ckan
-  privileged: true
-  links:
-    - solr
-    - db
-  volumes:
-    - ".:/srv/ckan"
-  environment:
-    - HDX_CKAN_API_KEY=${HDX_CKAN_API_KEY}
-    - HDX_CKAN_BRANCH=${HDX_CKAN_BRANCH}
-    - HDX_CKAN_RECAPTCHA_KEY=${HDX_CKAN_RECAPTCHA_KEY}
-    - HDX_CKANDB_ADDR=db
-    - HDX_CKANDB_PORT=5432
-    - HDX_CKANDB_DB=ckan
-    - HDX_CKANDB_USER=ckan
-    - HDX_CKANDB_PASS=ckan
-    - HDX_CKANDB_USER_DATASTORE=datastore
-    - HDX_CKANDB_DB_DATASTORE=datastore
-    - HDX_DOMAIN=travis.org
-    - HDX_FILESTORE=/srv/filestore
-    - HDX_PREFIX=test
-    - HDX_SOLR_ADDR=solr
-    - HDX_SOLR_PORT=8983
-    - HDX_TYPE=${HDX_TYPE}
-    - HDX_GISDB_DB=gis
-    - HDX_GISDB_ADDR=127.0.0.1
-    - HDX_GISDB_PORT=5432
-    - HDX_GISDB_USER=gis
-    - HDX_GISDB_PASS=gis
+services:
+  solr:
+    image: teodorescuserban/hdx-solr:latest
+    hostname: solr
+    container_name: solr
 
+  db:
+    image: teodorescuserban/hdx-psql-ckan:latest
+    hostname: db
+    container_name: db
+    networks:
+      default:
+        aliases:
+          - dbckan
+
+  ckan:
+    image: teodorescuserban/hdx-ckan:latest
+    hostname: ckan
+    privileged: true
+    volumes:
+      - ".:/srv/ckan"
+    environment:
+      - HDX_CKAN_API_KEY=${HDX_CKAN_API_KEY}
+      - HDX_CKAN_BRANCH=${HDX_CKAN_BRANCH}
+      - HDX_CKAN_RECAPTCHA_KEY=${HDX_CKAN_RECAPTCHA_KEY}
+    #  - HDX_CKANDB_ADDR=db
+    #  - HDX_CKANDB_PORT=5432
+      - HDX_CKANDB_DB=ckan
+      - HDX_CKANDB_USER=ckan
+      - HDX_CKANDB_PASS=ckan
+      - HDX_CKANDB_USER_DATASTORE=datastore
+      - HDX_CKANDB_DB_DATASTORE=datastore
+      - HDX_DOMAIN=travis.org
+      - HDX_FILESTORE=/srv/filestore
+      - HDX_PREFIX=test
+    #  - HDX_SOLR_ADDR=solr
+    #  - HDX_SOLR_PORT=8983
+      - HDX_TYPE=${HDX_TYPE}
+      - HDX_GISDB_DB=gis
+    #  - HDX_GISDB_ADDR=127.0.0.1
+    #  - HDX_GISDB_PORT=5432
+      - HDX_GISDB_USER=gis
+      - HDX_GISDB_PASS=gis
