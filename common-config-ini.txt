@@ -216,6 +216,7 @@ hdx.onboarding.send_confirmation_email = true
 
 # The configuration for running the service checks
 hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
+hdx.checks.allowed_user_agent = HDX-CHECKER
 
 # Map Explorer configs
 hdx.explorer.url = /mpx/#/
