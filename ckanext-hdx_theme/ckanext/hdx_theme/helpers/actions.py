@@ -101,6 +101,9 @@ def member_list(context, data_dict=None):
     group = model.Group.get(_get_or_bust(data_dict, 'id'))
     if not group:
         raise logic.NotFound
+    # user = context.get('user')
+    if group.state == 'deleted' and (not c.userobj or not c.userobj.sysadmin):
+        raise logic.NotFound
 
     obj_type = data_dict.get('object_type', None)
     capacity = data_dict.get('capacity', None)

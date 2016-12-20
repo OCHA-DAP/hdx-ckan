@@ -115,10 +115,14 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         q = c.q = request.params.get('q', '')
 
         c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
-        org_meta.fetch_all()
+        try:
+            org_meta.fetch_all()
+        except NotFound, e:
+            abort(404)
+        except NotAuthorized, e:
+            abort(401, _('Not authorized to see this page'))
 
         c.group_dict = org_meta.org_dict
-
 
         # If custom_org set to true, redirect to the correct route
         if org_meta.is_custom:
