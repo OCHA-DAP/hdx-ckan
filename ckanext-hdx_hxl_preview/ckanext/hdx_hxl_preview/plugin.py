@@ -1,15 +1,19 @@
 import logging
 import urllib
 import urlparse
+import json
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
+import ckan.lib.helpers as ckan_helpers
 
 import ckanext.hdx_hxl_preview.actions.update as update
 
 from pylons import config
 
 _ = plugins.toolkit._
+
+
 
 log = logging.getLogger(__name__)
 
@@ -57,12 +61,15 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
         resource_view_dict = data_dict.get('resource_view')
         resource_dict = data_dict.get('resource')
 
+        start_edit_mode = 'true' if self.__is_allowed_to_edit(resource_dict) and \
+                          not self.__is_hxl_preview_config_saved(resource_view_dict) else 'false'
 
         return {
             'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),
             'resource_url': urllib.urlencode({'url': resource_dict.get('url')}),
             'resource_view_id': urllib.urlencode({'resource_view_id': resource_view_dict.get('id')}),
-            'hdx_domain': urllib.urlencode({'hdx_domain': self.__get_ckan_domain_without_protocol()})
+            'hdx_domain': urllib.urlencode({'hdx_domain': self.__get_ckan_domain_without_protocol()}),
+            'edit_mode': urllib.urlencode({'editMode': start_edit_mode})
         }
 
     def __get_ckan_domain_without_protocol(self):
@@ -71,6 +78,17 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
 
         return urlparse.urlunsplit([''] + list(url_parts[1:]))
 
+    def __is_hxl_preview_config_saved(self, resource_view_dict):
+        try:
+            hxl_preview_config = resource_view_dict.get('hxl_preview_config')
+            if hxl_preview_config and json.loads(hxl_preview_config):
+                return True
+        except Exception, e:
+            log.error('Couldn\'t check if hxl_preview_config exists: {}'.format(str(e)))
+        return False
+
+    def __is_allowed_to_edit(self, resource_dict):
+        return ckan_helpers.check_access('package_update', {'id': resource_dict.get('package_id')})
 
     def view_template(self, context, data_dict):
         return 'hxl_preview.html'
