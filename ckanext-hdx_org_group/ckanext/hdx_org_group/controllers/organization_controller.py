@@ -118,7 +118,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         try:
             org_meta.fetch_all()
         except NotFound, e:
-            abort(404)
+            abort(403)
         except NotAuthorized, e:
             abort(401, _('Not authorized to see this page'))
 
