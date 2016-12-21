@@ -5,7 +5,7 @@
 {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
 {% set ebolaLink = "/ebola" %}
 {% set faqLink = "/faq" %}
-
+{% set events = h.hdx_events_list() %}
 
 {% block header_wrapper %}
 <div>
@@ -183,7 +183,6 @@
                         <span id="crises-label" >{{ _('Events') }}</span>
                       </a>
                       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-                          {% set events = h.hdx_events_list() %}
                           <li class="crises-group">
                               Ongoing
                               <ul>
@@ -268,9 +267,15 @@
                 <li><a href="{{ dataLink }}">Data</a></li>
                 <li><a href="{{ locationLink }}">Locations</a></li>
                 <li><a href="{{ orgLink }}">Organisations</a></li>
-                <li class="crisis"><a href="{{ elNinoLink }}"><span>Event</span><br>El Nino</a></li>
                 <li class="crisis"><a href="{{ nepalLink }}"><span>Event</span><br>Nepal Earthquake</a></li>
                 <li class="crisis"><a href="{{ ebolaLink }}"><span>Event</span><br>Ebola</a></li>
+                {% for ev in events.ongoing %}
+                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}"><span>Event</span><br>{{ ev.title }}</a></li>
+                {% endfor %}
+                {% for ev in events.archived %}
+                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}"><span>Event - Archived</span>{{ ev.title }}</a></li>
+                {% endfor %}
+
                 <li class="sub-nav"><a href="{{ faqLink }}">FAQ</a></li>
                 <li class="sub-nav top-pad">{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
                 <li class="sub-nav">{% link_for _('Terms'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
