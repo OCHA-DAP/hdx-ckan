@@ -118,7 +118,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
             'subnational': 1,
             'dataset_source': 'some_source',
             'owner_org': 'hdx-test-org',
-            'locations': model.Group.get('roger').id,
+            'locations': 'roger',
             'maintainer': 'testsysadmin',
             'license_id': 'cc-by',
             'methodology': 'Census',

@@ -392,9 +392,9 @@ class HDXAnalyticsPlugin(plugins.SingletonPlugin):
         self.run_on_startup()
         return app
 
-    def after_create(self, context, data_dict):
-        if not context.get('contribute_flow'):
-            analytics.DatasetCreatedAnalyticsSender(data_dict).send_to_queue()
+    # def after_create(self, context, data_dict):
+    #     if not context.get('contribute_flow'):
+    #         analytics.DatasetCreatedAnalyticsSender(data_dict).send_to_queue()
 
 
 class HDXChartViewsPlugin(plugins.SingletonPlugin):

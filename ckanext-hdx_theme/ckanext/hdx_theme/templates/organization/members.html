@@ -46,7 +46,7 @@
                         <div class="pull-right base-actions-menu">
                             <ul>
                                 <li>
-                                    <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '{{role_name}}s');showOnboardingWidget('#groupMessagePopup'); return false;" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss / collaborate / make announcements on particular topics.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
+                                    <a href="#" onclick="closeCurrentWidget(this);$('#group-message-topics-selector').select2('val', '{{role_name}}s');showOnboardingWidget('#groupMessagePopup'); return false;" title="{{ _('Group message lets you communicate with members of your organisation. Use it to discuss, collaborate, and make announcements. ') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-members">
                                         <i class="icon-megahorn"></i>
                                         Group message [?] to all {{ role_name }}s
                                     </a>
@@ -190,7 +190,7 @@
                                         Add / invite colleagues to this organisation
                                     </div>
                                     <div class="invite-box">
-                                        <span>Enter email(s) of whom you'd like to add to this organisation. Multiple email addresses can be entered if separated by comma ',' </span>
+                                        <span>To invite your colleagues to join this organisation, please enter their email(s) below. Multiple email addresses can be entered if separated by comma ',' :</span>
                                         {% set tag_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '',
                                            'style':'width: 100% !important;',
                                            'data-module-label': 'fullname',
@@ -204,8 +204,7 @@
                                         classes=['control-full'], attrs=tag_attrs) }}
                                         <!--<textarea name="emails" placeholder="Enter email(s) of whom you'd like to add to this organisation. Multiple email addresses can be entered if separated by comma ',' "></textarea>-->
                                         <p>
-                                            <strong>If you add user who is already registered on HDX</strong> - user will be added to your organisation after approval by your org admin.
-                                            <strong>If you invite member new to HDX</strong> - we will send an invite on your behalf to register on HDX. After signup, org admin will receive the request to join your organisation.
+                                            <strong>If you add user who is already registered on HDX</strong>, they will be automatically added to your organisation. If you invite someone who is not registered on HDX, a temporary account will be created for them and they will receive an invitation to sign up.
                                         </p>
 
 

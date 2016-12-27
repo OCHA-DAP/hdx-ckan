@@ -10,6 +10,7 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.dictization as d
+from ckan.common import c
 import ckan.lib.helpers as helpers
 
 import ckanext.hdx_crisis.dao.location_data_access as location_data_access
@@ -171,6 +172,8 @@ def hdx_light_group_show(context, data_dict):
     group = model.Group.get(id)
     if not group:
         raise NotFound
+    if group.state == 'deleted' and (not c.userobj or not c.userobj.sysadmin):
+        raise NotFound
     # group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
@@ -178,6 +181,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['display_name'] = group_dict['title'] = group.title
     group_dict['description'] = group.description
     group_dict['revision_id'] = group.revision_id
+    group_dict['state'] = group.state
 
     result_list = []
     for name, extra in group._extras.iteritems():
