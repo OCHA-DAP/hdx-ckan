@@ -2116,6 +2116,7 @@ h4 small {
 }
 .newHeader .crises-menu {
   padding: 0;
+  width: 250px;
 }
 .newHeader .crises-menu li.crises-group {
   text-transform: uppercase;
@@ -2144,6 +2145,9 @@ h4 small {
 .newHeader .crises-menu li.crises-group ul li a {
   color: #000000;
   font-size: 14px;
+}
+.newHeader .crises-menu li.crises-group ul li a:hover {
+  text-decoration: none;
 }
 .newHeader .crises-menu li.crises-group ul li .crises-datasets {
   line-height: 1;
@@ -2291,10 +2295,6 @@ h4 small {
   background-color: #FFFFFF;
   color: #333333;
   text-decoration: underline;
-}
-.mainLinks > li .crises-menu {
-  left: inherit;
-  right: 0px;
 }
 .mainLinks > li #crises-label:after {
   content: '\25bc';
@@ -2682,7 +2682,7 @@ nav.mobile-only {
   line-height: 16px;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
   display: inline;
   margin-right: 16px;
 }
@@ -2705,9 +2705,46 @@ nav.mobile-only {
 .base-actions-menu ul li a i {
   margin-right: 5px;
 }
+.base-actions-menu ul li .direct-share-links {
+  position: relative;
+  bottom: -5px;
+}
 /* END - Actions */
 .no-margin {
   margin: 0;
+}
+#error-page {
+  min-height: 400px;
+  height: 70vh;
+  background: url("/images/page404/pxel_bg.png");
+  background-size: 10px 20px;
+  background-repeat: repeat;
+  position: relative;
+}
+#error-page .error-message-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  text-align: center;
+  color: #333333;
+}
+#error-page .error-message-container img {
+  height: 90px;
+}
+#error-page .error-message-container h1 {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin: 20px 0;
+}
+#error-page .error-message-container p {
+  margin: 20px 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
 }
 /* Left - right layout */
 .section-right {
