@@ -53,6 +53,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
             'page_update': update.page_update,
             'page_show': get.page_show,
             'page_group_list': get.page_group_list,
+            'group_page_list': get.group_page_list,
             'page_list': get.page_list
         }
 

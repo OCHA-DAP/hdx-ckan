@@ -75,12 +75,14 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {'id': country_dict['id']}
         )
 
-        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(country_dict).get_dataset_results()
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+            country_dict).get_dataset_results()
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
+        f_thumbnail_list = self._get_thumbnail_list_for_featured()
+        f_event_list = self._get_event_list_for_featured(country_dict['id'])
         f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
         f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
-        f_thumbnail_list = self._get_thumbnail_list_for_featured()
 
         template_data = {
             'data': {
@@ -100,6 +102,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 },
                 'featured_section': {
                     'thumbnail_list': f_thumbnail_list,
+                    'event_list': f_event_list,
                     'organization_list': f_organization_list[:5],
                     'tag_list': f_tag_list[:10],
                     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
@@ -118,12 +121,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'total_res_downloads', None, None, context)
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'total_res_downloads', None,
+                                               None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
-                                                            {'tags': 'tags', 'organization': 'organization'}, query_result.get('count'), u'')
+                                                            {'tags': 'tags', 'organization': 'organization'},
+                                                            query_result.get('count'), u'')
 
         return non_filtered_facet_info
-
 
     def _get_org_list_for_menu_from_facets(self, full_facet_info):
         org_list = [
@@ -133,7 +137,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'url': helpers.url_for('organization_read', id=org.get('name'))
             }
             for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', [])
-        ]
+            ]
         return org_list
 
     def _get_org_list_for_featured_from_facets(self, full_facet_info):
@@ -143,8 +147,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'name': org.get('name'),
                 'url': helpers.url_for('organization_read', id=org.get('name'))
             }
-            for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if org.get('name') != 'hdx'
-        ]
+            for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if
+            org.get('name') != 'hdx'
+            ]
         return org_list
 
     def _get_tag_list_for_featured_from_facets(self, full_facet_info):
@@ -156,7 +161,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'url': helpers.url_for('package_search', tags=tag.get('name'))
             }
             for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
-        ]
+            ]
         tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
         return tag_list_by_count
 
@@ -177,6 +182,11 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         ]
         return thumbnail_list
+
+    def _get_event_list_for_featured(self, group_id):
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        pages_list = get_action('group_page_list')(context, {'id': group_id})
+        return pages_list
 
     def get_country(self, id):
         if group_type != self.group_type:

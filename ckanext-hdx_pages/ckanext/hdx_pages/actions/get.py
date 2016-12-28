@@ -88,3 +88,23 @@ def page_list(context, data_dict):
         else:
             page_dicts.append(p.as_dict())
     return page_dicts
+
+
+@logic.side_effect_free
+def group_page_list(context, data_dict):
+    '''List pages associated with a group.
+    :param id: id of the group
+    :type id: string
+    :rtype: list of dictionaries
+    '''
+
+    result = []
+
+    pages = page_list(context, data_dict)
+
+    for page in pages:
+        pg_list = page_group_list(context, {'id': page.get('id')})
+        if data_dict.get('id') in pg_list:
+            result.append(page)
+
+    return result
