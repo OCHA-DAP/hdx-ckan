@@ -109,6 +109,25 @@
         </div>
     </div>
 
+
+    {% if data.featured_section.show %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">
+                    {{ _("Featured") }}
+                </span>
+            </div>
+        </div>
+        <div class="col-xs-12" >
+            <div class="row">
+                {{data.featured_section}}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+
     {% if data.widgets.top_line_data_list %}
     <div class="row">
         <div class="col-xs-12">

@@ -16,6 +16,8 @@ import ckan.model as model
 import ckan.lib.helpers as helpers
 from ckan.controllers.api import CONTENT_TYPES
 
+from operator import itemgetter
+
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 
@@ -76,6 +78,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(country_dict).get_dataset_results()
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
+        f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
+        f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
+        f_thumbnail_list = self._get_thumbnail_list_for_featured()
 
         template_data = {
             'data': {
@@ -92,7 +97,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                     'top_line_data_list': top_line_data_list,
                     'chart_data_list': chart_data_list,
                     'show': len(top_line_data_list) > 0 or len(chart_data_list) > 0
-                }
+                },
+                'featured_section': {
+                    'thumbnail_list': f_thumbnail_list,
+                    'organization_list': f_organization_list[:5],
+                    'tag_list': f_tag_list[:10],
+                    'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
+                },
 
             },
             'errors': None,
@@ -107,7 +118,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, None, None, None, context)
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'total_res_downloads', None, None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
                                                             {'tags': 'tags', 'organization': 'organization'}, query_result.get('count'), u'')
 
@@ -125,6 +136,47 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         ]
         return org_list
 
+    def _get_org_list_for_featured_from_facets(self, full_facet_info):
+        org_list = [
+            {
+                'display_name': org.get('display_name'),
+                'name': org.get('name'),
+                'url': helpers.url_for('organization_read', id=org.get('name'))
+            }
+            for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if org.get('name') != 'hdx'
+        ]
+        return org_list
+
+    def _get_tag_list_for_featured_from_facets(self, full_facet_info):
+        tag_list = [
+            {
+                'display_name': tag.get('display_name'),
+                'count': tag.get('count'),
+                'name': tag.get('name'),
+                'url': helpers.url_for('package_search', tags=tag.get('name'))
+            }
+            for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
+        ]
+        tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
+        return tag_list_by_count
+
+    def _get_thumbnail_list_for_featured(self):
+        thumbnail_list = [
+            {
+                'display_name': 'First Item Display Name',
+                'type': 'Map Explorer|Event|Dataset',
+                'url': '#',
+                'thumbnail_url': '#'
+            },
+            {
+                'display_name': 'Second Item Display Name',
+                'type': 'COD',
+                'url': '#',
+                'thumbnail_url': '#'
+            }
+
+        ]
+        return thumbnail_list
 
     def get_country(self, id):
         if group_type != self.group_type:
