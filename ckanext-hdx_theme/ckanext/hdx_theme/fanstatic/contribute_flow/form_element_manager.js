@@ -33,6 +33,11 @@ ckan.module('hdx_form_element_manager', function($, _) {
                     }
                     else if (message.elementName == elementName) {
                         try {
+                            if (errorWrapperEl.find("input").attr("data-module") == "slug-preview-slug"){
+                                errorWrapperEl.parents(".form-section").find(".slug-preview").hide();
+                                errorWrapperEl.parent().show();
+                            }
+
                             errorWrapperEl.addClass('error');
 
                             var existingText = errorEl.html().trim();

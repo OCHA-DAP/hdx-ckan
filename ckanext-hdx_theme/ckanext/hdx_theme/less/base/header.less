@@ -40,7 +40,7 @@
 
 @bodyBackgroundColor: @greenColor;
 @bodyBackgroundUrl: "@{imagePath}/homepage/map.png";
-
+@errorPageBackgroundUrl: "@{imagePath}/page404/pxel_bg.png";
 
 /* Body Background */
     body {
@@ -787,4 +787,38 @@ nav{
 
 .no-margin{
   margin: 0;
+}
+
+#error-page {
+  min-height: 400px;
+  height: 70vh;
+  background: url(@errorPageBackgroundUrl);
+  background-size: 10px 20px;
+  background-repeat: repeat;
+  position: relative;
+
+  .error-message-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    text-align: center;
+    color: @darkGrayColor;
+
+    img {
+      height: 90px;
+    }
+
+    h1 {
+      .gothamBoldFont(18px);
+      text-transform: uppercase;
+      margin: 20px 0;
+    }
+
+    p {
+      margin: 20px 0;
+      .sourceSansProFont(400, 14px);
+    }
+  }
 }

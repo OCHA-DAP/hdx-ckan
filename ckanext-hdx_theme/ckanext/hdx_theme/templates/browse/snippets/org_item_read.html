@@ -6,6 +6,9 @@
     <h1 class="itemTitle">
         {{ organization.display_name or organization.title or organization.name }}
     </h1>
+    {% if organization.state == 'deleted' %}
+        <span style="vertical-align: top;" class="label label-danger">{{ _('Deleted') }}</span>
+    {% endif %}
 {% endblock %}
 {% block links %}
     {{ super() }}
