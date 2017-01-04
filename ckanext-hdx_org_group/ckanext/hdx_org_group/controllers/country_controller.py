@@ -78,8 +78,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             country_dict).get_dataset_results()
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
-        f_thumbnail_list = self._get_thumbnail_list_for_featured()
         f_event_list = self._get_event_list_for_featured(country_dict['id'])
+        f_thumbnail_list = self._get_thumbnail_list_for_featured(country_dict, f_event_list, not_filtered_facet_info.get('results'))
         f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
         f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
 
@@ -120,13 +120,26 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                    'auth_user_obj': c.userobj}
 
         fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'total_res_downloads', None,
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 2, 1, 'metadata_modified desc', None,
                                                None, context)
         non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
                                                             {'tags': 'tags', 'organization': 'organization'},
                                                             query_result.get('count'), u'')
 
+        non_filtered_facet_info['results'] = query_result.get('results', [])
+
         return non_filtered_facet_info
+
+    def _get_latest_cod_datatset(self, country_dict):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+
+        fq = 'groups:"{}" tags:cod +dataset_type:dataset'.format(country_dict.get('name'))
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'metadata_modified desc', None,
+                                               None, context)
+
+        return next(iter(query_result.get('results', [])), None)
 
     def _get_org_list_for_menu_from_facets(self, full_facet_info):
         org_list = [
@@ -164,23 +177,60 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
         return tag_list_by_count
 
-    def _get_thumbnail_list_for_featured(self):
-        thumbnail_list = [
-            {
-                'display_name': 'First Item Display Name',
-                'type': 'Map Explorer|Event|Dataset',
-                'url': '#',
-                'thumbnail_url': '#'
-            },
-            {
-                'display_name': 'Second Item Display Name',
-                'type': 'COD',
-                'url': '#',
-                'thumbnail_url': '#'
-            }
+    def _get_thumbnail_list_for_featured(self, country_dict, event_list, latest_datasets):
+        '''
+        :param country_dict:
+        :type country_dict: dict
+        :param event_list: if this was already fetched in the controller we can reuse it
+        :type event_list: list
+        :param latest_datasets: a list of the latest updated datasets for the country
+        :type latest_datasets: list
+        :return: list of dicts containing display_name, type and url for the featured thumbnails
+        :rtype: list
+        '''
 
-        ]
+        if event_list is None:
+            event_list = self._get_event_list_for_featured(country_dict.get('id'))
+
+        latest_cod_dataset = self._get_latest_cod_datatset(country_dict)
+        cloned_latest_datasets = latest_datasets[:]
+
+        thumbnail_list = [None, None]
+        if event_list:
+            thumbnail_list[0] = self.__event_as_thumbnail_dict(event_list[0])
+        elif cloned_latest_datasets:
+            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
+            del cloned_latest_datasets[0]
+
+        if latest_cod_dataset:
+            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(latest_cod_dataset, True)
+        elif cloned_latest_datasets:
+            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
+            del cloned_latest_datasets[0]
+
+        if thumbnail_list[0] and thumbnail_list[1] \
+                and thumbnail_list[0].get('url') == thumbnail_list[1].get('url') and cloned_latest_datasets:
+            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
+            del cloned_latest_datasets[0]
+
+
         return thumbnail_list
+
+    def __dataset_as_thumbnail_dict(self, dataset_dict, is_cod=False):
+        return {
+            'display_name': dataset_dict.get('title'),
+            'type': 'COD' if is_cod else 'Dataset',
+            'url': h.url_for('dataset_read', id=dataset_dict.get('name')),
+            'thumbnail_url': '#'
+        }
+
+    def __event_as_thumbnail_dict(self, event_dict, is_cod=False):
+        return {
+            'display_name': event_dict.get('title'),
+            'type': 'Event',
+            'url': h.url_for('read_event', id=event_dict.get('name')),
+            'thumbnail_url': '#'
+        }
 
     def _get_event_list_for_featured(self, group_id):
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
