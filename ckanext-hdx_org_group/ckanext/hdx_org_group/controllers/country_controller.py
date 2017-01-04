@@ -55,8 +55,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             not_filtered_facet_info = self._get_not_filtered_facet_info(country_dict)
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
-            vocab_topics_list = c.full_facet_info.get(
-                'facets', {}).pop('vocab_Topics', {}).get('items', [])
+            vocab_topics_list = c.full_facet_info.get('facets', {}).pop('vocab_Topics', {}).get('items', [])
 
             # Removed for now as per HDX-4927
             # c.cont_browsing = self.get_cont_browsing(
