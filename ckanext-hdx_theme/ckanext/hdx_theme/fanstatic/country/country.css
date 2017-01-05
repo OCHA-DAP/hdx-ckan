@@ -223,9 +223,9 @@ h1.country-title {
   margin-top: 0;
 }
 .featured-section .featured-info-block .info-title {
-  font-family: 'Gotham-Bold', sans-serif;
-  font-weight: 400;
-  font-size: 12px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
   letter-spacing: 0.01em;
 }
 .featured-section .featured-info-block .info-list ul {
@@ -234,15 +234,16 @@ h1.country-title {
   padding: 0;
 }
 .featured-section .featured-info-block .info-list ul li {
-  font-family: 'Gotham-Light', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 14px;
 }
 .featured-section .featured-info-block .info-list ul li.inline {
   display: inline;
 }
 .featured-section .featured-info-block .info-list ul li a.label.label-small {
   background-color: #f2645a;
+  font-size: 10px;
 }
 .featured-section .featured-info-block .info-list ul li ul {
   list-style: none;

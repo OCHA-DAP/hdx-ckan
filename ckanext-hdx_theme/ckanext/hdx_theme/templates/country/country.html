@@ -177,7 +177,8 @@
                                             <span>{{ item.display_name }} -</span>
                                             <ul>
                                                 {% if item.count %}
-                                                <li  class="inline"><a href="{{ item.url }}">{{item.count}} Datasets</a> | </li>
+                                                {% set filtered_by_org_url = h.url_for("group_read", id=data.country_dict.id) + "?organization="+ item.name +"#dataset-filter-start" %}
+                                                <li  class="inline"><a href="{{filtered_by_org_url}}">{{item.count}} Datasets</a> | </li>
                                                 {% endif %}
                                                 <li  class="inline"><a href="{{ item.url }}">Go to org page</a></li>
                                             </ul>
