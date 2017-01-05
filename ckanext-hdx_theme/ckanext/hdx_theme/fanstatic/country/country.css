@@ -246,6 +246,7 @@ h1.country-title {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 600;
   font-size: 10px;
+  letter-spacing: 0.03em;
 }
 .featured-section .featured-info-block .info-list ul li ul {
   list-style: none;
