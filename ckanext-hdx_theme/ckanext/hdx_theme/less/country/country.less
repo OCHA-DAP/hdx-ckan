@@ -207,5 +207,96 @@ h1.country-title {
       }
     }
   }
+}
 
+.featured-section {
+  .featured-thumbnail {
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgba(0,0,0,0.3);
+      color: @whiteColor;
+      text-align: center;
+
+      &:hover {
+        .featured-thumbnail-content{
+          .action{
+            visibility: visible;
+          }
+        }
+      }
+
+      .featured-thumbnail-content{
+        position: absolute;
+        width: 90%;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .type {
+          text-transform: capitalize;
+          .gothamLightFont(10px);
+        }
+
+        .title {
+          .gothamBoldFont(14px);
+          .letter-spacing-1();
+        }
+
+        .action {
+          background-color: @orangeColor;
+          display: inline;
+          visibility: hidden;
+        }
+      }
+    }
+
+  }
+
+  .featured-info-block {
+    color: @blackColor;
+    margin-top: 20px;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    .info-title {
+      .gothamBoldFont(12px);
+      .letter-spacing-1();
+    }
+
+    .info-list{
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+
+          &.inline {
+            display: inline;
+          }
+
+          a.label.label-small{
+            background-color: @orangeColor;
+          }
+
+          .gothamLightFont(12px);
+          ul {
+            list-style: none;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
 }

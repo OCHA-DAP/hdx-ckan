@@ -111,7 +111,7 @@
 
 
     {% if data.featured_section.show %}
-    <div class="row">
+    <div class="row featured-section">
         <div class="col-xs-12">
             <div class="list-header crisis-list-header">
                 <span class="mL15 list-header-title">
@@ -119,9 +119,92 @@
                 </span>
             </div>
         </div>
-        <div class="col-xs-12" >
+        <div class="col-xs-12 mTop30">
             <div class="row">
-                {{data.featured_section}}
+                {% for thumbnail in data.featured_section.thumbnail_list %}
+                    <div class="col-xs-4">
+                        <div class="featured-thumbnail">
+                            <img src="/global/00cbb248-8943-47b5-b483-c7011b7d46f7.png {# thumbnail.thumbnail_url #}">
+                            <div class="overlay">
+                                <div class="featured-thumbnail-content">
+                                    <div>
+                                        <span class="type">{{ thumbnail.type }}</span>
+                                    </div>
+                                    <div>
+                                        <span class="title">{{ thumbnail.display_name }}</span>
+                                    </div>
+                                    <div class="mTop10">
+                                        <a href="{{ thumbnail.url }}" class="action btn btn-large" >Explore</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="col-xs-4">
+                    {% if data.featured_section.event_list | length > 0 %}
+                        <div class="featured-info-block">
+                            <div class="info-title">
+                                {{ _("Events affecting this location") }}:
+                            </div>
+                            <div class="info-list">
+                                <ul>
+                                    {% for item in data.featured_section.organization_list %}
+                                        <li>
+                                            <span>{{ item.display_name }} -</span>
+                                            <ul>
+                                                {% if item.count %}
+                                                <li><a href="{{ item.url }}">{{item.count}} Datasets</a></li>
+                                                {% endif %}
+                                                <li><a href="{{ item.url }}">Go to org page</a></li>
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if data.featured_section.organization_list | length > 0 %}
+                        <div class="featured-info-block">
+                            <div class="info-title">
+                                {{ _("Most active organisations") }}:
+                            </div>
+                            <div class="info-list">
+                                <ul>
+                                    {% for item in data.featured_section.organization_list %}
+                                        <li>
+                                            <span>{{ item.display_name }} -</span>
+                                            <ul>
+                                                {% if item.count %}
+                                                <li><a href="{{ item.url }}">{{item.count}} Datasets</a></li>
+                                                {% endif %}
+                                                <li><a href="{{ item.url }}">Go to org page</a></li>
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if data.featured_section.tag_list | length > 0 %}
+                        <div class="featured-info-block">
+                            <div class="info-title">
+                                {{ _("Most used tags") }}:
+                            </div>
+                            <div class="info-list">
+                                <ul>
+                                    {% for item in data.featured_section.tag_list %}
+                                        <li class="inline">
+                                            <a href="{{ item.url }}" class="label label-small">{{ item.display_name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
