@@ -243,6 +243,8 @@ h1.country-title {
 }
 .featured-section .featured-info-block .info-list ul li a.label.label-small {
   background-color: #f2645a;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
   font-size: 10px;
 }
 .featured-section .featured-info-block .info-list ul li ul {
