@@ -82,7 +82,7 @@ def page_list(context, data_dict):
     page_dicts = []
     for p in pages:
         try:
-            logic.check_access('page_show', context, {'id': p.id})
+            logic.check_access('page_show', context, {'id': p.id, 'state': p.state})
         except logic.NotAuthorized:
             pass
         else:
