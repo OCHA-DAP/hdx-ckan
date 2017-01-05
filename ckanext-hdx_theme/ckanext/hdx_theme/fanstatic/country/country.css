@@ -153,7 +153,7 @@ h1.country-title {
   border-top: 1px solid #cccccc;
   height: 15px;
   width: 15px;
-  background-color: #fff;
+  background-color: #ffffff;
   transform: translate(-50%, 0) rotateZ(45deg);
 }
 .followers-list-popup.dropdown-menu .followers-list .follower-item {
@@ -185,7 +185,7 @@ h1.country-title {
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
-  color: #fff;
+  color: #ffffff;
   text-align: center;
 }
 .featured-section .featured-thumbnail .overlay:hover .featured-thumbnail-content .action {
@@ -216,7 +216,7 @@ h1.country-title {
   visibility: hidden;
 }
 .featured-section .featured-info-block {
-  color: #000;
+  color: #000000;
   margin-top: 20px;
 }
 .featured-section .featured-info-block:first-child {

@@ -157,12 +157,14 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {
                 'display_name': org.get('display_name'),
                 'name': org.get('name'),
+                'count': org.get('count'),
                 'url': helpers.url_for('organization_read', id=org.get('name'))
             }
             for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if
             org.get('name') != 'hdx'
             ]
-        return org_list
+        result = sorted(org_list, key=itemgetter('count'), reverse=True)
+        return result
 
     def _get_tag_list_for_featured_from_facets(self, full_facet_info):
         tag_list = [

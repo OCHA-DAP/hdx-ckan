@@ -149,14 +149,14 @@
                             </div>
                             <div class="info-list">
                                 <ul>
-                                    {% for item in data.featured_section.organization_list %}
+                                    {% for item in data.featured_section.event_list %}
                                         <li>
-                                            <span>{{ item.display_name }} -</span>
+                                            <span>{{ item.title }} -</span>
                                             <ul>
                                                 {% if item.count %}
-                                                <li><a href="{{ item.url }}">{{item.count}} Datasets</a></li>
+                                                <li  class="inline"><a href="{{ item.url }}">{{item.count}} Datasets</a> | </li>
                                                 {% endif %}
-                                                <li><a href="{{ item.url }}">Go to org page</a></li>
+                                                <li class="inline"><a href="{{ item.type }}/{{ item.name }}">Go to event page</a></li>
                                             </ul>
                                         </li>
                                     {% endfor %}
@@ -177,9 +177,9 @@
                                             <span>{{ item.display_name }} -</span>
                                             <ul>
                                                 {% if item.count %}
-                                                <li><a href="{{ item.url }}">{{item.count}} Datasets</a></li>
+                                                <li  class="inline"><a href="{{ item.url }}">{{item.count}} Datasets</a> | </li>
                                                 {% endif %}
-                                                <li><a href="{{ item.url }}">Go to org page</a></li>
+                                                <li  class="inline"><a href="{{ item.url }}">Go to org page</a></li>
                                             </ul>
                                         </li>
                                     {% endfor %}
