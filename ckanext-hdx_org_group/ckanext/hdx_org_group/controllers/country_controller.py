@@ -53,6 +53,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
             not_filtered_facet_info = self._get_not_filtered_facet_info(country_dict)
+            latest_cod_dataset = self._get_latest_cod_datatset(country_dict)
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
             vocab_topics_list = c.full_facet_info.get('facets', {}).pop('vocab_Topics', {}).get('items', [])
@@ -61,13 +62,13 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # c.cont_browsing = self.get_cont_browsing(
             #    c.group_dict, vocab_topics_list)
 
-            template_data = self.get_template_data(country_dict, not_filtered_facet_info)
+            template_data = self.get_template_data(country_dict, not_filtered_facet_info, latest_cod_dataset)
 
             result = render('country/country.html', extra_vars=template_data)
 
             return result
 
-    def get_template_data(self, country_dict, not_filtered_facet_info):
+    def get_template_data(self, country_dict, not_filtered_facet_info, latest_cod_dataset):
 
         follower_count = get_action('group_follower_count')(
             {'model': model, 'session': model.Session},
@@ -79,7 +80,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
         f_event_list = self._get_event_list_for_featured(country_dict['id'])
-        f_thumbnail_list = self._get_thumbnail_list_for_featured(country_dict, f_event_list, not_filtered_facet_info.get('results'))
+        f_thumbnail_list = self._get_thumbnail_list_for_featured(country_dict, f_event_list,
+                                                                 not_filtered_facet_info.get('results'),
+                                                                 latest_cod_dataset)
         f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
         f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
 
@@ -179,7 +182,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
         return tag_list_by_count
 
-    def _get_thumbnail_list_for_featured(self, country_dict, event_list, latest_datasets):
+    def _get_thumbnail_list_for_featured(self, country_dict, event_list, latest_datasets, latest_cod_dataset):
         '''
         :param country_dict:
         :type country_dict: dict
@@ -191,10 +194,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         :rtype: list
         '''
 
-        if event_list is None:
-            event_list = self._get_event_list_for_featured(country_dict.get('id'))
-
-        latest_cod_dataset = self._get_latest_cod_datatset(country_dict)
         cloned_latest_datasets = latest_datasets[:]
 
         thumbnail_list = [None, None]
