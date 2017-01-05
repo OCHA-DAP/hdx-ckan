@@ -202,7 +202,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         elif cloned_latest_datasets:
             thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
             del cloned_latest_datasets[0]
-
         if latest_cod_dataset:
             thumbnail_list[1] = self.__dataset_as_thumbnail_dict(latest_cod_dataset, True)
         elif cloned_latest_datasets:
@@ -214,7 +213,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
             del cloned_latest_datasets[0]
 
-
+        thumbnail_list[0]['thumbnail_url'] = '/images/backgrounds/featured_slot1.gif'
+        thumbnail_list[1]['thumbnail_url'] = '/images/backgrounds/featured_slot2.png'
         return thumbnail_list
 
     def __dataset_as_thumbnail_dict(self, dataset_dict, is_cod=False):
