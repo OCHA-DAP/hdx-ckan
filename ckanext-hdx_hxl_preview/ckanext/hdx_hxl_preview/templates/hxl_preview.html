@@ -1,9 +1,8 @@
 {% resource 'hdx_hxl_preview/hdx_hxl_preview.js' %}
 
-<div class="row">
-    <iframe data-module="hdx-hxl-preview"
-            style="width: 100%; border-style: none"
-            src="{{ hxl_preview_app }}/show;{{ resource_url }};{{ hdx_domain }};{{ resource_view_id }};{{ edit_mode }}"
+<div class="row" data-module="hdx-hxl-preview">
+    <iframe style="width: 100%; border-style: none"
+            src="{{ hxl_preview_full_url }}"
             class="hxl-preview-iframe">
     </iframe>
 </div>

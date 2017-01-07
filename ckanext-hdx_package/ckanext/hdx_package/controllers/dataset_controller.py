@@ -773,6 +773,18 @@ class DatasetController(PackageController):
                 if _default_view.get('type') == 'hdx_hxl_preview':
                     c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                     c.default_view = _default_view
+                    c.hxl_preview_urls = {
+                        'onlyView': get_action('hxl_preview_iframe_url_show')({}, {
+                            'resource': _default_view.get('resource'),
+                            'resource_view': _default_view.get('view'),
+                            'hxl_preview_mode': 'onlyView'
+                        }),
+                        'edit': get_action('hxl_preview_iframe_url_show')({}, {
+                            'resource': _default_view.get('resource'),
+                            'resource_view': _default_view.get('view'),
+                            'hxl_preview_mode': 'edit'
+                        })
+                    }
                     return render('indicator/hdx-hxl-read.html')
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
