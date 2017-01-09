@@ -1,6 +1,7 @@
 {% extends "indicator/read.html" %}
 
 {% set pkg = c.pkg_dict or pkg_dict %}
+{% set user_has_edit_rights = h.check_access('package_update', {'id':pkg.id })%}
 
 {% block pre_primary_content %}
     <div class="row list-header">
@@ -12,14 +13,15 @@
             </div>
         </div>
 
-        {% if h.check_access('package_update', {'id':pkg.id }) %}
+        {% if user_has_edit_rights %}
         <div class="col-xs-1 list-header-right-side">
             <a href="#" id="hxl-preview-edit-trigger">{{ _('Edit') }}</a>
-            {{ h.snippet('widget/popup/popup-hxl.html', id="hxl-preview-popup", title="Add HXL Preview to your dataset",
-                    class="zero-padding", hxl_preview_edit_url=c.hxl_preview_urls.edit) }}
         </div>
+        {{ h.snippet('widget/popup/popup-hxl.html', id="hxl-preview-popup", title="Add HXL Preview to your dataset",
+                    class="zero-padding", hxl_preview_edit_url=c.hxl_preview_urls.edit) }}
         {% endif %}
     </div>
+
     <div class="row mTop20">
         <div class="col-xs-12">
                 <div class="data-viewer-error"></div>

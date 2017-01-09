@@ -1,9 +1,33 @@
 
 {% extends "widget/popup/popup.html" %}
 
-{% block content %}
-    <div id="hxl-preview-edit-url" style="display: none">{{ hxl_preview_edit_url }}</div>
-    <div id="hxl-preview-edit-container">
+
+{% block all_content %}
+    <div class="row header-row">
+        {% block titlebar %}
+            <div class="col-xs-12">
+                <div class="title pull-left">
+                    {{ title }}
+                </div>
+                <div class="pull-right">
+                    <i class="close glyphicon glyphicon-remove"></i>
+                </div>
+            </div>
+        {% endblock %}
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            {% block content %}
+                <div class="hxl-description">
+                    <p>We have noticed that you have used HXL tags in your dataset.<br />
+                    You can add charts and values to your dataset by clicking the + icon below. </p>
+                </div>
+                <div id="hxl-preview-edit-url" style="display: none">{{ hxl_preview_edit_url }}</div>
+                <div id="hxl-preview-edit-container">
+
+                </div>
+            {% endblock %}
+        </div>
 
     </div>
 {% endblock %}

@@ -4,8 +4,31 @@
 
 #hxl-preview-popup.popup {
   .content {
-    background-color: #FFFFFF;
+    background-color: @whiteColor;
     width: 1260px;
+    padding: 0;
+    .header-row {
+      background-color: @blueColor;
+      margin-left: 0;
+      margin-right: 0;
+
+      .title {
+        color: @whiteColor;
+      }
+      .pull-right {
+        padding-top: 13px;
+      }
+      .close {
+        color: @whiteColor;
+        opacity: 1;
+      }
+    }
+
+    .hxl-description {
+      padding: 15px 15px 6px 15px;
+      line-height: 20px;
+      border-bottom: 1px solid @extraLightGrayColor;
+    }
   }
   iframe {
     height: 600px;
