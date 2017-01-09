@@ -211,6 +211,10 @@ hdx.analytics.ga.token = UA-48221887-3
 # hdx.analytics.enqueue_url = http://localhost:1234/api/send-analytics
 hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165
 
+# Scheduled execution
+# This should be overriden in your own prod.ini.
+hdx.jobprocessor.scheduled.base_url = http://localhost:1234/api/scheduler/
+
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
 hdx.onboarding.send_confirmation_email = true
 
