@@ -115,10 +115,14 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         q = c.q = request.params.get('q', '')
 
         c.org_meta = org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
-        org_meta.fetch_all()
+        try:
+            org_meta.fetch_all()
+        except NotFound, e:
+            abort(404)
+        except NotAuthorized, e:
+            abort(401, _('Not authorized to see this page'))
 
         c.group_dict = org_meta.org_dict
-
 
         # If custom_org set to true, redirect to the correct route
         if org_meta.is_custom:
@@ -238,6 +242,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'save': 'save' in request.params,
+                   'restore': 'restore' in request.params,
                    'for_edit': True,
                    'parent': request.params.get('parent', None)
                    }
@@ -245,6 +250,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         if context['save'] and not data:
             return self._save_edit(id, context)
+        if context['restore'] and not data:
+            return self._restore_org(id, context)
 
         try:
             old_data = self._action('group_show')(context, data_dict)
