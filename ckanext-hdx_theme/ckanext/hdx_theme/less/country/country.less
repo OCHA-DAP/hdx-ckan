@@ -169,23 +169,33 @@ h1.country-title {
 .followers-list-popup.dropdown-menu {
   position: absolute;
   left: 50%;
-  margin-top: 15px;
   transform: translate(-50%, 0);
   padding: 15px;
-  margin-top: 15px;
+  margin-top: 0;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
 
-  &:before {
-    content: " ";
-    position: absolute;
-    top: -8px;
-    left: 50%;
-
-    border-left: 1px solid @lightGrayColor;
-    border-top: 1px solid @lightGrayColor;
-    height: 15px;
-    width: 15px;
+  .hdx-arrow-wrapper {
+    padding: 15px;
     background-color: @whiteColor;
-    transform: translate(-50%, 0) rotateZ(45deg);
+    border: 1px solid @lightGrayColor;
+    border-radius: 4px;
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+
+    &:before {
+      content: " ";
+      position: absolute;
+      top: 7px;
+      left: 50%;
+
+      border-left: 1px solid @lightGrayColor;
+      border-top: 1px solid @lightGrayColor;
+      height: 15px;
+      width: 15px;
+      background-color: @whiteColor;
+      transform: translate(-50%, 0) rotateZ(45deg);
+    }
   }
 
   .followers-list {

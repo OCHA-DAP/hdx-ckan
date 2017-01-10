@@ -142,12 +142,22 @@ h1.country-title {
   left: 50%;
   transform: translate(-50%, 0);
   padding: 15px;
-  margin-top: 15px;
+  margin-top: 0;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
 }
-.followers-list-popup.dropdown-menu:before {
+.followers-list-popup.dropdown-menu .hdx-arrow-wrapper {
+  padding: 15px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+.followers-list-popup.dropdown-menu .hdx-arrow-wrapper:before {
   content: " ";
   position: absolute;
-  top: -8px;
+  top: 7px;
   left: 50%;
   border-left: 1px solid #cccccc;
   border-top: 1px solid #cccccc;

@@ -84,11 +84,12 @@
                         </li>
                         <li>
                             <span class="dropdown dropdown-on-hover">
-                                <a href="#" data-toggle="dropdown" data-target="#" data-module-trigger="hover focus click" data-module-placement="bottom" title="cosdalkj">
+                                <a href="#" data-toggle="dropdown" data-target="#" data-module-trigger="hover focus click" data-module-placement="bottom">
                                     {% set num_of_orgs = data.stats_section.num_of_organizations %}
                                     <span class="sspBold14">{{ num_of_orgs }} {% if num_of_orgs != 1 %}{{ _('Organisations') }}{% else %}{{ _('Organisation') }}{% endif %}</span>
                                 </a>
                                 <div class="followers-list-popup dropdown-menu bottom">
+                                  <div class="hdx-arrow-wrapper">
                                   <ul class="followers-list">
                                     {% for org in data.stats_section.organization_list %}
                                         <li class="follower-item">
@@ -96,6 +97,7 @@
                                         </li>
                                     {% endfor %}
                                   </ul>
+                                  </div>
                                 </div>
                             </span>
                         </li>
