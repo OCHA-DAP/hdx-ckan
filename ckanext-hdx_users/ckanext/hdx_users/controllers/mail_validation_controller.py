@@ -290,9 +290,8 @@ class ValidationController(ckan.controllers.user.UserController):
     def _signup_newsletter(self, data):
         if 'signup' in data:
             signup = data['signup']
-
-            if (signup == "true"):
-                h.log.info("Will signup to newsletter: " + signup)
+            if signup == "true":
+                log.info("Will signup to newsletter: " + signup)
                 m = self._get_mailchimp_api()
                 try:
                     m.helper.ping()
@@ -301,11 +300,10 @@ class ValidationController(ckan.controllers.user.UserController):
                         email = {
                             'email': data['email']
                         }
-                        m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
-                except mailchimp.Error:
-                    h.log.error(request, "Mailchimp error")
-
-                signup = signup
+                        m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
+                except mailchimp.Error, ex:
+                    log.error(str(ex.error_summary))
+                # signup = signup
         return None
 
     def _signup_newsuser(self, data):
@@ -313,13 +311,13 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             m.helper.ping()
             list_id = configuration.config.get('hdx.mailchimp.list.newuser')
-            if (list_id):
+            if list_id:
                 email = {
                     'email': data['email']
                 }
                 m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
-        except mailchimp.Error:
-            h.log.error(request, "Mailchimp error")
+        except mailchimp.Error, ex:
+            log.error(str(ex.error_summary))
 
         return None
 
