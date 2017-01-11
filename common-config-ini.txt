@@ -230,3 +230,10 @@ hdx.explorer.iframe.height = 750px
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
+
+#mailchimp settings - update your prod.ini with real ones
+hdx.mailchimp.list.newsletter = aaa-fake
+hdx.mailchimp.list.newuser = bbb-fake
+hdx.mailchimp.api.key = ccc-fake
+
+
