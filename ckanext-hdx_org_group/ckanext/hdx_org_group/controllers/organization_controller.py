@@ -124,7 +124,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         c.group_dict = org_meta.org_dict
 
-
         # If custom_org set to true, redirect to the correct route
         if org_meta.is_custom:
             custom_org_controller = custom_org.CustomOrgController()
@@ -243,6 +242,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author,
                    'save': 'save' in request.params,
+                   'restore': 'restore' in request.params,
                    'for_edit': True,
                    'parent': request.params.get('parent', None)
                    }
@@ -250,6 +250,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         if context['save'] and not data:
             return self._save_edit(id, context)
+        if context['restore'] and not data:
+            return self._restore_org(id, context)
 
         try:
             old_data = self._action('group_show')(context, data_dict)
