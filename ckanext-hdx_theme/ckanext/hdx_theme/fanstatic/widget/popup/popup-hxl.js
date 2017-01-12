@@ -12,6 +12,9 @@ $(document).ready(function(){
         $('#hxl-view-iframe')[0].contentWindow.location.reload();
         $('#hxl-preview-popup').hide();
     });
+    $(document.body).on('hxlPreviewCancelled', function(event){
+        $('#hxl-preview-popup').hide();
+    });
 
 
 });

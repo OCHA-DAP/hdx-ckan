@@ -15,7 +15,7 @@
 
         {% if user_has_edit_rights %}
         <div class="col-xs-1 list-header-right-side">
-            <a href="#" id="hxl-preview-edit-trigger">{{ _('Edit') }}</a>
+            <a href="javascript:void(0)" id="hxl-preview-edit-trigger">{{ _('Edit') }}</a>
         </div>
         {{ h.snippet('widget/popup/popup-hxl.html', id="hxl-preview-popup", title="Add HXL Preview to your dataset",
                     class="zero-padding", hxl_preview_edit_url=c.hxl_preview_urls.edit) }}
