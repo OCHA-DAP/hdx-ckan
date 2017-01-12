@@ -78,5 +78,10 @@ a:focus,
   border-bottom: 1px solid #eeeeee;
 }
 #hxl-preview-popup.popup iframe {
-  height: 600px;
+  height: 700px;
+}
+@media (max-height: 800px) {
+  #hxl-preview-popup.popup iframe {
+    height: 500px;
+  }
 }
