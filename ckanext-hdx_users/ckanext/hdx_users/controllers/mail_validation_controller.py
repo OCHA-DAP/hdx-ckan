@@ -260,8 +260,9 @@ class ValidationController(ckan.controllers.user.UserController):
             context['auth_user_obj'] = context['user_obj']
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
                                                                    'extras': ue_helpers.get_initial_extras()})
-            if 'email' in data_dict:
+            if 'email' in data_dict and 'nosetest' not in data_dict:
                 self._signup_newsletter(data_dict)
+                self._signup_newsuser(data_dict)
         except NotAuthorized:
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')
@@ -289,24 +290,36 @@ class ValidationController(ckan.controllers.user.UserController):
     def _signup_newsletter(self, data):
         if 'signup' in data:
             signup = data['signup']
-
-            if (signup == "true"):
-                h.log.info("Will signup to newsletter: " + signup)
+            if signup == "true":
+                log.info("Will signup to newsletter: " + signup)
                 m = self._get_mailchimp_api()
                 try:
                     m.helper.ping()
-                    list_id = configuration.config.get('hdx.mailchimp.list.id')
-                    email = {
-                        'email': data['email']
-                    }
-                    m.lists.subscribe(list_id, email, None, 'html', False, False, True, True)
-                except mailchimp.Error:
-                    h.log.error(request, "Mailchimp error")
-
+                    list_id = configuration.config.get('hdx.mailchimp.list.newsletter')
+                    if (list_id):
+                        email = {
+                            'email': data['email']
+                        }
+                        m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
+                except mailchimp.Error, ex:
+                    log.error(str(ex.error_summary))
                 signup = signup
-
         return None
 
+    def _signup_newsuser(self, data):
+        m = self._get_mailchimp_api()
+        try:
+            m.helper.ping()
+            list_id = configuration.config.get('hdx.mailchimp.list.newuser')
+            if list_id:
+                email = {
+                    'email': data['email']
+                }
+                m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
+        except mailchimp.Error, ex:
+            log.error(str(ex.error_summary))
+
+        return None
 
     def _get_exc_msg_by_key(self, e, key):
         if e and e.args:

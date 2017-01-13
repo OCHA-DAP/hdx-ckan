@@ -264,7 +264,7 @@ contact = {
     'questions': [
         {
             'q': 'How do I contact the HDX team?',
-            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also reach us on Twitter at <a target="_blank" href="https://twitter.com/humdata">@humdata</a>. Sign up to receive our blog posts <a target="_blank"  href="http://unocha.us2.list-manage.com/subscribe?u=83487eb1105d72ff2427e4bd7&id=6fd988326c">here</a>.',
+            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also reach us on Twitter at <a target="_blank" href="https://twitter.com/humdata">@humdata</a>. Sign up to receive our blog posts <a target="_blank"  href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315">here</a>.',
         },
     ]
 }
