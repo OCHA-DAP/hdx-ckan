@@ -205,16 +205,16 @@ def hdx_send_new_org_request(context, data_dict):
 
     subject = _('New organization request:') + ' ' \
               + data_dict['title']
-    body = _('New organization request \n' \
-             'Organization Name: {org_name}\n' \
-             'Organization Description: {org_description}\n' \
-             'Organization URL: {org_url}\n' \
-             'Person requesting: {person_name}\n' \
-             'Person\'s email: {person_email}\n' \
-             'Person\'s ckan username: {ckan_username}\n' \
-             'Person\'s ckan email: {ckan_email}\n' \
-             'Request time: {request_time}\n' \
-             '(This is an automated mail)' \
+    body = _('<h3>New organization request </h3><br/>' \
+             'Organization Name: {org_name}<br/>' \
+             'Organization Description: {org_description}<br/>' \
+             'Organization URL: {org_url}<br/>' \
+             'Person requesting: {person_name}<br/>' \
+             'Person\'s email: {person_email}<br/>' \
+             'Person\'s ckan username: {ckan_username}<br/>' \
+             'Person\'s ckan email: {ckan_email}<br/>' \
+             'Request time: {request_time}<br/>' \
+             '(This is an automated mail)<br/><br/>' \
              '').format(org_name=data_dict['title'], org_description=data_dict['description'],
                         org_url=data_dict['org_url'], person_name=data_dict['your_name'],
                         person_email=data_dict['your_email'],
