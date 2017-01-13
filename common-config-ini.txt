@@ -211,6 +211,10 @@ hdx.analytics.ga.token = UA-48221887-3
 # hdx.analytics.enqueue_url = http://localhost:1234/api/send-analytics
 hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165
 
+# Scheduled execution
+# This should be overriden in your own prod.ini.
+hdx.jobprocessor.scheduled.base_url = http://localhost:1234/api/scheduler/
+
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
 hdx.onboarding.send_confirmation_email = true
 
@@ -226,3 +230,10 @@ hdx.explorer.iframe.height = 750px
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
+
+#mailchimp settings - update your prod.ini with real ones
+hdx.mailchimp.list.newsletter = aaa-fake
+hdx.mailchimp.list.newuser = bbb-fake
+hdx.mailchimp.api.key = ccc-fake
+
+
