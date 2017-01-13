@@ -10,6 +10,7 @@ ckan.module('contribute_flow_main', function($, _) {
             var validateUrl = this.options.validate_url;
             var hxlPreviewApi = this.options.hxl_preview_api;
             var requestUrl = window.location.pathname;
+            var isNewDataset = null; // Whether we're editing or creating a new dataset
             var contributeGlobal = {
                 'getDatasetIdPromise': function() {
                     var deferred = new $.Deferred();
@@ -88,12 +89,15 @@ ckan.module('contribute_flow_main', function($, _) {
                                     formDataArray.push({'name': 'id', 'value': datasetId});
 
                                     analyticsPromise = {};
+                                    isNewDataset = false;
+
                                 }
                                 else{ // Saving a new dataset
                                     formDataArray = contributeGlobal.getFormValues('new-dataset-json');
 
                                      /* Send analytics tracking events */
                                     analyticsPromise = hdxUtil.analytics.sendDatasetCreationEvent();
+                                    isNewDataset = true;
                                 }
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
 
@@ -192,13 +196,26 @@ ckan.module('contribute_flow_main', function($, _) {
                     }
                     return this.resourceSaveReadyDeferred.promise();
                 },
-                'browseToDataset': function() {
+                'browseToDataset': function(data, status, xhr) {
                     /**
                      *
                      */
                     if ( this._datasetName ) {
-                        var promise = this.getDatasetIdPromise();
-                        window.top.location.href = '/dataset/' + this._datasetName;
+                        // var promise = this.getDatasetIdPromise();
+
+                        var fragment = '';
+                        if (data.result && data.result.length > 0) {
+                            fragment = '#hxlEditMode';
+                        }
+                        var currentUrl = window.top.location.href;
+                        var newUrl = '/dataset/' + this._datasetName;
+                        window.top.location.href = newUrl + fragment;
+
+                        // If we're just adding the fragment (#hash) to the current url the page will not reload
+                        // by itself. When we're editing a dataset the current url and the new url are the same.
+                        if (currentUrl && currentUrl.indexOf(newUrl)>0  && fragment) {
+                            window.top.location.reload();
+                        }
                     }
                     else {
                         moduleLog.log('Cannot browse to dataset because name is missing');
