@@ -1,7 +1,6 @@
 {% extends "indicator/read.html" %}
 
 {% set pkg = c.pkg_dict or pkg_dict %}
-{% set user_has_edit_rights = h.check_access('package_update', {'id':pkg.id })%}
 
 {% block pre_primary_content %}
     <div class="row list-header">
@@ -13,7 +12,7 @@
             </div>
         </div>
 
-        {% if user_has_edit_rights %}
+        {% if c.user_has_edit_rights %}
         <div class="col-xs-1 list-header-right-side">
             <a href="javascript:void(0)" id="hxl-preview-edit-trigger">{{ _('Edit') }}</a>
         </div>

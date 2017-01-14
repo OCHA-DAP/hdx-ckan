@@ -756,6 +756,8 @@ class DatasetController(PackageController):
             'data': template_data,
         }
 
+        c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
+
         _default_view = None
         if 'resources' in c.pkg_dict:
             _default_view = self._has_views(c.pkg_dict['resources'])
@@ -766,12 +768,16 @@ class DatasetController(PackageController):
             if org_info_dict.get('custom_org', False):
                 self._process_customizations(org_info_dict.get('customization', None))
 
-            if _default_view:
-                if _default_view.get('type') == 'hdx_geo_preview':
-                    c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                    return render('indicator/hdx-shape-read.html')
-                if _default_view.get('type') == 'hdx_hxl_preview':
-                    c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+            if _default_view and _default_view.get('type') == 'hdx_geo_preview':
+                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                return render('indicator/hdx-shape-read.html')
+            elif _default_view and _default_view.get('type') == 'hdx_hxl_preview':
+                hxl_view = _default_view.get('view')
+                # we render the hxl preview template only if there exists a saved configuration OR
+                # if the user can edit the preview configuration
+                if (hxl_view.get('hxl_preview_config') and json.loads(hxl_view.get('hxl_preview_config'))) \
+                        or c.user_has_edit_rights:
+                    # c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                     c.default_view = _default_view
                     c.hxl_preview_urls = {
                         'onlyView': get_action('hxl_preview_iframe_url_show')({}, {
