@@ -240,10 +240,10 @@
                       {% endif %}
 
                     <div class="{{ loop_class }}">
-                        {{ h.snippet('crisis/snippets/topline.html',
+                        {{ h.snippet('crisis/snippets/topline-rw.html',
                             title=value.indicatorTypeName, value=value.formatted_value,
                             unit=value.unitName, source=value.sourceName,
-                            sparkline_json=value.sparklines_json,
+                            sparkline_json=value.sparklines_json, relief_web_link = value.reliefWebLink,
                             source_link=value.datasetLink, latest_date=value.datasetUpdateDate) }}
                     </div>
 

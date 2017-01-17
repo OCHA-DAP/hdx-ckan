@@ -4,11 +4,16 @@ import datetime as dt
 
 import pylons.config as config
 
+import ckan.plugins.toolkit as tk
+import ckan.model as model
+
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.dao.rw_access as rw_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 log = logging.getLogger(__name__)
+
+_get_action = tk.get_action
 
 indicators_4_charts_list = [
     ('PVH140', 'mdgs'),
@@ -150,10 +155,12 @@ class RWWidgetDataService(WidgetDataService):
     '''
 
     def get_dataset_results(self):
-        url = config.get('hdx.active_locations_toplines.url')
+        context = {'model': model, 'session': model.Session}
+        resource_id = config.get('hdx.active_locations_reliefweb.resource_id')
+        resource_dict = _get_action('resource_show')(context, {'id': resource_id})
         top_line_data = []
-        if url:
-            rw = rw_access.RwAccess(url, self.country_name)
+        if resource_dict:
+            rw = rw_access.RwAccess(resource_dict, self.country_name)
             top_line_data = rw.fetch_data()
 
             class RWGettersSetteres(formatters.FormatterGettersSetters):

@@ -1,5 +1,6 @@
 
 import ckan.logic as logic
+import ckan.lib.helpers as h
 import ckanext.hdx_org_group.dao.common_functions as common_functions
 
 from ckanext.hdx_theme.helpers.top_line_items_formatter import TopLineItemsWithDateFormatter
@@ -7,12 +8,13 @@ from ckanext.hdx_theme.helpers.top_line_items_formatter import TopLineItemsWithD
 _get_action = logic.get_action
 
 class RwAccess(object):
-    def __init__(self, url, location_iso):
-        self.url = url
+    def __init__(self, resource_dict, location_iso):
+        self.resource_dict = resource_dict
+        self.dataset_link = h.url_for('dataset_read', id=resource_dict['package_id'])
         self.location_iso = location_iso
 
     def fetch_data(self):
-        location_list = _get_action('hdx_get_locations_info_from_rw')({}, {'rw_url': self.url})
+        location_list = _get_action('hdx_get_locations_info_from_rw')({}, {'rw_url': self.resource_dict['url']})
 
         location = self.__find_current_location(location_list)
 
@@ -55,7 +57,8 @@ class RwAccess(object):
             'indicatorTypeCode': figure.get('name'),
             # 'formatted_value': '6,201,521',
             'value': float(figure.get('value')),
-            'datasetLink': figure.get('url'),
+            'datasetLink': self.dataset_link,
+            'reliefWebLink': figure.get('url'),
             'time': figure.get('date'),
             'latest_date': figure.get('date'),
             'locationName': location.get('name'),

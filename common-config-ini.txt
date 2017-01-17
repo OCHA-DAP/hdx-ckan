@@ -228,4 +228,8 @@ ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
 
 # The url for topline data for active locations
-hdx.active_locations_toplines.url = https://raw.githubusercontent.com/reliefweb/crisis-app-data/master/crisis.json
+# DEPRECATED. Replaced by hdx.active_locations_reliefweb.resource_id
+# hdx.active_locations_toplines.url = https://raw.githubusercontent.com/reliefweb/crisis-app-data/master/crisis.json
+
+# The resource for topline data for active locations
+hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d5

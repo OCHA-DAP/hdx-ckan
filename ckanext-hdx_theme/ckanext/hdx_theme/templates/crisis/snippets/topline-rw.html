@@ -1,0 +1,28 @@
+{#
+Creates a topline number with or without the sparkline
+
+Depends on:
+    - crisis/topline.css
+
+Example:
+    {{ h.snippet('crisis/snippets/topline-rw.html', title=item.title, value=item.formatted_value, unit=item.units,
+                    notes=item.notes, sparkline_json=item.sparklines_json, source=item.source,
+                    source_link=item.source_link, relief_web_link=item.relief_web_link,
+                    explore=item.explore, latest_date=item.latest_date) }}
+
+#}
+
+{% extends "crisis/snippets/topline.html" %}
+
+{%  block topline_source %}
+    {% if source %}
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="source-title">{{ source }}</span>
+                {% if relief_web_link %}
+                    <a href="{{ relief_web_link }}">via ReliefWeb</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
