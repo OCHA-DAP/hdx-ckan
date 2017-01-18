@@ -37,6 +37,7 @@ class ContributeFlowController(base.BaseController):
         try:
             if id:
                 dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
+                dataset_dict['owner_org_name'] = dataset_dict.get('organization', {}).get('name')
             logic.check_access(action_name, context, dataset_dict)
         except logic.NotAuthorized, e:
             if c.userobj or c.user:
@@ -94,7 +95,7 @@ class ContributeFlowController(base.BaseController):
 
     def process_groups(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('locations'):
-            dataset_dict['locations'] = [item.get('id') for item in dataset_dict.get("groups")]
+            dataset_dict['locations'] = [item.get('name') for item in dataset_dict.get("groups")]
 
     def process_tags(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
@@ -221,7 +222,7 @@ class ContributeFlowController(base.BaseController):
             locations = [locations] if isinstance(locations, basestring) else locations
             groups = []
             for item in locations:
-                groups.append({'id': item})
+                groups.append({'name': item})
             data_dict['groups'] = groups
         else:
             data_dict['groups'] = []

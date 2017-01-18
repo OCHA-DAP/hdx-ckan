@@ -4,6 +4,7 @@ Functions for creating and maintaining datasets.
 import cgi
 import logging
 from string import lower
+from ckan.lib.mailer import MailerException
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.membership_data as membership_data
@@ -1241,8 +1242,13 @@ class DatasetController(PackageController):
             return json.dumps({'success': False, 'error': {'message': error_summary}})
         try:
             get_action('hdx_send_mail_contributor')(context, data_dict)
+        except MailerException, e:
+            error_summary = _('Could not send request for: %s') % unicode(e)
+            log.error(error_summary)
+            return json.dumps({'success': False, 'error': {'message': error_summary}})
         except Exception, e:
             error_summary = e.error or str(e)
+            log.error(error_summary)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
         return SUCCESS
 

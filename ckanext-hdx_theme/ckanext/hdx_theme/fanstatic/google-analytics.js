@@ -196,9 +196,10 @@ $(
     setUpResourcesTracking();
 
     /**
+     * @param {[{name: string, value: string}]} formdata the data of the form
      * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded
      */
-    function sendDatasetCreationEvent() {
+    function sendDatasetCreationEvent(formdata) {
 
         var pageTitle = null;
         try {
@@ -210,11 +211,40 @@ $(
             // raise an exception
         }
 
+        /**
+         *
+         * @param {string} name - the name of the form field
+         * @returns {[string]}
+         */
+        function getValuesFromFormData(name) {
+            var resultList = [];
+            for (var i=0; i<formdata.length; i++) {
+                var formItem = formdata[i];
+                if (name == formItem.name) {
+                    resultList.push(formItem.value);
+                }
+            }
+            return resultList;
+        }
+
+        var group_names = getValuesFromFormData('locations');
+        var org_names = getValuesFromFormData('owner_org');
+        var privateVal = getValuesFromFormData('private');
+
+        /* tag_string looks something like "3 word address,cod,health" */
+        var codVal = getValuesFromFormData('tag_string');
+        codVal = codVal.length > 0 ? codVal[0].split(',') : [];
+
         var mixpanelData = {
             "eventName": "dataset create",
             "eventMeta": {
                 "page title": pageTitle,
-                "event source": "web"
+                "event source": "web",
+                "group names": group_names,
+                "org_name": org_names.length > 0 ? org_names[0] : null,
+                "is cod": codVal.indexOf('cod') >= 0,
+                "is indicator": false,
+                "is private": privateVal.length > 0 ? privateVal[0] == "true" : false
             }
         };
 
@@ -353,10 +383,11 @@ $(
     hdxUtil.analytics.sendMemberAddRejectEvent = sendMemberAddRejectEvent;
 
     /**
-     * Sends an event when a new user is registered
+     * Sends events related to new user registration: user register, start user register, submit email register
+     * @param eventName {string}
      */
-    function sendUserRegisteredEvent() {
-        var eventName = "user register";
+    function sendUserRegisteredEvent(eventName) {
+        // var eventName = "user register";
         var metadata = {
             "page title": analyticsInfo.pageTitle
         };

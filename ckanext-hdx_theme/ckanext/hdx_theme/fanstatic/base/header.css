@@ -2426,3 +2426,36 @@ nav.mobile-only {
 .no-margin {
   margin: 0;
 }
+#error-page {
+  min-height: 400px;
+  height: 70vh;
+  background: url("/images/page404/pxel_bg.png");
+  background-size: 10px 20px;
+  background-repeat: repeat;
+  position: relative;
+}
+#error-page .error-message-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 450px;
+  text-align: center;
+  color: #333333;
+}
+#error-page .error-message-container img {
+  height: 90px;
+}
+#error-page .error-message-container h1 {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin: 20px 0;
+}
+#error-page .error-message-container p {
+  margin: 20px 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}

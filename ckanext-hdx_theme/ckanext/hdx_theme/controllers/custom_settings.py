@@ -36,12 +36,8 @@ class CustomSettingsController(base.BaseController):
         if remove_index >= 0:
             del existing_setting_list[remove_index]
 
-        if remove_element and remove_element.get('graphic'):
-            existing_upload = GlobalUpload({
-                'filename': remove_element.get('graphic'),
-                'upload': None
-            })
-            existing_upload.delete()
+        if remove_element:
+            self._remove_file_by_path(remove_element.get('graphic'))
 
         data_dict = {
             'hdx.carousel.config': existing_setting_list
@@ -106,12 +102,27 @@ class CustomSettingsController(base.BaseController):
     #             })
     #             existing_upload.delete()
 
+    def _remove_file_by_path(self, path):
+        '''
+        :param path: something like /global/[uuid].png
+        '''
+        if path:
+            existing_upload = GlobalUpload({
+                'filename': path,
+                'upload': None
+            })
+            existing_upload.delete()
+
     def _persist_file(self, item):
         # For some reason FieldStorage has the boolean value of false so we compare to None
         graphic_upload = item.get('graphic_upload')
         if graphic_upload is not None and graphic_upload != 'undefined':
+
+            # remove previous file if exists
+            self._remove_file_by_path(item.get('graphic'))
+
             upload = GlobalUpload({
-                'filename': item.get('id'),
+                'filename': '{}_{}'.format(item.get('id')[0:4], unicode(uuid.uuid4())),
                 'upload': graphic_upload
             })
             upload.upload()
