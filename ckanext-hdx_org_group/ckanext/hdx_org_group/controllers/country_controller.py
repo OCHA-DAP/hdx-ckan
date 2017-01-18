@@ -175,7 +175,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'display_name': tag.get('display_name'),
                 'count': tag.get('count'),
                 'name': tag.get('name'),
-                'url': helpers.url_for('package_search', tags=tag.get('name'))
+                'url': helpers.url_for(controller='package', action='search', tags=tag.get('name'))
             }
             for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
             ]
@@ -213,8 +213,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
             del cloned_latest_datasets[0]
 
-        thumbnail_list[0]['thumbnail_url'] = '/images/featured_orgs_placeholder1.png'
-        thumbnail_list[1]['thumbnail_url'] = '/images/featured_orgs_placeholder2.png'
+        thumbnail_list[0]['thumbnail_url'] = '/images/featured_locs_placeholder1.png'
+        thumbnail_list[1]['thumbnail_url'] = '/images/featured_locs_placeholder2.png'
         return thumbnail_list
 
     def __dataset_as_thumbnail_dict(self, dataset_dict, is_cod=False):

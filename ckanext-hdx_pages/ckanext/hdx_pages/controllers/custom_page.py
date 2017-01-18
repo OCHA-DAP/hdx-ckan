@@ -20,12 +20,19 @@ NotAuthorized = logic.NotAuthorized
 abort = base.abort
 checked = 'checked="checked"'
 
+# section_types = {
+#     "empty": '',
+#     "map": _('Map'),
+#     "key_figures": _('Key Figures'),
+#     "interactive_data": _('Interactive Data'),
+#     "data_list": _('Data')
+# }
 section_types = {
     "empty": '',
-    "map": _('Map'),
-    "key_figures": _('Key Figures'),
-    "interactive_data": _('Interactive Data'),
-    "data_list": _('Data')
+    "map": _(''),
+    "key_figures": _(''),
+    "interactive_data": _(''),
+    "data_list": _('')
 }
 
 

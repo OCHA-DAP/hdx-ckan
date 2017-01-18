@@ -236,7 +236,7 @@ ytp.requests.redirect_to_src_page = true
 # hdx.active_locations_toplines.url = https://raw.githubusercontent.com/reliefweb/crisis-app-data/master/crisis.json
 
 # The resource for topline data for active locations
-hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d5ytp.requests.redirect_to_src_page = true
+hdx.active_locations_reliefweb.resource_id = 9a698057-71b4-47b0-9d2b-753026ea8afa
 
 #mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp.list.newsletter = aaa-fake

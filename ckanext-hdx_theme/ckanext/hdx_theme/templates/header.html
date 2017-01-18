@@ -186,18 +186,11 @@
                           <li class="crises-group">
                               Ongoing
                               <ul>
-                                  <li>
-                                      <div><a href="/group/nepal-earthquake" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
-                                  <li>
-                                      <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
-                                  </li>
+
                                   {% for ev in events.ongoing %}
                                     <li>
                                       <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                                      <div class="crises-datasets">[ ## Datasets ]</div>
+                                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                                     </li>
                                   {% endfor %}
                               </ul>
@@ -209,9 +202,19 @@
                                       {% for ev in events.archived %}
                                         <li>
                                           <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                                          <div class="crises-datasets">[ ## Datasets ]</div>
+                                          <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                                         </li>
                                       {% endfor %}
+                                      <li>
+                                          <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola</a></div>
+                                          <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
+                                      </li>
+                                      <li>
+                                          {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
+                                          <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
+                                          <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
+                                      </li>
+
                                   </ul>
                               </li>
                           {% endif %}

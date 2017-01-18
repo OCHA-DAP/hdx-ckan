@@ -226,6 +226,8 @@ h1.country-title {
 
     img {
       width: 100%;
+      min-height: 270px;
+      max-height: 270px;
     }
     .overlay {
       position: absolute;
@@ -302,7 +304,12 @@ h1.country-title {
             .sourceSansProFont(400,10px);
             letter-spacing: 0.03em;
           }
-
+          a.label.label-small:hover,
+          a.label.label-small:focus {
+            background-color: #ce554d;
+            box-shadow: none;
+            opacity: 1;
+          }
           .sourceSansProFont(400,14px);
           ul {
             list-style: none;
