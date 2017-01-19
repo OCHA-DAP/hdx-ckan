@@ -152,7 +152,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
     def _create_user(self, email='valid@example.com'):
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params = {'email': email}
+        params = {'email': email, 'nosetest': 'true'}
         res = self.app.post(url, params)
         return res
 
@@ -175,7 +175,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
 
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params = {'email': 'valid@example.com'}
+        params = {'email': 'valid@example.com', 'nosetest': 'true'}
         res = self.app.post(url, params)
         assert_true(json.loads(res.body)['success'])
 
@@ -192,7 +192,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         '''Creating a new user with identical email is unsuccessful.'''
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params = {'email': 'valid@example.com'}
+        params = {'email': 'valid@example.com', 'nosetest': 'true'}
         # create 1
         self.app.post(url, params)
         # create 2
@@ -205,8 +205,8 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         unsuccessful.'''
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params_one = {'email': 'valid@example.com'}
-        params_two = {'email': 'VALID@example.com'}
+        params_one = {'email': 'valid@example.com', 'nosetest': 'true'}
+        params_two = {'email': 'VALID@example.com', 'nosetest': 'true'}
         # create 1
         self.app.post(url, params_one)
         # create 2
@@ -219,7 +219,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         before saving.'''
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params = {'email': 'VALID@example.com'}
+        params = {'email': 'VALID@example.com', 'nosetest': 'true'}
         self.app.post(url, params)
         user = model.User.get('valid@example.com')
         # retrieved user has lowercase email
@@ -230,7 +230,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         '''Email must be valid email format.'''
         url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='register_email')
-        params = {'email': 'invalidexample.com'}
+        params = {'email': 'invalidexample.com', 'nosetest': 'true'}
 
         res = json.loads(self.app.post(url, params).body)
         assert_equal(res['error']['message'][0], u'Email address is not valid')

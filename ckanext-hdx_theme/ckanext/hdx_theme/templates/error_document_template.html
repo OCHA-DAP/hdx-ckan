@@ -1,0 +1,62 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ gettext('Error %(error_code)s', error_code=c.code[0]) }}{% endblock %}
+
+{% block primary %}
+  <div class="paddingRowHack">
+    <div id="error-page">
+      <div class="error-message-container">
+        <div>
+          <img src="/images/page404/hdx_bot2.gif">
+        </div>
+        <div>
+          <h1>
+            {% if c.code[0] == "404" %}
+              Page not found
+            {% elif c.code[0] == "500" %}
+              Server Error
+            {% else %}
+              Something went wrong
+            {% endif %}
+          </h1>
+        </div>
+        <div>
+          <p>
+            {% if c.code[0] == "404" %}
+              Sorry, the page you are looking for could not be found. <br>
+              Please check the URL, try the search or go back to our homepage.
+            {% elif c.code[0] == "500" %}
+              Sorry, there was a server error. <br>
+              Please check the URL, try the search or go back to our homepage.
+            {% else %}
+              Sorry, something went wrong. <br>
+              Please check the URL, try the search or go back to our homepage.
+            {% endif %}
+          </p>
+        </div>
+        <div>
+          <a href="{{ h.url('home') }}" class="btn btn-primary hdx-btn btn-large">Back to homepage</a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <!--<article class="module">-->
+    <!--<div class="module-content">-->
+      <!---->
+      <!--<h1> ARti </h1>-->
+      <!--{{ c.content}}-->
+    <!--</div>-->
+  <!--</article>-->
+{% endblock %}
+
+{% block breadcrumb %}
+{% endblock %}
+
+{% block flash %}
+  {# eat the flash messages caused by the 404 #}
+  {% set flash_messages = h.flash.pop_messages() %}
+{% endblock %}
+
+{% block secondary %}{% endblock %}
