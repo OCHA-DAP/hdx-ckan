@@ -1110,6 +1110,9 @@ textarea {
 .list-header .list-header-showall > span input[type="radio"] ~ label:after {
   content: "";
 }
+.list-header .list-header-right-side {
+  text-align: right;
+}
 .list-header.list-header-min ~ .list-header-filters {
   display: none;
 }

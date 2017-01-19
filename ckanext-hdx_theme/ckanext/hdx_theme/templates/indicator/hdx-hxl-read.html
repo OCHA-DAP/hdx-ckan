@@ -1,0 +1,52 @@
+{% extends "indicator/read.html" %}
+
+{% set pkg = c.pkg_dict or pkg_dict %}
+
+{% block pre_primary_content %}
+    <div class="row list-header">
+        <div class="col-xs-11">
+            <div>
+                <span class="mL15 list-header-title">
+                    {{_('HXL Preview')}}
+                </span>
+            </div>
+        </div>
+
+        {% if c.user_has_edit_rights %}
+        <div class="col-xs-1 list-header-right-side">
+            <a href="javascript:void(0)" id="hxl-preview-edit-trigger">{{ _('Edit') }}</a>
+        </div>
+        {{ h.snippet('widget/popup/popup-hxl.html', id="hxl-preview-popup", title="Add HXL Preview to your dataset",
+                    class="zero-padding", hxl_preview_edit_url=c.hxl_preview_urls.edit) }}
+        {% endif %}
+    </div>
+
+    <div class="row mTop20">
+        <div class="col-xs-12">
+                <div class="data-viewer-error"></div>
+                <iframe id="hxl-view-iframe" data-module="hdx-hxl-preview" style="width: 100%; border-style: none"
+                        src="{{ c.hxl_preview_urls.onlyView }}" class="hxl-preview-iframe">
+                </iframe>
+
+                {#  snippet 'package/snippets/resource_view.html',
+                         resource_view=c.default_view.view,
+                         resource=c.default_view.resource,
+                         package=c.package
+                #}
+
+
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'hdx_hxl_preview/hdx_hxl_preview.js' %}
+  {% resource 'hdx_theme/popup' %}
+  {% resource 'hdx_theme/popup-hxl' %}
+{% endblock %}
