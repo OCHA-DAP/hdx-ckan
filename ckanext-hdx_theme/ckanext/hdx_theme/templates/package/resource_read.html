@@ -48,7 +48,7 @@
              #}
             {% if res.url and h.is_url(res.url) %}
               <li>
-                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.download_url }}">
+                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.hdx_rel_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}
@@ -77,9 +77,9 @@
           {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
           {% block resource_read_url %}
             {% if res.url and h.is_url(res.url) %}
-              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.download_url }}" title="{{ res.download_url }}">{{ res.original_url }}</a></p>
+              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.original_url }}</a></p>
             {% elif res.url %}
-              <p class="muted ellipsis">{{ _('URL:') }} {{ res.download_url }}</p>
+              <p class="muted ellipsis">{{ _('URL:') }} {{ res.hdx_rel_url }}</p>
             {% endif %}
           {% endblock %}
           <div class="prose notes" property="rdfs:label">

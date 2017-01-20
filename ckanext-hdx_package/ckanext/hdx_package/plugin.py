@@ -315,6 +315,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_package_update_metadata': hdx_update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': hdx_update.hdx_resource_update_metadata,
             'hdx_resource_delete_metadata': hdx_update.hdx_resource_delete_metadata,
+            'resource_view_update': hdx_update.resource_view_update,
             'hdx_resource_id_list': hdx_get.hdx_resource_id_list,
             'tag_autocomplete': hdx_actions.hdx_tag_autocomplete_list,
             'package_create': hdx_create.package_create,

@@ -366,3 +366,16 @@ def hdx_resource_delete_metadata(context, data_dict):
             resource = _get_action('resource_update')(context, resource)
 
     return resource
+
+
+def resource_view_update(context, data_dict):
+    '''
+    Theoretically the core ckan "resource_view_update" should only need the resource_view_id for the update.
+    Unfortunately, the auth needs the resource_id as well. So if it's not already there this wrapper
+    function injects it.
+    '''
+    if not data_dict.get('resource_id'):
+        model = context['model']
+        resource_view = model.ResourceView.get(data_dict.get('id'))
+        data_dict['resource_id'] = resource_view.resource_id
+    core_update.resource_view_update(context, data_dict)

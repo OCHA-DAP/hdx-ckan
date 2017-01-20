@@ -80,7 +80,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats resource_proxy text_view recline_view datastore
+ckan.plugins = hdx_hxl_preview ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -226,6 +226,13 @@ hdx.checks.allowed_user_agent = HDX-CHECKER
 hdx.explorer.url = /mpx/#/
 hdx.explorer.iframe.width = 100%
 hdx.explorer.iframe.height = 750px
+
+# Hxl Proxy
+# This should be overriden in your own prod.ini
+hdx.hxlproxy.url = https://beta-proxy.hxlstandard.org
+
+# HXL Preview
+hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
 
 # Org member request configs
 ytp.requests.hide_member_role = false

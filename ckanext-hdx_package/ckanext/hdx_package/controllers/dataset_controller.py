@@ -656,7 +656,6 @@ class DatasetController(PackageController):
         # used by disqus plugin
         c.current_package_id = c.pkg.id
         c.related_count = c.pkg.related_count
-
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
             # self._create_perma_link_if_needed(id, resource)
@@ -665,15 +664,15 @@ class DatasetController(PackageController):
             resource['can_be_previewed'] = self._resource_preview(
                 {'resource': resource, 'package': c.pkg_dict})
 
-            resource_views = get_action('resource_view_list')(
-                context, {'id': resource['id']})
+            resource_views = get_action('resource_view_list')(context, {'id': resource['id']})
             resource['has_views'] = len(resource_views) > 0
+            resource['resource_views'] = resource_views
 
-            if helpers.is_ckan_domain(resource['url']):
-                resource['url'] = helpers.make_url_relative(resource['url'])
-
-            if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
-                resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
+            # if helpers.is_ckan_domain(resource['url']):
+            #     resource['url'] = helpers.make_url_relative(resource['url'])
+            #
+            # if resource.get('perma_link') and helpers.is_ckan_domain(resource['perma_link']):
+            #     resource['perma_link'] = helpers.make_url_relative(resource['perma_link'])
 
         # Is this an indicator? Load up graph data
         # c.pkg_dict['indicator'] = 1
@@ -758,24 +757,49 @@ class DatasetController(PackageController):
             'data': template_data,
         }
 
-        has_shapes = False
+        c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
+
+        _default_view = None
         if 'resources' in c.pkg_dict:
-            has_shapes = self._has_shapes(c.pkg_dict['resources'])
+            _default_view = self._has_views(c.pkg_dict['resources'])
         try:
             org_dict = c.pkg_dict.get('organization') or {}
             org_id = org_dict.get('id', None)
             org_info_dict = self._get_org_extras(org_id)
             if org_info_dict.get('custom_org', False):
                 self._process_customizations(org_info_dict.get('customization', None))
-            if has_shapes:
+
+            if _default_view and _default_view.get('type') == 'hdx_geo_preview':
                 c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                 return render('indicator/hdx-shape-read.html')
+            elif _default_view and _default_view.get('type') == 'hdx_hxl_preview':
+                hxl_view = _default_view.get('view')
+                # we render the hxl preview template only if there exists a saved configuration OR
+                # if the user can edit the preview configuration
+                if (hxl_view.get('hxl_preview_config') and json.loads(hxl_view.get('hxl_preview_config'))) \
+                        or c.user_has_edit_rights:
+                    # c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                    c.default_view = _default_view
+                    c.hxl_preview_urls = {
+                        'onlyView': get_action('hxl_preview_iframe_url_show')({}, {
+                            'resource': _default_view.get('resource'),
+                            'resource_view': _default_view.get('view'),
+                            'hxl_preview_mode': 'onlyView'
+                        }),
+                        'edit': get_action('hxl_preview_iframe_url_show')({}, {
+                            'resource': _default_view.get('resource'),
+                            'resource_view': _default_view.get('view'),
+                            'hxl_preview_mode': 'edit'
+                        })
+                    }
+                    return render('indicator/hdx-hxl-read.html')
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
                 if org_info_dict.get('custom_org', False):
                     return render('package/custom_hdx_read.html')
                 return render('package/hdx_read.html')
+
         except ckan.lib.render.TemplateNotFound:
             msg = _("Viewing {package_type} datasets in {format} format is "
                     "not supported (template file {file} not found).".format(
@@ -821,26 +845,39 @@ class DatasetController(PackageController):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
-    def _has_shapes(self, resources):
+    def _has_views(self, resources):
         for resource in resources:
             if self._has_shape_info(resource):
-                return True
-        return False
+                return {'type': 'hdx_geo_preview', 'default': None}
+            _default_view = self._has_hxl_views(resource)
+            if _default_view:
+                _default_view['type'] = 'hdx_hxl_preview'
+                return _default_view
+        return None
 
-    @classmethod
-    def _has_shape_info(cls, resource):
+    def _has_shape_info(self, resource):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
             shp_info = json.loads(resource['shape_info'])
             if shp_info.get('state', '') == 'success':
                 return True
         return False
 
-    @classmethod
-    def _process_shapes(cls, resources):
+    def _has_hxl_views(self, resource):
+        for view in resource.get("resource_views"):
+            if view.get("view_type") == 'hdx_hxl_preview':
+                return {
+                    "view_url": h.url_for("resource_view", id=view.get('package_id'),
+                                          resource_id=view.get('resource_id'), view_id=view.get('id')),
+                    "view": view,
+                    "resource": resource
+                }
+        return None
+
+    def _process_shapes(self, resources):
         result = {}
 
         for resource in resources:
-            if cls._has_shape_info(resource):
+            if self._has_shape_info(resource):
                 res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
                 shp_info = json.loads(resource['shape_info'])
 
@@ -1084,8 +1121,7 @@ class DatasetController(PackageController):
         c.resource['can_be_previewed'] = self._resource_preview(
             {'resource': c.resource, 'package': c.package})
 
-        resource_views = get_action('resource_view_list')(
-            context, {'id': resource_id})
+        resource_views = get_action('resource_view_list')(context, {'id': resource_id})
         c.resource['has_views'] = len(resource_views) > 0
 
         # set dataset type for google analytics - modified by HDX
@@ -1115,9 +1151,9 @@ class DatasetController(PackageController):
 
         download_url = c.resource.get('perma_link') if c.resource.get('perma_link') else c.resource['url']
         c.resource['original_url'] = download_url
-        c.resource['download_url'] = download_url
-        if helpers.is_ckan_domain(download_url):
-            c.resource['download_url'] = helpers.make_url_relative(download_url)
+        # c.resource['download_url'] = download_url
+        # if helpers.is_ckan_domain(download_url):
+        #     c.resource['download_url'] = helpers.make_url_relative(download_url)
 
         template = self._resource_template(dataset_type)
         return render(template, extra_vars=vars)

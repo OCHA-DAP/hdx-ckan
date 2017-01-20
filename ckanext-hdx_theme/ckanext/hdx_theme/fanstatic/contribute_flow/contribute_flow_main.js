@@ -8,7 +8,9 @@ ckan.module('contribute_flow_main', function($, _) {
             var formBodyId = this.options.form_body_id;
             var dataset_id = this.options.dataset_id;
             var validateUrl = this.options.validate_url;
+            var hxlPreviewApi = this.options.hxl_preview_api;
             var requestUrl = window.location.pathname;
+            var isNewDataset = null; // Whether we're editing or creating a new dataset
             var contributeGlobal = {
                 'getDatasetIdPromise': function() {
                     var deferred = new $.Deferred();
@@ -87,12 +89,15 @@ ckan.module('contribute_flow_main', function($, _) {
                                     formDataArray.push({'name': 'id', 'value': datasetId});
 
                                     analyticsPromise = {};
+                                    isNewDataset = false;
+
                                 }
                                 else{ // Saving a new dataset
                                     formDataArray = contributeGlobal.getFormValues('new-dataset-json');
 
                                      /* Send analytics tracking events */
                                     analyticsPromise = hdxUtil.analytics.sendDatasetCreationEvent(formDataArray);
+                                    isNewDataset = true;
                                 }
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
 
@@ -191,13 +196,26 @@ ckan.module('contribute_flow_main', function($, _) {
                     }
                     return this.resourceSaveReadyDeferred.promise();
                 },
-                'browseToDataset': function() {
+                'browseToDataset': function(data, status, xhr) {
                     /**
                      *
                      */
                     if ( this._datasetName ) {
-                        var promise = this.getDatasetIdPromise();
-                        window.top.location.href = '/dataset/' + this._datasetName;
+                        // var promise = this.getDatasetIdPromise();
+
+                        var fragment = '';
+                        if (data.result && data.result.length > 0) {
+                            fragment = '#hxlEditMode';
+                        }
+                        var currentUrl = window.top.location.href;
+                        var newUrl = '/dataset/' + this._datasetName;
+                        window.top.location.href = newUrl + fragment;
+
+                        // If we're just adding the fragment (#hash) to the current url the page will not reload
+                        // by itself. When we're editing a dataset the current url and the new url are the same.
+                        if (currentUrl && currentUrl.indexOf(newUrl)>0  && fragment) {
+                            window.top.location.reload();
+                        }
                     }
                     else {
                         moduleLog.log('Cannot browse to dataset because name is missing');
@@ -235,6 +253,25 @@ ckan.module('contribute_flow_main', function($, _) {
                  */
                 'controlUserWaitingWidget':  function(show, message) {
                     sandbox.publish('hdx-user-waiting', {'show': show, 'message': message});
+                },
+                /**
+                 *
+                 * @returns {Promise}
+                 */
+                'callHxlPreviewGenerator': function(){
+                    // Since this is called after the dataset is saved we surely have a _datasetId
+                    // hxlPreviewApi, [{name: 'id', value: this._datasetId}], null, 'application/json'
+                    return $.ajax({
+                        url: hxlPreviewApi,
+                        type: 'POST',
+                        data: JSON.stringify({'id': this._datasetId}),
+                        contentType: 'application/json',
+                        dataType: 'json'
+                    });
+                },
+                'finishContributeFlow': function() {
+                    var callback = this.browseToDataset.bind(this);
+                    this.callHxlPreviewGenerator().then(callback, callback);
                 }
             };
             window.hdxContributeGlobal = contributeGlobal;
@@ -299,7 +336,8 @@ ckan.module('contribute_flow_main', function($, _) {
         options: {
             form_id: 'create_dataset_form',
             form_body_id: 'contribute-flow-form-body',
-            'validate_url': '/contribute/validate',
+            validate_url: '/contribute/validate',
+            hxl_preview_api: '/api/action/package_hxl_update',
             dataset_id: null
         }
 
