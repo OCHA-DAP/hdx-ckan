@@ -672,7 +672,7 @@ $(function(){
                     }.bind(this))
                     .then(function(){
                         console.log('Browsing away ');
-                        this.contribute_global.browseToDataset();
+                        this.contribute_global.finishContributeFlow();
                     }.bind(this),
                     function (error){
                         console.error("error while uploading resources");
