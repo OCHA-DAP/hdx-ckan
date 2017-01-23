@@ -81,14 +81,27 @@ function prepareMap(countDatasets){
       popup.openOn(map);
     }
   };
-  resetFeature = function(e) {
-    var layer;
-    layer = e.target;
-    layer.setStyle({
+
+  getStyle = function(feature) {
+    if (feature.properties.activity_level == "active"){
+      return {
+        weight: 0,
+        fillOpacity: 0.5,
+        fillColor: '#f5837b'
+      }
+    }
+
+    return {
       weight: 0,
       fillOpacity: 0,
       fillColor: '#f2f2ef'
-    });
+    };
+  };
+
+  resetFeature = function(e) {
+    var layer;
+    layer = e.target;
+    layer.setStyle(getStyle(layer.feature));
   };
   featureClicked = function(e) {
     var code, layer;
@@ -96,6 +109,7 @@ function prepareMap(countDatasets){
     code = layer.feature.id.toLowerCase();
     openURL("group/" + code);
   };
+
   onEachFeature = function(feature, layer) {
     layer.on({
       mousemove: highlightFeature,
@@ -117,6 +131,7 @@ function prepareMap(countDatasets){
         feature.properties.datasets = countItem.dataset_count;
       if (countItem.indicator_count != null)
         feature.properties.indicators = countItem.indicator_count;
+      feature.properties.activity_level = countItem.activity_level;
     }
   }
   map = L.map('map', {
@@ -129,13 +144,6 @@ function prepareMap(countDatasets){
       noWrap: false
     }
   });
-  getStyle = function(feature) {
-    return {
-      weight: 0,
-      fillOpacity: 0,
-      fillColor: '#f2f2ef'
-    };
-  };
 
   map.scrollWheelZoom.disable();
   //map.featureLayer.setFilter(function() {
