@@ -36,9 +36,13 @@ class PageBaseModel(DomainObject):
 
     @classmethod
     def create(cls, **kwargs):
+        defer_commit = kwargs.get('defer_commit')
+        if defer_commit:
+            del kwargs['defer_commit']
         instance = cls(**kwargs)
         meta.Session.add(instance)
-        meta.Session.commit()
+        if not defer_commit:
+            meta.Session.commit()
         return instance.as_dict()
 
 
@@ -97,8 +101,10 @@ class PageGroupAssociation(PageBaseModel):
         '''
         Return a list of group ids associated with the passed page_id.
         '''
-        associated_group_id_list = meta.Session.query(cls.group_id).filter_by(page_id=page_id).all()
-        result = [res[0] for res in associated_group_id_list]
+        page = Page.get_by_id(page_id)
+        # associated_group_id_list = meta.Session.query(cls.group_id).filter_by(page_id=page_id).all()
+
+        result = [assoc.group_id for assoc in page.countries_assoc_all]
         return result
 
 
@@ -111,7 +117,13 @@ page_group_association_table = Table(
            ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
 )
 
-meta.mapper(PageGroupAssociation, page_group_association_table)
+meta.mapper(PageGroupAssociation, page_group_association_table,
+            properties={
+                'page': orm.relation(Page,
+                                     backref=orm.backref('countries_assoc_all',
+                                                         cascade='all, delete-orphan'))
+            })
+
 
 
 def create_table():

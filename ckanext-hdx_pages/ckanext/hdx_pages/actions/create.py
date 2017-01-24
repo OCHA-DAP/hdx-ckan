@@ -23,18 +23,22 @@ def page_create(context, data_dict):
                                 sections=data_dict.get('sections'),
                                 status=data_dict.get('status'))
         model.Session.add(page)
-        model.Session.commit()
 
         for grp_id in data_dict.get('groups', []):
+
+            # Dealing with the case where grp_id is actually the name of the group
+            group_dict = logic.get_action('group_show')(context, {'id': grp_id})
+
             # We validate for id duplication, so this shouldn't be true during create.
-            if pages_model.PageGroupAssociation.exists(page_id=page.id, group_id=grp_id):
+            if pages_model.PageGroupAssociation.exists(page_id=page.id, group_id=group_dict.get('id')):
                 raise toolkit.ValidationError("Group already associated with page.",
                                               error_summary=u"The group, {0}, is already in the page".format(
-                                                  grp_id))
+                                                  group_dict.get('id')))
 
             # create the association
-            pages_model.PageGroupAssociation.create(page_id=page.id, group_id=grp_id)
+            pages_model.PageGroupAssociation.create(page=page, group_id=group_dict.get('id'), defer_commit=True)
 
+        model.Session.commit()
         page_dict = dictize.page_dictize(page)
         return page_dict
 

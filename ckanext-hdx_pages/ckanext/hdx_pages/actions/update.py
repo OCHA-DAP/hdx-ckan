@@ -45,7 +45,7 @@ def process_groups(page, groups):
 
     # add new ids
     for grp_id in groups:
-        pages_model.PageGroupAssociation.create(page_id=page.id, group_id=grp_id)
+        pages_model.PageGroupAssociation.create(page=page, group_id=grp_id, defer_commit=True)
 
 
 def populate_page(page, data_dict):
