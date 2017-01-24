@@ -4,8 +4,13 @@
 
 {% block breadcrumb_content %}
     <li><a>{{ data.type }}</a></li>
-    <li class="active">{{ h.nav_link(data.title, controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-        action='read_event', id=data.name) }}</li>
+    {% if data.type == 'event' %}
+        <li class="active">{{ h.nav_link(data.title, controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+         action='read_event', id=data.name) }}</li>
+    {% elif data.type == 'dashboards' %}
+        <li class="active">{{ h.nav_link(data.title, controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+         action='read_dashboards', id=data.name) }}</li>
+    {% endif %}
 {% endblock %}
 
 {% block secondary %}{% endblock %}
