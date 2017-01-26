@@ -45,4 +45,5 @@ ckan_deb/DEBIAN/prerm
 node_modules/
 .idea/
 
+# HDX-4956 - git ignore SOURCES.txt
 **/*.egg-info
