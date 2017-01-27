@@ -452,10 +452,12 @@
 
                                             {% set tag_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '',
                                               'data-module-include-tokenizer': 'true',
+                                              'data-module-width': '500px',
+                                              'data-module-placeholder': 'eg. economy, mental health, government',
                                               'class':'form-control choices-orange', 'multiple':'true',
                                               'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="tag_string">
-                                            {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
+                                            {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
                                             </div>
 
                                         </div>

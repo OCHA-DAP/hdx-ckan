@@ -65,6 +65,14 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
         containerCssClass: this.options.containerClass,
       };
 
+      if (this.options.placeholder) {
+        settings.placeholder = this.options.placeholder;
+      }
+
+      if (this.options.width) {
+        settings.width = this.options.width;
+      }
+
       if (this.options.tags && this.options.onlyEmailAsTags){
         settings.createSearchChoice = function(term, data) {
           if ($(data).filter(function() {
