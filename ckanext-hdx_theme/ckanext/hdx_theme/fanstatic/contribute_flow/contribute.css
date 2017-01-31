@@ -59,6 +59,7 @@ html > .contribute-body > .contribute-main {
 }
 html > .contribute-body > .contribute-main .create-step1 {
   height: 100%;
+  background-color: rgba(255, 255, 255, 0.7);
   min-height: 760px;
   overflow-x: hidden;
   position: relative;
@@ -74,7 +75,6 @@ html > .contribute-body > .contribute-main > div {
 }
 .contribute-splash {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.7);
   min-height: 760px;
 }
 .contribute-splash .drop-here {
