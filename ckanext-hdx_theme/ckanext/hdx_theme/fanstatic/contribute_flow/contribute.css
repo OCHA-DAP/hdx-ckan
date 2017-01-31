@@ -50,22 +50,29 @@ html {
   height: 100%;
 }
 html > .contribute-body {
-  min-height: 100%;
+  height: 100%;
+  background: transparent;
 }
 html > .contribute-body > .contribute-main {
   height: 100%;
+  position: relative;
 }
 html > .contribute-body > .contribute-main .create-step1 {
   height: 100%;
   min-height: 760px;
   overflow-x: hidden;
+  position: relative;
+}
+html > .contribute-body > .contribute-main .create-step1 .contribute-splash {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 html > .contribute-body > .contribute-main > div {
   height: 100%;
   min-height: 760px;
 }
 .contribute-splash {
-  height: 100%;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.7);
   min-height: 760px;
@@ -78,7 +85,7 @@ html > .contribute-body > .contribute-main > div {
   height: 500px;
   width: 500px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: #fff;
   text-align: center;
   color: #cccccc;
   font-size: 18px;
@@ -100,8 +107,8 @@ html > .contribute-body > .contribute-main > div {
   transform: translate(0, -50%);
 }
 .contribute-splash .drop-here.drop-incoming {
-  background-color: #007ce0;
-  color: #ffffff;
+  background-color: #007CE0;
+  color: #fff;
 }
 .contribute-splash .drop-here.drop-incoming .drop-title .title1 {
   display: none;
@@ -145,7 +152,7 @@ html > .contribute-body > .contribute-main > div {
   display: none;
 }
 .contribute-splash .drop-here .drop-browse {
-  color: #007ce0;
+  color: #007CE0;
 }
 .contribute-splash .drop-here .drop-browse span {
   font-family: 'Gotham-Book', sans-serif;
