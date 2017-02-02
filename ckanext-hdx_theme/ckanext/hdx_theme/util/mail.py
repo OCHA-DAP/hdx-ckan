@@ -4,20 +4,25 @@ Created on Jul 31, 2014
 @author: alexandru-m-g
 '''
 
-import logging as logging
 import exceptions as exceptions
-import ckan.lib.mailer as mailer
+import logging as logging
+
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import pylons.config as config
 import validate_email
 
 import ckan.plugins.toolkit as tk
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 log = logging.getLogger(__name__)
 
 
-def send_mail(recipients, subject, body, one_email=False):
-    if recipients and len(recipients) > 0:
+def send_mail(rawRecipients, subject, body, one_email=False):
+    if rawRecipients and len(rawRecipients) > 0:
+        recipients = [] # cleaned list
+        for recipient in rawRecipients:
+            if 'email' in recipient and 'display_name' in recipient and recipient['email'] is not None and recipient['display_name'] is not None:
+                recipients.append(recipient)
+
         email_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}' \
             .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject,
                     body=body)
