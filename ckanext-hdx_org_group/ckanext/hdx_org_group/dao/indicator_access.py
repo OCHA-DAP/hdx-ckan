@@ -40,7 +40,7 @@ class IndicatorAccess(object):
                     value = element.get('value')
                     if value:
                         unit = common_functions.compute_simplifying_units(value)
-                        element['units'] = element['unitName'] = element['unitCode'] = unit
+                        element['units'] = unit
 
         except Exception, e:
             self.__cps_data = {}

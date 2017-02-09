@@ -67,7 +67,7 @@ class RwAccess(object):
             'units': 'count'
         }
         value = ret_dict.get('value')
-        ret_dict['units'] = ret_dict['unitName'] = common_functions.compute_simplifying_units(value)
+        ret_dict['units'] = common_functions.compute_simplifying_units(value)
 
         return ret_dict
 
