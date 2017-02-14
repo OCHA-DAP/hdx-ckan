@@ -122,6 +122,11 @@ function getFieldListAndBuildLayer(layer_data, defaultPointStyle, defaultLineSty
 }
 function getData(options){
     //call DataProxy to get data for resource
+
+    /**
+     * List of shape info for each geopreviewable resource
+     * @type {[{resource_name: string, url: string, bounding_box: string, layer_fields: Array}]}
+     */
     var data = JSON.parse($("#shapeData").text());
     var layers = [];
 
@@ -185,9 +190,10 @@ function getData(options){
 
     var promises = [];
     var firstAdded = false;
-    for (var key in data) {
+    for (var idx=0; idx<data.length; idx++) {
 
-        var promise = getFieldListAndBuildLayer(data[key], defaultPointStyle, defaultLineStyle, defaultStyle, info, firstAdded, options, layers, key);
+        var promise = getFieldListAndBuildLayer(data[idx], defaultPointStyle, defaultLineStyle, defaultStyle,
+            info, firstAdded, options, layers, data[idx].resource_name);
         if (!firstAdded){
             firstAdded = true;
         }
