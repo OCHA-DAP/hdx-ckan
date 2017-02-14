@@ -837,7 +837,7 @@ class DatasetController(PackageController):
 
     @classmethod
     def _process_shapes(cls, resources):
-        result = {}
+        result = []
 
         for resource in resources:
             if cls._has_shape_info(resource):
@@ -846,11 +846,12 @@ class DatasetController(PackageController):
 
                 res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
                 name = resource['name']
-                result[name] = {
+                result.append({
+                    'resource_name': name,
                     'url': res_pbf_url,
                     'bounding_box': shp_info['bounding_box'],
                     'layer_fields': shp_info.get('layer_fields', [])
-                }
+                })
         return result
 
     # @staticmethod
