@@ -20,6 +20,8 @@ from operator import itemgetter
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_package.helpers.screenshot as screenshot
 
 render = base.render
 abort = base.abort
@@ -53,7 +55,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
             not_filtered_facet_info = self._get_not_filtered_facet_info(country_dict)
-            latest_cod_dataset = self._get_latest_cod_datatset(country_dict)
+            latest_cod_dataset = country_helper.get_latest_cod_datatset(country_dict.get('name'))
 
             c.full_facet_info = self.get_dataset_search_results(country_code)
             vocab_topics_list = c.full_facet_info.get('facets', {}).pop('vocab_Topics', {}).get('items', [])
@@ -133,16 +135,6 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         return non_filtered_facet_info
 
-    def _get_latest_cod_datatset(self, country_dict):
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
-
-        fq = 'groups:"{}" tags:cod +dataset_type:dataset'.format(country_dict.get('name'))
-        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 1, 1, 'metadata_modified desc', None,
-                                               None, context)
-
-        return next(iter(query_result.get('results', [])), None)
 
     def _get_org_list_for_menu_from_facets(self, full_facet_info):
         org_list = [
@@ -195,42 +187,43 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         '''
 
         cloned_latest_datasets = latest_datasets[:]
-
+        default_thumbnail_url = '/images/featured_locs_placeholder1.png';
         thumbnail_list = [None, None]
         if event_list:
-            thumbnail_list[0] = self.__event_as_thumbnail_dict(event_list[0])
+            thumbnail_list[0] = self.__event_as_thumbnail_dict(event_list[0], default_thumbnail_url)
         elif cloned_latest_datasets:
-            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
+            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
             del cloned_latest_datasets[0]
         if latest_cod_dataset:
-            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(latest_cod_dataset, True)
+            cod_thumbnail_url = screenshot.create_download_link(latest_cod_dataset, default_thumbnail_url)
+            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(latest_cod_dataset, cod_thumbnail_url, True)
         elif cloned_latest_datasets:
-            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
+            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
             del cloned_latest_datasets[0]
 
         if thumbnail_list[0] and thumbnail_list[1] \
                 and thumbnail_list[0].get('url') == thumbnail_list[1].get('url') and cloned_latest_datasets:
-            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0])
+            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
             del cloned_latest_datasets[0]
 
-        thumbnail_list[0]['thumbnail_url'] = '/images/featured_locs_placeholder1.png'
-        thumbnail_list[1]['thumbnail_url'] = '/images/featured_locs_placeholder2.png'
+        # thumbnail_list[0]['thumbnail_url'] = '/images/featured_locs_placeholder1.png'
+        # thumbnail_list[1]['thumbnail_url'] = '/images/featured_locs_placeholder2.png'
         return thumbnail_list
 
-    def __dataset_as_thumbnail_dict(self, dataset_dict, is_cod=False):
+    def __dataset_as_thumbnail_dict(self, dataset_dict, thumbnail_url, is_cod=False):
         return {
             'display_name': dataset_dict.get('title'),
             'type': 'COD' if is_cod else 'Dataset',
             'url': h.url_for('dataset_read', id=dataset_dict.get('name')),
-            'thumbnail_url': '#'
+            'thumbnail_url': thumbnail_url
         }
 
-    def __event_as_thumbnail_dict(self, event_dict, is_cod=False):
+    def __event_as_thumbnail_dict(self, event_dict, thumbnail_url, is_cod=False):
         return {
             'display_name': event_dict.get('title'),
             'type': 'Event',
             'url': h.url_for('read_event', id=event_dict.get('name')),
-            'thumbnail_url': '#'
+            'thumbnail_url': thumbnail_url
         }
 
     def _get_event_list_for_featured(self, group_id):

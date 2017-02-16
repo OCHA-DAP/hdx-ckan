@@ -79,3 +79,9 @@ def hdx_send_mail_members(context, data_dict):
         'success': False,
         'msg': _('Not authorized to perform this request')
     }
+
+def hdx_create_screenshot_for_cod(context, data_dict=None):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return {'success': False, 'msg': _('Only sysadmins can create a screenshot of a dataset\'s viz')}
