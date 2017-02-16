@@ -5,7 +5,9 @@ import ckan.lib.plugins as lib_plugins
 
 import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
-import ckanext.hdx_org_group.controllers.organization_controller as organization_controller
+
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_package.helpers.screenshot as screenshot
 
 log = logging.getLogger(__name__)
 
@@ -214,9 +216,6 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController',
             action='org_read')
 
-        map.connect(
-            'image_serve', '/image/{label}',
-            controller='ckanext.hdx_org_group.controllers.image_upload_controller:ImageController', action='file')
 
         # map.connect(
         #    'custom_org_read', '/org/{id}', controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController', action='org_read')
@@ -230,6 +229,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     '''
 
     plugins.implements(plugins.IGroupForm, inherit=False)
+    plugins.implements(plugins.IGroupController, inherit=True)
 
     def group_types(self):
         return ['']
@@ -285,3 +285,13 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             return schema
         else:
             return None
+
+    def edit(self, country):
+        cod_dict = country_helper.get_latest_cod_datatset(country.name)
+        shape_infos = []
+        if cod_dict:
+            shape_infos = [r.get('shape_info') for r in cod_dict.get('resources', []) if r.get('shape_info')]
+
+        if shape_infos and not screenshot.screenshot_exists(cod_dict):
+            context = {'ignore_auth': True}
+            tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
