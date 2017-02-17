@@ -33,6 +33,8 @@ import ckan.lib.helpers as helpers
 import ckan.logic.action as core
 from ckan.common import _, c
 
+from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
+
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 
 log = logging.getLogger(__name__)
@@ -666,16 +668,11 @@ def recompile_everything(context):
 
 
 def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedelay=10000, viewportsize='1200x800'):
-    try:
-        command = 'capturejs -l --uri "' + uri + '" --output ' + output_file + ' --selector "' + selector + '"' + ' --renderdelay ' + str(
-            renderdelay) + ' --waitcapturedelay ' + str(waitcapturedelay) + ' --viewportsize ' + str(
-            viewportsize) + ' ; mogrify -resize 40% ' + output_file
-        log.info(command)
-        args = shlex.split(command)
-        subprocess.Popen(args)
-        return True
-    except:
-        return False
+    screenshot_creator = ScreenshotCreator(uri, output_file, selector,
+                                           renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
+                                           http_timeout=None,
+                                           viewportsize=viewportsize, mogrify=True, resize='40%')
+    screenshot_creator.execute()
 
 def notify_admins(data_dict):
     try:

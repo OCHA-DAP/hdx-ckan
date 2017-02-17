@@ -330,6 +330,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_member_list': hdx_get.hdx_member_list,
             'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
             'hdx_send_mail_members': hdx_get.hdx_send_mail_members,
+            'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
         }
 
     def before_show(self, resource_dict):
@@ -354,6 +355,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'hdx_resource_id_list': authorize.hdx_resource_id_list,
                 'hdx_send_mail_contributor': authorize.hdx_send_mail_contributor,
                 'hdx_send_mail_members': authorize.hdx_send_mail_members,
+                'hdx_create_screenshot_for_cod': authorize.hdx_create_screenshot_for_cod,
                 }
 
     def make_middleware(self, app, config):

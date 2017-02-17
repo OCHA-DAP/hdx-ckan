@@ -751,7 +751,7 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
 
     // method that we will use to update the control based on feature properties passed
     info.update = function (title, itemArray) {
-        var html = '<h4>' + (title ? title : 'Hover over the map') + '</h4>' ;
+        var html = '<h4>' + (title ? title : confJson.map_title) + '</h4>' ;
         if (itemArray) {
             html += '<table>';
             for (var i=0; i<itemArray.length; i++) {
@@ -760,8 +760,10 @@ function drawDistricts(map, confJson, data, values, pcodeColumnName, valueColumn
             }
             html += '</table>';
         }
-        else
-            html += 'No data available';
+        else {
+            // html += 'No data available';
+            html += 'Hover over the map';
+        }
 
         this._div.innerHTML = html;
     };

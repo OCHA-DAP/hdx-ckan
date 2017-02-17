@@ -162,6 +162,12 @@ class HDXThemePlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
                     action='delete')
 
+        map.connect('image_serve', '/image/{label}',
+                    controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='org_file')
+
+        map.connect('dataset_image_serve', '/dataset_image/{label}',
+                    controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='dataset_file')
+
         return map
 
     def create(self, entity):

@@ -29,13 +29,15 @@ Example:
             </div>
         {% endif %}
         <div class="col-xs-12 mTop10">
-            {% if source %}
-                <div class="row">
-                    <div class="col-xs-12">
-                        <span class="source-title">{{ source }}</span>
+            {%  block topline_source %}
+                {% if source %}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <span class="source-title">{{ source }}</span>
+                        </div>
                     </div>
-                </div>
-            {% endif %}
+                {% endif %}
+            {% endblock %}
             <div class="row">
                 <div class="col-xs-12">
                     {% if source_link %}

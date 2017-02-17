@@ -1,4 +1,9 @@
 function drawMap() {
+    var crisisMapDiv = $("#crisis-map");
+    if (!crisisMapDiv.length){
+        return;
+    }
+
     var maxZoomValue = 4;
     var map = L.map('crisis-map', { attributionControl: false });
     map.scrollWheelZoom.disable();
@@ -98,7 +103,60 @@ function drawMap() {
     map.fitBounds([[minLat, minLng], [maxLat, maxLng]], {
         maxZoom: maxZoomValue
     });
+
 }
+
+function c3Sparklines(){
+  $('.sparkline').each(function() {
+    var th = $(this),
+    data = JSON.parse(th.text());
+    th.text("");
+    th.attr("style", "");
+
+    var chart = c3.generate({
+      bindto: this,
+      point: {
+        show: false
+      },
+      legend:{
+        show: false
+      },
+      color: {
+          pattern: ['#007ce0']
+      },
+      data: {
+        json: data,
+        keys: {
+          x: 'formatted_date',
+          value: ['value']
+        },
+        x: 'x',
+        xFormat: '%b %d, %Y' //'%Y-%m-%dT%H:%M:%S'
+      },
+      axis: {
+        x: {
+          show: false,
+          type: 'timeseries',
+          tick: {
+            format: '%b %d, %Y'
+          }
+        },
+        y: {
+          show: false
+        }
+      },
+      tooltip: {
+        format: {
+          value: d3.format(",")
+        }
+      },
+      size: {
+        width: 103
+      }
+    });
+  });
+}
+
 
 function buildGraphs() {
     $(".topline-charts").each(function (index){
@@ -165,4 +223,5 @@ function buildGraphs() {
 $(document).ready(function() {
     drawMap();
     buildGraphs();
+    c3Sparklines();
 });
