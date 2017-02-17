@@ -672,7 +672,7 @@ def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedela
                                            renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
                                            http_timeout=None,
                                            viewportsize=viewportsize, mogrify=True, resize='40%')
-    screenshot_creator.execute()
+    return screenshot_creator.execute()
 
 def notify_admins(data_dict):
     try:
