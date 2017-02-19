@@ -17,6 +17,7 @@ def page_dictize(page):
         'description': page.description,
         'type': page.type,
         'state': page.state,
+        'status': page.status,
         'sections': page.sections,
         'modified': page.modified.isoformat()
     }

@@ -1,22 +1,15 @@
 import ckan.controllers.storage as storage
 import os
-import re
-import urllib
 
-from pylons import request, response
-from pylons.controllers.util import abort, redirect_to
-from pylons import config
 
 import ckan.lib.uploader as uploader
 
-from ckan.lib.base import BaseController, c, request, render, config, h, abort
-
+from ckan.lib.base import request, h
 from logging import getLogger
+
 log = getLogger(__name__)
 
-
-BUCKET = uploader.get_storage_path() +'/storage/uploads/group/'
-_eq_re = re.compile(r"^(.*)(=[0-9]*)$")
+BASE_PATH = uploader.get_storage_path() +'/storage/'
 
 
 def generate_response(http_status, unicode_body, error=False, no_cache=True, other_headers=None):
@@ -38,8 +31,8 @@ def generate_response(http_status, unicode_body, error=False, no_cache=True, oth
 
 
 class ImageController(storage.StorageController):
-    def _download_file(self, label):
-        file_path = BUCKET+label
+    def _download_file(self, relative_path, label):
+        file_path = BASE_PATH + relative_path + label
         exists = os.path.isfile(file_path)
         if not exists:
             # handle erroneous trailing slash by redirecting to url w/o slash
@@ -59,6 +52,9 @@ class ImageController(storage.StorageController):
         return generate_response(200, image, other_headers={'Content-type':'image'})
 
 
-    def file(self, label):
-        return self._download_file(label)
+    def org_file(self, label):
+        return self._download_file('uploads/group/', label)
+
+    def dataset_file(self, label):
+        return self._download_file('uploads/dataset/', label)
 

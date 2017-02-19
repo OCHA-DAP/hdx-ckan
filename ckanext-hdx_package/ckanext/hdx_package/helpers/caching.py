@@ -31,7 +31,13 @@ def strip_accents(s):
 @bcache.cache_region('hdx_memory_cache', 'cached_grp_list')
 def cached_group_list():
     log.info("Creating cache for group list")
-    groups = tk.get_action('group_list')({'user': '127.0.0.1'}, {'all_fields': True})
+    groups = tk.get_action('group_list')({'user': '127.0.0.1'}, {'all_fields': True, 'include_extras': True})
+    for group in groups:
+        activity_level = next(
+            (extra.get('value') for extra in group.get('extras') if extra.get('key') == 'activity_level'),
+            None
+        )
+        group['activity_level'] = activity_level
     return sorted(groups, key=lambda k: strip_accents(k['display_name']))
 
 

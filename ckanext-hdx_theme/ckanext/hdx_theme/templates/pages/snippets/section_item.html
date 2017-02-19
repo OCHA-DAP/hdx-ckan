@@ -30,6 +30,7 @@ Example:
             </div>
         </div>
     {% else %}
+        {% if section.get('section_title') %}
         <div class="row">
             <div class="col-xs-12">
                 <div class="list-header crisis-list-header">
@@ -37,7 +38,7 @@ Example:
                 </div>
             </div>
         </div>
-
+        {% endif %}
         {% if section.description %}
             <div class="row">
                 <div class="col-xs-12">

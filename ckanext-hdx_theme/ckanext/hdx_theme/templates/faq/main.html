@@ -33,23 +33,86 @@
 {% endblock %}
 
 {% block primary %}
+    <div class="row mTop60">
+        <div class="col-xs-12">
+            <div id="body-about-hdx" class="section-flag" style="">About the Humanitarian Data Exchange</div>
+            <p class="mTop10">
+                The Humanitarian Data Exchange (HDX) is an open platform for sharing data. The goal of HDX is to make
+                humanitarian data easy to find and use for analysis. Launched in July 2014, HDX a growing collection of
+                datasets has been accessed by users in over 200 countries and territories.  Watch this
+                <a href="http://docs.humdata.org/making-the-invisible-visible-a-short-film-about-humanitarian-data/" target="_blank">video</a>
+                to learn more.
+            </p>
+
+            <p>
+                A team within the
+                <a href="http://www.unocha.org/" target="_blank">United Nations Office for the Coordination of Humanitarian Affairs</a>
+                (OCHA) manages HDX.
+                OCHA is part of the United Nations Secretariat, responsible for bringing together humanitarian actors to
+                ensure a coherent response to emergencies. The HDX team includes OCHA staff and a number of consultants.
+                We are based in North America, Europe and Africa.
+            </p>
+            <p>
+                The following is a selection of articles that have been written about HDX:
+                <ul>
+                    <li>
+                        Devex -
+                        <a target="_blank" href="https://www.devex.com/news/solving-the-data-conundrum-how-to-leverage-tech-and-big-data-for-impact-88406">Solving the data conundrum: How to leverage tech and 'big data' for impact</a>
+                    </li>
+                    <li>
+                        Thomson Reuters Foundation -
+                        <a target="_blank" href="http://news.trust.org/item/20160526150716-78o0j/?source=hpOtherNews3">From displacement to death, UN data innovation aims to boost aid response</a>
+                    </li>
+                    <li>
+                        Huffington Post -
+                        <a target="_blank" href="http://www.huffingtonpost.com/entry/open-data-platform-enables-aid-groups-to-respond-more-efficiently-to-crises_us_574876fee4b03ede4414a6a4">Open data platform lets aid groups respond more efficiently to crises</a>
+                    </li>
+                    <li>
+                        UN News -
+                        <a target="_blank" href="http://www.un.org/apps/news/story.asp?NewsID=53851#.WCJDuhIrLJw">UN Agencies boost partnership on visualization of food security data for Yemen</a>
+                    </li>
+                    <li>
+                        The Guardian -
+                        <a target="_blank" href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data exchange helps humanitarians act fast and effectively</a>
+                    </li>
+                    <li>
+                        Fast Company -
+                        <a target="_blank" href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the candy crush of data is saving lives in Nepal</a>
+                    </li>
+                    <li>
+                        Forbes -
+                        <a target="_blank" href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN deploys new tech to make relief faster in Nepal</a>
+                    </li>
+                    <li>
+                        The Independent -
+                        <a target="_blank" href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a>
+                    </li>
+
+                </ul>
+            </p>
+            <p>
+                To find our logo files and other materials, please
+                <a href="http://docs.humdata.org/design-assets/" target="_blank">click here</a>.
+            </p>
+        </div>
+    </div>
     {% snippet 'faq/questions_sections.html', data=data.faq_data %}
 {% endblock %}
 
 {% block secondary %}
     <div id="hdx-faq-sidebar-wrapper" class="mTop60">
-    <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
-        <ul class="nav">
-        {% for section in data.faq_data %}
-            <li>
-                <a id='menu-{{ section.id }}' href="#body-{{ section.id }}"> {{ section.title }} </a>
-            </li>
-        {% endfor %}
-        </ul>
-        <p class="no-answer-found mTop30">
-            <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
-        </p>
-    </div>
+        <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+            <ul class="nav">
+            {% for section in data.faq_data %}
+                <li>
+                    <a id='menu-{{ section.id }}' href="#body-{{ section.id }}"> {{ section.title }} </a>
+                </li>
+            {% endfor %}
+            </ul>
+            <p class="no-answer-found mTop30">
+                <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
+            </p>
+        </div>
     </div>
 {% endblock %}
 

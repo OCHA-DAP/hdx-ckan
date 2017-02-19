@@ -14,11 +14,14 @@ import ckan.plugins as plugins
 import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.helpers as helpers
+import ckanext.hdx_package.helpers.screenshot as screenshot
 
 from ckan.common import _
+from ckanext.hdx_package.helpers.analytics import is_cod
 
 _get_action = logic.get_action
 _check_access = logic.check_access
+_get_or_bust = logic.get_or_bust
 
 log = logging.getLogger(__name__)
 
@@ -237,3 +240,13 @@ def package_create(context, data_dict):
         else _get_action('package_show')(context, {'id': context['id']})
 
     return output
+
+
+def hdx_create_screenshot_for_cod(context, data_dict):
+    _check_access('hdx_create_screenshot_for_cod', context, data_dict)
+
+    id = _get_or_bust(data_dict, 'id')
+    dataset_dict = _get_action('package_show')(context, {'id': id})
+
+    if is_cod(dataset_dict) == 'true':
+        screenshot.create_screenshot(dataset_dict)
