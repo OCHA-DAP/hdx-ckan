@@ -159,7 +159,7 @@
 
         {% if data.visualization.config.type == 'embedded' %}
             <div class="col-xs-12 paddingLeftHack paddingRightHack mTop15">
-                <iframe src="{{ data.visualization.config.vis_url }}" frameborder="0" width="{{ data.visualization.config.width }}" height="{{ data.visualization.config.height }}"></iframe>
+                <iframe id="embedded-viz-iframe" src="{{ data.visualization.config.vis_url }}" frameborder="0" width="{{ data.visualization.config.width }}" height="{{ data.visualization.config.height }}"></iframe>
             </div>
         {% endif %}
         {% if data.visualization.config.type == 'embedded-preview' %}
