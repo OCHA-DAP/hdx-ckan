@@ -12,8 +12,8 @@ def hdx_events_list():
         if e.get("type") == 'event':
             if e.get("status") == 'ongoing':
                 ongoing.append(e)
-            else:
+            if e.get("status") == 'archived':
                 archived.append(e)
 
-    return {"archived": archived, "ongoing": ongoing}
+    return {"archived": sorted(archived, key=lambda x: x['title']), "ongoing": sorted(ongoing, key=lambda x: x['title'])}
 
