@@ -10,3 +10,4 @@ RUN cd /srv/ckan && \
     python setup.py develop && \
     hdxckantool update && \
     hdxckantool plugins dev
+
