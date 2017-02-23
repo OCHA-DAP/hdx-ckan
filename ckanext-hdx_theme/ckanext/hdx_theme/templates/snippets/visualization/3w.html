@@ -158,6 +158,48 @@
     </div>
 </div>
 
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-start-column">{{_('Which column contains start of period?')}}</label>
+
+        <div class="controls ">
+            <input id="field-start-column" type="text" name="start-column" value="{{visualization['start-column']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Start of period. If filled it will display the 4w dashboard.')}}</div>
+    </div>
+</div>
+
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-end-column">{{_('Which column contains end of period?')}}</label>
+
+        <div class="controls ">
+            <input id="field-end-column" type="text" name="end-column" value="{{visualization['end-column']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('End of period. If filled it will display the 4w dashboard.')}} </div>
+    </div>
+</div>
+
+<div class="org-control-container">
+    <div class="control-group control-full org-control field-with-info">
+        <label class="control-label" for="field-format-column">{{_('Which column contains date format for start and end period?')}}</label>
+
+        <div class="controls ">
+            <input id="field-format-column" type="text" name="format-column" value="{{visualization['format-column']}}"
+                   placeholder="" class="visualization_config" viz-type="3W-dashboard">
+        </div>
+    </div>
+    <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('Date format.')}} </div>
+    </div>
+</div>
+
 {% if visualization['colors'] is not defined %}
 {% set colors = ['#81d4fa','#4fc3f7','#29b6f6','#03a9f4','#039be5','#0288d1','#0277bd','#01579b'] %}
 {% else %}

@@ -4,46 +4,40 @@ duplicates methods from registration_controller.py because when
 enabled it will override them when enabled
 """
 import datetime
-import dateutil
-import hashlib
-import requests
-
-from pylons import config
-
-# import ckan.lib.base as base
-import ckan.controllers.user
-from ckan.common import _, c, g, request, response
-import ckan.lib.helpers as h
-import ckan.lib.mailer as mailer
-import ckan.lib.base as base
-import ckan.controllers.user
-import ckan.model as model
-import ckan.logic as logic
-import ckan.lib.navl.dictization_functions as dictization_functions
-import ckan.lib.captcha as captcha
-# import ckan.new_authz as new_authz
-import pylons.configuration as configuration
-import re
-import json
-import ckan.lib.navl.dictization_functions as df
-import ckan.lib.maintain as maintain
-# from urllib import quote
-import ckan.plugins as p
 import exceptions as exceptions
+import hashlib
+import json
+import logging as logging
+import re
+import urllib2 as urllib2
 
+import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.helpers.tokens as tokens
 import ckanext.hdx_users.helpers.user_extra as ue_helpers
 import ckanext.hdx_users.logic.schema as user_reg_schema
 import ckanext.hdx_users.model as user_model
-# import ckan.lib.dictization.model_dictize as model_dictize
-import ckanext.hdx_theme.util.mail as hdx_mail
-import ckanext.hdx_theme.helpers.helpers as hdx_h
-import logging as logging
-import urllib2 as urllib2
-from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
+import dateutil
+import mailchimp
+import pylons.configuration as configuration
+import requests
+from pylons import config
 from sqlalchemy.exc import IntegrityError
-# from email.mime.text import MIMEText
-# from email.mime.multipart import MIMEMultipart
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
+
+import ckan.controllers.user
+import ckan.controllers.user
+import ckan.lib.base as base
+import ckan.lib.captcha as captcha
+import ckan.lib.helpers as h
+import ckan.lib.mailer as mailer
+import ckan.lib.maintain as maintain
+import ckan.lib.navl.dictization_functions as df
+import ckan.lib.navl.dictization_functions as dictization_functions
+import ckan.logic as logic
+import ckan.model as model
+import ckan.plugins as p
+from ckan.common import _, c, g, request, response
+from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
 log = logging.getLogger(__name__)
 render = base.render
@@ -73,7 +67,7 @@ OnbSuccess = json.dumps({'success': True})
 
 
 def name_validator_with_changed_msg(val, context):
-    """This is just a wrapper function around the validator.name_validator function. 
+    """This is just a wrapper function around the validator.name_validator function.
         The wrapper function just changes the message in case the name_match doesn't match.
         The only purpose for still calling that function here is to keep the link visible and
         in case of a ckan upgrade to still be able to raise any new Invalid exceptions
@@ -99,10 +93,15 @@ def name_validator_with_changed_msg(val, context):
 class ValidationController(ckan.controllers.user.UserController):
     request_register_form = 'user/request_register.html'
 
-    def new_login(self, error=None):
+    def new_login(self, error=None, info_message=None, page_subtitle=None):
         template_data = {}
         if not c.user:
             template_data = ue_helpers.get_login(True, "")
+        if info_message:
+            if 'data' not in template_data:
+                template_data['data'] = {}
+            template_data['data']['info_message'] = info_message
+            template_data['data']['page_subtitle'] = page_subtitle
         return render('home/index.html', extra_vars=template_data)
 
     def first_login(self, error=None):
@@ -167,7 +166,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
             # IAuthenticator too buggy, doing this instead
             try:
-                token = get_action('token_show')(context, user_dict)
+                token = tokens.token_show(context, user_dict)
             except NotFound, e:
                 token = {'valid': True}  # Until we figure out what to do with existing users
             except:
@@ -232,6 +231,7 @@ class ValidationController(ckan.controllers.user.UserController):
         context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
                    'schema': temp_schema, 'save': 'save' in request.params}
         data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+
         if 'email' in data_dict:
             md5 = hashlib.md5()
             md5.update(data_dict['email'])
@@ -242,8 +242,8 @@ class ValidationController(ckan.controllers.user.UserController):
             check_access('user_create', context, data_dict)
             check_access('user_can_register', context, data_dict)
         except NotAuthorized, e:
-            if e.message and e.message.get('email'):
-                return self.error_message(e.message.get('email')[0])
+            if e.args and len(e.args):
+                return self.error_message(self._get_exc_msg_by_key(e, 'email'))
             return OnbNotAuth
         except ValidationError, e:
             # errors = e.error_dict
@@ -257,9 +257,12 @@ class ValidationController(ckan.controllers.user.UserController):
 
             user = get_action('user_create')(context, data_dict)
             token = get_action('token_create')(context, user)
+            context['auth_user_obj'] = context['user_obj']
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
                                                                    'extras': ue_helpers.get_initial_extras()})
-
+            if 'email' in data_dict and 'nosetest' not in data_dict:
+                self._signup_newsletter(data_dict)
+                self._signup_newsuser(data_dict)
         except NotAuthorized:
             return OnbNotAuth
             # abort(401, _('Unauthorized to create user %s') % '')
@@ -279,10 +282,51 @@ class ValidationController(ckan.controllers.user.UserController):
 
         if not c.user:
             # Send validation email
-            self.send_validation_email(user, token)
+            tokens.send_validation_email(user, token)
 
         c.user = save_user
         return OnbSuccess
+
+    def _signup_newsletter(self, data):
+        if 'signup' in data:
+            signup = data['signup']
+            if signup == "true":
+                log.info("Will signup to newsletter: " + signup)
+                m = self._get_mailchimp_api()
+                try:
+                    m.helper.ping()
+                    list_id = configuration.config.get('hdx.mailchimp.list.newsletter')
+                    if (list_id):
+                        email = {
+                            'email': data['email']
+                        }
+                        m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
+                except mailchimp.Error, ex:
+                    log.error(str(ex.error_summary))
+                signup = signup
+        return None
+
+    def _signup_newsuser(self, data):
+        m = self._get_mailchimp_api()
+        try:
+            m.helper.ping()
+            list_id = configuration.config.get('hdx.mailchimp.list.newuser')
+            if list_id:
+                email = {
+                    'email': data['email']
+                }
+                m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
+        except mailchimp.Error, ex:
+            log.error(str(ex.error_summary))
+
+        return None
+
+    def _get_exc_msg_by_key(self, e, key):
+        if e and e.args:
+            for arg in e.args:
+                if key in arg:
+                    return arg[key]
+        return None
 
     def validate(self, token):
         '''
@@ -304,7 +348,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         try:
             # Update token for user
-            token = get_action('token_show_by_id')(context, data_dict)
+            token = tokens.token_show_by_id(context, data_dict)
             data_dict['user_id'] = token['user_id']
             # removed because it is saved in next step. User is allowed to click on /validate link several times
             # get_action('user_extra_update')(context, data_dict)
@@ -319,6 +363,7 @@ class ValidationController(ckan.controllers.user.UserController):
         template_data['data']['current_step'] = user_model.HDX_ONBOARDING_DETAILS
         template_data['data']['email'] = user.email
         template_data['data']['name'] = user.name
+        template_data['capcha_api_key'] = configuration.config.get('ckan.recaptcha.publickey')
         return render('home/index.html', extra_vars=template_data)
 
     def register_details(self, data=None, errors=None, error_summary=None):
@@ -358,10 +403,10 @@ class ValidationController(ckan.controllers.user.UserController):
         save_user = c.user
         c.user = None
         try:
-            token_dict = get_action('token_show')(context, data_dict)
+            token_dict = tokens.token_show(context, data_dict)
             data_dict['token'] = token_dict['token']
             get_action('user_update')(context, data_dict)
-            get_action('token_update')(context, data_dict)
+            tokens.token_update(context, data_dict)
 
             ue_dict = self._get_ue_dict(data_dict['id'], user_model.HDX_ONBOARDING_USER_VALIDATED)
             get_action('user_extra_update')(context, ue_dict)
@@ -378,15 +423,15 @@ class ValidationController(ckan.controllers.user.UserController):
                   <head></head>
                   <body>
                     <p>You have successfully registered your account on HDX.</p>
-                    <p>Username: {username}</p>
-                    <p>Password: {password}</p>
-                    <p><a href="{link}">Login</a></p>
+                    <p>Your username is {username}</p>
+                    <p>Please use the following link to <a href="{link}">Login</a></p>
                     <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
                   </body>
                 </html>
                 """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
                            tour_link=tour_link)
-                hdx_mailer.mail_recipient(data_dict.get('fullname'), data_dict.get('email'), subject, html)
+                hdx_mailer.mail_recipient(
+                    [{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, html)
 
         except NotAuthorized:
             return OnbNotAuth
@@ -421,7 +466,7 @@ class ValidationController(ckan.controllers.user.UserController):
         name = c.user or data_dict['id']
         user_obj = model.User.get(name)
         user_id = user_obj.id
-        context = {'model': model, 'session': model.Session, 'user': user_obj.name}
+        context = {'model': model, 'session': model.Session, 'user': user_obj.name, 'auth_user_obj': c.userobj}
         try:
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FOLLOWS)
             get_action('user_extra_update')(context, ue_dict)
@@ -444,12 +489,12 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 5a: user can request to create a new organization
         :return:
         '''
-        context = {'model': model, 'session': model.Session,
+        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
                    'user': c.user}
         try:
             check_access('hdx_send_new_org_request', context)
-        except logic.NotAuthorized:
-            base.abort(401, _('Unauthorized to send a new org request'))
+        except NotAuthorized:
+            return OnbNotAuth
 
         try:
             user = model.User.get(context['user'])
@@ -477,27 +522,28 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 5b: user can request membership to an existing organization
         :return:
         '''
+
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user, 'auth_user_obj': c.userobj}
+        try:
+            check_access('hdx_send_new_org_request', context)
+        except NotAuthorized:
+            return OnbNotAuth
+
         try:
             org_id = request.params.get('org_id', '')
-            org = model.Group.get(org_id)
-            org_name = org.display_name or org.name
             msg = request.params.get('message', 'please add me to this organization')
-            user = hdx_h.hdx_get_user_info(c.user)
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user}
-            org_admins = get_action('member_list')(context, {'id': org_id, 'capacity': 'admin', 'object_type': 'user'})
-            admins = []
-            for admin_tuple in org_admins:
-                admin_id = admin_tuple[0]
-                admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = [admin for admin in admins if admin['email']]
 
-            data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_name,
-                         'message': msg, 'admins': admins_with_email}
-            get_action('hdx_send_request_membership')(context, data_dict)
+            data_dict = {
+                'organization': org_id,
+                'message': msg,
+                'save': u'save',
+                'role': u'member',
+                'group': org_id
+            }
+            member = get_action('member_request_create')(context, data_dict)
 
-            ue_dict = self._get_ue_dict(user['id'], user_model.HDX_ONBOARDING_ORG)
+            ue_dict = self._get_ue_dict(c.userobj.id, user_model.HDX_ONBOARDING_ORG)
             get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException, e:
@@ -512,11 +558,16 @@ class ValidationController(ckan.controllers.user.UserController):
         Step 6: user can invite friends by email to access HDX
         :return:
         '''
-        if not c.user:
+
+        context = {'model': model, 'session': model.Session, 'auth_user_obj': c.userobj,
+                   'user': c.user}
+        try:
+            check_access('hdx_basic_user_info', context)
+        except NotAuthorized:
             return OnbNotAuth
         try:
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user}
+            if not c.user:
+                return OnbNotAuth
             usr = c.userobj.display_name or c.user
             user_id = c.userobj.id or c.user
             ue_dict = self._get_ue_dict(user_id, user_model.HDX_ONBOARDING_FRIENDS)
@@ -530,7 +581,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 <html>
                   <head></head>
                   <body>
-                    <p>{fullname} invited you to join the <a href="https://hdx.rwlabs.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
+                    <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
                     <p>You can learn more about HDX by taking this quick {tour_link}</p>
                     <p>Join {hdx_link}</p>
                   </body>
@@ -540,7 +591,7 @@ class ValidationController(ckan.controllers.user.UserController):
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
                 if f:
-                    hdx_mailer.mail_recipient(f, f, subject, html)
+                    hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
 
         except exceptions.Exception, e:
             error_summary = str(e)
@@ -779,14 +830,14 @@ class ValidationController(ckan.controllers.user.UserController):
 
         # Get token for user
         try:
-            token = get_action('token_show')(context, data_dict)
+            token = tokens.token_show(context, data_dict)
         except NotFound, e:
             abort(404, _('User not found'))
         except:
             abort(500, _('Error'))
 
         # Send Validation email
-        self.send_validation_email(user, token)
+        tokens.send_validation_email(user, token)
 
         post_register_url = h.url_for(
             controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
@@ -795,31 +846,6 @@ class ValidationController(ckan.controllers.user.UserController):
         h.redirect_to(redirect_url.format(
             post_register_url,
             user['id']))
-
-    def send_validation_email(self, user, token):
-        validate_link = h.url_for(
-            controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-            action='validate',
-            token=token['token'])
-        link = '{0}{1}'
-        subject = "Please verify your email address"
-        print 'Validate link: ' + validate_link
-        html = """\
-        <html>
-          <head></head>
-          <body>
-            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
-            <p><a href="{link}">Verify Email</a></p>
-          </body>
-        </html>
-        """.format(link=link.format(config['ckan.site_url'], validate_link))
-
-        try:
-            # mailer.mail_recipient(user['name'], user['email'], subject, body)
-            hdx_mailer.mail_recipient('User', user['email'], subject, html)
-            return True
-        except:
-            return False
 
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
@@ -850,3 +876,7 @@ class ValidationController(ckan.controllers.user.UserController):
         r = requests.get(url, params=params, verify=True)
         res = json.loads(r.content)
         return 'success' in res and res['success'] == True
+
+
+    def _get_mailchimp_api(self):
+        return mailchimp.Mailchimp(configuration.config.get('hdx.mailchimp.api.key'))

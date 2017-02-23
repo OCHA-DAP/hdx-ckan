@@ -1,20 +1,34 @@
-{% set url = request.url %}
+{% extends "indicator/snippets/base_actions_menu.html" %}
 
 {% set panel_title = _('Share Indicator') if is_indicator else _('Share Dataset') %}
+{% set title = pkg.title %}
+{% set contact_topics = c.membership.data.contributor_topics %}
+{% set membership = c.membership %}
+{% set group_topics = c.membership.data.group_topics %}
 
-<span class="{{ classes }}">
-  {% snippet 'indicator/snippets/share_button.html', title=pkg.title, panel_title=panel_title %}
-  {{ h.follow_button('dataset', pkg.name) }}
-  {% if h.check_access('package_update', {'id':pkg.id }) %}
-    {% link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' %}
-  {% endif %}
-  {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
-    {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=True %}
-  {% endif %}
-  {#
-  <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
-          data-toggle="tooltip">Analyse</a>
-  <a class="btn btn-inverted" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="top"
-          data-toggle="tooltip"><i class="glyphicon glyphicon-wrench"></i></a>
-  #}
-</span>
+{% set base_type = "dataset" %}
+{% set base_title = base_type %}
+{% set org_id = pkg.owner_org %}
+{% set pkg_id = pkg.name or pkg.id %}
+{% set follow_id = pkg_id %}
+{% set plain_body = pkg.social_mail_body %}
+
+{% block user_actions %}
+    {% if h.check_access('package_update', {'id':pkg.id }) %}
+        {# link_for _('Edit'), controller='package', action='edit', id=pkg.name, class_='btn hdx-btn' #}
+        <li>
+            <a title="Edit {{ base_type | capitalize }}" onclick="contributeAddDetails('{{ pkg.id }}')"
+               {# href="{% url_for controller='ckanext.hdx_package.controllers.contribute_flow_controller:ContributeFlowController', action='edit', id=pkg.id %}">  #}
+                href="#">
+                <i class="icon-edit"></i>
+                {{ _('Edit') }}
+            </a>
+        </li>
+    {% endif %}
+    {% if (h.check_access('package_delete', {'id':pkg.id }) )and (not pkg.get('state', '').startswith('deleted')) %}
+        <li class="delete-override">
+            {% snippet 'snippets/delete_dataset.html', pkg=pkg, button=False, icon="icon-rubbish-bin" %}
+        </li>
+    {% endif %}
+
+{% endblock %}

@@ -10,8 +10,80 @@
 <!--[if gt IE 8]><!--> <html lang="{{ lang }}"> <!--<![endif]-->
 {%- endblock -%}
 
+{% block mixpanel_init %}
+    {{ h.snippet('snippets/mixpanel.html') }}
+{% endblock %}
+
   {# Allows custom attributes to be added to the <head> tag #}
   <head{% block headtag %}{% endblock %}>
+
+
+    <script type="application/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      var gaToken = '{{ h.hdx_get_ckan_config('hdx.analytics.ga.token') }}';
+      ga('create', gaToken, 'auto');
+
+      //swap the two create calls in order to enable recording data from localhost instances
+      //this is useful when testing to see realtime data on the Google Analytics site
+      //ga('create', 'UA-48221887-3', {
+      //  'cookieDomain': 'none'
+      //});
+
+      /**
+       * A map holding all the information to be sent to the analytics servers
+       * @type {object}
+       */
+      var analyticsInfo = {
+          'organizationName': '{% block analytics_org_name %}None{% endblock %}',
+          'organizationId': '{% block analytics_org_id %}None{% endblock %}',
+          'groupNames': {% block analytics_group_names %}[]{% endblock %},
+          'groupIds': {% block analytics_group_ids %}[]{% endblock %},
+          'isCod': {% block analytics_is_cod %}false{% endblock %},
+          'isIndicator': {% block analytics_is_indicator %}false{% endblock %},
+          'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
+          'datasetId': '{% block analytics_dataset_id %}None{% endblock %}',
+          'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}'
+
+      };
+
+      (function() {
+          if (analyticsInfo.organizationName != 'None') {
+              ga('set', 'dimension1', analyticsInfo.organizationName);
+          }
+
+          var dimension2Type = analyticsInfo.isCod ? 'cod' : '';
+          dimension2Type += analyticsInfo.isCod && analyticsInfo.isIndicator ? '~' : '';
+          dimension2Type += analyticsInfo.isIndicator ? 'indicator' : '';
+
+          dimension2Type = analyticsInfo.datasetId != 'None' && dimension2Type == '' ? 'standard' : dimension2Type;
+
+          if (dimension2Type) {
+              ga('set', 'dimension2', dimension2Type);
+          }
+
+          var dimension3Location = analyticsInfo.groupNames.length < 15 ? analyticsInfo.groupNames.join('~') : 'many';
+          if (dimension3Location) {
+              ga('set', 'dimension3', dimension3Location);
+          }
+          ga('send', 'pageview');
+
+          mixpanel.track("page view", {
+              "page title": analyticsInfo.pageTitle,
+              "org name": analyticsInfo.organizationName,
+              "org id": analyticsInfo.organizationId,
+              "group names": analyticsInfo.groupNames,
+              "group ids": analyticsInfo.groupIds,
+              "is cod": analyticsInfo.isCod,
+              "is indicator": analyticsInfo.isIndicator
+          });
+      }());
+
+    </script>
+
     {#
     Add custom meta tags to the page. Call super() to get the default tags
     such as charset, viewport and generator.
@@ -26,6 +98,7 @@
     #}
     {%- block meta -%}
       <meta charset="utf-8" />
+      <meta name="referrer" content="always">
       {% block meta_generator %}<meta name="generator" content="ckan {{ c.__version__ }}" />{% endblock %}
     {%- endblock -%}
 
@@ -72,11 +145,9 @@
 
       {% block styles %}
         {{ super() }}
-        <link rel="stylesheet" href="/base/css/custom.css" />
       {% endblock %}
     #}
     {%- block styles %}
-      {% resource 'hdx_theme/lite-main.css' %}
     {% endblock %}
 
     {% block head_extras %}

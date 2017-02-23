@@ -9,17 +9,18 @@ import logging
 import math
 
 import ckan.lib.base as base
-import ckan.model as model
 import ckan.common as common
 import ckan.logic as logic
 import ckan.controllers.group as group
 import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.actions.get as hdx_org_get
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_crisis.config.crisis_config as crisis_config
+import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckan.lib.helpers as h
+
+from ckan.controllers.api import CONTENT_TYPES
 
 render = base.render
 c = common.c
@@ -27,7 +28,7 @@ get_action = logic.get_action
 json = common.json
 _ = common._
 request = common.request
-LocationDataAccess = location_data_access.LocationDataAccess
+response = common.response
 log = logging.getLogger(__name__)
 
 IndicatorAccess = indicator_access.IndicatorAccess
@@ -51,7 +52,7 @@ def is_custom(environ, result):
     return False
 
 
-class CustomLocationController(group.GroupController, base.BaseController):
+class CustomLocationController(group.GroupController, search_controller.HDXSearchController):
     '''
     Extends Group and Base Controller and is used by custom locations to populate
     and compute the data to be displayed
@@ -59,9 +60,13 @@ class CustomLocationController(group.GroupController, base.BaseController):
     '''
 
     def read(self, id, group_info, group_customization):
-
-        template_data = self.generate_template_data(id, group_info, group_customization)
-        return render('country/custom_country.html', extra_vars=template_data)
+        if (self._is_facet_only_request()):
+            c.full_facet_info = self._generate_dataset_results(group_info['name'])
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            template_data = self.generate_template_data(id, group_info, group_customization)
+            return render('country/custom_country.html', extra_vars=template_data)
 
     def generate_template_data(self, id, group_info, custom_dict):
         '''
@@ -74,29 +79,24 @@ class CustomLocationController(group.GroupController, base.BaseController):
 
         country_name = group_info['name'] or id
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
-
         top_line_items = []
         try:
             top_line_resource_id = self._get_top_line_datastore_id(custom_dict)
-            top_line_items = self.get_topline_numbers(top_line_resource_id)
+            top_line_items = location_data_access.get_formatted_topline_numbers(top_line_resource_id)
         except Exception, e:
             log.warning(e)
             helpers.add_error('Fetching data problem', str(e), errors)
 
-        search_params = {u'groups': country_name}
+        c.full_facet_info = self._generate_dataset_results(country_name)
 
-        self._generate_dataset_results(
-            context, search_params, action_alias='show_custom_country', other_params_dict={'id': country_name})
-
-        self._generate_other_links(search_params)
+        # search_params = {u'groups': country_name}
+        # self._generate_other_links(search_params)
 
         charts_config_data = self._get_charts_config(group_info['name'], custom_dict, len(top_line_items), errors)
 
         template_data = {
             'data': {
+                'country_id': group_info['id'],
                 'country_name': group_info['name'],
                 'country_title': group_info.get('title', group_info['name']),
                 'topline_chart_sections': self._create_sections(top_line_items, charts_config_data),
@@ -124,25 +124,6 @@ class CustomLocationController(group.GroupController, base.BaseController):
 
     def _get_top_line_datastore_id(self, custom_dict):
         return custom_dict.get('topline_resource', None)
-
-    def get_topline_numbers(self, top_line_resource_id):
-        '''
-        Compute topline numbers items
-        :param top_line_resource_id:
-        :return:
-        '''
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
-
-        loc_data_access = LocationDataAccess(top_line_resource_id)
-        loc_data_access.fetch_data(context)
-        top_line_items = loc_data_access.get_top_line_items()
-
-        formatter = formatters.TopLineItemsWithDateFormatter(top_line_items)
-        formatter.format_results()
-
-        return top_line_items
 
     def _ckan_src_chart_config(self, chart_config, chart_type):
         '''
@@ -331,69 +312,38 @@ class CustomLocationController(group.GroupController, base.BaseController):
         '''
         return True if label in crisis_config.CRISES else False
 
-    def _generate_dataset_results(self, context, search_params,
-                                  action_alias='show_crisis', other_params_dict={}):
-        '''
-        Perform a search of datasets. Moved from crisis_controller.py
-        :param context:
-        :param search_params:
-        :param action_alias:
-        :param other_params_dict:
-        :return:
-        '''
-        limit = 25
+    def _generate_dataset_results(self, country_code):
 
-        sort_option = request.params.get('sort', None)
-
-        page = int(request.params.get('page', 1))
-        data_dict = {'sort': sort_option if sort_option else u'metadata_modified desc',
-                     'rows': limit,
-                     'start': (page - 1) * limit,
-                     'ext_indicator': u'0'
-                     }
-
-        search_param_list = [
-            key + ":" + value for key, value in search_params.iteritems() if key != 'q']
-        if 'q' in search_params:
-            data_dict['q'] = search_params['q']
-            c.q = search_params['q']
-        if search_param_list != None:
-            data_dict['fq'] = " ".join(
-                search_param_list) + ' +dataset_type:dataset'
-
-        query = get_action("package_search")(context, data_dict)
+        params_nopage = {
+            k: v for k, v in request.params.items() if k != 'page'}
 
         def pager_url(q=None, page=None):
-            if sort_option:
-                url = h.url_for(
-                    action_alias, page=page, sort=sort_option, **other_params_dict) + '#datasets-section'
-            else:
-                url = h.url_for(action_alias, page=page, **other_params_dict) + '#datasets-section'
+            params = params_nopage
+            params['page'] = page
+            url = h.url_for('show_custom_country', id=country_code, **params) + '#datasets-section'
             return url
 
-        get_action('populate_related_items_count')(context, {'pkg_dict_list': query['results']})
+        fq = 'groups:"{}"'.format(country_code)
+        package_type = 'dataset'
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
+        locations = full_facet_info.get('facets', {}).get('groups', {}).get('items', [])
+        locations[:] = [loc for loc in locations if loc.get('name', '') != country_code]
 
-        c.page = h.Page(
-            collection=query['results'],
-            page=page,
-            url=pager_url,
-            item_count=query['count'],
-            items_per_page=limit
-        )
-        c.items = query['results']
-        c.item_count = query['count']
+        c.other_links['current_page_url'] = h.url_for('show_custom_country', id=country_code)
 
-    def _generate_other_links(self, search_params):
-        '''
-        Show all search results based on sort options and search params. Moved from crisis_controller.py
-        :param search_params: some extra search parameters
-        :return:
-        '''
-        c.other_links = {}
-        sort_option = request.params.get('sort', None)
+        return full_facet_info
 
-        show_more_params = {'sort': sort_option if sort_option else u'metadata_modified desc',
-                            'ext_indicator': '0'}
-        show_more_params.update(search_params)
-        c.other_links['show_more'] = h.url_for(
-            "search", **show_more_params)
+    # def _generate_other_links(self, search_params):
+    #     '''
+    #     Show all search results based on sort options and search params. Moved from crisis_controller.py
+    #     :param search_params: some extra search parameters
+    #     :return:
+    #     '''
+    #     c.other_links = {}
+    #     sort_option = request.params.get('sort', None)
+    #
+    #     show_more_params = {'sort': sort_option if sort_option else u'metadata_modified desc',
+    #                         'ext_indicator': '0'}
+    #     show_more_params.update(search_params)
+    #     c.other_links['show_more'] = h.url_for(
+    #         "search", **show_more_params)

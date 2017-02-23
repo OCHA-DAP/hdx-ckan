@@ -1,0 +1,8 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}

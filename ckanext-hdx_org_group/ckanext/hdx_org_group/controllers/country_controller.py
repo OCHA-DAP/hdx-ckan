@@ -3,22 +3,25 @@ Created on Jan 13, 2015
 
 @author: alexandru-m-g
 '''
-import json
 import collections
-
+import json
 import logging
-import datetime as dt
 
-import ckan.lib.base as base
-import ckan.logic as logic
-import ckan.model as model
 import ckan.common as common
 import ckan.controllers.group as group
+import ckan.lib.base as base
 import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.model as model
+import ckan.lib.helpers as helpers
+from ckan.controllers.api import CONTENT_TYPES
 
-import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
-import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
+from operator import itemgetter
+
+import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_package.helpers.screenshot as screenshot
 
 render = base.render
 abort = base.abort
@@ -28,62 +31,205 @@ get_action = logic.get_action
 c = common.c
 request = common.request
 _ = common._
+response = common.response
 
 log = logging.getLogger(__name__)
 OrderedDict = collections.OrderedDict
 
 group_type = 'group'
 
-indicators_4_charts_list = [
-    ('PVH140', 'mdgs'),
-    ('PVN010', 'fao-foodsec'),
-    ('PVW010', 'mdgs'),
-    ('PVF020', 'faostat3'),
-    ('PSE160', 'data.undp.org'),
-    ('PCX051', 'mdgs'),
-    ('PVE130', 'mdgs'),
-    ('PCX060', 'mdgs'),
-    ('RW002', 'RW'),
-    ('PVE110', 'data.undp.org'),
-    ('PVN050', 'mdgs'),
-    ('PVN070', 'mdgs'),
-    ('PVW040', 'mdgs')
-]
 
-indicators_4_charts = [el[0] for el in indicators_4_charts_list]
-
-indicators_4_top_line_list = [
-    ('PSP120', 'world-bank'),
-    ('PSP090', 'world-bank'),
-    ('PSE220', 'data.undp.org'),
-    ('PSE030', 'world-bank'),
-    ('CG300', 'world-bank')
-]
-indicators_4_top_line = [el[0] for el in indicators_4_top_line_list]
-
-
-class CountryController(group.GroupController, simple_search_controller.HDXSimpleSearchController):
+class CountryController(group.GroupController, search_controller.HDXSearchController):
     def country_read(self, id):
+        country_dict = self.get_country(id)
 
-        self.get_country(id)
+        country_code = country_dict.get('name', id)
 
-        # country_uuid = c.group_dict.get('id', id)
-        country_code = c.group_dict.get('name', id)
+        if self._is_facet_only_request():
+            c.full_facet_info = self.get_dataset_search_results(country_code)
+            c.full_facet_info.get('facets', {}).pop('vocab_Topics', {})
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            # self.get_dataset_results(country_code)
+            # c.hdx_group_activities = self.get_activity_stream(country_uuid)
 
-        self.get_dataset_results(country_code)
-        # c.hdx_group_activities = self.get_activity_stream(country_uuid)
+            not_filtered_facet_info = self._get_not_filtered_facet_info(country_dict)
+            latest_cod_dataset = country_helper.get_latest_cod_datatset(country_dict.get('name'))
 
-        (query, all_results) = self.get_dataset_search_results(country_code)
-        vocab_topics_dict = all_results.get(
-            'facets', {}).get('vocab_Topics', {})
-        c.cont_browsing = self.get_cont_browsing(
-            c.group_dict, vocab_topics_dict)
+            c.full_facet_info = self.get_dataset_search_results(country_code)
+            vocab_topics_list = c.full_facet_info.get('facets', {}).pop('vocab_Topics', {}).get('items', [])
 
-        c.show_overview = len(c.top_line_data_list) > 0 or len(c.chart_data_list) > 0
+            # Removed for now as per HDX-4927
+            # c.cont_browsing = self.get_cont_browsing(
+            #    c.group_dict, vocab_topics_list)
 
-        result = render('country/country.html')
+            template_data = self.get_template_data(country_dict, not_filtered_facet_info, latest_cod_dataset)
 
+            result = render('country/country.html', extra_vars=template_data)
+
+            return result
+
+    def get_template_data(self, country_dict, not_filtered_facet_info, latest_cod_dataset):
+
+        follower_count = get_action('group_follower_count')(
+            {'model': model, 'session': model.Session},
+            {'id': country_dict['id']}
+        )
+
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+            country_dict).get_dataset_results()
+
+        organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
+        f_event_list = self._get_event_list_for_featured(country_dict['id'])
+        f_thumbnail_list = self._get_thumbnail_list_for_featured(country_dict, f_event_list,
+                                                                 not_filtered_facet_info.get('results'),
+                                                                 latest_cod_dataset)
+        f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
+        f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
+
+        template_data = {
+            'data': {
+                'country_dict': country_dict,
+                'stats_section': {
+                    'organization_list': organization_list,
+                    'num_of_organizations':
+                        len(not_filtered_facet_info.get('facets', {}).get('organization', {}).get('items', [])),
+                    'num_of_cods': not_filtered_facet_info.get('num_of_cods', 0),
+                    'num_of_datasets': not_filtered_facet_info.get('num_of_total_items'),
+                    'num_of_followers': follower_count
+                },
+                'widgets': {
+                    'top_line_data_list': top_line_data_list,
+                    'chart_data_list': chart_data_list,
+                    'show': len(top_line_data_list) > 0 or len(chart_data_list) > 0
+                },
+                'featured_section': {
+                    'thumbnail_list': f_thumbnail_list,
+                    'event_list': f_event_list,
+                    'organization_list': f_organization_list[:5],
+                    'tag_list': f_tag_list[:10],
+                    'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
+                },
+
+            },
+            'errors': None,
+            'error_summary': '',
+        }
+
+        return template_data
+
+    def _get_not_filtered_facet_info(self, country_dict):
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True,
+                   'auth_user_obj': c.userobj}
+
+        fq = 'groups:"{}" +dataset_type:dataset'.format(country_dict.get('name'))
+        query_result = self._performing_search(u'', fq, ['organization', 'tags'], 2, 1, 'metadata_modified desc', None,
+                                               None, context)
+        non_filtered_facet_info = self._prepare_facets_info(query_result.get('search_facets'), {}, {},
+                                                            {'tags': 'tags', 'organization': 'organization'},
+                                                            query_result.get('count'), u'')
+
+        non_filtered_facet_info['results'] = query_result.get('results', [])
+
+        return non_filtered_facet_info
+
+
+    def _get_org_list_for_menu_from_facets(self, full_facet_info):
+        org_list = [
+            {
+                'display_name': org.get('display_name'),
+                'name': org.get('name'),
+                'url': helpers.url_for('organization_read', id=org.get('name'))
+            }
+            for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', [])
+            ]
+        return org_list
+
+    def _get_org_list_for_featured_from_facets(self, full_facet_info):
+        org_list = [
+            {
+                'display_name': org.get('display_name'),
+                'name': org.get('name'),
+                'count': org.get('count'),
+                'url': helpers.url_for('organization_read', id=org.get('name'))
+            }
+            for org in full_facet_info.get('facets', {}).get('organization', {}).get('items', []) if
+            org.get('name') != 'hdx'
+            ]
+        result = sorted(org_list, key=itemgetter('count'), reverse=True)
         return result
+
+    def _get_tag_list_for_featured_from_facets(self, full_facet_info):
+        tag_list = [
+            {
+                'display_name': tag.get('display_name'),
+                'count': tag.get('count'),
+                'name': tag.get('name'),
+                'url': helpers.url_for(controller='package', action='search', tags=tag.get('name'))
+            }
+            for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
+            ]
+        tag_list_by_count = sorted(tag_list, key=itemgetter('count'), reverse=True)
+        return tag_list_by_count
+
+    def _get_thumbnail_list_for_featured(self, country_dict, event_list, latest_datasets, latest_cod_dataset):
+        '''
+        :param country_dict:
+        :type country_dict: dict
+        :param event_list: if this was already fetched in the controller we can reuse it
+        :type event_list: list
+        :param latest_datasets: a list of the latest updated datasets for the country
+        :type latest_datasets: list
+        :return: list of dicts containing display_name, type and url for the featured thumbnails
+        :rtype: list
+        '''
+
+        cloned_latest_datasets = latest_datasets[:]
+        default_thumbnail_url = '/images/featured_locs_placeholder1.png';
+        thumbnail_list = [None, None]
+        if event_list:
+            thumbnail_list[0] = self.__event_as_thumbnail_dict(event_list[0], default_thumbnail_url)
+        elif cloned_latest_datasets:
+            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
+            del cloned_latest_datasets[0]
+        if latest_cod_dataset:
+            cod_thumbnail_url = screenshot.create_download_link(latest_cod_dataset, default_thumbnail_url)
+            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(latest_cod_dataset, cod_thumbnail_url, True)
+        elif cloned_latest_datasets:
+            thumbnail_list[1] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
+            del cloned_latest_datasets[0]
+
+        if thumbnail_list[0] and thumbnail_list[1] \
+                and thumbnail_list[0].get('url') == thumbnail_list[1].get('url') and cloned_latest_datasets:
+            thumbnail_list[0] = self.__dataset_as_thumbnail_dict(cloned_latest_datasets[0], default_thumbnail_url)
+            del cloned_latest_datasets[0]
+
+        # thumbnail_list[0]['thumbnail_url'] = '/images/featured_locs_placeholder1.png'
+        # thumbnail_list[1]['thumbnail_url'] = '/images/featured_locs_placeholder2.png'
+        return thumbnail_list
+
+    def __dataset_as_thumbnail_dict(self, dataset_dict, thumbnail_url, is_cod=False):
+        return {
+            'display_name': dataset_dict.get('title'),
+            'type': 'COD' if is_cod else 'Dataset',
+            'url': h.url_for('dataset_read', id=dataset_dict.get('name')),
+            'thumbnail_url': thumbnail_url
+        }
+
+    def __event_as_thumbnail_dict(self, event_dict, thumbnail_url, is_cod=False):
+        return {
+            'display_name': event_dict.get('title'),
+            'type': 'Event',
+            'url': h.url_for('read_event', id=event_dict.get('name')),
+            'thumbnail_url': thumbnail_url
+        }
+
+    def _get_event_list_for_featured(self, group_id):
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
+        pages_list = get_action('group_page_list')(context, {'id': group_id})
+        return pages_list
 
     def get_country(self, id):
         if group_type != self.group_type:
@@ -97,97 +243,15 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
 
         try:
             context['include_datasets'] = False
-            c.group_dict = self._action(
+            group_dict = self._action(
                 'hdx_light_group_show')(context, data_dict)
-            # c.group = context['group']
+
+            return group_dict
 
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
             abort(401, _('Unauthorized to read group %s') % id)
-
-    def get_dataset_results(self, country_id):
-
-        top_line_dao = indicator_access.IndicatorAccess(
-            country_id, indicators_4_top_line_list, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
-
-        top_line_results = top_line_dao.fetch_indicator_data_from_cps()
-        top_line_data = top_line_results.get('results', [])
-
-        if not top_line_data:
-            log.warn(
-                'No top line numbers found for country: {}'.format(country_id))
-            top_line_data = []
-        sorted_top_line_data = sorted(top_line_data,
-                                      key=lambda x: indicators_4_top_line.index(x['indicatorTypeCode']))
-        for el in sorted_top_line_data:
-            el['formatted_value'] = formatters.format_decimal_number(
-                el['value'], 2)
-
-        c.top_line_data_list = sorted_top_line_data
-
-        top_line_ind_codes = [el['indicatorTypeCode']
-                              for el in sorted_top_line_data]
-
-        chart_dao = indicator_access.IndicatorAccess(
-            country_id, indicators_4_charts_list, {'sorting': 'INDICATOR_TYPE_ASC'})
-
-        chart_dao.fetch_indicator_data_from_cps()
-        chart_dataseries_dict = chart_dao.get_structured_data_from_cps()
-        if not chart_dataseries_dict:
-            log.warn('No chart data found for country: {}'.format(country_id))
-            chart_dataseries_dict = {}
-
-        # We can do the steps below because, in this case,
-        # we know that each indicator type has only one source
-        chart_data_dict = {}
-        for key, value in chart_dataseries_dict.iteritems():
-            try:
-                # we're taking the first (and only) soruce
-                new_value = value.itervalues().next()
-                chart_data_dict[key] = new_value
-            except Exception, e:
-                log.warning("Exception while iterating dataseries data: " + e)
-
-
-        # for code in chart_data_dict.keys():
-        #     chart_data_dict[code] = sorted(chart_data_dict[code], key=lambda x: x.get('datetime', None))
-
-        chart_data_list = []
-        for code in indicators_4_charts:
-            if code in chart_data_dict and len(chart_data_list) < 5:
-                chart_data_list.append(chart_data_dict[code])
-
-        chart_ind_codes = [chart['code'] for chart in chart_data_list]
-        shown_dataseries_codes = [(el, '') for el in top_line_ind_codes + chart_ind_codes]
-        shown_dataseries_dao = indicator_access.IndicatorAccess(country_id, shown_dataseries_codes)
-
-        indic_extra_dict = shown_dataseries_dao.fetch_indicator_data_from_ckan()
-
-        for chart in chart_data_list:
-            code = chart['code']
-            chart_extra = indic_extra_dict.get(code, None)
-            chart['data'] = json.dumps(chart['data'])
-            if chart_extra:
-                chart['datasetLink'] = chart_extra.get('datasetLink')
-                chart['datasetUpdateDate'] = chart_extra.get(
-                    'datasetUpdateDate')
-
-        c.chart_data_list = chart_data_list
-
-        # updating the top line info with links and dates
-        for el in sorted_top_line_data:
-            cps_time = el.get('time', '')
-            if cps_time:
-                el['datasetUpdateDate'] = \
-                    dt.datetime.strptime(cps_time, '%Y-%m-%d').strftime('%b %d, %Y')
-
-            top_line_extra = indic_extra_dict.get(
-                el['indicatorTypeCode'], None)
-            if top_line_extra:
-                el['datasetLink'] = top_line_extra.get('datasetLink')
-                # el['datasetUpdateDate'] = top_line_extra.get(
-                #     'datasetUpdateDate')
 
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,
@@ -199,99 +263,82 @@ class CountryController(group.GroupController, simple_search_controller.HDXSimpl
     #         'hdx_get_group_activity_list')(context, act_data_dict)
     #     return result
 
-    def get_cont_browsing(self, group_dict, vocab_topics_dict):
-        cont_browsing_dict = {
-            'websites': self._process_websites(group_dict),
-            'followers': self._get_followers(group_dict['id']),
-            'topics': self._get_topics(vocab_topics_dict)
-
-        }
-        return cont_browsing_dict
-
-    def _process_websites(self, group_dict):
-        site_list = []
-        if 'extras' in group_dict:
-            extras_dict = {el['key']: el['value']
-                           for el in group_dict['extras'] if el['state'] == u'active'}
-
-            if 'relief_web_url' in extras_dict:
-                site_list.append(
-                    {'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
-            site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
-            if 'hr_info_url' in extras_dict:
-                site_list.append(
-                    {'name': _('HumanitarianResponse'), 'url': extras_dict['hr_info_url']})
-            site_list.append(
-                {'name': _('OCHA Financial Tracking Service'),
-                 'url': 'http://fts.unocha.org/'}
-            )
-
-        return site_list
-
-    def _get_followers(self, country_id):
-        followers = get_action('group_follower_list')(
-            {'ignore_auth': True}, {'id': country_id})
-        followers_list = [
-            {
-                'name': f['display_name'],
-                'url': h.url_for(controller='user', action='read', id=f['name'])
-            } for f in followers
-            ]
-
-        return followers_list
-
-    def _get_topics(self, vocab_topics_dict):
-        topics_by_freq = OrderedDict(
-            sorted(vocab_topics_dict.items(), key=lambda x: x[1]))
-        topic_list = [
-            {
-                'name': topic,
-                'url': h.url_for(controller='package', action='search', vocab_Topics=topic)
-            } for topic in topics_by_freq.keys()
-            ]
-
-        return topic_list
+    # Removed for now as per HDX-4927
+    # def get_cont_browsing(self, group_dict, vocab_topics_list):
+    #     cont_browsing_dict = {
+    #         'websites': self._process_websites(group_dict),
+    #         'followers': self._get_followers(group_dict['id']),
+    #         'topics': self._get_topics(vocab_topics_list)
+    #
+    #     }
+    #     return cont_browsing_dict
+    #
+    # def _process_websites(self, group_dict):
+    #     site_list = []
+    #     if 'extras' in group_dict:
+    #         extras_dict = {el['key']: el['value']
+    #                        for el in group_dict['extras'] if el['state'] == u'active'}
+    #
+    #         if 'relief_web_url' in extras_dict:
+    #             site_list.append(
+    #                 {'name': _('ReliefWeb'), 'url': extras_dict['relief_web_url']})
+    #         site_list.append({'name': _('UNOCHA'), 'url': 'http://unocha.org'})
+    #         if 'hr_info_url' in extras_dict:
+    #             site_list.append(
+    #                 {'name': _('HumanitarianResponse'), 'url': extras_dict['hr_info_url']})
+    #         site_list.append(
+    #             {'name': _('OCHA Financial Tracking Service'),
+    #              'url': 'http://fts.unocha.org/'}
+    #         )
+    #
+    #     return site_list
+    #
+    # def _get_followers(self, country_id):
+    #     followers = get_action('group_follower_list')(
+    #         {'ignore_auth': True}, {'id': country_id})
+    #     followers_list = [
+    #         {
+    #             'name': f['display_name'],
+    #             'url': h.url_for(controller='user', action='read', id=f['name'])
+    #         } for f in followers
+    #         ]
+    #
+    #     return followers_list
+    #
+    # def _get_topics(self, vocab_topics_list):
+    #     topic_list = [
+    #         {
+    #             'name': topic.get('name', ''),
+    #             'url': h.url_for(controller='package', action='search', vocab_Topics=topic.get('name')),
+    #             'count': topic.get('count', 0)
+    #         } for topic in vocab_topics_list
+    #     ]
+    #
+    #     topic_list.sort(key=lambda x: x.get('count', 0), reverse=True)
+    #
+    #     return topic_list
 
     def get_dataset_search_results(self, country_code):
-        fq = u'groups:"{}" +dataset_type:dataset'.format(country_code)
-        facets = ['vocab_Topics']
+        package_type = 'dataset'
+
         suffix = '#datasets-section'
 
-        search_extras = {}
-        ext_indicator = request.params.get('ext_indicator', '0')
-        # if ext_indicator:
-        search_extras['ext_indicator'] = ext_indicator
-
-        # limit = self._allowed_num_of_items(search_extras)
-        limit = 8
-        page = self._page_number()
         params_nopage = {
             k: v for k, v in request.params.items() if k != 'page'}
-
-        sort_by = request.params.get('sort', None)
 
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
             return h.url_for('country_read', id=country_code, **params) + suffix
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+        fq = 'groups:"{}"'.format(country_code)
+        facets = {
+            'vocab_Topics': _('Topics')
+        }
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets)
+        locations = full_facet_info.get('facets', {}).get('groups', {}).get('items', [])
+        locations[:] = [loc for loc in locations if loc.get('name', '') != country_code]
 
-        self._set_other_links(
-            suffix=suffix, other_params_dict={'id': country_code})
-        self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search('', fq, facets, limit, page, sort_by,
-                                                       search_extras, pager_url, context)
+        c.other_links['current_page_url'] = h.url_for('country_read', id=country_code)
 
-        return query, all_results
-
-    def _set_other_links(self, suffix='', other_params_dict=None):
-        super(CountryController, self)._set_other_links(
-            suffix=suffix, other_params_dict=other_params_dict)
-        c.other_links['advanced_search'] = h.url_for(
-            'search', groups=other_params_dict['id'])
-
-    def _get_named_route(self):
-        return 'country_read'
+        return full_facet_info

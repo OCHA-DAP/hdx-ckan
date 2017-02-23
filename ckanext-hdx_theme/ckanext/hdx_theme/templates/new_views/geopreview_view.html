@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block page %}
+  	<div id="crisis-map-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.crisismap.url') }}</div>
+  	<div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+	<div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
+    <div id="shapeData" style="display: none;">
+        {{ shape_info }}
+    </div>
+
+    <div class="mTop20">
+            <div id="map" style="height: 400px;"></div>
+    </div>
+
+  {% resource 'hdx_theme/d3' %}
+  {% resource 'hdx_theme/crisis-base' %}
+  {% resource 'hdx_theme/shape-view' %}
+{% endblock %}

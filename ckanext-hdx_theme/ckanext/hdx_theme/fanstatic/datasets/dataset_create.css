@@ -273,3 +273,9 @@ label:after {
   padding-top: 0;
   margin-bottom: 0;
 }
+/* Changes for resource views */
+.hdx-view-preview-wrapper {
+  background-color: #ffffff;
+  margin-bottom: 20px;
+}
+/* END - Changes for resource views */

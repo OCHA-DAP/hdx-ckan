@@ -8,7 +8,7 @@ Example:
     {{ h.snippet('widget/popup/popup.html', id="embedPopup", title="Embed visualization", class="zero-padding") }}
 #}
 
-<div id="{{ id }}" class="popup {{ class }}" style="display: none;">
+<div id="{{ id }}" class="popup {{ class }}" {% block popup_attributes %}style="display: none;" {% endblock %}>
     <div class="content container-fluid">
         {% block all_content %}
             <div class="row">

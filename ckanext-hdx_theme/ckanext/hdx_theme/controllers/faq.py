@@ -1,20 +1,22 @@
-import requests
-import ckan.lib.base as base
-from ckan.common import _, c, g, request, response
 import exceptions as exceptions
-import ckan.logic as logic
 import json
-import pylons.configuration as configuration
 
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import pylons.configuration as configuration
+import requests
 from ckanext.hdx_theme.helpers.faq_data import faq_data
+from ckanext.hdx_theme.util.mail import simple_validate_email
+
+import ckan.lib.base as base
+import ckan.logic as logic
+from ckan.common import _, c, request, response
+from ckan.controllers.api import CONTENT_TYPES
 
 get_action = logic.get_action
 ValidationError = logic.ValidationError
 CaptchaNotValid = _('Captcha is not valid')
 FaqSuccess = json.dumps({'success': True})
 FaqCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
-
 
 for section in faq_data:
     s_id = ''.join(i if i.isalnum() else '_' for i in section['title'])
@@ -40,6 +42,7 @@ class FaqController(base.BaseController):
                 'fullname': fullname,
                 'email': email,
             },
+            'capcha_api_key': configuration.config.get('ckan.recaptcha.publickey'),
             'errors': '',
             'error_summary': '',
         }
@@ -51,12 +54,15 @@ class FaqController(base.BaseController):
         Send a contact request form
         :return:
         '''
+        response.headers['Content-Type'] = CONTENT_TYPES['json']
         try:
             topic = request.params.get('topic')
             fullname = request.params.get('fullname')
             email = request.params.get('email')
             msg = request.params.get('faq-msg')
             hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+
+            simple_validate_email(email)
 
             captcha_response = request.params.get('g-recaptcha-response')
             if not self.is_valid_captcha(response=captcha_response):
@@ -67,12 +73,12 @@ class FaqController(base.BaseController):
                 return FaqCaptchaErr
             return self.error_message(error_summary)
         except exceptions.Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return self.error_message(error_summary)
 
         try:
-            subject = 'Faq: request from user'
-            html = """\
+            subject = u'Faq: request from user'
+            html = u"""\
                 <html>
                   <head></head>
                   <body>
@@ -84,10 +90,10 @@ class FaqController(base.BaseController):
                   </body>
                 </html>
                 """.format(fullname=fullname, email=email, topic=topic, msg=msg)
-            hdx_mailer.mail_recipient('Humanitarian Data Exchange', hdx_email, subject, html)
+            hdx_mailer.mail_recipient([{'display_name': 'HDX', 'email': hdx_email}], subject, html)
 
         except exceptions.Exception, e:
-            error_summary = str(e)
+            error_summary = e.error or str(e)
             return self.error_message(error_summary)
         return FaqSuccess
 

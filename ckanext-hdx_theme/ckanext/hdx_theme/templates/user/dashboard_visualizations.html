@@ -1,0 +1,24 @@
+{% extends "user/dashboard.html" %}
+
+{% block dashboard_activity_stream_context %}{% endblock %}
+{% block add_action_content %}{% endblock %}
+
+{% block primary_content_inner %}
+  <div style="min-height: 120px;">
+    {% if data.powerviews %}
+      <div class="wide">
+        {% snippet "powerview/snippets/powerview_list.html", powerviews=data.powerviews, mpx_url_template = data.mpx_url_template %}
+      </div>
+    {% else %}
+    <div class="mL30">
+        <div class="row row-fluid">
+        <h3 class="center sspRegular14"> {{ _('You don\'t have any powerview saved. Use the explore link below.') }}</h3>
+        <br/>
+        <center>
+          <a href="/explore" class="btn btn-primary mBottom30">{{ _("Explore")}}</a>
+        </center>
+        </div>
+    </div>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,5 +1,9 @@
 {% extends "crisis/crisis-base.html" %}
 
+{# The lines below are for analytics #}
+{% block analytics_group_names %}['{{ data.country_name }}']{% endblock %}
+{% block analytics_group_ids %}['{{ data.country_id }}']{% endblock %}
+
 {% block subtitle %}{{ data.country_title }}{% endblock %}
 {% block crisis_title %} {{ data.country_title }} {% endblock %}
 {% block crisis_actions %}
@@ -7,7 +11,7 @@
         <span class="followButtonContainer">
             {{ h.follow_button('group', data.country_name) }}
         </span>
-        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title() %}
+        {% snippet 'indicator/snippets/share_button.html', title=self.crisis_title(), analytics_shared_item='location' %}
         {% if h.check_access('group_update', {'id': data.country_name}) %}
             {% link_for _('Edit'), controller='group', action='edit', id=data.country_name, class_='btn' %}
         {% endif %}
@@ -80,11 +84,11 @@
                     {% if ci %}
                     <div class="col-xs-12">
                         <div class="row auto-graph graph-item-wrapper">
-                            <div class="col-xs-12 graph-title">
+                            <div class="col-xs-12">
                                 {% set data_link_url = ci.data_link_url or "#" %}
-                                <div style="float: left;">{{ ci.title }}</div>
+                                <div class="graph-title pull-left">{{ ci.title }}</div>
                                 <!--<span style="float: left;">OCHA - <a href="{{data_link_url}}">Data</a></span>-->
-                                <div class="graph-info-label" style="float: left;">
+                                <div class="graph-info-label pull-left">
                                     <a>
                                         {{ _("Info") }}
                                         <div class="map-info legend source-list" style="display: none;"></div>

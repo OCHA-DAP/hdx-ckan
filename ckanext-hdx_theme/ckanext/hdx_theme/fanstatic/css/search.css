@@ -128,14 +128,7 @@
         content: "|";
         margin-left: 15px;
     } */
-    
-    .search-list .dataset-item .dataset-others ul.dataset-resources li + li.label-icons:before {
-    	content: "|";
-        margin-left: 15px;
-        margin-right: 15px;
-    }
-    
-    
+
     .search-list .dataset-content .pre-icon .icon {
         color: #007ce0;
         font-size: 20px;
@@ -143,33 +136,6 @@
         margin-top:3px;
     }
 /* END Dataset list */
-
-/* List header */
-    .list-header {
-        margin-top: 35px;
-        height: 50px;
-        background-color: #edf6fd;
-        border-bottom: 1px solid #cccccc;
-        vertical-align: middle;
-        line-height: 50px;
-    }
-
-    .list-header .list-header-title {
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 16px;
-        color: #333333;
-    }
-
-    .list-header .list-header-showall {
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 400;
-        font-size: 12px;
-        color: #007ce0;
-        letter-spacing: 0.03em;
-    }
-
-/* END List header */
 
 /* Fix search spacing between tabs and results number */
     .search-nav > li > a{
@@ -194,7 +160,7 @@
 /* Styling search recommendations */
 
 #search-recs {
-    margin-top:8px;
+    margin-top: 25px;
     font-family:'Source Sans Pro', sans-serif;
     font-weight: 400;
     font-size: 16px;
@@ -209,7 +175,7 @@
     position:relative;
 
 }
-#search-ahead{
+.search-ahead{
     position:absolute;
     z-index: 99999999;
     top:42px;
@@ -221,19 +187,19 @@
   display:none;
 }
 
-#search-ahead ul{
+.search-ahead ul{
     list-style: none;
     margin-bottom: 0px
 }
 
-#search-ahead li{
+.search-ahead li{
     padding: 5px;
     font-size: 18px;
     cursor: pointer;
     margin-left: -35px;
 }
 
-#search-ahead li:hover{
+.search-ahead li:hover{
     background: #cccccc; /* @lightGrayColor */
 }
 

@@ -20,6 +20,8 @@ import ckan.lib.datapreview as datapreview
 
 # import ckanext.hdx_theme.helpers.counting_actions as counting
 
+import ckanext.hdx_theme.helpers.explorer_data as explorer
+
 # from webhelpers.html import escape, HTML, literal, url_escape
 # from ckan.common import _
 import urlparse as urlparse
@@ -54,8 +56,8 @@ def get_facet_items_dict(facet, limit=1000, exclude_active=False):
     facets = h.get_facet_items_dict(
         facet, limit, exclude_active=exclude_active)
     filtered_no_items = c.search_facets.get(facet)['items'].__len__()
-    total_no_items = json.loads(
-        count.CountController.list[facet](count.CountController()))['count']
+    # total_no_items = json.loads(
+    #     count.CountController.list[facet](count.CountController()))['count']
     # if filtered_no_items <= 50 and filtered_no_items < total_no_items:
     #     no_items = filtered_no_items
     # else:
@@ -131,6 +133,21 @@ def get_last_revision_timestamp_group(group_id):
         activity = activity_objects[0]
         return h.render_datetime(activity.timestamp)
     return None
+
+
+def get_dataset_date_format(date):
+    # Is this a range?
+    drange = date.split('-')
+    if len(drange) != 2:
+        drange = [date]
+    dates = []
+    for d in drange:
+        try:
+            dt = datetime.datetime.strptime(d, '%m/%d/%Y')
+            dates.append(dt.strftime('%b %-d, %Y'))
+        except:
+            return False
+    return '-'.join(dates)
 
 
 def get_group_followers(grp_id):
@@ -294,7 +311,7 @@ def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='valu
 
 def hdx_less_default():
     return """
-@bodyBackgroundColor: @wfpBlueColor;
+@bodyBackgroundColor: @greenColor;
 @navTabsActiveColor: @wfpBlueColor;
 @orderByDropdownColor: @wfpBlueColor;
 @defaultLinkColor: @wfpBlueColor;
@@ -315,6 +332,11 @@ def hdx_less_default():
 
 def load_json(obj, **kw):
     return json.loads(obj, **kw)
+
+
+def escaped_dump_json(obj, **kw):
+    # escapes </ to prevent script tag hacking.
+    return json.dumps(obj, **kw).replace('</', '<\\/')
 
 
 def hdx_group_followee_list():
@@ -566,4 +588,61 @@ def hdx_popular(type_, number, min=1, title=None):
 
 def hdx_escape(item):
     import re
-    return re.sub("u&#39;([^']*)&#39;",r'\1', str(item))
+    return re.sub("u&#39;([^']*)&#39;", r'\1', str(item))
+
+
+def hdx_license_list():
+    license_touple_list = base.model.Package.get_license_options()
+    license_dict_list = [{'value': _id, 'text': _title} for _title, _id in license_touple_list]
+    return license_dict_list
+
+
+def hdx_methodology_list():
+    result = [{'value': 'Census', 'text': 'Census'}, {'value': 'Sample Survey', 'text': 'Sample Survey'},
+              {'value': 'Direct Observational Data/Anecdotal Data', 'text': 'Direct Observational Data/Anecdotal Data'},
+              {'value': 'Registry', 'text': 'Registry'}, {'value': 'Other', 'text': 'Other'}]
+    return result
+
+
+def hdx_location_list():
+    locations = logic.get_action('cached_group_list')({}, {})
+    locations_dict_list = [{'value': loc.get('name'), 'text': loc.get('title')} for loc in locations]
+    return locations_dict_list
+
+
+def hdx_organisation_list():
+    orgs = h.organizations_available('create_dataset')
+    orgs_dict_list = [{'value': org.get('name'), 'text': org.get('title')} for org in orgs]
+    return orgs_dict_list
+
+
+def hdx_tag_list():
+    if c.user:
+        context = {'model': model, 'session': model.Session, 'user': c.user}
+        tags = logic.get_action('tag_list')(context, {})
+        tags_dict_list = [{'value': tag, 'text': tag} for tag in tags]
+        return tags_dict_list
+    return []
+
+
+def hdx_frequency_list():
+    result = [{'value': '-1', 'text': '-- Please select --'}, {'value': '1', 'text': 'Every day'}, {'value': '7', 'text': 'Every week'},
+              {'value': '14', 'text': 'Every two weeks'}, {'value': '30', 'text': 'Every month'}, {'value': '90', 'text': 'Every three months'},
+              {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, {'value': '0', 'text': 'Never'}, ]
+    return result
+
+def hdx_get_frequency_by_value(value):
+    freqs = hdx_frequency_list()
+    for freq in freqs:
+        if value == freq.get('value'):
+            return freq.get('text')
+    return 'Never'
+
+
+
+def hdx_get_layer_info(id=None):
+    layer = explorer.explorer_data.get(id)
+    return layer
+
+def hdx_get_carousel_list():
+    return logic.get_action('hdx_carousel_settings_show')({}, {})

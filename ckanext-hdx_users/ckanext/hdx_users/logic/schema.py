@@ -30,8 +30,6 @@ from ckan.logic.validators import (package_id_not_changed,
                                    no_http,
                                    tag_not_uppercase,
                                    user_name_validator,
-    ## HDX HACK - ADD user_email_validator
-                                   user_email_validator,
                                    user_password_validator,
                                    user_both_passwords_entered,
                                    user_passwords_match,
@@ -79,8 +77,12 @@ from formencode.validators import OneOf
 import ckan.model
 import ckan.lib.maintain as maintain
 
+import ckan.plugins.toolkit as tk
+
 
 def register_user_schema():
+
+    user_email_validator = tk.get_validator('user_email_validator')
 
     schema = {
         # 'id': [ignore_missing, unicode],
@@ -99,7 +101,10 @@ def register_user_schema():
     }
     return schema
 
+
 def register_details_user_schema():
+
+    user_email_validator = tk.get_validator('user_email_validator')
 
     schema = {
         'id': [ignore_missing, unicode],

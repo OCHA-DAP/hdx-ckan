@@ -5,6 +5,8 @@ import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
+import ckanext.hdx_users.logic.validators as hdx_validators
+import ckanext.hdx_users.controllers.dashboard_controller as hdx_c
 
 
 def user_create(context, data_dict=None):
@@ -86,8 +88,6 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'token_create': create.token_create,
-            'token_show': get.token_show,
-            'token_show_by_id': get.token_show_by_id,
             'token_update': update.token_update,
             'onboarding_followee_list': get.onboarding_followee_list
         }
@@ -102,6 +102,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IValidators)
 
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
@@ -122,6 +123,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard_datasets',
                     ckan_icon='sitemap')
+        map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
+                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='dashboard_visualizations',
+                    ckan_icon='sitemap')
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
@@ -131,6 +136,10 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     action='request_reset')
         map.connect('/contribute', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
                     action='contribute')
+        map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                    action='contact_hdx')
+        map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+                    action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
         map.connect('/user/edit', controller='user', action='edit')
         map.connect('/user/activity/{id}/{offset}', controller='user', action='activity')
@@ -157,6 +166,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('user_datasets', '/user/{id:.*}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
                     ckan_icon='sitemap')
+        map.connect('delete_page', '/dashboard/visualization/delete/{id}', controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='hdx_delete_powerview',)
         return map
 
     def after_map(self, map):
@@ -168,7 +179,18 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
                     action='dashboard_datasets',
                     ckan_icon='sitemap')
+        map.connect('user_dashboard_visualizations', '/dashboard/visualizations',
+                    controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
+                    action='dashboard_visualizations',
+                    ckan_icon='sitemap')
         return map
 
     def get_actions(self):
-        return {}
+        return {
+
+        }
+
+    def get_validators(self):
+        return {
+            'user_email_validator': hdx_validators.user_email_validator
+        }

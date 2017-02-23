@@ -30,6 +30,7 @@ function prepareCountryList(countDatasets) {
         if (country == null || (country.dataset_count == null && country.indicator_count == null)) {
           $("<div class='country-item inactive'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
         } else {
+          console.log(JSON.stringify(country));
           var displayDatasets = 0;
           var displayIndicators = 0;
           if (country.dataset_count != null)
@@ -37,7 +38,9 @@ function prepareCountryList(countDatasets) {
           if (country.indicator_count != null)
             displayIndicators = country.indicator_count;
 
-          var item = $("<div class='country-item'></div>").appendTo(one_char_box);
+          var veryActive = (country.activity_level == "active") ? "very-active-country" : "";
+
+          var item = $("<div class='country-item " + veryActive + "'></div>").appendTo(one_char_box);
           var countryIdLower = country_id.toLowerCase();
           var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayIndicators + "</div><div class='marker-label'>indicators</div></div><div class='line-break'></div><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
         }
@@ -78,14 +81,27 @@ function prepareMap(countDatasets){
       popup.openOn(map);
     }
   };
-  resetFeature = function(e) {
-    var layer;
-    layer = e.target;
-    layer.setStyle({
+
+  getStyle = function(feature) {
+    if (feature.properties.activity_level == "active"){
+      return {
+        weight: 0,
+        fillOpacity: 0.5,
+        fillColor: '#f5837b'
+      }
+    }
+
+    return {
       weight: 0,
       fillOpacity: 0,
       fillColor: '#f2f2ef'
-    });
+    };
+  };
+
+  resetFeature = function(e) {
+    var layer;
+    layer = e.target;
+    layer.setStyle(getStyle(layer.feature));
   };
   featureClicked = function(e) {
     var code, layer;
@@ -93,6 +109,7 @@ function prepareMap(countDatasets){
     code = layer.feature.id.toLowerCase();
     openURL("group/" + code);
   };
+
   onEachFeature = function(feature, layer) {
     layer.on({
       mousemove: highlightFeature,
@@ -114,6 +131,7 @@ function prepareMap(countDatasets){
         feature.properties.datasets = countItem.dataset_count;
       if (countItem.indicator_count != null)
         feature.properties.indicators = countItem.indicator_count;
+      feature.properties.activity_level = countItem.activity_level;
     }
   }
   map = L.map('map', {
@@ -126,13 +144,6 @@ function prepareMap(countDatasets){
       noWrap: false
     }
   });
-  getStyle = function(feature) {
-    return {
-      weight: 0,
-      fillOpacity: 0,
-      fillColor: '#f2f2ef'
-    };
-  };
 
   map.scrollWheelZoom.disable();
   //map.featureLayer.setFilter(function() {
@@ -172,7 +183,6 @@ function prepareCount() {
   var datasetCounts = $("#datasetCounts");
   var dataPlain = datasetCounts.text();
   datasetCounts.remove();
-
   var data = JSON.parse(dataPlain);
 
   for (var i in data){
@@ -182,6 +192,7 @@ function prepareCount() {
     newItem.title = item.title;
     newItem.dataset_count = item.dataset_count;
     newItem.indicator_count = item.indicator_count;
+    newItem.activity_level = item.activity_level;
     countDatasets[code] = newItem;
   }
   return countDatasets;

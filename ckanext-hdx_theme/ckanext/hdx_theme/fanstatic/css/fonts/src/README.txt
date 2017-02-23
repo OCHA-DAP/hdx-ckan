@@ -7,5 +7,6 @@ How to update the icon bundles:
   - Generate Font -> Download
   - extract ZIP
   - copy content of fonts folder into the css/fonts folder inside the project
-  - rename style.css to hdx-icons.css for example
-  - replace previous file
+  - copy style.css to css/hdx-icons.css for example
+  - export settings: Projects -> HDX -> download
+  - replace previous file "icomoo-hdx-icons.json"

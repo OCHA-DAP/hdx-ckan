@@ -77,6 +77,12 @@ class SplashPageController(HomeController):
             if msg:
                 h.flash_notice(msg, allow_html=True)
 
+        # template_data = {
+        #     'data': {
+        #         'hdx.carousel.config': logic.get_action('hdx_carousel_settings_show')({}, {})
+        #     }
+        # }
+
         return base.render('home/index.html', cache_force=True)
 
     def _check_access(self, action_name, *args, **kw):

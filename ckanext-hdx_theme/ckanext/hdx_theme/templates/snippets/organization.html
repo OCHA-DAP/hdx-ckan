@@ -16,7 +16,6 @@ Example:
 {% resource 'hdx_theme/bs_tooltip.js' %}
 
 {% with truncate=truncate or 0, url=h.url_for(controller='organization', action='read', id=organization.name) %}
-
       {% if show_nums %}
         <div class="org-nums">
           {% if show_members_num %}
@@ -36,7 +35,7 @@ Example:
             {% else %}
             	{% if not h.user_in_org_or_group(organization.id) and h.check_access('hdx_basic_user_info') %}
             		<a href="#req-membership-div" data-toggle="modal" class="btn hdx-btn org-btn">{{ _('Request Membership') }}</a>
-            		{% snippet 'organization/snippets/req_membership.html', 
+            		{% snippet 'organization/snippets/req_membership.html',
             		form_url=h.url_for('request_membership', org_id=organization.name or organization.title), modal_div_id='req-membership-div' %}
             	{% endif %}
             {% endif %}
@@ -57,7 +56,7 @@ Example:
             	{{ h.follow_button('group', organization.id) }}
                 {% set follow_tooltip = _('If you want to get updates on this dataset, follow it here. Then you can go to your dashboard to see the latest updates.') %}
 				{% if user %}
-	         		 <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"   
+	         		 <a class="info-tooltip" onclick="return false;" href="#" data-module="bs_tooltip" data-module-placement="top"
           			data-toggle="tooltip" title="{{ follow_tooltip }}">{{ _("What's this?") }}</a>
 				{% endif%}
             </dd>

@@ -32,7 +32,7 @@
                             modal_div_id='req-membership-div', modal_div_class='fade',
                             form_action=data.links.request_membership %}
                 	{% endif %}
-                    <a href="{{ data.org_info.link }}" class="btn btn-inverted">{{ _("Visit Website") }}</a>
+                    <a href="{{ data.org_info.link }}" class="btn btn-inverted" target="_blank">{{ _("Visit Website") }}</a>
 
                     <div class="pull-right">
                         {% if data.permissions.edit %}

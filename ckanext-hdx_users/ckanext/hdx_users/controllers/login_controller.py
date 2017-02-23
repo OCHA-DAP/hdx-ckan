@@ -1,11 +1,11 @@
 """
-    Handles modifications to registration and login flow. 
+    Handles modifications to registration and login flow.
     Including password reset, logging in and redirecting user
     to the correct contribute page when not logged in.
 
     This is different from modifications to the registration
     and login flow made to add email validation to account
-    creation. That class is in mail_validation_controller.py 
+    creation. That class is in mail_validation_controller.py
 """
 import datetime
 import dateutil
@@ -20,6 +20,7 @@ import ckan.logic as logic
 from pylons import config
 import ckan.model as model
 import mail_validation_controller as hdx_mail_c
+import ckanext.hdx_users.helpers.tokens as tokens
 
 render = base.render
 
@@ -27,6 +28,8 @@ get_action = logic.get_action
 NotAuthorized = logic.NotAuthorized
 NotFound = logic.NotFound
 check_access = logic.check_access
+OnbErr = json.dumps({'success': False, 'error': {'message': _('Something went wrong. Please contact support.')}})
+OnbValidationErr = json.dumps({'success': False, 'error': {'message': _('You have not yet validated your email.')}})
 OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
 
 
@@ -43,19 +46,30 @@ class LoginController(ckan_user.UserController):
             base.abort(401, _('Unauthorized to request reset password.'))
 
         if request.method == 'POST':
-            user_id = request.params.get('user')
+            # user_id should be lowercase (for name and email)
+            user_id = request.params.get('user').lower()
 
             context = {'model': model,
                        'user': c.user}
 
-            data_dict = {'id': user_id}
             user_obj = None
             try:
-                get_action('user_show')(context, data_dict)
+                data_dict = get_action('user_show')(context, {'id': user_id})
                 user_obj = context['user_obj']
             except NotFound:
                 return hdx_mail_c.OnbUserNotFound
+            try:
+                token = tokens.token_show(context, data_dict)
+            except NotFound, e:
+                token = {'valid': True}  # Until we figure out what to do with existing users
+            except:
+                OnbErr
 
+            if not token['valid']:
+                # redirect to validation page
+                if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
+                    return hdx_mail_c.OnbSuccess
+                return OnbErr
             if user_obj:
                 try:
                     mailer.send_reset_link(user_obj)
@@ -108,11 +122,34 @@ class LoginController(ckan_user.UserController):
             else:
                 return self.login(error=err)
 
+    def _new_login(self, message, page_subtitle, error=None):
+        self.login(error)
+        # vars = {'contribute': True}
+        tmp = hdx_mail_c.ValidationController()
+        return tmp.new_login(info_message=message, page_subtitle=page_subtitle)
+
     def contribute(self, error=None):
         """
         If the user tries to add data but isn't logged in, directs
         them to a specific contribute login page.
         """
-        self.login(error)
-        vars = {'contribute': True}
-        return base.render('user/login.html', extra_vars=vars)
+
+        return self._new_login(_('In order to add data, you need to login below or register on HDX'),
+                               _('Login to contribute'), error=error)
+
+    def contact_hdx(self, error=None):
+        """
+        If the user tries to contact contributor but isn't logged in, directs
+        them to a specific login page.
+        """
+        return self._new_login(_('In order to contact the contributor, you need to login below or register on HDX'),
+                               _('Login to contact HDX'), error=error)
+
+    def save_mapexplorer_config(self, error=None):
+        """
+        If the user tries to save a map explorer configuration, we direct
+        them to a specific login page.
+        """
+        return self._new_login(
+            _('In order to save a custom map explorer view, you need to login below or register on HDX'),
+            _('Login to save map explorer view'), error=error)

@@ -1,0 +1,29 @@
+{% import 'macros/form.html' as form %}
+
+<form class="dataset-form form-horizontal" method="post" data-module="basic-form">
+  {% block error_summary %}
+    {{ form.errors(error_summary) }}
+  {% endblock %}
+
+  {% block basic_fields %}
+    {% set organizations = h.list_organizations() %}
+    <div class="control-group">
+      <label for="field-organizations" class="control-label">{{ _('Organization') }}</label>
+      <div class="controls">
+        <select id="field-organizations" name="organization" data-module="autocomplete">
+          <option value="" {% if not (data.organization or selected_organization) %} selected="selected" {% endif %}>{{ _('Select an organization...') }}</option>
+          {% for organization in organizations %}
+            {% set select = (selected_organization and selected_organization == organization.name) or (data.organization and data.organization == organization.id) %}
+            <option value="{{ organization.id }}" {% if select %} selected="selected" {% endif %}>{{ organization.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    {% set format_attrs = {'data-module': 'autocomplete'} %}
+    {{ form.select('role', label=_('Role'), options=c.roles, selected=c.user_role, error='', attrs=format_attrs) }}
+  {% endblock %}
+
+  <div class="form-actions">
+    <button class="btn btn-primary" name="save" type="submit">{% block save_text %}{{ _('Send request') }}{% endblock %}</button>
+  </div>
+</form>

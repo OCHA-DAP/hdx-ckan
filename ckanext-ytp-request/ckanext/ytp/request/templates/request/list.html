@@ -1,0 +1,48 @@
+{% extends "request/page.html" %}
+
+{% block subtitle %}{{ _('Received membership requests') }}{% endblock %}
+
+{% block secondary_content %}
+  <section class="module module-narrow">
+    <h2 class="module-heading"><i class="icon-large icon-info-sign"></i> {{ _('Received membership requests') }}</h2>
+    <div class="module-content">
+      <p>
+        {% trans -%}
+        All received membership requests are listed here. The organization admin can approve or reject requests. To process a request, select edit. Admins can edit the organization, datasets and accept membership requests. Editor can only edit datasets.
+        {%- endtrans %}
+      </p>
+    </div>
+  </section>
+{% endblock %}
+
+{% block primary_content %}
+  <section class="module">
+    <div class="module-content">
+      <h1>{% trans %}Received membership requests{% endtrans %}</h1>
+
+      {% if member_requests %}
+      <table class="table table-striped table-bordered table-condensed">
+        <thead>
+          <tr>
+             <th>{% trans %}Organization{% endtrans %}</th>
+             <th>{% trans %}User{% endtrans %}</th>
+             <th> </th>
+          </tr>
+        </thead>
+        <tfoot> </tfoot>
+        <tbody>
+        {% for member_request in member_requests %}
+          <tr>
+            <td>{{ member_request.group_name }}</td>
+            <td>{{ member_request.user_name }}</td>
+            <td><a href="{{ h.url_for('member_request_show', member_id=member_request.id) }}" class="btn btn-primary">{% trans %}Edit{% endtrans %}</a></td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>{% trans %}No requests found.{% endtrans %}</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

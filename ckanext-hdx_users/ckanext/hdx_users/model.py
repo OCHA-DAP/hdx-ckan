@@ -67,7 +67,7 @@ class ValidationToken(DomainObject):
 
 validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
-                               Column('user_id', types.UnicodeText, ForeignKey('user.id')),
+                               Column('user_id', types.UnicodeText, ForeignKey('user.id'), unique=True),
                                Column('token', types.UnicodeText),
                                Column('valid', types.Boolean)
                                )

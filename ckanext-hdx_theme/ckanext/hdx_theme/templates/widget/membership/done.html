@@ -1,0 +1,30 @@
+{#
+Done widget
+
+Depends on:
+    Fanstatic resource bundle "popup"
+
+Example:
+    {{ h.snippet('widget/membership/done.html', id="membershipDonePopup") }}
+#}
+{% resource 'hdx_theme/widget/onboarding/done.css' %}
+{% set class = "popup-onbording" %}
+{% set title = "Your message was sent" %}
+
+{% extends "widget/onboarding/notification.html" %}
+
+{% block notification_content %}
+    <div class="done-widget">
+        <div class="center">
+            <img class="gif mTop20" src="/images/onboarding/outgoingmail.gif">
+            <div class="to-message" style="display: none;">
+                <div class="mTop30 notification-message">
+                    <strong>To:</strong>
+                </div>
+                <div class="notification-message to-message-container">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

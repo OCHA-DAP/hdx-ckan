@@ -1,7 +1,17 @@
 /* Style Resources List */
-.resource-item .description{
-	text-align: justify;
-	max-width: 450px;
-}
+    .resource-list{
+        list-style: none;
+    }
+
+	.resource-item .description{
+		text-align: justify;
+		max-width: 450px;
+	}
+
+	.format-filesize-label{
+		font-size: 14px;
+		font-weight: normal;
+		color: #000;
+	}
 /* END Style Resources List*/
 

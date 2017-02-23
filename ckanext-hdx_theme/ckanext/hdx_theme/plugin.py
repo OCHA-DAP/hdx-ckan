@@ -1,17 +1,14 @@
-import ckanext.hdx_package.helpers.licenses as hdx_licenses
-
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
-import ckan.model.package as package
-import ckan.model.license as license
-import pylons.config as config
-import version
+import inspect
+import json
+import os
+import urlparse
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
-import inspect
-import os
-import json
+import pylons.config as config
+
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
 
 
 # def run_on_startup():
@@ -50,7 +47,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         '''
         # we want the filename that of the function caller but they will
         # have used one of the available helper functions
-        frame, filename, line_number, function_name, lines, index =\
+        frame, filename, line_number, function_name, lines, index = \
             inspect.getouterframes(inspect.currentframe())[1]
 
         this_dir = os.path.dirname(filename)
@@ -58,14 +55,62 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         import ckan.lib.fanstatic_resources
         ckan.lib.fanstatic_resources.create_library(name, absolute_path, False)
 
-
     def update_config(self, config):
         toolkit.add_template_directory(config, 'templates')
         toolkit.add_template_directory(config, 'templates_legacy')
         toolkit.add_public_directory(config, 'public')
         #self._add_resource('fanstatic', 'hdx_theme')
         toolkit.add_resource('fanstatic', 'hdx_theme')
+        # Add configs needed for checks
+        self.__add_dataproxy_url_for_checks(config)
+        self.__add_gis_layer_config_for_checks(config)
+        self.__add_spatial_config_for_checks(config)
+        self.__add_hxl_proxy_url_for_checks(config)
 
+    def __add_dataproxy_url_for_checks(self, config):
+        dataproxy_url = config.get('hdx.datapreview.url', '')
+        dataproxy_url = self._create_full_URL(dataproxy_url)
+        config['hdx_checks.dataproxy_url'] = dataproxy_url
+
+    def __add_gis_layer_config_for_checks(self, config):
+        gis_layer_api = config.get('hdx.gis.layer_import_url', '')
+        api_index = gis_layer_api.find('/api')
+        gis_layer_base_api = gis_layer_api[0:api_index]
+        gis_layer_base_api = self._create_full_URL(gis_layer_base_api)
+        config['hdx_checks.gis_layer_base_url'] = gis_layer_base_api
+
+    def __add_spatial_config_for_checks(self, config):
+        search_str = '/services'
+        spatial_url = config.get('hdx.gis.resource_pbf_url', '')
+        url_index = spatial_url.find(search_str)
+        spatial_check_url = spatial_url[0:url_index+len(search_str)]
+        spatial_check_url = self._create_full_URL(spatial_check_url)
+        config['hdx_checks.spatial_checks_url'] = spatial_check_url
+
+    def __add_hxl_proxy_url_for_checks(self, config):
+        hxl_proxy_url = self._create_full_URL('/hxlproxy/data.json?url=test')
+        config['hdx_checks.hxl_proxy_url'] = hxl_proxy_url
+
+    def _create_full_URL(self, url):
+        '''
+        Different URLs specified in prod.ini might be relative URLs or be
+        protocol independent.
+        This function tries to guess the full URL.
+
+        :param url: the url to be modified if needed
+        :type url: str
+        '''
+        urlobj = urlparse.urlparse(url)
+        if not urlobj.netloc:
+            base_url = config.get('ckan.site_url')
+            base_urlobj = urlparse.urlparse(base_url)
+            urlobj = urlobj._replace(scheme=base_urlobj.scheme)
+            urlobj = urlobj._replace(netloc=base_urlobj.netloc)
+
+        if not urlobj.scheme:
+            urlobj = urlobj._replace(scheme='https')
+
+        return urlobj.geturl()
 
     def before_map(self, map):
         map.connect(
@@ -99,7 +144,29 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
+        map.connect('/explore', controller='ckanext.hdx_theme.controllers.explorer:ExplorerController', action='show')
+
         #map.connect('resource_edit', '/dataset/{id}/resource_edit/{resource_id}', controller='ckanext.hdx_theme.package_controller:HDXPackageController', action='resource_edit', ckan_icon='edit')
+
+        map.connect('carousel_settings', '/ckan-admin/carousel/show',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='show')
+
+        map.connect('global_file_download', '/global/{filename}',
+                    controller='ckanext.hdx_theme.controllers.global_file_server:GlobalFileController',
+                    action='global_file_download')
+
+        map.connect('update_carousel_settings', '/ckan-admin/carousel/update',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController', action='update')
+
+        map.connect('delete_carousel_settings', '/ckan-admin/carousel/delete/{id}',
+                    controller='ckanext.hdx_theme.controllers.custom_settings:CustomSettingsController',
+                    action='delete')
+
+        map.connect('image_serve', '/image/{label}',
+                    controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='org_file')
+
+        map.connect('dataset_image_serve', '/dataset_image/{label}',
+                    controller='ckanext.hdx_theme.controllers.image_controller:ImageController', action='dataset_file')
 
         return map
 
@@ -149,10 +216,21 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'count_public_datasets_for_group': hdx_helpers.count_public_datasets_for_group,
             'hdx_resource_preview': hdx_helpers.hdx_resource_preview,
             'load_json': hdx_helpers.load_json,
+            'escaped_dump_json': hdx_helpers.escaped_dump_json,
             'json_dumps': json.dumps,
             'hdx_less_default': hdx_helpers.hdx_less_default,
             'hdx_popular': hdx_helpers.hdx_popular,
             'hdx_escape': hdx_helpers.hdx_escape,
+            'get_dataset_date_format': hdx_helpers.get_dataset_date_format,
+            'hdx_methodology_list': hdx_helpers.hdx_methodology_list,
+            'hdx_license_list': hdx_helpers.hdx_license_list,
+            'hdx_location_list': hdx_helpers.hdx_location_list,
+            'hdx_organisation_list': hdx_helpers.hdx_organisation_list,
+            'hdx_tag_list': hdx_helpers.hdx_tag_list,
+            'hdx_frequency_list': hdx_helpers.hdx_frequency_list,
+            'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
+            'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list,
+            'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
         }
 
     def get_actions(self):
@@ -162,15 +240,17 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'cached_group_list': hdx_actions.cached_group_list,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
-            'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
+            # 'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
             'hdx_send_new_org_request': hdx_actions.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': hdx_actions.hdx_send_editor_request_for_org,
-            'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
+            # 'hdx_send_request_membership': hdx_actions.hdx_send_request_membership,
             'hdx_user_show': hdx_actions.hdx_user_show,
             'hdx_get_indicator_values': hdx_actions.hdx_get_indicator_values,
             # 'hdx_get_shape_geojson': hdx_actions.hdx_get_shape_geojson,
-            'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
+            # 'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
             'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
+            'hdx_carousel_settings_show': hdx_actions.hdx_carousel_settings_show,
+            'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
         }
@@ -181,9 +261,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'group_member_create': auth.group_member_create,
             'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
-            'hdx_send_request_membership': auth.hdx_send_request_membership
+            # 'hdx_send_request_membership': auth.hdx_send_request_membership
         }
 
-    # def make_middleware(self, app, config):
-    #     run_on_startup()
-    #     return app
+        # def make_middleware(self, app, config):
+        #     run_on_startup()
+        #     return app

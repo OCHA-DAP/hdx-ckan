@@ -5,10 +5,13 @@
 
 /* Order DropDown style */
 .control-order-by {
+  float: right;
+  height: inherit;
   label {
     .gothamBoldFont(12px);
     color: @grayColor;
     .letter-spacing-3;
+    line-height: 20px;
   }
 
   .orderDropdown {
@@ -20,6 +23,7 @@
       color: @orderByDropdownColor;
       text-align: left;
       margin-top: -4px;
+      padding: 0;
 
       .caret {
         margin-top: 6px;

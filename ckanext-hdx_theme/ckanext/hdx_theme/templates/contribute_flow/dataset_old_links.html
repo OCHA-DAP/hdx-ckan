@@ -1,0 +1,24 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Please use the new contribute flow") }}{% endblock %}
+{% block breadcrumb_content %}
+  <li class="active">{{ _('Notice') }}</li>
+{% endblock %}
+
+
+{% block primary %}
+    <h2>{{ _('Notice') }} !</h2>
+    <div>
+        <p>{{ _("Please use the new contribute flow! This URL is no longer in use.") }}</p>
+        {% if c.userobj %}
+            {%  if data.notice %}
+                <p>{{ data.notice }} <a onclick="contributeAddDetails({{ data.dataset_id }})" href="#">{{ _('here') }}</a></p>
+            {% endif %}
+        {% else %}
+            <p>{{ _('You will need to log in first.') }}</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block secondary %}
+{% endblock %}

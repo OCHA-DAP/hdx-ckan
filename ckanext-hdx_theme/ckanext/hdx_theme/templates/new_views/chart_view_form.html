@@ -1,0 +1,21 @@
+{% import 'macros/form.html' as form %}
+
+{{ form.select('chart_type', label=_('Chart type'), options=chart_type, selected=data.chart_type, error=errors.chart_type) }}
+
+{{ form.input('x_axis_label', id='field-x-label', label=_('X Axis Label'), placeholder=_('Enter label for the X axis'),
+    value=data.x_axis_label, error=errors.x_axis_label, classes=['control-medium']) }}
+{{ form.input('y_axis_label', id='field-y-label', label=_('Y Axis Label'), placeholder=_('Enter label for the Y axis'),
+    value=data.y_axis_label, error=errors.y_axis_label, classes=['control-medium']) }}
+
+{{ form.select('x_column', label=_('X Column'), options=datastore_columns, selected=data.x_column, error=errors.x_column) }}
+{{ form.select('y_column', label=_('Y Column'), options=datastore_columns, selected=data.y_column, error=errors.y_column) }}
+
+
+{{ form.input('chart_data_source', id='char-data-source', label=_('Chart Data Source'), placeholder=_('Source for this chart'),
+    value=data.chart_data_source, error=errors.chart_data_source, classes=['control-medium']) }}
+
+{{ form.input('data_link_url', id='data-link-url', label=_('Data Link URL'), placeholder=_('Source data URL for this chart'),
+    value=data.data_link_url, error=errors.data_link_url, classes=['control-medium']) }}
+
+{{ form.input('data_label', id='data-label', label=_('Label'), placeholder=_('Label that will show in the chart legend'),
+    value=data.data_label, error=errors.data_label, classes=['control-medium']) }}

@@ -2,6 +2,7 @@ import logging, re
 import unicodedata
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+from ckan.common import _
 
 import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
@@ -20,6 +21,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IFacets, inherit=True)
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
@@ -28,17 +30,17 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {}
 
     def before_map(self, map):
+        map.connect('simple_search',
+            '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('search', '/search',
                     controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('simple_search',
-            '/dataset', controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search')
         return map
 
     def after_map(self, map):
+        map.connect('simple_search',
+            '/dataset', controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
         map.connect('search', '/search',
                     controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search')
-        map.connect('simple_search',
-            '/dataset', controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search')
         return map
 
     def before_search(self, search_params):
@@ -54,13 +56,23 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
             search_params['facet.field'].append('vocab_Topics')
 
+        def adapt_solr_fq(param_name):
+            '''
+            :param param_name: request param name without the "ext_" part, for example "indicator"
+            :type str:
+            '''
+            req_param = 'ext_{}'.format(param_name)
+            solr_param = 'extras_{}'.format(param_name)
+            if req_param in search_params['extras']:
+                if int(search_params['extras'][req_param]) == 1:
+                    search_params['fq'] += ' +{}:1'.format(solr_param)
+                elif int(search_params['extras'][req_param]) == 0:
+                    search_params['fq'] += ' -{}:1'.format(solr_param)
+
         # If indicator flag is set, search only that type
-        if 'ext_indicator' in search_params['extras']:
-            if int(search_params['extras']['ext_indicator']) == 1:
-                search_params['fq'] = search_params['fq'] + ' +extras_indicator:1'
-            elif int(search_params['extras']['ext_indicator']) == 0:
-                search_params['fq'] = search_params[
-                    'fq'] + ' -extras_indicator:1'
+        adapt_solr_fq("indicator")
+        adapt_solr_fq("subnational")
+
         return search_params
 
     def after_search(self, search_results, search_params):
@@ -83,3 +95,9 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         return {
             'populate_related_items_count': actions.populate_related_items_count
         }
+
+    def dataset_facets(self, facets_dict, package_type):
+        facets_dict['indicator'] = _('Indicators')
+        facets_dict['subnational'] = _('Subnational')
+
+        return facets_dict

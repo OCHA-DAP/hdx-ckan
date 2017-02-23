@@ -10,13 +10,16 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.dictization as d
+from ckan.common import c
+import ckan.lib.helpers as helpers
 
 import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
-import ckanext.hdx_org_group.controllers.country_controller as ctrlr
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 
-import ckan.lib.helpers as helpers
-import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+
+from ckanext.hdx_theme.helpers.actions import _make_rest_api_request as make_rest_api_request
 
 import shlex
 import subprocess
@@ -28,7 +31,7 @@ _get_or_bust = logic.get_or_bust
 NotFound = logic.NotFound
 
 IndicatorAccess = indicator_access.IndicatorAccess
-dataseries_list = ctrlr.indicators_4_top_line_list
+dataseries_list = widget_data_service.indicators_4_top_line_list
 
 
 @logic.side_effect_free
@@ -108,6 +111,30 @@ def hdx_topline_num_for_group(context, data_dict):
         for item in top_line_items:
             item['source_system'] = 'datastore'
             del item['units']
+    elif group_info.get('activity_level') == 'active':
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+            group_info).get_dataset_results()
+
+        def _parse_integer_value(item):
+            try:
+                value = float(item.get('value', ''))
+            except:
+                value = None
+            return value
+
+        top_line_items = [
+            {
+                'source_system': 'reliefweb crisis app',
+                'code': item.get('indicatorTypeCode', ''),
+                'title': item.get('indicatorTypeName', ''),
+                'source_link': item.get('datasetLink', ''),
+                'source': item.get('sourceName', ''),
+                'value': _parse_integer_value(item),
+                'latest_date': item.get('time', ''),
+                'units': item.get('units', )
+            }
+            for item in top_line_data_list
+        ]
     else:
         # source is CPS
         ckan_site_url = config.get('ckan.site_url')
@@ -145,6 +172,8 @@ def hdx_light_group_show(context, data_dict):
     group = model.Group.get(id)
     if not group:
         raise NotFound
+    if group.state == 'deleted' and (not c.userobj or not c.userobj.sysadmin):
+        raise NotFound
     # group_dict['group'] = group
     group_dict['id'] = group.id
     group_dict['name'] = group.name
@@ -152,6 +181,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['display_name'] = group_dict['title'] = group.title
     group_dict['description'] = group.description
     group_dict['revision_id'] = group.revision_id
+    group_dict['state'] = group.state
 
     result_list = []
     for name, extra in group._extras.iteritems():
@@ -202,12 +232,23 @@ def hdx_trigger_screencap(context, data_dict):
         return False
     if not cfg['screen_cap_asset_selector']:  # If there's no selector set just don't bother
         return False
-    try:
-        command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
-            'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
-        print command
-        args = shlex.split(command)
-        subprocess.Popen(args)
-        return True
-    except:
-        return False
+
+    return org_helper.hdx_capturejs(config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg['org_name']),
+                                    file_path, cfg['screen_cap_asset_selector'])
+    # try:
+    #     command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
+    #         'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
+    #     print command
+    #     args = shlex.split(command)
+    #     subprocess.Popen(args)
+    #     return True
+    # except:
+    #     return False
+
+
+@logic.side_effect_free
+def hdx_get_locations_info_from_rw(context, data_dict):
+    url = data_dict.get('rw_url')
+    if url:
+        return make_rest_api_request(url)
+    return None
