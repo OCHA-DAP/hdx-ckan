@@ -26,7 +26,8 @@ def get_packages():
             "name": "test_indicator_1",
             "notes": "This is a hdxtest indicator",
             "title": "Test Indicator 1",
-            "groups": [{"name": "roger"}]
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
         },
         {
             "package_creator": "test function",
@@ -41,7 +42,8 @@ def get_packages():
             "name": "test_indicator_2",
             "notes": "This is a hdxtest indicator 2",
             "title": "Test Indicator 2",
-            "groups": [{"name": "roger"}]
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
         },
         {
             "package_creator": "test function",
@@ -55,7 +57,8 @@ def get_packages():
             "name": "test_dataset_1",
             "notes": "This is a hdxtest dataset 1",
             "title": "Test Dataset 1",
-            "groups": [{"name": "roger"}]
+            "groups": [{"name": "roger"}],
+            "owner_org": "hdx-test-org",
         },
         {
             "package_creator": "test function",

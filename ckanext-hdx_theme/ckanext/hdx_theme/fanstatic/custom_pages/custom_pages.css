@@ -1,0 +1,14 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.hdx-visible-element {
+  display: inherit;
+}
+.hdx-invisible-element {
+  display: none;
+}

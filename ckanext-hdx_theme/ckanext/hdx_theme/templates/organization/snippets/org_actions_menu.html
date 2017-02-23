@@ -1,0 +1,38 @@
+{% extends "indicator/snippets/base_actions_menu.html" %}
+
+{% set panel_title = _('Share Org') %}
+{% set title = organization.title %}
+
+{% set base_type = 'group' %}
+{% set base_title = 'organisation' %}
+
+{% set membership = c.org_meta.group_message_info %}
+{% set group_topics = membership.data.group_topics %}
+{% set hide_contact_contributor = true %}
+{% set org_id = organization.id %}
+{% set follow_id = org_id %}
+
+{% block user_actions %}
+    {% if can_create_dataset %}
+        <li>
+            <a href="#" onclick="contributeAddDetails()">
+                {{_('Add Dataset')}}
+            </a>
+        </li>
+    {% endif %}
+    {% if can_edit %}
+        <li>
+            {% link_for _('Edit'), controller='organization', action='edit', id=c.group_dict.name, class_='' %}
+        </li>
+    {% endif %}
+    {% if request_membership %}
+        <li>
+            <a href="#" class="" data-toggle="modal" data-target="#req-membership-div">
+                {{ _("Request Membership") }}
+            </a>
+            {% snippet 'organization/snippets/req_membership_new.html',
+                modal_div_id='req-membership-div', modal_div_class='fade',
+                    form_action=h.url_for('member_request_new'), org_id=c.org_meta.org_dict.id %}
+        </li>
+    {% endif %}
+{% endblock %}}

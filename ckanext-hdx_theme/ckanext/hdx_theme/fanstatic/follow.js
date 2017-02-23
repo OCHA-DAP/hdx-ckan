@@ -19,7 +19,7 @@ this.ckan.module('hdx_follow', function($, _) {
 			type: null,
 			id: null,
 			loading: false,
-      extra_text: "",
+      		extra_text: "",
 			i18n: {
 				follow: _('Follow'),
 				unfollow: _('Unfollow')

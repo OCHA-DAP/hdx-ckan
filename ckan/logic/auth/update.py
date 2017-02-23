@@ -326,3 +326,11 @@ def bulk_update_delete(context, data_dict):
     if not authorized:
         return {'success': False}
     return {'success': True}
+
+
+# Below function related to config_options have been backported from CKAN 2.5
+def config_option_update(context, data_dict):
+    '''Update the runtime-editable configuration options
+       Only sysdmins can do it
+    '''
+    return {'success': False}

@@ -1,7 +1,7 @@
 {% import 'macros/form.html' as form %}
 <div class="paddingLeftHack">
   <div class="mTop35">
-<form class="dataset-form form-horizontal" method="post" action="{{ action }}">
+<form class="dataset-form form-horizontal" method="post" action="{{ action }}" id="user-edit-form">
   {{ form.errors(error_summary) }}
 
   <fieldset>
@@ -12,7 +12,7 @@
     {{ form.input('fullname', label=_('Full name'), id='field-fullname', value=data.fullname, error=errors.fullname, placeholder=_('eg. Joe Bloggs'), classes=['control-medium']) }}
 
     {{ form.input('email', label=_('Email'), id='field-email', type='email', value=data.email, error=errors.email, placeholder=_('eg. joe@example.com'), classes=['control-medium'], is_required=true) }}
-	
+
 	{% set format_attrs = {'style':'width: 333px;'} %}
     {{ form.textarea('about', label=_('About'), id='field-about', value=data.about, error=errors.about, placeholder=_('A little information about yourself'), classes=['control-medium'],attrs=format_attrs) }}
 

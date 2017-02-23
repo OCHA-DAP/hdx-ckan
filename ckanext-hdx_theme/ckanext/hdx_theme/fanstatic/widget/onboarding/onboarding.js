@@ -11,6 +11,10 @@ function notYou(){
 }
 
 function showOnboardingWidget(id){
+    if (id == "#signupPopup") {
+        // we only want to send the analytics event for the sign-up widget
+        hdxUtil.analytics.sendUserRegisteredEvent("start user register");
+    }
     $(id).show();
     $(id).find("input[type!='button']:visible:first").focus();
 
@@ -116,6 +120,16 @@ $(document).ready(function(){
         errMsg.show();
 
     }
+
+    //check for login info message
+    var loginInfo = $("#login-info").text();
+    if (loginInfo && loginInfo != ""){
+        var errMsg = $("#login-info-message");
+        errMsg.text(loginInfo);
+        notYou();
+        errMsg.show();
+    }
+
     var userLogin = $("#user-login").text();
     if (userLogin && userLogin != ""){
         showOnboardingWidget("#loginPopup");

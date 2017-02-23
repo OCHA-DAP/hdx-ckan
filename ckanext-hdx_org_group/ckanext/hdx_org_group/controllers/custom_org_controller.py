@@ -14,7 +14,7 @@ import ckan.common as common
 import ckan.lib.helpers as h
 import ckan.new_authz as new_authz
 
-import ckanext.hdx_search.controllers.simple_search_controller as simple_search_controller
+import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.helpers.helpers as hdx_helpers
@@ -22,6 +22,8 @@ import ckan.controllers.organization as org
 import ckanext.hdx_theme.helpers.less as less
 from urllib import urlencode
 from pylons import config
+from ckan.controllers.api import CONTENT_TYPES
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 
 render = base.render
 abort = base.abort
@@ -30,6 +32,7 @@ NotAuthorized = logic.NotAuthorized
 get_action = logic.get_action
 c = common.c
 request = common.request
+response = common.response
 _ = common._
 
 log = logging.getLogger(__name__)
@@ -53,25 +56,37 @@ def _get_embed_url(viz_config):
     return url
 
 
-class CustomOrgController(org.OrganizationController, simple_search_controller.HDXSimpleSearchController):
-    def org_read(self, id):
+class CustomOrgController(org.OrganizationController, search_controller.HDXSearchController):
+    def org_read(self, id, org_meta=None):
+        '''
 
-        org_info = self.get_org(id)
+        :param id: The id of the organization
+        :type id: str
+        :param org_meta: Information about the organization
+        :type org_meta: org_meta_dao.OrgMetaDao
+        :return:
+        '''
 
-        template_data = self.generate_template_data(org_info)
+        if not org_meta:
+            log.info("No org meta. Should have been created in organization_controller.py. Trying to create one now. ")
+            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+        c.org_meta = org_meta
 
-        css_dest_dir = '/organization/' + org_info['name']
+        org_info = self.get_org(org_meta)
 
-        template_data['style'] = {
-            'css_path': less.generate_custom_css_path(css_dest_dir, id, org_info['modified_at'], True)
-        }
+        if self._is_facet_only_request():
+            c.full_facet_info = self.get_dataset_search_results(org_info['name'])
+            response.headers['Content-Type'] = CONTENT_TYPES['json']
+            return json.dumps(c.full_facet_info)
+        else:
+            template_data = self.generate_template_data(org_info)
 
-        result = render(
-            'organization/custom/custom_org.html', extra_vars=template_data)
+            result = render(
+                'organization/custom/custom_org.html', extra_vars=template_data)
 
-        return result
+            return result
 
-    def assemble_viz_config(self, vis_json_config):
+    def assemble_viz_config(self, vis_json_config, org_id=None):
         try:
             visualization = json.loads(vis_json_config)
         except Exception, e:
@@ -91,6 +106,17 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'geo': h.url_for('perma_storage_file', id=visualization.get('viz-geo-dataset-id', ''),
                                  resource_id=visualization.get('viz-geo-resource-id', '')),
                 'source': visualization.get('viz-data-source', '')
+            })
+
+        if visualization.get('visualization-select', '') == 'embedded' or visualization.get('visualization-select', '') == 'embedded-preview':
+            config.update({
+                'title': visualization.get('vis-title', ''),
+                'data_link_url': visualization.get('vis-data-link-url', ''),
+                'vis_url': visualization.get('vis-url', ''),
+                'height': visualization.get('vis-height', '600px') if visualization.get('vis-height', '600px') != '' else '600px',
+                'width': visualization.get('vis-width', '100%') if visualization.get('vis-width', '100%') != '' else '100%',
+                'selector': visualization.get('vis-preview-selector', ''),
+                'embedded_preview': h.url_for('image_serve', label=org_id + '_embedded_preview.png')
             })
 
         if visualization.get('visualization-select', '') == 'WFP':
@@ -126,6 +152,9 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                                'whoFieldName': visualization.get('who-column', ''),
                                'whatFieldName': visualization.get('what-column', ''),
                                'whereFieldName': visualization.get('where-column', ''),
+                               'startFieldName': visualization.get('start-column', ''),
+                               'endFieldName': visualization.get('end-column', ''),
+                               'formatFieldName': visualization.get('format-column', ''),
                                'geotype': geotype,
                                'geo': geo,
                                'joinAttribute': visualization.get('where-column-2', ''),
@@ -151,16 +180,15 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
         req_params = self.process_req_params(org_id, request.params)
 
         activities = None
-        facets = {}
-        query_placeholder = ''
+        # facets = {}
+        # query_placeholder = ''
         try:
-            tab_results, all_results = self.get_dataset_search_results(
-                org_id, request.params)
-            tab = self.get_tab_name()
-            query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
+            c.full_facet_info = self.get_dataset_search_results(org_id)
+            c.tab = tab = self.get_tab_name()
+            # query_placeholder = self.generate_query_placeholder(tab, c.dataset_counts, c.indicator_counts)
 
-            facets = self.get_facet_information(
-                tab_results, all_results, tab, req_params)
+            # facets = self.get_facet_information(
+            #     tab_results, all_results, tab, req_params)
             if tab == 'activities':
                 activities = self.get_activity_stream(org_info.get('id', org_id))
         except Exception, e:
@@ -175,7 +203,7 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                                               {'organization_id': org_info['id'],
                                                'owner_org': org_info['id']})
 
-        viz_config = self.assemble_viz_config(org_info['visualization_config'])
+        viz_config = self.assemble_viz_config(org_info['visualization_config'], org_id)
 
         follower_count = get_action('group_follower_count')(
             {'model': model, 'session': model.Session},
@@ -189,9 +217,9 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                 'follower_count': follower_count,
                 'top_line_items': top_line_items,
                 'search_results': {
-                    'facets': facets,
+                    # 'facets': facets,
                     'activities': activities,
-                    'query_placeholder': query_placeholder
+                    # 'query_placeholder': query_placeholder
                 },
                 'links': {
                     'edit': h.url_for('organization_edit', id=org_id),
@@ -233,71 +261,32 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             '; '.join([e.get('message', '') for e in template_data['errors']])
         return template_data
 
-    def get_org(self, org_id):
-        group_type = 'organization'
+    def get_org(self, org_meta):
+        '''
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
-                   'schema': self._db_to_form_schema(group_type=group_type),
-                   'for_view': True}
-        data_dict = {'id': org_id}
+        :param org_meta: Information about the organization
+        :type org_meta: org_meta_dao.OrgMetaDao
+        :return: a dict containing more information specific for custom orgs
+        :rtype: dict
+        '''
 
-        try:
-            context['include_datasets'] = False
-            result = get_action(
-                'hdx_light_group_show')(context, data_dict)
+        result = org_meta.org_dict
 
-            org_url = [el.get('value', None) for el in result.get('extras', []) if el.get('key', '') == 'org_url']
+        org_dict = {
+            'id': result['id'],
+            'display_name': result.get('display_name', ''),
+            'description': result['description'],
+            'name': result['name'],
+            'link': org_meta.org_dict.get('extras', {}).get('org_url'),
+            'revision_id': result['revision_id'],
+            'topline_resource': org_meta.customization.get('topline_resource'),
+            'modified_at': result.get('modified_at', ''),
+            'image_sq': org_meta.customization.get('image_sq'),
+            'image_rect': org_meta.customization.get('image_rect'),
+            'visualization_config': result.get('visualization_config', ''),
+        }
 
-            json_extra = [el.get('value', None) for el in result.get('extras', []) if
-                          el.get('key', '') == 'customization']
-            jsonstring = json_extra[0] if len(json_extra) == 1 else ''
-            if jsonstring and jsonstring.strip():
-                json_dict = json.loads(jsonstring)
-                top_line_src_info = self._get_top_line_src_info(json_dict)
-                images = self._get_images(json_dict)
-            else:
-                top_line_src_info = (None, None)
-                images = (None, None)
-
-            org_dict = {
-                'id': result['id'],
-                'display_name': result.get('display_name', ''),
-                'description': result['description'],
-                'name': result['name'],
-                'link': org_url[0] if len(org_url) == 1 else None,
-                'revision_id': result['revision_id'],
-                'topline_resource': top_line_src_info,
-                'modified_at': result.get('modified_at', ''),
-                'image_sq': images[0],
-                'image_rect': images[1],
-                'visualization_config': result.get('visualization_config', ''),
-            }
-
-            return org_dict
-
-        except NotFound:
-            abort(404, _('Org not found'))
-        except NotAuthorized:
-            abort(401, _('Unauthorized to read org %s') % id)
-
-        return {}
-
-    def _get_images(self, json_dict):
-        if 'image_sq' in json_dict and 'image_rect' in json_dict:
-            return (json_dict['image_sq'], json_dict['image_rect'])
-        elif 'image_sq' in json_dict:
-            return (json_dict['image_sq'], None)
-        elif 'image_rect' in json_dict:
-            return (None, json_dict['image_rect'])
-
-        return (None, None)
-
-    def _get_top_line_src_info(self, json_dict):
-        if 'topline_resource' in json_dict:
-            return json_dict['topline_resource']
-
-        return (None, None)
+        return org_dict
 
     def get_top_line_numbers(self, top_line_num_resource):
         context = {'model': model, 'session': model.Session,
@@ -343,125 +332,100 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
                     req_params[k] = [v]
         return req_params
 
-    def get_facet_information(self, tab_results, all_results, tab, req_params):
-        search_facets = None
-        result_facets = collections.OrderedDict()
-        if tab == 'indicators' or tab == 'datasets':
-            search_facets = tab_results['search_facets']
-        else:
-            search_facets = all_results['search_facets']
+    # def get_facet_information(self, tab_results, all_results, tab, req_params):
+    #     search_facets = None
+    #     result_facets = collections.OrderedDict()
+    #     if tab == 'indicators' or tab == 'datasets':
+    #         search_facets = tab_results['search_facets']
+    #     else:
+    #         search_facets = all_results['search_facets']
+    #
+    #     self._add_facet(result_facets, search_facets, 'groups', _('Locations'))
+    #     self._add_facet(result_facets, search_facets, 'tags', _('Tags'))
+    #     self._add_facet(
+    #         result_facets, search_facets, 'res_format', _('Formats'))
+    #     self._add_facet(
+    #         result_facets, search_facets, 'license_id', _('Licenses'))
+    #
+    #     # self._populate_facet_links(result_facets, req_params)
+    #
+    #     return result_facets
+    #
+    # def _add_facet(self, facet_dict, search_facets, facet_code, facet_name):
+    #     if facet_code in search_facets:
+    #         facet_dict[facet_name] = {
+    #             'value_items': search_facets.get(facet_code, {}).get('items', []),
+    #             'code': search_facets.get(facet_code, {}).get('title', '')
+    #         }
+    #         facet_dict[facet_name]['count'] = len(
+    #             facet_dict[facet_name]['value_items'])
 
-        self._add_facet(result_facets, search_facets, 'groups', _('Locations'))
-        self._add_facet(result_facets, search_facets, 'tags', _('Tags'))
-        self._add_facet(
-            result_facets, search_facets, 'res_format', _('Formats'))
-        self._add_facet(
-            result_facets, search_facets, 'license_id', _('Licenses'))
+    # def _populate_facet_links(self, facets, params):
+    #     for facet in facets.itervalues():
+    #         params_copy = params.copy()
+    #         code = facet['code']
+    #         if code in params:
+    #             facet['is_used'] = True
+    #             params_copy.pop(code)
+    #             facet['clear_link'] = h.url_for(
+    #                 self._get_named_route(), **params_copy) + suffix
+    #         else:
+    #             facet['is_used'] = False
+    #
+    #         for item in facet['value_items']:
+    #             params_item_copy = params.copy()
+    #             if code in params:
+    #                 if item['name'] in params[code]:
+    #                     # user already filtered by this item
+    #                     params_item_copy[code] = [
+    #                         el for el in params_item_copy[code] if el != item['name']]
+    #                     item['remove_link'] = h.url_for(
+    #                         self._get_named_route(), **params_item_copy) + suffix
+    #                     item['is_used'] = True
+    #                 else:
+    #                     params_item_copy[code] = params_item_copy[
+    #                                                  code] + [item['name']]
+    #                     item['filter_link'] = h.url_for(
+    #                         self._get_named_route(), **params_item_copy) + suffix
+    #                     item['is_used'] = False
+    #             else:
+    #                 params_item_copy[code] = [item['name']]
+    #                 item['filter_link'] = h.url_for(
+    #                     self._get_named_route(), **params_item_copy) + suffix
+    #                 item['is_used'] = False
 
-        self._populate_facet_links(result_facets, req_params)
+    def get_dataset_search_results(self, org_code):
 
-        return result_facets
+        user = c.user or c.author
+        ignore_capacity_check = False
+        is_org_member = (user and
+                         new_authz.has_user_permission_for_group_or_org(org_code, user, 'read'))
+        if is_org_member:
+            ignore_capacity_check = True
 
-    def _add_facet(self, facet_dict, search_facets, facet_code, facet_name):
-        if facet_code in search_facets:
-            facet_dict[facet_name] = {
-                'value_items': search_facets.get(facet_code, {}).get('items', []),
-                'code': search_facets.get(facet_code, {}).get('title', '')
-            }
-            facet_dict[facet_name]['count'] = len(
-                facet_dict[facet_name]['value_items'])
+        package_type = 'dataset'
 
-    def _populate_facet_links(self, facets, params):
-        for facet in facets.itervalues():
-            params_copy = params.copy()
-            code = facet['code']
-            if code in params:
-                facet['is_used'] = True
-                params_copy.pop(code)
-                facet['clear_link'] = h.url_for(
-                    self._get_named_route(), **params_copy) + suffix
-            else:
-                facet['is_used'] = False
+        suffix = '#datasets-section'
 
-            for item in facet['value_items']:
-                params_item_copy = params.copy()
-                if code in params:
-                    if item['name'] in params[code]:
-                        # user already filtered by this item
-                        params_item_copy[code] = [
-                            el for el in params_item_copy[code] if el != item['name']]
-                        item['remove_link'] = h.url_for(
-                            self._get_named_route(), **params_item_copy) + suffix
-                        item['is_used'] = True
-                    else:
-                        params_item_copy[code] = params_item_copy[
-                                                     code] + [item['name']]
-                        item['filter_link'] = h.url_for(
-                            self._get_named_route(), **params_item_copy) + suffix
-                        item['is_used'] = False
-                else:
-                    params_item_copy[code] = [item['name']]
-                    item['filter_link'] = h.url_for(
-                        self._get_named_route(), **params_item_copy) + suffix
-                    item['is_used'] = False
-
-    def get_dataset_search_results(self, org_code, req_params):
-        facets = ['groups', 'tags', 'res_format',
-                  'license_id', 'extras_indicator']
-
-        fq = u'organization:"{}" +dataset_type:dataset'.format(org_code)
-        for (param, value) in req_params.items():
-            is_fq_param = param in facets and param != 'ext_indicator'
-            if is_fq_param and len(value):
-                fq += u' {}:"{}"'.format(param, value)
-
-        search_extras = {}
-        ext_indicator = req_params.get('ext_indicator', None)
-        if ext_indicator:
-            search_extras['ext_indicator'] = ext_indicator
-
-        ext_activities = req_params.get('ext_activities', None)
-        if ext_activities:
-            search_extras['ext_activities'] = ext_activities
-
-        # limit = self._allowed_num_of_items(search_extras)
-        limit = 8
-        page = self._page_number()
-        params_nopage = {k: v for k, v in req_params.items() if k != 'page'}
-
-        sort_by = req_params.get('sort', None)
+        params_nopage = {
+            k: v for k, v in request.params.items() if k != 'page'}
 
         def pager_url(q=None, page=None):
             params = params_nopage
             params['page'] = page
-            params['id'] = org_code
-            return h.url_for('organization_read', **params) + suffix
+            return h.url_for('organization_read', id=org_code, **params) + suffix
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
-                   'auth_user_obj': c.userobj}
+        fq = 'organization:"{}"'.format(org_code)
+        facets = {
+            'vocab_Topics': _('Topics')
+        }
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets,
+                                       ignore_capacity_check=ignore_capacity_check)
+        full_facet_info.get('facets', {}).pop('organization', {})
 
-        is_org_member = (context.get('user', None) and
-                         new_authz.has_user_permission_for_group_or_org(org_code, context.get('user'), 'read'))
-        if is_org_member:
-            context['ignore_capacity_check'] = True
+        c.other_links['current_page_url'] = h.url_for('organization_read', id=org_code)
 
-        self._set_other_links(
-            suffix=suffix, other_params_dict={'id': org_code})
-        self._which_tab_is_selected(search_extras)
-        (query, all_results) = self._performing_search(req_params.get('q', ''), fq, facets, limit, page, sort_by,
-                                                       search_extras, pager_url, context)
-
-        return query, all_results
-
-    def _set_other_links(self, suffix='', other_params_dict=None):
-        super(CustomOrgController, self)._set_other_links(
-            suffix=suffix, other_params_dict=other_params_dict)
-        c.other_links['advanced_search'] = h.url_for(
-            'search', organization=other_params_dict['id'])
-
-    def _get_named_route(self):
-        return 'organization_read'
+        return full_facet_info
 
     def get_activity_stream(self, org_uuid):
         context = {'model': model, 'session': model.Session,
@@ -474,24 +438,24 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             'hdx_get_group_activity_list')(context, act_data_dict)
         return result
 
-    def generate_query_placeholder(self, tab, dataset_count, indicator_count):
-        static_prefix = _('Search')
-        static_suffix = '...'
-        body = ''
-
-        if tab == 'all':
-            body = hdx_helpers.hdx_show_singular_plural(dataset_count + indicator_count,
-                                                        _('indicator / dataset'),
-                                                        _('indicators & datasets'), True)
-        elif tab == 'indicators':
-            body = hdx_helpers.hdx_show_singular_plural(indicator_count, _('indicator'), _('indicators'), True)
-        elif tab == 'datasets':
-            body = hdx_helpers.hdx_show_singular_plural(dataset_count, _('dataset'), _('datasets'), True)
-        else:
-            return ''
-
-        response = static_prefix + " " + body + " " + static_suffix
-        return response
+    # def generate_query_placeholder(self, tab, dataset_count, indicator_count):
+    #     static_prefix = _('Search')
+    #     static_suffix = '...'
+    #     body = ''
+    #
+    #     if tab == 'all':
+    #         body = hdx_helpers.hdx_show_singular_plural(dataset_count + indicator_count,
+    #                                                     _('indicator / dataset'),
+    #                                                     _('indicators & datasets'), True)
+    #     elif tab == 'indicators':
+    #         body = hdx_helpers.hdx_show_singular_plural(indicator_count, _('indicator'), _('indicators'), True)
+    #     elif tab == 'datasets':
+    #         body = hdx_helpers.hdx_show_singular_plural(dataset_count, _('dataset'), _('datasets'), True)
+    #     else:
+    #         return ''
+    #
+    #     response = static_prefix + " " + body + " " + static_suffix
+    #     return response
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
@@ -505,3 +469,6 @@ class CustomOrgController(org.OrganizationController, simple_search_controller.H
             result = False
 
         return result
+
+    def _activity_template(self, group_type):
+        return  'organization/custom_activity_stream.html'

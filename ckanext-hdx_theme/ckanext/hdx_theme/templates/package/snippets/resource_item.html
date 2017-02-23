@@ -17,6 +17,9 @@
   {% block resource_item_title %}
   <a class="heading" {% if url_is_edit and can_edit %} href="{{ url }}" {% endif %} title="{{ res.name or res.description }}">
     {{ h.resource_display_name(res) | truncate(50) }}<span class="format-label" property="dc:format" data-format="{{ res.format.lower() or 'data' }}">{{ res.format }}</span>
+    {% if res.size %}
+    <span class="format-filesize-label">({{ h.filesize_format(res.size) }})</span>
+    {% endif %}
     {{ h.hdx_popular('downloads', res.tracking_summary.total, min=10) }}
   </a>
   {% endblock %}
@@ -46,7 +49,7 @@
    			</div>
   		{% endif %}
   	{% endblock %}
-  	
+
   {% block resource_item_explore %}
     {% if not url_is_edit %}
     {# Adding classes ga-download, ga-preview, and ga-share for easy Google Analytics tracking. PLEASE DO NOT REMOVE #}
@@ -54,19 +57,23 @@
         {% block resource_item_explore_links %}
 
             {% if res.has_views and is_not_zipped and res.format|lower not in ['xlsx'] %}
-                <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview">
+                <a href="{{ url }}" class="btn btn-secondary hdx-btn ga-preview resource-btn">
                     {{ _('Preview') }}
                 </a>
             {% endif %}
 
-            {%  if can_edit %}
-                <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit">
-                    {{ _('Update') }}
-                </a>
-            {% endif %}
+            {# Commented out with the new contribute flow
+                {%  if can_edit %}
+                    <a href="{{ h.url_for(controller='package', action='resource_edit', id=pkg.name, resource_id=res.id) }}" class="btn btn-secondary hdx-btn ga-edit resource-btn">
+                        {{ _('Update') }}
+                    </a>
+                {% endif %}
+             #}
 
-            <a href="{{ res.url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
+            <a href="{{ res.hdx_rel_url }}" class="btn btn-secondary hdx-btn resource-url-analytics ga-download resource-btn resource-icon-btn" title="{{ _('Download') }}" tracking-type="{{res.url_type}}">
                 <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" />
+                <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
+                <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
             </a>
 
             {% set button_id = 'social-btn-' + res.id %}
@@ -74,10 +81,12 @@
             {% set social_wrapper_div_id = 'social-wrapper-' + res.id %}
 
 
+            {#
             {% snippet 'indicator/snippets/share_button.html', title=resource_display_name, dataset_social_wrapper=social_wrapper_div_id, dataset_social=social_div_id,
               target_url=res.url,
               icon=true,
-              class="btn btn-secondary hdx-btn resource-url-analytics ga-share", button_id=button_id %}
+              class="btn btn-secondary hdx-btn resource-url-analytics ga-share resource-btn resource-icon-btn", button_id=button_id %}
+            #}
 
         {% endblock %}
     </div>

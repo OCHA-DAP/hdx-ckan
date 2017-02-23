@@ -1,0 +1,32 @@
+<li>
+    {{ check.name }} -
+    <span style="color: {{ check.render_color }}">{{ check.result }}</span>
+    {% if check.result == 'Failed' %}
+        <table>
+            <thead>
+            <tr>
+                <th style="border: 1px solid red">{{ _('Name') }}</th>
+                <th style="border: 1px solid red">{{ _('Description') }}</th>
+                <th style="border: 1px solid red">{{ _('Type') }}</th>
+                <th style="border: 1px solid red">{{ _('Error') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="border: 1px solid red">{{ check.name }}</td>
+                <td style="border: 1px solid red">{{ check.description }}</td>
+                <td style="border: 1px solid red">{{ check.type }}</td>
+                <td style="border: 1px solid red">{{ check.error_message }}</td>
+            </tr>
+            </tbody>
+        </table>
+    {% endif %}
+    {% if check.subchecks %}
+        <ul>
+        {% for subcheck in check.subchecks %}
+            {% snippet 'result_item.html', check=subcheck %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+</li>

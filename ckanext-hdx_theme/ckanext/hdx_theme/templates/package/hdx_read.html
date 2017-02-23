@@ -2,7 +2,7 @@
 
 {% block breadcrum_parent_item %}
   <li>{{ h.nav_link(_('Datasets'), 
-  	controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search',  ext_indicator=0) }}</li>
+  	controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -28,10 +28,10 @@
             {% endif %}
         </div>
         <div class="col-xs-12 align-bottom-right">
-            <div class="pull-left dataset-resources ">
+            <ul class="pull-left dataset-resources ">
                 {% snippet 'search/snippets/package_icons.html', package=pkg%}
-            </div>
-            {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='indicator-actions followButtonContainer pull-right' %}
+            </ul>
+            {% snippet "indicator/snippets/indicator_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right' %}
         </div>
       </div>
       
@@ -50,5 +50,6 @@
 {% block package_resources %}
 	<div class="dataset-res-wraper">
 	{{ super() }}
+    {% resource 'hdx_theme/explorer' %}
 	</div>
 {% endblock %}

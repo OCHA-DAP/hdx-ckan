@@ -50,9 +50,7 @@
         function scrollTo() {
             var targetId = $(this).attr('href');
 
-            $('html, body').animate({
-                'scrollTop': $(targetId).offset().top - 40
-            }, 700);
+            hdxUtil.ui.scrollTo(targetId);
             return false;
         }
 
@@ -80,4 +78,20 @@
     scroll_to_menu();
     sticky_menu();
     add_menu_click_events();
+
+    $(document).ready(function(){
+        if (location.hash) {
+            if (location.hash.endsWith("-a")) {
+                var new_hash = location.hash.substring(0, location.hash.length - 2) + "-q";
+                $(new_hash + " ~ .panel-collapse").collapse('show');
+                hdxUtil.ui.scrollTo(new_hash, 1);
+
+            } else {
+                $(location.hash + " ~ .panel-collapse").collapse('show');
+            }
+        }
+
+
+    });
+
 }).call(this);

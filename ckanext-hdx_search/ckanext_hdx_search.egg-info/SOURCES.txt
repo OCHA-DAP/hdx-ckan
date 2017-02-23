@@ -8,7 +8,6 @@ ckanext/hdx_search/actions/__init__.py
 ckanext/hdx_search/actions/actions.py
 ckanext/hdx_search/controllers/__init__.py
 ckanext/hdx_search/controllers/search_controller.py
-ckanext/hdx_search/controllers/simple_search_controller.py
 ckanext/hdx_search/hdx-solr/schema.xml
 ckanext/hdx_search/solr/schema.xml
 ckanext/hdx_search/tests/__init__.py

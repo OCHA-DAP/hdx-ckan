@@ -8,7 +8,8 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
         content: _('Are you sure you want to perform this action?'),
         confirm: _('Confirm'),
         delete: null,
-        cancel: _('Cancel')
+        cancel: _('Cancel'),
+        error: _('There was a problem performing this action'), /* Text to show in the modal if the POST was not successful */
       },
       template: [
         '<div class="modal">',
@@ -26,7 +27,19 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
         '</div>',
         '</div>',
         '</div>'
-      ].join('\n')
+      ].join('\n'),
+
+      /* Normally this js module would do a normal (non-AJAX) request to the server and the sever would
+       * redirect the browser to a specific url.
+       *
+       * If you want the browser to go to a specific url after the POST set success_url. In this case
+       * the POST will be done via AJAX.
+       * In this case also check the params i18n.error, post_data, is_json
+       */
+      success_url: null,
+
+      post_data: null, /* body of the AJAX POST */
+      is_json: false
     },
 
     /* Sets up the event listeners for the object. Called internally by
@@ -66,12 +79,60 @@ this.ckan.module('hdx_confirm-action', function (jQuery, _) {
      * Returns nothing.
      */
     performAction: function () {
-      // create a form and submit it to confirm the deletion
-      var form = jQuery('<form/>', {
-        action: this.el.attr('href'),
-        method: 'POST'
-      });
-      form.appendTo('body').submit();
+
+      var successUrl = this.options.success_url;
+      var originalBodyText = this.i18n('content');
+      var errorBodyText = originalBodyText + "<div class='red'>" + this.i18n('error') + "{}</div>";
+      var modal = this.modal;
+      var uri = this.el.attr('href');
+
+      var successHandler = function (data, status) {
+        if (status == 'success') {
+          window.top.location = successUrl;
+        }
+        else {
+          modal.find('.modal-body').html(errorBodyText.replace('{}', ''));
+        }
+      };
+
+      /* IF we have success URL we do an AJAX POST and then go to the URL if it succeeded */
+      if (successUrl) {
+        if (this.options.is_json) {
+          $.ajax({
+            beforeSend: function (xhrObj) {
+              xhrObj.setRequestHeader("Content-Type", "application/json");
+              xhrObj.setRequestHeader("Accept", "application/json");
+            },
+            type: "POST",
+            url: uri,
+            data: JSON.stringify(this.options.post_data),
+            dataType: "json",
+            success: successHandler,
+            error: function (xhr, status, errorThrown) {
+              var errorMsg = errorThrown;
+              try {
+                var jsonErrorMsg = xhr.responseJSON.error.message;
+                errorMsg = jsonErrorMsg ? jsonErrorMsg : errorMsg;
+              }
+              catch(e){}
+              modal.find('.modal-body').html(errorBodyText.replace('{}', ": " + errorMsg));
+            }
+          });
+        }
+        else {
+          $.post(uri,this.options.post_data,successHandler);
+        }
+      }
+      /* ELSE stick to the original behaviour of adding a FORM elemennt to the body and submitting it */
+      else {
+        // create a form and submit it to confirm the deletion
+        var form = jQuery('<form/>', {
+          action: uri,
+          method: 'POST'
+        });
+        form.appendTo('body').submit();
+      }
+
     },
 
     /* Creates the modal dialog, attaches event listeners and localised

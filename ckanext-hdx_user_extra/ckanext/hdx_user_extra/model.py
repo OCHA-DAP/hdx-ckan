@@ -12,7 +12,7 @@ from ckan.model.domain_object import DomainObject
 from ckan.model import meta, extension
 import ckan.model.types as _types
 
-from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable
+from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
 
 mapper = orm.mapper
 log = logging.getLogger(__name__)
@@ -55,7 +55,7 @@ user_extra_table = Table('user_extra', meta.metadata,
                          Column('key', types.UnicodeText),
                          Column('value', types.UnicodeText),
                          )
-
+Index('user_id_key_idx', user_extra_table.c.user_id, user_extra_table.c.key, unique=True)
 mapper(UserExtra, user_extra_table, extension=[extension.PluginMapperExtension(), ])
 
 

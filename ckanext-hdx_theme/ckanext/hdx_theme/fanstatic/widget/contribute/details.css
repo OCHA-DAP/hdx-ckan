@@ -1,0 +1,50 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+.popup.popup-contribute {
+  z-index: 90000;
+  overflow: auto;
+}
+.popup.popup-contribute .content {
+  max-width: 1260px;
+  height: 100%;
+  padding: 0;
+  position: static;
+  left: auto;
+  top: auto;
+  transform: none;
+  -ms-transform: none;
+  -webkit-transform: none;
+  overflow: hidden;
+}
+.popup.popup-contribute .content .custom-close-container {
+  position: absolute;
+  width: 100%;
+  max-width: 1260px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.popup.popup-contribute .content .custom-close-container i.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  color: #888888;
+  opacity: .8;
+}
+.popup.popup-contribute .content .custom-close-container i.close.white {
+  color: #ffffff;
+}
+.popup.popup-contribute .content .details-content {
+  height: 100%;
+}
+.popup.popup-contribute .content .details-content iframe {
+  border: none;
+  height: 100%;
+  width: 100%;
+}

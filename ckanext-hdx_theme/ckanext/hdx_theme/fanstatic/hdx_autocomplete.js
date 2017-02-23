@@ -34,7 +34,11 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
           return _('Input is too short, must be at least one character')
           .ifPlural(data.min, 'Input is too short, must be at least %(min)d characters');
         }
-      }
+      },
+      onlyEmailAsTags: false,
+      nonEmailSelectionClass: null,
+      includeTokenizer: false,
+      emailSelectionClass: null
     },
 
     /* Sets up the module, binding methods, creating elements etc. Called
@@ -58,8 +62,56 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
         formatNoMatches: this.formatNoMatches,
         formatInputTooShort: this.formatInputTooShort,
         dropdownCssClass: this.options.dropdownClass,
-        containerCssClass: this.options.containerClass
+        containerCssClass: this.options.containerClass,
       };
+
+      if (this.options.tags && this.options.onlyEmailAsTags){
+        settings.createSearchChoice = function(term, data) {
+          if ($(data).filter(function() {
+                return this.text.localeCompare(term) === 0;
+              }).length === 0) {
+            if (/\S+@\S+\.\S+/g.test(term)) {
+              return {
+                id : term,
+                text : term
+              };
+            } else {
+              return null;
+            }
+          }
+        };
+      }
+
+      if (this.options.includeTokenizer){
+        settings.tokenizer = function(input, selection, callback) {
+          if (input.indexOf(',') < 0)
+            return;
+
+          var parts = input.split(/,/); // use /,| / if space need to be included as a separator
+          for (var i = 0; i < parts.length; i++) {
+            var part = parts[i];
+            part = part.trim();
+            if (part != ""){
+              callback({id:part,text:part});
+            }
+          }
+        }
+      }
+
+      if (this.options.nonEmailSelectionClass || this.options.emailSelectionClass){
+        settings.formatSelection = function(item) {
+          if (/\S+@\S+\.\S+/g.test(item.text)){
+            if (this.options.emailSelectionClass)
+              return '<span class="' + this.options.emailSelectionClass + '">' + item.text + '</span>';
+            else
+              return item.text;
+          }
+          if (this.options.nonEmailSelectionClass){
+            return '<span class="' + this.options.nonEmailSelectionClass + '">' + item.text + '</span>';
+          }
+          return item.text;
+        }.bind(this);
+      }
 
       // Different keys are required depending on whether the select is
       // tags or generic completion.
@@ -115,7 +167,7 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
     getCompletions: function (string, fn) {
       var parts  = this.options.source.split('?');
       var end    = parts.pop();
-      var source = parts.join('?') + encodeURIComponent(string) + end;
+      var source = parts.join('?') + string + end; //no need to encode as it's done later on by jquery.url
       var client = this.sandbox.client;
       var options = {
         format: function(data) {

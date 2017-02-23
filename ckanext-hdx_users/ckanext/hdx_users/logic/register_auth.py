@@ -5,6 +5,7 @@ Created on July 2nd, 2015
 '''
 import ckan.logic as logic
 import ckan.lib.navl.dictization_functions as dictization_functions
+import ckanext.hdx_users.helpers.tokens as tokens
 
 get_action = logic.get_action
 
@@ -24,7 +25,7 @@ def user_can_register(context, data_dict=None):
 
 @logic.auth_allow_anonymous_access
 def user_can_validate(context, data_dict=None):
-    token = get_action('token_show_by_id')(context, data_dict)
+    token = tokens.token_show_by_id(context, data_dict)
 
     if not token:
         return {'success': False, 'msg': 'User has no token'}

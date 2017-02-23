@@ -1,39 +1,28 @@
-# import json
 import logging
-# import datetime
-import os
-import sys
-import requests
 import datetime
+import json
 
+import requests
 from pylons import config
 import sqlalchemy
+import beaker.cache as bcache
 
 import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
-# import ckan.model.misc as misc
-# import ckan.plugins as plugins
-# import ckan.lib.plugins as lib_plugins
 import ckan.new_authz as new_authz
-import beaker.cache as bcache
 import ckan.model as model
-
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
-import urllib
-import json
-import tempfile
-
+import ckanext.ytp.request.util as hdx_util
 from ckan.common import c, _
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
 
 log = logging.getLogger(__name__)
-
 
 def organization_list_for_user(context, data_dict):
     '''Return the list of organizations that the user is a member of.
@@ -112,6 +101,9 @@ def member_list(context, data_dict=None):
     group = model.Group.get(_get_or_bust(data_dict, 'id'))
     if not group:
         raise logic.NotFound
+    # user = context.get('user')
+    if group.state == 'deleted' and (not c.userobj or not c.userobj.sysadmin):
+        raise logic.NotFound
 
     obj_type = data_dict.get('object_type', None)
     capacity = data_dict.get('capacity', None)
@@ -186,16 +178,16 @@ def _create_user_dict(user_obj, **kw):
               'created': user_obj.created,
               'name': user_obj.name,
               'email': user_obj.email,
+              'email_hash': user_obj.email_hash,
               'id': user_obj.id}
     result.update(kw)
     return result
 
 
-def hdx_get_sys_admins(context, data_dict):
-    # TODO: check access that user is logged in
-    q = model.Session.query(model.User).filter(model.User.sysadmin == True)
-    return [{'name': m.name, 'display_name': m.fullname or m.name, 'email': m.email} for m in q.all()]
-    # return q.all();
+# def hdx_get_sys_admins(context, data_dict):
+#     # TODO: check access that user is logged in
+#     q = model.Session.query(model.User).filter(model.User.sysadmin == True)
+#     return [{'name': m.name, 'display_name': m.fullname or m.name, 'email': m.email} for m in q.all()]
 
 
 def hdx_send_new_org_request(context, data_dict):
@@ -213,16 +205,16 @@ def hdx_send_new_org_request(context, data_dict):
 
     subject = _('New organization request:') + ' ' \
               + data_dict['title']
-    body = _('New organization request \n' \
-             'Organization Name: {org_name}\n' \
-             'Organization Description: {org_description}\n' \
-             'Organization URL: {org_url}\n' \
-             'Person requesting: {person_name}\n' \
-             'Person\'s email: {person_email}\n' \
-             'Person\'s ckan username: {ckan_username}\n' \
-             'Person\'s ckan email: {ckan_email}\n' \
-             'Request time: {request_time}\n' \
-             '(This is an automated mail)' \
+    body = _('<h3>New organization request </h3><br/>' \
+             'Organization Name: {org_name}<br/>' \
+             'Organization Description: {org_description}<br/>' \
+             'Organization URL: {org_url}<br/>' \
+             'Person requesting: {person_name}<br/>' \
+             'Person\'s email: {person_email}<br/>' \
+             'Person\'s ckan username: {ckan_username}<br/>' \
+             'Person\'s ckan email: {ckan_email}<br/>' \
+             'Request time: {request_time}<br/>' \
+             '(This is an automated mail)<br/><br/>' \
              '').format(org_name=data_dict['title'], org_description=data_dict['description'],
                         org_url=data_dict['org_url'], person_name=data_dict['your_name'],
                         person_email=data_dict['your_email'],
@@ -245,24 +237,27 @@ def hdx_send_editor_request_for_org(context, data_dict):
              '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'],
                         org=data_dict['organization'], msg=data_dict.get('message', ''))
 
-    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body, one_email=True)
 
 
-def hdx_send_request_membership(context, data_dict):
-    _check_access('hdx_send_request_membership', context, data_dict)
-
-    body = _('New request membership\n' \
-             'Full Name: {fn}\n' \
-             'Username: {username}\n' \
-             'Email: {mail}\n' \
-             'Organization: {org}\n' \
-             'Message from user: {msg}\n' \
-             '(This is an automated mail)' \
-             '').format(fn=data_dict['display_name'], username=data_dict['name'],
-                        mail=data_dict['email'], org=data_dict['organization'],
-                        msg=data_dict.get('message', ''))
-
-    hdx_mail.send_mail(data_dict['admins'], _('New Request Membership'), body)
+# def hdx_send_request_membership(context, data_dict):
+#     _check_access('hdx_send_request_membership', context, data_dict)
+#
+#     org_obj = model.Group.get(data_dict['organization'])
+#
+#     org_add_member_url = (config['ckan.site_url'] + '/organization/members/{org_name}').format(
+#         org_name=org_obj.name)
+#
+#     body = hdx_util._MESSAGE_MEMBERSHIP_REQUEST.format(org_title=org_obj.display_name,
+#                                                        user_fullname=data_dict.get('display_name'),
+#                                                        user_email=data_dict.get('email'),
+#                                                        org_add_member_url=org_add_member_url,
+#                                                        user_message=data_dict.get('message', ''))
+#     subject = hdx_util._SUBJECT_MEMBERSHIP_REQUEST.format(user_fullname=data_dict.get('display_name'))
+#
+#     # changed made to send customized emails to each admin
+#     # for admin in data_dict.get('admins'):
+#     hdx_mail.send_mail([data_dict.get('admins')], subject, body)
 
 
 def hdx_user_show(context, data_dict):
@@ -314,8 +309,10 @@ def hdx_user_show(context, data_dict):
     print data_dict.get('sort', None)
     sort = data_dict.get('sort', 'metadata_modified desc')
     user_dict['datasets'] = []
-    dataset_q = model.Session.query(model.Package).join(model.PackageRole).filter_by(user=user_obj, role=model.Role.ADMIN
-    ).order_by(sort).offset(offset).limit(limit)
+    dataset_q = model.Session.query(model.Package).join(model.PackageRole).filter_by(user=user_obj,
+                                                                                     role=model.Role.ADMIN
+                                                                                     ).order_by(sort).offset(
+        offset).limit(limit)
 
     dataset_q_counter = model.Session.query(model.Package).join(model.PackageRole
                                                                 ).filter_by(user=user_obj, role=model.Role.ADMIN
@@ -407,9 +404,19 @@ def hdx_get_indicator_available_periods(context, data_dict):
 
 @bcache.cache_region('hdx_memory_cache', 'cached_make_rest_api_request')
 def _make_rest_api_request(url):
+    '''
+    Makes a GET response and expect a JSON response
+    :param url:
+    :type url: str
+    :return: json transformed into a dict
+    :rtype: dict
+    '''
     log.info("Requesting indicators:" + url)
 
     response = requests.get(url)
+
+    response.raise_for_status()
+
     return response.json()
 
 
@@ -425,66 +432,89 @@ def _add_to_filter_list(src, param_name, filter_list):
     return filter_list
 
 
-def hdx_get_shape_info(context, data_dict):
-    try:
-        gis_url = data_dict.get('gis_url', None)
-        response = requests.get(gis_url, allow_redirects=True)
-        shape_info = response.text if hasattr(response, 'text') else ''
-    except:
-        log.error("Error retrieving the shape info content")
-        log.error(sys.exc_info()[0])
-        shape_info = json.dumps({
-            'state': 'failure',
-            'message': 'Error retrieving the shape info content',
-            'layer_id': 'None',
-            'error_type': 'ckan-generated-error',
-            'error_class': 'None'
-        })
-    return shape_info
+    # def hdx_get_shape_geojson(context, data_dict):
+    #     err_json_content = {'errors': "No valid file"}
+    #     if 'shape_source_url' not in data_dict:
+    #         return err_json_content
+    #     json_content = err_json_content
+    #     tmp_dir = config.get('cache_dir', '/tmp/')
+    #     tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
+    #     try:
+    #         shape_source_url = data_dict.get('shape_source_url', None)
+    #         if shape_source_url is None:
+    #             raise
+    #         shape_src_response = requests.get(shape_source_url, allow_redirects=True)
+    #         urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
+    #         ogre_url = config.get('hdx.ogre.url')
+    #         convert_url = data_dict.get('convert_url', ogre_url + '/convert')
+    #         shape_data = {'upload': open(tmp_file, 'rb')}
+    #         log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
+    #         try:
+    #             json_resp = requests.post(convert_url, files=shape_data)
+    #         except:
+    #             log.error("There was an error with the HTTP request")
+    #             log.error(sys.exc_info()[0])
+    #             raise
+    #         json_content = json.loads(json_resp.content)
+    #         os.remove(tmp_file)
+    #         if 'errors' in json_content and json_content['errors']:
+    #             log.error('There are errors in json file, error message: ' + str(json_content['errors']))
+    #             raise
+    #     except:
+    #         log.error("Error retrieving the json content")
+    #         log.error(sys.exc_info()[0])
+    #         return err_json_content
+    #     return json_content
+    #
+    #
+    # def hdx_get_json_from_resource(context, data_dict):
+    #     try:
+    #         if 'url' not in data_dict:
+    #             return None
+    #         url = data_dict['url']
+    #         resource_response = requests.get(url, allow_redirects=True)
+    #         res = json.loads(resource_response.content)
+    #     except:
+    #         res = None
+    #     return res
 
 
-# def hdx_get_shape_geojson(context, data_dict):
-#     err_json_content = {'errors': "No valid file"}
-#     if 'shape_source_url' not in data_dict:
-#         return err_json_content
-#     json_content = err_json_content
-#     tmp_dir = config.get('cache_dir', '/tmp/')
-#     tmp_file = tmp_dir + next(tempfile._get_candidate_names()) + '.zip'
-#     try:
-#         shape_source_url = data_dict.get('shape_source_url', None)
-#         if shape_source_url is None:
-#             raise
-#         shape_src_response = requests.get(shape_source_url, allow_redirects=True)
-#         urllib.URLopener().retrieve(shape_src_response.url, tmp_file)
-#         ogre_url = config.get('hdx.ogre.url')
-#         convert_url = data_dict.get('convert_url', ogre_url + '/convert')
-#         shape_data = {'upload': open(tmp_file, 'rb')}
-#         log.info('Calling Ogre to perform shapefile to geoJSON conversion...')
-#         try:
-#             json_resp = requests.post(convert_url, files=shape_data)
-#         except:
-#             log.error("There was an error with the HTTP request")
-#             log.error(sys.exc_info()[0])
-#             raise
-#         json_content = json.loads(json_resp.content)
-#         os.remove(tmp_file)
-#         if 'errors' in json_content and json_content['errors']:
-#             log.error('There are errors in json file, error message: ' + str(json_content['errors']))
-#             raise
-#     except:
-#         log.error("Error retrieving the json content")
-#         log.error(sys.exc_info()[0])
-#         return err_json_content
-#     return json_content
-#
-#
-# def hdx_get_json_from_resource(context, data_dict):
-#     try:
-#         if 'url' not in data_dict:
-#             return None
-#         url = data_dict['url']
-#         resource_response = requests.get(url, allow_redirects=True)
-#         res = json.loads(resource_response.content)
-#     except:
-#         res = None
-#     return res
+@logic.side_effect_free
+def hdx_carousel_settings_show(context, data_dict):
+    '''
+    :returns: list of dictionaries representing the setting for each carousel item. Returns default if nothing is in db.
+    :rtype: list of dict
+    '''
+    from ckanext.hdx_theme.helpers.initial_carousel_settings import INITIAL_CAROUSEL_DATA
+
+    carousel_settings = []
+    setting_value_json = model.get_system_info('hdx.carousel.config', config.get('hdx.carousel.config'))
+    if setting_value_json:
+        try:
+            carousel_settings = json.loads(setting_value_json)
+        except TypeError as e:
+            log.warn('The "hdx.carousel.config" setting is not a proper json string')
+
+    if not carousel_settings and not context.get('not_initial'):
+        carousel_settings = INITIAL_CAROUSEL_DATA
+        for i, item in enumerate(carousel_settings):
+            item['order'] = i + 1
+
+    return carousel_settings
+
+
+def hdx_carousel_settings_update(context, data_dict):
+    '''
+
+    :param 'hdx.carousel.config': a list with the carousel settings
+    :type 'hdx.carousel.config': list
+    :return: The JSON string that is the value of the new 'hdx.carousel.config'
+    :rtype: str
+    '''
+
+    logic.check_access('config_option_update', {}, {})
+
+    settings = data_dict.get('hdx.carousel.config')
+    settings_json = json.dumps(settings)
+    model.set_system_info('hdx.carousel.config', settings_json)
+    return settings_json

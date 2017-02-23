@@ -27,6 +27,10 @@
 		<td class="dataset-details">{{ h.render_date_from_concat_str(pkg_dict.dataset_date) }}</td>
     </tr>
 	<tr>
+		<th scope="row" class="dataset-label">{{ _('Expected Update Frequency') }}</th>
+		<td class="dataset-details">{{ h.hdx_get_frequency_by_value(pkg_dict.data_update_frequency) }}</td>
+    </tr>
+	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link mx-country">
 		<span data-module="hdx_show_more" style="visibility:hidden"><div>
@@ -41,8 +45,15 @@
 		<tr>
 			<th scope="row" class="dataset-label">{{ _('Visibility') }}</th>
 			<td class="dataset-details">
+				{% if pkg_dict.private %}
+					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
+					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it public') }}</a></div>
+				{% else %}
+					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
+					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
+				{% endif %}
+<!-- changed as per #4056
 				{% set locale = h.dump_json({'content': _('Are you sure? This will affect whether this data is visible to everyone')}) %}
-
 				{% if pkg_dict.private %}
 					<div id="private_loading" style="display:none;"><img src="/images/ajax-loader-b.gif"></div>
 					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
@@ -52,6 +63,7 @@
 					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
 					<a data-ajax="toggleVis()" id="visibility_change" class="my-link" style="cursor:pointer;" data-module="confirm-ajax" data-module-i18n="{{ locale }}">{{ _('make it private') }}</a></div>
 				{% endif %}
+-->
 			</td>
 		</tr>
 	{% else %}
@@ -108,8 +120,9 @@
 			{% for tag in pkg_dict.tags %}
 	    		<div class="tag-wrapper">
 	    			{% if tag.vocabulary_id %}
+					{% url_for controller='package', action='search', vocab_Topics=tag.name %}
 	      				<a class="label tag" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-	      			{% else %}	
+	      			{% else %}
 	      				<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
 	      			{% endif %}
 	    		</div>

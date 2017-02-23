@@ -13,9 +13,9 @@ import ckan.model as model
 from pylons import config
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_org_group.controllers.custom_org_controller as controller
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.tests as org_group_base
 import ckan.lib.uploader as uploader
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ json_config_wfp = '''
             {
                 "visualization-select": "WFP",
                 "viz-title": "Test Visualization Title",
-                "viz-data-link-url": "https://data.hdx.rwlabs.org/dataset/wfp-food-prices",
+                "viz-data-link-url": "https://data.humdata.org/dataset/wfp-food-prices",
                 "viz-resource-id": "test-resource-id"
             }
         '''
@@ -33,7 +33,7 @@ json_config_3w = '''
         {
             "visualization-select": "3W-dashboard",
             "viz-title": "Who's doing what and where ?",
-            "viz-data-link-url": "https://data.hdx.rwlabs.org/dataset/3w-matrix-for-somalia-ngo-consortium",
+            "viz-data-link-url": "https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium",
             "datatype_1": "datastore",
             "dataset_id_1": "dataset_id_1",
             "resource_id_1": "1d5b6821-fe99-4a5d-a0cf-d6987868027b",
@@ -45,6 +45,9 @@ json_config_3w = '''
             "where-column-2": "DIS_CODE",
             "who-column": "Organisation",
             "what-column": "Sector",
+            "start-column": "2000",
+            "end-column": "2015",
+            "format-column": "YYYY/MM/DD",
             "colors": ["red", "green", "blue"]
         }
         '''
@@ -65,14 +68,14 @@ top_line_items = [
 ]
 
 
-class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_package hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_package hdx_theme')
 
     @classmethod
     def _create_test_data(cls):
-        super(TestMembersController, cls)._create_test_data(create_datasets=True, create_members=True)
+        super(TestCustomOrgController, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_assemble_viz_config(self):
         custom_org_controller = controller.CustomOrgController()
@@ -82,7 +85,7 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
         assert config == {
             'title': 'Test Visualization Title',
-            'data_link_url': 'https://data.hdx.rwlabs.org/dataset/wfp-food-prices',
+            'data_link_url': 'https://data.humdata.org/dataset/wfp-food-prices',
             'type': 'WFP',
             'embedded': 'true',
             # 'resource_id': 'test-resource-id',
@@ -98,13 +101,16 @@ class TestMembersController(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
             'title': "Who's doing what and where ?",
             'geotype': 'filestore',
             'geo': '/dataset/json-repository/resource_download/07c835cd-7b47-4d76-97e0-ff0fd5cc09c5',
-            'data_link_url': 'https://data.hdx.rwlabs.org/dataset/3w-matrix-for-somalia-ngo-consortium',
+            'data_link_url': 'https://data.humdata.org/dataset/3w-matrix-for-somalia-ngo-consortium',
             'data': '/api/action/datastore_search?resource_id=1d5b6821-fe99-4a5d-a0cf-d6987868027b&limit=10000000',
             'datatype': 'datastore',
             'joinAttribute': 'DIS_CODE',
             'whereFieldName': 'DIST_NO',
             'whoFieldName': 'Organisation',
             'whatFieldName': 'Sector',
+            'startFieldName': '2000',
+            'endFieldName': '2015',
+            'formatFieldName': 'YYYY/MM/DD',
             'nameAttribute': 'DIST_NAME',
             'colors': ["red", "green", "blue"]
         }

@@ -1,0 +1,87 @@
+/*These styles will be probably be deprecated after next sprint*/
+/* style the filter items present in the left side dark section*/
+.secondary .nav-simple .nav-item {
+  padding: 0;
+  margin: 0;
+}
+.secondary .nav-simple .nav-item.active {
+  background-color: #8ca0a6;
+}
+.secondary .nav-simple .nav-item.active a:after {
+  content: "x";
+  float: right;
+}
+/* END style the filter items present in the left side dark section*/
+/* style search form present in the dataset lists*/
+.search-form {
+  margin-bottom: 20px;
+  padding-bottom: 25px;
+}
+.search-form .search-input {
+  position: relative;
+  margin-bottom: 20px;
+}
+.search-form .search-input input {
+  margin: 0;
+  width: 100%;
+  height: auto;
+}
+.search-form .search-input button {
+  cursor: pointer;
+  display: block;
+  position: absolute;
+  top: 50%;
+  margin-top: -10px;
+  right: 10px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+.search-form .search-input button span {
+  display: none;
+}
+.search-form .search-input.search-giant input {
+  font-size: 16px;
+  padding: 15px;
+}
+.search-form .search-input.search-giant button {
+  margin-top: -15px;
+  right: 15px;
+  height: 30px;
+}
+.search-form .search-input.search-giant button i {
+  font-size: 28px;
+  width: 28px;
+}
+.search-form .control-order-by label,
+.search-form .control-order-by select {
+  display: inline;
+}
+.search-form .control-order-by select {
+  width: 160px;
+  margin: 0;
+}
+.search-form h2 {
+  font-size: 24px;
+  line-height: 1.3;
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+.search-form .filter-list {
+  line-height: 32px;
+  margin: 10px 0 0 0;
+}
+.search-form .filter-list .pill {
+  line-height: 21px;
+}
+.search-form .filter-list .extra {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: normal;
+}
+.search-form.no-bottom-border {
+  border-bottom-width: 0;
+  margin-bottom: 0;
+}
+/* END style search form*/

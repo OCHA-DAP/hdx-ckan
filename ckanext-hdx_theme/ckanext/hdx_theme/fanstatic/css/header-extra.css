@@ -184,7 +184,7 @@
 /* Search widget style */
     /*Also used on the homepage*/
     .form-search .input-append .searchInput{
-        width: 246px;
+        width: 265px;
         height: 45px;
         border-radius: 6px 0 0 6px;
         background-color: white;
@@ -256,11 +256,9 @@
     .mTop45{
         margin-top: 45px;
     }
-    .mBottom40{
-        margin-bottom: 40px;
-    }
-    .mBottom10{
-        margin-bottom: 10px;
+
+    .mTop40{
+        margin-top: 40px;
     }
     .mTop35{
         margin-top: 35px;
@@ -286,8 +284,18 @@
     .mTop10{
         margin-top: 10px;
     }
+    .mBottom5{
+        margin-bottom: 5px;
+    }
+
+    .mBottom10{
+        margin-bottom: 10px;
+    }
     .mBottom15{
         margin-bottom: 15px;
+    }
+    .mBottom20{
+        margin-bottom: 20px;
     }
     .mBottom30{
         margin-bottom: 30px;
@@ -295,9 +303,10 @@
     .mBottom35{
         margin-bottom: 35px;
     }
-    .mBottom20{
-        margin-bottom: 20px;
+    .mBottom40{
+        margin-bottom: 40px;
     }
+
     .mBottom65{
         margin-bottom: 65px;
     }
@@ -368,6 +377,21 @@
 
     .pL45{
         padding-left: 45px;
+    }
+
+    .pTopBottom5{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .pTopBottom10{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .pTopBottom15{
+        padding-top: 15px;
+        padding-bottom: 15px;
     }
     .pTopBottom35{
         padding-top: 35px;
@@ -441,64 +465,10 @@
     
 /* END Common Classes */
 
-/* Label style (eg. tags) */
-    .label{
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        color: #FFFFFF;
-        display: inline-block;
-        margin-right: 6px;
-        margin-bottom: 4px;
-        padding: 3px 10px;
-        text-transform: uppercase;
-        font-family: 'Source Sans Pro', sans-serif;
-        font-weight: 600;
-        font-size: 14px;
-        line-height: 20px;
-        min-width: 0;
-        vertical-align: middle;
-    }
-
-    .label.label-small{
-        font-family: 'Gotham-Bold', sans-serif;
-        font-weight: 400;
-        font-size: 9px;
-        letter-spacing: 0.01em;
-        line-height: 16px;
-        margin-right: 0;
-        padding: 0 5px;
-        margin-bottom: 3px;
-    }
-
-    /* Pill styling - seem to be the similar to labels, but gray and with a button*/
-        .pill {
-            font-family: 'Source Sans Pro', sans-serif;
-            font-weight: 600;
-            font-size: 14px;
-            color: #ffffff;
-            text-transform: uppercase;
-
-            padding: 5px 15px;
-            margin-right: 20px;
-            margin-bottom: 20px;
-
-            background-color: #888888;
-            border-radius: 0;
-        }
-
-        .pill .icon-remove, .pill .glyphicon-remove {
-            cursor: pointer;
-            margin-left: 20px;
-
-        }
-    /* END Pill styling */
-
-/* END Label style */
-
 /* Style Select2 Dropdown */
     .select2-container {
         display: block;
+        padding: 0;
     }
 
     .select2-container.required.error > .select2-choice {
@@ -778,7 +748,7 @@
     font-weight: 700;
     font-size: 28px;
     display: inline;
-    line-height: 36px;
+    line-height: 28px;
 }
 
 .notes.embedded-content{
@@ -929,10 +899,6 @@ span.is-more a.more-link, .more-link {
         margin: 0;
         list-style: none;
     }
-    .dataset-resources {
-        margin-top: 8px;
-        padding: 0;
-    }
 
 /* END FIX Org Page */
 
@@ -950,9 +916,9 @@ span.is-more a.more-link, .more-link {
 /* END OLD Resource Edit Form*/
 
 .alert-error {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
 }
 
 .secondary .simple-input .field .btn-search {

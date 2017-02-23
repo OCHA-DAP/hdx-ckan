@@ -1,7 +1,16 @@
 {% extends "package/base.html" %}
 
 {% set res = c.resource %}
-{% set resource_dwd_url = res.perma_link if res.perma_link else res.url %}
+
+{# The lines below are for analytics #}
+{% block analytics_org_name %}{{ c.package.organization.name }}{% endblock %}
+{% block analytics_org_id %}{{ c.package.organization.id }}{% endblock %}
+{% block analytics_is_cod %}{{ c.analytics_is_cod }}{% endblock %}
+{% block analytics_is_indicator %}{{ c.analytics_is_indicator }}{% endblock %}
+{% block analytics_group_names %}{{ c.analytics_group_names | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ c.analytics_group_ids | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ c.package.name  }}{% endblock %}
+{% block analytics_dataset_id %}{{ c.package.id }}{% endblock %}
 
 {% block head_extras -%}
   {{ super() }}
@@ -16,7 +25,7 @@
 
 {% block breadcrumb_content %}
  <li>{{ h.nav_link(_('Datasets'), 
-    controller='ckanext.hdx_search.controllers.simple_search_controller:HDXSimpleSearchController', action='search',  ext_indicator=0) }}</li>
+    controller='ckanext.hdx_search.controllers.search_controller:HDXSearchController', action='search') }}</li>
     <li><a href="{{ h.url_for(controller='package',
                                                action='read',
                                                id=pkg.id) }}">{{pkg.title|truncate(30)}}</a></li>
@@ -30,14 +39,16 @@
       <div class="module-content">
         <div class="actions">
           {% block resource_actions %}
-          <ul class="mTop10">
+          <ul class="mTop10 pull-right">
             {% block resource_actions_inner %}
-            {% if h.check_access('package_update', {'id':pkg.id }) %}
-              <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn' %}</li>
-            {% endif %}
+            {# No longer needed because of the new contribute flow
+              {% if h.check_access('package_update', {'id':pkg.id }) %}
+                <li>{% link_for _('Edit'), controller='package', action='resource_edit', id=pkg.name, resource_id=res.id, class_='btn hdx-btn resource-btn' %}</li>
+              {% endif %}
+             #}
             {% if res.url and h.is_url(res.url) %}
               <li>
-                <a class="btn hdx-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ resource_dwd_url }}">
+                <a class="btn hdx-btn ga-download resource-btn resource-icon-btn resource-url-analytics resource-type-{{ res.resource_type }}" href="{{ res.hdx_rel_url }}">
                 {#
                   {% if res.resource_type in ('listing', 'service') %}
                     <i class="icon-eye-open"></i> {{ _('View') }}
@@ -50,6 +61,8 @@
                   {% endif %}
                 #}
                   <img src="/images/homepage/download.svg" alt=" {{ _('Download') }}" style="width: 14px;" />
+                  <span class="ga-download-resource-title" style="display: none">{{ res.name }}</span>
+                  <span class="ga-download-resource-id" style="display: none">{{ res.id }}</span>
                 </a>
               </li>
             {% endif %}
@@ -64,9 +77,9 @@
           {% block resource_read_title %}<h1 class="page-heading">{{ h.resource_display_name(res) | truncate(50) }}</h1>{% endblock %}
           {% block resource_read_url %}
             {% if res.url and h.is_url(res.url) %}
-              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ resource_dwd_url }}" title="{{ resource_dwd_url }}">{{ resource_dwd_url }}</a></p>
+              <p class="muted ellipsis">{{ _('URL:') }} <a href="{{ res.hdx_rel_url }}" title="{{ res.hdx_rel_url }}">{{ res.original_url }}</a></p>
             {% elif res.url %}
-              <p class="muted ellipsis">{{ _('URL:') }} {{ resource_dwd_url }}</p>
+              <p class="muted ellipsis">{{ _('URL:') }} {{ res.hdx_rel_url }}</p>
             {% endif %}
           {% endblock %}
           <div class="prose notes" property="rdfs:label">

@@ -8,6 +8,7 @@ ckanext/hdx_theme/version.py
 ckanext/hdx_theme/cli/__init__.py
 ckanext/hdx_theme/cli/cli.py
 ckanext/hdx_theme/controllers/__init__.py
+ckanext/hdx_theme/controllers/explorer.py
 ckanext/hdx_theme/controllers/faq.py
 ckanext/hdx_theme/controllers/widget.py
 ckanext/hdx_theme/controllers/widget_3W.py
@@ -19,6 +20,7 @@ ckanext/hdx_theme/helpers/auth.py
 ckanext/hdx_theme/helpers/count.py
 ckanext/hdx_theme/helpers/counting_actions.py
 ckanext/hdx_theme/helpers/country_list_hardcoded.py
+ckanext/hdx_theme/helpers/explorer_data.py
 ckanext/hdx_theme/helpers/faq_data.py
 ckanext/hdx_theme/helpers/helpers.py
 ckanext/hdx_theme/helpers/less.py
@@ -30,6 +32,8 @@ ckanext/hdx_theme/tests/__init__.py
 ckanext/hdx_theme/tests/hdx_test_base.py
 ckanext/hdx_theme/tests/hdx_test_util.py
 ckanext/hdx_theme/tests/hdx_test_with_inds_and_orgs.py
+ckanext/hdx_theme/tests/test_controller/__init__.py
+ckanext/hdx_theme/tests/test_controller/test_explorer.py
 ckanext/hdx_theme/util/__init__.py
 ckanext/hdx_theme/util/mail.py
 ckanext_hdx_theme.egg-info/PKG-INFO

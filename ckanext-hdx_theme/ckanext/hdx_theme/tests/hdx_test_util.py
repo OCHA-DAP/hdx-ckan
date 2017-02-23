@@ -15,13 +15,32 @@ def are_strings_in_text(text, search_strings,
     if end_str:
         end = text.find(end_str, start)
 
+    assert start >= 0, 'Begin of string not found'
+    assert end >= 0, 'End of string not found'
+
+    section = text[start + len(begin_str):end]
+
+    for item in search_strings:
+        assert item in section, item + ' not in text section'
+
+
+def strings_not_in_text(text, search_strings,
+                        begin_str=None, end_str=None):
+
+    start = 0
+    end = len(text)
+    if begin_str:
+        start = text.find(begin_str)
+    if end_str:
+        end = text.find(end_str, start)
+
     assert start >= 0
     assert end >= 0
 
     section = text[start + len(begin_str):end]
 
     for item in search_strings:
-        assert item in section, item + ' not in text section'
+        assert item not in section, item + ' exists in text section'
 
 
 def count_string_occurences(text, search_item,

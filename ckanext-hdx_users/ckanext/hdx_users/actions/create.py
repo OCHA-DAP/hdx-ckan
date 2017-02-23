@@ -1,8 +1,13 @@
 import ckanext.hdx_users.model as umodel
 import hashlib
+import ckan.logic as logic
+
+ValidationError = logic.ValidationError
+_check_access = logic.check_access
 
 
 def token_create(context, user):
+    _check_access('user_create',context, None)
     model = context['model']
     token = hashlib.md5()
     token.update(user['email'] + user['name'])

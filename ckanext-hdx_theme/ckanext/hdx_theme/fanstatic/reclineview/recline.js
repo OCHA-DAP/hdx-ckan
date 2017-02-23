@@ -2288,8 +2288,11 @@ my.Map = Backbone.View.extend({
 
     var mapUrl = $('#previewmap-url-div').text(); //MODIFIED BY HDX
 
-    var osmAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="//developer.mapquest.com/content/osm/mq_logo.png">';
-    var bg = new L.TileLayer(mapUrl, {maxZoom: 18, attribution: osmAttribution ,subdomains: '1234'});
+    //var osmAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="//developer.mapquest.com/content/osm/mq_logo.png">';
+    var osmAttribution = ' © <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors';
+
+    //var bg = new L.TileLayer(mapUrl, {maxZoom: 18, attribution: osmAttribution ,subdomains: '1234'});
+    var bg = new L.TileLayer(mapUrl, {maxZoom: 18, attribution: osmAttribution});
     this.map.addLayer(bg);
 
     this.markers = new L.MarkerClusterGroup(this._clusterOptions);

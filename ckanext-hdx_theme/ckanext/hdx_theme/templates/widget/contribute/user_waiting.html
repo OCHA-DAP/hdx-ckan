@@ -1,0 +1,31 @@
+{#
+Shows the user waiting overlay and modal
+
+Example:
+    {{ h.snippet('widget/contribute/user_waiting.html', id="popupId", initial_text="Please wait..", show_widget=True) }}
+#}
+{% extends "widget/popup/popup.html" %}
+
+
+{% set class = "" %}
+
+{% block popup_attributes %}
+    {% if not show_widget %}
+        style="display: none;"
+    {% endif %}
+    data-module="hdx_user_waiting"
+{% endblock %}
+
+{% block all_content %}
+    <div class="user-waiting-wrapper">
+        <div class="sk-folding-cube">
+          <div class="sk-cube1 sk-cube"></div>
+          <div class="sk-cube2 sk-cube"></div>
+          <div class="sk-cube4 sk-cube"></div>
+          <div class="sk-cube3 sk-cube"></div>
+        </div>
+        <div class="user-waiting-text">{{ initial_text }}</div>
+    </div>
+
+    {% resource 'hdx_theme/user-waiting' %}
+{% endblock %}

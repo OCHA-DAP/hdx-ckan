@@ -3,6 +3,10 @@ Created on Jun 10, 2014
 
 @author: Dan, alexandru-m-g
 '''
+
+import logging as logging
+import exceptions as exceptions
+
 import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.lib.base as base
@@ -11,8 +15,7 @@ from ckan.common import c, request, _
 import ckan.lib.base as base
 import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckan.model as model
-import logging as logging
-import exceptions as exceptions
+
 
 import ckanext.hdx_theme.util.mail as hdx_mail
 
@@ -21,34 +24,34 @@ log = logging.getLogger(__name__)
 
 class HDXReqsOrgController(base.BaseController):
 
-    def request_membership(self, org_id):
-        '''
-            user_email, name of user, username, organization name,  list with org-admins emails,
-        '''
-        try:
-            msg = request.params.get('message', '')
-            user = hdx_h.hdx_get_user_info(c.user)
-            context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
-            org_admins = tk.get_action('member_list')(context,{'id':org_id,'capacity':'admin','object_type':'user'})
-            admins=[]
-            for admin_tuple in org_admins:
-                admin_id = admin_tuple[0]
-                admins.append(hdx_h.hdx_get_user_info(admin_id))
-            admins_with_email = [admin for admin in admins if admin['email']]
-
-            data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_id, 
-                         'message': msg, 'admins': admins_with_email}
-            tk.get_action('hdx_send_request_membership')(context, data_dict)
-
-            h.flash_success(_('Message sent'))
-        except hdx_mail.NoRecipientException, e:
-            h.flash_error(_(str(e)))
-        except exceptions.Exception, e:
-            log.error(str(e))
-            h.flash_error(_('Request can not be sent. Contact an administrator.'))
-        h.redirect_to(controller='organization', action='read', id=org_id)
+    # def request_membership(self, org_id):
+    #     '''
+    #         user_email, name of user, username, organization name,  list with org-admins emails,
+    #     '''
+    #     try:
+    #         msg = request.params.get('message', '')
+    #         user = hdx_h.hdx_get_user_info(c.user)
+    #         context = {'model': model, 'session': model.Session,
+    #                    'user': c.user or c.author}
+    #         org_admins = tk.get_action('member_list')(context,{'id':org_id,'capacity':'admin','object_type':'user'})
+    #         admins=[]
+    #         for admin_tuple in org_admins:
+    #             admin_id = admin_tuple[0]
+    #             admins.append(hdx_h.hdx_get_user_info(admin_id))
+    #         admins_with_email = [admin for admin in admins if admin['email']]
+    #
+    #         data_dict = {'display_name': user['display_name'], 'name': user['name'],
+    #                      'email': user['email'], 'organization': org_id,
+    #                      'message': msg, 'admins': admins_with_email}
+    #         tk.get_action('hdx_send_request_membership')(context, data_dict)
+    #
+    #         h.flash_success(_('Message sent'))
+    #     except hdx_mail.NoRecipientException, e:
+    #         h.flash_error(_(str(e)))
+    #     except exceptions.Exception, e:
+    #         log.error(str(e))
+    #         h.flash_error(_('Request can not be sent. Contact an administrator.'))
+    #     h.redirect_to(controller='organization', action='read', id=org_id)
 
     def request_editor_for_org(self, org_id):
         '''
@@ -90,7 +93,8 @@ class HDXReqsOrgController(base.BaseController):
         errors = {}
         error_summary = {}
         data = {'from': request.params.get('from','')}
-        from_url = ''
+
+        sent_successfully = False
         if 'save' in request.params:
             try:
                 data = self._process_new_org_request()
@@ -98,9 +102,9 @@ class HDXReqsOrgController(base.BaseController):
                 
                 tk.get_action('hdx_send_new_org_request')(context, data)
                 
-                #from_url = data.get('from','')
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
+                sent_successfully = True
             except hdx_mail.NoRecipientException, e:
                 h.flash_error(_(str(e)))
             except logic.ValidationError, e:
@@ -109,13 +113,8 @@ class HDXReqsOrgController(base.BaseController):
             except exceptions.Exception, e:
                 log.error(str(e))
                 h.flash_error(_('Request can not be sent. Contact an administrator'))
-            
-            #Removing this because the form doesn't submit a from parameter
-            h.redirect_to('user_dashboard_organizations')
-            #if from_url and len(from_url) > 0:
-            #    h.redirect_to(from_url)
-            #else:
-            #    h.redirect_to('/error')
+            if sent_successfully:
+                h.redirect_to('user_dashboard_organizations')
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}

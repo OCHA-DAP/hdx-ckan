@@ -2,6 +2,7 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
+
 @import "variables";
 @import "fonts";
 @import "base";
@@ -11,8 +12,17 @@
 @import "tabs"; //used in a lot of places
 @import "buttons";
 @import "orderby";
+@import "dataset-labels";
 
-@hdxLogoUrl: "@{imagePath}/homepage/logo-beta.svg";
+//Do remove :)
+@import "deprecated";
+@import "forms-deprecated";
+
+@import "../search/list-header-search";
+@import "forms";
+
+
+@hdxLogoUrl: "@{imagePath}/homepage/logo-hdx.svg";
 
 @headerNavHeight: 55px;
 @headerNavBorderHeight: @navBorderHeight;
@@ -31,7 +41,7 @@
 
 @bodyBackgroundColor: @greenColor;
 @bodyBackgroundUrl: "@{imagePath}/homepage/map.png";
-
+@errorPageBackgroundUrl: "@{imagePath}/page404/pxel_bg.png";
 
 /* Body Background */
     body {
@@ -47,6 +57,31 @@
   color: @searchPlaceholderColor;
   .sourceSansProFont(400, 18px);
   line-height: 28px;
+}
+
+h1 {
+  font-size: 28px;
+}
+h2 {
+  font-size: 21px;
+}
+h3 {
+  font-size: 18px;
+}
+h4 {
+  font-size: 14px;
+}
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.5;
+}
+h1 small,
+h2 small,
+h3 small,
+h4 small {
+  font-size: 14px;
 }
 
 .newHeader{
@@ -121,13 +156,53 @@
       }
     }
   }
+
+  .crises-menu {
+    padding: 0;
+    width: 250px;
+
+    li.crises-group {
+      text-transform: uppercase;
+      color: @grayColor;
+      .gothamBookFont(12px);
+      padding: 10px 20px;
+      border-bottom: 1px solid @extraLightGrayColor;
+
+      &:last-child{
+        border-bottom: none;
+      }
+
+      ul {
+        padding: 0;
+        list-style: none;
+        text-transform: none;
+        .sourceSansProFont(400, 14px);
+        li {
+          padding-top: 5px;
+          font-size: 12px;
+          a {
+            color: @blackColor;
+            font-size: 14px;
+            &:hover{
+              text-decoration: none;
+            }
+          }
+          .crises-datasets {
+            line-height: 1;
+          }
+        }
+
+      }
+    }
+  }
+
 }
 
 /* HEADER Search Widget  */
 .header-nav-search {
   height: @headerNavHeight;
   margin-left: 15px;
-  width: 350px;
+  width: 310px;
 
   border-bottom: @headerNavBorderHeight solid @headerNavSearchBorderColor;
   margin-bottom: -@headerNavBorderHeight;
@@ -148,7 +223,7 @@
     }
 
     .filter-icon{
-      margin-right: 20px;
+      //margin-right: 20px;
       visibility: hidden;
 
       color: @blueColor;
@@ -162,7 +237,7 @@
       text-shadow: none;
       box-shadow: none;
       transition: none;
-      width: 250px;
+      width: 224px;
       margin: 0;
       padding: 0;
       height: 28px;
@@ -246,7 +321,7 @@
   }
 }
 .mainLinks {
-  padding-left: 25px;
+  padding-left: 20px;
   margin: 0;
   >li {
     display: inline;
@@ -281,10 +356,6 @@
       color: #333333;
       text-decoration: underline;
     }
-    .crises-menu{
-      left: inherit;
-      right: 0px;
-    }
 
     #crises-label:after {
       content: '\25bc';
@@ -314,12 +385,30 @@
     padding: 0;
 
     .breadcrumb{
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
       .sourceSansProFont(400, 12px);
-      color: @grayColor;
       line-height: @toolbarHeight;
       .uppercase;
       > li {
         text-shadow: none;
+        &:after{
+          content: " / ";
+        }
+        &.active {
+          &:after{
+            content: "";
+          }
+          a {
+            color: @darkGrayColor;
+            font-weight: bold;
+          }
+        }
+        a {
+          color: @darkGrayColor;
+        }
       }
       > li + li::before {
         content: "";
@@ -622,12 +711,160 @@
 /* END Style placeholders */
 
 
-/* Style dataset icons */
-.label-icons span{
-  height: 15px;
-  font-size: 15px;
-  color: #888888;
-  margin-right: 15px;
-  padding-top: 3px;
+/* Style Dashboard - Newsfeed list */
+
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+  background: transparent url('../../../../base/images/dotted.png') 14px 0 repeat-y;
+
+  .load-less{
+    margin-bottom: 15px;
+  }
+
+  .item .actor .gravatar {
+    position: absolute;
+    top: 0;
+    left: 40px;
+    border-radius: 100px;
+  }
 }
-/* END Style dataset icons */
+/* END Style Dashboard - Newsfeed list */
+
+.hide-heading {
+    display: none;
+}
+
+/* Style Sysadmin settings*/
+.user-list {
+  margin: 0;
+  list-style: none;
+
+  li {
+    margin: 0 0 10px 0;
+  }
+
+  .gravatar {
+    vertical-align: -4px;
+    margin-right: 3px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+  }
+}
+/* END Style Sysadmin settings*/
+
+/* Actions button list */
+.actions li {
+  display: inline-block;
+}
+/* END - Actions button list */
+
+.red {
+  color: @redColor;
+}
+
+nav{
+	&.mobile-only{
+		display: none;
+	}
+}
+
+@media(max-width: 767px) {
+  body.home .search-ahead {
+    width: 120%;
+  }
+}
+
+/* Actions */
+.base-actions-menu{
+  @listMarginUnit: 16px;
+  a.btn.hdx-btn {
+    margin-left: 12px;
+  }
+
+  ul {
+    list-style: none;
+    li {
+      line-height: @listMarginUnit;
+      .sourceSansProFont(400, 14px);
+
+      display: inline;
+      margin-right: @listMarginUnit;
+
+      &:last-child{
+        margin-right: 0;
+      }
+
+      &:first-child:before {
+        border: none;
+      }
+
+      &:before {
+        content: "";
+        border-left: 1px solid @grayColor;
+        height: @listMarginUnit;
+        margin-right: @listMarginUnit;
+      }
+
+      &.delete-override{
+        a {
+          color: @orangeColor;
+          text-transform: none;
+        }
+      }
+
+      a {
+        i {
+          margin-right: 5px;
+        }
+      }
+
+      .direct-share-links{
+        position: relative;
+        bottom: -5px;
+      }
+    }
+  }
+}
+
+/* END - Actions */
+
+.no-margin{
+  margin: 0;
+}
+
+#error-page {
+  min-height: 400px;
+  height: 70vh;
+  background: url(@errorPageBackgroundUrl);
+  background-size: 10px 20px;
+  background-repeat: repeat;
+  position: relative;
+
+  .error-message-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 450px;
+    text-align: center;
+    color: @darkGrayColor;
+
+    img {
+      height: 90px;
+    }
+
+    h1 {
+      .gothamBoldFont(18px);
+      text-transform: uppercase;
+      margin: 20px 0;
+    }
+
+    p {
+      margin: 20px 0;
+      .sourceSansProFont(400, 14px);
+    }
+  }
+}

@@ -1,0 +1,18 @@
+#contactContributorPopup .two-column-widget .two-column-left {
+  background-color: #1ebfb3;
+  height: 560px;
+}
+#contactContributorPopup .two-column-widget .two-column-right {
+  height: 560px;
+  padding: 60px;
+}
+#contactContributorPopup textarea {
+  height: 100px;
+  padding: 14px 20px;
+}
+#contactContributorPopup textarea ~ label {
+  bottom: 56px;
+}
+#contactContributorPopup textarea.input-content ~ label {
+  bottom: 6px;
+}

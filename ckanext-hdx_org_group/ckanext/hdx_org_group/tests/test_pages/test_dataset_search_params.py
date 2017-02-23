@@ -9,28 +9,28 @@ import logging as logging
 import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
-import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 import ckanext.hdx_theme.tests.hdx_test_util as hdx_test_util
+import ckanext.hdx_org_group.tests as org_group_base
 from ckan.lib.helpers import Page
 
 log = logging.getLogger(__name__)
 
 
-class TestDatasetSearchParams(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+class TestDatasetSearchParams(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('hdx_org_group hdx_package')
+        hdx_test_base.load_plugin('ytp_request hdx_search hdx_org_group hdx_package hdx_theme')
 
     def test_search_params(self):
         url = h.url_for(
             controller='organization', action='read', id='hdx-test-org')
 
-        result = self.app.get(url)
+        result = self.app.get(url, extra_environ={'REMOTE_USER': 'testsysadmin'})
         page = str(result.response)
 
-        begin_str = '<form class="section site-search simple-input"'
-        end_str = '</form>'
+        begin_str = '<section class="search-list list-items">'
+        end_str = '</section>'
         search_item = 'name="q"'
 
         count = hdx_test_util.count_string_occurences(page, search_item,

@@ -1,31 +1,26 @@
 import re
+import urlparse
+import uuid
+
+import json
+import logging
+
 import ckan.lib.helpers as h
-from ckan.common import (
-    c, request
-)
-import sqlalchemy
 import ckan.model as model
 import ckan.lib.base as base
 import ckan.logic as logic
-import datetime
-import json
-import logging
+
 import ckan.plugins.toolkit as tk
-import re
 import ckan.new_authz as new_authz
 import ckan.lib.activity_streams as activity_streams
 import ckan.model.package as package
 import ckan.model.misc as misc
-import ckan.lib.plugins as lib_plugins
-import ckanext.hdx_theme.helpers.counting_actions as counting
-import ckan.lib.dictization.model_save as model_save
-import ckan.plugins as plugins
 
-from ckan.logic.action.create import _validate
+from pylons import config
 
-from webhelpers.html import escape, HTML, literal, url_escape
-from ckan.common import _, c, request, response
-from ckan.model.tag import PackageTag, Tag
+
+from ckan.common import _, c, request
+from ckanext.hdx_package.exceptions import NoOrganization
 
 get_action = logic.get_action
 log = logging.getLogger(__name__)
@@ -289,197 +284,6 @@ def _tag_search(context, data_dict):
     return tags, count
 
 
-def package_create(context, data_dict):
-    '''Create a new dataset (package).
-
-    You must be authorized to create new datasets. If you specify any groups
-    for the new dataset, you must also be authorized to edit these groups.
-
-    Plugins may change the parameters of this function depending on the value
-    of the ``type`` parameter, see the ``IDatasetForm`` plugin interface.
-
-    :param name: the name of the new dataset, must be between 2 and 100
-        characters long and contain only lowercase alphanumeric characters,
-        ``-`` and ``_``, e.g. ``'warandpeace'``
-    :type name: string
-    :param title: the title of the dataset (optional, default: same as
-        ``name``)
-    :type title: string
-    :param author: the name of the dataset's author (optional)
-    :type author: string
-    :param author_email: the email address of the dataset's author (optional)
-    :type author_email: string
-    :param maintainer: the name of the dataset's maintainer (optional)
-    :type maintainer: string
-    :param maintainer_email: the email address of the dataset's maintainer
-        (optional)
-    :type maintainer_email: string
-    :param license_id: the id of the dataset's license, see ``license_list()``
-        for available values (optional)
-    :type license_id: license id string
-    :param notes: a description of the dataset (optional)
-    :type notes: string
-    :param url: a URL for the dataset's source (optional)
-    :type url: string
-    :param version: (optional)
-    :type version: string, no longer than 100 characters
-    :param state: the current state of the dataset, e.g. ``'active'`` or
-        ``'deleted'``, only active datasets show up in search results and
-        other lists of datasets, this parameter will be ignored if you are not
-        authorized to change the state of the dataset (optional, default:
-        ``'active'``)
-    :type state: string
-    :param type: the type of the dataset (optional), ``IDatasetForm`` plugins
-        associate themselves with different dataset types and provide custom
-        dataset handling behaviour for these types
-    :type type: string
-    :param resources: the dataset's resources, see ``resource_create()``
-        for the format of resource dictionaries (optional)
-    :type resources: list of resource dictionaries
-    :param tags: the dataset's tags, see ``tag_create()`` for the format
-        of tag dictionaries (optional)
-    :type tags: list of tag dictionaries
-    :param extras: the dataset's extras (optional), extras are arbitrary
-        (key: value) metadata items that can be added to datasets, each extra
-        dictionary should have keys ``'key'`` (a string), ``'value'`` (a
-        string)
-    :type extras: list of dataset extra dictionaries
-    :param relationships_as_object: see ``package_relationship_create()`` for
-        the format of relationship dictionaries (optional)
-    :type relationships_as_object: list of relationship dictionaries
-    :param relationships_as_subject: see ``package_relationship_create()`` for
-        the format of relationship dictionaries (optional)
-    :type relationships_as_subject: list of relationship dictionaries
-    :param groups: the groups to which the dataset belongs (optional), each
-        group dictionary should have one or more of the following keys which
-        identify an existing group:
-        ``'id'`` (the id of the group, string), ``'name'`` (the name of the
-        group, string), ``'title'`` (the title of the group, string), to see
-        which groups exist call ``group_list()``
-    :type groups: list of dictionaries
-    :param owner_org: the id of the dataset's owning organization, see
-        ``organization_list()`` or ``organization_list_for_user`` for
-        available values (optional)
-    :type owner_org: string
-
-    :returns: the newly created dataset (unless 'return_id_only' is set to True
-              in the context, in which case just the dataset id will be returned)
-    :rtype: dictionary
-
-    '''
-    model = context['model']
-    user = context['user']
-
-    if 'type' not in data_dict:
-        package_plugin = lib_plugins.lookup_package_plugin()
-        try:
-            # use first type as default if user didn't provide type
-            package_type = package_plugin.package_types()[0]
-        except (AttributeError, IndexError):
-            package_type = 'dataset'
-            # in case a 'dataset' plugin was registered w/o fallback
-            package_plugin = lib_plugins.lookup_package_plugin(package_type)
-        data_dict['type'] = package_type
-    else:
-        package_plugin = lib_plugins.lookup_package_plugin(data_dict['type'])
-
-
-    if 'schema' in context:
-        schema = context['schema']
-    else:
-        schema = package_plugin.create_package_schema()
-
-    _check_access('package_create', context, data_dict)
-
-    if 'api_version' not in context:
-        # check_data_dict() is deprecated. If the package_plugin has a
-        # check_data_dict() we'll call it, if it doesn't have the method we'll
-        # do nothing.
-        check_data_dict = getattr(package_plugin, 'check_data_dict', None)
-        if check_data_dict:
-            try:
-                check_data_dict(data_dict, schema)
-            except TypeError:
-                # Old plugins do not support passing the schema so we need
-                # to ensure they still work
-                package_plugin.check_data_dict(data_dict)
-
-    data, errors = _validate(data_dict, schema, context)
-    if 'tags' in data:
-        data['tags'] = get_tag_vocabulary(data['tags'])
-    if 'groups' in data:
-         data['extras'].append({'key':'solr_additions','value':build_additions(data['groups'])})
-
-    log.debug('package_create validate_errs=%r user=%s package=%s data=%r',
-              errors, context.get('user'),
-              data.get('name'), data_dict)
-
-    if errors:
-        model.Session.rollback()
-        raise ValidationError(errors)
-
-    rev = model.repo.new_revision()
-    rev.author = user
-    if 'message' in context:
-        rev.message = context['message']
-    else:
-        rev.message = _(u'REST API: Create object %s') % data.get("name")
-
-    admins = []
-    if user:
-        user_obj = model.User.by_name(user.decode('utf8'))
-        if user_obj:
-            admins = [user_obj]
-            data['creator_user_id'] = user_obj.id
-
-    pkg = model_save.package_dict_save(data, context)
-    model.setup_default_user_roles(pkg, admins)
-    # Needed to let extensions know the package id
-    model.Session.flush()
-    data['id'] = pkg.id
-    if data.get('resources'):
-        for index, resource in enumerate(data['resources']):
-            resource['id'] = pkg.resources[index].id
-
-
-    context_org_update = context.copy()
-    context_org_update['ignore_auth'] = True
-    context_org_update['defer_commit'] = True
-    _get_action('package_owner_org_update')(context_org_update,
-                                            {'id': pkg.id,
-                                             'organization_id': pkg.owner_org})
-
-    for item in plugins.PluginImplementations(plugins.IPackageController):
-        item.create(pkg)
-
-        item.after_create(context, data)
-
-    # Create default views for resources if necessary
-    if data.get('resources'):
-        logic.get_action('package_create_default_resource_views')(
-            context, {'package': data})
-
-
-    if not context.get('defer_commit'):
-        model.repo.commit()
-
-    # need to let rest api create
-    context["package"] = pkg
-    # this is added so that the rest controller can make a new location
-    context["id"] = pkg.id
-    log.debug('Created object %s' % pkg.name)
-
-    # Make sure that a user provided schema is not used on package_show
-    context.pop('schema', None)
-
-    return_id_only = context.get('return_id_only', False)
-
-    output = context['id'] if return_id_only \
-        else _get_action('package_show')(context, {'id': context['id']})
-
-    return output
-
-
 def pkg_topics_list(data_dict):
     """
     Get a list of topics
@@ -527,3 +331,132 @@ def hdx_unified_resource_format(format):
     else:
         format_new = format_clean
     return format_new
+
+
+def filesize_format(size_in_bytes):
+    try:
+        d = 1024.0
+        size = int(size_in_bytes)
+
+        # value = formatters.localised_filesize(size_in_bytes)
+        # return value
+
+        for unit in ['B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z']:
+            if size < d:
+                return "%3.1f%s" % (size, unit)
+            size /= d
+        return "%.1f%s" % (size, 'Yi')
+    except Exception, e:
+        log.warn('Error occured when formatting the numner {}. Error {}'.format(size_in_bytes, str(e)))
+        return size_in_bytes
+
+
+def hdx_get_proxified_resource_url(data_dict, proxy_schemes=['http','https']):
+    '''
+    This function replaces the one with the similar name from ckanext.resourceproxy.plugin .
+    Changes:
+    1) Don't look at the protocol when checking if it is the same domain
+    2) Return a domain relative url (without schema, domain or port) for local resources.
+
+    :param data_dict: contains a resource and package dict
+    :type data_dict: dict
+    :param proxy_schemes: list of url schemes to proxy for.
+    :type data_dict: list
+    '''
+
+    same_domain = is_ckan_domain(data_dict['resource']['url'])
+    parsed_url = urlparse.urlparse(data_dict['resource']['url'])
+    scheme = parsed_url.scheme
+
+    if not same_domain and scheme in proxy_schemes:
+        url = h.url_for(
+            action='proxy_resource',
+            controller='ckanext.resourceproxy.controller:ProxyController',
+            id=data_dict['package']['name'],
+            resource_id=data_dict['resource']['id'])
+        log.info('Proxified url is {0}'.format(url))
+    else:
+        url = urlparse.urlunparse((None, None) + parsed_url[2:])
+    return url
+
+
+def is_ckan_domain(url):
+    '''
+    :param url: url to check whether it's on the same domain as ckan
+    :type url: str
+    :return: True if it's the same domain. False otherwise
+    :rtype: bool
+    '''
+    ckan_url = config.get('ckan.site_url', '//localhost:5000')
+    parsed_url = urlparse.urlparse(url)
+    ckan_parsed_url = urlparse.urlparse(ckan_url)
+    same_domain = True if not parsed_url.hostname or parsed_url.hostname == ckan_parsed_url.hostname else False
+    return same_domain
+
+def make_url_relative(url):
+    '''
+    Transforms something like http://testdomain.com/test to /test
+    :param url: url to check whether it's on the same domain as ckan
+    :type url: str
+    :return: the new url as a string
+    :rtype: str
+    '''
+    parsed_url = urlparse.urlparse(url)
+    return urlparse.urlunparse((None, None) + parsed_url[2:])
+
+def generate_mandatory_fields():
+    '''
+
+    :return: dataset dict with mandatory fields filled
+    :rtype: dict
+    '''
+
+    user = c.user or c.author
+
+    # random_string = str(uuid.uuid4()).replace('-', '')[:8]
+    # dataset_name = 'autogenerated-{}-{}'.format(user, random_string)
+
+    selected_org = None
+    orgs = h.organizations_available('create_dataset')
+    if len(orgs) == 0:
+        raise NoOrganization(_('The user needs to belong to at least 1 organisation'))
+    else:
+        selected_org = orgs[0]
+
+
+    data_dict = {
+        'private': True,
+        # 'name': dataset_name,
+        # 'title': dataset_name,
+        'license_id': 'cc-by',
+        'owner_org': selected_org.get('id'),
+        'dataset_source': selected_org.get('title'),
+        'maintainer': user,
+        'subnational': 1,
+        'data_update_frequency': config.get('hdx.default_frequency', '365'),
+    }
+    return data_dict
+
+
+def hdx_check_add_data():
+    data_dict = {}
+
+    context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'auth_user_obj': c.userobj,
+                   'save': 'save' in request.params}
+    dataset_dict = None
+    try:
+        logic.check_access("package_create", context, dataset_dict)
+    except logic.NotAuthorized, e:
+        if c.userobj or c.user:
+            data_dict['href'] = '/dashboard/organizations'
+            data_dict['onclick'] = ''
+            return data_dict
+        data_dict['href'] = '/contribute'
+        data_dict['onclick'] = ''
+        return data_dict
+
+    data_dict['href'] = '#'
+    data_dict['onclick'] = 'contributeAddDetails()'
+
+    return data_dict
