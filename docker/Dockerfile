@@ -6,6 +6,6 @@ RUN rm -rf /srv/ckan && \
 COPY . /srv/ckan/
 
 RUN ls -l /srv/ckan && \
-    pip install -r requirements.txt && \
+    pip install -r /srv/ckan/requirements.txt && \
     hdxckantool update && \
     hdxckantool plugins dev
