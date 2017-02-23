@@ -180,7 +180,7 @@
                   <li><a href="{{ orgLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Organisations') }}</a></li>
                   <li style="position: relative">
                       <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                        <span id="crises-label" >{{ _('Events') }}</span>
+                        <span id="crises-label" >{{ _('Quicklinks') }}</span>
                       </a>
                       <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
                           <li class="crises-group">
@@ -193,6 +193,9 @@
                                       <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                                     </li>
                                   {% endfor %}
+                                    <li>
+                                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>
+                                    </li>
                               </ul>
                           </li>
                           {# if events.archived #}
