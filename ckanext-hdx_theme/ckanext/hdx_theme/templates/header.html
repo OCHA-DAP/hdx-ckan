@@ -276,16 +276,18 @@
                 <li><a href="{{ dataLink }}">Data</a></li>
                 <li><a href="{{ locationLink }}">Locations</a></li>
                 <li><a href="{{ orgLink }}">Organisations</a></li>
+                <li class="crisis"><a href="#"><span>Quicklinks / Ongoing</span></a></li>
                 {% for ev in events.ongoing %}
-                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}"><span>Quicklinks / Ongoing</span><br>{{ ev.title }}</a></li>
+                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}">{{ ev.title }}</a></li>
                 {% endfor %}
-                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}"><span>Quicklinks / Ongoing</span><br>South Sudan</a></li>
-                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}"><span>Quicklinks / Ongoing</span><br>Syria</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}">South Sudan</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}">Syria</a></li>
+                <li class="crisis"><a href="#"><span>Quicklinks / Archived</span></a></li>
                 {% for ev in events.archived %}
-                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}"><span>Quicklinks / Archived</span>{{ ev.title }}</a></li>
+                  <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}">{{ ev.title }}</a></li>
                 {% endfor %}
-                <li class="crisis"><a href="{{ nepalLink }}"><span>Quicklinks / Archived</span><br>Nepal Earthquake</a></li>
-                <li class="crisis"><a href="{{ ebolaLink }}"><span>Quicklinks / Archived</span><br>Ebola</a></li>
+                <li class="crisis"><a href="{{ nepalLink }}">Nepal Earthquake</a></li>
+                <li class="crisis"><a href="{{ ebolaLink }}">Ebola</a></li>
 
                 <li class="sub-nav"><a href="{{ faqLink }}">FAQ</a></li>
                 <li class="sub-nav top-pad">{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
