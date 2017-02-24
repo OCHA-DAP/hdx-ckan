@@ -1,23 +1,23 @@
 $('document').ready(function(){
 	var index = lunr(function () {
-    this.field('title', {boost: 10})
-    this.field('crisis', {boost: 1000}) //Little hack to boost the scores of crisis pages
+    this.field('title', {boost: 10});
+    this.field('event', {boost: 1000}); //Little hack to boost the scores of event pages
     this.field('url')
     this.ref('id')
   })
 	for(i=0; i<feature_index.length; i++){//This is the part where Lunr is actually not too bright
 		feature_index[i]['id'] = i;
-		if(feature_index[i]['type'] == 'crisis'){
-			feature_index[i]['crisis'] = feature_index[i]['title'];
+		if(feature_index[i]['type'] == 'event'){
+			feature_index[i]['event'] = feature_index[i]['title'];
 		}else{
-			feature_index[i]['crisis'] = '';
+			feature_index[i]['event'] = '';
 		}
 		index.add(feature_index[i])
 	}
 
 	results = index.search($('#input-search input').attr('value'));
 	if(results.length > 0){//Don't show if we don't have any good matches
-		var html = "You might also like:"
+		var html = "You might also like:";
 		var limit = results.length > 5 ? 5 : results.length;
 		for(i=0; i<limit; i++){
 			html += ' <a href="'+feature_index[results[i]['ref']]['url']+'">'+feature_index[results[i]['ref']]['title']+'</a> '+feature_index[results[i]['ref']]['type']+' page';
