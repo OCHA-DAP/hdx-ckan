@@ -40,7 +40,7 @@ def proxy_resource(context, data_dict):
         # first we try a HEAD request which may not be supported
         did_get = False
         r = requests.head(url)
-        if r.status_code == 405:
+        if r.status_code in (400, 403, 405, 500):
             r = requests.get(url, stream=True)
             did_get = True
         r.raise_for_status()
