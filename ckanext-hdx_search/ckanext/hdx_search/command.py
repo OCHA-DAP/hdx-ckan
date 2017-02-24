@@ -73,16 +73,16 @@ def buildIndex(path):
 
     index.append({'title': 'Ebola', 'url': h.url_for(
         controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
-        action='read', qualified=True), 'type': 'quicklink'})
+        action='read', qualified=True), 'type': 'event'})
     index.append({'title': 'Nepal Earthquake', 'url': h.url_for(
         controller='ckanext.hdx_crisis.controllers.custom_location_controller:CustomLocationController',
-        action='read', id='nepal-earthquake', qualified=True), 'type': 'quicklink'})
+        action='read', id='nepal-earthquake', qualified=True), 'type': 'event'})
     index.append({'title': 'El Nino',
                   'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                   action='read_event', id='elnino', qualified=True), 'type': 'quicklink'})
+                                   action='read_event', id='elnino', qualified=True), 'type': 'event'})
     index.append({'title': 'Lake Chad',
                   'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                   action='read_event', id='lake-chad', qualified=True), 'type': 'quicklink'})
+                                   action='read_event', id='lake-chad', qualified=True), 'type': 'event'})
 
     ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
     # topic = Session.execute("select id from vocabulary where name='Topics'")
