@@ -279,6 +279,8 @@
                 {% for ev in events.ongoing %}
                   <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}"><span>Quicklinks / Ongoing</span><br>{{ ev.title }}</a></li>
                 {% endfor %}
+                <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}"><span>Quicklinks / Ongoing</span><br>South Sudan</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}"><span>Quicklinks / Ongoing</span><br>Syria</a></li>
                 {% for ev in events.archived %}
                   <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}"><span>Quicklinks / Archived</span>{{ ev.title }}</a></li>
                 {% endfor %}
