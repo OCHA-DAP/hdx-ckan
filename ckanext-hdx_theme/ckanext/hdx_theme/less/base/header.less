@@ -2,6 +2,7 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
+
 @import "variables";
 @import "fonts";
 @import "base";
@@ -155,6 +156,46 @@ h4 small {
       }
     }
   }
+
+  .crises-menu {
+    padding: 0;
+    width: 250px;
+
+    li.crises-group {
+      text-transform: uppercase;
+      color: @grayColor;
+      .gothamBookFont(12px);
+      padding: 10px 20px;
+      border-bottom: 1px solid @extraLightGrayColor;
+
+      &:last-child{
+        border-bottom: none;
+      }
+
+      ul {
+        padding: 0;
+        list-style: none;
+        text-transform: none;
+        .sourceSansProFont(400, 14px);
+        li {
+          padding-top: 5px;
+          font-size: 12px;
+          a {
+            color: @blackColor;
+            font-size: 14px;
+            &:hover{
+              text-decoration: none;
+            }
+          }
+          .crises-datasets {
+            line-height: 1;
+          }
+        }
+
+      }
+    }
+  }
+
 }
 
 /* HEADER Search Widget  */
@@ -314,10 +355,6 @@ h4 small {
       background-color: #FFFFFF;
       color: #333333;
       text-decoration: underline;
-    }
-    .crises-menu{
-      left: inherit;
-      right: 0px;
     }
 
     #crises-label:after {
@@ -751,10 +788,14 @@ nav{
     list-style: none;
     li {
       line-height: @listMarginUnit;
-      .sourceSansProFont(400, 12px);
+      .sourceSansProFont(400, 14px);
 
       display: inline;
       margin-right: @listMarginUnit;
+
+      &:last-child{
+        margin-right: 0;
+      }
 
       &:first-child:before {
         border: none;
@@ -778,6 +819,11 @@ nav{
         i {
           margin-right: 5px;
         }
+      }
+
+      .direct-share-links{
+        position: relative;
+        bottom: -5px;
       }
     }
   }

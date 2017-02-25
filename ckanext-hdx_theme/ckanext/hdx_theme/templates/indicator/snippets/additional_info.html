@@ -120,8 +120,9 @@
 			{% for tag in pkg_dict.tags %}
 	    		<div class="tag-wrapper">
 	    			{% if tag.vocabulary_id %}
+					{% url_for controller='package', action='search', vocab_Topics=tag.name %}
 	      				<a class="label tag" href="{% url_for controller='package', action='search', vocab_Topics=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-	      			{% else %}	
+	      			{% else %}
 	      				<a class="label tag" href="{% url_for controller='package', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
 	      			{% endif %}
 	    		</div>
