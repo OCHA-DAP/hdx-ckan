@@ -15,6 +15,7 @@ ckanext/hdx_org_group/controllers/member_controller.py
 ckanext/hdx_org_group/controllers/organization_controller.py
 ckanext/hdx_org_group/controllers/redirect_controller.py
 ckanext/hdx_org_group/controllers/request_controller.py
+ckanext/hdx_org_group/controllers/wfp_controller.py
 ckanext/hdx_org_group/dao/__init__.py
 ckanext/hdx_org_group/dao/indicator_access.py
 ckanext/hdx_org_group/helpers/__init__.py
