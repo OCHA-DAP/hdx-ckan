@@ -1,0 +1,7 @@
+.topline.topline-rw .topline-value {
+  float: left;
+  margin-right: 20px;
+}
+.topline.topline-rw .sparkline {
+  float: left;
+}
