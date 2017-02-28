@@ -28,6 +28,10 @@
     null,
     "Kunne ikke laste informasjon om data-API"
   ],
+  "File": [
+    null,
+    "Fil"
+  ],
   "Follow": [
     null,
     "Følg"
@@ -67,6 +71,10 @@
   "Remove": [
     null,
     "Fjern"
+  ],
+  "Reorder resource view": [
+    null,
+    "Forandre rekkefølgen i ressursvisning"
   ],
   "Reorder resources": [
     null,
@@ -135,13 +143,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Du laster opp en fil. Er du sikker på at du vil forlate siden og stoppe denne opplastingen?"
-  ],
-  "show less": [
-    null,
-    "vis mindre"
-  ],
-  "show more": [
-    null,
-    "vis mer"
   ]
 }

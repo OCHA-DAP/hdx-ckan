@@ -1,9 +1,11 @@
+# encoding: utf-8
+
 import paste.fixture
-import pylons.config as config
+from ckan.common import config
 import urlparse
 
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckan.plugins as plugins
 import ckan.lib.helpers as h
 import ckanext.textview.plugin as plugin

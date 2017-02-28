@@ -1,11 +1,13 @@
+# encoding: utf-8
+
 import mock
 import nose
 
 import sqlalchemy.exc
 
 import ckan.plugins as p
-import ckan.new_tests.helpers as helpers
-import ckan.new_tests.factories as factories
+import ckan.tests.helpers as helpers
+import ckan.tests.factories as factories
 
 import ckanext.datastore.db as db
 

@@ -28,6 +28,10 @@
     null,
     "Falhou em carregar informações sobre a API de dados"
   ],
+  "File": [
+    null,
+    "Arquivo"
+  ],
   "Follow": [
     null,
     "Seguir"
@@ -67,6 +71,10 @@
   "Remove": [
     null,
     "Remover"
+  ],
+  "Reorder resource view": [
+    null,
+    "Reordenar visão de recurso"
   ],
   "Reorder resources": [
     null,
@@ -135,13 +143,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Você está enviando um arquivo. Tem certeza de que quer navegar para outra página e parar esse envio?"
-  ],
-  "show less": [
-    null,
-    "mostrar menos"
-  ],
-  "show more": [
-    null,
-    "mostrar mais"
   ]
 }

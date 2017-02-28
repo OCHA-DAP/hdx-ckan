@@ -8,6 +8,10 @@
     null,
     "Ocurrió un error"
   ],
+  "An error occurred: %(text)s %(error)s": [
+    null,
+    "Ha ocurrido un error: %(text)s %(error)s"
+  ],
   "Are you sure you want to perform this action?": [
     null,
     "¿Está seguro de que desea realizar esta acción?"
@@ -27,6 +31,10 @@
   "Failed to load data API information": [
     null,
     "Falló carga de información de datos de API"
+  ],
+  "File": [
+    null,
+    "Fichero"
   ],
   "Follow": [
     null,
@@ -140,12 +148,8 @@
     null,
     "Estás subiendo un fichero. Estás seguro que quieres salir y parar esta subida?"
   ],
-  "show less": [
+  "error loading view": [
     null,
-    "mostrar menos"
-  ],
-  "show more": [
-    null,
-    "mostrar más"
+    "error cargando la vista"
   ]
 }

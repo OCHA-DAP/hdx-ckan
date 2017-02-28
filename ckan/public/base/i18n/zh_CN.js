@@ -28,6 +28,10 @@
     null,
     "读取API资讯失败"
   ],
+  "File": [
+    null,
+    "文件"
+  ],
   "Follow": [
     null,
     "追随"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "你正在上传文件。你是否确定要放弃上传而浏览别处？"
-  ],
-  "show less": [
-    null,
-    "展示更少"
-  ],
-  "show more": [
-    null,
-    "展示更多"
   ]
 }

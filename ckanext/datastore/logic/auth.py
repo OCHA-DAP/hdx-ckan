@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import ckan.plugins as p
 
 
@@ -36,6 +38,11 @@ def datastore_upsert(context, data_dict):
 
 def datastore_delete(context, data_dict):
     return datastore_auth(context, data_dict)
+
+
+@p.toolkit.auth_allow_anonymous_access
+def datastore_info(context, data_dict):
+    return datastore_auth(context, data_dict, 'resource_show')
 
 
 @p.toolkit.auth_allow_anonymous_access

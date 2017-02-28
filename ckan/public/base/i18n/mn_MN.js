@@ -28,6 +28,10 @@
     null,
     "Өгөгдлийн API мэдээллийг ачааллахад алдаа гарлаа"
   ],
+  "File": [
+    null,
+    "Файл"
+  ],
   "Follow": [
     null,
     "Дагах"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Та яг одоо файл хуулж байна. Хуулж байгаа файлаа зогсоогоод гарахдаа итгэлтэй байна уу."
-  ],
-  "show less": [
-    null,
-    "хураангуй"
-  ],
-  "show more": [
-    null,
-    "дэлгэрэнгүй"
   ]
 }

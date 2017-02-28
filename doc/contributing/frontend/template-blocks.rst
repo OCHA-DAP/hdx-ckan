@@ -210,10 +210,10 @@ block to use::
 scripts
 -------
 
-The scripts block allows you to add additonal scripts to the page. Use the
+The scripts block allows you to add additional scripts to the page. Use the
 ``super()`` function to load the default scripts before/after your own::
 
-  {% block script %}
+  {% block scripts %}
     {{ super() }}
     <script src="/base/js/custom.js"></script>
   {% endblock %}

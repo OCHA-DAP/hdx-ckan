@@ -2,7 +2,7 @@
   "": {
     "domain": "ckan",
     "lang": "is",
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
   },
   "An Error Occurred": [
     null,
@@ -27,6 +27,10 @@
   "Failed to load data API information": [
     null,
     "Villa kom upp við að sækja upplýsingar um API gögn"
+  ],
+  "File": [
+    null,
+    "Skrá"
   ],
   "Follow": [
     null,
@@ -67,6 +71,10 @@
   "Remove": [
     null,
     "Fjarlægja"
+  ],
+  "Reorder resource view": [
+    null,
+    "Endurraða tilfangssýnum"
   ],
   "Reorder resources": [
     null,
@@ -135,13 +143,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
-  ],
-  "show less": [
-    null,
-    "sýna færri"
-  ],
-  "show more": [
-    null,
-    "sýna fleiri"
   ]
 }

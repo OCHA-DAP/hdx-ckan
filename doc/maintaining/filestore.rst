@@ -93,7 +93,7 @@ To create a new resource and upload a file to it using the Python library
 
  import requests
  requests.post('http://0.0.0.0:5000/api/action/resource_create',
-               data={"package_id":"my_dataset}",
+               data={"package_id":"my_dataset"},
                headers={"X-CKAN-API-Key": "21a47217-6d7b-49c5-88f9-72ebd5a4d4bb"},
                files=[('upload', file('/path/to/file/to/upload.csv'))])
 
@@ -149,7 +149,7 @@ an uploaded file. If some particular format is not included in the ones guessed
 by the ``mimetypes`` library, a default ``application/octet-stream`` value will be
 returned.
 
-Users can still register a more appropiate media type by using the ``mimetypes``
+Users can still register a more appropriate media type by using the ``mimetypes``
 library. A good way to do so is to use the ``IConfigurer`` interface so the
 custom types get registered on startup::
 

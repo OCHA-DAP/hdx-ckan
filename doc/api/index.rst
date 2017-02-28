@@ -314,7 +314,7 @@ call. The function is named in the 'callback' parameter. For example:
 
 http://demo.ckan.org/api/3/action/package_show?id=adur_district_spending&callback=myfunction
 
-.. todo :: This doesn't work with all functions.
+.. note :: This only works for GET requests
 
 
 .. _api-examples:
@@ -322,6 +322,45 @@ http://demo.ckan.org/api/3/action/package_show?id=adur_district_spending&callbac
 ------------
 API Examples
 ------------
+
+
+Tags (not in a vocabulary)
+==========================
+
+A list of all tags:
+
+* browser: http://demo.ckan.org/api/3/action/tag_list
+* curl: ``curl http://demo.ckan.org/api/3/action/tag_list``
+* ckanapi: ``ckanapi -r http://demo.ckan.org action tag_list``
+    
+Top 10 tags used by datasets:
+
+* browser: http://demo.ckan.org/api/action/package_search?facet.field=[%22tags%22]&facet.limit=10&rows=0
+* curl: ``curl 'http://demo.ckan.org/api/action/package_search?facet.field=\["tags"\]&facet.limit=10&rows=0'``
+* ckanapi: ``ckanapi -r http://demo.ckan.org action package_search facet.field='["tags"]' facet.limit=10 rows=0``
+
+All datasets that have tag 'economy':
+
+* browser: http://demo.ckan.org/api/3/action/package_search?fq=tags:economy
+* curl: ``curl 'http://demo.ckan.org/api/3/action/package_search?fq=tags:economy'``
+* ckanapi: ``ckanapi -r http://demo.ckan.org action package_search fq='tags:economy'``
+
+Tag Vocabularies
+================
+
+Top 10 tags and vocabulary tags used by datasets:
+
+* browser: http://demo.ckan.org/api/action/package_search?facet.field=[%22tags%22]&facet.limit=10&rows=0
+* curl: ``curl 'http://demo.ckan.org/api/action/package_search?facet.field=\["tags"\]&facet.limit=10&rows=0'``
+* ckanapi: ``ckanapi -r http://demo.ckan.org action package_search facet.field='["tags"]' facet.limit=10 rows=0``
+
+e.g. Facet: `vocab_Topics` means there is a vocabulary called Topics, and its top tags are listed under it.
+
+A list of datasets using tag 'education' from vocabulary 'Topics':
+
+* browser: https://data.hdx.rwlabs.org/api/3/action/package_search?fq=vocab_Topics:education
+* curl: ``curl 'https://data.hdx.rwlabs.org/api/3/action/package_search?fq=vocab_Topics:education'``
+* ckanapi: ``ckanapi -r https://data.hdx.rwlabs.org action package_search fq='vocab_Topics:education'``
 
 
 Uploading a new version of a resource file

@@ -28,6 +28,10 @@
     null,
     "Неуспешно зареждане на информация за API на данните"
   ],
+  "File": [
+    null,
+    "Файл"
+  ],
   "Follow": [
     null,
     "Следване"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "В момента качвате файл. Сигурни ли сте, че искате да излезете от страницата и да прекъснете качването?"
-  ],
-  "show less": [
-    null,
-    "показване на по-малко"
-  ],
-  "show more": [
-    null,
-    "показване на повече"
   ]
 }

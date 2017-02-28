@@ -46,11 +46,15 @@ Setting up the DataStore
 
 .. note::
 
-   The DataStore requires PostgreSQL 9.0 or later. It is possible to use the
-   DataStore on versions prior to 9.0 (for example 8.4). However, the
-   :meth:`~ckanext.datastore.logic.action.datastore_search_sql` will not be
-   available and the set-up is slightly different. Make sure, you read
-   :ref:`legacy-mode` for more details.
+   The DataStore (like CKAN) requires |postgres| 9.2 or later. This was
+   released in 2012, is widely available. At the time of writing, the only version
+   that is not supported by CKAN that has not been made 'end-of-life' by the
+   |postgres| community is 9.1.
+
+.. versionchanged:: 2.6
+
+   Previous CKAN (and DataStore) versions were compatible with earlier versions
+   of |postgres|.
 
 1. Enable the plugin
 ====================
@@ -134,12 +138,12 @@ superuser using::
 
 Then you can use this connection to set the permissions::
 
-    sudo ckan datastore set-permissions |
-    sudo -u postgres psql --set ON_ERROR_STOP=1
+    sudo ckan datastore set-permissions | sudo -u postgres psql --set ON_ERROR_STOP=1
 
 .. note::
    If you performed a source install, you will need to replace all references to
-   ``sudo ckan ...`` with ``paster --plugin=ckan ...``
+   ``sudo ckan ...`` with ``paster --plugin=ckan ...`` and provide the path to
+   the config file, e.g. ``paster --plugin=ckan datastore set-permissions -c /etc/ckan/default/development.ini``
 
 If your database server is not local, but you can access it over SSH, you can
 pipe the permissions script over SSH::
@@ -276,7 +280,7 @@ Download resource as CSV
 
 A DataStore resource can be downloaded in the `CSV`_ file format from ``{CKAN-URL}/datastore/dump/{RESOURCE-ID}``.
 
-.. _CSV: //en.wikipedia.org/wiki/Comma-separated_values
+.. _CSV: https://en.wikipedia.org/wiki/Comma-separated_values
 
 
 .. _fields:

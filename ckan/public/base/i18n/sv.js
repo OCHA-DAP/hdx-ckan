@@ -28,6 +28,10 @@
     null,
     "Misslyckades med att ladda API-information"
   ],
+  "File": [
+    null,
+    "Fil"
+  ],
   "Follow": [
     null,
     "Följ"
@@ -139,13 +143,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Du laddar upp en fil. Är du säker på att du vill lämna sidan och avbryta uppladdningen?"
-  ],
-  "show less": [
-    null,
-    "visa mindre"
-  ],
-  "show more": [
-    null,
-    "visa mer"
   ]
 }

@@ -4,8 +4,9 @@
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'name asc'), (_('Name Descending'), 'name desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
 {% set no_bottom_border = no_bottom_border if no_bottom_border else false %}
+{% set form_id = form_id if form_id else false %}
 
-<form class="search-form{% if no_bottom_border %} no-bottom-border{% endif %}" method="get" data-module="select-switch">
+<form {% if form_id %}id="{{ form_id }}" {% endif %}class="search-form{% if no_bottom_border %} no-bottom-border{% endif %}" method="get" data-module="select-switch">
 
   {% block search_input %}
     <div class="search-input control-group {{ search_class }}">
@@ -44,8 +45,10 @@
   {% endblock %}
 
   {% block search_title %}
-    {% if not no_title %}
+    {% if not error %}
       <h2>{% snippet 'snippets/search_result_text.html', query=query, count=count, type=type %}</h2>
+    {% else %}
+      <h2>Error</h2>
     {% endif %}
   {% endblock %}
 
@@ -73,7 +76,7 @@
 
 </form>
 
-{% if show_empty and count == 0 %}
+{% if show_empty and count == 0 and not error %}
   {% trans %}
     <p class="extra">Please try another search.</p>
   {% endtrans %}
@@ -81,6 +84,6 @@
 
 {% if error %}
   {% trans %}
-    <p><strong>There was an error while searching.</strong> Please try again.</p>
+    <p id="search-error"><strong>There was an error while searching.</strong> Please try again.</p>
   {% endtrans %}
 {% endif %}

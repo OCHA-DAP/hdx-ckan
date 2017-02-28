@@ -28,6 +28,10 @@
     null,
     "Data API:n tietojen lataaminen epäonnistui"
   ],
+  "File": [
+    null,
+    "Tiedosto"
+  ],
   "Follow": [
     null,
     "Seuraa"
@@ -50,7 +54,7 @@
   ],
   "Link to a URL on the internet (you can also link to an API)": [
     null,
-    "Linkki URL-osoitteeseen intterneteissä (voit myös linkittää API:in)"
+    "Linkki URL-osoitteeseen internetissä (voit myös linkittää API:in)"
   ],
   "Loading...": [
     null,
@@ -94,7 +98,7 @@
   ],
   "Start typing…": [
     null,
-    "Ala kirjoittamaan..."
+    "Ala kirjoittaa..."
   ],
   "There are unsaved modifications to this form": [
     null,
@@ -114,7 +118,7 @@
   ],
   "Unable to get data for uploaded file": [
     null,
-    "Datan saaminen ladattavalle tiedostolle epäonnistui"
+    "Datan saaminen ladattavaan tiedostoon epäonnistui"
   ],
   "Unable to upload file": [
     null,
@@ -138,14 +142,6 @@
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
-    "Olet olet parhaillaan lataamassa tiedostoa palvelimelle. Oletko varma että haluat navigoida sivukta ja keskeyttää lataamisen?"
-  ],
-  "show less": [
-    null,
-    "näytä vähemmän"
-  ],
-  "show more": [
-    null,
-    "näytä lisää"
+    "Olet parhaillaan lataamassa tiedostoa palvelimelle. Oletko varma, että haluat poistua sivulta ja keskeyttää lataamisen?"
   ]
 }

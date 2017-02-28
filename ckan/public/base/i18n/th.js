@@ -28,6 +28,10 @@
     null,
     "ไม่สามารถโหลดข้อมูลผ่าน API นี้ได้"
   ],
+  "File": [
+    null,
+    "ไฟล์"
+  ],
   "Follow": [
     null,
     "ติดตาม"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "คุณกำลังอัพโหลดไฟล์อยู่ กรุณายืนยันว่าคุณต้องการเปลี่ยนไปหน้าอื่น และหยุดการอัพโหลดนี้"
-  ],
-  "show less": [
-    null,
-    "แสดงน้อยลง"
-  ],
-  "show more": [
-    null,
-    "แสดงเพิ่ม"
   ]
 }

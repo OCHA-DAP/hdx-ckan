@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import datetime
 import uuid
 import logging
@@ -6,7 +8,7 @@ from sqlalchemy.orm import class_mapper
 
 import ckan.lib.dictization as d
 import ckan.lib.helpers as h
-import ckan.new_authz as new_authz
+import ckan.authz as authz
 
 log = logging.getLogger(__name__)
 
@@ -27,7 +29,6 @@ def resource_dict_save(res_dict, context):
     table = class_mapper(model.Resource).mapped_table
     fields = [field.name for field in table.c]
 
-
     # Resource extras not submitted will be removed from the existing extras
     # dict
     new_extras = {}
@@ -40,7 +41,9 @@ def resource_dict_save(res_dict, context):
             if isinstance(getattr(obj, key), datetime.datetime):
                 if getattr(obj, key).isoformat() == value:
                     continue
-            if key == 'url' and not new and obj.url <> value:
+                if key == 'last_modified' and not new:
+                    obj.url_changed = True
+            if key == 'url' and not new and obj.url != value:
                 obj.url_changed = True
             setattr(obj, key, value)
         else:
@@ -154,10 +157,8 @@ def package_tag_list_save(tag_dicts, package, context):
                             for package_tag in
                             package.package_tag_all)
 
-    tag_package_tag_inactive = dict(
-        [ (tag,pt) for tag,pt in tag_package_tag.items() if
-            pt.state in ['deleted'] ]
-        )
+    tag_package_tag_inactive = {tag: pt for tag,pt in tag_package_tag.items() if
+            pt.state in ['deleted']}
 
     tag_name_vocab = set()
     tags = set()
@@ -228,7 +229,7 @@ def package_membership_list_save(group_dicts, package, context):
         member_obj = group_member[group]
         if member_obj and member_obj.state == 'deleted':
             continue
-        if new_authz.has_user_permission_for_group_or_org(
+        if authz.has_user_permission_for_group_or_org(
                 member_obj.group_id, user, 'read'):
             member_obj.capacity = capacity
             member_obj.state = 'deleted'
@@ -239,7 +240,7 @@ def package_membership_list_save(group_dicts, package, context):
         member_obj = group_member.get(group)
         if member_obj and member_obj.state == 'active':
             continue
-        if new_authz.has_user_permission_for_group_or_org(
+        if authz.has_user_permission_for_group_or_org(
                 group.id, user, 'read'):
             member_obj = group_member.get(group)
             if member_obj:
@@ -446,13 +447,6 @@ def user_dict_save(user_dict, context):
     user = d.table_dict_save(user_dict, User, context)
 
     return user
-
-
-def related_dict_save(related_dict, context):
-    model = context['model']
-    session = context['session']
-
-    return d.table_dict_save(related_dict,model.Related, context)
 
 
 def package_api_to_dict(api1_dict, context):

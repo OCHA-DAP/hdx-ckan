@@ -8,6 +8,10 @@
     null,
     "Erreur"
   ],
+  "An error occurred: %(text)s %(error)s": [
+    null,
+    "Une erreur est survenue: %(text)s %(error)s"
+  ],
   "Are you sure you want to perform this action?": [
     null,
     "Etes-vous sûr de vouloir exécuter cette commande ?"
@@ -27,6 +31,10 @@
   "Failed to load data API information": [
     null,
     "Le chargement de l'information de l'API de données a échoué"
+  ],
+  "File": [
+    null,
+    "Fichier"
   ],
   "Follow": [
     null,
@@ -67,6 +75,10 @@
   "Remove": [
     null,
     "Supprimer"
+  ],
+  "Reorder resource view": [
+    null,
+    "Réordonner la visualisation de ressource"
   ],
   "Reorder resources": [
     null,
@@ -136,12 +148,8 @@
     null,
     "Vous êtes en train de transférer un fichier. Êtes-vous sûr de vouloir naviguer ailleurs et interrompre ce transfert ?"
   ],
-  "show less": [
+  "error loading view": [
     null,
-    "montrer moins"
-  ],
-  "show more": [
-    null,
-    "montrer plus"
+    "erreur lors du chargement de la vue"
   ]
 }

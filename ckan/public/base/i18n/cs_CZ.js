@@ -28,6 +28,10 @@
     null,
     "Pokus o získání informací pomocí API selhal"
   ],
+  "File": [
+    null,
+    "Soubor"
+  ],
   "Follow": [
     null,
     "Sledovat"
@@ -54,7 +58,7 @@
   ],
   "Loading...": [
     null,
-    "Nahrávám ..."
+    "Nahrávám..."
   ],
   "No matches found": [
     null,
@@ -70,7 +74,7 @@
   ],
   "Reorder resource view": [
     null,
-    "Přeuspořádat zobrazení zdroje"
+    "Změnit pořadí zobrazení datového zdroje"
   ],
   "Reorder resources": [
     null,
@@ -78,7 +82,7 @@
   ],
   "Resource uploaded": [
     null,
-    "Zdroj nahrán"
+    "Datový zdroj nahrán"
   ],
   "Save order": [
     null,
@@ -102,7 +106,7 @@
   ],
   "There is no API data to load for this resource": [
     null,
-    "Tento zdroj neobsahuje žádná data, která lze poskytnou přes API"
+    "Tento datový zdroj neobsahuje žádná data, která lze poskytnou přes API"
   ],
   "URL": [
     null,
@@ -134,18 +138,10 @@
   ],
   "Upload a file on your computer": [
     null,
-    "Nahrát soubor na Váš počítač"
+    "Nahrát soubor z počítače"
   ],
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Právě nahráváte soubor. Jste si opravdu jistí, že chcete tuto stránku opustit a ukončit tak nahrávání?"
-  ],
-  "show less": [
-    null,
-    "ukázat méně"
-  ],
-  "show more": [
-    null,
-    "ukázat více"
   ]
 }

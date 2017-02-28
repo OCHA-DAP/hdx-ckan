@@ -107,13 +107,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Sunteți în proces de încărcare a fișierului. Sunteți sigur să doriți să navigați mai departe și să opriți încărcarea fișierului?"
-  ],
-  "show less": [
-    null,
-    "arată mai puțin"
-  ],
-  "show more": [
-    null,
-    "arată mai mult"
   ]
 }

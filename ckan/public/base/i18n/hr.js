@@ -28,6 +28,10 @@
     null,
     "Pogreška pri dohvatu informacija o API-ju podataka"
   ],
+  "File": [
+    null,
+    "Datoteka"
+  ],
   "Follow": [
     null,
     "Slijedi"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "U tijeku je učitavanje datoteke. Jeste li sigurni da želite otići sa ove stranice i prekinuti učitavanje?"
-  ],
-  "show less": [
-    null,
-    "prikaži manje"
-  ],
-  "show more": [
-    null,
-    "prikaži više"
   ]
 }

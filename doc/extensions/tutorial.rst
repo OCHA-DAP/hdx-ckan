@@ -257,8 +257,9 @@ dictionary:
 Whenever a user tries to create a new group via the web interface or the API,
 CKAN calls the :func:`~ckan.logic.auth.create.group_create` authorization
 function to decide whether to allow the action. Let's override this function
-and simply prevent anyone from creating new groups. Edit your ``plugin.py``
-file so that it looks like this:
+and simply prevent anyone from creating new groups(Note: this is default behavior.
+In order to go further, you need to change ``ckan.auth.user_create_groups`` to `True`
+in configuration file). Edit your ``plugin.py`` file so that it looks like this:
 
 .. literalinclude:: ../../ckanext/example_iauthfunctions/plugin_v2.py
 
@@ -414,7 +415,8 @@ group named ``curators``.
 
    If you've already created a ``curators`` group and want to test what happens
    when the site has no ``curators`` group, you can use CKAN's command line
-   interface to :ref:`clean and reinitialize your database <paster db>`.
+   interface to :ref`clean and reinitialize your database
+   <database management>`.
 
 Try visiting the ``/group`` page in CKAN with our ``example_iauthfunctions``
 plugin activated in your CKAN config file and with no ``curators`` group in

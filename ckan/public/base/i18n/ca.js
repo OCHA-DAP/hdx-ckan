@@ -8,6 +8,10 @@
     null,
     "Ha tingut lloc un error"
   ],
+  "An error occurred: %(text)s %(error)s": [
+    null,
+    "S'ha produït un error: %(text)s %(error)s"
+  ],
   "Are you sure you want to perform this action?": [
     null,
     "Teniu tota la seguretat per a dur a terme aquesta acció?"
@@ -27,6 +31,10 @@
   "Failed to load data API information": [
     null,
     "Ha fallat la càrrega d'informació de l'API"
+  ],
+  "File": [
+    null,
+    "Arxiu"
   ],
   "Follow": [
     null,
@@ -140,12 +148,8 @@
     null,
     "Esteu pujant un arxiu. Esteu segurs que voleu marxar de la pàgina i aturar la pujada?"
   ],
-  "show less": [
+  "error loading view": [
     null,
-    "mostra menys"
-  ],
-  "show more": [
-    null,
-    "mostra més"
+    "Error carregant la vista"
   ]
 }

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 import collections
 import datetime
 from itertools import count
@@ -12,7 +14,7 @@ from ckan.model import (MAX_TAG_LENGTH, MIN_TAG_LENGTH,
                         PACKAGE_VERSION_MAX_LENGTH,
                         VOCABULARY_NAME_MAX_LENGTH,
                         VOCABULARY_NAME_MIN_LENGTH)
-import ckan.new_authz as new_authz
+import ckan.authz as authz
 
 from ckan.common import _
 
@@ -26,8 +28,8 @@ def owner_org_validator(key, data, errors, context):
     value = data.get(key)
 
     if value is missing or value is None:
-        if not new_authz.check_config_permission('create_unowned_dataset'):
-            raise Invalid(_('A organization must be supplied'))
+        if not authz.check_config_permission('create_unowned_dataset'):
+            raise Invalid(_('An organization must be provided'))
         data.pop(key, None)
         raise df.StopOnError
 
@@ -35,8 +37,8 @@ def owner_org_validator(key, data, errors, context):
     user = context['user']
     user = model.User.get(user)
     if value == '':
-        if not new_authz.check_config_permission('create_unowned_dataset'):
-            raise Invalid(_('A organization must be supplied'))
+        if not authz.check_config_permission('create_unowned_dataset'):
+            raise Invalid(_('An organization must be provided'))
         return
 
     group = model.Group.get(value)
@@ -44,7 +46,7 @@ def owner_org_validator(key, data, errors, context):
         raise Invalid(_('Organization does not exist'))
     group_id = group.id
     if not(user.sysadmin or
-           new_authz.has_user_permission_for_group_or_org(
+           authz.has_user_permission_for_group_or_org(
                group_id, user.name, 'create_dataset')):
         raise Invalid(_('You cannot add a dataset to this organization'))
     data[key] = group_id
@@ -101,6 +103,15 @@ def is_positive_integer(value, context):
     return value
 
 def boolean_validator(value, context):
+    '''
+    Return a boolean for value.
+    Return value when value is a python bool type.
+    Return True for strings 'true', 'yes', 't', 'y', and '1'.
+    Return False in all other cases, including when value is an empty string or
+    None
+    '''
+    if value is missing or value is None:
+        return False
     if isinstance(value, bool):
         return value
     if value.lower() in ['true', 'yes', 't', 'y', '1']:
@@ -232,20 +243,6 @@ def group_id_exists(group_id, context):
         raise Invalid('%s: %s' % (_('Not found'), _('Group')))
     return group_id
 
-
-def related_id_exists(related_id, context):
-    '''Raises Invalid if the given related_id does not exist in the model
-    given in the context, otherwise returns the given related_id.
-
-    '''
-    model = context['model']
-    session = context['session']
-
-    result = session.query(model.Related).get(related_id)
-    if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Related')))
-    return related_id
-
 def group_id_or_name_exists(reference, context):
     '''
     Raises Invalid if a group identified by the name or id cannot be found.
@@ -269,15 +266,6 @@ def activity_type_exists(activity_type):
     else:
         raise Invalid('%s: %s' % (_('Not found'), _('Activity type')))
 
-def resource_id_exists(value, context):
-
-    model = context['model']
-    session = context['session']
-
-    result = session.query(model.Resource).get(value)
-    if not result:
-        raise Invalid('%s: %s' % (_('Not found'), _('Resource')))
-    return value
 
 # A dictionary mapping activity_type values from activity dicts to functions
 # for validating the object_id values from those same activity dicts.
@@ -296,9 +284,6 @@ object_id_validators = {
     'changed organization' : group_id_exists,
     'deleted organization' : group_id_exists,
     'follow group' : group_id_exists,
-    'new related item': related_id_exists,
-    'deleted related item': related_id_exists,
-    'changed related item': related_id_exists,
     }
 
 def object_id_validator(key, activity_dict, errors, context):
@@ -484,7 +469,7 @@ def ignore_not_package_admin(key, data, errors, context):
     if 'ignore_auth' in context:
         return
 
-    if user and new_authz.is_sysadmin(user):
+    if user and authz.is_sysadmin(user):
         return
 
     authorized = False
@@ -512,7 +497,7 @@ def ignore_not_sysadmin(key, data, errors, context):
     user = context.get('user')
     ignore_auth = context.get('ignore_auth')
 
-    if ignore_auth or (user and new_authz.is_sysadmin(user)):
+    if ignore_auth or (user and authz.is_sysadmin(user)):
         return
 
     data.pop(key)
@@ -524,7 +509,7 @@ def ignore_not_group_admin(key, data, errors, context):
     model = context['model']
     user = context.get('user')
 
-    if user and new_authz.is_sysadmin(user):
+    if user and authz.is_sysadmin(user):
         return
 
     authorized = False
@@ -574,7 +559,6 @@ def user_name_validator(key, data, errors, context):
             # existing user's name to that name.
             errors[key].append(_('That login name is not available.'))
 
-
 def user_both_passwords_entered(key, data, errors, context):
 
     password1 = data.get(('password1',),None)
@@ -610,6 +594,11 @@ def user_passwords_match(key, data, errors, context):
 def user_password_not_empty(key, data, errors, context):
     '''Only check if password is present if the user is created via action API.
        If not, user_both_passwords_entered will handle the validation'''
+
+    # sysadmin may provide password_hash directly for importing users
+    if (data.get(('password_hash',), missing) is not missing and
+            authz.is_sysadmin(context.get('user'))):
+        return
 
     if not ('password1',) in data and not ('password2',) in data:
         password = data.get(('password',),None)
@@ -718,7 +707,7 @@ def user_name_exists(user_name, context):
 
 
 def role_exists(role, context):
-    if role not in new_authz.ROLE_PERMISSIONS:
+    if role not in authz.ROLE_PERMISSIONS:
         raise Invalid(_('role does not exist.'))
     return role
 
@@ -837,7 +826,7 @@ def empty_if_not_sysadmin(key, data, errors, context):
     user = context.get('user')
 
     ignore_auth = context.get('ignore_auth')
-    if ignore_auth or (user and new_authz.is_sysadmin(user)):
+    if ignore_auth or (user and authz.is_sysadmin(user)):
         return
 
     empty(key, data, errors, context)

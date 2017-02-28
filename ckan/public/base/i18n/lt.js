@@ -107,13 +107,5 @@
   "Upload a file": [
     null,
     "Įkelti failą"
-  ],
-  "show less": [
-    null,
-    "rodyti mažiau"
-  ],
-  "show more": [
-    null,
-    "Rodyti daugiau"
   ]
 }

@@ -28,6 +28,10 @@
     null,
     "לא הצלחתי לטעון את נתוני המידע של ה-API "
   ],
+  "File": [
+    null,
+    "קובץ"
+  ],
   "Follow": [
     null,
     "עקוב"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "אתם מעלים קובץ. האם אתם בטוחים שברצונכם לצאת מהעמוד ולהפסיק את ההעלאה?"
-  ],
-  "show less": [
-    null,
-    "הצג פחות"
-  ],
-  "show more": [
-    null,
-    "הראה עוד"
   ]
 }

@@ -7,6 +7,461 @@
 Changelog
 ---------
 
+v2.6.1 2017-02-22
+=================
+
+ * Fix DataPusher being fired multiple times (#3245)
+ * Use the url_for() helper for datapusher URLs (#2866)
+ * Resource creation date use datetime.utcnow() (#3447)
+ * Fix locale error when using fix ckan.root_path
+ * `render_markdown` breaks links with ampersands
+ * Check group name and id during package creation
+ * Use utcnow() on dashboard_mark_activities_old (#3373)
+ * Fix encoding error on DataStore exception
+ * Datastore doesn't add site_url to resource created via API (#3189)
+ * Fix memberships after user deletion (#3265)
+ * Remove idle database connection (#3260)
+ * Fix package_owner_org_update action when called via the API (#2661)
+ * Fix French locale (#3327)
+ * Updated translations
+
+v2.6.0 2016-11-02
+=================
+
+Note: Starting from this version, CKAN requires at least Python 2.7 and Postgres 9.2
+
+Note: This version requires a requirements upgrade on source installations
+
+Note: This version requires a database upgrade
+
+Note: This version does not require a Solr schema upgrade (You may want to
+         upgrade the schema if you want to target Solr>=5, see #2914)
+
+Major:
+ * Private datasets are now included in the default dataset search results (#3191)
+ * package_search API action now has an include_private parameter (#3191)
+
+Minor:
+ * Make resource name default to file name (#1372)
+ * Customizable email templates  (#1527)
+ * Change solrpy library to pysolr (#2352)
+ * Cache SQL query results (#2353)
+ * File Upload UX improvements (#2604)
+ * Helpers for multilingual fields (#2678)
+ * Improve Extension translation docs (#2783)
+ * Decouple configuration from Pylons (#3163)
+ * toolkit: add h, StopOnError, DefaultOrganizationForm (#2835)
+ * Remove Genshi support (#2833)
+ * Make resource URLs optional (#2844)
+ * Use 403 when actions are forbidden, not 401  (#2846)
+ * Upgrade requirements version (#3004, #3005)
+ * Add icons sources (#3048)
+ * Remove lib/dumper (#2879)
+ * ckan.__version__ available as template helper (#3103)
+ * Remove `site_url_nice` from app_globals (#3117)
+ * Remove `e.message` deprecation warning when running tests (#3121)
+ * Drop Python 2.6 support (#3126)
+ * Update Recline version (#3184)
+ * Refactor config/middleware.py to more closely match poc-flask-views (#3116)
+ * Creation of datasets sources with no organization specified (#3046)
+
+Bug fixes:
+ * DataPusher called multiple times when creating a dataset (#2856)
+ * Default view is re-added when removed before DataStore upload is complete (#3011)
+ * "Data API" button disappears on resource page after empty update (#3012)
+ * Uncaught email exceptions on user invite (#3077)
+ * Resource view description is not rendered as Markdown (#3128)
+ * Fix broken html5lib dependency (#3180)
+ * ZH_cn translation formatter fix (#3238)
+ * Incorrect i18n-paths in extension's setup.cfg (#3275)
+ * Changing your user name produces an error and logs you out (#2394)
+ * Fix "Load more" functionality in the dashboard (#2346)
+ * Fix filters not working when embedding a resource view (#2657)
+ * Proper sanitation of header name on SlickGrid view (#2923)
+ * Fix unicode error when indexing field of type JSON (#2969)
+ * Fix group feeds returning no datasets (#2955)
+ * Replace MapQuest tiles in Recline with Stamen Terrain (#3162)
+ * Fix bulk operations not taking effect (#3199)
+ * Raise validation errors on group/org_member_create (#3108)
+ * Incorrect warnings when ckan.views.default_views is empty (#3093)
+ * Don't show deleted users/datasets on member_list (#3078)
+ * Fix Tag pagination widget styling (#2399)
+ * Fix package_owner_org_update standalone (#2661)
+ * Don't template fanstatic error pages (#2770)
+ * group_controller() on IGroupForm not in interface (#2771)
+ * Fix assert_true to test for message in response (#2802)
+ * Add user parameter to paster profile command (#2815)
+ * make context['user'] always username or None (#2817)
+ * remove some deprecated compatibility hacks (#2818)
+ * Param use_default_schema does not work on package_search (#2848)
+ * Sanitize offset when listing group activity (#2859)
+ * Incorrect 'download resource' hyperlink when a resource is unable to upload to datastore  (#2873)
+ * Resolve datastore_delete erasing the database when filters was blank. (#2885)
+ * DomainObject.count() doesn't return count (#2919)
+ * Fix response code test failures (#2931)
+ * Fixed the url_for_* helpers when both SCRIPT_NAME and ckan.root_path are defined (#2936)
+ * Escape special characters in password while db loading (#2952)
+ * Fix redirect not working with non-root (#2968)
+ * Group pagination does not preserve sort order (#2981)
+ * Remove LazyJSONObject (#2983)
+ * Deleted users appear in sysadmin user lists (#2988)
+ * Server error at /organization if not authorized to list organizations (#2990)
+ * Slow page rendering when using lots of snippets (#3000)
+ * Only allow JSONP callbacks on GET requests (#3002)
+ * Attempting to access non-existing helpers should raise HelperException (#3041)
+ * Deprecate h.url, make it use h.url_for internally (#3055)
+ * Tests fail when LANG environment variable is set to German (#3060)
+ * Fix pagination style (CSS) (#3067)
+ * Login fails with 404 when using root_path (#3089)
+ * Resource view description is not rendered as Markdown (#3128)
+ * Clarify package_relationship_update documentation (#3132)
+ * `q` parameter in followee_list action has no effect (#3167)
+ * Zh cn translation formatter fix (#3238)
+ * Users are not removed in related tables if the main user entry is deleted (#3265)
+
+API changes and deprecations:
+ * Replace `c.__version__` with new helper `h.ckan_version()` (#3103)
+
+v2.5.4 2017-02-22
+=================
+
+ * Fix DataPusher being fired multiple times (#3245)
+ * Use the url_for() helper for datapusher URLs (#2866)
+ * Resource creation date use datetime.utcnow() (#3447)
+ * Fix locale error when using fix ckan.root_path
+ * `render_markdown` breaks links with ampersands
+ * Check group name and id during package creation
+ * Use utcnow() on dashboard_mark_activities_old (#3373)
+ * Fix encoding error on DataStore exception
+ * Datastore doesn't add site_url to resource created via API (#3189)
+ * Fix memberships after user deletion (#3265)
+ * Remove idle database connection (#3260)
+ * Fix package_owner_org_update action when called via the API (#2661)
+
+v2.5.3 2016-11-02
+=================
+
+ * DataPusher called multiple times when creating a dataset (#2856)
+ * Default view is re-added when removed before DataStore upload is complete (#3011)
+ * "Data API" button disappears on resource page after empty update (#3012)
+ * Uncaught email exceptions on user invite (#3077)
+ * Resource view description is not rendered as Markdown (#3128)
+ * Fix broken html5lib dependency (#3180)
+ * ZH_cn translation formatter fix (#3238)
+ * Incorrect i18n-paths in extension's setup.cfg (#3275)
+ * Changing your user name produces an error and logs you out (#2394)
+ * Fix "Load more" functionality in the dashboard (#2346)
+ * Fix filters not working when embedding a resource view (#2657)
+ * Proper sanitation of header name on SlickGrid view (#2923)
+ * Fix unicode error when indexing field of type JSON (#2969)
+ * Fix group feeds returning no datasets (#2955)
+ * Replace MapQuest tiles in Recline with Stamen Terrain (#3162)
+ * Fix bulk operations not taking effect (#3199)
+ * Raise validation errors on group/org_member_create (#3108)
+ * Incorrect warnings when ckan.views.default_views is empty (#3093)
+ * Don't show deleted users/datasets on member_list (#3078)
+
+v2.5.2 2016-03-31
+=================
+
+Bug fixes:
+ * Avoid submitting resources to the DataPusher multiple times (#2856)
+ * Use `resource.url` as raw_resource_url (#2873)
+ * Fix DomainObject.count() to return count (#2919)
+ * Prevent unicode/ascii conversion errors in DataStore
+ * Fix datastore_delete erasing the db when filters is blank (#2885)
+ * Avoid package_search exception when using use_default_schema (#2848)
+ * Encode EXPLAIN SQL before sending to datastore
+ * Use `ckan.site_url` to generate urls of resources (#2592)
+ * Fixed the url for the organization_item template
+
+v2.5.1 2015-12-17
+=================
+
+Note: This version requires a requirements upgrade on source installations
+
+Note: This version requires a database upgrade
+
+Note: This version does not require a Solr schema upgrade
+
+Major:
+ * CKAN extension language translations integrated using ITranslations interface (#2461, #2643)
+ * Speed improvements for displaying a dataset (#2234), home page (#2554), searching (#2382, #2724) and API actions: package_show (#1078) and user_list (#2752).
+ * An interface to replace the file uploader, allowing integration with other cloud storage providers (IUploader interface) (#2510)
+
+Minor:
+ * package_purge API action added (#1572)
+ * revision_list API action now has paging (#1431)
+ * Official Ubuntu 14.04 LTS support (#1651)
+ * Require/validate current password before allowing a password change (#1940)
+ * recline_map_view now recognizes GeoJSON fileds (#2387)
+ * Timezone setting (#2494)
+ * Updating a resource via upload now saves the last_modified value in the resource (#2519)
+ * DataPusher can be customized using the new IDataPusher interface (#2571)
+ * Exporting and importing users, with their passwords (if sysadmin) (#2647)
+
+Bug fixes:
+ * Fix to allow uppercase letters in local part of email when sending user invitations (#2415)
+ * License pick-list changes would cause old values in datasets to be overwritten when edited (#2472)
+ * Schema was being passed to package_create_default_resource_views (#2484)
+ * Arabic translation format string issue (#2493)
+ * Error when deleting organizations (#2512)
+ * When DataPusher had an error storing a resource in Data Store, the resource data page gave an error (#2518)
+ * Data preview failed when it comes from a server that gives 403 error from a HEAD request (#2530)
+ * 'paster views create' failed for non-default dataset types (#2532)
+ * DataPusher didn't work for TSV files (#2553)
+ * DataPusher failed sometimes due to 'type mismatch' (#2581)
+ * IGroupForm wasn't allowing new groups (of type 'group') to use group_form (#2617, #2640)
+ * group_purge left behind a Member if it has a parent group/org (#2631)
+ * organization_purge left orphaned datasets still with owner_id (#2632)
+ * Fix Markdown rendering issue
+ * Return default error page on fanstatic errors
+ * Prevent authentication when using API callbacks
+
+Changes and deprecations
+------------------------
+
+* The old RDF templates to output a dataset in RDF/XML or N3 format have been
+  removed. These can be now enabled using the ``dcat`` plugin on *ckanext-dcat*:
+
+    https://github.com/ckan/ckanext-dcat#rdf-dcat-endpoints
+
+* The library used to render markdown has been changed to python-markdown. This
+  introduces both ``python-markdown`` and ``bleach`` as dependencies, as ``bleach``
+  is used to clean any HTML provided to the markdown processor.
+
+* This is the last version of CKAN to support Postgresql 8.x, 9.0 and 9.1. The
+  next minor version of CKAN will require Postgresql 9.2 or later.
+
+
+v2.5.0 2015-12-17
+=================
+
+Cancelled release
+
+v2.4.5 2017-02-22
+=================
+
+ * Use the url_for() helper for datapusher URLs (#2866)
+ * Resource creation date use datetime.utcnow() (#3447)
+ * Fix locale error when using fix ckan.root_path
+ * `render_markdown` breaks links with ampersands
+ * Check group name and id during package creation
+ * Use utcnow() on dashboard_mark_activities_old (#3373)
+ * Fix encoding error on DataStore exception
+ * Datastore doesn't add site_url to resource created via API (#3189)
+ * Fix memberships after user deletion (#3265)
+ * Remove idle database connection (#3260)
+ * Fix package_owner_org_update action when called via the API (#2661)
+
+v2.4.4 2016-11-02
+=================
+
+ * Changing your user name produces an error and logs you out (#2394)
+ * Fix "Load more" functionality in the dashboard (#2346)
+ * Fix filters not working when embedding a resource view (#2657)
+ * Proper sanitation of header name on SlickGrid view (#2923)
+ * Fix unicode error when indexing field of type JSON (#2969)
+ * Fix group feeds returning no datasets (#2955)
+ * Replace MapQuest tiles in Recline with Stamen Terrain (#3162)
+ * Fix bulk operations not taking effect (#3199)
+ * Raise validation errors on group/org_member_create (#3108)
+ * Incorrect warnings when ckan.views.default_views is empty (#3093)
+ * Don't show deleted users/datasets on member_list (#3078)
+
+v2.4.3 2016-03-31
+=================
+
+Bug fixes:
+ * Use `resource.url` as raw_resource_url (#2873)
+ * Fix DomainObject.count() to return count (#2919)
+ * Add offset param to organization_activity (#2640)
+ * Prevent unicode/ascii conversion errors in DataStore
+ * Fix datastore_delete erasing the db when filters is blank (#2885)
+ * Avoid package_search exception when using use_default_schema (#2848)
+ * resource_edit incorrectly setting action to new instead of edit
+ * Encode EXPLAIN SQL before sending to datastore
+ * Use `ckan.site_url` to generate urls of resources (#2592)
+ * Don't hide actual exception on paster commands
+
+v2.4.2 2015-12-17
+=================
+
+Note: This version requires a requirements upgrade on source installations
+
+Bug fixes:
+ * Fix Markdown rendering issue
+ * Return default error page on fanstatic errors
+ * Prevent authentication when using API callbacks
+
+
+v2.4.1 2015-09-02
+=================
+
+Note: #2554 fixes a regression where ``group_list`` and ``organization_list``
+      where returning extra additional fields by default, causing performance
+      issues. This is now fixed, so the output for these actions no longer returns
+      ``users``, ``extras``, etc.
+      Also, on the homepage template the ``c.groups`` and ``c.group_package_stuff``
+      context variables are no longer available.
+
+
+Bug fixes:
+
+* Fix dataset count in templates and show datasets on featured org/group (#2557)
+* Fix autodetect for TSV resources (#2553)
+* Improve character escaping in DataStore parameters
+* Fix "paster db init" when celery is configured with a non-database backend
+* Fix severe performance issues with groups and orgs listings (#2554)
+
+
+v2.4.0 2015-07-22
+=================
+
+Note: This version requires a database upgrade
+
+Note: This version requires a Solr schema upgrade
+
+Major:
+ * CKAN config can now be set from environment variables and via the API (#2429)
+
+Minor:
+ * API calls now faster: ``group_show``, ``organization_show``, ``user_show``,
+   ``package_show``, ``vocabulary_show`` & ``tag_show`` (#1886, #2206, #2207,
+   #2376)
+ * Require/validate current password before allowing a password change (#1940)
+ * Added ``organization_autocomplete`` action (#2125)
+ * Default authorization no longer allows anyone to create datasets etc (#2164)
+ * ``organization_list_for_user`` now returns organizations in hierarchy if they
+   exist for roles set in ``ckan.auth.roles_that_cascade_to_sub_groups`` (#2199)
+ * Improved accessibility (text based browsers) focused on the page header
+   (#2258)
+ * Improved IGroupForm for better customizing groups and organization behaviour
+   (#2354)
+ * Admin page can now be extended to have new tabs (#2351)
+
+
+Bug fixes:
+ * Command line ``paster user`` failed for non-ascii characters (#1244)
+ * Memory leak fixed in datastore API (#1847)
+ * Modifying resource didn't update it's last updated timestamp (#1874)
+ * Datastore didn't update if you uploaded a new file of the same name as the
+   existing file (#2147)
+ * Files with really long file were skipped by datapusher (#2057)
+ * Multi-lingual Solr schema is now updated so it works again (#2161)
+ * Resource views didn't display when embedded in another site (#2238)
+ * ``resource_update`` failed if you supplied a revision_id (#2340)
+ * Recline could not plot GeoJSON on a map (#2387)
+ * Dataset create form 404 error if you added a resource but left it blank (#2392)
+ * Editing a resource view for a file that was UTF-8 and had a BOM gave an
+   error (#2401)
+ * Email invites had the email address changed to lower-case (#2415)
+ * Default resource views not created when using a custom dataset schema (#2421,
+   #2482)
+ * If the licenses pick-list was customized to remove some, datasets with old
+   values had them overwritten when edited (#2472)
+ * Recline views failed on some non-ascii characters (#2490)
+ * Resource proxy failed if HEAD responds with 403 (#2530)
+ * Resource views for non-default dataset types couldn't be created (#2532)
+
+Changes and deprecations
+------------------------
+
+* The default of allowing anyone to create datasets, groups and organizations
+  has been changed to False. It is advised to ensure you set all of the
+  :ref:`config-authorization` options explicitly in your CKAN config. (#2164)
+
+* The ``package_show`` API call does not return the ``tracking_summary``,
+  keys in the dataset or resources by default any more.
+
+  Any custom templates or users of this API call that use these values will
+  need to pass: ``include_tracking=True``.
+
+* The legacy `tests` directory has moved to `tests/legacy`, the
+  `new_tests` directory has moved to `tests` and the `new_authz.py`
+  module has been renamed `authz.py`. Code that imports names from the
+  old locations will continue to work in this release but will issue
+  a deprecation warning. (#1753)
+
+* ``group_show`` and ``organization_show`` API calls no longer return the
+  datasets by default (#2206)
+
+  Custom templates or users of this API call will need to pass
+  ``include_datasets=True`` to include datasets in the response.
+
+* The ``vocabulary_show`` and ``tag_show`` API calls no longer returns the 
+  ``packages`` key - i.e. datasets that use the vocabulary or tag. 
+  However ``tag_show`` now has an ``include_datasets`` option. (#1886)
+
+* Config option ``site_url`` is now required - CKAN will not abort during
+  start-up if it is not set. (#1976)
+
+v2.3.5 2016-11-02
+=================
+
+ * Fix "Load more" functionality in the dashboard (#2346)
+ * Fix filters not working when embedding a resource view (#2657)
+ * Proper sanitation of header name on SlickGrid view (#2923)
+ * Fix unicode error when indexing field of type JSON (#2969)
+ * Fix group feeds returning no datasets (#2955)
+ * Replace MapQuest tiles in Recline with Stamen Terrain (#3162)
+ * Fix bulk operations not taking effect (#3199)
+ * Raise validation errors on group/org_member_create (#3108)
+ * Incorrect warnings when ckan.views.default_views is empty (#3093)
+ * Don't show deleted users/datasets on member_list (#3078)
+
+v2.3.4 2016-03-31
+=================
+
+Bug fixes:
+ * Use `resource.url` as raw_resource_url (#2873)
+ * Fix DomainObject.count() to return count (#2919)
+ * Prevent unicode/ascii conversion errors in DataStore
+ * Fix datastore_delete erasing the db when filters is blank (#2885)
+ * Avoid package_search exception when using use_default_schema (#2848)
+ * resource_edit incorrectly setting action to new instead of edit
+ * Use `ckan.site_url` to generate urls of resources (#2592)
+ * Don't hide actual exception on paster commands
+
+v2.3.3 2015-12-17
+=================
+
+Note: This version requires a requirements upgrade on source installations
+
+Bug fixes:
+ * Fix Markdown rendering issue
+ * Return default error page on fanstatic errors
+ * Prevent authentication when using API callbacks
+
+
+v2.3.2 2015-09-02
+=================
+
+Bug fixes:
+* Fix autodetect for TSV resources (#2553)
+* Improve character escaping in DataStore parameters
+* Fix "paster db init" when celery is configured with a non-database backend
+
+
+v2.3.1 2015-07-22
+=================
+
+Bug fixes:
+ * Resource views won't display when embedded in another site (#2238)
+ * ``resource_update`` failed if you supplied a revision_id (#2340)
+ * Recline could not plot GeoJSON on a map (#2387)
+ * Dataset create form 404 error if you added a resource but left it blank (#2392)
+ * Editing a resource view for a file that was UTF-8 and had a BOM gave an
+   error (#2401)
+ * Email invites had the email address changed to lower-case (#2415)
+ * Default resource views not created when using a custom dataset schema (#2421,
+   #2482)
+ * If the licenses pick-list was customized to remove some, datasets with old
+   values had them overwritten when edited (#2472)
+ * Recline views failed on some non-ascii characters (#2490)
+ * Resource views for non-default dataset types couldn't be created (#2532)
+
+
 v2.3 2015-03-04
 ===============
 
@@ -162,7 +617,6 @@ Bug fixes:
  * Make resource_create auth work against package_update (#2037)
  * Fix DataStore permissions check on startup (#1374)
  * Fix datastore docs link (#2044)
- * Fix resource extras getting lost on resource update (#2158)
  * Clean up field names before rendering the Recline table (#2319)
  * Don't "normalize" resource URL in recline view (#2324)
  * Don't assume resource format is there on text preview (#2320)
@@ -302,6 +756,27 @@ Troubleshooting:
    https://github.com/ckan/ckan/pull/2058/files#diff-2
 
   Also see the previous point for other ``who.ini`` changes.
+
+v2.2.4 2015-12-17
+=================
+
+Note: This version requires a requirements upgrade on source installations
+
+Bug fixes:
+ * Fix Markdown rendering issue
+ * Return default error page on fanstatic errors
+ * Prevent authentication when using API callbacks
+
+v2.2.3 2015-07-22
+=================
+
+Bug fixes:
+ * Allow uppercase emails on user invites (#2415)
+ * Fix broken boolean validator (#2443)
+ * Fix auth check in resources_list.html (#2037)
+ * Key error on resource proxy (#2425)
+ * Ignore revision_id passed to resources (#2340)
+ * Add reset for reset_key on successful password change (#2379)
 
 v2.2.2 2015-03-04
 =================
@@ -524,6 +999,25 @@ Troubleshooting:
    leaving the fields empty. Also make sure to restart running processes like
    harvesters after the update to make sure they use the new code base.
 
+v2.1.6 2015-12-17
+=================
+
+Note: This version requires a requirements upgrade on source installations
+
+Bug fixes:
+ * Fix Markdown rendering issue
+ * Return default error page on fanstatic errors
+ * Prevent authentication when using API callbacks
+
+v2.1.5 2015-07-22
+=================
+
+Bug fixes:
+ * Fix broken boolean validator (#2443)
+ * Key error on resource proxy (#2425)
+ * Ignore revision_id passed to resources (#2340)
+ * Add reset for reset_key on successful password change (#2379)
+
 v2.1.4 2015-03-04
 =================
 
@@ -681,6 +1175,25 @@ Deprecated and removed:
 Known issues:
  * Under certain authorization setups the frontend for the groups functionality
    may not work as expected (See #1176 #1175).
+
+v2.0.8 2015-12-17
+=================
+
+Note: This version requires a requirements upgrade on source installations
+
+Bug fixes:
+ * Fix Markdown rendering issue
+ * Return default error page on fanstatic errors
+ * Prevent authentication when using API callbacks
+
+v2.0.7 2015-07-22
+=================
+
+Bug fixes:
+ * Fix broken boolean validator (#2443)
+ * Key error on resource proxy (#2425)
+ * Ignore revision_id passed to resources (#2340)
+ * Add reset for reset_key on successful password change (#2379)
 
 v2.0.6 2015-03-04
 =================

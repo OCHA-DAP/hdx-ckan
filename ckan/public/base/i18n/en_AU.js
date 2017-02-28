@@ -28,6 +28,10 @@
     null,
     "Failed to load data API information"
   ],
+  "File": [
+    null,
+    "File"
+  ],
   "Follow": [
     null,
     "Follow"
@@ -43,6 +47,14 @@
   "Input is too short, must be at least one character": [
     null,
     "Input is too short, must be at least one character"
+  ],
+  "Link": [
+    null,
+    "Link"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "Link to a URL on the internet (you can also link to an API)"
   ],
   "Loading...": [
     null,
@@ -60,9 +72,25 @@
     null,
     "Remove"
   ],
+  "Reorder resource view": [
+    null,
+    "Reorder resource view"
+  ],
+  "Reorder resources": [
+    null,
+    "Reorder resources"
+  ],
   "Resource uploaded": [
     null,
     "Resource uploaded"
+  ],
+  "Save order": [
+    null,
+    "Save order"
+  ],
+  "Saving...": [
+    null,
+    "Saving..."
   ],
   "Show more": [
     null,
@@ -108,12 +136,12 @@
     null,
     "Upload a file"
   ],
-  "show less": [
+  "Upload a file on your computer": [
     null,
-    "show less"
+    "Upload a file on your computer"
   ],
-  "show more": [
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
-    "show more"
+    "You are uploading a file. Are you sure you want to navigate away and stop this upload?"
   ]
 }

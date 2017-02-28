@@ -1,4 +1,8 @@
+# encoding: utf-8
+
 import logging
+import os
+import sys
 
 from pylons import c
 from ckan.lib import base
@@ -6,7 +10,7 @@ import ckan.lib.maintain as maintain
 from ckan import logic
 import logic.schema
 from ckan import plugins
-import ckan.new_authz
+import ckan.authz
 import ckan.plugins.toolkit as toolkit
 
 log = logging.getLogger(__name__)
@@ -16,10 +20,12 @@ _package_plugins = {}
 # The fallback behaviour
 _default_package_plugin = None
 
-# Mapping from group-type strings to IDatasetForm instances
+# Mapping from group-type strings to IGroupForm instances
 _group_plugins = {}
 # The fallback behaviour
 _default_group_plugin = None
+# Mapping from group-type strings to controllers
+_group_controllers = {}
 
 
 def reset_package_plugins():
@@ -31,6 +37,8 @@ def reset_package_plugins():
     _default_group_plugin = None
     global _group_plugins
     _group_plugins = {}
+    global _group_controllers
+    _group_controllers = {}
 
 
 def lookup_package_plugin(package_type=None):
@@ -47,7 +55,7 @@ def lookup_package_plugin(package_type=None):
 
 def lookup_group_plugin(group_type=None):
     """
-    Returns the plugin controller associoated with the given group type.
+    Returns the form plugin associated with the given group type.
 
     If the group type is None or cannot be found in the mapping, then the
     fallback behaviour is used.
@@ -56,6 +64,14 @@ def lookup_group_plugin(group_type=None):
         return _default_group_plugin
     return _group_plugins.get(group_type, _default_organization_plugin
         if group_type == 'organization' else _default_group_plugin)
+
+
+def lookup_group_controller(group_type=None):
+    """
+    Returns the group controller associated with the given group type. The
+    controller is expressed as a string that you'd pass to url_to(controller=x)
+    """
+    return _group_controllers.get(group_type)
 
 
 def register_package_plugins(map):
@@ -161,18 +177,57 @@ def register_group_plugins(map):
             map.connect('%s_read' % group_type, '/%s/{id}' % group_type,
                         controller=group_controller, action='read')
             map.connect('%s_action' % group_type,
-                        '/%s/{action}/{id}' % group_type, controller=group_controller,
-                        requirements=dict(action='|'.join(['edit', 'authz', 'history'])))
+                        '/%s/{action}/{id}' % group_type,
+                        controller=group_controller,
+                        requirements=dict(action='|'.join(
+                            ['edit', 'authz', 'delete', 'history', 'member_new',
+                             'member_delete', 'followers', 'follow',
+                             'unfollow', 'admins', 'activity'])))
+            map.connect('%s_edit' % group_type, '/%s/edit/{id}' % group_type,
+                        controller=group_controller, action='edit',
+                        ckan_icon='edit')
+            map.connect('%s_members' % group_type,
+                        '/%s/members/{id}' % group_type,
+                        controller=group_controller,
+                        action='members',
+                        ckan_icon='group')
+            map.connect('%s_activity' % group_type,
+                        '/%s/activity/{id}/{offset}' % group_type,
+                        controller=group_controller,
+                        action='activity', ckan_icon='time'),
+            map.connect('%s_about' % group_type, '/%s/about/{id}' % group_type,
+                        controller=group_controller,
+                        action='about', ckan_icon='info-sign')
+            map.connect('%s_bulk_process' % group_type,
+                        '/%s/bulk_process/{id}' % group_type,
+                        controller=group_controller,
+                        action='bulk_process', ckan_icon='sitemap')
 
             if group_type in _group_plugins:
                 raise ValueError("An existing IGroupForm is "
                                  "already associated with the group type "
                                  "'%s'" % group_type)
             _group_plugins[group_type] = plugin
+            _group_controllers[group_type] = group_controller
+
+            controller_obj = None
+            # If using one of the default controllers, tell it that it is allowed
+            # to handle other group_types.
+            # Import them here to avoid circular imports.
+            if group_controller == 'group':
+                from ckan.controllers.group import GroupController as controller_obj
+            elif group_controller == 'organization':
+                from ckan.controllers.organization import OrganizationController as controller_obj
+            if controller_obj is not None:
+                controller_obj.add_group_type(group_type)
 
     # Setup the fallback behaviour if one hasn't been defined.
     if _default_group_plugin is None:
         _default_group_plugin = DefaultGroupForm()
+    if 'group' not in _group_controllers:
+        _group_controllers['group'] = 'group'
+    if 'organization' not in _group_controllers:
+        _group_controllers['organization'] = 'organization'
 
 
 def plugin_validate(plugin, context, data_dict, schema, action):
@@ -221,8 +276,6 @@ class DefaultDatasetForm(object):
         return ckan.logic.schema.default_show_package_schema()
 
     def setup_template_variables(self, context, data_dict):
-        from ckan.lib.helpers import render_markdown
-
         authz_fn = logic.get_action('group_list_authz')
         c.groups_authz = authz_fn(context, data_dict)
         data_dict.update({'available_only': True})
@@ -233,11 +286,7 @@ class DefaultDatasetForm(object):
         # CS: bad_spelling ignore 2 lines
         c.licences = c.licenses
         maintain.deprecate_context_item('licences', 'Use `c.licenses` instead')
-        c.is_sysadmin = ckan.new_authz.is_sysadmin(c.user)
-
-        if c.pkg:
-            c.related_count = c.pkg.related_count
-            c.pkg_notes_formatted = render_markdown(c.pkg.notes)
+        c.is_sysadmin = ckan.authz.is_sysadmin(c.user)
 
         if context.get('revision_id') or context.get('revision_date'):
             if context.get('revision_id'):
@@ -301,6 +350,9 @@ class DefaultGroupForm(object):
     Note - this isn't a plugin implementation. This is deliberate, as we
            don't want this being registered.
     """
+    def group_controller(self):
+        return 'group'
+
     def new_template(self):
         """
         Returns a string representing the location of the template to be
@@ -401,7 +453,7 @@ class DefaultGroupForm(object):
         into a format suitable for the form (optional)'''
 
     def db_to_form_schema_options(self, options):
-        '''This allows the selectino of different schemas for different
+        '''This allows the selection of different schemas for different
         purposes.  It is optional and if not available, ``db_to_form_schema``
         should be used.
         If a context is provided, and it contains a schema, it will be
@@ -435,7 +487,7 @@ class DefaultGroupForm(object):
         pass
 
     def setup_template_variables(self, context, data_dict):
-        c.is_sysadmin = ckan.new_authz.is_sysadmin(c.user)
+        c.is_sysadmin = ckan.authz.is_sysadmin(c.user)
 
         ## This is messy as auths take domain object not data_dict
         context_group = context.get('group', None)
@@ -451,6 +503,9 @@ class DefaultGroupForm(object):
 
 
 class DefaultOrganizationForm(DefaultGroupForm):
+    def group_controller(self):
+        return 'organization'
+
     def group_form(self):
         return 'organization/new_organization_form.html'
 
@@ -484,3 +539,38 @@ class DefaultOrganizationForm(DefaultGroupForm):
         return 'organization/activity_stream.html'
 
 _default_organization_plugin = DefaultOrganizationForm()
+
+
+class DefaultTranslation(object):
+    def i18n_directory(self):
+        '''Change the directory of the *.mo translation files
+
+        The default implementation assumes the plugin is
+        ckanext/myplugin/plugin.py and the translations are stored in
+        i18n/
+        '''
+        # assume plugin is called ckanext.<myplugin>.<...>.PluginClass
+        extension_module_name = '.'.join(self.__module__.split('.')[:3])
+        module = sys.modules[extension_module_name]
+        return os.path.join(os.path.dirname(module.__file__), 'i18n')
+
+    def i18n_locales(self):
+        '''Change the list of locales that this plugin handles
+
+        By default the will assume any directory in subdirectory in the
+        directory defined by self.directory() is a locale handled by this
+        plugin
+        '''
+        directory = self.i18n_directory()
+        return [ d for
+                 d in os.listdir(directory)
+                 if os.path.isdir(os.path.join(directory, d))
+        ]
+
+    def i18n_domain(self):
+        '''Change the gettext domain handled by this plugin
+
+        This implementation assumes the gettext domain is
+        ckanext-{extension name}, hence your pot, po and mo files should be
+        named ckanext-{extension name}.mo'''
+        return 'ckanext-{name}'.format(name=self.name)

@@ -8,6 +8,10 @@
     null,
     "發生錯誤"
   ],
+  "An error occurred: %(text)s %(error)s": [
+    null,
+    "發生錯誤：%(text)s %(error)s"
+  ],
   "Are you sure you want to perform this action?": [
     null,
     "確定要展示此活動嗎？"
@@ -27,6 +31,10 @@
   "Failed to load data API information": [
     null,
     "讀取API資訊失敗"
+  ],
+  "File": [
+    null,
+    "檔案"
   ],
   "Follow": [
     null,
@@ -140,12 +148,8 @@
     null,
     "你現在正在上傳一個檔案，確定要離開當前頁面及停止上傳檔案嗎？"
   ],
-  "show less": [
+  "error loading view": [
     null,
-    "顯示較少"
-  ],
-  "show more": [
-    null,
-    "顯示更多"
+    "讀取資料檢視發生錯誤"
   ]
 }

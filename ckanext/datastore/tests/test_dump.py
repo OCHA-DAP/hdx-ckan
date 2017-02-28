@@ -1,8 +1,10 @@
+# encoding: utf-8
+
 import json
 
 import nose
 from nose.tools import assert_equals
-from pylons import config
+from ckan.common import config
 import sqlalchemy.orm as orm
 import paste.fixture
 
@@ -10,7 +12,7 @@ import ckan.config.middleware as middleware
 import ckan.plugins as p
 import ckan.lib.create_test_data as ctd
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckanext.datastore.db as db
 import ckanext.datastore.tests.helpers as helpers
 

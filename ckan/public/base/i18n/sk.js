@@ -28,6 +28,10 @@
     null,
     "Zlyhalo načítanie informácie o dátovom API"
   ],
+  "File": [
+    null,
+    "Súbor"
+  ],
   "Follow": [
     null,
     "Odoberať"
@@ -67,6 +71,10 @@
   "Remove": [
     null,
     "Zmazať"
+  ],
+  "Reorder resource view": [
+    null,
+    "Preusporiadať náhľad dátového zdroja"
   ],
   "Reorder resources": [
     null,
@@ -135,13 +143,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Nahrávate súbor. Chcete odísť preč a prerušiť nahrávanie?"
-  ],
-  "show less": [
-    null,
-    "ukázať menej"
-  ],
-  "show more": [
-    null,
-    "ukázať viac"
   ]
 }

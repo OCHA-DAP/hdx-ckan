@@ -1,15 +1,17 @@
+# encoding: utf-8
+
 '''Tests for the ckanext.example_iauthfunctions extension.
 
 '''
-import pylons.config as config
+from ckan.common import config
 import webtest
 
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 
 import ckan.plugins
-import ckan.new_tests.factories as factories
-import ckan.new_tests.helpers as helpers
+import ckan.tests.factories as factories
+import ckan.tests.helpers as helpers
 from ckanext.example_iresourcecontroller import plugin
 
 

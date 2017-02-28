@@ -28,6 +28,10 @@
     null,
     "データAPIの情報の読み込みに失敗しました"
   ],
+  "File": [
+    null,
+    "ファイル"
+  ],
   "Follow": [
     null,
     "フォロー"
@@ -139,13 +143,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "ファイルをアップロードしています。ナビゲートを離れてこのアップロードを終了しても良いですか？"
-  ],
-  "show less": [
-    null,
-    "少なく表示"
-  ],
-  "show more": [
-    null,
-    "もっとみる"
   ]
 }

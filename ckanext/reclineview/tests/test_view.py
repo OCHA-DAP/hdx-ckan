@@ -1,15 +1,17 @@
+# encoding: utf-8
+
 import paste.fixture
-import pylons.config as config
+from ckan.common import config
 
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckan.plugins as p
 import ckan.lib.helpers as h
 import ckanext.reclineview.plugin as plugin
 import ckan.lib.create_test_data as create_test_data
 import ckan.config.middleware as middleware
 
-from ckan.new_tests import helpers, factories
+from ckan.tests import helpers, factories
 
 
 class BaseTestReclineViewBase(tests.WsgiAppCase):

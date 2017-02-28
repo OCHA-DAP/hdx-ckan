@@ -28,6 +28,10 @@
     null,
     "Kunne ikke indlæse data-API-information"
   ],
+  "File": [
+    null,
+    "Fil"
+  ],
   "Follow": [
     null,
     "Følg"
@@ -135,13 +139,5 @@
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
     "Du uploader en fil. Er du sikker på, du vil navigere væk og standse upload?"
-  ],
-  "show less": [
-    null,
-    "vis færre"
-  ],
-  "show more": [
-    null,
-    "vis flere"
   ]
 }

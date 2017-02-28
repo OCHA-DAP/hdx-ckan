@@ -1,29 +1,24 @@
+# encoding: utf-8
+
 import json
 import nose
 import sys
-from nose.tools import assert_equal
+from nose.tools import assert_equal, raises
 
-import pylons
-from pylons import config
 import sqlalchemy.orm as orm
 import paste.fixture
 
+from ckan.common import config
 import ckan.plugins as p
 import ckan.lib.create_test_data as ctd
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckan.config.middleware as middleware
-import ckan.new_tests.helpers as helpers
-import ckan.new_tests.factories as factories
+import ckan.tests.helpers as helpers
+import ckan.tests.factories as factories
 
 import ckanext.datastore.db as db
 from ckanext.datastore.tests.helpers import rebuild_all_dbs, set_url_type
-
-
-# avoid hanging tests https://github.com/gabrielfalcao/HTTPretty/issues/34
-if sys.version_info < (2, 7, 0):
-    import socket
-    socket.setdefaulttimeout(1)
 
 
 class TestDatastoreCreateNewTests(object):
@@ -49,6 +44,20 @@ class TestDatastoreCreateNewTests(object):
         resource_id = result['resource_id']
         index_names = self._get_index_names(resource_id)
         assert resource_id + '_pkey' in index_names
+
+    def test_create_creates_url_with_site_name(self):
+        package = factories.Dataset()
+        data = {
+            'resource': {
+                'boo%k': 'crime',
+                'package_id': package['id']
+            },
+        }
+        result = helpers.call_action('datastore_create', **data)
+        resource_id = result['resource_id']
+        resource = helpers.call_action('resource_show', id=resource_id)
+        url = resource['url']
+        assert url.startswith(config.get('ckan.site_url'))
 
     def test_create_index_on_specific_fields(self):
         package = factories.Dataset()
@@ -138,6 +147,21 @@ class TestDatastoreCreateNewTests(object):
         current_index_names = self._get_index_names(resource['id'])
         assert_equal(previous_index_names, current_index_names)
 
+    @raises(p.toolkit.ValidationError)
+    def test_create_duplicate_fields(self):
+        package = factories.Dataset()
+        data = {
+            'resource': {
+                'book': 'crime',
+                'author': ['tolstoy', 'dostoevsky'],
+                'package_id': package['id']
+            },
+            'fields': [{'id': 'book', 'type': 'text'},
+                       {'id': 'book', 'type': 'text'}],
+        }
+        result = helpers.call_action('datastore_create', **data)
+
+
     def _has_index_on_field(self, resource_id, field):
         sql = u"""
             SELECT
@@ -170,9 +194,50 @@ class TestDatastoreCreateNewTests(object):
 
     def _execute_sql(self, sql, *args):
         engine = db._get_engine(
-            {'connection_url': pylons.config['ckan.datastore.write_url']})
+            {'connection_url': config['ckan.datastore.write_url']})
         session = orm.scoped_session(orm.sessionmaker(bind=engine))
         return session.connection().execute(sql, *args)
+
+    def test_sets_datastore_active_on_resource_on_create(self):
+        resource = factories.Resource()
+
+        assert_equal(resource['datastore_active'], False)
+
+        data = {
+            'resource_id': resource['id'],
+            'force': True,
+            'records': [
+                {'book': 'annakarenina', 'author': 'tolstoy'}
+            ]
+        }
+
+        helpers.call_action('datastore_create', **data)
+
+        resource = helpers.call_action('resource_show', id=resource['id'])
+
+        assert_equal(resource['datastore_active'], True)
+
+    def test_sets_datastore_active_on_resource_on_delete(self):
+        resource = factories.Resource(datastore_active=True)
+
+        assert_equal(resource['datastore_active'], True)
+
+        data = {
+            'resource_id': resource['id'],
+            'force': True,
+            'records': [
+                {'book': 'annakarenina', 'author': 'tolstoy'}
+            ]
+        }
+
+        helpers.call_action('datastore_create', **data)
+
+        helpers.call_action('datastore_delete', resource_id=resource['id'],
+                            force=True)
+
+        resource = helpers.call_action('resource_show', id=resource['id'])
+
+        assert_equal(resource['datastore_active'], False)
 
 
 class TestDatastoreCreate(tests.WsgiAppCase):
@@ -191,7 +256,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
         cls.sysadmin_user = model.User.get('testsysadmin')
         cls.normal_user = model.User.get('annafan')
         engine = db._get_engine(
-            {'connection_url': pylons.config['ckan.datastore.write_url']})
+            {'connection_url': config['ckan.datastore.write_url']})
         cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
         set_url_type(
             model.Package.get('annakarenina').resources, cls.sysadmin_user)
@@ -490,9 +555,9 @@ class TestDatastoreCreate(tests.WsgiAppCase):
 
             assert results == results_alias
 
-            sql = (u"select * from _table_metadata "
-                "where alias_of='{0}' and name='{1}'").format(resource.id, alias)
-            results = c.execute(sql)
+            sql = u"select * from _table_metadata " \
+                  "where alias_of=%s and name=%s"
+            results = c.execute(sql, resource.id, alias)
             assert results.rowcount == 1
         self.Session.remove()
 
@@ -602,14 +667,14 @@ class TestDatastoreCreate(tests.WsgiAppCase):
         # new aliases should replace old aliases
         c = self.Session.connection()
         for alias in aliases:
-            sql = (u"select * from _table_metadata "
-                "where alias_of='{0}' and name='{1}'").format(resource.id, alias)
-            results = c.execute(sql)
+            sql = "select * from _table_metadata " \
+                  "where alias_of=%s and name=%s"
+            results = c.execute(sql, resource.id, alias)
             assert results.rowcount == 0
 
-        sql = (u"select * from _table_metadata "
-            "where alias_of='{0}' and name='{1}'").format(resource.id, 'another_alias')
-        results = c.execute(sql)
+        sql = "select * from _table_metadata " \
+              "where alias_of=%s and name=%s"
+        results = c.execute(sql, resource.id, 'another_alias')
         assert results.rowcount == 1
         self.Session.remove()
 

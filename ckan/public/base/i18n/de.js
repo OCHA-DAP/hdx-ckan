@@ -8,6 +8,10 @@
     null,
     "Es trat ein Fehler auf"
   ],
+  "An error occurred: %(text)s %(error)s": [
+    null,
+    "Ein Fehler ist aufgetreten: %(text)s %(error)s"
+  ],
   "Are you sure you want to perform this action?": [
     null,
     "Bist du sicher, dass du diese Aktion ausführen willst?"
@@ -27,6 +31,10 @@
   "Failed to load data API information": [
     null,
     "Informationen zur Daten-API konnten nicht geladen werden"
+  ],
+  "File": [
+    null,
+    "Datei"
   ],
   "Follow": [
     null,
@@ -140,12 +148,8 @@
     null,
     "Eine Datei wird hochgeladen. Soll das wirklich abgebrochen werden?"
   ],
-  "show less": [
+  "error loading view": [
     null,
-    "weniger anzeigen"
-  ],
-  "show more": [
-    null,
-    "mehr anzeigen"
+    "Fehler beim Laden der Ansicht"
   ]
 }

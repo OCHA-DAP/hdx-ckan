@@ -28,6 +28,10 @@
     null,
     "데이터 API 정보를 읽어오는데 실패했습니다"
   ],
+  "File": [
+    null,
+    "파일"
+  ],
   "Follow": [
     null,
     "Follow"
@@ -43,6 +47,14 @@
   "Input is too short, must be at least one character": [
     null,
     "입력값이 적습니다. 하나 이상의 character를 입력하세요."
+  ],
+  "Link": [
+    null,
+    "링크"
+  ],
+  "Link to a URL on the internet (you can also link to an API)": [
+    null,
+    "인터넷에 있는 URL 연결 (API 연결도 가능)"
   ],
   "Loading...": [
     null,
@@ -60,9 +72,25 @@
     null,
     "제거"
   ],
+  "Reorder resource view": [
+    null,
+    "리소스 뷰 재정리"
+  ],
+  "Reorder resources": [
+    null,
+    "리소스 재정리"
+  ],
   "Resource uploaded": [
     null,
     "리소스가 업로드 되었음"
+  ],
+  "Save order": [
+    null,
+    "순서 저장"
+  ],
+  "Saving...": [
+    null,
+    "저장 중"
   ],
   "Show more": [
     null,
@@ -108,12 +136,12 @@
     null,
     "파일 업로드하기"
   ],
-  "show less": [
+  "Upload a file on your computer": [
     null,
-    "적게 보기"
+    "컴퓨터에 있는 파일을 업로드하기"
   ],
-  "show more": [
+  "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null,
-    "더 보기"
+    "파일을 업로드중입니다. 탐색을 위해 업로드를 중지하겠습니까?"
   ]
 }
