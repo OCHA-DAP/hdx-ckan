@@ -604,27 +604,15 @@ class DatasetController(PackageController):
                     'perma_storage_file', id=dataset_id, resource_id=resource['id'])
                 resource['perma_link'] = domain + perma_link
 
-    def read(self, id, format='html'):
+    def read(self, id):
         """
         Display the package, includes HDX additions for continuous browsing
         """
-        if not format == 'html':
-            ctype, extension = \
-                self._content_type_from_extension(format)
-            if not ctype:
-                # An unknown format, we'll carry on in case it is a
-                # revision specifier and re-constitute the original id
-                id = "%s.%s" % (id, format)
-                ctype, format = "text/html; charset=utf-8", "html"
-        else:
-            ctype, format = self._content_type_from_accept()
-
-        response.headers['Content-Type'] = ctype
 
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
+                   'user': c.user, 'for_view': True,
                    'auth_user_obj': c.userobj}
-        data_dict = {'id': id}
+        data_dict = {'id': id, 'include_tracking': True}
 
         # interpret @<revision_id> or @<date> suffix
         split = id.split('@')
@@ -655,7 +643,8 @@ class DatasetController(PackageController):
 
         # used by disqus plugin
         c.current_package_id = c.pkg.id
-        c.related_count = c.pkg.related_count
+
+        # can the resources be previewed?
         for resource in c.pkg_dict['resources']:
             # create permalink if needed
             # self._create_perma_link_if_needed(id, resource)
@@ -693,7 +682,7 @@ class DatasetController(PackageController):
         # package_saver.PackageSaver().render_package(c.pkg_dict, context)
 
         template = self._read_template(package_type)
-        template = template[:template.index('.') + 1] + format
+        # template = template[:template.index('.') + 1] + format
 
         # set dataset type for google analytics - modified by HDX
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
@@ -704,7 +693,6 @@ class DatasetController(PackageController):
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
         c.hdx_activities = get_action(
             'hdx_get_activity_list')(context, act_data_dict)
-        c.related_count = c.pkg.related_count
 
         # added as per HDX-4969
         c.downloads_count = 0
