@@ -27,7 +27,6 @@ log = logging.getLogger(__name__)
 
 abort = base.abort
 render = base.render
-validate = base.validate
 
 check_access = logic.check_access
 get_action = logic.get_action
