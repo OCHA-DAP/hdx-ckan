@@ -385,6 +385,10 @@ class HDXSearchController(PackageController):
             'extras': search_extras
         }
 
+        include_private = context.pop('ignore_capacity_check', None)
+        if include_private:
+            data_dict['include_private'] = include_private
+
         query = get_action('package_search')(context, data_dict)
 
         if not query.get('results', None):

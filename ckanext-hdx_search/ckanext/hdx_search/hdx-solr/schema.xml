@@ -16,6 +16,14 @@
  limitations under the License.
 -->
 
+<!--
+     NB Please copy changes to this file into the multilingual schema:
+        ckanext/multilingual/solr/schema.xml
+-->
+
+<!-- We update the version when there is a backward-incompatible change to this
+schema. In this case the version should be set to the next CKAN version number.
+(x.y but not x.y.z since it needs to be a float) -->
 <schema name="ckan" version="2.3">
 
 <types>
@@ -32,6 +40,13 @@
     <fieldType name="tdouble" class="solr.TrieDoubleField" precisionStep="8" omitNorms="true" positionIncrementGap="0"/>
     <fieldType name="date" class="solr.TrieDateField" omitNorms="true" precisionStep="0" positionIncrementGap="0"/>
     <fieldType name="tdate" class="solr.TrieDateField" omitNorms="true" precisionStep="6" positionIncrementGap="0"/>
+
+    <fieldType name="tdates" class="solr.TrieDateField" precisionStep="7" positionIncrementGap="0" multiValued="true"/>
+    <fieldType name="booleans" class="solr.BoolField" sortMissingLast="true" multiValued="true"/>
+    <fieldType name="tints" class="solr.TrieIntField" precisionStep="8" positionIncrementGap="0" multiValued="true"/>
+    <fieldType name="tfloats" class="solr.TrieFloatField" precisionStep="8" positionIncrementGap="0" multiValued="true"/>
+    <fieldType name="tlongs" class="solr.TrieLongField" precisionStep="8" positionIncrementGap="0" multiValued="true"/>
+    <fieldType name="tdoubles" class="solr.TrieDoubleField" precisionStep="8" positionIncrementGap="0" multiValued="true"/>
 
     <fieldType name="text" class="solr.TextField" positionIncrementGap="100">
         <analyzer type="index">
@@ -183,8 +198,8 @@
 <copyField source="notes" dest="text"/>
 <copyField source="tags" dest="text"/>
 <copyField source="groups" dest="text"/>
-<copyField source="res_name" dest="text"/>
 <copyField source="organization" dest="text"/>
+<copyField source="res_name" dest="text"/>
 <copyField source="res_description" dest="text"/>
 <copyField source="maintainer" dest="text"/>
 <copyField source="author" dest="text"/>

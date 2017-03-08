@@ -323,7 +323,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_update': hdx_update.resource_update,
             'resource_show': hdx_get.resource_show,
             'package_purge': hdx_delete.hdx_dataset_purge,
-            'package_search': hdx_get.package_search,
+            # 'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,
             'package_validate': hdx_get.package_validate,
