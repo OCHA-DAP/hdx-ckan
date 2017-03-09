@@ -1,4 +1,4 @@
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 import ckan.logic as logic
 import ckan.logic.auth.create as create
 

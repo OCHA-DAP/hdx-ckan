@@ -14,7 +14,7 @@ import count
 import logging
 import ckan.plugins.toolkit as tk
 # import re
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 import re
 import ckan.lib.datapreview as datapreview
 

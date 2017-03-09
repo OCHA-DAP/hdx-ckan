@@ -1,10 +1,10 @@
-from ckan import new_authz, model
+from ckan import authz, model
 from ckan.common import _, c
 from ckanext.ytp.request.tools import get_user_member
 
 
 def _only_registered_user():
-    if not new_authz.auth_is_registered_user():
+    if not authz.auth_is_registered_user():
         return {'success': False, 'msg': _('User is not logged in')}
     return {'success': True}
 
@@ -12,7 +12,7 @@ def _only_registered_user():
 def member_request_create(context, data_dict):
     """ Create request access check """
 
-    if not new_authz.auth_is_registered_user():
+    if not authz.auth_is_registered_user():
         return {'success': False, 'msg': _('User is not logged in')}
 
     organization_id = None if not data_dict else data_dict.get('organization_id', None)
@@ -76,7 +76,7 @@ def member_request_cancel(context, data_dict):
 def member_request_process(context, data_dict):
     """ Approve or reject access check """
 
-    if new_authz.is_sysadmin(context['user']):
+    if authz.is_sysadmin(context['user']):
         return {'success': True}
 
     user = model.User.get(context['user'])

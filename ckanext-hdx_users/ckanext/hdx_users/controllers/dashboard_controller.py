@@ -11,7 +11,7 @@ from pylons import config
 import ckan.lib.base as base
 import ckan.model as model
 import ckan.lib.helpers as h
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 import ckan.logic as logic
 import ckan.common as common
 import ckan.lib.navl.dictization_functions as dictization_functions

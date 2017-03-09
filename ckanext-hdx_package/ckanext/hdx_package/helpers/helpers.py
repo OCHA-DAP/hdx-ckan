@@ -11,7 +11,7 @@ import ckan.lib.base as base
 import ckan.logic as logic
 
 import ckan.plugins.toolkit as tk
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 import ckan.lib.activity_streams as activity_streams
 import ckan.model.package as package
 import ckan.model.misc as misc

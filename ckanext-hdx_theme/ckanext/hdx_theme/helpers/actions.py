@@ -11,7 +11,7 @@ import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 import ckan.model as model
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting

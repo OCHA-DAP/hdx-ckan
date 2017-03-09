@@ -6,7 +6,7 @@ from pylons import config
 from ckanext.ytp.request.model import MemberExtra
 from pylons import i18n
 
-from ckan import model, new_authz
+from ckan import model, authz
 from ckan.lib.dictization import model_dictize
 from ckan.logic import NotFound, ValidationError, check_access
 from ckan.common import _, c
@@ -19,6 +19,7 @@ import ckanext.ytp.request.util as hdx_util
 
 log = logging.getLogger(__name__)
 
+new_authz = authz
 
 # _SUBJECT_MEMBERSHIP_REQUEST = lambda: _("New membership request (%(organization)s)")
 # _MESSAGE_MEMBERSHIP_REQUEST = lambda: _("""\
