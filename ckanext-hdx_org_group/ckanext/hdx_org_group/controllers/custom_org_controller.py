@@ -12,7 +12,7 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.common as common
 import ckan.lib.helpers as h
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_crisis.dao.data_access as data_access

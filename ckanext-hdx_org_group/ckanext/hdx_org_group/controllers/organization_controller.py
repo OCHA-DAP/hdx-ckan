@@ -11,7 +11,7 @@ import ckan.model as model
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.common as common
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 
 from ckan.common import c, request, _
 import ckan.lib.helpers as h

@@ -2,7 +2,7 @@ import json
 
 import ckan.logic as logic
 import ckan.model as model
-import ckan.new_authz as new_authz
+import ckan.authz as new_authz
 import ckan.lib.base as base
 import ckan.lib.helpers as ckan_helpers
 
