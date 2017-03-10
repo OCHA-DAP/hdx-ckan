@@ -5,9 +5,10 @@ RUN rm -rf /srv/ckan && \
 
 COPY . /srv/ckan/
 
-RUN cd /srv/ckan && \
-    pip install -r requirements.txt && \
-    python setup.py develop && \
+RUN ls -l /srv/ckan && \
+    easy_install pip==9.0.1 && \
+    apt-get update && apt-get install libffi-dev libssl-dev && \
+    rm -rf /usr/local/man && \
+    pip install --upgrade  -r /srv/ckan/requirements.txt && \
     hdxckantool update && \
     hdxckantool plugins dev
-
