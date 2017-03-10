@@ -9,12 +9,12 @@ networks:
 
 services:
   solr:
-    image: teodorescuserban/hdx-solr:latest
+    image: unocha/alpine-solr:4
     hostname: solr
     container_name: solr
 
   db:
-    image: teodorescuserban/hdx-psql-ckan:latest
+    image: unocha/alpine-base-postgres:201010-PR85
     hostname: db
     container_name: db
     networks:
@@ -23,7 +23,7 @@ services:
           - dbckan
 
   ckan:
-    image: teodorescuserban/hdx-ckan:latest
+    image: unocha/hdx-ckan:dev
     hostname: ckan
     privileged: true
     volumes:
