@@ -232,11 +232,11 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         return pages_list
 
     def get_country(self, id):
-        if group_type != self.group_type:
-            abort(404, _('Incorrect group type'))
+        group_type = self._ensure_controller_matches_group_type(
+            id.split('@')[0])
 
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author,
+                   'user': c.user,
                    'schema': self._db_to_form_schema(group_type=group_type),
                    'for_view': True}
         data_dict = {'id': id}
