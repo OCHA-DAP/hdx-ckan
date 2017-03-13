@@ -417,7 +417,7 @@ hdx_api = {
                  '<br/><br/>'
                  'The HDX Python Library is essentially a wrapper around the most common functions of the base CKAN API, '
                  'on which HDX is built.  HDX supports both the core '
-                 '<a target="_blank" href="http://docs.ckan.org/en/ckan-2.3/api/index.html">CKAN 2.3 API</a> '
+                 '<a target="_blank" href="http://docs.ckan.org/en/ckan-2.3.5/api/index.html">CKAN 2.3 API</a> '
                  'and, for some datasets, the CKAN Datastore API. For more information, please e-mail '
                  'hdx.feedback@gmail.com. We will be happy to assist you.'
         },
