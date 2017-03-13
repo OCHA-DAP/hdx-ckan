@@ -13,7 +13,7 @@
   background-color: #eeeeee;
 }
 .hdx-form .background-white {
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .hdx-form .label-title-style {
   font-family: 'Gotham-Light', sans-serif;
@@ -26,7 +26,7 @@
   padding: 30px 0;
 }
 .hdx-form .form-section h3 {
-  color: #007ce0;
+  color: #007CE0;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
@@ -55,21 +55,21 @@
 }
 .hdx-form .hdx-form-breadcrumb {
   padding: 20px 0;
-  background-color: #007ce0;
+  background-color: #007CE0;
   font-family: 'Gotham-Light', sans-serif;
   font-weight: 400;
   font-size: 20px;
-  color: #ffffff;
+  color: #fff;
 }
 .hdx-form .hdx-form-breadcrumb .breadcrumb {
   margin: 0;
-  background-color: #007ce0;
+  background-color: #007CE0;
 }
 .hdx-form .hdx-form-breadcrumb .breadcrumb li {
   opacity: 0.6;
 }
 .hdx-form .hdx-form-breadcrumb .breadcrumb li.active {
-  color: #ffffff;
+  color: #fff;
   opacity: 1;
 }
 .hdx-form .hdx-form-breadcrumb .breadcrumb li .circle {
@@ -81,8 +81,8 @@
   /* or 50% */
   border-radius: 50%;
   /* or 50% */
-  background-color: #ffffff;
-  color: #007ce0;
+  background-color: #fff;
+  color: #007CE0;
   text-align: center;
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
@@ -92,7 +92,7 @@
 .hdx-form .hdx-form-breadcrumb .breadcrumb > li + li:before {
   content: ">";
   float: left;
-  color: #ffffff;
+  color: #fff;
 }
 .hdx-form label.control-label {
   color: #333333;
@@ -140,7 +140,7 @@
   top: 0;
 }
 .hdx-form .form-group .form-control {
-  background-color: #ffffff;
+  background-color: #fff;
   min-height: 44px;
   height: auto;
   border-color: #cccccc;
@@ -157,7 +157,7 @@
   border-color: #cccccc;
 }
 .hdx-form .form-group .form-control.select2-container .select2-choice .select2-arrow {
-  background-color: #ffffff;
+  background-color: #fff;
   border: none;
 }
 .hdx-form .form-group .form-control.select2-container .select2-choice .select2-arrow b {
@@ -191,7 +191,7 @@
 .hdx-form .form-group .form-control.select2-container-multi .select2-choices .select2-search-choice {
   background-color: #888888;
   background-image: none;
-  color: #ffffff;
+  color: #fff;
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -222,20 +222,20 @@
   font-style: normal;
   font-weight: 400;
   content: "\e014";
-  color: #ffffff;
+  color: #fff;
   font-size: 15px;
 }
 .hdx-form .form-group .form-control.select2-dropdown-open .select2-choice {
-  border-color: #007ce0;
+  border-color: #007CE0;
 }
 .hdx-form .form-group .form-control.select2-dropdown-open .select2-choices {
-  border-color: #007ce0;
+  border-color: #007CE0;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: none;
 }
 .hdx-form .form-group .form-control:focus {
-  border-color: #007ce0;
+  border-color: #007CE0;
 }
 .hdx-form .form-group .form-control::-webkit-input-placeholder {
   color: #cccccc;
@@ -307,7 +307,7 @@ ul.list-horizontal li:first-child:before {
   padding: 15px;
   padding-bottom: 0;
   margin-bottom: 10px;
-  background-color: #ffffff;
+  background-color: #fff;
 }
 .drag-drop-component.drag-drop-ghost {
   opacity: 0.4;
@@ -350,9 +350,9 @@ ul.list-horizontal li:first-child:before {
   z-index: 100;
 }
 .drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content {
-  background-color: #007ce0;
-  color: #ffffff;
-  border-color: #ffffff;
+  background-color: #007CE0;
+  color: #fff;
+  border-color: #fff;
 }
 .drag-drop-component .drag-drop-area.drop-incoming .drag-drop-content .drag-text1 {
   display: none;
@@ -364,7 +364,7 @@ ul.list-horizontal li:first-child:before {
   display: none;
 }
 .drag-drop-component .drag-drop-area .browse-button {
-  color: #007ce0;
+  color: #007CE0;
   cursor: pointer;
   position: relative;
   margin: 0;
