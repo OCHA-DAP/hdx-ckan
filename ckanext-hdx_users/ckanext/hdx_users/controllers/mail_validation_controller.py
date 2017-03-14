@@ -208,10 +208,11 @@ class ValidationController(ckan.controllers.user.UserController):
             except:
                 pass
 
-            if h.asbool(config.get('ckan.legacy_templates', 'false')):
+            if p.toolkit.asbool(config.get('ckan.legacy_templates', 'false')):
                 h.flash_error(err)
                 h.redirect_to(controller='user',
                               action='login', came_from=came_from)
+
             else:
                 return self.login(error=err)
 
