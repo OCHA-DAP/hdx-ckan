@@ -24,10 +24,8 @@ def count_user_grps(user_id):
     return result
 
 def count_user_datasets(user_id):
-    q = sqlalchemy.text('''SELECT count(*) FROM package_role pr 
-        JOIN package p ON p.id = pr.package_id
-        JOIN user_object_role uor ON pr.user_object_role_id = uor.id 
-        WHERE uor.user_id = '{user_id}';'''.format(user_id=user_id))
+    q = sqlalchemy.text('''select count(*) from package
+        where creator_user_id = '{user_id}';'''.format(user_id=user_id))
    
     result = model.Session.connection().execute(q, entity_id=id).scalar()
     return result
