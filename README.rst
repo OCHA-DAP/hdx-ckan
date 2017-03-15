@@ -72,4 +72,4 @@ BrowserStack
 ------------
 HDX wish to thank BrowserStack for the kind donation of their software which simplifies cross browser testing of our website.
 
-.. image:: https://raw.githubusercontent.com/OCHA-DAP/hdx-ckan/dev/Logo-01.svg
+.. image:: https://github.com/OCHA-DAP/hdx-ckan/raw/dev/browserstack/browserstack.png
