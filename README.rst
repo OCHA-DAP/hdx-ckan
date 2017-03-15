@@ -72,5 +72,4 @@ BrowserStack
 ------------
 HDX wish to thank BrowserStack for the kind donation of their software which simplifies cross browser testing of our website.
 
-.. raw:: html
-   <img src="https://www.browserstack.com/images/layout/browserstack-logo-600x315.png" alt="BrowserStack" height="100" width="20">
+.. image:: Logo-01.svg
