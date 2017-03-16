@@ -2,9 +2,9 @@ import logging
 
 log = logging.getLogger(__name__)
 
-_SUBJECT_MEMBERSHIP_REQUEST = '''{user_fullname} sent a request to join your organisation on HDX'''
+_SUBJECT_MEMBERSHIP_REQUEST = u'''{user_fullname} sent a request to join your organisation on HDX'''
 _MESSAGE_MEMBERSHIP_REQUEST = \
-    '''
+    u'''
     <br/><br/>You are receiving this message because you are an administrator of the {org_title} organisation on HDX.
     <br/>{user_fullname} ( {user_email} ) has requested to join your organisation on HDX.
     <br/>The user included the following message with his/her request:
@@ -24,9 +24,9 @@ _MESSAGE_MEMBERSHIP_REQUEST = \
     the HDX Team <br/>
     '''
 
-_SUBJECT_MEMBERSHIP_APPROVED = '''Organisation membership request on HDX has been approved'''
+_SUBJECT_MEMBERSHIP_APPROVED = u'''Organisation membership request on HDX has been approved'''
 _MESSAGE_MEMBERSHIP_APPROVED = \
-    '''
+    u'''
     <br/><br/>
     Your membership request to organisation {organization} with {role} access has been approved.
     <br/><br/>
@@ -34,9 +34,9 @@ _MESSAGE_MEMBERSHIP_APPROVED = \
     the HDX Team <br/>
     '''
 
-_SUBJECT_MEMBERSHIP_REJECTED = '''Organisation membership request on HDX has been rejected'''
+_SUBJECT_MEMBERSHIP_REJECTED = u'''Organisation membership request on HDX has been rejected'''
 _MESSAGE_MEMBERSHIP_REJECTED = \
-    '''
+    u'''
     <br/><br/>
     Your membership request to organisation {organization} with {role} access has been rejected.
     <br/><br/>
