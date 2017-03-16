@@ -16,6 +16,7 @@ import ckan.logic as logic
 import ckan.common as common
 import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.controllers.user as uc
+import ckan.plugins as p
 from ckan.controllers.api import CONTENT_TYPES
 
 from ckan.common import _, c, g, request
@@ -115,7 +116,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
 
         # The legacy templates have the user's activity stream on the user
         # profile page, new templates do not.
-        if h.asbool(config.get('ckan.legacy_templates', False)):
+        if p.toolkit.asbool(config.get('ckan.legacy_templates', False)):
             c.user_activity_stream = get_action('user_activity_list_html')(
                 context, {'id': c.user_dict['id']})
 
