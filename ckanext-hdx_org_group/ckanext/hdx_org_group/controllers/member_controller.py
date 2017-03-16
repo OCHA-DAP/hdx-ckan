@@ -176,7 +176,7 @@ class HDXOrgMemberController(org.OrganizationController):
                             # Is user deleted?
                             if user_dict[0].state == 'deleted':
                                 h.flash_error(_('This user no longer has an account on HDX'))
-                                self._redirect_to(controller='group', action='members', id=id)
+                                self._redirect_to_this_controller(action='members', id=id)
                             # Add user
                             data_dict['username'] = user_dict[0].name
                             flash_message = 'That email is already associated with user ' + data_dict[
@@ -210,7 +210,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 else:
                     h.flash_error(_('''You need to either fill the username or
                         the email of the person you wish to invite'''))
-                self._redirect_to(controller='group', action='members', id=id)
+                self._redirect_to_this_controller(action='members', id=id)
 
             if not request.params['username']:
                 abort(404, _('User not found'))
