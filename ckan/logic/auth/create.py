@@ -92,15 +92,6 @@ def package_create_default_resource_views(context, data_dict):
                                data_dict['package'])
 
 
-def resource_create_default_resource_views(context, data_dict):
-    return resource_create(context, {'id': data_dict['resource']['id']})
-
-
-def package_create_default_resource_views(context, data_dict):
-    return new_authz.is_authorized('package_update', context,
-                                   data_dict['package'])
-
-
 def package_relationship_create(context, data_dict):
     user = context['user']
 
