@@ -220,7 +220,7 @@ class HDXOrgMemberController(org.OrganizationController):
             abort(404, _('Group not found'))
         except ValidationError, e:
             h.flash_error(e.error_summary)
-        self._redirect_to(controller='group', action='members', id=id)
+        self._redirect_to_this_controller(action='members', id=id)
 
     def bulk_member_new(self, id):
 
@@ -274,7 +274,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 self._send_analytics_info(org_obj, new_members, invited_members)
             else:
                 h.flash_error(_('''No user or role was specified'''))
-            self._redirect_to(controller='group', action='members', id=id)
+            self._redirect_to_this_controller(action='members', id=id)
 
         except NotAuthorized:
             abort(401, _('Unauthorized to add member to group %s') % '')
@@ -282,7 +282,7 @@ class HDXOrgMemberController(org.OrganizationController):
             abort(404, _('Group not found'))
         except ValidationError, e:
             h.flash_error(e.error_summary)
-        self._redirect_to(controller='group', action='members', id=id)
+        self._redirect_to_this_controller(action='members', id=id)
 
     def _get_user_obj(self, mail_or_username):
         userobj = None
@@ -353,7 +353,7 @@ class HDXOrgMemberController(org.OrganizationController):
             - the delete confirmation is done with js ( DHTML )
         '''
         if 'cancel' in request.params:
-            self._redirect_to(controller='group', action='members', id=id)
+            self._redirect_to_this_controller(action='members', id=id)
 
         context = self._get_context()
 
@@ -373,7 +373,7 @@ class HDXOrgMemberController(org.OrganizationController):
                 org_obj = model.Group.get(id)
                 analytics.RemoveMemberAnalyticsSender(org_obj.id, org_obj.name).send_to_queue()
 
-                self._redirect_to(controller='group', action='members', id=id)
+                self._redirect_to_this_controller(action='members', id=id)
             c.user_dict = self._action('user_show')(context, {'id': user_id})
             c.user_id = user_id
             c.group_id = id
@@ -382,4 +382,4 @@ class HDXOrgMemberController(org.OrganizationController):
         except NotFound:
             abort(404, _('Group not found'))
         # modified by HDX
-        self._redirect_to(controller='group', action='members', id=id)
+        self._redirect_to_this_controller(action='members', id=id)
