@@ -584,11 +584,6 @@ def hdx_group_or_org_create(context, data_dict, is_org=False):
 
     group = model_save.group_dict_save(data, context)
 
-    if user:
-        admins = [model.User.by_name(user.decode('utf8'))]
-    else:
-        admins = []
-    model.setup_default_user_roles(group, admins)
     # Needed to let extensions know the group id
     session.flush()
 
