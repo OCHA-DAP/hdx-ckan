@@ -1105,7 +1105,13 @@ class DatasetController(PackageController):
         c.datastore_api = '%s/api/action' % config.get(
             'ckan.site_url', '').rstrip('/')
 
-        c.related_count = c.pkg.related_count
+        try:
+            c.related_count = c.pkg.related_count
+        except AttributeError, e:
+            c.related_count = 0
+            error_summary = str(e)
+            log.warn(error_summary + ". Setting related_count to 0.")
+
 
         c.resource['can_be_previewed'] = self._resource_preview(
             {'resource': c.resource, 'package': c.package})

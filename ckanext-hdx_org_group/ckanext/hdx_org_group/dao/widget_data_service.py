@@ -118,9 +118,10 @@ class WidgetDataService(object):
 
         chart_ind_codes = [chart['code'] for chart in chart_data_list]
         shown_dataseries_codes = [(el, '') for el in top_line_ind_codes + chart_ind_codes]
-        shown_dataseries_dao = indicator_access.IndicatorAccess(country_id, shown_dataseries_codes)
 
-        indic_extra_dict = shown_dataseries_dao.fetch_indicator_data_from_ckan()
+        shown_dataseries_dao = indicator_access.IndicatorAccess(country_id, shown_dataseries_codes)
+        if shown_dataseries_codes:
+            indic_extra_dict = shown_dataseries_dao.fetch_indicator_data_from_ckan()
 
         for chart in chart_data_list:
             code = chart['code']

@@ -46,7 +46,7 @@ def run_on_startup():
     cache_on_startup = config.get('hdx.cache.onstartup', 'true')
     if 'true' == cache_on_startup:
         _generate_license_list()
-        caching.cached_get_group_package_stuff()
+        # caching.cached_get_group_package_stuff()
 
     compile_less_on_startup = config.get('hdx.less_compile.onstartup', 'false')
     if 'true' == compile_less_on_startup:

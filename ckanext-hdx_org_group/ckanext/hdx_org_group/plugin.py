@@ -261,33 +261,27 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         return schema
 
     def db_to_form_schema(self):
-        # There's a bug in dictionary validation when form isn't present
-        try:
-            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars[
-                'action'] == 'new':
-                schema = super(HDXGroupPlugin, self).form_to_db_schema()
-                schema.update({'language_code': [
-                    tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'relief_web_url': [
-                    tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'hr_info_url': [
-                    tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'geojson': [tk.get_converter(
-                    'convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'custom_loc': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'customization': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({
-                    'activity_level': [
-                        tk.get_converter('convert_from_extras'),
-                        tk.get_validator('ignore_missing')]
-                })
-                return schema
-        except TypeError, e:
-            log.debug("Problem returning schema: {}".format(str(e)))
 
-        return None
+        schema = super(HDXGroupPlugin, self).form_to_db_schema()
+        schema.update({'language_code': [
+            tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'relief_web_url': [
+            tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'hr_info_url': [
+            tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'geojson': [tk.get_converter(
+            'convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'custom_loc': [tk.get_validator(
+            'ignore_missing'), tk.get_converter('convert_to_extras')]})
+        schema.update({'customization': [tk.get_validator(
+            'ignore_missing'), tk.get_converter('convert_to_extras')]})
+        schema.update({
+            'activity_level': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')]
+        })
+        return schema
+
 
     def edit(self, country):
         cod_dict = country_helper.get_latest_cod_datatset(country.name)
