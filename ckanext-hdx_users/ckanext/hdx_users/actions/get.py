@@ -23,7 +23,7 @@ def onboarding_followee_list(context, data_dict):
     i = 1
     for item in locs:
         type = 'location'
-        if is_custom(item['extras']):
+        if is_custom(item.get('extras', {})):
             if item['name'] == c_nepal_earthquake:
                 type = 'crisis'
             result.append(create_item(item, type, False))
