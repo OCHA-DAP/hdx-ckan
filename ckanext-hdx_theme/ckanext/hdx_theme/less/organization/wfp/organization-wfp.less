@@ -183,21 +183,22 @@
       line-height: 16px;
       height: 32px;
     }
+    .floating-org-links {
+      >a{
+        .gothamBoldFont(10px);
+  //      color: @wfpBlueColor;
+        text-transform: uppercase;
 
-    a{
-      .gothamBoldFont(10px);
-//      color: @wfpBlueColor;
-      text-transform: uppercase;
+        line-height: 12px;
 
-      line-height: 12px;
-
-      +a:before{
-        content: "";
-        margin-right: 6px;
-        margin-left: 0;
-        border-left: 1px solid @extraLightGrayColor;
+        +a:before{
+          content: "|";
+          margin-right: 3px;
+          margin-left: 3px;
+        }
       }
     }
+
   }
 }
 
