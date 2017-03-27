@@ -68,7 +68,7 @@ Example:
                     {% endfor %}
                     <b class="caret" style="vertical-align: baseline;"></b>
                 </a>
-                <ul class="dropdown-menu dropdown-inverse" role="menu" style="max-height: 241px; overflow-y: auto;">
+                <ul class="dropdown-menu dropdown-inverse dropdown-menu-right" role="menu" style="max-height: 241px; overflow-y: auto;">
                     {% for label, value in sorting %}
                         {% if label and value %}
                             <li><a href="#" tabindex="-1" val="{{ value }}">{{ label }}</a></li>
