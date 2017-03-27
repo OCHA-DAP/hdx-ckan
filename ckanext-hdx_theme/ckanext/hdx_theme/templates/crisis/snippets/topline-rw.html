@@ -14,6 +14,17 @@ Example:
 
 {% extends "crisis/snippets/topline.html" %}
 
+{% block topline_class %} {{ super() }} topline-rw {% endblock %}
+
+{% block value_with_sparkline %}
+    <div class="col-xs-12 indicator-value">
+        {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
+            <div style="display: none;" class="sparkline">{{ sparkline_json }}</div>
+    </div>
+
+{% endblock %}
+
+
 {%  block topline_source %}
     {% if source %}
         <div class="row">
@@ -25,4 +36,6 @@ Example:
             </div>
         </div>
     {% endif %}
+    {% resource 'hdx_theme/crisis/topline-rw.css' %}
 {% endblock %}
+

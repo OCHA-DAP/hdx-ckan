@@ -11,18 +11,20 @@ Example:
 
 #}
 
-<div class="topline">
+<div class="{% block topline_class %} topline {% endblock %}">
     <div class="row">
         <div class="col-xs-12 indicator-title">
             {{ title }}
         </div>
         {% if sparkline_json %}
-            <div class="col-xs-8 indicator-value">
-                {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
-            </div>
-            <div class="col-xs-4">
-                <div style="display: none;" class="sparkline">{{ sparkline_json }}</div>
-            </div>
+            {% block value_with_sparkline %}
+                <div class="col-xs-8 indicator-value">
+                    {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}
+                </div>
+                <div class="col-xs-4">
+                    <div style="display: none;" class="sparkline">{{ sparkline_json }}</div>
+                </div>
+            {% endblock %}
         {% else %}
             <div class="col-xs-12 indicator-value">
                 {{ h.snippet('crisis/snippets/topline-value.html', value=value, unit=unit, notes=notes) }}

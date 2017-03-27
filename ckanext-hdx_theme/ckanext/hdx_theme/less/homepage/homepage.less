@@ -60,7 +60,7 @@ header {
         @searchBoxSize: 405px; //size of the actual search box inside the whole widget
         .searchBox {
             width: @searchBoxSize + 2*@searchBoxPadding;
-            height: 250px;
+            min-height: 200px; //actual content will enlarge/shrink
             background-color: @extraLightGrayColor;
             border-radius: @searchBoxRadius;
 
