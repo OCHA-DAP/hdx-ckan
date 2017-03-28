@@ -1,5 +1,7 @@
 $(document).ready(function(){
-    var url = "/api/action/organization_list?package_count=true&include_extras=false&all_fields=true&sort=name asc";
+    // var url = "/api/action/organization_list?package_count=true&include_extras=false&all_fields=true&sort=name asc";
+    var url = "/api/action/cached_organization_list";
+
     $.getJSON(url, {}, function(result){
         if (result.success){
             $.each(result.result, function(idx, el){

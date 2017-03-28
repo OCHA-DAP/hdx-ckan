@@ -19,6 +19,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IGroupForm, inherit=False)
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IActions)
+    plugins.implements(plugins.IOrganizationController, inherit=True)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -222,6 +223,12 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         return map
 
+    def create(self, org):
+        tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+
+    def edit(self, org):
+        tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     '''
@@ -282,8 +289,14 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         })
         return schema
 
+    def create(self, country):
+        tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
 
     def edit(self, country):
+        # invalidate caches
+        tk.get_action('invalidate_cache_for_groups')({'ignore_auth': True}, {})
+
+        # Screenshot generation for latest COD when country is edited
         cod_dict = country_helper.get_latest_cod_datatset(country.name)
         shape_infos = []
         if cod_dict:

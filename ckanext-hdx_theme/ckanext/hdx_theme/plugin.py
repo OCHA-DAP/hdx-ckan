@@ -35,7 +35,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
-    plugins.implements(plugins.IGroupController, inherit=True)
     plugins.implements(plugins.IMiddleware, inherit=True)
 
     def _add_resource(cls, path, name):
@@ -170,12 +169,6 @@ class HDXThemePlugin(plugins.SingletonPlugin):
 
         return map
 
-    def create(self, entity):
-        caching.invalidate_group_caches()
-
-    def edit(self, entity):
-        caching.invalidate_group_caches()
-
     def get_helpers(self):
         from ckanext.hdx_theme.helpers import helpers as hdx_helpers
         return {
@@ -237,6 +230,9 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         return {
             'organization_list_for_user': hdx_actions.organization_list_for_user,
             'cached_group_list': hdx_actions.cached_group_list,
+            'cached_organization_list': hdx_actions.cached_organization_list,
+            'invalidate_cache_for_groups': hdx_actions.invalidate_cache_for_groups,
+            'invalidate_cache_for_organizations': hdx_actions.invalidate_cache_for_organizations,
             'hdx_basic_user_info': hdx_actions.hdx_basic_user_info,
             'member_list': hdx_actions.member_list,
             # 'hdx_get_sys_admins': hdx_actions.hdx_get_sys_admins,
@@ -260,7 +256,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'group_member_create': auth.group_member_create,
             'hdx_send_new_org_request': auth.hdx_send_new_org_request,
             'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
-            # 'hdx_send_request_membership': auth.hdx_send_request_membership
+            'invalidate_cache_for_groups': auth.invalidate_cache_for_groups,
+            'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,
         }
 
         # def make_middleware(self, app, config):
