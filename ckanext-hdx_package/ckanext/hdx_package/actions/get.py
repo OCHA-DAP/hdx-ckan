@@ -378,8 +378,9 @@ def __get_resource_filesize(resource_dict):
     if resource_dict.get('url_type') == 'upload':
         value = None
         try:
-            upload = uploader.ResourceUpload(resource_dict)
-            value = os.path.getsize(upload.get_path(resource_dict['id']))
+            # upload = uploader.ResourceUpload(resource_dict)
+            # value = os.path.getsize(upload.get_path(resource_dict['id']))
+            pass
         except Exception as e:
             log.warn(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
                                                                                          str(e)))
