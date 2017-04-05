@@ -261,7 +261,8 @@ class ValidationController(ckan.controllers.user.UserController):
             context['auth_user_obj'] = context['user_obj']
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
                                                                    'extras': ue_helpers.get_initial_extras()})
-            if 'email' in data_dict and 'nosetest' not in data_dict:
+            is_mailchimp_enabled = configuration.config.get('hdx.mailchimp', 'false')
+            if 'email' in data_dict and 'nosetest' not in data_dict and is_mailchimp_enabled == 'true':
                 self._signup_newsletter(data_dict)
                 self._signup_newsuser(data_dict)
         except NotAuthorized:
