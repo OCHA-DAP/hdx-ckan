@@ -387,9 +387,11 @@ class ValidationController(ckan.controllers.user.UserController):
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
         try:
-            captcha_response = data_dict.get('g-recaptcha-response', None)
-            if not self.is_valid_captcha(response=captcha_response):
-                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
+            if is_captcha_enabled == 'true':
+                captcha_response = data_dict.get('g-recaptcha-response', None)
+                if not self.is_valid_captcha(response=captcha_response):
+                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
