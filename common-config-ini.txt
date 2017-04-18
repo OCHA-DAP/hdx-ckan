@@ -1,14 +1,14 @@
-# PLEASE ALSO SEE FILE specific-config-ini.sample AND THE COMMENTS 
+# PLEASE ALSO SEE FILE specific-config-ini.sample AND THE COMMENTS
 # FROM THE BEGINNING OF THAT FILE
 #
-# This file contains the common configuration options for ckan. 
-# These configuration options should be the same on all 
+# This file contains the common configuration options for ckan.
+# These configuration options should be the same on all
 # servers and development environments.
 # Do not change and commit changes to this file unless every
 # server and dev environment needs to use the changes.
-# The commented configuration options marked with "#!" need to 
-# be overwritten in your specific-config-ini.txt ( aka development.ini, 
-# aka production.ini ) 
+# The commented configuration options marked with "#!" need to
+# be overwritten in your specific-config-ini.txt ( aka development.ini,
+# aka production.ini )
 
 [app:main]
 use = egg:ckan
@@ -98,8 +98,8 @@ ckan.preview.loadable = html htm rdf+xml owl+xml xml n3 n-triples turtle plain a
 #package_new_return_url = http://another.frontend/dataset/<NAME>
 #ckan.recaptcha.publickey =
 #ckan.recaptcha.privatekey =
-#!ckan.recaptcha.publickey = 
-#!ckan.recaptcha.privatekey = 
+#!ckan.recaptcha.publickey =
+#!ckan.recaptcha.privatekey =
 #licenses_group_url = http://licenses.opendefinition.org/licenses/groups/ckan.json
 # ckan.template_footer_end =
 
@@ -201,7 +201,7 @@ hdx.nepal_earthquake.filestore.circle_markers = /dataset/json-repository/resourc
 hdx.nepal_earthquake.filestore.shakemap = /dataset/json-repository/resource_download/475656c7-ee1e-4cd1-a11e-fd20e397be1c
 
 # URL shortener
-hdx.google.dev_key = 
+hdx.google.dev_key =
 
 # GIS
 # This should be overriden in your own prod.ini
@@ -218,6 +218,7 @@ hdx.analytics.mixpanel.token = 875bfe50f9cb981f4e2817832c83c165
 # This should be overriden in your own prod.ini.
 hdx.jobprocessor.scheduled.base_url = http://localhost:1234/api/scheduler/
 
+hdx.captcha = true
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
 hdx.onboarding.send_confirmation_email = true
 
@@ -249,6 +250,7 @@ ytp.requests.redirect_to_src_page = true
 hdx.active_locations_reliefweb.resource_id = 9a698057-71b4-47b0-9d2b-753026ea8afa
 
 #mailchimp settings - update your prod.ini with real ones
+hdx.mailchimp = true
 hdx.mailchimp.list.newsletter = aaa-fake
 hdx.mailchimp.list.newuser = bbb-fake
 hdx.mailchimp.api.key = ccc-fake
