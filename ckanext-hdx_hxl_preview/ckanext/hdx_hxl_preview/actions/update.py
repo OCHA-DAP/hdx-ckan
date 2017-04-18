@@ -71,8 +71,8 @@ def package_hxl_update(context, data_dict):
 
     new_views = []
 
-    if not package_dict.get('private', True) and \
-                    'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
+    if not package_dict.get('private', True):
+            # and 'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
         for resource in package_dict.get('resources', []):
             view_list = _get_action('resource_view_list')(context, {'id': resource.get('id')})
             view = _view_already_exists(view_list)
@@ -94,6 +94,10 @@ def package_hxl_update(context, data_dict):
 
             elif view:
                 _get_action('resource_view_delete')(context, {'id': view.get('id')})
+
+    if new_views and not 'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
+        package_dict['tags'].append({'name': u'hxl'})
+        _get_action('package_patch')(context, {'id': package_id, 'tags': package_dict.get('tags')})
 
     return new_views
 
