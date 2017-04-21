@@ -76,7 +76,7 @@ def package_hxl_update(context, data_dict):
         for resource in package_dict.get('resources', []):
             view_list = _get_action('resource_view_list')(context, {'id': resource.get('id')})
             view = _view_already_exists(view_list)
-            if _check_has_hxl_tags(resource.get('url','')):
+            if _check_has_hxl_tags(resource.get('url', '')):
                 if not view:
                     resource_view_dict = {
                         'resource_id': resource.get('id'),
@@ -86,16 +86,16 @@ def package_hxl_update(context, data_dict):
                     }
                     new_view = _get_action('resource_view_create')(context, resource_view_dict)
                     new_views.append(new_view)
-                else:
-                    # if there's no hxl_preview_config saved we want to return this view as well.
-                    # This will force the hxl preview edit popup to show up for existing resource with no saved configs
-                    if not (view.get('hxl_preview_config') and json.loads(view.get('hxl_preview_config'))):
-                        new_views.append(view)
+                # else:
+                #     # if there's no hxl_preview_config saved we want to return this view as well.
+                #     # This will force the hxl preview edit popup to show up for existing resource with no saved configs
+                #     if not (view.get('hxl_preview_config') and json.loads(view.get('hxl_preview_config'))):
+                #         new_views.append(view)
 
             elif view:
                 _get_action('resource_view_delete')(context, {'id': view.get('id')})
 
-    if new_views and not 'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
+    if new_views and 'hxl' not in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
         package_dict['tags'].append({'name': u'hxl'})
         _get_action('package_patch')(context, {'id': package_id, 'tags': package_dict.get('tags')})
 
