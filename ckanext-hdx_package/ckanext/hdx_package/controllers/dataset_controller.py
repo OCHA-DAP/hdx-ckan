@@ -223,9 +223,10 @@ class DatasetController(PackageController):
                 return render('organization/request_mem_or_org.html')
                 # If there's an org and the user is not a member of this org
                 # redirect back to org select
-                this_org = request.params['organization_id']
-                if this_org in user_orgs:
-                    return render('organization/request_mem_or_org.html')
+                # commented by Dan after checking code: this code was never run
+                # this_org = request.params['organization_id']
+                # if this_org in user_orgs:
+                #     return render('organization/request_mem_or_org.html')
         except:
             return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
                                       action='contribute'))
