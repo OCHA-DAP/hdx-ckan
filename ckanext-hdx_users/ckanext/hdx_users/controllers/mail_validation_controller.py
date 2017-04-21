@@ -260,7 +260,8 @@ class ValidationController(ckan.controllers.user.UserController):
             context['auth_user_obj'] = context['user_obj']
             user_extra = get_action('user_extra_create')(context, {'user_id': user['id'],
                                                                    'extras': ue_helpers.get_initial_extras()})
-            if 'email' in data_dict and 'nosetest' not in data_dict:
+            is_mailchimp_enabled = configuration.config.get('hdx.mailchimp', 'false')
+            if 'email' in data_dict and 'nosetest' not in data_dict and is_mailchimp_enabled == 'true':
                 self._signup_newsletter(data_dict)
                 self._signup_newsuser(data_dict)
         except NotAuthorized:
@@ -385,9 +386,11 @@ class ValidationController(ckan.controllers.user.UserController):
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
         try:
-            captcha_response = data_dict.get('g-recaptcha-response', None)
-            if not self.is_valid_captcha(response=captcha_response):
-                raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
+            if is_captcha_enabled == 'true':
+                captcha_response = data_dict.get('g-recaptcha-response', None)
+                if not self.is_valid_captcha(response=captcha_response):
+                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
