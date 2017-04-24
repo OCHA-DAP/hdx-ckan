@@ -55,10 +55,13 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
 
         import ckanext.hdx_users.model as umodel
         import ckanext.hdx_user_extra.model as ue_model
+        import ckanext.hdx_pages.model as p_model
 
         super(TestPageLoad, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
+        p_model.create_table()
+        p_model.patch_table()
 
     def test_page_load(self):
         global pages
