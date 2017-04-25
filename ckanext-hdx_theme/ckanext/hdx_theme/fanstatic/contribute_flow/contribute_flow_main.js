@@ -203,19 +203,20 @@ ckan.module('contribute_flow_main', function($, _) {
                     if ( this._datasetName ) {
                         // var promise = this.getDatasetIdPromise();
 
-                        var fragment = '';
-                        if (data.result && data.result.length > 0) {
-                            fragment = '#hxlEditMode';
-                        }
-                        var currentUrl = window.top.location.href;
+                        // var fragment = '';
+                        // if (data.result && data.result.length > 0) {
+                        //     fragment = '#hxlEditMode';
+                        // }
+                        // var currentUrl = window.top.location.href;
                         var newUrl = '/dataset/' + this._datasetName;
-                        window.top.location.href = newUrl + fragment;
+                        //window.top.location.href = newUrl + fragment;
+                        window.top.location.href = newUrl;
 
                         // If we're just adding the fragment (#hash) to the current url the page will not reload
                         // by itself. When we're editing a dataset the current url and the new url are the same.
-                        if (currentUrl && currentUrl.indexOf(newUrl)>0  && fragment) {
-                            window.top.location.reload();
-                        }
+                        // if (currentUrl && currentUrl.indexOf(newUrl)>0  && fragment) {
+                        //     window.top.location.reload();
+                        // }
                     }
                     else {
                         moduleLog.log('Cannot browse to dataset because name is missing');
