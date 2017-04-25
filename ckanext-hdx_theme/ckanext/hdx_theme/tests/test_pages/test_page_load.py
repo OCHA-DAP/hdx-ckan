@@ -52,7 +52,6 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
         umodel.setup()
         ue_model.create_table()
         p_model.create_table()
-        p_model.patch_table()
 
     def test_page_load(self):
         global pages
