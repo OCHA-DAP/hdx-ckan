@@ -36,9 +36,11 @@ def hxl_preview_iframe_url_show(context, data_dict):
         'hdx_domain': urllib.urlencode({'hdx_domain': __get_ckan_domain_without_protocol()}),
         'edit_mode': urllib.urlencode({'editMode': start_edit_mode}),
         'only_view_mode': urllib.urlencode({'onlyViewMode': only_view_mode}),
+        'google_analytics_key': urllib.urlencode({'googleAnalyticsKey': config.get('hdx.analytics.ga.token')}),
+        'mixpanel_key': urllib.urlencode({'mixpanelKey': config.get('hdx.analytics.mixpanel.token')}),
     }
 
-    url = '{hxl_preview_app}/show;{resource_url};{hdx_domain};{resource_view_id};{edit_mode};{only_view_mode}'.format(
+    url = '{hxl_preview_app}/show;{resource_url};{hdx_domain};{resource_view_id};{edit_mode};{only_view_mode};{google_analytics_key};{mixpanel_key}'.format(
         **params)
     return url
 

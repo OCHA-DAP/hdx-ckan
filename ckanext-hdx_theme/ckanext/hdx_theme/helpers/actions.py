@@ -147,10 +147,27 @@ def member_list(context, data_dict=None):
                 for m, u in q.all()]
 
 
+@logic.side_effect_free
 def cached_group_list(context, data_dict):
     # to make things simpler for caching there's no argument passed
     groups = caching.cached_group_list()
     return groups
+
+
+def invalidate_cache_for_groups(context, data_dict):
+    _check_access('invalidate_cache_for_groups', context, data_dict)
+    caching.invalidate_group_caches()
+
+
+@logic.side_effect_free
+def cached_organization_list(context, data_dict):
+    orgs = caching.cached_organization_list()
+    return orgs
+
+
+def invalidate_cache_for_organizations(context, data_dict):
+    _check_access('invalidate_cache_for_organizations', context, data_dict)
+    caching.invalidate_cached_organization_list()
 
 
 def hdx_basic_user_info(context, data_dict):

@@ -16,9 +16,11 @@ def onboarding_followee_list(context, data_dict):
     # TODO check if user is following org&locs
     result = []
 
-    data_filter = {'package_count': True, 'include_extras': True, 'all_fields': True, 'sort': 'package_count desc'}
+    # data_filter = {'package_count': True, 'include_extras': True, 'all_fields': True, 'sort': 'package_count desc'}
 
-    locs = get_action('group_list')(context, data_filter)
+    locs = get_action('cached_group_list')(context, {})
+    locs = sorted(locs, key=lambda elem: elem.get('package_count', 0), reverse=True)
+
     result_aux = []
     i = 1
     for item in locs:
@@ -32,7 +34,9 @@ def onboarding_followee_list(context, data_dict):
                 result_aux.append(create_item(item, type, False))
                 i += 1
 
-    orgs = get_action('organization_list')(context, data_filter)
+    orgs = get_action('cached_organization_list')(context, {})
+    orgs = sorted(orgs, key=lambda elem: elem.get('package_count', 0), reverse=True)
+
     i = 1
     type = 'organization'
     for item in orgs:

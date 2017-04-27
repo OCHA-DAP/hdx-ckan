@@ -80,3 +80,10 @@ It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
 whose full text may be found at:
 
 http://www.fsf.org/licensing/licenses/agpl-3.0.html
+
+
+BrowserStack
+------------
+HDX wish to thank BrowserStack for the kind donation of their software which simplifies cross browser testing of our website.
+
+.. image:: https://github.com/OCHA-DAP/hdx-ckan/raw/dev/browserstack/browserstack.png

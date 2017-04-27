@@ -31,7 +31,12 @@ def strip_accents(s):
 @bcache.cache_region('hdx_memory_cache', 'cached_grp_list')
 def cached_group_list():
     log.info("Creating cache for group list")
-    groups = tk.get_action('group_list')({'user': '127.0.0.1'}, {'all_fields': True, 'include_extras': True})
+    groups = tk.get_action('group_list')({'user': '127.0.0.1'},
+                                         {
+                                             'all_fields': True,
+                                             'include_extras': True,
+                                             'package_count': True
+                                         })
     # for group in groups:
     #     activity_level = next(
     #         (extra.get('value') for extra in group.get('extras', []) if extra.get('key') == 'activity_level'),
@@ -75,3 +80,21 @@ def invalidate_group_caches():
 
 
 group_invalidation_functions = [invalidate_cached_group_list, invalidate_cached_get_group_package_stuff]
+
+
+@bcache.cache_region('hdx_memory_cache', 'cached_organization_list')
+def cached_organization_list():
+    log.info("Creating cache for group list")
+    orgs = tk.get_action('organization_list')({'user': '127.0.0.1'},
+                                              {
+                                                  'all_fields': True,
+                                                  'include_extras': True,
+                                                  'package_count': True,
+                                              })
+
+    return sorted(orgs, key=lambda k: strip_accents(k['display_name']))
+
+
+def invalidate_cached_organization_list():
+    log.info("Invalidating cache for org list")
+    bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_organization_list')

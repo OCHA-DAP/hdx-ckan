@@ -663,7 +663,8 @@ def recompile_everything(context):
 
 
 def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedelay=10000, viewportsize='1200x800'):
-    screenshot_creator = ScreenshotCreator(uri, output_file, selector,
+    quoted_selector = '"{}"'.format(selector)
+    screenshot_creator = ScreenshotCreator(uri, output_file, quoted_selector,
                                            renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
                                            http_timeout=None,
                                            viewportsize=viewportsize, mogrify=True, resize='40%')

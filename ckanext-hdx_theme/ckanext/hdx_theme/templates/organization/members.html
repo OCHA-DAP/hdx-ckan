@@ -238,6 +238,8 @@
 
 {% block scripts2 %}
   {{ super() }}
+  {% resource 'hdx_theme/jquery.expander' %}
+  {% resource 'hdx_theme/hdx_show_more.js' %}
   {% resource 'hdx_theme/organization/members.js' %}
   {% resource 'hdx_theme/search' %}
 {% endblock %}

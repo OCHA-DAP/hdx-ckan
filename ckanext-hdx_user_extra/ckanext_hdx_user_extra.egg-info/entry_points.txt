@@ -1,7 +1,0 @@
-
-        [ckan.plugins]
-        hdx_user_extra=ckanext.hdx_user_extra.plugin:HDX_User_ExtraPlugin
-
-        [paste.paster_command]
-        hdx_user_extra = ckanext.hdx_user_extra.command:InitDBCommand
-    
