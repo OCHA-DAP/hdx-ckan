@@ -36,56 +36,88 @@
     <div id="create-dataset-app">
         <div class="create-step1 ">
             <div class="contribute-splash">
-                <span class="drop-here">
-                    <span class="drop-here-mask" style="display: none;">
-                    </span>
-                    <span class="drop-here-content">
-                        <i class="cloud glyphicon glyphicon-cloud"></i>
-                        <div class="drop-title">
-                            <span class="title1">
-                                Drag and drop file here
-                            </span>
-                            <span class="title2">
-                                Incoming files
-                            </span>
-                        </div>
-                        <div class="drop-description">
-                            <span class="description1">
-                                These files will be attached to one dataset
-                            </span>
-                            <span class="description2">
-                                Drop your files to start uploading
-                            </span>
-                        </div>
-                        <!--<div class="drop-size">* 300 MB per file</div>-->
-                        <div class="drop-separator"> or </div>
-                        <div class="drop-browse">
-                            <label class="browse-button" style="position: relative;">
-                                <span>
-                                    Browse files
+                <div class="contribute-splash-box">
+                    <div class="drop-here" style="width: 544px;">
+                        <span class="drop-here-mask" style="display: none;">
+                        </span>
+                        <span class="drop-here-content">
+                            <img src="/images/add-fulldataset.svg" width="140" height="180" />
+                            <div class="drop-title">
+                                <span class="title1">
+                                    Add full dataset
                                 </span>
-                                <input type="file" name="upload" style="position: absolute; width: 1px; height: 1px; top: 0; opacity: 0; z-index: -1;" value="" class="resource_file_field form-control" multiple />
-                            </label>
+                                <span class="title2">
+                                    Incoming files
+                                </span>
+                            </div>
+                            <div class="drop-description">
+                                <span class="description1">
+                                    Drag and drop files to attach to one dataset
+                                </span>
+                                <span class="description2">
+                                    Drop your files to start uploading
+                                </span>
+                            </div>
+                            <!--<div class="drop-size">* 300 MB per file</div>-->
+                            <div class="drop-separator import-files-from">Import files from: </div>
+                            <div class="drop-alternatives"> <a href="#" class="dropbox">Dropbox</a>  |  <a href="#" class="google-drive">Google Drive</a>  |  <a href="#" class="apis-urls">APIs/URLs</a></div>
+                            <div class="drop-browse">
+                            <div class="drop-separator" style="color: #B6B6B6"> OR </div>
+                                <label class="browse-button" style="position: relative;">
+                                    <span>
+                                        <a class="btn add-dataset-btn">Browse files</a>
+                                    </span>
+                                    <input type="file" name="upload" style="position: absolute; width: 1px; height: 1px; top: 0; opacity: 0; z-index: -1;" value="" class="resource_file_field form-control" multiple />
+                                </label>
+                            </div>
+                        </span>
+                        <div class="drop-details">
+                            <p class="details-title-suitable">This option is suitable if:</p>
+                            <p>- Your data is ready to be shared</p>
+                            <p class="details-title">Supported format:</p>
+                            <p>
+                                We encourage contributions in <strong class="details-title-accented">any common data format</strong>.<br/>
+                                HDX has built-in preview support for <strong>CSV</strong>, <strong>TXT</strong>, <strong>XLS</strong>, and <strong>JSON</strong> formats.
+                            </p>
+                            <p>
+                                <strong style="color: #333333">Map previews</strong> are also possible from geographic data in <strong>zipped shapefile</strong>,
+                                <strong>KML</strong> and <strong>GeoJSON</strong> formats. For more info, read our <a href="/faq#auto-faq-Sharing_Data-What_are_the_recommended_data_formats_-q" target="_blank">FAQ</a>.
+                            </p>
                         </div>
-                        <div class="drop-separator"> or import files from: </div>
-
-                        <div class="drop-alternatives"> <a href="#" class="dropbox">Dropbox</a>  |  <a href="#" class="google-drive">Google Drive</a>  |  <a href="#" class="apis-urls">APIs/URLs</a></div>
-                    </span>
-                </span>
-
-                <div class="drop-details">
-                    <p class="details-title">Supported format:</p>
-                    <p>
-                        We encourage contributions in <strong>any common data format</strong>.<br/>
-                        HDX has built-in preview support for <strong>CSV</strong>, <strong>TXT</strong>, <strong>XLS</strong>, and <strong>JSON</strong> formats.
-                    </p>
-                    <p>
-                        <strong>Map previews</strong> are also possible from geographic data in <strong>zipped shapefile</strong>,
-                        <strong>KML</strong> and <strong>GeoJSON</strong> formats. For more info, read our <a href="/faq#auto-faq-Sharing_Data-What_are_the_recommended_data_formats_-q" target="_blank">FAQ</a>.
-                    </p>
-                    <p>Please limit uploaded files to a maximum of 300MB.</p>
+                    </div>
                 </div>
-
+                <div class="contribute-splash-box" style="padding-left: 25px;">
+                    <div class="drop-here" style="width: 460px;">
+                        <span class="drop-here-mask" style="display: none;">
+                        </span>
+                        <span class="drop-here-content">
+                            <img src="/images/add-metadata-only.svg" width="160" height="110" style="margin-top: 29px; margin-bottom: 40px;" />
+                            <div class="drop-title">
+                                <span class="title1">
+                                    Add metadata-only
+                                </span>
+                                <span class="title2">
+                                    Incoming files
+                                </span>
+                            </div>
+                            <div class="drop-description">
+                                <span class="description1">
+                                    Let others know your data is available
+                                </span>
+                                <br><br><br><br>
+                                <p>Promote your dataset without uploading file(s).</p>
+                                <p>You will receive requests to share your data personally.</p>
+                            </div>
+                            <a class="btn add-dataset-btn add-metadata-btn" style="margin-top: 37px;">Add metadata</a>
+                        </span>
+                        <div class="drop-details">
+                            <p class="details-title-suitable">This option is suitable if:</p>
+                            <p>- You want to be in control of who can access your data</p>
+                            <p>- You are not finished collecting data</p>
+                            <p>- You have a plan to collect data</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="hdx-form container create-step2 {{ 'edit-mode' if edit_mode else '' }}" style="display: none;">
@@ -99,9 +131,18 @@
                 </div>
 
                 <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
+                    {% if data.type == 'hdx-requestdata-metadata-only' %}
+                        <input type="hidden" name="type" value="hdx-requestdata-metadata-only" />
+                    {% endif %}
                     <div class="background-gray">
                         <div class="paddingLeftHack paddingRightHack">
-                                <div class="row form-section">
+                                <div id="hdx_error" class="error-explanation alert alert-error hdx-invisible-element" data-module="hdx_error_block_manager">
+                                    <p>{{ _('The form contains invalid entries. These are highlighted below. Please scroll down and correct them.') }}</p>
+                                    <!--<ul>-->
+                                      <!--<li data-field-label="type of error">type of error: error</li>-->
+                                    <!--</ul>-->
+                                </div>
+                                <div class="row form-section form-resources-section">
                                     <div class="col-xs-3 form-explanation">
                                         <h3>{{ _('Your Files') }}</h3>
                                         <p>{{ _('You can add more resources as needed by clicking on "Add more resources".') }}</p>
@@ -127,12 +168,7 @@
 
                                     <div class="col-xs-9" id="resource-widget">
 
-                                        <div id="hdx_error" class="error-explanation alert alert-error hdx-invisible-element" data-module="hdx_error_block_manager">
-                                            <p>{{ _('The form contains invalid entries. These are highlighted below. Please scroll down and correct them.') }}</p>
-                                            <!--<ul>-->
-                                              <!--<li data-field-label="type of error">type of error: error</li>-->
-                                            <!--</ul>-->
-                                        </div>
+                                        
 
                                         <script type="text/template" id="resource-item-tmpl">
                                             <div class="row">
@@ -262,7 +298,7 @@
                                     </div>
                                 </div>
                                 <section id="contribute-flow-form-body">
-                                    <div class="row form-section">
+                                    <div class="row form-section form-privacy-section">
                                         <div class="col-xs-3">
                                             <h3>Privacy Settings</h3>
                                             <p>You have a choice of sharing your dataset publicly or restricting access to other members of the organisation which owns the dataset.</p>
@@ -415,7 +451,7 @@
                                                     'data-toggle': 'tooltip'}
                                                     %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="data_update_frequency" data-module-required="public">
-                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
+                                            {{ form.select('data_update_frequency', id='field_data_update_frequency', label=_('Expected Update Frequency (?)'), placeholder=_("How often does this data update?"), options=frequencies, selected=data.data_update_frequency, error=errors.data_update_frequency, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}, label_attrs=frequency_attrs) }}
                                             </div>
 
                                             {% set location_list = h.hdx_location_list() %}
@@ -433,9 +469,23 @@
                                                 {{ form.markdown('license_other', id='field_license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                             </div>
 
+                                            {% set field_names_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What are the most important indicators in the dataset?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="field_names" data-module-required="public">
+                                            {{ form.input('field_names', id='field_names', label=_('Field names'), value=data.field_names, error=errors.field_names, classes=['control-full', 'form-group', 'field-names-select'], attrs=field_names_attrs) }}
+                                            </div>
+
+                                            {% set file_types_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What file types does your dataset contains?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="file_types" data-module-required="public">
+                                            {{ form.input('file_types', id='file_types', label=_('File types'), value=data.file_types, error=errors.file_types, classes=['control-full', 'form-group', 'file-types-select'], attrs=file_types_attrs) }}
+                                            </div>
+
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="num_of_rows">
+                                            {{ form.input('num_of_rows', id='num_of_rows', label=_('Number of rows'), value=data.num_of_rows, error=errors.num_of_rows, classes=['control-full', 'form-group', 'num-of-rows-select'], attrs={'class': 'form-control'}) }}
+                                            </div>
+
                                             {% set methodologies = h.hdx_methodology_list() %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="methodology" data-module-required="public" data-module-broadcast_change="true">
-                                                {{ form.select('methodology', id='field_methodology', label=_('Methodology'), placeholder=_("Select methodology"), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                                {{ form.select('methodology', id='field_methodology', label=_('Methodology'), placeholder=_("Select methodology"), options=methodologies, selected=data.methodology, error=errors.methodology, classes=['form-group methodology-select'], attrs={'class':'form-control'}) }}
                                             </div>
                                             <div data-module="hdx_form_element_manager" data-module-element_name="methodology_other" id="methodology-other-define" {% if data.methodology != 'Other' %} style="display:none;" {% endif %}>
                                                 {{ form.markdown('methodology_other', id='field_method_other', label=_('Define Methodology'), placeholder=_('Describe how this data was collected'), value=data.methodology_other, error=errors.methodology_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
@@ -457,7 +507,7 @@
                                               'class':'form-control choices-orange', 'multiple':'true',
                                               'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?'} %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="tag_string">
-                                            {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
+                                            {{ form.input('tag_string', id='field_tag_string', label=_('Tags'), value=data.tag_string, error=errors.tag_string, classes=['control-full', 'form-group', 'tags-select'], attrs=tag_attrs) }}
                                             </div>
 
                                         </div>

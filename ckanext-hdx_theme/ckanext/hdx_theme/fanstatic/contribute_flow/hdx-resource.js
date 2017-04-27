@@ -781,6 +781,21 @@ $(function(){
             browseButton.on('change', function(e){
                 handleFiles(this.files);
             })
+
+            var addMetadataBtn = $('.contribute-splash .add-metadata-btn')
+
+            addMetadataBtn.on('click', function() {
+                this.goToStep2()
+                this._prepareFormForMetadataOnly()
+            }.bind(this))
+
+            var isMetadataOnly = $('input[name=type][value=hdx-requestdata-metadata-only]')
+
+            // For already created datasets, if they are metadata-only adapt
+            // the form
+            if (isMetadataOnly.length === 1) {
+                this._prepareFormForMetadataOnly()
+            }
         },
         initGooglePicker: function() {
             var options = defaultGoogleDriveOptions();
@@ -821,6 +836,68 @@ $(function(){
             $(".content i.close", window.top.document).addClass("white");
             $(".create-step1").hide();
             $(".create-step2").show();
+        },
+        _prepareFormForMetadataOnly() {
+            var formSectionResources = $('.form-resources-section')
+            var privacyPublicRadioBtn = $('.form-privacy-section input[type=radio][value=false]')
+            var privacyPrivateRadioBtn = $('.form-privacy-section input[type=radio][value=true]')
+            var selectMethodology = $('#field_methodology')
+            var methodologySelectModule = $('.methodology-select')
+            var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen')
+            var formBody = $('#contribute-flow-form-body')
+            var selectUpdateFrequency = $('#field_data_update_frequency')
+            var updateFrequencySelectModule = $('.update-frequency-select')
+            var currentlySelectedUpdateFrequency = updateFrequencySelectModule.find('.select2-chosen')
+            var selectTagsModule = $('.tags-select')
+            var licenseField = $('.special-license')
+            var selectFieldNames = $('.field-names-select')
+            var selectFileTypes = $('.file-types-select')
+            var selectNumOfRows = $('.num-of-rows-select')
+
+            // We set the type so that the right schema is used in the backend
+            formBody.append('<input type=hidden name=type value=hdx-requestdata-metadata-only />')
+
+            // Resources are not required for metadata-only datasets
+            formSectionResources.hide()
+
+            // Hides the horizontal line
+            formSectionResources.next().hide()
+
+            // Metadata-only datasets are public only, so we select the "Public"
+            // radio button and disable the "Private" one
+            privacyPublicRadioBtn.click()
+            privacyPrivateRadioBtn.attr('disabled', 'disabled')
+
+            // Add additional field to methodology options, since this is an
+            // optional field
+            var option = new Option('None', 'None')
+            selectMethodology.prepend($(option))
+            selectMethodology.val('None')
+
+            currentlySelectedMethodology.text('None')
+
+            // Methodology and Update frequency fields are not required in a
+            // metadata-only dataset
+            methodologySelectModule.removeClass('required')
+            updateFrequencySelectModule.removeClass('required')
+
+            // For some reason, when editing a dataset, the class wasn't
+            // applied, that's why the timeout is needed.
+            setTimeout(function() {
+                selectTagsModule.addClass('required')
+            }, 500)
+
+            selectUpdateFrequency.val('-1')
+            currentlySelectedUpdateFrequency.text('None')
+
+            // License is not required as well
+            licenseField.hide()
+
+            // These are already created fields in the DOM, but they are
+            // initially hidden, and are only shown for metadata-only datasets
+            selectFieldNames.show()
+            selectFileTypes.show()
+            selectNumOfRows.show()
         }
     });
 
