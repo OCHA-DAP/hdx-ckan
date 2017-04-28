@@ -72,3 +72,11 @@ ua-parser==0.7.2
 # Below lines are needed for ckanext-powerview
 ckantoolkit==0.0.2
 -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.0.2#egg=ckanext-powerview
+
+# request data plugin
+email_validator==1.0.2
+timeago==1.0.7
+-e git+https://github.com/ViderumGlobal/ckanext-requestdata.git@bae5a8ba868de78ed21a5e435ed83704d1ee915b#egg=ckanext-requestdata
+
+# HDX request data plugin
+-e git+https://github.com/OCHA-DAP/hdx-request-data.git@1.0.0#egg=ckanext-hdx_request_data
