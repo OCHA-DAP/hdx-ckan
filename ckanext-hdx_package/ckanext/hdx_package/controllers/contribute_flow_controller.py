@@ -173,7 +173,7 @@ class ContributeFlowController(base.BaseController):
     def _prepare_data_for_saving(self, context, data_dict, package_type):
         data_dict = clean_dict(dict_fns.unflatten(
             tuplize_dict(parse_params(request.POST))))
-        data_dict['type'] = package_type
+        data_dict['type'] = package_type or data_dict.get('type')
 
         del data_dict['save']
 
