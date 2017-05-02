@@ -249,10 +249,11 @@ ytp.requests.redirect_to_src_page = true
 # The resource for topline data for active locations
 hdx.active_locations_reliefweb.resource_id = 9a698057-71b4-47b0-9d2b-753026ea8afa
 
-#mailchimp settings - update your prod.ini with real ones
+# mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp = false
 hdx.mailchimp.list.newsletter = aaa-fake
 hdx.mailchimp.list.newuser = bbb-fake
 hdx.mailchimp.api.key = ccc-fake
 
-
+# hdx_requestdata setting
+hdx_portal = True
