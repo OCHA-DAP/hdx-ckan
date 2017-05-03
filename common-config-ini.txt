@@ -254,6 +254,3 @@ hdx.mailchimp = false
 hdx.mailchimp.list.newsletter = aaa-fake
 hdx.mailchimp.list.newuser = bbb-fake
 hdx.mailchimp.api.key = ccc-fake
-
-# hdx_requestdata setting
-hdx_portal = True
