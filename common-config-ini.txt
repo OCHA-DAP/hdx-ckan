@@ -80,7 +80,7 @@ ckan.site_id = default
 #ckan.plugins_deprecated = hdx_orgs register metadata_fields dataset_auth ungroups hdx_theme stats text_preview recline_preview
 #changed with mail validation ckan.plugins = hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_users hdx_theme stats text_preview recline_preview datastore
 
-ckan.plugins = hdx_hxl_preview hdx_request_data requestdata ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users stats resource_proxy text_view recline_view datastore hdx_theme
+ckan.plugins = hdx_hxl_preview hdx_request_data requestdata ytp_request powerview hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats resource_proxy text_view recline_view datastore
 
 ckan.views.default_views = image_view recline_view text_view
 
@@ -249,10 +249,11 @@ ytp.requests.redirect_to_src_page = true
 # The resource for topline data for active locations
 hdx.active_locations_reliefweb.resource_id = 9a698057-71b4-47b0-9d2b-753026ea8afa
 
-#mailchimp settings - update your prod.ini with real ones
+# mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp = false
 hdx.mailchimp.list.newsletter = aaa-fake
 hdx.mailchimp.list.newuser = bbb-fake
 hdx.mailchimp.api.key = ccc-fake
 
-
+# hdx_requestdata setting
+hdx_portal = True
