@@ -41,6 +41,7 @@
         <div class="header-user-box pull-right">
           {% if c.userobj %}
             <span class="dropdown">
+              {% block header_request_data_notification %}{% endblock %}
               <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
                 <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
               </a>
