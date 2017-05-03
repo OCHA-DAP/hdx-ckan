@@ -68,7 +68,9 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
         #                   not self.__is_hxl_preview_config_saved(resource_view_dict) else 'false'
 
         return {
-            'hxl_preview_full_url': get.hxl_preview_iframe_url_show({}, data_dict)
+            'hxl_preview_full_url': get.hxl_preview_iframe_url_show({
+                'is_logged_in': True if c.user else False
+            }, data_dict)
         }
 
     # def __is_hxl_preview_config_saved(self, resource_view_dict):
