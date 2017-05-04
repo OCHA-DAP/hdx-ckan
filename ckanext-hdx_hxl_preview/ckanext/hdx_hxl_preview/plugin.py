@@ -51,13 +51,13 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
 
         return {
             'name': 'hdx_hxl_preview',
-            'title': 'HXL Preview',
+            'title': 'Smart Charts',
             'filterable': False,
             'preview_enabled': True,
             'schema': schema,
             'requires_datastore': False,
             'iframed': False,
-            'default_title': _('HXL Preview')
+            'default_title': _('Smart Charts')
         }
 
     def setup_template_variables(self, context, data_dict):
