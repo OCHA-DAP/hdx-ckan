@@ -15,32 +15,23 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 pages = [
     {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
      'action': 'register', 'usertype': None},
-    {'controller': 'user',
-     'action': 'login', 'usertype': None},
+    {'controller': 'user', 'action': 'login', 'usertype': None},
     {'controller': 'ckanext.hdx_users.controllers.login_controller:LoginController',
      'action': 'contribute', 'usertype': None},
-    {'controller': 'package',
-     'action': 'search', 'usertype': 'all'},
-    {'controller': 'group',
-     'action': 'index', 'usertype': 'all'},
-    {'controller': 'organization',
-     'action': 'index', 'usertype': 'all'},
-    {'controller': 'home',
-     'action': 'about', 'usertype': 'all'},
-    {'controller': 'user',
-     'action': 'dashboard_organizations', 'usertype': 'all'},
+    {'controller': 'package', 'action': 'search', 'usertype': 'all'},
+    {'controller': 'group', 'action': 'index', 'usertype': 'all'},
+    {'controller': 'organization', 'action': 'index', 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
+    {'controller': 'user', 'action': 'dashboard_organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard_datasets', 'usertype': 'all'},
-    {'controller': 'user',
-     'action': 'dashboard_groups', 'usertype': 'all'},
+    {'controller': 'user', 'action': 'dashboard_groups', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_package.controllers.dataset_controller:DatasetController',
      'action': 'preselect', 'usertype': 'all'},
-    {'controller': 'user',
-     'action': 'dashboard_groups', 'usertype': 'all'},
-    {'controller': 'user', 'action': 'read',
-     'has_id': True, 'usertype': 'all'}
+    {'controller': 'user', 'action': 'dashboard_groups', 'usertype': 'all'},
+    {'controller': 'user', 'action': 'read', 'has_id': True, 'usertype': 'all'}
 ]
 
 
@@ -48,17 +39,19 @@ class TestPageLoad(hdx_test_base.HdxBaseTest):
     @classmethod
     def _load_plugins(cls):
         hdx_test_base.load_plugin(
-            'hdx_search hdx_org_group hdx_package hdx_users hdx_user_extra hdx_theme')
+            'hdx_search hdx_org_group hdx_package hdx_users hdx_user_extra hdx_pages hdx_theme')
 
     @classmethod
     def setup_class(cls):
 
         import ckanext.hdx_users.model as umodel
         import ckanext.hdx_user_extra.model as ue_model
+        import ckanext.hdx_pages.model as p_model
 
         super(TestPageLoad, cls).setup_class()
         umodel.setup()
         ue_model.create_table()
+        p_model.create_table()
 
     def test_page_load(self):
         global pages

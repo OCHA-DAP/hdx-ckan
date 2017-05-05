@@ -29,8 +29,8 @@ def _check_has_hxl_tags(url):
     params = {
         'url': url
     }
-
-    r = requests.get(url_wo_params, params=params, timeout=12, verify=False)
+    log.info("HXL Proxy request url: " + str(url_wo_params) + str(params))
+    r = requests.get(url_wo_params, params=params, timeout=30, verify=False)
     log.info("Querying url: {}".format(r.url))
 
     r.raise_for_status()
@@ -71,29 +71,33 @@ def package_hxl_update(context, data_dict):
 
     new_views = []
 
-    if not package_dict.get('private', True) and \
-                    'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
+    if not package_dict.get('private', True):
+            # and 'hxl' in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
         for resource in package_dict.get('resources', []):
             view_list = _get_action('resource_view_list')(context, {'id': resource.get('id')})
             view = _view_already_exists(view_list)
-            if _check_has_hxl_tags(resource.get('url','')):
+            if _check_has_hxl_tags(resource.get('url', '')):
                 if not view:
                     resource_view_dict = {
                         'resource_id': resource.get('id'),
-                        'title': 'HXL Preview',
+                        'title': 'Smart Charts',
                         'description': '',
                         'view_type': 'hdx_hxl_preview'
                     }
                     new_view = _get_action('resource_view_create')(context, resource_view_dict)
                     new_views.append(new_view)
-                else:
-                    # if there's no hxl_preview_config saved we want to return this view as well.
-                    # This will force the hxl preview edit popup to show up for existing resource with no saved configs
-                    if not (view.get('hxl_preview_config') and json.loads(view.get('hxl_preview_config'))):
-                        new_views.append(view)
+                # else:
+                #     # if there's no hxl_preview_config saved we want to return this view as well.
+                #     # This will force the hxl preview edit popup to show up for existing resource with no saved configs
+                #     if not (view.get('hxl_preview_config') and json.loads(view.get('hxl_preview_config'))):
+                #         new_views.append(view)
 
             elif view:
                 _get_action('resource_view_delete')(context, {'id': view.get('id')})
+
+    if new_views and 'hxl' not in [tag.get('name', '').lower() for tag in package_dict.get('tags', [])]:
+        package_dict['tags'].append({'name': u'hxl'})
+        _get_action('package_patch')(context, {'id': package_id, 'tags': package_dict.get('tags')})
 
     return new_views
 
