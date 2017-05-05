@@ -878,12 +878,12 @@ $(function(){
 
             // Methodology and Update frequency fields are not required in a
             // metadata-only dataset
-            methodologySelectModule.removeClass('required')
-            updateFrequencySelectModule.removeClass('required')
 
             // For some reason, when editing a dataset, the class wasn't
             // applied, that's why the timeout is needed.
             setTimeout(function() {
+                methodologySelectModule.removeClass('required')
+                updateFrequencySelectModule.removeClass('required')
                 selectTagsModule.addClass('required')
             }, 500)
 
