@@ -76,7 +76,7 @@ ckantoolkit==0.0.2
 # request data plugin
 email_validator==1.0.2
 timeago==1.0.7
--e git+https://github.com/ViderumGlobal/ckanext-requestdata.git@v1.3#egg=ckanext-requestdata
+-e git+https://github.com/ViderumGlobal/ckanext-requestdata.git@v1.4#egg=ckanext-requestdata
 
 # HDX request data plugin
 -e git+https://github.com/OCHA-DAP/hdx-request-data.git@1.0.0#egg=ckanext-hdx_request_data
