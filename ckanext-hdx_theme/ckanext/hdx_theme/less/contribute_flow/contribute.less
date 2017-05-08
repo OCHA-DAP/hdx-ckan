@@ -96,7 +96,7 @@ html {
 
   @dropHereSize: 500px;
   .drop-here {
-    height: 710px;
+    height: 730px;
     border-radius: 20px;
     background-color: @whiteColor;
     text-align: center;
@@ -156,17 +156,23 @@ html {
     }
 
     .drop-title {
-      .gothamBoldFont(30px);
-      font-size: 30px;
+      .gothamBoldFont(24px);
+      text-transform: uppercase;
 
       .title2 {
         display: none;
       }
     }
 
+    .description-headline {
+      .gothamBoldFont(16px);
+      margin-top: 13px;
+    }
+
     .drop-description {
-      .gothamBookFont(14px);
-      margin-top: 10px;
+      .gothamBookFont(15px);
+      margin-top: 14px;
+      line-height: 1.4;
       .description2 {
         display: none;
       }
@@ -174,6 +180,7 @@ html {
 
     .drop-browse {
       color: @blueColor;
+      margin-top: 35px;
       span {
         .gothamBookFont(15px);
         z-index: 1;
@@ -197,6 +204,7 @@ html {
 
     .drop-alternatives {
       .gothamBookFont(15px);
+      margin-top: 10px;
     }
 
     .import-files-from {

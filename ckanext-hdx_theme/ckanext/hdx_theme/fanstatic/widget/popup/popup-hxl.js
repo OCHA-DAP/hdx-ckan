@@ -9,9 +9,9 @@ $(document).ready(function(){
     $('#hxl-preview-edit-trigger').on('click', function(){
         startEditModePopup();
     });
-    // if (window.location.hash == '#hxlEditMode') {
-    //     startEditModePopup();
-    // }
+    if (window.location.hash == '#hxlEditMode') {
+        startEditModePopup();
+    }
 
 
     $(document.body).on('hxlPreviewSaved', function(event){

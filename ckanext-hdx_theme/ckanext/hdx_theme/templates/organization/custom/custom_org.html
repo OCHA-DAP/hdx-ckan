@@ -22,6 +22,7 @@
                     {{ h.build_nav_icon('organization_activity', _('Activity Stream'), id=c.group_dict.name, class_='hdx-tab-button') }}
                     {% if c.user %}
                         {{ h.build_nav_icon('organization_members', _('Members'), id=c.group_dict.name, class_='hdx-tab-button') }}
+                        {{ h.build_nav_icon('requestdata_organization_requests', _('Requested Data'), id=c.group_dict.name) }}
                     {% endif %}
                {% endblock %}
             </ul>

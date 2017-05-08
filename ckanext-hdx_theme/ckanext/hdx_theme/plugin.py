@@ -138,9 +138,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         map.connect(
             '/widget/WFP', controller='ckanext.hdx_theme.controllers.widget_WFP:WidgetWFPController', action='show')
 
-        map.connect('about', '/about', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='about')
-
-        map.connect('/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+        map.connect(
+            '/faq', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
         map.connect(
             '/faq/contact_us', controller='ckanext.hdx_theme.controllers.faq:FaqController', action='contact_us')
 
