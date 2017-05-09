@@ -29,8 +29,8 @@ def _check_has_hxl_tags(url):
     params = {
         'url': url
     }
-
-    r = requests.get(url_wo_params, params=params, timeout=12, verify=False)
+    log.info("HXL Proxy request url: " + str(url_wo_params) + str(params))
+    r = requests.get(url_wo_params, params=params, timeout=30, verify=False)
     log.info("Querying url: {}".format(r.url))
 
     r.raise_for_status()
