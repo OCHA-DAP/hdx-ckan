@@ -223,9 +223,10 @@ class DatasetController(PackageController):
                 return render('organization/request_mem_or_org.html')
                 # If there's an org and the user is not a member of this org
                 # redirect back to org select
-                this_org = request.params['organization_id']
-                if this_org in user_orgs:
-                    return render('organization/request_mem_or_org.html')
+                # commented by Dan after checking code: this code was never run
+                # this_org = request.params['organization_id']
+                # if this_org in user_orgs:
+                #     return render('organization/request_mem_or_org.html')
         except:
             return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
                                       action='contribute'))
@@ -781,16 +782,18 @@ class DatasetController(PackageController):
                     # c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                     c.default_view = _default_view
                     c.hxl_preview_urls = {
-                        'onlyView': get_action('hxl_preview_iframe_url_show')({}, {
+                        'onlyView': get_action('hxl_preview_iframe_url_show')({
+                            'is_logged_in': True if c.user else False
+                        }, {
                             'resource': _default_view.get('resource'),
                             'resource_view': _default_view.get('view'),
                             'hxl_preview_mode': 'onlyView'
-                        }),
-                        'edit': get_action('hxl_preview_iframe_url_show')({}, {
-                            'resource': _default_view.get('resource'),
-                            'resource_view': _default_view.get('view'),
-                            'hxl_preview_mode': 'edit'
                         })
+                        # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
+                        #     'resource': _default_view.get('resource'),
+                        #     'resource_view': _default_view.get('view'),
+                        #     'hxl_preview_mode': 'edit'
+                        # })
                     }
                     return render('indicator/hdx-hxl-read.html')
             if int(c.pkg_dict['indicator']):

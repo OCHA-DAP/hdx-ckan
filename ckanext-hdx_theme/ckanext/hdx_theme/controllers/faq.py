@@ -49,6 +49,10 @@ class FaqController(base.BaseController):
 
         return base.render('faq/main.html', extra_vars=template_data)
 
+    def about(self):
+        import ckan.lib.helpers as h
+        return h.redirect_to(controller='ckanext.hdx_theme.controllers.faq:FaqController', action='show')
+
     def contact_us(self):
         '''
         Send a contact request form
