@@ -20,9 +20,12 @@ class MailerException(Exception):
     pass
 
 
+FOOTER = '''<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p><p><a href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315">Sign up for our newsletter</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'''
+
+
 def add_msg_niceties(body, footer=None):
     if not footer:
-        footer = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'
+        footer = FOOTER
     content = u'''
     {body}
     {footer}'''.format(body=body, footer=footer)
@@ -51,8 +54,8 @@ def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_
         for r in recipients_list:
             recipient_email_list.append(r.get('email'))
             recipient += u"%s <%s> , " % (r.get('display_name'), r.get('email'))
-    # else:
-        #no recipient list provided
+            # else:
+            # no recipient list provided
 
     msg['To'] = Header(recipient, 'utf-8')
     if bcc_recipients_list:
@@ -114,10 +117,12 @@ def _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_
         smtp_connection.quit()
 
 
-def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_email=None, bcc_recipients_list=None, footer=None, headers={}):
+def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_email=None, bcc_recipients_list=None,
+                   footer=None, headers={}):
     if recipients_list is None and bcc_recipients_list is None:
         raise MailerException('There are no recipients to send email')
-    return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list, footer=footer, headers=headers, sender_email=sender_email)
+    return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list,
+                           footer=footer, headers=headers, sender_email=sender_email)
 
     # recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
     #                        sender_url=g.site_url, subject=subject, body=body, headers=headers,
