@@ -786,7 +786,7 @@ $(function(){
 
             addMetadataBtn.on('click', function() {
                 this.goToStep2()
-                this._prepareFormForMetadataOnly()
+                this._prepareFormForMetadataOnly({isEdit: false})
             }.bind(this))
 
             var isMetadataOnly = $('input[name=type][value=hdx-requestdata-metadata-only]')
@@ -794,7 +794,7 @@ $(function(){
             // For already created datasets, if they are metadata-only adapt
             // the form
             if (isMetadataOnly.length === 1) {
-                this._prepareFormForMetadataOnly()
+                this._prepareFormForMetadataOnly({isEdit: true})
             }
         },
         initGooglePicker: function() {
@@ -837,7 +837,7 @@ $(function(){
             $(".create-step1").hide();
             $(".create-step2").show();
         },
-        _prepareFormForMetadataOnly() {
+        _prepareFormForMetadataOnly(data) {
             var formSectionResources = $('.form-resources-section')
             var privacyPublicRadioBtn = $('.form-privacy-section input[type=radio][value=false]')
             var privacyPrivateRadioBtn = $('.form-privacy-section input[type=radio][value=true]')
@@ -853,6 +853,7 @@ $(function(){
             var selectFieldNames = $('.field-names-select')
             var selectFileTypes = $('.file-types-select')
             var selectNumOfRows = $('.num-of-rows-select')
+            var isEdit = data.isEdit
 
             // We set the type so that the right schema is used in the backend
             formBody.append('<input type=hidden name=type value=hdx-requestdata-metadata-only />')
@@ -868,13 +869,17 @@ $(function(){
             privacyPublicRadioBtn.click()
             privacyPrivateRadioBtn.attr('disabled', 'disabled')
 
-            // Add additional field to methodology options, since this is an
-            // optional field
-            var option = new Option('None', 'None')
-            selectMethodology.prepend($(option))
-            selectMethodology.val('None')
+            if (!isEdit) {
+                // Add additional field to methodology options, since this is an
+                // optional field
+                var option = new Option('None', 'None')
+                selectMethodology.prepend($(option))
+                selectMethodology.val('None')
 
-            currentlySelectedMethodology.text('None')
+                currentlySelectedMethodology.text('None')
+                selectUpdateFrequency.val('-1')
+                currentlySelectedUpdateFrequency.text('None')
+            }
 
             // Methodology and Update frequency fields are not required in a
             // metadata-only dataset
@@ -887,8 +892,6 @@ $(function(){
                 selectTagsModule.addClass('required')
             }, 500)
 
-            selectUpdateFrequency.val('-1')
-            currentlySelectedUpdateFrequency.text('None')
 
             // License is not required as well
             licenseField.hide()
