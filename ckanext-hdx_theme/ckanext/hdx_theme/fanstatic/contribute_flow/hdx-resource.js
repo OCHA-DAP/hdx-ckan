@@ -839,8 +839,8 @@ $(function(){
         },
         _prepareFormForMetadataOnly(data) {
             var formSectionResources = $('.form-resources-section')
-            var privacyPublicRadioBtn = $('.form-privacy-section input[type=radio][value=false]')
-            var privacyPrivateRadioBtn = $('.form-privacy-section input[type=radio][value=true]')
+            var formSectionPrivacy = $('.form-privacy-section')
+            var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=false]')
             var selectMethodology = $('#field_methodology')
             var methodologySelectModule = $('.methodology-select')
             var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen')
@@ -867,7 +867,7 @@ $(function(){
             // Metadata-only datasets are public only, so we select the "Public"
             // radio button and disable the "Private" one
             privacyPublicRadioBtn.click()
-            privacyPrivateRadioBtn.attr('disabled', 'disabled')
+            formSectionPrivacy.hide()
 
             if (!isEdit) {
                 // Add additional field to methodology options, since this is an
