@@ -742,7 +742,7 @@ $(function(){
                     }.bind(this));
             }.bind(this));
 
-            var widget = $(".contribute-splash .drop-here"),
+            var widget = $(".contribute-splash .drop-here.full-dataset-box"),
                 mask = widget.find(".drop-here-mask"),
                 browseButton = $(".contribute-splash .browse-button input[type='file']");
 
