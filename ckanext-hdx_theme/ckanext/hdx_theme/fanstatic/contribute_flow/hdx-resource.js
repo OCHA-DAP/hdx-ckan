@@ -870,28 +870,23 @@ $(function(){
             formSectionPrivacy.hide()
 
             if (!isEdit) {
-                // Add additional field to methodology options, since this is an
-                // optional field
-                var option = new Option('None', 'None')
-                selectMethodology.prepend($(option))
                 selectMethodology.val('None')
-
                 currentlySelectedMethodology.text('None')
                 selectUpdateFrequency.val('-1')
                 currentlySelectedUpdateFrequency.text('None')
             }
 
-            // Methodology and Update frequency fields are not required in a
-            // metadata-only dataset
-
             // For some reason, when editing a dataset, the class wasn't
             // applied, that's why the timeout is needed.
             setTimeout(function() {
+
+                // Methodology and Update frequency fields are not required in a
+                // metadata-only dataset
                 methodologySelectModule.removeClass('required')
                 updateFrequencySelectModule.removeClass('required')
+
                 selectTagsModule.addClass('required')
             }, 500)
-
 
             // License is not required as well
             licenseField.hide()

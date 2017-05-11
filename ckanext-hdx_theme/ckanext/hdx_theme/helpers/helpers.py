@@ -593,7 +593,7 @@ def hdx_license_list():
 
 
 def hdx_methodology_list():
-    result = [{'value': 'Census', 'text': 'Census'}, {'value': 'Sample Survey', 'text': 'Sample Survey'},
+    result = [{'value': 'None', 'text': 'None'}, {'value': 'Census', 'text': 'Census'}, {'value': 'Sample Survey', 'text': 'Sample Survey'},
               {'value': 'Direct Observational Data/Anecdotal Data', 'text': 'Direct Observational Data/Anecdotal Data'},
               {'value': 'Registry', 'text': 'Registry'}, {'value': 'Other', 'text': 'Other'}]
     return result
@@ -621,7 +621,7 @@ def hdx_tag_list():
 
 
 def hdx_frequency_list():
-    result = [{'value': '-1', 'text': 'None'}, {'value': '1', 'text': 'Every day'}, {'value': '7', 'text': 'Every week'},
+    result = [{'value': 'none', 'text': 'None'}, {'value': '1', 'text': 'Every day'}, {'value': '7', 'text': 'Every week'},
               {'value': '14', 'text': 'Every two weeks'}, {'value': '30', 'text': 'Every month'}, {'value': '90', 'text': 'Every three months'},
               {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'}, {'value': '0', 'text': 'Never'}, ]
     return result
