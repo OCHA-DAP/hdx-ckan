@@ -16,7 +16,7 @@ _MESSAGE_MEMBERSHIP_REQUEST = \
     - Editor: The user can add, edit and delete datasets, but not manage organisation membership. <br/>
     - Member: The user can view the organisation's private datasets, but not add new datasets or manage membership.
     <br/><br/>
-    The message has been sent to all the admins of the Humanitarian Exchange Language (HXL) organisation on HDX.
+    The message has been sent to all the admins of the {org_title} organisation on HDX.
     <br/><br/>
     You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.
     <br/><br/>
