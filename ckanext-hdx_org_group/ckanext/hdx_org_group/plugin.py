@@ -135,7 +135,13 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('organization_members', '/organization/members/{id}',
                     controller='ckanext.hdx_org_group.controllers.member_controller:HDXOrgMemberController',
                     action='members')
+        # map.connect('organization_activity', '/organization/activity/{id}',
+        #             controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+        #             action='activity_stream')
         map.connect('organization_activity', '/organization/activity/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='activity_stream')
+        map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='activity_stream')
         return map
@@ -187,6 +193,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     action='activity_stream'
                     # conditions={'function': organization_controller.is_not_custom}
                     )
+        map.connect('organization_activity_offset', '/organization/activity/{id}/{offset}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='activity_stream')
         # map.connect('custom_org_activity', '/organization/activity/{id}',
         #             controller='ckanext.hdx_org_group.controllers.custom_org_controller:CustomOrgController',
         #             action='activity_stream')
