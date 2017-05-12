@@ -49,8 +49,11 @@
 					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
 					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it public') }}</a></div>
 				{% else %}
-					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
-					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
+					<div id="private_block"><span id="visibility">{{ _('Public') }}</span>
+          {# Metadata-only datasets are public, so this option is only for full datasets #}
+          {% if pkg_dict.type == 'dataset' %}
+            - <a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
+          {% endif %}
 				{% endif %}
 <!-- changed as per #4056
 				{% set locale = h.dump_json({'content': _('Are you sure? This will affect whether this data is visible to everyone')}) %}

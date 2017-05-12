@@ -742,7 +742,7 @@ $(function(){
                     }.bind(this));
             }.bind(this));
 
-            var widget = $(".contribute-splash .drop-here"),
+            var widget = $(".contribute-splash .drop-here.full-dataset-box"),
                 mask = widget.find(".drop-here-mask"),
                 browseButton = $(".contribute-splash .browse-button input[type='file']");
 
@@ -839,8 +839,8 @@ $(function(){
         },
         _prepareFormForMetadataOnly(data) {
             var formSectionResources = $('.form-resources-section')
-            var privacyPublicRadioBtn = $('.form-privacy-section input[type=radio][value=false]')
-            var privacyPrivateRadioBtn = $('.form-privacy-section input[type=radio][value=true]')
+            var formSectionPrivacy = $('.form-privacy-section')
+            var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=false]')
             var selectMethodology = $('#field_methodology')
             var methodologySelectModule = $('.methodology-select')
             var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen')
@@ -867,31 +867,26 @@ $(function(){
             // Metadata-only datasets are public only, so we select the "Public"
             // radio button and disable the "Private" one
             privacyPublicRadioBtn.click()
-            privacyPrivateRadioBtn.attr('disabled', 'disabled')
+            formSectionPrivacy.hide()
 
             if (!isEdit) {
-                // Add additional field to methodology options, since this is an
-                // optional field
-                var option = new Option('None', 'None')
-                selectMethodology.prepend($(option))
                 selectMethodology.val('None')
-
                 currentlySelectedMethodology.text('None')
                 selectUpdateFrequency.val('-1')
                 currentlySelectedUpdateFrequency.text('None')
             }
 
-            // Methodology and Update frequency fields are not required in a
-            // metadata-only dataset
-
             // For some reason, when editing a dataset, the class wasn't
             // applied, that's why the timeout is needed.
             setTimeout(function() {
+
+                // Methodology and Update frequency fields are not required in a
+                // metadata-only dataset
                 methodologySelectModule.removeClass('required')
                 updateFrequencySelectModule.removeClass('required')
+
                 selectTagsModule.addClass('required')
             }, 500)
-
 
             // License is not required as well
             licenseField.hide()
