@@ -40,7 +40,9 @@
   <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads across all files in the last 2 weeks') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
 {% endif %}
 
-{% if package.data_update_frequency  %}
+{% if package.type == 'hdx-requestdata-metadata-only'  %}
+  <li class="label-icons"><span class="download-counts">{{ _('This dataset has restrictive access') }}</span></li>
+{% elif package.type == 'dataset' and package.data_update_frequency %}
   <li class="label-icons"><span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }} </span></li>
 {% endif %}
 
