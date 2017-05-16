@@ -65,94 +65,96 @@ html > .contribute-body > .contribute-main .create-step1 {
   position: relative;
 }
 html > .contribute-body > .contribute-main .create-step1 .contribute-splash {
-  position: fixed;
+  position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translate(0, -50%);
 }
 html > .contribute-body > .contribute-main > div {
   height: 100%;
   min-height: 760px;
 }
-.contribute-splash-box {
-  display: table-cell;
+.contribute-splash {
+  width: 100%;
+  min-height: 760px;
 }
-.contribute-splash-box .drop-here {
-  height: 730px;
-  border-radius: 20px;
+.contribute-splash .drop-here {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  transform: translate(-50%, 0);
+  height: 500px;
+  width: 500px;
+  border-radius: 50%;
   background-color: #fff;
   text-align: center;
-  color: #B6B6B6;
+  color: #cccccc;
   font-size: 18px;
   padding: 40px;
   line-height: 1;
 }
-.contribute-splash-box .drop-here .drop-here-mask {
+.contribute-splash .drop-here .drop-here-mask {
   position: absolute;
   z-index: 99;
   height: 100%;
   width: 100%;
   top: 0;
 }
-.contribute-splash-box .drop-here.drop-incoming {
+.contribute-splash .drop-here .drop-here-content {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  transform: translate(0, -50%);
+}
+.contribute-splash .drop-here.drop-incoming {
   background-color: #007CE0;
   color: #fff;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-title .title1 {
+.contribute-splash .drop-here.drop-incoming .drop-title .title1 {
   display: none;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-title .title2 {
+.contribute-splash .drop-here.drop-incoming .drop-title .title2 {
   display: block;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-description .description1 {
-  visibility: hidden;
+.contribute-splash .drop-here.drop-incoming .drop-description .description1 {
+  display: none;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-description .description2 {
+.contribute-splash .drop-here.drop-incoming .drop-description .description2 {
   display: block;
-  margin-top: 4px;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-size {
+.contribute-splash .drop-here.drop-incoming .drop-size {
   display: none;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-separator {
+.contribute-splash .drop-here.drop-incoming .drop-separator {
   display: none;
 }
-.contribute-splash-box .drop-here.drop-incoming .drop-alternatives {
+.contribute-splash .drop-here.drop-incoming .drop-alternatives {
   display: none;
 }
-.contribute-splash-box .drop-here .cloud {
+.contribute-splash .drop-here .cloud {
   font-size: 160px;
 }
-.contribute-splash-box .drop-here .drop-title {
+.contribute-splash .drop-here .drop-title {
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
-  font-size: 24px;
-  text-transform: uppercase;
+  font-size: 30px;
 }
-.contribute-splash-box .drop-here .drop-title .title2 {
+.contribute-splash .drop-here .drop-title .title2 {
   display: none;
 }
-.contribute-splash-box .drop-here .description-headline {
-  font-family: 'Gotham-Bold', sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  margin-top: 13px;
-}
-.contribute-splash-box .drop-here .drop-description {
+.contribute-splash .drop-here .drop-description {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 15px;
-  margin-top: 14px;
-  line-height: 1.4;
+  margin-top: 10px;
 }
-.contribute-splash-box .drop-here .drop-description .description2 {
+.contribute-splash .drop-here .drop-description .description2 {
   display: none;
 }
-.contribute-splash-box .drop-here .drop-browse {
+.contribute-splash .drop-here .drop-browse {
   color: #007CE0;
-  margin-top: 35px;
 }
-.contribute-splash-box .drop-here .drop-browse span {
+.contribute-splash .drop-here .drop-browse span {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 15px;
@@ -160,54 +162,49 @@ html > .contribute-body > .contribute-main > div {
   cursor: pointer;
   text-decoration: underline;
 }
-.contribute-splash-box .drop-here .drop-browse .browse-button:after {
+.contribute-splash .drop-here .drop-browse .browse-button:after {
   content: "";
 }
-.contribute-splash-box .drop-here .drop-size {
+.contribute-splash .drop-here .drop-size {
   margin-top: 10px;
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 16px;
 }
-.contribute-splash-box .drop-here .drop-separator {
-  margin: 20px 0;
-  font-family: 'Gotham-Book', sans-serif;
+.contribute-splash .drop-here .drop-separator {
+  margin: 10px 0;
+  font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
 }
-.contribute-splash-box .drop-here .drop-alternatives {
+.contribute-splash .drop-here .drop-alternatives {
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 15px;
-  margin-top: 10px;
 }
-.contribute-splash-box .drop-here .import-files-from {
-  margin-top: 25px;
-}
-.contribute-splash-box .drop-details {
+.contribute-splash .drop-details {
+  position: absolute;
+  top: 560px;
+  width: 460px;
+  left: 50%;
+  transform: translate(-50%, 0);
   text-align: center;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 14px;
-  color: #4e4e4e;
 }
-.contribute-splash-box .drop-details .details-title,
-.contribute-splash-box .drop-details .details-title-suitable {
-  color: #333333;
+.contribute-splash .drop-details .details-title {
+  color: #888888;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 700;
-  font-size: 17px;
-  margin-top: 30px;
+  font-size: 20px;
 }
-.contribute-splash-box .drop-details strong {
-  color: #007CE0;
+.contribute-splash .drop-details strong {
+  color: #888888;
   font-weight: 700;
 }
-.contribute-splash-box .drop-details a {
+.contribute-splash .drop-details a {
   font-weight: 700;
-}
-.contribute-splash-box .drop-details .details-title-suitable {
-  font-size: 15px;
 }
 .form-group .format-label {
   position: absolute;
@@ -226,16 +223,4 @@ html > .contribute-body > .contribute-main > div {
   width: 30%;
   top: 13px;
   margin-left: 15px;
-}
-.browse-button .add-dataset-btn {
-  background-color: #888888;
-}
-.drop-alternatives a,
-.drop-details a {
-  text-decoration: underline;
-}
-.field-names-select,
-.file-types-select,
-.num-of-rows-select {
-  display: none;
 }
