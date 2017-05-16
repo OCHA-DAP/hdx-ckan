@@ -79,4 +79,4 @@ timeago==1.0.7
 -e git+https://github.com/ViderumGlobal/ckanext-requestdata.git@v2.0.0#egg=ckanext-requestdata
 
 # HDX request data plugin
--e git+https://github.com/OCHA-DAP/hdx-request-data.git@v1.0.5#egg=ckanext-hdx_request_data
+-e git+https://github.com/OCHA-DAP/hdx-request-data.git@v1.0.6#egg=ckanext-hdx_request_data
