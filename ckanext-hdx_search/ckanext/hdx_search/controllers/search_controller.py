@@ -191,8 +191,8 @@ class HDXSearchController(PackageController):
 
         package_type = self._guess_package_type()
 
-        if package_type == 'search' or package_type == 'dataset':
-            package_type = 'dataset OR hdx-requestdata-metadata-only'
+        if package_type == 'search':
+            package_type = 'dataset'
 
         params_nopage = self._params_nopage()
         c.search_url_params = urlencode(_encode_params(params_nopage))
