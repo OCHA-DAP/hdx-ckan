@@ -1,3 +1,6 @@
+// THIS IS A COPY OF THE recline.js FROM THE RECLINEVIEW EXTENSION
+// CHANGES: uses the url for preview map and dataproxy that are specified in the .ini file
+
 this.recline = this.recline || {};
 this.recline.Backend = this.recline.Backend || {};
 this.recline.Backend.DataProxy = this.recline.Backend.DataProxy || {};
