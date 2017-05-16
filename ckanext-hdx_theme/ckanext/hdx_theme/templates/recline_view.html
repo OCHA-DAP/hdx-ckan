@@ -11,10 +11,12 @@
 
   <div id="datapreview-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.datapreview.url') }}</div>
   <div id="previewmap-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.previewmap.url') }}</div>
+  {% set map_config = h.get_map_config() %}
   <div data-module="recline_view"
        data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}"
        data-module-resource = "{{ h.dump_json(resource_json) }}";
        data-module-resource-view = "{{ h.dump_json(resource_view_json) }}";
+       data-module-map_config= "{{ h.dump_json(map_config) }}";
        >
     <h4 class="loading-dialog">
       <div class="loading-spinner"></div>
@@ -45,7 +47,9 @@
     {% resource 'ckanext-reclineview/vendor/moment/2.0.0/moment.js' %}
     {% resource 'ckanext-reclineview/vendor/ckan.js/ckan.js' %}
 
-    {% resource 'ckanext-reclineview/vendor/recline/recline.js' %}
+{#    {% resource 'ckanext-reclineview/vendor/recline/recline.js' %} we use our own dataproxy #}
+    {% resource 'hdx_theme/reclineview/recline.js' %}
+    {% resource 'hdx_theme/base/hdx-util-lib.js' %}
 
     {% resource 'ckanext-reclineview/widget.recordcount.js' %}
     {% resource 'ckanext-reclineview/recline_view.js' %}
