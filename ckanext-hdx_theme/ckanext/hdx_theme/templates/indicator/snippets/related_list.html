@@ -1,12 +1,30 @@
 {% block related_list %}
-    {% if pkg.related %}
-      {% snippet "related/snippets/related_list.html", related_items=pkg.related, pkg_id=pkg.name %}
-       {% if user %}
-       <br>
-      <span class="more">{% link_for _('ADD MORE'), controller='related', action='new', id=pkg.name, class_="btn btn-primary" %}</span>
-      {% endif %}
+    {% if showcases %}
+
+        {% snippet "showcase/snippets/showcase_list.html", packages=showcases, pkg_id=c.pkg_dict.name, show_remove=h.check_access('ckanext_showcase_update') %}
+
+        {% if h.check_access('ckanext_showcase_create') %}
+            <br/>
+            <span class="more">
+                {% link_for _('Add Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='new', class_="btn btn-primary" %}
+            </span>
+        {% endif %}
+        <!--{% if user %}-->
+            <!--<br>-->
+            <!--<span class="more">{% link_for _('ADD MORE'), controller='related', action='new', id=pkg.name, class_="btn btn-primary" %}</span>-->
+        <!--{% endif %}-->
     {% else %}
-    {{ _('There are no gallery items for this')}} {% if pkg.indicator == 1%}indicator{% else %}dataset{% endif %}.  {% if user %}
-      {% link_for _('Add one.'), controller='related', action='new', id=pkg.name %} {% endif %}
+        <p class="empty">{{ _('There are no showcases for this')}} {% if pkg.indicator == 1%}indicator{% else %}dataset{% endif %}.</p>
+
+        {% if h.check_access('ckanext_showcase_create') %}
+            <br/>
+            <div class="more">
+                {% link_for _('Add One'), controller='ckanext.showcase.controller:ShowcaseController', action='new', class_="btn btn-primary" %}
+            </div>
+        {% endif %}
+
+        <!--{% if user %}-->
+            <!--{% link_for _('Add one.'), controller='related', action='new', id=pkg.name %}-->
+        <!--{% endif %}-->
     {% endif %}
-  {% endblock %}
+{% endblock %}

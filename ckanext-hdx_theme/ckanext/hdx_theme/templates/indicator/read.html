@@ -84,8 +84,8 @@
 
 {% block secondary %}
 <div>
-  <h2 class="uppercase">{{_('Gallery')}}</h2>
-  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj %}
+  <h2 class="uppercase">{{_('Related Showcases')}}</h2>
+  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
 
 </div>
   <div>

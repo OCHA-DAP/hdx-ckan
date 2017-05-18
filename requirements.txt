@@ -82,4 +82,4 @@ timeago==1.0.7
 -e git+https://github.com/OCHA-DAP/hdx-request-data.git@v1.0.7#egg=ckanext-hdx_request_data
 
 # ckanext-showcase==1.0.2
--e git+https://github.com/ckan/ckanext-showcase.git@1.0.2#egg=ckanext-showcase
+-e git+https://github.com/ckan/ckanext-showcase.git@master#egg=ckanext-showcase
