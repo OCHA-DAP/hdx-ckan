@@ -16,16 +16,16 @@
 .hdx-faq-sidebar .nav li a.active {
   font-family: 'Gotham-Medium', sans-serif;
   font-size: 14px;
-  color: #007ce0;
+  color: #007CE0;
   line-height: 20px;
   letter-spacing: 0.01em;
   padding: 0;
 }
 .hdx-faq-sidebar .no-answer-found a {
-  color: #000000;
+  color: #000;
 }
 .hdx-faq-sidebar .no-answer-found a:hover {
-  color: #007ce0;
+  color: #007CE0;
 }
 .hdx-wrapper .section-flag {
   font-family: 'Gotham-Book', sans-serif;
@@ -59,7 +59,7 @@
 .hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more {
   font-family: 'Gotham-Book', sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #FFFFFF;
   letter-spacing: 0.01em;
   text-align: center;
 }
@@ -90,7 +90,7 @@
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;
-  color: #000000;
+  color: #000;
   line-height: 24px;
   letter-spacing: 0.01em;
 }
@@ -104,6 +104,6 @@
   letter-spacing: 0.01em;
 }
 .hdx-wrapper .hdx-panel-group .panel .panel-heading + .panel-collapse > .panel-body a {
-  color: #007ce0;
+  color: #007CE0;
   font-weight: 700;
 }
