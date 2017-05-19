@@ -8,11 +8,13 @@ import ckanext.hdx_pages.actions.get as get
 import ckanext.hdx_pages.actions.auth as auth
 
 import ckanext.hdx_pages.helpers.helper as helper
+import ckanext.hdx_pages.model as pages_model
 
 
 class HdxPagesPlugin(plugins.SingletonPlugin):
 
     plugins.implements(plugins.IConfigurer)
+    plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions, inherit=True)
     plugins.implements(plugins.IAuthFunctions, inherit=True)
@@ -69,3 +71,7 @@ class HdxPagesPlugin(plugins.SingletonPlugin):
         return {
             'hdx_events_list': helper.hdx_events_list,
         }
+
+    # IConfigurable
+    def configure(self, config):
+        pages_model.setup()

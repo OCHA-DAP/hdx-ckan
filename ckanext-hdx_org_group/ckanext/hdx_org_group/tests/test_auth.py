@@ -6,7 +6,7 @@ Created on Jul 24, 2014
 
 import logging as logging
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -177,10 +177,11 @@ class TestGroupAuth(org_group_base.OrgGroupBaseTest):
 
     def test_create_country_member(self):
         testsysadmin = model.User.by_name('testsysadmin')
+        tester = model.User.by_name('tester')
         create_result = tests.call_action_api(self.app, 'group_create',
                                               name='test_group_d', title='Test Group D',
                                               apikey=testsysadmin.apikey, status=200)
         tests.call_action_api(self.app, 'group_member_create',
                               id=create_result['id'], username='tester', role='editor',
-                              apikey=testsysadmin.apikey, status=403)
+                              apikey=tester.apikey, status=403)
         assert True, 'Country members shouldn\'t be allowed'

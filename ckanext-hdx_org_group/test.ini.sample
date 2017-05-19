@@ -2,3 +2,5 @@
 use = config:../hdx-test-core.ini
 ckan.site_title = Test CKAN Site
 ckan.site_description = Testing extension
+ckan.plugins = hdx_hxl_preview hdx_request_data requestdata ytp_request hdx_pages hdx_choropleth_map_view hdx_key_figures_view hdx_geopreview_view hdx_chart_views hdx_service_checker hdx_analytics hdx_crisis hdx_search sitemap hdx_org_group hdx_group hdx_package hdx_user_extra hdx_mail_validate hdx_users hdx_theme stats resource_proxy text_view recline_view datastore
+ckan.use_pylons_response_cleanup_middleware = False

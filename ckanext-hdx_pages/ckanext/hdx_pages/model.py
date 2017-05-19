@@ -12,6 +12,22 @@ from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
 mapper = orm.mapper
 log = logging.getLogger(__name__)
 
+page_table = None
+page_group_association_table = None
+
+
+def setup():
+    if page_table is None:
+        define_page_table()
+        log.error('Page table defined in memory')
+
+    if page_group_association_table is None:
+        define_page_group_association_table()
+        log.error('Page group association table defined in memory')
+
+    # checks for existence first
+    create_table()
+
 
 class PageBaseModel(DomainObject):
     @classmethod
@@ -80,7 +96,10 @@ class Page(PageBaseModel):
         return page_table.exists()
 
 
-page_table = Table('page', meta.metadata,
+def define_page_table():
+    global page_table
+
+    page_table = Table('page', meta.metadata,
                    Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                    Column('name', types.UnicodeText, nullable=False, unique=True, index=True),
                    Column('title', types.UnicodeText, nullable=False),
@@ -92,7 +111,7 @@ page_table = Table('page', meta.metadata,
                    Column('status', types.UnicodeText),
                    )
 
-mapper(Page, page_table, extension=[extension.PluginMapperExtension(), ])
+    mapper(Page, page_table, extension=[extension.PluginMapperExtension(), ])
 
 
 class PageGroupAssociation(PageBaseModel):
@@ -108,21 +127,24 @@ class PageGroupAssociation(PageBaseModel):
         return result
 
 
-page_group_association_table = Table(
-    'page_group_association',
-    meta.metadata,
-    Column('group_id', types.UnicodeText,
-           ForeignKey('group.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False),
-    Column('page_id', types.UnicodeText,
-           ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
-)
+def define_page_group_association_table():
+    global  page_group_association_table
 
-meta.mapper(PageGroupAssociation, page_group_association_table,
-            properties={
-                'page': orm.relation(Page,
-                                     backref=orm.backref('countries_assoc_all',
-                                                         cascade='all, delete-orphan'))
-            })
+    page_group_association_table = Table(
+        'page_group_association',
+        meta.metadata,
+        Column('group_id', types.UnicodeText,
+               ForeignKey('group.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False),
+        Column('page_id', types.UnicodeText,
+               ForeignKey('page.id', ondelete='CASCADE', onupdate='CASCADE'), primary_key=True, nullable=False)
+    )
+
+    meta.mapper(PageGroupAssociation, page_group_association_table,
+                properties={
+                    'page': orm.relation(Page,
+                                         backref=orm.backref('countries_assoc_all',
+                                                             cascade='all, delete-orphan'))
+                })
 
 
 
