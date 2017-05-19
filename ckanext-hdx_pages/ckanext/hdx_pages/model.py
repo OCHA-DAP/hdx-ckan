@@ -19,11 +19,11 @@ page_group_association_table = None
 def setup():
     if page_table is None:
         define_page_table()
-        log.error('Page table defined in memory')
+        log.debug('Page table defined in memory')
 
     if page_group_association_table is None:
         define_page_group_association_table()
-        log.error('Page group association table defined in memory')
+        log.debug('Page group association table defined in memory')
 
     # checks for existence first
     create_table()

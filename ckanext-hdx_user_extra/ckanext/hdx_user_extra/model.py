@@ -22,7 +22,7 @@ user_extra_table = None
 def setup():
     if user_extra_table is None:
         define_user_extra_table()
-        log.error('User extra table defined in memory')
+        log.debug('User extra table defined in memory')
 
     create_table()
 
