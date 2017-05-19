@@ -64,11 +64,10 @@ class HdxBaseTest(object):
         # so that we can search for strings in the HTTP response
         config['ckan.use_pylons_response_cleanup_middleware'] = False
 
-        # cls._load_plugins()
-        cls.app = _get_test_app()
-
         search.clear_all()
         helpers.reset_db()
+        # cls._load_plugins()
+        cls.app = _get_test_app()
 
         cls.replace_package_create()
 
