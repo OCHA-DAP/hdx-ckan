@@ -149,12 +149,13 @@ def define_page_group_association_table():
 
 
 def create_table():
-    if not page_table.exists():
-        page_table.create()
-        print 'Page table created'
-    if not page_group_association_table.exists():
-        page_group_association_table.create()
-        print "page group association table created"
+    if model.group_table.exists():
+        if not page_table.exists():
+            page_table.create()
+            print 'Page table created'
+        if not page_group_association_table.exists():
+            page_group_association_table.create()
+            print "page group association table created"
 
 
 def delete_table():
