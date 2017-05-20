@@ -28,19 +28,19 @@ CUSTOM_GROUPS = [
         'name': 'ebola',
         'title': 'Ebola',
         'description': 'This is a Ebola crisis group',
-        'extras': extras
+        'custom_loc': '1'
     },
     {
         'name': 'mli',
         'title': 'Mali',
         'description': 'This is a Mali group',
-        'extras': extras
+        'custom_loc': '1'
     },
     {
         'name': 'test-nepal-earthquake-123',
         'title': 'Test Nepal Earthquake 123',
         'description': 'This is Test Nepal Earthquake group page',
-        'extras': extras
+        'custom_loc': '1'
     },
     {
         'name': 'afg',
@@ -51,16 +51,8 @@ CUSTOM_GROUPS = [
         "name": "nepal-earthquake",
         'description': "This will be a placeholder for all information related to the earthquake in Nepal.",
         'title': "Nepal Earthquake",
-        'extras': [
-            {
-                "value": "1",
-                "state": "active",
-                "key": "custom_loc"},
-            {
-                "value": "{\"topline_resource\":\"a699046b-db5d-4399-b75b-514e351f0975\",\"charts\":[{\"resources\":[{\"chart_dataset_id\":\"\",\"chart_resource_id\":\"\",\"chart_source\":\"\",\"chart_data_link_url\":\"\",\"chart_label\":\"\",\"chart_x_column\":\"\",\"chart_y_column\":\"\"},{}],\"chart_title\":\"\",\"chart_type\":\"bar chart\",\"chart_x_label\":\"\",\"chart_y_label\":\"\"},{\"resources\":[{\"chart_dataset_id\":\"\",\"chart_resource_id\":\"\",\"chart_source\":\"\",\"chart_data_link_url\":\"\",\"chart_label\":\"\",\"chart_x_column\":\"\",\"chart_y_column\":\"\"},{}],\"chart_title\":\"\",\"chart_type\":\"bar chart\",\"chart_x_label\":\"\",\"chart_y_label\":\"\"}],\"map\":{\"map_title\":\"Deaths\",\"map_datatype_1\":\"datastore\",\"map_dataset_id_1\":\"json-repository\",\"map_resource_id_1\":\"60804d36-b0b6-4d1f-9531-bf8f064497df\",\"map_column_1\":\"ocha_pcode\",\"map_values\":\"deaths\",\"map_threshold\":\"1,10,100,1000,2000\",\"map_datatype_2\":\"filestore\",\"map_dataset_id_2\":\"json-repository\",\"map_resource_id_2\":\"b0aa9065-eadb-49ac-8c61-9ffccf4397bc\",\"map_column_2\":\"OCHA_PCODE\",\"map_district_name_column\":\"DISTRICT\"}}",
-                "state": "active",
-                "key": "customization"},
-        ],
+        'custom_loc': '1',
+        'customization': "{\"topline_resource\":\"a699046b-db5d-4399-b75b-514e351f0975\",\"charts\":[{\"resources\":[{\"chart_dataset_id\":\"\",\"chart_resource_id\":\"\",\"chart_source\":\"\",\"chart_data_link_url\":\"\",\"chart_label\":\"\",\"chart_x_column\":\"\",\"chart_y_column\":\"\"},{}],\"chart_title\":\"\",\"chart_type\":\"bar chart\",\"chart_x_label\":\"\",\"chart_y_label\":\"\"},{\"resources\":[{\"chart_dataset_id\":\"\",\"chart_resource_id\":\"\",\"chart_source\":\"\",\"chart_data_link_url\":\"\",\"chart_label\":\"\",\"chart_x_column\":\"\",\"chart_y_column\":\"\"},{}],\"chart_title\":\"\",\"chart_type\":\"bar chart\",\"chart_x_label\":\"\",\"chart_y_label\":\"\"}],\"map\":{\"map_title\":\"Deaths\",\"map_datatype_1\":\"datastore\",\"map_dataset_id_1\":\"json-repository\",\"map_resource_id_1\":\"60804d36-b0b6-4d1f-9531-bf8f064497df\",\"map_column_1\":\"ocha_pcode\",\"map_values\":\"deaths\",\"map_threshold\":\"1,10,100,1000,2000\",\"map_datatype_2\":\"filestore\",\"map_dataset_id_2\":\"json-repository\",\"map_resource_id_2\":\"b0aa9065-eadb-49ac-8c61-9ffccf4397bc\",\"map_column_2\":\"OCHA_PCODE\",\"map_district_name_column\":\"DISTRICT\"}}"
     }
 
 ]
