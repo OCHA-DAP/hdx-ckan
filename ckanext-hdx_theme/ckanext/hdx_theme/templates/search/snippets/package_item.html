@@ -1,3 +1,5 @@
+{% set is_metadata_only = package.type == 'hdx-requestdata-metadata-only' %}
+
 <li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
     <div class="row list-items dataset-content mTB15">
@@ -6,10 +8,16 @@
         {% endblock %}
         <span class="mL15 pull-left">
           <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
+            {% if is_metadata_only %}
+              {% block metadata_only_icon %}{% endblock %}
+            {% endif %}
             {% block title %}
               {% set truncate = truncate or 180 %}
               {% set truncate_title = truncate_title or 80 %}
               {% set title = package.title or package.name %}
+              {% if is_metadata_only %}
+                {% set title = title + ' [On Request Only]' %}
+              {% endif %}
               {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
               {% if package.private %}
                  <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
