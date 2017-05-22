@@ -38,7 +38,7 @@ class TestHDXBrowseController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
             indicator_count = indicator_count if indicator_count else 0
             dataset_count = group.get('dataset_count', None)
             dataset_count = dataset_count if dataset_count else 0
-            total = group.get('packages', None)
+            total = group.get('package_count', None)
             total = total if total else 0
             assert indicator_count+dataset_count == total
             if group['name'] == 'roger':

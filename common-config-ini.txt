@@ -257,3 +257,6 @@ hdx.mailchimp.api.key = ccc-fake
 
 # hdx_requestdata setting
 hdx_portal = True
+ckanext.requestdata.newsletter_url = http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315
+ckanext.requestdata.twitter_url = https://twitter.com/humdata
+ckanext.requestdata.contact_email = hdx@un.org

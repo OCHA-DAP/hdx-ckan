@@ -6,7 +6,7 @@ import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
 import ckanext.hdx_users.logic.validators as hdx_validators
-import ckanext.hdx_users.controllers.dashboard_controller as hdx_c
+import ckanext.hdx_users.model as users_model
 
 
 def user_create(context, data_dict=None):
@@ -15,7 +15,7 @@ def user_create(context, data_dict=None):
 
 
 class HDXValidatePlugin(plugins.SingletonPlugin):
-    # plugins.implements(plugins.IAuthenticator)
+    plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IConfigurer, inherit=False)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IActions)
@@ -96,6 +96,10 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
     def get_auth_functions(self):
         return {'user_can_register': authorize.user_can_register,
                 'user_can_validate': authorize.user_can_validate}
+
+    # IConfigurable
+    def configure(self, config):
+        users_model.setup()
 
 
 class HDXUsersPlugin(plugins.SingletonPlugin):

@@ -26,13 +26,13 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
 
         super(TestContributeFlowController, cls)._create_test_data()
 
-        def wrapped_request_config(original=False):
-            result = original_request_config(original)
-            result.__setattr__('host', 'test.ckan.org')
-            result.__setattr__('protocol', 'http')
-            return result
-
-        routes_util.request_config = wrapped_request_config
+        # def wrapped_request_config(original=False):
+        #     result = original_request_config(original)
+        #     result.__setattr__('host', 'test.ckan.org')
+        #     result.__setattr__('protocol', 'http')
+        #     return result
+        #
+        # routes_util.request_config = wrapped_request_config
 
         c = {'ignore_auth': True,
              'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -78,10 +78,10 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
             'user': 'testsysadmin', 'return_id_only': True},
             resource)
 
-    @classmethod
-    def teardown_class(cls):
-        routes_util.request_config = original_request_config
-        super(TestContributeFlowController, cls).teardown_class()
+    # @classmethod
+    # def teardown_class(cls):
+    #     routes_util.request_config = original_request_config
+    #     super(TestContributeFlowController, cls).teardown_class()
 
     @mock.patch('ckanext.hdx_package.controllers.contribute_flow_controller.request')
     @mock.patch('ckanext.hdx_package.controllers.contribute_flow_controller.c')
@@ -104,7 +104,7 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
                                                 {'id': 'test_contribute_ds'})
 
         assert dataset.get('resources')
-        assert 'http://test.ckan.org' in dataset.get('resources')[0].get('url', ''), \
+        assert 'http://test.ckan.net' in dataset.get('resources')[0].get('url', ''), \
             'The dataset is loaded normally so the uploaded resource "url" field should BE the full URL'
 
     @staticmethod
