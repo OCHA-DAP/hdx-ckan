@@ -49,10 +49,10 @@
   font-size: 11px;
   line-height: 13px;
   letter-spacing: 0.01em;
-  color: #ffffff;
+  color: #fff;
 }
 .featured-org .feature-header a .feature-highlight a {
-  color: #ffffff;
+  color: #fff;
 }
 .featured-org .feature-header .logo-box {
   position: absolute;
@@ -76,7 +76,7 @@
   margin-top: 3px;
 }
 .featured-org .feature-content .organization-heading a {
-  color: #000000;
+  color: #000;
 }
 .featured-org .feature-content .last-update {
   color: #333333;
