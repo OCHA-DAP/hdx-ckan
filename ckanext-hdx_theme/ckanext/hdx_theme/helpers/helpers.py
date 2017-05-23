@@ -586,10 +586,6 @@ def hdx_popular(type_, number, min=1, title=None):
     return snippet('snippets/popular.html', title=title, number=number, min=min)
 
 
-def hdx_escape(item):
-    import re
-    return re.sub("u&#39;([^']*)&#39;", r'\1', str(item))
-
 
 def hdx_license_list():
     license_touple_list = base.model.Package.get_license_options()
