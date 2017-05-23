@@ -149,7 +149,7 @@ h1.country-title {
 }
 .followers-list-popup.dropdown-menu .hdx-arrow-wrapper {
   padding: 15px;
-  background-color: #ffffff;
+  background-color: #fff;
   border: 1px solid #cccccc;
   border-radius: 4px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -163,7 +163,7 @@ h1.country-title {
   border-top: 1px solid #cccccc;
   height: 15px;
   width: 15px;
-  background-color: #ffffff;
+  background-color: #fff;
   transform: translate(-50%, 0) rotateZ(45deg);
 }
 .followers-list-popup.dropdown-menu .followers-list .follower-item {
@@ -197,7 +197,7 @@ h1.country-title {
   height: 100%;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.3);
-  color: #ffffff;
+  color: #fff;
   text-align: center;
 }
 .featured-section .featured-thumbnail .overlay:hover .featured-thumbnail-content .action {
@@ -228,7 +228,7 @@ h1.country-title {
   visibility: hidden;
 }
 .featured-section .featured-info-block {
-  color: #000000;
+  color: #000;
   margin-top: 20px;
 }
 .featured-section .featured-info-block:first-child {
