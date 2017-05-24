@@ -637,7 +637,12 @@ class DatasetController(PackageController):
         try:
             c.pkg_dict = get_action('package_show')(context, data_dict)
             c.pkg = context['package']
-            c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+
+            # Needed because of showcase validation convert_package_name_or_id_to_id_for_type_dataset()
+            if c.pkg_dict.get('type') == 'dataset':
+                c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+            else:
+                c.showcase_list = []
         except NotFound:
             abort(404, _('Dataset not found'))
         except NotAuthorized:
