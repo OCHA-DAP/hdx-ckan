@@ -209,6 +209,10 @@ html > .contribute-body > .contribute-main > div {
 .contribute-splash-box .drop-details .details-title-suitable {
   font-size: 15px;
 }
+.contribute-splash-box .drop-here.drop-incoming .drop-details strong,
+.contribute-splash-box .drop-here.drop-incoming .drop-details a {
+  color: #fff;
+}
 .form-group .format-label {
   position: absolute;
   margin-left: 5px;
