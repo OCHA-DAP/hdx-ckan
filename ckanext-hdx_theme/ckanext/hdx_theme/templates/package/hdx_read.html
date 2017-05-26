@@ -19,11 +19,12 @@
           </h1>
         </div>
       </div>
+
       <div class="row mBottom30">
         <div class="col-xs-12 mBottom20">
-            {% if c.pkg_notes_formatted %}
+            {% if pkg.notes %}
               <div class="notes embedded-content">
-                {{ c.pkg_notes_formatted }}
+                {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
               </div>
             {% endif %}
         </div>
