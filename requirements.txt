@@ -81,5 +81,5 @@ timeago==1.0.7
 # HDX request data plugin
 -e git+https://github.com/OCHA-DAP/hdx-request-data.git@v1.1.0#egg=ckanext-hdx_request_data
 
-# ckanext-showcase 92c9b2b7d4cc07b68eeb77587a832cb3c7607daa
--e git+https://github.com/ckan/ckanext-showcase.git@92c9b2b7d4cc07b68eeb77587a832cb3c7607daa#egg=ckanext-showcase
+# ckanext-showcase v1.0.3
+-e git+https://github.com/ckan/ckanext-showcase.git@v1.0.3#egg=ckanext-showcase
