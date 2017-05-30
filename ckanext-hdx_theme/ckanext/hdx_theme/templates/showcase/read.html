@@ -31,28 +31,38 @@
     <div class="col-xs-12 paddingLeftHack paddingRightHack">
         <div class="row">
             <div class="col-xs-12 mTop35 mBottom15">
-                <h1 class="itemTitle">
-                    {{ pkg.title or pkg.name }}
-                </h1>
-                {% if pkg.author %}
-                <div>
-                    <span class="smallest">{{_('Submitted by')}}</span> {{ pkg.author }}
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 mBottom20">
                 <div class="row">
                     <div class="col-xs-8">
-                        <div class="notes">
-                            {{ pkg.showcase_notes_formatted }}
-                        </div>
-                        <div>
-                            <div class="tag-wrapper">
-                                {% for tag in pkg.tags %}
-                                <a class="label tag" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-                                {% endfor %}
+                        <div class="row">
+                            <div class="col-xs-12 mBottom15">
+                                <h1 class="itemTitle">
+                                    {{ pkg.title or pkg.name }}
+                                </h1>
+                                <div class="list-items mTop20">
+                                    {% if c.showcase_pkgs %}
+                                        {% set num_of_pack = c.showcase_pkgs|length %}
+                                        <span class="sspBold14">
+                                            <a class="sspBold14" href="#datasets-anchor">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                                        </span>
+                                    {% else %}
+                                        <span class="sspBold14">{{ _('0 Datasets') }}</span>
+                                    {% endif %}
+                                    -
+                                    <span class="sspBold14">
+                                        <a class="sspBold14" href="{{ pkg.url }}">{{ _('Visit Website') }}</a>
+                                    </span>
+                                </div>
+                                {% if pkg.author %}
+                                <div>
+                                    <span class="smallest">{{_('Submitted by')}}</span> {{ pkg.author }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="notes">
+                                    {{ pkg.showcase_notes_formatted }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -64,16 +74,12 @@
                 </div>
             </div>
             <div class="col-xs-12 align-bottom-right">
-                {% if pkg.url %}
-                <a class="btn btn-primary" href="{{ pkg.url }}" target="_blank">
-                    <i class="icon-external-link"></i> {{ _('Launch website') }}
-                </a>
-                {% endif %}
-                {% if h.check_access('ckanext_showcase_update', {'id':pkg.id }) %}
-                    {% link_for _('Manage'), controller='ckanext.showcase.controller:ShowcaseController', action='edit', id=pkg.name, class_='btn hdx-btn org-edit-btn', icon='wrench' %}
-                {% endif %}
-
-                {% snippet "indicator/snippets/base_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right',
+                <div class="tag-wrapper">
+                    {% for tag in pkg.tags %}
+                    <a class="label tag" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+                    {% endfor %}
+                </div>
+                {% snippet "showcase/showcase_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right',
                 panel_title="Share Showcase", title=pkg.title, base_type='showcase', base_title='showcase', hide_membership=true, hide_contact_contributor=true,
                 hide_follow=true %}
             </div>
@@ -85,7 +91,7 @@
 
 
 {% block page_header %}
-<div>
+<div id="datasets-anchor">
     <header class="module-content page-header paddingRowHack mTop20 mBottom10">
         <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
             {% block content_primary_nav %}
