@@ -474,12 +474,12 @@
                                                 {{ form.markdown('license_other', id='field_license_other', label=_('Define License'), placeholder=_('Describe how people can and cannot use this data'), value=data.license_other, error=errors.license_other, classes=['form-group'], attrs={'class':'form-control', 'style': 'height: 80px;'}) }}
                                             </div>
 
-                                            {% set field_names_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What are the most important indicators in the dataset?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
+                                            {% set field_names_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What are the most important fields in the dataset?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="field_names" data-module-required="public">
                                             {{ form.input('field_names', id='field_names', label=_('Field names'), value=data.field_names, error=errors.field_names, classes=['control-full', 'form-group', 'field-names-select'], attrs=field_names_attrs) }}
                                             </div>
 
-                                            {% set file_types_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What file types does your dataset contains?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
+                                            {% set file_types_attrs = {'data-module': 'hdx_autocomplete', 'data-module-tags': '', 'data-module-placeholder': 'What file types does your dataset contain?', 'class':'form-control', 'multiple':'true', 'data-module-width': '500px',} %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="file_types" data-module-required="public">
                                             {{ form.input('file_types', id='file_types', label=_('File types'), value=data.file_types, error=errors.file_types, classes=['control-full', 'form-group', 'file-types-select'], attrs=file_types_attrs) }}
                                             </div>
