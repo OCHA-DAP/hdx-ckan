@@ -6,22 +6,21 @@ Created on Jan 13, 2015
 import collections
 import json
 import logging
+from operator import itemgetter
+
+import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_package.helpers.screenshot as screenshot
+import ckanext.hdx_search.controllers.search_controller as search_controller
 
 import ckan.common as common
 import ckan.controllers.group as group
 import ckan.lib.base as base
 import ckan.lib.helpers as h
+import ckan.lib.helpers as helpers
 import ckan.logic as logic
 import ckan.model as model
-import ckan.lib.helpers as helpers
 from ckan.controllers.api import CONTENT_TYPES
-
-from operator import itemgetter
-
-import ckanext.hdx_search.controllers.search_controller as search_controller
-import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
-import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_package.helpers.screenshot as screenshot
 
 render = base.render
 abort = base.abort
@@ -167,7 +166,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 'display_name': tag.get('display_name'),
                 'count': tag.get('count'),
                 'name': tag.get('name'),
-                'url': helpers.url_for(controller='package', action='search', tags=tag.get('name'))
+                'url': '?tags='+tag.get('name')+'#dataset-filter-start'
             }
             for tag in full_facet_info.get('facets', {}).get('tags', {}).get('items', [])
             ]
