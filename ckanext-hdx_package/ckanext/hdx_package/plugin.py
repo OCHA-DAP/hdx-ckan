@@ -3,38 +3,34 @@ Created on Apr 10, 2014
 
 @author:alexandru-m-g
 '''
-import logging
-from routes.mapper import SubMapper
-import pylons.config as config
-import json
-import ijson
 import io
-
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as tk
-import ckan.plugins as p
-import ckan.plugins.toolkit as toolkit
-import ckan.model as model
-import ckan.model.package as package
-import ckan.model.license as license
-import ckan.logic as logic
-
-import ckanext.resourceproxy.plugin as resourceproxy_plugin
-
-import ckanext.hdx_package.helpers.licenses as hdx_licenses
-import ckanext.hdx_package.helpers.caching as caching
-import ckanext.hdx_package.helpers.custom_validator as vd
-import ckanext.hdx_package.actions.authorize as authorize
-import ckanext.hdx_package.actions.create as hdx_create
-import ckanext.hdx_package.actions.update as hdx_update
-import ckanext.hdx_package.actions.delete as hdx_delete
-import ckanext.hdx_package.helpers.helpers as hdx_helpers
-import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
-import ckanext.hdx_package.helpers.analytics as analytics
-import ckanext.hdx_package.actions.get as hdx_get
+import json
+import logging
 
 import ckanext.hdx_org_group.helpers.organization_helper as org_helper
+import ckanext.hdx_package.actions.authorize as authorize
+import ckanext.hdx_package.actions.create as hdx_create
+import ckanext.hdx_package.actions.delete as hdx_delete
+import ckanext.hdx_package.actions.get as hdx_get
+import ckanext.hdx_package.actions.update as hdx_update
+import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_validator as vd
+import ckanext.hdx_package.helpers.helpers as hdx_helpers
+import ckanext.hdx_package.helpers.licenses as hdx_licenses
+import ckanext.hdx_package.helpers.tracking_changes as tracking_changes
+import ijson
+import pylons.config as config
+from routes.mapper import SubMapper
 
+import ckan.logic as logic
+import ckan.model as model
+import ckan.model.license as license
+import ckan.model.package as package
+import ckan.plugins as p
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
+import ckan.plugins.toolkit as toolkit
+import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
 
 log = logging.getLogger(__name__)
@@ -181,7 +177,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         schema.update({
             # Notes == description. Makes description required
-            'notes': [tk.get_validator('not_empty')],
+            'notes': [vd.not_empty_ignore_ws],
             'package_creator': [ tk.get_validator('find_package_creator'),
                                 tk.get_validator('not_empty'),
                                 tk.get_converter('convert_to_extras')],
@@ -253,7 +249,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         schema = super(HDXPackagePlugin, self).show_package_schema()
         schema.update({
             # Notes == description. Makes description required
-            'notes': [tk.get_validator('not_empty')],
+            'notes': [vd.not_empty_ignore_ws],
             'package_creator': [tk.get_converter('convert_from_extras'),
                                 tk.get_validator('ignore_missing')],
             'indicator': [tk.get_converter('convert_from_extras'),

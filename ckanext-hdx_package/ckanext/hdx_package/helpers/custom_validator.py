@@ -4,19 +4,29 @@ Created on Apr 11, 2014
 @author: alexandru-m-g
 '''
 
-import logging
 import bisect
-import ckan.lib.navl.dictization_functions as df
 
-import ckanext.hdx_package.helpers.geopreview as geopreview
 import ckanext.hdx_package.helpers.caching as caching
+import ckanext.hdx_package.helpers.geopreview as geopreview
 
+import ckan.lib.navl.dictization_functions as df
 from ckan.common import _, c
 
 missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
 
+# same as not_empty, but ignore whitespaces
+def not_empty_ignore_ws(key, data, errors, context):
+
+    value = data.get(key)
+    if not value or value is missing:
+        errors[key].append(_('Missing value'))
+        raise StopOnError
+    value = value.strip()
+    if not value or value is missing:
+        errors[key].append(_('Missing value'))
+        raise StopOnError
 
 def groups_not_empty(key, data, errors, context):
     """

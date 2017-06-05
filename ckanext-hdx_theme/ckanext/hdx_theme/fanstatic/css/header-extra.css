@@ -745,10 +745,11 @@
 /* datasets and orgs view&list */
 .itemTitle{
     font-family: 'Source Sans Pro', sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 28px;
     display: inline;
     line-height: 28px;
+    color: #333333;
 }
 
 .notes.embedded-content{
