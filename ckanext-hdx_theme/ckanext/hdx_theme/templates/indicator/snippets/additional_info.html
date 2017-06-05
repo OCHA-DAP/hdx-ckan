@@ -81,6 +81,7 @@
   		</td>
 	</tr>
     {% endif %}
+    {% if pkg_dict.type != 'hdx-requestdata-metadata-only' %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">
@@ -106,7 +107,7 @@
           {% endif %}
       </td>
     </tr>
-
+   {% endif %}
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
 		{% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
