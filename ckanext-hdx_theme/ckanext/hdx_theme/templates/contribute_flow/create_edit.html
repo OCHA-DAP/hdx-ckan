@@ -136,8 +136,8 @@
                 </div>
 
                 <form id="create_dataset_form" class="" method="post" enctype="multipart/form-data" data-module="basic-form">
-                    {% if data.type == 'hdx-requestdata-metadata-only' %}
-                        <input type="hidden" name="type" value="hdx-requestdata-metadata-only" />
+                    {% if data.is_requestdata_type %}
+                        <input type="hidden" name="is_requestdata_type" value="true" />
                     {% endif %}
                     <div class="background-gray">
                         <div class="paddingLeftHack paddingRightHack">

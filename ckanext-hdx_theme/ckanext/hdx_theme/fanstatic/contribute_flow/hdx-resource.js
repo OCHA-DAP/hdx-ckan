@@ -782,14 +782,14 @@ $(function(){
                 handleFiles(this.files);
             })
 
-            var addMetadataBtn = $('.contribute-splash .add-metadata-btn')
+            var addMetadataBtn = $('.contribute-splash .add-metadata-btn');
 
             addMetadataBtn.on('click', function() {
                 this.goToStep2()
                 this._prepareFormForMetadataOnly({isEdit: false})
             }.bind(this))
 
-            var isMetadataOnly = $('input[name=type][value=hdx-requestdata-metadata-only]')
+            var isMetadataOnly = $('input[name=is_requestdata_type][value=true]');
 
             // For already created datasets, if they are metadata-only adapt
             // the form
@@ -856,7 +856,7 @@ $(function(){
             var isEdit = data.isEdit
 
             // We set the type so that the right schema is used in the backend
-            formBody.append('<input type=hidden name=type value=hdx-requestdata-metadata-only />')
+            formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />')
 
             // Resources are not required for metadata-only datasets
             formSectionResources.hide()

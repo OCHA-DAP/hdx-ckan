@@ -1,4 +1,4 @@
-{% set is_metadata_only = package.type == 'hdx-requestdata-metadata-only' %}
+{% set is_metadata_only = package.is_requestdata_type %}
 
 <li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}

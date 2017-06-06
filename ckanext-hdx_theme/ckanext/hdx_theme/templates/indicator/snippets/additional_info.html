@@ -81,7 +81,7 @@
   		</td>
 	</tr>
     {% endif %}
-    {% if pkg_dict.type != 'hdx-requestdata-metadata-only' %}
+    {% if pkg_dict.is_requestdata_type %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">

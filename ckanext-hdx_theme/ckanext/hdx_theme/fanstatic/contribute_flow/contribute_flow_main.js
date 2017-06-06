@@ -59,12 +59,12 @@ ckan.module('contribute_flow_main', function($, _) {
                                     data.error_summary = data.error_summary ? data.error_summary : {};
 
                                     // Resources are not required for metadata-only datasets
-                                    if (data.data.type !== 'hdx-requestdata-metadata-only' && (!resourceDataArray || resourceDataArray.length == 0)) {
+                                    if (!data.data.is_requestdata_type && (!resourceDataArray || resourceDataArray.length === 0)) {
                                         data.error_summary['Resources'] = 'Please add at least 1 resource to the dataset';
                                     }
 
                                     // Tags are required for metadata-only datasets
-                                    if (data.data.type === 'hdx-requestdata-metadata-only' && data.data.tag_string.length === 0) {
+                                    if (data.data.is_requestdata_type && data.data.tag_string.length === 0) {
                                         data.errors.tag_string = ['Missing value']
                                     }
 
