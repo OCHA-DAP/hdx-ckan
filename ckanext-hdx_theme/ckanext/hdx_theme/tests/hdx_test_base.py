@@ -12,7 +12,7 @@ import ckan.model as model
 import ckan.lib.search as search
 import ckan.logic as logic
 
-import ckan.new_tests.helpers as helpers
+import ckan.tests.helpers as helpers
 
 import ckanext.hdx_package.actions.create as hdx_actions
 import ckanext.hdx_package.helpers.caching as caching
@@ -25,11 +25,13 @@ log = logging.getLogger(__name__)
 original_package_create = hdx_actions.package_create
 
 
-def _get_test_app():
-    config['ckan.legacy_templates'] = False
-    app = ckanconfig.middleware.make_app(config['global_conf'], **config)
-    app = webtest.TestApp(app)
-    return app
+# def _get_test_app():
+#     config['ckan.legacy_templates'] = False
+#     app = ckanconfig.middleware.make_app(config['global_conf'], **config)
+#     app = webtest.TestApp(app)
+#     return app
+
+_get_test_app = helpers._get_test_app
 
 
 def load_plugin(plugin):
@@ -53,17 +55,19 @@ class HdxBaseTest(object):
 
     @classmethod
     def _load_plugins(cls):
-        load_plugin('hdx_theme')
+        load_plugin('ytp_request hdx_org_group hdx_theme')
 
     @classmethod
     def setup_class(cls):
         cls.original_config = config.copy()
 
-        cls._load_plugins()
-        cls.app = _get_test_app()
+        # so that we can search for strings in the HTTP response
+        config['ckan.use_pylons_response_cleanup_middleware'] = False
 
-        search.clear()
+        search.clear_all()
         helpers.reset_db()
+        # cls._load_plugins()
+        cls.app = _get_test_app()
 
         cls.replace_package_create()
 
@@ -74,7 +78,7 @@ class HdxBaseTest(object):
     @classmethod
     def teardown_class(cls):
         model.Session.remove()
-        model.repo.rebuild_db()
+        # model.repo.rebuild_db()
 
         config.clear()
         config.update(cls.original_config)

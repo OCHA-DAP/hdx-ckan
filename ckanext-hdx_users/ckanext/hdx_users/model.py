@@ -39,6 +39,7 @@ USER_STATUSES = [
     HDX_ONBOARDING_FRIENDS
 ]
 
+validation_token_table = None
 
 class ValidationToken(DomainObject):
     '''
@@ -65,26 +66,29 @@ class ValidationToken(DomainObject):
         return validation_token_table.exists()
 
 
-validation_token_table = Table('validation_tokens', meta.metadata,
+def define_validation_token_table():
+    global  validation_token_table
+    validation_token_table = Table('validation_tokens', meta.metadata,
                                Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
                                Column('user_id', types.UnicodeText, ForeignKey('user.id'), unique=True),
                                Column('token', types.UnicodeText),
                                Column('valid', types.Boolean)
                                )
 
-mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
+    mapper(ValidationToken, validation_token_table, extension=[extension.PluginMapperExtension(), ])
 
 
 def setup():
     '''
     Create our tables!
     '''
-    print 'User Model setup...'
+    if validation_token_table is None:
+        define_validation_token_table()
+        log.debug('Validation tokens table defined in memory')
+
     if model.user_table.exists() and not validation_token_table.exists():
-        print CreateTable(validation_token_table)
         validation_token_table.create()
-        print 'DONE validation_token_table.create()'
-    print 'DONE User Model setup...'
+        log.debug('Validation tokens table created')
 
 
 def delete_tables():

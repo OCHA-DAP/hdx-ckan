@@ -5,10 +5,10 @@ Created on September 25, 2015
 
 '''
 
-import ckan.tests as tests
 import ckan.plugins.toolkit as tk
 import ckan.lib.helpers as h
 import ckan.model as model
+import ckan.lib.create_test_data as ctd
 import unicodedata
 
 import ckanext.hdx_users.model as umodel
@@ -40,7 +40,7 @@ organization = {
     'description': 'This is a test organization',
     'users': [{'name': 'joeadmin', 'capacity': 'admin'},
               {'name': 'tester', 'capacity': 'editor'},
-              {'name': 'visitor', 'capacity': 'member'}]
+              {'name': 'annafan', 'capacity': 'member'}]
 }
 
 
@@ -65,10 +65,10 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
     def test_contact_members_button_appears(self):
         '''
         testsysadmin - sysadmin
-        visitor - member
+        annafan - member
         tester - editor
         joeadmin - admin
-        logged_in - user which is not member of the org
+        bob - user which is not member of the org
 
         Only members (admin, editor, member) and sysadmin should see the button
 
@@ -76,7 +76,10 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
         '''
 
         global package
-        user = model.User.by_name('visitor')
+
+        user_bob = ctd.CreateTestData.create_user('bob')
+
+        user = model.User.by_name('annafan')
         testsysadmin = model.User.by_name('testsysadmin')
 
         dataset_name = package['name']
@@ -112,9 +115,8 @@ class TestDatasetOutput(hdx_test_base.HdxBaseTest):
 
 
         # any logged in user and not member of organization can NOT see the button
-        context['user'] = 'logged_in'
-        user = model.User.by_name('logged_in')
-        page = self._getPackagePage(dataset_name, user.apikey)
+        context['user'] = 'bob'
+        page = self._getPackagePage(dataset_name, user_bob.apikey)
         assert 'contact-members' not in str(page.response), 'Any loggedin user & not member should NOT see the edit button'
 
 

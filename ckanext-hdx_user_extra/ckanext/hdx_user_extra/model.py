@@ -17,6 +17,15 @@ from sqlalchemy.schema import Table, Column, ForeignKey, CreateTable, Index
 mapper = orm.mapper
 log = logging.getLogger(__name__)
 
+user_extra_table = None
+
+def setup():
+    if user_extra_table is None:
+        define_user_extra_table()
+        log.debug('User extra table defined in memory')
+
+    create_table()
+
 
 class UserExtra(DomainObject):
     '''
@@ -49,14 +58,16 @@ class UserExtra(DomainObject):
         return user_extra_table.exists()
 
 
-user_extra_table = Table('user_extra', meta.metadata,
-                         Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
-                         Column('user_id', types.UnicodeText, ForeignKey('user.id')),
-                         Column('key', types.UnicodeText),
-                         Column('value', types.UnicodeText),
-                         )
-Index('user_id_key_idx', user_extra_table.c.user_id, user_extra_table.c.key, unique=True)
-mapper(UserExtra, user_extra_table, extension=[extension.PluginMapperExtension(), ])
+def define_user_extra_table():
+    global user_extra_table
+    user_extra_table = Table('user_extra', meta.metadata,
+                             Column('id', types.UnicodeText, primary_key=True, default=_types.make_uuid),
+                             Column('user_id', types.UnicodeText, ForeignKey('user.id')),
+                             Column('key', types.UnicodeText),
+                             Column('value', types.UnicodeText),
+                             )
+    Index('user_id_key_idx', user_extra_table.c.user_id, user_extra_table.c.key, unique=True)
+    mapper(UserExtra, user_extra_table, extension=[extension.PluginMapperExtension(), ])
 
 
 def _create_extra(key, value):
@@ -67,12 +78,9 @@ def create_table():
     '''
     Create user_extra table
     '''
-    print 'User Extra create table...'
     if model.user_table.exists() and not user_extra_table.exists():
-        print CreateTable(user_extra_table)
         user_extra_table.create()
-        print 'DONE validation_token_table.create()'
-    print 'DONE User Model setup...'
+        log.debug('User extra table created')
 
 
 def delete_table():

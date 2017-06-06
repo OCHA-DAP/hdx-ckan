@@ -1,0 +1,71 @@
+{% import 'macros/form.html' as form %}
+{% set action = c.form_action or '' %}
+{% set form_style = c.form_style or c.action %}
+
+<form id="dataset-edit" class="hdx-form" method="post" action="{{ action }}" data-module="basic-form" enctype="multipart/form-data">
+
+  <input type="hidden" name="_ckan_phase" value="dataset_new_1" />
+  {# pkg_name used in 3 stage edit #}
+  <input type="hidden" name="pkg_name" value="{{ data.id }}" />
+  {% block errors %}{{ form.errors(error_summary) }}{% endblock %}
+
+  {% block basic_fields %}
+    <div class="form-group">
+      {% block package_basic_fields_title %}
+        {{ form.input('title', id='field-title', label=_('Title'), placeholder=_('eg. A descriptive title'), value=data.title, error=errors.title, classes=['control-full', 'form-group', 'control-large'], attrs={'data-module': 'slug-preview-target', 'class': 'form-control'}) }}
+      {% endblock %}
+
+      {% block package_basic_fields_url %}
+        {% set prefix = h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id='') %}
+        {% set domain = h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id='', qualified=true) %}
+        {% set domain = domain|replace("http://", "")|replace("https://", "") %}
+        {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<showcase>'} %}
+
+        {{ form.prepend('name', id='field-name', label=_('URL'), prepend=prefix, placeholder=_('eg. my-showcase'), value=data.name, error=errors.name, attrs=attrs, is_required=true) }}
+      {% endblock %}
+
+      {% block package_basic_fields_description %}
+        {{ form.markdown('notes', id='field-notes', label=_('Description'), placeholder=_('eg. Some useful notes about the data'), value=data.notes, error=errors.notes, classes=['form-group'], attrs={'class': 'form-control'}) }}
+      {% endblock %}
+
+      {% block package_basic_fields_tags %}
+        {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/tag/autocomplete?incomplete=?', 'class': 'form-control'} %}
+        {{ form.input('tag_string', id='field-tags', label=_('Tags'), placeholder=_('eg. economy, mental health, government'), value=data.tag_string, error=errors.tags, classes=['control-full', 'form-group'], attrs=tag_attrs) }}
+      {% endblock %}
+
+      {% set is_upload = data.image_url and not data.image_url.startswith('http') %}
+      {% set is_url = data.image_url and data.image_url.startswith('http') %}
+
+      {{ form.image_upload(data, errors, is_upload_enabled=h.uploads_enabled(), is_url=is_url, is_upload=is_upload, attrs={'class': 'form-control'}) }}
+    </div>
+  {% endblock %}
+
+  {% block metadata_fields %}
+    <div class="form-group">
+      {% block package_metadata_fields_url %}
+        {{ form.input('url', label=_('External link'), id='field-url', placeholder=_('http://www.example.com'), value=data.url, error=errors.url, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+      {% endblock %}
+
+      {% block package_metadata_author %}
+        {{ form.input('author', label=_('Submitted By'), id='field-author', placeholder=_('Joe Bloggs'), value=data.author, error=errors.author, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+
+        {{ form.input('author_email', label=_('Submitter Email'), id='field-author-email', placeholder=_('joe@example.com'), value=data.author_email, error=errors.author_email, classes=['control-full', 'form-group'], attrs={'class': 'form-control'}) }}
+      {% endblock %}
+    </div>
+  {% endblock %}
+
+  {% block form_actions %}
+    <div class="form-actions" style="margin-left: 0;">
+      {% block delete_button %}
+        {% if form_style == 'edit' and h.check_access('ckanext_showcase_delete', {'id': data.id}) and not data.state == 'deleted' %}
+          {% set locale = h.dump_json({'content': _('Are you sure you want to delete this showcase?')}) %}
+          <a class="btn btn-danger pull-left" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='delete', id=data.id %}" data-module="confirm-action" data-module-i18n="{{ locale }}">{% block delete_button_text %}{{ _('Delete') }}{% endblock %}</a>
+        {% endif %}
+      {% endblock %}
+      {% block save_button %}
+        <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{% if form_style != 'edit' %}{{ _('Create Showcase') }}{% else %}{{ _('Update Showcase') }}{% endif %}{% endblock %}</button>
+      {% endblock %}
+      {{ form.required_message() }}
+    </div>
+  {% endblock %}
+</form>

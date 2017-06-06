@@ -4,7 +4,7 @@ Created on Jun 17, 2014
 @author: alexandru-m-g
 '''
 
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 

@@ -327,6 +327,10 @@ def package_show(context, data_dict):
     '''
     package_dict = logic_get.package_show(context, data_dict)
 
+    # added because showcase schema validation is generating "ckan.lib.navl.dictization_functions.Missing"
+    if 'tracking_summary' in package_dict and not package_dict.get('tracking_summary'):
+        del package_dict['tracking_summary']
+
     for resource_dict in package_dict.get('resources', []):
         if _should_manually_load_property_value(context, resource_dict, 'size'):
             resource_dict['size'] = __get_resource_filesize(resource_dict)
