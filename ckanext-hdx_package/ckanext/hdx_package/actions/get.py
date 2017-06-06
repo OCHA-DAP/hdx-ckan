@@ -325,6 +325,7 @@ def package_show(context, data_dict):
     Wraps the default package_show and adds additional information to the resources:
     resource size (for uploaded files) and resource revision timestamp
     '''
+    data_dict['include_tracking'] = True
     package_dict = logic_get.package_show(context, data_dict)
 
     # added because showcase schema validation is generating "ckan.lib.navl.dictization_functions.Missing"
