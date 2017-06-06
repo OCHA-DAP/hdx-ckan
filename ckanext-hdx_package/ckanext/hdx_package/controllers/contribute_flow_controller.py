@@ -56,14 +56,6 @@ class ContributeFlowController(base.BaseController):
         abort_message = None
 
         try:
-            maintainer_dict = logic.get_action('user_show')(context, {'id': dataset_dict.get('maintainer', 'hdx')})
-            if maintainer_dict:
-                dataset_dict['maintainer'] = maintainer_dict.get('name', None)
-                dataset_dict['maintainer_email'] = maintainer_dict.get('email', None)
-        except logic.NotFound, e:
-            log.info("Maintainer or user not found!")
-
-        try:
             if request.POST and save_type:
                 # update or create dataset
                 dataset_dict, errors, error_summary = self._save_or_update(context)
@@ -73,15 +65,17 @@ class ContributeFlowController(base.BaseController):
                     # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
+                    maintainer_dict = logic.get_action('user_show')(context,{'id': dataset_dict.get('maintainer', None)})
+                    if maintainer_dict:
+                        dataset_dict['maintainer'] = maintainer_dict.get('name', None)
 
         except logic.NotAuthorized, e:
             status_code = 401
             ex_msg = e.message if hasattr(e, 'message') else str(e)
             abort_message = _('Unauthorized action: ') + ex_msg
         except logic.NotFound, e:
-            status_code = 404
+            log.info("Maintainer or user not found!")
             abort_message = _('Dataset/user not found')
-
         except NoOrganization, e:
             status_code = 400
             ex_msg = e.message if hasattr(e, 'message') else str(e)
