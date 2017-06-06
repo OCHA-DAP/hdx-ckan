@@ -395,7 +395,10 @@
                                             </div>
 
                                             {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
-                                            'data-module-source': '/api/2/util/user/autocomplete?q=?', 'class':'form-control' } %}
+                                            'data-module-source': '/api/2/util/user/autocomplete?q=?',
+                                            'data-module-label': 'fullname',
+                                            'data-module-key': 'id',
+                                            'class':'form-control' } %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="maintainer">
                                             {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
                                             </div>

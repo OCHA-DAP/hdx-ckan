@@ -6,7 +6,7 @@
 {% set group_topics = group_topics or {} %}
 {% set hide_contact_contributor = hide_contact_contributor or false%}
 {% set hide_membership = hide_membership or false %}
-
+{% set hide_follow = hide_follow or false %}
 
 
 {% if not hide_membership %}
@@ -20,9 +20,11 @@
 <span class="{{ classes }}">
     <ul class="">
         {% if c.user %}
-            <li>
-                <strong class="uppercase">{{ h.hdx_follow_link(base_type, follow_id, "", "link-separator") }}</strong>
-            </li>
+            {% if not hide_follow%}
+                <li>
+                    <strong class="uppercase">{{ h.hdx_follow_link(base_type, follow_id, "", "link-separator") }}</strong>
+                </li>
+            {% endif %}
             {% if not hide_contact_contributor%}
                 <li>
                     <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">

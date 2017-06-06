@@ -1,0 +1,10 @@
+{% extends "indicator/snippets/base_actions_menu.html" %}
+
+
+{% block user_actions %}
+    {% if h.check_access('ckanext_showcase_update', {'id':pkg.id }) %}
+        <li>
+            {% link_for _('Edit showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='edit', id=pkg.name, class_='' %}
+        </li>
+    {% endif %}
+{% endblock %}

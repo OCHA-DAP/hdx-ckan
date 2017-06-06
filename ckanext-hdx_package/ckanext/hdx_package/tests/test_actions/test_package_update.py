@@ -11,6 +11,7 @@ import pylons.config as config
 import json
 import ckan.plugins.toolkit as tk
 import ckan.tests as tests
+import ckan.tests.legacy as legacy_tests
 import ckan.model as model
 import ckan.lib.helpers as h
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
@@ -43,8 +44,6 @@ organization = {
     'description': 'This is a test organization',
     'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
 }
-
-log = logging.getLogger(__name__)
 
 
 class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
@@ -139,9 +138,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
     def test_hdx_solr_additions(self):
         testsysadmin = model.User.by_name('testsysadmin')
-        tests.call_action_api(self.app, 'group_create', name="col", title="Colombia", apikey=testsysadmin.apikey,
+        legacy_tests.call_action_api(self.app, 'group_create', name="col", title="Colombia", apikey=testsysadmin.apikey,
                               status=200)
-        p = tests.call_action_api(self.app, 'package_create', package_creator="test function", name="test_activity_12",
+        p = legacy_tests.call_action_api(self.app, 'package_create', package_creator="test function", name="test_activity_12",
                                   dataset_source="World Bank", notes="This is a test activity", title="Test Activity 1",
                                   indicator=1, groups=[{"name": "col"}], apikey=testsysadmin.apikey, status=200)
         context = {'ignore_auth': True,
@@ -186,7 +185,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         #                       apikey=testsysadmin.apikey, status=404)
         # modified_package = tests.call_action_api(self.app, 'package_show', id='test_activity_1_modified',
         #                                          apikey=testsysadmin.apikey, status=200)
-        modified_package = tests.call_action_api(self.app, 'package_show', id='test_activity_1',
+        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_1',
                                                  apikey=testsysadmin.apikey, status=200)
         modified_fields.pop('id')
 

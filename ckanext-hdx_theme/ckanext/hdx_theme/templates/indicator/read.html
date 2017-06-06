@@ -84,8 +84,8 @@
 
 {% block secondary %}
 <div>
-  <h2 class="uppercase">{{_('Gallery')}}</h2>
-  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj %}
+  <h2 class="uppercase">{{_('Related Showcases')}}</h2>
+  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
 
 </div>
   <div>
@@ -102,9 +102,9 @@
 {% block primary %}
   <div class="mL30 mTop20">
     {% block package_notes %}
-        {% if c.pkg_notes_formatted %}
+        {% if pkg.notes %}
           <div class="notes embedded-content">
-            {{ c.pkg_notes_formatted }}
+            {{ h.render_markdown(h.get_translated(pkg, 'notes')) }}
           </div>
         {% endif %}
     {% endblock %}

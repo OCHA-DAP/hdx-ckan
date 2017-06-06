@@ -6,7 +6,7 @@ Created on Jul 25, 2014
 
 import logging as logging
 import ckan.model as model
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 

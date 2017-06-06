@@ -1,10 +1,13 @@
 import ckan.authz as new_authz
 import ckan.logic as logic
 import ckan.logic.auth.create as create
+import ckan.model as model
 
 from ckan.lib.base import _
 from ckan.common import c
 import ckan.plugins.toolkit as tk
+
+import ckanext.hdx_theme.helpers.helpers as helpers
 
 
 ## ORGS
@@ -59,3 +62,41 @@ def invalidate_cache_for_groups(context, data_dict):
 
 def invalidate_cache_for_organizations(context, data_dict):
     return {'success': False, 'msg': _('Only sysadmins can invalidate organization cache')}
+
+
+def _is_editor():
+    '''
+    Check if the current user is at least editor in some organization
+    :return: True if user is at least editor in some org
+    :rtype: bool
+    '''
+    organizations = helpers.hdx_organizations_available_with_roles()
+    for org in organizations:
+        if org.get('role') in ('admin', 'editor'):
+            return True
+    return False
+
+
+# showcase
+def showcase_create(context, data_dict):
+    return {'success': _is_editor()}
+
+
+# showcase
+def showcase_update(context, data_dict):
+    return {'success': _is_editor()}
+
+
+# showcase
+def showcase_delete(context, data_dict):
+    return {'success': _is_editor()}
+
+
+# showcase
+def showcase_package_association_create(context, data_dict):
+    return {'success': _is_editor()}
+
+
+# showcase
+def showcase_package_association_delete(context, data_dict):
+    return {'success': _is_editor()}

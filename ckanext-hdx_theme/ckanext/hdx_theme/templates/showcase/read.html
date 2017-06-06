@@ -1,0 +1,125 @@
+{% ckan_extends %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary_content_inner %}
+
+    <section class="module module-narrow">
+        {% if c.showcase_pkgs %}
+            <div class="search-list">
+                <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+                    {% for package in c.showcase_pkgs %}
+                        {% if package.indicator and package.indicator == "1" %}
+                            {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
+                        {% else %}
+                            {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p class="module-content empty">{{_('There are no Datasets in this Showcase')}}</p>
+        {% endif %}
+    </section>
+{% endblock %}
+
+{% block pre_primary %}
+<div class="row paddingRowHack whiteBackground">
+
+
+    {% block title_and_actions %}
+    <div class="col-xs-12 paddingLeftHack paddingRightHack">
+        <div class="row">
+            <div class="col-xs-12 mTop35 mBottom15">
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="row">
+                            <div class="col-xs-12 mBottom15">
+                                <h1 class="itemTitle">
+                                    {{ pkg.title or pkg.name }}
+                                </h1>
+                                <div class="list-items mTop20">
+                                    {% if c.showcase_pkgs %}
+                                        {% set num_of_pack = c.showcase_pkgs|length %}
+                                        <span class="sspBold14">
+                                            <a class="sspBold14" href="#datasets-anchor">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                                        </span>
+                                    {% else %}
+                                        <span class="sspBold14">{{ _('0 Datasets') }}</span>
+                                    {% endif %}
+                                    -
+                                    <span class="sspBold14">
+                                        <a class="sspBold14" href="{{ pkg.url }}">{{ _('Visit Website') }}</a>
+                                    </span>
+                                </div>
+                                {% if pkg.author %}
+                                <div>
+                                    <span class="smallest">{{_('Submitted by')}}</span> {{ pkg.author }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-xs-12">
+                                <div class="notes">
+                                    {{ pkg.showcase_notes_formatted }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4">
+                        {% if pkg.image_display_url %}
+                        <img class="pull-right" style="max-width: 100%; max-height: 200px;" src="{{ pkg.image_display_url }}" alt="{{ name }}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 align-bottom-right">
+                <div class="tag-wrapper">
+                    {% for tag in pkg.tags %}
+                    <a class="label tag" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
+                    {% endfor %}
+                </div>
+                {% snippet "showcase/showcase_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right',
+                panel_title="Share Showcase", title=pkg.title, base_type='showcase', base_title='showcase', hide_membership=true, hide_contact_contributor=true,
+                hide_follow=true %}
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+{% endblock %}
+
+
+{% block page_header %}
+<div id="datasets-anchor">
+    <header class="module-content page-header paddingRowHack mTop20 mBottom10">
+        <ul class="nav nav-tabs paddingLeftHack paddingRightHack">
+            {% block content_primary_nav %}
+            <li class="active">
+                <a class="hdx-tab-button" href="#">{{ _('Datasets') }}</a>
+            </li>
+            {% endblock %}
+        </ul>
+    </header>
+</div>
+{% endblock %}
+
+
+
+{% block content_action %}
+{% endblock %}
+
+
+{% block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/indicator/indicator.css' %}
+    {% resource 'hdx_theme/jquery.highlight' %}
+    {% resource 'hdx_theme/jquery.expander' %}
+    {% resource 'hdx_theme/hdx_show_more.js' %}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+{% endblock %}
+
+

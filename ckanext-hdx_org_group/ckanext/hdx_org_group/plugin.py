@@ -296,6 +296,10 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
                 tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')]
         })
+        schema.update({
+            'package_count': [
+                tk.get_validator('ignore_missing')]
+        })
         return schema
 
     def create(self, country):

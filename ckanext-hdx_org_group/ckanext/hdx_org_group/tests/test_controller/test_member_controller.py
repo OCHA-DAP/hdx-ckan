@@ -289,5 +289,5 @@ class MockedHDXOrgMemberController(member_controller.HDXOrgMemberController):
         context = {'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         return context
 
-    def _render_template(self, template_name):
+    def _render_template(self, template_name, group_type):
         pass

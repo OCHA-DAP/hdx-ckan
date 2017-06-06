@@ -14,6 +14,9 @@ from ckan.lib.search import SearchIndexError
 from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_package.exceptions import WrongResourceParamName, NoOrganization
 
+import logging
+log = logging.getLogger(__name__)
+
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
 parse_params = logic.parse_params
@@ -51,26 +54,28 @@ class ContributeFlowController(base.BaseController):
 
         status_code = 200
         abort_message = None
+
         try:
             if request.POST and save_type:
                 # update or create dataset
                 dataset_dict, errors, error_summary = self._save_or_update(context)
-
             else:
                 if id:
                     # show dataset in case of edit
                     # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
+                    maintainer_dict = logic.get_action('user_show')(context,{'id': dataset_dict.get('maintainer', None)})
+                    if maintainer_dict:
+                        dataset_dict['maintainer'] = maintainer_dict.get('name', None)
 
         except logic.NotAuthorized, e:
             status_code = 401
             ex_msg = e.message if hasattr(e, 'message') else str(e)
             abort_message = _('Unauthorized action: ') + ex_msg
         except logic.NotFound, e:
-            status_code = 404
-            abort_message = _('Dataset not found')
-
+            log.info("Maintainer or user not found!")
+            abort_message = _('Dataset/user not found')
         except NoOrganization, e:
             status_code = 400
             ex_msg = e.message if hasattr(e, 'message') else str(e)
@@ -182,6 +187,7 @@ class ContributeFlowController(base.BaseController):
         self.process_locations(data_dict)
         self.process_dataset_date(data_dict)
         self.process_expected_update_frequency(data_dict)
+        self.process_maintainer(context, data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
@@ -306,3 +312,16 @@ class ContributeFlowController(base.BaseController):
     def process_expected_update_frequency(self, data_dict):
         if 'data_update_frequency' in data_dict and data_dict.get('data_update_frequency', '-1') == '-1':
             data_dict['data_update_frequency'] = None
+
+    def process_maintainer(self, context, data_dict):
+        if 'maintainer' in data_dict:
+            # maintainer_dict = logic.get_action('user_show')(context, {'id': data_dict.get('maintainer', 'hdx')})
+            # data_dict['maintainer'] = maintainer_dict.get('id', None)
+            # data_dict['maintainer_email'] = maintainer_dict.get('email', None)
+            try:
+                maintainer_dict = logic.get_action('user_show')(context, {'id': data_dict.get('maintainer', 'hdx')})
+                if maintainer_dict:
+                    data_dict['maintainer'] = maintainer_dict.get('id', None)
+                    data_dict['maintainer_email'] = maintainer_dict.get('email', None)
+            except logic.NotFound, e:
+                log.info("Maintainer or user not found!")

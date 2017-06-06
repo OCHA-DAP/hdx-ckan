@@ -1,7 +1,8 @@
 {# This snippet is still used in normal (old-style) org pages #}
 {% import 'macros/form.html' as form %}
 
-{% set placeholder = placeholder if placeholder else _('Search...') %}
+{% set backupPlaceholder = "Search " ~ type ~ " ..." %}
+{% set placeholder = placeholder if placeholder else backupPlaceholder %}
 {% set sorting = sorting if sorting else [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc')] %}
 {% set search_class = search_class if search_class else 'search-giant' %}
 {% set is_display_search_input = display_search_input if display_search_input==False else True %}
@@ -17,14 +18,14 @@
         {% block search_input %}
           <span class="mL30">
               {% set searchValue = request.params.get('q') if request.params.get('q') else query %}
-              <input id="headerSearch" class="header-search search" type="text" name="q" placeholder="Search {{type}} ..." value="{{searchValue}}">
+              <input id="headerSearch" class="header-search search" type="text" name="q" placeholder="{{placeholder}}" value="{{searchValue}}">
           </span>
         {% endblock %}
         {% endif %}
 
         {% set sorting = sorting or [(_('Name Ascending'), 'title asc'), (_('Name Descending'), 'title desc'), (_('Dataset Count Descending'), 'datasets desc'), (_('Dataset Count Ascending'), 'datasets asc')] %}
         {% set sort_param = request.params.get('sort') %}
-        {% set sorting_selected = sort_param if sort_param else 'title asc' %}
+        {% set sorting_selected = sorting_selected or (sort_param if sort_param else 'title asc') %}
         <div class="form-select control-group control-order-by pull-right">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
             <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
