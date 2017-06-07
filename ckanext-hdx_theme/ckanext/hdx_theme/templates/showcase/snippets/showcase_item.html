@@ -1,0 +1,35 @@
+{% ckan_extends %}
+{% block item_inner %}
+    {% block image %}
+      <img src="{{ package.image_display_url or h.url_for_static('/base/images/placeholder-group.png') }}" alt="{{ package.name }}" class="media-image">
+    {% endblock %}
+    {% block title %}
+      <h3 class="media-heading">{{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name)) }}</h3>
+    {% endblock %}
+    {% block notes %}
+      {% if notes %}
+        <div>{{ notes|urlize }}</div>
+      {% else %}
+        <p class="empty">{{ _("This showcase has no description") }}</p>
+      {% endif %}
+    {% endblock %}
+    {% block datasets %}
+      {% if package.num_datasets %}
+        <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', package.num_datasets).format(num=package.num_datasets) }}</strong>
+      {% elif package.num_datasets == 0 %}
+        <span class="count">{{ _('0 Datasets') }}</span>
+      {% endif %}
+    {% endblock %}
+    {% block link %}
+      <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}" title="{{ _('View {showcase_title}').format(showcase_title=package.title) }}" class="media-view">
+        <span>{{ _('View {showcase_title}').format(showcase_title=package.title) }}</span>
+      </a>
+    {% endblock %}
+    {% if show_remove %}
+      <form method="post"><input type="hidden" value="{{ package.id }}" name="remove_showcase_id" />
+        <a href="{{h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='manage_datasets', id=package.name)}}" class="btn btn-danger btn-small media-edit" title="{{ _('Remove dataset from this showcase') }}">
+          {{ _('Remove') }}
+        </a>
+      </form>
+    {% endif %}
+  {% endblock %}
