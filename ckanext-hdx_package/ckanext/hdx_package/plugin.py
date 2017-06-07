@@ -249,6 +249,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(HDXPackagePlugin, self).show_package_schema()
+
         schema.update({
             # Notes == description. Makes description required
             'notes': [vd.not_empty_ignore_ws],
@@ -366,21 +367,84 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         '''
             We're using a different validation schema if the dataset is private !
         '''
+        is_requestdata_type = self._is_requestdata_type(data_dict)
+
         if action in ['package_create', 'package_update']:
             private = False if str(data_dict.get('private','')).lower() == 'false' else True
 
             if private:
-                schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
-                schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-                schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
-                schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
-                                                   tk.get_converter('convert_to_extras')]
+                self._update_with_private_modify_package_schema(schema)
 
-                if 'groups_list' in schema:
-                    del schema['groups_list']
+            if is_requestdata_type:
+                self._update_with_requestdata_modify_package_schema(schema)
+
+
+        if action == 'package_show':
+            if is_requestdata_type:
+                self._update_with_requestdata_show_package_schema(schema)
 
         return toolkit.navl_validate(data_dict, schema, context)
 
+    def _is_requestdata_type(self, data_dict):
+        is_requestdata_type_show = False
+        is_requestdata_type_modify = str(data_dict.get('is_requestdata_type', '')).lower() == 'true'
+
+        if not is_requestdata_type_modify:
+            is_requestdata_type_show = next(
+                (extra.get('value') for extra in data_dict.get('extras',[])
+                    if extra.get('state') == 'active' and extra.get('key') == 'is_requestdata_type'),
+                'false') == 'true'
+
+        return is_requestdata_type_modify or is_requestdata_type_show
+
+    def _update_with_private_modify_package_schema(self, schema):
+        log.debug('Update with private modifiy package schema')
+        schema['notes'] = [tk.get_validator('ignore_missing'), unicode]
+        schema['methodology'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+        schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+        schema['data_update_frequency'] = [tk.get_validator('ignore_missing'),
+                                           tk.get_converter('convert_to_extras')]
+
+        if 'groups_list' in schema:
+            del schema['groups_list']
+
+    def _update_with_requestdata_modify_package_schema(self, schema):
+        log.debug('Update with requestdata modifiy package schema')
+        for plugin in plugins.PluginImplementations(plugins.IDatasetForm):
+            if plugin.name == 'requestdata':
+                if type == 'create':
+                    requestdata_schema = plugin.create_package_schema()
+                    schema.update(requestdata_schema)
+                elif type == 'update':
+                    requestdata_schema = plugin.update_package_schema()
+                    schema.update(requestdata_schema)
+
+        schema.update({
+            'field_names': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'file_types': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'num_of_rows': [tk.get_validator('ignore_missing'), tk.get_validator('is_positive_integer'),
+                            tk.get_converter('convert_to_extras')]
+        })
+
+        schema.pop('license_id')
+        schema.pop('license_other')
+
+    def _update_with_requestdata_show_package_schema(self, schema):
+        log.debug('Update with requestdata show package schema')
+
+        # Adding requestdata related schema
+        for plugin in plugins.PluginImplementations(plugins.IDatasetForm):
+            if plugin.name == 'requestdata':
+                requestdata_schema = plugin.show_package_schema()
+                schema.update(requestdata_schema)
+
+        # Adding hdx specific request data schema
+        schema.update({
+            'field_names': [tk.get_converter('convert_from_extras'), tk.get_validator('not_empty')],
+            'file_types': [tk.get_converter('convert_from_extras'), tk.get_validator('not_empty')],
+            'num_of_rows': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing'),
+                            tk.get_validator('is_positive_integer')]
+        })
 
 class HDXAnalyticsPlugin(plugins.SingletonPlugin):
 
