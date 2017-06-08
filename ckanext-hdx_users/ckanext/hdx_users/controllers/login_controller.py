@@ -20,6 +20,7 @@ import ckan.logic as logic
 from pylons import config
 import ckan.model as model
 import mail_validation_controller as hdx_mail_c
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_users.helpers.tokens as tokens
 
 render = base.render
@@ -72,9 +73,10 @@ class LoginController(ckan_user.UserController):
                 return OnbErr
             if user_obj:
                 try:
-                    mailer.send_reset_link(user_obj)
+                    # hdx_mailer.send_reset_link(user_obj)
+                    get_action('hdx_send_reset_link')(context, {'id': user_id})
                     return hdx_mail_c.OnbSuccess
-                except mailer.MailerException, e:
+                except hdx_mailer.MailerException, e:
                     return OnbResetLinkErr
         # return render('user/request_reset.html')
         return render('home/index.html')

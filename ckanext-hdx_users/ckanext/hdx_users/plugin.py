@@ -90,7 +90,8 @@ class HDXValidatePlugin(plugins.SingletonPlugin):
         return {
             'token_create': create.token_create,
             'token_update': update.token_update,
-            'onboarding_followee_list': get.onboarding_followee_list
+            'onboarding_followee_list': get.onboarding_followee_list,
+            'hdx_send_reset_link': get.hdx_send_reset_link
         }
 
     def get_auth_functions(self):
@@ -163,7 +164,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/logged_in', controller='user', action='logged_in')
         map.connect('/user/logged_out', controller='user', action='logged_out')
         map.connect('/user/logged_out_redirect', controller='user', action='logged_out_page')
-        map.connect('/user/reset', controller='user', action='request_reset')
+        # map.connect('/user/reset', controller='user', action='request_reset')
         map.connect('/user/me', controller='user', action='me')
         map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')

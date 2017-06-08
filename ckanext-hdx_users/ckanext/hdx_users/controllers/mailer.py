@@ -12,12 +12,16 @@ import paste.deploy.converters
 import ckan
 
 from ckan.common import _, g
+import ckan.lib.helpers as h
+
+import ckan.lib.mailer as mailer
 
 log = logging.getLogger(__name__)
 
+from ckan.lib.mailer import MailerException
 
-class MailerException(Exception):
-    pass
+# class MailerException(Exception):
+#     pass
 
 
 FOOTER = '''<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p><p><a href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315">Sign up for our newsletter</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'''
@@ -124,16 +128,30 @@ def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_ema
     return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list,
                            footer=footer, headers=headers, sender_email=sender_email)
 
-    # recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
-    #                        sender_url=g.site_url, subject=subject, body=body, headers=headers,
-    #                        recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
-    #                        bcc_recipients_list=bcc_recipients_list)
-
 #
+# def send_reset_link(user):
+#     from urlparse import urljoin
 #
-# def mail_recipient(recipient_name, recipient_email, subject, body, headers={}, recipients_list=None, footer=None,
-#                    sender_name='HDX', sender_email=None, bcc_recipients_list=None):
-#     return _mail_recipient(recipient_name=recipient_name, recipient_email=recipient_email, sender_name=sender_name,
-#                            sender_url=g.site_url, subject=subject, body=body, headers=headers,
-#                            recipients_list=recipients_list, footer=footer, show_header=False, sender_email=sender_email,
-#                            bcc_recipients_list=bcc_recipients_list)
+#     mailer.create_reset_key(user)
+#
+#     subject = mailer.render_jinja2('emails/reset_password_subject.txt', {'site_title': config.get('ckan.site_title')})
+#     # Make sure we only use the first line
+#     subject = subject.split('\n')[0]
+#
+#     reset_link = user_fullname = recipient_mail = None
+#     if user:
+#         recipient_mail = user.email if user.email else None
+#         user_fullname = user.fullname or ''
+#         reset_link = urljoin(config.get('ckan.site_url'),
+#                              h.url_for(controller='user', action='perform_reset', id=user.id, key=user.reset_key))
+#
+#     body = u"""\
+#                 <p>Dear {fullname}, </p>
+#                 <p>You have requested your password on {site_title} to be reset.</p>
+#                 <p>Please click on the following link to confirm this request:</p>
+#                 <p> <a href=\"{reset_link}\">{reset_link}</a></p>
+#             """.format(fullname=user_fullname, site_title=config.get('ckan.site_title'),
+#                        reset_link=reset_link)
+#
+#     if recipient_mail:
+#         mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
