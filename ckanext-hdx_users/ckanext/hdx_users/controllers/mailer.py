@@ -127,31 +127,3 @@ def mail_recipient(recipients_list, subject, body, sender_name='HDX', sender_ema
         raise MailerException('There are no recipients to send email')
     return _mail_recipient(recipients_list, subject, body, sender_name, bcc_recipients_list=bcc_recipients_list,
                            footer=footer, headers=headers, sender_email=sender_email)
-
-#
-# def send_reset_link(user):
-#     from urlparse import urljoin
-#
-#     mailer.create_reset_key(user)
-#
-#     subject = mailer.render_jinja2('emails/reset_password_subject.txt', {'site_title': config.get('ckan.site_title')})
-#     # Make sure we only use the first line
-#     subject = subject.split('\n')[0]
-#
-#     reset_link = user_fullname = recipient_mail = None
-#     if user:
-#         recipient_mail = user.email if user.email else None
-#         user_fullname = user.fullname or ''
-#         reset_link = urljoin(config.get('ckan.site_url'),
-#                              h.url_for(controller='user', action='perform_reset', id=user.id, key=user.reset_key))
-#
-#     body = u"""\
-#                 <p>Dear {fullname}, </p>
-#                 <p>You have requested your password on {site_title} to be reset.</p>
-#                 <p>Please click on the following link to confirm this request:</p>
-#                 <p> <a href=\"{reset_link}\">{reset_link}</a></p>
-#             """.format(fullname=user_fullname, site_title=config.get('ckan.site_title'),
-#                        reset_link=reset_link)
-#
-#     if recipient_mail:
-#         mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)

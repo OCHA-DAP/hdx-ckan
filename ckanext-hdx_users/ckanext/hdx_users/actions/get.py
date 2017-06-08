@@ -10,7 +10,6 @@ NoOfOrgs = 5
 c_nepal_earthquake = config.get('hdx.crisis.nepal_earthquake')
 
 
-
 @logic.side_effect_free
 def onboarding_followee_list(context, data_dict):
     # TODO check if user is following org&locs
