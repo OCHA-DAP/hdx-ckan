@@ -104,7 +104,7 @@
         </div>
         <div class="dataset-others">
           {% block others %}
-            {% if package.type == 'hdx-requestdata-metadata-only' %}
+            {% if package.is_requestdata_type %}
               {% if c.userobj %}
                 {% set is_logged_in = 'true' %}
               {% else %}
