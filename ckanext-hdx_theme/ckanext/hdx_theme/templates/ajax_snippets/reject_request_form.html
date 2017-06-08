@@ -1,0 +1,55 @@
+{% import 'macros/form.html' as form %}
+
+<div class="modal request-data-modal two-cols request-data-two-cols reply-request-form">
+  <div class="modal-content request-data-modal-content">
+    <div class="modal-body request-data-modal-body">
+      <div class="row two-cols request-data-two-cols" style="width: initial !important;">
+        <div class="col-sm-6 left-col" style="height: 610px;">
+          <div class="large-title reply-request-form-large-title white">
+            {{ package_name }}
+          </div>
+          <div class="reply-request-form-request-info white">
+            {% set sender_profile = h.url_for(controller='user', action='read', id=sender_id) %}
+            <p>Requested by: <a href="{{ sender_profile }}">{{ requested_by }}</a></p>
+            {% set maintainers = h.requestdata_convert_str_to_json(maintainers) %}
+
+            <p>Maintainers:
+              {% for item in maintainers %}
+                {% set sender_profile = h.url_for(controller='user', action='read', id=item.id) %}
+                <a href="{{ sender_profile }}">{{ item.fullname }}</a>{% if not loop.last %}, {% endif %}
+              {% endfor %}
+            </p>
+          </div>
+          <div class="reply-request-form-line white"></div>
+          <div class="reply-request-form-sender-message white">
+            <span>{{requested_by}} wrote:</span>
+            <br>
+            <p>{{ message_content }}</p>
+          </div>
+        </div>
+        <div class="col-sm-6 right-col" style="background-color: #EEEEEE;">
+          <div class="paddingfix">
+            <div class="ds-title">
+              Decline the request
+            </div>
+            <div class="ds-contrib mtop5">
+              Explain why you can't share the requested data
+            </div>
+            <form class="form-horizontal" id="request-data-form" enctype="multipart/form-data">
+              <div class="alert alert-error hide"></div>
+              {% block message_content %}
+                <div class="request-data-form-control reply-request-form-control">
+                  <textarea id="field-comments" name="message_content" class="request-data-form-input reply-request-form-message-content" type="text" value="" required="required" style="height: 100px; padding: 12px;"></textarea>
+                </div>
+              {% endblock %}
+            </form>
+            <div class="modal-footer request-data-modal-footer">
+              <button class="btn btn-empty btn-empty-black btn-large btn-cancel" style="border-color: transparent;">Cancel</button>
+              <button type="submit" class="btn btn-primary btn-submit" style="width: 120px; margin-left: 25px;">Send</button>
+            </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

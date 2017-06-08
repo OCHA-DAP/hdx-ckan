@@ -1,0 +1,21 @@
+{% ckan_extends %}
+
+
+{% block collapse_icon %}
+    <div class="glyphicon-container">
+        <i class="glyphicon glyphicon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+    </div>
+{% endblock %}
+{% block rejected_icon %}
+        <div class="requested-data-status-icon"><i class="glyphicon glyphicon-ban-circle"></i></div>
+        <div class="requested-data-status">Dataset rejected</div>
+{% endblock %}
+{% block shared_icon %}
+        <div class="requested-data-status-icon"><i class="glyphicon glyphicon-ok-circle"></i></div>
+        <div class="requested-data-status">Dataset shared</div>
+{% endblock %}
+{% block notshared_icon %}
+        <div class="requested-data-status-icon"> <i class="glyphicon glyphicon-remove-circle"></i></div>
+        <div class="requested-data-status"> Dataset not shared</div>
+{% endblock %}
+{{ super() }}

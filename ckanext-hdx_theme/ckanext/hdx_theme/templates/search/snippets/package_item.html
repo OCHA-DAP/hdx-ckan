@@ -9,7 +9,9 @@
         <span class="mL15 pull-left">
           <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
             {% if is_metadata_only %}
-              {% block metadata_only_icon %}{% endblock %}
+              {% block metadata_only_icon %}
+                <img src="/images/metadata-only-restricted.png" width="16" height="16" style="margin-top: -3px;" />
+              {% endblock %}
             {% endif %}
             {% block title %}
               {% set truncate = truncate or 180 %}
@@ -102,25 +104,48 @@
         </div>
         <div class="dataset-others">
           {% block others %}
-            <ul class="hdx-bs3 list-items dataset-resources unstyled">
-            {% if package.resources and not hide_resources %}
+            {% if package.type == 'hdx-requestdata-metadata-only' %}
+              {% if c.userobj %}
+                {% set is_logged_in = 'true' %}
+              {% else %}
+                {% set is_logged_in = 'false' %}
+              {% endif %}
+              {% set is_hdx = h.requestdata_is_hdx_portal() %}
+              {% set redirect_url = h.url_for(controller='user', action='login') %}
+              {% set requestdata_action = h.url_for('requestdata_send_request') %}
+              {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
+              {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
+              <a href="#" class="btn btn-primary" style="margin-top: 10px;"
+                 data-module="modal-form"
+                 data-module-template_file="request_contact.html"
+                 data-module-submit_action="{{ requestdata_action }}"
+                 data-module-post_data="{{ request_post_data }}"
+                 data-module-is_logged_in="{{ is_logged_in }}"
+                 data-module-is_hdx="{{ is_hdx }}"
+                 data-module-redirect_url="{{ redirect_url }}"
+                 data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+              >Request access</a>
+              <div class="requested-data-message"></div>
+            {% else %}
+              <ul class="hdx-bs3 list-items dataset-resources unstyled">
+              {% if package.resources and not hide_resources %}
 
-                {% for resource in h.dict_list_reduce(package.resources, 'format') %}
-                  <li>
-                    <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
-                  </li>
-                {% endfor %}
-                {# set size="32Kb" #}
-                {% if size %}
-                  <li class="label-size">
-                    {{ size }}
-                  </li>
-                {% endif %}
+                  {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                    <li>
+                      <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
+                    </li>
+                  {% endfor %}
+                  {# set size="32Kb" #}
+                  {% if size %}
+                    <li class="label-size">
+                      {{ size }}
+                    </li>
+                  {% endif %}
+              {% endif %}
+              <!-- load package icons -->
+              {% snippet 'search/snippets/package_icons.html', package=package %}
+              </ul>
             {% endif %}
-            <!-- load package icons -->
-            {% snippet 'search/snippets/package_icons.html', package=package %}
-            </ul>
-
           {% endblock %}
         </div>
       </div>
@@ -130,3 +155,5 @@
 {% resource 'hdx_theme/bs_tooltip.js' %}
 {% resource 'hdx_theme/explorer' %}
 
+{% resource 'requestdata/modal-form.js' %}
+{% resource 'hdx_theme/requestdata/request-data.css' %}

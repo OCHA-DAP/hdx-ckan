@@ -41,7 +41,14 @@
         <div class="header-user-box pull-right">
           {% if c.userobj %}
             <span class="dropdown">
-              {% block header_request_data_notification %}{% endblock %}
+              {% block header_request_data_notification %}
+                {% set notification_seen = h.requestdata_get_notification() %}
+                {% if not notification_seen %}
+                  <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}" title="{{ _('New data request') }}">
+                    <div class="request-data-notification"></div>
+                  </a>
+                {% endif %}
+              {% endblock %}
               <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
                 <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
               </a>
