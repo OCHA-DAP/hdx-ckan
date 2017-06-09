@@ -248,7 +248,10 @@ def hdx_trigger_screencap(context, data_dict):
 
 @logic.side_effect_free
 def hdx_get_locations_info_from_rw(context, data_dict):
-    url = data_dict.get('rw_url')
-    if url:
-        return make_rest_api_request(url)
-    return None
+    try:
+        url = data_dict.get('rw_url')
+        if url:
+            return make_rest_api_request(url)
+        return None
+    except:
+        return None
