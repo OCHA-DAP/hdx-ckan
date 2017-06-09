@@ -1,3 +1,11 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
 .wrapper-secondary .banner {
   top: 10px;
   right: -20px;
@@ -180,4 +188,45 @@
 }
 .wide .media-item {
   width: 186px;
+}
+.showcase-item {
+  border: 1px solid #eeeeee;
+  height: 330px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+.showcase-item .showcase-image {
+  height: 150px;
+  max-height: 150px;
+  text-align: center;
+  border: 1px solid #eeeeee;
+}
+.showcase-item .showcase-image .img-placeholder {
+  background-color: #007CE0;
+  position: relative;
+  height: 100%;
+}
+.showcase-item .showcase-image .img-placeholder .img-placeholder-text {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.showcase-item .showcase-image img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.showcase-item .title {
+  margin: 15px 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: #333333;
+}
+.showcase-item .description {
+  color: #888888;
 }

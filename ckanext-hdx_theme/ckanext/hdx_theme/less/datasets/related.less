@@ -1,3 +1,6 @@
+@import "../base/variables";
+@import "../base/mixins";
+
 .wrapper-secondary .banner {
   top: 10px;
   right: -20px;
@@ -186,4 +189,48 @@
 }
 .wide .media-item {
   width: 186px;
+}
+
+.showcase-item {
+  border: 1px solid @extraLightGrayColor;
+  height: 330px;
+  padding: 15px;
+
+  margin-bottom: 15px;
+
+  .showcase-image {
+    height: 150px;
+    max-height: 150px;
+    text-align: center;
+
+    border: 1px solid @extraLightGrayColor;
+    .img-placeholder {
+      background-color: @blueColor;
+      position: relative;
+      height: 100%;
+
+      .img-placeholder-text {
+        .sourceSansProFont(700, 14px);
+        color: @whiteColor;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .title {
+    margin: 15px 0;
+    .sourceSansProFont(700, 18px);
+    color: @darkGrayColor;
+  }
+
+  .description {
+    color: @grayColor;
+  }
 }
