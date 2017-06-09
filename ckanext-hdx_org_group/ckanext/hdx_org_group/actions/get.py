@@ -25,6 +25,9 @@ import shlex
 import subprocess
 import random
 
+import logging
+log = logging.getLogger(__name__)
+
 json = common.json
 get_action = logic.get_action
 _get_or_bust = logic.get_or_bust
@@ -254,4 +257,5 @@ def hdx_get_locations_info_from_rw(context, data_dict):
             return make_rest_api_request(url)
         return None
     except:
+        log.error("RW file was not found or can not be accessed")
         return None
