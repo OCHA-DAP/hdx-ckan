@@ -4,7 +4,7 @@ $(document).ready(function(){
         $.post("/user/reset", $this.serialize(), function (result_data) {
             var result = JSON.parse(result_data);
             if (result.success) {
-                closeCurrentWidget(this);showOnboardingWidget('#recoverSuccessPopup');
+                closeCurrentWidget($this); showOnboardingWidget('#recoverSuccessPopup');
             } else {
                 var errMsg = $("#recoverPopup").find(".error-message");
                 errMsg.text(result.error.message);
