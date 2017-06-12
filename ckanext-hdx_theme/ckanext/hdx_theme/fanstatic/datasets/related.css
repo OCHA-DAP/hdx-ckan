@@ -230,3 +230,7 @@
 .showcase-item .description {
   color: #888888;
 }
+.showcase-item .remove-link {
+  color: #f2645a;
+  font-weight: 700;
+}

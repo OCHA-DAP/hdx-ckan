@@ -1,7 +1,7 @@
 {% block related_list %}
     {% if showcases %}
 
-        {% snippet "showcase/snippets/showcase_list.html", packages=showcases, pkg_id=c.pkg_dict.name, show_remove=h.check_access('ckanext_showcase_update') %}
+        {% snippet "showcase/snippets/showcase_list.html", packages=showcases, pkg_id=c.pkg_dict.name, show_remove=h.check_access('ckanext_showcase_update'), dataset=True %}
 
         {% if h.check_access('ckanext_showcase_create') %}
             <br/>

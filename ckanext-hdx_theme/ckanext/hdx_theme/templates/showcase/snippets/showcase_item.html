@@ -15,7 +15,7 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
 
 {% block package_item %}
 
-<div class="col-xs-3">
+<div class="{% if dataset %} col-xs-12 {% else %} col-xs-3 {% endif %}">
   <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}">
     <div class="showcase-item">
       <div class="showcase-image">
@@ -42,6 +42,13 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
           <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', package.num_datasets).format(num=package.num_datasets) }}</strong>
       {% elif package.num_datasets == 0 %}
           <span class="count">{{ _('0 Datasets') }}</span>
+      {% endif %}
+
+      {% if show_remove %}
+        <form method="post" class="pull-right">
+          <input type="hidden" value="{{ package.id }}" name="remove_showcase_id" />
+          <a href="#" onclick="$(this).parent().submit(); return false;" class="remove-link">{{ _('Remove') }}</a>
+        </form>
       {% endif %}
     </div>
   </a>
