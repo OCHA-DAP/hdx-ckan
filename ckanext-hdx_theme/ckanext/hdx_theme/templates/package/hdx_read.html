@@ -54,3 +54,8 @@
     {% resource 'hdx_theme/explorer' %}
 	</div>
 {% endblock %}
+
+{% block styles %}
+ {{ super() }}
+ {% resource 'hdx_theme/requestdata/request-data.css' %}
+{% endblock %}

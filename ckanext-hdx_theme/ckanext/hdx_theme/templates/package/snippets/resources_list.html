@@ -9,22 +9,67 @@ Example:
   {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
 
 #}
-<section id="dataset-resources" class="resources mTop35 info-wrapper">
-    <h3 class="uppercase">{{ _('Data and Resources') }}</h3>
-    {% block resource_list %}
-        {% if resources %}
-            <ul class="hdx-bs3 resource-list">
-                {% block resource_list_inner %}
-                    {% for resource in resources %}
-                        {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
-                    {% endfor %}
-                {% endblock %}
-            </ul>
+{% import 'macros/form.html' as form %}
+
+{% resource 'requestdata/modal-form.js' %}
+{% resource 'requestdata/css/main.css' %}
+
+<p id="dataset-resources" class="resources mTop35 info-wrapper">
+  <h3 class="uppercase">{{ _('Data and Resources') }}</h3>
+  <div class="requested-data-message"></div>
+  {% block resource_list %}
+    {% if resources %}
+      <ul class="{% block resource_list_class %}hdx-bs3 resource-list{% endblock %}">
+        {% block resource_list_inner %}
+          {% for resource in resources %}
+            {% snippet 'package/snippets/resource_item.html', pkg=pkg, res=resource %}
+          {% endfor %}
+        {% endblock %}
+      </ul>
+    {% else %}
+      {% if pkg.is_requestdata_type %}
+        {% if c.userobj %}
+         {% set is_logged_in = 'true' %}
         {% else %}
-            <p class="mTop20">
-                {# Comment out "add some" as action doesn't exist yet #}
-                    <p class="empty">This dataset has no data, <a class="info-item-name" href="#" onclick="contributeAddDetails('{{pkg.id}}')" >why not add some?</a>
-            </p>
+         {% set is_logged_in = 'false' %}
         {% endif %}
+        {% set is_hdx = h.requestdata_is_hdx_portal() %}
+        {% set redirect_url = h.url_for(controller='user', action='login') %}
+        {% set requestdata_action = h.url_for('requestdata_send_request') %}
+        {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name, 'package_title':pkg.title}) %}
+        {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
+        {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
+          <p class="empty">The metadata is available for this dataset. To access the full dataset, please request data.</p>
+          <a href="#" class="btn pull-right" style="margin-top: 10px;"
+             data-module="modal-form"
+             data-module-template_file="request_contact.html"
+             data-module-submit_action="{{ requestdata_action }}"
+             data-module-post_data="{{ request_post_data }}"
+             data-module-is_logged_in="{{ is_logged_in }}"
+             data-module-is_hdx="{{ is_hdx }}"
+             data-module-redirect_url="{{ redirect_url }}"
+             data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+          >Request data</a>
+
+          <div class="container-subpanel">
+
+            <div class="circle gray-bg"></div>
+            <div class="lines">
+              <div class="upper gray-bg"></div>
+              <div class="lower gray-bg"></div>
+            </div>
+
+          </div>
+        {% endtrans %}
+      {% else %}
+        {# Comment out "add some" as action doesn't exist yet #}
+        <p class="empty mTop20">This dataset has no data, <a class="info-item-name" href="#" onclick="contributeAddDetails('{{pkg.id}}')" >why not add some?</a>
+        </p>
+      {% endif %}
+
+
+    {% endif %}
+
     {% endblock %}
 </section>
+

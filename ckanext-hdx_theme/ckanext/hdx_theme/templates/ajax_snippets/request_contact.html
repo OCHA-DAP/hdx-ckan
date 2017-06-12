@@ -1,0 +1,58 @@
+{% resource 'hdx_theme/requestdata/request-data.css' %}
+
+{% import 'macros/form.html' as form %}
+
+<div class="modal request-data-modal two-cols request-data-two-cols posfix">
+  <div class="modal-content request-data-modal-content">
+    <div class="modal-body request-data-modal-body">
+      <div class="row two-cols request-data-two-cols" style="height: 610px !important;">
+        <div class="col-sm-6 left-col">
+          <div class="large-title">
+            Request access to a dataset
+          </div>
+          <div class="large-text mTop20">
+            Get in touch with an organization to know more about its available datasets.
+          </div>
+          <div class="regular-text mTop20 white">
+            HDX enables you to contact organizations that have interesting datasets. We will encourage the contributor to answer your request within a week. Check your email for updates!
+          </div>
+        </div>
+        <div class="col-sm-6 right-col">
+          <div class="paddingfix">
+            <div class="ds-title">
+              Dataset {{ package_name }}
+            </div>
+            <form class="form-horizontal" id="request-data-form">
+              <div class="alert alert-error hide"></div>
+              <div class="mTop20">
+                <div class="request-data-form-control">
+                  <input id="field-name" name="sender_name" class="request-data-form-input" type="text" value="{{ c.userobj.fullname }}" required="required">
+                  <label for="field-name" class="request-data-form-label">your name</label>
+                </div>
+                <div class="request-data-form-control">
+                  <input id="field-email" name="email_address" class="request-data-form-input" type="text" value="{{ c.userobj.email }}" required="required">
+                  <label for="field-email" class="request-data-form-label">your e-mail</label>
+                </div>
+              </div>
+              <div class="mTop20 mbottom15">
+                <div class="redasterisk">
+                  Why are you requesting access to this dataset?
+                </div>
+                <div class="mbottom10">
+                  Leave a message for the contributor:
+                </div>
+              </div>
+              <div class="request-data-form-control">
+                <textarea id="field-comments" name="message_content" class="request-data-form-input" type="text" value="" required="required" style="height: 100px; padding: 12px;"></textarea>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
+    <div class="modal-footer request-data-modal-footer bottom-actions" style="bottom: 30px !important;">
+      <button class="btn btn-empty btn-empty-black btn-large btn-cancel">Cancel</button>
+      <button type="submit" class="btn btn-primary btn-submit">Send request</button>
+    </div>
+  </div>
+  </div>
+</div>
