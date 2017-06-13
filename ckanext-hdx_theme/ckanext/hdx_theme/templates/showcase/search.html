@@ -35,6 +35,27 @@
               {% set searchPlaceholder = _("Search showcases...") %}
               {% snippet 'snippets/search_form_new.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, fields=c.fields, placeholder=searchPlaceholder %}
             </div>
+
+
+            {% if facets and facets.fields %}
+                <div class="list-header-filters">
+                    {% for field in facets.fields %}
+                    {% set search_facets_items = facets.search.get(field)['items'] %}
+                    <span class="filters-title uppercase" style="margin-right: 10px;">{{ facets.titles.get(field) }}:</span>
+                    {% for value in facets.fields[field] %}
+                    <span class="list-items filtered pill" style="line-height: 20px;">
+                          {%- if facets.translated_fields and facets.translated_fields.has_key((field,value)) -%}
+                            {{ facets.translated_fields[(field,value)] }}
+                          {%- else -%}
+                            {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
+                          {%- endif %}
+                          <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}" style="color: white;"><i class="glyphicon glyphicon-remove"></i></a>
+                        </span>
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
         {% endblock %}
 
         {% block package_search_results_list %}
