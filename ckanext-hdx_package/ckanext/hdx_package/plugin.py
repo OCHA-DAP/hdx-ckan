@@ -423,7 +423,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'field_names': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'file_types': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'num_of_rows': [tk.get_validator('ignore_missing'), tk.get_validator('is_positive_integer'),
-                            tk.get_converter('convert_to_extras')]
+                            tk.get_converter('convert_to_extras')],
+            'data_update_frequency': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
         })
 
         schema.pop('license_id')
@@ -443,7 +444,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'field_names': [tk.get_converter('convert_from_extras'), tk.get_validator('not_empty')],
             'file_types': [tk.get_converter('convert_from_extras'), tk.get_validator('not_empty')],
             'num_of_rows': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing'),
-                            tk.get_validator('is_positive_integer')]
+                            tk.get_validator('is_positive_integer')],
+            'data_update_frequency': [tk.get_validator('convert_from_extras'), tk.get_converter('ignore_missing')]
         })
 
 class HDXAnalyticsPlugin(plugins.SingletonPlugin):

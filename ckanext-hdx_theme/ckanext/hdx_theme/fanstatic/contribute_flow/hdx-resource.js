@@ -785,9 +785,9 @@ $(function(){
             var addMetadataBtn = $('.contribute-splash .add-metadata-btn');
 
             addMetadataBtn.on('click', function() {
-                this.goToStep2()
-                this._prepareFormForMetadataOnly({isEdit: false})
-            }.bind(this))
+                this.goToStep2();
+                this._prepareFormForMetadataOnly({isEdit: false});
+            }.bind(this));
 
             var isMetadataOnly = $('input[name=is_requestdata_type][value=true]');
 
@@ -837,43 +837,43 @@ $(function(){
             $(".create-step1").hide();
             $(".create-step2").show();
         },
-        _prepareFormForMetadataOnly(data) {
-            var formSectionResources = $('.form-resources-section')
-            var formSectionPrivacy = $('.form-privacy-section')
-            var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=false]')
-            var selectMethodology = $('#field_methodology')
-            var methodologySelectModule = $('.methodology-select')
-            var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen')
-            var formBody = $('#contribute-flow-form-body')
-            var selectUpdateFrequency = $('#field_data_update_frequency')
-            var updateFrequencySelectModule = $('.update-frequency-select')
-            var currentlySelectedUpdateFrequency = updateFrequencySelectModule.find('.select2-chosen')
-            var selectTagsModule = $('.tags-select')
-            var licenseField = $('.special-license')
-            var selectFieldNames = $('.field-names-select')
-            var selectFileTypes = $('.file-types-select')
-            var selectNumOfRows = $('.num-of-rows-select')
-            var isEdit = data.isEdit
+        _prepareFormForMetadataOnly: function(data) {
+            var formSectionResources = $('.form-resources-section');
+            var formSectionPrivacy = $('.form-privacy-section');
+            var privacyPublicRadioBtn = formSectionPrivacy.find('input[type=radio][value=false]');
+            var selectMethodology = $('#field_methodology');
+            var methodologySelectModule = $('.methodology-select');
+            var currentlySelectedMethodology = methodologySelectModule.find('.select2-chosen');
+            var formBody = $('#contribute-flow-form-body');
+            var selectUpdateFrequency = $('#field_data_update_frequency');
+            var updateFrequencySelectModule = $('.update-frequency-select');
+            var currentlySelectedUpdateFrequency = updateFrequencySelectModule.find('.select2-chosen');
+            var selectTagsModule = $('.tags-select');
+            var licenseField = $('.special-license');
+            var selectFieldNames = $('.field-names-select');
+            var selectFileTypes = $('.file-types-select');
+            var selectNumOfRows = $('.num-of-rows-select');
+            var isEdit = data.isEdit;
 
             // We set the type so that the right schema is used in the backend
-            formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />')
+            formBody.append('<input type="hidden" name="is_requestdata_type" value="true" />');
 
             // Resources are not required for metadata-only datasets
-            formSectionResources.hide()
+            formSectionResources.hide();
 
             // Hides the horizontal line
-            formSectionResources.next().hide()
+            formSectionResources.next().hide();
 
             // Metadata-only datasets are public only, so we select the "Public"
             // radio button and disable the "Private" one
-            privacyPublicRadioBtn.click()
-            formSectionPrivacy.hide()
+            privacyPublicRadioBtn.click();
+            formSectionPrivacy.hide();
 
             if (!isEdit) {
-                selectMethodology.val('None')
-                currentlySelectedMethodology.text('None')
-                selectUpdateFrequency.val('-1')
-                currentlySelectedUpdateFrequency.text('None')
+                selectMethodology.val('None');
+                currentlySelectedMethodology.text('None');
+                // selectUpdateFrequency.val('-1');
+                // currentlySelectedUpdateFrequency.text('None');
             }
 
             // For some reason, when editing a dataset, the class wasn't
@@ -882,20 +882,20 @@ $(function(){
 
                 // Methodology and Update frequency fields are not required in a
                 // metadata-only dataset
-                methodologySelectModule.removeClass('required')
-                updateFrequencySelectModule.removeClass('required')
+                methodologySelectModule.removeClass('required');
+                updateFrequencySelectModule.removeClass('required');
 
-                selectTagsModule.addClass('required')
-            }, 500)
+                selectTagsModule.addClass('required');
+            }, 500);
 
             // License is not required as well
-            licenseField.hide()
+            licenseField.hide();
 
             // These are already created fields in the DOM, but they are
             // initially hidden, and are only shown for metadata-only datasets
-            selectFieldNames.show()
-            selectFileTypes.show()
-            selectNumOfRows.show()
+            selectFieldNames.show();
+            selectFileTypes.show();
+            selectNumOfRows.show();
         }
     });
 
