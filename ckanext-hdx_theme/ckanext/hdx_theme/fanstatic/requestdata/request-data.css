@@ -1,17 +1,17 @@
 .request-data-modal {
   display: block;
   position: relative;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translateX(-50%) translateY(-50%) !important;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .request-data-modal-content {
-  border: unset !important;
+  border: unset;
 }
 
 .request-data-modal-body {
-  padding: 0px 0px 0px !important;
+  padding: 0px 0px 0px;
   position: absolute;
 }
 
@@ -23,7 +23,7 @@
 
 .left-col {
   background-color: #1ebdaf;
-  padding: 80px !important;
+  padding: 80px;
   height: inherit;
   background-image: url('/images/backgrounds/pixels_white.png');
   background-repeat: no-repeat;
@@ -32,10 +32,10 @@
 }
 
 .request-data-two-cols {
-  width: 890px !important;
-  height: 610px !important;
-  overflow: hidden !important;
-  margin-left: 0px !important;
+  width: 890px;
+  height: 610px;
+  overflow: hidden;
+  margin-left: 0px;
 }
 
 .large-title {
@@ -65,8 +65,8 @@
 }
 
 .bottom-actions {
-  position: absolute !important;
-  right: 35px !important;
+  position: absolute;
+  right: 35px;
   bottom: 35px;
 }
 
@@ -85,8 +85,8 @@
 }
 
 .curvy-border {
-  border: 1px solid #a9a9a9 !important;
-  border-radius: 5px !important;
+  border: 1px solid #a9a9a9;
+  border-radius: 5px;
 }
 
 .mbottom10 {
@@ -102,18 +102,18 @@
 }
 
 .form-fix {
-  margin-right: 50px !important;
-  line-height: 2 !important;
+  margin-right: 50px;
+  line-height: 2;
   font-weight: bold;
-  padding-right: 10px !important;
+  padding-right: 10px;
 }
 
 .request-data-modal-footer {
-  border-top: unset !important;
+  border-top: unset;
   position: absolute;
   right: 50px;
   bottom: 180px;
-  padding: initial !important;
+  padding: initial;
 }
 
 .paddingfix {
@@ -121,7 +121,7 @@
 }
 
 .form-horizontal .controls {
-     margin-left: unset !important;
+     margin-left: unset;
     margin-right: 50px;
 }
 
@@ -129,38 +129,38 @@
 .requested-data-container__actions--reply,
 .requested-data-container__actions--data-shared,
 .requested-data-container__actions--data-notshared{
-    background-color: #3071a9 !important;
-    padding-left: 6px !important;
+    background-color: #3071a9;
+    padding-left: 6px;
 }
 .requested-data-container__actions--reject:hover,
 .requested-data-container__actions--reply:hover,
 .requested-data-container__actions--data-shared:hover,
 .requested-data-container__actions--data-notshared:hover{
-    background-color: #888888 !important;
+    background-color: #888888;
 }
 
 .requested-data-container__content-item{
-    border: 2px solid #dddddd !important;
+    border: 2px solid #dddddd;
     border-radius: 10px;
     margin-bottom: 5px;
 }
 
 .requested-data-container__content{
     margin-left:8px;
-    border: 0px !important;
+    border: 0px;
     }
 
 h3{
     margin-left:8px;
-    font-size:25px !important;
+    font-size:25px;
 }
 h4{
-    font-size:20px !important;
+    font-size:20px;
 }
 .requested-data-container__content-item-counters{
     position:absolute;
-    right: 120px !important;
-    top: 30px !important;
+    right: 120px;
+    top: 30px;
 }
 .glyphicon-container{
     top: 51px;
@@ -168,10 +168,10 @@ h4{
     right: 5px;
 }
 .move-right {
-    margin-left: 20px !important;
+    margin-left: 20px;
 }
 .requested-data-shared{
-    font-size: 15px !important;
+    font-size: 15px;
 }
 .requested-data-container__content-item-info{
     font-size: 17px;
@@ -190,7 +190,7 @@ h4{
 .filter-requests{
     position: absolute;
     top: 35px;
-    right: 35px !important;
+    right: 35px;
     font-weight:bold;
 }
 .paddingLeftHack,
@@ -198,11 +198,11 @@ h4{
 
 }
 .caret{
-    border-top:9px solid black !important;
-    vertical-align: middle !important;
+    border-top: 9px solid black;
+    vertical-align: middle;
 }
 .btn-filter{
-    width: 140px !important;
+    width: 140px;
 }
 .empty {
   font-weight: bold;
@@ -262,8 +262,8 @@ h4{
 }
 
 .reply-request-form {
-  width: 880px !important;
-  height: 610px !important;
+  width: 880px;
+  height: 610px;
 }
 
 .reply-request-form-large-title {
@@ -304,14 +304,14 @@ h4{
 }
 
 .white {
-  color: #ffffff !important;
+  color: #ffffff;
 }
 
 .bottom-actions button {
-  border-color: transparent !important;
+  border-color: transparent;
 }
 
 .reply-request-form-file-upload {
-  display: inline-block !important;
+  display: inline-block;
   margin-left: 10px;
 }
