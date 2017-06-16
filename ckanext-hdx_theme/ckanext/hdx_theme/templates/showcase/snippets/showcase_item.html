@@ -45,10 +45,9 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
       {% endif %}
 
       {% if show_remove %}
-        <form method="post" class="pull-right">
-          <input type="hidden" value="{{ package.id }}" name="remove_showcase_id" />
-          <a href="#" onclick="$(this).parent().submit(); return false;" class="remove-link">{{ _('Remove') }}</a>
-        </form>
+        <div class="pull-right">
+          <a href="{{ h.url_for('ckanext_showcase_edit', id=package.name) }}" class="remove-link">{{ _('Edit') }}</a>
+        </div>
       {% endif %}
     </div>
   </a>

@@ -195,6 +195,9 @@
   padding: 15px;
   margin-bottom: 15px;
 }
+.showcase-item:hover .remove-link {
+  display: block;
+}
 .showcase-item .showcase-image {
   height: 150px;
   max-height: 150px;
@@ -231,6 +234,7 @@
   color: #888888;
 }
 .showcase-item .remove-link {
+  display: none;
   color: #f2645a;
   font-weight: 700;
 }
