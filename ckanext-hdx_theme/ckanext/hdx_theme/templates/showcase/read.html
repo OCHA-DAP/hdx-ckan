@@ -49,7 +49,7 @@
                                     {% endif %}
                                     -
                                     <span class="sspBold14">
-                                        <a class="sspBold14" href="{{ pkg.url }}">{{ _('Visit Website') }}</a>
+                                        <a class="sspBold14" href="{{ pkg.url }}" target="_blank">{{ _('Visit Website') }}</a>
                                     </span>
                                 </div>
                                 {% if pkg.author %}
@@ -68,13 +68,15 @@
                     </div>
                     <div class="col-xs-offset-1 col-xs-3">
                       <div class="showcase-image">
-                      {% if pkg.image_display_url %}
-                        <img src="{{ pkg.image_display_url }}" alt="{{ pkg.name }}">
-                      {% else %}
-                        <div class="img-placeholder">
-                          <span class="img-placeholder-text"></span>
-                        </div>
-                      {% endif %}
+                          <a href="{{ pkg.url }}" target="_blank">
+                              {% if pkg.image_display_url %}
+                                <img src="{{ pkg.image_display_url }}" alt="{{ pkg.name }}">
+                              {% else %}
+                                <div class="img-placeholder">
+                                  <span class="img-placeholder-text"></span>
+                                </div>
+                              {% endif %}
+                          </a>
                       </div>
                     </div>
                 </div>
