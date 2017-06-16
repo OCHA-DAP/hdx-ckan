@@ -213,6 +213,9 @@
   color: #f2645a;
   font-weight: 700;
 }
+.showcase-item .count-zero {
+  color: #888888;
+}
 .showcase-image {
   height: 150px;
   max-height: 150px;

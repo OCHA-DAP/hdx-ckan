@@ -41,7 +41,8 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
       {% if package.num_datasets %}
           <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', package.num_datasets).format(num=package.num_datasets) }}</strong>
       {% elif package.num_datasets == 0 %}
-          <span class="count">{{ _('0 Datasets') }}</span>
+          <strong class="count count-zero">{{ _('0 Datasets') }}</strong>
+
       {% endif %}
 
       {% if show_remove %}
