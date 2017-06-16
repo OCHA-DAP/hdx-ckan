@@ -198,31 +198,6 @@
 .showcase-item:hover .remove-link {
   display: block;
 }
-.showcase-item .showcase-image {
-  height: 150px;
-  max-height: 150px;
-  text-align: center;
-  border: 1px solid #eeeeee;
-}
-.showcase-item .showcase-image .img-placeholder {
-  background-color: #007CE0;
-  position: relative;
-  height: 100%;
-}
-.showcase-item .showcase-image .img-placeholder .img-placeholder-text {
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  color: #fff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.showcase-item .showcase-image img {
-  max-width: 100%;
-  max-height: 100%;
-}
 .showcase-item .title {
   margin: 15px 0;
   font-family: 'Source Sans Pro', sans-serif;
@@ -237,4 +212,29 @@
   display: none;
   color: #f2645a;
   font-weight: 700;
+}
+.showcase-image {
+  height: 150px;
+  max-height: 150px;
+  text-align: center;
+  border: 1px solid #eeeeee;
+}
+.showcase-image .img-placeholder {
+  background-color: #007CE0;
+  position: relative;
+  height: 100%;
+}
+.showcase-image .img-placeholder .img-placeholder-text {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.showcase-image img {
+  max-width: 100%;
+  max-height: 100%;
 }

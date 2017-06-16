@@ -23,10 +23,10 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
         <img src="{{ package.image_display_url }}" alt="{{ package.name }}">
       {% else %}
         <div class="img-placeholder">
-          <span class="img-placeholder-text">236 x 150px</span>
+          <span class="img-placeholder-text"></span>
         </div>
       {% endif %}
-    </div>
+      </div>
       <div class="title">
         {{ h.truncate(title, truncate_title) }}
       </div>
