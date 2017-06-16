@@ -7,6 +7,7 @@
 {% set search_class = search_class if search_class else 'search-giant' %}
 {% set is_display_search_input = display_search_input if display_search_input==False else True %}
 {% set is_dataset = ('dataset' == type) %}
+{% set sectionAnchor = sectionAnchor if sectionAnchor else "organizationsSection" %}
 
 {% resource 'hdx_theme/organization/organizations.js' %}
 
@@ -28,7 +29,7 @@
         {% set sorting_selected = sorting_selected or (sort_param if sort_param else 'title asc') %}
         <div class="form-select control-group control-order-by pull-right">
             <label for="field-order-by" class="uppercase">{{ _('Order by') }}</label>
-            <div class="dropdown orderDropdown" data-module-additional="#organizationsSection">
+            <div class="dropdown orderDropdown" data-module-additional="#{{sectionAnchor}}">
                 <button id="field-order-by" class="dropdown-toggle sspBold16" data-toggle="dropdown" style="background-color: transparent;">
                     <span class="dropdown-toggle-text">
                     {% for label, value in sorting %}

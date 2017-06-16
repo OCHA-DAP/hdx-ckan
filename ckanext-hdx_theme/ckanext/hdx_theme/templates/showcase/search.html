@@ -9,7 +9,7 @@
 {% block secondary_content %}{% endblock %}
 
 {% block primary_content %}
-  <section class="list-items module">
+  <section id="showcaseSection" class="list-items module">
     <div class="list-items module-content mT35">
       {% block page_primary_action %}
       {% endblock %}
@@ -33,7 +33,7 @@
               {% set sort_param = request.params.get('sort') %}
               {% set sorting_selected = sort_param if sort_param else 'score desc, metadata_modified desc' %}
               {% set searchPlaceholder = _("Search showcases...") %}
-              {% snippet 'snippets/search_form_new.html', type='showcase', query=c.q, sorting=sorting, sorting_selected=sorting_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, fields=c.fields, placeholder=searchPlaceholder %}
+              {% snippet 'snippets/search_form_new.html', type='showcase', query=c.q, sorting=sorting, sorting_selected=sorting_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, fields=c.fields, placeholder=searchPlaceholder, sectionAnchor="showcaseSection" %}
             </div>
 
 
