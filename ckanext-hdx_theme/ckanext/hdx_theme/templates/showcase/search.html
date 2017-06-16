@@ -33,7 +33,7 @@
               {% set sort_param = request.params.get('sort') %}
               {% set sorting_selected = sort_param if sort_param else 'score desc, metadata_modified desc' %}
               {% set searchPlaceholder = _("Search showcases...") %}
-              {% snippet 'snippets/search_form_new.html', type='dataset', query=c.q, sorting=sorting, sorting_selected=sorting_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, fields=c.fields, placeholder=searchPlaceholder %}
+              {% snippet 'snippets/search_form_new.html', type='showcase', query=c.q, sorting=sorting, sorting_selected=sorting_selected, count=c.page.item_count, facets=facets, show_empty=request.params, error=c.query_error, fields=c.fields, placeholder=searchPlaceholder %}
             </div>
 
 
@@ -49,7 +49,7 @@
                           {%- else -%}
                             {{ h.list_dict_filter(search_facets_items, 'name', 'display_name', value) }}
                           {%- endif %}
-                          <a href="{{ facets.remove_field(field, value) }}" class="remove" title="{{ _('Remove') }}" style="color: white;"><i class="glyphicon glyphicon-remove"></i></a>
+                          <a href="/showcase{# facets.remove_field(field, value) #}" class="remove" title="{{ _('Remove') }}" style="color: white;"><i class="glyphicon glyphicon-remove"></i></a>
                         </span>
                     {% endfor %}
                     {% endfor %}
