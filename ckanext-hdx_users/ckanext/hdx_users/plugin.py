@@ -168,6 +168,32 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/me', controller='user', action='me')
         map.connect('/user/reset/{id:.*}', controller='user', action='perform_reset')
         map.connect('/user/set_lang/{lang}', controller='user', action='set_lang')
+
+        # requestdata mapping
+        user_controller = 'ckanext.requestdata.controllers.user:UserController'
+        request_data_controller = 'ckanext.requestdata.controllers.request_data:RequestDataController'
+        map.connect('requestdata_my_requests',
+                    '/user/my_requested_data/{id}',
+                    controller=user_controller,
+                    action='my_requested_data', ckan_icon='list')
+
+        map.connect('requestdata_handle_new_request_action',
+                    '/user/my_requested_data/{username}/' +
+                    '{request_action:reply|reject}',
+                    controller=user_controller,
+                    action='handle_new_request_action')
+
+        map.connect('requestdata_handle_open_request_action',
+                    '/user/my_requested_data/{username}/' +
+                    '{request_action:shared|notshared}',
+                    controller=user_controller,
+                    action='handle_open_request_action')
+
+        map.connect('requestdata_send_request', '/request_data',
+                    controller=request_data_controller,
+                    action='send_request')
+
+
         #######
         map.connect('user_datasets', '/user/{id:.*}',
                     controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='read',
