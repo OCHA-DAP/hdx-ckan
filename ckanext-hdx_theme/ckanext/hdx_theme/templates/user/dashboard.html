@@ -28,14 +28,14 @@
           {{ h.build_nav_icon('user_dashboard_visualizations', _('My Visualizations')) }}
           {{ h.build_nav_icon('requestdata_my_requests', _('My Requests'), id=c.userobj.name) }}
         </ul>
-        <div class="paddingRightHack" style="position: absolute; top: 0; right: 0">
+        <div class="paddingRightHack" style="position: absolute; top: 50px; right: 0">
           {% block page_header_inner %}
             {% snippet 'user/snippets/followee_dropdown.html', context=c.dashboard_activity_stream_context, followees=c.followee_list %}
           {% endblock %}
         </div>
       </header>
     {% endblock %}
-    <div class="module-content mTop35">
+    <div class="module-content mTop60">
       {% block primary_content_inner %}
         <div data-module="dashboard">
           {% block activity_stream %}
