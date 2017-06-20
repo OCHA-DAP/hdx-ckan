@@ -26,6 +26,7 @@
           {{ h.build_nav_icon('user_dashboard_organizations', _('My Organisations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_groups', _('My Locations'), class_='hdx-tab-button') }}
           {{ h.build_nav_icon('user_dashboard_visualizations', _('My Visualizations')) }}
+          {{ h.build_nav_icon('requestdata_my_requests', _('My Requests'), id=c.userobj.name) }}
         </ul>
         <div class="paddingRightHack" style="position: absolute; top: 0; right: 0">
           {% block page_header_inner %}
