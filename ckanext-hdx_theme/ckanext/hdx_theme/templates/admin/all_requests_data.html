@@ -1,7 +1,10 @@
 {% ckan_extends %}
 
 {% block primary %}
-{{ super() }}
-{% resource 'hdx_theme/requestdata/remove-class.js' %}
-{% resource 'hdx_theme/requestdata/request-data.css' %}
+<div class="request-data-module">
+    {{ super() }}
+</div>
+    {% resource 'hdx_theme/requestdata/remove-class.js' %}
+    {% resource 'requestdata/css/main.css' %}
+    {% resource 'hdx_theme/requestdata/request-data.css' %}
 {% endblock %}
