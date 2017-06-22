@@ -39,7 +39,7 @@ Example:
         {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name, 'package_title':pkg.title}) %}
         {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
         {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
-          <p class="empty">The metadata is available for this dataset. To access the full dataset, please request data.</p>
+          <p class="empty">The contributor has only shared the metadata for this dataset. To access the data, please use the request button.</p>
           <a href="#" class="btn pull-right" style="margin-top: 10px;"
              data-module="modal-form"
              data-module-template_file="request_contact.html"
