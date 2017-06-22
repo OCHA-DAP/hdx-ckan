@@ -81,8 +81,6 @@
   border-top: unset;
   position: absolute;
   right: 50px;
-  bottom: 180px;
-  padding: initial;
 }
 .modal.request-data-modal .mtop5,
 .modal.in.request-data-modal .mtop5,
@@ -354,7 +352,7 @@
 .modal.in.request-data-modal .reply-request-form-file-upload,
 .request-data-module .reply-request-form-file-upload {
   display: inline-block;
-  margin-left: 10px;
+  margin-top: 5px;
 }
 .request-data-module .requested-data-container__content-item {
   border-top: 1px solid #dddddd;

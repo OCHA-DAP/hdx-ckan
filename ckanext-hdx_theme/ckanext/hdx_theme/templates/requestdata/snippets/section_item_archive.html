@@ -1,6 +1,75 @@
-{% ckan_extends %}
+{#
 
+Creates single item in a section.
 
-{% block collapse_icon %}
-  glyphicon glyphicon-chevron-right archive-requests-arrow
-{% endblock %}
+item - The request that needs to be shown.
+
+Example usage:
+  {% snippet 'requestdata/snippets/section_item_archive.html', item=item %}
+
+#}
+
+{% resource 'requestdata/expand-dataset.js' %}
+{% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
+
+<div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
+  <div class="requested-data-container__content-item--sections" style="align-items: center;">
+    <h4>
+      <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
+    </h4>
+
+    {% set counters = h.requestdata_get_request_counters(item.package_id) %}
+    <div class="requested-data-container__content-item-counters">
+      <span><span style="font-size: 20px;">{{ counters.requests }}</span> Requests</span>
+      <span>
+        <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
+        <span>{{ counters.replied }} Replied</span>
+      </span>
+
+      <span>
+        <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+        <span>{{ counters.declined }} Denied</span>
+      </span>
+
+      <span>
+        <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
+        <span>{{ counters.shared }} Shared</span>
+      </span>
+    </div>
+
+    <div data-module="expand-dataset">
+      <i class="{% block collapse_icon %}glyphicon glyphicon-chevron-right archive-requests-arrow{% endblock %}" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+    </div>
+  </div>
+</div>
+<div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
+    {% for x in item.requests_archived %}
+      <div class="requested-data-container__collapse--sections requested-data-container__collapse--sections-archive" style="{% if loop.last %}border-bottom: none;{% endif %}">
+
+        {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
+
+        <div class="requested-data-container__collapse--request-status">
+          {% if x.rejected %}
+            <div style="margin-right: 2px;">
+              <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+              <span class="requested-data-container__collapse--status-text">Request Denied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+            </div>
+          {% else %}
+            <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
+            <span class="requested-data-container__collapse--status-text">Request Replied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+
+            <div style="margin-top: 8px;">
+            {% if x.data_shared %}
+              <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
+              <span class="requested-data-container__collapse--status-text">Data Shared</span>
+            {% else %}
+              <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+              <span class="requested-data-container__collapse--status-text">Data Not Shared</span>
+            {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  <div class=" requested-data-container__collapse--line"></div>
+</div>

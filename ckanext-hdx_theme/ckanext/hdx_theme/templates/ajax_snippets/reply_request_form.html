@@ -13,7 +13,7 @@
             <p>Requested by: <a href="{{ sender_profile }}">{{ requested_by }}</a></p>
             {% set maintainers = h.requestdata_convert_str_to_json(maintainers) %}
 
-            <p>Maintainers:
+            <p>Maintainer:
               {% for item in maintainers %}
                 {% set sender_profile = h.url_for(controller='user', action='read', id=item.id) %}
                 <a href="{{ sender_profile }}">{{ item.fullname }}</a>{% if not loop.last %}, {% endif %}
@@ -34,7 +34,9 @@
               Reply to this request
             </div>
             <div class="ds-contrib mtop5">
-              Discuss how to share the requested data
+              <p>Provide instructions on how to access the data, or simply attach the file.</p>
+              **Please note that HDX tracks whether data requests are accepted or denied <br/>
+              but does not track the content of the email message.
             </div>
             <form class="form-horizontal" id="request-data-form" enctype="multipart/form-data">
               {% block message_content %}
