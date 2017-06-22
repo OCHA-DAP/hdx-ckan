@@ -5,6 +5,7 @@ Created on Jul 07, 2015
 '''
 import logging
 import requests
+import datetime
 import sys
 import json
 import urllib
@@ -18,6 +19,8 @@ import ckan.model as model
 import ckan.lib.helpers as h
 
 from ckan.common import c
+
+from ckanext.hdx_theme.helpers.hash_generator import generate_hash_dict, HashCodeGenerator
 
 log = logging.getLogger(__name__)
 
@@ -45,6 +48,29 @@ def detect_format_from_extension(url):
     return None
 
 
+def add_to_shape_info_list(shape_info_json, resource):
+    if shape_info_json:
+        try:
+            existing_shape_info_json = resource.get('shape_info')
+            if existing_shape_info_json:
+                existing_shape_info = json.loads(existing_shape_info_json)
+                if not isinstance(existing_shape_info, list):
+                    existing_shape_info = [existing_shape_info]
+            else:
+                existing_shape_info = []
+            shape_info_dict = json.loads(shape_info_json)
+            shape_info_dict['timestamp'] = datetime.datetime.now().isoformat()
+            existing_shape_info.append(shape_info_dict)
+
+            #keep the list from growing indefinitely
+            existing_shape_info = existing_shape_info[-10:]
+            return json.dumps(existing_shape_info)
+
+        except Exception, e:
+            log.error('There was an error processing the shape info from geopreview: {}'.format(str(e)))
+
+    return None
+
 def _get_shape_info_as_json(gis_data):
     resource_id = gis_data['resource_id']
 
@@ -64,11 +90,11 @@ def _make_geopreview_request(gis_url):
         response = requests.get(gis_url, allow_redirects=True)
         shape_info = response.text if hasattr(response, 'text') else ''
     except:
-        log.error("Error retrieving the shape info content")
+        log.error("Error in communication with geopreview stack")
         log.error(sys.exc_info()[0])
         shape_info = json.dumps({
             'state': 'failure',
-            'message': 'Error retrieving the shape info content',
+            'message': 'Error in communication with geopreview stack',
             'layer_id': 'None',
             'error_type': 'ckan-generated-error',
             'error_class': 'None'
@@ -85,15 +111,15 @@ def add_init_shape_info_data_if_needed(resource_data):
         resource_data['name']) or detect_format_from_extension(resource_data['url'])
 
     if file_format in GIS_FORMATS:
-        shape_info = json.dumps({
+        shape_info_json = json.dumps({
             'state': PROCESSING,
             'message': 'The processing of the geo-preview has started',
             'layer_id': 'None',
             'error_type': 'None',
             'error_class': 'None'
         })
-
-        resource_data['shape_info'] = shape_info
+        shape_info_list_json = add_to_shape_info_list(shape_info_json, resource_data)
+        resource_data['shape_info'] = shape_info_list_json
 
 def get_shape_info_state(resource_data):
     '''
@@ -103,13 +129,10 @@ def get_shape_info_state(resource_data):
     :rtype: str
     '''
 
-    shape_info_str = resource_data.get('shape_info')
-    if shape_info_str:
-        try:
-            shape_info = json.loads(shape_info_str)
-            return shape_info.get('state')
-        except ValueError, e:
-            log.error("Couldn't load following string as json: {}".format(shape_info_str))
+    shape_info_obj = get_latest_shape_info(resource_data)
+    if shape_info_obj:
+        return shape_info_obj.get('state')
+
     return None
 
 def do_geo_transformation_process(context, result_dict):
@@ -151,50 +174,54 @@ def do_geo_transformation_process(context, result_dict):
     shape_info_json = _get_shape_info_as_json(gis_data)
     shape_info = json.loads(shape_info_json)
     if shape_info.get('error_type') in ['transformation-init-problem', 'ckan-generated-error']:
-        result_dict['shape_info'] = shape_info_json
+        shape_info_list_json = add_to_shape_info_list(shape_info_json, result_dict)
+        result_dict['shape_info'] = shape_info_list_json
         ctx['do_geo_preview'] = False
         get_action('resource_update')(ctx, result_dict)
 
 
-def _before_ckan_action(context, resource_dict, source_action):
+def _before_ckan_action(context, resource_dict):
     '''
-    'source_action' helps to only trigger geopreview process for the resource(s) that are updated.
-    resource_create() calls package_update() and the package could have several resources.
-
     :param context: context
     :type context: dict
     :param resource_dict:
     :type resource_dict dict
-    :param source_action: either 'resource_action' or 'package_action' - the initial trigger of the create/update
-    :type source_action: str
     '''
 
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
-                     and get_shape_info_state(resource_dict) != PROCESSING and not context.get('return_id_only') \
-                     and not context.get('hdx_source_action')
+                     and not context.get('return_id_only')
     if do_geo_preview:
-        context['hdx_source_action'] = source_action
+        # context['hdx_source_action'] = source_action
         add_init_shape_info_data_if_needed(resource_dict)
 
 
-def _after_ckan_action(context, resource_dict, source_action):
+def _after_ckan_action(context, resource_dict):
     '''
-    'source_action' helps to only trigger geopreview process for the resource(s) that are updated.
-    resource_create() calls package_update() and the package could have several resources.
-
     :param context: context
     :type context: dict
     :param resource_dict:
     :type resource_dict dict
-    :param source_action: either 'resource_action' or 'package_action' - the initial trigger of the create/update
-    :type source_action: str
     '''
     do_geo_preview = context.get('do_geo_preview', True) and config.get('hdx.gis.layer_import_url') \
-                     and get_shape_info_state(resource_dict) == PROCESSING \
-                     and context.get('hdx_source_action') == source_action
+                     and get_shape_info_state(resource_dict) == PROCESSING
 
     if do_geo_preview and lower(resource_dict.get('format', '')) in GIS_FORMATS:
         do_geo_transformation_process(context, resource_dict)
+
+
+def get_latest_shape_info(resource_dict):
+    if resource_dict:
+        shape_info = resource_dict.get('shape_info')
+        if shape_info:
+            try:
+                shape_info_obj = json.loads(shape_info)
+                if isinstance(shape_info_obj, list):
+                    return shape_info_obj[-1]
+                else:
+                    return shape_info_obj
+            except ValueError, e:
+                log.error("Couldn't load following string as json: {}".format(shape_info))
+    return None
 
 
 def geopreview_4_resources(original_resource_action):
@@ -205,11 +232,11 @@ def geopreview_4_resources(original_resource_action):
         It triggers the geopreview creation process.
         '''
 
-        _before_ckan_action(context, resource_dict, 'resource_action')
+        # _before_ckan_action(context, resource_dict, 'resource_action')
 
         result_dict = original_resource_action(context, resource_dict)
 
-        _after_ckan_action(context, result_dict, 'resource_action')
+        _after_ckan_action(context, result_dict)
 
         return result_dict
 
@@ -220,14 +247,40 @@ def geopreview_4_packages(original_package_action):
 
     def package_action(context, package_dict):
 
+        old_package_dict = get_action('package_show')(context, {'id': package_dict.get('id')}) \
+            if 'id' in package_dict else {}
+
+        old_resources_list = old_package_dict.get('resources')
+        fields = ['name', 'description', 'url', 'format']
+        resource_id_to_hash_dict = {}
+
+        if old_resources_list:
+            try:
+                # We compute a hash code for "old" resource to see if they have changed
+                resource_id_to_hash_dict = generate_hash_dict(old_resources_list, 'id', fields)
+            except Exception, e:
+                log.error(str(e))
+
         for resource_dict in package_dict.get('resources', []):
-            _before_ckan_action(context, resource_dict, 'package_action')
+            modified_or_new = True
+            try:
+                if 'id' in resource_dict:
+                    rid = resource_dict['id']
+                    hash_code = HashCodeGenerator(resource_dict, fields).compute_hash()
+                    modified_or_new = False if resource_id_to_hash_dict.get(rid) == hash_code else True
+            except Exception, e:
+                log.error(str(e))
+
+            if modified_or_new:
+                _before_ckan_action(context, resource_dict)
 
         result_dict = original_package_action(context, package_dict)
 
-        if isinstance(result_dict, dict):
+        # If it comes from resource_create / resource_update the transaction is not yet committed
+        # (resource is not yet saved )
+        if isinstance(result_dict, dict) and not context.get('defer_commit', False):
             for resource_dict in result_dict.get('resources', []):
-                _after_ckan_action(context, resource_dict, 'package_action')
+                _after_ckan_action(context, resource_dict)
         else:
             log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
 

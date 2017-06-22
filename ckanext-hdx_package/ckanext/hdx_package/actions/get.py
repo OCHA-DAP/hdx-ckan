@@ -344,6 +344,16 @@ def package_show(context, data_dict):
     return package_dict
 
 
+@logic.side_effect_free
+def shape_info_show(context, data_dict):
+    dataset_dict = get_action('package_show')(context, data_dict)
+
+    shape_infos = [{r.get('name'): json.loads(r.get('shape_info'))} for r in dataset_dict.get('resources', []) if r.get('shape_info')]
+
+    return shape_infos
+
+
+
 def _should_manually_load_property_value(context, data_dict, property_name):
     '''
     IF use_cache is false OR if the property doesn't exist in the dict we need to load it manually
