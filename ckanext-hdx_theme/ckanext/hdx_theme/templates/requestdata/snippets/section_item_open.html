@@ -1,0 +1,54 @@
+{#
+
+Creates single item in a section.
+
+item - The request that needs to be shown.
+
+Example usage:
+  {% snippet 'requestdata/snippets/section_item_open.html', item=item %}
+
+#}
+
+{% resource 'requestdata/handle-open-request.js' %}
+
+{% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
+{% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
+
+<div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC {% endif %}">
+  <div class="requested-data-container__content-item--sections" style="padding-top: 15px; padding-bottom: 15px;">
+    <h4>
+      <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
+    </h4>
+
+    {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
+
+    <div class="requested-data-container__content-item--actions requested-data-container__content-item--actions-open" style="margin-right: 20px; margin-top: -4px;">
+      {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+      {% set post_data_shared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': True}) %}
+
+      {% set action_notshared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+      {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
+
+      <div class="requested-data-container__content-item--actions-text">Keep track of who you share data with. Did you share the data?</div>
+
+      <div class="requested-data-container-inline">
+        <a class="btn btn-primary requested-data-container__actions--data-shared"
+          style="margin-right: 8px;"
+          data-module="handle-open-request"
+          data-module-action="{{ action_shared }}"
+          data-module-post_data="{{ post_data_shared }}"
+          data-module-refresh_on_success="1"
+          data-module-disable_action_buttons="1">Yes</a>
+      </div>
+      <div class="requested-data-container-inline">
+        <a class="btn requested-data-container__actions--data-notshared"
+          style="font-weight: bold; cursor: pointer;"
+          data-module="handle-open-request"
+          data-module-action="{{ action_notshared }}"
+          data-module-post_data="{{ post_data_notshared }}"
+          data-module-refresh_on_success="1"
+          data-module-disable_action_buttons="1">No</a>
+      </div>
+    </div>
+  </div>
+</div>
