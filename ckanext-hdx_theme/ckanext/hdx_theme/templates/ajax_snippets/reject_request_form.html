@@ -13,7 +13,7 @@
             <p>Requested by: <a href="{{ sender_profile }}">{{ requested_by }}</a></p>
             {% set maintainers = h.requestdata_convert_str_to_json(maintainers) %}
 
-            <p>Maintainers:
+            <p>Maintainer:
               {% for item in maintainers %}
                 {% set sender_profile = h.url_for(controller='user', action='read', id=item.id) %}
                 <a href="{{ sender_profile }}">{{ item.fullname }}</a>{% if not loop.last %}, {% endif %}
