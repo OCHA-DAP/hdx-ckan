@@ -15,7 +15,7 @@ get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
-_get_action = requestdata_user._get_action()
+_get_action = requestdata_user._get_action
 abort = base.abort
 
 _SUBJECT_REQUESTDATA_REPLY = u'''[HDX] Data request reply: "{dataset_title}" '''
