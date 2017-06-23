@@ -15,7 +15,7 @@ get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
-
+_get_action = requestdata_user._get_action()
 abort = base.abort
 
 _SUBJECT_REQUESTDATA_REPLY = u'''[HDX] Data request reply: "{dataset_title}" '''
@@ -91,7 +91,7 @@ class HDXRequestdataController(requestdata_user.UserController):
             return json.dumps(payload)
 
         try:
-            self._get_action('requestdata_request_patch', data)
+            _get_action('requestdata_request_patch', data)
         except NotAuthorized:
             abort(403, _('Not authorized to use this action.'))
         except ValidationError as e:
@@ -130,7 +130,7 @@ class HDXRequestdataController(requestdata_user.UserController):
         }
 
         action_name = 'requestdata_increment_request_data_counters'
-        self._get_action(action_name, counters_data_dict)
+        _get_action(action_name, counters_data_dict)
 
         return json.dumps(success)
 
