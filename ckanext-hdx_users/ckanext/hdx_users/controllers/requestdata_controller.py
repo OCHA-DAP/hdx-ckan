@@ -21,12 +21,12 @@ abort = base.abort
 _SUBJECT_REQUESTDATA_REPLY = u'''[HDX] Data request reply: "{dataset_title}" '''
 _MESSAGE_REQUESTDATA_REPLY = \
     u'''
-    Dear {requested_by},
+    Dear {requested_by},<br/>
     {maintainer_name} from {organization} replied to your request for "{package_name}". See their message below:<br/>
     
     {message_content}
 
-    Best wishes, <br/>
+    <br/>Best wishes, <br/>
     the HDX Team <br/>
     '''
 
