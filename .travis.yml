@@ -13,15 +13,26 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
+  - docker-compose build ckan
   - docker-compose up -d
-  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan && pip install -r requirements.txt && python setup.py develop"
-  - docker exec -t hdxckan_ckan_1 hdxckantool update
-  - docker exec -t hdxckan_ckan_1 hdxckantool pgpass
-  - docker exec -t hdxckan_ckan_1 hdxckantool plugins dev
-  - docker exec -t hdxckan_ckan_1 sh -c "cd /srv/ckan; paster db upgrade -c /srv/prod.ini"
-  - docker exec -t hdxckan_ckan_1 hdxckantool feature
-  - docker exec -t hdxckan_ckan_1 hdxckantool less compile
-  - docker exec -t hdxckan_ckan_1 hdxckantool restart
-  # just forcing capturejs test to succeed. :(
-  - docker exec -t hdxckan_ckan_1 sh -c "mkdir -p /srv/filestore/storage/uploads/group && cd /srv/filestore/storage/uploads/group && touch david_thumbnail.png"
-  - docker exec -t hdxckan_ckan_1 hdxckantool test
+  - sleep 30
+  - docker-compose logs solr
+  - docker-compose exec ckan curl "http://solr:8983/solr/admin/cores?action=RENAME&core=collection1&other=ckan"
+  - docker cp ./ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml solr:/srv/solr/example/solr/collection1/conf/
+  - docker-compose restart solr
+  - sleep 30
+  - docker-compose restart ckan
+  - docker-compose exec ckan pip install -r /srv/ckan/dev-requirements.txt
+  - docker-compose exec ckan python setup.py develop
+  - docker-compose exec ckan hdxckantool plugins dev
+  - docker-compose exec ckan hdxckantool pgpass
+  - docker-compose exec ckan psql -h dbckan -U ckan -c "create database datastore owner ckan;"
+  - docker-compose exec ckan psql -h dbckan -U ckan -c "create role datastore with login;"
+  - docker-compose exec ckan psql -h dbckan -U ckan -c "alter role datastore with password 'datastore';"
+  - docker-compose exec ckan hdxckantool db set-perms
+  - docker-compose exec ckan paster db upgrade -c /srv/prod.ini
+  - docker-compose exec ckan hdxckantool feature
+  - docker-compose exec ckan hdxckantool less compile
+  - docker-compose exec ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"
+  - docker-compose exec ckan sh -c "touch /srv/filestore/storage/uploads/group/david_thumbnail.png"
+  - docker-compose exec ckan hdxckantool test

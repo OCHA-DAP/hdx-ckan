@@ -9,44 +9,49 @@ networks:
 
 services:
   solr:
-    image: teodorescuserban/hdx-solr:latest
+    image: unocha/alpine-solr:4
     hostname: solr
     container_name: solr
 
   db:
-    image: teodorescuserban/hdx-psql-ckan:latest
+    image: unocha/alpine-postgres:201703-PR116
     hostname: db
     container_name: db
+    environment:
+      PGSQL_DB: '${PGSQL_DB}'
+      PGSQL_USER: '${PGSQL_USER}'
+      PGSQL_PASS: '${PGSQL_PASS}'
     networks:
       default:
         aliases:
           - dbckan
 
   ckan:
-    image: teodorescuserban/hdx-ckan:latest
+    build: ./
     hostname: ckan
+    container_name: ckan
     privileged: true
-    volumes:
-      - ".:/srv/ckan"
+    depends_on:
+      - db
+      - solr
     environment:
-      - HDX_CKAN_API_KEY=${HDX_CKAN_API_KEY}
-      - HDX_CKAN_BRANCH=${HDX_CKAN_BRANCH}
-      - HDX_CKAN_RECAPTCHA_KEY=${HDX_CKAN_RECAPTCHA_KEY}
-      - HDX_CKANDB_ADDR=dbckan
-      - HDX_CKANDB_PORT=5432
-      - HDX_CKANDB_DB=ckan
-      - HDX_CKANDB_USER=ckan
-      - HDX_CKANDB_PASS=ckan
-      - HDX_CKANDB_USER_DATASTORE=datastore
-      - HDX_CKANDB_DB_DATASTORE=datastore
-      - HDX_DOMAIN=travis.org
-      - HDX_FILESTORE=/srv/filestore
-      - HDX_PREFIX=test
-      - HDX_SOLR_ADDR=solr
-      - HDX_SOLR_PORT=8983
-      - HDX_TYPE=${HDX_TYPE}
-      - HDX_GISDB_DB=gis
-      - HDX_GISDB_ADDR=127.0.0.1
-      - HDX_GISDB_PORT=5432
-      - HDX_GISDB_USER=gis
-      - HDX_GISDB_PASS=gis
+      HDX_CKANDB_ADDR: 'dbckan'
+      HDX_CKANDB_PORT: 5432
+      HDX_CKANDB_DB: '${PGSQL_DB}'
+      HDX_CKANDB_USER: '${PGSQL_USER}'
+      HDX_CKANDB_PASS: '${PGSQL_PASS}'
+      HDX_CKANDB_USER_DATASTORE: 'datastore'
+      HDX_CKANDB_DB_DATASTORE: 'datastore'
+      HDX_CKANDB_DB_TEST: '${PGSQL_DB}'
+      HDX_CKANDB_DB_TEST_DATASTORE: 'datastore'
+      HDX_DOMAIN: travis.org
+      HDX_FILESTORE: /srv/filestore
+      HDX_PREFIX: test
+      HDX_SOLR_ADDR: solr
+      HDX_SOLR_PORT: 8983
+      HDX_TYPE: ${HDX_TYPE}
+      HDX_GISDB_DB: gis
+      HDX_GISDB_ADDR: 127.0.0.1
+      HDX_GISDB_PORT: 5432
+      HDX_GISDB_USER: gis
+      HDX_GISDB_PASS: gis
