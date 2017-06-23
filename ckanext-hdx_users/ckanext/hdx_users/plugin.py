@@ -180,7 +180,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('requestdata_handle_new_request_action',
                     '/user/my_requested_data/{username}/' +
                     '{request_action:reply|reject}',
-                    controller=user_controller,
+                    controller='ckanext.hdx_users.controllers.requestdata_controller:HDXRequestdataController',
                     action='handle_new_request_action')
 
         map.connect('requestdata_handle_open_request_action',
