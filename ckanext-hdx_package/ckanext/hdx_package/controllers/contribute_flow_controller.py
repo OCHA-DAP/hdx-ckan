@@ -150,6 +150,8 @@ class ContributeFlowController(base.BaseController):
             analytics_dict['is_cod'] = analytics.is_cod(data)
             analytics_dict['is_indicator'] = analytics.is_indicator(data)
             analytics_dict['group_names'], analytics_dict['group_ids'] = analytics.extract_locations_in_json(data)
+            analytics_dict['is_private'] = analytics.is_private(data)
+            analytics_dict['is_protected'] = analytics.is_protected(data)
         else:
             analytics_dict['is_cod'] = 'false'
             analytics_dict['is_indicator'] = 'false'

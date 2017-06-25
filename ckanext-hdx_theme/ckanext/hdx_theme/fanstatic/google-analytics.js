@@ -171,7 +171,8 @@ $(
                 "group names": analyticsInfo.groupNames,
                 "group ids": analyticsInfo.groupIds,
                 "is cod": analyticsInfo.isCod,
-                "is indicator": analyticsInfo.isIndicator
+                "is indicator": analyticsInfo.isIndicator,
+                "authenticated": analyticsInfo.authenticated
             });
         });
 
@@ -230,6 +231,7 @@ $(
         var group_names = getValuesFromFormData('locations');
         var org_names = getValuesFromFormData('owner_org');
         var privateVal = getValuesFromFormData('private');
+        var protectedVal = getValuesFromFormData('is_requestdata_type');
 
         /* tag_string looks something like "3 word address,cod,health" */
         var codVal = getValuesFromFormData('tag_string');
@@ -244,7 +246,8 @@ $(
                 "org_name": org_names.length > 0 ? org_names[0] : null,
                 "is cod": codVal.indexOf('cod') >= 0,
                 "is indicator": false,
-                "is private": privateVal.length > 0 ? privateVal[0] == "true" : false
+                "is private": privateVal.length > 0 ? privateVal[0] == "true" : false,
+                "is protected": protectedVal.length > 0 ? protectedVal[0] == "true" : false
             }
         };
 

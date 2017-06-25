@@ -46,7 +46,10 @@
           'isIndicator': {% block analytics_is_indicator %}false{% endblock %},
           'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
           'datasetId': '{% block analytics_dataset_id %}None{% endblock %}',
-          'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}'
+          'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}',
+          'isPrivate': '{% block analytics_is_dataset_private %}None{% endblock %}',
+          'isProtected': '{% block analytics_is_dataset_protected %}None{% endblock %}',
+          'authenticated': '{{ "true" if c.userobj else "false" }}'
 
       };
 
@@ -78,7 +81,10 @@
               "group names": analyticsInfo.groupNames,
               "group ids": analyticsInfo.groupIds,
               "is cod": analyticsInfo.isCod,
-              "is indicator": analyticsInfo.isIndicator
+              "is indicator": analyticsInfo.isIndicator,
+              "is private": analyticsInfo.isPrivate,
+              "is protected": analyticsInfo.isProtected,
+              "authenticated": analyticsInfo.authenticated
           });
       }());
 

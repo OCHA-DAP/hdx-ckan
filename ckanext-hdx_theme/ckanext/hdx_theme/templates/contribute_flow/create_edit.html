@@ -11,6 +11,8 @@
 {% block analytics_group_ids %}{{ analytics.group_ids | safe }}{% endblock %}
 {% block analytics_dataset_name %}{{ data.name  }}{% endblock %}
 {% block analytics_dataset_id %}{{ data.id }}{% endblock %}
+{% block analytics_is_dataset_private %}{{ analytics.is_private }}{% endblock %}
+{% block analytics_is_dataset_protected %}{{ analytics.is_protected }}{% endblock %}
 
 {% block subtitle %}{{ _('Contribute') }}{% endblock %}
 

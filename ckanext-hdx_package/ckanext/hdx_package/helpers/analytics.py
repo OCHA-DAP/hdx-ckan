@@ -35,6 +35,12 @@ def is_private(pkg_dict):
     return 'false'
 
 
+def is_protected(pkg_dict):
+    if pkg_dict.get('is_requestdata_type'):
+        return 'true'
+    return 'false'
+
+
 def extract_locations(pkg_dict):
     locations = pkg_dict.get('groups', [])
     location_names = []
@@ -140,6 +146,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
             dataset_title = dataset_dict.get('title', dataset_dict.get('name'))
             dataset_is_cod = is_cod(dataset_dict) == 'true'
             dataset_is_indicator = is_indicator(dataset_dict) == 'true'
+            authenticated = True if c.userobj else False
 
             self.analytics_dict = {
                 'event_name': 'resource download',
@@ -154,6 +161,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
                     "group ids": location_ids,
                     "is cod": dataset_is_cod,
                     "is indicator": dataset_is_indicator,
+                    "authenticated": authenticated,
                     'event source': 'direct'
                 },
                 'ga_meta': {
@@ -197,6 +205,7 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
         dataset_is_cod = is_cod(dataset_dict) == 'true'
         dataset_is_indicator = is_indicator(dataset_dict) == 'true'
         dataset_is_private = is_private(dataset_dict) == 'true'
+        dataset_is_protected = is_protected(dataset_dict) == 'true'
 
 
 
@@ -210,7 +219,8 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
                 'org_id': (dataset_dict.get('organization') or {}).get('id'),
                 'is cod': dataset_is_cod,
                 'is indicator': dataset_is_indicator,
-                'is private': dataset_is_private
+                'is private': dataset_is_private,
+                'is protected': dataset_is_protected
             },
             'ga_meta': {
                 'ec': 'dataset',  # event category

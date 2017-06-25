@@ -697,6 +697,8 @@ class DatasetController(PackageController):
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
         c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
+        c.analytics_is_private = analytics.is_private(c.pkg_dict)
+        c.analytics_is_protected = analytics.is_protected(c.pkg_dict)
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
@@ -1130,6 +1132,8 @@ class DatasetController(PackageController):
         c.analytics_is_cod = analytics.is_cod(c.package)
         c.analytics_is_indicator = analytics.is_indicator(c.package)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
+        c.analytics_is_private = analytics.is_private(c.package)
+        c.analytics_is_protected = analytics.is_protected(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')
