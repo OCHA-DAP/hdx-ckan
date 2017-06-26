@@ -1,0 +1,29 @@
+<div class="requests-header">
+  {% set org_link = h.url_for(controller='organization', action='read', id=org_name) %}
+  <div class="requests-header__title" title="{{ title }}">{{ title|truncate(27) }} [{{ total_requests }}]</div>
+
+  {% if type == 'organization' or type == 'admin' %}
+    <div class="requests-header-counters">
+      <span>
+        <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
+        <span>{{ counters.replied[0][0] or 0 }} Replied</span>
+      </span>
+
+      <span>
+        <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+        <span>{{ counters.declined[0][0] or 0 }} Denied</span>
+      </span>
+
+      <span>
+        <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
+        <span>{{ counters.shared[0][0] or 0 }} Shared</span>
+      </span>
+    </div>
+
+    <div class="org-total-requests-filter">
+    {% if maintainers %}
+        {% snippet 'requestdata/snippets/filter_requests.html', org_name=org_name, title='Maintainer', filter_options=maintainers, type='maintainer' %}
+    {% endif %}
+    </div>
+  {% endif %}
+</div>
