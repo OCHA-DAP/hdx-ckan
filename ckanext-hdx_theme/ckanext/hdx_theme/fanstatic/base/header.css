@@ -1884,6 +1884,7 @@ h4 small {
 }
 .toolbarRow .toolbar .breadcrumb > li {
   text-shadow: none;
+  white-space: nowrap;
 }
 .toolbarRow .toolbar .breadcrumb > li:after {
   content: " / ";
