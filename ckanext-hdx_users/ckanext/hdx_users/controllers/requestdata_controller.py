@@ -5,6 +5,7 @@ from ckanext.requestdata.emailer import send_email
 from email_validator import validate_email
 from paste.deploy.converters import asbool
 from pylons import config
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 from ckan import logic
 from ckan.common import _
@@ -18,11 +19,15 @@ ValidationError = logic.ValidationError
 _get_action = requestdata_user._get_action
 abort = base.abort
 
-_SUBJECT_REQUESTDATA_REPLY = u'''[HDX] Data request reply: "{dataset_title}" '''
+_REQUESTDATA_REJECT = 'reject'
+_REQUESTDATA_REPLY = 'reply'
+
+_SUBJECT_REQUESTDATA_REPLY = u'''[HDX] Data request reply: "{dataset_name}" '''
 _MESSAGE_REQUESTDATA_REPLY = \
     u'''
     Dear {requested_by},<br/>
-    {maintainer_name} from {organization} replied to your request for "{package_name}". See their message below:<br/>
+    {maintainer_name} from {organization} replied to your request for "{dataset_name}".
+     You can contact the maintainer on this email address {email_address}. See their message below:<br/>
     
     {message_content}
 
@@ -30,6 +35,20 @@ _MESSAGE_REQUESTDATA_REPLY = \
     the HDX Team <br/>
     '''
 
+_SUBJECT_REQUESTDATA_REJECT = u'''[HDX] Data request denied: "{dataset_name}" '''
+_MESSAGE_REQUESTDATA_REJECT = \
+    u'''
+    Dear {requested_by},<br/>
+    Unfortunately, the contributing organization denied your request for "{dataset_name}". 
+    You can try contacting them again with more details on your intended use. <br/>
+    <br/>
+    They included this message:<br/>
+
+    {message_content}
+
+    <br/>Best wishes, <br/>
+    the HDX Team <br/>
+    '''
 
 class HDXRequestdataController(requestdata_user.UserController):
     def handle_new_request_action(self, username, request_action):
@@ -138,20 +157,25 @@ class HDXRequestdataController(requestdata_user.UserController):
         message_content = data_dict.get('message_content')
         if message_content is None or message_content == '':
             return None
-        # if request_action == 'reply':
-        #     message_content += '<br><br> You can contact the maintainer on ' \
-        #                        'this email address: ' + reply_email
         user_obj = model.User.get(data_dict.get('sender_id'))
         pkg_obj = model.Package.get(data_dict.get('package_id'))
         org_obj = model.Group.get(pkg_obj.owner_org)
-        email_content = _MESSAGE_REQUESTDATA_REPLY.format(**{
-            'requested_by': data_dict.get('requested_by'),
-            'maintainer_name': user_obj.display_name,
-            'organization': org_obj.display_name,
-            'package_name': data_dict.get('package_name'),
-            'message_content': message_content,
-        })
-
+        if request_action == _REQUESTDATA_REPLY:
+            email_content = _MESSAGE_REQUESTDATA_REPLY.format(**{
+                'requested_by': data_dict.get('requested_by'),
+                'maintainer_name': user_obj.display_name,
+                'organization': org_obj.display_name,
+                'dataset_name': data_dict.get('package_name'),
+                'email_address': data_dict.get('email'),
+                'message_content': message_content,
+            })
+        if request_action == _REQUESTDATA_REJECT:
+            email_content = _MESSAGE_REQUESTDATA_REJECT.format(**{
+                'requested_by': data_dict.get('requested_by'),
+                'dataset_name': data_dict.get('package_name'),
+                'message_content': message_content,
+            })
+        email_content += hdx_mailer.FOOTER
         return email_content
 
     def _get_email_to(self, data_dict, request_action):
@@ -159,6 +183,13 @@ class HDXRequestdataController(requestdata_user.UserController):
         return to
 
     def _get_email_subject(self, data_dict, request_action):
-        subject = config.get('ckan.site_title') + ': Data request ' + \
-                  request_action
+        subject = None
+        if request_action == _REQUESTDATA_REPLY:
+            subject = _SUBJECT_REQUESTDATA_REPLY.format(**{
+                'dataset_name': data_dict.get('package_name'),
+            })
+        if request_action == _REQUESTDATA_REJECT:
+            subject = _SUBJECT_REQUESTDATA_REJECT.format(**{
+                'dataset_name': data_dict.get('package_name'),
+            })
         return subject
