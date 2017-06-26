@@ -80,7 +80,7 @@ def package_hxl_update(context, data_dict):
                 if not view:
                     resource_view_dict = {
                         'resource_id': resource.get('id'),
-                        'title': 'HXL Preview',
+                        'title': 'Quick Charts',
                         'description': '',
                         'view_type': 'hdx_hxl_preview'
                     }

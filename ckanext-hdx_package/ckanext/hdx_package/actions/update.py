@@ -6,6 +6,7 @@ Created on Jul 07, 2015
 
 import logging
 import datetime
+import json
 
 import ckan.logic.action.update as core_update
 import ckan.logic as logic
@@ -316,6 +317,10 @@ def hdx_resource_update_metadata(context, data_dict):
 
     resource_was_modified = False
     resource = _get_action('resource_show')(context, data_dict)
+
+    if data_dict.get('shape_info'):
+        data_dict['shape_info'] = geopreview.add_to_shape_info_list(data_dict.get('shape_info'), resource)
+
     for key, value in data_dict.iteritems():
         if key in allowed_fields:
             resource_was_modified = True
