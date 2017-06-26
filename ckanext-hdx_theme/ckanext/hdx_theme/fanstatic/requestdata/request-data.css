@@ -2,7 +2,7 @@
 .modal.in.request-data-modal {
   display: block;
   height: 610px;
-  width: inherit;
+  width: 890px;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
