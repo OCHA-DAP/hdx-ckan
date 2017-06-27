@@ -771,27 +771,22 @@ class DatasetController(PackageController):
                 return render('indicator/hdx-shape-read.html')
             elif _default_view and _default_view.get('type') == 'hdx_hxl_preview':
                 hxl_view = _default_view.get('view')
-                # we render the hxl preview template only if there exists a saved configuration OR
-                # if the user can edit the preview configuration
-                if (hxl_view.get('hxl_preview_config') and json.loads(hxl_view.get('hxl_preview_config'))) \
-                        or c.user_has_edit_rights:
-                    # c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                    c.default_view = _default_view
-                    c.hxl_preview_urls = {
-                        'onlyView': get_action('hxl_preview_iframe_url_show')({
-                            'is_logged_in': True if c.user else False
-                        }, {
-                            'resource': _default_view.get('resource'),
-                            'resource_view': _default_view.get('view'),
-                            'hxl_preview_mode': 'onlyView'
-                        })
-                        # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
-                        #     'resource': _default_view.get('resource'),
-                        #     'resource_view': _default_view.get('view'),
-                        #     'hxl_preview_mode': 'edit'
-                        # })
-                    }
-                    return render('indicator/hdx-hxl-read.html')
+                c.default_view = _default_view
+                c.hxl_preview_urls = {
+                    'onlyView': get_action('hxl_preview_iframe_url_show')({
+                        'is_logged_in': True if c.user else False
+                    }, {
+                        'resource': _default_view.get('resource'),
+                        'resource_view': _default_view.get('view'),
+                        'hxl_preview_mode': 'onlyView'
+                    })
+                    # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
+                    #     'resource': _default_view.get('resource'),
+                    #     'resource_view': _default_view.get('view'),
+                    #     'hxl_preview_mode': 'edit'
+                    # })
+                }
+                return render('indicator/hdx-hxl-read.html')
             if int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
