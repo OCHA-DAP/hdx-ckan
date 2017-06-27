@@ -16,7 +16,7 @@ class TestHDXBrowseController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_package hdx_theme')
+        hdx_test_base.load_plugin('showcase ytp_request hdx_org_group hdx_package hdx_theme')
 
     def _create_world(self):
         group = {'name': 'world',

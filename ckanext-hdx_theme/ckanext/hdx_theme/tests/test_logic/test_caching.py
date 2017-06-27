@@ -6,7 +6,7 @@ Created on Jun 3, 2014
 
 import ckan.plugins.toolkit as tk
 import ckan.lib.create_test_data as ctd
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import ckan.lib.search as search
 import ckan.model as model
 import ckan.plugins as p
