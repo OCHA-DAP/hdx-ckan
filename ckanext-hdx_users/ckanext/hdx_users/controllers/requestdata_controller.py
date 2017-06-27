@@ -8,7 +8,7 @@ from pylons import config
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 
 from ckan import logic
-from ckan.common import _
+from ckan.common import _, c
 from ckan.lib import base
 from ckan.plugins import toolkit
 
@@ -157,13 +157,13 @@ class HDXRequestdataController(requestdata_user.UserController):
         message_content = data_dict.get('message_content')
         if message_content is None or message_content == '':
             return None
-        user_obj = model.User.get(data_dict.get('sender_id'))
         pkg_obj = model.Package.get(data_dict.get('package_id'))
         org_obj = model.Group.get(pkg_obj.owner_org)
+        # user_obj = model.User.get(c.userobj.display_name or pkg_obj.maintainer)
         if request_action == _REQUESTDATA_REPLY:
             email_content = _MESSAGE_REQUESTDATA_REPLY.format(**{
                 'requested_by': data_dict.get('requested_by'),
-                'maintainer_name': user_obj.display_name,
+                'maintainer_name': c.userobj.display_name or pkg_obj.maintainer,
                 'organization': org_obj.display_name,
                 'dataset_name': data_dict.get('package_name'),
                 'email_address': data_dict.get('email'),
