@@ -8,7 +8,7 @@ from string import lower
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.mail import simple_validate_email
 from pylons import config
 
@@ -856,7 +856,7 @@ class DatasetController(PackageController):
 
     def _has_shape_info(self, resource):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
-            shp_info = json.loads(resource['shape_info'])
+            shp_info = get_latest_shape_info(resource)
             if shp_info.get('state', '') == 'success':
                 return True
         return False
@@ -878,7 +878,7 @@ class DatasetController(PackageController):
         for resource in resources:
             if self._has_shape_info(resource):
                 res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
-                shp_info = json.loads(resource['shape_info'])
+                shp_info = get_latest_shape_info(resource)
 
                 res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
                 name = resource['name']
