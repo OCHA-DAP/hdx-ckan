@@ -4,6 +4,7 @@ Created on Mar 16, 2015
 @author: alexandru-m-g
 '''
 
+import mock
 import ckan.model as model
 import logging as logging
 
@@ -16,7 +17,7 @@ class TestHDXBrowseController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):
-        hdx_test_base.load_plugin('showcase ytp_request hdx_org_group hdx_package hdx_theme')
+        hdx_test_base.load_plugin('ytp_request hdx_org_group hdx_package hdx_theme')
 
     def _create_world(self):
         group = {'name': 'world',
@@ -27,7 +28,12 @@ class TestHDXBrowseController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         self._get_action('group_create')(context, group)
 
-    def test_get_countries(self):
+    @mock.patch('ckanext.showcase.plugin.c')
+    def test_get_countries(self, showcase_c):
+
+        showcase_c.user = 'testsysadmin'
+        showcase_c.userobj = model.User.by_name('testsysadmin')
+
         self._create_world()
         controller = browse_controller.BrowseController()
         groups = controller.get_countries('testsysadmin')

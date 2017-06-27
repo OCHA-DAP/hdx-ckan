@@ -9,7 +9,7 @@ import logging as logging
 import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
-import ckan.tests as tests
+import ckan.tests.legacy as tests
 import json
 import ckanext.hdx_search.actions.actions as actions
 
