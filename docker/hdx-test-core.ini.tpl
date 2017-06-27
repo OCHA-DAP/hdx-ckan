@@ -49,7 +49,7 @@ package_form = standard
 licenses_group_url =
 # pyamqplib or queue
 carrot_messaging_library = queue
-ckan.site_url = http://localhost:5000
+ckan.site_url = http://test.ckan.net
 #ckan.site_url = http://${HDX_PREFIX}data.${HDX_DOMAIN}
 package_new_return_url = http://localhost/dataset/<NAME>?test=new
 package_edit_return_url = http://localhost/dataset/<NAME>?test=edit
