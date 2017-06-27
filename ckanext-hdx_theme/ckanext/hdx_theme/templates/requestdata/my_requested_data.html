@@ -6,22 +6,7 @@
 {% block primary %}
 
 <div class="request-data-module">
-    <div class="requests-main-container">
-        {% snippet 'requestdata/snippets/requests_header.html', title='My Requests', total_requests=total_requests %}
-
-        {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new, template_type='user' %}
-        {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open, template_type='user' %}
-
-        {% if requests_archive %}
-        {% snippet 'requestdata/snippets/order_requests.html', service_url=my_requests_url, current_order_name=current_order_name %}
-        {% endif %}
-
-        {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archived', requests=requests_archive, template_type='user' %}
-
-        <div class="alert alert-dismissible request-message-alert hide" role="alert">
-            <div class="alert-text"></div>
-        </div>
-    </div>
+    {{ super() }}
     {% resource 'requestdata/css/main.css' %}
     {% resource 'hdx_theme/requestdata/request-data.css' %}
 </div>

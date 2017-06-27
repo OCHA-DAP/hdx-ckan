@@ -25,7 +25,7 @@ from ckan.lib.mailer import MailerException
 #     pass
 
 
-FOOTER = '''<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p><p><a href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315">Sign up for our newsletter</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'''
+FOOTER = '''<br/><br/><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p><p><a href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315">Sign up for our newsletter</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'''
 
 
 def add_msg_niceties(body, footer=None):
