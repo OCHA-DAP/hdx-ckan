@@ -4,7 +4,6 @@ Functions for creating and maintaining datasets.
 import cgi
 import logging
 from string import lower
-from ckan.lib.mailer import MailerException
 
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.membership_data as membership_data
@@ -13,6 +12,7 @@ from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_theme.util.mail import simple_validate_email
 from pylons import config
 
+import ckan.authz as new_authz
 import ckan.lib.base as base
 import ckan.lib.datapreview as datapreview
 import ckan.lib.helpers as h
@@ -20,10 +20,10 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.plugins
 import ckan.logic as logic
 import ckan.model as model
-import ckan.authz as new_authz
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckan.controllers.home import CACHE_PARAMETERS
+from ckan.lib.mailer import MailerException
 
 log = logging.getLogger(__name__)
 
@@ -642,7 +642,8 @@ class DatasetController(PackageController):
             if c.pkg_dict.get('type') == 'dataset':
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
             else:
-                c.showcase_list = []
+                # c.showcase_list = []
+                abort(404, _('Dataset not found'))
         except NotFound:
             abort(404, _('Dataset not found'))
         except NotAuthorized:
