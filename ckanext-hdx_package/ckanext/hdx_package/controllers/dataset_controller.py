@@ -639,11 +639,14 @@ class DatasetController(PackageController):
             c.pkg = context['package']
 
             # Needed because of showcase validation convert_package_name_or_id_to_id_for_type_dataset()
-            if c.pkg_dict.get('type') == 'dataset':
-                c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
-            else:
-                # c.showcase_list = []
+            current_pkg_type = c.pkg_dict.get('type')
+            if current_pkg_type == 'showcase':
                 abort(404, _('Dataset not found'))
+            else:
+                if current_pkg_type == 'dataset':
+                    c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                else:
+                    c.showcase_list = []
         except NotFound:
             abort(404, _('Dataset not found'))
         except NotAuthorized:
