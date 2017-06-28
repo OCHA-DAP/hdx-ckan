@@ -19,7 +19,7 @@ hdxckantool pgpass > /dev/null
 hdxckantool db set-perms > /dev/null
 
 # make ckan dependent on pgb
-sv start pgb || exit 1
+#sv start pgb || exit 1
 
 #hdxckantool less compile
 
