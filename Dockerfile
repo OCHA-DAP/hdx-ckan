@@ -6,8 +6,10 @@ COPY . /srv/ckan/
 
 WORKDIR /srv/ckan
 
+# /srv/pgb /etc/service/pgb && \
+    
 RUN rm -rf /usr/local/man && \
-    mkdir -p /var/log/ckan /srv/filestore /etc/service/ckan /srv/pgb /etc/service/pgb && \
+    mkdir -p /var/log/ckan /srv/filestore /etc/service/ckan && \
     cp -a docker/helper_ckan.py /srv/helper.py && \
     cp -a docker/run_ckan /etc/service/ckan/run && \
     cp -a docker/gunicorn_conf.py /srv/ && \
