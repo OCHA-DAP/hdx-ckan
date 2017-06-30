@@ -13,6 +13,7 @@ Example:
 
 {% resource 'requestdata/modal-form.js' %}
 {% resource 'requestdata/css/main.css' %}
+{% resource 'hdx_theme/bs_tooltip.js' %}
 
 <p id="dataset-resources" class="resources mTop35 info-wrapper">
   <h3 class="uppercase">{{ _('Data and Resources') }}</h3>
@@ -40,16 +41,23 @@ Example:
         {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(pkg.maintainer) %}
         {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
           <p class="empty">The contributor has only shared the metadata for this dataset. To access the data, please use the request button.</p>
-          <a href="#" class="btn btn-primary pull-right" style="margin-top: 10px;"
-             data-module="modal-form"
-             data-module-template_file="request_contact.html"
-             data-module-submit_action="{{ requestdata_action }}"
-             data-module-post_data="{{ request_post_data }}"
-             data-module-is_logged_in="{{ is_logged_in }}"
-             data-module-is_hdx="{{ is_hdx }}"
-             data-module-redirect_url="{{ redirect_url }}"
-             data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
-          >Request data</a>
+          <div data-module="bs_tooltip"
+               data-module-placement="top"
+               data-toggle="tooltip"
+               title = "Request data directly from the maintainer of this dataset."
+               style = " float: right; margin-right:5px"
+          >
+            <a href="#" class="btn btn-primary pull-right" style="margin-top: 10px;"
+               data-module="modal-form"
+               data-module-template_file="request_contact.html"
+               data-module-submit_action="{{ requestdata_action }}"
+               data-module-post_data="{{ request_post_data }}"
+               data-module-is_logged_in="{{ is_logged_in }}"
+               data-module-is_hdx="{{ is_hdx }}"
+               data-module-redirect_url="{{ redirect_url }}"
+               data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+            >Request data</a>
+          </div>
 
           <div class="container-subpanel">
 
