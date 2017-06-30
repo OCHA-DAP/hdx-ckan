@@ -18,7 +18,7 @@
               {% set truncate_title = truncate_title or 80 %}
               {% set title = package.title or package.name %}
               {% if is_metadata_only %}
-                {% set title = title + ' [On Request Only]' %}
+                {% set title = title + ' [By Request Only]' %}
               {% endif %}
               {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
               {% if package.private %}
