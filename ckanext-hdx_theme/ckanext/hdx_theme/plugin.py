@@ -3,7 +3,6 @@ import json
 import os
 import urlparse
 
-import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.auth as auth
 import pylons.config as config
 
@@ -224,6 +223,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_layer_info': hdx_helpers.hdx_get_layer_info,
             'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list,
             'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
+            'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,
         }
 
     def get_actions(self):

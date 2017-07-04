@@ -20,6 +20,7 @@ this.ckan.module('hdx_follow', function($, _) {
 			id: null,
 			loading: false,
       		extra_text: "",
+			confirm_text: "",
 			i18n: {
 				follow: _('Follow'),
 				unfollow: _('Unfollow')
@@ -44,19 +45,28 @@ this.ckan.module('hdx_follow', function($, _) {
 		 * Returns nothing.
 		 */
 		_onClick: function(event) {
+			var conf = true;
 			var options = this.options;
-			if (
-				options.action
-				&& options.type
-				&& options.id
-				&& !options.loading
-			) {
-				event.preventDefault();
-				var client = this.sandbox.client;
-				var path = options.action + '_' + options.type;
-				options.loading = true;
-				this.el.addClass('disabled');
-				client.call('POST', path, { id : options.id }, this._onClickLoaded);
+			if (options.confirm_text && options.confirm_text !== "None"){
+				conf = confirm(options.confirm_text);
+			}
+
+			if (conf){
+				if (
+					options.action
+					&& options.type
+					&& options.id
+					&& !options.loading
+				) {
+					event.preventDefault();
+					var client = this.sandbox.client;
+					var path = options.action + '_' + options.type;
+					options.loading = true;
+					this.el.addClass('disabled');
+					client.call('POST', path, { id : options.id }, this._onClickLoaded);
+				}
+			} else {
+				return false;
 			}
 		},
 
