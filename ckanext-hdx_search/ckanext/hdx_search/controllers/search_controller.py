@@ -20,6 +20,7 @@ from ckan.controllers.package import PackageController
 from ckan.controllers.api import CONTENT_TYPES
 
 from ckanext.hdx_package.controllers.dataset_controller import find_approx_download
+from ckanext.hdx_package.helpers.analytics import generate_analytics_data
 
 _validate = dict_fns.validate
 _check_access = logic.check_access
@@ -415,6 +416,9 @@ class HDXSearchController(PackageController):
             download_sum = sum(downloads_list)
 
             dataset['approx_total_downloads'] = find_approx_download(download_sum)
+
+        for dataset in query['results']:
+            dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
 
         c.page.items = query['results']
         c.sort_by_selected = query['sort']

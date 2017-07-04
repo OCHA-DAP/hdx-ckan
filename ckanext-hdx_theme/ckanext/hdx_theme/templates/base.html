@@ -42,13 +42,12 @@
           'organizationId': '{% block analytics_org_id %}None{% endblock %}',
           'groupNames': {% block analytics_group_names %}[]{% endblock %},
           'groupIds': {% block analytics_group_ids %}[]{% endblock %},
-          'isCod': {% block analytics_is_cod %}false{% endblock %},
-          'isIndicator': {% block analytics_is_indicator %}false{% endblock %},
+          'isCod': {% block analytics_is_cod %}null{% endblock %},
+          'isIndicator': {% block analytics_is_indicator %}null{% endblock %},
           'datasetName': '{% block analytics_dataset_name %}None{% endblock %}',
           'datasetId': '{% block analytics_dataset_id %}None{% endblock %}',
           'pageTitle': '{% if self.subtitle()|trim %}{{ self.subtitle()|trim }}{% else %} {{ 'None' }} {% endif -%}',
-          'isPrivate': '{% block analytics_is_dataset_private %}None{% endblock %}',
-          'isProtected': '{% block analytics_is_dataset_protected %}None{% endblock %}',
+          'datasetAvailability': '{% block analytics_dataset_availability %}None{% endblock %}',
           'authenticated': '{{ "true" if c.userobj else "false" }}'
 
       };
@@ -74,18 +73,25 @@
           }
           ga('send', 'pageview');
 
-          mixpanel.track("page view", {
+          var mixpanelTrackData = {
               "page title": analyticsInfo.pageTitle,
               "org name": analyticsInfo.organizationName,
               "org id": analyticsInfo.organizationId,
               "group names": analyticsInfo.groupNames,
               "group ids": analyticsInfo.groupIds,
-              "is cod": analyticsInfo.isCod,
-              "is indicator": analyticsInfo.isIndicator,
-              "is private": analyticsInfo.isPrivate,
-              "is protected": analyticsInfo.isProtected,
               "authenticated": analyticsInfo.authenticated
-          });
+          };
+          if (analyticsInfo.datasetAvailability) {
+              mixpanelTrackData['dataset availability'] = analyticsInfo.datasetAvailability;
+          }
+          if (analyticsInfo.isCod !== null) {
+              mixpanelTrackData['is cod'] = analyticsInfo.isCod;
+          }
+          if (analyticsInfo.isIndicator !== null) {
+              mixpanelTrackData['is indicator'] = analyticsInfo.isIndicator;
+          }
+
+          mixpanel.track("page view", mixpanelTrackData);
       }());
 
     </script>

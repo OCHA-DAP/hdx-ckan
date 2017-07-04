@@ -35,10 +35,20 @@ def is_private(pkg_dict):
     return 'false'
 
 
-def is_protected(pkg_dict):
+# def is_protected(pkg_dict):
+#     if pkg_dict.get('is_requestdata_type'):
+#         return 'true'
+#     return 'false'
+
+
+def dataset_availability(pkg_dict):
     if pkg_dict.get('is_requestdata_type'):
-        return 'true'
-    return 'false'
+        level = 'metadata only'
+    elif pkg_dict.get('private'):
+        level = 'private'
+    else:
+        level = 'public'
+    return level
 
 
 def extract_locations(pkg_dict):
@@ -80,6 +90,32 @@ def _ga_dataset_type(is_indicator, is_cod):
         type = 'cod~indicator' if type == 'indicator' else 'cod'
 
     return type
+
+
+def generate_analytics_data(dataset_dict):
+    # in case of an edit event we populate the analytics info
+
+    # it's going to be used mostly in JSON so using camelCase
+    analytics_dict = {}
+    if dataset_dict and dataset_dict.get('id'):
+        analytics_dict['datasetId'] = dataset_dict['id']
+        analytics_dict['datasetName'] = dataset_dict['name']
+        analytics_dict['organizationName'] = dataset_dict.get('organization', {}).get('name')
+        analytics_dict['organizationId'] = dataset_dict.get('organization', {}).get('name')
+        analytics_dict['isCod'] = is_cod(dataset_dict)
+        analytics_dict['isIndicator'] = is_indicator(dataset_dict)
+        analytics_dict['groupNames'], analytics_dict['groupIds'] = extract_locations_in_json(dataset_dict)
+        analytics_dict['datasetAvailability'] = dataset_availability(dataset_dict)
+    else:
+        analytics_dict['datasetId'] = ''
+        analytics_dict['datasetName'] = ''
+        analytics_dict['organizationName'] = ''
+        analytics_dict['organizationId'] = ''
+        analytics_dict['isCod'] = 'false'
+        analytics_dict['isIndicator'] = 'false'
+        analytics_dict['groupNames'] = '[]'
+        analytics_dict['groupIds'] = '[]'
+    return analytics_dict
 
 
 def _ga_location(location_names):
@@ -205,7 +241,7 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
         dataset_is_cod = is_cod(dataset_dict) == 'true'
         dataset_is_indicator = is_indicator(dataset_dict) == 'true'
         dataset_is_private = is_private(dataset_dict) == 'true'
-        dataset_is_protected = is_protected(dataset_dict) == 'true'
+        dataset_availability_level = dataset_availability(dataset_dict) == 'true'
 
 
 
@@ -220,7 +256,7 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
                 'is cod': dataset_is_cod,
                 'is indicator': dataset_is_indicator,
                 'is private': dataset_is_private,
-                'is protected': dataset_is_protected
+                'dataset availability': dataset_availability_level
             },
             'ga_meta': {
                 'ec': 'dataset',  # event category

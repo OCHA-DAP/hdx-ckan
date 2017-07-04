@@ -231,7 +231,12 @@ $(
         var group_names = getValuesFromFormData('locations');
         var org_names = getValuesFromFormData('owner_org');
         var privateVal = getValuesFromFormData('private');
-        var protectedVal = getValuesFromFormData('is_requestdata_type');
+        var reqdataTypeVal = getValuesFromFormData('is_requestdata_type');
+
+        var isPrivate = privateVal.length > 0 ? privateVal[0] == "true" : false;
+        var isMetadataOnly = reqdataTypeVal.length > 0 ? reqdataTypeVal[0] == "true" : false;
+
+        var dataset_availability = isMetadataOnly ? 'metadata only' : isPrivate ? 'private' : 'public';
 
         /* tag_string looks something like "3 word address,cod,health" */
         var codVal = getValuesFromFormData('tag_string');
@@ -246,8 +251,8 @@ $(
                 "org_name": org_names.length > 0 ? org_names[0] : null,
                 "is cod": codVal.indexOf('cod') >= 0,
                 "is indicator": false,
-                "is private": privateVal.length > 0 ? privateVal[0] == "true" : false,
-                "is protected": protectedVal.length > 0 ? protectedVal[0] == "true" : false
+                "is private": isPrivate,
+                "dataset availability": dataset_availability
             }
         };
 
@@ -305,9 +310,18 @@ $(
      * @param {string} messageSubject The problem type flagged by this message (for now only for "contact contributor")
      * @param {string} messageTarget Which people will receive this message (for now only for "group message")
      * @param {boolean} isDatasetPage is the event sent from a dataset page (include dataset meta)
+     * @param {object} localAnalyticsInfo analytics data about dataset.
+     * Useful when not on a dataset specific page, like the search page.
      * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded
      */
-    function sendMessagingEvent(messageSource, messageType, messageSubject, messageTarget, isDatasetPage) {
+    function sendMessagingEvent(messageSource, messageType, messageSubject, messageTarget,
+                                isDatasetPage, localAnalyticsInfo) {
+
+        if (localAnalyticsInfo) {
+            localAnalyticsInfo.pageTitle = analyticsInfo.pageTitle;
+        } else {
+            localAnalyticsInfo = analyticsInfo;
+        }
         var metadata = {
             'message type': messageType
         };
@@ -319,15 +333,15 @@ $(
         }
         if (isDatasetPage) {
             $.extend(metadata, {
-                "dataset name": analyticsInfo.datasetName,
-                "dataset id": analyticsInfo.datasetId,
-                "page title": analyticsInfo.pageTitle,
-                "org name": analyticsInfo.organizationName,
-                "org id": analyticsInfo.organizationId,
-                "group names": analyticsInfo.groupNames,
-                "group ids": analyticsInfo.groupIds,
-                "is cod": analyticsInfo.isCod,
-                "is indicator": analyticsInfo.isIndicator
+                "dataset name": localAnalyticsInfo.datasetName,
+                "dataset id": localAnalyticsInfo.datasetId,
+                "page title": localAnalyticsInfo.pageTitle,
+                "org name": localAnalyticsInfo.organizationName,
+                "org id": localAnalyticsInfo.organizationId,
+                "group names": localAnalyticsInfo.groupNames,
+                "group ids": localAnalyticsInfo.groupIds,
+                "is cod": localAnalyticsInfo.isCod,
+                "is indicator": localAnalyticsInfo.isIndicator
             });
         }
 
