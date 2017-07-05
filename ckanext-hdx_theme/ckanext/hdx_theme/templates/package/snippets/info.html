@@ -18,7 +18,7 @@ Example:
         </div>
         <div class="info-wrapper mTop35">
           <div class="uppercase">{{ _('Followers:') }}</div>
-          <div class="followers-count followersNumber">{{ h.SI_number_span(h.get_action('dataset_follower_count', {'id': pkg.id})) }}</div>
+          <div class="followers-count followersNumber">{{ h.SI_number_span(h.hdx_dataset_follower_count(pkg.id)) }}</div>
         </div>
         {% if not hide_follow_button %}
           <div class="follow_button">

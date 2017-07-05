@@ -3,14 +3,15 @@
 {% import 'macros/form.html' as form %}
 
 {# The line below is for google analytics #}
-{% block analytics_org_name %}{{ data.get('organization',{}).name }}{% endblock %}
-{% block analytics_org_id %}{{ data.get('organization',{}).id }}{% endblock %}
-{% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}
-{% block analytics_is_indicator %}{{ analytics.is_indicator }}{% endblock %}
-{% block analytics_group_names %}{{ analytics.group_names | safe }}{% endblock %}
-{% block analytics_group_ids %}{{ analytics.group_ids | safe }}{% endblock %}
-{% block analytics_dataset_name %}{{ data.name  }}{% endblock %}
-{% block analytics_dataset_id %}{{ data.id }}{% endblock %}
+{% block analytics_org_name %}{{ analytics.organizationName }}{% endblock %}
+{% block analytics_org_id %}{{ analytics.organizationId }}{% endblock %}
+{% block analytics_is_cod %}{{ analytics.isCod }}{% endblock %}
+{% block analytics_is_indicator %}{{ analytics.isIndicator }}{% endblock %}
+{% block analytics_group_names %}{{ analytics.groupNames | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ analytics.groupIds | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ analytics.datasetName  }}{% endblock %}
+{% block analytics_dataset_id %}{{ analytics.datasetId }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics.datasetAvailability }}{% endblock %}
 
 {% block subtitle %}{{ _('Contribute') }}{% endblock %}
 

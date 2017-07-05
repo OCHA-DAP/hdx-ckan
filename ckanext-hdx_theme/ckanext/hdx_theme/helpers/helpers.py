@@ -155,6 +155,12 @@ def get_group_followers(grp_id):
         {'id': grp_id})
     return result
 
+def hdx_dataset_follower_count(pkg_id):
+    result = logic.get_action('dataset_follower_count')(
+        {'model': model, 'session': model.Session},
+        {'id': pkg_id})
+    return result
+
 
 def get_group_members(grp_id):
     member_list = logic.get_action('member_list')(

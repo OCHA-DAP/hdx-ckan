@@ -224,6 +224,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_carousel_list': hdx_helpers.hdx_get_carousel_list,
             'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
             'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,
+            'hdx_dataset_follower_count': hdx_helpers.hdx_dataset_follower_count,
         }
 
     def get_actions(self):
