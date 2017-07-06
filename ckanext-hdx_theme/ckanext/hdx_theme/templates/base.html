@@ -79,17 +79,13 @@
               "org id": analyticsInfo.organizationId,
               "group names": analyticsInfo.groupNames,
               "group ids": analyticsInfo.groupIds,
-              "authenticated": analyticsInfo.authenticated
+              "authenticated": analyticsInfo.authenticated,
+              "dataset availability": analyticsInfo.datasetAvailability,
+              "is cod": analyticsInfo.isCod,
+              "is indicator": analyticsInfo.isIndicator,
+              "dataset id": analyticsInfo.datasetId,
+              "dataset name": analyticsInfo.datasetName
           };
-          if (analyticsInfo.datasetAvailability) {
-              mixpanelTrackData['dataset availability'] = analyticsInfo.datasetAvailability;
-          }
-          if (analyticsInfo.isCod !== null) {
-              mixpanelTrackData['is cod'] = analyticsInfo.isCod;
-          }
-          if (analyticsInfo.isIndicator !== null) {
-              mixpanelTrackData['is indicator'] = analyticsInfo.isIndicator;
-          }
 
           mixpanel.track("page view", mixpanelTrackData);
       }());
