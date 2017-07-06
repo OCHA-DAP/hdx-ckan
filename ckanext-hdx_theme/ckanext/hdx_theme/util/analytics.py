@@ -7,6 +7,7 @@ import pylons.config as config
 
 
 from ckan.common import _, c, request
+from ckanext.hdx_theme.helpers.hash_generator import HashCodeGenerator
 
 log = logging.getLogger(__name__)
 
@@ -64,7 +65,12 @@ class AbstractAnalyticsSender(object):
             log.error('Unexpected error {}'.format(e))
 
     def _populate_defaults(self):
-        self._set_if_not_exists(self.analytics_dict, 'mixpanel_tracking_id', 'anonymous')
+
+        # computing distinct id based on ip and UA
+        distinct_id = HashCodeGenerator({'ip': self.user_addr, 'ua': self.user_agent}).compute_hash()
+        # this is the mixpanel distinct_id
+        self._set_if_not_exists(self.analytics_dict, 'mixpanel_tracking_id', distinct_id)
+
         self._set_if_not_exists(self.analytics_dict, 'mixpanel_token', config.get('hdx.analytics.mixpanel.token'))
         self._set_if_not_exists(self.analytics_dict, 'send_mixpanel', True)
         self._set_if_not_exists(self.analytics_dict, 'send_ga', False)
