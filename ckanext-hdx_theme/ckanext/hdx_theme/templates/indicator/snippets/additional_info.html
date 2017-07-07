@@ -81,7 +81,7 @@
   		</td>
 	</tr>
     {% endif %}
-    {% if pkg_dict.is_requestdata_type %}
+    {% if not pkg_dict.is_requestdata_type %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
     	<td class="dataset-details  metadata-link">
