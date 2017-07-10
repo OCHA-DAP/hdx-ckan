@@ -399,8 +399,10 @@ class HDXSearchController(PackageController):
         c.facets = query['facets']
         c.search_facets = query['search_facets']
 
-        get_action('populate_related_items_count')(
-            context, {'pkg_dict_list': query['results']})
+        # get_action('populate_related_items_count')(
+        #     context, {'pkg_dict_list': query['results']})
+
+        get_action('populate_showcase_items_count')(context, {'pkg_dict_list': query['results']})
 
         c.page = h.Page(
             collection=query['results'],
