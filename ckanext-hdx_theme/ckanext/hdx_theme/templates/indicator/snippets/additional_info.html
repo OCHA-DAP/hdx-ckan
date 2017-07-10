@@ -40,6 +40,8 @@
 		<br/></div></span>
 		</td>
     </tr>
+    {# Metadata-only datasets are public, so this option is only for full datasets #}
+{% if not pkg_dict.is_requestdata_type %}
     {% if h.check_access('package_update', {'id':pkg_dict.id }) %}
     	<hidden id="controller_url" value="{% url_for controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController', action='visibility', id=pkg_dict.id %}">
 		<tr>
@@ -49,11 +51,8 @@
 					<div id="private_block"><span id="visibility">{{ _('Private') }}</span> -
 					<a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it public') }}</a></div>
 				{% else %}
-					<div id="private_block"><span id="visibility">{{ _('Public') }}</span>
-          {# Metadata-only datasets are public, so this option is only for full datasets #}
-          {% if not pkg_dict.is_requestdata_type %}
-            - <a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
-          {% endif %}
+					<div id="private_block"><span id="visibility">{{ _('Public') }}</span> -
+                    <a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
 				{% endif %}
 <!-- changed as per #4056
 				{% set locale = h.dump_json({'content': _('Are you sure? This will affect whether this data is visible to everyone')}) %}
@@ -81,6 +80,8 @@
   		</td>
 	</tr>
     {% endif %}
+{% endif %}
+
     {% if not pkg_dict.is_requestdata_type %}
     <tr>
     	<th scope="row" class="dataset-label">{{ _('License') }}</th>
