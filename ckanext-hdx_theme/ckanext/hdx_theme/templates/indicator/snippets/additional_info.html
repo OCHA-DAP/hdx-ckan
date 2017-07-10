@@ -51,7 +51,7 @@
 				{% else %}
 					<div id="private_block"><span id="visibility">{{ _('Public') }}</span>
           {# Metadata-only datasets are public, so this option is only for full datasets #}
-          {% if pkg_dict.type == 'dataset' %}
+          {% if not pkg_dict.is_requestdata_type %}
             - <a onclick="contributeAddDetails('{{ pkg_dict.id }}')" href="#">{{ _('make it private') }}</a></div>
           {% endif %}
 				{% endif %}
@@ -108,6 +108,20 @@
       </td>
     </tr>
    {% endif %}
+	{% if pkg_dict.is_requestdata_type %}
+        <tr>
+            <th scope="row" class="dataset-label">{{ _('Field Names') }}</th>
+            <td class="dataset-details">{{ pkg_dict.field_names }}</td>
+        </tr>
+        <tr>
+            <th scope="row" class="dataset-label">{{ _('File Types') }}</th>
+            <td class="dataset-details">{{ pkg_dict.file_types }}</td>
+        </tr>
+        <tr>
+            <th scope="row" class="dataset-label">{{ _('Number of Rows') }}</th>
+            <td class="dataset-details">{{ pkg_dict.num_of_rows }}</td>
+        </tr>
+    {% endif %}
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
 		{% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
