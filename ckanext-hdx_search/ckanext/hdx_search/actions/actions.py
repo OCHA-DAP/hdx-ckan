@@ -26,5 +26,4 @@ def populate_showcase_items_count(context, data_dict):
         _check_access('package_show', context, pkg_dict)
         showcase_items = get_action('ckanext_package_showcase_list')(context, {'package_id': pkg_dict['id']})
         pkg_dict['showcase_count'] = len(showcase_items)
-        print pkg_dict['showcase_count']
     return pkg_dict_list
