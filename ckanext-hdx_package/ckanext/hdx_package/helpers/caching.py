@@ -17,8 +17,8 @@ bcache.cache_regions.update({
     'hdx_memory_cache': {
         'expire': 86400,  # 1 days
         'type': 'file',
-        'data_dir': '/tmp/hdxcache/data',
-        'lock_dir': '/tmp/hdxcache/lock',
+        'data_dir': '/tmp/hdx/main_cache/data',
+        'lock_dir': '/tmp/hdx/main_cache/lock',
         'key_length': 250
     }
 })
