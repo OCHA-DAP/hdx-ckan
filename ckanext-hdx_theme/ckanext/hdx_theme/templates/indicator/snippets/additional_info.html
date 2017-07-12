@@ -125,8 +125,16 @@
     {% endif %}
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Methodology') }}</th>
-		{% set methodology, methodology_other = h. methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
-	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">{% if not methodology_other %}{{methodology}}{% else %}{{methodology_other}}{% endif %}</span></td>
+		{% set methodology, methodology_other = h.methodology_bk_compat(pkg_dict.methodology, pkg_dict.methodology_other) %}
+	      <td class="dataset-details"><span data-module="hdx_show_more" style="visibility:hidden">
+			  {% if not methodology_other %}
+			  	{% if methodology != None %}
+			  		{{methodology}}
+			  	{% endif %}
+			  {% else %}
+			  	{{methodology_other}}
+			  {% endif %}
+		  </span></td>
 	</tr>
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Caveats / Comments') }}</th>
