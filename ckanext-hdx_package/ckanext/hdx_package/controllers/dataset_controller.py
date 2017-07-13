@@ -1087,11 +1087,13 @@ class DatasetController(PackageController):
 
         try:
             c.resource = get_action('resource_show')(context,{'id': resource_id})
-            if c.resource and c.resource.datastore_active and c.resource.datastore_active in ('false', 'False'):
-                c.resource.datastore_active = False
+
+            if c.resource and c.resource.get('datastore_active', 'false') in ('false', 'False'):
+                c.resource['datastore_active'] = False
             else:
-                if c.resource and c.resource.datastore_active and c.resource.datastore_active in ('true', 'True'):
-                    c.resource.datastore_active = True
+                if c.resource and c.resource.get('datastore_active', 'true') in ('true', 'True'):
+                    c.resource['datastore_active'] = True
+
             c.package = get_action('package_show')(context, {'id': id})
             # required for nav menu
             c.pkg = context['package']
