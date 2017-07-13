@@ -1,12 +1,13 @@
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as toolkit
 import ckanext.hdx_users.actions.create as create
 import ckanext.hdx_users.actions.get as get
 import ckanext.hdx_users.actions.update as update
-import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
+import ckanext.hdx_users.logic.register_auth as authorize
 import ckanext.hdx_users.logic.validators as hdx_validators
 import ckanext.hdx_users.model as users_model
+
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as toolkit
 
 
 def user_create(context, data_dict=None):
@@ -192,6 +193,8 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('requestdata_send_request', '/request_data',
                     controller=request_data_controller,
                     action='send_request')
+        map.connect('/util/user/hdx_autocomplete', controller='ckanext.hdx_users.controllers.api:APIExtensionController',
+                    action='hdx_user_autocomplete')
 
 
         #######
@@ -219,7 +222,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
     def get_actions(self):
         return {
-
+            'hdx_user_autocomplete': get.hdx_user_autocomplete
         }
 
     def get_validators(self):
