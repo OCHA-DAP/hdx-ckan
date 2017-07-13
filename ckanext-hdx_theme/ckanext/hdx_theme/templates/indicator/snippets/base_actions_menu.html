@@ -8,7 +8,7 @@
 {% set hide_membership = hide_membership or false %}
 {% set hide_follow = hide_follow or false %}
 
-{% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) %}
+{% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) if pkg else false %}
 {% set follow_confirm_text = "WARNING: You are maintainer of the dataset which you want to follow. Do you wish to continue?" if is_current_user_a_maintainer else None %}
 {% set contact_confirm_text = "WARNING: you are the contributor of this dataset. Do you wish to continue contacting the contributor?" if is_current_user_a_maintainer else None %}
 
