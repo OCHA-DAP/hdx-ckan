@@ -643,6 +643,7 @@ class DatasetController(PackageController):
 
             if current_pkg_type == 'dataset':
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                c.pkg_dict['showcase_count'] = len(c.showcase_list)
             else:
                 abort(404, _('Package type is not dataset'))
         except NotFound:
@@ -1087,8 +1088,12 @@ class DatasetController(PackageController):
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
         try:
-            c.resource = get_action('resource_show')(context,
-                                                     {'id': resource_id})
+            c.resource = get_action('resource_show')(context,{'id': resource_id})
+            if c.resource and c.resource.datastore_active and c.resource.datastore_active in ('false', 'False'):
+                c.resource.datastore_active = False
+            else:
+                if c.resource and c.resource.datastore_active and c.resource.datastore_active in ('true', 'True'):
+                    c.resource.datastore_active = True
             c.package = get_action('package_show')(context, {'id': id})
             # required for nav menu
             c.pkg = context['package']

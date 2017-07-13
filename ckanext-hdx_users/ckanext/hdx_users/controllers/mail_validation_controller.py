@@ -190,15 +190,29 @@ class ValidationController(ckan.controllers.user.UserController):
                 #    If you want to associate this dataset with an organization, either click on "My Organizations" below
                 #    to create a new organization or ask the admin of an existing organization to add you as a member.''' % contribute_url
                 # h.flash_success(_(message), True)
+
                 return h.redirect_to(controller='user', action='dashboard_organizations')
             else:
                 userobj = c.userobj if c.userobj else model.User.get(c.user)
                 login_dict = {'display_name': userobj.display_name, 'email': userobj.email,
                               'email_hash': userobj.email_hash, 'login': userobj.name}
-                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
+
                 max_age = int(14 * 24 * 3600)
                 response.set_cookie('hdx_login', urllib2.quote(json.dumps(login_dict)), max_age=max_age)
-                return self.me()
+                if not c.user:
+                    h.redirect_to(locale=None, controller='user', action='login', id=None)
+
+                # do we need this?
+                user_ref = c.userobj.get_reference_preferred_for_uri()
+
+                _ckan_site_url = config.get('ckan.site_url', '#')
+                _came_from = str(request.referrer or _ckan_site_url)
+
+                if _ckan_site_url != _came_from:
+                    h.redirect_to(_came_from)
+
+                h.flash_success(_("%s is now logged in") % user_dict['display_name'])
+                h.redirect_to(locale=None, controller='user', action='dashboard')
         else:
             err = _('Login failed. Bad username or password.')
             try:

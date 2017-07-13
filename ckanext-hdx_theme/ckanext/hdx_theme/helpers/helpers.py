@@ -599,7 +599,7 @@ def hdx_license_list():
 
 
 def hdx_methodology_list():
-    result = [{'value': 'None', 'text': 'None'}, {'value': 'Census', 'text': 'Census'},
+    result = [{'value': '-1', 'text': '-- Please select --'}, {'value': 'Census', 'text': 'Census'},
               {'value': 'Sample Survey', 'text': 'Sample Survey'},
               {'value': 'Direct Observational Data/Anecdotal Data', 'text': 'Direct Observational Data/Anecdotal Data'},
               {'value': 'Registry', 'text': 'Registry'}, {'value': 'Other', 'text': 'Other'}]

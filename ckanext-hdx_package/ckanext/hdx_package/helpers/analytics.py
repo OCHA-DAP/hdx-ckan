@@ -100,8 +100,10 @@ def generate_analytics_data(dataset_dict):
     if dataset_dict and dataset_dict.get('id'):
         analytics_dict['datasetId'] = dataset_dict['id']
         analytics_dict['datasetName'] = dataset_dict['name']
-        analytics_dict['organizationName'] = dataset_dict.get('organization', {}).get('name')
-        analytics_dict['organizationId'] = dataset_dict.get('organization', {}).get('name')
+        analytics_dict['organizationName'] = dataset_dict.get('organization', {}).get('name') \
+                                                if dataset_dict.get('organization') else None
+        analytics_dict['organizationId'] = dataset_dict.get('organization', {}).get('name') \
+                                                if dataset_dict.get('organization') else None
         analytics_dict['isCod'] = is_cod(dataset_dict)
         analytics_dict['isIndicator'] = is_indicator(dataset_dict)
         analytics_dict['groupNames'], analytics_dict['groupIds'] = extract_locations_in_json(dataset_dict)
