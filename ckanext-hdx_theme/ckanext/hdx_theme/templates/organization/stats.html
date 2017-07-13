@@ -1,0 +1,126 @@
+{% extends "organization/read.html" %}
+
+{% resource 'hdx_theme/activity-stream' %}
+
+{% block subtitle %}{{ _('Stats') }} - {{ c.group_dict.title or c.group_dict.name }}{% endblock %}
+
+{% block primary_content_inner %}
+    <script id="stats-data-pageviews" type="application/json">
+        [
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-01-30","value":39},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-02-06","value":320},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-02-13","value":190},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-02-20","value":21},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-02-27","value":250},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-03-06","value":400},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-03-13","value":22},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-03-20","value":37},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-03-27","value":37},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-04-03","value":410},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-04-10","value":460},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-04-17","value":520},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-04-24","value":64},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-05-01","value":550},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-05-08","value":600},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-05-15","value":410},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-05-22","value":270},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-05-29","value":30},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-06-05","value":22},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-06-12","value":22},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-06-19","value":310},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-06-26","value":220},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-07-03","value":110},
+            {"org_id":"00547685-9ded-4d69-9ca5-47d5278ead7c","date":"2017-07-10","value":5}
+        ]
+    </script>
+    <script id="stats-data-top-downloads" type="application/json">
+        [
+            {"dataset_id":"0013fbe3-4b43-4da0-985a-4fda7f0081dc","date":1498435200000,"value":2},
+            {"dataset_id":"00215f01-9326-493a-aff1-6267684fa962","date":1497225600000,"value":1},
+            {"dataset_id":"004daf8f-2f9e-417a-92ee-9e2187d2da7e","date":1496620800000,"value":1},
+            {"dataset_id":"00710e3e-c8ef-46c2-9cb0-d87070600bd7","date":1497830400000,"value":1},
+            {"dataset_id":"0087e82a-83c6-4aeb-9681-4cebf664e7e6","date":1496620800000,"value":1},
+            {"dataset_id":"008e23ea-9d98-482e-bc1e-555b32b44715","date":1497225600000,"value":1}
+        ]
+    </script>
+
+	<h2 class="hide-heading">{% block page_heading %}{{ _('Stats') }}{% endblock %}</h2>
+
+    <div class="row">
+        <div class="col-xs-9">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="list-header crisis-list-header">
+                        <span class="mL15 list-header-title">Top Downloads (last 24 weeks)</span>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div id="chart-data-top-downloads" style="height: 320px;"></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="list-header crisis-list-header">
+                        <span class="mL15 list-header-title">Downloads and Total Page Views (last 24 weeks)</span>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div id="chart-data-pageviews" style="height: 320px;"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-3">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">Users (last 30 days)</span>
+            </div>
+            <div class="topline">
+                <div class="row">
+                    <div class="col-xs-12 indicator-title">
+                        Unique visitors who downloaded at least one dataset from this org
+                    </div>
+                    <div class="col-xs-12 indicator-value">
+                        <div class="topline-value">
+                            <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
+                                137
+                            </span>
+                            <span class="small"> users </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topline">
+                <div class="row">
+                    <div class="col-xs-12 indicator-title">
+                        Unique visitors to this organisation's content
+                    </div>
+                    <div class="col-xs-12 indicator-value">
+                        <div class="topline-value">
+                            <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
+                                439
+                            </span>
+                            <span class="small"> users </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row"><h1>the end</h1></div>
+{% endblock %}
+
+{% block primary_content_module_margin %}{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+	{% resource 'hdx_theme/dashboard.css' %}
+	{% resource 'hdx_theme/hdx_dashboard.js' %}
+    {% resource 'hdx_theme/crisis/topline.css' %}
+    {% resource 'hdx_theme/organization/stats.js' %}
+    {% resource 'hdx_theme/organization/stats.css' %}
+    {% resource 'hdx_theme/d3' %}
+    {% resource 'hdx_theme/c3' %}
+
+{% endblock %}

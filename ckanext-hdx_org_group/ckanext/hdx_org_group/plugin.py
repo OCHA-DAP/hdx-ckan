@@ -1,13 +1,13 @@
 import logging
-import ckan.plugins as plugins
-import ckan.plugins.toolkit as tk
-import ckan.lib.plugins as lib_plugins
 
-import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
-
+import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
 import ckanext.hdx_package.helpers.screenshot as screenshot
+
+import ckan.lib.plugins as lib_plugins
+import ckan.plugins as plugins
+import ckan.plugins.toolkit as tk
 
 log = logging.getLogger(__name__)
 
@@ -205,6 +205,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('organization_read', '/organization/{id}',
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='read')
+
+        map.connect('hdx_organization_stats', '/organization/stats/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='stats')
 
         # map.connect('browse_list', '/browse',
         #            controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')

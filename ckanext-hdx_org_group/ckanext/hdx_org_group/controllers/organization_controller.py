@@ -6,21 +6,19 @@ Created on Jan 13, 2015
 
 import json
 
-import ckan.controllers.organization as org
-import ckan.model as model
-import ckan.logic as logic
-import ckan.lib.base as base
-import ckan.common as common
-import ckan.authz as new_authz
-
-from ckan.common import c, request, _
-import ckan.lib.helpers as h
-
-import ckanext.hdx_org_group.helpers.organization_helper as helper
-import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
+import ckan.authz as new_authz
+import ckan.common as common
+import ckan.controllers.organization as org
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.model as model
+from ckan.common import c, request, _
 from ckan.controllers.api import CONTENT_TYPES
 
 abort = base.abort
@@ -279,6 +277,27 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         #  The extra_vars are needed here to send analytics information like org name and id
         return render(self._edit_template(c.group.type), extra_vars={'data': data})
+
+    def stats(self, id, data=None, errors=None, error_summary=None):
+        template_data = {}
+        return render('organization/stats.html', extra_vars=template_data)
+
+    def stats(self, id, org_meta=None, offset=0):
+        if not org_meta:
+            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+        c.org_meta = org_meta
+        org_meta.fetch_all()
+
+        c.group_dict = org_meta.org_dict
+
+
+        # Add the group's activity stream (already rendered to HTML) to the
+        # template context for the group/read.html template to retrieve later.
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True}
+
+        template_data = {}
+        return render('organization/stats.html', extra_vars=template_data)
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
