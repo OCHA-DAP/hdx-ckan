@@ -35,6 +35,11 @@ def resource_update(context, data_dict):
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up
         data_dict['url_type'] = 'api'
+    if data_dict.get('datastore_active', 'false') in ('false', 'False'):
+        data_dict['datastore_active'] = False
+    else:
+        if data_dict.get('datastore_active', 'true') in ('true', 'True'):
+            data_dict['datastore_active'] = True
     result_dict = core_update.resource_update(context, data_dict)
 
     return result_dict
