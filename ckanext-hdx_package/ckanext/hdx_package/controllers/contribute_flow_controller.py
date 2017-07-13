@@ -173,6 +173,7 @@ class ContributeFlowController(base.BaseController):
         self.process_locations(data_dict)
         self.process_dataset_date(data_dict)
         self.process_expected_update_frequency(data_dict)
+        self.process_methodology(data_dict)
         self.process_maintainer(context, data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
@@ -298,6 +299,10 @@ class ContributeFlowController(base.BaseController):
     def process_expected_update_frequency(self, data_dict):
         if 'data_update_frequency' in data_dict and data_dict.get('data_update_frequency', '-1') == '-1':
             data_dict['data_update_frequency'] = None
+
+    def process_methodology(self, data_dict):
+        if 'methodology' in data_dict and data_dict.get('methodology', '-1') == '-1':
+            data_dict['methodology'] = None
 
     def process_maintainer(self, context, data_dict):
         if 'maintainer' in data_dict:

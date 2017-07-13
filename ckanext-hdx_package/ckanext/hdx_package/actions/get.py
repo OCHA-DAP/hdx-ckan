@@ -28,8 +28,8 @@ _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 
-_footer_contact_contributor = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p><p>Note: <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
-_footer_group_message = '<br><br><small><p><a href="https://data.humdata.org">Humanitarian Data Exchange</a></p>' + '<p>Sign up for <a href="http://eepurl.com/PlJgH">Blogs</a> | <a href="https://twitter.com/humdata">Follow us on Twitter</a> | <a href="mailto:hdx@un.org" target="_top">Contact us</a></p></small>'
+_FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER + '<small><p>Note: <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
+_FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
 
 
 @logic.side_effect_free
@@ -520,7 +520,7 @@ def hdx_send_mail_contributor(context, data_dict):
 
     hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=html,
                               sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              bcc_recipients_list=bcc_recipients_list, footer=_footer_contact_contributor)
+                              bcc_recipients_list=bcc_recipients_list, footer=_FOOTER_CONTACT_CONTRIBUTOR)
 
     return None
 
@@ -550,6 +550,6 @@ def hdx_send_mail_members(context, data_dict):
 
     hdx_mailer.mail_recipient(recipients_list=recipients_list, subject=subject, body=html,
                               sender_name=data_dict.get('fullname'), sender_email=data_dict.get('email'),
-                              footer=_footer_group_message)
+                              footer=_FOOTER_GROUP_MESSAGE)
 
     return None
