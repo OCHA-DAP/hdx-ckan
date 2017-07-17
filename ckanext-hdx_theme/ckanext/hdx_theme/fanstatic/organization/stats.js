@@ -8,7 +8,7 @@ $(document).ready(function(){
         padding: {
             bottom: 20
         },
-        color: '#117be1',
+        color: '#0077ce',
         data: {
             json: dataPageviews,
             keys: {
@@ -53,7 +53,7 @@ $(document).ready(function(){
         padding: {
             bottom: 20
         },
-        color: '#117be1',
+        color: '#0077ce',
         data: {
             json: dataTopDownloads,
             keys: {

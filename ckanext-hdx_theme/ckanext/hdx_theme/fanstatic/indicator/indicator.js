@@ -45,7 +45,7 @@ $(document).ready(function() {
             size: {
                 height: 120
             },
-            color: '#117be1',
+            color: '#0077ce',
             data: {
                 json: chartData,
                 keys: {
