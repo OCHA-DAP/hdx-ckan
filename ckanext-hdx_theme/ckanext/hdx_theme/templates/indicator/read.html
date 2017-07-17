@@ -85,9 +85,9 @@
 
 {% block secondary %}
     <div >
-        <script id="dataset-downloads-data" type="application/json">
-            [{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-01-30","value":39},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-02-06","value":32},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-02-13","value":19},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-02-20","value":21},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-02-27","value":25},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-03-06","value":40},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-03-13","value":22},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-03-20","value":37},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-03-27","value":37},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-04-03","value":41},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-04-10","value":46},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-04-17","value":52},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-04-24","value":64},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-05-01","value":55},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-05-08","value":60},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-05-15","value":41},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-05-22","value":27},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-05-29","value":30},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-06-05","value":22},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-06-12","value":22},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-06-19","value":31},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-06-26","value":22},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-07-03","value":11},{"dataset_id":"0d089fa0-3567-4b01-9c03-39d340ff34e3","date":"2017-07-10","value":5}]
-        </script>
+        <div id="dataset-downloads-data" style="display: none">
+            {{ h.json_dumps(c.dashboard_downloads_last_weeks) }}
+        </div>
         <h2 class="uppercase">{{_('Downloads')}}</h2>
         <div id="dataset-downloads-chart">
 

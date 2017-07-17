@@ -10,6 +10,7 @@ import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.mail import simple_validate_email
+from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks
 from pylons import config
 
 import ckan.authz as new_authz
@@ -757,6 +758,10 @@ class DatasetController(PackageController):
         }
 
         c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
+
+        #analytics charts
+        downloads_last_weeks = downloads_per_dataset_per_week_last_24_weeks().get(c.pkg_dict['id'], {}).values()
+        c.dashboard_downloads_last_weeks = downloads_last_weeks
 
         _default_view = None
         if 'resources' in c.pkg_dict:

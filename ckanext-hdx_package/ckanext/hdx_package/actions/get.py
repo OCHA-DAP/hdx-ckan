@@ -19,9 +19,11 @@ import logging
 import json
 
 from ckan.lib import uploader
+
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
-from ckanext.hdx_theme.util.jql import downloads_per_dataset_cached
+
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -347,11 +349,15 @@ def package_show(context, data_dict):
     #                   res.get('tracking_summary', {}).get('total'))
     # package_dict['total_res_downloads'] = sum(downloads_list)
 
-    log.debug('BEFORE total_res_downloads')
     if _should_manually_load_property_value(context, package_dict, 'total_res_downloads'):
-        total_res_downloads = downloads_per_dataset_cached()[package_dict['id']]
+        total_res_downloads = jql.downloads_per_dataset_all_cached().get(package_dict['id'], 0)
         log.debug('Dataset {} has {} downloads'.format(package_dict['id'], total_res_downloads))
         package_dict['total_res_downloads'] = total_res_downloads
+
+    if _should_manually_load_property_value(context, package_dict, 'pageviews_last_14_days'):
+        pageviews_last_14_days = jql.pageviews_per_dataset_last_14_days_cached().get(package_dict['id'], 0)
+        log.debug('Dataset {} has {} page views in the last 14 days'.format(package_dict['id'], pageviews_last_14_days))
+        package_dict['pageviews_last_14_days'] = pageviews_last_14_days
 
     return package_dict
 

@@ -155,6 +155,7 @@ schema. In this case the version should be set to the next CKAN version number.
     <field name="resources_accessed_recent" type="int" indexed="true" stored="false"/>
 
     <field name="total_res_downloads" type="int" indexed="true" stored="true"/>
+    <field name="pageviews_last_14_days" type="int" indexed="true" stored="true"/>
 
     <field name="metadata_created" type="date" indexed="true" stored="true" multiValued="false"/>
     <field name="metadata_modified" type="date" indexed="true" stored="true" multiValued="false"/>
