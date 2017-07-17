@@ -13,14 +13,20 @@ $(document).ready(function(){
             json: dataPageviews,
             keys: {
                 x: 'date',
-                value: ['value']
+                value: ['pageviews', 'downloads']
             },
             type: 'line',
             regions: {
-                'value': null
+                'pageviews': null
             },
             names: {
-                'value': 'Downloads and Page Views'
+                'pageviews': 'Page Views',
+                'downloads': 'Downloads'
+
+            },
+            axes: {
+                'pageview': 'y',
+                'downloads': 'y2'
             }
         },
         axis: {
@@ -29,6 +35,13 @@ $(document).ready(function(){
                 tick: {
                     format: '%Y-%m-%d'
                 }
+            },
+            y: {
+                label: "Page Views"
+            },
+            y2: {
+                label: "Downloads",
+                show: true
             }
         },
         regions: {
