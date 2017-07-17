@@ -131,7 +131,7 @@ class MultipleValueMappingResultTransformer(MappingResultTransformer):
                 log.error('{} not in mandatory values {}'.format(secondary_key, ','.join(self.mandatory_values)))
                 continue
 
-            if self.key_name not in result:
+            if main_key not in result:
                 result[main_key] = OrderedDict(self.template)
 
             result[main_key][secondary_key] = {'value': item.get('value', 0), self.mandatory_key: secondary_key}
@@ -153,6 +153,50 @@ def downloads_per_dataset(hours_since_now=None):
     return result
 
 
+@bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_per_week_last_24_weeks')
+def downloads_per_dataset_per_week_last_24_weeks():
+    return downloads_per_dataset_per_week(24)
+
+
+def downloads_per_dataset_per_week(weeks=24):
+    since = datetime.utcnow()
+    query_executor = JqlQueryExecutorForWeeksSinceNow(jql_queries.DOWNLOADS_PER_DATASET_PER_WEEK, weeks, since)
+
+    mandatory_values = _generate_mandatory_dates(since, weeks)
+
+    result = query_executor.run_query(MultipleValueMappingResultTransformer('dataset_id', 'date', mandatory_values))
+
+    return result
+
+
+@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_last_30_days_cached')
+def downloads_per_organization_last_30_days_cached():
+    return downloads_per_organization(30)
+
+
+def downloads_per_organization(days_since_now=30):
+    query_executor = JqlQueryExecutorForHoursSinceNow(jql_queries.DOWNLOADS_PER_ORGANIZATION, days_since_now * 24)
+    result = query_executor.run_query(MappingResultTransformer('org_id'))
+
+    return result
+
+
+@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_per_week_last_24_weeks_cached')
+def downloads_per_organization_per_week_last_24_weeks_cached():
+    return downloads_per_organization_per_week(24)
+
+
+def downloads_per_organization_per_week(weeks=24):
+    since = datetime.utcnow()
+    query_executor = JqlQueryExecutorForWeeksSinceNow(jql_queries.DOWNLOADS_PER_ORGANIZATION_PER_WEEK, weeks, since)
+
+    mandatory_values = _generate_mandatory_dates(since, weeks)
+
+    result = query_executor.run_query(MultipleValueMappingResultTransformer('org_id', 'date', mandatory_values))
+
+    return result
+
+
 @bcache.cache_region('hdx_jql_cache', 'pageviews_per_dataset_last_14_days_cached')
 def pageviews_per_dataset_last_14_days_cached():
     hours = 14 * 24
@@ -166,22 +210,46 @@ def pageviews_per_dataset(hours_since_now=None):
     return result
 
 
-@bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_per_week_last_24_weeks')
-def downloads_per_dataset_per_week_last_24_weeks():
-    return downloads_per_dataset_per_week(24)
+@bcache.cache_region('hdx_jql_cache', 'pageviews_per_organization_last_30_days_cached')
+def pageviews_per_organization_last_30_days_cached():
+    return pageviews_per_organization(30)
 
 
-def downloads_per_dataset_per_week(weeks=24):
+def pageviews_per_organization(days_since_now=30):
+    query_executor = JqlQueryExecutorForHoursSinceNow(jql_queries.PAGEVIEWS_PER_ORGANIZATION, days_since_now*24)
+    result = query_executor.run_query(MappingResultTransformer('org_id'))
+
+    return result
+
+
+@bcache.cache_region('hdx_jql_cache', 'pageviews_per_organization_per_week_last_24_weeks_cached')
+def pageviews_per_organization_per_week_last_24_weeks_cached():
+    return pageviews_per_organization_per_week(24)
+
+
+def pageviews_per_organization_per_week(weeks=24):
     since = datetime.utcnow()
-    query_executor = JqlQueryExecutorForWeeksSinceNow(jql_queries.DOWNLOADS_PER_DATASET_PER_WEEK, weeks, since)
+    query_executor = JqlQueryExecutorForWeeksSinceNow(jql_queries.PAGEVIEWS_PER_ORGANIZATION_PER_WEEK, weeks, since)
 
+    mandatory_values = _generate_mandatory_dates(since, weeks)
+
+    result = query_executor.run_query(MultipleValueMappingResultTransformer('org_id', 'date', mandatory_values))
+
+    return result
+
+
+def _generate_mandatory_dates(since, weeks):
+    '''
+    :param since: the datetime "until" object
+    :type since: datetime
+    :param weeks:
+    :type weeks: int
+    :return: list of mandatory dates
+    :rtype: list[str]
+    '''
     mandatory_dates = [since]
     ''':type : list[datetime]'''
-
     for i in range(0, weeks):
         mandatory_dates.insert(0, since - timedelta(weeks=i, days=since.weekday()))
     mandatory_values = list(map(lambda x: x.isoformat()[:10], mandatory_dates))
-
-    result = query_executor.run_query(MultipleValueMappingResultTransformer('dataset_id', 'date', mandatory_values))
-
-    return result
+    return mandatory_values

@@ -761,7 +761,7 @@ class DatasetController(PackageController):
 
         #analytics charts
         downloads_last_weeks = downloads_per_dataset_per_week_last_24_weeks().get(c.pkg_dict['id'], {}).values()
-        c.dashboard_downloads_last_weeks = downloads_last_weeks
+        c.stats_downloads_last_weeks = downloads_last_weeks
 
         _default_view = None
         if 'resources' in c.pkg_dict:

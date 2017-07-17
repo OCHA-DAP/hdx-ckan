@@ -10,6 +10,7 @@ import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_theme.util.jql as jql
 
 import ckan.authz as new_authz
 import ckan.common as common
@@ -33,6 +34,7 @@ parse_params = logic.parse_params
 get_action = logic.get_action
 
 response = common.response
+
 
 # def is_not_custom(environ, result):
 #     '''
@@ -90,9 +92,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         def pager_url(page=None):
             if sort_option:
                 url = h.url_for(
-                    'organizations_index', q=q, page=page, sort=sort_option, limit=limit)+'#organizationsSection'
+                    'organizations_index', q=q, page=page, sort=sort_option, limit=limit) + '#organizationsSection'
             else:
-                url = h.url_for('organizations_index', q=q, page=page, limit=limit)+'#organizationsSection'
+                url = h.url_for('organizations_index', q=q, page=page, limit=limit) + '#organizationsSection'
             return url
 
         c.page = h.Page(
@@ -131,7 +133,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             # setting the count with the value that was populated from search_controller so that templates find it
             c.group_dict['packages'] = c.count
             c.group_dict['type'] = 'organization'
-
 
             # This was moved in OrgMetaDao
             # allow_basic_user_info = self.check_access('hdx_basic_user_info')
@@ -290,13 +291,33 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         c.group_dict = org_meta.org_dict
 
-
         # Add the group's activity stream (already rendered to HTML) to the
         # template context for the group/read.html template to retrieve later.
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True}
 
-        template_data = {}
+        pageviews_per_week_dict = jql.pageviews_per_organization_per_week_last_24_weeks_cached().get(
+            org_meta.org_dict['id'], {})
+        downloads_per_week_dict = jql.downloads_per_organization_per_week_last_24_weeks_cached().get(
+            org_meta.org_dict['id'], {})
+
+        dw_and_pv_per_week = []
+        for date_str in pageviews_per_week_dict.keys():
+            dw_and_pv_per_week.append({
+                'org_id': org_meta.org_dict['id'],
+                'date': date_str,
+                'pageviews': pageviews_per_week_dict[date_str].get('value', 0),
+                'downloads': downloads_per_week_dict.get(date_str, {}).get('value', 0)
+            })
+
+        template_data = {
+            'data': {
+                'stats_downloaders': jql.downloads_per_organization_last_30_days_cached().get(org_meta.org_dict['id'],
+                                                                                              0),
+                'stats_viewers': jql.pageviews_per_organization_last_30_days_cached().get(org_meta.org_dict['id'], 0),
+                'stats_dw_and_pv_per_week': dw_and_pv_per_week
+            }
+        }
         return render('organization/stats.html', extra_vars=template_data)
 
     def check_access(self, action_name, data_dict=None):
@@ -333,7 +354,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         org_meta.fetch_all()
 
         c.group_dict = org_meta.org_dict
-
 
         # Add the group's activity stream (already rendered to HTML) to the
         # template context for the group/read.html template to retrieve later.
