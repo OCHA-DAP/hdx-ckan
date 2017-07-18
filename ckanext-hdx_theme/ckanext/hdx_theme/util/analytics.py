@@ -1,13 +1,12 @@
-import logging
 import json
-import requests
-import ua_parser.user_agent_parser as useragent
+import logging
 
 import pylons.config as config
-
-
-from ckan.common import _, c, request
+import requests
+import ua_parser.user_agent_parser as useragent
 from ckanext.hdx_theme.helpers.hash_generator import HashCodeGenerator
+
+from ckan.common import request
 
 log = logging.getLogger(__name__)
 
@@ -83,6 +82,7 @@ class AbstractAnalyticsSender(object):
         self._set_if_not_exists(mixpanel_meta, '$os', self.ua_os)
         self._set_if_not_exists(mixpanel_meta, '$browser', self.ua_browser)
         self._set_if_not_exists(mixpanel_meta, '$browser_version', self.ua_browser_version)
+        self._set_if_not_exists(mixpanel_meta, '$current_url', self.request_url) #TODO: verify actual url
 
         ga_meta = self.analytics_dict.get('ga_meta')
         self._set_if_not_exists(ga_meta, 'uip', self.user_addr)
