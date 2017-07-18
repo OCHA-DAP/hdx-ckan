@@ -5,6 +5,8 @@ Created on Jan 13, 2015
 '''
 
 import json
+import logging
+import itertools
 
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
@@ -34,6 +36,8 @@ parse_params = logic.parse_params
 get_action = logic.get_action
 
 response = common.response
+
+log = logging.getLogger(__name__)
 
 
 # def is_not_custom(environ, result):
@@ -296,15 +300,16 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'for_view': True}
 
+        org_id = org_meta.org_dict['id']
         pageviews_per_week_dict = jql.pageviews_per_organization_per_week_last_24_weeks_cached().get(
-            org_meta.org_dict['id'], {})
+            org_id, {})
         downloads_per_week_dict = jql.downloads_per_organization_per_week_last_24_weeks_cached().get(
-            org_meta.org_dict['id'], {})
+            org_id, {})
 
         dw_and_pv_per_week = []
         for date_str in pageviews_per_week_dict.keys():
             dw_and_pv_per_week.append({
-                'org_id': org_meta.org_dict['id'],
+                'org_id': org_id,
                 'date': date_str,
                 'pageviews': pageviews_per_week_dict[date_str].get('value', 0),
                 'downloads': downloads_per_week_dict.get(date_str, {}).get('value', 0)
@@ -312,13 +317,55 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         template_data = {
             'data': {
-                'stats_downloaders': jql.downloads_per_organization_last_30_days_cached().get(org_meta.org_dict['id'],
+                'stats_downloaders': jql.downloads_per_organization_last_30_days_cached().get(org_id,
                                                                                               0),
-                'stats_viewers': jql.pageviews_per_organization_last_30_days_cached().get(org_meta.org_dict['id'], 0),
+                'stats_viewers': jql.pageviews_per_organization_last_30_days_cached().get(org_id, 0),
+                'stats_top_dataset_downloads': self._stats_top_dataset_downloads(org_id),
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
             }
         }
         return render('organization/stats.html', extra_vars=template_data)
+
+    def _stats_top_dataset_downloads(self, org_id):
+        from ckan.lib.search.query import make_connection
+        datasets_map = jql.downloads_per_organization_per_dataset_last_24_weeks_cached().get(
+            org_id, {})
+        total_downloads = sum((item.get('value') for item in datasets_map.values()))
+
+        context = {'model': model, 'user': c.user or c.author,
+                   'auth_user_obj': c.userobj}
+        data_dict = {
+            'q': '*:*',
+            'fl': 'id name',
+            'fq': 'capacity:"public" id:({})'.format(' OR '.join(datasets_map.keys())),
+            'rows': len(datasets_map),
+            'start': 0,
+        }
+
+        conn = make_connection(decode_dates=False)
+        try:
+            search_result = conn.search(**data_dict)
+            dataseta_meta_map = {d['id']: {'name': d.get('name'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+                                 for d in search_result.docs}
+            ret = [
+                {
+                    'dataset_id': d.get('dataset_id'),
+                    'dataset_name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('name'),
+                    'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
+                    'value': d.get('value'),
+                    'percentage': round(100*d.get('value', 0)/total_downloads, 1)
+                }
+                for d in itertools.islice(
+                    (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
+                )
+            ]
+        except Exception, e:
+            log.warn('Error in searching solr {}'.format(str(e)))
+            ret = []
+
+        # query = get_action('package_search')(context, data_dict)
+
+        return ret
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:

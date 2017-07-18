@@ -127,3 +127,23 @@ function main() {{
   }});
 }}  
 '''
+
+DOWNLOADS_PER_ORGANIZATION_PER_DATASET = '''
+function main() {{
+  return Events({{
+    from_date: '{}',
+    to_date: '{}',
+    event_selectors: [{{event: "resource download"}}]
+  }})
+  .groupBy(["distinct_id","properties.resource id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets),"properties.dataset id", "properties.org id"],mixpanel.reducer.count())
+  .groupBy([function(row) {{return row.key.slice(4)}}, function(row) {{return row.key.slice(3)}}],mixpanel.reducer.count())
+  .map(function(r){{
+    return {{
+      org_id: r.key[0],
+      dataset_id: r.key[1],
+      value: r.value
+    }};
+  }})
+  .sortDesc('value');
+}}
+'''

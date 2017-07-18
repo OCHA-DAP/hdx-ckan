@@ -20,8 +20,8 @@ bcache.cache_regions.update({
 
 CONFIG_API_SECRET = config.get('hdx.analytics.mixpanel.secret')
 
-
 log = logging.getLogger(__name__)
+
 
 class JqlQueryExecutor(object):
     def __init__(self, query, *args):
@@ -44,7 +44,7 @@ class JqlQueryExecutor(object):
 
 class JqlQueryExecutorForHoursSinceNow(JqlQueryExecutor):
     def __init__(self, query, hours_since_now):
-        super(JqlQueryExecutorForHoursSinceNow, self).\
+        super(JqlQueryExecutorForHoursSinceNow, self). \
             __init__(query, *JqlQueryExecutorForHoursSinceNow._compute_period(hours_since_now))
 
     @staticmethod
@@ -73,7 +73,7 @@ class JqlQueryExecutorForWeeksSinceNow(JqlQueryExecutor):
         :param since_date:
         :type since_date: datetime
         '''
-        super(JqlQueryExecutorForWeeksSinceNow, self).\
+        super(JqlQueryExecutorForWeeksSinceNow, self). \
             __init__(query, *JqlQueryExecutorForWeeksSinceNow._compute_period(weeks_since, since_date))
 
     @staticmethod
@@ -111,9 +111,29 @@ class MappingResultTransformer(object):
 
 
 class MultipleValueMappingResultTransformer(MappingResultTransformer):
-
-    def __init__(self, key_name, mandatory_key, mandatory_values):
+    def __init__(self, key_name, secondary_key_name):
         super(MultipleValueMappingResultTransformer, self).__init__(key_name)
+        self.secondary_key_name = secondary_key_name
+
+    def transform(self, response):
+        result = {}
+        ''':type : dict[str, OrderedDict]'''
+
+        for item in response.json():
+            main_key = item.get(self.key_name)
+            secondary_key = item.get(self.secondary_key_name)
+
+            if main_key not in result:
+                result[main_key] = OrderedDict()
+
+            result[main_key][secondary_key] = {'value': item.get('value', 0), self.secondary_key_name: secondary_key}
+
+        return result
+
+
+class MultipleValueMandatoryMappingResultTransformer(MappingResultTransformer):
+    def __init__(self, key_name, mandatory_key, mandatory_values):
+        super(MultipleValueMandatoryMappingResultTransformer, self).__init__(key_name)
         self.mandatory_key = mandatory_key
         self.mandatory_values = mandatory_values
 
@@ -139,14 +159,12 @@ class MultipleValueMappingResultTransformer(MappingResultTransformer):
         return result
 
 
-
 @bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_all_cached')
 def downloads_per_dataset_all_cached():
     return downloads_per_dataset()
 
 
 def downloads_per_dataset(hours_since_now=None):
-
     query_executor = JqlQueryExecutorForHoursSinceNow(jql_queries.DOWNLOADS_PER_DATASET, hours_since_now)
     result = query_executor.run_query(MappingResultTransformer('dataset_id'))
 
@@ -164,7 +182,8 @@ def downloads_per_dataset_per_week(weeks=24):
 
     mandatory_values = _generate_mandatory_dates(since, weeks)
 
-    result = query_executor.run_query(MultipleValueMappingResultTransformer('dataset_id', 'date', mandatory_values))
+    result = query_executor.run_query(
+        MultipleValueMandatoryMappingResultTransformer('dataset_id', 'date', mandatory_values))
 
     return result
 
@@ -192,7 +211,23 @@ def downloads_per_organization_per_week(weeks=24):
 
     mandatory_values = _generate_mandatory_dates(since, weeks)
 
-    result = query_executor.run_query(MultipleValueMappingResultTransformer('org_id', 'date', mandatory_values))
+    result = query_executor.run_query(
+        MultipleValueMandatoryMappingResultTransformer('org_id', 'date', mandatory_values))
+
+    return result
+
+
+@bcache.cache_region('hdx_jql_cache', 'downloads_per_organization_per_dataset_last_24_weeks_cached')
+def downloads_per_organization_per_dataset_last_24_weeks_cached():
+    return downloads_per_organization_per_dataset(24)
+
+
+def downloads_per_organization_per_dataset(weeks=24):
+    since = datetime.utcnow()
+    query_executor = JqlQueryExecutorForWeeksSinceNow(jql_queries.DOWNLOADS_PER_ORGANIZATION_PER_DATASET, weeks, since)
+
+    result = query_executor.run_query(
+        MultipleValueMappingResultTransformer('org_id', 'dataset_id'))
 
     return result
 
@@ -216,7 +251,7 @@ def pageviews_per_organization_last_30_days_cached():
 
 
 def pageviews_per_organization(days_since_now=30):
-    query_executor = JqlQueryExecutorForHoursSinceNow(jql_queries.PAGEVIEWS_PER_ORGANIZATION, days_since_now*24)
+    query_executor = JqlQueryExecutorForHoursSinceNow(jql_queries.PAGEVIEWS_PER_ORGANIZATION, days_since_now * 24)
     result = query_executor.run_query(MappingResultTransformer('org_id'))
 
     return result
@@ -233,7 +268,8 @@ def pageviews_per_organization_per_week(weeks=24):
 
     mandatory_values = _generate_mandatory_dates(since, weeks)
 
-    result = query_executor.run_query(MultipleValueMappingResultTransformer('org_id', 'date', mandatory_values))
+    result = query_executor.run_query(
+        MultipleValueMandatoryMappingResultTransformer('org_id', 'date', mandatory_values))
 
     return result
 
