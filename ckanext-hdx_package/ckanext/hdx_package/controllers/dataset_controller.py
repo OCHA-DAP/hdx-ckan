@@ -643,6 +643,7 @@ class DatasetController(PackageController):
 
             if current_pkg_type == 'dataset':
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                c.pkg_dict['showcase_count'] = len(c.showcase_list)
             else:
                 abort(404, _('Package type is not dataset'))
         except NotFound:
@@ -697,6 +698,7 @@ class DatasetController(PackageController):
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
         c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
+        c.analytics_dataset_availability = analytics.dataset_availability(c.pkg_dict)
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
@@ -1086,8 +1088,14 @@ class DatasetController(PackageController):
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
 
         try:
-            c.resource = get_action('resource_show')(context,
-                                                     {'id': resource_id})
+            c.resource = get_action('resource_show')(context,{'id': resource_id})
+
+            if c.resource and c.resource.get('datastore_active', 'false') in ('false', 'False'):
+                c.resource['datastore_active'] = False
+            else:
+                if c.resource and c.resource.get('datastore_active', 'true') in ('true', 'True'):
+                    c.resource['datastore_active'] = True
+
             c.package = get_action('package_show')(context, {'id': id})
             # required for nav menu
             c.pkg = context['package']
@@ -1130,6 +1138,7 @@ class DatasetController(PackageController):
         c.analytics_is_cod = analytics.is_cod(c.package)
         c.analytics_is_indicator = analytics.is_indicator(c.package)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
+        c.analytics_dataset_availability = analytics.dataset_availability(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')

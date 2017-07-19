@@ -869,12 +869,12 @@ $(function(){
             privacyPublicRadioBtn.click();
             formSectionPrivacy.hide();
 
-            if (!isEdit) {
-                selectMethodology.val('None');
-                currentlySelectedMethodology.text('None');
-                // selectUpdateFrequency.val('-1');
-                // currentlySelectedUpdateFrequency.text('None');
-            }
+            // if (!isEdit) {
+            //     selectMethodology.val('None');
+            //     currentlySelectedMethodology.text('None');
+            //     // selectUpdateFrequency.val('-1');
+            //     // currentlySelectedUpdateFrequency.text('None');
+            // }
 
             // For some reason, when editing a dataset, the class wasn't
             // applied, that's why the timeout is needed.

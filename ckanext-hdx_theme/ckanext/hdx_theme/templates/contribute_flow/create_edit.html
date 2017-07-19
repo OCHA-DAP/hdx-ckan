@@ -3,14 +3,15 @@
 {% import 'macros/form.html' as form %}
 
 {# The line below is for google analytics #}
-{% block analytics_org_name %}{{ data.get('organization',{}).name }}{% endblock %}
-{% block analytics_org_id %}{{ data.get('organization',{}).id }}{% endblock %}
-{% block analytics_is_cod %}{{ analytics.is_cod }}{% endblock %}
-{% block analytics_is_indicator %}{{ analytics.is_indicator }}{% endblock %}
-{% block analytics_group_names %}{{ analytics.group_names | safe }}{% endblock %}
-{% block analytics_group_ids %}{{ analytics.group_ids | safe }}{% endblock %}
-{% block analytics_dataset_name %}{{ data.name  }}{% endblock %}
-{% block analytics_dataset_id %}{{ data.id }}{% endblock %}
+{% block analytics_org_name %}{{ analytics.organizationName }}{% endblock %}
+{% block analytics_org_id %}{{ analytics.organizationId }}{% endblock %}
+{% block analytics_is_cod %}{{ analytics.isCod }}{% endblock %}
+{% block analytics_is_indicator %}{{ analytics.isIndicator }}{% endblock %}
+{% block analytics_group_names %}{{ analytics.groupNames | safe }}{% endblock %}
+{% block analytics_group_ids %}{{ analytics.groupIds | safe }}{% endblock %}
+{% block analytics_dataset_name %}{{ analytics.datasetName  }}{% endblock %}
+{% block analytics_dataset_id %}{{ analytics.datasetId }}{% endblock %}
+{% block analytics_dataset_availability %}{{ analytics.datasetAvailability }}{% endblock %}
 
 {% block subtitle %}{{ _('Contribute') }}{% endblock %}
 
@@ -394,10 +395,14 @@
                                             {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
                                             </div>
 
+                                            {% set first_org = organisations[0].value if organisations[0] else None %}
+                                            {% set selected_org_name = data.owner_org_name or first_org %}
+
                                             {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
-                                            'data-module-source': '/api/2/util/user/autocomplete?q=?',
+                                            'data-module-source': '/util/user/hdx_autocomplete?q=?',
                                             'data-module-label': 'fullname',
                                             'data-module-key': 'id',
+                                            'data-module-extra-params': 'org=' + selected_org_name,
                                             'class':'form-control' } %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="maintainer">
                                             {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}

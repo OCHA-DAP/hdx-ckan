@@ -1,6 +1,5 @@
 import sys
 
-
 def generate_hash_dict(src_dict_list, dict_identifier, field_list):
     '''
     Works only on simple dictionaries (not nested). At least the specified fields need to not be nested.
@@ -22,13 +21,17 @@ class HashCodeGenerator(object):
     '''
     Works only on simple dictionaries (not nested). At least the specified fields need to not be nested.
     '''
-    def __init__(self, src_dict, field_list):
+    def __init__(self, src_dict, field_list=None):
         '''
         :param src_dict: for each dict in this list a hash code will be computed
         :type src_dict: dict
         :param field_list: list of fields in the dict that will be taken into consideration when computing the hash code
         :type field_list: list[str]
         '''
+
+        if not field_list and src_dict:
+            field_list = list(src_dict.keys())
+
         try:
             self.__inner_dict = {}
             if field_list and src_dict:

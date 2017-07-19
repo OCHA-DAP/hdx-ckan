@@ -93,7 +93,8 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
 
     def get_actions(self):
         return {
-            'populate_related_items_count': actions.populate_related_items_count
+            'populate_related_items_count': actions.populate_related_items_count,
+            'populate_showcase_items_count': actions.populate_showcase_items_count
         }
 
     def dataset_facets(self, facets_dict, package_type):

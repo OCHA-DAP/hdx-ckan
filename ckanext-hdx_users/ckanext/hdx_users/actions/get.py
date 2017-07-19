@@ -1,6 +1,6 @@
-import ckanext.hdx_users.model as umodel
-import ckan.logic as logic
 import pylons.config as config
+
+import ckan.logic as logic
 
 _check_access = logic.check_access
 NotFound = logic.NotFound
@@ -100,3 +100,47 @@ def hdx_send_reset_link(context, data_dict):
 
     if recipient_mail:
         hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
+
+@logic.validate(logic.schema.default_autocomplete_schema)
+def hdx_user_autocomplete(context, data_dict):
+    '''Return a list of user names that contain a string.
+
+    :param q: the string to search for
+    :type q: string
+    :param limit: the maximum number of user names to return (optional,
+        default: 20)
+    :type limit: int
+
+    :rtype: a list of user dictionaries each with keys ``'name'``,
+        ``'fullname'``, and ``'id'``
+
+    '''
+    model = context['model']
+    user = context['user']
+
+    _check_access('user_autocomplete', context, data_dict)
+
+    q = data_dict['q']
+    if (data_dict['__extras']):
+        org = data_dict['__extras']['org']
+    limit = data_dict.get('limit', 20)
+
+    query = model.User.search(q)
+    query = query.filter(model.User.state != model.State.DELETED)
+    if (org):
+        query = query.filter(model.User.id == model.Member.table_id) \
+                     .filter(model.Member.table_name == "user") \
+                     .filter(model.Member.group_id == model.Group.id) \
+                     .filter(model.Group.name == org)
+
+    query = query.limit(limit)
+
+    user_list = []
+    for user in query.all():
+        result_dict = {}
+        for k in ['id', 'name', 'fullname']:
+            result_dict[k] = getattr(user, k)
+
+        user_list.append(result_dict)
+
+    return user_list

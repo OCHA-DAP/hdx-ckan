@@ -11,7 +11,7 @@ Example:
 #}
 {% import 'macros/form.html' as form %}
 
-{% resource 'requestdata/modal-form.js' %}
+{% resource 'hdx_theme/requestdata/modal-form.js' %}
 {% resource 'requestdata/css/main.css' %}
 {% resource 'hdx_theme/bs_tooltip.js' %}
 
@@ -49,7 +49,7 @@ Example:
                style="margin-top: 10px;"
           >
             <a href="#" class="btn btn-primary"
-               data-module="modal-form"
+               data-module="hdx-modal-form"
                data-module-template_file="request_contact.html"
                data-module-submit_action="{{ requestdata_action }}"
                data-module-post_data="{{ request_post_data }}"

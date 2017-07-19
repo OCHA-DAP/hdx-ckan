@@ -297,6 +297,21 @@ ckan.module('contribute_flow_main', function($, _) {
 
             // Initialize private/public logic
             this.managePrivateField();
+
+            //initialize organisation change, triggering autocomplete changes
+            this.manageAutocompleteOrgBinding();
+        },
+        manageAutocompleteOrgBinding: function(){
+            var selectMaintainer = $('#field_maintainer');
+            var selectOrganisation = $('#field_owner_org');
+
+            selectOrganisation.on("change", function(e){
+                var value = e.val;
+                // console.log(selectMaintainer);
+                var attrValue = "org=" + value;
+                selectMaintainer.attr('data-module-extra-params', attrValue);
+                ckan.module.initializeElement(selectMaintainer[0]);
+            });
         },
         managePrivateField: function() {
             var sandbox = this.sandbox;
