@@ -4,9 +4,9 @@ Created on Jan 13, 2015
 @author: alexandru-m-g
 '''
 
+import itertools
 import json
 import logging
-import itertools
 
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
@@ -283,9 +283,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         #  The extra_vars are needed here to send analytics information like org name and id
         return render(self._edit_template(c.group.type), extra_vars={'data': data})
 
-    def stats(self, id, data=None, errors=None, error_summary=None):
-        template_data = {}
-        return render('organization/stats.html', extra_vars=template_data)
+    # def stats(self, id, data=None, errors=None, error_summary=None):
+    #     template_data = {}
+    #     return render('organization/stats.html', extra_vars=template_data)
 
     def stats(self, id, org_meta=None, offset=0):
         if not org_meta:
@@ -324,7 +324,12 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
             }
         }
-        return render('organization/stats.html', extra_vars=template_data)
+
+        if org_meta.is_custom:
+            return render('organization/custom_stats.html', extra_vars=template_data)
+        else:
+            return render('organization/stats.html', extra_vars=template_data)
+
 
     def _stats_top_dataset_downloads(self, org_id):
         from ckan.lib.search.query import make_connection
