@@ -1,4 +1,5 @@
 $(document).ready(function(){
+    const LABEL_MAX_LENGTH = 40;
     var dataPageviews = JSON.parse($("#stats-data-pageviews").html());
     var dataTopDownloads = JSON.parse($("#stats-data-top-downloads").html());
 
@@ -61,6 +62,34 @@ $(document).ready(function(){
 
     var pageviewChart = c3.generate(configPageviews);
 
+    $.each(dataTopDownloads, function(idx, el) {
+        //trim names
+        var name = el['name'];
+        var trimName = name;
+        if (name && name.length > LABEL_MAX_LENGTH){
+            trimName = name.slice(0, LABEL_MAX_LENGTH - 3) + "...";
+        }
+        el['trimName'] = trimName;
+    });
+
+    var substituteDatasetNamesWithLinks = function () {
+        console.log("Substituting");
+        d3.selectAll('#chart-data-top-downloads .c3-axis-x .tick text')
+            .each(function(d,i){
+                // augment tick contents with link
+                var self = d3.select(this);
+                var text = self.text();
+                var url;
+                var item = $.grep(dataTopDownloads, function(el, idx) {
+                   return (el['trimName'] === text);
+                });
+                if (item.length !== 1) {
+                    console.error('Two datasets with same name!');
+                }
+                self.html("<a xlink:href='"+ item[0]['url'] +"' target='_blank' style='fill: #0077ce;'>"+ text +"</a>");
+            });
+    }.bind(this);
+
     var configTopDownloads = {
         bindto: "#chart-data-top-downloads",
         padding: {
@@ -70,7 +99,7 @@ $(document).ready(function(){
         data: {
             json: dataTopDownloads,
             keys: {
-                x: 'name',
+                x: 'trimName',
                 value: ['value']
             },
             type: 'bar',
@@ -88,23 +117,28 @@ $(document).ready(function(){
             x: {
                 type: 'category'
             }
-        }
+        },
+        legend: {
+            show: false
+        },
+        tooltip: {
+            format: {
+                title: function (d) {
+                  return dataTopDownloads[d]['name'];
+                },
+                value: function (value, ratio, id, index) {
+                    var el = dataTopDownloads[index];
+                    var total = el['total'];
+                    var numberFormat = d3.format(".2%");
+                    var percent = numberFormat(el['value'] / total);
+                    return value + " (" + percent + " out of " + total + ")";
+                }
+            }
+        },
+        onresized: substituteDatasetNamesWithLinks,
+        onrendered: substituteDatasetNamesWithLinks
     };
     var topDownloadsChart = c3.generate(configTopDownloads);
+    substituteDatasetNamesWithLinks();
 
-
-    d3.selectAll('#chart-data-top-downloads .c3-axis-x .tick text')
-        .each(function(d,i){
-            // augment tick contents with link
-            var self = d3.select(this);
-            var text = self.text();
-            var url;
-            var item = $.grep(dataTopDownloads, function(el, idx) {
-               return (el['name'] === text);
-            });
-            if (item.length !== 1) {
-                logger.error('Two datasets with same name!');
-            }
-            self.html("<a xlink:href='"+ item[0]['url'] +"' target='_blank' style='fill: #0077ce;'>Dataset: "+text+"</a>");
-        });
 });

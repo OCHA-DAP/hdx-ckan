@@ -5,35 +5,54 @@
 {% block subtitle %}{{ _('Stats') }} - {{ c.group_dict.title or c.group_dict.name }}{% endblock %}
 
 {% block primary_content_inner %}
+    <div id="stats-data-single-dataset-downloads"  style="display: none">
+        [{"date":"2017-01-30","value":39},{"date":"2017-02-06","value":32},{"date":"2017-02-13","value":19},{"date":"2017-02-20","value":21},{"date":"2017-02-27","value":25},{"date":"2017-03-06","value":40},{"date":"2017-03-13","value":22},{"date":"2017-03-20","value":37},{"date":"2017-03-27","value":37},{"date":"2017-04-03","value":41},{"date":"2017-04-10","value":46},{"date":"2017-04-17","value":52},{"date":"2017-04-24","value":64},{"date":"2017-05-01","value":55},{"date":"2017-05-08","value":60},{"date":"2017-05-15","value":41},{"date":"2017-05-22","value":27},{"date":"2017-05-29","value":30},{"date":"2017-06-05","value":22},{"date":"2017-06-12","value":22},{"date":"2017-06-19","value":31},{"date":"2017-06-26","value":22},{"date":"2017-07-03","value":11},{"date":"2017-07-10","value":5}]
+    </div>
     <div id="stats-data-pageviews" style="display: none">
         {{ h.json_dumps(data.stats_dw_and_pv_per_week) }}
     </div>
-    <script id="stats-data-top-downloads" type="application/json">
+    <div id="stats-data-top-downloads"  style="display: none">
         [
-            {"name":"Health Infrastructure Nepal 3 word Addresses","url":"https://data.humdata.org/dataset/0013fbe3-4b43-4da0-985a-4fda7f0081dc","date":1498435200000,"value":2},
-            {"name":"Yemen: Cholera Outbreak Epidemiology Update Data","url":"https://data.humdata.org/dataset/00215f01-9326-493a-aff1-6267684fa962","date":1497225600000,"value":1},
-            {"name":"Guinea administrative boundaries (levels 0-3)","url":"https://data.humdata.org/dataset/004daf8f-2f9e-417a-92ee-9e2187d2da7e","date":1496620800000,"value":1},
-            {"name":"HOTOSM Democratic Republic of the Congo Points of Interest (OpenStreetMap Export)","url":"https://data.humdata.org/dataset/00710e3e-c8ef-46c2-9cb0-d87070600bd7","date":1497830400000,"value":1},
-            {"name":"Airports in Saint-Martin (French part)","url":"https://data.humdata.org/dataset/0087e82a-83c6-4aeb-9681-4cebf664e7e6","date":1496620800000,"value":1},
-            {"name":"Ebola Treatment Units - 3 Word Addresses","url":"https://data.humdata.org/dataset/008e23ea-9d98-482e-bc1e-555b32b44715","date":1497225600000,"value":1}
+            {"name":"Health Infrastructure Nepal 3 word Addresses","url":"https://data.humdata.org/dataset/0013fbe3-4b43-4da0-985a-4fda7f0081dc","date":1498435200000,"value":200, "total": 2991},
+            {"name":"Yemen: Cholera Outbreak Epidemiology Update Data","url":"https://data.humdata.org/dataset/00215f01-9326-493a-aff1-6267684fa962","date":1497225600000,"value":142, "total": 2991},
+            {"name":"Guinea administrative boundaries (levels 0-3)","url":"https://data.humdata.org/dataset/004daf8f-2f9e-417a-92ee-9e2187d2da7e","date":1496620800000,"value":539, "total": 2991},
+            {"name":"HOTOSM Democratic Republic of the Congo Points of Interest (OpenStreetMap Export)","url":"https://data.humdata.org/dataset/00710e3e-c8ef-46c2-9cb0-d87070600bd7","date":1497830400000,"value":19, "total": 2991},
+            {"name":"Airports in Saint-Martin (French part)","url":"https://data.humdata.org/dataset/0087e82a-83c6-4aeb-9681-4cebf664e7e6","date":1496620800000,"value":7, "total": 2991},
+            {"name":"Ebola Treatment Units - 3 Word Addresses","url":"https://data.humdata.org/dataset/008e23ea-9d98-482e-bc1e-555b32b44715","date":1497225600000,"value":183, "total": 2991}
         ]
-    </script>
+    </div>
 
 	<h2 class="hide-heading">{% block page_heading %}{{ _('Stats') }}{% endblock %}</h2>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">Number of Downloads (last 24 weeks)</span>
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <div id="chart-data-top-downloads" style="height: 320px;"></div>
+        </div>
+        <div class="col-xs-3">
+            <div class="topline">
+                <div class="row">
+                    <div class="col-xs-12 indicator-title">
+                        Total number of downloads for this organisation's content
+                    </div>
+                    <div class="col-xs-12 indicator-value">
+                        <div class="topline-value">
+                            <span id="stats-data-total-downloads" data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
+                                2991
+                            </span>
+                            <span class="small"> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-xs-9">
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="list-header crisis-list-header">
-                        <span class="mL15 list-header-title">Top Downloads (last 24 weeks)</span>
-                    </div>
-                </div>
-                <div class="col-xs-12">
-                    <div id="chart-data-top-downloads" style="height: 320px;"></div>
-                </div>
-            </div>
-
             <div class="row">
                 <div class="col-xs-12">
                     <div class="list-header crisis-list-header">
@@ -44,7 +63,6 @@
                     <div id="chart-data-pageviews" style="height: 320px;"></div>
                 </div>
             </div>
-
         </div>
         <div class="col-xs-3">
             <div class="list-header crisis-list-header">
