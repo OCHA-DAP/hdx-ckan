@@ -70,7 +70,7 @@ $(document).ready(function(){
         data: {
             json: dataTopDownloads,
             keys: {
-                x: 'dataset_id',
+                x: 'name',
                 value: ['value']
             },
             type: 'bar',
@@ -98,6 +98,13 @@ $(document).ready(function(){
             // augment tick contents with link
             var self = d3.select(this);
             var text = self.text();
-            self.html("<a xlink:href='http://google.ro' target='_blank' style='fill: #0077ce;'>Dataset: "+text+"</a>");
+            var url;
+            var item = $.grep(dataTopDownloads, function(el, idx) {
+               return (el['name'] === text);
+            });
+            if (item.length !== 1) {
+                logger.error('Two datasets with same name!');
+            }
+            self.html("<a xlink:href='"+ item[0]['url'] +"' target='_blank' style='fill: #0077ce;'>Dataset: "+text+"</a>");
         });
 });
