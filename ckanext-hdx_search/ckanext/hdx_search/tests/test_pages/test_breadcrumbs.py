@@ -8,9 +8,10 @@ import ckan.lib.helpers as h
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.tests.hdx_test_util as hdx_test_util
+import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 
-class TestBreadcrumbs(hdx_test_base.HdxBaseTest):
+class TestBreadcrumbs(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
 
     @classmethod
     def _load_plugins(cls):

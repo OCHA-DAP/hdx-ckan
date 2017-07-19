@@ -38,7 +38,8 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
       onlyEmailAsTags: false,
       nonEmailSelectionClass: null,
       includeTokenizer: false,
-      emailSelectionClass: null
+      emailSelectionClass: null,
+      extraParams: null
     },
 
     /* Sets up the module, binding methods, creating elements etc. Called
@@ -175,7 +176,9 @@ this.ckan.module('hdx_autocomplete', function (jQuery, _) {
     getCompletions: function (string, fn) {
       var parts  = this.options.source.split('?');
       var end    = parts.pop();
-      var source = parts.join('?') + string + end; //no need to encode as it's done later on by jquery.url
+      //no need to encode as it's done later on by jquery.url
+      var source = parts.join('?') + string + end + (this.options.extraParams !== null ? "&" + this.options.extraParams : "");
+
       var client = this.sandbox.client;
       var options = {
         format: function(data) {

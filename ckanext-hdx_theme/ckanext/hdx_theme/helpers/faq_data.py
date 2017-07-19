@@ -45,7 +45,7 @@ getting_started = {
                  '<li> follow the latest changes to data, locations, organisations, topics and crises; </li> '
                  '<li> share datasets publicly or privately, and join organisations to get access to private datasets*; </li>'
                  '<li> add data visualizations as gallery items alongside datasets*; </li>'
-                 '<li> <a target="_blank" href="http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/">contact data contributors</a>. </li>'
+                 '<li> <a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">contact data contributors</a>. </li>'
                  '</ol> '
                  '<br/><br/><p>*You need to be affiliated with an organisation to access these features.</p>',
         },
@@ -59,7 +59,7 @@ getting_started = {
         {
             'q': 'How do I contact a data contributor?',
             'a': 'You\'ll find a \'contact the contributor\' link below the title of every dataset. Please find more details '
-                 '<a target="_blank" href="http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.'
+                 '<a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.'
         },
         {
             'q': 'What if I forget my username and password?',
@@ -146,7 +146,7 @@ organizations = {
         {
             'q': 'How do I use the Group Message feature?',
             'a': 'Please find more details '
-                 '<a target="_blank" href="http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.'
+                 '<a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.'
         },
         {
             'q': 'I changed my job - what happens to my account?',
@@ -382,7 +382,7 @@ metadata_and_data_quality = {
         {
             'q': 'What metadata do I need to include when sharing data?',
             'a': 'All data on HDX must include a minimum set of metadata fields. You can read our '
-                 '<a target="_blank"  href="http://docs.humdata.org/providing-metadata-for-your-datasets-on-hdx/">Guide to Metadata</a> '
+                 '<a target="_blank"  href="https://centre.humdata.org/providing-metadata-for-your-datasets-on-hdx/">Guide to Metadata</a> '
                  'to learn more. We encourage data contributors to include as much metadata as possible to make their '
                  'data easier to understand and use for analysis.',
         },
@@ -392,7 +392,7 @@ metadata_and_data_quality = {
                  'timeliness, interpretability and comparability. We contact data contributors if we have any concerns '
                  'or suggestions for improvement. You can learn more about our definition of the dimensions of data '
                  'quality and our quality-assurance processes '
-                 '<a target="_blank"  href="http://docs.humdata.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
+                 '<a target="_blank"  href="https://centre.humdata.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
         },
         {
             'q': 'Does HDX make any changes to my dataset?',
@@ -413,7 +413,7 @@ hdx_api = {
                  'The library is open source software available here: '
                  '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">hdx-python-api</a>. '
                  'Learn more about the library '
-                 '<a target="_blank" href="http://docs.humdata.org/hdx-python-library/">in this blog post</a>.'
+                 '<a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
                  '<br/><br/>'
                  'The HDX Python Library is essentially a wrapper around the most common functions of the base CKAN API, '
                  'on which HDX is built.  HDX supports both the core '

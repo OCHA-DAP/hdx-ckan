@@ -116,7 +116,7 @@
               {% set request_post_data = h.dump_json({'package_id': package.id, 'package_name': package.name}) %}
               {% set is_current_user_a_maintainer = h.requestdata_is_current_user_a_maintainer(package.maintainer) %}
               <a href="#" class="btn btn-primary" style="margin-top: 10px;"
-                 data-module="modal-form"
+                 data-module="hdx-modal-form"
                  data-module-template_file="request_contact.html"
                  data-module-submit_action="{{ requestdata_action }}"
                  data-module-post_data="{{ request_post_data }}"
@@ -124,6 +124,7 @@
                  data-module-is_hdx="{{ is_hdx }}"
                  data-module-redirect_url="{{ redirect_url }}"
                  data-module-is_current_user_a_maintainer="{{ is_current_user_a_maintainer }}"
+                 data-module-analytics="{{ package.hdx_analytics }}"
               >Request access</a>
               <div class="requested-data-message"></div>
             {% else %}
@@ -155,5 +156,5 @@
 {% resource 'hdx_theme/bs_tooltip.js' %}
 {% resource 'hdx_theme/explorer' %}
 
-{% resource 'requestdata/modal-form.js' %}
+{% resource 'hdx_theme/requestdata/modal-form.js' %}
 {% resource 'hdx_theme/requestdata/request-data.css' %}

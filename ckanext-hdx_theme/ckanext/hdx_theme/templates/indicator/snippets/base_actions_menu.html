@@ -8,6 +8,9 @@
 {% set hide_membership = hide_membership or false %}
 {% set hide_follow = hide_follow or false %}
 
+{% set is_current_user_a_maintainer = h.hdx_is_current_user_a_maintainer(pkg.maintainer, pkg) if pkg else false %}
+{% set follow_confirm_text = "WARNING: You are maintainer of the dataset which you want to follow. Do you wish to continue?" if is_current_user_a_maintainer else None %}
+{% set contact_confirm_text = "WARNING: you are the contributor of this dataset. Do you wish to continue contacting the contributor?" if is_current_user_a_maintainer else None %}
 
 {% if not hide_membership %}
     {% set membership_data = membership.data %}
@@ -22,12 +25,12 @@
         {% if c.user %}
             {% if not hide_follow%}
                 <li>
-                    <strong class="uppercase">{{ h.hdx_follow_link(base_type, follow_id, "", "link-separator") }}</strong>
+                    <strong class="uppercase">{{ h.hdx_follow_link(base_type, follow_id, "", "link-separator", follow_confirm_text) }}</strong>
                 </li>
             {% endif %}
             {% if not hide_contact_contributor %}
                 <li>
-                    <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
+                    <a href="#" onclick="{% if is_current_user_a_maintainer %}if (confirm('{{contact_confirm_text}}')){ {% endif %}closeCurrentWidget(this);showOnboardingWidget('#contactContributorPopup');{% if is_current_user_a_maintainer %} } {% endif %}" title="{{ _('Contact the contributor lets users send inquiries directly to data contributors. This feature is available on all ' + base_type + ' pages.') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" id="contact-the-contributor">
                         <i class="icon-envelope"></i>
                         Contact the contributor
                     </a>

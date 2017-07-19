@@ -643,6 +643,7 @@ class DatasetController(PackageController):
 
             if current_pkg_type == 'dataset':
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                c.pkg_dict['showcase_count'] = len(c.showcase_list)
             else:
                 abort(404, _('Package type is not dataset'))
         except NotFound:
@@ -697,6 +698,7 @@ class DatasetController(PackageController):
         c.analytics_is_cod = analytics.is_cod(c.pkg_dict)
         c.analytics_is_indicator = analytics.is_indicator(c.pkg_dict)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.pkg_dict)
+        c.analytics_dataset_availability = analytics.dataset_availability(c.pkg_dict)
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
@@ -1136,6 +1138,7 @@ class DatasetController(PackageController):
         c.analytics_is_cod = analytics.is_cod(c.package)
         c.analytics_is_indicator = analytics.is_indicator(c.package)
         c.analytics_group_names, c.analytics_group_ids = analytics.extract_locations_in_json(c.package)
+        c.analytics_dataset_availability = analytics.dataset_availability(c.package)
 
         current_resource_view = None
         view_id = request.GET.get('view_id')
