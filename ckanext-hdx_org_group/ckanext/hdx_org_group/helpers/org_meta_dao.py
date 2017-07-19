@@ -92,6 +92,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
             'fq': 'organization:"{}" +dataset_type:dataset'.format(self.org_dict.get('name')),
             'rows': 1,
             'start': 0,
+            'include_private': True if ignore_capacity_check else False,
             'extras': {}
         }
 
