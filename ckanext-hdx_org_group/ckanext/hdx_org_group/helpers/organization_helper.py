@@ -48,19 +48,36 @@ NotFound = logic.NotFound
 ValidationError = logic.ValidationError
 
 
-def sort_results_case_insensitive(results, sort_by):
-    if results:
+def filter_and_sort_results_case_insensitive(results, sort_by, q=None):
+    '''
+    :param results: list of organizations to filter/sort
+    :type results: list[dict]
+    :param sort_by:
+    :type sort_by: str
+    :param q:
+    :type q: str
+    :return: sorted/filtered list
+    :rtype: list[dict]
+    '''
+    if q:
+        q = q.lower()
+        filtered_results = [org for org in results
+                            if q in org.get('title', '').lower() or q in org.get('name', '')
+                            or q in org.get('description', '').lower()]
+    else:
+        filtered_results = results
+    if filtered_results:
         if sort_by == 'title asc':
-            return sorted(results, key=lambda x: x.get('title', '').lower())
+            return sorted(filtered_results, key=lambda x: x.get('title', '').lower())
         elif sort_by == 'title desc':
-            return sorted(results, key=lambda x: x.get('title', '').lower(), reverse=True)
+            return sorted(filtered_results, key=lambda x: x.get('title', '').lower(), reverse=True)
         elif sort_by == 'datasets desc':
-            return sorted(results, key=lambda x: x.get('package_count', 0), reverse=True)
+            return sorted(filtered_results, key=lambda x: x.get('package_count', 0), reverse=True)
         elif sort_by == 'datasets asc':
-            return sorted(results, key=lambda x: x.get('package_count', 0))
+            return sorted(filtered_results, key=lambda x: x.get('package_count', 0))
         elif sort_by == 'popularity':
             pass
-    return results
+    return filtered_results
 
 
 def hdx_get_featured_orgs(context, data_dict):
