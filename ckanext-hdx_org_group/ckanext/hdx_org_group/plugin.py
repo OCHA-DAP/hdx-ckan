@@ -2,6 +2,7 @@ import logging
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.lib.plugins as lib_plugins
+import ckan.logic.schema as core_schema
 
 import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
@@ -106,7 +107,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         try:
             if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars[
                 'action'] == 'new':
-                schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+                schema = core_schema.default_show_group_schema()
                 schema.update({'description': [tk.get_validator('not_empty')]})
                 schema.update(
                     {'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
