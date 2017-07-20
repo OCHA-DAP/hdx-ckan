@@ -131,7 +131,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             c.full_facet_info = self._get_dataset_search_results(org_info['name'])
 
             # setting the count with the value that was populated from search_controller so that templates find it
-            c.group_dict['packages'] = c.count
+            c.group_dict['package_count'] = c.count
             c.group_dict['type'] = 'organization'
 
 
