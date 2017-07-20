@@ -707,11 +707,11 @@ class DatasetController(PackageController):
             'hdx_get_activity_list')(context, act_data_dict)
 
         # added as per HDX-4969
-        c.downloads_count = 0
-        for resource in c.pkg_dict['resources']:
-            if resource['tracking_summary']:
-                c.downloads_count += resource['tracking_summary']['total']
-        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.downloads_count)
+        # c.downloads_count = 0
+        # for resource in c.pkg_dict['resources']:
+        #     if resource['tracking_summary']:
+        #         c.downloads_count += resource['tracking_summary']['total']
+        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.pkg_dict.get('total_res_downloads', 0))
         # Removed for now as per HDX-4927
         # # count the number of resource downloads
 

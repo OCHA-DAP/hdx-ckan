@@ -417,7 +417,7 @@ class HDXSearchController(PackageController):
                               res.get('tracking_summary', {}).get('total'))
             download_sum = sum(downloads_list)
 
-            dataset['approx_total_downloads'] = find_approx_download(download_sum)
+            dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
