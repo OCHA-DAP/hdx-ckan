@@ -1,6 +1,8 @@
-function setupDatasetDownloads(divId){
-        var chartData = JSON.parse($(divId).html());
+function setupDatasetDownloads(dataDivId, placeholderDivId, extraConfigs){
+        var chartData = JSON.parse($(dataDivId).html());
         var monthsSet = {};
+        if (!extraConfigs)
+            extraConfigs = {};
         $.each(chartData, function(idx, data){
             var date = new Date(data.date), y = date.getFullYear(), m = date.getMonth();
             var firstDay = new Date(y, m, 1);
@@ -12,7 +14,7 @@ function setupDatasetDownloads(divId){
         months = months.slice(1);
 
         var chartConfig = {
-            bindto: "#dataset-downloads-chart",
+            bindto: placeholderDivId,
             padding: {
                 bottom: 0
             },
@@ -58,6 +60,7 @@ function setupDatasetDownloads(divId){
                 }
             }
         };
+        $.extend(chartConfig, extraConfigs);
 
         if (chartData.length > 2){
             var startDate = chartData[chartData.length - 2].date;
@@ -72,6 +75,6 @@ $(document).ready(function(){
     var datasetDwdId = "#dataset-downloads-data";
     var datasetDwdDiv = $(datasetDwdId);
     if (datasetDwdDiv.length > 0){
-        setupDatasetDownloads(datasetDwdId);
+        setupDatasetDownloads(datasetDwdId, "#dataset-downloads-chart");
     }
 });

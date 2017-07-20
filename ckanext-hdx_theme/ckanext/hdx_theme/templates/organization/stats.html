@@ -1,7 +1,5 @@
 {% extends "organization/read.html" %}
 
-{% resource 'hdx_theme/activity-stream' %}
-
 {% block subtitle %}{{ _('Stats') }} - {{ c.group_dict.title or c.group_dict.name }}{% endblock %}
 
 {% block primary_content_inner %}
@@ -13,12 +11,7 @@
     </div>
     <div id="stats-data-top-downloads"  style="display: none">
         [
-            {"name":"Health Infrastructure Nepal 3 word Addresses","url":"https://data.humdata.org/dataset/0013fbe3-4b43-4da0-985a-4fda7f0081dc","date":1498435200000,"value":200, "total": 2991},
-            {"name":"Yemen: Cholera Outbreak Epidemiology Update Data","url":"https://data.humdata.org/dataset/00215f01-9326-493a-aff1-6267684fa962","date":1497225600000,"value":142, "total": 2991},
-            {"name":"Guinea administrative boundaries (levels 0-3)","url":"https://data.humdata.org/dataset/004daf8f-2f9e-417a-92ee-9e2187d2da7e","date":1496620800000,"value":539, "total": 2991},
-            {"name":"HOTOSM Democratic Republic of the Congo Points of Interest (OpenStreetMap Export)","url":"https://data.humdata.org/dataset/00710e3e-c8ef-46c2-9cb0-d87070600bd7","date":1497830400000,"value":19, "total": 2991},
-            {"name":"Airports in Saint-Martin (French part)","url":"https://data.humdata.org/dataset/0087e82a-83c6-4aeb-9681-4cebf664e7e6","date":1496620800000,"value":7, "total": 2991},
-            {"name":"Ebola Treatment Units - 3 Word Addresses","url":"https://data.humdata.org/dataset/008e23ea-9d98-482e-bc1e-555b32b44715","date":1497225600000,"value":183, "total": 2991}
+            {"name":"Health Infrastructure Nepal 3 word Addresses","url":"https://data.humdata.org/dataset/0013fbe3-4b43-4da0-985a-4fda7f0081dc","date":1498435200000,"value":200, "total": 2991}
         ]
     </div>
 
@@ -114,5 +107,6 @@
     {% resource 'hdx_theme/organization/stats.css' %}
     {% resource 'hdx_theme/d3' %}
     {% resource 'hdx_theme/c3' %}
+    {% resource 'hdx_theme/indicator/indicator_downloads.js' %}
 
 {% endblock %}

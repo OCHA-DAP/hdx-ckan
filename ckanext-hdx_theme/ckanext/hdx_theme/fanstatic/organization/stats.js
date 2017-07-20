@@ -18,7 +18,8 @@ $(document).ready(function(){
             },
             type: 'line',
             regions: {
-                'pageviews': null
+                'pageviews': null,
+                'downloads': null
             },
             names: {
                 'pageviews': 'Page Views',
@@ -45,9 +46,6 @@ $(document).ready(function(){
                 show: true
             }
         },
-        regions: {
-            'value': [{'start': dataPageviews.length-1, 'style': 'dashed'}]
-        },
         grid: {
           y: {
             show: true
@@ -57,7 +55,8 @@ $(document).ready(function(){
 
     if (dataPageviews.length > 2){
         var startDate = dataPageviews[dataPageviews.length - 2].date;
-        configPageviews.data.regions['value'] = [{'start': startDate, 'style': 'dashed'}];
+        configPageviews.data.regions['pageviews'] = [{'start': startDate, 'style': 'dashed'}];
+        configPageviews.data.regions['downloads'] = [{'start': startDate, 'style': 'dashed'}];
     }
 
     var pageviewChart = c3.generate(configPageviews);
@@ -138,7 +137,16 @@ $(document).ready(function(){
         onresized: substituteDatasetNamesWithLinks,
         onrendered: substituteDatasetNamesWithLinks
     };
-    var topDownloadsChart = c3.generate(configTopDownloads);
-    substituteDatasetNamesWithLinks();
+
+    if (dataTopDownloads.length === 1){
+        setupDatasetDownloads("#stats-data-single-dataset-downloads", "#chart-data-top-downloads", {
+            size: {
+                height: 320
+            }
+        });
+    } else {
+        var topDownloadsChart = c3.generate(configTopDownloads);
+        substituteDatasetNamesWithLinks();
+    }
 
 });
