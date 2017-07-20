@@ -172,7 +172,7 @@ def downloads_per_dataset(hours_since_now=None):
 
 
 @bcache.cache_region('hdx_jql_cache', 'downloads_per_dataset_per_week_last_24_weeks')
-def downloads_per_dataset_per_week_last_24_weeks():
+def downloads_per_dataset_per_week_last_24_weeks_cached():
     return downloads_per_dataset_per_week(24)
 
 
@@ -283,7 +283,9 @@ def _generate_mandatory_dates(since, weeks):
     :return: list of mandatory dates
     :rtype: list[str]
     '''
-    mandatory_dates = [since]
+    mandatory_dates = []
+    if since.weekday() == 0:
+        mandatory_dates.insert(since)
     ''':type : list[datetime]'''
     for i in range(0, weeks):
         mandatory_dates.insert(0, since - timedelta(weeks=i, days=since.weekday()))

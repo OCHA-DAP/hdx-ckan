@@ -315,12 +315,19 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'downloads': downloads_per_week_dict.get(date_str, {}).get('value', 0)
             })
 
+        stats_top_dataset_downloads, stats_total_downloads, stats_1_dataset_downloads_last_weeks = \
+            self._stats_top_dataset_downloads(org_id)
+
+
+
         template_data = {
             'data': {
                 'stats_downloaders': jql.downloads_per_organization_last_30_days_cached().get(org_id,
                                                                                               0),
                 'stats_viewers': jql.pageviews_per_organization_last_30_days_cached().get(org_id, 0),
-                'stats_top_dataset_downloads': self._stats_top_dataset_downloads(org_id),
+                'stats_top_dataset_downloads': stats_top_dataset_downloads,
+                'stats_total_downloads': stats_total_downloads,
+                'stats_1_dataset_downloads_last_weeks': stats_1_dataset_downloads_last_weeks,
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
             }
         }
@@ -341,7 +348,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                    'auth_user_obj': c.userobj}
         data_dict = {
             'q': '*:*',
-            'fl': 'id name',
+            'fl': 'id name title',
             'fq': 'capacity:"public" id:({})'.format(' OR '.join(datasets_map.keys())),
             'rows': len(datasets_map),
             'start': 0,
@@ -350,15 +357,16 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         conn = make_connection(decode_dates=False)
         try:
             search_result = conn.search(**data_dict)
-            dataseta_meta_map = {d['id']: {'name': d.get('name'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+            dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
                                  for d in search_result.docs}
             ret = [
                 {
                     'dataset_id': d.get('dataset_id'),
-                    'dataset_name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('name'),
+                    'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
                     'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
                     'value': d.get('value'),
-                    'percentage': round(100*d.get('value', 0)/total_downloads, 1)
+                    'total': total_downloads,
+                    # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
                 }
                 for d in itertools.islice(
                     (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
@@ -369,8 +377,13 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             ret = []
 
         # query = get_action('package_search')(context, data_dict)
+        stats_1_dataset_downloads_last_weeks = []
+        if ret and len(ret) == 1:
+            dataset_id = ret[0].get('dataset_id')
+            stats_1_dataset_downloads_last_weeks = \
+                jql.downloads_per_dataset_per_week_last_24_weeks_cached().get(dataset_id).values()
 
-        return ret
+        return ret, total_downloads, stats_1_dataset_downloads_last_weeks
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
