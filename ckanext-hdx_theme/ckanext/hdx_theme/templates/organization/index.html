@@ -53,14 +53,14 @@
                               {{ h.link_to(item.display_name, h.url_for(controller='organization', action='read', id=item.name)) }}
                             </h3>
                             <div class="list-items">
-                                {% if item.packages %}
-                                    {% if item.packages is number %}
-                                        {% set num_of_pack = item.packages %}
+                                {% if item.package_count or c.org_meta.datasets_num %}
+                                    {% if item.package_count is number %}
+                                        {% set num_of_pack = item.package_count %}
                                     {% else %}
-                                        {% set num_of_pack = item.packages|length %}
+                                        {% set num_of_pack = c.org_meta.datasets_num %}
                                     {% endif %}
                                     <span class="sspBold14">
-                                        <a class="sspBold14" href="{{ h.url_for(item.type + '_read', action='read', id=item.name, sort='metadata_modified desc')}}#datasets-section">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
+                                        <a class="sspBold14" href="{{ h.url_for('organization_read', action='read', id=item.name, sort='metadata_modified desc')}}#datasets-section">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
                                     </span>
                                 {% else %}
                                     <span class="sspBold14">{{ _('0 Datasets') }}</span>
