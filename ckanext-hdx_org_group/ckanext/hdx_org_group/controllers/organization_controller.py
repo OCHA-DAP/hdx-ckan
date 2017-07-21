@@ -53,7 +53,7 @@ response = common.response
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
+                   'for_view': True,
                    'with_private': False}
 
         try:
@@ -63,10 +63,10 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         # pass user info to context as needed to view private datasets of
         # orgs correctly
-        if c.userobj:
-            context['user_id'] = c.userobj.id
-            context['user_is_admin'] = c.userobj.sysadmin
-            context['auth_user_obj'] = c.userobj
+        # if c.userobj:
+        #     context['user_id'] = c.userobj.id
+        #     context['user_is_admin'] = c.userobj.sysadmin
+        #     context['auth_user_obj'] = c.userobj
 
         q = c.q = request.params.get('q', '')
         page = request.params.get('page', 1)
@@ -83,9 +83,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             'reset_thumbnails': reset_thumbnails,
         }
 
-        all_orgs = get_action('organization_list')(context, data_dict)
+        all_orgs = get_action('cached_organization_list')(context, data_dict)
 
-        all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
+        all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs, sort_option, q)
 
         c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
 

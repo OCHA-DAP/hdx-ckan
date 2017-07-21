@@ -21,6 +21,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IOrganizationController, inherit=True)
+    plugins.implements(plugins.IDomainObjectModification, inherit=True)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -238,6 +239,17 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
     def edit(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+
+    def delete(self, org):
+        tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+
+    # IDomainObjectModification
+    def notify(self, entity, operation):
+        try:
+            if entity and entity.__class__ and 'Package' == entity.__class__.__name__:
+                tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+        except:
+            log.warn('Problem occured while trying to invalidate cache for org list')
 
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
