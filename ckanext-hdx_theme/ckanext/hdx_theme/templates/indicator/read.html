@@ -84,9 +84,18 @@
 {% endblock %}
 
 {% block secondary %}
+    <div >
+        <div id="dataset-downloads-data" style="display: none">
+            {{ h.json_dumps(c.stats_downloads_last_weeks) }}
+        </div>
+        <h2 class="uppercase">{{_('Downloads')}}</h2>
+        <div id="dataset-downloads-chart">
+
+        </div>
+    </div>
 <div>
-  <h2 class="uppercase">{{_('Related Showcases')}}</h2>
-  {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
+    <h2 class="uppercase">{{_('Related Showcases')}}</h2>
+    {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
 
 </div>
   <div>
@@ -142,6 +151,7 @@
 {% block scripts %}
   {{ super() }}
   {% resource 'hdx_theme/indicator' %}
+  {% resource 'hdx_theme/indicator/indicator_downloads.js' %}
   {% resource 'hdx_theme/activity-stream' %}
   {% resource 'hdx_theme/jquery.expander' %}
   {% resource 'hdx_theme/bs_tooltip.js' %}

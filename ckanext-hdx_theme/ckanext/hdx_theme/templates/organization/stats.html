@@ -1,0 +1,110 @@
+{% extends "organization/read.html" %}
+
+{% block subtitle %}{{ _('Stats') }} - {{ c.group_dict.title or c.group_dict.name }}{% endblock %}
+
+{% block primary_content_inner %}
+    <div id="stats-data-single-dataset-downloads"  style="display: none">
+        {{ h.json_dumps(data.stats_1_dataset_downloads_last_weeks) }}
+    </div>
+    <div id="stats-data-pageviews" style="display: none">
+        {{ h.json_dumps(data.stats_dw_and_pv_per_week) }}
+    </div>
+    <div id="stats-data-top-downloads"  style="display: none">
+        {{ h.json_dumps(data.stats_top_dataset_downloads) }}
+    </div>
+
+	<h2 class="hide-heading">{% block page_heading %}{{ _('Stats') }}{% endblock %}</h2>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">Number of Downloads (last 24 weeks)</span>
+            </div>
+        </div>
+        <div class="col-xs-9">
+            <div id="chart-data-top-downloads" style="height: 320px;"></div>
+        </div>
+        <div class="col-xs-3">
+            <div class="topline">
+                <div class="row">
+                    <div class="col-xs-12 indicator-title">
+                        Total number of downloads for this organisation's content
+                    </div>
+                    <div class="col-xs-12 indicator-value">
+                        <div class="topline-value">
+                            <span id="stats-data-total-downloads" data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
+                                {{ data.stats_total_downloads }}
+                            </span>
+                            <span class="small"> </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-9">
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="list-header crisis-list-header">
+                        <span class="mL15 list-header-title">Downloads and Total Page Views (last 24 weeks)</span>
+                    </div>
+                </div>
+                <div class="col-xs-12">
+                    <div id="chart-data-pageviews" style="height: 320px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-3">
+            <div class="list-header crisis-list-header">
+                <span class="mL15 list-header-title">Users (last 30 days)</span>
+            </div>
+            <div class="topline">
+                <div class="row">
+                    <div class="col-xs-12 indicator-title">
+                        Unique visitors who downloaded at least one dataset from this org
+                    </div>
+                    <div class="col-xs-12 indicator-value">
+                        <div class="topline-value">
+                            <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
+                                {{ data.stats_downloaders }}
+                            </span>
+                            <span class="small"> users </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topline">
+                <div class="row">
+                    <div class="col-xs-12 indicator-title">
+                        Unique visitors to this organisation's content
+                    </div>
+                    <div class="col-xs-12 indicator-value">
+                        <div class="topline-value">
+                            <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
+                                {{ data.stats_viewers }}
+                            </span>
+                            <span class="small"> users </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block primary_content_module_margin %}{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+	{% resource 'hdx_theme/dashboard.css' %}
+	{% resource 'hdx_theme/hdx_dashboard.js' %}
+    {% resource 'hdx_theme/crisis/topline.css' %}
+    {% resource 'hdx_theme/organization/stats.js' %}
+    {% resource 'hdx_theme/organization/stats.css' %}
+    {% resource 'hdx_theme/d3' %}
+    {% resource 'hdx_theme/c3' %}
+    {% resource 'hdx_theme/indicator/indicator_downloads.js' %}
+
+{% endblock %}

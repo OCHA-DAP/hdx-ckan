@@ -208,6 +208,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
                     action='read')
 
+        map.connect('hdx_organization_stats', '/organization/stats/{id}',
+                    controller='ckanext.hdx_org_group.controllers.organization_controller:HDXOrganizationController',
+                    action='stats')
+
         # map.connect('browse_list', '/browse',
         #            controller='ckanext.hdx_org_group.controllers.browse_controller:BrowseController', action='index')
 

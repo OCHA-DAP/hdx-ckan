@@ -1,5 +1,5 @@
 
-{% set popular = package.tracking_summary and package.tracking_summary.recent >= 10 %}
+{% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 10 %}
 {# set has_related_items = package.related_count and package.related_count > 0 #}
 {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
 {% set has_quality_checked = package.indicator == '1' or package.quality %}
@@ -31,7 +31,7 @@
         <span class="icon-fire" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
       {% else %}
       {# Dataset page #}
-        {{ h.hdx_popular('recent views', package.tracking_summary.recent, min=10) }}
+        {{ h.hdx_popular('recent views', package.pageviews_last_14_days, min=10) }}
       {% endif %}
     {% endif %}
 
