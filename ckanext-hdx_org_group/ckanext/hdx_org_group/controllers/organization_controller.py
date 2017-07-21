@@ -354,27 +354,28 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             'start': 0,
         }
 
-        conn = make_connection(decode_dates=False)
-        try:
-            search_result = conn.search(**data_dict)
-            dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
-                                 for d in search_result.docs}
-            ret = [
-                {
-                    'dataset_id': d.get('dataset_id'),
-                    'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
-                    'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
-                    'value': d.get('value'),
-                    'total': total_downloads,
-                    # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
-                }
-                for d in itertools.islice(
-                    (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
-                )
-            ]
-        except Exception, e:
-            log.warn('Error in searching solr {}'.format(str(e)))
-            ret = []
+        ret = []
+        if datasets_map:
+            try:
+                conn = make_connection(decode_dates=False)
+                search_result = conn.search(**data_dict)
+                dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+                                     for d in search_result.docs}
+                ret = [
+                    {
+                        'dataset_id': d.get('dataset_id'),
+                        'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
+                        'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
+                        'value': d.get('value'),
+                        'total': total_downloads,
+                        # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
+                    }
+                    for d in itertools.islice(
+                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
+                    )
+                ]
+            except Exception, e:
+                log.warn('Error in searching solr {}'.format(str(e)))
 
         # query = get_action('package_search')(context, data_dict)
         stats_1_dataset_downloads_last_weeks = []
