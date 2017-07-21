@@ -88,6 +88,7 @@ def cached_organization_list():
     orgs = tk.get_action('organization_list')({'user': '127.0.0.1'},
                                               {
                                                   'all_fields': True,
+                                                  'include_extras': True
                                               })
 
     return sorted(orgs, key=lambda k: strip_accents(k['display_name']))
