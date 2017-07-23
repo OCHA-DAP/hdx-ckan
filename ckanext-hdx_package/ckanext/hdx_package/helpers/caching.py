@@ -17,8 +17,8 @@ bcache.cache_regions.update({
     'hdx_memory_cache': {
         'expire': 86400,  # 1 days
         'type': 'file',
-        'data_dir': '/tmp/hdxcache/data',
-        'lock_dir': '/tmp/hdxcache/lock',
+        'data_dir': '/tmp/hdx/main_cache/data',
+        'lock_dir': '/tmp/hdx/main_cache/lock',
         'key_length': 250
     }
 })
@@ -88,8 +88,7 @@ def cached_organization_list():
     orgs = tk.get_action('organization_list')({'user': '127.0.0.1'},
                                               {
                                                   'all_fields': True,
-                                                  'include_extras': True,
-                                                  'package_count': True,
+                                                  'include_extras': True
                                               })
 
     return sorted(orgs, key=lambda k: strip_accents(k['display_name']))
@@ -97,4 +96,4 @@ def cached_organization_list():
 
 def invalidate_cached_organization_list():
     log.info("Invalidating cache for org list")
-    bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_organization_list')
+    bcache.region_invalidate(cached_organization_list, 'hdx_memory_cache', 'cached_organization_list')

@@ -208,7 +208,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 _ckan_site_url = config.get('ckan.site_url', '#')
                 _came_from = str(request.referrer or _ckan_site_url)
 
-                if _ckan_site_url != _came_from:
+                if _ckan_site_url != _came_from and '/user/validate/' not in _came_from:
                     h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
@@ -448,8 +448,9 @@ class ValidationController(ckan.controllers.user.UserController):
                 </html>
                 """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
                            tour_link=tour_link)
-                hdx_mailer.mail_recipient(
-                    [{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, html)
+                if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
+                    hdx_mailer.mail_recipient(
+                        [{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, html)
 
         except NotAuthorized:
             return OnbNotAuth
@@ -894,7 +895,6 @@ class ValidationController(ckan.controllers.user.UserController):
         r = requests.get(url, params=params, verify=True)
         res = json.loads(r.content)
         return 'success' in res and res['success'] == True
-
 
     def _get_mailchimp_api(self):
         return mailchimp.Mailchimp(configuration.config.get('hdx.mailchimp.api.key'))
