@@ -11,7 +11,7 @@ class APICallAnalyticsSender(AbstractAnalyticsSender):
         super(APICallAnalyticsSender, self).__init__()
 
         self.analytics_dict = {
-            'event_name': 'programmatic use',
+            'event_name': 'api call',
             'mixpanel_meta': {
                 'event source': 'api',
                 'action name': action_name
