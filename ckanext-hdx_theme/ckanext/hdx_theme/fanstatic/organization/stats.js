@@ -92,7 +92,11 @@ $(document).ready(function(){
     var configTopDownloads = {
         bindto: "#chart-data-top-downloads",
         padding: {
-            bottom: 20
+            bottom: 20,
+            left: 250
+        },
+        size: {
+            height: 320
         },
         color: '#0077ce',
         data: {
