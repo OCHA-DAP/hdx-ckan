@@ -49,7 +49,7 @@
                                     {% endif %}
                                     -
                                     <span class="sspBold14">
-                                        <a class="sspBold14" href="{{ pkg.url }}" target="_blank">{{ _('Visit Website') }}</a>
+                                        <a class="sspBold14" href="{% if pkg.url %} {{ pkg.url }} {% else %}#{% endif %}" target="{% if pkg.url %}_blank{% else %} _self {% endif %}">{{ _('Visit external site') }}</a>
                                     </span>
                                 </div>
                                 {% if pkg.author %}
@@ -68,7 +68,7 @@
                     </div>
                     <div class="col-xs-offset-1 col-xs-3">
                       <div class="showcase-image">
-                          <a href="{{ pkg.url }}" target="_blank">
+                          <a href="{% if pkg.url %} {{ pkg.url }} {% else %}#{% endif %}" target="{% if pkg.url %}_blank{% else %} _self {% endif %}">
                               {% if pkg.image_display_url %}
                                 <img src="{{ pkg.image_display_url }}" alt="{{ pkg.name }}">
                               {% else %}
@@ -82,11 +82,11 @@
                 </div>
             </div>
             <div class="col-xs-12 align-bottom-right">
-                <div class="tag-wrapper">
-                    {% for tag in pkg.tags %}
-                    <a class="label tag" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>
-                    {% endfor %}
-                </div>
+                <!--<div class="tag-wrapper">-->
+                    <!--{% for tag in pkg.tags %}-->
+                    <!--<a class="label tag" href="{% url_for controller='ckanext.showcase.controller:ShowcaseController', action='search', tags=tag.name %}">{{ h.truncate(tag.display_name, 22) }}</a>-->
+                    <!--{% endfor %}-->
+                <!--</div>-->
                 {% snippet "showcase/showcase_actions_menu.html", pkg = pkg, is_indicator=False, classes='base-actions-menu followButtonContainer pull-right',
                 panel_title="Share Showcase", title=pkg.title, base_type='showcase', base_title='showcase', hide_membership=true, hide_contact_contributor=true,
                 hide_follow=true %}

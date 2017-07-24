@@ -13,23 +13,28 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
 {% set title = package.title or package.name %}
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
 
+{% set url = package.url or h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) %}
+{% set has_url = package.url or False %}
+
 {% block package_item %}
 
 <div class="{% if dataset %} col-xs-12 {% else %} col-xs-3 {% endif %}">
-  <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}">
+
     <div class="showcase-item">
-      <div class="showcase-image">
-      {% if package.image_display_url %}
-        <img src="{{ package.image_display_url }}" alt="{{ package.name }}">
-      {% else %}
-        <div class="img-placeholder">
-          <span class="img-placeholder-text"></span>
+      <a href="{{url}}" {% if has_url %} target="_blank" {% endif %}>
+        <div class="showcase-image">
+        {% if package.image_display_url %}
+          <img src="{{ package.image_display_url }}" alt="{{ package.name }}">
+        {% else %}
+          <div class="img-placeholder">
+            <span class="img-placeholder-text"></span>
+          </div>
+        {% endif %}
         </div>
-      {% endif %}
-      </div>
-      <div class="title">
-        {{ h.truncate(title, truncate_title) }}
-      </div>
+        <div class="title">
+          {{ h.truncate(title, truncate_title) }}
+        </div>
+      </a>
       <div class="description">
         {% if notes %}
           {{ notes|urlize }}
@@ -38,12 +43,17 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
         {% endif %}
       </div>
 
-      {% if package.num_datasets %}
-          <strong class="count">{{ ungettext('{num} Dataset', '{num} Datasets', package.num_datasets).format(num=package.num_datasets) }}</strong>
-      {% elif package.num_datasets == 0 %}
-          <strong class="count count-zero">{{ _('0 Datasets') }}</strong>
+      <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}">
+        {% if package.num_datasets %}
+          <div><strong class="count count-zero">{{ ungettext('{num} Dataset', '{num} Datasets', package.num_datasets).format(num=package.num_datasets) }}</strong></div>
+        {% elif package.num_datasets == 0 %}
+          <div><strong class="count count-zero">{{ _('0 Datasets') }}</strong></div>
+        {% endif %}
 
-      {% endif %}
+        <span>
+            <strong class="count">{{ _('Read More') }}</strong>
+        </span>
+      </a>
 
       {% if show_remove %}
         <div class="pull-right">
@@ -51,6 +61,5 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
         </div>
       {% endif %}
     </div>
-  </a>
 </div>
 {% endblock %}
