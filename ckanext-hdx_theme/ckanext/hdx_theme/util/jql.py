@@ -284,10 +284,10 @@ def _generate_mandatory_dates(since, weeks):
     :rtype: list[str]
     '''
     mandatory_dates = []
-    if since.weekday() == 0:
-        mandatory_dates.insert(since)
+    if since.weekday() != 0:
+        mandatory_dates.append(since)
     ''':type : list[datetime]'''
-    for i in range(0, weeks):
+    for i in range(0, weeks+1):
         mandatory_dates.insert(0, since - timedelta(weeks=i, days=since.weekday()))
     mandatory_values = list(map(lambda x: x.isoformat()[:10], mandatory_dates))
     return mandatory_values
