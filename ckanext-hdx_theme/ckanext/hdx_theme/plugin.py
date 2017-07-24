@@ -3,6 +3,7 @@ import json
 import os
 import urlparse
 
+import ckanext.hdx_theme.helpers.api_tracking_middleware as api_tracking
 import ckanext.hdx_theme.helpers.auth as auth
 import pylons.config as config
 
@@ -283,6 +284,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,
         }
 
-        # def make_middleware(self, app, config):
-        #     run_on_startup()
-        #     return app
+    def make_middleware(self, app, config):
+        # run_on_startup()
+        new_app = api_tracking.APITrackingMiddleware(app, config)
+        return new_app
+

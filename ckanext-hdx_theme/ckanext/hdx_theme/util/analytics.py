@@ -1,13 +1,13 @@
-import logging
 import json
+import logging
+
+import ckanext.hdx_theme.helpers.api_tracking_helper as api_th
+import pylons.config as config
 import requests
 import ua_parser.user_agent_parser as useragent
-
-import pylons.config as config
-
-
-from ckan.common import _, c, request
 from ckanext.hdx_theme.helpers.hash_generator import HashCodeGenerator
+
+from ckan.common import request
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +25,11 @@ class AbstractAnalyticsSender(object):
 
             self.user_agent = request.user_agent if request.user_agent else ''
             ua_dict = useragent.Parse(self.user_agent)
+
+            self.is_api_call = False
+            rq_headers = request.headers if request.headers else request._headers
+            if rq_headers and rq_headers.environ:
+                self.is_api_call = api_th.is_api_call(rq_headers.environ)
 
             if ua_dict:
                 self.ua_browser = ua_dict.get('user_agent', {}).get('family')
@@ -76,6 +81,9 @@ class AbstractAnalyticsSender(object):
         self._set_if_not_exists(self.analytics_dict, 'send_ga', False)
 
         mixpanel_meta = self.analytics_dict.get('mixpanel_meta')
+        if (self.is_api_call):
+            self._set_if_not_exists(mixpanel_meta, 'event source', 'api')
+
         self._set_if_not_exists(mixpanel_meta, 'server side', True)
         self._set_if_not_exists(mixpanel_meta, 'user agent', self.user_agent)
         self._set_if_not_exists(mixpanel_meta, 'referer url', self.referer_url)
@@ -83,6 +91,7 @@ class AbstractAnalyticsSender(object):
         self._set_if_not_exists(mixpanel_meta, '$os', self.ua_os)
         self._set_if_not_exists(mixpanel_meta, '$browser', self.ua_browser)
         self._set_if_not_exists(mixpanel_meta, '$browser_version', self.ua_browser_version)
+        self._set_if_not_exists(mixpanel_meta, '$current_url', self.request_url)
 
         ga_meta = self.analytics_dict.get('ga_meta')
         self._set_if_not_exists(ga_meta, 'uip', self.user_addr)

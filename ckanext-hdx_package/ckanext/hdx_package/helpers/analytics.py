@@ -1,17 +1,15 @@
-import logging
 import json
+import logging
 import urlparse
 
 import pylons.config as config
+from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
-import ckan.model as model
+import ckan.controllers.package as package_controller
 import ckan.lib.base as base
 import ckan.logic as logic
-import ckan.controllers.package as package_controller
-
+import ckan.model as model
 from ckan.common import _, c, request
-
-from ckanext.hdx_theme.util.analytics import AbstractAnalyticsSender
 
 log = logging.getLogger(__name__)
 
@@ -271,5 +269,3 @@ class DatasetCreatedAnalyticsSender(AbstractAnalyticsSender):
 
             }
         }
-
-
