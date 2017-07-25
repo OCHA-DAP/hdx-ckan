@@ -287,8 +287,7 @@ def _generate_mandatory_dates(since, weeks):
     :rtype: list[str]
     '''
     mandatory_dates = []
-    if since.weekday() != 0:
-        mandatory_dates.append(since)
+
     ''':type : list[datetime]'''
     for i in range(0, weeks+1):
         mandatory_dates.insert(0, since - timedelta(weeks=i, days=since.weekday()))
