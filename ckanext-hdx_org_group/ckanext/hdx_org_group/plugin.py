@@ -115,7 +115,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
                 schema = core_schema.default_show_group_schema()
                 schema.update({'description': [tk.get_validator('not_empty')]})
-                schema.update({'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('not_missing')]})
+                schema.update({'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 schema.update({'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 schema.update({'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
