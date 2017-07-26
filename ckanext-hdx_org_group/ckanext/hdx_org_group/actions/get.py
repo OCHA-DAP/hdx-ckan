@@ -26,6 +26,7 @@ import subprocess
 import random
 
 import logging
+
 log = logging.getLogger(__name__)
 
 json = common.json
@@ -238,15 +239,6 @@ def hdx_trigger_screencap(context, data_dict):
 
     return org_helper.hdx_capturejs(config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg['org_name']),
                                     file_path, cfg['screen_cap_asset_selector'])
-    # try:
-    #     command = 'capturejs -l --uri "' + config['ckan.site_url'] + helpers.url_for('organization_read', id=cfg[
-    #         'org_name']) + '" --output ' + file_path + ' --selector "' + cfg['screen_cap_asset_selector'] + '"' + ' --renderdelay 10000'
-    #     print command
-    #     args = shlex.split(command)
-    #     subprocess.Popen(args)
-    #     return True
-    # except:
-    #     return False
 
 
 @logic.side_effect_free
