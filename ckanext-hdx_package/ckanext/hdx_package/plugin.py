@@ -309,7 +309,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         }
 
     def get_actions(self):
-        from ckanext.hdx_package.helpers import helpers as hdx_actions
+        import ckanext.hdx_package.helpers.helpers as hdx_actions
         return {
             'package_update': hdx_update.package_update,
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
