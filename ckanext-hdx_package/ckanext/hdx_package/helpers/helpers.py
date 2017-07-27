@@ -101,7 +101,11 @@ def hdx_get_activity_list(context, data_dict):
     Get activity list for a given package
 
     """
-    activity_stream = get_action('package_activity_list')(context, data_dict)
+    try:
+        activity_stream = get_action('package_activity_list')(context, data_dict)
+    except Exception, ex:
+        log.exception(ex)
+        activity_stream = []
     #activity_stream = package_activity_list(context, data_dict)
     offset = int(data_dict.get('offset', 0))
     extra_vars = {
