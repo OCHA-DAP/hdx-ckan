@@ -642,7 +642,10 @@ class DatasetController(PackageController):
             current_pkg_type = c.pkg_dict.get('type')
 
             if current_pkg_type == 'dataset':
-                c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                context_showcase = {'model': model, 'session': model.Session,
+                           'user': c.user, 'for_view': True,
+                           'auth_user_obj': c.userobj}
+                c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
             else:
                 abort(404, _('Package type is not dataset'))
