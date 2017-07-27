@@ -643,7 +643,10 @@ class DatasetController(PackageController):
             current_pkg_type = c.pkg_dict.get('type')
 
             if current_pkg_type == 'dataset':
-                c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                context_showcase = {'model': model, 'session': model.Session,
+                           'user': c.user, 'for_view': True,
+                           'auth_user_obj': c.userobj}
+                c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
             else:
                 abort(404, _('Package type is not dataset'))
@@ -703,8 +706,7 @@ class DatasetController(PackageController):
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
-        c.hdx_activities = get_action(
-            'hdx_get_activity_list')(context, act_data_dict)
+        c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
 
         # added as per HDX-4969
         # c.downloads_count = 0
