@@ -702,8 +702,7 @@ class DatasetController(PackageController):
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
-        c.hdx_activities = get_action(
-            'hdx_get_activity_list')(context, act_data_dict)
+        c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
 
         # added as per HDX-4969
         c.downloads_count = 0
