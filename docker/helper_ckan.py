@@ -224,7 +224,7 @@ class DockerHelper(object):
 def main():
     """show a use-case."""
     #
-    s = DockerHelper.fromcontainer(templates_root_path='/srv')
+    s = DockerHelper.fromcontainer(templates_root_path='/etc/ckan')
     ssh_folder = '/root/.ssh'
     ssh_key = '/'.join([ssh_folder, 'id_rsa'])
     ssh_pub = '.'.join([ssh_key, 'pub'])
