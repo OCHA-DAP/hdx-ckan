@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# just for travis, until this PR is merged into dev
+mkdir -p /etc/ckan
+[ -f /etc/ckan/prod.ini.tpl ] && cp -a /srv/ckan/docker/prod.ini.tpl /etc/ckan
+
 # configure prod.ini
 [ -f /etc/ckan/prod.ini.tpl ] && envsubst < /etc/ckan/prod.ini.tpl > /etc/ckan/prod.ini
 # and a copy of it to be used by less compile verbose mode
