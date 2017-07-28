@@ -15,7 +15,7 @@ RUN rm -rf /usr/local/man && \
     cp -a docker/run_ckan /etc/service/ckan/run && \
     chmod +x /etc/service/ckan/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
-    curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-tools/master/hdxckantool.py && \
+    curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-infra-tools/master/hdxckantool.py && \
     chmod +x /srv/hdxckantool.py && \
     ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
