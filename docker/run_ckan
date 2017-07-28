@@ -9,7 +9,7 @@ mkdir -p /etc/ckan
 # and a copy of it to be used by less compile verbose mode
 [ -f /etc/ckan/prod.ini.tpl ] && cat /etc/ckan/prod.ini | sed 's/level = WARNING/level = INFO/' > /etc/ckan/less.ini;
 #configure test ini
-[ -f /srv/ckan/hdx-test-core.ini ] && envsubst < /srv/ckan/docker/hdx-test-core.ini.tpl > /srv/ckan/hdx-test-core.ini
+[ -f /srv/ckan/hdx-test-core.ini ] || envsubst < /srv/ckan/docker/hdx-test-core.ini.tpl > /srv/ckan/hdx-test-core.ini
 
 # fix permissions on filestore
 mkdir -p /srv/filestore /srv/backup /var/log/ckan
