@@ -30,7 +30,7 @@ script:
   - docker-compose exec ckan psql -h dbckan -U ckan -c "create role datastore with login;"
   - docker-compose exec ckan psql -h dbckan -U ckan -c "alter role datastore with password 'datastore';"
   - docker-compose exec ckan hdxckantool db set-perms
-  - docker-compose exec ckan paster db upgrade -c /srv/prod.ini
+  - docker-compose exec ckan paster db upgrade -c /etc/ckan/prod.ini
   - docker-compose exec ckan hdxckantool feature
   - docker-compose exec ckan hdxckantool less compile
   - docker-compose exec ckan sh -c "mkdir -p /srv/filestore/storage/uploads/group"

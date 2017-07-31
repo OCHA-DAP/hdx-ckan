@@ -224,15 +224,15 @@ class DockerHelper(object):
 def main():
     """show a use-case."""
     #
-    s = DockerHelper.fromcontainer(templates_root_path='/srv')
-    ssh_folder = '/root/.ssh'
-    ssh_key = '/'.join([ssh_folder, 'id_rsa'])
-    ssh_pub = '.'.join([ssh_key, 'pub'])
-    if not os.path.isdir(ssh_folder):
-        os.makedirs(ssh_folder)
+    s = DockerHelper.fromcontainer(templates_root_path='/etc/ckan')
+    # ssh_folder = '/root/.ssh'
+    # ssh_key = '/'.join([ssh_folder, 'id_rsa'])
+    # ssh_pub = '.'.join([ssh_key, 'pub'])
+    # if not os.path.isdir(ssh_folder):
+    #     os.makedirs(ssh_folder)
 
-    s.create_special_file(ssh_pub, 'HDX_SSH_PUB', private=False)
-    s.create_special_file(ssh_key, 'HDX_SSH_KEY', private=True)
+    # s.create_special_file(ssh_pub, 'HDX_SSH_PUB', private=False)
+    # s.create_special_file(ssh_key, 'HDX_SSH_KEY', private=True)
 
     s.create_config_files()
 
