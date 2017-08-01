@@ -442,7 +442,7 @@ hxl = {
                 'figures to help you highlight the most important aspects of your dataset. This is called a "HXL Preview." '
                 'For a HXL Preview to be generated, your dataset needs: '
                 '<ol>'
-                '<li>A CSV with HXL tags as the first resource. HXL is  easy!  Check out the 30-second tutorial. The '
+                '<li>A CSV with HXL tags as the first resource. HXL is  easy!  Check out the <a target="_blank"  href="http://hxlstandard.org/#steps">30-second tutorial.</a> The '
                 'CSV can be stored on HDX or as a remote resource at another URL. </li>'
                 '<li>To be tagged with "HXL" on the dataset page.  This is not referring to the HXL tags inside the CSV, '
                 'but rather the metadata tags that you set for the whole dataset. This is a flag to HDX to try and '
