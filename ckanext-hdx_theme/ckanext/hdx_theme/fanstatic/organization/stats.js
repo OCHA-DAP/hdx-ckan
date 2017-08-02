@@ -87,6 +87,7 @@ $(document).ready(function(){
                 }
                 self.html("<a xlink:href='"+ item[0]['url'] +"' target='_blank' style='fill: #0077ce;'>"+ text +"</a>");
             });
+        d3.selectAll('#chart-data-top-downloads svg > g:nth-of-type(2)').attr('style', 'display: none;');
     }.bind(this);
 
     var configTopDownloads = {
@@ -122,6 +123,13 @@ $(document).ready(function(){
             }
         },
         legend: {
+            show: false
+        },
+        zoom: {
+            enabled: false,
+            type: 'drag'
+        },
+        subchart: {
             show: false
         },
         tooltip: {
