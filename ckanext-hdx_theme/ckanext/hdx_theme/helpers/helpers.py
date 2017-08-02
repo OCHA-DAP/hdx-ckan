@@ -155,6 +155,7 @@ def get_group_followers(grp_id):
         {'id': grp_id})
     return result
 
+
 def hdx_dataset_follower_count(pkg_id):
     result = logic.get_action('dataset_follower_count')(
         {'model': model, 'session': model.Session},
@@ -652,6 +653,7 @@ def hdx_get_layer_info(id=None):
 def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({}, {})
 
+
 def _get_context():
     return {
         'model': model,
@@ -660,8 +662,10 @@ def _get_context():
         'auth_user_obj': c.userobj
     }
 
+
 def _get_action(action, data_dict):
     return toolkit.get_action(action)(_get_context(), data_dict)
+
 
 def hdx_is_current_user_a_maintainer(maintainers, pkg):
     if c.user:
@@ -673,3 +677,28 @@ def hdx_is_current_user_a_maintainer(maintainers, pkg):
             return True
 
     return False
+
+
+def hdx_is_sysadmin(user_id):
+    import ckan.authz as authz
+    user_obj = model.User.get(user_id)
+    if not user_obj:
+        return False
+        # raise logic.NotFound
+    user = user_obj.name
+    return authz.is_sysadmin(user)
+
+def hdx_organization_list_for_user(user_id):
+    orgs = []
+    if user_id:
+        # context = {
+        #     'model': model,
+        #     'session': model.Session,
+        # }
+        # user = model.User.get(user_id)
+        # if user:
+        #     context['auth_user_obj'] = user
+        #     context['user'] = user.name
+        # return tk.get_action('organization_list_for_user')(context, {'id': user_id})
+        return tk.get_action('hdx_organization_list_for_user')(_get_context(), {'id': user_id})
+    return orgs

@@ -1,20 +1,29 @@
+{% resource 'hdx_theme/jquery.highlight' %}
+{% resource 'hdx_theme/jquery.expander' %}
+{% resource 'hdx_theme/hdx_show_more.js' %}
+
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
-
+{% set is_user_sysadmin = h.hdx_is_sysadmin(item.sender_user_id) %}
 <div class="requested-data-container__content-item--requested-by" {% if type == 'archive' %}style="margin-right: 60px;"{% endif %}>
-  <!--<a href="{{ sender_profile }}">-->
-    <!--{{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=24) }}-->
-  <!--</a>-->
-
-  {% set orgs = h.requestdata_get_orgs_for_user(item.sender_user_id) %}
+  {% set orgs = h.hdx_organization_list_for_user(item.sender_user_id) %}
 
   <div class="requested-data-container__content-item--requested-by-info" {% if type == 'archive' %}style="float: right; margin-right: 14px;"{% endif %} >
-    <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a>
+    <div><a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a></div>
+    {% if is_user_sysadmin %}
+      <div>Sysadmin</div>
+    {% else %}
+      <span data-module="hdx_show_more" style="visibility:hidden;">
+        <div>
+          {% for org in orgs %}
+            <a href="{{ h.url_for(controller='organization', action='read', id=org.id) }}">{{ org.title }}</a>{% if not loop.last %},&nbsp;{% endif %}
+          {% endfor %}
+        </div>
+      </span>
+    {% endif %}
+
     <p class="requested-data-container__content-item--requested-by-date">
       <span>Requested on {{ h.render_datetime(item.created_at, date_format='%-d %B %Y') }}</span>
     </p>
-    {% for org in orgs %}
-      <a href="{{ h.url_for(controller='organization', action='read', id=org.id) }}">{{ org.title }}</a> |
-    {% endfor %}
     <p class="requested-data-container__content-item--requested-by-message">{{ item.message_content }}</p>
   </div>
 </div>
