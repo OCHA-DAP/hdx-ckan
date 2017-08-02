@@ -4,6 +4,10 @@ import urlparse
 
 from pylons import config
 
+import ckan.lib.helpers as h
+import ckan.plugins.toolkit as toolkit
+
+_get_action = toolkit.get_action
 log = logging.getLogger(__name__)
 
 
@@ -31,15 +35,21 @@ def hxl_preview_iframe_url_show(context, data_dict):
 
     is_logged_in = 'true' if context.get('is_logged_in', False) else 'false'
 
+    package_id = resource_dict.get('package_id')
+    package_dict = _get_action('package_show')(context, {'id': package_id})
+    package_source = package_dict.get('dataset_source', '')
+
+    package_url = h.url_for(controller='package', action='read', id=package_id, qualified=True)
+    resource_last_modified = h.render_datetime(resource_dict.get('last_modified') or resource_dict.get('created'))
     params = {
         'hxl_preview_app': config.get('hdx.hxl_preview_app.url'),
         'resource_url': urllib.urlencode({'url': resource_dict.get('url')}),
         'resource_view_id': urllib.urlencode({'resource_view_id': resource_view_dict.get('id')}),
         'hdx_domain': urllib.urlencode({'hdx_domain': __get_ckan_domain_without_protocol()}),
         'is_logged_in': urllib.urlencode({'is_logged_in': is_logged_in}),
-        'embedded_source': urllib.urlencode({'embeddedSource': 'Source'}),
-        'embedded_url': urllib.urlencode({'embeddedUrl': resource_dict.get('package_id')}),
-        'embedded_date': urllib.urlencode({'embeddedDate': resource_dict.get('last_modified')})
+        'embedded_source': urllib.urlencode({'embeddedSource': package_source}),
+        'embedded_url': urllib.urlencode({'embeddedUrl': package_url}),
+        'embedded_date': urllib.urlencode({'embeddedDate': resource_last_modified})
         # 'edit_mode': urllib.urlencode({'editMode': start_edit_mode}),
         # 'only_view_mode': urllib.urlencode({'onlyViewMode': only_view_mode}),
     }
