@@ -231,7 +231,7 @@ class HDXThemePlugin(plugins.SingletonPlugin):
     def get_actions(self):
         from ckanext.hdx_theme.helpers import actions as hdx_actions
         return {
-            'organization_list_for_user': hdx_actions.organization_list_for_user,
+            # 'organization_list_for_user': hdx_actions.organization_list_for_user,
             'cached_group_list': hdx_actions.cached_group_list,
             'cached_organization_list': hdx_actions.cached_organization_list,
             'invalidate_cache_for_groups': hdx_actions.invalidate_cache_for_groups,
