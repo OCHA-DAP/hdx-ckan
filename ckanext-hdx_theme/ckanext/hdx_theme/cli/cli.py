@@ -103,7 +103,7 @@ class AnalyticsChangesReindex(cli.CkanCommand):
         self.log.info('Rebuilding index for {} datasets.'.format(total))
 
         for idx, dataset_id in enumerate(ds_to_update):
-            self.log.info('Rebuilding index for dataset {}. {}/{}'.format(dataset_id, idx, total))
+            self.log.info('Rebuilding index for dataset {}. {}/{}'.format(dataset_id, idx+1, total))
             try:
                 rebuild(dataset_id)
                 self.log.info('Done')
