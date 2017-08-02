@@ -37,11 +37,14 @@ def hxl_preview_iframe_url_show(context, data_dict):
         'resource_view_id': urllib.urlencode({'resource_view_id': resource_view_dict.get('id')}),
         'hdx_domain': urllib.urlencode({'hdx_domain': __get_ckan_domain_without_protocol()}),
         'is_logged_in': urllib.urlencode({'is_logged_in': is_logged_in}),
+        'embedded_source': urllib.urlencode({'embeddedSource': 'Source'}),
+        'embedded_url': urllib.urlencode({'embeddedUrl': resource_dict.get('package_id')}),
+        'embedded_date': urllib.urlencode({'embeddedDate': resource_dict.get('last_modified')})
         # 'edit_mode': urllib.urlencode({'editMode': start_edit_mode}),
         # 'only_view_mode': urllib.urlencode({'onlyViewMode': only_view_mode}),
     }
 
-    url = '{hxl_preview_app}/show;{resource_url};{hdx_domain};{resource_view_id};{is_logged_in}'.format(
+    url = '{hxl_preview_app}/show;{resource_url};{hdx_domain};{embedded_source};{embedded_url};{embedded_date};{resource_view_id};{is_logged_in}'.format(
         **params)
     return url
 
