@@ -47,9 +47,9 @@ def hxl_preview_iframe_url_show(context, data_dict):
         'resource_view_id': urllib.urlencode({'resource_view_id': resource_view_dict.get('id')}),
         'hdx_domain': urllib.urlencode({'hdx_domain': __get_ckan_domain_without_protocol()}),
         'is_logged_in': urllib.urlencode({'is_logged_in': is_logged_in}),
-        'embedded_source': urllib.urlencode({'embeddedSource': package_source}),
+        'embedded_source': urllib.urlencode({'embeddedSource': urllib.quote(package_source)}),
         'embedded_url': urllib.urlencode({'embeddedUrl': package_url}),
-        'embedded_date': urllib.urlencode({'embeddedDate': resource_last_modified})
+        'embedded_date': urllib.urlencode({'embeddedDate': urllib.quote(resource_last_modified)})
         # 'edit_mode': urllib.urlencode({'editMode': start_edit_mode}),
         # 'only_view_mode': urllib.urlencode({'onlyViewMode': only_view_mode}),
     }
