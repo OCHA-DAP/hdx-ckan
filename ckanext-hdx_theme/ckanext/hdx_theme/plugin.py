@@ -226,12 +226,14 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_get_frequency_by_value': hdx_helpers.hdx_get_frequency_by_value,
             'hdx_is_current_user_a_maintainer': hdx_helpers.hdx_is_current_user_a_maintainer,
             'hdx_dataset_follower_count': hdx_helpers.hdx_dataset_follower_count,
+            'hdx_organization_list_for_user': hdx_helpers.hdx_organization_list_for_user,
+            'hdx_is_sysadmin': hdx_helpers.hdx_is_sysadmin,
         }
 
     def get_actions(self):
         from ckanext.hdx_theme.helpers import actions as hdx_actions
         return {
-            'organization_list_for_user': hdx_actions.organization_list_for_user,
+            'hdx_organization_list_for_user': hdx_actions.hdx_organization_list_for_user,
             'cached_group_list': hdx_actions.cached_group_list,
             'cached_organization_list': hdx_actions.cached_organization_list,
             'invalidate_cache_for_groups': hdx_actions.invalidate_cache_for_groups,
