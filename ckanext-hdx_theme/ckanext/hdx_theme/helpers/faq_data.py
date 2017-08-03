@@ -80,6 +80,20 @@ organizations = {
                  'relevant data to share with the HDX user community.',
         },
         {
+            'q': 'Where can I see how popular an organization\'s datasets are?',
+            'a': 'On an organization\'s page, click on the "Stats" tab to see how many visitors an organization has '
+                 'received and which datasets are most popular in terms of downloads.  Here\'s an '
+                 '<a target="_blank" href="https://data.humdata.org/organization/stats/un-operational-satellite-appplications-programme-unosat">example</a>.'
+                 '<br/><br/>'
+                 'You can also see a timeline of how often a dataset has been downloaded on each dataset page.  The download timeline '
+                 'is located on the left side of a dataset page, just beside the dataset description. '
+                 'Downloads for a dataset are counted as the total of downloads of any resource in a dataset, with '
+                 'repeated downloads of the same resource by the same user being counted a maximum of once per day. '
+                 '<br/><br/>'
+                 'There is a delay, usually less than one hour, between when a user views a page or downloads a resource '
+                 'on HDX and when the activity is visible in these graphs and figures.',
+        },
+        {
             'q': 'How do I create an organisation?',
             'a': 'You can request an organisation through the \'Add Data\' button. We ask you to submit the following '
                  'information: an organisation name, description and link to an organisation-related website (optional). '
@@ -199,6 +213,26 @@ sharing_data = {
                  'provide a walk-through of how to edit a dataset.',
         },
         {
+            'q':'How can I add graphs and key figures to my dataset?',
+            'a':'If your data uses the '
+                '<a target="_blank" href="http://hxlstandard.org/">HXL standard</a>, then HDX can automatically create '
+                'customizable graphs and key figures to help you highlight the most important aspects of your dataset. '
+                'We call these "Quick Charts". For a Quick Chart to be generated, your dataset needs to be public and contain '
+                'a CSV or XLSX resource with HXL tags.  HXL is easy! '
+                'Check out the <a target="_blank" href="http://hxlstandard.org/">30-second tutorial</a>.' 
+                '<br/><br/>'
+                'The resource can be stored on HDX or as a remote resource at another URL. Quick Charts will be generated'
+                'from the first resource with HXL tags in the list of a dataset\'s resources. The system will try to '
+                'generate up to three charts based on the HXL tags, and these can be changed to best tell the story in '
+                'your data. You can edit each Quick Chart\'s titles, axis labels, and description. Don\'t forget to save '
+                'the changes so they become the default view that users see when viewing your dataset. Here\'s a good '
+                '<a target="_blank" href="https://data.humdata.org/dataset/madagascar-cyclone-enawo-needs-assessment-data-5-april">example</a> '
+                'to get you started.'
+                '<br/><br/>'
+                'Quick Charts doesn\'t work with all HXL tags, but we\'re working to expand its capabilities and your feedback '
+                 'is welcome at <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>.',
+        },
+        {
             'q': 'What are the recommended data formats?',
             'a': 'We define data as information that software can read and analyse. We encourage contributions in any '
                  'common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel '
@@ -296,12 +330,14 @@ sharing_data = {
                 'Be careful not to move or rename the file after you share it.'
         },
         {
-            'q': 'I\'ve updated the data in my remote resource, but the dataset date on HDX did not change.',
+            'q': 'I\'ve updated the data in my remote resource, but the "updated" date on HDX did not change.',
             'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or '
-                 'on a GeoNode). However, the metadata and activity stream will not automatically indicate the updated '
-                 'date of the data. This has to be done manually in HDX by the dataset owner. The changes to the date '
-                 'of the dataset are only updated automatically if the resource is stored on HDX. We are working to '
-                 'improve this functionality, so please bear with us!',
+                 'on a GeoNode). However, the metadata and activity stream will not automatically indicate the date of '
+                 'the update. Basically, at the moment HDX has no way of knowing that the remote resource has changed '
+                 '(we\'re working on a solution to this). Triggering an update to the date on HDX can be done manually '
+                 'by the dataset maintainer by making a small change to some part of the metadata of the dataset and saving '
+                 'it. If the resource is not remote (i.e. it is uploaded to HDX), the "updated" date will change each time a '
+                 'resource is uploaded.',
         },
         {
             'q': 'How do I access the HDX Python Library?',
@@ -436,37 +472,6 @@ hxl = {
                  '<p>HDX is currently adding features to visualise HXL-tagged data. To learn more about HXL and who\'s '
                  'currently using it, visit the <a target="_blank"  href="http://hxlstandard.org/">HXL standard site</a>.</p>',
         },
-        {
-            'q':'How can I add graphs and key figures to my dataset?',
-            'a':'If your data uses the HXL standard, then HDX can automatically create customizable graphs and key '
-                'figures to help you highlight the most important aspects of your dataset. This is called a "HXL Preview." '
-                'For a HXL Preview to be generated, your dataset needs: '
-                '<ol>'
-                '<li>A CSV with HXL tags as the first resource. HXL is  easy!  Check out the <a target="_blank"  href="http://hxlstandard.org/#steps">30-second tutorial.</a> The '
-                'CSV can be stored on HDX or as a remote resource at another URL. </li>'
-                '<li>To be tagged with "HXL" on the dataset page.  This is not referring to the HXL tags inside the CSV, '
-                'but rather the metadata tags that you set for the whole dataset. This is a flag to HDX to try and '
-                'process the CSV as a HXL-ated dataset.</li>'
-                '</ol>'
-                '<br/>'
-                'The system will generate a palette of visualizations and you can choose up to six of them for display '
-                'of your dataset. You can find an example '
-                '<a target="_blank"  href="https://data.humdata.org/dataset/philippines-haima-house-damage-pcoded-ndrrmc-sitrep-9#hxlEditMode">here</a>. '
-                'You can always edit or remove the HXL Preview later.'
-                '<br/><br/>'
-                'If you decide not to save any HXL Preview, this section will be hidden for users that don\'t have the '
-                'right to edit the dataset.'
-                '<br/><br/>'
-                'For more details you can view '
-                '<a target="_blank"  href="https://drive.google.com/file/d/0BxkmOVXTW3qaSlMwWnFaaFBkMmM/view?usp=sharing">this screencast</a>.'
-        },
-        {
-            'q':'Why is the HXL Preview only working for a limited number of HXL tags?',
-            'a':'To generate a HXL Preview, a dataset can have multiple resources but only the first resource in the '
-                'list of resources can be previewed. At this stage, HXL Preview is working with a limited number of HXL '
-                'tags, including:  <i>#affected, #inneed, #reached, #targeted, #country, #adm1, #adm2, #adm3, #adm4, '
-                '#adm5</i>.'
-        }
     ]
 }
 
