@@ -110,7 +110,7 @@ def _get_email_configuration(
          <a href="' + url + '">My Requests</a> page.</strong>'
 
     organizations =\
-        _get_action('hdx_organization_list_for_user', {'id': data_owner})
+        _get_action('organization_list_for_user', {'id': data_owner})
 
     package = _get_action('package_show', {'id': dataset_name})
 
@@ -189,7 +189,7 @@ class HDXRequestDataController(RequestDataController):
             'permission': 'read'
         }
 
-        organizations = _get_action('hdx_organization_list_for_user', data_dict)
+        organizations = _get_action('organization_list_for_user', data_dict)
 
         orgs = []
         for i in organizations:
