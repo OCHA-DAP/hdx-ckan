@@ -50,7 +50,7 @@ _MESSAGE_REQUESTDATA_REJECT = \
     the HDX Team <br/>
     '''
 
-class HDXRequestdataController(requestdata_user.UserController):
+class HDXRequestdataUserController(requestdata_user.UserController):
     def handle_new_request_action(self, username, request_action):
         '''Handles sending email to the person who created the request, as well
         as updating the state of the request depending on the data sent.
