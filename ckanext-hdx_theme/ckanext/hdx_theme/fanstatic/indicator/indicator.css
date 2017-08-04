@@ -199,3 +199,18 @@ span.is-more a.more-link,
 #dataset-downloads-chart .c3-ygrid-line line {
   opacity: 0.3 !important;
 }
+#dataset-downloads-chart-no-data {
+  height: 120px;
+  background-color: #edf6fd;
+  position: relative;
+}
+#dataset-downloads-chart-no-data .title {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #888888;
+}

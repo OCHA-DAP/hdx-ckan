@@ -104,6 +104,11 @@ $(document).ready(function(){
     var datasetDwdId = "#dataset-downloads-data";
     var datasetDwdDiv = $(datasetDwdId);
     if (datasetDwdDiv.length > 0){
-        setupDatasetDownloads(datasetDwdId, "#dataset-downloads-chart");
+        var chartData = JSON.parse($(datasetDwdId).html());
+        if (chartData.length > 0){
+            setupDatasetDownloads(datasetDwdId, "#dataset-downloads-chart");
+        } else {
+            $("#dataset-downloads-chart-no-data").show();
+        }
     }
 });
