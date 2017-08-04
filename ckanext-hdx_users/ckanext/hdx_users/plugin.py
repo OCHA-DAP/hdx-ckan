@@ -172,7 +172,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
 
         # requestdata mapping
         user_controller = 'ckanext.requestdata.controllers.user:UserController'
-        request_data_controller = 'ckanext.requestdata.controllers.request_data:RequestDataController'
+        # request_data_controller = 'ckanext.requestdata.controllers.request_data:RequestDataController'
         hdx_request_data_controller = 'ckanext.hdx_users.controllers.request_data:HDXRequestDataController'
         map.connect('requestdata_my_requests',
                     '/user/my_requested_data/{id}',
@@ -182,7 +182,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('requestdata_handle_new_request_action',
                     '/user/my_requested_data/{username}/' +
                     '{request_action:reply|reject}',
-                    controller='ckanext.hdx_users.controllers.requestdata_controller:HDXRequestdataUserController',
+                    controller='ckanext.hdx_users.controllers.requestdata_user_controller:HDXRequestdataUserController',
                     action='handle_new_request_action')
 
         map.connect('requestdata_handle_open_request_action',
