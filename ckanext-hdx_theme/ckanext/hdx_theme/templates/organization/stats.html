@@ -32,9 +32,9 @@
                     <div class="col-xs-12 indicator-value">
                         <div class="topline-value">
                             <span id="stats-data-total-downloads" data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
-                                {{ data.stats_total_downloads }}
+                                {{ data.stats_total_downloads.formatted_value }}
                             </span>
-                            <span class="small"> </span>
+                            <span class="small">{{ data.stats_total_downloads.units }}</span>
                         </div>
                     </div>
                 </div>
@@ -67,9 +67,9 @@
                     <div class="col-xs-12 indicator-value">
                         <div class="topline-value">
                             <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
-                                {{ data.stats_downloaders }}
+                                {{ data.stats_downloaders.formatted_value }}
                             </span>
-                            <span class="small"> users </span>
+                            <span class="small"> {{ data.stats_downloaders.units }} users </span>
                         </div>
                     </div>
                 </div>
@@ -83,9 +83,9 @@
                     <div class="col-xs-12 indicator-value">
                         <div class="topline-value">
                             <span data-module="bs_tooltip" data-toggle="tooltip" data-module-placement="right" title="" data-original-title="">
-                                {{ data.stats_viewers }}
+                                {{ data.stats_viewers.formatted_value }}
                             </span>
-                            <span class="small"> users </span>
+                            <span class="small"> {{ data.stats_viewers.units }} users </span>
                         </div>
                     </div>
                 </div>
