@@ -83,9 +83,11 @@ organizations = {
             'q': 'Where can I see how popular an organization\'s datasets are?',
             'a': 'On an organization\'s page, click on the "Stats" tab to see how many visitors an organization has '
                  'received and which datasets are most popular in terms of downloads.  Here\'s an '
-                 '<a target="_blank" href="https://data.humdata.org/organization/stats/un-operational-satellite-appplications-programme-unosat">example</a>.'
+                 '<a target="_blank" href="https://data.humdata.org/organization/stats/un-operational-satellite-appplications-programme-unosat">example</a>. '
+                 'The number of unique visitors is approximate and is based on the browser someone uses when visiting HDX.  A user visiting from different '
+                 'browsers or from different devices will be counted separately.'
                  '<br/><br/>'
-                 'You can also see a timeline of how often a dataset has been downloaded on each dataset page.  The download timeline '
+                 'You can also see a timeline of how often an individual dataset has been downloaded on each dataset page.  The download timeline '
                  'is located on the left side of a dataset page, just beside the dataset description. '
                  'Downloads for a dataset are counted as the total of downloads of any resource in a dataset, with '
                  'repeated downloads of the same resource by the same user being counted a maximum of once per day. '
