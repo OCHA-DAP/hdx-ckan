@@ -223,7 +223,7 @@ sharing_data = {
                 'a CSV or XLSX resource with HXL tags.  HXL is easy! '
                 'Check out the <a target="_blank" href="http://hxlstandard.org/">30-second tutorial</a>.' 
                 '<br/><br/>'
-                'The resource can be stored on HDX or as a remote resource at another URL. Quick Charts will be generated'
+                'The resource can be stored on HDX or as a remote resource at another URL. Quick Charts will be generated '
                 'from the first resource with HXL tags in the list of a dataset\'s resources. The system will try to '
                 'generate up to three charts based on the HXL tags, and these can be changed to best tell the story in '
                 'your data. You can edit each Quick Chart\'s titles, axis labels, and description. Don\'t forget to save '
@@ -345,7 +345,7 @@ sharing_data = {
             'q': 'How do I access the HDX Python Library?',
             'a': 'The library is open source software and available here: '
                  '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">hdx-python-api</a>. Learn more '
-                 'about the library in this blog post.'
+                 'about the library in this <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">blog post</a>.'
         },
     ]
 }
