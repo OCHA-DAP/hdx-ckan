@@ -21,7 +21,7 @@ INITIAL_CAROUSEL_DATA = [
         "title": "Blog Post",
         "description": "New Features",
         "graphic": "/images/homepage/membership.jpg",
-        "url": "http://docs.humdata.org/new-features-contact-the-contributor-and-group-message/",
+        "url": "https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/",
         "buttonText": "Read",
         "newTab": True
     },

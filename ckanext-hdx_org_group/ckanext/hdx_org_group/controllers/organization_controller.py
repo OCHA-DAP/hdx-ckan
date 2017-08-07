@@ -57,7 +57,7 @@ log = logging.getLogger(__name__)
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
         context = {'model': model, 'session': model.Session,
-                   'user': c.user or c.author, 'for_view': True,
+                   'for_view': True,
                    'with_private': False}
 
         try:
@@ -67,10 +67,10 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         # pass user info to context as needed to view private datasets of
         # orgs correctly
-        if c.userobj:
-            context['user_id'] = c.userobj.id
-            context['user_is_admin'] = c.userobj.sysadmin
-            context['auth_user_obj'] = c.userobj
+        # if c.userobj:
+        #     context['user_id'] = c.userobj.id
+        #     context['user_is_admin'] = c.userobj.sysadmin
+        #     context['auth_user_obj'] = c.userobj
 
         q = c.q = request.params.get('q', '')
         page = request.params.get('page', 1)
@@ -87,9 +87,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             'reset_thumbnails': reset_thumbnails,
         }
 
-        all_orgs = get_action('organization_list')(context, data_dict)
+        all_orgs = get_action('cached_organization_list')(context, data_dict)
 
-        all_orgs = helper.sort_results_case_insensitive(all_orgs, sort_option)
+        all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs, sort_option, q)
 
         c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
 
@@ -135,7 +135,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             c.full_facet_info = self._get_dataset_search_results(org_info['name'])
 
             # setting the count with the value that was populated from search_controller so that templates find it
-            c.group_dict['packages'] = c.count
+            c.group_dict['package_count'] = c.count
             c.group_dict['type'] = 'organization'
 
             # This was moved in OrgMetaDao
@@ -354,27 +354,28 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             'start': 0,
         }
 
-        conn = make_connection(decode_dates=False)
-        try:
-            search_result = conn.search(**data_dict)
-            dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
-                                 for d in search_result.docs}
-            ret = [
-                {
-                    'dataset_id': d.get('dataset_id'),
-                    'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
-                    'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
-                    'value': d.get('value'),
-                    'total': total_downloads,
-                    # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
-                }
-                for d in itertools.islice(
-                    (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
-                )
-            ]
-        except Exception, e:
-            log.warn('Error in searching solr {}'.format(str(e)))
-            ret = []
+        ret = []
+        if datasets_map:
+            try:
+                conn = make_connection(decode_dates=False)
+                search_result = conn.search(**data_dict)
+                dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+                                     for d in search_result.docs}
+                ret = [
+                    {
+                        'dataset_id': d.get('dataset_id'),
+                        'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
+                        'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
+                        'value': d.get('value'),
+                        'total': total_downloads,
+                        # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
+                    }
+                    for d in itertools.islice(
+                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
+                    )
+                ]
+            except Exception, e:
+                log.warn('Error in searching solr {}'.format(str(e)))
 
         # query = get_action('package_search')(context, data_dict)
         stats_1_dataset_downloads_last_weeks = []

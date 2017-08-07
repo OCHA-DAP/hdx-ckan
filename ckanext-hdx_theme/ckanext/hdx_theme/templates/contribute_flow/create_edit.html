@@ -395,10 +395,14 @@
                                             {{ form.select('owner_org', id='field_owner_org', label=_('Organisation'), options=organisations, selected=data.owner_org_name, error=errors.owner_org, classes=['form-group'], attrs={'class':'form-control', 'data-placeholder':_('Which organisation is contributing data?')}) }}
                                             </div>
 
+                                            {% set first_org = organisations[0].value if organisations[0] else None %}
+                                            {% set selected_org_name = data.owner_org_name or first_org %}
+
                                             {% set maintainer_attrs = {'data-module': 'hdx_autocomplete',
-                                            'data-module-source': '/api/2/util/user/autocomplete?q=?',
+                                            'data-module-source': '/util/user/hdx_autocomplete?q=?',
                                             'data-module-label': 'fullname',
                                             'data-module-key': 'id',
+                                            'data-module-extra-params': 'org=' + selected_org_name,
                                             'class':'form-control' } %}
                                             <div data-module="hdx_form_element_manager" data-module-element_name="maintainer">
                                             {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}

@@ -19,12 +19,14 @@
                 {% endblock %}
                 <div class="list-items mTop20">
                     {% block links %}
-                        {% set num_of_pack = c.org_meta.datasets_num %}
-                        {% if num_of_pack and num_of_pack > 0 %}
+                        {% if organization.package_count or c.org_meta.datasets_num %}
+                            {% if organization.package_count is number %}
+                                {% set num_of_pack = organization.package_count %}
+                            {% else %}
+                                {% set num_of_pack = c.org_meta.datasets_num %}
+                            {% endif %}
                             <span class="sspBold14">
-                                <a class="sspBold14" href="{{ h.url_for('organization_read', action='read', id=organization.name, sort='metadata_modified desc')}}">
-                                    {{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}
-                                </a>
+                                <a class="sspBold14" href="{{ h.url_for('organization_read', action='read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
                             </span>
                         {% else %}
                             <span class="sspBold14">{{ _('0 Datasets') }}</span>

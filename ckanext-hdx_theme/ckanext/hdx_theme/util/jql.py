@@ -12,8 +12,8 @@ bcache.cache_regions.update({
     'hdx_jql_cache': {
         'expire': int(config.get('hdx.analytics.hours_for_results_in_cache', 24)) * 60 * 60,
         'type': 'file',
-        'data_dir': '/tmp/hdx/jql_cache/data',
-        'lock_dir': '/tmp/hdx/jql_cache/lock',
+        'data_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/jql_cache/data',
+        'lock_dir': config.get('hdx.caching.base_dir', '/tmp/hdx') + '/jql_cache/lock',
         'key_length': 250
     }
 })
@@ -31,15 +31,18 @@ class JqlQueryExecutor(object):
 
     def run_query(self, transformer):
         '''
-
         :param transformer: transforms the request result
         :type transformer: MappingResultTransformer
         :return: a dict mapping the key to the values
         :rtype: dict
         '''
-        r = requests.post('https://mixpanel.com/api/2.0/jql', data=self.payload, auth=(CONFIG_API_SECRET, ''))
-        r.raise_for_status()
-        return transformer.transform(r)
+        nose_test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+        if nose_test:
+            return {}
+        else:
+            r = requests.post('https://mixpanel.com/api/2.0/jql', data=self.payload, auth=(CONFIG_API_SECRET, ''))
+            r.raise_for_status()
+            return transformer.transform(r)
 
 
 class JqlQueryExecutorForHoursSinceNow(JqlQueryExecutor):
@@ -284,10 +287,9 @@ def _generate_mandatory_dates(since, weeks):
     :rtype: list[str]
     '''
     mandatory_dates = []
-    if since.weekday() == 0:
-        mandatory_dates.insert(since)
+
     ''':type : list[datetime]'''
-    for i in range(0, weeks):
+    for i in range(0, weeks+1):
         mandatory_dates.insert(0, since - timedelta(weeks=i, days=since.weekday()))
     mandatory_values = list(map(lambda x: x.isoformat()[:10], mandatory_dates))
     return mandatory_values

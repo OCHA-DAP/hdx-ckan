@@ -1,6 +1,7 @@
 FROM unocha/hdx-base-ckan:latest
 
-ENV HDX_CKAN_WORKERS=4
+ENV HDX_CKAN_WORKERS=4 \
+    INI_FILE=/etc/ckan/prod.ini
 
 COPY . /srv/ckan/
 
@@ -9,13 +10,12 @@ WORKDIR /srv/ckan
 # /srv/pgb /etc/service/pgb && \
     
 RUN rm -rf /usr/local/man && \
-    mkdir -p /var/log/ckan /srv/filestore /etc/service/ckan && \
-    cp -a docker/helper_ckan.py /srv/helper.py && \
+    mkdir -p /var/log/ckan /srv/filestore /etc/service/ckan /etc/ckan && \
+    cp -a docker/prod.ini.tpl /etc/ckan && \
     cp -a docker/run_ckan /etc/service/ckan/run && \
-    cp -a docker/gunicorn_conf.py /srv/ && \
     chmod +x /etc/service/ckan/run && \
     chown www-data:www-data -R /var/log/ckan /srv/filestore && \
-    curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-tools/master/hdxckantool.py && \
+    curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-infra-tools/master/hdxckantool.py && \
     chmod +x /srv/hdxckantool.py && \
     ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
     echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \

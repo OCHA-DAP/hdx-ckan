@@ -1,35 +1,34 @@
 # from ckan.controllers import group
+import datetime
+# import json
+import logging
+import re
+# from webhelpers.html import escape, HTML, literal, url_escape
+# from ckan.common import _
+import urlparse as urlparse
+
+import ckanext.hdx_theme.helpers.explorer_data as explorer
+import ckanext.hdx_theme.version as version
+import pylons.config as config
+
+# import re
+import ckan.authz as new_authz
+import ckan.lib.base as base
+import ckan.lib.datapreview as datapreview
 import ckan.lib.helpers as h
+import ckan.logic as logic
 # from ckan.common import (
 #     c, request
 # )
 # import sqlalchemy
 import ckan.model as model
-import ckan.lib.base as base
-import ckan.logic as logic
-import datetime
-import ckanext.hdx_theme.version as version
-import count
-# import json
-import logging
 import ckan.plugins.toolkit as tk
-# import re
-import ckan.authz as new_authz
-import re
-import ckan.lib.datapreview as datapreview
-
-# import ckanext.hdx_theme.helpers.counting_actions as counting
-
-import ckanext.hdx_theme.helpers.explorer_data as explorer
-
-# from webhelpers.html import escape, HTML, literal, url_escape
-# from ckan.common import _
-import urlparse as urlparse
-import pylons.config as config
-
 from ckan.common import (
     _, ungettext, c, request, json,
 )
+from ckan.plugins import toolkit
+
+# import ckanext.hdx_theme.helpers.counting_actions as counting
 
 log = logging.getLogger(__name__)
 
@@ -414,7 +413,7 @@ def get_group_name_from_list(glist, gid):
     return ""
 
 
-def hdx_follow_link(obj_type, obj_id, extra_text, cls=None):
+def hdx_follow_link(obj_type, obj_id, extra_text, cls=None, confirm_text=None):
     obj_type = obj_type.lower()
     assert obj_type in h._follow_objects
     # If the user is logged in show the follow/unfollow button
@@ -427,6 +426,7 @@ def hdx_follow_link(obj_type, obj_id, extra_text, cls=None):
                          obj_id=obj_id,
                          obj_type=obj_type,
                          extra_text=extra_text,
+                         confirm_text=confirm_text,
                          cls=cls)
     return ''
 
@@ -599,7 +599,7 @@ def hdx_license_list():
 
 
 def hdx_methodology_list():
-    result = [{'value': 'None', 'text': 'None'}, {'value': 'Census', 'text': 'Census'},
+    result = [{'value': '-1', 'text': '-- Please select --'}, {'value': 'Census', 'text': 'Census'},
               {'value': 'Sample Survey', 'text': 'Sample Survey'},
               {'value': 'Direct Observational Data/Anecdotal Data', 'text': 'Direct Observational Data/Anecdotal Data'},
               {'value': 'Registry', 'text': 'Registry'}, {'value': 'Other', 'text': 'Other'}]
@@ -651,3 +651,25 @@ def hdx_get_layer_info(id=None):
 
 def hdx_get_carousel_list():
     return logic.get_action('hdx_carousel_settings_show')({}, {})
+
+def _get_context():
+    return {
+        'model': model,
+        'session': model.Session,
+        'user': c.user or c.author,
+        'auth_user_obj': c.userobj
+    }
+
+def _get_action(action, data_dict):
+    return toolkit.get_action(action)(_get_context(), data_dict)
+
+def hdx_is_current_user_a_maintainer(maintainers, pkg):
+    if c.user:
+        current_user = _get_action('user_show', {'id': c.user})
+        user_id = current_user.get('id')
+        user_name = current_user.get('name')
+
+        if maintainers and (user_id in maintainers or user_name in maintainers):
+            return True
+
+    return False

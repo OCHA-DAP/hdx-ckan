@@ -84,12 +84,11 @@ group_invalidation_functions = [invalidate_cached_group_list, invalidate_cached_
 
 @bcache.cache_region('hdx_memory_cache', 'cached_organization_list')
 def cached_organization_list():
-    log.info("Creating cache for group list")
+    log.info("Creating cache for organization list")
     orgs = tk.get_action('organization_list')({'user': '127.0.0.1'},
                                               {
                                                   'all_fields': True,
-                                                  'include_extras': True,
-                                                  'package_count': True,
+                                                  'include_extras': True
                                               })
 
     return sorted(orgs, key=lambda k: strip_accents(k['display_name']))
@@ -97,4 +96,4 @@ def cached_organization_list():
 
 def invalidate_cached_organization_list():
     log.info("Invalidating cache for org list")
-    bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_organization_list')
+    bcache.region_invalidate(cached_organization_list, 'hdx_memory_cache', 'cached_organization_list')

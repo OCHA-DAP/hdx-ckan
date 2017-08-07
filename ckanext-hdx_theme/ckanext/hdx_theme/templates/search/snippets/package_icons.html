@@ -38,7 +38,7 @@
   </li>
 {% endif %}
 {% if package.approx_total_downloads  %}
-  <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads across all files in the last 2 weeks') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
+  <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
 {% endif %}
 
 {% if package.is_requestdata_type %}

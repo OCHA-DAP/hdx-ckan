@@ -1,13 +1,14 @@
 import logging
-
-import ckanext.hdx_org_group.actions.authorize as authorize
-import ckanext.hdx_org_group.actions.get as get_actions
-import ckanext.hdx_org_group.helpers.country_helper as country_helper
-import ckanext.hdx_package.helpers.screenshot as screenshot
-
-import ckan.lib.plugins as lib_plugins
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
+import ckan.lib.plugins as lib_plugins
+import ckan.logic.schema as core_schema
+
+import ckanext.hdx_org_group.actions.get as get_actions
+import ckanext.hdx_org_group.actions.authorize as authorize
+
+import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_package.helpers.screenshot as screenshot
 
 log = logging.getLogger(__name__)
 
@@ -20,6 +21,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.ITemplateHelpers, inherit=False)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IOrganizationController, inherit=True)
+    plugins.implements(plugins.IDomainObjectModification, inherit=True)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -78,18 +80,12 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         schema.update({
             'description': [tk.get_validator('not_empty')],
             'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')],
-            'fts_id': [tk.get_validator('ignore_missing'),
-                       tk.get_converter('convert_to_extras')],
-            'custom_org': [tk.get_validator('ignore_missing'),
-                           tk.get_converter('convert_to_extras')],
-            'customization': [tk.get_validator('ignore_missing'),
-                              tk.get_converter('convert_to_extras')],
-            'less': [tk.get_validator('ignore_missing'),
-                     tk.get_converter('convert_to_extras')],
-            'visualization_config': [tk.get_validator('ignore_missing'),
-                                     tk.get_converter('convert_to_extras')],
-            'modified_at': [tk.get_validator('ignore_missing'),
-                            tk.get_converter('convert_to_extras')],
+            'fts_id': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'custom_org': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'less': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'visualization_config': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'modified_at': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
         })
         return schema
 
@@ -101,27 +97,31 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     #     def check_data_dict(self, data_dict):
     #         return super(HDXOrgFormPlugin, self).check_data_dict(self, data_dict)
 
+    # def default_show_group_schema(self):
+    #     schema = core_schema.default_show_group_schema()
+    #     schema.update({'description': [tk.get_validator('not_empty')]})
+    #     schema.update({'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('not_missing')]})
+    #     schema.update({'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+    #     schema.update({'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+    #     schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+    #     schema.update({'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+    #     schema.update({'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+    #     schema.update({'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+    #     return schema
+
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
-            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars[
-                'action'] == 'new':
-                schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
+                schema = core_schema.default_show_group_schema()
                 schema.update({'description': [tk.get_validator('not_empty')]})
-                schema.update(
-                    {'org_url': [tk.get_validator('not_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'fts_id': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'custom_org': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'customization': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'less': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'visualization_config': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
-                schema.update({'modified_at': [tk.get_validator(
-                    'ignore_missing'), tk.get_converter('convert_to_extras')]})
+                schema.update({'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update({'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update({'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update({'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update({'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update({'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 return schema
         except TypeError, e:
             log.warn('Exception in db_to_form_schema: {}'.format(str(e)))
@@ -242,6 +242,17 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def edit(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
 
+    def delete(self, org):
+        tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+
+    # IDomainObjectModification
+    def notify(self, entity, operation):
+        try:
+            if entity and entity.__class__ and 'Package' == entity.__class__.__name__:
+                tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
+        except:
+            log.warn('Problem occured while trying to invalidate cache for org list')
+
 
 class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     '''
@@ -264,15 +275,11 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
             tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
         schema.update({'hr_info_url': [
             tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]})
-        schema.update({'geojson': [tk.get_validator(
-            'ignore_missing'), tk.get_converter('convert_to_extras')],
-            'custom_loc': [tk.get_validator('ignore_missing'),
-                           tk.get_converter('convert_to_extras')],
-            'customization': [tk.get_validator('ignore_missing'),
-                              tk.get_converter('convert_to_extras')],
-            'activity_level': [tk.get_validator('ignore_missing'),
-                               tk.get_converter('convert_to_extras')]
-        })
+        schema.update({'geojson': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
+                       })
         return schema
 
     def form_to_db_schema(self):
@@ -283,26 +290,19 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
     def db_to_form_schema(self):
 
         schema = super(HDXGroupPlugin, self).form_to_db_schema()
-        schema.update({'language_code': [
-            tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'relief_web_url': [
-            tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'hr_info_url': [
-            tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'geojson': [tk.get_converter(
-            'convert_from_extras'), tk.get_validator('ignore_missing')]})
-        schema.update({'custom_loc': [tk.get_validator(
-            'ignore_missing'), tk.get_converter('convert_to_extras')]})
-        schema.update({'customization': [tk.get_validator(
-            'ignore_missing'), tk.get_converter('convert_to_extras')]})
+        schema.update({'language_code': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'relief_web_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'hr_info_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'geojson': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'custom_loc': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+        schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({
             'activity_level': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')]
         })
         schema.update({
-            'package_count': [
-                tk.get_validator('ignore_missing')]
+            'package_count': [tk.get_validator('ignore_missing')]
         })
         return schema
 
