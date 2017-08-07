@@ -1,18 +1,22 @@
 DOWNLOADS_PER_DATASET = '''
-/* VER 1.0
-gets all download events and counts occurrences of unique combinations of user, resource, and dataset, then counts the number of occurrences of dataset.  In other words, if a user downloaded all 3 resources on a dataset 2 different times (6 total downloads), the result of this query would be 3.  It answers the question "What is the total number of downloads of any resource on a given dataset, ignorning repeated downloads?"*/
+/* VER 1.1
+
+used for total downloads from 2016-08-01 which is used to sort datasets by "most downloads" for the "XXX downloads" counter on /search and on each individual dataset
+
+gets all download events and counts occurrences of unique combinations of user, resource, and dataset, and day, then counts the number of occurrences of dataset by week.  In other words, if a user downloaded all 3 resources on a dataset 2 different times on the same day (6 total downloads), the result of this query would be 3.  It answers the question "What is the total number of downloads of any resource on a given dataset, ignorning repeated downloads from the same user the same day?"*/
 
 function main() {{
   return Events({{
-    from_date: '{}',
-    to_date: '{}',
+    from_date: '2016-08-01',
+    to_date: '2016-09-29',
     event_selectors: [{{event: "resource download"}}]
   }})
-  .groupBy(["distinct_id","properties.resource id","properties.dataset id"],mixpanel.reducer.count())
-  .groupBy([function(row) {{return row.key.slice(2)}}],mixpanel.reducer.count())
-  .map(function(r){{
+  .groupBy(["distinct_id","properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.count())
+  .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())
+    .map(function(r){{
     return {{
       dataset_id: r.key[0],
+      date: new Date(r.key[1]).toISOString().substring(0,10),
       value: r.value
     }};
   }});

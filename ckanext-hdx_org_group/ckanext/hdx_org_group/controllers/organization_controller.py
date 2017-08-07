@@ -11,8 +11,10 @@ import logging
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.util.jql as jql
+import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
 import ckan.authz as new_authz
 import ckan.common as common
@@ -315,18 +317,17 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'downloads': downloads_per_week_dict.get(date_str, {}).get('value', 0)
             })
 
-        stats_top_dataset_downloads, stats_total_downloads, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name = \
+        stats_top_dataset_downloads, total_downloads_topline, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name = \
             self._stats_top_dataset_downloads(org_id)
 
-
-
+        downloaders_topline = jql.downloads_per_organization_last_30_days_cached().get(org_id, 0)
+        viewers_topline = jql.pageviews_per_organization_last_30_days_cached().get(org_id, 0)
         template_data = {
             'data': {
-                'stats_downloaders': jql.downloads_per_organization_last_30_days_cached().get(org_id,
-                                                                                              0),
-                'stats_viewers': jql.pageviews_per_organization_last_30_days_cached().get(org_id, 0),
+                'stats_downloaders': self._format_topline(downloaders_topline),
+                'stats_viewers': self._format_topline(viewers_topline),
                 'stats_top_dataset_downloads': stats_top_dataset_downloads,
-                'stats_total_downloads': stats_total_downloads,
+                'stats_total_downloads': self._format_topline(total_downloads_topline, unit='count'),
                 'stats_1_dataset_downloads_last_weeks': stats_1_dataset_downloads_last_weeks,
                 'stats_1_dataset_name': stats_1_dataset_name,
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
@@ -337,6 +338,27 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             return render('organization/custom_stats.html', extra_vars=template_data)
         else:
             return render('organization/stats.html', extra_vars=template_data)
+
+    def _format_topline(self, topline_value, unit=None):
+        '''
+        :param topline_value:
+        :type topline_value: int
+        :return: dict with formatted value (as string) and unit
+        :rtype: dict
+        '''
+        if not unit:
+            unit = common_functions.compute_simplifying_units(topline_value)
+
+        topline  = [{
+            'units': unit,
+            'value': topline_value
+        }]
+
+        formatters.TopLineItemsFormatter(topline).format_results()
+        result = topline[0]
+        if result.get('units') == 'count':
+            result['units'] = ''
+        return result
 
 
     def _stats_top_dataset_downloads(self, org_id):
