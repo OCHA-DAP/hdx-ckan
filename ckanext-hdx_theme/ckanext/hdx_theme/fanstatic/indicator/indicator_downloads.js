@@ -89,7 +89,7 @@ function setupDatasetDownloads(dataDivId, placeholderDivId, extraConfigs){
                 }
             }
         };
-        $.extend(chartConfig, extraConfigs);
+        $.extend(true, chartConfig, extraConfigs);
 
         if (chartData.length > 2){
             var startDate = chartData[chartData.length - 2].date;

@@ -154,11 +154,22 @@ $(document).ready(function(){
     };
 
     if (dataTopDownloads.length === 1){
+        var datasetName = $('#stats-data-single-dataset-name').text();
         setupDatasetDownloads("#stats-data-single-dataset-downloads", top_downloads_chart_id, {
             size: {
                 height: 320
+            },
+            data: {
+                names: {
+                    'value': datasetName
+                }
+            },
+            legend: {
+                show: true
             }
+
         });
+        $(top_downloads_chart_id + ' .c3-legend-item-event').remove();
     } else {
         var topDownloadsChart = c3.generate(configTopDownloads);
         enableMouseWheelZoom(top_downloads_chart_id, dataTopDownloads.length, topDownloadsChart);

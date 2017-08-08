@@ -317,7 +317,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'downloads': downloads_per_week_dict.get(date_str, {}).get('value', 0)
             })
 
-        stats_top_dataset_downloads, total_downloads_topline, stats_1_dataset_downloads_last_weeks = \
+        stats_top_dataset_downloads, total_downloads_topline, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name = \
             self._stats_top_dataset_downloads(org_id)
 
         downloaders_topline = jql.downloads_per_organization_last_30_days_cached().get(org_id, 0)
@@ -329,6 +329,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'stats_top_dataset_downloads': stats_top_dataset_downloads,
                 'stats_total_downloads': self._format_topline(total_downloads_topline, unit='count'),
                 'stats_1_dataset_downloads_last_weeks': stats_1_dataset_downloads_last_weeks,
+                'stats_1_dataset_name': stats_1_dataset_name,
                 'stats_dw_and_pv_per_week': dw_and_pv_per_week
             }
         }
@@ -401,12 +402,14 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         # query = get_action('package_search')(context, data_dict)
         stats_1_dataset_downloads_last_weeks = []
+        stats_1_dataset_name = None
         if ret and len(ret) == 1:
             dataset_id = ret[0].get('dataset_id')
             stats_1_dataset_downloads_last_weeks = \
                 jql.downloads_per_dataset_per_week_last_24_weeks_cached().get(dataset_id).values()
+            stats_1_dataset_name = ret[0].get('name')
 
-        return ret, total_downloads, stats_1_dataset_downloads_last_weeks
+        return ret, total_downloads, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name
 
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
