@@ -92,7 +92,7 @@ organizations = {
                  'Downloads for a dataset are counted as the total of downloads of any resource in a dataset, with '
                  'repeated downloads of the same resource by the same user being counted a maximum of once per day. '
                  '<br/><br/>'
-                 'There is a delay, usually less than one hour, between when a user views a page or downloads a resource '
+                 'There is a delay, usually less than one day, between when a user views a page or downloads a resource '
                  'on HDX and when the activity is visible in these graphs and figures.',
         },
         {
@@ -226,7 +226,7 @@ sharing_data = {
                 'The resource can be stored on HDX or as a remote resource at another URL. Quick Charts will be generated '
                 'from the first resource with HXL tags in the list of a dataset\'s resources. The system will try to '
                 'generate up to three charts based on the HXL tags, and these can be changed to best tell the story in '
-                'your data. You can edit each Quick Chart\'s titles, axis labels, and description. Don\'t forget to save '
+                'your data. You can edit each Quick Chart\'s title, axis labels, and description. Don\'t forget to save '
                 'the changes so they become the default view that users see when viewing your dataset. Here\'s a good '
                 '<a target="_blank" href="https://data.humdata.org/dataset/madagascar-cyclone-enawo-needs-assessment-data-5-april">example</a> '
                 'to get you started.'
