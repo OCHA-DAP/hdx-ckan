@@ -1,5 +1,5 @@
 DOWNLOADS_PER_DATASET = '''
-/* VER 1.1
+/* VER 1.2
 
 used for total downloads from 2016-08-01 which is used to sort datasets by "most downloads" for the "XXX downloads" counter on /search and on each individual dataset
 
@@ -8,15 +8,14 @@ gets all download events and counts occurrences of unique combinations of user, 
 function main() {{
   return Events({{
     from_date: '2016-08-01',
-    to_date: '2016-09-29',
+    to_date: '2017-08-09',
     event_selectors: [{{event: "resource download"}}]
   }})
   .groupBy(["distinct_id","properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.count())
-  .groupBy(["key.2",(mixpanel.numeric_bucket('key.3',mixpanel.weekly_time_buckets))],mixpanel.reducer.count())
+  .groupBy(["key.2"], mixpanel.reducer.count())
     .map(function(r){{
     return {{
       dataset_id: r.key[0],
-      date: new Date(r.key[1]).toISOString().substring(0,10),
       value: r.value
     }};
   }});
