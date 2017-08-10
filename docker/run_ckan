@@ -16,6 +16,7 @@ mkdir -p /srv/filestore /srv/backup /var/log/ckan
 #chown www-data:www-data -R /srv/filestore/
 #chown www-data:www-data -R /var/log/ckan
 #chown root:root -R /srv/backup
+chown -R www-data:www-data /var/log/ckan
 
 python /srv/ckan/docker/helper.py
 
