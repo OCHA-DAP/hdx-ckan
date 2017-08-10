@@ -287,7 +287,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
         }
 
     def make_middleware(self, app, config):
+        api_tracking_enabled = config.get('hdx.analytics.track_api', 'false')
         # run_on_startup()
-        new_app = api_tracking.APITrackingMiddleware(app, config)
-        return new_app
+        if api_tracking_enabled == 'true':
+            new_app = api_tracking.APITrackingMiddleware(app, config)
+            return new_app
 
+        return app
