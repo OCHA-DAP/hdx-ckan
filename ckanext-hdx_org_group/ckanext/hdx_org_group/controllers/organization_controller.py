@@ -4,23 +4,26 @@ Created on Jan 13, 2015
 @author: alexandru-m-g
 '''
 
+import itertools
 import json
+import logging
 
-import ckan.controllers.organization as org
-import ckan.model as model
-import ckan.logic as logic
-import ckan.lib.base as base
-import ckan.common as common
-import ckan.authz as new_authz
-
-from ckan.common import c, request, _
-import ckan.lib.helpers as h
-
-import ckanext.hdx_org_group.helpers.organization_helper as helper
-import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
+import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
+import ckanext.hdx_org_group.helpers.organization_helper as helper
+import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_search.controllers.search_controller as search_controller
+import ckanext.hdx_theme.util.jql as jql
+import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 
+import ckan.authz as new_authz
+import ckan.common as common
+import ckan.controllers.organization as org
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.model as model
+from ckan.common import c, request, _
 from ckan.controllers.api import CONTENT_TYPES
 
 abort = base.abort
@@ -35,6 +38,9 @@ parse_params = logic.parse_params
 get_action = logic.get_action
 
 response = common.response
+
+log = logging.getLogger(__name__)
+
 
 # def is_not_custom(environ, result):
 #     '''
@@ -92,9 +98,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         def pager_url(page=None):
             if sort_option:
                 url = h.url_for(
-                    'organizations_index', q=q, page=page, sort=sort_option, limit=limit)+'#organizationsSection'
+                    'organizations_index', q=q, page=page, sort=sort_option, limit=limit) + '#organizationsSection'
             else:
-                url = h.url_for('organizations_index', q=q, page=page, limit=limit)+'#organizationsSection'
+                url = h.url_for('organizations_index', q=q, page=page, limit=limit) + '#organizationsSection'
             return url
 
         c.page = h.Page(
@@ -133,7 +139,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             # setting the count with the value that was populated from search_controller so that templates find it
             c.group_dict['package_count'] = c.count
             c.group_dict['type'] = 'organization'
-
 
             # This was moved in OrgMetaDao
             # allow_basic_user_info = self.check_access('hdx_basic_user_info')
@@ -280,6 +285,132 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         #  The extra_vars are needed here to send analytics information like org name and id
         return render(self._edit_template(c.group.type), extra_vars={'data': data})
 
+    # def stats(self, id, data=None, errors=None, error_summary=None):
+    #     template_data = {}
+    #     return render('organization/stats.html', extra_vars=template_data)
+
+    def stats(self, id, org_meta=None, offset=0):
+        if not org_meta:
+            org_meta = org_meta_dao.OrgMetaDao(id, c.user or c.author, c.userobj)
+        c.org_meta = org_meta
+        org_meta.fetch_all()
+
+        c.group_dict = org_meta.org_dict
+
+        # Add the group's activity stream (already rendered to HTML) to the
+        # template context for the group/read.html template to retrieve later.
+        context = {'model': model, 'session': model.Session,
+                   'user': c.user or c.author, 'for_view': True}
+
+        org_id = org_meta.org_dict['id']
+        pageviews_per_week_dict = jql.pageviews_per_organization_per_week_last_24_weeks_cached().get(
+            org_id, {})
+        downloads_per_week_dict = jql.downloads_per_organization_per_week_last_24_weeks_cached().get(
+            org_id, {})
+
+        dw_and_pv_per_week = []
+        for date_str in pageviews_per_week_dict.keys():
+            dw_and_pv_per_week.append({
+                'org_id': org_id,
+                'date': date_str,
+                'pageviews': pageviews_per_week_dict[date_str].get('value', 0),
+                'downloads': downloads_per_week_dict.get(date_str, {}).get('value', 0)
+            })
+
+        stats_top_dataset_downloads, total_downloads_topline, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name = \
+            self._stats_top_dataset_downloads(org_id)
+
+        downloaders_topline = jql.downloads_per_organization_last_30_days_cached().get(org_id, 0)
+        viewers_topline = jql.pageviews_per_organization_last_30_days_cached().get(org_id, 0)
+        template_data = {
+            'data': {
+                'stats_downloaders': self._format_topline(downloaders_topline),
+                'stats_viewers': self._format_topline(viewers_topline),
+                'stats_top_dataset_downloads': stats_top_dataset_downloads,
+                'stats_total_downloads': self._format_topline(total_downloads_topline, unit='count'),
+                'stats_1_dataset_downloads_last_weeks': stats_1_dataset_downloads_last_weeks,
+                'stats_1_dataset_name': stats_1_dataset_name,
+                'stats_dw_and_pv_per_week': dw_and_pv_per_week
+            }
+        }
+
+        if org_meta.is_custom:
+            return render('organization/custom_stats.html', extra_vars=template_data)
+        else:
+            return render('organization/stats.html', extra_vars=template_data)
+
+    def _format_topline(self, topline_value, unit=None):
+        '''
+        :param topline_value:
+        :type topline_value: int
+        :return: dict with formatted value (as string) and unit
+        :rtype: dict
+        '''
+        if not unit:
+            unit = common_functions.compute_simplifying_units(topline_value)
+
+        topline  = [{
+            'units': unit,
+            'value': topline_value
+        }]
+
+        formatters.TopLineItemsFormatter(topline).format_results()
+        result = topline[0]
+        if result.get('units') == 'count':
+            result['units'] = ''
+        return result
+
+
+    def _stats_top_dataset_downloads(self, org_id):
+        from ckan.lib.search.query import make_connection
+        datasets_map = jql.downloads_per_organization_per_dataset_last_24_weeks_cached().get(
+            org_id, {})
+        total_downloads = sum((item.get('value') for item in datasets_map.values()))
+
+        context = {'model': model, 'user': c.user or c.author,
+                   'auth_user_obj': c.userobj}
+        data_dict = {
+            'q': '*:*',
+            'fl': 'id name title',
+            'fq': 'capacity:"public" id:({})'.format(' OR '.join(datasets_map.keys())),
+            'rows': len(datasets_map),
+            'start': 0,
+        }
+
+        ret = []
+        if datasets_map:
+            try:
+                conn = make_connection(decode_dates=False)
+                search_result = conn.search(**data_dict)
+                dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+                                     for d in search_result.docs}
+                ret = [
+                    {
+                        'dataset_id': d.get('dataset_id'),
+                        'name': dataseta_meta_map.get(d.get('dataset_id'), {}).get('title'),
+                        'url': dataseta_meta_map.get(d.get('dataset_id'), {}).get('url'),
+                        'value': d.get('value'),
+                        'total': total_downloads,
+                        # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
+                    }
+                    for d in itertools.islice(
+                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
+                    )
+                ]
+            except Exception, e:
+                log.warn('Error in searching solr {}'.format(str(e)))
+
+        # query = get_action('package_search')(context, data_dict)
+        stats_1_dataset_downloads_last_weeks = []
+        stats_1_dataset_name = None
+        if ret and len(ret) == 1:
+            dataset_id = ret[0].get('dataset_id')
+            stats_1_dataset_downloads_last_weeks = \
+                jql.downloads_per_dataset_per_week_last_24_weeks_cached().get(dataset_id).values()
+            stats_1_dataset_name = ret[0].get('name')
+
+        return ret, total_downloads, stats_1_dataset_downloads_last_weeks, stats_1_dataset_name
+
     def check_access(self, action_name, data_dict=None):
         if data_dict is None:
             data_dict = {}
@@ -314,7 +445,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         org_meta.fetch_all()
 
         c.group_dict = org_meta.org_dict
-
 
         # Add the group's activity stream (already rendered to HTML) to the
         # template context for the group/read.html template to retrieve later.

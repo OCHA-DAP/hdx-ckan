@@ -76,8 +76,10 @@ hdx.gis.layer_import_url = http://gislayer:5000/api/add-layer/dataset/{dataset_i
 hdx.gis.resource_pbf_url = //${HDX_PREFIX}data.${HDX_DOMAIN}/gis/services/postgis/{resource_id}/wkb_geometry/vector-tiles/{z}/{x}/{y}.pbf
 
 hdx.analytics.mixpanel.token = ${HDX_MIXPANEL_TOKEN}
+hdx.analytics.mixpanel.secret = ${HDX_MIXPANEL_SECRET}
 hdx.analytics.enqueue_url    = http://gislayer:5000/api/send-analytics
 #hdx.analytics.enqueue_url    = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/send-analytics
+hdx.analytics.hours_for_results_in_cache = ${HDX_HOURS_MIXPANEL_CACHE}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
