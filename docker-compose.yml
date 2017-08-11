@@ -31,6 +31,7 @@ services:
       - db
       - solr
     environment:
+      HDX_HOURS_MIXPANEL_CACHE: 1
       HDX_CKANDB_ADDR: 'dbckan'
       HDX_CKANDB_PORT: 5432
       HDX_CKANDB_DB: '${PGSQL_DB}'
