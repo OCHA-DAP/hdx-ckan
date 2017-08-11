@@ -295,7 +295,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_validator('ignore_missing')],
             'quality': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'data_update_frequency': [tk.get_converter('convert_from_extras'),
-                              tk.get_validator('ignore_missing')]
+                              tk.get_validator('ignore_missing')],
+            'pageviews_last_14_days':[tk.get_converter('convert_from_extras'),
+                              tk.get_validator('ignore_missing')],
+            'total_res_downloads': [tk.get_converter('convert_from_extras'),
+                                       tk.get_validator('ignore_missing')],
         })
         return schema
 

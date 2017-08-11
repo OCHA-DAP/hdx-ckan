@@ -34,6 +34,7 @@
 				{% if h.check_access('organization_update', {'id': c.group_dict.id}) %}
 				  {{ h.build_nav_icon('requestdata_organization_requests', _('Requested Data'), id=c.group_dict.name) }}
 				{% endif %}
+			   	{{ h.build_nav_icon('hdx_organization_stats', _('Stats'), id=c.group_dict.name, class_='hdx-tab-button') }}
 		   {% endblock %}
 		</ul>
 	</header>

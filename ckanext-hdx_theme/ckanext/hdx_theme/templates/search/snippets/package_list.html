@@ -48,7 +48,7 @@ Example:
         (_('Name Ascending'), 'title_case_insensitive asc'),
         (_('Name Descending'), 'title_case_insensitive desc'),
         (_('Last Modified'), 'metadata_modified desc'),
-        (_('Trending'), 'views_recent desc') if g.tracking_enabled else (false, false),
+        (_('Trending'), 'pageviews_last_14_days desc') if g.tracking_enabled else (false, false),
         (_('Most Downloads'), 'total_res_downloads desc') ]
         %}
         {% set sort_param = c.sort_by_selected %}

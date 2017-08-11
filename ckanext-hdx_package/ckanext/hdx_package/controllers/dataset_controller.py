@@ -10,6 +10,7 @@ import ckanext.hdx_package.helpers.membership_data as membership_data
 from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.mail import simple_validate_email
+from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
 from pylons import config
 
 import ckan.authz as new_authz
@@ -642,7 +643,10 @@ class DatasetController(PackageController):
             current_pkg_type = c.pkg_dict.get('type')
 
             if current_pkg_type == 'dataset':
-                c.showcase_list = get_action('ckanext_package_showcase_list')(context, {'package_id': c.pkg_dict['id']})
+                context_showcase = {'model': model, 'session': model.Session,
+                           'user': c.user, 'for_view': True,
+                           'auth_user_obj': c.userobj}
+                c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
             else:
                 abort(404, _('Package type is not dataset'))
@@ -702,15 +706,14 @@ class DatasetController(PackageController):
 
         # changes done for indicator
         act_data_dict = {'id': c.pkg_dict['id'], 'limit': 7}
-        c.hdx_activities = get_action(
-            'hdx_get_activity_list')(context, act_data_dict)
+        c.hdx_activities = get_action('hdx_get_activity_list')(context, act_data_dict)
 
         # added as per HDX-4969
-        c.downloads_count = 0
-        for resource in c.pkg_dict['resources']:
-            if resource['tracking_summary']:
-                c.downloads_count += resource['tracking_summary']['total']
-        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.downloads_count)
+        # c.downloads_count = 0
+        # for resource in c.pkg_dict['resources']:
+        #     if resource['tracking_summary']:
+        #         c.downloads_count += resource['tracking_summary']['total']
+        c.pkg_dict['approx_total_downloads'] = find_approx_download(c.pkg_dict.get('total_res_downloads', 0))
         # Removed for now as per HDX-4927
         # # count the number of resource downloads
 
@@ -757,6 +760,10 @@ class DatasetController(PackageController):
         }
 
         c.user_has_edit_rights = h.check_access('package_update', {'id': c.pkg_dict['id']})
+
+        #analytics charts
+        downloads_last_weeks = downloads_per_dataset_per_week_last_24_weeks_cached().get(c.pkg_dict['id'], {}).values()
+        c.stats_downloads_last_weeks = downloads_last_weeks
 
         _default_view = None
         if 'resources' in c.pkg_dict:
