@@ -79,14 +79,16 @@ $(document).ready(function(){
                 // augment tick contents with link
                 var self = d3.select(this);
                 var text = self.text();
-                var url;
-                var item = $.grep(dataTopDownloads, function(el, idx) {
-                   return (el['trimName'] === text);
-                });
-                if (item.length !== 1) {
-                    console.error('Two datasets with same name!');
-                }
-                self.html("<a xlink:href='"+ item[0]['url'] +"' target='_blank' style='fill: #0077ce;'>"+ text +"</a>");
+                // var url;
+                // var item = $.grep(dataTopDownloads, function(el, idx) {
+                //    return (el['trimName'] === text);
+                // });
+                var dataIndex = i % dataTopDownloads.length; // The list of items is repeated in the interface
+                var item = dataTopDownloads[dataIndex];
+                // if (item.length !== 1) {
+                //     console.error('Two datasets with same name!');
+                // }
+                self.html("<a xlink:href='"+ item['url'] +"' target='_blank' style='fill: #0077ce;'>"+ text +"</a>");
             });
         d3.selectAll('#chart-data-top-downloads svg > g:nth-of-type(2)').attr('style', 'display: none;');
     }.bind(this);
