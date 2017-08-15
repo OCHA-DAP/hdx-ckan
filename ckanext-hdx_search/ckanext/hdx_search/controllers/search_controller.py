@@ -205,6 +205,8 @@ class HDXSearchController(PackageController):
 
         c.full_facet_info = self._search(package_type, pager_url)
 
+        c.cps_off = config.get('hdx.cps.off', 'false')
+
         # If we're only interested in the facet numbers a json will be returned with the numbers
         if self._is_facet_only_request():
             response.headers['Content-Type'] = CONTENT_TYPES['json']
