@@ -1,4 +1,29 @@
 (function() {
+
+    function get_analytics_data(el) {
+        return {
+            destinationUrl: $(el).attr('href'),
+            destinationLabel: $(el).text().trim()
+        };
+
+    }
+
+    function send_analytic_event(collapsePanelEl) {
+        var linkEl = $(collapsePanelEl.parentNode).find('.faq-question-link');
+        if (linkEl && linkEl.length === 1) {
+            var analyticsData = get_analytics_data(linkEl);
+            hdxUtil.analytics.sendFaqClickEvent(analyticsData);
+        }
+        else {
+            console.error('Exactly one <a> tag needs to exist in the parent panel');
+        }
+    }
+
+    $('.faq-panel-collapse').on('shown.bs.collapse', function(event){
+        send_analytic_event(event.target);
+
+    });
+
     function scroll_to_menu() {
         var window_top = $(window).scrollTop();
         var window_bottom = window_top + $(window).height();
