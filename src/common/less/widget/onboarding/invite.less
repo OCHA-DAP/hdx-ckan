@@ -1,0 +1,47 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+@import "notification";
+
+@titleHeight: 85px;
+
+.popup-invite .notification-widget {
+  position: relative;
+
+  .notification-title {
+    background-color: @greenColor;
+    .letter-spacing-1();
+    padding: (@titleHeight - @baseLineHeight)/2;
+
+    .close {
+      position: absolute;
+      right: @notificationPaddingSize;
+      line-height: @titleHeight;
+    }
+  }
+
+  .bottom-actions {
+    position: absolute;
+    bottom: @notificationPaddingSize;
+    right: @notificationPaddingSize;
+  }
+}
+
+.invite-widget {
+  height: @baseHeight - @titleHeight;
+  width: 2*@bigColumnWidth;
+
+  background-color: @extraLightGrayColor;
+  padding: @paddingLarge;
+
+  background-image: url('/images/backgrounds/pixels_white.png');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100%;
+}
+
+.invite-actions{
+  position: absolute;
+  bottom: @paddingSmall;
+  right: @paddingSmall;
+}
