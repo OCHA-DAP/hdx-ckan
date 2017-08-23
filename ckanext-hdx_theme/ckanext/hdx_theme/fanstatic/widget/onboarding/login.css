@@ -9,7 +9,7 @@
 .login-widget .login-top {
   position: relative;
   background-image: url('/images/backgrounds/browse_illustration.png');
-  background-color: #007ce0;
+  background-color: #007CE0;
   background-size: 400px;
   background-position: 15px -97px;
   background-repeat: no-repeat;
@@ -17,11 +17,11 @@
   width: 370px;
 }
 .login-widget .login-top .login-photo {
-  background-color: #007ce0;
+  background-color: #007CE0;
   width: 105px;
   height: 105px;
   border-radius: 57.5px;
-  border: 5px solid #ffffff;
+  border: 5px solid #fff;
   position: absolute;
   top: 87.5px;
   left: 132.5px;
@@ -46,7 +46,7 @@
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 16px;
-  color: #000000;
+  color: #000;
   line-height: 23px;
   letter-spacing: 0.01em;
 }
