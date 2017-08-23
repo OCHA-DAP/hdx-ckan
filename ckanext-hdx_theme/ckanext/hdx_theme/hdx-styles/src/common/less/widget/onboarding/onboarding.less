@@ -1,0 +1,159 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+
+.popup.popup-onboarding {
+  .content {
+    padding: 0;
+  }
+
+  .error-message {
+    color: red;
+    .gothamBookFont(10px);
+  }
+
+  .close {
+    opacity: 1;
+    color: @whiteColor;
+    font-weight: 400;
+    text-shadow: none;
+    &:hover,&:focus{
+      opacity: 0.5;
+    }
+  }
+
+  .control {
+    position: relative;
+  }
+
+  input[type="text"], input[type="password"], textarea {
+    height: @inputHeight;
+    border-radius: 6px;
+    border: 1px solid white;
+    padding-left: @inputPadding;
+    font-size: 16px;
+    color: @darkGrayColor;
+
+    &:focus {
+      outline: none;
+    }
+
+    & ~ label {
+      color: #cccccc;
+      .sourceSansProFont(700, 16px);
+      opacity: 1;
+      position: absolute;
+      bottom: 0;
+      margin: 0;
+      left: @inputPadding;
+      line-height: @inputHeight;
+      cursor: text;
+
+      transition: 1s;
+
+      &:after{
+        content:"";
+      }
+    }
+
+    &.input-content ~ label {
+      .sourceSansProFont(400, 10px);
+      line-height: 10px;
+      color: @grayColor;
+      bottom: 1px;
+    }
+
+    &.required.input-content ~ label:after {
+      content: "";
+    }
+    &.required.error{
+      border-color: red;
+    }
+
+    &.required ~ label {
+      &:after{
+        content:"*";
+        margin-left: 5px;
+        color: red;
+      }
+    }
+
+  }
+
+  .center {
+    text-align: center;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+  .member {
+    .gothamBookFont(12px);
+    color: @grayColor;
+    .letter-spacing-1();
+
+    a {
+      .gothamBoldFont(12px);
+    }
+  }
+  input[type="checkbox"] {
+    top: 0;
+
+    ~ label{
+      .sourceSansProFont(400, 12px);
+      color: @darkGrayColor;
+      .letter-spacing-1();
+      padding: 0;
+      margin-left: 5px;
+
+      &:after{
+        content: "";
+      }
+    }
+  }
+
+  .large-title {
+    .gothamBookFont(36px);
+    line-height: 40px;
+    .letter-spacing-1();
+    strong{
+      .gothamBoldFont(36px);
+    }
+  }
+
+  .btn-large {
+    min-width: 150px;
+    &.btn-empty {
+      min-width: 0;
+    }
+  }
+
+  .bold-regular-text {
+    .gothamBoldFont(14px);
+    line-height: 20px;
+    .letter-spacing-1();
+  }
+
+  .large-text {
+    .gothamBookFont(18px);
+    line-height: 24px;
+    .letter-spacing-1();
+  }
+
+  .regular-text {
+    .sourceSansProFont(400, 14px);
+    line-height: 20px;
+  }
+
+  .small-form-title {
+    .gothamBoldFont(14px);
+    .letter-spacing-1();
+  }
+}
+
+#incomplete-profile {
+  .gothamMediumFont(12px);
+  color: white;
+  .letter-spacing-1();
+  line-height: 24px;
+}

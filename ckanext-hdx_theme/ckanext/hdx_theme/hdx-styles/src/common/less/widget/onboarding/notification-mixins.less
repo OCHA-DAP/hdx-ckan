@@ -1,0 +1,32 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+
+@notificationPaddingSize: @paddingSmall;
+@notificationLineHeight: 20px;
+@notificationTitleHeight: 2*@notificationPaddingSize + @notificationLineHeight;
+
+
+.notification-widget-style(){
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.notification-title-style(){
+  .gothamBoldFont(16px);
+  color: @whiteColor;
+  background-color: @blueColor;
+  .letter-spacing-1();
+  line-height: 20px;
+  padding: @notificationPaddingSize;
+
+  .close {
+    margin-left: @notificationPaddingSize;
+    float: right;
+    top: 0;
+    color: @whiteColor;
+    opacity: 1;
+  }
+
+}

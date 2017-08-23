@@ -1,0 +1,25 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "notification";
+@import "onboarding-variables";
+
+@registeredHeight: 360px - @notificationTitleHeight;
+
+.registered-widget {
+  position: relative;
+  width: @popupWidth;
+  height: @registeredHeight;
+  background-color: @whiteColor;
+
+  padding: @notificationPaddingSize;
+
+  img {
+    height: 150px;
+  }
+
+  .bottom-actions {
+    position: absolute;
+    bottom: @notificationPaddingSize;
+    width: @popupWidth - 2*@notificationPaddingSize;
+  }
+}

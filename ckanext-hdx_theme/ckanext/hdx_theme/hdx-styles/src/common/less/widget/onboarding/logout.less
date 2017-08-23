@@ -1,0 +1,17 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+@import "notification";
+
+@logoutHeight: 360px - @notificationTitleHeight;
+
+.logout-widget {
+  padding: @notificationPaddingSize;
+  height: @logoutHeight;
+  background-color: @whiteColor;
+  width: @popupWidth;
+
+  img {
+    height: 150px;
+  }
+}

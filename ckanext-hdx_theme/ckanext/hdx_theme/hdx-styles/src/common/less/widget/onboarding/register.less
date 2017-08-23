@@ -1,0 +1,21 @@
+@import "../../base/mixins";
+@import "../../base/variables";
+@import "onboarding-variables";
+
+@widgetHeight: @baseHeight;
+
+.two-column-register {
+  .two-column-left {
+    height: @widgetHeight;
+
+    .envelope {
+      height: 250px;
+    }
+  }
+  .two-column-right {
+    height: @widgetHeight;
+    color: @blackColor;
+    padding: @paddingLarge @paddingLarge 0;
+
+  }
+}
