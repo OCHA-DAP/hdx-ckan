@@ -35,7 +35,6 @@ _get_or_bust = logic.get_or_bust
 NotFound = logic.NotFound
 
 IndicatorAccess = indicator_access.IndicatorAccess
-dataseries_list = widget_data_service.indicators_4_top_line_list
 
 
 @logic.side_effect_free
@@ -116,6 +115,7 @@ def hdx_topline_num_for_group(context, data_dict):
             item['source_system'] = 'datastore'
             del item['units']
     elif group_info.get('activity_level') == 'active':
+        # source is rw
         top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
             group_info).get_dataset_results()
 
@@ -142,7 +142,7 @@ def hdx_topline_num_for_group(context, data_dict):
     else:
         # source is CPS
         ckan_site_url = config.get('ckan.site_url')
-        indicator_dao = IndicatorAccess(id, dataseries_list, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
+        indicator_dao = IndicatorAccess(id, None, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
         cps_top_line_items = indicator_dao.fetch_indicator_data_from_cps()
         ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
         top_line_items = []
