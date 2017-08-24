@@ -628,7 +628,7 @@ def hdx_tag_list():
     return []
 
 
-def hdx_frequency_list(for_sysadmin=False):
+def hdx_frequency_list(for_sysadmin=False, include_value=None):
     result = [
         {'value': '-999', 'text': '-- Please select --', 'onlySysadmin': False},
         {'value': '1', 'text': 'Every day', 'onlySysadmin': False},
@@ -644,7 +644,7 @@ def hdx_frequency_list(for_sysadmin=False):
     ]
     filtered_result = result
     if not for_sysadmin:
-        filtered_result = [r for r in result if not r.get('onlySysadmin')]
+        filtered_result = [r for r in result if not r.get('onlySysadmin') or include_value == r.get('value')]
 
     return filtered_result
 

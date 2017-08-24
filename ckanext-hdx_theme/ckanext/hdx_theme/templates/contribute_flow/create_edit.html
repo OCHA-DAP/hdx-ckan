@@ -458,7 +458,7 @@
 
                                             </div>
 
-                                            {% set frequencies = h.hdx_frequency_list(user_is_sysadmin) %}
+                                            {% set frequencies = h.hdx_frequency_list(user_is_sysadmin, data.data_update_frequency) %}
                                             {% set frequency_attrs = {'data-module': 'bs_tooltip',  'data-module-placement': 'top',
                                                     'data-original-title': 'Your best guess of how often this dataset will be updated',
                                                     'data-toggle': 'tooltip'}
