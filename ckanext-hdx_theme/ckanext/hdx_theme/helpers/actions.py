@@ -381,23 +381,26 @@ def hdx_get_indicator_values(context, data_dict):
     '''
 
     transformer = transformers.FilterTransformer('#country+code', data_dict.get('l'))
-    source_url = 'https://test-data.humdata.org/dataset/08e69140-9f37-4b99-ab75-961845f8bba9/resource/e6cb8e05-84ee-4ed4-b781-f8a8cd7acd0b/download/worldbank_topline.csv'
-    mapping = {
-        '#country+code': 'countryCode',
-        '#date': 'date',
-        '#indicator+name': 'indicatorTypeName',
-        '#indicator+unit': 'unitName',
-        '#meta+source': 'sourceName',
-        '#meta+url': 'datasetLink',
-        '#value+amount': 'value',
-    }
-    result = transform_response_to_dict_list(do_hxl_transformation(source_url, transformer), mapping)
+    source_url = config.get('hdx.locations.toplines_url')
+    if source_url:
+        mapping = {
+            '#country+code': 'countryCode',
+            '#date': 'date',
+            '#indicator+name': 'indicatorTypeName',
+            '#indicator+unit': 'unitName',
+            '#meta+source': 'sourceName',
+            '#meta+url': 'datasetLink',
+            '#value+amount': 'value',
+        }
+        result = transform_response_to_dict_list(do_hxl_transformation(source_url, transformer), mapping)
 
-    for item in result:
-        if 'value' in item:
-            item['value'] = float(item['value'])
+        for item in result:
+            if 'value' in item:
+                item['value'] = float(item['value'])
 
-    return result
+        return result
+
+    return []
     #
     # endpoint = config.get('hdx.rest.indicator.endpoint') + '?'
     #
