@@ -48,7 +48,17 @@ class WidgetDataService(object):
                 'No top line numbers found for country: {}'.format(country_id))
             top_line_data = []
 
-        formatters.TopLineItemsWithDateFormatter(top_line_data).format_results()
+        class CustomFormatters(formatters.FormatterGettersSetters):
+            @staticmethod
+            def top_line_date_set(r, value):
+                r['datasetUpdateDate'] = value
+
+            @staticmethod
+            def top_line_date_get(r):
+                return r['date']
+
+        formatters.TopLineItemsWithDateFormatter(top_line_data, getter_setter_class=CustomFormatters,
+                                                 src_date_format='%Y-%m-%d').format_results()
 
 
 

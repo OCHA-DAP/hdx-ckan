@@ -384,10 +384,11 @@ def hdx_get_indicator_values(context, data_dict):
     source_url = 'https://test-data.humdata.org/dataset/08e69140-9f37-4b99-ab75-961845f8bba9/resource/e6cb8e05-84ee-4ed4-b781-f8a8cd7acd0b/download/worldbank_topline.csv'
     mapping = {
         '#country+code': 'countryCode',
-        '#date+year': 'time',
+        '#date': 'date',
         '#indicator+name': 'indicatorTypeName',
         '#indicator+unit': 'unitName',
         '#meta+source': 'sourceName',
+        '#meta+url': 'datasetLink',
         '#value+amount': 'value',
     }
     result = transform_response_to_dict_list(do_hxl_transformation(source_url, transformer), mapping)
