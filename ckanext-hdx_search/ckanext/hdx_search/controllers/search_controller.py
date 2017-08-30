@@ -203,7 +203,7 @@ class HDXSearchController(PackageController):
             params.append(('page', page))
             return self._search_url(params, package_type)
 
-        c.full_facet_info = self._search(package_type, pager_url)
+        c.full_facet_info = self._search(package_type, pager_url, default_sort_by='pageviews_last_14_days desc')
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 

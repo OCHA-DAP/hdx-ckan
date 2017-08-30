@@ -1,16 +1,13 @@
 import logging
-import urllib
-import urlparse
-import json
+
 
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
-import ckan.lib.helpers as ckan_helpers
+import ckan.authz as authz
 
 import ckanext.hdx_hxl_preview.actions.update as update
 import ckanext.hdx_hxl_preview.actions.get as get
 
-from pylons import config
 
 _ = plugins.toolkit._
 c = plugins.toolkit.c
@@ -62,14 +59,15 @@ class HdxHxlPreviewPlugin(plugins.SingletonPlugin):
 
     def setup_template_variables(self, context, data_dict):
         # resource_view_dict = data_dict.get('resource_view')
-        # resource_dict = data_dict.get('resource')
+        resource_dict = data_dict.get('resource')
 
         # start_edit_mode = 'true' if self.__is_allowed_to_edit(resource_dict) and \
         #                   not self.__is_hxl_preview_config_saved(resource_view_dict) else 'false'
 
+        has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': resource_dict.get('package_id')})
         return {
             'hxl_preview_full_url': get.hxl_preview_iframe_url_show({
-                'is_logged_in': True if c.user else False
+                'has_modify_permission': has_modify_permission
             }, data_dict)
         }
 

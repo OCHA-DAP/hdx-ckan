@@ -16,9 +16,11 @@ import ckan.model as model
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
+import ckanext.hdx_theme.hxl.transformers.transformers as transformers
 import ckanext.ytp.request.util as hdx_util
 import ckan.authz as authz
 from ckan.common import c, _
+from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
@@ -377,19 +379,42 @@ def hdx_get_indicator_values(context, data_dict):
     :param lang: language
     :type lang: string
     '''
-    endpoint = config.get('hdx.rest.indicator.endpoint') + '?'
 
-    filter_list = []
+    transformer = transformers.FilterTransformer('#country+code', data_dict.get('l'))
+    source_url = config.get('hdx.locations.toplines_url')
+    if source_url:
+        mapping = {
+            '#country+code': 'countryCode',
+            '#date': 'date',
+            '#indicator+name': 'indicatorTypeName',
+            '#indicator+unit': 'unitName',
+            '#meta+source': 'sourceName',
+            '#meta+url': 'datasetLink',
+            '#value+amount': 'value',
+        }
+        result = transform_response_to_dict_list(do_hxl_transformation(source_url, transformer), mapping)
 
-    for param_name in ['it', 'l', 'ds', 's', 'minTime', 'maxTime', 'periodType',
-                       'pageNum', 'pageSize', 'lang', 'sorting']:
-        param_values = data_dict.get(param_name, None)
-        filter_list = _add_to_filter_list(param_values, param_name, filter_list)
+        for item in result:
+            if 'value' in item:
+                item['value'] = float(item['value'])
 
-    filter_list.sort()
-    url = endpoint + "&".join(filter_list)
+        return result
 
-    return _make_rest_api_request(url)
+    return []
+    #
+    # endpoint = config.get('hdx.rest.indicator.endpoint') + '?'
+    #
+    # filter_list = []
+    #
+    # for param_name in ['it', 'l', 'ds', 's', 'minTime', 'maxTime', 'periodType',
+    #                    'pageNum', 'pageSize', 'lang', 'sorting']:
+    #     param_values = data_dict.get(param_name, None)
+    #     filter_list = _add_to_filter_list(param_values, param_name, filter_list)
+    #
+    # filter_list.sort()
+    # url = endpoint + "&".join(filter_list)
+    #
+    # return _make_rest_api_request(url)
 
 
 @logic.side_effect_free
