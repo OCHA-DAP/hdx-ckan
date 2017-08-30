@@ -207,6 +207,9 @@
                                     <li>
                                       <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>
                                     </li>
+                                    <li>
+                                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>
+                                    </li>
                               </ul>
                           </li>
                           {# if events.archived #}
@@ -290,6 +293,7 @@
                 {% endfor %}
                 <li class="crisis"><a href="{{h.url_for('group_read', id='ssd')}}">South Sudan</a></li>
                 <li class="crisis"><a href="{{h.url_for('group_read', id='syr')}}">Syria</a></li>
+                <li class="crisis"><a href="{{h.url_for('group_read', id='yem')}}">Yemen</a></li>
                 <li class="crisis"><a href="#"><span>Quicklinks / Archived</span></a></li>
                 {% for ev in events.archived %}
                   <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}">{{ ev.title }}</a></li>
