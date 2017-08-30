@@ -75,3 +75,21 @@
 .topline .indicator-prevalue {
   margin-left: 0px;
 }
+.faq-question-mark .question-mark {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 13px;
+  color: #fff;
+  padding: 3.5px 0;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  background-color: #007CE0;
+  text-align: center;
+}
+.vertically-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

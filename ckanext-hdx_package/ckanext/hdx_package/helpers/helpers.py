@@ -437,7 +437,7 @@ def generate_mandatory_fields():
         'dataset_source': selected_org.get('title'),
         'maintainer': user,
         'subnational': 1,
-        'data_update_frequency': config.get('hdx.default_frequency', '-1'),
+        'data_update_frequency': config.get('hdx.default_frequency', '-999'),
     }
     return data_dict
 

@@ -104,6 +104,10 @@ def _make_geopreview_request(gis_url):
 
 def add_init_shape_info_data_if_needed(resource_data):
 
+    # all resources should have a name
+    if 'name' not in resource_data:
+        log.error('This resource does NOT have a name: {}'.format(str(resource_data)))
+
     # If this is the first time that a resource has been uploaded it might not have a format.
     # The format detection only happens during the actual 'create' action.
     # That's why we're applying the same format detection function to name and url in case there's no format provided.

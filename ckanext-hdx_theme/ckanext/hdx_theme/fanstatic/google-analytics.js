@@ -271,6 +271,42 @@ $(
     /**
      *
      * @param {object} data
+     * @param {string} data.destinationUrl The faq question hashtag url
+     * @param {string} data.destinationLabel The faq question text
+     * @returns {boolean} true
+     */
+    function sendFaqClickEvent(data) {
+
+        var metadata = {
+            "page title": analyticsInfo.pageTitle
+        };
+        if (data.destinationUrl) {
+            metadata["destionation url"] = data.destinationUrl;
+        }
+        if (data.destinationLabel) {
+            metadata["destination label"] = data.destinationLabel;
+        }
+
+        var mixpanelData = {
+            "eventName": "faq click",
+            "eventMeta": metadata
+        };
+
+        var gaData = {
+            "eventCategory": (metadata["link type"] || "") + "faq click",
+            "eventAction": metadata["destionation url"],
+            "eventLabel": metadata["destination label"] || ""
+        };
+
+        return sendAnalyticsEventsAsync(mixpanelData, gaData);
+
+    }
+
+    hdxUtil.analytics.sendFaqClickEvent = sendFaqClickEvent;
+
+    /**
+     *
+     * @param {object} data
      * @param {?string} data.destinationUrl The url where the link was supposed to navigate
      * @param {?string} data.linkType One of: carousel, learn more faq, find data box, trending topic, main nav, footer
      * @returns {promise} Promise that gets fulfilled when the analytics tracking events were sent or time out exceeded

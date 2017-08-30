@@ -628,17 +628,29 @@ def hdx_tag_list():
     return []
 
 
-def hdx_frequency_list():
-    result = [{'value': '-1', 'text': '-- Please select --'}, {'value': '1', 'text': 'Every day'},
-              {'value': '7', 'text': 'Every week'}, {'value': '14', 'text': 'Every two weeks'},
-              {'value': '30', 'text': 'Every month'}, {'value': '90', 'text': 'Every three months'},
-              {'value': '180', 'text': 'Every six months'}, {'value': '365', 'text': 'Every year'},
-              {'value': '0', 'text': 'Never'}, ]
-    return result
+def hdx_frequency_list(for_sysadmin=False, include_value=None):
+    result = [
+        {'value': '-999', 'text': '-- Please select --', 'onlySysadmin': False},
+        {'value': '1', 'text': 'Every day', 'onlySysadmin': False},
+        {'value': '7', 'text': 'Every week', 'onlySysadmin': False},
+        {'value': '14', 'text': 'Every two weeks', 'onlySysadmin': False},
+        {'value': '30', 'text': 'Every month', 'onlySysadmin': False},
+        {'value': '90', 'text': 'Every three months', 'onlySysadmin': False},
+        {'value': '180', 'text': 'Every six months', 'onlySysadmin': False},
+        {'value': '365', 'text': 'Every year', 'onlySysadmin': False},
+        {'value': '0', 'text': 'Live', 'onlySysadmin': True},
+        {'value': '-2', 'text': 'Adhoc', 'onlySysadmin': True},
+        {'value': '-1', 'text': 'Never', 'onlySysadmin': True},
+    ]
+    filtered_result = result
+    if not for_sysadmin:
+        filtered_result = [r for r in result if not r.get('onlySysadmin') or include_value == r.get('value')]
+
+    return filtered_result
 
 
 def hdx_get_frequency_by_value(value):
-    freqs = hdx_frequency_list()
+    freqs = hdx_frequency_list(for_sysadmin=True)
     for freq in freqs:
         if value == freq.get('value'):
             return freq.get('text')
