@@ -297,7 +297,7 @@ class ContributeFlowController(base.BaseController):
                 data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
 
     def process_expected_update_frequency(self, data_dict):
-        if 'data_update_frequency' in data_dict and data_dict.get('data_update_frequency', '-1') == '-1':
+        if data_dict.get('data_update_frequency', '-999') == '-999':
             data_dict['data_update_frequency'] = None
 
     def process_methodology(self, data_dict):
