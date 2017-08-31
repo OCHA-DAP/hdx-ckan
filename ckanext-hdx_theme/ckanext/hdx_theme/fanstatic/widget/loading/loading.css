@@ -7,7 +7,7 @@
   vertical-align: middle;
 }
 .spinner-message {
-  color: #ffffff;
+  color: #fff;
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
   font-size: 14px;
@@ -42,7 +42,7 @@
 .spinkit-spinner > div {
   width: 18px;
   height: 18px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 100%;
   display: inline-block;
   -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;

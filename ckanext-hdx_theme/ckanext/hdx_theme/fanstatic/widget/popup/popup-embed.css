@@ -1,7 +1,7 @@
 /* Default link style */
 a,
 .dataset-heading a {
-  color: #007ce0;
+  color: #007CE0;
   text-decoration: none;
 }
 a:hover,
@@ -49,7 +49,7 @@ a:focus,
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 18px;
-  color: #000000;
+  color: #000;
   letter-spacing: 0;
 }
 .embed-link {
