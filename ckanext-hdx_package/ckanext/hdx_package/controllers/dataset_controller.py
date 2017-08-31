@@ -636,6 +636,8 @@ class DatasetController(PackageController):
             abort(400, _('Invalid revision format: %r') %
                   'Too many "@" symbols')
 
+        c.cps_off = config.get('hdx.cps.off', 'false')
+
         # check if package exists
         try:
             c.pkg_dict = get_action('package_show')(context, data_dict)
@@ -799,7 +801,10 @@ class DatasetController(PackageController):
                     # })
                 }
                 return render('indicator/hdx-hxl-read.html')
-            if int(c.pkg_dict['indicator']):
+
+            cps_off = config.get('hdx.cps.off', 'false')
+
+            if cps_off == 'false' and int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
                 if org_info_dict.get('custom_org', False):

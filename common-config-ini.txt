@@ -253,6 +253,9 @@ ytp.requests.redirect_to_src_page = true
 # The resource for topline data for active locations
 hdx.active_locations_reliefweb.resource_id = 9a698057-71b4-47b0-9d2b-753026ea8afa
 
+# The url containing a hxlated date with country topline numbers
+hdx.locations.toplines_url = https://test-data.humdata.org/dataset/08e69140-9f37-4b99-ab75-961845f8bba9/resource/e6cb8e05-84ee-4ed4-b781-f8a8cd7acd0b/download/worldbank_topline.csv
+
 #mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp = true
 hdx.mailchimp.list.newsletter = aaa-fake
@@ -264,3 +267,6 @@ hdx_portal = True
 ckanext.requestdata.newsletter_url = http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315
 ckanext.requestdata.twitter_url = https://twitter.com/humdata
 ckanext.requestdata.contact_email = hdx@un.org
+
+# CPS
+hdx.cps.off = true
