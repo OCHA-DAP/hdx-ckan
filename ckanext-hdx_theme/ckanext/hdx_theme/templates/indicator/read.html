@@ -84,6 +84,7 @@
 {% endblock %}
 
 {% block secondary %}
+    {% if not pkg.is_requestdata_type %}
     <div >
         <div id="dataset-downloads-data" style="display: none">
             {{ h.json_dumps(c.stats_downloads_last_weeks) }}
@@ -95,11 +96,12 @@
             </div>
         </div>
     </div>
-<div>
-    <h2 class="uppercase">{{_('Related Showcases')}}</h2>
-    {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
+    {% endif %}
+    <div>
+        <h2 class="uppercase">{{_('Related Showcases')}}</h2>
+        {% snippet "indicator/snippets/related_list.html", pkg=c.pkg, user=c.userobj, showcases=c.showcase_list %}
 
-</div>
+    </div>
   <div>
         <h2 class="uppercase">{{_('Activity')}}</h2>
         {# <span class="more" title="{{ _("Coming soon...") }}" data-module="bs_tooltip" data-module-placement="bottom" data-toggle="tooltip">See all</span> #}
