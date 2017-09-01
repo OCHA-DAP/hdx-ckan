@@ -23,10 +23,11 @@ _ = common._
 class IndicatorAccess(object):
 
     def __init__(self, country_code, dataseries_list, additional_cps_params_dict={}, recompute_units=False):
+
         self.__recompute_units = recompute_units
         self.__cps_params_dict = {
             'l': country_code.upper(),
-            'ds': [el[0] + '___' + el[1] for el in dataseries_list]
+            # 'ds': [el[0] + '___' + el[1] for el in dataseries_list]
         }
         self.__cps_params_dict.update(additional_cps_params_dict)
 
@@ -36,7 +37,7 @@ class IndicatorAccess(object):
         try:
             self.__cps_data = get_action('hdx_get_indicator_values')({}, self.__cps_params_dict)
             if self.__recompute_units:
-                for element in self.__cps_data.get('results', []):
+                for element in self.__cps_data:
                     value = element.get('value')
                     if value:
                         unit = common_functions.compute_simplifying_units(value)
