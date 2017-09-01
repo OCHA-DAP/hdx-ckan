@@ -49,7 +49,7 @@
   left: 10px;
 }
 .two-column-follow .two-column-right .selectable-list li input[type="checkbox"]:checked + div {
-  background-color: #007ce0;
+  background-color: #007CE0;
   opacity: 0.1;
 }
 .two-column-follow .two-column-right .selectable-list li div {

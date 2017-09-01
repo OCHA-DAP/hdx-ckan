@@ -22,7 +22,7 @@
                    data-original-title="Share">
                     {{ _("Share") }}
                 </a>
-                <a href="{{ c.org_meta.org_dict.link }}" target="_blank">{{ _('Visit Website') }}</a>
+                <a href="{{ c.org_meta.org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a>
                 {{ h.hdx_follow_button('group', c.org_meta.id, follow_extra_text=' ' ) }}
 
                 {% if c.org_meta.allow_req_membership %}

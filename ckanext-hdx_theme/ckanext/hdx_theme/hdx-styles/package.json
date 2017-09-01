@@ -1,0 +1,47 @@
+{
+  "name": "hdx-styles",
+  "version": "0.0.0",
+  "description": "Repo with HDX Common Styles ",
+  "license": "MIT",
+  "main": "",
+  "repository":"hdx-styles",
+  "author": {
+    "name": "Arti",
+    "email": "aalecs@gmail.com",
+    "url": ""
+  },
+  "scripts": {
+    "dev": "gulp",
+    "build": "gulp build",
+    "optimize": "gulp optimize",
+    "deploy": "gulp deploy",
+    "test": "mocha"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "browser-sync": "^2.16.1",
+    "critical": "^0.8.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.1",
+    "gulp-babel": "^6.1.1",
+    "gulp-beautify": "^2.0.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssimport": "^3.1.0",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-htmlmin": "1.3.0",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-jshint": "^2.0.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-less": "^3.0.5",
+    "gulp-sourcemaps": "^2.1.1",
+    "gulp-uglify": "^2.0.0",
+    "gulp-uncss": "^1.0.6"
+  },
+  "devDependencies": {
+    "mocha": "*"
+  }
+}

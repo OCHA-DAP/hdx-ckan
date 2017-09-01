@@ -14,15 +14,17 @@
 {% endblock %}
 
 {% block preview_link %}
-  <a data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}"
-     data-module-subchart="true" data-module-click_only="true"
-      {% if show_preview_on_first and loop.index == 1 %}
-        data-module-click_only_show="true"
-      {% endif %}
-     data-module-container="chart-container"
-     data-module-parent_selector=".dataset-item" style="cursor: pointer;">
-      Preview
-  </a>
+    {% if c.cps_off == 'false' %}
+      <a data-module="hdx-indicator-graph" data-module-label="{{ package.title }}" data-module-name="{{ package.title }}"
+         data-module-subchart="true" data-module-click_only="true"
+          {% if show_preview_on_first and loop.index == 1 %}
+            data-module-click_only_show="true"
+          {% endif %}
+         data-module-container="chart-container"
+         data-module-parent_selector=".dataset-item" style="cursor: pointer;">
+          Preview
+      </a>
+    {% endif%}
 {% endblock %}
 
 {% block follow_link %}

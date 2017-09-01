@@ -1,0 +1,26 @@
+@import "../crisis/topline";
+
+@topLineItemNumberFontSize: 56px;
+
+.faq-question-mark {
+  @questionMarkSize: 20px;
+  @questionMarkFontSize: 13px;
+  .question-mark {
+    .gothamMediumFont(@questionMarkFontSize);
+    font-size: @questionMarkFontSize;
+    line-height: @questionMarkFontSize;
+    color: @whiteColor;
+    padding: @questionMarkSize/2-@questionMarkFontSize/2 0;
+    height: @questionMarkSize;
+    width: @questionMarkSize;
+    border-radius: @questionMarkSize;
+    background-color: @blueColor;
+    text-align: center;
+  }
+}
+
+.vertically-center {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}

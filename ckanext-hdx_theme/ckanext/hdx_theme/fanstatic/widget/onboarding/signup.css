@@ -9,12 +9,12 @@
 .signup-widget {
   height: 560px;
   width: 890px;
-  background-color: #007ce0;
+  background-color: #007CE0;
   background-image: url('/images/backgrounds/pixels_white.png');
   background-repeat: no-repeat;
   background-position: bottom;
   background-size: 100%;
-  color: #ffffff;
+  color: #fff;
 }
 .signup-widget .close {
   margin-top: 25px;

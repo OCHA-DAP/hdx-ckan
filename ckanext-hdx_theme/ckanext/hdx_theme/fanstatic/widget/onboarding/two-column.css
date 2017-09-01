@@ -10,12 +10,12 @@
   width: 890px;
 }
 .two-column-widget .two-column-left {
-  background-color: #007ce0;
+  background-color: #007CE0;
   background-image: url('/images/backgrounds/pixels_white.png');
   background-repeat: no-repeat;
   background-position: left bottom;
   background-size: 200%;
-  color: #ffffff;
+  color: #fff;
   padding: 60px;
 }
 .two-column-widget .two-column-right {

@@ -1,7 +1,7 @@
 /* Default link style */
 a,
 .dataset-heading a {
-  color: #007ce0;
+  color: #007CE0;
   text-decoration: none;
 }
 a:hover,
@@ -49,27 +49,27 @@ a:focus,
   font-family: 'Gotham-Bold', sans-serif;
   font-weight: 400;
   font-size: 18px;
-  color: #000000;
+  color: #000;
   letter-spacing: 0;
 }
 #hxl-preview-popup.popup .content {
-  background-color: #ffffff;
+  background-color: #fff;
   width: 1260px;
   padding: 0;
 }
 #hxl-preview-popup.popup .content .header-row {
-  background-color: #007ce0;
+  background-color: #007CE0;
   margin-left: 0;
   margin-right: 0;
 }
 #hxl-preview-popup.popup .content .header-row .title {
-  color: #ffffff;
+  color: #fff;
 }
 #hxl-preview-popup.popup .content .header-row .pull-right {
   padding-top: 13px;
 }
 #hxl-preview-popup.popup .content .header-row .close {
-  color: #ffffff;
+  color: #fff;
   opacity: 1;
 }
 #hxl-preview-popup.popup .content .hxl-description {

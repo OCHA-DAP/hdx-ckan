@@ -21,6 +21,8 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.plugins
 import ckan.logic as logic
 import ckan.model as model
+import ckan.authz as authz
+
 from ckan.common import _, json, request, c, g, response
 from ckan.controllers.api import CONTENT_TYPES
 from ckan.controllers.home import CACHE_PARAMETERS
@@ -634,6 +636,8 @@ class DatasetController(PackageController):
             abort(400, _('Invalid revision format: %r') %
                   'Too many "@" symbols')
 
+        c.cps_off = config.get('hdx.cps.off', 'false')
+
         # check if package exists
         try:
             c.pkg_dict = get_action('package_show')(context, data_dict)
@@ -779,11 +783,12 @@ class DatasetController(PackageController):
                 c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
                 return render('indicator/hdx-shape-read.html')
             elif _default_view and _default_view.get('type') == 'hdx_hxl_preview':
-                hxl_view = _default_view.get('view')
+                # hxl_view = _default_view.get('view')
                 c.default_view = _default_view
+                has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': c.pkg_dict['id']})
                 c.hxl_preview_urls = {
                     'onlyView': get_action('hxl_preview_iframe_url_show')({
-                        'is_logged_in': True if c.user else False
+                        'has_modify_permission': has_modify_permission
                     }, {
                         'resource': _default_view.get('resource'),
                         'resource_view': _default_view.get('view'),
@@ -796,7 +801,10 @@ class DatasetController(PackageController):
                     # })
                 }
                 return render('indicator/hdx-hxl-read.html')
-            if int(c.pkg_dict['indicator']):
+
+            cps_off = config.get('hdx.cps.off', 'false')
+
+            if cps_off == 'false' and int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
                 if org_info_dict.get('custom_org', False):
