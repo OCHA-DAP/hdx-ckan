@@ -254,7 +254,7 @@ ytp.requests.redirect_to_src_page = true
 hdx.active_locations_reliefweb.resource_id = 9a698057-71b4-47b0-9d2b-753026ea8afa
 
 # The url containing a hxlated date with country topline numbers
-hdx.locations.toplines_url = https://test-data.humdata.org/dataset/08e69140-9f37-4b99-ab75-961845f8bba9/resource/e6cb8e05-84ee-4ed4-b781-f8a8cd7acd0b/download/worldbank_topline.csv
+hdx.locations.toplines_url = https://data.humdata.org/dataset/a0f8e926-9340-4034-a053-6c004c9bdee3/resource/9e90a441-43cc-4c69-b54f-41efabf57fa6/download/worldbank_topline.csv
 
 #mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp = true
