@@ -281,7 +281,7 @@ $(
             "page title": analyticsInfo.pageTitle
         };
         if (data.destinationUrl) {
-            metadata["destionation url"] = data.destinationUrl;
+            metadata["destination url"] = data.destinationUrl;
         }
         if (data.destinationLabel) {
             metadata["destination label"] = data.destinationLabel;
@@ -294,7 +294,7 @@ $(
 
         var gaData = {
             "eventCategory": (metadata["link type"] || "") + "faq click",
-            "eventAction": metadata["destionation url"],
+            "eventAction": metadata["destination url"],
             "eventLabel": metadata["destination label"] || ""
         };
 
