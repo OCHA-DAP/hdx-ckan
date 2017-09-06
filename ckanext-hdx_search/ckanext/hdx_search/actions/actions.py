@@ -23,10 +23,11 @@ def populate_showcase_items_count(context, data_dict):
     pkg_dict_list = data_dict.get('pkg_dict_list', {})
     for pkg_dict in pkg_dict_list:
         pkg = model.Package.get(pkg_dict['id'])
-        _check_access('package_show', context, pkg_dict)
+        # _check_access('package_show', context, pkg_dict)
         if pkg:
             try:
                 # showcase_items = get_action('ckanext_package_showcase_list')(context, {'package_id': pkg_dict.get('id')})
+                _check_access('package_show', context, pkg_dict)
                 pkg_dict['showcase_count'] = len(
                     hdx_get_package_showcase_id_list(context, {'package_id': pkg_dict.get('id')}))
             except Exception, e:
