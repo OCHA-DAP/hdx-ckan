@@ -280,7 +280,9 @@ class HDXSearchController(PackageController):
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
-                    if not param.startswith('ext_'):
+                    if param == 'fq':
+                        fq += ' %s' % (value,)
+                    elif not param.startswith('ext_'):
                         c.fields.append((param, value))
                         fq += ' %s:"%s"' % (param, value)
                         if param not in c.fields_grouped:

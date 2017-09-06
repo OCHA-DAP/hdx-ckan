@@ -221,6 +221,8 @@ class PagesController(HDXSearchController):
             elif key in get_default_facet_titles().keys():
                 for value in values_list:
                     fq += '%s:"%s" ' % (key, value)
+            elif key == 'fq':
+                fq += '%s ' % (values_list[0],)
             elif key == 'sort':
                 search_params['default_sort_by'] = values_list[0]
             elif key == 'ext_page_size':
