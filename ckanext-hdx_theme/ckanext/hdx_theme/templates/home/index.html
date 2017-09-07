@@ -90,7 +90,7 @@
                   <div class="col-xs-4">
                     <div class="row">
                       <div class="col-xs-12 itemCount">
-                        <a href="{% url_for 'simple_search', sort='metadata_modified desc' %}"
+                        <a href="{% url_for 'simple_search' %}"
                            data-module="count hdx_click_stopper" data-module-link_type="find data box"
                            data-url="{% url_for controller='ckanext.hdx_theme.helpers.count:CountController', action='dataset' %}">
                           0
@@ -153,8 +153,13 @@
     #}
     <div class="hdx-warning">
         <div class="hdx-warning-text">
-            <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" href="/search?q=(groups:atg+OR+groups:kna+OR+groups:vir+OR+groups:pri+OR+groups:hti+OR+groups:dom+OR+tags=hurricaneirma)&ext_page_size=25&sort=metadata_modified+desc&ext_cod=1">
-                Trending: <span class="hdx-warning-text-important">Hurricane Irma</span> &raquo;
+            <span class="light-text">Trending:</span>
+            <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" href="/search?fq=((tags:cod%20AND%20(groups:atg%20OR%20groups:aia%20OR%20groups:msr%20OR%20groups:kna%20OR%20groups:ant%20OR%20groups:maf%20OR%20groups:blm%20OR%20groups:glp%20OR%20groups:pri%20OR%20groups:vir))%20OR%20(tags:hurricaneirma%20OR%20tags:hurricane%20irma))&sort=metadata_modified+desc">
+                <span class="hdx-warning-text-important">Hurricane Irma</span>
+            </a>
+            <span class="light-text">&nbsp;and&nbsp;</span>
+            <a data-module="hdx_click_stopper" data-module-link_type="crisis bar" href="/search?fq=(((tags:cod%20OR%20tags:flood)%20AND%20(groups:ind%20OR%20groups:npl%20OR%20groups:bgd))%20OR%20(tags:fl20170815bgd%20OR%20tags:fl-2017-000108-bgd%20OR%20tags:fl-2017-000107-npl%20OR%20tags:fl-2017-000084-ind))&sort=metadata_modified+desc">
+                <span class="hdx-warning-text-important">Monsoon Flooding</span> &raquo;
             </a>
         </div>
     </div>
