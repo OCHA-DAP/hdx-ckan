@@ -17,6 +17,7 @@ Example:
 {% resource 'hdx_theme/dataset-search' %}
 {% resource 'hdx_theme/indicator' %}
 {% resource 'hdx_theme/jquery.highlight' %}
+{% resource 'hdx_theme/bs_tooltip.js' %}
 
 {% set min_version = full_facet_info.get("filters_selected") or full_facet_info.get("query_selected") %}
 {% set searchValue = request.params.get('q') if request.params.get('q') else '' %}
@@ -62,7 +63,13 @@ Example:
                             <input id="header-search-sort_initial_values" type="hidden" style="display: none" value="{{value}}" label="{{label}}" />
                             <input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>
                             <span class="dropdown-toggle-text">
-                                {{ label }}
+                                {% if label == 'Trending' %}
+                                    <span title="{{ _('Trending is determined by page views last 14 days') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
+                                       {{ label }}
+                                    </span>
+                                {% else %}
+                                    {{ label }}
+                                {% endif %}
                             </span>
                         {% endif %}
                     {% endfor %}
