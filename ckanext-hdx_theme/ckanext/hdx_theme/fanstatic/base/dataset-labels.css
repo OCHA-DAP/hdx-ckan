@@ -29,6 +29,7 @@
 }
 .label-icons span.download-counts {
   font-size: 12px;
+  white-space: nowrap;
 }
 ul.dataset-resources li + li.label-icons {
   border-left: 1px solid #888888;
