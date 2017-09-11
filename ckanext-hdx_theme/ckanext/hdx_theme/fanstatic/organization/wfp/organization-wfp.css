@@ -110,14 +110,17 @@
 }
 /* Default link style */
 a,
-.dataset-heading a {
+.dataset-heading a,
+a.test {
   color: #0088FF;
   text-decoration: none;
 }
 a:hover,
 .dataset-heading a:hover,
+a.test:hover,
 a:focus,
-.dataset-heading a:focus {
+.dataset-heading a:focus,
+a.test:focus {
   color: #005299;
   text-decoration: none;
 }
@@ -417,6 +420,7 @@ a:focus,
 }
 .label-icons span.download-counts {
   font-size: 12px;
+  white-space: nowrap;
 }
 ul.dataset-resources li + li.label-icons {
   border-left: 1px solid #888888;
