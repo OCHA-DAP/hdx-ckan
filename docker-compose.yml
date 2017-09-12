@@ -54,7 +54,7 @@ services:
       HDX_GISDB_PASS: gis
       HDX_SMTP_ADDR: localhost
       HDX_SMTP_PORT:: 25
-      HDX_SMTP_USER:: 
-      HDX_SMTP_PASS:
-      HDX_SMTP_TLS: False
+      HDX_SMTP_USER:: ''
+      HDX_SMTP_PASS: ''
+      HDX_SMTP_TLS: 'False'
 
