@@ -1081,7 +1081,7 @@ class DatasetController(PackageController):
 
         try:
             if request.method == 'POST':
-                get_action('package_purge')(context, {'id': id})  # Create new action to fully delete
+                get_action('dataset_purge')(context, {'id': id})  # Create new action to fully delete
                 h.flash_notice(_('Dataset has been deleted.'))
                 h.redirect_to(controller='user', action='dashboard_datasets')
             c.pkg_dict = get_action('package_show')(context, {'id': id})
