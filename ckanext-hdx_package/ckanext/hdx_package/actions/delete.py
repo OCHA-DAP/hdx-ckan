@@ -13,6 +13,7 @@ def hdx_dataset_purge(context, data_dict):
     return dataset_purge(context, dict)
 
 
+# needed to overwrite to check access "package_delete"
 def dataset_purge(context, data_dict):
     '''
     This runs the 'dataset_purge' action from core ckan's delete.py
@@ -34,8 +35,8 @@ def dataset_purge(context, data_dict):
     _check_access('package_delete', context, data_dict)
 
     members = model.Session.query(model.Member) \
-                   .filter(model.Member.table_id == pkg.id) \
-                   .filter(model.Member.table_name == 'package')
+        .filter(model.Member.table_id == pkg.id) \
+        .filter(model.Member.table_name == 'package')
     if members.count() > 0:
         for m in members.all():
             m.purge()
@@ -51,8 +52,8 @@ def dataset_purge(context, data_dict):
     pkg.purge()
     model.repo.commit_and_remove()
 
-    if is_requested_data_type:
-        toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})
+    # if is_requested_data_type:
+    #     toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})
     log.info('Dataset was purged, id was ' + data_dict.get('id'))
 
 
