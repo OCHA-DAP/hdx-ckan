@@ -24,7 +24,7 @@ getting_started = {
         {
             'q': 'Is HDX open source?',
             'a': 'Yes. HDX uses an open-source software called <a target="_blank"  href="http://ckan.org/">CKAN</a> '
-                 'for our technical back-end. We partner with <a target="_blank"  href="https://scraperwiki.com/">ScraperWiki</a> '
+                 'for our technical back-end. We partner with <a target="_blank"  href="http://sensiblecode.io/">Sensiblecode.io</a> '
                  'for data transformation and operations support. You can find all of our code on '
                  '<a target="_blank"  href="https://github.com/OCHA-DAP">GitHub</a>.',
         },
@@ -43,9 +43,10 @@ getting_started = {
                  'After signing up you can: '
                  '<ol>'
                  '<li> follow the latest changes to data, locations, organisations, topics and crises; </li> '
-                 '<li> share datasets publicly or privately, and join organisations to get access to private datasets*; </li>'
-                 '<li> add data visualizations as gallery items alongside datasets*; </li>'
-                 '<li> <a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">contact data contributors</a>. </li>'
+                 '<li> share datasets (or only metadata) publicly or privately; </li>'
+                 '<li> request access to datasets where only metadata has been shared and contact data contributors; </li>'
+                 '<li> join organisations to get access to private datasets*; </li>'
+                 '<li> add data visualizations as gallery items alongside datasets*. </li>'
                  '</ol> '
                  '<br/><br/><p>*You need to be affiliated with an organisation to access these features.</p>',
         },
@@ -55,6 +56,11 @@ getting_started = {
                  'that you follow will appear as a running list in your user dashboard(accessible from your user name '
                  'in the top right of every page when you are logged in). You can follow data, organisations, locations, '
                  'topics and crises.',
+        },
+        {
+            'q': 'How do I request access to a dataset where I can only see metadata?',
+            'a': 'You\'ll find a \'request data\' button in the data and resources section of every requestable dataset.'
+                 'Please find more details <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>.',
         },
         {
             'q': 'How do I contact a data contributor?',
@@ -184,11 +190,18 @@ sharing_data = {
                  'request to create a new organisation or ask to join an existing one. (See more under Organisations above.)',
         },
         {
+            'q': 'What if my data is sensitive?',
+            'a': 'You can publish your dataset\'s metadata on HDX without including the actual data. '
+                 'This enables people to find out about the existence of your data. '
+                 'They are then able to request access to it in HDX and you will be notified of any requests by email. '
+                 'Control of access is entirely within your hands and no sensitive data is stored on HDX during this process.',
+        },
+        {
             'q': 'Can I share data privately with my organisation\'s members?',
-            'a': 'Yes. For each dataset that you create, you have a choice of sharing publicly or restricting access to '
-                 'other members of the same organisation. The default visibility is set to private when you upload a '
-                 'new dataset. We encourage the open sharing of data, but we recognize that some data may not be '
-                 'suitable for public release.',
+            'a': 'Yes. For each dataset that you create, you have a choice of sharing data publicly, sharing only metadata publicly or restricting access to other members of the same organisation. '
+                 'The default visibility is set to private when you upload a new dataset. '
+                 'We encourage the open sharing of data, but we recognize that some data may not be suitable for public release in which case you can publish only metadata so that people can find and request your data. '
+                 'For fully restricted access (which we discourage), you can make your dataset and its metadata private so that only members of your organization can see it.',
         },
         {
             'q': 'What is the difference between a dataset and a resource?',
@@ -343,7 +356,7 @@ sharing_data = {
         },
         {
             'q': 'How do I access the HDX Python Library?',
-            'a': 'The library is open source software and available here: '
+            'a': 'The library is open source and is available here: '
                  '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">hdx-python-api</a>. Learn more '
                  'about the library in this <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">blog post</a>.'
         },
@@ -358,7 +371,7 @@ geodata = {
             'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it '
                  'recognizes. For a geographic preview to be generated, your data needs to be in either a zipped '
                  'shapefile, kml or geojson format.  Ensure that the \'File type\' field for the resource also has one of '
-                 'the above formats. Pro tip: HDX will automatically add the correct format if the extenion is '
+                 'the above formats. Pro tip: HDX will automatically add the correct format if the extension is '
                  '\'.shp.zip\', \'.kml\', or \'.geojson\'. Here are examples of geodata '
                  '<a href="https://data.humdata.org/dataset/somalia-schools">points</a>, '
                  '<a href="https://data.humdata.org/dataset/nigeria-water-courses-cod">lines</a>, and '
@@ -447,17 +460,15 @@ hdx_api = {
     'questions': [
         {
             'q': 'How do I access the HDX API?',
-            'a': 'There are two APIs for accessing HDX.  The best choice for most tasks is the HDX Python Library. '
-                 'The library is open source software available here: '
-                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">hdx-python-api</a>. '
-                 'Learn more about the library '
-                 '<a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
+            'a': 'There are two APIs for accessing HDX. '
+                 'The best choice for most tasks is the HDX Python Library which is open source and available here:'
+                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">https://github.com/OCHA-DAP/hdx-python-api</a>. '
+                 'The library is a wrapper around the the base CKAN API with additional features that simplify usage.'
+                 'Learn more about it <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
                  '<br/><br/>'
-                 'The HDX Python Library is essentially a wrapper around the most common functions of the base CKAN API, '
-                 'on which HDX is built.  HDX supports both the core '
-                 '<a target="_blank" href="http://docs.ckan.org/en/ckan-2.3.5/api/index.html">CKAN 2.3 API</a> '
-                 'and, for some datasets, the CKAN Datastore API. For more information, please e-mail '
-                 'hdx.feedback@gmail.com. We will be happy to assist you.'
+                 'HDX supports both the core <a target="_blank" href="http://docs.ckan.org/en/ckan-2.6.3/api/index.html">CKAN 2.6 API</a> '
+                 'and, for some datasets, the CKAN Datastore API. '
+                 'For more information, please e-mail <a href="mailto:hdx@un.org">hdx.feedback@gmail.com</a>. We will be happy to assist you.'
         },
     ]
 }
