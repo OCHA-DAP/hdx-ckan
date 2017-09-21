@@ -59,7 +59,7 @@ getting_started = {
         },
         {
             'q': 'How do I request access to a dataset where I can only see metadata?',
-            'a': 'You\'ll find a \'request data\' button in the data and resources section of every requestable dataset.'
+            'a': 'You\'ll find a \'request data\' button in the data and resources section of every requestable dataset. '
                  'Please find more details <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>.',
         },
         {

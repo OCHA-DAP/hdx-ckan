@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 
 def hdx_dataset_purge(context, data_dict):
-    return dataset_purge(context, dict)
+    return dataset_purge(context, data_dict)
 
 
 # needed to overwrite to check access "package_delete"
@@ -22,7 +22,7 @@ def dataset_purge(context, data_dict):
     model = context['model']
     id = _get_or_bust(data_dict, 'id')
     pkg = model.Package.get(id)
-    is_requested_data_type = _is_requested_data_type(pkg)
+    # is_requested_data_type = _is_requested_data_type(pkg)
 
     # core_delete.dataset_purge(context, data_dict)
 
