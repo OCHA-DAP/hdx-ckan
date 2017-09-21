@@ -33,7 +33,7 @@ ckan.module('hdx_custom_pages', function ($, _) {
             this.field_config = {
                 "empty":[],
                 "map":["data_url","section_title","max_height"],
-                "key_figures":["data_url","section_title","section_description"],
+                "key_figures":["data_url","section_title","section_description","max_height"],
                 "interactive_data":["data_url","section_title","section_description","max_height"],
                 "data_list":["data_url", "section_title"]
             };
