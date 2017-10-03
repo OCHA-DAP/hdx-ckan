@@ -136,8 +136,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
 
         with SubMapper(map, controller='ckanext.hdx_package.controllers.dataset_controller:DatasetController') as m:
             # m.connect('add dataset', '/dataset/new', action='new')
-            m.connect(
-                '/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
+            m.connect('/dataset/{id}/resource_delete/{resource_id}', action='resource_delete')
             m.connect('/dataset/{id}.{format}', action='read')
             m.connect('dataset_read', '/dataset/{id}', action='read',
                       ckan_icon='sitemap')
@@ -316,6 +315,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         from ckanext.hdx_package.helpers import helpers as hdx_actions
         return {
             'package_update': hdx_update.package_update,
+            'dataset_purge': hdx_delete.dataset_purge,
+            'hdx_dataset_purge': hdx_delete.hdx_dataset_purge,
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
             'hdx_package_update_metadata': hdx_update.hdx_package_update_metadata,
             'hdx_resource_update_metadata': hdx_update.hdx_resource_update_metadata,
@@ -327,7 +328,6 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
             'resource_show': hdx_get.resource_show,
-            'package_purge': hdx_delete.hdx_dataset_purge,
             # 'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,

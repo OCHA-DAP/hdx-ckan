@@ -13,6 +13,10 @@
   margin-left: auto;
   margin-right: auto;
 }
+.hdx-warning .hdx-warning-text .light-text {
+  font-family: "Gotham-Light", sans-serif;
+  color: #FFFFFF;
+}
 .hdx-warning .hdx-warning-text a {
   font-family: "Gotham-Light", sans-serif;
   font-size: 16px;
@@ -20,4 +24,13 @@
 }
 .hdx-warning-text .hdx-warning-text-important {
   font-family: 'Gotham-Bold', sans-serif;
+}
+@media (max-width: 767px) {
+  .hdx-warning {
+    min-width: 0;
+  }
+  .hdx-warning .hdx-warning-text {
+    padding: 0 10px;
+    width: 100%;
+  }
 }
