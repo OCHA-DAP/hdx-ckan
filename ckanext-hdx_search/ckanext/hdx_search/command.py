@@ -83,6 +83,10 @@ def buildIndex(path):
     index.append({'title': 'Lake Chad',
                   'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                                    action='read_event', id='lake-chad', qualified=True), 'type': 'event'})
+    index.append({'title': 'Rohingya Displacement',
+                  'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                                   action='read_event', id='rohingya-displacement', qualified=True), 'type': 'event'})
+
 
     ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
     # topic = Session.execute("select id from vocabulary where name='Topics'")
