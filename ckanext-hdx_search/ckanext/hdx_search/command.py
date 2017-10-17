@@ -87,6 +87,29 @@ def buildIndex(path):
                   'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
                                    action='read_event', id='rohingya-displacement', qualified=True), 'type': 'event'})
 
+    # visualizations
+
+    index.append({'title': 'Missing Migrants',
+                  'url': '//data.humdata.org/visualization/missing-migrants/ ', 'type': 'visualization'})
+    index.append({'title': 'Lake Chad Crisis Dashboard',
+                  'url': '//data.humdata.org/visualization/ocha-lake-chad/ ', 'type': 'visualization'})
+    index.append({'title': 'Nepal: Community Perceptions Survey',
+                  'url': '//ocha-dap.github.io/hdxviz-nepal-community-survey/ ', 'type': 'visualization'})
+    index.append({'title': 'Somalia Humanitarian Dashboard',
+                  'url': '//data.humdata.org/visualization/somalia-monitoring/ ', 'type': 'visualization'})
+    index.append({'title': 'Somalia Cash 3w',
+                  'url': '//ocha-dap.github.io/hdx-somalia-cash-v2/ ', 'type': 'visualization'})
+    index.append({'title': 'Chattam House Refugee Data',
+                  'url': '//baripembo.github.io/chathamhouse-refugeedata/ ', 'type': 'visualization'})
+    index.append({'title': 'Education Above All 3W',
+                  'url': '//ndongamadu.github.io/hdx-3w-education-above-all/ ', 'type': 'visualization'})
+    index.append({'title': 'South Sudan Map Explorer',
+                  'url': '//data.humdata.org/mpx/#/name/south-sudan/ ', 'type': 'visualization'})
+    index.append({'title': 'Lake Chad Map Explorer',
+                  'url': '//data.humdata.org/mpx/#/name/lake-chad ', 'type': 'visualization'})
+    index.append({'title': 'WFP Food Market Prices',
+                  'url': '//data.humdata.org/widget/WFP?type=WFP&datastore_id=bd88a565-bf6f-4827-b07b-fb3a65bbb01a&data_link_url=https%3A%2F%2Fdata.humdata.org%2Fdataset%2Fwfp-food-prices&embedded=true&title=Food+Market+Prices  ', 'type': 'visualization'})
+
 
     ## UNCOMMENT THIS TO ENABLE TOPIC PAGES AS WELL
     # topic = Session.execute("select id from vocabulary where name='Topics'")
