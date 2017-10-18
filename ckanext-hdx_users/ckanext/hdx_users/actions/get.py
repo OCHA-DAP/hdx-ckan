@@ -101,6 +101,7 @@ def hdx_send_reset_link(context, data_dict):
     if recipient_mail:
         hdx_mailer.mail_recipient([{'display_name': user_fullname, 'email': recipient_mail}], subject, body)
 
+
 @logic.validate(logic.schema.default_autocomplete_schema)
 def hdx_user_autocomplete(context, data_dict):
     '''Return a list of user names that contain a string.
@@ -121,17 +122,20 @@ def hdx_user_autocomplete(context, data_dict):
     _check_access('user_autocomplete', context, data_dict)
 
     q = data_dict['q']
-    if (data_dict['__extras']):
+    if data_dict['__extras']:
         org = data_dict['__extras']['org']
     limit = data_dict.get('limit', 20)
 
     query = model.User.search(q)
-    query = query.filter(model.User.state != model.State.DELETED)
-    if (org):
+    query = query.filter(model.User.state == model.State.ACTIVE)
+    if org:
+        # org_obj = model.Group.get(org)
+        # org_id = org_obj.id if org_obj else org
         query = query.filter(model.User.id == model.Member.table_id) \
-                     .filter(model.Member.table_name == "user") \
-                     .filter(model.Member.group_id == model.Group.id) \
-                     .filter(model.Group.name == org)
+            .filter(model.Member.table_name == "user") \
+            .filter(model.Member.group_id == model.Group.id) \
+            .filter((model.Group.name == org) | (model.Group.id == org)) \
+            .filter(model.Member.state == model.State.ACTIVE)
 
     query = query.limit(limit)
 
