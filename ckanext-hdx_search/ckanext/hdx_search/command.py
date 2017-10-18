@@ -99,10 +99,10 @@ def buildIndex(path):
                   'url': '//data.humdata.org/visualization/somalia-monitoring/ ', 'type': 'visualization'})
     index.append({'title': 'Somalia Cash 3w',
                   'url': '//ocha-dap.github.io/hdx-somalia-cash-v2/ ', 'type': 'visualization'})
-    index.append({'title': 'Chattam House Refugee Data',
-                  'url': '//baripembo.github.io/chathamhouse-refugeedata/ ', 'type': 'visualization'})
-    index.append({'title': 'Education Above All 3W',
-                  'url': '//ndongamadu.github.io/hdx-3w-education-above-all/ ', 'type': 'visualization'})
+    # index.append({'title': 'Chattam House Refugee Data',
+    #               'url': '//baripembo.github.io/chathamhouse-refugeedata/ ', 'type': 'visualization'})
+    # index.append({'title': 'Education Above All 3W',
+    #               'url': '//ndongamadu.github.io/hdx-3w-education-above-all/ ', 'type': 'visualization'})
     index.append({'title': 'South Sudan Map Explorer',
                   'url': '//data.humdata.org/mpx/#/name/south-sudan/ ', 'type': 'visualization'})
     index.append({'title': 'Lake Chad Map Explorer',
