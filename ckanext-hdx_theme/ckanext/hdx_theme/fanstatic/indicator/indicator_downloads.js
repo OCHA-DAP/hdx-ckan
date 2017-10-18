@@ -21,7 +21,7 @@ function setupDatasetDownloads(dataDivId, placeholderDivId, extraConfigs){
             multiplier *= 10;
         }
         roundMaxDownloads = roundMaxDownloads*10; multiplier /= 10;
-        roundMaxDownloads = Math.floor(roundMaxDownloads);
+        roundMaxDownloads = Math.ceil(roundMaxDownloads);
         roundMaxDownloads *= multiplier;
 
         var tickValues = [roundMaxDownloads/4, roundMaxDownloads/2, 3*roundMaxDownloads/4, roundMaxDownloads];
