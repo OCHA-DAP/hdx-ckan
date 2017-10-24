@@ -27,10 +27,10 @@ $(document).ready(function(){
                 'downloads': 'Downloads'
 
             },
-            axes: {
-                'pageview': 'y',
-                'downloads': 'y2'
-            }
+            // axes: {
+            //     'pageview': 'y',
+            //     'downloads': 'y2'
+            // }
         },
         axis: {
             x: {
@@ -39,13 +39,13 @@ $(document).ready(function(){
                     format: '%Y-%m-%d'
                 }
             },
-            y: {
-                label: "Page Views"
-            },
-            y2: {
-                label: "Downloads",
-                show: true
-            }
+            // y: {
+            //     label: "Page Views"
+            // },
+            // y2: {
+            //     label: "Downloads",
+            //     show: true
+            // }
         },
         grid: {
           y: {
