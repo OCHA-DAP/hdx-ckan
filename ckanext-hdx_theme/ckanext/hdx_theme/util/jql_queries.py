@@ -7,8 +7,8 @@ gets all download events and counts occurrences of unique combinations of user, 
 
 function main() {{
   return Events({{
-    from_date: '2016-08-01',
-    to_date: '2017-08-09',
+    from_date: '{}',
+    to_date: '{}',
     event_selectors: [{{event: "resource download"}}]
   }})
   .groupBy(["distinct_id","properties.resource id","properties.dataset id",mixpanel.numeric_bucket('time',mixpanel.daily_time_buckets)],mixpanel.reducer.count())
