@@ -93,6 +93,17 @@
 .btn-empty-black:focus {
   color: #000;
 }
+.btn-empty-blue {
+  border: 1px solid #007CE0;
+  color: #007CE0;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.btn-empty-blue:hover,
+.btn-empty-blue:focus {
+  color: #007CE0;
+  border-color: #007CE0;
+}
 .btn-blue-on-white,
 .btn-blue-on-white:hover,
 .btn-blue-on-white:focus {
