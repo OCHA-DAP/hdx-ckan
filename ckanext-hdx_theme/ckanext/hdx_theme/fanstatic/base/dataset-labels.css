@@ -17,9 +17,6 @@
 .dataset-resources li {
   display: inline;
 }
-.dataset-resources li a {
-  background-color: #aaaaaa;
-}
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;
@@ -42,6 +39,7 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 0;
   box-shadow: none;
   color: #FFFFFF;
+  background-color: #aaaaaa;
   display: inline-block;
   margin-right: 6px;
   margin-bottom: 4px;

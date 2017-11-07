@@ -359,6 +359,17 @@ def package_show(context, data_dict):
         log.debug('Dataset {} has {} page views in the last 14 days'.format(package_dict['id'], pageviews_last_14_days))
         package_dict['pageviews_last_14_days'] = pageviews_last_14_days
 
+    if _should_manually_load_property_value(context, package_dict, 'has_quickcharts'):
+        package_dict['has_quickcharts'] = False
+        for resource_dict in package_dict.get('resources', []):
+            resource_views = get_action('resource_view_list')(context, {'id': resource_dict['id']}) or []
+            for view in resource_views:
+                if view.get("view_type") == 'hdx_hxl_preview':
+                    package_dict['has_quickcharts'] = True
+                    break
+
+
+
     return package_dict
 
 
