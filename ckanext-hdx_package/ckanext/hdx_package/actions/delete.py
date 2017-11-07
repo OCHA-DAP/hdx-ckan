@@ -62,3 +62,25 @@ def _is_requested_data_type(entity):
         if extra.key == 'is_requestdata_type':
             return 'true' == extra.value
     return False
+
+
+def resource_view_delete(context, data_dict):
+    ''' Wraps the default resource_view_delete ALSO reindexing the package
+
+    :param id: the id of the resource_view
+    :type id: string
+
+    '''
+    from ckan.lib.search import rebuild
+
+    core_delete.resource_view_delete(context, data_dict)
+
+    resource = context.get('resource')
+    package_id = resource.package_id
+
+    try:
+        rebuild(package_id)
+    except NotFound:
+        log.error("Error: package {} not found.".format(package_id))
+    except Exception, e:
+        log.error(str(e))

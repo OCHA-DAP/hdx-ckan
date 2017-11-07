@@ -584,7 +584,7 @@ class HDXSearchController(PackageController):
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
 
-        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational']
+        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts']
 
         for param in checkboxes:
             if param in search_extras:
@@ -593,6 +593,7 @@ class HDXSearchController(PackageController):
         num_of_indicators = 0
         num_of_cods = 0
         num_of_subnational = 0
+        num_of_quickcharts = 0
         for category_key, category_title in title_translations.items():
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
@@ -601,6 +602,8 @@ class HDXSearchController(PackageController):
                 num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
             elif category_key == 'subnational':
                 num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+            elif category_key == 'quickcharts':
+                num_of_quickcharts = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
             else:
                 sorted_item_list = []
                 for item in item_list:
