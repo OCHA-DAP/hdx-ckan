@@ -25,6 +25,12 @@
     {% if package.subnational %}
       <span class="icon-subnational" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
     {% endif %}
+    {% if package.has_quickcharts %}
+        <a href="{% url_for controller='package', action='search', ext_quickcharts=1 %}">
+            <span class="icon-quickchart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
+                  data-module-placement="top" data-toggle="tooltip"></span>
+        </a>
+    {% endif %}
     {% if popular %}
       {#
       {% if c.search %}

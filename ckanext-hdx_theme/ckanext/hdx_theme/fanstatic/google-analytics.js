@@ -50,6 +50,11 @@ $(
                     'name': 'subnational filter',
                     'isList': false,
                     'mandatory': true
+                },
+                'ext_quickcharts': {
+                    'name': 'quickcharts filter',
+                    'isList': false,
+                    'mandatory': true
                 }
             };
 
