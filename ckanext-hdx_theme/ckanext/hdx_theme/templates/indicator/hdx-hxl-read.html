@@ -22,7 +22,7 @@
         </div>
         <div class="col-xs-12">
             <div class="pull-right mTB15">
-                <a href="http://feature-tools.humdata.org/wizard/?url={{c.default_view.resource.url}}" class="btn btn-empty btn-empty-blue">
+                <a href="http://feature-tools.humdata.org/wizard/?{{ h.urlencode({'url': c.default_view.resource.url}) }}" class="btn btn-empty btn-empty-blue">
                     &raquo; Make quick charts on <img style="height: 1.4em; vertical-align: middle;" src="/images/homepage/logo-tools.png" />
                 </a>
             </div>
