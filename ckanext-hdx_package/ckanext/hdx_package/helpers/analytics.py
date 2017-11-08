@@ -115,6 +115,7 @@ def generate_analytics_data(dataset_dict):
         analytics_dict['isIndicator'] = 'false'
         analytics_dict['groupNames'] = '[]'
         analytics_dict['groupIds'] = '[]'
+        analytics_dict['datasetAvailability'] = None
     return analytics_dict
 
 

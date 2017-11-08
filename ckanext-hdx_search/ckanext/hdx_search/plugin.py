@@ -56,22 +56,30 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         if 'facet.field' in search_params and 'vocab_Topics' not in search_params['facet.field']:
             search_params['facet.field'].append('vocab_Topics')
 
-        def adapt_solr_fq(param_name):
+        def adapt_solr_fq(param_name, fq_filter_1=None, fq_filter_0=None):
             '''
             :param param_name: request param name without the "ext_" part, for example "indicator"
             :type str:
             '''
             req_param = 'ext_{}'.format(param_name)
             solr_param = 'extras_{}'.format(param_name)
+
+            if not fq_filter_1:
+                fq_filter_1 = ' +{}:1'.format(solr_param)
+            if not fq_filter_0:
+                fq_filter_0 = ' -{}:1'.format(solr_param)
+
+
             if req_param in search_params['extras']:
                 if int(search_params['extras'][req_param]) == 1:
-                    search_params['fq'] += ' +{}:1'.format(solr_param)
+                    search_params['fq'] += fq_filter_1
                 elif int(search_params['extras'][req_param]) == 0:
-                    search_params['fq'] += ' -{}:1'.format(solr_param)
+                    search_params['fq'] += fq_filter_0
 
         # If indicator flag is set, search only that type
-        adapt_solr_fq("indicator")
-        adapt_solr_fq("subnational")
+        adapt_solr_fq('indicator')
+        adapt_solr_fq('subnational')
+        adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
 
         return search_params
 
@@ -100,5 +108,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def dataset_facets(self, facets_dict, package_type):
         facets_dict['indicator'] = _('Indicators')
         facets_dict['subnational'] = _('Subnational')
+        facets_dict['quickcharts'] = _('Quick charts')
 
         return facets_dict
