@@ -23,6 +23,8 @@ _get_action = logic.get_action
 _check_access = logic.check_access
 _get_or_bust = logic.get_or_bust
 
+NotFound = logic.NotFound
+
 log = logging.getLogger(__name__)
 
 @geopreview.geopreview_4_resources
@@ -251,3 +253,40 @@ def hdx_create_screenshot_for_cod(context, data_dict):
 
     if is_cod(dataset_dict) == 'true':
         screenshot.create_screenshot(dataset_dict)
+
+
+def resource_view_create(context, data_dict):
+    ''' Wraps the default resource_view_create ALSO reindexing the package
+
+    :param resource_id: id of the resource
+    :type resource_id: string
+    :param title: the title of the view
+    :type title: string
+    :param description: a description of the view (optional)
+    :type description: string
+    :param view_type: type of view
+    :type view_type: string
+    :param config: options necessary to recreate a view state (optional)
+    :type config: JSON string
+
+    :returns: the newly created resource view
+    :rtype: dictionary
+
+    '''
+
+    from ckan.lib.search import rebuild
+
+    result = core_create.resource_view_create(context, data_dict)
+
+    if data_dict.get('view_type') == 'hdx_hxl_preview':
+        resource = context.get('resource')
+        package_id = resource.package_id
+
+        try:
+            rebuild(package_id)
+        except NotFound:
+            log.error("Error: package {} not found.".format(package_id))
+        except Exception, e:
+            log.error(str(e))
+
+    return result

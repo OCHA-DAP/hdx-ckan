@@ -75,11 +75,11 @@ def resource_view_delete(context, data_dict):
 
     core_delete.resource_view_delete(context, data_dict)
 
-    resource = context.get('resource')
-    package_id = resource.package_id
-
     try:
-        rebuild(package_id)
+        if context.get('resource_view').view_type == 'hdx_hxl_preview':
+            resource = context.get('resource')
+            package_id = resource.package_id
+            rebuild(package_id)
     except NotFound:
         log.error("Error: package {} not found.".format(package_id))
     except Exception, e:
