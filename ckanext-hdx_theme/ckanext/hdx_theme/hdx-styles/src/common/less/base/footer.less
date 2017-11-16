@@ -1,0 +1,167 @@
+/**
+ * HDX Footer
+ */
+
+@import "variables";
+@import "mixins";
+
+.hdx-footer {
+    .titlePlusVersion{
+        color: #888888;
+        .gothamBookFont(12px);
+    }
+
+    .logo-gray {
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .mailChimpForm {
+        .subscribeText {
+            .gothamMediumFont(12px);
+            margin-bottom: 10px;
+            color: @extraLightGrayColor;
+        }
+
+        input[type="email"] {
+            height: 44px;
+            border-color: #ffffff;
+            box-shadow: none;
+            line-height: 14px;
+            border: 0;
+            border-radius: 3px;
+            width: 280px;
+            margin: 0;
+            padding: 5px;
+        }
+
+        form{
+            margin: 0;
+        }
+
+        .response{
+            color: #ffffff;
+        }
+
+        .btn.btn-primary {
+            height: 44px;
+            margin-left: 20px;
+            padding: 0 20px;
+        }
+    }
+
+    .links-list {
+        .sourceSansProFont(400, 15px);
+        color: @grayColor;
+
+        &:after{
+            content: none;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+
+            li, a {
+                .gothamBoldFont(12px);
+                color: @extraLightGrayColor;
+
+                .glyphicon-new-window {
+                    color: @grayColor;
+                    margin-left: 3px;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        .logo-tools-gray {
+            height: 24px;
+            margin: 10px 0;
+        }
+    }
+
+
+    .social-footer {
+        height: 100px;
+        position: relative;
+
+        .social-links {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+        }
+
+        .product-links {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+
+            .sourceSansProFont(400, 15px);
+
+            img {
+                margin-left: 20px;
+            }
+        }
+
+    }
+
+
+    .col-xs-12 > .row {
+        vertical-align: middle;
+        padding-top: 60px;
+        padding-bottom: 60px;
+    }
+    .mainLinks{
+        margin: 0;
+        padding-left: 0;
+    }
+
+    .mainLinks li a{
+        font-family: 'Gotham-Bold', sans-serif;
+        font-weight: 400;
+        font-size: 12px;
+        color: #ffffff;
+        text-transform: uppercase;
+    }
+
+
+    .otherLicenseText{
+        /*width: 320px;*/
+        color: #ffffff;
+        font-weight: 300;
+    }
+
+    a.social-icon {
+		background-image: url("@{imagePath}/homepage/socialBlog.png");
+		background-size: 250px 64px;
+        background-color: #404040;
+        border-radius: 3px;
+        float: left;
+        height: 25px;
+        list-style: none;
+        margin-left: 4px;
+        width: 25px;
+	}
+
+    a.social-icon:hover{
+        background-color: #007ce0;
+    }
+    a.social-icon.twitter{
+        background-position: -163px -3px;
+    }
+
+    a.social-icon.github{
+        background-position:  -3px -3px;
+    }
+
+    a.social-icon.email{
+        background-position: -67px -36px;
+    }
+
+    a.social-icon.rss{
+        background-position: -224px -4px;
+    }
+
+}
