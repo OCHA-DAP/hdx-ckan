@@ -1665,6 +1665,14 @@ ul.list-horizontal li:first-child:before {
   top: 50%;
   transform: translate(0, -50%);
 }
+.hdx-footer .social-footer .social-links a {
+  margin-left: 15px;
+}
+.hdx-footer .social-footer .social-links a svg {
+  height: 18px;
+  width: 18px;
+  fill: #cccccc;
+}
 .hdx-footer .social-footer .product-links {
   position: absolute;
   right: 0;
