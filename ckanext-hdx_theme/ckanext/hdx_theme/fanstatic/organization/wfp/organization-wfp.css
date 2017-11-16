@@ -419,9 +419,6 @@ a.test:focus {
 .dataset-resources li {
   display: inline;
 }
-.dataset-resources li a {
-  background-color: #aaaaaa;
-}
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;
@@ -444,6 +441,7 @@ ul.dataset-resources li + li.label-icons {
   border-radius: 0;
   box-shadow: none;
   color: #FFFFFF;
+  background-color: #aaaaaa;
   display: inline-block;
   margin-right: 6px;
   margin-bottom: 4px;
@@ -1657,6 +1655,147 @@ ul.list-horizontal li:first-child:before {
 .form-explanation .cloud-img {
   height: 21px;
   margin-right: 3px;
+}
+/**
+ * HDX Footer
+ */
+.hdx-footer .titlePlusVersion {
+  color: #888888;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+}
+.hdx-footer .logo-gray {
+  height: 40px;
+  margin-bottom: 10px;
+}
+.hdx-footer .mailChimpForm .subscribeText {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #eeeeee;
+}
+.hdx-footer .mailChimpForm input[type="email"] {
+  height: 44px;
+  border-color: #ffffff;
+  box-shadow: none;
+  line-height: 14px;
+  border: 0;
+  border-radius: 3px;
+  width: 280px;
+  margin: 0;
+  padding: 5px;
+}
+.hdx-footer .mailChimpForm form {
+  margin: 0;
+}
+.hdx-footer .mailChimpForm .response {
+  color: #ffffff;
+}
+.hdx-footer .mailChimpForm .btn.btn-primary {
+  height: 44px;
+  margin-left: 20px;
+  padding: 0 20px;
+}
+.hdx-footer .links-list {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  color: #888888;
+}
+.hdx-footer .links-list:after {
+  content: none;
+}
+.hdx-footer .links-list ul {
+  list-style: none;
+  padding: 0;
+}
+.hdx-footer .links-list ul li,
+.hdx-footer .links-list ul a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #eeeeee;
+}
+.hdx-footer .links-list ul li .glyphicon-new-window,
+.hdx-footer .links-list ul a .glyphicon-new-window {
+  color: #888888;
+  margin-left: 3px;
+  font-weight: 400;
+}
+.hdx-footer .links-list .logo-tools-gray {
+  height: 24px;
+  margin: 10px 0;
+}
+.hdx-footer .social-footer {
+  height: 100px;
+  position: relative;
+}
+.hdx-footer .social-footer .social-links {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.hdx-footer .social-footer .product-links {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+}
+.hdx-footer .social-footer .product-links img {
+  margin-left: 20px;
+}
+.hdx-footer .col-xs-12 > .row {
+  vertical-align: middle;
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+.hdx-footer .mainLinks {
+  margin: 0;
+  padding-left: 0;
+}
+.hdx-footer .mainLinks li a {
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.hdx-footer .otherLicenseText {
+  /*width: 320px;*/
+  color: #ffffff;
+  font-weight: 300;
+}
+.hdx-footer a.social-icon {
+  background-image: url("/images/homepage/socialBlog.png");
+  background-size: 250px 64px;
+  background-color: #404040;
+  border-radius: 3px;
+  float: left;
+  height: 25px;
+  list-style: none;
+  margin-left: 4px;
+  width: 25px;
+}
+.hdx-footer a.social-icon:hover {
+  background-color: #007ce0;
+}
+.hdx-footer a.social-icon.twitter {
+  background-position: -163px -3px;
+}
+.hdx-footer a.social-icon.github {
+  background-position: -3px -3px;
+}
+.hdx-footer a.social-icon.email {
+  background-position: -67px -36px;
+}
+.hdx-footer a.social-icon.rss {
+  background-position: -224px -4px;
 }
 /* Body Background */
 body {
