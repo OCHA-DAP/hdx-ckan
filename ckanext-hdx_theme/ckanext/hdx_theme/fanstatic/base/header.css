@@ -1651,6 +1651,14 @@ ul.list-horizontal li:first-child:before {
   margin-left: 3px;
   font-weight: 400;
 }
+.hdx-footer .links-list ul li svg,
+.hdx-footer .links-list ul a svg {
+  fill: #888888;
+  margin-bottom: -1px;
+  margin-left: 3px;
+  height: 12px;
+  width: 12px;
+}
 .hdx-footer .links-list .logo-tools-gray {
   height: 24px;
   margin: 10px 0;
