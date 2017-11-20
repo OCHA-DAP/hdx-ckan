@@ -208,7 +208,8 @@ class ValidationController(ckan.controllers.user.UserController):
                 _ckan_site_url = config.get('ckan.site_url', '#')
                 _came_from = str(request.referrer or _ckan_site_url)
 
-                if _ckan_site_url != _came_from and '/user/validate/' not in _came_from:
+                excluded_paths = ['/user/validate/', 'user/logged_in?__logins', 'user/logged_out_redirect']
+                if _ckan_site_url != _came_from and not any(path in _came_from for path in excluded_paths):
                     h.redirect_to(_came_from)
 
                 h.flash_success(_("%s is now logged in") % user_dict['display_name'])
