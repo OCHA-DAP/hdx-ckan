@@ -9,6 +9,10 @@
   display: table-cell;
   vertical-align: middle;
 }
+.hdx-footer {
+  position: relative;
+  z-index: 100;
+}
 .hdx-footer .titlePlusVersion {
   color: #888888;
   font-family: 'Gotham-Book', sans-serif;
