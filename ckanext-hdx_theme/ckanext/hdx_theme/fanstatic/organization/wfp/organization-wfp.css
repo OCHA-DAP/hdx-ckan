@@ -1659,6 +1659,10 @@ ul.list-horizontal li:first-child:before {
 /**
  * HDX Footer
  */
+.hdx-footer {
+  position: relative;
+  z-index: 100;
+}
 .hdx-footer .titlePlusVersion {
   color: #888888;
   font-family: 'Gotham-Book', sans-serif;
@@ -1694,8 +1698,9 @@ ul.list-horizontal li:first-child:before {
   color: #ffffff;
 }
 .hdx-footer .mailChimpForm .btn.btn-primary {
-  height: 44px;
-  margin-left: 20px;
+  height: 45px;
+  margin-left: 7px;
+  margin-top: -3px;
   padding: 0 20px;
 }
 .hdx-footer .links-list {
