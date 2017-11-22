@@ -4,9 +4,13 @@ ADDING NEW DATASET FIELD (including indexing in solr)
 Example fields: *has_quickcharts* - not stored but based on existing resource view of type *hdx_hxl_preview*
 
 computed - steps marked with *computed* should be done for dataset properties that are computed (not stored in the db)
+
 saved - steps marked with *saved* should be done for dataset properties that are stored in the db
+
 indexed - steps marked with *indexed* should be done for dataset properties that are indexed in solr
+
 filtering - steps marked with *filtering* should be done for dataset properties which will be used for filters
+
 
 STEPS
 -----
