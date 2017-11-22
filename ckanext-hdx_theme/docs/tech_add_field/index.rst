@@ -38,7 +38,9 @@ STEPS
    * transform the HTTP request param (ext_quickcharts) into **fq** param for solr. In *before_search()*
    * add translation for the facet (how it should appear in UI). In *dataset_facets()*
 
-#. In solr's `schema.xml <../../../ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml>`_ (indexed)
+#. In solr's `schema.xml <../../../ckanext-hdx_search/ckanext/hdx_search/hdx-solr/schema.xml>`_ (indexed) ::
+
+   <field name="has_quickcharts" type="boolean" indexed="true" stored="true"/>
 
 #. In the validation schemas - it should at least be part of the validation *show* schema for computed.
    Otherwise, for saved, properties it should be part of the *create* and *update* schemas as well.
@@ -48,4 +50,5 @@ STEPS
 #. For Mixpanel / Google Analytics to track filterting by this property.
    Change this in `google_analytics.js <../../../ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/google-analytics.js>`_,
    in the *setUpSearchTracking()* function
-   (indexed, filtering)
+   (indexed, filtering) 
+
