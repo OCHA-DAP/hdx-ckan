@@ -8,7 +8,7 @@ smtp_use_tls     = ${HDX_SMTP_TLS}
 [server:main]
 use = egg:Paste#http
 host = 0.0.0.0
-port = 9221
+port = 5000
 
 [app:main]
 use = egg:ckan
