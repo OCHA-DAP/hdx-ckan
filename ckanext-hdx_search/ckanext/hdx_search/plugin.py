@@ -108,6 +108,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def dataset_facets(self, facets_dict, package_type):
         facets_dict['indicator'] = _('Indicators')
         facets_dict['subnational'] = _('Subnational')
-        facets_dict['quickcharts'] = _('Quick charts')
+        facets_dict['has_quickcharts'] = _('Quick charts')
 
         return facets_dict

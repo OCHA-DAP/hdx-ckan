@@ -602,8 +602,9 @@ class HDXSearchController(PackageController):
                 num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
             elif category_key == 'subnational':
                 num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
-            elif category_key == 'quickcharts':
-                num_of_quickcharts = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+            elif category_key == 'has_quickcharts':
+                # has_quickcharts is a solr boolean that is transformed to the string 'true'
+                num_of_quickcharts = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             else:
                 sorted_item_list = []
                 for item in item_list:
@@ -633,6 +634,7 @@ class HDXSearchController(PackageController):
         result['num_of_indicators'] = num_of_indicators
         result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
+        result['num_of_quickcharts'] = num_of_quickcharts
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
