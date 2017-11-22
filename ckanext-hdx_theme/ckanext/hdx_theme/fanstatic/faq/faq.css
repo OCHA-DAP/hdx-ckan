@@ -4,6 +4,7 @@
 .hdx-faq-sidebar.sticky {
   position: fixed;
   top: 15px;
+  z-index: 99;
 }
 .hdx-faq-sidebar .nav li a {
   font-family: 'Gotham-Book', sans-serif;
