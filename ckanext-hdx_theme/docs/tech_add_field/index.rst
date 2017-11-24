@@ -52,3 +52,10 @@ STEPS
    in the *setUpSearchTracking()* function
    (indexed, filtering) 
 
+
+IMPORTANT NOTE FOR SOLR INDEXED FIELDS
+--------------------------------------
+
+* the *schema.xml* file needs to end up in the solr container
+* you might need a reindex to be able to filter by the new field
+
