@@ -55,6 +55,11 @@ $(
                     'name': 'quickcharts filter',
                     'isList': false,
                     'mandatory': true
+                },
+                'ext_geodata': {
+                    'name': 'quickcharts filter',
+                    'isList': false,
+                    'mandatory': true
                 }
             };
 

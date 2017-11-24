@@ -24,6 +24,8 @@ import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
 
+from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
@@ -368,7 +370,12 @@ def package_show(context, data_dict):
                     package_dict['has_quickcharts'] = True
                     break
 
-
+    if _should_manually_load_property_value(context, package_dict, 'has_geodata'):
+        package_dict['has_geodata'] = False
+        for resource_dict in package_dict.get('resources', []):
+            if resource_dict.get('format') in GIS_FORMATS:
+                package_dict['has_geodata'] = True
+                break
 
     return package_dict
 

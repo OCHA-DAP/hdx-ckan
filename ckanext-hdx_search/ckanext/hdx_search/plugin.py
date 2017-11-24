@@ -80,6 +80,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('indicator')
         adapt_solr_fq('subnational')
         adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
+        adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
 
         return search_params
 
@@ -109,5 +110,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['indicator'] = _('Indicators')
         facets_dict['subnational'] = _('Subnational')
         facets_dict['has_quickcharts'] = _('Quick charts')
+        facets_dict['has_geodata'] = _('Geodata')
 
         return facets_dict
