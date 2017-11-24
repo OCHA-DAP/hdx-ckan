@@ -60,6 +60,11 @@ $(
                     'name': 'quickcharts filter',
                     'isList': false,
                     'mandatory': true
+                },
+                'ext_hxl': {
+                    'name': 'quickcharts filter',
+                    'isList': false,
+                    'mandatory': true
                 }
             };
 

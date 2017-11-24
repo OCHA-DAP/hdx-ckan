@@ -340,8 +340,7 @@ class HDXSearchController(PackageController):
 
             # TODO Line below to be removed after refactoring
             c.tab = 'all'
-            if request.params.get('ext_cod', '0') == '1':
-                fq += ' tags:cod'
+
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
                                     search_extras, pager_url, context)
 
@@ -584,7 +583,7 @@ class HDXSearchController(PackageController):
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
 
-        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts', 'ext_geodata']
+        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_hxl']
 
         for param in checkboxes:
             if param in search_extras:
@@ -595,6 +594,8 @@ class HDXSearchController(PackageController):
         num_of_subnational = 0
         num_of_quickcharts = 0
         num_of_geodata = 0
+        num_of_hxl = 0
+
         for category_key, category_title in title_translations.items():
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
@@ -626,6 +627,8 @@ class HDXSearchController(PackageController):
                         sorted_item_list.append(new_item)
                         if category_key == 'tags' and new_item['name'] == 'cod':
                             num_of_cods = new_item['count']
+                        if category_key == 'tags' and new_item['name'] == 'hxl':
+                            num_of_hxl = new_item['count']
 
                 sorted_item_list.sort(key=lambda x: x.get('display_name'))
 
@@ -640,6 +643,7 @@ class HDXSearchController(PackageController):
         result['num_of_subnational'] = num_of_subnational
         result['num_of_quickcharts'] = num_of_quickcharts
         result['num_of_geodata'] = num_of_geodata
+        result['num_of_hxl'] = num_of_hxl
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
