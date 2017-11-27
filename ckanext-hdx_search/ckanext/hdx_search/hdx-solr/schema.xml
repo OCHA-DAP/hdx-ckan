@@ -158,6 +158,7 @@ schema. In this case the version should be set to the next CKAN version number.
     <field name="pageviews_last_14_days" type="int" indexed="true" stored="true"/>
     <field name="has_quickcharts" type="boolean" indexed="true" stored="true"/>
     <field name="has_geodata" type="boolean" indexed="true" stored="true"/>
+    <field name="is_requestdata_type" type="boolean" indexed="true" stored="true"/>
 
     <field name="metadata_created" type="date" indexed="true" stored="true" multiValued="false"/>
     <field name="metadata_modified" type="date" indexed="true" stored="true" multiValued="false"/>

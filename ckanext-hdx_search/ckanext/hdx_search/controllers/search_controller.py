@@ -583,7 +583,8 @@ class HDXSearchController(PackageController):
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
 
-        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_hxl']
+        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata']
 
         for param in checkboxes:
             if param in search_extras:
@@ -595,6 +596,7 @@ class HDXSearchController(PackageController):
         num_of_quickcharts = 0
         num_of_geodata = 0
         num_of_hxl = 0
+        num_of_requestdata = 0
 
         for category_key, category_title in title_translations.items():
             item_list = existing_facets.get(category_key, {}).get('items', [])
@@ -603,13 +605,19 @@ class HDXSearchController(PackageController):
             if category_key == 'indicator':
                 num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
             elif category_key == 'subnational':
-                num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+                num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'),
+                                          0)
             elif category_key == 'has_quickcharts':
                 # has_quickcharts is a solr boolean that is transformed to the string 'true'
-                num_of_quickcharts = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+                num_of_quickcharts = next(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             elif category_key == 'has_geodata':
                 # has_geodata is a solr boolean that is transformed to the string 'true'
                 num_of_geodata = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'extras_is_requestdata_type':
+                # has_geodata is a solr boolean that is transformed to the string 'true'
+                num_of_requestdata = next(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             else:
                 sorted_item_list = []
                 for item in item_list:
@@ -644,6 +652,7 @@ class HDXSearchController(PackageController):
         result['num_of_quickcharts'] = num_of_quickcharts
         result['num_of_geodata'] = num_of_geodata
         result['num_of_hxl'] = num_of_hxl
+        result['num_of_requestdata'] = num_of_requestdata
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
