@@ -873,7 +873,7 @@ textarea {
   display: block;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: none;
   border-radius: 28px;
   margin: 0;
 }
@@ -898,10 +898,10 @@ textarea {
   display: block;
   float: left;
   width: 50%;
-  height: 16px;
+  height: 20px;
   padding: 0;
-  line-height: 16px;
-  font-size: 16px;
+  line-height: 20px;
+  font-size: 20px;
   color: white;
   font-family: Trebuchet, Arial, sans-serif;
   font-weight: bold;

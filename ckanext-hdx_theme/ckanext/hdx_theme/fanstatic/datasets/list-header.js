@@ -1,9 +1,33 @@
 $(document).ready(function() {
+
+    const LS_FILTER_CONFIG = "/search:filterConfig";
+    var filterConfig = window.localStorage.getItem(LS_FILTER_CONFIG);
+    if (!filterConfig) {
+        filterConfig = {
+            showFilter: true,
+            facets: {
+                featured: true,
+                organisations: true,
+                locations: true,
+                tags: true,
+                formats: true,
+                licenses: true
+            }
+        };
+        window.localStorage.setItem(LS_FILTER_CONFIG, JSON.stringify(filterConfig));
+    } else {
+        filterConfig = JSON.parse(filterConfig);
+    }
+
     $(".filter-category .categ-title").on("click", function() {
-        $(this).siblings(".categ-list").toggle();
+        $(this).siblings(".categ-content").toggle();
         var glyph = $(this).find("i.glyphicon");
         glyph.toggleClass("glyphicon-minus");
         glyph.toggleClass("glyphicon-plus");
+
+        var facetName = $(this).attr("data-value");
+        filterConfig.facets[facetName] = glyph.hasClass("glyphicon-minus");
+        window.localStorage.setItem(LS_FILTER_CONFIG, JSON.stringify(filterConfig));
     });
 
     $(".filter-category .categ-actions .show-more").on("click", function() {
@@ -31,11 +55,25 @@ $(document).ready(function() {
     });
 
     $("#show-filter-toggle").on("change", function(){
-       $("#search-page-filters").toggle();
+        filterConfig.showFilter = $(this).prop("checked");
+        window.localStorage.setItem(LS_FILTER_CONFIG, JSON.stringify(filterConfig));
+
+        $("#search-page-filters").toggle();
         var searchResults = $("#search-page-results");
         searchResults.toggleClass("col-xs-12");
         searchResults.toggleClass("col-xs-9");
     });
+
+    if (!filterConfig.showFilter) {
+        $("#show-filter-toggle").prop("checked", false);
+        $("#show-filter-toggle").change();
+    }
+    $.each(filterConfig.facets, function(key, val){
+        if (!val){
+            $(".filter-category .categ-title[data-value='"+ key +"']").click();
+        }
+    })
+
 });
 
 function getFilterUrlNew(onlyFilter) {

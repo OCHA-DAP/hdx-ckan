@@ -110,22 +110,24 @@ Example:
         </div>
 
         <div class="filter-category">
-            <div class="categ-title">
+            <div class="categ-title" data-value="featured">
                 Featured: <i class="pull-right glyphicon glyphicon-minus"></i>
             </div>
-            <div class="categ-list show-always">
-                <ul class="categ-items">
-                    {% set ext_cod = request.params.get('ext_cod') %}
-                    <li><label><input name="ext_cod" value="1" type="checkbox" {% if ext_cod == "1" %} checked="checked" {% endif %}> CODs(?) <span class="item-count">[00]</span></label></li>
-                    {% set ext_subnational = request.params.get('ext_subnational') %}
-                    <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %}> Sub-national <span class="item-count">[00]</span></label></li>
-                    <li><label><input type="checkbox"> Geodata <span class="item-count">[00]</span></label></li>
-                    <li><label><input type="checkbox"> Datasets on request <span class="item-count">[00]</span></label></li>
-                    {% set ext_quickcharts = request.params.get('ext_quickcharts') %}
-                    <li><label><input type="checkbox" name="ext_quickcharts" value="1" {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %} {% if ext_quickcharts == "1" %} checked="checked" {% endif %}> Datasets with Quick Charts <span class="item-count">[00]</span></label></li>
-                    <li><label><input type="checkbox"> Datasets with Showcase <span class="item-count">[00]</span></label></li>
-                    <li><label><input type="checkbox"> Datasets with HXL tags <span class="item-count">[00]</span></label></li>
-                </ul>
+            <div class="categ-content">
+                <div class="categ-list show-always">
+                    <ul class="categ-items">
+                        {% set ext_cod = request.params.get('ext_cod') %}
+                        <li><label><input name="ext_cod" value="1" type="checkbox" {% if ext_cod == "1" %} checked="checked" {% endif %}> CODs(?) <span class="item-count">[00]</span></label></li>
+                        {% set ext_subnational = request.params.get('ext_subnational') %}
+                        <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %}> Sub-national <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox"> Geodata <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox"> Datasets on request <span class="item-count">[00]</span></label></li>
+                        {% set ext_quickcharts = request.params.get('ext_quickcharts') %}
+                        <li><label><input type="checkbox" name="ext_quickcharts" value="1" {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %} {% if ext_quickcharts == "1" %} checked="checked" {% endif %}> Datasets with Quick Charts <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox"> Datasets with Showcase <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox"> Datasets with HXL tags <span class="item-count">[00]</span></label></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -133,22 +135,24 @@ Example:
         {% for id in facet_list %}
             {% set facet = facet_list.get(id) %}
             <div class="filter-category">
-                <div class="categ-title">
+                <div class="categ-title" data-value="{{ facet.get('display_name') | lower }}">
                     {{ facet.get('display_name') }}: <i class="pull-right glyphicon glyphicon-minus"></i>
                 </div>
-                <div class="categ-list">
-                    <div class="categ-search">
-                        <input type="text" ><i class="glyphicon glyphicon-search"></i>
+                <div class="categ-content">
+                    <div class="categ-list">
+                        <div class="categ-search">
+                            <input type="text" ><i class="glyphicon glyphicon-search"></i>
+                        </div>
+                        <ul name="{{id}}" class="categ-items">
+                            {% for option in facet.get('items') %}
+                                <li> <label> <input name="{{id}}" value="{{option.name}}" type="checkbox" {% if option.selected %}checked="checked"{% endif %}> {{option.display_name}} <span class="item-count">[{{option.count}}]</span></label> </li>
+                            {% endfor %}
+                        </ul>
                     </div>
-                    <ul name="{{id}}" class="categ-items">
-                        {% for option in facet.get('items') %}
-                            <li> <label> <input name="{{id}}" value="{{option.name}}" type="checkbox" {% if option.selected %}checked="checked"{% endif %}> {{option.display_name}} <span class="item-count">[{{option.count}}]</span></label> </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="categ-actions">
-                    <div>
-                        <span class="show-more"><span class="show-more-text" style="display: none;">Less</span><span class="show-more-text">More</span></span>
+                    <div class="categ-actions">
+                        <div>
+                            <span class="show-more"><span class="show-more-text" style="display: none;">Less</span><span class="show-more-text">More</span></span>
+                        </div>
                     </div>
                 </div>
             </div>
