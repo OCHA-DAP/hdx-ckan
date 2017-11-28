@@ -1,0 +1,131 @@
+@import "../base/variables";
+@import "../base/mixins";
+@import "../base/components/checkbox-slider";
+
+@filterCategPadding: 15px;
+@filterCategItemLineHeight: 20px;
+
+.filter-title {
+    padding: @filterCategPadding;
+    color: @blackColor;
+    .sourceSansProFont(400, 14px);
+
+    .filter-clear {
+        color: @blueColor;
+        cursor: pointer;
+    }
+}
+
+.filter-category {
+
+    border: 1px solid @extraLightGrayColor;
+
+    .categ-title {
+        background-color: @extraLightBlueColor;
+        padding: @filterCategPadding;
+        border-bottom: 1px solid @extraLightGrayColor;
+
+        .gothamBoldFont(12px);
+        text-transform: uppercase;
+        color: @grayColor;
+        line-height: 1em;
+        .letter-spacing-3();
+    }
+    .categ-list {
+        .categ-search {
+            margin: @filterCategPadding;
+            padding: 0;
+            display: none;
+            position: relative;
+
+            input {
+                width: 100%;
+                border: 1px solid @lightGrayColor;
+                padding: 5px;
+                padding-left: 10px;
+
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            i.glyphicon-search {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+            }
+        }
+        .categ-items {
+            list-style: none;
+            margin: @filterCategPadding;
+            padding: 0;
+
+            li {
+                line-height: @filterCategItemLineHeight;
+
+                color: @darkGrayColor;
+
+                label {
+                    font-weight: 400;
+                    margin-bottom: 0;
+                    .sourceSansProFont(400, 14px);
+                    line-height: @filterCategItemLineHeight;
+
+                    &:after {
+                        content: none;
+                    }
+                }
+
+                input[type='checkbox'] {
+                    top: 0;
+                    margin-right: 5px;
+                }
+
+                .item-count{
+                    margin-left: 2px;
+                    color: @grayColor;
+                }
+
+                &:nth-child(n+6) {
+                    display: none;
+                }
+            }
+        }
+
+        &.show-all {
+            .categ-search {
+                display: block;
+            }
+            .categ-items {
+                max-height: 10.5*@filterCategItemLineHeight;
+                overflow-y: scroll;
+
+                li:nth-child(n+6) {
+                    display: block;
+                }
+            }
+        }
+
+        &.show-always {
+            .categ-items {
+                li:nth-child(n+6) {
+                    display: block;
+                }
+            }
+        }
+
+    }
+
+    .categ-actions {
+        margin: @filterCategPadding;
+
+        .show-more {
+            color: @blueColor;
+            cursor: pointer;
+        }
+    }
+
+    ~ .filter-category {
+        margin-top: -1px; //double border fix
+    }
+}
