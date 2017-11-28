@@ -117,15 +117,19 @@ Example:
                 <div class="categ-list show-always">
                     <ul class="categ-items">
                         {% set ext_cod = request.params.get('ext_cod') %}
-                        <li><label><input name="ext_cod" value="1" type="checkbox" {% if ext_cod == "1" %} checked="checked" {% endif %}> CODs(?) <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox" name="ext_cod" value="1"  {% if ext_cod == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}> CODs(?) <span class="item-count">[{{ full_facet_info.get("num_of_cods") }}]</span></label></li>
                         {% set ext_subnational = request.params.get('ext_subnational') %}
-                        <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %}> Sub-national <span class="item-count">[00]</span></label></li>
-                        <li><label><input type="checkbox"> Geodata <span class="item-count">[00]</span></label></li>
-                        <li><label><input type="checkbox"> Datasets on request <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %}> Sub-national <span class="item-count">[{{ full_facet_info.get("num_of_subnational") }}]</span></label></li>
+                        {% set ext_geodata = request.params.get('ext_geodata') %}
+                        <li><label><input type="checkbox" name="ext_geodata" value="1" {% if ext_geodata == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_geodata") == 0 %} disabled="disabled" {% endif %}> Geodata <span class="item-count">[{{ full_facet_info.get("num_of_geodata") }}]</span></label></li>
+                        {% set requestdata = request.params.get('ext_requestdata') %}
+                        <li><label><input type="checkbox" name="ext_requestdata" value="1" {% if ext_requestdata == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_requestdata") == 0 %} disabled="disabled" {% endif %}> Datasets on request <span class="item-count">[{{ full_facet_info.get("num_of_requestdata") }}]</span></label></li>
                         {% set ext_quickcharts = request.params.get('ext_quickcharts') %}
-                        <li><label><input type="checkbox" name="ext_quickcharts" value="1" {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %} {% if ext_quickcharts == "1" %} checked="checked" {% endif %}> Datasets with Quick Charts <span class="item-count">[00]</span></label></li>
-                        <li><label><input type="checkbox"> Datasets with Showcase <span class="item-count">[00]</span></label></li>
-                        <li><label><input type="checkbox"> Datasets with HXL tags <span class="item-count">[00]</span></label></li>
+                        <li><label><input type="checkbox" value="1" name="ext_quickcharts" {% if ext_quickcharts == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %}> Datasets with Quick Charts <span class="item-count">[{{ full_facet_info.get("num_of_quickcharts") }}]</span></label></li>
+                        {% set ext_showcases = request.params.get('ext_showcases') %}
+                        <li><label><input type="checkbox" name="ext_showcases" value="1" {% if ext_showcases == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_showcases") == 0 %} disabled="disabled" {% endif %}> Datasets with Showcase <span class="item-count">[{{ full_facet_info.get("num_of_showcases") }}]</span></label></li>
+                        {% set ext_hxl = request.params.get('ext_hxl') %}
+                        <li><label><input type="checkbox" name="ext_hxl" value="1" {% if ext_hxl == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_hxl") == 0 %} disabled="disabled" {% endif %}> Datasets with HXL tags <span class="item-count">[{{ full_facet_info.get("num_of_hxl") }}]</span></label></li>
                     </ul>
                 </div>
             </div>

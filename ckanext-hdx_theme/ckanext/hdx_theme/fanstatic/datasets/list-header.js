@@ -41,9 +41,9 @@ $(document).ready(function() {
         $(this).parents(".filter-category").find(".categ-items li").each(function(){
             var text = $(this).find("label").text();
             if (text.toUpperCase().indexOf(searchVal) > -1){
-                $(this).show();
+                $(this).css("display", "");
             } else {
-                $(this).hide();
+                $(this).css("display", "none");
             }
         });
     });
