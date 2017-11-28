@@ -584,7 +584,7 @@ class HDXSearchController(PackageController):
         result['filters_selected'] = False
 
         checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
-                      'ext_geodata', 'ext_hxl', 'ext_requestdata']
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases']
 
         for param in checkboxes:
             if param in search_extras:
@@ -597,6 +597,7 @@ class HDXSearchController(PackageController):
         num_of_geodata = 0
         num_of_hxl = 0
         num_of_requestdata = 0
+        num_of_showcases = 0
 
         for category_key, category_title in title_translations.items():
             item_list = existing_facets.get(category_key, {}).get('items', [])
@@ -615,9 +616,12 @@ class HDXSearchController(PackageController):
                 # has_geodata is a solr boolean that is transformed to the string 'true'
                 num_of_geodata = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             elif category_key == 'extras_is_requestdata_type':
-                # has_geodata is a solr boolean that is transformed to the string 'true'
+                # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
                 num_of_requestdata = next(
                     (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'has_showcases':
+                # has_showcases is a solr boolean that is transformed to the string 'true'
+                num_of_showcases = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             else:
                 sorted_item_list = []
                 for item in item_list:
@@ -653,6 +657,7 @@ class HDXSearchController(PackageController):
         result['num_of_geodata'] = num_of_geodata
         result['num_of_hxl'] = num_of_hxl
         result['num_of_requestdata'] = num_of_requestdata
+        result['num_of_showcases'] = num_of_showcases
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False

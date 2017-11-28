@@ -25,6 +25,7 @@ import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
 
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
+from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 
 
 _validate = ckan.lib.navl.dictization_functions.validate
@@ -337,45 +338,54 @@ def package_show(context, data_dict):
     if 'tracking_summary' in package_dict and not package_dict.get('tracking_summary'):
         del package_dict['tracking_summary']
 
-    for resource_dict in package_dict.get('resources', []):
-        if _should_manually_load_property_value(context, resource_dict, 'size'):
-            resource_dict['size'] = __get_resource_filesize(resource_dict)
-
-        if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-            resource_dict['revision_last_updated'] = __get_resource_revison_timestamp(resource_dict)
-
-        if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
-            resource_dict['hdx_rel_url'] = __get_resource_hdx_relative_url(resource_dict)
-
-    # downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
-    #                   res.get('tracking_summary', {}).get('total'))
-    # package_dict['total_res_downloads'] = sum(downloads_list)
-
-    if _should_manually_load_property_value(context, package_dict, 'total_res_downloads'):
-        total_res_downloads = jql.downloads_per_dataset_all_cached().get(package_dict['id'], 0)
-        log.debug('Dataset {} has {} downloads'.format(package_dict['id'], total_res_downloads))
-        package_dict['total_res_downloads'] = total_res_downloads
-
-    if _should_manually_load_property_value(context, package_dict, 'pageviews_last_14_days'):
-        pageviews_last_14_days = jql.pageviews_per_dataset_last_14_days_cached().get(package_dict['id'], 0)
-        log.debug('Dataset {} has {} page views in the last 14 days'.format(package_dict['id'], pageviews_last_14_days))
-        package_dict['pageviews_last_14_days'] = pageviews_last_14_days
-
-    if _should_manually_load_property_value(context, package_dict, 'has_quickcharts'):
-        package_dict['has_quickcharts'] = False
+    if package_dict.get('type') == 'dataset': # this shouldn't be executed from showcases
         for resource_dict in package_dict.get('resources', []):
-            resource_views = get_action('resource_view_list')(context, {'id': resource_dict['id']}) or []
-            for view in resource_views:
-                if view.get("view_type") == 'hdx_hxl_preview':
-                    package_dict['has_quickcharts'] = True
+            if _should_manually_load_property_value(context, resource_dict, 'size'):
+                resource_dict['size'] = __get_resource_filesize(resource_dict)
+
+            if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
+                resource_dict['revision_last_updated'] = __get_resource_revison_timestamp(resource_dict)
+
+            if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
+                resource_dict['hdx_rel_url'] = __get_resource_hdx_relative_url(resource_dict)
+
+        # downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
+        #                   res.get('tracking_summary', {}).get('total'))
+        # package_dict['total_res_downloads'] = sum(downloads_list)
+
+        if _should_manually_load_property_value(context, package_dict, 'total_res_downloads'):
+            total_res_downloads = jql.downloads_per_dataset_all_cached().get(package_dict['id'], 0)
+            log.debug('Dataset {} has {} downloads'.format(package_dict['id'], total_res_downloads))
+            package_dict['total_res_downloads'] = total_res_downloads
+
+        if _should_manually_load_property_value(context, package_dict, 'pageviews_last_14_days'):
+            pageviews_last_14_days = jql.pageviews_per_dataset_last_14_days_cached().get(package_dict['id'], 0)
+            log.debug('Dataset {} has {} page views in the last 14 days'.format(package_dict['id'], pageviews_last_14_days))
+            package_dict['pageviews_last_14_days'] = pageviews_last_14_days
+
+        if _should_manually_load_property_value(context, package_dict, 'has_quickcharts'):
+            package_dict['has_quickcharts'] = False
+            for resource_dict in package_dict.get('resources', []):
+                resource_views = get_action('resource_view_list')(context, {'id': resource_dict['id']}) or []
+                for view in resource_views:
+                    if view.get("view_type") == 'hdx_hxl_preview':
+                        package_dict['has_quickcharts'] = True
+                        break
+
+        if _should_manually_load_property_value(context, package_dict, 'has_geodata'):
+            package_dict['has_geodata'] = False
+            for resource_dict in package_dict.get('resources', []):
+                if resource_dict.get('format') in GIS_FORMATS:
+                    package_dict['has_geodata'] = True
                     break
 
-    if _should_manually_load_property_value(context, package_dict, 'has_geodata'):
-        package_dict['has_geodata'] = False
-        for resource_dict in package_dict.get('resources', []):
-            if resource_dict.get('format') in GIS_FORMATS:
-                package_dict['has_geodata'] = True
-                break
+        if _should_manually_load_property_value(context, package_dict, 'has_showcases'):
+            package_dict['has_showcases'] = False
+            package_dict['num_of_showcases'] = 0
+            num_of_showcases = len(hdx_get_package_showcase_id_list(context, {'package_id': package_dict['id']}))
+            if num_of_showcases > 0:
+                package_dict['has_showcases'] = True
+                package_dict['num_of_showcases'] = num_of_showcases
 
     return package_dict
 

@@ -84,6 +84,7 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
         adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
+        adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
 
         return search_params
 
@@ -115,5 +116,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         facets_dict['has_quickcharts'] = _('Quick charts')
         facets_dict['has_geodata'] = _('Geodata')
         facets_dict['extras_is_requestdata_type'] = _('Datasets on request')
+        facets_dict['has_showcases'] = _('Datasets with Showcases')
 
         return facets_dict
