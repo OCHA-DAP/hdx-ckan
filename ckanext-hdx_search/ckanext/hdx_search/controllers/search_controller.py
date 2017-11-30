@@ -1,4 +1,5 @@
 import logging
+import re
 import datetime
 import sqlalchemy
 from urllib import urlencode
@@ -279,6 +280,7 @@ class HDXSearchController(PackageController):
             # limit = g.datasets_per_page
 
             fq = additional_fq
+            tagged_fq_dict = {}
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
@@ -286,7 +288,10 @@ class HDXSearchController(PackageController):
                         fq += ' %s' % (value,)
                     elif not param.startswith('ext_'):
                         c.fields.append((param, value))
-                        fq += ' %s:"%s"' % (param, value)
+                        # fq += ' {!tag=%s}%s:"%s"' % (param, param, value)
+                        if param not in tagged_fq_dict:
+                            tagged_fq_dict[param] = []
+                        tagged_fq_dict[param].append('{}:"{}"'.format(param, value))
                         if param not in c.fields_grouped:
                             c.fields_grouped[param] = [value]
                         else:
@@ -295,6 +300,9 @@ class HDXSearchController(PackageController):
                         search_extras[param] = value
 
             self._set_filters_are_selected_flag()
+
+            fq_list = ['{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
+                       for key, value_list in tagged_fq_dict.items()]
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
@@ -342,7 +350,7 @@ class HDXSearchController(PackageController):
             c.tab = 'all'
 
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
-                                    search_extras, pager_url, context)
+                                    search_extras, pager_url, context, fq_list=fq_list)
 
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
@@ -376,9 +384,10 @@ class HDXSearchController(PackageController):
         return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
-                           search_extras, pager_url, context):
+                           search_extras, pager_url, context, fq_list=None):
         data_dict = {
             'q': q,
+            'fq_list': fq_list,
             'fq': fq.strip(),
             'facet.field': facet_keys,
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
@@ -599,7 +608,10 @@ class HDXSearchController(PackageController):
         num_of_requestdata = 0
         num_of_showcases = 0
 
-        for category_key, category_title in title_translations.items():
+        for solr_category_key, category_title in title_translations.items():
+            regex = r'\{[\s\S]*\}'
+            category_key = re.sub(regex, '', solr_category_key)
+
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
             # We're only interested in the number of items of the "indicator" facet

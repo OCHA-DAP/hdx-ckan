@@ -111,6 +111,15 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         }
 
     def dataset_facets(self, facets_dict, package_type):
+
+        tagged_facets = ['groups', 'res_format', 'organization', 'tags', 'license_id']
+
+        # adding exclusion directive for tagged facets
+        for f in tagged_facets:
+            translation = facets_dict[f]
+            del facets_dict[f]
+            facets_dict['{{!ex={}}}{}'.format(f, f)] = translation
+
         facets_dict['indicator'] = _('Indicators')
         facets_dict['subnational'] = _('Subnational')
         facets_dict['has_quickcharts'] = _('Quick charts')
