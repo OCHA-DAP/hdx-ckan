@@ -33,20 +33,27 @@ $('document').ready(function(){
         var q = $(this).val();
         var search = index.search(q);
         var $results = $(this).parents("form").find('.search-ahead');
+        var html = "";
+        html += "<ul>";
         if(search.length >0){
-            var html ="<ul>";
             var limit = search.length > 5 ? 5 : search.length;
             for(i=0; i<limit; i++){
                 html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link">'+process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 
             }
-            html += '</ul>';
-            $results.html(html);
-            $results.show();
-        }else{
-            $results.html('');
-            $results.hide();
+
         }
+
+        html +=
+            '<li data-href="/search?q='+ q +'"><div class="ahead-link">' +
+            '<i class="glyphicon glyphicon-search"></i>Search <b>'+ q +'</b> in <b>datasets</b>' +
+            '</div></li>' +
+            '<li data-href="/showcase?q='+ q +'"><div class="ahead-link">' +
+            '<i class="glyphicon glyphicon-stats"></i>Search <b>'+ q +'</b> in <b>dataviz</b>' +
+            '</div></li>';
+        html += '</ul>';
+        $results.html(html);
+        $results.show();
     });
 
     $('.search-ahead').on('mousedown', "li", function(){
