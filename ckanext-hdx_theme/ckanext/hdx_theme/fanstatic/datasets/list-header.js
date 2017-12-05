@@ -54,6 +54,21 @@ $(document).ready(function() {
         window.location = location;
     });
 
+    $("#search-page-filters .filter-clear").on("click", function(event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        var location = getFilterUrlNew(true);
+        console.log("Refresh to: " + location);
+        window.location = location;
+    });
+
+    $(".filter-pagination input").click(function(){
+        var location = getFilterUrlNew(false);
+        console.log("Refresh to: " + location);
+        window.location = location;
+    });
+
     $("#show-filter-toggle").on("change", function(){
         filterConfig.showFilter = $(this).prop("checked");
         window.localStorage.setItem(LS_FILTER_CONFIG, JSON.stringify(filterConfig));
@@ -76,24 +91,26 @@ $(document).ready(function() {
 
 });
 
-function getFilterUrlNew(onlyFilter) {
-    var params = $(".filter-category .categ-items li input").serialize();
-    $("input.checkbox-filter:checked").each(function (idx, el) {
-        if (params !== "") {
-            params += "&";
-        }
-        params += $(el).attr("name");
-        params += "=1";
-    });
-    if (onlyFilter){
-        if (params !== ""){
-            params += "&";
-        }
-        params += "ext_only_facets=true";
+function getFilterUrlNew(resetFilters) {
+    var params = "";
+    if (!resetFilters){
+        params = $(".filter-category .categ-items li input").serialize();
+        $("input.checkbox-filter:checked").each(function (idx, el) {
+            if (params !== "") {
+                params += "&";
+            }
+            params += $(el).attr("name");
+            params += "=1";
+        });
     }
 
+    //check non filter params
+    const params2 = $("#headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort").serialize();
+    params += ((params !== "" && params2 != null) ? "&" : "") + params2;
+
+
     var base = $("#base-filter-location").text().trim();
-    return base + "?" + params;
+    return base + ((params && params !== "") ? "?" + params : "") ;
 }
 
 //

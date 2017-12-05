@@ -33,9 +33,6 @@ Example:
 
               <input id="headerSearch" name="q" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
           </span>
-          {% set limits = [25, 50, 100] %}
-          {% set limit_param = request.params.get('ext_page_size') %}
-          {% set limit_selected = limit_param if latasetimit_param else 25 %}
           <span class="mL45 list-header-showall filter-pagination">
               Show filter:
 
@@ -52,6 +49,9 @@ Example:
               </span>
           </span>
 
+          {% set limits = [25, 50, 100] %}
+          {% set limit_param = request.params.get('ext_page_size') %}
+          {% set limit_selected = limit_param if limit_param else 25 %}
           <span class="mL45 list-header-showall filter-pagination">
               Show
               {% for value in limits %}
@@ -106,7 +106,7 @@ Example:
 <div class="row">
     <div id="search-page-filters" class="col-xs-3">
         <div class="filter-title">
-            Refine your search: <a href="/search" class="filter-clear pull-right">Clear all</a>
+            Refine your search: <a href="{{other_links.get('current_page_url')}}" class="filter-clear pull-right">Clear all</a>
         </div>
 
         <div class="filter-category">
