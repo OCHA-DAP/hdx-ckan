@@ -387,7 +387,7 @@ class HDXSearchController(PackageController):
                            search_extras, pager_url, context, fq_list=None):
         data_dict = {
             'q': q,
-            'fq_list': fq_list,
+            'fq_list': fq_list if fq_list else [],
             'fq': fq.strip(),
             'facet.field': facet_keys,
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
