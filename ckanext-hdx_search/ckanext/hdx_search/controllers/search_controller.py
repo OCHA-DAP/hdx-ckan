@@ -204,7 +204,8 @@ class HDXSearchController(PackageController):
             params.append(('page', page))
             return self._search_url(params, package_type)
 
-        c.full_facet_info = self._search(package_type, pager_url, default_sort_by='pageviews_last_14_days desc')
+        default_sort_by = None if request.params.get('q', '').strip() else 'pageviews_last_14_days desc'
+        c.full_facet_info = self._search(package_type, pager_url, default_sort_by=default_sort_by)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
@@ -239,7 +240,12 @@ class HDXSearchController(PackageController):
 
         # self._set_remove_field_function()
         req_sort_by = request.params.get('sort', None)
-        sort_by = req_sort_by if req_sort_by else default_sort_by
+        if req_sort_by:
+            sort_by = req_sort_by
+            c.used_default_sort_by = False
+        else:
+            sort_by = default_sort_by
+            c.used_default_sort_by = True
         # params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
         # The sort_by function seems to not be used anymore

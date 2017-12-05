@@ -35,7 +35,7 @@ Example:
           </span>
           {% set limits = [25, 50, 100] %}
           {% set limit_param = request.params.get('ext_page_size') %}
-          {% set limit_selected = limit_param if limit_param else 25 %}
+          {% set limit_selected = limit_param if latasetimit_param else 25 %}
           <span class="mL45 list-header-showall filter-pagination">
               Show filter:
 
@@ -65,7 +65,7 @@ Example:
         (_('Name Ascending'), 'title_case_insensitive asc'),
         (_('Name Descending'), 'title_case_insensitive desc'),
         (_('Last Modified'), 'metadata_modified desc'),
-        (_('Trending'), 'pageviews_last_14_days desc') if g.tracking_enabled else (false, false),
+        (_('Trending'), 'pageviews_last_14_days desc'),
         (_('Most Downloads'), 'total_res_downloads desc') ]
         %}
         {% set sort_param = c.sort_by_selected %}
@@ -77,7 +77,7 @@ Example:
                     {% for label, value in sorting %}
                         {% if sorting_selected == value %}
                             <input id="header-search-sort_initial_values" type="hidden" style="display: none" value="{{value}}" label="{{label}}" />
-                            <input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>
+                            {% if not c.used_default_sort_by %}<input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>{% endif %}
                             <span class="dropdown-toggle-text">
                                 {% if label == 'Trending' %}
                                     <span title="{{ _('Trending is determined by page views last 14 days') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
