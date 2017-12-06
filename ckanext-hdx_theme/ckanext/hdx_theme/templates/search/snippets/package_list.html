@@ -122,7 +122,7 @@ Example:
                         <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %}> Sub-national <span class="item-count">[{{ full_facet_info.get("num_of_subnational") }}]</span></label></li>
                         {% set ext_geodata = request.params.get('ext_geodata') %}
                         <li><label><input type="checkbox" name="ext_geodata" value="1" {% if ext_geodata == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_geodata") == 0 %} disabled="disabled" {% endif %}> Geodata <span class="item-count">[{{ full_facet_info.get("num_of_geodata") }}]</span></label></li>
-                        {% set requestdata = request.params.get('ext_requestdata') %}
+                        {% set ext_requestdata = request.params.get('ext_requestdata') %}
                         <li><label><input type="checkbox" name="ext_requestdata" value="1" {% if ext_requestdata == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_requestdata") == 0 %} disabled="disabled" {% endif %}> Datasets on request <span class="item-count">[{{ full_facet_info.get("num_of_requestdata") }}]</span></label></li>
                         {% set ext_quickcharts = request.params.get('ext_quickcharts') %}
                         <li><label><input type="checkbox" value="1" name="ext_quickcharts" {% if ext_quickcharts == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %}> Datasets with Quick Charts <span class="item-count">[{{ full_facet_info.get("num_of_quickcharts") }}]</span></label></li>

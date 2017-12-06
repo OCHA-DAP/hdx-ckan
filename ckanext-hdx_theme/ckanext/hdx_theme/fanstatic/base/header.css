@@ -959,6 +959,7 @@ textarea {
   color: #888888;
   line-height: 1em;
   letter-spacing: 0.03em;
+  cursor: pointer;
 }
 .filter-category .categ-list .categ-search {
   margin: 15px;
