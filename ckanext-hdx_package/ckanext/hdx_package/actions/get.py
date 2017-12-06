@@ -37,6 +37,11 @@ get_action = logic.get_action
 _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER + '<small><p>Note: <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
 
+GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service', 'file geodatabase',
+                   'garmin img', 'gdb', 'geodatabase', 'geonode', 'geotiff', 'map server', 'map service', 'obf',
+                   'topojson', 'wkt', 'zipped gdb', 'zipped geodatabase', 'zipped geopackage', 'zipped geotiff',
+                   'zipped grd', 'zipped img', 'zipped kml', 'zipped raster', 'zipped shapefiles']
+
 
 @logic.side_effect_free
 def hdx_resource_id_list(context, data_dict):
@@ -375,7 +380,7 @@ def package_show(context, data_dict):
         if _should_manually_load_property_value(context, package_dict, 'has_geodata'):
             package_dict['has_geodata'] = False
             for resource_dict in package_dict.get('resources', []):
-                if resource_dict.get('format') in GIS_FORMATS:
+                if resource_dict.get('format') in GEODATA_FORMATS:
                     package_dict['has_geodata'] = True
                     break
 
