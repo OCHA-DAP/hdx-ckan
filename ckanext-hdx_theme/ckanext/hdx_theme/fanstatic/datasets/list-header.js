@@ -63,7 +63,7 @@ $(document).ready(function() {
         window.location = location;
     });
 
-    $(".filter-pagination input").click(function(){
+    $(".filter-pagination input[type='radio']").click(function(){
         var location = getFilterUrlNew(false);
         console.log("Refresh to: " + location);
         window.location = location;
