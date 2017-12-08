@@ -33,6 +33,22 @@ Example:
 
               <input id="headerSearch" name="q" class="header-search" type="text" placeholder="Search {{c.page.item_count}} datasets & indicators ..." value="{{searchValue}}">
           </span>
+          <span class="mL45 list-header-showall filter-pagination">
+              Show filter:
+
+              <span>
+                <span class="checkbox-slider" style="display: inline-block; top: 5px; left: -7px;">
+                  <input id="show-filter-toggle" type="checkbox" class="checkbox-slider-checkbox" checked="checked"/>
+                  <label class="checkbox-slider-label" for="show-filter-toggle">
+                    <span class="checkbox-slider-inner"></span>
+                    <span class="checkbox-slider-switch"></span>
+                  </label>
+
+                </span>
+
+              </span>
+          </span>
+
           {% set limits = [25, 50, 100] %}
           {% set limit_param = request.params.get('ext_page_size') %}
           {% set limit_selected = limit_param if limit_param else 25 %}
@@ -49,7 +65,7 @@ Example:
         (_('Name Ascending'), 'title_case_insensitive asc'),
         (_('Name Descending'), 'title_case_insensitive desc'),
         (_('Last Modified'), 'metadata_modified desc'),
-        (_('Trending'), 'pageviews_last_14_days desc') if g.tracking_enabled else (false, false),
+        (_('Trending'), 'pageviews_last_14_days desc'),
         (_('Most Downloads'), 'total_res_downloads desc') ]
         %}
         {% set sort_param = c.sort_by_selected %}
@@ -61,7 +77,7 @@ Example:
                     {% for label, value in sorting %}
                         {% if sorting_selected == value %}
                             <input id="header-search-sort_initial_values" type="hidden" style="display: none" value="{{value}}" label="{{label}}" />
-                            <input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>
+                            {% if not c.used_default_sort_by %}<input id="header-search-sort" name="sort" type="hidden" value="{{value}}"/>{% endif %}
                             <span class="dropdown-toggle-text">
                                 {% if label == 'Trending' %}
                                     <span title="{{ _('Trending is determined by page views last 14 days') }}"  data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" >
@@ -85,87 +101,91 @@ Example:
             </div>
         </div>
     </div>
-    <div class="list-header-filters">
-        <span class="filters-title uppercase">{{ _("Filter by") }}:</span>
-            {% set facet_list = full_facet_info.get('facets') %}
-            {% for id in facet_list %}
+</form>
+
+<div class="row">
+    <div id="search-page-filters" class="col-xs-3">
+        <div class="filter-title">
+            Refine your search: <a href="{{other_links.get('current_page_url')}}" class="filter-clear pull-right">Clear all</a>
+        </div>
+
+        <div class="filter-category">
+            <div class="categ-title" data-value="featured">
+                Featured: <i class="pull-right glyphicon glyphicon-minus"></i>
+            </div>
+            <div class="categ-content">
+                <div class="categ-list show-always">
+                    <ul class="categ-items">
+                        {% set ext_cod = request.params.get('ext_cod') %}
+                        <li><label><input type="checkbox" name="ext_cod" value="1"  {% if ext_cod == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}> CODs(?) <span class="item-count">[{{ full_facet_info.get("num_of_cods") }}]</span></label></li>
+                        {% set ext_subnational = request.params.get('ext_subnational') %}
+                        <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %}> Sub-national <span class="item-count">[{{ full_facet_info.get("num_of_subnational") }}]</span></label></li>
+                        {% set ext_geodata = request.params.get('ext_geodata') %}
+                        <li><label><input type="checkbox" name="ext_geodata" value="1" {% if ext_geodata == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_geodata") == 0 %} disabled="disabled" {% endif %}> Geodata <span class="item-count">[{{ full_facet_info.get("num_of_geodata") }}]</span></label></li>
+                        {% set ext_requestdata = request.params.get('ext_requestdata') %}
+                        <li><label><input type="checkbox" name="ext_requestdata" value="1" {% if ext_requestdata == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_requestdata") == 0 %} disabled="disabled" {% endif %}> Datasets on request <span class="item-count">[{{ full_facet_info.get("num_of_requestdata") }}]</span></label></li>
+                        {% set ext_quickcharts = request.params.get('ext_quickcharts') %}
+                        <li><label><input type="checkbox" value="1" name="ext_quickcharts" {% if ext_quickcharts == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %}> Datasets with Quick Charts <span class="item-count">[{{ full_facet_info.get("num_of_quickcharts") }}]</span></label></li>
+                        {% set ext_showcases = request.params.get('ext_showcases') %}
+                        <li><label><input type="checkbox" name="ext_showcases" value="1" {% if ext_showcases == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_showcases") == 0 %} disabled="disabled" {% endif %}> Datasets with Showcase <span class="item-count">[{{ full_facet_info.get("num_of_showcases") }}]</span></label></li>
+                        {% set ext_hxl = request.params.get('ext_hxl') %}
+                        <li><label><input type="checkbox" name="ext_hxl" value="1" {% if ext_hxl == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_hxl") == 0 %} disabled="disabled" {% endif %}> Datasets with HXL tags <span class="item-count">[{{ full_facet_info.get("num_of_hxl") }}]</span></label></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% set facet_list = full_facet_info.get('facets') %}
+        {% for id in facet_list %}
             {% set facet = facet_list.get(id) %}
-            <select name="{{id}}" style="display: none; width: 140px;" class="filter-item" title="{{ facet.get('display_name') }}" multiple="multiple">
-                {% for option in facet.get('items') %}
-                <option value="{{option.name}}" count="{{option.count}}" {% if option.selected %}selected="selected"{% endif %}>{{option.display_name}}</option>
-                {% endfor %}
+            <div class="filter-category">
+                <div class="categ-title" data-value="{{ facet.get('display_name') | lower }}">
+                    {{ facet.get('display_name') }}: <i class="pull-right glyphicon glyphicon-minus"></i>
+                </div>
+                <div class="categ-content">
+                    <div class="categ-list">
+                        <div class="categ-search">
+                            <input type="text" ><i class="glyphicon glyphicon-search"></i>
+                        </div>
+                        <ul name="{{id}}" class="categ-items">
+                            {% for option in facet.get('items') %}
+                                <li> <label> <input name="{{id}}" value="{{option.name}}" type="checkbox" {% if option.selected %}checked="checked"{% endif %}> {{option.display_name}} <span class="item-count">[{{option.count}}]</span></label> </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="categ-actions">
+                        <div>
+                            <span class="show-more"><span class="show-more-text" style="display: none;">Less</span><span class="show-more-text">More</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <select name="{{id}}" style="display: none; width: 140px;" class="filter-item" title="" multiple="multiple">
+
             </select>
             <div name="{{id}}_initial_values" style="display: none;">
                 {% for option in facet.get('items') %}
                 <option value="{{option.name}}" count="{{option.count}}" {% if option.selected %}selected="selected"{% endif %}>{{option.display_name}}</option>
                 {% endfor %}
             </div>
-            {% endfor %}
-
-            <span class="mL15">
-                {% set ext_quickcharts = request.params.get('ext_quickcharts') %}
-                <input id="show-quickcharts" name="ext_quickcharts" class="checkbox-filter" type="checkbox" {% if full_facet_info.get("num_of_quickcharts") == 0 %} disabled="disabled" {% endif %} {% if ext_quickcharts == "1" %} checked="checked" {% endif %}>
-                <label for="show-quickcharts" title="{{ _('Quick charts are visualizations based on resources with HXL hashtags.') }}" data-module="bs_tooltip" data-toggle="tooltip">Quick charts [?]</label>
-            </span>
-            <span class="mL15">
-                {% set ext_cod = request.params.get('ext_cod') %}
-                <input id="show-cods" name="ext_cod" class="checkbox-filter" type="checkbox" {% if  full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %} {% if ext_cod == "1" %} checked="checked" {% endif %}>
-                <label for="show-cods" title="{{ _('The Common Operational Datasets are agreed baseline data maintained by OCHA offices.') }}" data-module="bs_tooltip" data-toggle="tooltip">CODs [?]</label>
-            </span>
-            <span class="mL15">
-                {% set ext_subnational = request.params.get('ext_subnational') %}
-                <input id="show-subnational" name="ext_subnational" class="checkbox-filter" type="checkbox" {% if  full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %} {% if ext_subnational == "1" %} checked="checked" {% endif %}>
-                <label for="show-subnational" title="{{ _('Sub national data refers to data that is disaggregated in smaller administrative levels than the national level.') }}" data-module="bs_tooltip" data-toggle="tooltip">Sub-national [?]</label>
-            </span>
-            {#
-            <div class="filters-actions list-header-showall pull-right">
-                <div class="row">
-                    <div class="col-xs-12 loading-div">
-                        <img class="loading-image" src="/images/filter_loading.gif">
-                        <div class="pull-right list-header-showall">
-                            <span class="filter-action-item"><a class="main-action" href="#">Apply</a></span>
-                            <span class="filter-action-item"><a class="reset-action" href="#">Reset</a></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="filter-results">
-                            <span class="filter-results-number">{{c.page.item_count}}</span> results found
-                        </div>
-                    </div>
-                </div>
-            </div>
-            #}
+        {% endfor %}
     </div>
-    <div class="list-header-apply">
-        <img class="loading-image" src="/images/filter_loading.gif">
-        <div class="filters-actions list-header-showall">
-            <span class="filter-results">
-                <span class="filter-results-number">{{c.page.item_count}}</span> results matching current filter selection
-            </span>
-            <span class="loading-div">
-                <span class="list-header-showall">
-                    <span class="filter-action-item"><a class="btn main-action" href="#">Apply</a></span>
-                    <span class="or-text">or</span>
-                    <span class="filter-action-item"><a class="btn reset-action" href="#">Reset</a></span>
-                    ?
-                </span>
-            </span>
+    <div id="search-page-results" class="col-xs-9">
+        <div class="search-list">
+            <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+                {% for package in packages %}
+                    {% if package.indicator and package.indicator == "1" %}
+                        {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
+                    {% else %}
+                        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
     </div>
-</form>
-<div class="search-list">
-    <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
-        {% for package in packages %}
-            {% if package.indicator and package.indicator == "1" %}
-                {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
-            {% else %}
-                {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
-            {% endif %}
-        {% endfor %}
-    </ul>
 </div>
+
 {% else %}
     <div class="list-items search-form">
         {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}

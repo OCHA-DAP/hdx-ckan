@@ -55,6 +55,26 @@ $(
                     'name': 'quickcharts filter',
                     'isList': false,
                     'mandatory': true
+                },
+                'ext_geodata': {
+                    'name': 'geodata filter',
+                    'isList': false,
+                    'mandatory': true
+                },
+                'ext_requestdata': {
+                    'name': 'requestdata filter',
+                    'isList': false,
+                    'mandatory': true
+                },
+                'ext_hxl': {
+                    'name': 'hxl filter',
+                    'isList': false,
+                    'mandatory': true
+                },
+                'ext_showcases': {
+                    'name': 'showcases filter',
+                    'isList': false,
+                    'mandatory': true
                 }
             };
 

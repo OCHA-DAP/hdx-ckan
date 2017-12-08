@@ -24,10 +24,10 @@ dataset_counts = 0
 performing_search_original = search_controller.HDXSearchController._performing_search
 
 
-def performing_search_wrapper(self, *args):
+def performing_search_wrapper(self, *args, **kwargs):
     global indicator_counts
     global dataset_counts
-    ret = performing_search_original(self, *args)
+    ret = performing_search_original(self, *args, **kwargs)
     facet_item_list = c.search_facets.get('indicator', {}).get('items', [])
     indicator_counts = next((item.get('count', 0) for item in facet_item_list if item.get('name', '') == '1'), 0)
     dataset_counts = c.count - indicator_counts

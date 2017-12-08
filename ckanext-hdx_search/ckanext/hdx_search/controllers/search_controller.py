@@ -1,4 +1,5 @@
 import logging
+import re
 import datetime
 import sqlalchemy
 from urllib import urlencode
@@ -203,7 +204,8 @@ class HDXSearchController(PackageController):
             params.append(('page', page))
             return self._search_url(params, package_type)
 
-        c.full_facet_info = self._search(package_type, pager_url, default_sort_by='pageviews_last_14_days desc')
+        default_sort_by = None if request.params.get('q', '').strip() else 'pageviews_last_14_days desc'
+        c.full_facet_info = self._search(package_type, pager_url, default_sort_by=default_sort_by)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
@@ -238,7 +240,12 @@ class HDXSearchController(PackageController):
 
         # self._set_remove_field_function()
         req_sort_by = request.params.get('sort', None)
-        sort_by = req_sort_by if req_sort_by else default_sort_by
+        if req_sort_by:
+            sort_by = req_sort_by
+            c.used_default_sort_by = False
+        else:
+            sort_by = default_sort_by
+            c.used_default_sort_by = True
         # params_nosort = [(k, v) for k, v in params_nopage if k != 'sort']
 
         # The sort_by function seems to not be used anymore
@@ -279,6 +286,7 @@ class HDXSearchController(PackageController):
             # limit = g.datasets_per_page
 
             fq = additional_fq
+            tagged_fq_dict = {}
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
@@ -286,7 +294,10 @@ class HDXSearchController(PackageController):
                         fq += ' %s' % (value,)
                     elif not param.startswith('ext_'):
                         c.fields.append((param, value))
-                        fq += ' %s:"%s"' % (param, value)
+                        # fq += ' {!tag=%s}%s:"%s"' % (param, param, value)
+                        if param not in tagged_fq_dict:
+                            tagged_fq_dict[param] = []
+                        tagged_fq_dict[param].append('{}:"{}"'.format(param, value))
                         if param not in c.fields_grouped:
                             c.fields_grouped[param] = [value]
                         else:
@@ -295,6 +306,9 @@ class HDXSearchController(PackageController):
                         search_extras[param] = value
 
             self._set_filters_are_selected_flag()
+
+            fq_list = ['{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
+                       for key, value_list in tagged_fq_dict.items()]
 
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
@@ -340,10 +354,9 @@ class HDXSearchController(PackageController):
 
             # TODO Line below to be removed after refactoring
             c.tab = 'all'
-            if request.params.get('ext_cod', '0') == '1':
-                fq += ' tags:cod'
+
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
-                                    search_extras, pager_url, context)
+                                    search_extras, pager_url, context, fq_list=fq_list)
 
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
@@ -377,9 +390,10 @@ class HDXSearchController(PackageController):
         return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
-                           search_extras, pager_url, context):
+                           search_extras, pager_url, context, fq_list=None):
         data_dict = {
             'q': q,
+            'fq_list': fq_list if fq_list else [],
             'fq': fq.strip(),
             'facet.field': facet_keys,
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
@@ -584,7 +598,8 @@ class HDXSearchController(PackageController):
         result['facets'] = OrderedDict()
         result['filters_selected'] = False
 
-        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts']
+        checkboxes = ['ext_cod', 'ext_indicator', 'ext_subnational', 'ext_quickcharts',
+                      'ext_geodata', 'ext_hxl', 'ext_requestdata', 'ext_showcases']
 
         for param in checkboxes:
             if param in search_extras:
@@ -594,17 +609,37 @@ class HDXSearchController(PackageController):
         num_of_cods = 0
         num_of_subnational = 0
         num_of_quickcharts = 0
-        for category_key, category_title in title_translations.items():
+        num_of_geodata = 0
+        num_of_hxl = 0
+        num_of_requestdata = 0
+        num_of_showcases = 0
+
+        for solr_category_key, category_title in title_translations.items():
+            regex = r'\{[\s\S]*\}'
+            category_key = re.sub(regex, '', solr_category_key)
+
             item_list = existing_facets.get(category_key, {}).get('items', [])
 
             # We're only interested in the number of items of the "indicator" facet
             if category_key == 'indicator':
                 num_of_indicators = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
             elif category_key == 'subnational':
-                num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'), 0)
+                num_of_subnational = next((item.get('count', 0) for item in item_list if item.get('name', '') == '1'),
+                                          0)
             elif category_key == 'has_quickcharts':
                 # has_quickcharts is a solr boolean that is transformed to the string 'true'
-                num_of_quickcharts = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+                num_of_quickcharts = next(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'has_geodata':
+                # has_geodata is a solr boolean that is transformed to the string 'true'
+                num_of_geodata = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'extras_is_requestdata_type':
+                # extras_is_requestdata_type is a solr boolean that is transformed to the string 'true'
+                num_of_requestdata = next(
+                    (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+            elif category_key == 'has_showcases':
+                # has_showcases is a solr boolean that is transformed to the string 'true'
+                num_of_showcases = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             else:
                 sorted_item_list = []
                 for item in item_list:
@@ -622,6 +657,8 @@ class HDXSearchController(PackageController):
                         sorted_item_list.append(new_item)
                         if category_key == 'tags' and new_item['name'] == 'cod':
                             num_of_cods = new_item['count']
+                        if category_key == 'tags' and new_item['name'] == 'hxl':
+                            num_of_hxl = new_item['count']
 
                 sorted_item_list.sort(key=lambda x: x.get('display_name'))
 
@@ -635,6 +672,10 @@ class HDXSearchController(PackageController):
         result['num_of_cods'] = num_of_cods
         result['num_of_subnational'] = num_of_subnational
         result['num_of_quickcharts'] = num_of_quickcharts
+        result['num_of_geodata'] = num_of_geodata
+        result['num_of_hxl'] = num_of_hxl
+        result['num_of_requestdata'] = num_of_requestdata
+        result['num_of_showcases'] = num_of_showcases
         result['num_of_total_items'] = total_count
 
         result['query_selected'] = True if query and query.strip() else False
