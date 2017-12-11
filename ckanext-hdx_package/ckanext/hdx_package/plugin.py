@@ -301,6 +301,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                        tk.get_validator('ignore_missing')],
             'has_quickcharts': [tk.get_converter('convert_from_extras'),
                                     tk.get_validator('ignore_missing')],
+            'has_geodata': [tk.get_converter('convert_from_extras'),
+                                tk.get_validator('ignore_missing')],
         })
         return schema
 

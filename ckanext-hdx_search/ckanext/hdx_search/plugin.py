@@ -79,7 +79,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         # If indicator flag is set, search only that type
         adapt_solr_fq('indicator')
         adapt_solr_fq('subnational')
+        adapt_solr_fq('cod', ' +tags:cod', ' -tags:cod')
+        adapt_solr_fq('hxl', ' +tags:hxl', ' -tags:hxl')
         adapt_solr_fq('quickcharts', ' +has_quickcharts:true', ' -has_quickcharts:true')
+        adapt_solr_fq('geodata', ' +has_geodata:true', ' -has_geodata:true')
+        adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
+        adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
 
         return search_params
 
@@ -106,8 +111,20 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         }
 
     def dataset_facets(self, facets_dict, package_type):
+
+        tagged_facets = ['groups', 'res_format', 'organization', 'tags', 'license_id']
+
+        # adding exclusion directive for tagged facets
+        for f in tagged_facets:
+            translation = facets_dict[f]
+            del facets_dict[f]
+            facets_dict['{{!ex={}}}{}'.format(f, f)] = translation
+
         facets_dict['indicator'] = _('Indicators')
         facets_dict['subnational'] = _('Subnational')
-        facets_dict['quickcharts'] = _('Quick charts')
+        facets_dict['has_quickcharts'] = _('Quick charts')
+        facets_dict['has_geodata'] = _('Geodata')
+        facets_dict['extras_is_requestdata_type'] = _('Datasets on request')
+        facets_dict['has_showcases'] = _('Datasets with Showcases')
 
         return facets_dict
