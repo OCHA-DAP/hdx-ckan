@@ -181,7 +181,7 @@
     top:42px;
     left:0px;
     background: rgba(255,255,255,1);
-  width: 160%;
+  width: 500px;
   border-top: 3px solid #007CE0; /*@blueColor*/
   box-shadow: 5px 5px 5px #ccc;
   display:none;
@@ -189,23 +189,27 @@
 
 .search-ahead ul{
     list-style: none;
-    margin-bottom: 0px
+    margin-bottom: 0;
+    padding: 0;
 }
 
 .search-ahead li{
-    padding: 5px;
+    padding: 10px;
     font-size: 18px;
     cursor: pointer;
-    margin-left: -35px;
 }
 
 .search-ahead li:hover{
-    background: #cccccc; /* @lightGrayColor */
+    background: #eeeeee;
 }
 
 .ahead-link{
     text-align:left;
     color:#333333; /* @darkGrayColor */
+}
+.ahead-link i.glyphicon {
+    margin-right: 10px;
+    color: #888888;
 }
 
 .ahead-type{
