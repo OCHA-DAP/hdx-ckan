@@ -54,11 +54,13 @@ Example:
 	  {% block counters %}
 	  <div class="list-items mTop20">
 		  {% block datasets %}
-			  {% if organization.packages %}
-			    {% if organization.packages is number %}
-			    	{% set num_of_pack = organization.packages %}
-			    {% else %}
-			    	{% set num_of_pack = organization.packages|length %}
+			  {% if organization.package_count or organization.packages %}
+			    {% if organization.package_count is number %}
+			    	{% set num_of_pack = organization.package_count %}
+			    {% elif  organization.packages is number %}
+			    		{% set num_of_pack = organization.package_count %}
+		  			{% else %}
+		  				{% set num_of_pack = organization.packages|length %}
 			    {% endif %}
 			   <span class="sspBold14">
 			   		 <a class="sspBold14" href="{{ h.url_for(organization.type + '_read', action='read', id=organization.name, sort='metadata_modified desc')}}">{{ num_of_pack }} {% if num_of_pack != 1 %}{{ _('Datasets') }}{% else %}{{ _('Dataset') }}{% endif %}</a>
