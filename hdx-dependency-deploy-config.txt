@@ -1,21 +1,21 @@
 
 HDX_CKAN_URL = https://hub.docker.com/r/unocha/hdx-ckan/tags/
-HDX_CKAN = 0.0.0
-
-HDX_DEMO_LITION_URL = https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
-HDX_DEMO_LITION = 0.0.0
+HDX_CKAN = 1.15.0
 
 HDX_GISLAYER_URL = https://hub.docker.com/r/unocha/hdx-gislayer/tags/
-HDX_GISLAYER = 0.0.0
+HDX_GISLAYER = 0.4.4-3
 
 HDX_GISWORKER_URL = https://hub.docker.com/r/unocha/hdx-gisworker/tags/
-HDX_GISWORKER = 0.0.0
+HDX_GISWORKER = 0.4.4-3
 
 HDX_HXL_PROXY_URL = https://hub.docker.com/r/unocha/hxl-proxy/tags/
-HDX_HXL_PROXY = 0.0.0
+HDX_HXL_PROXY = v1.4
 
 HDX_HXL_PREVIEW_URL = https://hub.docker.com/r/unocha/hdx-hxl-preview/tags/
-HDX_HXL_PREVIEW = 0.0.0
+HDX_HXL_PREVIEW = 1.1.16
 
 HDX_MAP_EXPLORER_URL = https://hub.docker.com/r/unocha/hdx-map-explorer/tags/
-HDX_MAP_EXPLORER = 0.0.0
+HDX_MAP_EXPLORER = 0.0.11
+
+HDX_DEMO_LITION_URL = https://hub.docker.com/r/unocha/hdx-demo-lition/tags/
+HDX_DEMO_LITION = 1.2
