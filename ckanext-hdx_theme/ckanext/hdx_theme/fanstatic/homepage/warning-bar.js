@@ -4,7 +4,7 @@ function positionWarningBar() {
     var windowTop = win.scrollTop();
     var windowBottom = windowTop + win.height();
 
-    var footerTop = $('.newFooter').offset().top;
+    var footerTop = $('.hdx-footer').offset().top;
 
     // var datasetsCountTop = $('#datasets-count').offset().top;
 
