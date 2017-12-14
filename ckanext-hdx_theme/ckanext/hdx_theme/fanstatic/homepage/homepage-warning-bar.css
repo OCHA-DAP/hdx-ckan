@@ -13,23 +13,21 @@
   margin-left: auto;
   margin-right: auto;
   color: #fff;
+  text-decoration: underline;
 }
 .hdx-warning .hdx-warning-text .light-text {
   font-family: "Gotham-Light", sans-serif;
 }
-.hdx-warning .hdx-warning-text a {
-  font-family: "Gotham-Light", sans-serif;
+.hdx-warning .hdx-warning-text .hdx-warning-text-important {
+  font-family: "Gotham-Bold", sans-serif;
   font-size: 16px;
   color: inherit;
 }
 .hdx-warning.hdx-announcement {
-  background-color: #cccccc;
+  background-color: #fff;
 }
 .hdx-warning.hdx-announcement .hdx-warning-text {
   color: #007CE0;
-}
-.hdx-warning-text .hdx-warning-text-important {
-  font-family: 'Gotham-Bold', sans-serif;
 }
 @media (max-width: 767px) {
   .hdx-warning {
