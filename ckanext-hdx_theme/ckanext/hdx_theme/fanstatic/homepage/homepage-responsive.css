@@ -207,6 +207,9 @@
   body.home .newFooter > div > div:first-child > .container > .row > .span12 {
     padding-left: 0;
   }
+  body .hdx-footer .links-list {
+    width: 100%;
+  }
   body .hdx-footer .links-list .logo-tools-gray {
     height: auto;
     width: 100%;
