@@ -207,6 +207,14 @@
   body.home .newFooter > div > div:first-child > .container > .row > .span12 {
     padding-left: 0;
   }
+  body .hdx-footer .links-list .logo-tools-gray {
+    height: auto;
+    width: 100%;
+  }
+  body .hdx-footer .mailChimpForm form input[type="submit"].btn.btn-primary {
+    margin-left: 0;
+    margin-top: 10px;
+  }
 }
 @media (max-width: 767px) {
   body.home {
@@ -378,10 +386,31 @@
   body.home .newFooter .span12 > .row > .span6 {
     padding-right: 0;
   }
+  body .hdx-footer .mailChimpForm {
+    margin-bottom: 10px;
+  }
+  body .hdx-footer .mailChimpForm form input[type="submit"].btn.btn-primary {
+    margin-left: 7px;
+    margin-top: -3px;
+  }
 }
 @media (max-width: 414px) {
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
     left: 80px;
+  }
+  body .hdx-footer .mailChimpForm form input[type="submit"].btn.btn-primary {
+    margin-left: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  body .hdx-footer .social-footer .product-links img {
+    margin-left: 5px;
+  }
+  body .hdx-footer .social-footer .product-links a:first-child img {
+    height: 20px !important;
+  }
+  body .hdx-footer .social-footer .product-links a img {
+    height: 26px !important;
   }
 }
 @media (max-width: 320px) {
