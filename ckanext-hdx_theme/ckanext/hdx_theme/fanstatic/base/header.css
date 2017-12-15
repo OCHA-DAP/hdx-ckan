@@ -1609,7 +1609,7 @@ ul.list-horizontal li:first-child:before {
 .hdx-footer .social-footer .product-links img {
   margin-left: 20px;
 }
-.hdx-footer .col-xs-12 > .row {
+.hdx-footer .footer-wrapper {
   vertical-align: middle;
   padding-top: 60px;
   padding-bottom: 60px;
