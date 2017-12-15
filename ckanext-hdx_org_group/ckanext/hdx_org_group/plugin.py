@@ -220,6 +220,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('group_index', '/group',
                     controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
                     highlight_actions='index search')
+        map.connect('group_worldmap', '/worldmap',
+                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
 
         map.connect('group_new', '/group/new', controller='group', action='new')
         map.connect(
