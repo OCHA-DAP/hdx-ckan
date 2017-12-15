@@ -2,7 +2,7 @@
 	display: none;
 }
 
-@media (max-width: 1200px) { 
+@media (max-width: 1200px) {
 	body{
 		&.home{
 			min-width: 100%;
@@ -75,13 +75,13 @@
 						}
 					}
 				}
-			}		
+			}
 		}
 	}
 }
 
 
-@media (max-width: 992px) { 
+@media (max-width: 992px) {
 	body{
 		&.home{
 			.hdxLogo{
@@ -270,11 +270,28 @@
 				}
 			}
 		}
+
+        .hdx-footer {
+
+            .links-list .logo-tools-gray {
+                height: auto;
+                width: 100%;
+            }
+
+            .mailChimpForm {
+               form {
+                   input[type="submit"].btn.btn-primary {
+                       margin-left: 0;
+                       margin-top: 10px;
+                   }
+               }
+            }
+        }
 	}
 }
 
 
-@media (max-width: 767px) { 
+@media (max-width: 767px) {
 	body{
 		&.home{
 			min-width: 100%;
@@ -308,7 +325,7 @@
 							margin-top: 12px;
 						}
 					}
-				}	
+				}
 			}
 			.navbar-header,
 			.navbar{
@@ -444,7 +461,7 @@
 							width: 100%;
 							.firstSearch{
 								.form-search{
-									.input-append{			
+									.input-append{
 										.searchInput{
 											width: 79%;
 										}
@@ -490,10 +507,23 @@
 				}
 			}
 		}
+
+        .hdx-footer {
+            .mailChimpForm {
+               form {
+                   input[type="submit"].btn.btn-primary {
+                       margin-left: 7px;
+                       margin-top: -3px;
+                   }
+               }
+                margin-bottom: 10px;
+            }
+
+        }
 	}
 }
 
-@media (max-width: 414px) { 
+@media (max-width: 414px) {
 	@carousel-left-pos: 80px;
 	body{
 		&.home{
@@ -507,10 +537,41 @@
 				}
 			}
 		}
+
+        .hdx-footer {
+            .mailChimpForm {
+               form {
+                   input[type="submit"].btn.btn-primary {
+                       margin-left: 0;
+                       margin-top: 10px;
+                       margin-bottom: 10px;
+                   }
+               }
+            }
+
+            .social-footer {
+                .product-links {
+                    img {
+                        margin-left: 5px;
+                    }
+                    a:first-child {
+                        img {
+                            height: 20px !important;
+                        }
+                    }
+                    a {
+                        img {
+                            height: 26px !important;
+                        }
+                    }
+
+                }
+            }
+        }
 	}
 }
 
-@media (max-width: 320px) { 
+@media (max-width: 320px) {
 	@carousel-left-pos: 53px;
 	body{
 		&.home{
