@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{%- block page %}
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.4/mapbox.css' rel='stylesheet' />
+    {% resource 'hdx_theme/leaflet' %}
+    {% resource 'hdx_theme/group' %}
+
+    <div id="mapbox-baselayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.baselayer.url') }}</div>
+    <div id="mapbox-labelslayer-url-div" style="display: none;">{{ h.hdx_get_ckan_config('hdx.mapbox.labelslayer.url') }}</div>
+    <div id="datasetCounts" style="display: none;">
+        {{ c.countries }}
+    </div>
+
+    <div id="locationSection" class="row paddingRowHack">
+        <div class="col-xs-12 paddingLeftHack paddingRightHack">
+            <div id="map" style="height: 580px; position: relative;"></div>
+        </div>
+    </div>
+
+{% endblock -%}
+
+
+
