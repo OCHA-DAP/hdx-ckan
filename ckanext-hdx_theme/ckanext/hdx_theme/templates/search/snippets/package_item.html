@@ -2,113 +2,115 @@
 
 <li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
-    <div class="row list-items dataset-content mTB15">
-      <div class="col-xs-6">
-        {% block pre_icon %}
-        {% endblock %}
-        <span class="mL15 pull-left">
-          <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
-            {% if is_metadata_only %}
-              {% block metadata_only_icon %}
-                <img src="/images/metadata-only-restricted.png" width="16" height="16" style="margin-top: -3px;" />
-              {% endblock %}
-            {% endif %}
-            {% block title %}
-              {% set truncate = truncate or 180 %}
-              {% set truncate_title = truncate_title or 80 %}
-              {% set title = package.title or package.name %}
+    <div class="dataset-pre-content">
+      <div class="list-items dataset-content">
+        <div class="row">
+          <div class="col-xs-6">
+            {% block pre_icon %}
+            {% endblock %}
+            <span class="pull-left">
+            <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
               {% if is_metadata_only %}
-                {% set title = title + ' [By Request Only]' %}
+                {% block metadata_only_icon %}
+                  <img src="/images/metadata-only-restricted.png" width="16" height="16" style="margin-top: -3px;" />
+                {% endblock %}
               {% endif %}
-              {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
-              {% if package.private %}
-                 <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-              {% endif %}
+              {% block title %}
+                {% set truncate = truncate or 180 %}
+                {% set truncate_title = truncate_title or 80 %}
+                {% set title = package.title or package.name %}
+                {% if is_metadata_only %}
+                  {% set title = title + ' [By Request Only]' %}
+                {% endif %}
+                {{ h.link_to(h.truncate(title, truncate_title), h.url_for(controller='package', action='read', id=package.name)) }}
+                {% if package.private %}
+                   <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                {% endif %}
 
-            {% endblock %}
-          </div>
-          <div class="dataset-updated">
-            {% block updated %}
-              {% block owner_update %}
-                  {% set updated_time = package.metadata_modified or package.metadata_created%}
-                  {% set f_updated_time = h.render_datetime(updated_time) %}
-
-                  {% if package.organization %}
-                    <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
-                      {{ package.organization.title or package.organization.name }}
-                    </a>
-                  {% else %}
-                    {% set last_user = h.get_last_modifier_user(p_id=package.id) %}
-                    <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
-                      {{ last_user.fullname }}
-                    </a>
-                  {% endif %}
-                  <br/>
-                  Updated {{f_updated_time}}
-                  {% if package.dataset_date%}
-                    {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
-                    {% if dataset_date %}
-                        | Dataset date: {{dataset_date}}
-                    {% endif %}
-                  {% endif %}
               {% endblock %}
-            {% endblock %}
+            </div>
+            <div class="dataset-updated">
+              {% block updated %}
+                {% block owner_update %}
+                    {% set updated_time = package.metadata_modified or package.metadata_created%}
+                    {% set f_updated_time = h.render_datetime(updated_time) %}
+
+                    {% if package.organization %}
+                      <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
+                        {{ package.organization.title or package.organization.name }}
+                      </a>
+                    {% else %}
+                      {% set last_user = h.get_last_modifier_user(p_id=package.id) %}
+                      <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
+                        {{ last_user.fullname }}
+                      </a>
+                    {% endif %}
+                    <br/>
+                    Updated {{f_updated_time}}
+                    {% if package.dataset_date%}
+                      {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
+                      {% if dataset_date %}
+                          | Dataset date: {{dataset_date}}
+                      {% endif %}
+                    {% endif %}
+                {% endblock %}
+              {% endblock %}
+            </div>
+            <div class="dataset-actions">
+              {% block actions %}
+              <ul class="hdx-bs3">
+                {% if show_edit_link %}
+                  <li>
+                    {% if h.check_access('package_update', {'id':package.id }) %}
+                      {% link_for _('Edit'), controller='package', action='edit', id=package.name %}
+                    {% endif %}
+                  </li>
+                {% endif %}
+                {% if not package.private %}
+                  <li>
+                    {% block preview_link %}
+                      {#<a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>#}
+                    {% endblock %}
+                  </li>
+                  {#
+                  <li>
+                    <a  class="link-separator" href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
+                  </li>
+                  #}
+                  <li>
+                    {% block follow_link %}
+                      {# h.hdx_follow_link('dataset', package.id, "this dataset") #}
+                    {% endblock %}
+                  </li>
+                {% endif %}
+                {# {% if package.private %}
+                  <li>
+                    <a>Request data</a>&nbsp;<span class="glyphicon glyphicon-lock" style="font-size: 15px; color:#007ce0"></span>
+                  </li>
+                {% endif %} #}
+              </ul>
+              {% endblock %}
+            </div>
+          </span>
           </div>
-          <div class="dataset-actions">
-            {% block actions %}
-            <ul class="hdx-bs3">
-              {% if show_edit_link %}
-                <li>
-                  {% if h.check_access('package_update', {'id':package.id }) %}
-                    {% link_for _('Edit'), controller='package', action='edit', id=package.name %}
-                  {% endif %}
-                </li>
-              {% endif %}
-              {% if not package.private %}
-                <li>
-                  {% block preview_link %}
-                    {#<a href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Preview</a>#}
-                  {% endblock %}
-                </li>
-                {#
-                <li>
-                  <a  class="link-separator" href="{{ h.url_for(controller='package', action='read', id=package.name) }}">Download</a>
-                </li>
-                #}
-                <li>
-                  {% block follow_link %}
-                    {# h.hdx_follow_link('dataset', package.id, "this dataset") #}
-                  {% endblock %}
-                </li>
-              {% endif %}
-              {# {% if package.private %}
-                <li>
-                  <a>Request data</a>&nbsp;<span class="glyphicon glyphicon-lock" style="font-size: 15px; color:#007ce0"></span>
-                </li>
-              {% endif %} #}
-            </ul>
-            {% endblock %}
-          </div>
-        </span>
-      </div>
-      <div class="col-xs-6">
-        <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
-          {% block description %}
-            {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
-            {% if notes %}
-            	<span data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"><div>{{ notes|urlize }}</div></span>
-            {% else %}
-              <p class="empty">{{ _("This dataset has no description") }}</p>
-            {% endif %}
-          {% endblock %}
-        </div>
-        <div class="dataset-others">
-          {% block others %}
-            {% if package.is_requestdata_type %}
-              {% if c.userobj %}
-                {% set is_logged_in = 'true' %}
+          <div class="col-xs-6">
+            <div class="dataset-description" data-module="highlight" data-module-text="{{ query }}">
+              {% block description %}
+              {% set notes = h.markdown_extract(package.notes, extract_length=truncate) if package.notes else '' %}
+              {% if notes %}
+              <span data-module="hdx_show_more" style="visibility:hidden; word-wrap: break-word"><div>{{ notes|urlize }}</div></span>
               {% else %}
-                {% set is_logged_in = 'false' %}
+              <p class="empty">{{ _("This dataset has no description") }}</p>
+              {% endif %}
+              {% endblock %}
+            </div>
+            <div class="dataset-others">
+              {% block others %}
+              {% if package.is_requestdata_type %}
+              {% if c.userobj %}
+              {% set is_logged_in = 'true' %}
+              {% else %}
+              {% set is_logged_in = 'false' %}
               {% endif %}
               {% set is_hdx = h.requestdata_is_hdx_portal() %}
               {% set redirect_url = h.url_for(controller='user', action='login') %}
@@ -127,30 +129,36 @@
                  data-module-analytics="{{ package.hdx_analytics }}"
               >Request access</a>
               <div class="requested-data-message"></div>
-            {% else %}
+              {% else %}
               <ul class="hdx-bs3 list-items dataset-resources unstyled">
-              {% if package.resources and not hide_resources %}
+                {% if package.resources and not hide_resources %}
 
-                  {% for resource in h.dict_list_reduce(package.resources, 'format') %}
-                    <li>
-                      <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
-                    </li>
-                  {% endfor %}
-                  {# set size="32Kb" #}
-                  {% if size %}
-                    <li class="label-size">
-                      {{ size }}
-                    </li>
-                  {% endif %}
-              {% endif %}
-              <!-- load package icons -->
-              {% snippet 'search/snippets/package_icons.html', package=package %}
+                {% for resource in h.dict_list_reduce(package.resources, 'format') %}
+                <li>
+                  <a href="{{ h.url_for(controller='package', action='read', id=package.name) }}" class="label label-small" data-format="{{ resource.lower() }}">{{ resource }}</a>
+                </li>
+                {% endfor %}
+                {# set size="32Kb" #}
+                {% if size %}
+                <li class="label-size">
+                  {{ size }}
+                </li>
+                {% endif %}
+                {% endif %}
+                <!-- load package icons -->
+                {% snippet 'search/snippets/package_icons.html', package=package %}
               </ul>
-            {% endif %}
-          {% endblock %}
+              {% endif %}
+              {% endblock %}
+            </div>
+          </div>
+          <div class="col-xs-12 stacked-info">
+            Show other [[39]] automated updates from [[ORG Name]]
+          </div>
         </div>
       </div>
     </div>
+
   {% endblock %}
 </li>
 {% resource 'hdx_theme/bs_tooltip.js' %}

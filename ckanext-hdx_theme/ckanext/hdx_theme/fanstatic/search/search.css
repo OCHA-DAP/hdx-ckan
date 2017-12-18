@@ -1,0 +1,252 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* Set page background */
+.contentBackground {
+  background-color: #fff;
+}
+/* END Set page background */
+/* Style search widget */
+.module-content:first-child {
+  padding-top: 0;
+  margin-bottom: 100px;
+}
+.list-items.search-form h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #000;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  margin: 35px 0;
+}
+/* END Style search widget */
+/* Dataset list */
+.search-list .dataset-item {
+  border-bottom: 1px solid #cccccc;
+  margin: 0;
+  position: relative;
+}
+.search-list .dataset-item .stacked-info {
+  display: none;
+}
+.search-list .dataset-item.stacked-item {
+  border-bottom: none;
+  margin-bottom: 10px;
+}
+.search-list .dataset-item.stacked-item:before {
+  content: " ";
+  background-color: #edf6fd;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #007CE0;
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+.search-list .dataset-item.stacked-item .dataset-pre-content:before {
+  content: " ";
+  background-color: #edf6fd;
+  height: 100%;
+  width: 100%;
+  border: 1px solid #007CE0;
+  position: absolute;
+  display: block;
+  top: 5px;
+  left: 5px;
+  z-index: 101;
+}
+.search-list .dataset-item.stacked-item .dataset-content {
+  position: relative;
+  top: 10px;
+  left: 10px;
+  z-index: 102;
+  background-color: #fff;
+  border: 1px solid #007CE0;
+  padding-bottom: 0;
+}
+.search-list .dataset-item.stacked-item .stacked-info {
+  background-color: #edf6fd;
+  color: #007CE0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 40px;
+  margin-top: 10px;
+  display: block;
+}
+.search-list .dataset-item .dataset-content {
+  padding: 15px;
+}
+.search-list .dataset-item:last-of-type {
+  border-bottom: none;
+}
+.search-list .dataset-item .dataset-heading {
+  margin-bottom: 0;
+  line-height: 1;
+  font-size: 14px;
+}
+.search-list .dataset-item .dataset-heading a {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  /*color: #007ce0;*/
+  /*let's try and use default color*/
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+.search-list .dataset-item .dataset-updated {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.01em;
+}
+.search-list .dataset-item .updatedNameColor {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #333333;
+  letter-spacing: 0.01em;
+}
+.search-list .dataset-item .dataset-actions img svg {
+  height: 15px;
+  fill: #007CE0;
+}
+.search-list .dataset-item .dataset-actions > ul {
+  display: inline;
+  list-style: none;
+}
+.search-list .dataset-item .dataset-actions > ul > li {
+  display: inline;
+  color: #007CE0;
+}
+.search-list .dataset-item .dataset-actions > ul > li > a {
+  text-transform: uppercase;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  color: #007CE0;
+  letter-spacing: 0.01em;
+}
+.search-list .dataset-item .dataset-actions > ul > li > a::after {
+  margin-left: 7px;
+  margin-right: 4px;
+}
+.search-list .dataset-item .dataset-actions > ul > li > a.link-separator::before {
+  content: "|";
+  margin-left: 7px;
+  margin-right: 4px;
+}
+.search-list .dataset-item .dataset-actions > ul > li:last-child > a::after {
+  content: "";
+  margin: 0;
+}
+.search-list .dataset-item .dataset-description {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.01em;
+}
+.search-list .dataset-item .dataset-others .list-items {
+  margin: 0;
+}
+.search-list .dataset-item .dataset-others .label-size {
+  font-size: 10px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  letter-spacing: 0.01em;
+  margin-left: 5px;
+}
+.search-list .dataset-item .hdx-ds-title-icon {
+  font-size: 12px;
+  margin-left: 5px;
+}
+.search-list .dataset-content .pre-icon .icon {
+  color: #007CE0;
+  font-size: 20px;
+  width: 20px;
+  margin-top: 3px;
+}
+/* END Dataset list */
+/* Fix search spacing between tabs and results number */
+.search-nav > li > a {
+  padding-top: 0;
+}
+/* END Fix search spacing between tabs and results number */
+/* Show full text on hover over select2 options */
+.select2-results .select2-result-label {
+  max-height: 2em;
+  overflow: hidden;
+}
+.select2-results .select2-result-label:hover {
+  max-height: inherit;
+  overflow: inherit;
+}
+/* END - Show full text on hover over select2 options */
+/* Styling search recommendations */
+#search-recs {
+  margin-top: 25px;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #888888;
+  letter-spacing: 0.01em;
+}
+/* END - Styling search recommendations */
+/* Styling Predictive search */
+#input-search {
+  position: relative;
+}
+.search-ahead {
+  position: absolute;
+  z-index: 99999999;
+  top: 42px;
+  left: 0px;
+  background: #ffffff;
+  width: 500px;
+  border-top: 3px solid #007CE0;
+  /*@blueColor*/
+  box-shadow: 5px 5px 5px #ccc;
+  display: none;
+}
+.search-ahead ul {
+  list-style: none;
+  margin-bottom: 0;
+  padding: 0;
+}
+.search-ahead li {
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.search-ahead li:hover {
+  background: #eeeeee;
+}
+.ahead-link {
+  text-align: left;
+  color: #333333;
+  /* @darkGrayColor */
+}
+.ahead-link i.glyphicon {
+  margin-right: 10px;
+  color: #888888;
+}
+.ahead-type {
+  float: right;
+  text-align: right;
+  margin-top: -20px;
+}
+/* END - Styling predictive search */
