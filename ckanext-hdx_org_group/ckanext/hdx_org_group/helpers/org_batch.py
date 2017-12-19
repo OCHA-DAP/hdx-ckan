@@ -5,6 +5,7 @@ import uuid
 import ckan.logic as logic
 import ckan.model as model
 
+from pylons import config
 from ckanext.hdx_org_group.model import OrganizationBatch
 
 log = logging.getLogger(__name__)
@@ -22,6 +23,7 @@ def get_batch_or_generate(org_identifier):
 
 
 def get_batch(org_identifier):
+    max_minutes = int(config.get('hdx.batch.period_in_mins', '30'))
     batch = None
     if not org_identifier:
         raise NoOrganization('organization_id needs to exist')
@@ -44,7 +46,7 @@ def get_batch(org_identifier):
     else:
         minutes = (right_now - organization_batch.last_modified).seconds / 60
         organization_batch.last_modified = right_now
-        if minutes > 30:
+        if minutes > max_minutes:
             organization_batch.batch = unicode(uuid.uuid4())
         organization_batch.save()
         batch = organization_batch.batch
