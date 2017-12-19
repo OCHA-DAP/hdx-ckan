@@ -68,6 +68,8 @@ def _encode_params(params):
 def url_with_params(url, params):
     params = _encode_params(params)
     return url + u'?' + urlencode(params)
+
+
 #
 #
 # def search_for_all(context, data_dict):
@@ -310,6 +312,12 @@ class HDXSearchController(PackageController):
             fq_list = ['{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
                        for key, value_list in tagged_fq_dict.items()]
 
+            # if the search is not filtered by query or facet group datasets
+            solr_expand = 'false'
+            if not fq_list and not q:
+                fq_list = ['{!collapse field=batch nullPolicy=expand} ']
+                solr_expand = 'true'
+
             try:
                 limit = 1 if self._is_facet_only_request() else int(request.params.get('ext_page_size', num_of_items))
             except:
@@ -356,7 +364,7 @@ class HDXSearchController(PackageController):
             c.tab = 'all'
 
             self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
-                                    search_extras, pager_url, context, fq_list=fq_list)
+                                    search_extras, pager_url, context, fq_list=fq_list, expand=solr_expand)
 
         except SearchError, se:
             log.error('Dataset search error: %r', se.args)
@@ -390,10 +398,12 @@ class HDXSearchController(PackageController):
         return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
-                           search_extras, pager_url, context, fq_list=None):
+                           search_extras, pager_url, context, fq_list=None, expand=None):
         data_dict = {
             'q': q,
             'fq_list': fq_list if fq_list else [],
+            'expand': expand,
+            'expand.rows': 1,  # we anyway don't show the expanded datasets, but doesn't work with 0
             'fq': fq.strip(),
             'facet.field': facet_keys,
             # added for https://github.com/OCHA-DAP/hdx-ckan/issues/3340
@@ -436,6 +446,7 @@ class HDXSearchController(PackageController):
             download_sum = sum(downloads_list)
 
             dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
+            dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
@@ -549,7 +560,8 @@ class HDXSearchController(PackageController):
         url = h.url_for('search')
         return url
 
-    def _prepare_facets_info(self, existing_facets, selected_facets, search_extras, title_translations, total_count, query):
+    def _prepare_facets_info(self, existing_facets, selected_facets, search_extras, title_translations, total_count,
+                             query):
         '''
         Sample return
         {
@@ -639,7 +651,8 @@ class HDXSearchController(PackageController):
                     (item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
             elif category_key == 'has_showcases':
                 # has_showcases is a solr boolean that is transformed to the string 'true'
-                num_of_showcases = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'), 0)
+                num_of_showcases = next((item.get('count', 0) for item in item_list if item.get('name', '') == 'true'),
+                                        0)
             else:
                 sorted_item_list = []
                 for item in item_list:

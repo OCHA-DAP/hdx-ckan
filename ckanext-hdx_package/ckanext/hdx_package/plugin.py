@@ -223,7 +223,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                               tk.get_converter('convert_to_extras')],
             'data_update_frequency': [tk.get_validator('not_empty'),
-                              tk.get_converter('convert_to_extras')]
+                              tk.get_converter('convert_to_extras')],
+            'batch': [tk.get_validator('not_empty'),
+                                      tk.get_converter('convert_to_extras')]
         })
 
         schema['resources'].update(
@@ -303,6 +305,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                                     tk.get_validator('ignore_missing')],
             'has_geodata': [tk.get_converter('convert_from_extras'),
                                 tk.get_validator('ignore_missing')],
+            'batch': [tk.get_converter('convert_from_extras'),
+                                      tk.get_validator('ignore_missing')],
         })
         return schema
 
@@ -334,7 +338,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
             'resource_show': hdx_get.resource_show,
-            # 'package_search': hdx_get.package_search,
+            'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,
             'package_validate': hdx_get.package_validate,
