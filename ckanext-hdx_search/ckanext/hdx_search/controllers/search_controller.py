@@ -207,7 +207,8 @@ class HDXSearchController(PackageController):
             return self._search_url(params, package_type)
 
         default_sort_by = None if request.params.get('q', '').strip() else 'pageviews_last_14_days desc'
-        c.full_facet_info = self._search(package_type, pager_url, default_sort_by=default_sort_by)
+        c.full_facet_info = self._search(package_type, pager_url, default_sort_by=default_sort_by,
+                                         use_solr_collapse=True)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
@@ -223,7 +224,7 @@ class HDXSearchController(PackageController):
     def _search(self, package_type, pager_url,
                 additional_fq='', additional_facets=None,
                 default_sort_by=None, num_of_items=NUM_OF_ITEMS,
-                ignore_capacity_check=False):
+                ignore_capacity_check=False, use_solr_collapse=False):
         from ckan.lib.search import SearchError
 
         # unicode format (decoded from utf8)
@@ -314,7 +315,7 @@ class HDXSearchController(PackageController):
 
             # if the search is not filtered by query or facet group datasets
             solr_expand = 'false'
-            if not fq_list and not q:
+            if use_solr_collapse and not fq_list and not q:
                 fq_list = ['{!collapse field=batch nullPolicy=expand} ']
                 solr_expand = 'true'
 
@@ -447,6 +448,8 @@ class HDXSearchController(PackageController):
 
             dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
             dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
+            dataset['batch_url'] = h.url_for('organization_read', id=dataset.get('organization', {}).get('name'),
+                                             ext_batch=dataset.get('batch'))
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
