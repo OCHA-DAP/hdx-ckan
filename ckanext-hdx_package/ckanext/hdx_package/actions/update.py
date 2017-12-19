@@ -6,7 +6,6 @@ Created on Jul 07, 2015
 
 import logging
 import datetime
-import json
 
 import ckan.logic.action.update as core_update
 import ckan.logic as logic
@@ -18,6 +17,7 @@ import ckanext.hdx_package.helpers.helpers as helpers
 import ckanext.hdx_package.helpers.geopreview as geopreview
 
 from ckan.common import _
+from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
 _check_access = logic.check_access
 _get_action = logic.get_action
@@ -104,6 +104,9 @@ def package_update(context, data_dict):
     # Inject the existing package_creator as it should not be modifiable
     if hasattr(pkg, 'extras'):
         data_dict['package_creator'] = pkg.extras.get('package_creator', data_dict.get('package_creator'))
+
+    # Inject a code representing the batch within which this dataset was modified
+    data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')

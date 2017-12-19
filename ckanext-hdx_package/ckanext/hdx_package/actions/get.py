@@ -13,6 +13,7 @@ import ckan.lib.navl.dictization_functions
 import ckan.lib.search as search
 import ckan.logic.action.get as logic_get
 import ckan.lib.plugins as lib_plugins
+import ckan.authz as authz
 
 import sqlalchemy
 import logging
@@ -23,6 +24,8 @@ from ckan.lib import uploader
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import ckanext.hdx_theme.util.jql as jql
 from ckanext.hdx_package.helpers import helpers
+from paste.deploy.converters import asbool
+
 
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS
 from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
@@ -58,7 +61,7 @@ def package_search(context, data_dict):
     '''
 
     THIS IS A COPY OF THE package_search() ACTION FROM CORE CKAN
-    IT USES ONLY ONE SQLALCHEMY QUERY TO GET ORG AND GROUP DISPLAY_NAMES
+    IT'S CHANGED TO RETURN MORE DATA FROM THE SOLR QUERY (collapse/expand)
 
     Searches for packages satisfying a given search criteria.
 
@@ -84,7 +87,8 @@ def package_search(context, data_dict):
         documentation, this is a comma-separated string of field names and
         sort-orderings.
     :type sort: string
-    :param rows: the number of matching rows to return.
+    :param rows: the number of matching rows to return. There is a hard limit
+        of 1000 datasets per query.
     :type rows: int
     :param start: the offset in the complete result for where the set of
         returned datasets should begin.
@@ -101,6 +105,18 @@ def package_search(context, data_dict):
     :param facet.field: the fields to facet upon.  Default empty.  If empty,
         then the returned facet information is empty.
     :type facet.field: list of strings
+    :param include_drafts: if ``True``, draft datasets will be included in the
+        results. A user will only be returned their own draft datasets, and a
+        sysadmin will be returned all draft datasets. Optional, the default is
+        ``False``.
+    :type include_drafts: boolean
+    :param include_private: if ``True``, private datasets will be included in
+        the results. Only private datasets from the user's organizations will
+        be returned and sysadmins will be returned all private datasets.
+        Optional, the default is ``False``.
+    :param use_default_schema: use default package schema instead of
+        a custom schema defined with an IDatasetForm plugin (default: False)
+    :type use_default_schema: bool
 
 
     The following advanced Solr parameters are supported as well. Note that
@@ -113,6 +129,12 @@ def package_search(context, data_dict):
     .. _dismax: http://wiki.apache.org/solr/DisMaxQParserPlugin
     .. _edismax: http://wiki.apache.org/solr/ExtendedDisMax
 
+
+    **Examples:**
+
+    ``q=flood`` datasets containing the word `flood`, `floods` or `flooding`
+    ``fq=tags:economy`` datasets with the tag `economy`
+    ``facet.field=["tags"] facet.limit=10 rows=0`` top 10 tags
 
     **Results:**
 
@@ -135,9 +157,6 @@ def package_search(context, data_dict):
         "count", "display_name" and "name" entries.  The display_name is a
         form of the name that can be used in titles.
     :type search_facets: nested dict of dicts.
-    :param use_default_schema: use default package schema instead of
-        a custom schema defined with an IDatasetForm plugin (default: False)
-    :type use_default_schema: bool
 
     An example result: ::
 
@@ -176,6 +195,7 @@ def package_search(context, data_dict):
 
     model = context['model']
     session = context['session']
+    user = context.get('user')
 
     _check_access('package_search', context, data_dict)
 
@@ -198,18 +218,54 @@ def package_search(context, data_dict):
 
     results = []
     if not abort:
-        data_source = 'data_dict' if data_dict.get('use_default_schema') else 'validated_data_dict'
+        if asbool(data_dict.get('use_default_schema')):
+            data_source = 'data_dict'
+        else:
+            data_source = 'validated_data_dict'
+        data_dict.pop('use_default_schema', None)
         # return a list of package ids
         data_dict['fl'] = 'id {0}'.format(data_source)
 
-        # If this query hasn't come from a controller that has set this flag
-        # then we should remove any mention of capacity from the fq and
+        # we should remove any mention of capacity from the fq and
         # instead set it to only retrieve public datasets
         fq = data_dict.get('fq', '')
-        if not context.get('ignore_capacity_check', False):
-            fq = ' '.join(p for p in fq.split(' ')
-                          if not 'capacity:' in p)
-            data_dict['fq'] = fq + ' capacity:"public"'
+
+        # Remove before these hit solr FIXME: whitelist instead
+        include_private = asbool(data_dict.pop('include_private', False))
+        include_drafts = asbool(data_dict.pop('include_drafts', False))
+
+        capacity_fq = 'capacity:"public"'
+        if include_private and authz.is_sysadmin(user):
+            capacity_fq = None
+        elif include_private and user:
+            orgs = logic.get_action('organization_list_for_user')(
+                {'user': user}, {'permission': 'read'})
+            if orgs:
+                capacity_fq = '({0} OR owner_org:({1}))'.format(
+                    capacity_fq,
+                    ' OR '.join(org['id'] for org in orgs))
+            if include_drafts:
+                capacity_fq = '({0} OR creator_user_id:({1}))'.format(
+                    capacity_fq,
+                    authz.get_user_id_for_username(user))
+
+        if capacity_fq:
+            fq = ' '.join(p for p in fq.split() if 'capacity:' not in p)
+            data_dict['fq'] = capacity_fq + ' ' + fq
+
+        fq = data_dict.get('fq', '')
+        if include_drafts:
+            user_id = authz.get_user_id_for_username(user, allow_none=True)
+            if authz.is_sysadmin(user):
+                data_dict['fq'] = '+state:(active OR draft) ' + fq
+            elif user_id:
+                # Query to return all active datasets, and all draft datasets
+                # for this user.
+                u_fq = ' ((creator_user_id:{0} AND +state:(draft OR active))' \
+                       ' OR state:active) '.format(user_id)
+                data_dict['fq'] = u_fq + ' ' + fq
+        elif not authz.is_sysadmin(user):
+            data_dict['fq'] = '+state:active ' + fq
 
         # Pop these ones as Solr does not need them
         extras = data_dict.pop('extras', None)
@@ -222,53 +278,48 @@ def package_search(context, data_dict):
 
         for package in query.results:
             # get the package object
-            package, package_dict = package['id'], package.get(data_source)
-            # COMMENTING BELOW CODE FRAGMENT OUT ACCORDING TO A CHANGE DONE IN
-            # CKAN CORE https://github.com/ckan/ckan/commit/463bc3e3422ad60a5a00148167115485d93c1bbb#diff-4494aaf212251212949348df94158668
-            # pkg_query = session.query(model.Package)\
-            #     .filter(model.Package.id == package)\
-            #     .filter(model.Package.state == u'active')
-            # pkg = pkg_query.first()
-            #
-            # ## if the index has got a package that is not in ckan then
-            # ## ignore it.
-            # if not pkg:
-            #     log.warning('package %s in index but not in database'
-            #                 % package)
-            #     continue
+            package_dict = package.get(data_source)
             ## use data in search index if there
             if package_dict:
-                ## the package_dict still needs translating when being viewed
+                # the package_dict still needs translating when being viewed
                 package_dict = json.loads(package_dict)
                 if context.get('for_view'):
                     for item in plugins.PluginImplementations(
                             plugins.IPackageController):
                         package_dict = item.before_view(package_dict)
                 results.append(package_dict)
-                # else:
-                #     results.append(model_dictize.package_dictize(pkg, context))
+            else:
+                log.error('No package_dict is coming from solr for package '
+                          'id %s', package['id'])
 
         count = query.count
         facets = query.facets
+        expanded = query.raw_response.get('expanded', {})
     else:
         count = 0
         facets = {}
         results = []
+        expanded = {}
 
     search_results = {
         'count': count,
         'facets': facets,
+        'expanded': expanded,
         'results': results,
         'sort': data_dict['sort']
     }
 
-    org_group_keys = []
-    for key, value in facets.items():
-        if key in ('groups', 'organization'):
-            org_group_keys.extend(value.keys())
+    # create a lookup table of group name to title for all the groups and
+    # organizations in the current search's facets.
+    group_names = []
+    for field_name in ('groups', 'organization'):
+        group_names.extend(facets.get(field_name, {}).keys())
 
-    groups = session.query(model.Group.name, model.Group.title).filter(model.Group.name.in_(org_group_keys)).all()
-    group_display_names = {g.name: g.title for g in groups}
+    groups = (session.query(model.Group.name, model.Group.title)
+                    .filter(model.Group.name.in_(group_names))
+                    .all()
+              if group_names else [])
+    group_titles_by_name = dict(groups)
 
     # Transform facets into a more useful data structure.
     restructured_facets = {}
@@ -277,12 +328,13 @@ def package_search(context, data_dict):
             'title': key,
             'items': []
         }
-
         for key_, value_ in value.items():
             new_facet_dict = {}
             new_facet_dict['name'] = key_
             if key in ('groups', 'organization'):
-                new_facet_dict['display_name'] = group_display_names.get(key_, key_)
+                display_name = group_titles_by_name.get(key_, key_)
+                display_name = display_name if display_name and display_name.strip() else key_
+                new_facet_dict['display_name'] = display_name
             elif key == 'license_id':
                 license = model.Package.get_license_register().get(key_)
                 if license:

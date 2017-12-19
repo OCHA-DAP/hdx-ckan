@@ -18,6 +18,7 @@ import ckanext.hdx_package.helpers.screenshot as screenshot
 
 from ckan.common import _
 from ckanext.hdx_package.helpers.analytics import is_cod
+from ckanext.hdx_org_group.helpers.org_batch import get_batch_or_generate
 
 _get_action = logic.get_action
 _check_access = logic.check_access
@@ -158,6 +159,9 @@ def package_create(context, data_dict):
                 # Old plugins do not support passing the schema so we need
                 # to ensure they still work
                 package_plugin.check_data_dict(data_dict)
+
+    # Inject a code representing the batch within which this dataset was modified
+    data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_create')
