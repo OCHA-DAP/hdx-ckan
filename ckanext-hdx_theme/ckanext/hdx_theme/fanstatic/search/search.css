@@ -35,9 +35,13 @@
 .search-list .dataset-item .stacked-info {
   display: none;
 }
+.search-list .dataset-item ~ .dataset-item.stacked-item {
+  margin-top: 0;
+}
 .search-list .dataset-item.stacked-item {
   border-bottom: none;
   margin-bottom: 10px;
+  margin-top: 15px;
 }
 .search-list .dataset-item.stacked-item:before {
   content: " ";
