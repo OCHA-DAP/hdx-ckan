@@ -143,6 +143,25 @@
           </span>
           <span class="header-nav-search table-valign pull-left">
             <span class="table-valign-content">
+              <div id="previous-searches" style="display: none;">
+                  [
+                    {
+                        "text": "rohingya",
+                        "count": "3",
+                        "url": ""
+                    },
+                    {
+                        "text": "bangladesh",
+                        "count": "1",
+                        "url": ""
+                    },
+                    {
+                        "text": "nepal",
+                        "count": "8",
+                        "url": ""
+                    }
+                  ]
+              </div>
               <div class="">
                 <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
                   <div id="input-search">

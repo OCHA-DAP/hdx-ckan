@@ -29,19 +29,27 @@ $('document').ready(function(){
         $('#search-recs').html(html);
     }
 
-    $('#q, #q2').keyup(function(){
+    const onSearch = function(){
         var q = $(this).val();
+        var prevSearch = JSON.parse($("#previous-searches").text());
+
         var search = index.search(q);
         var $results = $(this).parents("form").find('.search-ahead');
         var html = "";
         html += "<ul>";
+
+        if (prevSearch != null && prevSearch.length > 0){
+            $(prevSearch).each(function(idx, el){
+                html += '<li data-href="'+el.url+'"><div class="ahead-link"><i class="glyphicon glyphicon-time"></i>'+process_title(el.text, q)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
+            });
+        }
+
         if(search.length >0){
             var limit = search.length > 5 ? 5 : search.length;
             for(i=0; i<limit; i++){
                 html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link">'+process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 
             }
-
         }
 
         html +=
@@ -54,7 +62,9 @@ $('document').ready(function(){
         html += '</ul>';
         $results.html(html);
         $results.show();
-    });
+    };
+    $('#q, #q2').keyup(onSearch);
+    $('#q, #q2').click(onSearch);
 
     $('.search-ahead').on('mousedown', "li", function(){
         window.location = $(this).attr('data-href');
