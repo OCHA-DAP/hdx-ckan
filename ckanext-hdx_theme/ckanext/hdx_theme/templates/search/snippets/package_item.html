@@ -1,6 +1,6 @@
 {% set is_metadata_only = package.is_requestdata_type %}
 
-<li class="list-items {{ item_class or "dataset-item" }}">
+<li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length > 0 %} stacked-item {% endif %}">
   {% block package_item_content %}
     <div class="dataset-pre-content">
       <div class="list-items dataset-content">
@@ -152,9 +152,11 @@
               {% endblock %}
             </div>
           </div>
+          {% if package.batch_length > 0 %}
           <div class="col-xs-12 stacked-info">
-            Show other [[39]] automated updates from [[ORG Name]]
+            <a href="{{package.batch_url}}" target="_blank">Show other {{ package.batch_length }} automated updates from {{ package.organization.title or package.organization.name }}</a>
           </div>
+          {% endif %}
         </div>
       </div>
     </div>
