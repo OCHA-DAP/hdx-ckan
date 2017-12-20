@@ -23,7 +23,7 @@ def get_batch_or_generate(org_identifier):
 
 
 def get_batch(org_identifier):
-    max_minutes = int(config.get('hdx.batch.period_in_mins', '30'))
+    max_minutes = int(config.get('hdx.batch.period_in_mins', '3'))
     batch = None
     if not org_identifier:
         raise NoOrganization('organization_id needs to exist')
