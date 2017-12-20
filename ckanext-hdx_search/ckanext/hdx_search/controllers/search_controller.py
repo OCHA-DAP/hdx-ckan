@@ -206,9 +206,7 @@ class HDXSearchController(PackageController):
             params.append(('page', page))
             return self._search_url(params, package_type)
 
-        default_sort_by = None if request.params.get('q', '').strip() else 'pageviews_last_14_days desc'
-        c.full_facet_info = self._search(package_type, pager_url, default_sort_by=default_sort_by,
-                                         use_solr_collapse=True)
+        c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
