@@ -45,6 +45,10 @@
             margin-bottom: 2*@stackedMarginSize;
             margin-top: @datasetItemPadding;
 
+            + .stacked-item {
+                margin-top: @datasetItemPadding + 2*@stackedMarginSize;
+            }
+
             &:before {
                 content: " ";
                 background-color: @extraLightBlueColor;
@@ -263,18 +267,33 @@
         }
     }
 
-}
+    .ahead-link {
+        text-align:left;
+        color: @darkGrayColor; /* @darkGrayColor */
 
-.ahead-link {
-    text-align:left;
-    color: @darkGrayColor; /* @darkGrayColor */
+        i.empty {
+            margin-left: 30px;
+        }
+        i.icon, i.glyphicon {
+            margin: 0;
+            margin-right: 5px;
+            color: @grayColor;
+            font-size: 26px;
+            position: relative;
+            top: 5px;
+        }
 
-    i.glyphicon {
-        margin-right: 10px;
-        color: @grayColor;
+        i.icon.icon-search {
+            font-size: 20px;
+            margin-left: 4px;
+            margin-right: 8px;
+        }
+
     }
 
+
 }
+
 .ahead-type{
     float:right;
     text-align: right;
