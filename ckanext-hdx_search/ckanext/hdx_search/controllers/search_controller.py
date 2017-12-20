@@ -449,7 +449,8 @@ class HDXSearchController(PackageController):
             dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
 
             dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
-            dataset['batch_url'] = h.url_for('organization_read', id=(dataset.get('organization') or {}).get('name'),
+            if dataset.get('organization'):
+                dataset['batch_url'] = h.url_for('organization_read', id=dataset['organization'].get('name'),
                                              ext_batch=dataset.get('batch'))
 
         for dataset in query['results']:
