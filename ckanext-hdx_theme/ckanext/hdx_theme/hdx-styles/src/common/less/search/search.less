@@ -33,10 +33,17 @@
             display: none;
         }
 
+        ~ .dataset-item.stacked-item {
+            //remove margin-top for stacked-item that isn't the first elemet
+            margin-top: 0;
+        }
+
         @stackedMarginSize: 5px;
+        @datasetItemPadding: 15px;
         &.stacked-item {
             border-bottom: none;
             margin-bottom: 2*@stackedMarginSize;
+            margin-top: @datasetItemPadding;
 
             &:before {
                 content: " ";
@@ -86,7 +93,7 @@
         }
 
         .dataset-content {
-            padding: 15px;
+            padding: @datasetItemPadding;
         }
 
 
