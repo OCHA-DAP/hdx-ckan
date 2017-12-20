@@ -40,24 +40,24 @@ $('document').ready(function(){
 
         if (prevSearch != null && prevSearch.length > 0){
             $(prevSearch).each(function(idx, el){
-                html += '<li data-href="'+el.url+'"><div class="ahead-link"><i class="glyphicon glyphicon-time"></i>'+process_title(el.text, q)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
+                html += '<li data-href="'+el.url+'"><div class="ahead-link"><i class="icon icon-previoussearches"></i>'+process_title(el.text, q)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
             });
         }
 
         if(search.length >0){
             var limit = search.length > 5 ? 5 : search.length;
             for(i=0; i<limit; i++){
-                html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link">'+process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
+                html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link"><i class="empty"></i>'+process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 
             }
         }
 
         html +=
             '<li data-href="/search?q='+ q +'"><div class="ahead-link">' +
-            '<i class="glyphicon glyphicon-search"></i>Search <b>'+ q +'</b> in <b>datasets</b>' +
+            '<i class="icon icon-search"></i>Search <b>'+ q +'</b> in <b>datasets</b>' +
             '</div></li>' +
             '<li data-href="/showcase?q='+ q +'"><div class="ahead-link">' +
-            '<i class="glyphicon glyphicon-stats"></i>Search <b>'+ q +'</b> in <b>dataviz</b>' +
+            '<i class="icon icon-dataviz"></i>Search <b>'+ q +'</b> in <b>dataviz</b>' +
             '</div></li>';
         html += '</ul>';
         $results.html(html);
