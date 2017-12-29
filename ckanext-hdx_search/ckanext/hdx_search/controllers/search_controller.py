@@ -15,6 +15,8 @@ import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
 
+import ckanext.hdx_search.helpers.search_history as search_history
+
 from ckan.common import OrderedDict, _, json, request, c, g, response
 
 from ckan.controllers.package import PackageController
@@ -209,6 +211,10 @@ class HDXSearchController(PackageController):
         c.full_facet_info = self._search(package_type, pager_url, use_solr_collapse=True)
 
         c.cps_off = config.get('hdx.cps.off', 'false')
+
+        query_string = request.params.get('q', u'')
+        if c.userobj and query_string:
+            search_history.store_search(query_string, c.userobj.id)
 
         # If we're only interested in the facet numbers a json will be returned with the numbers
         if self._is_facet_only_request():
@@ -446,10 +452,10 @@ class HDXSearchController(PackageController):
 
             dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
 
-            dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
+            dataset['batch_length'] = query['expanded'].get(dataset.get('batch', ''), {}).get('numFound', 0)
             if dataset.get('organization'):
                 dataset['batch_url'] = h.url_for('organization_read', id=dataset['organization'].get('name'),
-                                             ext_batch=dataset.get('batch'))
+                                                 ext_batch=dataset.get('batch'))
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
