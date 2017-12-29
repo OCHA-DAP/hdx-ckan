@@ -5,7 +5,6 @@ import ckan.plugins.toolkit as tk
 from ckan.common import _
 
 import ckanext.hdx_search.actions.actions as actions
-import ckanext.hdx_search.model as search_model
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
 
 
@@ -23,12 +22,6 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IPackageController, inherit=True)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IFacets, inherit=True)
-    plugins.implements(plugins.IConfigurable)
-
-    # IConfigurable
-    def configure(self, config):
-        search_model.setup()
-        search_model.create_table()
 
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
