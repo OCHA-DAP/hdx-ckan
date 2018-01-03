@@ -6,9 +6,11 @@ import ckan.logic.schema as core_schema
 
 import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
+import ckanext.hdx_org_group.model as org_group_model
 
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
 import ckanext.hdx_package.helpers.screenshot as screenshot
+
 
 log = logging.getLogger(__name__)
 
@@ -22,6 +24,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IOrganizationController, inherit=True)
     plugins.implements(plugins.IDomainObjectModification, inherit=True)
+    plugins.implements(plugins.IConfigurable)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -32,8 +35,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     num_times_check_data_dict_called = 0
     num_times_setup_template_variables_called = 0
 
+    # IConfigurer
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
+
+    # IConfigurable
+    def configure(self, config):
+        org_group_model.setup()
+        org_group_model.create_table()
 
     def get_helpers(self):
         return {}
@@ -220,6 +229,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         map.connect('group_index', '/group',
                     controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='index',
                     highlight_actions='index search')
+        map.connect('group_worldmap', '/worldmap',
+                    controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
 
         map.connect('group_new', '/group/new', controller='group', action='new')
         map.connect(

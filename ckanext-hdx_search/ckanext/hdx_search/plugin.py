@@ -86,6 +86,16 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         adapt_solr_fq('requestdata', ' +extras_is_requestdata_type:true', ' -extras_is_requestdata_type:true')
         adapt_solr_fq('showcases', ' +has_showcases:true', ' -has_showcases:true')
 
+        if 'ext_batch' in search_params['extras']:
+            batch = search_params['extras']['ext_batch'].strip()
+            if batch:
+                search_params['fq'] += ' +batch:{}'.format(batch)
+            else:
+                raise Exception('wrong parameter value for ext_batch')
+
+
+
+
         return search_params
 
     def after_search(self, search_results, search_params):

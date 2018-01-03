@@ -20,7 +20,7 @@ _open_licenses = None
 VALID_SOLR_PARAMETERS = set([
     'q', 'fl', 'fq', 'rows', 'sort', 'start', 'wt', 'qf', 'bf', 'boost',
     'facet', 'facet.mincount', 'facet.limit', 'facet.field',
-    'extras', 'fq_list', 'tie', 'defType', 'mm'
+    'extras', 'fq_list', 'tie', 'defType', 'mm', 'expand', 'expand.rows'
 ])
 
 # for (solr) package searches, this specifies the fields that are searched
@@ -360,6 +360,7 @@ class PackageSearchQuery(SearchQuery):
                     raise SearchQueryError('Invalid "sort" parameter')
             raise SearchError('SOLR returned an error running query: %r Error: %r' %
                               (query, e))
+        self.raw_response = solr_response.raw_response
         self.count = solr_response.hits
         self.results = solr_response.docs
 

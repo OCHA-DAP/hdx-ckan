@@ -143,6 +143,25 @@
           </span>
           <span class="header-nav-search table-valign pull-left">
             <span class="table-valign-content">
+              <div id="previous-searches" style="display: none;">
+                  [
+                    {
+                        "text": "rohingya",
+                        "count": "3",
+                        "url": ""
+                    },
+                    {
+                        "text": "bangladesh",
+                        "count": "1",
+                        "url": ""
+                    },
+                    {
+                        "text": "nepal",
+                        "count": "8",
+                        "url": ""
+                    }
+                  ]
+              </div>
               <div class="">
                 <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
                   <div id="input-search">
@@ -304,8 +323,8 @@
                 <li class="sub-nav"><a href="{{ faqLink }}">FAQ</a></li>
                 <li class="sub-nav top-pad">{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
                 <li class="sub-nav">{% link_for _('Terms'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='terms' %}</li>
-                <li class="sub-nav"><a href="http://docs.hdx.rwlabs.org/">Blog</a></li>
-                <li class="sub-nav"><a href="http://docs.hdx.rwlabs.org/get-involved/">Contact</a></li>
+                <li class="sub-nav"><a href="https://centre.humdata.org/category/blog/">Blog</a></li>
+                <li class="sub-nav"><a href="https://centre.humdata.org/get-involved/">Contact</a></li>
                 <li class="sub-nav login top-pad"><a onclick="showOnboardingWidget('#loginPopup');" href="#">Login</a> | <a onclick="showOnboardingWidget('#signupPopup');" href="#">Sign up</a></li>
             </ul>
         </div>

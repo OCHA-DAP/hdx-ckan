@@ -55,11 +55,12 @@ function prepareCountryList(countDatasets) {
   });
 }
 
-function prepareMap(countDatasets){
+function prepareMap(countDatasets, openNewWindow){
   var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref;
   //mapID = 'yumiendo.ijchbik8';
+  const openTarget = openNewWindow ? "_blank" : "_self";
   openURL = function(url) {
-    return window.open(url, '_self').focus();
+    return window.open(url, openTarget).focus();
   };
   closeTooltip = window.setTimeout(function() {
     return map.closePopup();
@@ -159,8 +160,20 @@ function prepareMap(countDatasets){
   });
   countryLayer.addTo(map);
 
-  topPane = map._createPane('leaflet-top-pane', map.getPanes().mapPane);
+  var urlToParse = location.search;
+  var result = parseQueryString(urlToParse );
 
+  var country = $(worldJSON.features).filter(function(idx, el){
+    return el.id === result['id'];
+  });
+
+  if(country && country[0] != null)
+  {
+    var specificCountryLayer = L.geoJson(country[0]);
+    map.fitBounds(specificCountryLayer.getBounds());
+  }
+
+  topPane = map._createPane('leaflet-top-pane', map.getPanes().mapPane);
 
   topLayer = L.tileLayer($('#mapbox-baselayer-url-div').text(), {
     attribution: '<a href="http://www.mapbox.com/about/maps/" target="_blank">Mapbox</a>',
@@ -176,6 +189,18 @@ function prepareMap(countDatasets){
   topPane.appendChild(topLayer2.getContainer());
 
   topLayer.setZIndex(1);
+}
+
+var parseQueryString = function(url) {
+  var urlParams = {};
+  url.replace(
+    new RegExp("([^?=&]+)(=([^&]*))?", "g"),
+    function($0, $1, $2, $3) {
+      urlParams[$1] = $3;
+    }
+  );
+
+  return urlParams;
 }
 
 function prepareCount() {
