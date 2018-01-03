@@ -225,7 +225,7 @@ sharing_data = {
                  '<a target="_blank" href="https://daringfireball.net/projects/markdown/syntax">markdown</a> '
                  'which provides some simple formatting commands.'
                  '<br/><br/>'
-                 'The "description", "methodology:other", and "caveats/comments" fields, as well as the description field for each resource ',
+                 'The "description", "methodology:other", and "caveats/comments" fields, as well as the description field for each resource '
                  'attached to the dataset, all accept markdown formatting.' 
                  'The most useful markdown commands are outlined here:'
                  '<br/><br/>'
