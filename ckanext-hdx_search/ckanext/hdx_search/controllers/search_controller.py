@@ -397,7 +397,7 @@ class HDXSearchController(PackageController):
         return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
-                           search_extras, pager_url, context, fq_list=None, expand=None):
+                           search_extras, pager_url, context, fq_list=None, expand='false'):
         data_dict = {
             'q': q,
             'fq_list': fq_list if fq_list else [],
