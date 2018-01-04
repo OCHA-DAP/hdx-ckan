@@ -47,7 +47,7 @@ class SearchedString(domain_object.DomainObject):
         one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
         query = meta.Session.query(cls).filter(cls.user == user_id).filter(cls.last_modified < one_day_ago)\
             .order_by(desc(cls.last_modified)).limit(10)
-        return query.all
+        return query.all()
 
     @classmethod
     def by_search_string_and_user(cls, search_string, user_id):

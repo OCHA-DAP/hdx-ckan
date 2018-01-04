@@ -144,23 +144,7 @@
           <span class="header-nav-search table-valign pull-left">
             <span class="table-valign-content">
               <div id="previous-searches" style="display: none;">
-                  [
-                    {
-                        "text": "rohingya",
-                        "count": "3",
-                        "url": ""
-                    },
-                    {
-                        "text": "bangladesh",
-                        "count": "1",
-                        "url": ""
-                    },
-                    {
-                        "text": "nepal",
-                        "count": "8",
-                        "url": ""
-                    }
-                  ]
+                  {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) }}
               </div>
               <div class="">
                 <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">

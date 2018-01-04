@@ -6,6 +6,7 @@ from ckan.common import _
 
 import ckanext.hdx_search.actions.actions as actions
 import ckanext.hdx_search.model as search_model
+import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
 
 
@@ -33,8 +34,11 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
+    # ITemplateHelpers
     def get_helpers(self):
-        return {}
+        return {
+            'num_of_results_for_prev_searches': search_history.num_of_results_for_prev_searches
+        }
 
     def before_map(self, map):
         map.connect('simple_search',

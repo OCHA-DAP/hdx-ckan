@@ -1,4 +1,9 @@
+import ckan.model as model
 from ckanext.hdx_search.model import SearchedString
+from ckan.plugins import toolkit as tk
+
+
+_get_action = tk.get_action
 
 
 def store_search(search_string, user_id):
@@ -10,3 +15,31 @@ def store_search(search_string, user_id):
         else:
             searched_string = SearchedString(clean_string, user_id)
         searched_string.save()
+
+
+def num_of_results_for_prev_searches(userobj):
+    num_of_results_per_search = []
+    if userobj and userobj.id:
+        context = {'model': model, 'session': model.Session,
+                   'user': userobj.name, 'for_view': True,
+                   'auth_user_obj':userobj}
+
+        latest_searched_strings = SearchedString.latest_queries_for_user(userobj.id)
+        for s in latest_searched_strings:
+            last_search_time = s.last_modified.isoformat() + "Z" # it's in UTC
+            data_dict = {
+                'q': s.search_string,
+                'fq': 'metadata_modified:[{} TO NOW]'.format(last_search_time),
+                'rows': 1,
+                'start': 0,
+            }
+            query = _get_action('package_search')(context, data_dict)
+            num_of_results_per_search.append({
+                'text': s.search_string,
+                'count': query.get('count', 0),
+                'url': ''
+            })
+            if len(num_of_results_per_search) >= 3:
+                break
+
+    return num_of_results_per_search
