@@ -74,7 +74,9 @@
   color: #eeeeee;
 }
 .hdx-footer .links-list ul li .glyphicon-new-window,
-.hdx-footer .links-list ul a .glyphicon-new-window {
+.hdx-footer .links-list ul a .glyphicon-new-window,
+.hdx-footer .links-list ul li .icon-external-link,
+.hdx-footer .links-list ul a .icon-external-link {
   color: #888888;
   margin-left: 3px;
   font-weight: 400;
@@ -104,10 +106,13 @@
 .hdx-footer .social-footer .social-links a {
   margin-left: 15px;
 }
-.hdx-footer .social-footer .social-links a svg {
+.hdx-footer .social-footer .social-links a svg,
+.hdx-footer .social-footer .social-links a .icon {
   height: 18px;
   width: 18px;
   fill: #cccccc;
+  font-size: 18px;
+  color: #cccccc;
 }
 .hdx-footer .social-footer .product-links {
   position: absolute;

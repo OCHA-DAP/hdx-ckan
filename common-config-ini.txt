@@ -270,3 +270,6 @@ ckanext.requestdata.contact_email = hdx@un.org
 
 # CPS
 hdx.cps.off = true
+
+# BATCH
+hdx.batch.period_in_mins = 3

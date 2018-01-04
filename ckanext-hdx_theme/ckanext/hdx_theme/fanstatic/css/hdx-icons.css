@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'hdx-icons';
-  src:  url('fonts/hdx-icons.eot?is9xve');
-  src:  url('fonts/hdx-icons.eot?is9xve#iefix') format('embedded-opentype'),
-    url('fonts/hdx-icons.ttf?is9xve') format('truetype'),
-    url('fonts/hdx-icons.woff?is9xve') format('woff'),
-    url('fonts/hdx-icons.svg?is9xve#hdx-icons') format('svg');
+  src:  url('fonts/hdx-icons.eot?uehlqn');
+  src:  url('fonts/hdx-icons.eot?uehlqn#iefix') format('embedded-opentype'),
+    url('fonts/hdx-icons.ttf?uehlqn') format('truetype'),
+    url('fonts/hdx-icons.woff?uehlqn') format('woff'),
+    url('fonts/hdx-icons.svg?uehlqn#hdx-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,21 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-dataviz:before {
+  content: "\e908";
+}
+.icon-previoussearches:before {
+  content: "\e909";
+}
+.icon-external-link:before {
+  content: "\e905";
+}
+.icon-facebook:before {
+  content: "\e906";
+}
+.icon-github:before {
+  content: "\e907";
+}
 .icon-edit:before {
   content: "\e900";
 }
