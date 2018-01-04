@@ -1,6 +1,6 @@
 {% set is_metadata_only = package.is_requestdata_type %}
 
-<li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length > 0 %} stacked-item {% endif %}">
+<li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length and package.batch_length > 0 %} stacked-item {% endif %}">
   {% block package_item_content %}
     <div class="dataset-pre-content">
       <div class="list-items dataset-content">
@@ -152,7 +152,7 @@
               {% endblock %}
             </div>
           </div>
-          {% if package.batch_length > 0 %}
+          {% if package.batch_length and package.batch_length > 0 %}
           <div class="col-xs-12 stacked-info">
             <a href="{{package.batch_url}}" target="_blank">Show other {{ package.batch_length }} updates from {{ package.organization.title or package.organization.name }} <i class="icon icon-external-link"></i> </a>
           </div>
