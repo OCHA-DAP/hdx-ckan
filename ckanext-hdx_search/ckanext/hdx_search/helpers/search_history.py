@@ -1,4 +1,5 @@
 import ckan.model as model
+import ckan.lib.helpers as h
 from ckanext.hdx_search.model import SearchedString
 from ckan.plugins import toolkit as tk
 
@@ -34,11 +35,13 @@ def num_of_results_for_prev_searches(userobj):
                 'start': 0,
             }
             query = _get_action('package_search')(context, data_dict)
-            num_of_results_per_search.append({
-                'text': s.search_string,
-                'count': query.get('count', 0),
-                'url': ''
-            })
+            count = query.get('count', 0)
+            if count > 0:
+                num_of_results_per_search.append({
+                    'text': s.search_string,
+                    'count': count,
+                    'url': h.url_for('search', ext_after_metadata_modified=last_search_time, q=s.search_string)
+                })
             if len(num_of_results_per_search) >= 3:
                 break
 

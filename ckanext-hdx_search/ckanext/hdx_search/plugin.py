@@ -104,8 +104,12 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             else:
                 raise Exception('wrong parameter value for ext_batch')
 
-
-
+        if 'ext_after_metadata_modified' in search_params['extras'] or \
+                'ext_before_metadata_modified' in search_params['extras']:
+            start_metadata_modified = search_params['extras'].get('ext_after_metadata_modified', '*')
+            end_metadata_modified = search_params['extras'].get('ext_before_metadata_modified', '*')
+            search_params['fq'] += ' +metadata_modified:[{} TO {}]'.format(start_metadata_modified,
+                                                                           end_metadata_modified)
 
         return search_params
 
