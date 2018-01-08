@@ -44,37 +44,58 @@ $(
                 'ext_cod': {
                     'name': 'cod filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 },
                 'ext_subnational': {
                     'name': 'subnational filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 },
                 'ext_quickcharts': {
                     'name': 'quickcharts filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 },
                 'ext_geodata': {
                     'name': 'geodata filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 },
                 'ext_requestdata': {
                     'name': 'requestdata filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 },
                 'ext_hxl': {
                     'name': 'hxl filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 },
                 'ext_showcases': {
                     'name': 'showcases filter',
                     'isList': false,
-                    'mandatory': true
+                    'mandatory': true,
+                    'valueMap': {
+                        '1': 'on'
+                    }
                 }
             };
 
@@ -119,7 +140,7 @@ $(
         /**
          * Populates the object that is sent to mixpanel for one <form> parameter
          * @param mixpanelEventMeta {Object} map of property-values to be sent to mixpanel
-         * @param mappingInfo {{name:string, isList: boolean, mandatory: boolean}} information about how the param should be formatted
+         * @param mappingInfo {{name:string, isList: boolean, mandatory: boolean, valueMap: {Object}}} information about how the param should be formatted
          * @param paramValue {string} the value of the <form> parameter
          */
         function populateMetadata(mixpanelEventMeta, mappingInfo, paramValue) {
@@ -129,7 +150,12 @@ $(
                 mixpanelEventMeta[mappingInfo.name].push(paramValue);
             }
             else {
-                mixpanelEventMeta[mappingInfo.name] = paramValue;
+                if (mappingInfo.valueMap) {
+                    mixpanelEventMeta[mappingInfo.name] = mappingInfo.valueMap[paramValue];
+                }
+                else{
+                    mixpanelEventMeta[mappingInfo.name] = paramValue;
+                }
             }
         }
     }
