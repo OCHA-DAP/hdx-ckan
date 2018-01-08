@@ -298,7 +298,7 @@ class HDXSearchController(PackageController):
                         # fq += ' {!tag=%s}%s:"%s"' % (param, param, value)
                         if param not in tagged_fq_dict:
                             tagged_fq_dict[param] = []
-                        tagged_fq_dict[param].append('{}:"{}"'.format(param, value))
+                        tagged_fq_dict[param].append(u'{}:"{}"'.format(param, value))
                         if param not in c.fields_grouped:
                             c.fields_grouped[param] = [value]
                         else:
@@ -308,7 +308,7 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            fq_list = ['{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
+            fq_list = [u'{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
                        for key, value_list in tagged_fq_dict.items()]
 
             # if the search is not filtered by query or facet group datasets
