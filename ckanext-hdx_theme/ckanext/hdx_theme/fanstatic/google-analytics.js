@@ -3,8 +3,21 @@ $(
      * We're only sending mixpanel events. GA deals with search differently / automatically
      */
     function setUpSearchTracking() {
-        var formEl = $("#search-page-filters-form");
-        if (formEl.length > 0) {
+
+        /* We now have 2 separate forms. One with the filters the other one with the query term*/
+        var formEl1 = $("#search-page-filters-form");
+        var formEl2 = $("#dataset-filter-form");
+
+        var paramList = [];
+
+        if (formEl1.length > 0) {
+            paramList = paramList.concat(formEl1.serializeArray());
+        }
+        if (formEl2.length > 0) {
+            paramList = paramList.concat(formEl2.serializeArray());
+        }
+
+        if (paramList.length > 0) {
             var mixpanelMapping = {
                 'q': {
                     'name': 'search term',
@@ -101,7 +114,6 @@ $(
 
             var numberOfResults = parseInt($('#analytics-number-of-results').text().trim()) || 0;
 
-            var paramList = formEl.serializeArray();
             var mixpanelEventMeta = {
                 "page title": analyticsInfo.pageTitle,
                 "number of results": numberOfResults
