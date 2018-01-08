@@ -3,7 +3,7 @@ $(
      * We're only sending mixpanel events. GA deals with search differently / automatically
      */
     function setUpSearchTracking() {
-        var formEl = $("#dataset-filter-form");
+        var formEl = $("#search-page-filters-form");
         if (formEl.length > 0) {
             var mixpanelMapping = {
                 'q': {

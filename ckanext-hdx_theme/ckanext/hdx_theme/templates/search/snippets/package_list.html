@@ -104,6 +104,7 @@ Example:
 </form>
 
 <div class="row">
+    <form id="search-page-filters-form">
     <div id="search-page-filters" class="col-xs-3">
         <div class="filter-title">
             Refine your search: <a href="{{other_links.get('current_page_url')}}" class="filter-clear pull-right">Clear all</a>
@@ -171,6 +172,7 @@ Example:
             </div>
         {% endfor %}
     </div>
+    </form>
     <div id="search-page-results" class="col-xs-9">
         <div class="search-list">
             <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
