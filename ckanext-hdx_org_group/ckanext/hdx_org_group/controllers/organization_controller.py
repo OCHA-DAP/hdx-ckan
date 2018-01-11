@@ -110,7 +110,32 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             items_per_page=limit
         )
 
+        displayed_orgs = c.featured_orgs + [o for o in c.page]
+        org_to_last_update = self._find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
+        for o in displayed_orgs:
+            o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+
         return base.render('organization/index.html')
+
+    def _find_last_update_for_orgs(self, org_names):
+
+        context = {
+            'model': model,
+            'session': model.Session
+        }
+        filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
+
+        data_dict = {
+            'q': '',
+            'fq': filter,
+            'fq_list': ['{!collapse field=organization nullPolicy=expand} '],
+            'rows': len(org_names),
+            'start': 0,
+            'sort': 'metadata_modified desc'
+        }
+        query = get_action('package_search')(context, data_dict)
+        org_to_update_time = {d['organization']['name']:d.get('metadata_modified') for d in query['results']}
+        return org_to_update_time
 
     def read(self, id, limit=20):
         self._ensure_controller_matches_group_type(id)
