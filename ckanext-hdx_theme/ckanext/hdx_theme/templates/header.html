@@ -73,7 +73,7 @@
                   {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
                   <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{# notifications_tooltip #}">
                     <i class="icon-dashboard"></i>
-                    <span> {{ _('Dashboard') }} ({{ h.new_activities() }})</span>
+                    <span> {{ _('Dashboard') }} </span>
                   </a>
                 </li>
                 <li>
