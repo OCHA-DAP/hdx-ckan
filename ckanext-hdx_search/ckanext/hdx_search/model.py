@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from sqlalchemy import types, Table, Column, ForeignKey, UniqueConstraint, desc
+from sqlalchemy import types, Table, Column, ForeignKey, UniqueConstraint, Index, desc
 
 from ckan.model import meta, domain_object
 from ckan.model import types as ckan_types
@@ -76,8 +76,12 @@ def define_searched_string_table():
         Column('user', types.UnicodeText, ForeignKey('user.id', ondelete='CASCADE', onupdate='CASCADE'),
                nullable=False, index=True),
         Column('search_string', types.UnicodeText, index=True),
+        # Index('ix_searched_string_last_modified_desc', 'last_modified', postgresql_using='btree'),
         UniqueConstraint('search_string', 'user')
     )
+
+    Index('ix_searched_string_last_modified_desc', searched_string_table.c.last_modified.desc())
+
 
     meta.mapper(SearchedString, searched_string_table)
 
