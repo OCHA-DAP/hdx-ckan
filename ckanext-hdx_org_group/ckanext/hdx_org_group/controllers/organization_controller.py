@@ -118,23 +118,24 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         return base.render('organization/index.html')
 
     def _find_last_update_for_orgs(self, org_names):
+        org_to_update_time = {}
+        if org_names:
+            context = {
+                'model': model,
+                'session': model.Session
+            }
+            filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
 
-        context = {
-            'model': model,
-            'session': model.Session
-        }
-        filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
-
-        data_dict = {
-            'q': '',
-            'fq': filter,
-            'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
-            'rows': len(org_names),
-            'start': 0,
-            'sort': 'metadata_modified desc'
-        }
-        query = get_action('package_search')(context, data_dict)
-        org_to_update_time = {d['organization']['name']:d.get('metadata_modified') for d in query['results']}
+            data_dict = {
+                'q': '',
+                'fq': filter,
+                'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
+                'rows': len(org_names),
+                'start': 0,
+                'sort': 'metadata_modified desc'
+            }
+            query = get_action('package_search')(context, data_dict)
+            org_to_update_time = {d['organization']['name']:d.get('metadata_modified') for d in query['results']}
         return org_to_update_time
 
     def read(self, id, limit=20):
