@@ -128,7 +128,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         data_dict = {
             'q': '',
             'fq': filter,
-            'fq_list': ['{!collapse field=organization nullPolicy=expand} '],
+            'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
             'rows': len(org_names),
             'start': 0,
             'sort': 'metadata_modified desc'
