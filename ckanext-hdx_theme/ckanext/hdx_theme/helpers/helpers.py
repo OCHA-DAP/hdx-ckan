@@ -113,7 +113,7 @@ def get_filtered_params_list(params):
 #     activity_objects = model.activity.group_activity_list(
 #         group_id, limit=1, offset=0)
 #     if len(activity_objects) > 0:
-#         activity = activity_objects[0]˙
+#         activity = activity_objects[0]
 #         return activity.revision_id
 #     return None
 
