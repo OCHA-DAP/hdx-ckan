@@ -226,7 +226,11 @@ def analytics_wrapper_4_package_create(original_package_action):
     def package_action(context, package_dict):
 
         result_dict = original_package_action(context, package_dict)
-        if not context.get('contribute_flow'):
+
+        # if the package doesn't come from the contribute flow UI form and is a normal dataset (aka not a showcase)
+        # then send the even from the server side
+        if not context.get('contribute_flow') and (
+                package_dict.get('type') == 'dataset' or not package_dict.get('type')):
             DatasetCreatedAnalyticsSender(result_dict).send_to_queue()
 
         return result_dict
