@@ -314,7 +314,7 @@ class HDXSearchController(PackageController):
             # if the search is not filtered by query or facet group datasets
             solr_expand = 'false'
             if use_solr_collapse and not fq_list and not q:
-                fq_list = ['{!collapse field=batch nullPolicy=expand} ']
+                fq_list = ['{!tag=batch}{!collapse field=batch nullPolicy=expand} ']
                 solr_expand = 'true'
 
             try:
