@@ -44,6 +44,11 @@ $(
                     'isList': true,
                     'mandatory': true
                 },
+                'license_id': {
+                    'name': 'license filters',
+                    'isList': true,
+                    'mandatory': true
+                },
                 /*'ext_page_size': {
                  'name': 'items per page',
                  'isList': false,
