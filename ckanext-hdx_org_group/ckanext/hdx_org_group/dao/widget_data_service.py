@@ -6,6 +6,7 @@ import pylons.config as config
 
 import ckan.plugins.toolkit as tk
 import ckan.model as model
+import ckan.logic as logic
 
 import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_org_group.dao.rw_access as rw_access
@@ -72,7 +73,13 @@ class RWWidgetDataService(WidgetDataService):
     def get_dataset_results(self):
         context = {'model': model, 'session': model.Session}
         resource_id = config.get('hdx.active_locations_reliefweb.resource_id')
-        resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        try:
+            resource_dict = _get_action('resource_show')(context, {'id': resource_id})
+        except logic.NotFound, e:
+            resource_dict = None
+            log.error(
+                'No resource was found for "hdx.active_locations_reliefweb.resource_id" = {}. Exception: NotFound'.format(
+                    resource_id))
         top_line_data = []
         if resource_dict:
             rw = rw_access.RwAccess(resource_dict, self.country_name)

@@ -71,26 +71,19 @@ def get_facet_items_dict(facet, limit=1000, exclude_active=False):
         return (facets, no_items)
 
 
-def get_last_modifier_user(g_id=None, p_id=None, get_timestamp=False):
-    if g_id is not None:
-        activity_objects = model.activity.group_activity_list(
-            g_id, limit=1, offset=0)
-    if p_id is not None:
-        activity_objects = model.activity.package_activity_list(
-            p_id, limit=1, offset=0)
+def get_last_modifier_user(dataset_id=None, group_id=None):
+    if group_id is not None:
+        activity_objects = model.activity.group_activity_list(group_id, limit=1, offset=0)
+    if dataset_id:
+        activity_objects = model.activity.package_activity_list(dataset_id, limit=1, offset=0)
     if activity_objects:
         user = activity_objects[0].user_id
         t_stamp = activity_objects[0].timestamp
-        if get_timestamp:
-            return (model.User.get(user), t_stamp.isoformat())
-        return model.User.get(user)
+        user_obj = model.User.get(user)
+        return {"user_obj": user_obj, "last_modified": t_stamp.isoformat()}
 
     # in case there is no update date it will be displayed the current date
-    user = model.Session.query(model.User).filter(
-        model.User.name == 'hdx').first()
-    if get_timestamp:
-        return (user, datetime.datetime.now().isoformat())
-    return user
+    return {"user_obj": None, "last_modified": None}
 
 
 def get_filtered_params_list(params):
@@ -101,28 +94,28 @@ def get_filtered_params_list(params):
     return result
 
 
-def get_last_revision_package(package_id):
-    #     pkg_list  = model.Session.query(model.Package).filter(model.Package.id == package_id).all()
-    #     pkg = pkg_list[0]
-    #     return pkg.latest_related_revision.id
-    activity_objects = model.activity.package_activity_list(
-        package_id, limit=1, offset=0)
-    if len(activity_objects) > 0:
-        activity = activity_objects[0]
-        return activity.revision_id
-    return None
+# def get_last_revision_package(package_id):
+#     #     pkg_list  = model.Session.query(model.Package).filter(model.Package.id == package_id).all()
+#     #     pkg = pkg_list[0]
+#     #     return pkg.latest_related_revision.id
+#     activity_objects = model.activity.package_activity_list(
+#         package_id, limit=1, offset=0)
+#     if len(activity_objects) > 0:
+#         activity = activity_objects[0]
+#         return activity.revision_id
+#     return None
 
 
-def get_last_revision_group(group_id):
-    #     grp_list  = model.Session.query(model.Group).filter(model.Group.id == group_id).all()
-    #     grp = grp_list[0]
-    #     last_rev = grp.all_related_revisions[0][0]
-    activity_objects = model.activity.group_activity_list(
-        group_id, limit=1, offset=0)
-    if len(activity_objects) > 0:
-        activity = activity_objects[0]
-        return activity.revision_id
-    return None
+# def get_last_revision_group(group_id):
+#     #     grp_list  = model.Session.query(model.Group).filter(model.Group.id == group_id).all()
+#     #     grp = grp_list[0]
+#     #     last_rev = grp.all_related_revisions[0][0]
+#     activity_objects = model.activity.group_activity_list(
+#         group_id, limit=1, offset=0)
+#     if len(activity_objects) > 0:
+#         activity = activity_objects[0]
+#         return activity.revision_id
+#     return None
 
 
 def get_last_revision_timestamp_group(group_id):

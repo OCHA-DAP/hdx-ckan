@@ -19,7 +19,6 @@ Example:
 {% set notes = h.markdown_extract(package.notes, extract_length=truncate) %}
 {% set updated_time = package.metadata_modified or package.metadata_created%}
 {% set f_updated_time = h.render_datetime(updated_time) %}
-{% set last_user = h.get_last_modifier_user(p_id=package.id) %}
 
 <li class="list-items {{ item_class or "dataset-item" }}">
   {% block package_item_content %}
@@ -44,10 +43,6 @@ Example:
         {% if package.organization %}
   				<a class="sspBold16 updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
   					{{ package.organization.title or package.organization.name }}
-  				</a>
-  			{% else %}
-          <a class="sspBold16 updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
-  					{{ last_user.fullname }}
   				</a>
   			{% endif %} - {{f_updated_time}}
       </div>
