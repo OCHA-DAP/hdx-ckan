@@ -54,6 +54,15 @@ $(document).ready(function() {
         window.location = location;
     });
 
+    $("#headerSearch").on("keydown", function(event){
+        if (event.keyCode == '13'){
+            var location = getFilterUrlNew(false);
+            console.log("Refresh to: " + location);
+            window.location = location;
+            event.preventDefault();
+        }
+    });
+
     $("#search-page-filters .filter-clear").on("click", function(event) {
         event.stopPropagation();
         event.preventDefault();
