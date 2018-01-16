@@ -220,6 +220,41 @@ sharing_data = {
                  '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field.',
         },
         {
+            'q': 'How can I add links and formatting to my dataset page?',
+            'a': 'There are 4 metadata fields that accept '
+                 '<a target="_blank" href="https://daringfireball.net/projects/markdown/syntax">markdown</a> '
+                 'which provides some simple formatting commands.'
+                 '<br/><br/>'
+                 'The "description", "methodology:other", and "caveats/comments" fields, as well as the description field for each resource '
+                 'attached to the dataset, all accept markdown formatting. ' 
+                 'The most useful markdown commands are outlined here:'
+                 '<br/><br/>'
+                 'Links can be entered like this: <pre>[the linked text](https://data.humdata.org)</pre> '
+                 'and will be rendered like this: <a href="https://data.humdata.org">the linked text</a>'
+                 '<br/>'
+                 '<i>Italics</i> can be indicated by surrounding text with single asterisks, like this: <pre>*A bit of italics text*</pre> '
+                 '<b>Bold</b> can be indicated by surrounding text with double asterisks, like this: <pre>**A bit of bold text**</pre>'
+                 '<br/><br/>'
+                 'Bulleted lists must start with and be followed by a blank line.  Each item in the list starts '
+                 'with an asterisk and a space:'
+                 '<br/><br/>'
+                 '* item 1'
+                 '<br/>'
+                 '* item 2'
+                 '<br/>'
+                 '* etc.'
+                 '<br/><br/>'
+                 'Numbered lists must also start with and be followed by a blank line.  Each item starts with the number 1, a period, and a space:'
+                 '<br/><br/>'
+                 '1. First item'
+                 '<br/>'
+                 '1. Second item.  Note that the lines always start with a one followed by a period and space.'
+                 '<br/>'
+                 '1. 3rd item'
+                 '<br/>'
+                 '1. etc.'
+        },
+        {
             'q': 'How do I edit a dataset?',
             'a': 'You can only edit a dataset if you are an administrator or editor of your organisation. If you have '
                  'the appropriate role, you will find an \'Edit\' button just below the dataset description. This will '
@@ -245,7 +280,7 @@ sharing_data = {
                 'to get you started.'
                 '<br/><br/>'
                 'Quick Charts doesn\'t work with all HXL tags, but we\'re working to expand its capabilities and your feedback '
-                 'is welcome at <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>.',
+                'is welcome at <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>.',
         },
         {
             'q': 'What are the recommended data formats?',

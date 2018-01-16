@@ -63,8 +63,11 @@ $('document').ready(function(){
         $results.html(html);
         $results.show();
     };
-    $('#q, #q2').keyup(onSearch);
-    $('#q, #q2').click(onSearch);
+
+    // $('#q, #q2').keyup(onSearch);
+
+    $('#q').keyup(onSearch);
+    $('#q').click(onSearch);
 
     $('.search-ahead').on('mousedown', "li", function(){
         window.location = $(this).attr('data-href');

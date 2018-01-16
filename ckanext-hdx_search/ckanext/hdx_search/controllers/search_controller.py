@@ -15,8 +15,6 @@ import ckan.lib.helpers as h
 import ckan.model as model
 import ckan.plugins as p
 
-import ckanext.hdx_search.helpers.search_history as search_history
-
 from ckan.common import OrderedDict, _, json, request, c, g, response
 
 from ckan.controllers.package import PackageController
@@ -212,10 +210,6 @@ class HDXSearchController(PackageController):
 
         c.cps_off = config.get('hdx.cps.off', 'false')
 
-        query_string = request.params.get('q', u'')
-        if c.userobj and query_string:
-            search_history.store_search(query_string, c.userobj.id)
-
         # If we're only interested in the facet numbers a json will be returned with the numbers
         if self._is_facet_only_request():
             response.headers['Content-Type'] = CONTENT_TYPES['json']
@@ -304,7 +298,7 @@ class HDXSearchController(PackageController):
                         # fq += ' {!tag=%s}%s:"%s"' % (param, param, value)
                         if param not in tagged_fq_dict:
                             tagged_fq_dict[param] = []
-                        tagged_fq_dict[param].append('{}:"{}"'.format(param, value))
+                        tagged_fq_dict[param].append(u'{}:"{}"'.format(param, value))
                         if param not in c.fields_grouped:
                             c.fields_grouped[param] = [value]
                         else:
@@ -314,7 +308,7 @@ class HDXSearchController(PackageController):
 
             self._set_filters_are_selected_flag()
 
-            fq_list = ['{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
+            fq_list = [u'{{!tag={tag}}}{value}'.format(tag=key, category=key, value=' OR '.join(value_list))
                        for key, value_list in tagged_fq_dict.items()]
 
             # if the search is not filtered by query or facet group datasets
@@ -403,7 +397,7 @@ class HDXSearchController(PackageController):
         return request.params.get('ext_only_facets') == 'true'
 
     def _performing_search(self, q, fq, facet_keys, limit, page, sort_by,
-                           search_extras, pager_url, context, fq_list=None, expand=None):
+                           search_extras, pager_url, context, fq_list=None, expand='false'):
         data_dict = {
             'q': q,
             'fq_list': fq_list if fq_list else [],
@@ -452,10 +446,10 @@ class HDXSearchController(PackageController):
 
             dataset['approx_total_downloads'] = find_approx_download(dataset.get('total_res_downloads', 0))
 
-            dataset['batch_length'] = query['expanded'].get(dataset.get('batch', ''), {}).get('numFound', 0)
+            dataset['batch_length'] = query['expanded'].get(dataset.get('batch',''), {}).get('numFound', 0)
             if dataset.get('organization'):
                 dataset['batch_url'] = h.url_for('organization_read', id=dataset['organization'].get('name'),
-                                                 ext_batch=dataset.get('batch'))
+                                             ext_batch=dataset.get('batch'))
 
         for dataset in query['results']:
             dataset['hdx_analytics'] = json.dumps(generate_analytics_data(dataset))
