@@ -1,7 +1,10 @@
 import datetime
 import logging
+import pylons.config as config
 
 from sqlalchemy import types, Table, Column, ForeignKey, UniqueConstraint, Index, desc
+
+from paste.deploy.converters import asint
 
 from ckan.model import meta, domain_object
 from ckan.model import types as ckan_types
@@ -44,8 +47,10 @@ class SearchedString(domain_object.DomainObject):
         :rtype: list[SearchedString]
         '''
 
-        one_day_ago = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-        query = meta.Session.query(cls).filter(cls.user == user_id).filter(cls.last_modified < one_day_ago)\
+        hours_from_actual_search = asint(config.get('hdx.search_history.hours_from_actual_search', '24'))
+
+        hours_ago = datetime.datetime.utcnow() - datetime.timedelta(hours=hours_from_actual_search)
+        query = meta.Session.query(cls).filter(cls.user == user_id).filter(cls.last_modified < hours_ago)\
             .order_by(desc(cls.last_modified)).limit(10)
         return query.all()
 
