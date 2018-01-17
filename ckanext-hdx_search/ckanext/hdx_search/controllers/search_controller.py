@@ -221,7 +221,7 @@ class HDXSearchController(PackageController):
 
     def _search(self, package_type, pager_url,
                 additional_fq='', additional_facets=None,
-                default_sort_by=None, num_of_items=NUM_OF_ITEMS,
+                default_sort_by='metadata_modified desc', num_of_items=NUM_OF_ITEMS,
                 ignore_capacity_check=False, use_solr_collapse=False):
         from ckan.lib.search import SearchError
 
@@ -241,6 +241,9 @@ class HDXSearchController(PackageController):
 
         # self._set_remove_field_function()
         req_sort_by = request.params.get('sort', None)
+        if not req_sort_by and q:
+            req_sort_by = 'score desc, metadata_modified desc'
+
         if req_sort_by:
             sort_by = req_sort_by
             c.used_default_sort_by = False
