@@ -81,8 +81,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         else:
             template_data = self.generate_template_data(org_info)
 
-            result = render(
-                'organization/custom/custom_org.html', extra_vars=template_data)
+            result = render('organization/custom/custom_org.html', extra_vars=template_data)
 
             return result
 

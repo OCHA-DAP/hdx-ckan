@@ -288,6 +288,8 @@ class HDXSearchController(PackageController):
 
             fq = additional_fq
             tagged_fq_dict = {}
+            featured_filters_set = False
+
             for (param, value) in request.params.items():
                 if param not in ['q', 'page', 'sort'] \
                         and len(value) and not param.startswith('_'):
@@ -304,6 +306,9 @@ class HDXSearchController(PackageController):
                         else:
                             c.fields_grouped[param].append(value)
                     else:
+                        if param in ['ext_cod', 'ext_subnational', 'ext_quickcharts', 'ext_geodata', 'ext_requestdata',
+                                     'ext_hxl', 'ext_showcases']:
+                            featured_filters_set = True
                         search_extras[param] = value
 
             self._set_filters_are_selected_flag()
@@ -313,8 +318,8 @@ class HDXSearchController(PackageController):
 
             # if the search is not filtered by query or facet group datasets
             solr_expand = 'false'
-            if use_solr_collapse and not fq_list and not q:
-                fq_list = ['{!collapse field=batch nullPolicy=expand} ']
+            if use_solr_collapse and not fq_list and not q and not featured_filters_set:
+                fq_list = ['{!tag=batch}{!collapse field=batch nullPolicy=expand} ']
                 solr_expand = 'true'
 
             try:
@@ -362,7 +367,9 @@ class HDXSearchController(PackageController):
             # TODO Line below to be removed after refactoring
             c.tab = 'all'
 
-            self._performing_search(q, fq, facets.keys(), limit, page, sort_by,
+            #adding site_id to facets to facilitate totals counts in case of batch/collapse
+            facet_keys = ['{!ex=batch}site_id'] + facets.keys()
+            self._performing_search(q, fq, facet_keys, limit, page, sort_by,
                                     search_extras, pager_url, context, fq_list=fq_list, expand=solr_expand)
 
         except SearchError, se:
@@ -425,6 +432,11 @@ class HDXSearchController(PackageController):
 
         c.facets = query['facets']
         c.search_facets = query['search_facets']
+
+        # if we're using collapse/expand/batch then take total count from facet site_id
+        if expand:
+            site_id_items = query['search_facets'].get('site_id', {}).get('items', [])
+            c.batch_total_items = sum((item.get('count', 0) for item in site_id_items))
 
         # get_action('populate_related_items_count')(
         #     context, {'pkg_dict_list': query['results']})

@@ -44,7 +44,7 @@
                             <div class="org-title">{{c.org_meta.org_dict.display_name}}</div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row mBottom10">
                         <div class="col-xs-12 mTop10">
                             <ul class="mainLinks org-info-links">
                                 <li>
@@ -64,8 +64,14 @@
                                 </li>
                                 <li><a href="{{ c.org_meta.org_dict.org_url }}" target="_blank">{{ _('Visit Website') }}</a></li>
                             </ul>
+                            <div class="dataset-updated">
+                                {% block updated %}
+                                    Last updated on {{f_updated_time}}
+                                {% endblock %}
+                            </div>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-xs-12">
                             <span data-module="hdx_show_more" data-module-points="320" style="visibility: hidden;" class="org-description">
