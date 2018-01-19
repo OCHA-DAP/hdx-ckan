@@ -47,16 +47,18 @@ $('document').ready(function(){
         if(search.length >0){
             var limit = search.length > 5 ? 5 : search.length;
             for(i=0; i<limit; i++){
-                html += '<li data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link"><i class="empty"></i>'+process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
+                html += '<li data-search-term="'+q+'" data-search-type="'+feature_index[search[i]['ref']]['type']+
+                    '" data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link"><i class="empty"></i>'+
+                    process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 
             }
         }
 
         html +=
-            '<li data-href="/search?q='+ q +'"><div class="ahead-link">' +
+            '<li data-href="/search?q='+ q +'&ext_search_source=main-nav"><div class="ahead-link">' +
             '<i class="icon icon-search"></i>Search <b>'+ q +'</b> in <b>datasets</b>' +
             '</div></li>' +
-            '<li data-href="/showcase?q='+ q +'"><div class="ahead-link">' +
+            '<li data-href="/showcase?q='+ q +'&ext_search_source=main-nav"><div class="ahead-link">' +
             '<i class="icon icon-dataviz"></i>Search <b>'+ q +'</b> in <b>dataviz</b>' +
             '</div></li>';
         html += '</ul>';
@@ -70,7 +72,19 @@ $('document').ready(function(){
     $('#q').click(onSearch);
 
     $('.search-ahead').on('mousedown', "li", function(){
-        window.location = $(this).attr('data-href');
+        var searchTerm = $(this).attr('data-search-term');
+        var resultType = $(this).attr('data-search-type');
+        var dataHref = $(this).attr('data-href');
+        console.log("Clicked on " + resultType + ". Search term is " + searchTerm);
+        var followLink = function () {
+            window.location = dataHref;
+        };
+        if (searchTerm && resultType) {
+            hdxUtil.analytics.sendTopBarSearchEvents(searchTerm, resultType).then(followLink, followLink);
+        }
+        else {
+            followLink();
+        }
     });
 
     $('#q, #q2').blur(function(){

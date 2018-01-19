@@ -4,9 +4,13 @@ $(
      */
     function setUpSearchTracking() {
 
+        var resultType = "dataset";
+
         /* We now have 2 separate forms. One with the filters the other one with the query term*/
         var formEl1 = $("#search-page-filters-form");
         var formEl2 = $("#dataset-filter-form");
+
+        var showCaseFormEl = $("#showcaseSection form");
 
         var paramList = [];
 
@@ -15,6 +19,10 @@ $(
         }
         if (formEl2.length > 0) {
             paramList = paramList.concat(formEl2.serializeArray());
+        }
+        if (showCaseFormEl.length > 0) {
+            paramList = paramList.concat(showCaseFormEl.serializeArray());
+            resultType = "showcase";
         }
 
         if (paramList.length > 0) {
@@ -121,7 +129,8 @@ $(
 
             var mixpanelEventMeta = {
                 "page title": analyticsInfo.pageTitle,
-                "number of results": numberOfResults
+                "number of results": numberOfResults,
+                "result type": resultType
                 /*"org name": analyticsInfo.organizationName,
                  "org id": analyticsInfo.organizationId,
                  "group names": analyticsInfo.groupNames,
@@ -527,6 +536,25 @@ $(
     }
 
     hdxUtil.analytics.sendUserRegisteredEvent = sendUserRegisteredEvent;
+
+    /**
+     *
+     * @param {string} searchTerm
+     * @param {string} resultType
+     */
+    function sendTopBarSearchEvents(searchTerm, resultType) {
+        var mixpanelData = {
+            "eventName": "search",
+            "eventMeta": {
+                "page title": analyticsInfo.pageTitle,
+                "result type": resultType,
+                "search term": searchTerm
+            }
+        };
+        return sendAnalyticsEventsAsync(mixpanelData);
+
+    }
+    hdxUtil.analytics.sendTopBarSearchEvents = sendTopBarSearchEvents;
 
     /**
      * This function will send the analytics events to the server async and will return a promise
