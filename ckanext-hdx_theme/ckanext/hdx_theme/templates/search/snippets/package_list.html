@@ -131,6 +131,7 @@ Example:
                         <li><label><input type="checkbox" name="ext_showcases" value="1" {% if ext_showcases == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_showcases") == 0 %} disabled="disabled" {% endif %}> Datasets with Showcase <span class="item-count">[{{ full_facet_info.get("num_of_showcases") }}]</span></label></li>
                         {% set ext_hxl = request.params.get('ext_hxl') %}
                         <li><label><input type="checkbox" name="ext_hxl" value="1" {% if ext_hxl == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_hxl") == 0 %} disabled="disabled" {% endif %}> Datasets with HXL tags <span class="item-count">[{{ full_facet_info.get("num_of_hxl") }}]</span></label></li>
+
                     </ul>
                 </div>
             </div>
@@ -172,6 +173,10 @@ Example:
             </div>
         {% endfor %}
     </div>
+        {% set ext_after_metadata_modified = request.params.get('ext_after_metadata_modified') %}
+        {%  if ext_after_metadata_modified %}
+            <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+        {% endif %}
     </form>
     <div id="search-page-results" class="col-xs-9">
         <div class="search-list">
