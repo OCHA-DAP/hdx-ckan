@@ -114,7 +114,8 @@ function getFilterUrlNew(resetFilters) {
     }
 
     //check non filter params
-    const params2 = $("#headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort").serialize();
+    const params2 = $("#headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort, " +
+        "#ext_after_metadata_modified").serialize();
     params += ((params !== "" && params2 != null) ? "&" : "") + params2;
 
 
