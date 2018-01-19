@@ -10,6 +10,7 @@ show_remove    - If True, show the remove button to remove the showcase/dataset 
 
 #}
 {% block package_list %}
+    <div style="display: none;" id="analytics-number-of-results">{{c.page.item_count}}</div>
     {% if packages %}
     <div class="row mTop30">
         <div class="col-xs-12">
