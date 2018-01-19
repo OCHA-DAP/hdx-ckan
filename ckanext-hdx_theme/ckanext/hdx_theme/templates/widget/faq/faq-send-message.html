@@ -48,15 +48,11 @@ Example:
                         <textarea id="faq-msg" name="faq-msg" class="full-width required"></textarea>
                         <label for="faq-msg">Your question</label>
                     </div>
-                    <div class="mTop15 captcha">
-                        <div class="g-recaptcha" data-sitekey="{{ capcha_api_key }}"
-                                style="transform:scale(1.08);transform-origin:0;-webkit-transform:scale(1.08);transform:scale(1.08);-webkit-transform-origin:0 0;transform-origin:0 0;"></div>
-                    </div>
                 </div>
             </div>
             <div class="right-side-actions">
+                <input class="btn btn-primary btn-large mL45 pull-right g-recaptcha" type="submit" value="Submit" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="faqSendMessageOnSubmit" data-size="invisible" data-badge="inline">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Cancel">
-                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
             </div>
         </form>
     </div>
