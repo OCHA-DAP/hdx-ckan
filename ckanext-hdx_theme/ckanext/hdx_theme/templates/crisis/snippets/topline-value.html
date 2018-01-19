@@ -14,7 +14,7 @@ Example:
 
 #}
 <div class="topline-value">
-    {% if unit in ('dollars', 'dollars_million') %}
+    {% if unit in ('dollars', 'dollars_million', 'dollars_billion') %}
     	<span class="indicator-prevalue small">
             $
     	</span>
@@ -25,6 +25,8 @@ Example:
 	
 	{% if unit in ('million', 'dollars_million') %}
 		<span class="small"> {{ _('million') }} </span>
+    {% elif unit in ('billion', 'dollars_billion') %}
+		<span class="small"> {{ _('billion') }} </span>
 	{% elif unit == 'ratio' %}
 		<span class="small">%</span>
 	{% elif unit == 'per100k' %}
