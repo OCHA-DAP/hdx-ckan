@@ -39,11 +39,6 @@
                       <a class="updatedNameColor" href="{{ h.url_for(controller='organization', action='read', id=package.organization.name, sort='metadata_modified desc') }}">
                         {{ package.organization.title or package.organization.name }}
                       </a>
-                    {% else %}
-                      {% set last_user = h.get_last_modifier_user(p_id=package.id) %}
-                      <a class="updatedNameColor" href="{{ h.url_for(controller='user', action='read', id=last_user.name) }}">
-                        {{ last_user.fullname }}
-                      </a>
                     {% endif %}
                     <br/>
                     Updated {{f_updated_time}}

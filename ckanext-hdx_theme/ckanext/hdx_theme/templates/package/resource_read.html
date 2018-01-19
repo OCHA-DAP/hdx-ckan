@@ -1,6 +1,7 @@
-{% extends "package/base.html" %}
+{% extends "page.html" %}
 
 {% set res = c.resource %}
+{% set pkg = c.pkg_dict or pkg_dict %}
 
 {# The lines below are for analytics #}
 {% block analytics_org_name %}{{ c.package.organization.name }}{% endblock %}
