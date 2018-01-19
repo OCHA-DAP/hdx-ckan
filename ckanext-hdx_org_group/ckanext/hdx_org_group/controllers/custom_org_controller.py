@@ -81,8 +81,7 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
         else:
             template_data = self.generate_template_data(org_info)
 
-            result = render(
-                'organization/custom/custom_org.html', extra_vars=template_data)
+            result = render('organization/custom/custom_org.html', extra_vars=template_data)
 
             return result
 
@@ -416,10 +415,10 @@ class CustomOrgController(org.OrganizationController, search_controller.HDXSearc
             return h.url_for('organization_read', id=org_code, **params) + suffix
 
         fq = 'organization:"{}"'.format(org_code)
-        facets = {
-            'vocab_Topics': _('Topics')
-        }
-        full_facet_info = self._search(package_type, pager_url, additional_fq=fq, additional_facets=facets,
+        # facets = {
+        #     'vocab_Topics': _('Topics')
+        # }
+        full_facet_info = self._search(package_type, pager_url, additional_fq=fq,
                                        ignore_capacity_check=ignore_capacity_check)
         full_facet_info.get('facets', {}).pop('organization', {})
 

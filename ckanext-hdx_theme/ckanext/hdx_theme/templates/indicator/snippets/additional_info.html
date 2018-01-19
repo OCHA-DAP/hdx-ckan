@@ -14,7 +14,7 @@
 		<th scope="row" class="dataset-label">{{ _('Contributor') }}</th>
 		<td class="dataset-details metadata-link">
 		{% if pkg_dict.owner_org %}
-		{% set org_id = pkg_dict.organization.name or pkg_dict.owner_org %}
+		{% set org_id = pkg_dict.owner_org or pkg_dict.organization.name %}
 			<a class="mx-ga-dimension-organization"
                href="{{ h.url_for(controller='organization', action='read', id=org_id) }}">
 	            	{{ pkg_dict.organization.title }}

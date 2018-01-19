@@ -128,13 +128,13 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
         for f in tagged_facets:
             translation = facets_dict[f]
             del facets_dict[f]
-            facets_dict['{{!ex={}}}{}'.format(f, f)] = translation
+            facets_dict['{{!ex={},batch}}{}'.format(f, f)] = translation
 
-        facets_dict['indicator'] = _('Indicators')
-        facets_dict['subnational'] = _('Subnational')
-        facets_dict['has_quickcharts'] = _('Quick charts')
-        facets_dict['has_geodata'] = _('Geodata')
-        facets_dict['extras_is_requestdata_type'] = _('Datasets on request')
-        facets_dict['has_showcases'] = _('Datasets with Showcases')
+        facets_dict['{!ex=batch}indicator'] = _('Indicators')
+        facets_dict['{!ex=batch}subnational'] = _('Subnational')
+        facets_dict['{!ex=batch}has_quickcharts'] = _('Quick charts')
+        facets_dict['{!ex=batch}has_geodata'] = _('Geodata')
+        facets_dict['{!ex=batch}extras_is_requestdata_type'] = _('Datasets on request')
+        facets_dict['{!ex=batch}has_showcases'] = _('Datasets with Showcases')
 
         return facets_dict
