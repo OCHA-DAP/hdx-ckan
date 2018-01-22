@@ -237,6 +237,24 @@ class ValidationController(ckan.controllers.user.UserController):
         # return render('user/logout.html')
 
     def register_email(self, data=None, errors=None, error_summary=None):
+
+        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
+
+        try:
+            is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
+            if is_captcha_enabled == 'true':
+                captcha_response = data_dict.get('g-recaptcha-response', None)
+                if not self.is_valid_captcha(response=captcha_response):
+                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+        except ValidationError, e:
+            error_summary = e.error_summary
+            if error_summary == CaptchaNotValid:
+                return OnbCaptchaErr
+            return self.error_message(error_summary)
+        except exceptions.Exception, e:
+            error_summary = e.error_summary
+            return self.error_message(error_summary)
+
         """
         STEP 1: user register the email
         """
@@ -246,7 +264,6 @@ class ValidationController(ckan.controllers.user.UserController):
                                    temp_schema['name']]
         context = {'model': model, 'session': model.Session, 'user': c.user, 'auth_user_obj': c.userobj,
                    'schema': temp_schema, 'save': 'save' in request.params}
-        data_dict = logic.clean_dict(unflatten(logic.tuplize_dict(logic.parse_params(request.params))))
 
         if 'email' in data_dict:
             md5 = hashlib.md5()
@@ -402,19 +419,19 @@ class ValidationController(ckan.controllers.user.UserController):
         # data_dict['name'] = data_dict['email']
         data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
         try:
-            is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
-            if is_captcha_enabled == 'true':
-                captcha_response = data_dict.get('g-recaptcha-response', None)
-                if not self.is_valid_captcha(response=captcha_response):
-                    raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+            # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
+            # if is_captcha_enabled == 'true':
+            #     captcha_response = data_dict.get('g-recaptcha-response', None)
+            #     if not self.is_valid_captcha(response=captcha_response):
+            #         raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
             check_access('user_update', context, data_dict)
         except NotAuthorized:
             return OnbNotAuth
-        except ValidationError, e:
-            error_summary = e.error_summary
-            if error_summary == CaptchaNotValid:
-                return OnbCaptchaErr
-            return self.error_message(error_summary)
+        # except ValidationError, e:
+        #     error_summary = e.error_summary
+        #     if error_summary == CaptchaNotValid:
+        #         return OnbCaptchaErr
+        #     return self.error_message(error_summary)
         except exceptions.Exception, e:
             error_summary = e.error_summary
             return self.error_message(error_summary)

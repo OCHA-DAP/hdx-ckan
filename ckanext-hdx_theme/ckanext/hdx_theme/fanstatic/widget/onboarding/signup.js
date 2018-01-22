@@ -1,12 +1,13 @@
 $(document).ready(function(){
-    $("#signup-form").on("submit", function(){
+    signupFormOnSubmit = function(){
         var $this = $(this);
         var email = $("#field-email").val();
         if (email){
             var url = "/user/register_email";
             var data = {
                 email: email,
-                signup: $("#signup-send-updates").prop("checked")
+                signup: $("#signup-send-updates").prop("checked"),
+                'g-recaptcha-response': grecaptcha.getResponse()
             };
 
             $.post(url, data, function(result_data){
@@ -38,7 +39,7 @@ $(document).ready(function(){
                         // }
 
                         $("#verifyPopup").find(".verify-email").html(email);
-                        closeCurrentWidget($this);
+                        closeCurrentWidget($(".signup-widget:first"));
                         showOnboardingWidget('#verifyPopup');
                     });
                 } else {
@@ -49,6 +50,8 @@ $(document).ready(function(){
                 }
             });
         }
+        grecaptcha.reset();
         return false;
-    })
+    };
+    // $("#signup-form").on("submit", signupFormOnSubmit)
 });

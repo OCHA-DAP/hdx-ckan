@@ -54,8 +54,8 @@ function showFaqWidget(id) {
 $(document).ready(function(){
     $('#topics-selector').select2();
 
-    $('#faq-send-message-form').on('submit', function(){
-        $this = $(this);
+    faqSendMessageOnSubmit = function(){
+        $this = $("#faq-send-message-form");
         $iframe = $($(".g-recaptcha").find("iframe:first"));
         $iframe.css("border", "");
         //$sel = $($("#faq-send-message-form .select2-container.mTop20.required").find("a:first"));
@@ -88,6 +88,7 @@ $(document).ready(function(){
         );
 
         return false;
-    });
+    };
+    // $('#faq-send-message-form').on('submit', faqSendMessageOnSubmit);
 
 });
