@@ -9,12 +9,12 @@ import json
 import logging
 
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
+import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
-import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_search.controllers.search_controller as search_controller
-import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckanext.hdx_theme.util.jql as jql
 
 import ckan.authz as new_authz
 import ckan.common as common
@@ -420,7 +420,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                         # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
                     }
                     for d in itertools.islice(
-                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
+                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 25
                     )
                 ]
             except Exception, e:
