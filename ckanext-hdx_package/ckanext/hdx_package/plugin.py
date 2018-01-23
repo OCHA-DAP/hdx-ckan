@@ -232,7 +232,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             {
                 'name': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
-                           tk.get_validator('clean_format'), unicode]
+                           tk.get_validator('clean_format'), unicode],
+                'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
             }
         )
 
