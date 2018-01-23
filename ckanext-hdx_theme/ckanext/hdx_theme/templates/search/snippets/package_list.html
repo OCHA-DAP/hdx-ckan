@@ -61,10 +61,10 @@ Example:
 
 
         {% set sorting = [
+        (_('Last Modified'), 'metadata_modified desc'),
         (_('Relevance'), 'score desc, metadata_modified desc'),
         (_('Name Ascending'), 'title_case_insensitive asc'),
         (_('Name Descending'), 'title_case_insensitive desc'),
-        (_('Last Modified'), 'metadata_modified desc'),
         (_('Trending'), 'pageviews_last_14_days desc'),
         (_('Most Downloads'), 'total_res_downloads desc') ]
         %}
@@ -118,7 +118,7 @@ Example:
                 <div class="categ-list show-always">
                     <ul class="categ-items">
                         {% set ext_cod = request.params.get('ext_cod') %}
-                        <li><label><input type="checkbox" name="ext_cod" value="1"  {% if ext_cod == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}> CODs(?) <span class="item-count">[{{ full_facet_info.get("num_of_cods") }}]</span></label></li>
+                        <li><label><input type="checkbox" name="ext_cod" value="1"  {% if ext_cod == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}> CODs <span class="item-count">[{{ full_facet_info.get("num_of_cods") }}]</span></label></li>
                         {% set ext_subnational = request.params.get('ext_subnational') %}
                         <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %}> Sub-national <span class="item-count">[{{ full_facet_info.get("num_of_subnational") }}]</span></label></li>
                         {% set ext_geodata = request.params.get('ext_geodata') %}
