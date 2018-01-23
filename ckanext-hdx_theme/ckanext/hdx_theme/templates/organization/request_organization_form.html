@@ -54,6 +54,20 @@ overriding the form blocks depending on the current context
 	    		{{_('Brief overview of what organisation is for.')}}</div>
 	    </div>
     </div>
+      <div class="org-control-container">
+          {% set org_acronym = h.hdx_get_extras_element(data.extras, value_key="org_acronym") %}
+          {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full','org-control','field-with-info']) }}
+          <div class="org-control-info info-field">
+              <div class="org-info-label">{{ _('Organisation Acronym') }}</div>
+          </div>
+      </div>
+      <div class="org-control-container">
+          {% set hdx_org_type = data.get('hdx_org_type') if data.get('hdx_org_type') else h.hdx_get_extras_element(data.extras, value_key='hdx_org_type') %}
+          {{ form.select('hdx_org_type', id='hdx-org-type', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full','org-control','field-with-info']) }}
+          <div class="org-control-info info-field">
+              <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
+          </div>
+      </div>
 	  {% if c.userobj.sysadmin %}
 	  <div class="org-control-container" style="margin-top:50px;">
 		{% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}

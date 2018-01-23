@@ -13,10 +13,10 @@ import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request, _
 import ckan.lib.base as base
-import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckan.model as model
 
-
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
+import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckanext.hdx_theme.util.mail as hdx_mail
 
 log = logging.getLogger(__name__)
@@ -118,6 +118,9 @@ class HDXReqsOrgController(base.BaseController):
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
+
+        c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
+                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
         c.form = base.render('organization/request_organization_form.html', extra_vars=vars)
         return base.render('organization/request_new.html')
 
