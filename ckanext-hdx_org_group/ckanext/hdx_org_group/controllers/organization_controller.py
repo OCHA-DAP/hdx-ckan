@@ -56,6 +56,34 @@ log = logging.getLogger(__name__)
 #         return False
 #     return True
 
+def _find_last_update_for_orgs(org_names):
+    org_to_update_time = {}
+    if org_names:
+        context = {
+            'model': model,
+            'session': model.Session
+        }
+        filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
+
+        data_dict = {
+            'q': '',
+            'fq': filter,
+            'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
+            'rows': len(org_names),
+            'start': 0,
+            'sort': 'metadata_modified desc'
+        }
+        query = get_action('package_search')(context, data_dict)
+        org_to_update_time = {d['organization']['name']: d.get('metadata_modified') for d in query['results']}
+    return org_to_update_time
+
+
+def org_add_last_updated_field(displayed_orgs):
+    org_to_last_update = _find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
+    for o in displayed_orgs:
+        o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+
+
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
         context = {'model': model, 'session': model.Session,
@@ -111,32 +139,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         )
 
         displayed_orgs = c.featured_orgs + [o for o in c.page]
-        org_to_last_update = self._find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
-        for o in displayed_orgs:
-            o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+        org_add_last_updated_field(displayed_orgs)
 
         return base.render('organization/index.html')
-
-    def _find_last_update_for_orgs(self, org_names):
-        org_to_update_time = {}
-        if org_names:
-            context = {
-                'model': model,
-                'session': model.Session
-            }
-            filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
-
-            data_dict = {
-                'q': '',
-                'fq': filter,
-                'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
-                'rows': len(org_names),
-                'start': 0,
-                'sort': 'metadata_modified desc'
-            }
-            query = get_action('package_search')(context, data_dict)
-            org_to_update_time = {d['organization']['name']:d.get('metadata_modified') for d in query['results']}
-        return org_to_update_time
 
     def read(self, id, limit=20):
         self._ensure_controller_matches_group_type(id)
@@ -151,6 +156,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             abort(404)
         except NotAuthorized, e:
             abort(401, _('Not authorized to see this page'))
+
+        org_add_last_updated_field([org_meta.org_dict])
 
         c.group_dict = org_meta.org_dict
 
@@ -375,7 +382,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if not unit:
             unit = common_functions.compute_simplifying_units(topline_value)
 
-        topline  = [{
+        topline = [{
             'units': unit,
             'value': topline_value
         }]
@@ -385,7 +392,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if result.get('units') == 'count':
             result['units'] = ''
         return result
-
 
     def _stats_top_dataset_downloads(self, org_id):
         from ckan.lib.search.query import make_connection
@@ -408,8 +414,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             try:
                 conn = make_connection(decode_dates=False)
                 search_result = conn.search(**data_dict)
-                dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
-                                     for d in search_result.docs}
+                dataseta_meta_map = {
+                d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+                for d in search_result.docs}
                 ret = [
                     {
                         'dataset_id': d.get('dataset_id'),
