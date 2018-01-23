@@ -32,7 +32,7 @@ solr_url = http://solr:8983/solr/ckan
 #solr_url = http://${HDX_SOLR_ADDR}:${HDX_SOLR_PORT}/solr/ckan
 #ckan.simple_search = 1
 
-ckan.recaptcha.publickey  = 6LfoIfMSAAAAADKSmGKOsRggVKv4CAOm2yqJoeto
+ckan.recaptcha.publickey  = 6Lcl60EUAAAAAE46a3XcPM2nPUKI2K4XZbcsorkR
 ckan.recaptcha.privatekey = ${HDX_CKAN_RECAPTCHA_KEY}
 
 ckan.tracking_enabled = true
