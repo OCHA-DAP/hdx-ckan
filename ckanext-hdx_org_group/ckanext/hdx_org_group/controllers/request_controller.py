@@ -125,23 +125,30 @@ class HDXReqsOrgController(base.BaseController):
         return base.render('organization/request_new.html')
 
     def _process_new_org_request(self):
+        hdx_org_type = None
+        hdx_org_type_code = request.params.get('hdx_org_type', '')
+
+        if hdx_org_type_code:
+            hdx_org_type = next(
+                (type[0] for type in static_lists.ORGANIZATION_TYPE_LIST if type[1] == hdx_org_type_code), '-1')
+
         data = {'name': request.params.get('name', ''), \
                 'title': request.params.get('title', ''), \
                 'org_url': request.params.get('org_url', ''), \
                 'description': request.params.get('description', ''), \
                 'your_email': request.params.get('your_email', ''), \
                 'your_name': request.params.get('your_name', ''), \
-                #'from': request.params.get('from', '')
+                'org_acronym': request.params.get('org_acronym', ''), \
+                'hdx_org_type': hdx_org_type, \
+
                 }
         return data
 
     def _validate_new_org_request_field(self, data):
         errors = {}
-        for field in ['title', 'description', 'your_email', 'your_name']:
-            if data[field].strip() == '':
+        for field in ['title', 'description', 'your_email', 'your_name', 'org_acronym', 'hdx_org_type']:
+            if data[field].strip() in ['', '-1']:
                 errors[field] = [_('should not be empty')]
 
         if len(errors) > 0:
             raise logic.ValidationError(errors)
-
-        

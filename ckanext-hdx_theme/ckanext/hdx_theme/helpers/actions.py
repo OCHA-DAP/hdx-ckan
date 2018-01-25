@@ -226,12 +226,14 @@ def hdx_send_new_org_request(context, data_dict):
     if c.userobj:
         ckan_email = c.userobj.email
 
-    subject = _('New organization request:') + ' ' \
+    subject = _('New organisation request:') + ' ' \
               + data_dict['title']
-    body = _('<h3>New organization request </h3><br/>' \
-             'Organization Name: {org_name}<br/>' \
-             'Organization Description: {org_description}<br/>' \
-             'Organization URL: {org_url}<br/>' \
+    body = _('<h3>New organisation request </h3><br/>' \
+             'Organisation Name: {org_name}<br/>' \
+             'Organisation Description: {org_description}<br/>' \
+             'Organisation URL: {org_url}<br/>' \
+             'Organisation Type: {hdx_org_type}<br/>' \
+             'Organisation Acronym: {org_acronym}<br/>' \
              'Person requesting: {person_name}<br/>' \
              'Person\'s email: {person_email}<br/>' \
              'Person\'s ckan username: {ckan_username}<br/>' \
@@ -239,7 +241,9 @@ def hdx_send_new_org_request(context, data_dict):
              'Request time: {request_time}<br/>' \
              '(This is an automated mail)<br/><br/>' \
              '').format(org_name=data_dict['title'], org_description=data_dict['description'],
-                        org_url=data_dict['org_url'], person_name=data_dict['your_name'],
+                        org_url=data_dict['org_url'], org_acronym=data_dict['org_acronym'],
+                        hdx_org_type=data_dict['hdx_org_type'],
+                        person_name=data_dict['your_name'],
                         person_email=data_dict['your_email'],
                         ckan_username=ckan_username, ckan_email=ckan_email,
                         request_time=datetime.datetime.now().isoformat())
@@ -254,7 +258,7 @@ def hdx_send_editor_request_for_org(context, data_dict):
              'Full Name: {fn}\n' \
              'Username: {username}\n' \
              'Email: {mail}\n' \
-             'Organization: {org}\n' \
+             'Organisation: {org}\n' \
              'Message from user: {msg}\n' \
              '(This is an automated mail)' \
              '').format(fn=data_dict['display_name'], username=data_dict['name'], mail=data_dict['email'],
