@@ -233,9 +233,12 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                     controller='ckanext.hdx_org_group.controllers.group_controller:HDXGroupController', action='group_worldmap')
 
         map.connect('group_new', '/group/new', controller='group', action='new')
-        map.connect(
-            'country_read', '/group/{id}',
-            controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+
+        map.connect('country_read', '/group/{id}',
+                    controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_read')
+
+        map.connect('country_topline', '/country/topline/{id}',
+                    controller='ckanext.hdx_org_group.controllers.country_controller:CountryController', action='country_topline')
 
         map.connect(
             'wfp_read', '/alpha/wfp', controller='ckanext.hdx_org_group.controllers.wfp_controller:WfpController',

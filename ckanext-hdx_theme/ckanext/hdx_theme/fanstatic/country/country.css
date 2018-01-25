@@ -134,6 +134,12 @@ h1.country-title {
 #key-figures-carousel .carousel-chevron.right {
   right: -18px;
 }
+#key-figures-carousel .carousel-chevron.left-embed {
+  left: -5px;
+}
+#key-figures-carousel .carousel-chevron.right-embed {
+  right: -5px;
+}
 #key-figures-carousel .topline .topline-value {
   font-size: 52px;
 }
