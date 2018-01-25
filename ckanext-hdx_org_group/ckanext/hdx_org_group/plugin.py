@@ -92,7 +92,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def get_validators(self):
         org_type_keys = [t[1] for t in static_lists.ORGANIZATION_TYPE_LIST]
         return {
-            'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys),
+            'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
         }
 
     def _modify_group_schema(self, schema):
@@ -105,9 +105,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'less': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'visualization_config': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'modified_at': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-            'hdx_org_type': [tk.get_validator('ignore_missing'), tk.get_validator('correct_hdx_org_type'),
+            'hdx_org_type': [tk.get_validator('not_empty'), tk.get_validator('correct_hdx_org_type'),
                              tk.get_converter('convert_to_extras')],
-            'org_acronym': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'org_acronym': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
         })
         return schema
 
