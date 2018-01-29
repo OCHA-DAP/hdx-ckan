@@ -10,6 +10,8 @@ import ckan.model as model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+
 
 def get_packages():
     packages = [
@@ -83,6 +85,8 @@ def get_packages():
 def get_organization():
     organization = {'name': 'hdx-test-org',
                     'title': 'Hdx Test Org',
+                    'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+                    'org_acronym': 'HTO',
                     'org_url': 'http://test-org.test',
                     'description': 'This is a test organization',
                     'users': [{'name': 'testsysadmin'}, {'name':'janedoe3'}]}

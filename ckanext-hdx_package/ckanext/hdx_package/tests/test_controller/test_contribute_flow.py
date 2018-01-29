@@ -9,6 +9,8 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_package.controllers.contribute_flow_controller as contribute_flow_controller
 import ckanext.hdx_package.helpers.caching as caching
 
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+
 original_request_config = routes_util.request_config
 
 
@@ -40,6 +42,8 @@ class TestContributeFlowController(hdx_test_base.HdxBaseTest):
         organization = {
             'name': 'hdx-test-org',
             'title': 'Hdx Test Org',
+            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+            'org_acronym': 'HTO',
             'org_url': 'http://test-org.test',
             'description': 'This is a test organization',
             'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]

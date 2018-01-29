@@ -7,10 +7,12 @@ import ckan.logic.schema as core_schema
 import ckanext.hdx_org_group.actions.get as get_actions
 import ckanext.hdx_org_group.actions.authorize as authorize
 import ckanext.hdx_org_group.model as org_group_model
-
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
+
 import ckanext.hdx_package.helpers.screenshot as screenshot
 
+import ckanext.hdx_theme.helpers.custom_validator as custom_validator
 
 log = logging.getLogger(__name__)
 
@@ -25,6 +27,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     plugins.implements(plugins.IOrganizationController, inherit=True)
     plugins.implements(plugins.IDomainObjectModification, inherit=True)
     plugins.implements(plugins.IConfigurable)
+    plugins.implements(plugins.IValidators)
 
     num_times_new_template_called = 0
     num_times_read_template_called = 0
@@ -85,6 +88,13 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def group_types(self):
         return ['organization']
 
+    # IValidators
+    def get_validators(self):
+        org_type_keys = [t[1] for t in static_lists.ORGANIZATION_TYPE_LIST]
+        return {
+            'correct_hdx_org_type': custom_validator.general_value_in_list(org_type_keys, False),
+        }
+
     def _modify_group_schema(self, schema):
         schema.update({
             'description': [tk.get_validator('not_empty')],
@@ -95,6 +105,9 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'less': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'visualization_config': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'modified_at': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'hdx_org_type': [tk.get_validator('not_empty'), tk.get_validator('correct_hdx_org_type'),
+                             tk.get_converter('convert_to_extras')],
+            'org_acronym': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
         })
         return schema
 
@@ -131,6 +144,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 schema.update({'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 schema.update({'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 schema.update({'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update(
+                    {'hdx_org_type': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
+                schema.update(
+                    {'org_acronym': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
                 return schema
         except TypeError, e:
             log.warn('Exception in db_to_form_schema: {}'.format(str(e)))

@@ -17,6 +17,7 @@ import mock
 
 import ckanext.hdx_theme.tests.mock_helper as mock_helper
 from ckanext.requestdata.model import ckanextRequestdata
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 from nose.tools import assert_raises
 from ckan import logic
 
@@ -42,6 +43,8 @@ log = logging.getLogger(__name__)
 organization = {
     'name': 'hdx-test-org',
     'title': 'Hdx Test Org',
+    'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+    'org_acronym': 'HTO',
     'org_url': 'http://test-org.test',
     'description': 'This is a test organization',
     'users': [{'name': 'testsysadmin'}, {'name': 'tester', 'capacity': 'member'}]

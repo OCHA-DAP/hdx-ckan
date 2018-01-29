@@ -358,6 +358,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         tracking_changes.add_tracking_summary_to_resource_dict(resource_dict)
         return resource_dict
 
+    # IValidators
     def get_validators(self):
         return {
             'hdx_detect_format': vd.detect_format,

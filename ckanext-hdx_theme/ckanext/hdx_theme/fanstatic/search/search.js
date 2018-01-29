@@ -95,8 +95,9 @@ $('document').ready(function(){
 });
 
 function process_title(title, q){
-    if(title.length>40){
-        title = title.substring(0,40);
+    var max_length = 30;
+    if(title.length>max_length){
+        title = title.substring(0, max_length);
         title = title+'...'
     }
     var re = new RegExp(q, "gi");
