@@ -270,6 +270,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'error_summary': error_summary, 'action': 'new'}
 
         self._setup_template_variables(context, data, group_type=group_type)
+        c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
+                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
         c.form = render(self._group_form(group_type=group_type),
                         extra_vars=vars)
         return render(self._new_template(group_type))
