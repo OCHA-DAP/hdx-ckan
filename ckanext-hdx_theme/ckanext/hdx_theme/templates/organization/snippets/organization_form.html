@@ -32,7 +32,7 @@
             data.get('org_url') contains the url after a validation fail for a new org.
             When editing an activity we need to get the url from the org extas
          #}
-		{% set org_url_value = data.get('org_url') if data.get('org_url') else h.hdx_get_extras_element(data.extras) %}
+		{% set org_url_value = h.hdx_get_extras_element(data) %}
 
 	    {{ form.input('org_url', label=_('URL of Organisation'), id='field-org-url', type='url', placeholder=_('http://example.com/about'), value=org_url_value, error=errors.image_url, classes=['control-full','org-control','field-with-info']) }}
 	    <div class="org-control-info info-field">
@@ -47,23 +47,23 @@
 	    </div>
     </div>
   <div class="org-control-container">
-    {% set org_acronym = h.hdx_get_extras_element(data.extras, value_key="org_acronym") %}
-      {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full','org-control','field-with-info']) }}
+    {% set org_acronym = h.hdx_get_extras_element(data, value_key="org_acronym") %}
+      {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Organisation Acronym')}}</div>
       </div>
   </div>
   <div class="org-control-container">
-      {% set hdx_org_type = data.get('hdx_org_type') if data.get('hdx_org_type') else h.hdx_get_extras_element(data.extras, value_key='hdx_org_type') %}
+      {% set hdx_org_type = h.hdx_get_extras_element(data, value_key='hdx_org_type') %}
 
-      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full','org-control','field-with-info']) }}
+      {{ form.select('hdx_org_type', id='field-hdx-org-type-id', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
       <div class="org-control-info info-field">
           <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
       </div>
   </div>
   {% if c.userobj.sysadmin %}
   <div class="org-control-container" style="margin-top:50px;">
-    {% set fts_id = h.hdx_get_extras_element(data.extras, value_key="fts_id") %}
+    {% set fts_id = h.hdx_get_extras_element(data, value_key="fts_id") %}
       {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
@@ -71,16 +71,16 @@
   </div>
   {% endif %}
 
-{% if h.hdx_get_extras_element(data.extras, value_key="customization") %}
-{% set custom_org = h.hdx_get_extras_element(data.extras, value_key="custom_org") %}
-{% set customizations = h.load_json(h.hdx_get_extras_element(data.extras, value_key="customization")) %}
+{% if h.hdx_get_extras_element(data, value_key="customization") %}
+{% set custom_org = h.hdx_get_extras_element(data, value_key="custom_org") %}
+{% set customizations = h.load_json(h.hdx_get_extras_element(data, value_key="customization")) %}
 {% else %}
 {% set custom_org = 0 %}
 {% set customizations = {'highlight_color' : '', 'topline_dataset':'', 'topline_resource':''} %}
 {% endif %}
 
-{% if h.hdx_get_extras_element(data.extras, value_key="visualization_config") %}
-{% set visualization = h.load_json(h.hdx_get_extras_element(data.extras, value_key="visualization_config")) %}
+{% if h.hdx_get_extras_element(data, value_key="visualization_config") %}
+{% set visualization = h.load_json(h.hdx_get_extras_element(data, value_key="visualization_config")) %}
 {% else %}
 {% set visualization = {} %}
 {% endif %}
@@ -159,8 +159,8 @@
 </div>
 
 <div class="org-control-container">
-{% if h.hdx_get_extras_element(data.extras, value_key="less") %}
-  {% set less = h.hdx_get_extras_element(data.extras, value_key="less") %}
+{% if h.hdx_get_extras_element(data, value_key="less") %}
+  {% set less = h.hdx_get_extras_element(data, value_key="less") %}
 {% else %}
   {% set less = h.hdx_less_default() %}
 {% endif %}
