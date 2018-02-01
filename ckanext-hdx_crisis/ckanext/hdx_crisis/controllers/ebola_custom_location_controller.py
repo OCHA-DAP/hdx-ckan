@@ -103,7 +103,7 @@ class EbolaCustomLocationController(search_controller.HDXSearchController):
 
         package_type = 'dataset'
 
-        fq = u'ebola '
+        fq = u'+text:ebola '
 
         full_facet_info = self._search(package_type, pager_url, additional_fq=fq)
 
