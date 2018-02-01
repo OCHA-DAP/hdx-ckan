@@ -273,3 +273,6 @@ hdx.cps.off = true
 
 # BATCH
 hdx.batch.period_in_mins = 3
+
+#SEARCH_HISTORY
+hdx.search_history.hours_from_actual_search = 1

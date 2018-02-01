@@ -12,6 +12,8 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_org_group.controllers.browse_controller as browse_controller
 import ckanext.hdx_org_group.tests as org_group_base
 
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+
 
 class TestHDXBrowseController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
@@ -53,10 +55,12 @@ class TestHDXBrowseController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
 
     def _create_additional_org(self):
         organization = {'name': 'additional-test-org',
-                    'title': 'This is an additional org',
-                    'org_url': 'http://test-org.test',
-                    'description': 'This is an additional org',
-                    'users': [{'name': 'testsysadmin'}]}
+                        'title': 'This is an additional org',
+                        'org_acronym': 'AO',
+                        'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+                        'org_url': 'http://test-org.test',
+                        'description': 'This is an additional org',
+                        'users': [{'name': 'testsysadmin'}]}
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
         self._get_action('organization_create')(context, organization)

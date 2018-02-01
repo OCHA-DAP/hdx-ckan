@@ -9,12 +9,13 @@ import json
 import logging
 
 import ckanext.hdx_org_group.controllers.custom_org_controller as custom_org
+import ckanext.hdx_org_group.dao.common_functions as common_functions
 import ckanext.hdx_org_group.helpers.org_meta_dao as org_meta_dao
 import ckanext.hdx_org_group.helpers.organization_helper as helper
-import ckanext.hdx_org_group.dao.common_functions as common_functions
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_search.controllers.search_controller as search_controller
-import ckanext.hdx_theme.util.jql as jql
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
+import ckanext.hdx_theme.util.jql as jql
 
 import ckan.authz as new_authz
 import ckan.common as common
@@ -55,6 +56,34 @@ log = logging.getLogger(__name__)
 #     if org_meta.is_custom:
 #         return False
 #     return True
+
+def _find_last_update_for_orgs(org_names):
+    org_to_update_time = {}
+    if org_names:
+        context = {
+            'model': model,
+            'session': model.Session
+        }
+        filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
+
+        data_dict = {
+            'q': '',
+            'fq': filter,
+            'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
+            'rows': len(org_names),
+            'start': 0,
+            'sort': 'metadata_modified desc'
+        }
+        query = get_action('package_search')(context, data_dict)
+        org_to_update_time = {d['organization']['name']: d.get('metadata_modified') for d in query['results']}
+    return org_to_update_time
+
+
+def org_add_last_updated_field(displayed_orgs):
+    org_to_last_update = _find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
+    for o in displayed_orgs:
+        o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+
 
 class HDXOrganizationController(org.OrganizationController, search_controller.HDXSearchController):
     def index(self):
@@ -111,32 +140,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         )
 
         displayed_orgs = c.featured_orgs + [o for o in c.page]
-        org_to_last_update = self._find_last_update_for_orgs([o.get('name') for o in displayed_orgs])
-        for o in displayed_orgs:
-            o['dataset_last_updated'] = org_to_last_update.get(o['name'], o.get('created'))
+        org_add_last_updated_field(displayed_orgs)
 
         return base.render('organization/index.html')
-
-    def _find_last_update_for_orgs(self, org_names):
-        org_to_update_time = {}
-        if org_names:
-            context = {
-                'model': model,
-                'session': model.Session
-            }
-            filter = 'organization:({}) +dataset_type:dataset'.format(' OR '.join(org_names))
-
-            data_dict = {
-                'q': '',
-                'fq': filter,
-                'fq_list': ['{!collapse field=organization nullPolicy=expand sort="metadata_modified desc"} '],
-                'rows': len(org_names),
-                'start': 0,
-                'sort': 'metadata_modified desc'
-            }
-            query = get_action('package_search')(context, data_dict)
-            org_to_update_time = {d['organization']['name']:d.get('metadata_modified') for d in query['results']}
-        return org_to_update_time
 
     def read(self, id, limit=20):
         self._ensure_controller_matches_group_type(id)
@@ -151,6 +157,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             abort(404)
         except NotAuthorized, e:
             abort(401, _('Not authorized to see this page'))
+
+        org_add_last_updated_field([org_meta.org_dict])
 
         c.group_dict = org_meta.org_dict
 
@@ -306,6 +314,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 'error_summary': error_summary, 'action': 'edit'}
 
         self._setup_template_variables(context, data, group_type=group_type)
+        c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] +\
+                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
         c.form = render(self._group_form(group_type), extra_vars=vars)
 
         #  The extra_vars are needed here to send analytics information like org name and id
@@ -375,7 +385,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if not unit:
             unit = common_functions.compute_simplifying_units(topline_value)
 
-        topline  = [{
+        topline = [{
             'units': unit,
             'value': topline_value
         }]
@@ -385,7 +395,6 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         if result.get('units') == 'count':
             result['units'] = ''
         return result
-
 
     def _stats_top_dataset_downloads(self, org_id):
         from ckan.lib.search.query import make_connection
@@ -408,8 +417,9 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             try:
                 conn = make_connection(decode_dates=False)
                 search_result = conn.search(**data_dict)
-                dataseta_meta_map = {d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
-                                     for d in search_result.docs}
+                dataseta_meta_map = {
+                d['id']: {'title': d.get('title'), 'url': h.url_for('dataset_read', id=d.get('name'))}
+                for d in search_result.docs}
                 ret = [
                     {
                         'dataset_id': d.get('dataset_id'),
@@ -420,7 +430,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                         # 'percentage': round(100*d.get('value', 0)/total_downloads, 1)
                     }
                     for d in itertools.islice(
-                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 10
+                        (ds for ds in datasets_map.values() if ds.get('dataset_id') in dataseta_meta_map), 25
                     )
                 ]
             except Exception, e:

@@ -56,7 +56,7 @@
 }
 .signup-widget .signup-box {
   width: 370px;
-  height: 230px;
+  height: 290px;
   padding: 35px;
   background-color: #eeeeee;
   border-radius: 6px;
@@ -67,4 +67,8 @@
 .signup-widget .signup-action i {
   margin-left: 8px;
   font-size: 14px;
+}
+.signup-widget .grecaptcha-badge {
+  transform: scale(0.8);
+  transform-origin: 0;
 }

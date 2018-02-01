@@ -18,8 +18,7 @@ $(document).ready(function(){
                     $iframe.css("border", "1px solid red");
                 } else {
                     alert("Can't register: " + result.error.message);
-                    grecaptcha.reset();
-
+                    // grecaptcha.reset();
                 }
             }
         });

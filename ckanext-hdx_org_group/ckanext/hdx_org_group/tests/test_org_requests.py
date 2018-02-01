@@ -13,6 +13,8 @@ import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_org_group.tests as org_group_base
 
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+
 log = logging.getLogger(__name__)
 
 
@@ -57,6 +59,8 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'save': '',
             'title': 'Test org',
             'org_url': 'http://test.com',
+            'org_acronym': 'TO',
+            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'description': 'Test description',
             'your_email': 'email1@testemail.com',
             'your_name': 'Test User'
@@ -86,6 +90,8 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         postparams = {
             'save': '',
             'title': 'Org êßȘ',
+            'org_acronym': 'SCO',
+            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
             'org_url': 'http://test.com',
             'description': 'Description ê,ß, and Ș',
             'your_email': 'email1@testemail.com',

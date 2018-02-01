@@ -672,7 +672,7 @@ class DatasetController(PackageController):
                 {'resource': resource, 'package': c.pkg_dict})
 
             resource_views = get_action('resource_view_list')(context, {'id': resource['id']})
-            resource['has_views'] = len(resource_views) > 0
+            resource['has_views'] = bool(self._find_default_view(resource, resource_views))
             resource['resource_views'] = resource_views
 
             # if helpers.is_ckan_domain(resource['url']):
@@ -1146,7 +1146,7 @@ class DatasetController(PackageController):
             {'resource': c.resource, 'package': c.package})
 
         resource_views = get_action('resource_view_list')(context, {'id': resource_id})
-        c.resource['has_views'] = len(resource_views) > 0
+        c.resource['has_views'] = bool(self._find_default_view(c.resource, resource_views))
 
         # set dataset type for google analytics - modified by HDX
         # c.ga_dataset_type = self._google_analytics_dataset_type(c.package)
@@ -1168,7 +1168,7 @@ class DatasetController(PackageController):
                 else:
                     abort(404, _('Resource view not found'))
             else:
-                current_resource_view = resource_views[0]
+                current_resource_view = self._find_default_view(c.resource, resource_views)
 
         vars = {'resource_views': resource_views,
                 'current_resource_view': current_resource_view,
@@ -1182,6 +1182,17 @@ class DatasetController(PackageController):
 
         template = self._resource_template(dataset_type)
         return render(template, extra_vars=vars)
+
+    def _find_default_view(self, resource, resource_views):
+        default_resource_view = resource_views[0] if resource_views else None
+        res_format = (resource.get('format', None) or '').lower()
+        if 'xlsx' in res_format:
+            default_resource_view = next(
+                (rv for rv in resource_views if rv.get('view_type') == 'hdx_hxl_preview'),
+                None)
+
+        return default_resource_view
+
 
     def resource_datapreview(self, id, resource_id):
         '''

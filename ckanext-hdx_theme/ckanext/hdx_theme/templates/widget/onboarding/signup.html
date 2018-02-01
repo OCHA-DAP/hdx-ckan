@@ -48,10 +48,10 @@ Example:
                                 <label for="field-email">Your Email Address</label>
                             </div>
                             <div class="error-message" style="display: none;"></div>
-                            <div class="mTop10">
+                            <div class="mTop10 mBottom10">
                                 <input id="signup-send-updates" name="signup-send-updates" type="checkbox" checked="checked"><label for="signup-send-updates">{{_('Allow HDX to send email updates')}}</label>
                             </div>
-                            <input class="mTop10 full-width btn btn-primary btn-large" type="submit" value="Sign up">
+                            <input id="recaptcha" class="mTop10 full-width btn btn-primary btn-large g-recaptcha" type="submit" value="Sign up" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="signupFormOnSubmit" data-size="invisible" data-badge="inline">
                             <div class="member center mTop10">Already a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#loginPopup');">Sign in</a></div>
                         </div>
                     </form>

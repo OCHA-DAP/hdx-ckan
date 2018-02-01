@@ -66,11 +66,12 @@ class FaqController(base.BaseController):
             msg = request.params.get('faq-msg')
             hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
 
-            simple_validate_email(email)
-
             captcha_response = request.params.get('g-recaptcha-response')
             if not self.is_valid_captcha(response=captcha_response):
                 raise ValidationError(CaptchaNotValid, error_summary=CaptchaNotValid)
+
+            simple_validate_email(email)
+
         except ValidationError, e:
             error_summary = e.error_summary
             if error_summary == CaptchaNotValid:
