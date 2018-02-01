@@ -31,7 +31,7 @@ Example:
         <span class="mL15 list-header-title">{{ _("Data") }} [{{ c.batch_total_items or c.page.item_count}}]</span>
           <span class="mL30">
 
-              <input id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
+              <input autocomplete="off" id="headerSearch" name="q" class="header-search" type="text" placeholder="Search all datasets ..." value="{{searchValue}}">
           </span>
           <span class="mL45 list-header-showall filter-pagination">
               Show filter:
@@ -61,10 +61,10 @@ Example:
 
 
         {% set sorting = [
+        (_('Last Modified'), 'metadata_modified desc'),
         (_('Relevance'), 'score desc, metadata_modified desc'),
         (_('Name Ascending'), 'title_case_insensitive asc'),
         (_('Name Descending'), 'title_case_insensitive desc'),
-        (_('Last Modified'), 'metadata_modified desc'),
         (_('Trending'), 'pageviews_last_14_days desc'),
         (_('Most Downloads'), 'total_res_downloads desc') ]
         %}
@@ -104,7 +104,7 @@ Example:
 </form>
 
 <div class="row">
-    <form id="search-page-filters-form">
+    <form id="search-page-filters-form" autocomplete="off">
     <div id="search-page-filters" class="col-xs-3">
         <div class="filter-title">
             Refine your search: <a href="{{other_links.get('current_page_url')}}" class="filter-clear pull-right">Clear all</a>
@@ -118,7 +118,7 @@ Example:
                 <div class="categ-list show-always">
                     <ul class="categ-items">
                         {% set ext_cod = request.params.get('ext_cod') %}
-                        <li><label><input type="checkbox" name="ext_cod" value="1"  {% if ext_cod == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}> CODs(?) <span class="item-count">[{{ full_facet_info.get("num_of_cods") }}]</span></label></li>
+                        <li><label><input type="checkbox" name="ext_cod" value="1"  {% if ext_cod == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_cods") == 0 %} disabled="disabled" {% endif %}> CODs <span class="item-count">[{{ full_facet_info.get("num_of_cods") }}]</span></label></li>
                         {% set ext_subnational = request.params.get('ext_subnational') %}
                         <li><label><input type="checkbox" name="ext_subnational" value="1" {% if ext_subnational == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_subnational") == 0 %} disabled="disabled" {% endif %}> Sub-national <span class="item-count">[{{ full_facet_info.get("num_of_subnational") }}]</span></label></li>
                         {% set ext_geodata = request.params.get('ext_geodata') %}
@@ -131,6 +131,7 @@ Example:
                         <li><label><input type="checkbox" name="ext_showcases" value="1" {% if ext_showcases == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_showcases") == 0 %} disabled="disabled" {% endif %}> Datasets with Showcase <span class="item-count">[{{ full_facet_info.get("num_of_showcases") }}]</span></label></li>
                         {% set ext_hxl = request.params.get('ext_hxl') %}
                         <li><label><input type="checkbox" name="ext_hxl" value="1" {% if ext_hxl == "1" %} checked="checked" {% endif %} {% if full_facet_info.get("num_of_hxl") == 0 %} disabled="disabled" {% endif %}> Datasets with HXL tags <span class="item-count">[{{ full_facet_info.get("num_of_hxl") }}]</span></label></li>
+
                     </ul>
                 </div>
             </div>
@@ -172,6 +173,10 @@ Example:
             </div>
         {% endfor %}
     </div>
+        {% set ext_after_metadata_modified = request.params.get('ext_after_metadata_modified') %}
+        {%  if ext_after_metadata_modified %}
+            <input id="ext_after_metadata_modified" type="hidden" name="ext_after_metadata_modified" value="{{ ext_after_metadata_modified }}"/>
+        {% endif %}
     </form>
     <div id="search-page-results" class="col-xs-9">
         <div class="search-list">

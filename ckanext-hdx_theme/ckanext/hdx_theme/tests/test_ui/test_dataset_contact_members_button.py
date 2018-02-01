@@ -16,6 +16,8 @@ import ckanext.hdx_user_extra.model as ue_model
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+
 package = {
     "package_creator": "test function",
     "private": False,
@@ -36,6 +38,8 @@ package = {
 organization = {
     'name': 'hdx-test-org',
     'title': 'Hdx Test Org',
+    'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+    'org_acronym': 'HTO',
     'org_url': 'http://test-org.test',
     'description': 'This is a test organization',
     'users': [{'name': 'joeadmin', 'capacity': 'admin'},

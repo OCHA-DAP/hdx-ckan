@@ -13,10 +13,10 @@ import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request, _
 import ckan.lib.base as base
-import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckan.model as model
 
-
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
+import ckanext.hdx_theme.helpers.helpers as hdx_h
 import ckanext.hdx_theme.util.mail as hdx_mail
 
 log = logging.getLogger(__name__)
@@ -118,27 +118,37 @@ class HDXReqsOrgController(base.BaseController):
 
         vars = {'data': data, 'errors': errors,
                 'error_summary': error_summary, 'action': 'new'}
+
+        c.hdx_org_type_list = [{'value': '-1', 'text': _('-- Please select --')}] + \
+                              [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
         c.form = base.render('organization/request_organization_form.html', extra_vars=vars)
         return base.render('organization/request_new.html')
 
     def _process_new_org_request(self):
+        hdx_org_type = None
+        hdx_org_type_code = request.params.get('hdx_org_type', '')
+
+        if hdx_org_type_code:
+            hdx_org_type = next(
+                (type[0] for type in static_lists.ORGANIZATION_TYPE_LIST if type[1] == hdx_org_type_code), '-1')
+
         data = {'name': request.params.get('name', ''), \
                 'title': request.params.get('title', ''), \
                 'org_url': request.params.get('org_url', ''), \
                 'description': request.params.get('description', ''), \
                 'your_email': request.params.get('your_email', ''), \
                 'your_name': request.params.get('your_name', ''), \
-                #'from': request.params.get('from', '')
+                'org_acronym': request.params.get('org_acronym', ''), \
+                'hdx_org_type': hdx_org_type, \
+
                 }
         return data
 
     def _validate_new_org_request_field(self, data):
         errors = {}
-        for field in ['title', 'description', 'your_email', 'your_name']:
-            if data[field].strip() == '':
+        for field in ['title', 'description', 'your_email', 'your_name', 'org_acronym', 'hdx_org_type']:
+            if data[field].strip() in ['', '-1']:
                 errors[field] = [_('should not be empty')]
 
         if len(errors) > 0:
             raise logic.ValidationError(errors)
-
-        

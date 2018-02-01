@@ -134,7 +134,7 @@ class TopLineItemsFormatter:
                     modified_value = self._format_thousand(modified_value)
                 elif unit_getter(r) in ('million', 'dollars_million', 'mln'):
                     modified_value = self._format_million(modified_value)
-                elif unit_getter(r) == 'bln':
+                elif unit_getter(r) in ('billion', 'dollars_billion', 'bln'):
                     modified_value = self._format_billion(modified_value)
                 elif unit_getter(r) == 'count':
                     modified_value = self._format_decimal_number(
@@ -174,11 +174,11 @@ class TopLineItemsFormatter:
     def _format_billion(self, original_value):
         modified_value = original_value / 1000000000.0
 
-        formatted_value = self._format_decimal_number(modified_value)
+        formatted_value = self._format_decimal_number(modified_value, 2)
         return formatted_value
 
-    def _format_decimal_number(self, value):
-        return format_decimal_number(value)
+    def _format_decimal_number(self, value, places=1):
+        return format_decimal_number(value, places=places)
 
     def _format_date(self, r, date_getter, date_setter):
         pass

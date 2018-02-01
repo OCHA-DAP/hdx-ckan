@@ -39,7 +39,7 @@ group_type = 'group'
 
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
-    def country_read(self, id):
+    def country_read(self, id, get_only_toplines=False):
         country_dict = self.get_country(id)
 
         country_code = country_dict.get('name', id)
@@ -65,9 +65,17 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
             template_data = self.get_template_data(country_dict, not_filtered_facet_info, latest_cod_dataset)
 
-            result = render('country/country.html', extra_vars=template_data)
+            if get_only_toplines:
+                result = render('country/country_topline.html', extra_vars=template_data)
+            else:
+                result = render('country/country.html', extra_vars=template_data)
 
             return result
+
+    def country_topline(self, id):
+        log.info("The id of the page is: " + id)
+        # return base.render('country/country_topline.html')
+        return self.country_read(id=id, get_only_toplines=True)
 
     def get_template_data(self, country_dict, not_filtered_facet_info, latest_cod_dataset):
 

@@ -11,6 +11,10 @@
 #faq-send-message .captcha {
   overflow: hidden;
 }
+#faq-send-message .grecaptcha-badge {
+  margin-bottom: 60px;
+  margin-right: 25px;
+}
 #faqSendMsgPopup .two-column-widget .two-column-left {
   background-color: #1ebfb3;
   height: 560px;

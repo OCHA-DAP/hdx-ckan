@@ -300,11 +300,16 @@ def hdx_version():
     return version.hdx_version
 
 
-def hdx_get_extras_element(extras, key='key', value_key='org_url', ret_key='value'):
+def hdx_get_extras_element(data_dict, key='key', value_key='org_url', ret_key='value'):
     res = ''
-    for ex in extras:
-        if ex[key] == value_key:
-            res = ex[ret_key]
+
+    if value_key in data_dict:
+        res = data_dict[value_key]
+    else:
+        extras = data_dict.get('extras', [])
+        for ex in extras:
+            if ex[key] == value_key:
+                res = ex[ret_key]
     return res
 
 

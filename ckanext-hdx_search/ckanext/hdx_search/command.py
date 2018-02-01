@@ -48,8 +48,13 @@ def buildIndex(path):
         crises = config.get('hdx.crises').split(", ")
     except:
         crises = ['ebola', 'nepal-earthquake']
-    groups = Session.execute('select name, title, is_organization from "group" where state=\'active\'')
-    for name, title, is_org in groups:
+    query = '''
+    select g.name, g.title, g.is_organization, upper(coalesce(ge.value, g.name)) as code
+    from "group" g LEFT OUTER JOIN group_extra ge ON g.id = ge.group_id and ge.key='org_acronym' and ge.state='active'
+    where g.state='active'
+    '''
+    groups = Session.execute(query)
+    for name, title, is_org, code in groups:
         if is_org:
             page_type = 'organisation'
             url = h.url_for(controller='organization',
@@ -65,7 +70,9 @@ def buildIndex(path):
                             action='read',
                             id=name,
                             qualified=True)
-        index.append({'title': title, 'url': url, 'type': page_type})
+
+
+        index.append({'title': u'{} ({})'.format(title, code), 'url': url, 'type': page_type})
 
     ## I hate this, but given the way we did crisis
     ## I think this is the only way to go. Please update
