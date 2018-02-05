@@ -34,7 +34,10 @@ $(function(){
             if (_.contains(['read', 'update', 'patch'], method)) {
                 options.url += model.id;
             } else if (method == 'delete') {
-                options.data = JSON.stringify({id: model.id});
+                options.data = JSON.stringify({
+                    id: model.id,
+                    batch_mode: 'DONT_GROUP'
+                });
             }
             return Backbone.sync.apply(this, arguments);
         },
@@ -70,6 +73,7 @@ $(function(){
 
         initialize: function() {
             this.set('originalHash', this.hashResource());
+            this.set('batch_mode', 'DONT_GROUP');
         }
     });
 
@@ -192,7 +196,8 @@ $(function(){
                     type: 'POST',
                     data: JSON.stringify({
                         id: this.package_id,
-                        order: resource_ids
+                        order: resource_ids,
+                        batch_mode: 'DONT_GROUP'
                     }),
                     success: function(model, response, options) {
                         this.orderChanged = false;  // reset flag

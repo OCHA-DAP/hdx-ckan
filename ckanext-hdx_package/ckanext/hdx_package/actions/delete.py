@@ -1,7 +1,8 @@
 import ckan.logic
 import logging
 import ckan.logic.action.delete as core_delete
-import ckan.plugins.toolkit as toolkit
+
+from ckanext.hdx_package.actions.update import process_batch_mode
 
 _check_access = ckan.logic.check_access
 NotFound = ckan.logic.NotFound
@@ -56,6 +57,17 @@ def dataset_purge(context, data_dict):
     #     toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})
     log.info('Dataset was purged, id was ' + data_dict.get('id'))
 
+
+def resource_delete(context, data_dict):
+    '''
+    This runs the 'resource_delete' action from core ckan's delete.py
+    It allows us to do some minor changes and wrap it.
+    '''
+    process_batch_mode(context, data_dict)
+
+    result_dict = core_delete.resource_delete(context, data_dict)
+
+    return result_dict
 
 def _is_requested_data_type(entity):
     for extra in entity.extras_list:

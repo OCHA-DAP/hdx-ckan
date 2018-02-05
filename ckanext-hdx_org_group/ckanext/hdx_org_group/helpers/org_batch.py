@@ -10,6 +10,8 @@ from ckanext.hdx_org_group.model import OrganizationBatch
 
 log = logging.getLogger(__name__)
 
+BATCH_PERIOD_CONFIG = 'hdx.batch.period_in_mins'
+
 
 def get_batch_or_generate(org_identifier):
     try:
@@ -23,7 +25,7 @@ def get_batch_or_generate(org_identifier):
 
 
 def get_batch(org_identifier):
-    max_minutes = int(config.get('hdx.batch.period_in_mins', '3'))
+
     batch = None
     if not org_identifier:
         raise NoOrganization('organization_id needs to exist')
@@ -31,6 +33,11 @@ def get_batch(org_identifier):
     group = model.Group.get(org_identifier)
     if not group:
         raise OrganizationNotFound('Organization {} not found in the database'.format(org_identifier))
+
+    org_specific_period_config = '{}_{}'.format(BATCH_PERIOD_CONFIG, group.name)
+
+    max_minutes = int(config.get(org_specific_period_config,
+                                 config.get(BATCH_PERIOD_CONFIG, '3')))
 
     organization_id = group.id
 

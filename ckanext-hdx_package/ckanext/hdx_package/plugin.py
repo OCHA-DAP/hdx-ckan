@@ -224,7 +224,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                               tk.get_converter('convert_to_extras')],
             'data_update_frequency': [tk.get_validator('not_empty'),
                               tk.get_converter('convert_to_extras')],
-            'batch': [tk.get_validator('not_empty'),
+            'batch': [tk.get_validator('ignore_missing'),
                                       tk.get_converter('convert_to_extras')]
         })
 
@@ -324,6 +324,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         from ckanext.hdx_package.helpers import helpers as hdx_actions
         return {
             'package_update': hdx_update.package_update,
+            'package_resource_reorder': hdx_update.package_resource_reorder,
             'dataset_purge': hdx_delete.dataset_purge,
             'hdx_dataset_purge': hdx_delete.hdx_dataset_purge,
             'hdx_get_activity_list': hdx_actions.hdx_get_activity_list,
@@ -339,6 +340,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
             'resource_show': hdx_get.resource_show,
+            'resource_delete': hdx_delete.resource_delete,
             'package_search': hdx_get.package_search,
             'package_show': hdx_get.package_show,
             'package_show_edit': hdx_get.package_show_edit,
