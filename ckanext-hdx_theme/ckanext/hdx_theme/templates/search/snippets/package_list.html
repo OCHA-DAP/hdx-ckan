@@ -24,7 +24,6 @@ Example:
 
 <div style="display: none;" id="analytics-number-of-results">{{c.page.item_count}}</div>
 
-{% if packages %}
 <form id="dataset-filter-form" style="display: inline;">
     <div id="base-filter-location" style="display: none;">{{other_links.get('current_page_url')}}</div>
     <div id="dataset-filter-start" class="list-header {% if display_min and not min_version %}list-header-min{% endif %}">
@@ -179,27 +178,27 @@ Example:
         {% endif %}
     </form>
     <div id="search-page-results" class="col-xs-9">
-        <div class="search-list">
-            <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
-                {% for package in packages %}
-                    {% if package.indicator and package.indicator == "1" %}
-                        {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
-                    {% else %}
-                        {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
+        {% if packages %}
+            <div class="search-list">
+                <ul class="hdx-bs3 list-items {{ list_class or 'dataset-list unstyled' }}">
+                    {% for package in packages %}
+                        {% if package.indicator and package.indicator == "1" %}
+                            {% snippet 'search/snippets/indicator_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, loop=loop, show_preview_on_first=show_preview_on_first %}
+                        {% else %}
+                            {% snippet 'search/snippets/package_item.html', query=query, package=package, item_class=item_class, hide_resources=hide_resources, banner=banner, truncate=truncate, truncate_title=truncate_title, show_my_links=show_my_links, show_edit_link=show_edit_link, loop=loop %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <div class="list-items search-form">
+                {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
+                <form id="dataset-filter-form" style="display: none;">
+                    <input name="q" type="hidden" value="{{searchValue}}">
+                </form>
+                <h2>Sorry no datasets found for current filter selection {# and {{src_msg}} #}</h2>
+            </div>
+        {% endif %}
     </div>
 </div>
-
-{% else %}
-    <div class="list-items search-form">
-        {% set src_msg = 'for \"'+ searchValue +'\"' if searchValue else ''  %}
-        <form id="dataset-filter-form" style="display: none;">
-            <input name="q" type="hidden" value="{{searchValue}}">
-        </form>
-        <h2>Sorry no datasets found {{src_msg}}</h2>
-    </div>
-{% endif %}
 

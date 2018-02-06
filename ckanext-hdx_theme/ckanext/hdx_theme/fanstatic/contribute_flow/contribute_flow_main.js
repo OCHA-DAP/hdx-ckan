@@ -107,6 +107,7 @@ ckan.module('contribute_flow_main', function($, _) {
                                     analyticsPromise = hdxUtil.analytics.sendDatasetCreationEvent(formDataArray);
                                     isNewDataset = true;
                                 }
+                                formDataArray.push({'name': 'batch_mode', 'value': 'DONT_GROUP'});
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
 
                                 $.when(analyticsPromise).done(function () {
