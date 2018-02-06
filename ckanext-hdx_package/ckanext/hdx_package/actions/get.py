@@ -371,13 +371,13 @@ def resource_show(context, data_dict):
 
     # TODO: check if needed. Apparently the default resource_show() action anyway calls package_show
     if _should_manually_load_property_value(context, resource_dict, 'size'):
-        resource_dict['size'] = __get_resource_filesize(resource_dict)
+        resource_dict['size'] = _get_resource_filesize(resource_dict)
 
     if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-        resource_dict['revision_last_updated'] = __get_resource_revison_timestamp(resource_dict)
+        resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
 
     if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
-        resource_dict['hdx_rel_url'] = __get_resource_hdx_relative_url(resource_dict)
+        resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
 
     return resource_dict
 
@@ -398,13 +398,13 @@ def package_show(context, data_dict):
     if package_dict.get('type') == 'dataset': # this shouldn't be executed from showcases
         for resource_dict in package_dict.get('resources', []):
             if _should_manually_load_property_value(context, resource_dict, 'size'):
-                resource_dict['size'] = __get_resource_filesize(resource_dict)
+                resource_dict['size'] = _get_resource_filesize(resource_dict)
 
             if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-                resource_dict['revision_last_updated'] = __get_resource_revison_timestamp(resource_dict)
+                resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
 
             if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
-                resource_dict['hdx_rel_url'] = __get_resource_hdx_relative_url(resource_dict)
+                resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
 
         # downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
         #                   res.get('tracking_summary', {}).get('total'))
@@ -487,20 +487,20 @@ def package_show_edit(context, data_dict):
     return package_show(context, data_dict)
 
 
-def __get_resource_filesize(resource_dict):
+def _get_resource_filesize(resource_dict):
     if resource_dict.get('url_type') == 'upload':
         value = None
         try:
             upload = uploader.ResourceUpload(resource_dict)
             value = os.path.getsize(upload.get_path(resource_dict['id']))
         except Exception as e:
-            log.warn(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
+            log.debug(u'Error occurred trying to get the size for resource {}: {}'.format(resource_dict.get('name', ''),
                                                                                          str(e)))
         return value
     return None
 
 
-def __get_resource_revison_timestamp(resource_dict):
+def _get_resource_revison_timestamp(resource_dict):
     '''
     :param resource_dict: the dictized resource information
     :type resource_dict: dict
@@ -509,13 +509,16 @@ def __get_resource_revison_timestamp(resource_dict):
     '''
     revision_id = resource_dict.get('revision_id')
     if revision_id:
-        context = {'model': model, 'session': model.Session}
-        revision_dict = logic.get_action('revision_show')(context, {'id': revision_id})
-        return revision_dict.get('timestamp')
+        # context = {'model': model, 'session': model.Session}
+        timestamp = model.Session.query(model.Revision.timestamp).filter(model.Revision.id == revision_id).first()
+        if timestamp:
+            return timestamp[0].isoformat()
+        # revision_dict = logic.get_action('revision_show')(context, {'id': revision_id})
+        # return revision_dict.get('timestamp')
     return None
 
 
-def __get_resource_hdx_relative_url(resource_dict):
+def _get_resource_hdx_relative_url(resource_dict):
     if helpers.is_ckan_domain(resource_dict.get('url', '')):
         return helpers.make_url_relative(resource_dict.get('url', ''))
 

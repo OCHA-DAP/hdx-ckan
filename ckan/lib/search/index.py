@@ -100,6 +100,210 @@ class PackageSearchIndex(SearchIndex):
     def update_dict(self, pkg_dict, defer_commit=False):
         self.index_package(pkg_dict, defer_commit)
 
+    def index_packages(self, pkg_dicts, defer_commit=False):
+        if not pkg_dicts:
+            return
+
+        final_dicts = []
+
+        for pkg_dict in pkg_dicts:
+            # tracking summary values will be stale, never store them
+            tracking_summary = pkg_dict.pop('tracking_summary', None)
+            for r in pkg_dict.get('resources', []):
+                r.pop('tracking_summary', None)
+
+            data_dict_json = json.dumps(pkg_dict)
+
+            if config.get('ckan.cache_validated_datasets', True):
+                package_plugin = lib_plugins.lookup_package_plugin(
+                    pkg_dict.get('type'))
+
+                schema = package_plugin.show_package_schema()
+                validated_pkg_dict, errors = lib_plugins.plugin_validate(
+                    package_plugin, {'model': model, 'session': model.Session},
+                    pkg_dict, schema, 'package_show')
+                pkg_dict['validated_data_dict'] = json.dumps(validated_pkg_dict,
+                    cls=ckan.lib.navl.dictization_functions.MissingNullEncoder)
+
+            pkg_dict['data_dict'] = data_dict_json
+
+            # add to string field for sorting
+            title = pkg_dict.get('title')
+            if title:
+                pkg_dict['title_string'] = title
+
+            # delete the package if there is no state, or the state is `deleted`
+            if (not pkg_dict.get('state') or 'deleted' in pkg_dict.get('state')):
+                return self.delete_package(pkg_dict)
+
+            index_fields = RESERVED_FIELDS + pkg_dict.keys()
+
+            # include the extras in the main namespace
+            extras = pkg_dict.get('extras', [])
+            for extra in extras:
+                key, value = extra['key'], extra['value']
+                if isinstance(value, (tuple, list)):
+                    value = " ".join(map(unicode, value))
+                key = ''.join([c for c in key if c in KEY_CHARS])
+                pkg_dict['extras_' + key] = value
+                if key not in index_fields:
+                    pkg_dict[key] = value
+            pkg_dict.pop('extras', None)
+
+            # add tags, removing vocab tags from 'tags' list and adding them as
+            # vocab_<tag name> so that they can be used in facets
+            non_vocab_tag_names = []
+            tags = pkg_dict.pop('tags', [])
+            context = {'model': model}
+
+            for tag in tags:
+                if tag.get('vocabulary_id'):
+                    data = {'id': tag['vocabulary_id']}
+                    vocab = logic.get_action('vocabulary_show')(context, data)
+                    key = u'vocab_%s' % vocab['name']
+                    if key in pkg_dict:
+                        pkg_dict[key].append(tag['name'])
+                    else:
+                        pkg_dict[key] = [tag['name']]
+                else:
+                    non_vocab_tag_names.append(tag['name'])
+
+            pkg_dict['tags'] = non_vocab_tag_names
+
+            # add groups
+            groups = pkg_dict.pop('groups', [])
+
+            # we use the capacity to make things private in the search index
+            if pkg_dict['private']:
+                pkg_dict['capacity'] = 'private'
+            else:
+                pkg_dict['capacity'] = 'public'
+
+            pkg_dict['groups'] = [group['name'] for group in groups]
+
+            # if there is an owner_org we want to add this to groups for index
+            # purposes
+            if pkg_dict.get('organization'):
+               pkg_dict['organization'] = pkg_dict['organization']['name']
+            else:
+               pkg_dict['organization'] = None
+
+            # tracking
+            if not tracking_summary:
+                tracking_summary = model.TrackingSummary.get_for_package(
+                    pkg_dict['id'])
+            pkg_dict['views_total'] = tracking_summary['total']
+            pkg_dict['views_recent'] = tracking_summary['recent']
+
+            resource_fields = [('name', 'res_name'),
+                               ('description', 'res_description'),
+                               ('format', 'res_format'),
+                               ('url', 'res_url'),
+                               ('resource_type', 'res_type')]
+            resource_extras = [(e, 'res_extras_' + e) for e
+                                in model.Resource.get_extra_columns()]
+            # flatten the structure for indexing:
+            for resource in pkg_dict.get('resources', []):
+                for (okey, nkey) in resource_fields + resource_extras:
+                    pkg_dict[nkey] = pkg_dict.get(nkey, []) + [resource.get(okey, u'')]
+            pkg_dict.pop('resources', None)
+
+            rel_dict = collections.defaultdict(list)
+            subjects = pkg_dict.pop("relationships_as_subject", [])
+            objects = pkg_dict.pop("relationships_as_object", [])
+            for rel in objects:
+                type = model.PackageRelationship.forward_to_reverse_type(rel['type'])
+                rel_dict[type].append(model.Package.get(rel['subject_package_id']).name)
+            for rel in subjects:
+                type = rel['type']
+                rel_dict[type].append(model.Package.get(rel['object_package_id']).name)
+            for key, value in rel_dict.iteritems():
+                if key not in pkg_dict:
+                    pkg_dict[key] = value
+
+            pkg_dict[TYPE_FIELD] = PACKAGE_TYPE
+
+            # Save dataset type
+            pkg_dict['dataset_type'] = pkg_dict['type']
+
+            # clean the dict fixing keys and dates
+            # FIXME where are we getting these dirty keys from?  can we not just
+            # fix them in the correct place or is this something that always will
+            # be needed?  For my data not changing the keys seems to not cause a
+            # problem.
+            new_dict = {}
+            bogus_date = datetime.datetime(1, 1, 1)
+            for key, value in pkg_dict.items():
+                key = key.encode('ascii', 'ignore')
+                if key.endswith('_date'):
+                    try:
+                        date = parse(value, default=bogus_date)
+                        if date != bogus_date:
+                            value = date.isoformat() + 'Z'
+                        else:
+                            # The date field was empty, so dateutil filled it with
+                            # the default bogus date
+                            value = None
+                    except:
+                        continue
+                new_dict[key] = value
+            pkg_dict = new_dict
+
+            for k in ('title', 'notes', 'title_string'):
+                if k in pkg_dict and pkg_dict[k]:
+                    pkg_dict[k] = escape_xml_illegal_chars(pkg_dict[k])
+
+            # modify dates (SOLR is quite picky with dates, and only accepts ISO dates
+            # with UTC time (i.e trailing Z)
+            # See http://lucene.apache.org/solr/api/org/apache/solr/schema/DateField.html
+            pkg_dict['metadata_created'] += 'Z'
+            pkg_dict['metadata_modified'] += 'Z'
+
+            # mark this CKAN instance as data source:
+            pkg_dict['site_id'] = config.get('ckan.site_id')
+
+            # Strip a selection of the fields.
+            # These fields are possible candidates for sorting search results on,
+            # so we strip leading spaces because solr will sort " " before "a" or "A".
+            for field_name in ['title']:
+                try:
+                    value = pkg_dict.get(field_name)
+                    if value:
+                        pkg_dict[field_name] = value.lstrip()
+                except KeyError:
+                    pass
+
+            # add a unique index_id to avoid conflicts
+            import hashlib
+            pkg_dict['index_id'] = hashlib.md5('%s%s' % (pkg_dict['id'],config.get('ckan.site_id'))).hexdigest()
+
+            for item in PluginImplementations(IPackageController):
+                pkg_dict = item.before_index(pkg_dict)
+
+            assert pkg_dict, 'Plugin must return non empty package dict on index'
+
+            final_dicts.append(pkg_dict)
+
+        # send to solr:
+        try:
+            conn = make_connection()
+            commit = not defer_commit
+            if not asbool(config.get('ckan.search.solr_commit', 'true')):
+                commit = False
+            conn.add(docs=final_dicts, commit=commit)
+        except pysolr.SolrError, e:
+            msg = 'Solr returned an error: {0}'.format(
+                e[:1000] # limit huge responses
+            )
+            raise SearchIndexError(msg)
+        except socket.error, e:
+            err = 'Could not connect to Solr using {0}: {1}'.format(conn.url, str(e))
+            log.error(err)
+            raise SearchIndexError(err)
+
+        commit_debug_msg = 'Not committed yet' if defer_commit else 'Committed'
+        log.debug('Updated index for %s [%s]' % (pkg_dict.get('name'), commit_debug_msg))
+
     def index_package(self, pkg_dict, defer_commit=False):
         if pkg_dict is None:
             return
