@@ -33,6 +33,9 @@ def resource_update(context, data_dict):
 
     process_batch_mode(context, data_dict)
 
+    # make the update faster (less computation in the custom package_show)
+    context['no_compute_extra_hdx_show_properties'] = True
+
     if data_dict.get('resource_type', '') != 'file.upload':
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up

@@ -395,7 +395,8 @@ def package_show(context, data_dict):
     if 'tracking_summary' in package_dict and not package_dict.get('tracking_summary'):
         del package_dict['tracking_summary']
 
-    if package_dict.get('type') == 'dataset': # this shouldn't be executed from showcases
+    # this shouldn't be executed from showcases
+    if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
         for resource_dict in package_dict.get('resources', []):
             if _should_manually_load_property_value(context, resource_dict, 'size'):
                 resource_dict['size'] = _get_resource_filesize(resource_dict)
