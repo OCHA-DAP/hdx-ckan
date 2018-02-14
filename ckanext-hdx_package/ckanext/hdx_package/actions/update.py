@@ -31,6 +31,8 @@ def resource_update(context, data_dict):
     It allows us to do some minor changes and wrap it.
     '''
 
+    process_batch_mode(context, data_dict)
+
     if data_dict.get('resource_type', '') != 'file.upload':
         #If this isn't an upload, it is a link so make sure we update
         #the url_type otherwise solr will screw everything up
@@ -67,6 +69,9 @@ def package_update(context, data_dict):
     :rtype: dictionary
 
     '''
+
+    process_batch_mode(context, data_dict)
+
     model = context['model']
     user = context['user']
     name_or_id = data_dict.get("id") or data_dict['name']
@@ -106,7 +111,17 @@ def package_update(context, data_dict):
         data_dict['package_creator'] = pkg.extras.get('package_creator', data_dict.get('package_creator'))
 
     # Inject a code representing the batch within which this dataset was modified
-    data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
+    # KEEP_OLD - keep the code before this update
+    # DONT_GROUP - don't use any code
+    if context.get('batch_mode') == 'KEEP_OLD':
+        try:
+            batch_extras = pkg._extras.get('batch')
+            if batch_extras and batch_extras.state == 'active':
+                data_dict['batch'] = batch_extras.value
+        except Exception, e:
+            log.info(str(e))
+    elif context.get('batch_mode') != 'DONT_GROUP':
+        data_dict['batch'] = get_batch_or_generate(data_dict.get('owner_org'))
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
@@ -177,6 +192,25 @@ def package_update(context, data_dict):
         else _get_action('package_show')(context, {'id': data_dict['id']})
 
     return output
+
+
+def package_resource_reorder(context, data_dict):
+    '''
+    This runs the 'package_resource_reorder' action from core ckan's update.py
+    It allows us to do some minor changes and wrap it.
+    '''
+
+    process_batch_mode(context, data_dict)
+
+    result_dict = core_update.package_resource_reorder(context, data_dict)
+
+    return result_dict
+
+
+def process_batch_mode(context, data_dict):
+    if 'batch_mode' in data_dict:
+        context['batch_mode'] = data_dict['batch_mode']
+        del data_dict['batch_mode']
 
 
 def modified_save(context, data):
@@ -314,6 +348,8 @@ def hdx_resource_update_metadata(context, data_dict):
     as a parameter and you can't supply just a modified field .
     This function first loads the resource via resource_show() and then modifies the respective dict.
     '''
+
+    process_batch_mode(context, data_dict)
 
     # Below params are needed in context so that the URL of the resource is not
     # transformed to a real URL for an uploaded file
