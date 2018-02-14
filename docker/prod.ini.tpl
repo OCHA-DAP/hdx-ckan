@@ -91,6 +91,9 @@ hdx.hxlproxy.url = https://${HDX_PREFIX}data.${HDX_DOMAIN}/hxlproxy
 # HXL Preview
 hdx.hxl_preview_app.url = https://${HDX_PREFIX}data.${HDX_DOMAIN}/hxlpreview
 
+# HDX Snap Service
+hdx.snap_service.url = https://${HDX_PREFIX}data.${HDX_DOMAIN}/snap
+
 # GOOGLE DEV
 hdx.google.dev_key = ${HDX_GOOGLE_DEV_KEY}
 
