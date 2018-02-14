@@ -279,3 +279,10 @@ hdx.search_history.hours_from_actual_search = 1
 
 #SEARCH GROUPING/BATCH
 hdx.batch.period_in_mins_unesco = 75
+
+#Enable HDX-specific reindexing
+hdx.reindexing.enabled = true
+# number of datasets to process at a time
+hdx.reindexing.batch_size = 200
+
+
