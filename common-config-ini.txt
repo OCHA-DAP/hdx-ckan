@@ -278,4 +278,5 @@ hdx.batch.period_in_mins = 3
 hdx.search_history.hours_from_actual_search = 1
 
 #SEARCH GROUPING/BATCH
-hdx.batch.period_in_mins_unesco = 75
+hdx.batch.period_in_mins_unesco = 90
+hdx.batch.period_in_mins_hot = 1500
