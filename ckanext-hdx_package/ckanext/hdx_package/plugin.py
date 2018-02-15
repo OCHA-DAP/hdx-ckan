@@ -212,7 +212,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'license_id': [tk.get_validator('not_empty'), unicode],
             'license_other': [tk.get_validator('not_empty_if_license_other'), tk.get_converter('convert_to_extras')],
             'solr_additions': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
-            'subnational': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+            'subnational': [tk.get_validator('hdx_show_subnational'), tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'quality': [tk.get_validator('ignore_not_sysadmin'), tk.get_validator('ignore_missing'),
                         tk.get_converter('convert_to_extras')],
             'data_update_frequency': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
