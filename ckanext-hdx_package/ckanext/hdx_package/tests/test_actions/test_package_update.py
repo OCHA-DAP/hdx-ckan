@@ -298,9 +298,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            key: value,
                            }
         self._get_action('package_patch')(context, modified_fields)
-        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_1',
+        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_2',
                                                         apikey=user.apikey, status=200)
-        modified_package_obj = model.Package.by_name('test_activity_1')
+        modified_package_obj = model.Package.by_name('test_activity_2')
         return {
             "modified_package": modified_package,
             "modified_package_obj": modified_package_obj
