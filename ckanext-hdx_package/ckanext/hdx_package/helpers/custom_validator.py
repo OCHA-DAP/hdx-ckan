@@ -16,9 +16,9 @@ missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
 
+
 # same as not_empty, but ignore whitespaces
 def not_empty_ignore_ws(key, data, errors, context):
-
     value = data.get(key)
     if not value or value is missing:
         errors[key].append(_('Missing value'))
@@ -27,6 +27,7 @@ def not_empty_ignore_ws(key, data, errors, context):
     if not value or value is missing:
         errors[key].append(_('Missing value'))
         raise StopOnError
+
 
 def groups_not_empty(key, data, errors, context):
     """
@@ -107,6 +108,26 @@ def detect_format(key, data, errors, context):
         raise df.Invalid(_('No format provided and none could be automatically deduced'))
 
     return current_format
+
+
+def hdx_show_subnational(key, data, errors, context):
+    '''
+    resource url should not be empty
+    '''
+
+    current_value = data.get(key)
+    if not current_value or isinstance(current_value, df.Missing):
+        data[key] = "0"
+        return data[key]
+    if current_value in ["true", "True", "1"]:
+        data[key] = "1"
+        return data[key]
+    if current_value in ["false", "False", "0", None]:
+        data[key] = "0"
+        return data[key]
+
+    data[key] = "0"
+    return data[key]
 
 
 def find_package_creator(key, data, errors, context):
