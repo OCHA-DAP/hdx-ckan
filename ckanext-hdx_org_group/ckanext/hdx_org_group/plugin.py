@@ -107,7 +107,7 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
             'modified_at': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'hdx_org_type': [tk.get_validator('not_empty'), tk.get_validator('correct_hdx_org_type'),
                              tk.get_converter('convert_to_extras')],
-            'org_acronym': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
+            'org_acronym': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
         })
         return schema
 
