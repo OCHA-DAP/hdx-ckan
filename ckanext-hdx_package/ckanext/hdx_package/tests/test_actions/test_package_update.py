@@ -146,7 +146,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                               status=200)
         p = legacy_tests.call_action_api(self.app, 'package_create', package_creator="test function", name="test_activity_12",
                                   dataset_source="World Bank", notes="This is a test activity", title="Test Activity 1",
-                                  indicator=1, groups=[{"name": "col"}], apikey=testsysadmin.apikey, status=200)
+                                  indicator=1, groups=[{"name": "col"}], apikey=testsysadmin.apikey, status=200, owner_org="hdx-test-org")
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
         s = self._get_action('package_show')(context, {"id": p["id"]})
