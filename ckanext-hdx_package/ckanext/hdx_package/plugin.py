@@ -13,6 +13,7 @@ import ckanext.hdx_package.actions.create as hdx_create
 import ckanext.hdx_package.actions.delete as hdx_delete
 import ckanext.hdx_package.actions.get as hdx_get
 import ckanext.hdx_package.actions.update as hdx_update
+import ckanext.hdx_package.actions.patch as hdx_patch
 import ckanext.hdx_package.helpers.analytics as analytics
 import ckanext.hdx_package.helpers.custom_validator as vd
 import ckanext.hdx_package.helpers.helpers as hdx_helpers
@@ -304,6 +305,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'package_create': hdx_create.package_create,
             'resource_create': hdx_create.resource_create,
             'resource_update': hdx_update.resource_update,
+            'resource_patch': hdx_patch.resource_patch,
             'resource_show': hdx_get.resource_show,
             'resource_delete': hdx_delete.resource_delete,
             'package_search': hdx_get.package_search,
