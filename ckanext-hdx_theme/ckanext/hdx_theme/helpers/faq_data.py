@@ -556,7 +556,7 @@ contact = {
                  'the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also '
                  'reach us on Twitter at <a target="_blank" href="https://twitter.com/humdata">@humdata</a>. Sign up '
                  'to receive our blog posts '
-                 '<a target="_blank"  href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315">here</a>.',
+                 '<a target="_blank"  href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1">here</a>.',
         },
     ]
 }
