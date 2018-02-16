@@ -14,8 +14,19 @@ import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
 import ckanext.hdx_package.helpers.caching as caching
 
+from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+
 log = logging.getLogger(__name__)
 
+organization = {
+    'name': 'hdx-test-org',
+    'title': 'Hdx Test Org',
+    'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+    'org_acronym': 'HTO',
+    'org_url': 'http://test-org.test',
+    'description': 'This is a test organization',
+    'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
+}
 
 class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
     @classmethod
@@ -32,6 +43,47 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         umodel.setup()
         ue_model.create_table()
 
+    def test_create_with_2_groups(self):
+        package = {
+            "package_creator": "test function",
+            "private": False,
+            "dataset_date": "01/01/1960-12/31/2012",
+            "indicator": "1",
+            "caveats": "These are the caveats",
+            "license_other": "TEST OTHER LICENSE",
+            "methodology": "This is a test methodology",
+            "dataset_source": "World Bank",
+            "license_id": "hdx-other",
+            "name": "test_activity_3_with_2_groups",
+            "notes": "This is a test activity",
+            "title": "Test Activity 3 with 2 Groups",
+            "owner_org": "hdx-test-org",
+        }
+
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        self._get_action('organization_create')(context, organization)
+
+        group_list = caching.cached_group_list()
+
+        try:
+            package['groups'] = [{"id": group_list[0]['id']}, {"name": 'non-existing name'}]
+            self._get_action('package_create')(context, package)
+            assert False
+        except logic.ValidationError:
+            assert True
+
+        try:
+            package['groups'] = [{"id": group_list[0]['id']}, {"name": group_list[1]['name']}]
+            self._get_action('package_create')(context, package)
+            data_dict = self._get_action('package_show')(context, {"id": "test_activity_3_with_2_groups"})
+            assert len(data_dict.get('groups', [])) == 2
+        except logic.ValidationError:
+            assert False
+
+
+
     def test_create_with_group(self):
         package = {
             "package_creator": "test function",
@@ -46,6 +98,7 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
             "name": "test_activity_3",
             "notes": "This is a test activity",
             "title": "Test Activity 3",
+            "owner_org": "hdx-test-org",
         }
 
         context = {'ignore_auth': True,
@@ -73,38 +126,3 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         except logic.ValidationError:
             assert False
 
-    def test_create_with_2_groups(self):
-        package = {
-            "package_creator": "test function",
-            "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
-            "indicator": "1",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_activity_3_with_2_groups",
-            "notes": "This is a test activity",
-            "title": "Test Activity 3 with 2 Groups",
-        }
-
-        context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-
-        group_list = caching.cached_group_list()
-
-        try:
-            package['groups'] = [{"id": group_list[0]['id']}, {"name": 'non-existing name'}]
-            self._get_action('package_create')(context, package)
-            assert False
-        except logic.ValidationError:
-            assert True
-
-        try:
-            package['groups'] = [{"id": group_list[0]['id']}, {"name": group_list[1]['name']}]
-            self._get_action('package_create')(context, package)
-            data_dict = self._get_action('package_show')(context, {"id": "test_activity_3_with_2_groups"})
-            assert len(data_dict.get('groups', [])) == 2
-        except logic.ValidationError:
-            assert False
