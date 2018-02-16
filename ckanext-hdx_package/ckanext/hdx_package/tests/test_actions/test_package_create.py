@@ -102,7 +102,7 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         }
 
         context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'nouser'}
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
 
         try:
             self._get_action('package_create')(context, package)
