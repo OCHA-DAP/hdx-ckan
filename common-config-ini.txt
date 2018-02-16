@@ -242,6 +242,11 @@ hdx.hxlproxy.url = https://beta-proxy.hxlstandard.org
 # HXL Preview
 hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
 
+# HDX Snap Service
+hdx.snap_service.url = http://snap:8080
+
+
+
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
