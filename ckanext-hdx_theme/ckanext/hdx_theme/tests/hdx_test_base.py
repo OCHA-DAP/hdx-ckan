@@ -101,6 +101,8 @@ class HdxBaseTest(object):
                     data_dict['license_id'] = 'cc'
 
                 private = False if str(data_dict.get('private', '')).lower() == 'false' else True
+                if not data_dict.get('maintainer'):
+                    data_dict['maintainer'] = 'testsysadmin'
                 if not private:
                     if not data_dict.get('data_update_frequency'):
                         data_dict['data_update_frequency'] = '0'
