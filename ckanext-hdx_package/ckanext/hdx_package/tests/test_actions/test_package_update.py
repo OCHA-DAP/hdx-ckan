@@ -180,15 +180,13 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            # 'methodology': 'methodology test',
                            'more_info': 'more_info test',
                            # 'terms_of_use': 'terms_of_use test',
-                           'data_update_frequency': '7'
+                           'data_update_frequency': '7',
+                           'maintainer': testsysadmin.id
                            }
 
         self._get_action('hdx_package_update_metadata')(context, modified_fields)
 
-        # tests.call_action_api(self.app, 'package_show', id='test_activity_1',
-        #                       apikey=testsysadmin.apikey, status=404)
-        # modified_package = tests.call_action_api(self.app, 'package_show', id='test_activity_1_modified',
-        #                                          apikey=testsysadmin.apikey, status=200)
+
         modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_1',
                                                  apikey=testsysadmin.apikey, status=200)
         modified_fields.pop('id')
