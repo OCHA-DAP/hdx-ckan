@@ -40,7 +40,7 @@ $('document').ready(function(){
 
         if (prevSearch != null && prevSearch.length > 0){
             $(prevSearch).each(function(idx, el){
-                html += '<li data-href="'+el.url+'"><div class="ahead-link"><i class="icon icon-previoussearches"></i>'+process_title(el.text, q)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
+                html += '<li data-href="'+el.url+'" data-toggle="tooltip" title="'+ el.text +'"><div class="ahead-link"><i class="icon icon-previoussearches"></i>'+process_title(el.text, q)+'</div><div class="ahead-type">'+el.count+' new results</div></li>';
             });
         }
 
@@ -48,7 +48,8 @@ $('document').ready(function(){
             var limit = search.length > 5 ? 5 : search.length;
             for(i=0; i<limit; i++){
                 html += '<li data-search-term="'+q+'" data-search-type="'+feature_index[search[i]['ref']]['type']+
-                    '" data-href="'+feature_index[search[i]['ref']]['url']+'"><div class="ahead-link"><i class="empty"></i>'+
+                    '" data-href="'+feature_index[search[i]['ref']]['url']+'" ' +
+                    'data-toggle="tooltip" title="'+ feature_index[search[i]['ref']]['title'] +'"><div class="ahead-link"><i class="empty"></i>'+
                     process_title(feature_index[search[i]['ref']]['title'], q)+'</div><div class="ahead-type">'+feature_index[search[i]['ref']]['type']+' page</div></li>';
 
             }
@@ -63,6 +64,14 @@ $('document').ready(function(){
             '</div></li>';
         html += '</ul>';
         $results.html(html);
+        $results.find("li").tooltip({
+            placement: 'top',
+    	    trigger: 'hover',
+            delay: {
+                show: 700,
+                hide: 100
+            }
+        });
         $results.show();
     };
 
