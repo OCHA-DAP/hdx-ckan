@@ -8,6 +8,8 @@ import bisect
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
+import ckan.logic as logic
+import ckan.model as model
 
 import ckan.lib.navl.dictization_functions as df
 from ckan.common import _, c
@@ -15,6 +17,7 @@ from ckan.common import _, c
 missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
+get_action = logic.get_action
 
 
 # same as not_empty, but ignore whitespaces
@@ -140,6 +143,32 @@ def find_package_creator(key, data, errors, context):
 
     return current_creator
 
+def hdx_find_package_maintainer(key, data, errors, context):
+    # current_creator = data.get(key)
+    # if not current_creator:
+    #     user = c.user or c.author
+    #     if user:
+    #         data[key] = user
+    #         current_creator = user
+
+    # return current_creator
+
+    try:
+        user_obj = model.User.get(data.get(key))
+    except Exception, ex:
+        raise df.Invalid(_('Maintainer does not exist. Please add valid user ID'))
+
+    org_id = data.get(('owner_org',))
+    if not org_id:
+        raise df.Invalid(_('Organizations owner does not exist. Please add an organization ID'))
+
+    members = get_action('hdx_member_list')(context, {'org_id': org_id})
+
+    if user_obj and ((user_obj.id in members.get('all')) or user_obj.sysadmin):
+        data[key] = user_obj.id
+        return data[key]
+    raise df.Invalid(_('Maintainer does not exist or is not a member of current owner organization.'
+                       ' Please add valid user ID'))
 
 def general_not_empty_if_other_selected(other_key, other_compare_value):
     '''
