@@ -14,6 +14,8 @@ import ckanext.hdx_package.helpers.screenshot as screenshot
 
 import ckanext.hdx_theme.helpers.custom_validator as custom_validator
 
+from ckanext.hdx_org_group.helpers.analytics import OrganizationCreateAnalyticsSender
+
 log = logging.getLogger(__name__)
 
 
@@ -267,12 +269,17 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
 
         return map
 
+    # IOrganizationController
     def create(self, org):
+        OrganizationCreateAnalyticsSender(org.name,
+                                          org.hdx_org_type if hasattr(org, 'hdx_org_type') else None).send_to_queue()
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
 
+    # IOrganizationController
     def edit(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
 
+    # IOrganizationController
     def delete(self, org):
         tk.get_action('invalidate_cache_for_organizations')({'ignore_auth': True}, {})
 

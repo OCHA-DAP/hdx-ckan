@@ -7,7 +7,6 @@ from pylons import config
 import sqlalchemy
 import beaker.cache as bcache
 
-import ckan.lib.dictization
 import ckan.logic as logic
 import ckan.plugins.toolkit as tk
 import ckan.lib.dictization.model_dictize as model_dictize
@@ -17,10 +16,11 @@ import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_theme.helpers.counting_actions as counting
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_theme.hxl.transformers.transformers as transformers
-import ckanext.ytp.request.util as hdx_util
 import ckan.authz as authz
+
 from ckan.common import c, _
 from ckanext.hdx_theme.hxl.proxy import do_hxl_transformation, transform_response_to_dict_list
+from sqlalchemy import func
 
 _check_access = tk.check_access
 _get_or_bust = tk.get_or_bust
@@ -662,3 +662,50 @@ def hdx_organization_list_for_user(context, data_dict):
 
     orgs_list = model_dictize.group_list_dictize(orgs_q.all(), context)
     return orgs_list
+
+
+@logic.side_effect_free
+def hdx_general_statistics(context, data_dict):
+
+    model = context['model']
+
+    active_users_completed = model.Session.query(func.count(model.User.id)).filter(model.User.state == 'active').filter(
+        model.User.fullname != None).first()[0]
+    active_users_not_completed = model.Session.query(func.count(model.User.id)).filter(
+        model.User.state == 'active').filter(model.User.fullname == None).first()[0]
+
+    org_list = tk.get_action('organization_list')(context, {})
+    pkg_results = tk.get_action('package_search')(context, {
+        'fq': '+dataset_type:dataset',
+        'facet.field': [
+            'organization',
+            'has_geodata',
+            'has_showcases'
+        ],
+        'q': u'',
+        'rows': 1,
+        'start': 0
+    })
+
+    total_orgs = len(org_list)
+    orgs_with_datasets = len(pkg_results['facets'].get('organization', {}))
+
+    results = {
+        'datasets': {
+            'total': pkg_results.get('count'),
+            'with_geodata': pkg_results['facets'].get('has_geodata',{}).get('true'),
+            'with_showcases': pkg_results['facets'].get('has_showcases', {}).get('true'),
+        },
+        'organizations': {
+            'total': total_orgs,
+            'with_datasets': orgs_with_datasets,
+            'without_datasets': total_orgs - orgs_with_datasets
+        },
+        'users': {
+            'total': active_users_completed + active_users_not_completed,
+            'completed_registration': active_users_completed,
+            'not_completed_registration': active_users_not_completed
+        }
+    }
+
+    return results
