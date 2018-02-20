@@ -17,27 +17,12 @@ import ckan.lib.helpers as h
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_users.model as umodel
 import ckanext.hdx_user_extra.model as ue_model
+import ckan.logic as logic
 
 from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
+from nose import tools as nosetools
 
 log = logging.getLogger(__name__)
-
-package = {
-    "package_creator": "test function",
-    "private": False,
-    "dataset_date": "01/01/1960-12/31/2012",
-    "caveats": "These are the caveats",
-    "license_other": "TEST OTHER LICENSE",
-    "methodology": "This is a test methodology",
-    "dataset_source": "World Bank",
-    "license_id": "hdx-other",
-    "name": "test_activity_1",
-    "notes": "This is a test activity",
-    "title": "Test Activity 1",
-    "indicator": 1,
-    "groups": [{"name": "roger"}],
-    "owner_org": "hdx-test-org",
-}
 
 organization = {
     'name': 'hdx-test-org',
@@ -46,7 +31,7 @@ organization = {
     'org_acronym': 'HTO',
     'org_url': 'http://test-org.test',
     'description': 'This is a test organization',
-    'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
+    'users': [{'name': 'testsysadmin', 'capacity': 'admin'}, {'name': 'joeadmin', 'capacity': 'admin'}]
 }
 
 
@@ -65,27 +50,25 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         umodel.setup()
         ue_model.create_table()
 
-
     def test_create_and_upload(self):
-        package = {
-            "package_creator": "test function",
-            "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
-            "indicator": "1",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_activity_3",
-            "notes": "This is a test activity",
-            "title": "Test Activity 3",
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
-        }
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_2',
+                   'title': 'Test Activity 2'
+                   }
 
         resource = {
-            'package_id': 'test_activity_3',
+            'package_id': 'test_activity_2',
             'url': config.get('ckan.site_url', '') + '/storage/f/test_folder/hdx_test.csv',
             'resource_type': 'file.upload',
             'format': 'CSV',
@@ -113,22 +96,22 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert '<a class="heading"  title="hdx_test.csv">' in str(result)
 
     def test_hdx_package_delete_redirect(self):
-        package = {
-            "package_creator": "test function",
-            "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
-            "indicator": "1",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_activity_2",
-            "notes": "This is a test activity",
-            "title": "Test Activity 2",
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
-        }
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_3',
+                   'title': 'Test Activity 3'
+                   }
+
         testsysadmin = model.User.by_name('testsysadmin')
 
         context = {'ignore_auth': True,
@@ -143,17 +126,33 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
     def test_hdx_solr_additions(self):
         testsysadmin = model.User.by_name('testsysadmin')
         legacy_tests.call_action_api(self.app, 'group_create', name="col", title="Colombia", apikey=testsysadmin.apikey,
-                              status=200)
-        p = legacy_tests.call_action_api(self.app, 'package_create', package_creator="test function", name="test_activity_12",
-                                  dataset_source="World Bank", notes="This is a test activity", title="Test Activity 1",
-                                  indicator=1, groups=[{"name": "col"}], apikey=testsysadmin.apikey, status=200, owner_org="hdx-test-org")
+                                     status=200)
+        p = legacy_tests.call_action_api(self.app, 'package_create', package_creator="test function",
+                                         name="test_activity_4",
+                                         dataset_source="World Bank", notes="This is a test activity 4",
+                                         title="Test Activity 4",
+                                         indicator=1, groups=[{"name": "col"}], apikey=testsysadmin.apikey, status=200,
+                                         owner_org="hdx-test-org")
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'nouser'}
         s = self._get_action('package_show')(context, {"id": p["id"]})
         assert json.loads(s['solr_additions'])['countries'] == ['Colombia']
 
     def test_hdx_package_update_metadata(self):
-        global package
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_5',
+                   'title': 'Test Activity 5'
+                   }
 
         testsysadmin = model.User.by_name('testsysadmin')
 
@@ -165,7 +164,7 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # This is a copy of the hack done in dataset_controller
         self._get_action('package_update')(context, package)
 
-        modified_fields = {'id': 'test_activity_1',
+        modified_fields = {'id': 'test_activity_5',
                            # 'name': 'test_activity_1_modified',
                            'indicator': '2',
                            # 'title': "Modified Test Activity 1",
@@ -186,9 +185,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
 
         self._get_action('hdx_package_update_metadata')(context, modified_fields)
 
-
-        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_1',
-                                                 apikey=testsysadmin.apikey, status=200)
+        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_5',
+                                                        apikey=testsysadmin.apikey, status=200)
         modified_fields.pop('id')
 
         # Checking that all fields in the modified_package come either
@@ -215,22 +213,20 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert modified_package.get('owner_org') == org_obj.id
 
     def test_hdx_package_subnational_validation(self):
-        package = {
-            "package_creator": "test function",
-            "private": False,
-            "dataset_date": "01/01/1960-12/31/2012",
-            "caveats": "These are the caveats",
-            "license_other": "TEST OTHER LICENSE",
-            "methodology": "This is a test methodology",
-            "dataset_source": "World Bank",
-            "license_id": "hdx-other",
-            "name": "test_activity_2",
-            "notes": "This is a test activity",
-            "title": "Test Activity 2",
-            "indicator": 1,
-            "groups": [{"name": "roger"}],
-            "owner_org": "hdx-test-org",
-        }
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_6',
+                   'title': 'Test Activity 6'
+                   }
 
         testsysadmin = model.User.by_name('testsysadmin')
 
@@ -242,140 +238,107 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # This is a copy of the hack done in dataset_controller
         self._get_action('package_update')(context, package)
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', 'true')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', 'true')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '1'
-        assert (modified_package_obj.extras).get('subnational') == '1'
+        assert modified_package_obj.extras.get('subnational') == '1'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', 'True')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', 'True')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '1'
-        assert (modified_package_obj.extras).get('subnational') == '1'
+        assert modified_package_obj.extras.get('subnational') == '1'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', '1')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', '1')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '1'
-        assert (modified_package_obj.extras).get('subnational') == '1'
+        assert modified_package_obj.extras.get('subnational') == '1'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', 'false')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', 'false')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '0'
-        assert (modified_package_obj.extras).get('subnational') == '0'
+        assert modified_package_obj.extras.get('subnational') == '0'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', 'False')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', 'False')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '0'
-        assert (modified_package_obj.extras).get('subnational') == '0'
+        assert modified_package_obj.extras.get('subnational') == '0'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', '0')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', '0')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '0'
-        assert (modified_package_obj.extras).get('subnational') == '0'
+        assert modified_package_obj.extras.get('subnational') == '0'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', 'Dummy Text')
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', 'Dummy Text')
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '0'
-        assert (modified_package_obj.extras).get('subnational') == '0'
+        assert modified_package_obj.extras.get('subnational') == '0'
 
-        data_dict = self._modify_field(context, testsysadmin, 'subnational', None)
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'subnational', None)
         modified_package = data_dict.get('modified_package')
         modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('subnational') == '0'
-        assert (modified_package_obj.extras).get('subnational') == '0'
+        assert modified_package_obj.extras.get('subnational') == '0'
 
+    def test_hdx_package_maintainer_validation(self):
 
-    # def test_hdx_package_maintainer_validation(self):
-    #     package = {
-    #         "package_creator": "test function",
-    #         "private": False,
-    #         "dataset_date": "01/01/1960-12/31/2012",
-    #         "caveats": "These are the caveats",
-    #         "license_other": "TEST OTHER LICENSE",
-    #         "methodology": "This is a test methodology",
-    #         "dataset_source": "World Bank",
-    #         "license_id": "hdx-other",
-    #         "name": "test_activity_2",
-    #         "notes": "This is a test activity",
-    #         "title": "Test Activity 2",
-    #         "indicator": 1,
-    #         "groups": [{"name": "roger"}],
-    #         "owner_org": "hdx-test-org",
-    #     }
-    #
-    #     testsysadmin = model.User.by_name('testsysadmin')
-    #
-    #     context = {'ignore_auth': True,
-    #                'model': model, 'session': model.Session, 'user': 'testsysadmin'}
-    #
-    #     # self._get_action('organization_create')(context, organization)
-    #     self._get_action('package_create')(context, package)
-    #     # This is a copy of the hack done in dataset_controller
-    #     self._get_action('package_update')(context, package)
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'maintainer', 'testsyadmin')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '1'
-    #     assert (modified_package_obj.extras).get('subnational') == '1'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'True')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '1'
-    #     assert (modified_package_obj.extras).get('subnational') == '1'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', '1')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '1'
-    #     assert (modified_package_obj.extras).get('subnational') == '1'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'false')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'False')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', '0')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'Dummy Text')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', None)
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_7',
+                   'title': 'Test Activity 7',
+                   'maintainer': 'testsysadmin'
+                   }
 
+        testsysadmin = model.User.by_name('testsysadmin')
+        joeadmin = model.User.by_name('joeadmin')
 
-    def _modify_field(self, context, user, key, value):
-        modified_fields = {'id': 'test_activity_2',
+        context = {'ignore_auth': True,
+                   'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+
+        # self._get_action('organization_create')(context, organization)
+        self._get_action('package_create')(context, package)
+        # This is a copy of the hack done in dataset_controller
+        self._get_action('package_update')(context, package)
+
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'maintainer', 'testsysadmin')
+        modified_package = data_dict.get('modified_package')
+        # modified_package_obj = data_dict.get('modified_package_obj')
+        assert modified_package.get('maintainer') == testsysadmin.id
+
+        data_dict = self._modify_field(context, testsysadmin, package['name'], 'maintainer', 'joeadmin')
+        modified_package = data_dict.get('modified_package')
+        # modified_package_obj = data_dict.get('modified_package_obj')
+        assert modified_package.get('maintainer') == joeadmin.id
+
+        with nosetools.assert_raises(logic.ValidationError):
+            data_dict = self._modify_field(context, testsysadmin, package['name'], 'maintainer', 'joeadmin no user')
+            modified_package = data_dict.get('modified_package')
+            # modified_package_obj = data_dict.get('modified_package_obj')
+            assert modified_package.get('maintainer') == joeadmin.id
+
+    def _modify_field(self, context, user, package_id, key, value):
+        modified_fields = {'id': package_id,
                            key: value,
                            }
         self._get_action('package_patch')(context, modified_fields)
-        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id='test_activity_2',
+        modified_package = legacy_tests.call_action_api(self.app, 'package_show', id=package_id,
                                                         apikey=user.apikey, status=200)
-        modified_package_obj = model.Package.by_name('test_activity_2')
+        modified_package_obj = model.Package.by_name(package_id)
         return {
             "modified_package": modified_package,
             "modified_package_obj": modified_package_obj
