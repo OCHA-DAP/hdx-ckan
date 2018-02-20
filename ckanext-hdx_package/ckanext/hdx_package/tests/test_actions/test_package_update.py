@@ -24,23 +24,6 @@ from nose import tools as nosetools
 
 log = logging.getLogger(__name__)
 
-package = {
-    "package_creator": "test function",
-    "private": False,
-    "dataset_date": "01/01/1960-12/31/2012",
-    "caveats": "These are the caveats",
-    "license_other": "TEST OTHER LICENSE",
-    "methodology": "This is a test methodology",
-    "dataset_source": "World Bank",
-    "license_id": "hdx-other",
-    "name": "test_activity_1",
-    "notes": "This is a test activity",
-    "title": "Test Activity 1",
-    "indicator": 1,
-    "groups": [{"name": "roger"}],
-    "owner_org": "hdx-test-org",
-}
-
 organization = {
     'name': 'hdx-test-org',
     'title': 'Hdx Test Org',
@@ -68,25 +51,21 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         ue_model.create_table()
 
     def test_create_and_upload(self):
-        # package = {
-        #     "package_creator": "test function",
-        #     "private": False,
-        #     "dataset_date": "01/01/1960-12/31/2012",
-        #     "indicator": "1",
-        #     "caveats": "These are the caveats",
-        #     "license_other": "TEST OTHER LICENSE",
-        #     "methodology": "This is a test methodology",
-        #     "dataset_source": "World Bank",
-        #     "license_id": "hdx-other",
-        #     "name": "test_activity_3",
-        #     "notes": "This is a test activity",
-        #     "title": "Test Activity 3",
-        #     "groups": [{"name": "roger"}],
-        #     "owner_org": "hdx-test-org",
-        # }
-        global package
-        package['name'] = 'test_activity_2'
-        package['title'] = 'Test Activity 2'
+
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_2',
+                   'title': 'Test Activity 2'
+                   }
 
         resource = {
             'package_id': 'test_activity_2',
@@ -117,26 +96,21 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert '<a class="heading"  title="hdx_test.csv">' in str(result)
 
     def test_hdx_package_delete_redirect(self):
-        global package
-        # package = {
-        #     "package_creator": "test function",
-        #     "private": False,
-        #     "dataset_date": "01/01/1960-12/31/2012",
-        #     "indicator": "1",
-        #     "caveats": "These are the caveats",
-        #     "license_other": "TEST OTHER LICENSE",
-        #     "methodology": "This is a test methodology",
-        #     "dataset_source": "World Bank",
-        #     "license_id": "hdx-other",
-        #     "name": "test_activity_2",
-        #     "notes": "This is a test activity",
-        #     "title": "Test Activity 2",
-        #     "groups": [{"name": "roger"}],
-        #     "owner_org": "hdx-test-org",
-        # }
 
-        package['name'] = 'test_activity_3'
-        package['title'] = 'Test Activity 3'
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_3',
+                   'title': 'Test Activity 3'
+                   }
 
         testsysadmin = model.User.by_name('testsysadmin')
 
@@ -165,9 +139,20 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert json.loads(s['solr_additions'])['countries'] == ['Colombia']
 
     def test_hdx_package_update_metadata(self):
-        global package
-        package['name'] = 'test_activity_5'
-        package['title'] = 'Test Activity 5'
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_5',
+                   'title': 'Test Activity 5'
+                   }
 
         testsysadmin = model.User.by_name('testsysadmin')
 
@@ -228,25 +213,20 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert modified_package.get('owner_org') == org_obj.id
 
     def test_hdx_package_subnational_validation(self):
-        # package = {
-        #     "package_creator": "test function",
-        #     "private": False,
-        #     "dataset_date": "01/01/1960-12/31/2012",
-        #     "caveats": "These are the caveats",
-        #     "license_other": "TEST OTHER LICENSE",
-        #     "methodology": "This is a test methodology",
-        #     "dataset_source": "World Bank",
-        #     "license_id": "hdx-other",
-        #     "name": "test_activity_2",
-        #     "notes": "This is a test activity",
-        #     "title": "Test Activity 2",
-        #     "indicator": 1,
-        #     "groups": [{"name": "roger"}],
-        #     "owner_org": "hdx-test-org",
-        # }
-        global package
-        package['name'] = 'test_activity_6'
-        package['title'] = 'Test Activity 6'
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_6',
+                   'title': 'Test Activity 6'
+                   }
 
         testsysadmin = model.User.by_name('testsysadmin')
 
@@ -307,28 +287,22 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert modified_package_obj.extras.get('subnational') == '0'
 
     def test_hdx_package_maintainer_validation(self):
-        global package
-        # package = {
-        #     "package_creator": "test function",
-        #     "private": False,
-        #     "dataset_date": "01/01/1960-12/31/2012",
-        #     "caveats": "These are the caveats",
-        #     "license_other": "TEST OTHER LICENSE",
-        #     "methodology": "This is a test methodology",
-        #     "dataset_source": "World Bank",
-        #     "license_id": "hdx-other",
-        #     "name": "test_activity_2",
-        #     "notes": "This is a test activity",
-        #     "title": "Test Activity 2",
-        #     "indicator": 1,
-        #     "groups": [{"name": "roger"}],
-        #     "owner_org": "hdx-test-org",
-        #     "maintainer": 'testsysadmin'
-        # }
 
-        package['name'] = 'test_activity_7'
-        package['title'] = 'Test Activity 7'
-        package['maintainer'] = 'testsysadmin'
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "roger"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_7',
+                   'title': 'Test Activity 7',
+                   'maintainer': 'testsysadmin'
+                   }
 
         testsysadmin = model.User.by_name('testsysadmin')
         joeadmin = model.User.by_name('joeadmin')
@@ -346,7 +320,6 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         # modified_package_obj = data_dict.get('modified_package_obj')
         assert modified_package.get('maintainer') == testsysadmin.id
 
-
         data_dict = self._modify_field(context, testsysadmin, package['name'], 'maintainer', 'joeadmin')
         modified_package = data_dict.get('modified_package')
         # modified_package_obj = data_dict.get('modified_package_obj')
@@ -357,52 +330,6 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
             modified_package = data_dict.get('modified_package')
             # modified_package_obj = data_dict.get('modified_package_obj')
             assert modified_package.get('maintainer') == joeadmin.id
-
-
-
-    # assert (modified_package_obj.extras).get('subnational') == '1'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'True')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '1'
-    #     assert (modified_package_obj.extras).get('subnational') == '1'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', '1')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '1'
-    #     assert (modified_package_obj.extras).get('subnational') == '1'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'false')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'False')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', '0')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', 'Dummy Text')
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
-    #
-    #     data_dict = self._modify_field(context, testsysadmin, 'subnational', None)
-    #     modified_package = data_dict.get('modified_package')
-    #     modified_package_obj = data_dict.get('modified_package_obj')
-    #     assert modified_package.get('subnational') == '0'
-    #     assert (modified_package_obj.extras).get('subnational') == '0'
 
     def _modify_field(self, context, user, package_id, key, value):
         modified_fields = {'id': package_id,
