@@ -4,36 +4,33 @@ Created on Jan 14, 2015
 @author: alexandru-m-g
 '''
 
-import logging
 import json
+import logging
 import os
-import shlex
-import subprocess
 from datetime import datetime, timedelta
+
+import ckanext.hdx_crisis.dao.data_access as data_access
+import ckanext.hdx_search.command as lunr
+import ckanext.hdx_theme.helpers.helpers as h
+import ckanext.hdx_theme.helpers.less as less
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import paste.deploy.converters as converters
+import pylons.config as config
+from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
 from sqlalchemy import func
 
-import pylons.config as config
-import ckanext.hdx_crisis.dao.data_access as data_access
-import ckanext.hdx_theme.helpers.less as less
-import ckanext.hdx_theme.helpers.helpers as h
-import ckanext.hdx_search.command as lunr
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
-
-import ckan.logic as logic
-import ckan.plugins as plugins
 import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
 import ckan.lib.dictization.model_save as model_save
+import ckan.lib.helpers as helpers
 import ckan.lib.navl.dictization_functions
-import ckan.model as model
 import ckan.lib.plugins as lib_plugins
 import ckan.lib.uploader as uploader
-import paste.deploy.converters as converters
-import ckan.lib.helpers as helpers
+import ckan.logic as logic
 import ckan.logic.action as core
+import ckan.model as model
+import ckan.plugins as plugins
 from ckan.common import _, c
-
-from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
 
 BUCKET = str(uploader.get_storage_path()) + '/storage/uploads/group/'
 
@@ -679,7 +676,7 @@ def recompile_everything(context):
             compile_less(org, translate_func=lambda str: str)
 
 
-def hdx_capturejs(uri, output_file, selector, renderdelay=10000, waitcapturedelay=10000, viewportsize='1200x800'):
+def hdx_capturejs(uri, output_file, selector, renderdelay=20000, waitcapturedelay=10000, viewportsize='1200x800'):
     quoted_selector = '"{}"'.format(selector)
     screenshot_creator = ScreenshotCreator(uri, output_file, quoted_selector,
                                            renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
