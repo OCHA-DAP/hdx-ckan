@@ -136,21 +136,25 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
     def db_to_form_schema(self):
         # There's a bug in dictionary validation when form isn't present
         try:
-            if tk.request.urlvars['action'] == 'index' or tk.request.urlvars['action'] == 'edit' or tk.request.urlvars['action'] == 'new':
-                schema = core_schema.default_show_group_schema()
-                schema.update({'description': [tk.get_validator('not_empty')]})
-                schema.update({'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update({'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update(
-                    {'hdx_org_type': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                schema.update(
-                    {'org_acronym': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
-                return schema
+            schema = super(HDXOrgGroupPlugin, self).form_to_db_schema()
+            new_org_schema = {
+                'description': [tk.get_validator('not_empty')],
+                'org_url': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'fts_id': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'custom_org': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'less': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'visualization_config': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'hdx_org_type': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'org_acronym': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+                'package_count': [],
+                'packages': {'__extras': [tk.get_converter('keep_extras')]},
+                'users': {'__extras': [tk.get_converter('keep_extras')]}
+
+            }
+            schema.update(new_org_schema)
+            return schema
         except TypeError, e:
             log.warn('Exception in db_to_form_schema: {}'.format(str(e)))
 
