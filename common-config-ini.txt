@@ -242,6 +242,11 @@ hdx.hxlproxy.url = https://beta-proxy.hxlstandard.org
 # HXL Preview
 hdx.hxl_preview_app.url = http://172.17.42.1/hxlpreview
 
+# HDX Snap Service
+hdx.snap_service.url = http://snap:8080
+
+
+
 # Org member request configs
 ytp.requests.hide_member_role = false
 ytp.requests.redirect_to_src_page = true
@@ -258,13 +263,13 @@ hdx.locations.toplines_url = https://data.humdata.org/dataset/a0f8e926-9340-4034
 
 #mailchimp settings - update your prod.ini with real ones
 hdx.mailchimp = true
-hdx.mailchimp.list.newsletter = aaa-fake
+hdx.mailchimp.list.newsletter = 99796325d1
 hdx.mailchimp.list.newuser = bbb-fake
 hdx.mailchimp.api.key = ccc-fake
 
 # hdx_requestdata setting
 hdx_portal = True
-ckanext.requestdata.newsletter_url = http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=d996922315
+ckanext.requestdata.newsletter_url = http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1
 ckanext.requestdata.twitter_url = https://twitter.com/humdata
 ckanext.requestdata.contact_email = hdx@un.org
 
@@ -280,3 +285,10 @@ hdx.search_history.hours_from_actual_search = 1
 #SEARCH GROUPING/BATCH
 hdx.batch.period_in_mins_unesco = 90
 hdx.batch.period_in_mins_hot = 1500
+
+#Enable HDX-specific reindexing
+hdx.reindexing.enabled = true
+# number of datasets to process at a time
+hdx.reindexing.batch_size = 200
+
+

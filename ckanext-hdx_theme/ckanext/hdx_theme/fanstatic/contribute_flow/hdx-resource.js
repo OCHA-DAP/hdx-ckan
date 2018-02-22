@@ -74,7 +74,13 @@ $(function(){
         initialize: function() {
             this.set('originalHash', this.hashResource());
             this.set('batch_mode', 'DONT_GROUP');
+
+            // this.on('progress', function (percentage) {
+            //     var position = this.get('position') + 1;
+            //     console.log('Percentage is ' + percentage + ' for ' + position)
+            // })
         }
+
     });
 
     var PackageResources = Backbone.Collection.extend({
@@ -97,7 +103,6 @@ $(function(){
                     }.bind(this));
                 }
             }.bind(this));
-            this.contribute_global = options.contribute_global;
         },
 
         url: function() {
@@ -118,7 +123,7 @@ $(function(){
                  * We need to save the resources sequentially to avoid
                  * race conditions on the server side
                  */
-                this.contribute_global.controlUserWaitingWidget(true, 'Saving resource ' + (index+1) +  '...');
+                this.trigger('upload event', 'Saving resource ' + (index+1) +  '...');
                 var model = resources.models[index];
                 model.set('package_id', pkg_id);
                 //if ( model.get('resource_type') == 'file.upload' && !model.get('upload')){
@@ -157,7 +162,7 @@ $(function(){
             var index = 0;
             var resources = this;
 
-            this.contribute_global.controlUserWaitingWidget(true, 'Almost done...');
+            this.trigger('upload event', 'Almost done...');
 
             var destroyResources = function() {
                 var model = resources.removedModels[index];
@@ -225,7 +230,8 @@ $(function(){
             'sort-updated': 'onSortOrderChange'
         },
 
-        initialize: function() {
+        initialize: function(options) {
+            this.contribute_global = options.contribute_global;
             this.resource_list = this.$('.resources');
             // Fetch the collection if we have a package_id and no models.
             if (this.collection.package_id !== null && this.collection.length === 0){
@@ -243,6 +249,7 @@ $(function(){
             this.listenTo(this.collection, 'sync add remove reset', this.render);
             this.listenTo(this.collection, 'add remove reset', this.updateTotal);
             this.listenTo(this.collection, 'remove', this.onSortOrderChange);
+            this.listenTo(this.collection, 'upload event', this.showUserWaitingMessage);
 
             // Initialize drag n drop sorting
             Sortable.create(this.resource_list[0], {
@@ -274,12 +281,18 @@ $(function(){
 
         addOne: function(resource) {
             var view = new ResourceItemView({model: resource});
+            this.listenTo(view, 'upload progress', this.showUserWaitingMessage);
             this.resource_list.append(view.render().el);
         },
 
         updateTotal: function() {
             var total_text = this.collection.length == 1 ? "1 Resource" : this.collection.length + " Resources";
             this.$('.resources_total').text(total_text);
+        },
+
+        showUserWaitingMessage: function(msg) {
+          this.contribute_global.controlUserWaitingWidget(true, msg);
+          console.log('User waiting msg: ' + msg);
         },
 
         onSortOrderChange: function(e) {
@@ -327,6 +340,12 @@ $(function(){
 
         initialize: function() {
             this.model.view = this;
+            this.listenTo(this.model, 'progress', function(fraction){
+                var idx = this.model.get('position') + 1;
+                var percentage = Math.floor(fraction * 100);
+                this.trigger('upload progress', 'Saving resource ' + idx +  ': ' + percentage + '%')
+            });
+
             var dragGhost, dragParent;
 
             // Initially users should be able to drag and drop files
@@ -647,15 +666,17 @@ $(function(){
 
                 this.contribute_global.getDatasetIdPromise().then(
                     function(package_id){
-                        this.resourceCollection = new PackageResources(data,
-                            {package_id: package_id, contribute_global: this.contribute_global});
+                        this.resourceCollection = new PackageResources(data, {package_id: package_id});
 
                         ///* Have at least one empty resource in the form for a new dataset */
                         //if (this.resourceCollection.length == 0) {
                         //    this.resourceCollection.add(new Resource(this.resourceDefaults()));
                         //}
 
-                        this.resourceListView = new PackageResourcesListView({collection: this.resourceCollection});
+                        this.resourceListView = new PackageResourcesListView({
+                            collection: this.resourceCollection,
+                            contribute_global: this.contribute_global
+                        });
 
                         this.contribute_global.setResourceModelList(this.resourceCollection);
                         this.contribute_global.controlUserWaitingWidget(false);

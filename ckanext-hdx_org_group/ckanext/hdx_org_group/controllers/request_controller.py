@@ -146,7 +146,7 @@ class HDXReqsOrgController(base.BaseController):
 
     def _validate_new_org_request_field(self, data):
         errors = {}
-        for field in ['title', 'description', 'your_email', 'your_name', 'org_acronym', 'hdx_org_type']:
+        for field in ['title', 'description', 'your_email', 'your_name', 'hdx_org_type']:
             if data[field].strip() in ['', '-1']:
                 errors[field] = [_('should not be empty')]
 

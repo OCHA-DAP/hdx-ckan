@@ -48,7 +48,7 @@
     </div>
   <div class="org-control-container">
     {% set org_acronym = h.hdx_get_extras_element(data, value_key="org_acronym") %}
-      {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full', 'mandatory', 'org-control','field-with-info']) }}
+      {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full', 'org-control','field-with-info']) }}
       <div class="org-control-info info-field">
         <div class="org-info-label">{{_('Organisation Acronym')}}</div>
       </div>
