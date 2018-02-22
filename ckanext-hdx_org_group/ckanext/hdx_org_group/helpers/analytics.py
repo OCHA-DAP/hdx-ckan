@@ -41,3 +41,28 @@ class AddMemberAnalyticsSender(RemoveMemberAnalyticsSender):
     def __init__(self, org_id, org_name):
         super(AddMemberAnalyticsSender, self).__init__(org_id, org_name)
         self.analytics_dict['mixpanel_meta']['add method'] = 'by invitation'
+
+
+class OrganizationCreateAnalyticsSender(AbstractAnalyticsSender):
+
+    @classmethod
+    def _get_action_name(cls):
+        return 'org create'
+
+    def __init__(self, org_name, org_type):
+        super(OrganizationCreateAnalyticsSender, self).__init__()
+        event_name = 'org create'
+        self.analytics_dict = {
+            'event_name': event_name,
+            'mixpanel_meta': {
+                'org name': org_name,
+                'org type': org_type
+            },
+            'ga_meta': {
+                'ec': 'organization',  # event category
+                'ea': event_name,  # event action
+                'el': org_name,  # event label
+                'cd2': org_type
+            }
+        }
+

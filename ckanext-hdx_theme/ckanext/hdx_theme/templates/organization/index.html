@@ -23,7 +23,7 @@
                 <div class="col-xs-4">
                     <div class="featured-org">
                         <div class="feature-header">
-                            {% set customization = h.load_json(h.get_pkg_dict_extra(item, 'customization')) %}
+                            {% set customization = h.load_json(item.customization) %}
                             {% set image_sq = h.url_for('image_serve', label=customization.image_sq) %}
                             {% set logo_extra_style = "background-color: #ffffff; border: 1px solid #eeeeee;" if customization.use_org_color == "false" else "background-color: " + customization.highlight_color %}
                             <a {% if item.highlight.link != '' %} href="{{item.highlight.link}}" {% endif %}>

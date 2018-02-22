@@ -1,13 +1,11 @@
 import os
+
 import pylons.config as config
-
-import ckan.logic as logic
-import ckan.lib.uploader as uploader
-import ckan.lib.helpers as helpers
-
-
-
 from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
+
+import ckan.lib.helpers as helpers
+import ckan.lib.uploader as uploader
+import ckan.logic as logic
 
 get_action = logic.get_action
 STORAGE_FOLDER = str(uploader.get_storage_path()) + '/storage/uploads/dataset/'
@@ -23,7 +21,7 @@ def create_screenshot(dataset_dict):
           helpers.url_for(controller='package', action='read', id = dataset_dict.get('name'))
     output_file = __get_file_path(dataset_dict)
 
-    screenshot_creator = ScreenshotCreator(url, output_file, '"#map"', renderdelay=10000, waitcapturedelay=10000,
+    screenshot_creator = ScreenshotCreator(url, output_file, '"#map"', renderdelay=20000, waitcapturedelay=10000,
                                            mogrify=True, crop='548x400+311+0')
     screenshot_creator.execute()
 

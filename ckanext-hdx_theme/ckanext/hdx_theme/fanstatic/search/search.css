@@ -39,44 +39,53 @@
   margin-top: 0;
 }
 .search-list .dataset-item.stacked-item {
-  border-bottom: none;
-  margin-bottom: 10px;
-  margin-top: 15px;
+  /* BEGIN 3 stacked items old style */
+  /*
+            border-bottom: none;
+            margin-bottom: 2*@stackedMarginSize;
+            margin-top: @datasetItemPadding;
+            */
+  /* END 3 stacked items old style */
+  /* BEGIN 3 stacked items old style */
+  /*
+            &:before {
+                content: " ";
+                background-color: @extraLightBlueColor;
+                height: 100%;
+                width: 100%;
+                border: 1px solid @blueColor;
+                position: absolute;
+                display: block;
+                top: 0; left: 0;
+                z-index: 100;
+            }
+
+            .dataset-pre-content:before {
+                content: " ";
+                background-color: @extraLightBlueColor;
+                height: 100%;
+                width: 100%;
+                border: 1px solid @blueColor;
+                position: absolute;
+                display: block;
+                top: @stackedMarginSize; left: @stackedMarginSize;
+                z-index: 101;
+            }
+            .dataset-content {
+                position: relative;
+                top: 2*@stackedMarginSize; left: 2*@stackedMarginSize;
+                z-index: 102;
+                background-color: @whiteColor;
+                border: 1px solid @blueColor;
+                padding-bottom: 0;
+            }
+            */
+  /* END 3 stacked items old style */
 }
 .search-list .dataset-item.stacked-item + .stacked-item {
   margin-top: 25px;
 }
-.search-list .dataset-item.stacked-item:before {
-  content: " ";
-  background-color: #edf6fd;
-  height: 100%;
-  width: 100%;
-  border: 1px solid #007CE0;
-  position: absolute;
-  display: block;
-  top: 0;
-  left: 0;
-  z-index: 100;
-}
-.search-list .dataset-item.stacked-item .dataset-pre-content:before {
-  content: " ";
-  background-color: #edf6fd;
-  height: 100%;
-  width: 100%;
-  border: 1px solid #007CE0;
-  position: absolute;
-  display: block;
-  top: 5px;
-  left: 5px;
-  z-index: 101;
-}
 .search-list .dataset-item.stacked-item .dataset-content {
-  position: relative;
-  top: 10px;
-  left: 10px;
-  z-index: 102;
-  background-color: #fff;
-  border: 1px solid #007CE0;
   padding-bottom: 0;
 }
 .search-list .dataset-item.stacked-item .stacked-info {

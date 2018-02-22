@@ -41,14 +41,20 @@
         @stackedMarginSize: 5px;
         @datasetItemPadding: 15px;
         &.stacked-item {
+            /* BEGIN 3 stacked items old style */
+            /*
             border-bottom: none;
             margin-bottom: 2*@stackedMarginSize;
             margin-top: @datasetItemPadding;
+            */
+            /* END 3 stacked items old style */
 
             + .stacked-item {
                 margin-top: @datasetItemPadding + 2*@stackedMarginSize;
             }
 
+            /* BEGIN 3 stacked items old style */
+            /*
             &:before {
                 content: " ";
                 background-color: @extraLightBlueColor;
@@ -72,7 +78,6 @@
                 top: @stackedMarginSize; left: @stackedMarginSize;
                 z-index: 101;
             }
-
             .dataset-content {
                 position: relative;
                 top: 2*@stackedMarginSize; left: 2*@stackedMarginSize;
@@ -81,6 +86,12 @@
                 border: 1px solid @blueColor;
                 padding-bottom: 0;
             }
+            */
+            //remove following if reverting style
+            .dataset-content {
+                padding-bottom: 0;
+            }
+            /* END 3 stacked items old style */
 
             .stacked-info {
                 background-color: @extraLightBlueColor;

@@ -404,8 +404,8 @@
                                             'data-module-key': 'id',
                                             'data-module-extra-params': 'org=' + selected_org_name,
                                             'class':'form-control' } %}
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="maintainer">
-                                            {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group'], attrs=maintainer_attrs) }}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="maintainer" data-module-required="private">
+                                            {{ form.input('maintainer', id='field_maintainer', label=_('Maintainer'), placeholder=_("Maintainer"), value=data.maintainer, error=errors.maintainer, classes=['form-group', 'required'], attrs=maintainer_attrs) }}
                                             </div>
 
                                             <div class="row">

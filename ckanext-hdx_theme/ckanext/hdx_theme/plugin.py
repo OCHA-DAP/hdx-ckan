@@ -250,9 +250,10 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             # 'hdx_get_shape_info': hdx_actions.hdx_get_shape_info,
             'hdx_get_indicator_available_periods': hdx_actions.hdx_get_indicator_available_periods,
             'hdx_carousel_settings_show': hdx_actions.hdx_carousel_settings_show,
-            'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update
+            'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update,
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
+            'hdx_general_statistics': hdx_actions.hdx_general_statistics
         }
 
     def get_auth_functions(self):
