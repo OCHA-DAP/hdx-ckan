@@ -24,7 +24,7 @@ def onboarding_followee_list(context, data_dict):
     i = 1
     for item in locs:
         type = 'location'
-        if is_custom(item.get('extras', {})):
+        if item.get('activity_level') == 'active':
             if item['name'] == c_nepal_earthquake:
                 type = 'crisis'
             result.append(create_item(item, type, False))
@@ -39,7 +39,7 @@ def onboarding_followee_list(context, data_dict):
     i = 1
     type = 'organization'
     for item in orgs:
-        if is_custom(item['extras']):
+        if item.get('custom_org', '0') == '1':
             result.append(create_item(item, type, False))
         else:
             if i <= NoOfOrgs:
@@ -48,13 +48,6 @@ def onboarding_followee_list(context, data_dict):
 
     result.extend(result_aux)
     return result
-
-
-def is_custom(extras):
-    for item in extras:
-        if 'key' in item and ('custom_loc' == item['key'] or 'custom_org' == item['key']) and '1' == item['value']:
-            return True
-    return False
 
 
 def create_item(item, type, follow=False):
