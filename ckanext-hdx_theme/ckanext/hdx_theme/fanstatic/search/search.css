@@ -44,10 +44,11 @@
             border-bottom: none;
             margin-bottom: 2*@stackedMarginSize;
             margin-top: @datasetItemPadding;
-            */
-  /* END 3 stacked items old style */
-  /* BEGIN 3 stacked items old style */
-  /*
+
+            + .stacked-item {
+                margin-top: @datasetItemPadding + 2*@stackedMarginSize;
+            }
+
             &:before {
                 content: " ";
                 background-color: @extraLightBlueColor;
@@ -81,9 +82,6 @@
             }
             */
   /* END 3 stacked items old style */
-}
-.search-list .dataset-item.stacked-item + .stacked-item {
-  margin-top: 25px;
 }
 .search-list .dataset-item.stacked-item .dataset-content {
   padding-bottom: 0;
