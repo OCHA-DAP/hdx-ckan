@@ -857,7 +857,8 @@ class DatasetController(PackageController):
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
     def _has_views(self, resources):
-        for resource in resources:
+        view_enabled_resources = (r for r in resources if r.get('no_preview') != 'true')
+        for resource in view_enabled_resources:
             if self._has_shape_info(resource):
                 return {'type': 'hdx_geo_preview', 'default': None}
             _default_view = self._has_hxl_views(resource)

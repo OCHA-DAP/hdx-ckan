@@ -1,15 +1,15 @@
 
 HDX_GISLAYER_URL=https://hub.docker.com/r/unocha/hdx-gislayer/tags/
-HDX_GISLAYER_TAG=0.4.5-1
+HDX_GISLAYER_TAG=0.4.5-2
 
 HDX_GISWORKER_URL=https://hub.docker.com/r/unocha/hdx-gisworker/tags/
-HDX_GISWORKER_TAG=0.4.5-1
+HDX_GISWORKER_TAG=0.4.5-2
 
 HDX_HXL_PROXY_URL=https://hub.docker.com/r/unocha/hxl-proxy/tags/
 HDX_HXL_PROXY_TAG=v1.5.1
 
 HDX_HXL_PREVIEW_URL=https://hub.docker.com/r/unocha/hdx-hxl-preview/tags/
-HDX_HXL_PREVIEW_TAG=1.2.2-ckan
+HDX_HXL_PREVIEW_TAG=1.2.3-ckan
 
 HDX_MAP_EXPLORER_URL=https://hub.docker.com/r/unocha/hdx-map-explorer/tags/
 HDX_MAP_EXPLORER_TAG=0.0.12
