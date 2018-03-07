@@ -155,58 +155,57 @@ def rebuild(package_id=None, only_missing=False, force=False, refresh=False,
         'use_cache': False}
 
     use_hdx_reindex = asbool(config.get('hdx.reindexing.enabled', True))
-
-    if package_id:
-        pkg_dict = logic.get_action('package_show')(context,
-            {'id': package_id})
-        log.info('Indexing just package %r...', pkg_dict['name'])
-        package_index.remove_dict(pkg_dict)
-        package_index.insert_dict(pkg_dict)
-    elif package_ids:
-        if use_hdx_reindex:
-            _hdx_fast_reindex(context, package_ids, package_index, defer_commit, False, quiet)
-        else:
+    if use_hdx_reindex:
+        from ckanext.hdx_search.helpers.reindexing import HdxSolrReindexer
+        hdx_reindexer = HdxSolrReindexer(context, model, package_index, query_for, text_traceback)
+        hdx_reindexer.rebuild(package_id=package_id, only_missing=only_missing, force=force, refresh=refresh,
+                              defer_commit=defer_commit, package_ids=package_ids, quiet=quiet)
+    else:
+        if package_id:
+            pkg_dict = logic.get_action('package_show')(context,
+                {'id': package_id})
+            log.info('Indexing just package %r...', pkg_dict['name'])
+            package_index.remove_dict(pkg_dict)
+            package_index.insert_dict(pkg_dict)
+        elif package_ids:
             for package_id in package_ids:
                 pkg_dict = logic.get_action('package_show')(context,
-                                                            {'id': package_id})
+                    {'id': package_id})
                 log.info('Indexing just package %r...', pkg_dict['name'])
                 package_index.update_dict(pkg_dict, True)
-    else:
-        package_ids = [r[0] for r in model.Session.query(model.Package.id).
-                       filter(model.Package.state != 'deleted').all()]
-        if only_missing:
-            log.info('Indexing only missing packages...')
-            package_query = query_for(model.Package)
-            indexed_pkg_ids = set(package_query.get_all_entity_ids(
-                max_results=len(package_ids)))
-            # Packages not indexed
-            package_ids = set(package_ids) - indexed_pkg_ids
-
-            if len(package_ids) == 0:
-                log.info('All datasets are already indexed')
-                return
         else:
-            log.info('Rebuilding the whole index...')
-            # When refreshing, the index is not previously cleared
-            if not refresh:
-                package_index.clear()
+            package_ids = [r[0] for r in model.Session.query(model.Package.id).
+                           filter(model.Package.state != 'deleted').all()]
+            if only_missing:
+                log.info('Indexing only missing packages...')
+                package_query = query_for(model.Package)
+                indexed_pkg_ids = set(package_query.get_all_entity_ids(
+                    max_results=len(package_ids)))
+                # Packages not indexed
+                package_ids = set(package_ids) - indexed_pkg_ids
 
-        if use_hdx_reindex:
-            _hdx_fast_reindex(context, package_ids, package_index, defer_commit, force, quiet)
-        else:
+                if len(package_ids) == 0:
+                    log.info('All datasets are already indexed')
+                    return
+            else:
+                log.info('Rebuilding the whole index...')
+                # When refreshing, the index is not previously cleared
+                if not refresh:
+                    package_index.clear()
+
             total_packages = len(package_ids)
             for counter, pkg_id in enumerate(package_ids):
                 if not quiet:
                     sys.stdout.write(
                         "\rIndexing dataset {0}/{1}".format(
-                            counter + 1, total_packages)
+                            counter +1, total_packages)
                     )
                     sys.stdout.flush()
                 try:
                     package_index.update_dict(
                         logic.get_action('package_show')(context,
-                                                         {'id': pkg_id}
-                                                         ),
+                            {'id': pkg_id}
+                        ),
                         defer_commit
                     )
                 except Exception, e:
@@ -220,38 +219,6 @@ def rebuild(package_id=None, only_missing=False, force=False, refresh=False,
 
     model.Session.commit()
     log.info('Finished rebuilding search index.')
-
-
-def _hdx_fast_reindex(context, package_ids, package_index, defer_commit, force, quiet):
-    total_packages = len(package_ids)
-    step = int(config.get('hdx.reindexing.batch_size', '100'))
-    start = 0
-    stop = step
-    counter = 0
-    while start < total_packages:
-        import ckanext.hdx_package.helpers.reindex_helper as reindex_helper
-
-        if not quiet:
-            log.info(
-                "Indexing dataset {0}/{1}".format(
-                    start, total_packages)
-            )
-            # sys.stdout.flush()
-        try:
-            pkg_dicts = reindex_helper.package_list_show_for_reindex(context, package_ids[start:stop])
-            package_index.index_packages(pkg_dicts, defer_commit)
-        except Exception, e:
-            log.error(u'Error while indexing dataset %s: %s' %
-                      (str(start), repr(e)))
-            if force:
-                log.error(text_traceback())
-                continue
-            else:
-                raise
-
-        start = stop
-        stop += step
-        counter += 1
 
 
 def commit():
