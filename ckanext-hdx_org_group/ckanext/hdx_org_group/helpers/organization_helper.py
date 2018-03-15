@@ -676,7 +676,7 @@ def recompile_everything(context):
             compile_less(org, translate_func=lambda str: str)
 
 
-def hdx_capturejs(uri, output_file, selector, renderdelay=20000, waitcapturedelay=10000, viewportsize='1200x800'):
+def hdx_capturejs(uri, output_file, selector, renderdelay=90000, waitcapturedelay=10000, viewportsize='1200x800'):
     quoted_selector = '"{}"'.format(selector)
     screenshot_creator = ScreenshotCreator(uri, output_file, quoted_selector,
                                            renderdelay=renderdelay, waitcapturedelay=waitcapturedelay,
