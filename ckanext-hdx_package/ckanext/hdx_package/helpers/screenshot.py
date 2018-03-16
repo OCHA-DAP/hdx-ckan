@@ -21,7 +21,7 @@ def create_screenshot(dataset_dict):
           helpers.url_for(controller='package', action='read', id = dataset_dict.get('name'))
     output_file = __get_file_path(dataset_dict)
 
-    screenshot_creator = ScreenshotCreator(url, output_file, '"#map"', renderdelay=20000, waitcapturedelay=10000,
+    screenshot_creator = ScreenshotCreator(url, output_file, '"#map"', renderdelay=90000, waitcapturedelay=10000,
                                            mogrify=True, crop='548x400+311+0')
     screenshot_creator.execute()
 
