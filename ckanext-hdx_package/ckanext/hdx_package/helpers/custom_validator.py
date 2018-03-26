@@ -19,6 +19,8 @@ StopOnError = df.StopOnError
 Invalid = df.Invalid
 get_action = logic.get_action
 
+_DATA_PREVIEW_VALUES = ['first_resource', 'resource_id', 'no_preview']
+
 
 # same as not_empty, but ignore whitespaces
 def not_empty_ignore_ws(key, data, errors, context):
@@ -143,16 +145,8 @@ def find_package_creator(key, data, errors, context):
 
     return current_creator
 
+
 def hdx_find_package_maintainer(key, data, errors, context):
-    # current_creator = data.get(key)
-    # if not current_creator:
-    #     user = c.user or c.author
-    #     if user:
-    #         data[key] = user
-    #         current_creator = user
-
-    # return current_creator
-
     try:
         user_obj = model.User.get(data.get(key))
     except Exception, ex:
@@ -169,6 +163,20 @@ def hdx_find_package_maintainer(key, data, errors, context):
         return data[key]
     raise df.Invalid(_('Maintainer does not exist or is not a member of current owner organization.'
                        ' Please add valid user ID'))
+
+
+def hdx_data_preview_validator(key, data, errors, context):
+    try:
+        data_preview = str(data.get(key))
+        if data_preview and data_preview in _DATA_PREVIEW_VALUES:
+            return data[key]
+        # if data_preview is None or data_preview == '' or data_preview == 'None':
+        # first_resource
+        data[key] = _DATA_PREVIEW_VALUES[0]
+    except Exception, ex:
+        data[key] = _DATA_PREVIEW_VALUES[0]
+    return data[key]
+
 
 def general_not_empty_if_other_selected(other_key, other_compare_value):
     '''
