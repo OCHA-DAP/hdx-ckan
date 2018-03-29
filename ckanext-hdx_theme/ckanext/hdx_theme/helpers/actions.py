@@ -240,11 +240,11 @@ def hdx_send_new_org_request(context, data_dict):
              'Person\'s ckan email: {ckan_email}<br/>' \
              'Request time: {request_time}<br/>' \
              '(This is an automated mail)<br/><br/>' \
-             '').format(org_name=data_dict.get('title'), org_description=data_dict.get('description'),
-                        org_url=data_dict.get('org_url'), org_acronym=data_dict.get('org_acronym'),
-                        hdx_org_type=data_dict.get('hdx_org_type'),
-                        person_name=data_dict.get('your_name'),
-                        person_email=data_dict.get('your_email'),
+             '').format(org_name=data_dict.get('title',''), org_description=data_dict.get('description',''),
+                        org_url=data_dict.get('org_url',''), org_acronym=data_dict.get('org_acronym',''),
+                        hdx_org_type=data_dict.get('hdx_org_type',''),
+                        person_name=data_dict.get('your_name',''),
+                        person_email=data_dict.get('your_email',''),
                         ckan_username=ckan_username, ckan_email=ckan_email,
                         request_time=datetime.datetime.now().isoformat())
 
