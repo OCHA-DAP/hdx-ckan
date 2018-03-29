@@ -8,6 +8,7 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 
 import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_validator as vd
 
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
@@ -15,6 +16,7 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_package.exceptions import WrongResourceParamName, NoOrganization
 
 import logging
+
 log = logging.getLogger(__name__)
 
 tuplize_dict = logic.tuplize_dict
@@ -65,7 +67,9 @@ class ContributeFlowController(base.BaseController):
                     # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
-                    maintainer_dict = logic.get_action('user_show')(context,{'id': dataset_dict.get('maintainer', None)})
+                    self.process_data_preview(dataset_dict)
+                    maintainer_dict = logic.get_action('user_show')(context,
+                                                                    {'id': dataset_dict.get('maintainer', None)})
                     if maintainer_dict:
                         dataset_dict['maintainer'] = maintainer_dict.get('name', None)
 
@@ -105,6 +109,13 @@ class ContributeFlowController(base.BaseController):
     def process_tags(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
             dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
+
+    def process_data_preview(self, dataset_dict):
+        if dataset_dict:
+            data_preview = dataset_dict.get('data_preview', vd._DATA_PREVIEW_FIRST_RESOURCE)
+            if data_preview and (
+                    data_preview == vd._DATA_PREVIEW_FIRST_RESOURCE or data_preview == vd._DATA_PREVIEW_RESOURCE_ID):
+                dataset_dict['data_preview_check'] = '1'
 
     def process_tag_string(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
@@ -293,9 +304,10 @@ class ContributeFlowController(base.BaseController):
 
     def process_dataset_date(self, data_dict):
         if 'date_range1' in data_dict:
-            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2', data_dict.get('date_range1'))
+            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2',
+                                                                                           data_dict.get('date_range1'))
         elif 'data_range2' in data_dict:
-                data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
+            data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
 
     def process_expected_update_frequency(self, data_dict):
         if data_dict.get('data_update_frequency', '-999') == '-999':

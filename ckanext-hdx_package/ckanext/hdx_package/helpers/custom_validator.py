@@ -19,7 +19,10 @@ StopOnError = df.StopOnError
 Invalid = df.Invalid
 get_action = logic.get_action
 
-_DATA_PREVIEW_VALUES = ['first_resource', 'resource_id', 'no_preview']
+_DATA_PREVIEW_FIRST_RESOURCE = 'first_resource'
+_DATA_PREVIEW_RESOURCE_ID = 'resource_id'
+_DATA_PREVIEW_NO_PREVIEW = 'no_preview'
+DATA_PREVIEW_VALUES_LIST = [_DATA_PREVIEW_FIRST_RESOURCE, _DATA_PREVIEW_RESOURCE_ID, _DATA_PREVIEW_NO_PREVIEW]
 
 
 # same as not_empty, but ignore whitespaces
@@ -168,13 +171,13 @@ def hdx_find_package_maintainer(key, data, errors, context):
 def hdx_data_preview_validator(key, data, errors, context):
     try:
         data_preview = str(data.get(key))
-        if data_preview and data_preview in _DATA_PREVIEW_VALUES:
+        if data_preview and data_preview in DATA_PREVIEW_VALUES_LIST:
             return data[key]
         # if data_preview is None or data_preview == '' or data_preview == 'None':
         # first_resource
-        data[key] = _DATA_PREVIEW_VALUES[0]
+        data[key] = _DATA_PREVIEW_FIRST_RESOURCE
     except Exception, ex:
-        data[key] = _DATA_PREVIEW_VALUES[0]
+        data[key] = _DATA_PREVIEW_FIRST_RESOURCE
     return data[key]
 
 

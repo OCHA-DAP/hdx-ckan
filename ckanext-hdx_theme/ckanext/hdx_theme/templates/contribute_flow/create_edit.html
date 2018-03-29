@@ -387,11 +387,16 @@
                                                 You have a choice of turning on/off dataset previews. Available previews include geo preview (if your data includes geo data) or Quick Charts (embeddable, live data charts, graphs and key figures generated from your HXL-tagged spreadsheet).
                                             </p>
                                         </div>
-                                        <div class="col-xs-9">
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_preview_check" data-module-required="public">
+                                        <div class="col-xs-7">
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_preview_check" data-module-broadcast_change="true">
                                             {{ form.checkbox('data_preview_check', id='field_data_preview_check', label=_('Display Preview'), value='1', checked=data.data_preview_check, error=errors.data_preview_check, classes=['form-group'], attrs={}) }}
                                             </div>
+
                                             <p>If you have added multiple resources above, select a resource to generate a preview</p>
+                                            {% set data_preview_values_list = h.hdx_data_preview_values_list() %}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_preview_value" id="data-preview-value-define">
+                                                {{ form.select('data_preview_value', id='field_data_preview_value', label=_('Data preview value (?)'), placeholder=_("Data preview value"), options=data_preview_values_list, selected=data.data_preview_value, error=errors.data_preview_value, classes=['form-group update-frequency-select'], attrs={'class':'form-control'}) }}
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="row">
