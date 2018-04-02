@@ -13,8 +13,8 @@ Example:
 #}
 
 {% set url = h.url_for(group.type + '_read', action='read', id=group.name, sort='metadata_modified desc') %}
-{% set modifier_dict = h.get_last_modifier_user(g_id=group.id, get_timestamp=True) %}
-{% set last_user = modifier_dict.userobj OR 'hdx' %}
+{% set modifier_dict = h.get_last_modifier_user(group_id=group.id) %}
+{% set last_user = modifier_dict.user_obj or 'hdx' %}
 {% set f_updated_time = h.render_datetime(modifier_dict.last_modified) or '' %}
 {% set followers = h.get_group_followers(group.id) %}
 {# set members = h.get_group_members(group.id) #}
