@@ -4,16 +4,15 @@ Created on Dec 22, 2014
 @author: alexandru-m-g
 '''
 import json
-
 import logging
 
-import ckan.lib.base as base
-import ckan.model as model
-import ckan.common as common
-import ckan.logic as logic
-import ckan.lib.helpers as h
-
 import ckanext.hdx_org_group.helpers.organization_helper as helper
+
+import ckan.common as common
+import ckan.lib.base as base
+import ckan.lib.helpers as h
+import ckan.logic as logic
+import ckan.model as model
 
 c = common.c
 request = common.request
@@ -45,8 +44,7 @@ class BrowseController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': user, 'for_view': True,
                    }
-        dataset_count_dict = self._get_dataset_counts(context, 'dataset')
-        indicator_count_dict = self._get_dataset_counts(context, 'indicator')
+        dataset_count_dict = self._get_dataset_counts(context)
 
         all_countries = get_action('cached_group_list')()
 
@@ -60,7 +58,6 @@ class BrowseController(base.BaseController):
                 all_countries_world_1st.append(country)
 
             country['dataset_count'] = dataset_count_dict.get(code, None)
-            country['indicator_count'] = indicator_count_dict.get(code, None)
 
         return all_countries_world_1st
 
@@ -112,10 +109,10 @@ class BrowseController(base.BaseController):
                       str(e.extra_msg))
         return all_topics
 
-    def _get_dataset_counts(self, context, package_type):
+    def _get_dataset_counts(self, context):
         search = {
             'q': None,
-            'fq': '+extras_indicator: 1' if package_type == 'indicator' else '-extras_indicator: 1',
+            'fq': None,
             'facet.field': ['groups'],
             'facet.limit': 1000,
             'rows': 1,

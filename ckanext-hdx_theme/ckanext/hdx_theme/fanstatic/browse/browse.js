@@ -77,7 +77,7 @@ function prepareMap(countDatasets, openNewWindow){
       fillColor: '#f5837b'
     });
     popup.setLatLng(e.latlng);
-    popup.setContent("<div class='marker-container'> <div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.indicators + "</div> <div class='marker-label'>indicators</div> </div> <div class='line-break'></div> <div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.datasets + "</div> <div class='marker-label'>datasets</div> </div> </div>");
+    popup.setContent("<div class='marker-container'> <div class='marker-box'> <div class='marker-number'>" + layer.feature.properties.datasets + "</div> <div class='marker-label'>datasets</div> </div> </div>");
     if (!popup._map) {
       popup.openOn(map);
     }
