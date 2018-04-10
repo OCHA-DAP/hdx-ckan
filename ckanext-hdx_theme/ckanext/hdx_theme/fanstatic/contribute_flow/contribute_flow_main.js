@@ -239,6 +239,13 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'setResourceModelList': function (resourceModelList) {
                     this.resourceModelList = resourceModelList;
+                    var newOptions = resourceModelList.models;
+                    var selectOptions = $('#field_data_preview_value').prop('options');
+
+                    $.each(newOptions, function(index, value) {
+                        selectOptions[selectOptions.length] = new Option('Resource '+(index+1), value.id);
+                    });
+
                 },
                 'generateResourcePostData': function() {
                     var resourceModelList = this.resourceModelList.models;
