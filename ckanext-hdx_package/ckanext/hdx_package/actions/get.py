@@ -397,15 +397,32 @@ def package_show(context, data_dict):
 
     # this shouldn't be executed from showcases
     if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
-        for resource_dict in package_dict.get('resources', []):
-            if _should_manually_load_property_value(context, resource_dict, 'size'):
-                resource_dict['size'] = _get_resource_filesize(resource_dict)
+        max_time = None
+        j = None
+        i = 0
 
-            if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
-                resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
+        if 'resources' in package_dict:
+            for resource_dict in package_dict.get('resources', []):
+                if _should_manually_load_property_value(context, resource_dict, 'size'):
+                    resource_dict['size'] = _get_resource_filesize(resource_dict)
 
-            if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
-                resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
+                if _should_manually_load_property_value(context, resource_dict, 'revision_last_updated'):
+                    resource_dict['revision_last_updated'] = _get_resource_revison_timestamp(resource_dict)
+
+                if _should_manually_load_property_value(context, resource_dict, 'hdx_rel_url'):
+                    resource_dict['hdx_rel_url'] = _get_resource_hdx_relative_url(resource_dict)
+
+                # if context.get('use_cache', True) == False and (resource_dict.get('dataset_preview_enabled') not in (None, True, False)) :
+                if _check_dataset_preview_selected_value(context, resource_dict, 'dataset_preview_enabled'):
+                    if resource_dict.get('dataset_preview_enabled') > max_time:
+                        max_time = resource_dict.get('dataset_preview_enabled')
+                        j = i
+                    resource_dict['dataset_preview_enabled'] = False
+                    i = i + 1
+
+            if j is not None:
+                package_dict['resources'][j]['dataset_preview_enabled'] = True
+
 
         # downloads_list = (res['tracking_summary']['total'] for res in package_dict.get('resources', []) if
         #                   res.get('tracking_summary', {}).get('total'))
@@ -457,6 +474,11 @@ def shape_info_show(context, data_dict):
     return shape_infos
 
 
+def _check_dataset_preview_selected_value(context, data_dict, property_name):
+    use_cache = context.get('use_cache', True) and False
+    current_value = data_dict.get(property_name) not in (None, True, False)
+
+    return not (use_cache and current_value)
 
 def _should_manually_load_property_value(context, data_dict, property_name):
     '''

@@ -62,7 +62,7 @@ ckan.module('hdx_form_element_manager', function($, _) {
                         /* If we get the message from the correct select element */
                         //moduleLog('Processing broadcast message: ' + JSON.stringify(message));
                         if (elementName.indexOf(message.srcElement) == 0) {
-                            if (message.newValue == 'Other' || message.newValue == 'hdx-other')
+                            if (message.newValue == 'Other' || message.newValue == 'hdx-other' || message.newValue=='data_preview_show')
                                 moduleEl.show();
                             else
                                 moduleEl.hide();
@@ -70,7 +70,12 @@ ckan.module('hdx_form_element_manager', function($, _) {
                     }
                 );
             }
-            var selectEl = moduleEl.find('select');
+            var selectEl ;
+            if ( broadcastChange && elementName.endsWith('_check') ){
+                selectEl = moduleEl.find('input');
+            }
+            else
+                selectEl = moduleEl.find('select');
             if ( broadcastChange ) {
                 selectEl.change(
                     function (e) {
@@ -87,6 +92,9 @@ ckan.module('hdx_form_element_manager', function($, _) {
              * methodology_other textboxes
              */
             var newValue = selectEl.prop('value');
+            if(selectEl.prop('type')=='checkbox' && true == selectEl.prop('checked')){
+                newValue = 'data_preview_show'
+            }
             var message = {
                 'srcElement': this.options.element_name,
                 'newValue': newValue

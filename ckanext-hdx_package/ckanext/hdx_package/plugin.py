@@ -230,6 +230,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'format': [tk.get_validator('hdx_detect_format'), tk.get_validator('not_empty'),
                            tk.get_validator('clean_format'), unicode],
                 'url': [tk.get_validator('not_empty'), unicode, tk.get_validator('remove_whitespace')],
+                'dataset_preview_enabled': [tk.get_validator('hdx_convert_to_timestamp'), tk.get_validator('ignore_missing')]
             }
         )
 
@@ -341,7 +342,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'not_empty_if_license_other': vd.general_not_empty_if_other_selected('license_id', 'hdx-other'),
             'hdx_show_subnational': vd.hdx_show_subnational,
             'hdx_find_package_maintainer': vd.hdx_find_package_maintainer,
-            'hdx_data_preview_validator': vd.hdx_data_preview_validator
+            'hdx_data_preview_validator': vd.hdx_data_preview_validator,
+            'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp
         }
 
     def get_auth_functions(self):

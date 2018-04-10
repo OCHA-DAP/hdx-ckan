@@ -5,6 +5,7 @@ Created on Apr 11, 2014
 '''
 
 import bisect
+import datetime
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
@@ -205,3 +206,16 @@ def general_not_empty_if_other_selected(other_key, other_compare_value):
             raise StopOnError
 
     return not_empty_if_other_selected
+
+
+def hdx_convert_to_timestamp(key, data, errors, context):
+    '''
+    value set to true will be changed to timestamp, otherwise none
+    '''
+
+    value = data.get(key)
+    if value and value in ('true', 'True'):
+        data[key] = datetime.datetime.utcnow().isoformat()
+    else:
+        data[key] = None
+    return data[key]
