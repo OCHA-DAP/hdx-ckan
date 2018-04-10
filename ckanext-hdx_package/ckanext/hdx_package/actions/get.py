@@ -397,7 +397,7 @@ def package_show(context, data_dict):
 
     # this shouldn't be executed from showcases
     if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
-        max_time = None
+        max_time = 0
         j = None
         i = 0
 
@@ -475,10 +475,10 @@ def shape_info_show(context, data_dict):
 
 
 def _check_dataset_preview_selected_value(context, data_dict, property_name):
-    use_cache = context.get('use_cache', True) and False
+    use_cache = context.get('use_cache', True)
     current_value = data_dict.get(property_name) not in (None, True, False)
 
-    return not (use_cache and current_value)
+    return use_cache is False and current_value
 
 def _should_manually_load_property_value(context, data_dict, property_name):
     '''
