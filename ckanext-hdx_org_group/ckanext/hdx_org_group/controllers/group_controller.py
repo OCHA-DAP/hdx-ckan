@@ -4,17 +4,13 @@ Created on Aug 11, 2015
 @author: mbellotti
 '''
 import json
-
 import logging
 
-import ckan.lib.base as base
-import ckan.model as model
 import ckan.common as common
-import ckan.logic as logic
-import ckan.lib.helpers as h
-
-import ckanext.hdx_org_group.helpers.organization_helper as helper
 import ckan.controllers.group as grp
+import ckan.lib.base as base
+import ckan.logic as logic
+import ckan.model as model
 
 c = common.c
 request = common.request
@@ -55,7 +51,7 @@ class HDXGroupController(grp.GroupController):
             else:
                 all_countries_world_1st.append(country)
 
-            country['dataset_count'] = dataset_count_dict.get(code, None)
+            country['dataset_count'] = dataset_count_dict.get(code, 0) + indicator_count_dict.get(code, 0)
             country['indicator_count'] = indicator_count_dict.get(code, None)
 
         return all_countries_world_1st

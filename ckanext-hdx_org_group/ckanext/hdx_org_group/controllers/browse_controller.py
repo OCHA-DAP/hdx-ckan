@@ -44,7 +44,8 @@ class BrowseController(base.BaseController):
         context = {'model': model, 'session': model.Session,
                    'user': user, 'for_view': True,
                    }
-        dataset_count_dict = self._get_dataset_counts(context)
+        dataset_count_dict = self._get_dataset_counts(context, 'dataset')
+        indicator_count_dict = self._get_dataset_counts(context, 'indicator')
 
         all_countries = get_action('cached_group_list')()
 
@@ -58,6 +59,7 @@ class BrowseController(base.BaseController):
                 all_countries_world_1st.append(country)
 
             country['dataset_count'] = dataset_count_dict.get(code, None)
+            country['indicator_count'] = indicator_count_dict.get(code, None)
 
         return all_countries_world_1st
 
@@ -109,10 +111,10 @@ class BrowseController(base.BaseController):
                       str(e.extra_msg))
         return all_topics
 
-    def _get_dataset_counts(self, context):
+    def _get_dataset_counts(self, context, package_type):
         search = {
             'q': None,
-            'fq': None,
+            'fq': '+extras_indicator: 1' if package_type == 'indicator' else '-extras_indicator: 1',
             'facet.field': ['groups'],
             'facet.limit': 1000,
             'rows': 1,
