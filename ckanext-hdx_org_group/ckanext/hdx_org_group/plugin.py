@@ -148,9 +148,14 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 'modified_at': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'hdx_org_type': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
                 'org_acronym': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
+
                 'package_count': [],
                 'packages': {'__extras': [tk.get_converter('keep_extras')]},
-                'users': {'__extras': [tk.get_converter('keep_extras')]}
+                'users': {'__extras': [tk.get_converter('keep_extras')]},
+                'num_followers': [],
+                'created': [],
+                'revision_id': [],
+                'state': []
 
             }
             schema.update(new_org_schema)
