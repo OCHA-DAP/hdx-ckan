@@ -265,6 +265,9 @@ header {
 .homepage-header-user-bg {
   background-color: #333333;
 }
+.homepage-header-user-bg .header-message {
+  max-width: 100%;
+}
 .homepage-header-nav-border {
   background-color: #ffffff;
   border-bottom: 3px solid #cccccc;

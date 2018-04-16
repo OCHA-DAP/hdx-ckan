@@ -12,35 +12,40 @@
 </div>
 <header class="newHeader">
 <div class="homepage-header-user-bg">
-  <div class="container">
-    <div class="row paddingRowHack header-user-bg">
-      <div class="col-xs-12 paddingLeftHack paddingRightHack" style="position: relative;">
-        {% if step %}
-          {% if step == "hdx_onboarding_first_login" %}
-            <div id="first-login" style="display: none;">first login</div>
-            <div id="incomplete-profile" class="pull-left">
-              » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
-            </div>
-          {% endif %}
-          {% if step == "hdx_onboarding_follows" %}
-            <div id="incomplete-profile" class="pull-left">
-              » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
-            </div>
-          {% endif %}
-          {% if step == "hdx_onboarding_org" %}
-            <div id="incomplete-profile" class="pull-left">
-              » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
-            </div>
-          {% endif %}
-          {% if step == "hdx_onboarding_friends" %}
-            <div id="incomplete-profile" class="pull-left">
-              » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
-            </div>
-          {% endif %}
-        {% endif %}
-        <div class="header-user-box pull-right">
-          {% if c.userobj %}
-            <span class="dropdown">
+    <div class="header-message header-user-bg">
+        <div class="header-message-container">
+            <img class="header-message-image" src="/images/empty.png" />
+        </div>
+    </div>
+    <div class="container">
+        <div class="row paddingRowHack header-user-bg">
+            <div class="col-xs-12 paddingLeftHack paddingRightHack" style="position: relative;">
+                {% if step %}
+                {% if step == "hdx_onboarding_first_login" %}
+                <div id="first-login" style="display: none;">first login</div>
+                <div id="incomplete-profile" class="pull-left">
+                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+                </div>
+                {% endif %}
+                {% if step == "hdx_onboarding_follows" %}
+                <div id="incomplete-profile" class="pull-left">
+                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+                </div>
+                {% endif %}
+                {% if step == "hdx_onboarding_org" %}
+                <div id="incomplete-profile" class="pull-left">
+                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
+                </div>
+                {% endif %}
+                {% if step == "hdx_onboarding_friends" %}
+                <div id="incomplete-profile" class="pull-left">
+                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
+                </div>
+                {% endif %}
+                {% endif %}
+                <div class="header-user-box pull-right">
+                    {% if c.userobj %}
+                    <span class="dropdown">
               {% block header_request_data_notification %}
                 {% set notification_seen = h.requestdata_get_notification() %}
                 {% if not notification_seen %}
@@ -101,25 +106,25 @@
                 {% endblock %}
               </ul>
             </span>
-            <span style="margin: 0 10px;">|</span>
-            <span>
+                    <span style="margin: 0 10px;">|</span>
+                    <span>
               <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
                 {{ _('Log out') }}
               </a>
             </span>
-          {% else %}
-            {% block header_account_notlogged %}
-              <span>
+                    {% else %}
+                    {% block header_account_notlogged %}
+                    <span>
                 <a class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#">Log in</a>
               </span>
-              <span style="margin: 0 10px;">|</span>
-              <span><a onclick="showOnboardingWidget('#signupPopup');" href="#">{{_('Sign up')}}</a></span>
-            {% endblock %}
-          {% endif %}
+                    <span style="margin: 0 10px;">|</span>
+                    <span><a onclick="showOnboardingWidget('#signupPopup');" href="#">{{_('Sign up')}}</a></span>
+                    {% endblock %}
+                    {% endif %}
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <div class="homepage-header-nav-border">
   <div class="container">
@@ -256,6 +261,11 @@
 
 <!-- MOBILE NAV START -->
 <nav class="mobile-only navbar navbar-static-top" role="navigation">
+    <div class="header-message">
+        <div class="header-message-container">
+            <img class="header-message-image" src="/images/empty.png" />
+        </div>
+    </div>
     <div class="container">
         <div class="navbar-header">
             <div class="hdxLogo">

@@ -1932,6 +1932,20 @@ h4 small {
   line-height: 28px;
   opacity: 1;
 }
+.header-message {
+  max-width: 1260px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.header-message .header-message-container {
+  line-height: 1;
+  font-size: 0;
+  background-image: url("/images/empty.png");
+  background-repeat: repeat-x;
+}
+.header-message .header-message-container img.header-message-image {
+  visibility: hidden;
+}
 .newHeader .header-nav .header-nav-search .header-search-form input::-webkit-input-placeholder {
   color: #dadada;
   font-family: 'Source Sans Pro', sans-serif;
