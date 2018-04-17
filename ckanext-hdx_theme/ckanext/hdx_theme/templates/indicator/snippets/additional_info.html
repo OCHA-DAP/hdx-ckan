@@ -33,11 +33,11 @@
 	<tr>
 		<th scope="row" class="dataset-label">{{ _('Location') }}</th>
 		<td class="dataset-details metadata-link mx-country">
-		<span data-module="hdx_show_more" style="visibility:hidden"><div>
-			{% for grp in pkg_dict.groups %}
-				<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %},&nbsp;{% endif %}
-			{% endfor %}
-		<br/></div></span>
+			<span data-module="hdx_show_more" style="visibility:hidden"><div>
+				{% for grp in pkg_dict.groups %}
+					<a href="{{ h.url_for(controller='group', action='read', id=grp['name']) }}">{{ grp['title'] or grp['name'] }}</a>{% if not loop.last %},&nbsp;{% endif %}
+				{% endfor %}
+			<br/></div></span>
 		</td>
     </tr>
     {# Metadata-only datasets are public, so this option is only for full datasets #}
@@ -112,11 +112,11 @@
 	{% if pkg_dict.is_requestdata_type %}
         <tr>
             <th scope="row" class="dataset-label">{{ _('Field Names') }}</th>
-            <td class="dataset-details">{{ pkg_dict.field_names }}</td>
+            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.field_names }}</td>
         </tr>
         <tr>
             <th scope="row" class="dataset-label">{{ _('File Types') }}</th>
-            <td class="dataset-details">{{ pkg_dict.file_types }}</td>
+            <td class="dataset-details" style="word-break: break-all;">{{ pkg_dict.file_types }}</td>
         </tr>
         <tr>
             <th scope="row" class="dataset-label">{{ _('Number of Rows') }}</th>
@@ -171,3 +171,5 @@
     </tbody>
   </table>
 </section>
+
+{% resource 'hdx_theme/hdx_show_more.js' %}
