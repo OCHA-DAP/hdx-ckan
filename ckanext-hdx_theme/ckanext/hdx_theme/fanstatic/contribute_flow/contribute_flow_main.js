@@ -239,12 +239,23 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'setResourceModelList': function (resourceModelList) {
                     this.resourceModelList = resourceModelList;
+                },
+                'generateDatasetPreviewOptions': function (resourceModelList) {
                     var newOptions = resourceModelList.models;
-                    var selectOptions = $('#field_data_preview_value').prop('options');
-
+                    $("#field_dataset_preview_value").find("option").remove();
+                    var selectOptions = $('#field_dataset_preview_value').prop('options');
+                    selectOptions[0] = new Option('!Default (first resource with preview)', 'first_resource');
                     $.each(newOptions, function(index, value) {
-                        selectOptions[selectOptions.length] = new Option('Resource '+(index+1), value.id);
+                        var resName = value.get('name') ? value.get('name') : 'Resource '+(index+1);
+                        if (index === 0){
+                            selectOptions[selectOptions.length] = new Option(resName, index, true, true);
+                        }
+                        else {
+                            selectOptions[selectOptions.length] = new Option(resName, index);
+                        }
                     });
+                    $("#field_dataset_preview_value").val(0).trigger('change');
+
 
                 },
                 'generateResourcePostData': function() {
@@ -308,6 +319,8 @@ ckan.module('contribute_flow_main', function($, _) {
 
             //initialize organisation change, triggering autocomplete changes
             this.manageAutocompleteOrgBinding();
+
+            this.manageDatasetPreviewSelect();
         },
         manageAutocompleteOrgBinding: function(){
             var selectMaintainer = $('#field_maintainer');
@@ -320,6 +333,18 @@ ckan.module('contribute_flow_main', function($, _) {
                 selectMaintainer.attr('data-module-extra-params', attrValue);
                 ckan.module.initializeElement(selectMaintainer[0]);
             });
+        },
+        manageDatasetPreviewSelect: function(){
+		    var sandbox = this.sandbox;
+            var selectOptions = $('#field_dataset_preview_value');
+            selectOptions.on("change", function(e){
+                sandbox.publish('hdx-resource-information', {
+                    'type': 'dataset_preview_resource_change',
+                    'newValue': e.val
+                    }
+                );
+            });
+
         },
         managePrivateField: function() {
             var sandbox = this.sandbox;

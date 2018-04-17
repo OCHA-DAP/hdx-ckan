@@ -20,10 +20,10 @@ StopOnError = df.StopOnError
 Invalid = df.Invalid
 get_action = logic.get_action
 
-_DATA_PREVIEW_FIRST_RESOURCE = 'first_resource'
-_DATA_PREVIEW_RESOURCE_ID = 'resource_id'
-_DATA_PREVIEW_NO_PREVIEW = 'no_preview'
-DATA_PREVIEW_VALUES_LIST = [_DATA_PREVIEW_FIRST_RESOURCE, _DATA_PREVIEW_RESOURCE_ID, _DATA_PREVIEW_NO_PREVIEW]
+_DATASET_PREVIEW_FIRST_RESOURCE = 'first_resource'
+_DATASET_PREVIEW_RESOURCE_ID = 'resource_id'
+_DATASET_PREVIEW_NO_PREVIEW = 'no_preview'
+DATASET_PREVIEW_VALUES_LIST = [_DATASET_PREVIEW_FIRST_RESOURCE, _DATASET_PREVIEW_RESOURCE_ID, _DATASET_PREVIEW_NO_PREVIEW]
 
 
 # same as not_empty, but ignore whitespaces
@@ -169,16 +169,14 @@ def hdx_find_package_maintainer(key, data, errors, context):
                        ' Please add valid user ID'))
 
 
-def hdx_data_preview_validator(key, data, errors, context):
+def hdx_dataset_preview_validator(key, data, errors, context):
     try:
-        data_preview = str(data.get(key))
-        if data_preview and data_preview in DATA_PREVIEW_VALUES_LIST:
+        dataset_preview = str(data.get(key))
+        if dataset_preview and dataset_preview in DATASET_PREVIEW_VALUES_LIST:
             return data[key]
-        # if data_preview is None or data_preview == '' or data_preview == 'None':
-        # first_resource
-        data[key] = _DATA_PREVIEW_FIRST_RESOURCE
+        data[key] = _DATASET_PREVIEW_FIRST_RESOURCE
     except Exception, ex:
-        data[key] = _DATA_PREVIEW_FIRST_RESOURCE
+        data[key] = _DATASET_PREVIEW_FIRST_RESOURCE
     return data[key]
 
 
@@ -213,9 +211,33 @@ def hdx_convert_to_timestamp(key, data, errors, context):
     value set to true will be changed to timestamp, otherwise none
     '''
 
+    # value = data.get(key)
+    # if value and value in ('1', 1):
+    #     data[key] = datetime.datetime.utcnow().isoformat()
+    # elif value and value in ('0', 0):
+    #     data[key] = None
+    # # else:
+    # #     data[key] = None
+    # return data[key]
+
     value = data.get(key)
-    if value and value in ('true', 'True'):
-        data[key] = datetime.datetime.utcnow().isoformat()
+    if value in (True, False, 'True', 'False'):
+        pass
+    elif value in ('1', 1):
+        # set others on False
+        i = 0
+        while True:
+            temp_key_name = ('resources', i, 'name')
+            temp_key_preview = ('resources', i, 'dataset_preview_enabled')
+            if not data.get(temp_key_name):
+                break
+            data[temp_key_preview] = False
+            i += 1
+        data[key] = True
+
+    elif value in ('0', 0):
+        data[key] = False
     else:
+        # value not in ('1',1,'0',0, True, False, 'True', 'False'):
         data[key] = None
     return data[key]

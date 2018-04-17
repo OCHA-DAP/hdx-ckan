@@ -388,15 +388,15 @@
                                             </p>
                                         </div>
                                         <div class="col-xs-7">
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_preview_check" data-module-broadcast_change="true">
-                                                {{ form.checkbox('data_preview_check', id='field_data_preview_check', label=_('Display Preview'), value='1', checked=data.data_preview_check, error=errors.data_preview_check, classes=['form-group'], attrs={}) }}
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check" data-module-broadcast_change="true">
+                                                {{ form.checkbox('dataset_preview_check', id='field_dataset_preview_check', label=_('Display Preview'), value='1', checked=data.dataset_preview_check, error=errors.dataset_preview_check, classes=['form-group'], attrs={}) }}
                                             </div>
 
 
-                                            <div data-module="hdx_form_element_manager" data-module-element_name="data_preview_check_other" id="data-preview-check-other-define"  {% if data.data_preview_check != '1' %} style="display:none;" {% endif %}>
+                                            <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check_other" id="dataset-preview-check-other-define"  {% if data.dataset_preview_check != '1' %} style="display:none;" {% endif %}>
                                                 <p>If you have added multiple resources above, select a resource to generate a preview</p>
-                                                {% set data_preview_values_list = h.hdx_data_preview_values_list() %}
-                                                {{ form.select('data_preview_value', id='field_data_preview_value', label=_('Data preview value (?)'), placeholder=_("Data preview value"), options=data_preview_values_list, selected=data.data_preview_value, error=errors.data_preview_value, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                                {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
+                                                {{ form.select('dataset_preview_value', id='field_dataset_preview_value', label=_('Data preview value (?)'), placeholder=_("Data preview value"), options=dataset_preview_values_list, selected=data.dataset_preview_value, error=errors.dataset_preview_value, classes=['form-group'], attrs={'class':'form-control'}) }}
                                             </div>
                                         </div>
                                     </div>

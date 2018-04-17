@@ -67,7 +67,7 @@ class ContributeFlowController(base.BaseController):
                     # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
-                    self.process_data_preview(dataset_dict)
+                    self.process_dataset_preview_edit(dataset_dict)
                     maintainer_dict = logic.get_action('user_show')(context,
                                                                     {'id': dataset_dict.get('maintainer', None)})
                     if maintainer_dict:
@@ -110,12 +110,12 @@ class ContributeFlowController(base.BaseController):
         if dataset_dict and not dataset_dict.get('tag_string'):
             dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
 
-    def process_data_preview(self, dataset_dict):
+    def process_dataset_preview_edit(self, dataset_dict):
         if dataset_dict:
-            data_preview = dataset_dict.get('data_preview', vd._DATA_PREVIEW_FIRST_RESOURCE)
-            if data_preview and (
-                    data_preview == vd._DATA_PREVIEW_FIRST_RESOURCE or data_preview == vd._DATA_PREVIEW_RESOURCE_ID):
-                dataset_dict['data_preview_check'] = '1'
+            dataset_preview = dataset_dict.get('dataset_preview', vd._DATASET_PREVIEW_FIRST_RESOURCE)
+            if dataset_preview and (
+                    dataset_preview == vd._DATASET_PREVIEW_FIRST_RESOURCE or dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID):
+                dataset_dict['dataset_preview_check'] = '1'
 
     def process_tag_string(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
@@ -186,6 +186,7 @@ class ContributeFlowController(base.BaseController):
         self.process_expected_update_frequency(data_dict)
         self.process_methodology(data_dict)
         self.process_maintainer(context, data_dict)
+        self.process_dataset_preview_save(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
@@ -329,3 +330,15 @@ class ContributeFlowController(base.BaseController):
                     data_dict['maintainer_email'] = maintainer_dict.get('email', None)
             except logic.NotFound, e:
                 log.info("Maintainer or user not found!")
+
+    def process_dataset_preview_save(self, data_dict):
+        if 'dataset_preview_check' in data_dict:
+            if data_dict.get('dataset_preview_check', '1') == '1':
+                if 'dataset_preview_value' in data_dict and data_dict.get('dataset_preview_value') == vd._DATASET_PREVIEW_FIRST_RESOURCE:
+                    data_dict['dataset_preview'] = vd._DATASET_PREVIEW_FIRST_RESOURCE
+                else:
+                    data_dict['dataset_preview'] = vd._DATASET_PREVIEW_RESOURCE_ID
+            else:
+                data_dict['dataset_preview'] = vd._DATASET_PREVIEW_NO_PREVIEW
+        else:
+            data_dict['dataset_preview'] = vd._DATASET_PREVIEW_NO_PREVIEW

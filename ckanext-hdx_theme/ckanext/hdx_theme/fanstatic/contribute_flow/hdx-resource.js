@@ -103,6 +103,19 @@ $(function(){
                     }.bind(this));
                 }
             }.bind(this));
+
+            sandbox.subscribe('hdx-resource-information', function (message) {
+                if (message.type == 'dataset_preview_resource_change' && message.newValue!=null) {
+                    var resId = Number(message.newValue);
+                    var modelsList = this.models;
+                    for(var i=0; i<modelsList.length; i++){
+                        modelsList[i].attributes['dataset_preview_enabled'] = '0';
+                    }
+                    if(!isNaN(resId)){
+                        modelsList[resId].attributes['dataset_preview_enabled'] = '1';
+                    }
+                }
+            }.bind(this));
         },
 
         url: function() {
@@ -246,6 +259,7 @@ $(function(){
                 this.render();
                 this.updateTotal();
             }
+            this.listenTo(this.collection, 'change', this.generateDatasetPreviewOptions);
             this.listenTo(this.collection, 'sync add remove reset', this.render);
             this.listenTo(this.collection, 'add remove reset', this.updateTotal);
             this.listenTo(this.collection, 'remove', this.onSortOrderChange);
@@ -277,6 +291,10 @@ $(function(){
                 this.addOne(resource);
             }, this);
             return this;
+        },
+
+        generateDatasetPreviewOptions: function() {
+            this.contribute_global.generateDatasetPreviewOptions(this.collection);
         },
 
         addOne: function(resource) {
@@ -679,6 +697,7 @@ $(function(){
                         });
 
                         this.contribute_global.setResourceModelList(this.resourceCollection);
+                        this.contribute_global.generateDatasetPreviewOptions(this.resourceCollection);
                         this.contribute_global.controlUserWaitingWidget(false);
                     }.bind(this)
                 );

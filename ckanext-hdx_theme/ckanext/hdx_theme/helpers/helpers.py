@@ -625,9 +625,9 @@ def hdx_tag_list():
         return tags_dict_list
     return []
 
-def hdx_data_preview_values_list():
+def hdx_dataset_preview_values_list():
     import ckanext.hdx_package.helpers.custom_validator as vd
-    result = [{'value': vd._DATA_PREVIEW_FIRST_RESOURCE, 'text': 'Default (first resource with preview)'}]
+    result = [{'value': vd._DATASET_PREVIEW_FIRST_RESOURCE, 'text': 'Default (first resource with preview)'}]
     return result
 
 def hdx_frequency_list(for_sysadmin=False, include_value=None):

@@ -220,7 +220,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'data_update_frequency': [tk.get_validator('not_empty'), tk.get_converter('convert_to_extras')],
             'batch': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
-            'data_preview': [tk.get_validator('hdx_data_preview_validator'), tk.get_validator('ignore_missing'),
+            'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
                              tk.get_converter('convert_to_extras')]
         })
 
@@ -279,7 +279,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'has_quickcharts': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_geodata': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'batch': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'data_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_data_preview_validator')]
+            'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')]
         })
         return schema
 
@@ -342,7 +342,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'not_empty_if_license_other': vd.general_not_empty_if_other_selected('license_id', 'hdx-other'),
             'hdx_show_subnational': vd.hdx_show_subnational,
             'hdx_find_package_maintainer': vd.hdx_find_package_maintainer,
-            'hdx_data_preview_validator': vd.hdx_data_preview_validator,
+            'hdx_dataset_preview_validator': vd.hdx_dataset_preview_validator,
             'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp
         }
 

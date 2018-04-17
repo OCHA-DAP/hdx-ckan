@@ -62,7 +62,7 @@ ckan.module('hdx_form_element_manager', function($, _) {
                         /* If we get the message from the correct select element */
                         //moduleLog('Processing broadcast message: ' + JSON.stringify(message));
                         if (elementName.indexOf(message.srcElement) == 0) {
-                            if (message.newValue == 'Other' || message.newValue == 'hdx-other' || message.newValue=='data_preview_show')
+                            if (message.newValue == 'Other' || message.newValue == 'hdx-other' || message.newValue=='dataset_preview_show')
                                 moduleEl.show();
                             else
                                 moduleEl.hide();
@@ -93,7 +93,7 @@ ckan.module('hdx_form_element_manager', function($, _) {
              */
             var newValue = selectEl.prop('value');
             if(selectEl.prop('type')=='checkbox' && true == selectEl.prop('checked')){
-                newValue = 'data_preview_show'
+                newValue = 'dataset_preview_show'
             }
             var message = {
                 'srcElement': this.options.element_name,
