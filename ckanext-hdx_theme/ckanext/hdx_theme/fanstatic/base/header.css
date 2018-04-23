@@ -1863,6 +1863,7 @@ h4 small {
   max-width: 1260px;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
 .header-message .header-message-container {
   line-height: 1;
