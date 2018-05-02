@@ -802,7 +802,7 @@ class DatasetController(PackageController):
                     view_enabled_resources = [r for r in view_enabled_resources if
                                               r.get('dataset_preview_enabled') == 'True']
                 for r in view_enabled_resources:
-                    _res_view = self._handle_resource(r)
+                    _res_view = self.check_resource(r)
                     if _res_view is None:
                         continue
                     if _res_view.get('type') == 'hdx_geo_preview':
@@ -849,7 +849,7 @@ class DatasetController(PackageController):
 
         assert False, "We should never get here"
 
-    def _handle_resource(self, resource):
+    def check_resource(self, resource):
         shape_info = self._has_shape_info(resource)
         if shape_info:
             return shape_info
@@ -910,7 +910,7 @@ class DatasetController(PackageController):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
             shp_info = get_latest_shape_info(resource)
             if shp_info.get('state', '') == 'success':
-                return {'type': 'hdx_geo_preview'}
+                return {'type': 'hdx_geo_preview', 'default': None}
         return None
 
     def _has_hxl_views(self, resource):
