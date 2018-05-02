@@ -850,7 +850,13 @@ class DatasetController(PackageController):
         assert False, "We should never get here"
 
     def _handle_resource(self, resource):
-        pass
+        shape_info = self._has_shape_info(resource)
+        if shape_info:
+            return shape_info
+        hxl_preview = self._has_hxl_views(resource)
+        if hxl_preview:
+            return hxl_preview
+        return None
 
     def _get_org_extras(self, org_id):
         """
@@ -889,16 +895,16 @@ class DatasetController(PackageController):
                 c.logo_config['background_color'] = custom_dict.get('highlight_color', '#fafafa')
                 c.logo_config['border_color'] = custom_dict.get('highlight_color', '#cccccc')
 
-    def _has_views(self, resources):
-        view_enabled_resources = (r for r in resources if r.get('no_preview') != 'true')
-        for resource in view_enabled_resources:
-            if self._has_shape_info(resource):
-                return {'type': 'hdx_geo_preview', 'default': None}
-            _default_view = self._has_hxl_views(resource)
-            if _default_view:
-                _default_view['type'] = 'hdx_hxl_preview'
-                return _default_view
-        return None
+    # def _has_views(self, resources):
+    #     view_enabled_resources = (r for r in resources if r.get('no_preview') != 'true')
+    #     for resource in view_enabled_resources:
+    #         if self._has_shape_info(resource):
+    #             return {'type': 'hdx_geo_preview', 'default': None}
+    #         _default_view = self._has_hxl_views(resource)
+    #         if _default_view:
+    #             _default_view['type'] = 'hdx_hxl_preview'
+    #             return _default_view
+    #     return None
 
     def _has_shape_info(self, resource):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
