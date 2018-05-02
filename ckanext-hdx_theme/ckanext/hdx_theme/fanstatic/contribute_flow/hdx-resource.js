@@ -262,7 +262,7 @@ $(function(){
                 this.render();
                 this.updateTotal();
             }
-            this.listenTo(this.collection, 'change', this.generateDatasetPreviewOptions);
+            this.listenTo(this.collection, 'sync add remove reset change', this.generateDatasetPreviewOptions);
             this.listenTo(this.collection, 'sync add remove reset', this.render);
             this.listenTo(this.collection, 'add remove reset', this.updateTotal);
             this.listenTo(this.collection, 'remove', this.onSortOrderChange);

@@ -21,6 +21,7 @@ from pylons import config
 
 from ckan.common import _, c, request
 from ckanext.hdx_package.exceptions import NoOrganization
+import ckanext.hdx_package.helpers.custom_validator as vd
 
 get_action = logic.get_action
 log = logging.getLogger(__name__)
@@ -438,6 +439,9 @@ def generate_mandatory_fields():
         'maintainer': user,
         'subnational': 1,
         'data_update_frequency': config.get('hdx.default_frequency', '-999'),
+        'dataset_preview_check': '1',
+        'dataset_preview': vd._DATASET_PREVIEW_FIRST_RESOURCE,
+        'dataset_preview_value': vd._DATASET_PREVIEW_FIRST_RESOURCE
     }
     return data_dict
 
