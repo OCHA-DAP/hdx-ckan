@@ -11,6 +11,7 @@ from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
+import ckanext.hdx_package.helpers.custom_validator as vd
 from pylons import config
 
 import ckan.authz as new_authz
@@ -769,44 +770,73 @@ class DatasetController(PackageController):
         downloads_last_weeks = downloads_per_dataset_per_week_last_24_weeks_cached().get(c.pkg_dict['id'], {}).values()
         c.stats_downloads_last_weeks = downloads_last_weeks
 
-        _default_view = None
+        _dataset_preview = None
         if 'resources' in c.pkg_dict:
-            _default_view = self._has_views(c.pkg_dict['resources'])
+            _dataset_preview = c.pkg_dict.get('dataset_preview', vd._DATASET_PREVIEW_FIRST_RESOURCE)
         try:
-            org_dict = c.pkg_dict.get('organization') or {}
-            org_id = org_dict.get('id', None)
-            org_info_dict = self._get_org_extras(org_id)
-            if org_info_dict.get('custom_org', False):
-                self._process_customizations(org_info_dict.get('customization', None))
-
-            if _default_view and _default_view.get('type') == 'hdx_geo_preview':
-                c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-                return render('indicator/hdx-shape-read.html')
-            elif _default_view and _default_view.get('type') == 'hdx_hxl_preview':
-                # hxl_view = _default_view.get('view')
-                c.default_view = _default_view
-                has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': c.pkg_dict['id']})
-                c.hxl_preview_urls = {
-                    'onlyView': get_action('hxl_preview_iframe_url_show')({
-                        'has_modify_permission': has_modify_permission
-                    }, {
-                        'resource': _default_view.get('resource'),
-                        'resource_view': _default_view.get('view'),
-                        'hxl_preview_mode': 'onlyView'
-                    })
-                    # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
-                    #     'resource': _default_view.get('resource'),
-                    #     'resource_view': _default_view.get('view'),
-                    #     'hxl_preview_mode': 'edit'
-                    # })
-                }
-                return render('indicator/hdx-hxl-read.html')
+            # if _dataset_preview and _dataset_preview.get('type') == 'hdx_geo_preview':
+            #     c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+            #     return render('indicator/hdx-shape-read.html')
+            # elif _dataset_preview and _dataset_preview.get('type') == 'hdx_hxl_preview':
+            #     # hxl_view = _default_view.get('view')
+            #     c.default_view = _dataset_preview
+            #     has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': c.pkg_dict['id']})
+            #     c.hxl_preview_urls = {
+            #         'onlyView': get_action('hxl_preview_iframe_url_show')({
+            #             'has_modify_permission': has_modify_permission
+            #         }, {
+            #             'resource': _dataset_preview.get('resource'),
+            #             'resource_view': _dataset_preview.get('view'),
+            #             'hxl_preview_mode': 'onlyView'
+            #         })
+            #         # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
+            #         #     'resource': _default_view.get('resource'),
+            #         #     'resource_view': _default_view.get('view'),
+            #         #     'hxl_preview_mode': 'edit'
+            #         # })
+            #     }
+            #     return render('indicator/hdx-hxl-read.html')
+            if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
+                view_enabled_resources = [r for r in c.pkg_dict['resources'] if r.get('no_preview') != 'true']
+                if _dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID:
+                    view_enabled_resources = [r for r in view_enabled_resources if
+                                              r.get('dataset_preview_enabled') == 'True']
+                for r in view_enabled_resources:
+                    _res_view = self._handle_resource(r)
+                    if _res_view is None:
+                        continue
+                    if _res_view.get('type') == 'hdx_geo_preview':
+                        c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                        return render('indicator/hdx-shape-read.html')
+                    if _res_view.get('type') == 'hdx_hxl_preview':
+                        c.default_view = _res_view
+                        has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': c.pkg_dict['id']})
+                        c.hxl_preview_urls = {
+                            'onlyView': get_action('hxl_preview_iframe_url_show')({
+                                'has_modify_permission': has_modify_permission
+                            }, {
+                                'resource': _res_view.get('resource'),
+                                'resource_view': _res_view.get('view'),
+                                'hxl_preview_mode': 'onlyView'
+                            })
+                            # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
+                            #     'resource': _default_view.get('resource'),
+                            #     'resource_view': _default_view.get('view'),
+                            #     'hxl_preview_mode': 'edit'
+                            # })
+                        }
+                        return render('indicator/hdx-hxl-read.html')
 
             cps_off = config.get('hdx.cps.off', 'false')
 
             if cps_off == 'false' and int(c.pkg_dict['indicator']):
                 return render('indicator/read.html')
             else:
+                org_dict = c.pkg_dict.get('organization') or {}
+                org_id = org_dict.get('id', None)
+                org_info_dict = self._get_org_extras(org_id)
+                if org_info_dict.get('custom_org', False):
+                    self._process_customizations(org_info_dict.get('customization', None))
                 if org_info_dict.get('custom_org', False):
                     return render('package/custom_hdx_read.html')
                 return render('package/hdx_read.html')
@@ -818,6 +848,9 @@ class DatasetController(PackageController):
             abort(404, msg)
 
         assert False, "We should never get here"
+
+    def _handle_resource(self, resource):
+        pass
 
     def _get_org_extras(self, org_id):
         """
@@ -871,13 +904,14 @@ class DatasetController(PackageController):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
             shp_info = get_latest_shape_info(resource)
             if shp_info.get('state', '') == 'success':
-                return True
-        return False
+                return {'type': 'hdx_geo_preview'}
+        return None
 
     def _has_hxl_views(self, resource):
         for view in resource.get("resource_views"):
             if view.get("view_type") == 'hdx_hxl_preview':
                 return {
+                    'type': 'hdx_hxl_preview',
                     "view_url": h.url_for("resource_view", id=view.get('package_id'),
                                           resource_id=view.get('resource_id'), view_id=view.get('id')),
                     "view": view,
@@ -1339,3 +1373,6 @@ class DatasetController(PackageController):
             error_summary = e.error or str(e)
             return json.dumps({'success': False, 'error': {'message': error_summary}})
         return SUCCESS
+
+    def _handle_resource(self, resource):
+        pass
