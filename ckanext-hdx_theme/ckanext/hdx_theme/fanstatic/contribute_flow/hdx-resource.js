@@ -914,6 +914,9 @@ $(function(){
             // Hides the horizontal line
             formSectionResources.next().hide();
 
+            // hide dataset preview
+            $('#_dataset_preview').hide();
+
             // Metadata-only datasets are public only, so we select the "Public"
             // radio button and disable the "Private" one
             privacyPublicRadioBtn.click();
