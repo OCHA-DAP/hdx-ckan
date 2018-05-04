@@ -806,7 +806,7 @@ class DatasetController(PackageController):
                     if _res_view is None:
                         continue
                     if _res_view.get('type') == 'hdx_geo_preview':
-                        c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
+                        c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources'], r.get('id')))
                         return render('indicator/hdx-shape-read.html')
                     if _res_view.get('type') == 'hdx_hxl_preview':
                         c.default_view = _res_view
@@ -925,7 +925,7 @@ class DatasetController(PackageController):
                 }
         return None
 
-    def _process_shapes(self, resources):
+    def _process_shapes(self, resources, id=None):
         result = []
 
         for resource in resources:
@@ -935,12 +935,16 @@ class DatasetController(PackageController):
 
                 res_pbf_url = res_pbf_template_url.replace('{resource_id}', shp_info['layer_id'])
                 name = resource['name']
-                result.append({
+                shp_dict = {
                     'resource_name': name,
                     'url': res_pbf_url,
                     'bounding_box': shp_info['bounding_box'],
                     'layer_fields': shp_info.get('layer_fields', [])
-                })
+                }
+                if resource.get('id') == id:
+                    result.insert(0, shp_dict)
+                else:
+                    result.append(shp_dict)
         return result
 
     # @staticmethod
