@@ -58,10 +58,11 @@ $(function(){
 
         hashResource: function() {
             var newUpload = this.get('upload') ? 'true' : 'false';
+            var dpe = this.get('dataset_preview_enabled') === '1' || this.get('dataset_preview_enabled') === 'True' ? 'True' : 'False';
             var properties = [
                 this.get('name'), this.get('format'), this.get('url'),
                 this.get('description'), this.get('url_type'), this.get('resource_type'),
-                this.get('dataset_preview_enabled'),
+                dpe,
                 newUpload
             ];
 
