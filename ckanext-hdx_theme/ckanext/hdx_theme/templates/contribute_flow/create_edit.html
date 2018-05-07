@@ -395,7 +395,7 @@
                                                 <div data-module="hdx_form_element_manager" data-module-element_name="dataset_preview_check_other" id="dataset-preview-check-other-define"  {% if data.dataset_preview_check != '1' %} style="display:none;" {% endif %}>
                                                     <p>If you have added multiple resources above, select a resource to generate a preview</p>
                                                     {% set dataset_preview_values_list = h.hdx_dataset_preview_values_list() %}
-                                                    {{ form.select('dataset_preview_value', id='field_dataset_preview_value', label=_('Data preview value (?)'), placeholder=_("Data preview value"), options=dataset_preview_values_list, selected=data.dataset_preview_value, error=errors.dataset_preview_value, classes=['form-group'], attrs={'class':'form-control'}) }}
+                                                    {{ form.select('dataset_preview_value', id='field_dataset_preview_value', label=_('Data preview value'), placeholder=_("Data preview value"), options=dataset_preview_values_list, selected=data.dataset_preview_value, error=errors.dataset_preview_value, classes=['form-group'], attrs={'class':'form-control'}) }}
                                                 </div>
                                             </div>
                                         </div>
