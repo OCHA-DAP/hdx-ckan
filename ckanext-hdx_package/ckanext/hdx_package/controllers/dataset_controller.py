@@ -774,33 +774,18 @@ class DatasetController(PackageController):
         if 'resources' in c.pkg_dict:
             _dataset_preview = c.pkg_dict.get('dataset_preview', vd._DATASET_PREVIEW_FIRST_RESOURCE)
         try:
-            # if _dataset_preview and _dataset_preview.get('type') == 'hdx_geo_preview':
-            #     c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources']))
-            #     return render('indicator/hdx-shape-read.html')
-            # elif _dataset_preview and _dataset_preview.get('type') == 'hdx_hxl_preview':
-            #     # hxl_view = _default_view.get('view')
-            #     c.default_view = _dataset_preview
-            #     has_modify_permission = authz.is_authorized_boolean('package_update', context, {'id': c.pkg_dict['id']})
-            #     c.hxl_preview_urls = {
-            #         'onlyView': get_action('hxl_preview_iframe_url_show')({
-            #             'has_modify_permission': has_modify_permission
-            #         }, {
-            #             'resource': _dataset_preview.get('resource'),
-            #             'resource_view': _dataset_preview.get('view'),
-            #             'hxl_preview_mode': 'onlyView'
-            #         })
-            #         # 'edit': get_action('hxl_preview_iframe_url_show')({}, {
-            #         #     'resource': _default_view.get('resource'),
-            #         #     'resource_view': _default_view.get('view'),
-            #         #     'hxl_preview_mode': 'edit'
-            #         # })
-            #     }
-            #     return render('indicator/hdx-hxl-read.html')
             if _dataset_preview != vd._DATASET_PREVIEW_NO_PREVIEW:
                 view_enabled_resources = [r for r in c.pkg_dict['resources'] if r.get('no_preview') != 'true']
+                dataset_preview_enabled_list = []
+                dataset_preview_disabled_list = []
                 if _dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID:
-                    view_enabled_resources = [r for r in view_enabled_resources if
-                                              r.get('dataset_preview_enabled') == 'True']
+                    for r in view_enabled_resources:
+                        if r.get('dataset_preview_enabled') == 'True':
+                            dataset_preview_enabled_list.append(r)
+                        else:
+                            dataset_preview_disabled_list.append(r)
+                    dataset_preview_enabled_list.extend(dataset_preview_disabled_list)
+                    view_enabled_resources = dataset_preview_enabled_list
                 for r in view_enabled_resources:
                     _res_view = self.check_resource(r)
                     if _res_view is None:
