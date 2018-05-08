@@ -247,7 +247,7 @@ ckan.module('contribute_flow_main', function($, _) {
                     //     selectOptions[0] = new Option('!Default (first resource with preview)', 'first_resource', true, true);
                     // }
                     // else{
-                    selectOptions[0] = new Option('!Default (first resource with preview)', 'first_resource');
+                    selectOptions[0] = new Option('Default (first resource with preview)', 'first_resource');
                     // }
                     var i = 'first_resource';
                     $.each(newOptions, function(index, value) {
