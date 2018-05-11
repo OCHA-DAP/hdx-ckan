@@ -8,6 +8,7 @@ import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 
 import ckanext.hdx_package.helpers.analytics as analytics
+import ckanext.hdx_package.helpers.custom_validator as vd
 
 from ckan.common import _, request, response, c
 from ckan.lib.search import SearchIndexError
@@ -15,6 +16,7 @@ from ckan.controllers.api import CONTENT_TYPES
 from ckanext.hdx_package.exceptions import WrongResourceParamName, NoOrganization
 
 import logging
+
 log = logging.getLogger(__name__)
 
 tuplize_dict = logic.tuplize_dict
@@ -65,7 +67,9 @@ class ContributeFlowController(base.BaseController):
                     # dataset_dict = logic.get_action('package_show_edit')(context, {'id': id})
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
-                    maintainer_dict = logic.get_action('user_show')(context,{'id': dataset_dict.get('maintainer', None)})
+                    self.process_dataset_preview_edit(dataset_dict)
+                    maintainer_dict = logic.get_action('user_show')(context,
+                                                                    {'id': dataset_dict.get('maintainer', None)})
                     if maintainer_dict:
                         dataset_dict['maintainer'] = maintainer_dict.get('name', None)
 
@@ -105,6 +109,13 @@ class ContributeFlowController(base.BaseController):
     def process_tags(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
             dataset_dict['tag_string'] = ', '.join(h.dict_list_reduce(dataset_dict.get('tags', {}), 'name'))
+
+    def process_dataset_preview_edit(self, dataset_dict):
+        if dataset_dict:
+            dataset_preview = dataset_dict.get('dataset_preview', vd._DATASET_PREVIEW_FIRST_RESOURCE)
+            if dataset_preview and (
+                    dataset_preview == vd._DATASET_PREVIEW_FIRST_RESOURCE or dataset_preview == vd._DATASET_PREVIEW_RESOURCE_ID):
+                dataset_dict['dataset_preview_check'] = '1'
 
     def process_tag_string(self, dataset_dict):
         if dataset_dict and not dataset_dict.get('tag_string'):
@@ -175,6 +186,7 @@ class ContributeFlowController(base.BaseController):
         self.process_expected_update_frequency(data_dict)
         self.process_methodology(data_dict)
         self.process_maintainer(context, data_dict)
+        self.process_dataset_preview_save(data_dict)
         if 'private' not in data_dict:
             data_dict['private'] = 'True'
 
@@ -293,9 +305,10 @@ class ContributeFlowController(base.BaseController):
 
     def process_dataset_date(self, data_dict):
         if 'date_range1' in data_dict:
-            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2', data_dict.get('date_range1'))
+            data_dict['dataset_date'] = data_dict.get('date_range1') + '-' + data_dict.get('date_range2',
+                                                                                           data_dict.get('date_range1'))
         elif 'data_range2' in data_dict:
-                data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
+            data_dict['dataset_date'] = data_dict.get('date_range2') + '-' + data_dict.get('date_range2')
 
     def process_expected_update_frequency(self, data_dict):
         if data_dict.get('data_update_frequency', '-999') == '-999':
@@ -317,3 +330,15 @@ class ContributeFlowController(base.BaseController):
                     data_dict['maintainer_email'] = maintainer_dict.get('email', None)
             except logic.NotFound, e:
                 log.info("Maintainer or user not found!")
+
+    def process_dataset_preview_save(self, data_dict):
+        if 'dataset_preview_check' in data_dict:
+            if data_dict.get('dataset_preview_check', '1') == '1':
+                if 'dataset_preview_value' in data_dict and data_dict.get('dataset_preview_value') == vd._DATASET_PREVIEW_FIRST_RESOURCE:
+                    data_dict['dataset_preview'] = vd._DATASET_PREVIEW_FIRST_RESOURCE
+                else:
+                    data_dict['dataset_preview'] = vd._DATASET_PREVIEW_RESOURCE_ID
+            else:
+                data_dict['dataset_preview'] = vd._DATASET_PREVIEW_NO_PREVIEW
+        else:
+            data_dict['dataset_preview'] = vd._DATASET_PREVIEW_NO_PREVIEW

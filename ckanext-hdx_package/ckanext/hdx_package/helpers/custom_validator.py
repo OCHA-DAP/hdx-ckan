@@ -5,6 +5,7 @@ Created on Apr 11, 2014
 '''
 
 import bisect
+import datetime
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
@@ -18,6 +19,11 @@ missing = df.missing
 StopOnError = df.StopOnError
 Invalid = df.Invalid
 get_action = logic.get_action
+
+_DATASET_PREVIEW_FIRST_RESOURCE = 'first_resource'
+_DATASET_PREVIEW_RESOURCE_ID = 'resource_id'
+_DATASET_PREVIEW_NO_PREVIEW = 'no_preview'
+DATASET_PREVIEW_VALUES_LIST = [_DATASET_PREVIEW_FIRST_RESOURCE, _DATASET_PREVIEW_RESOURCE_ID, _DATASET_PREVIEW_NO_PREVIEW]
 
 
 # same as not_empty, but ignore whitespaces
@@ -143,16 +149,8 @@ def find_package_creator(key, data, errors, context):
 
     return current_creator
 
+
 def hdx_find_package_maintainer(key, data, errors, context):
-    # current_creator = data.get(key)
-    # if not current_creator:
-    #     user = c.user or c.author
-    #     if user:
-    #         data[key] = user
-    #         current_creator = user
-
-    # return current_creator
-
     try:
         user_obj = model.User.get(data.get(key))
     except Exception, ex:
@@ -169,6 +167,18 @@ def hdx_find_package_maintainer(key, data, errors, context):
         return data[key]
     raise df.Invalid(_('Maintainer does not exist or is not a member of current owner organization.'
                        ' Please add valid user ID'))
+
+
+def hdx_dataset_preview_validator(key, data, errors, context):
+    try:
+        dataset_preview = str(data.get(key))
+        if dataset_preview and dataset_preview in DATASET_PREVIEW_VALUES_LIST:
+            return data[key]
+        data[key] = _DATASET_PREVIEW_FIRST_RESOURCE
+    except Exception, ex:
+        data[key] = _DATASET_PREVIEW_FIRST_RESOURCE
+    return data[key]
+
 
 def general_not_empty_if_other_selected(other_key, other_compare_value):
     '''
@@ -194,3 +204,40 @@ def general_not_empty_if_other_selected(other_key, other_compare_value):
             raise StopOnError
 
     return not_empty_if_other_selected
+
+
+def hdx_convert_to_timestamp(key, data, errors, context):
+    '''
+    value set to true will be changed to timestamp, otherwise none
+    '''
+
+    # value = data.get(key)
+    # if value and value in ('1', 1):
+    #     data[key] = datetime.datetime.utcnow().isoformat()
+    # elif value and value in ('0', 0):
+    #     data[key] = None
+    # # else:
+    # #     data[key] = None
+    # return data[key]
+
+    value = data.get(key)
+    if value in (True, False, 'True', 'False'):
+        pass
+    elif value in ('1', 1):
+        # set others on False
+        i = 0
+        while True:
+            temp_key_name = ('resources', i, 'name')
+            temp_key_preview = ('resources', i, 'dataset_preview_enabled')
+            if not data.get(temp_key_name):
+                break
+            data[temp_key_preview] = False
+            i += 1
+        data[key] = True
+
+    elif value in ('0', 0):
+        data[key] = False
+    else:
+        # value not in ('1',1,'0',0, True, False, 'True', 'False'):
+        data[key] = None
+    return data[key]
