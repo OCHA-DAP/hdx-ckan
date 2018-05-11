@@ -58,9 +58,11 @@ $(function(){
 
         hashResource: function() {
             var newUpload = this.get('upload') ? 'true' : 'false';
+            var dpe = this.get('dataset_preview_enabled') === '1' || this.get('dataset_preview_enabled') === 'True' ? 'True' : 'False';
             var properties = [
                 this.get('name'), this.get('format'), this.get('url'),
                 this.get('description'), this.get('url_type'), this.get('resource_type'),
+                dpe,
                 newUpload
             ];
 
@@ -101,6 +103,21 @@ $(function(){
                         var resource_field_errors = o;
                         this.at(resource_index).view.display_errors(resource_field_errors);
                     }.bind(this));
+                }
+            }.bind(this));
+
+            sandbox.subscribe('hdx-resource-information', function (message) {
+                if (message.type == 'dataset_preview_resource_change' && message.newValue!=null) {
+                    var resIdx = Number(message.newValue);
+                    var modelsList = this.models;
+                    for(var i=0; i<modelsList.length; i++){
+                        // modelsList[i].attributes['dataset_preview_enabled'] = '0';
+                        modelsList[i].set('dataset_preview_enabled', '0');
+                    }
+                    if(!isNaN(resIdx)){
+                        modelsList[resIdx].set('dataset_preview_enabled', '1');
+                    }
+
                 }
             }.bind(this));
         },
@@ -246,6 +263,7 @@ $(function(){
                 this.render();
                 this.updateTotal();
             }
+            this.listenTo(this.collection, 'sync add remove reset change', this.generateDatasetPreviewOptions);
             this.listenTo(this.collection, 'sync add remove reset', this.render);
             this.listenTo(this.collection, 'add remove reset', this.updateTotal);
             this.listenTo(this.collection, 'remove', this.onSortOrderChange);
@@ -277,6 +295,12 @@ $(function(){
                 this.addOne(resource);
             }, this);
             return this;
+        },
+
+        generateDatasetPreviewOptions: function(options) {
+            if(!options.changed.dataset_preview_enabled){
+                this.contribute_global.generateDatasetPreviewOptions(this.collection);
+            }
         },
 
         addOne: function(resource) {
@@ -679,6 +703,7 @@ $(function(){
                         });
 
                         this.contribute_global.setResourceModelList(this.resourceCollection);
+                        this.contribute_global.generateDatasetPreviewOptions(this.resourceCollection);
                         this.contribute_global.controlUserWaitingWidget(false);
                     }.bind(this)
                 );
@@ -889,6 +914,9 @@ $(function(){
 
             // Hides the horizontal line
             formSectionResources.next().hide();
+
+            // hide dataset preview
+            $('#_dataset_preview').hide();
 
             // Metadata-only datasets are public only, so we select the "Public"
             // radio button and disable the "Private" one
