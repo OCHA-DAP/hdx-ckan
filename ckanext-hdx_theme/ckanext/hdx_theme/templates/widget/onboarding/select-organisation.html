@@ -72,9 +72,15 @@ Example:
                 <label for="org-fts">FTS ID</label>
             </div>
 -->
+            <div class="mTop20 control">
+                <label class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="new-org-req-submit">
+                    <input type="checkbox">
+                    I have read and accept the <a target="_blank" href="/about/terms">HDX Terms of Service</a>
+                </label>
+            </div>
             <div class="right-side-actions">
                 <input class="btn btn-empty btn-empty-black btn-large" type="button" onclick="closeCurrentWidget(this);" value="Skip">
-                <input class="btn btn-primary btn-large mL45" type="submit" value="Submit">
+                <input id="new-org-req-submit" class="btn btn-primary btn-large mL45" type="submit" value="Submit">
             </div>
         </form>
     </div>
