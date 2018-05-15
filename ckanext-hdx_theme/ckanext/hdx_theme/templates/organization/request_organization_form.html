@@ -107,9 +107,16 @@ overriding the form blocks depending on the current context
 {% endblock %}
 
 {% block action_buttons %}
+<div class="mTB15">
+	<label class="terms-of-service" data-module="hdx_terms_checkbox" data-module-button="request-new-org-submit" style="font-style: normal;">
+		<input type="checkbox" style="top: 0;">
+		I have read and accept the <a target="_blank" href="/about/terms">HDX Terms of Service</a>
+	</label>
+</div>
 <div class="org-control-container button-align">
 	  <div class="create-org form-actions">
-		<button class="btn btn-primary" name="save" type="submit">
+
+		<button id="request-new-org-submit" class="btn btn-primary" name="save" type="submit">
 			{% block save_text %}{{ _('Request New Organisation') }}{% endblock %}
 		</button>
 	  </div>

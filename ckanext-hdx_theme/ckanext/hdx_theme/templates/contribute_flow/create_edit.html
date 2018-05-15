@@ -556,22 +556,31 @@
                     <div class="background-white">
                         <div class="paddingLeftHack paddingRightHack">
                             <div class="pTopBottom35">
-                                {% if data.id %}
-                                    {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
-                                    {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
-                                    <a class="btn btn-danger btn-lg"
-                                       href="/api/action/hdx_dataset_purge?"
-                                       data-module-success_url="{% url_for controller='package', action='search' %}"
-                                       data-module-post_data="{{ h.dump_json({'id': data.id}) }}" data-module-is_json="true"
-                                       data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">
-                                       {{ _('Delete') }}
-                                    </a>
-                                {% endif %}
-                                <div class="pull-right">
-                                    <!-- removed as per #4012 <input type="button" class="btn btn-inverse btn-lg" value="See preview"/> -->
-                                    <input type="submit" class="btn btn-primary btn-lg" value="Submit"/>
+                                <div class="clearfix vertically-center-reference">
+                                    <label class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="create-form-submit">
+                                        <input type="checkbox">
+                                        I have read and accept the <a target="_blank" href="/about/terms">HDX Terms of Service</a>
+                                    </label>
+
+                                    <div class="pull-right">
+                                        <!-- removed as per #4012 <input type="button" class="btn btn-inverse btn-lg" value="See preview"/> -->
+                                        <input id="create-form-submit" type="submit" class="btn btn-primary btn-lg" value="Submit"/>
+                                    </div>
+                                    {% if data.id %}
+                                        <div class="pull-right mLR10">
+                                            {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
+                                            {% set locale = h.dump_json({'content': _('Are you sure you want to delete this dataset ? '), 'heading': _('You are deleting a dataset'), 'delete': _('Delete')}) %}
+                                            <a class="btn btn-danger btn-lg"
+                                               href="/api/action/hdx_dataset_purge?"
+                                               data-module-success_url="{% url_for controller='package', action='search' %}"
+                                               data-module-post_data="{{ h.dump_json({'id': data.id}) }}" data-module-is_json="true"
+                                               data-module="hdx_confirm-action" data-module-i18n="{{ locale }}">
+                                               {{ _('Delete') }}
+                                            </a>
+                                        </div>
+                                    {% endif %}
+
                                 </div>
-                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>

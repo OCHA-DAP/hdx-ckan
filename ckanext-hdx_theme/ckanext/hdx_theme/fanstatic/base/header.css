@@ -2400,3 +2400,18 @@ nav.mobile-only {
   font-weight: 400;
   font-size: 14px;
 }
+label.terms-of-service {
+  font-weight: 400;
+  margin: 0;
+}
+label.terms-of-service:after {
+  content: none;
+}
+.vertically-center-reference {
+  position: relative;
+}
+.vertically-center-reference .vertically-center {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}

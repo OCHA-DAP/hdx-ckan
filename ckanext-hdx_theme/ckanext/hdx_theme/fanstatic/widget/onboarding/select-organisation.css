@@ -9,6 +9,9 @@
 .two-column-select-organisation .two-column-left {
   height: 560px;
 }
+.two-column-select-organisation .two-column-left .regular-text {
+  color: #cccccc;
+}
 .two-column-select-organisation .two-column-right {
   height: 560px;
   padding: 60px;
@@ -18,11 +21,11 @@
   height: 400px;
 }
 .two-column-select-organisation .two-column-right #org-description {
-  height: 160px;
+  height: 120px;
   padding: 14px 20px;
 }
 .two-column-select-organisation .two-column-right #org-description ~ label {
-  bottom: 116px;
+  bottom: 76px;
 }
 .two-column-select-organisation .two-column-right #org-description.input-content ~ label {
   bottom: 6px;
