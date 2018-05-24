@@ -207,6 +207,9 @@
   body.home .newFooter > div > div:first-child > .container > .row > .span12 {
     padding-left: 0;
   }
+  body .allow-cookies-container {
+    padding: 10px 0;
+  }
   body .hdx-footer .links-list {
     width: 100%;
   }
@@ -388,6 +391,18 @@
   }
   body.home .newFooter .span12 > .row > .span6 {
     padding-right: 0;
+  }
+  body .allow-cookies-container {
+    height: auto;
+    padding-bottom: 60px;
+  }
+  body .allow-cookies-container .allow-cookies-continue {
+    position: fixed;
+    top: auto;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    height: 40px;
   }
   body .hdx-footer .mailChimpForm {
     margin-bottom: 10px;
