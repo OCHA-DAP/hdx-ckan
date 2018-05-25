@@ -49,7 +49,12 @@ Example:
                             </div>
                             <div class="error-message" style="display: none;"></div>
                             <div class="mTop10 mBottom10">
-                                <input id="signup-send-updates" name="signup-send-updates" type="checkbox" checked="checked"><label for="signup-send-updates">{{_('Allow HDX to send email updates')}}</label>
+                                <div>
+                                    <input id="signup-send-updates" name="signup-send-updates" type="checkbox" checked="checked"><label for="signup-send-updates">{{_('Allow HDX to send email updates')}}</label>
+                                </div>
+                                <div data-module="hdx_terms_checkbox" data-module-button="recaptcha">
+                                    <input id="signup-terms" name="signup-terms" type="checkbox" checked="checked"><label for="signup-terms">{{_('I have read and accept the')}} <a target="_blank" href="/about/terms">HDX Terms of Service</a></label>
+                                </div>
                             </div>
                             <input id="recaptcha" class="mTop10 full-width btn btn-primary btn-large g-recaptcha" type="submit" value="Sign up" data-sitekey="{{ g.recaptcha_publickey }}" data-callback="signupFormOnSubmit" data-size="invisible" data-badge="inline">
                             <div class="member center mTop10">Already a member? <a href="#" onclick="closeCurrentWidget(this);showOnboardingWidget('#loginPopup');">Sign in</a></div>
