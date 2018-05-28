@@ -111,11 +111,14 @@
 }
 .popup.popup-onboarding input[type="checkbox"] {
   top: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 10px;
 }
 .popup.popup-onboarding input[type="checkbox"] ~ label {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
-  font-size: 12px;
+  font-size: 10px;
   color: #333333;
   letter-spacing: 0.01em;
   padding: 0;
