@@ -1497,6 +1497,10 @@ ul.list-horizontal li:first-child:before {
 /**
  * HDX Footer
  */
+/**
+ * HDX Allow Cookies Banner
+ * - used on CKAN, Tools
+ */
 .allow-cookies-container {
   position: fixed;
   z-index: 10000;
