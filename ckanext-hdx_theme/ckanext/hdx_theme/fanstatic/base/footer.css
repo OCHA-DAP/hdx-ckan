@@ -9,6 +9,10 @@
   display: table-cell;
   vertical-align: middle;
 }
+/**
+ * HDX Allow Cookies Banner
+ * - used on CKAN, Tools
+ */
 .allow-cookies-container {
   position: fixed;
   z-index: 10000;
