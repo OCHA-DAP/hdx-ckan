@@ -42,7 +42,7 @@ function prepareCountryList(countDatasets) {
 
           var item = $("<div class='country-item " + veryActive + "'></div>").appendTo(one_char_box);
           var countryIdLower = country_id.toLowerCase();
-          var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayIndicators + "</div><div class='marker-label'>indicators</div></div><div class='line-break'></div><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
+          var line = $("<a href='group/" + countryIdLower + "' data-code='" + countryIdLower + "' data-html='true' data-toggle='tooltip' data-placement='top'>" + country.title + "</a>").attr('data-title', "<div class='marker-container'><div class='marker-box'><div class='marker-number'>" + displayDatasets + "</div><div class='marker-label'>datasets</div></div></div>").appendTo(item);
         }
       }
     }
@@ -56,7 +56,7 @@ function prepareCountryList(countDatasets) {
 }
 
 function prepareMap(countDatasets, openNewWindow){
-  var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref;
+  var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref, closePopupTimeout;
   //mapID = 'yumiendo.ijchbik8';
   const openTarget = openNewWindow ? "_blank" : "_self";
   openURL = function(url) {
@@ -67,6 +67,7 @@ function prepareMap(countDatasets, openNewWindow){
   }, 100);
   highlightFeature = function(e) {
     var countryID, layer;
+    clearTimeout(closePopupTimeout);
     layer = e.target;
     countryID = layer.feature.id;
     layer.setStyle({
@@ -103,6 +104,9 @@ function prepareMap(countDatasets, openNewWindow){
     var layer;
     layer = e.target;
     layer.setStyle(getStyle(layer.feature));
+    closePopupTimeout = setTimeout(function() {
+      map.closePopup();
+    }, 200);
   };
   featureClicked = function(e) {
     var code, layer;

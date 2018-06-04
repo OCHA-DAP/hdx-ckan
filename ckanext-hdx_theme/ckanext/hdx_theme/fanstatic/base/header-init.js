@@ -8,4 +8,17 @@ $(document).ready(function(){
         function(){ $(this).addClass('open') },
         function(){ $(this).removeClass('open') }
     );
+
+    function initCookiePopup(){
+        var consent = $.cookie("hdx-cookie-consent");
+        if (!consent) {
+            $(".allow-cookies-container .allow-cookies-continue").click(function () {
+               $.cookie("hdx-cookie-consent", true);
+               $(".allow-cookies-container").hide();
+            });
+            $(".allow-cookies-container").show();
+        }
+    }
+
+    initCookiePopup();
 });

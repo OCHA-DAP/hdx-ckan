@@ -5,7 +5,25 @@
 
 {% set events = h.hdx_events_list() %}
 
+<div class="allow-cookies-container" style="display: none;">
+  <div class="{{ upperContainerClass }}">
+    <div class="{{ firstContainerClass }}">
+      <div class="{{ secondContainerClass }}">
+        <div class="{{ thirdContainerClass }}">
+            <div class="col-xs-12 paddingLeftHack paddingRightHack">
+              <div class="row" style="position: relative;">
+                <div class="col-sm-9 col-xs-12">
+                  By using this site you consent to the use of cookies. Cookies can be managed in your browser or device settings.
+                </div>
 
+                <button class="allow-cookies-continue">Continue</button>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <footer class="hdx-footer">
   <div class="{{ upperContainerClass }}">
     <div class="{{ firstContainerClass }}" style="background-color: #353535;">
