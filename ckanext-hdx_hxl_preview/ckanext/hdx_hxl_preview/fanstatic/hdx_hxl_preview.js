@@ -4,7 +4,8 @@ ckan.module('hdx-hxl-preview', function ($, _) {
             console.log("hxlpreview: initializing resize");
             var setHeight = function (element, newHeight) {
                 var maxHeight = 700;
-                element.style.height = (newHeight < maxHeight ? newHeight : maxHeight) + 'px';
+                var minHeight = 200;
+                element.style.height = Math.max(Math.min(maxHeight, newHeight), minHeight) + 'px';
                 console.log("hxlpreview: Height is " + element.style.height);
             };
             var iframeEl = this.el[0];
