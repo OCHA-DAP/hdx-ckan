@@ -71,8 +71,10 @@ def buildIndex(path):
                             id=name,
                             qualified=True)
 
-
-        index.append({'title': u'{} ({})'.format(title, code), 'url': url, 'type': page_type})
+        if code and code != "":
+            index.append({'title': u'{} ({})'.format(title, code), 'url': url, 'type': page_type})
+        else:
+            index.append({'title': u'{}'.format(title), 'url': url, 'type': page_type})
 
     ## I hate this, but given the way we did crisis
     ## I think this is the only way to go. Please update
