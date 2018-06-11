@@ -27,12 +27,14 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.model.license as license
 import ckan.model.package as package
+import ckan.authz as authz
 import ckan.plugins as p
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.plugins.toolkit as toolkit
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
+from ckan.common import c
 
 log = logging.getLogger(__name__)
 
@@ -374,6 +376,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             if is_requestdata_type:
                 self._update_with_requestdata_modify_package_schema(schema)
 
+            if config.get('hdx.validation.allow_skip_for_sysadmin', 'false') == 'true' and \
+                    authz.is_sysadmin(c.user) and data_dict.get('skip_dataset_date'):
+                self._update_with_skip_dataset_date(schema)
+
         if action == 'package_show':
             if is_requestdata_type:
                 self._update_with_requestdata_show_package_schema(schema)
@@ -391,6 +397,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'false') == 'true'
 
         return is_requestdata_type_modify or is_requestdata_type_show
+
+    def _update_with_skip_dataset_date(self, schema):
+        schema['dataset_date'] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
 
     def _update_with_private_modify_package_schema(self, schema):
         log.debug('Update with private modifiy package schema')
