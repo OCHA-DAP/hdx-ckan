@@ -292,6 +292,6 @@ hdx.reindexing.enabled = true
 hdx.reindexing.batch_size = 200
 
 # Dataset Validation
-hdx.validation.allow_skip_for_sysadmin = false
+# hdx.validation.allow_skip_for_sysadmin = dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
 
 

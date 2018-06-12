@@ -282,9 +282,10 @@ def geopreview_4_packages(original_package_action):
 
         # If it comes from resource_create / resource_update the transaction is not yet committed
         # (resource is not yet saved )
-        if isinstance(result_dict, dict) and not context.get('defer_commit', False):
-            for resource_dict in result_dict.get('resources', []):
-                _after_ckan_action(context, resource_dict)
+        if isinstance(result_dict, dict):
+            if not context.get('defer_commit', False):
+                for resource_dict in result_dict.get('resources', []):
+                    _after_ckan_action(context, resource_dict)
         else:
             log.info("result_dict variable is not a dict but: {}".format(str(result_dict)))
 
