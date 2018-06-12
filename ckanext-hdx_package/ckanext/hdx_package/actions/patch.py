@@ -6,7 +6,7 @@ from ckan.logic import (
     get_or_bust as _get_or_bust,
 )
 
-from ckanext.hdx_package.actions.update import process_skip_validation
+from ckanext.hdx_package.actions.update import process_skip_validation, process_batch_mode
 
 
 def resource_patch(context, data_dict):
@@ -28,6 +28,7 @@ def resource_patch(context, data_dict):
     _check_access('resource_patch', context, data_dict)
 
     context['no_compute_extra_hdx_show_properties'] = True
+    process_batch_mode(context, data_dict)
     process_skip_validation(context, data_dict)
 
     show_context = {
