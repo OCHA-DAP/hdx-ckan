@@ -3,6 +3,7 @@ import ckan.lib.base as base
 import ckan.logic as logic
 import ckan.model as model
 import ckan.lib.helpers as h
+import pylons.config as config
 
 from ckanext.hdx_search.controllers.search_controller import HDXSearchController, get_default_facet_titles
 
@@ -10,6 +11,8 @@ from ckan.common import _, c, g, request, response
 from ckan.controllers.api import CONTENT_TYPES
 from urlparse import parse_qs, urlparse
 import ckan.lib.navl.dictization_functions as dict_fns
+
+import ckanext.hdx_search.command as lunr
 
 tuplize_dict = logic.tuplize_dict
 clean_dict = logic.clean_dict
@@ -67,6 +70,9 @@ class PagesController(HDXSearchController):
 
                 try:
                     created_page = get_action('page_create')(context, page_dict)
+                    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+                    if not test:
+                        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
                 except logic.ValidationError, e:
                     errors = e.error_dict
                     error_summary = e.error_summary
@@ -108,6 +114,9 @@ class PagesController(HDXSearchController):
                 page_dict = self._populate_sections()
                 try:
                     updated_page = get_action('page_update')(context, page_dict)
+                    test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+                    if not test:
+                        lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
                 except logic.ValidationError, e:
                     errors = e.error_dict
                     error_summary = e.error_summary
@@ -177,6 +186,9 @@ class PagesController(HDXSearchController):
             'user': c.user or c.author
         }
         page_dict = logic.get_action('page_delete')(context, {'id': id})
+        test = True if config.get('ckan.site_id') == 'test.ckan.net' else False
+        if not test:
+            lunr.buildIndex('ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search')
 
         vars = {
             'data': page_dict,
