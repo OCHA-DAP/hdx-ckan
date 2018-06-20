@@ -328,14 +328,18 @@ def hdx_package_update_metadata(context, data_dict):
     #                   'validation_notes_and_comments', 'last_data_update_date',
     #                   'groups']
 
-    allowed_fields = ['indicator', 'package_creator',
+    allowed_fields = ['indicator',
+                      'package_creator',
                       'dataset_date',
                       'last_metadata_update_date',
-                      'dataset_source_short_name', 'source_code',
-                      'indicator_type', 'indicator_type_code',
+                      'dataset_source_short_name',
+                      'source_code',
+                      'indicator_type',
+                      'indicator_type_code',
                       'more_info',
                       'last_data_update_date',
-                      'groups', 'maintainer', 'maintainer_email'
+                      'groups', 'maintainer',
+                      'maintainer_email',
                       'data_update_frequency']
 
     package = _get_action('package_show')(context, data_dict)
