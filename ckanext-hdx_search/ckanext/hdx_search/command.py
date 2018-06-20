@@ -89,21 +89,26 @@ def buildIndex(path):
 
     # pages
 
-    index.append({'title': 'El Nino',
-                  'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                   action='read_event', id='elnino', qualified=True), 'type': 'event'})
-    index.append({'title': 'Lake Chad',
-                  'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                   action='read_event', id='lake-chad', qualified=True), 'type': 'event'})
-    index.append({'title': 'Rohingya Displacement',
-                  'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                   action='read_event', id='rohingya-displacement', qualified=True), 'type': 'event'})
-    index.append({'title': 'Common Operational Dataset (COD)',
-                  'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
-                                   action='read_dashboards', id='cod', qualified=True), 'type': 'topic'})
+    # index.append({'title': 'El Nino',
+    #               'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+    #                                action='read_event', id='elnino', qualified=True), 'type': 'event'})
+    # index.append({'title': 'Lake Chad',
+    #               'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+    #                                action='read_event', id='lake-chad', qualified=True), 'type': 'event'})
+    # index.append({'title': 'Rohingya Displacement',
+    #               'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+    #                                action='read_event', id='rohingya-displacement', qualified=True), 'type': 'event'})
+    # index.append({'title': 'Common Operational Dataset (COD)',
+    #               'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+    #                                action='read_dashboards', id='cod', qualified=True), 'type': 'topic'})
     # index.append({'title': 'Protection of Civilians (PoC)',
     #               'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
     #                                action='read_dashboards', id='poc', qualified=True), 'type': 'topic'})
+    pages = Session.execute("select name, title from page where state='active'")
+    for name, title in pages:
+        index.append({'title': title or name,
+                      'url': h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController',
+                                       action='read_dashboards', id=name, qualified=True), 'type': 'topic'})
 
     # visualizations
 
