@@ -7,6 +7,201 @@
 Changelog
 ---------
 
+
+v2.7.4 2018-05-09
+=================
+
+ * Adding filter at resoruce preview doesn't work while site is setup with ckan.root_path param (#4140)
+ * Datastore dump results are not the same as data in database (#4150)
+
+v2.7.3 2018-03-15
+=================
+
+General notes:
+ * As with all patch releases this one does not include requirement changes.
+   However in some scenarios you might encounter the following error while
+   installing or upgrading this version of CKAN::
+
+     Error: could not determine PostgreSQL version from '10.2'
+
+   This is due to a bug in the psycopg2 version pinned to the release. To solve
+   it, upgrade psycopg2 with the following command::
+
+     pip install --upgrade psycopg2==2.7.3.2
+
+ * This release does not require a Solr schema upgrade, but if you are having the
+   issues described in #3863 (datasets wrongly indexed in multilingual setups),
+   you can upgrade the Solr schema and reindex to solve them.
+
+ * #3422 (implemented in #3425) introduced a major bug where if a resource was
+   deleted and the DataStore was active extras from all resources on the site where
+   changed. This is now fixed as part of this release but if your database is already
+   affected you will need to run a script to restore the extras to their
+   previous state. Remember, you only need to run the script if all the following are
+   true:
+
+   1. You are currently running CKAN 2.7.0 or 2.7.2, and
+   2. You have enabled the DataStore, and
+   3. One or more resources with data on the DataStore have been deleted (or you
+      suspect they might have been)
+
+   If all these are true you can run the following script to restore the extras to
+   their previous state:
+
+   https://github.com/ckan/ckan/blob/dev-v2.7/scripts/4042_fix_resource_extras.py
+
+   This issue is described in #4042
+
+Fixes:
+ * Fix toggle bars header icon (#3880)
+ * Change CORS header keys and values to string instead of unicode (#3855)
+ * Fix cors header when all origins are allowed (#3898)
+ * Update SOLR schema.xml reference in Dockerfile
+ * Build local SOLR container by default
+ * Create datastore indexes only if they are not exist
+ * Properly close file responses
+ * Use javascript content-type for jsonp responses (#4022)
+ * Add Data Dictionary documentation (#3989)
+ * Fix SOLR index delete_package implementation
+ * Add second half of DataStore set-permissions command(Docs)
+ * Fix extras overriding for removed resources (#4042)
+ * Return a 403 if not authorized on the search page (#4081)
+ * Add support for user/pass for Solr as ENV var
+ * Change permission_labels type to string in schema.xml (#3863)
+ * Disallow solr local parameters
+ * Improve text view rendering
+ * Update Orgs/Groups logic for custom fields delete and update (#4094)
+ * Upgrade Solr Docker image
+
+v2.7.2 2017-09-28
+=================
+
+ * Include missing minified JavaScript files
+
+v2.7.1 2017-09-27
+=================
+
+ * add field_name to image_upload macro when uploading resources (#3766)
+ * Add some missing major changes to change log. (#3799)
+ * _mail_recipient header override (#3781)
+ * skip url parsing in redirect (#3499)
+ * Fix multiple errors in i18n of JS modules (#3590)
+ * Standardize on url_for on popup (#3831)
+
+v2.7.0 2017-08-02
+=================
+
+General notes:
+ * Starting from this version, CKAN requires at least Postgres 9.3
+ * Starting from this version, CKAN requires a Redis database. Please
+   refer to the new `ckan.redis.url
+   <http://docs.ckan.org/en/ckan-2.7.0/maintaining/configuration.html#ckan-redis-url>`_
+   configuration option.
+ * This version requires a requirements upgrade on source installations
+ * This version requires a database upgrade
+ * This version does not require a Solr schema upgrade (You may want to
+   upgrade the schema if you want to target Solr>=5, see #2914)
+ * There are several old features being officially deprecated starting from
+   this version. Check the *Deprecations* section to be prepared.
+
+Major changes:
+ * New datatables_view resource view plugin for tabular data (#3444)
+ * IDataStoreBackend plugins for replacing the default DataStore Postgres backend (#3437)
+ * datastore_search new result formats and performance improvements (#3523)
+ * PL/PGSQL triggers for DataStore tables (#3428)
+ * DataStore dump CLI commands (#3384)
+ * Wrap/override actions defined in other plugins (#3494)
+ * DataStore table data dictionary stored as postgres comments (#3414)
+ * Common session object for Flask and Pylons (#3208)
+ * Rename deleted datasets when they conflict with new ones (#3370)
+ * DataStore dump more formats: CSV, TSV, XML, JSON; BOM option (#3390)
+ * Common requests code for Flask and Pylons (#3212)
+ * Generate complete datastore dump files (#3344)
+ * A new system for asynchronous background jobs (#3165)
+
+Minor changes:
+ * Renamed example theme plugin (#3576)
+ * Localization support for groups (#3559)
+ * Create new resource views when format changes (#3515)
+ * Email field validation (#3568)
+ * datastore_run_triggers sysadmin-only action to apply triggers to existing data (#3565)
+ * Docs updated for Ubuntu 16.04 (#3544)
+ * Upgrade leaflet to 0.7.7 (#3534)
+ * Datapusher CLI always-answer-yes option (#3524)
+ * Added docs for all plugin interfaces (#3519)
+ * DataStore dumps nested columns as JSON (#3487)
+ * Faster/optional datastore_search total calculation (#3467)
+ * Faster group_activity_query (#3466)
+ * Faster query performance (#3430)
+ * Marked remaining JS strings translatable (#3423)
+ * Upgrade font-awesome to 4.0.3 (#3400)
+ * group/organization_show include_dataset_count option (#3385)
+ * image_formats config option for image viewer (#3380)
+ * click may now be used for CLI interfaces: use load_config instead of CkanCommand (#3384)
+ * package_search option to return only names/ids (#3427)
+ * user_list all_fields option (#3353)
+ * Error controller may now be overridden (#3340)
+ * Plural translations in JS (#3211)
+ * Support JS translations in extensions (#3272)
+ * Requirements upgraded (#3305)
+ * Dockerfile updates (#3295)
+ * Fix activity test to use utcnow (#3644)
+ * Changed required permission from 'update' to 'manage_group' (#3631)
+ * Catch invalid sort param exception (#3630)
+ * Choose direction of recreated package relationship depending on its type (#3626)
+ * Fix render_datetime for dates before year 1900 (#3611)
+ * Fix KeyError in 'package_create' (#3027)
+ * Allow slug preview to work with autocomplete fields (#2501)
+ * Fix filter results button not working for organization/group (#3620)
+ * Allow underscores in URL slug preview on create dataset (#3612)
+ * Fallback to po file translations on ``h.get_translated()`` (#3577)
+ * Fix Fanstatic URL on non-root installs (#3618)
+ * Fixed escaping issues with ``helpers.mail_to`` and datapusher logs
+ * Autocomplete fields are more responsive - 300ms timeout instead of 1s (#3693)
+ * Fixed dataset count display for groups (#3711)
+ * Restrict access to form pages (#3684)
+ * Render_datetime can handle dates before year 1900 (#2228)
+
+API changes:
+ * ``organization_list_for_user`` (and the ``h.organizations_available()``
+   helper) now return all organizations a user belongs to regardless of
+   capacity (Admin, Editor or Member), not just the ones where she is an
+   administrator (#2457)
+ * ``organization_list_for_user`` (and the ``h.organizations_available()``
+   helper) now default to not include package_count. Pass
+   include_dataset_count=True if you need the package_count values.
+ * ``resource['size']`` will change from string to long integer (#3205)
+ * Font Awesome has been upgraded from version 3.2.1 to 4.0.3 .Please refer to
+   https://github.com/FortAwesome/Font-Awesome/wiki/Upgrading-from-3.2.1-to-4
+   to upgrade your code accordingly if you are using custom themes.
+
+Deprecations:
+ * The API versions 1 and 2 (also known as the REST API, ie ``/api/rest/*`` will removed
+   in favour of the version 3 (action API, ``/api/action/*``), which was introduced in
+   CKAN 2.0. The REST API will be removed on CKAN 2.8.
+ * The default theme included in CKAN core will switch to use Bootstrap 3 instead of
+   Bootstrap 2 in CKAN 2.8. The current Bootstrap 2 based templates will still be included
+   in the next CKAN versions, so existing themes will still work. Bootstrap 2 templates will
+   be eventually removed though, so instances are encouraged to update their themes using
+   the available documentation (https://getbootstrap.com/migration/)
+ * The activity stream related actions ending with ``*_list`` (eg ``package_activity_list``)
+   and ``*_html`` (eg ``package_activity_list_html``) will be removed in CKAN 2.8 in favour of
+   more efficient alternatives and are now deprecated.
+ * The legacy revisions controller (ie ``/revisions/*``) will be completely removed in CKAN 2.8.
+ * The old Celery based background jobs will be removed in CKAN 2.8 in favour of the new RQ based
+   jobs (http://docs.ckan.org/en/latest/maintaining/background-tasks.html). Extensions can still
+   of course use Celery but they will need to handle the management themselves.
+
+
+v2.6.2 2017-03-22
+=================
+
+* Use fully qualified urls for reset emails (#3486)
+* Fix edit_resource for resource with draft state (#3480)
+* Tag fix for group/organization pages (#3460)
+* Setting of datastore_active flag moved to separate function (#3481)
+
+
 v2.6.1 2017-02-22
 =================
 
@@ -18,7 +213,7 @@ v2.6.1 2017-02-22
  * Check group name and id during package creation
  * Use utcnow() on dashboard_mark_activities_old (#3373)
  * Fix encoding error on DataStore exception
- * Datastore doesn't add site_url to resource created via API (#3189)
+ * DataStore doesn't add site_url to resource created via API (#3189)
  * Fix memberships after user deletion (#3265)
  * Remove idle database connection (#3260)
  * Fix package_owner_org_update action when called via the API (#2661)
@@ -133,7 +328,7 @@ v2.5.4 2017-02-22
  * Check group name and id during package creation
  * Use utcnow() on dashboard_mark_activities_old (#3373)
  * Fix encoding error on DataStore exception
- * Datastore doesn't add site_url to resource created via API (#3189)
+ * DataStore doesn't add site_url to resource created via API (#3189)
  * Fix memberships after user deletion (#3265)
  * Remove idle database connection (#3260)
  * Fix package_owner_org_update action when called via the API (#2661)
@@ -239,7 +434,7 @@ v2.5.0 2015-12-17
 
 Cancelled release
 
-v2.4.5 2017-02-22
+v2.4.6 2017-02-22
 =================
 
  * Use the url_for() helper for datapusher URLs (#2866)
@@ -249,10 +444,15 @@ v2.4.5 2017-02-22
  * Check group name and id during package creation
  * Use utcnow() on dashboard_mark_activities_old (#3373)
  * Fix encoding error on DataStore exception
- * Datastore doesn't add site_url to resource created via API (#3189)
+ * DataStore doesn't add site_url to resource created via API (#3189)
  * Fix memberships after user deletion (#3265)
  * Remove idle database connection (#3260)
  * Fix package_owner_org_update action when called via the API (#2661)
+
+v2.4.5 2017-02-22
+=================
+
+Cancelled release
 
 v2.4.4 2016-11-02
 =================
@@ -345,7 +545,7 @@ Bug fixes:
  * Command line ``paster user`` failed for non-ascii characters (#1244)
  * Memory leak fixed in datastore API (#1847)
  * Modifying resource didn't update it's last updated timestamp (#1874)
- * Datastore didn't update if you uploaded a new file of the same name as the
+ * DataStore didn't update if you uploaded a new file of the same name as the
    existing file (#2147)
  * Files with really long file were skipped by datapusher (#2057)
  * Multi-lingual Solr schema is now updated so it works again (#2161)
@@ -389,8 +589,8 @@ Changes and deprecations
   Custom templates or users of this API call will need to pass
   ``include_datasets=True`` to include datasets in the response.
 
-* The ``vocabulary_show`` and ``tag_show`` API calls no longer returns the 
-  ``packages`` key - i.e. datasets that use the vocabulary or tag. 
+* The ``vocabulary_show`` and ``tag_show`` API calls no longer returns the
+  ``packages`` key - i.e. datasets that use the vocabulary or tag.
   However ``tag_show`` now has an ``include_datasets`` option. (#1886)
 
 * Config option ``site_url`` is now required - CKAN will not abort during
@@ -559,7 +759,7 @@ Bug fixes:
  * num_followers and package_count not in default_group_schema (#1434)
  * Fix extras deletion (#1449)
  * Fix resource reordering (#1450)
- * Datastore callback fails when browser url is different from site_url (#1451)
+ * DataStore callback fails when browser url is different from site_url (#1451)
  * sysadmins should not create datasets wihout org when config is set (#1453)
  * Member Editing Fixes (#1454)
  * Bulk editing broken on IE7 (#1455)
@@ -1471,7 +1671,7 @@ Major
    datasets (#2304)
  * New user dashboard that shows an activity stream of all the datasets and
    users you are following. Thanks to Sven R. Kunze for his work on this (#2305)
- * New version of the Datastore. It has been completely rewritten to use
+ * New version of the DataStore. It has been completely rewritten to use
    PostgreSQL as backend, it is more stable and fast and supports SQL queries
    (#2733)
  * Clean up and simplifyng of CKAN's dependencies and source install

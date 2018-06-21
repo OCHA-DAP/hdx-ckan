@@ -15,6 +15,7 @@ from ckan.model import (MAX_TAG_LENGTH, MIN_TAG_LENGTH,
                         VOCABULARY_NAME_MAX_LENGTH,
                         VOCABULARY_NAME_MIN_LENGTH)
 import ckan.authz as authz
+from ckan.model.core import State
 
 from ckan.common import _
 
@@ -45,7 +46,7 @@ def owner_org_validator(key, data, errors, context):
     if not group:
         raise Invalid(_('Organization does not exist'))
     group_id = group.id
-    if not(user.sysadmin or
+    if not context.get(u'ignore_auth', False) and not(user.sysadmin or
            authz.has_user_permission_for_group_or_org(
                group_id, user.name, 'create_dataset')):
         raise Invalid(_('You cannot add a dataset to this organization'))
@@ -348,7 +349,7 @@ def package_name_validator(key, data, errors, context):
     session = context['session']
     package = context.get('package')
 
-    query = session.query(model.Package.name).filter_by(name=data[key])
+    query = session.query(model.Package.state).filter_by(name=data[key])
     if package:
         package_id = package.id
     else:
@@ -356,7 +357,7 @@ def package_name_validator(key, data, errors, context):
     if package_id and package_id is not missing:
         query = query.filter(model.Package.id <> package_id)
     result = query.first()
-    if result:
+    if result and result.state != State.DELETED:
         errors[key].append(_('That URL is already in use.'))
 
     value = data[key]
@@ -830,3 +831,17 @@ def empty_if_not_sysadmin(key, data, errors, context):
         return
 
     empty(key, data, errors, context)
+
+#pattern from https://html.spec.whatwg.org/#e-mail-state-(type=email)
+email_pattern = re.compile(r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9]"\
+                       "(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9]"\
+                       "(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
+
+
+def email_validator(value, context):
+    '''Validate email input '''
+
+    if value:
+        if not email_pattern.match(value):
+            raise Invalid(_('Email {email} is not a valid format').format(email=value))
+    return value

@@ -1,14 +1,38 @@
 # encoding: utf-8
 
-import logging
 import json
-
-import sqlparse
+import logging
 
 import paste.deploy.converters as converters
+import sqlparse
 
+from ckan.plugins.toolkit import get_action, ObjectNotFound, NotAuthorized
 
 log = logging.getLogger(__name__)
+
+
+def is_single_statement(sql):
+    '''Returns True if received SQL string contains at most one statement'''
+    return len(sqlparse.split(sql)) <= 1
+
+
+def is_valid_field_name(name):
+    '''
+    Check that field name is valid:
+    * can't start or end with whitespace characters
+    * can't start with underscore
+    * can't contain double quote (")
+    * can't be empty
+    '''
+    return (name and name == name.strip() and
+            not name.startswith('_') and
+            '"' not in name)
+
+
+def is_valid_table_name(name):
+    if '%' in name:
+        return False
+    return is_valid_field_name(name)
 
 
 def get_list(input, strip_values=True):
@@ -18,16 +42,11 @@ def get_list(input, strip_values=True):
     if input == '':
         return []
 
-    l = converters.aslist(input, ',', True)
+    converters_list = converters.aslist(input, ',', True)
     if strip_values:
-        return [_strip(x) for x in l]
+        return [_strip(x) for x in converters_list]
     else:
-        return l
-
-
-def is_single_statement(sql):
-    '''Returns True if received SQL string contains at most one statement'''
-    return len(sqlparse.split(sql)) <= 1
+        return converters_list
 
 
 def validate_int(i, non_negative=False):
@@ -97,15 +116,17 @@ def get_table_names_from_sql(context, sql):
     return table_names
 
 
-def literal_string(s):
+def datastore_dictionary(resource_id):
     """
-    Return s as a postgres literal string
+    Return the data dictionary info for a resource
     """
-    return u"'" + s.replace(u"'", u"''").replace(u'\0', '') + u"'"
-
-
-def identifier(s):
-    """
-    Return s as a quoted postgres identifier
-    """
-    return u'"' + s.replace(u'"', u'""').replace(u'\0', '') + u'"'
+    try:
+        return [
+            f for f in get_action('datastore_search')(
+                None, {
+                    u'resource_id': resource_id,
+                    u'limit': 0,
+                    u'include_total': False})['fields']
+            if not f['id'].startswith(u'_')]
+    except (ObjectNotFound, NotAuthorized):
+        return []

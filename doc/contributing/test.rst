@@ -6,10 +6,20 @@ If you're a CKAN developer, if you're developing an extension for CKAN, or if
 you're just installing CKAN from source, you should make sure that CKAN's tests
 pass for your copy of CKAN. This section explains how to run CKAN's tests.
 
+CKAN's testsuite contains automated tests for both the back-end (Python) and
+the front-end (JavaScript). In addition, the correct functionality of the
+complete front-end (HTML, CSS, JavaScript) on all supported browsers should be
+tested manually.
 
--------------------------------
+--------------
+Back-end tests
+--------------
+
+Most of CKAN's testsuite is for the backend Python code.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Install additional dependencies
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Some additional dependencies are needed to run the tests. Make sure you've
 created a config file at |development.ini|, then activate your
@@ -31,9 +41,9 @@ environment:
     pip install -r |virtualenv|/src/ckan/dev-requirements.txt
 
 
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Set up the test databases
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionchanged:: 2.1
    Previously |postgres| tests used the databases defined in your
@@ -50,10 +60,52 @@ Create test databases:
 This database connection is specified in the ``test-core.ini`` file by the
 ``sqlalchemy.url`` parameter.
 
+You should also make sure that the :ref:`Redis database <ckan_redis_url>`
+configured in ``test-core.ini`` is different from your production database.
 
--------------
+
+.. _solr-multi-core:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~
+Configure Solr Multi-core
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The tests assume that Solr is configured 'multi-core', whereas the default
+Solr set-up is often 'single-core'. You can ask Solr how many cores it has
+configured::
+
+    curl -s 'http://127.0.0.1:8983/solr/admin/cores?action=STATUS' |python -c 'import sys;import xml.dom.minidom;s=sys.stdin.read();print xml.dom.minidom.parseString(s).toprettyxml()'
+
+You can also tell from your ckan config::
+
+    grep solr_url /etc/ckan/default/production.ini
+    # single-core: solr_url = http://127.0.0.1:8983/solr
+    # multi-core:  solr_url = http://127.0.0.1:8983/solr/ckan
+
+To enable multi-core:
+
+1. Find the ``instanceDir`` of the existing Solr core. It is found in the output of the curl command above.
+
+       e.g. ``/usr/share/solr/`` or ``/opt/solr/example/solr/collection1``
+
+2. Make a copy of that core's directory e.g.::
+
+       sudo cp -r /usr/share/solr/ /etc/solr/ckan
+
+3. Configure Solr with the new core::
+
+       curl 'http://localhost:8983/solr/admin/cores?action=CREATE&name=ckan&instanceDir=/etc/solr/ckan'
+
+   If successful the status should be 0 - some XML containing: ``<int name="status">0</int>``
+
+4. Edit your main ckan config (e.g. |development.ini|) and adjust the solr_url to match::
+
+       solr_url = http://127.0.0.1:8983/solr/ckan
+
+
+~~~~~~~~~~~~~
 Run the tests
--------------
+~~~~~~~~~~~~~
 
 To run CKAN's tests using PostgreSQL as the database, you have to give the
 ``--with-pylons=test-core.ini`` option on the command line. This command will
@@ -63,7 +115,7 @@ run the tests for CKAN core and for the core extensions::
 
 The speed of the PostgreSQL tests can be improved by running PostgreSQL in
 memory and turning off durability, as described
-`in the PostgreSQL documentation <http://www.postgresql.org/docs/9.0/static/non-durability.html>`_. 
+`in the PostgreSQL documentation <http://www.postgresql.org/docs/9.0/static/non-durability.html>`_.
 
 By default the tests will keep the database between test runs. If you wish to
 drop and reinitialize the database before the run you can use the ``reset-db``
@@ -75,9 +127,9 @@ option::
 
 .. _migrationtesting:
 
------------------
+~~~~~~~~~~~~~~~~~
 Migration testing
------------------
+~~~~~~~~~~~~~~~~~
 
 If you're a CKAN developer or extension developer and your new code requires a
 change to CKAN's model, you'll need to write a migration script. To ensure that
@@ -98,9 +150,9 @@ is how the database is created and upgraded in production.
    is that these are versioned files and people have checked in these by
    mistake, creating problems for other developers.
 
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 Common error messages
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 ConfigError
 ===========
@@ -149,11 +201,48 @@ nosetests
 
          pip freeze | grep -i nose
 
+SolrError
+=========
 
------------------
-Front-end Testing
------------------
+``SolrError: Solr responded with an error (HTTP 404): [Reason: None]
+<html><head><meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type" /><title>Error 404 NOT_FOUND</title></head><body><h2>HTTP ERROR 404</h2><p>Problem accessing /solr/ckan/select/. Reason:<pre>    NOT_FOUND</pre></p><hr /><i><small>Powered by Jetty://</small></i>``
 
+This means your solr_url is not corresponding with your SOLR. When running tests, it is usually easiest to change your set-up to match the default solr_url in test-core.ini. Often this means switching to multi-core - see :ref:`solr-multi-core`.
+
+
+---------------
+Front-end tests
+---------------
+Front-end testing consists of both automated tests (for the JavaScript code)
+and manual tests (for the complete front-end consisting of HTML, CSS and
+JavaScript).
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Automated JavaScript tests
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The JS tests are written using the Mocha_ test framework and run via
+PhantomJS_. First you need to install the necessary packages::
+
+    sudo apt-get install npm nodejs-legacy
+    sudo npm install -g mocha-phantomjs@3.5.0 phantomjs@~1.9.1
+
+.. _Mocha: https://mochajs.org/
+.. _PhantomJS: http://phantomjs.org//ckan
+
+To run the tests, make sure that a test server is running::
+
+    . /usr/lib/ckan/default/bin/activate
+    paster serve test-core.ini
+
+Once the test server is running switch to another terminal and execute the
+tests::
+
+    mocha-phantomjs http://localhost:5000/base/test/index.html
+
+~~~~~~~~~~~~
+Manual tests
+~~~~~~~~~~~~
 All new CKAN features should be coded so that they work in the
 following browsers:
 
@@ -191,14 +280,15 @@ Thirdly you should fully test all new features that have a front-end
 element in all browsers before making your pull request into
 CKAN master.
 
-Common pitfalls & their fixes
-=============================
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Common front-end pitfalls & their fixes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Here's a few of the most common front end bugs and a list of their
 fixes.
 
 Reserved JS keywords
---------------------
+====================
 
 Since IE has a stricter language definition in JS it really doesn't
 like you using JS reserved keywords method names, variables, etc...
@@ -221,7 +311,7 @@ https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Reserved_Words
   };
 
 Unclosed JS arrays / objects
-----------------------------
+============================
 
 Internet Explorer doesn't like it's JS to have unclosed JS objects
 and arrays. For example:

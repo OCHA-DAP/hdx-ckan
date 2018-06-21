@@ -19,6 +19,8 @@ import ckan.lib.navl.dictization_functions
 import ckan.lib.jsonp as jsonp
 import ckan.lib.munge as munge
 
+from ckan.views import identify_user
+
 from ckan.common import _, c, request, response
 
 
@@ -36,6 +38,7 @@ CONTENT_TYPES = {
     'text': 'text/plain;charset=utf-8',
     'html': 'text/html;charset=utf-8',
     'json': 'application/json;charset=utf-8',
+    'javascript': 'application/javascript;charset=utf-8',
 }
 
 
@@ -52,7 +55,7 @@ class ApiController(base.BaseController):
             api_version = api_version[1:]
             routes_dict['ver'] = int(api_version)
 
-        self._identify_user()
+        identify_user()
         try:
             context = {'model': model, 'user': c.user,
                        'auth_user_obj': c.userobj}
@@ -97,6 +100,7 @@ class ApiController(base.BaseController):
                 # escape callback to remove '<', '&', '>' chars
                 callback = cgi.escape(request.params['callback'])
                 response_msg = self._wrap_jsonp(callback, response_msg)
+                response.headers['Content-Type'] = CONTENT_TYPES['javascript']
         return response_msg
 
     def _finish_ok(self, response_data=None,
@@ -181,8 +185,8 @@ class ApiController(base.BaseController):
                        }
         try:
             side_effect_free = getattr(function, 'side_effect_free', False)
-            request_data = self._get_request_data(try_url_params=
-                                                  side_effect_free)
+            request_data = self._get_request_data(
+                try_url_params=side_effect_free)
         except ValueError, inst:
             log.info('Bad Action API request data: %s', inst)
             return self._finish_bad_request(

@@ -369,6 +369,25 @@ Default value: true
 
 This enables middleware that clears the response string after it has been sent. This helps CKAN's memory management if CKAN repeatedly serves very large requests.
 
+.. _ckan.mimetype_guess:
+
+ckan.mimetype_guess
+^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.mimetype_guess = file_ext
+
+Default value: ``file_ext``
+
+There are three options for guessing the mimetype of uploaded or linked resources: file_ext, file_contents, None.
+
+``file_ext`` will guess the mimetype by the url first, then the file extension.
+
+``file_contents`` will guess the mimetype by the file itself, this tends to be inaccurate.
+
+``None`` will not store the mimetype for the resource.
+
 .. _ckan.static_max_age:
 
 ckan.static_max_age
@@ -581,19 +600,6 @@ a single CKAN instance then this can be ignored.
 
 Note, if you change this value, you need to rebuild the search index.
 
-.. _ckan.simple_search:
-
-ckan.simple_search
-^^^^^^^^^^^^^^^^^^
-
-Example::
-
- ckan.simple_search = true
-
-Default value:  ``false``
-
-Switching this on tells CKAN search functionality to just query the database, (rather than using Solr). In this setup, search is crude and limited, e.g. no full-text search, no faceting, etc. However, this might be very useful for getting up and running quickly with CKAN.
-
 .. _solr_url:
 
 solr_url
@@ -706,6 +712,25 @@ Example::
 Default value: ``None``
 
 List of the extra resource fields that would be used when searching.
+
+
+Redis Settings
+---------------
+
+.. _ckan_redis_url:
+
+ckan.redis.url
+^^^^^^^^^^^^^^
+
+Example::
+
+    ckan.redis.url = redis://localhost:7000/1
+
+Default value: ``redis://localhost:6379/0``
+
+URL to your Redis instance, including the database to be used.
+
+.. versionadded:: 2.7
 
 
 CORS Settings
@@ -1161,7 +1186,7 @@ Example::
 
 Default value: ``json``
 
-JSON based resource formats that will be rendered by the Text view plugin (``text_view``)
+Space-delimited list of JSON based resource formats that will be rendered by the Text view plugin (``text_view``)
 
 .. _ckan.preview.xml_formats:
 
@@ -1174,7 +1199,7 @@ Example::
 
 Default value: ``xml rdf rdf+xml owl+xml atom rss``
 
-XML based resource formats that will be rendered by the Text view plugin (``text_view``)
+Space-delimited list of XML based resource formats that will be rendered by the Text view plugin (``text_view``)
 
 .. _ckan.preview.text_formats:
 
@@ -1187,7 +1212,20 @@ Example::
 
 Default value: ``text plain text/plain``
 
-Plain text based resource formats that will be rendered by the Text view plugin (``text_view``)
+Space-delimited list of plain text based resource formats that will be rendered by the Text view plugin (``text_view``)
+
+.. _ckan.preview.image_formats:
+
+ckan.preview.image_formats
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+ ckan.preview.image_formats = png jpeg jpg gif
+
+Default value: ``png jpeg jpg gif``
+
+Space-delimited list of image-based resource formats that will be rendered by the Image view plugin (``image_view``)
 
 .. end_resource-views
 
@@ -1385,6 +1423,22 @@ DataPusher endpoint to use when enabling the ``datapusher`` extension. If you
 installed CKAN via :doc:`/maintaining/installing/install-from-package`, the DataPusher was installed for you
 running on port 8800. If you want to manually install the DataPusher, follow
 the installation `instructions <http://docs.ckan.org/projects/datapusher>`_.
+
+
+.. _ckan.datapusher.assume_task_stale_after:
+
+ckan.datapusher.assume_task_stale_after
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Example::
+
+  ckan.datapusher.assume_task_stale_after = 86400
+
+Default value:  ``3600`` (one hour)
+
+In case a DataPusher task gets stuck and fails to recover, this is the minimum
+amount of time (in seconds) after a resource is submitted to DataPusher that the
+resource can be submitted again.
 
 
 User Settings

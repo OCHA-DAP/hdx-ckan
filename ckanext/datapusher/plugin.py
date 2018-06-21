@@ -41,11 +41,11 @@ class ResourceDataController(base.BaseController):
             except logic.ValidationError:
                 pass
 
-            base.redirect(core_helpers.url_for(
+            core_helpers.redirect_to(
                 controller='ckanext.datapusher.plugin:ResourceDataController',
                 action='resource_data',
                 id=id,
-                resource_id=resource_id)
+                resource_id=resource_id
             )
 
         try:
@@ -67,11 +67,12 @@ class ResourceDataController(base.BaseController):
         except logic.NotAuthorized:
             base.abort(403, _('Not authorized to see this page'))
 
-        return base.render('package/resource_data.html',
+        return base.render('datapusher/resource_data.html',
                            extra_vars={'status': datapusher_status})
 
 
 class DatapusherPlugin(p.SingletonPlugin):
+    p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IActions)
     p.implements(p.IAuthFunctions)
@@ -82,6 +83,9 @@ class DatapusherPlugin(p.SingletonPlugin):
 
     legacy_mode = False
     resource_show_action = None
+
+    def update_config(self, config):
+        p.toolkit.add_template_directory(config, 'templates')
 
     def configure(self, config):
         self.config = config

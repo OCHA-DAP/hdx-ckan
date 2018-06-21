@@ -483,6 +483,13 @@ class PackageSearchIndex(SearchIndex):
 
         assert pkg_dict, 'Plugin must return non empty package dict on index'
 
+        # permission labels determine visibility in search, can't be set
+        # in original dataset or before_index plugins
+        labels = lib_plugins.get_permission_labels()
+        dataset = model.Package.get(pkg_dict['id'])
+        pkg_dict['permission_labels'] = labels.get_dataset_labels(
+            dataset) if dataset else [] # TestPackageSearchIndex-workaround
+
         # send to solr:
         try:
             conn = make_connection()
@@ -511,12 +518,10 @@ class PackageSearchIndex(SearchIndex):
             log.exception(e)
             raise SearchIndexError(e)
 
-
     def delete_package(self, pkg_dict):
         conn = make_connection()
-        query = "+%s:%s (+id:\"%s\" OR +name:\"%s\") +site_id:\"%s\"" % (TYPE_FIELD, PACKAGE_TYPE,
-                                                       pkg_dict.get('id'), pkg_dict.get('id'),
-                                                       config.get('ckan.site_id'))
+        query = "+%s:%s AND +(id:\"%s\" OR name:\"%s\") AND +site_id:\"%s\"" % \
+                (TYPE_FIELD, PACKAGE_TYPE, pkg_dict.get('id'), pkg_dict.get('id'), config.get('ckan.site_id'))
         try:
             commit = asbool(config.get('ckan.search.solr_commit', 'true'))
             conn.delete(q=query, commit=commit)

@@ -44,6 +44,8 @@ class _Toolkit(object):
         'literal',
         # get logic action function
         'get_action',
+        # decorator for chained action
+        'chained_action',
         # get navl schema converter
         'get_converter',
         # get navl schema validator
@@ -66,8 +68,10 @@ class _Toolkit(object):
         'StopOnError',
         # validation invalid exception
         'Invalid',
-        # class for providing cli interfaces
+        # old class for providing CLI interfaces
         'CkanCommand',
+        # function for initializing CLI interfaces
+        'load_config',
         # base class for IDatasetForm plugins
         'DefaultDatasetForm',
         # base class for IGroupForm plugins
@@ -96,6 +100,8 @@ class _Toolkit(object):
         'auth_disallow_anonymous_access',
         # Helper not found error.
         'HelperError',
+        # Enqueue background job
+        'enqueue_job',
 
         # Fully defined in this file ##
         'add_template_directory',
@@ -134,6 +140,7 @@ class _Toolkit(object):
             CkanVersionException,
             HelperError
         )
+        from ckan.lib.jobs import enqueue as enqueue_job
 
         from paste.deploy import converters
         import pylons
@@ -224,6 +231,7 @@ For example: ``bar = toolkit.aslist(config.get('ckan.foo.bar', []))``
         t['literal'] = webhelpers.html.tags.literal
 
         t['get_action'] = logic.get_action
+        t['chained_action'] = logic.chained_action
         t['get_converter'] = logic.get_validator  # For backwards compatibility
         t['get_validator'] = logic.get_validator
         t['check_access'] = logic.check_access
@@ -237,6 +245,7 @@ For example: ``bar = toolkit.aslist(config.get('ckan.foo.bar', []))``
         t['Invalid'] = logic_validators.Invalid
 
         t['CkanCommand'] = cli.CkanCommand
+        t['load_config'] = cli.load_config
         t['DefaultDatasetForm'] = lib_plugins.DefaultDatasetForm
         t['DefaultGroupForm'] = lib_plugins.DefaultGroupForm
         t['DefaultOrganizationForm'] = lib_plugins.DefaultOrganizationForm
@@ -271,6 +280,7 @@ content type, cookies, etc.
         t['check_ckan_version'] = self._check_ckan_version
         t['CkanVersionException'] = CkanVersionException
         t['HelperError'] = HelperError
+        t['enqueue_job'] = enqueue_job
 
         # check contents list correct
         errors = set(t).symmetric_difference(set(self.contents))

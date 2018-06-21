@@ -70,6 +70,7 @@ from ckan.logic.validators import (
     extra_key_not_in_root_schema,
     empty_if_not_sysadmin,
     package_id_does_not_exist,
+    email_validator
     )
 
 
@@ -146,9 +147,9 @@ def default_create_package_schema():
         'name': [not_empty, unicode, name_validator, package_name_validator],
         'title': [if_empty_same_as("name"), unicode],
         'author': [ignore_missing, unicode],
-        'author_email': [ignore_missing, unicode],
+        'author_email': [ignore_missing, unicode, email_validator],
         'maintainer': [ignore_missing, unicode],
-        'maintainer_email': [ignore_missing, unicode],
+        'maintainer_email': [ignore_missing, unicode, email_validator],
         'license_id': [ignore_missing, unicode],
         'notes': [ignore_missing, unicode],
         'url': [ignore_missing, unicode],  # , URL(add_http=False)],
@@ -323,7 +324,6 @@ def group_form_schema():
         "capacity": [ignore_missing],
         "__extras": [ignore]
     }
-    schema['display_name'] = [ignore_missing]
     return schema
 
 
@@ -341,7 +341,7 @@ def default_show_group_schema():
     schema['created'] = []
     schema['display_name'] = []
     schema['extras'] = {'__extras': [keep_extras]}
-    schema['package_count'] = []
+    schema['package_count'] = [ignore_missing]
     schema['packages'] = {'__extras': [keep_extras]}
     schema['revision_id'] = []
     schema['state'] = []
@@ -599,6 +599,7 @@ def default_autocomplete_schema():
 def default_package_search_schema():
     schema = {
         'q': [ignore_missing, unicode],
+        'fl': [ignore_missing, list_of_strings],
         'fq': [ignore_missing, unicode],
         'rows': [ignore_missing, natural_number_validator],
         'sort': [ignore_missing, unicode],
@@ -677,6 +678,8 @@ def default_update_configuration_schema():
         'ckan.site_custom_css': [unicode],
         'ckan.main_css': [unicode],
         'ckan.homepage_style': [is_positive_integer],
+        'logo_upload': [ignore_missing, unicode],
+        'clear_logo_upload': [ignore_missing, unicode],
     }
 
     # Add ignore_missing to all fields, otherwise you need to provide them all
@@ -712,3 +715,15 @@ def update_configuration_schema():
             schema = plugin.update_config_schema(schema)
 
     return schema
+
+
+def job_list_schema():
+    return {
+        u'queues': [ignore_missing, list_of_strings],
+    }
+
+
+def job_clear_schema():
+    return {
+        u'queues': [ignore_missing, list_of_strings],
+    }

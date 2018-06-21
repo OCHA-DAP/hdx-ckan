@@ -4,7 +4,7 @@ import ckan.plugins as p
 
 
 def datastore_auth(context, data_dict, privilege='resource_update'):
-    if not 'id' in data_dict:
+    if 'id' not in data_dict:
         data_dict['id'] = data_dict.get('resource_id')
 
     user = context.get('user')
@@ -14,15 +14,16 @@ def datastore_auth(context, data_dict, privilege='resource_update'):
     if not authorized:
         return {
             'success': False,
-            'msg': p.toolkit._('User {0} not authorized to update resource {1}'
-                    .format(str(user), data_dict['id']))
+            'msg': p.toolkit._(
+                'User {0} not authorized to update resource {1}'
+                    .format(str(user), data_dict['id'])
+            )
         }
     else:
         return {'success': True}
 
 
 def datastore_create(context, data_dict):
-
     if 'resource' in data_dict and data_dict['resource'].get('package_id'):
         data_dict['id'] = data_dict['resource'].get('package_id')
         privilege = 'package_update'
@@ -57,3 +58,17 @@ def datastore_search_sql(context, data_dict):
 
 def datastore_change_permissions(context, data_dict):
     return datastore_auth(context, data_dict)
+
+
+def datastore_function_create(context, data_dict):
+    '''sysadmin-only: functions can be used to skip access checks'''
+    return {'success': False}
+
+
+def datastore_function_delete(context, data_dict):
+    return {'success': False}
+
+
+def datastore_run_triggers(context, data_dict):
+    '''sysadmin-only: functions can be used to skip access checks'''
+    return {'success': False}

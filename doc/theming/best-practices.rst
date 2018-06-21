@@ -50,42 +50,12 @@ All user-visible strings should be internationalized, see
 :doc:`/contributing/string-i18n`.
 
 
------------------------------------------------------------------
-Helper function names should begin with the name of the extension
------------------------------------------------------------------
+------------------
+Avoid name clashes
+------------------
 
-Namespacing helper functions in this way avoids accidentally overriding, or
-being overriden by, a core helper function, or a helper function from another
-extension. For example:
+See :ref:`avoid name clashes`.
 
-.. literalinclude:: /../ckanext/example_theme/v08_custom_helper_function/plugin.py
-   :pyobject: ExampleThemePlugin.get_helpers
-
-
-.. _snippet filenames best practice:
-
--------------------------------------------------------------
-Snippet filenames should begin with the name of the extension
--------------------------------------------------------------
-
-Namespacing snippets in this way avoids accidentally overriding, or being
-overridden by, a core snippet, or a snippet from another extension.
-For example::
-
- snippets/example_theme_most_popular_groups.html
-
-
-.. _javascript module names best practice:
-
-----------------------------------------------------------------------
-|javascript| modules names should begin with the name of the extension
-----------------------------------------------------------------------
-
-Namespacing |javascript| modules in this way avoids accidentally overriding, or
-being overridden by, a core module, or a module from another extension.  For
-example: ``fanstatic/example_theme_popover.js``:
-
-.. literalinclude:: /../ckanext/example_theme/v16_initialize_a_javascript_module/fanstatic/example_theme_popover.js
 
 .. _javascript module docstrings best practice:
 
@@ -96,7 +66,7 @@ example: ``fanstatic/example_theme_popover.js``:
 A |javascript| module should have a docstring at the top of the file, briefly
 documentating what the module does and what options it takes. For example:
 
-.. literalinclude:: /../ckanext/example_theme/v17_popover/fanstatic/example_theme_popover.js
+.. literalinclude:: /../ckanext/example_theme_docs/v17_popover/fanstatic/example_theme_popover.js
    :language: javascript
 
 
@@ -148,5 +118,5 @@ Snippets should have docstrings
 A snippet should have a docstring comment at the top of the file that briefly
 documents what the snippet does and what parameters it requires. For example:
 
-.. literalinclude:: /../ckanext/example_theme/v10_custom_snippet/templates/snippets/example_theme_most_popular_groups.html
+.. literalinclude:: /../ckanext/example_theme_docs/v10_custom_snippet/templates/snippets/example_theme_most_popular_groups.html
    :language: django

@@ -1,23 +1,20 @@
 # encoding: utf-8
 
+import datetime
 import json
+
+import ckan.config.middleware as middleware
+import ckan.lib.create_test_data as ctd
+import ckan.model as model
+import ckan.plugins as p
+import ckan.tests.legacy as tests
+import ckanext.datastore.backend.postgres as db
 import httpretty
 import httpretty.core
 import nose
-import datetime
-
-import sqlalchemy.orm as orm
 import paste.fixture
-
-import ckan.plugins as p
-import ckan.lib.create_test_data as ctd
-import ckan.model as model
-import ckan.tests.legacy as tests
-import ckan.config.middleware as middleware
-
+import sqlalchemy.orm as orm
 from ckan.common import config
-
-import ckanext.datastore.db as db
 from ckanext.datastore.tests.helpers import rebuild_all_dbs, set_url_type
 
 
@@ -52,6 +49,7 @@ class HTTPrettyFix(httpretty.core.fakesock.socket):
 
         self.truesock = SetTimeoutPatch()
 
+
 httpretty.core.fakesock.socket = HTTPrettyFix
 
 
@@ -70,8 +68,7 @@ class TestDatastoreCreate(tests.WsgiAppCase):
         ctd.CreateTestData.create()
         cls.sysadmin_user = model.User.get('testsysadmin')
         cls.normal_user = model.User.get('annafan')
-        engine = db._get_engine(
-            {'connection_url': config['ckan.datastore.write_url']})
+        engine = db.get_write_engine()
         cls.Session = orm.scoped_session(orm.sessionmaker(bind=engine))
         set_url_type(
             model.Package.get('annakarenina').resources, cls.sysadmin_user)

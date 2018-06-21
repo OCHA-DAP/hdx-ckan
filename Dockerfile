@@ -8,7 +8,7 @@ COPY . /srv/ckan/
 WORKDIR /srv/ckan
 
 # /srv/pgb /etc/service/pgb && \
-    
+
 RUN rm -rf /usr/local/man && \
     mkdir -p /var/log/ckan /srv/filestore /etc/service/ckan /etc/ckan && \
     cp -a docker/prod.ini.tpl /etc/ckan && \

@@ -48,7 +48,7 @@ The version will look like this::
 
     server_version
     ----------------
-    9.1.9 
+    9.1.9
     (1 row)
 
 Ignoring the last number of the three, if your |postgres| version number is
@@ -144,7 +144,7 @@ Upgrading
 
    or remotely::
 
-     psql --host=HOSTNAME --username=USERNAME -W -l 
+     psql --host=HOSTNAME --username=USERNAME -W -l
 
    The databases listed should comprise:
 
@@ -212,7 +212,7 @@ Upgrading
         sudo -u postgres psql --cluster 9.4/main -d |database| -f /usr/share/postgresql/9.4/contrib/postgis-2.1/postgis.sql
         sudo -u postgres psql --cluster 9.4/main -d |database| -f /usr/share/postgresql/9.4/contrib/postgis-2.1/spatial_ref_sys.sql
         sudo -u postgres psql --cluster 9.4/main -d |database| -c 'ALTER TABLE geometry_columns OWNER TO ckan_default;'
-        sudo -u postgres psql --cluster 9.4/main -d |database| -c 'ALTER TABLE geometry_columns OWNER TO ckan_default;'
+        sudo -u postgres psql --cluster 9.4/main -d |database| -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
 
    To check if PostGIS was properly installed:
 
