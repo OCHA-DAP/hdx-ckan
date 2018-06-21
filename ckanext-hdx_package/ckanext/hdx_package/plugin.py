@@ -27,12 +27,14 @@ import ckan.logic as logic
 import ckan.model as model
 import ckan.model.license as license
 import ckan.model.package as package
+import ckan.authz as authz
 import ckan.plugins as p
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckan.plugins.toolkit as toolkit
 import ckanext.resourceproxy.plugin as resourceproxy_plugin
 from ckan.lib import uploader
+from ckan.common import c
 
 log = logging.getLogger(__name__)
 
@@ -296,6 +298,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         from ckanext.hdx_package.helpers import helpers as hdx_actions
         return {
             'package_update': hdx_update.package_update,
+            'package_patch': hdx_patch.package_patch,
             'package_resource_reorder': hdx_update.package_resource_reorder,
             'dataset_purge': hdx_delete.dataset_purge,
             'hdx_dataset_purge': hdx_delete.hdx_dataset_purge,
@@ -374,6 +377,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             if is_requestdata_type:
                 self._update_with_requestdata_modify_package_schema(schema)
 
+            fields_to_skip = config.get('hdx.validation.allow_skip_for_sysadmin', '').split(',')
+            if len(fields_to_skip) > 0 and fields_to_skip[0] and \
+                    authz.is_sysadmin(c.user) and context.get(hdx_update.SKIP_VALIDATION):
+                self._update_with_skip_validation(schema, fields_to_skip)
+
         if action == 'package_show':
             if is_requestdata_type:
                 self._update_with_requestdata_show_package_schema(schema)
@@ -391,6 +399,17 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 'false') == 'true'
 
         return is_requestdata_type_modify or is_requestdata_type_show
+
+    def _update_with_skip_validation(self, schema, fields_to_skip):
+        for field in fields_to_skip:
+            field = field.strip()
+            if field in ['notes', 'maintainer']:
+                schema[field] = [tk.get_validator('ignore_missing')]
+            elif field.startswith('resources/'):
+                resources_field = field.split('/')[1]
+                schema['resources'][resources_field] = [tk.get_validator('ignore_missing')]
+            else:
+                schema[field] = [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
 
     def _update_with_private_modify_package_schema(self, schema):
         log.debug('Update with private modifiy package schema')
