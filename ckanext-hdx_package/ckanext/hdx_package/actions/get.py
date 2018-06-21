@@ -397,6 +397,11 @@ def package_show(context, data_dict):
 
     # this shouldn't be executed from showcases
     if package_dict.get('type') == 'dataset' and not context.get('no_compute_extra_hdx_show_properties'):
+
+        member_list = get_action('hdx_member_list')(context, {'org_id': package_dict.get('owner_org')})
+        if not member_list.get('is_member'):
+            del package_dict['maintainer_email']
+
         if 'resources' in package_dict:
             # max_time = 0
             # j = None

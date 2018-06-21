@@ -14,18 +14,24 @@ import json
 import ckanext.hdx_search.actions.actions as actions
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
+import ckanext.hdx_theme.tests.hdx_test_with_inds_and_orgs as hdx_test_with_inds_and_orgs
 
 log = logging.getLogger(__name__)
 
 
-class TestHDXSearch(hdx_test_base.HdxBaseTest):
+class TestHDXSearch(hdx_test_with_inds_and_orgs.HDXWithIndsAndOrgsTest):
+
     @classmethod
     def _load_plugins(cls):
         try:
-            hdx_test_base.load_plugin('hdx_search hdx_org_group hdx_theme')
+            hdx_test_base.load_plugin('hdx_package hdx_search hdx_org_group hdx_theme')
         except Exception as e:
             log.warn('Module already loaded')
             log.info(str(e))
+
+    @classmethod
+    def _create_test_data(cls, create_datasets=True, create_members=False):
+        super(TestHDXSearch, cls)._create_test_data(create_datasets=True, create_members=True)
 
     def test_search(self):
         user = model.User.by_name('tester')
@@ -79,12 +85,12 @@ class TestHDXSearch(hdx_test_base.HdxBaseTest):
     #     assert sorted_features[0]['name'] == 'world'
 
     def test_populate_related_items_count(self):
-        #Run random search
+        # Run random search
         user = model.User.by_name('testsysadmin')
         context = {'model': model, 'session': model.Session,
-                     'user': user.name, 'auth_user_obj': user}
+                   'user': user.name, 'auth_user_obj': user}
         query = tests.call_action_api(self.app, 'package_search', q='test')
-        populate = actions.populate_related_items_count(context,{'pkg_dict_list':query['results']})
+        populate = actions.populate_related_items_count(context, {'pkg_dict_list': query['results']})
         assert populate[0]['related_count'] >= 0
 
         # Not using the hdx_actions.package_search anymore so commenting this test out

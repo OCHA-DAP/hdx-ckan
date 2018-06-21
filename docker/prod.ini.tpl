@@ -101,6 +101,9 @@ hdx.mailchimp.list.newuser = ${HDX_MAILCHIMP_LIST_NEW_USER}
 
 hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d5
 
+# Dataset Validation
+hdx.validation.allow_skip_for_sysadmin = dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext
