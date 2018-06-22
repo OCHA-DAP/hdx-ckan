@@ -453,7 +453,9 @@ class ValidationController(ckan.controllers.user.UserController):
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
                 subject = 'Thank you for registering on HDX!'
                 link = config['ckan.site_url'] + '/login'
-                tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
+                # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
+                # <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
+                faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
                 html = """\
                 <html>
                   <head></head>
@@ -461,11 +463,10 @@ class ValidationController(ckan.controllers.user.UserController):
                     <p>You have successfully registered your account on HDX.</p>
                     <p>Your username is {username}</p>
                     <p>Please use the following link to <a href="{link}">Login</a></p>
-                    <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
+                    <p>You can learn more about HDX by {faq_link}.</p>
                   </body>
                 </html>
-                """.format(username=data_dict.get('name'), password=data_dict.get('password'), link=link,
-                           tour_link=tour_link)
+                """.format(username=data_dict.get('name'), link=link, faq_link=faq_link)
                 if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
                     hdx_mailer.mail_recipient(
                         [{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, html)
@@ -613,17 +614,18 @@ class ValidationController(ckan.controllers.user.UserController):
             subject = u'{fullname} invited you to join HDX!'.format(fullname=usr)
             link = config['ckan.site_url'] + '/user/register'
             hdx_link = '<a href="{link}">HDX</a>'.format(link=link)
-            tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
+            # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
+            faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
             html = u"""\
                 <html>
                   <head></head>
                   <body>
                     <p>{fullname} invited you to join the <a href="https://humdata.org">Humanitarian Data Exchange (HDX)</a>, an open platform for sharing humanitarian data. Anyone can access the data on HDX but registered users are able to share data and be part of the HDX community.</p>
-                    <p>You can learn more about HDX by taking this quick {tour_link}</p>
+                    <p>You can learn more about HDX by {faq_link}.</p>
                     <p>Join {hdx_link}</p>
                   </body>
                 </html>
-            """.format(fullname=usr, tour_link=tour_link, hdx_link=hdx_link)
+            """.format(fullname=usr, faq_link=faq_link, hdx_link=hdx_link)
 
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
