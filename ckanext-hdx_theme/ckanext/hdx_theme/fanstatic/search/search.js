@@ -77,8 +77,8 @@ $('document').ready(function(){
 
     // $('#q, #q2').keyup(onSearch);
 
-    $('#q').keyup(onSearch);
-    $('#q').click(onSearch);
+    $('#q, #qMobile').keyup(onSearch);
+    $('#q, #qMobile').click(onSearch);
 
     $('.search-ahead').on('mousedown', "li", function(){
         var searchTerm = $(this).attr('data-search-term');
@@ -96,7 +96,7 @@ $('document').ready(function(){
         }
     });
 
-    $('#q, #q2').blur(function(){
+    $('#q, #q2, #qMobile').blur(function(){
         var $results = $(this).parents("form").find('.search-ahead');
         $results.html('');
         $results.hide();
