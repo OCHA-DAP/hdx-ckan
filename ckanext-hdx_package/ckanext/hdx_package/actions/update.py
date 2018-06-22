@@ -24,6 +24,9 @@ _get_action = logic.get_action
 
 log = logging.getLogger(__name__)
 
+BATCH_MODE = 'batch_mode'
+SKIP_VALIDATION = 'skip_validation'
+
 @geopreview.geopreview_4_resources
 def resource_update(context, data_dict):
     '''
@@ -32,6 +35,7 @@ def resource_update(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
+    process_skip_validation(context, data_dict)
 
     # make the update faster (less computation in the custom package_show)
     context['no_compute_extra_hdx_show_properties'] = True
@@ -74,6 +78,7 @@ def package_update(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
+    process_skip_validation(context, data_dict)
 
     model = context['model']
     user = context['user']
@@ -211,9 +216,15 @@ def package_resource_reorder(context, data_dict):
 
 
 def process_batch_mode(context, data_dict):
-    if 'batch_mode' in data_dict:
-        context['batch_mode'] = data_dict['batch_mode']
-        del data_dict['batch_mode']
+    if BATCH_MODE in data_dict:
+        context[BATCH_MODE] = data_dict[BATCH_MODE]
+        del data_dict[BATCH_MODE]
+
+
+def process_skip_validation(context, data_dict):
+    if SKIP_VALIDATION in data_dict:
+        context[SKIP_VALIDATION] = data_dict[SKIP_VALIDATION]
+        del data_dict[SKIP_VALIDATION]
 
 
 def modified_save(context, data):
@@ -317,14 +328,18 @@ def hdx_package_update_metadata(context, data_dict):
     #                   'validation_notes_and_comments', 'last_data_update_date',
     #                   'groups']
 
-    allowed_fields = ['indicator', 'package_creator',
+    allowed_fields = ['indicator',
+                      'package_creator',
                       'dataset_date',
                       'last_metadata_update_date',
-                      'dataset_source_short_name', 'source_code',
-                      'indicator_type', 'indicator_type_code',
+                      'dataset_source_short_name',
+                      'source_code',
+                      'indicator_type',
+                      'indicator_type_code',
                       'more_info',
                       'last_data_update_date',
-                      'groups',
+                      'groups', 'maintainer',
+                      'maintainer_email',
                       'data_update_frequency']
 
     package = _get_action('package_show')(context, data_dict)
@@ -353,6 +368,7 @@ def hdx_resource_update_metadata(context, data_dict):
     '''
 
     process_batch_mode(context, data_dict)
+    process_skip_validation(context, data_dict)
 
     # Below params are needed in context so that the URL of the resource is not
     # transformed to a real URL for an uploaded file

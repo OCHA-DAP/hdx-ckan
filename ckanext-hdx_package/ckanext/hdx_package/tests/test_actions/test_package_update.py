@@ -139,6 +139,9 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         assert json.loads(s['solr_additions'])['countries'] == ['Colombia']
 
     def test_hdx_package_update_metadata(self):
+
+        testsysadmin = model.User.by_name('testsysadmin')
+
         package = {"package_creator": "test function",
                    "private": False,
                    "dataset_date": "01/01/1960-12/31/2012",
@@ -151,10 +154,12 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                    "groups": [{"name": "roger"}],
                    "owner_org": "hdx-test-org",
                    'name': 'test_activity_5',
-                   'title': 'Test Activity 5'
+                   'title': 'Test Activity 5',
+                   'maintainer': testsysadmin.id,
+                   'maintainer_email': None
                    }
 
-        testsysadmin = model.User.by_name('testsysadmin')
+
 
         context = {'ignore_auth': True,
                    'model': model, 'session': model.Session, 'user': 'testsysadmin'}
@@ -180,7 +185,8 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
                            'more_info': 'more_info test',
                            # 'terms_of_use': 'terms_of_use test',
                            'data_update_frequency': '7',
-                           'maintainer': testsysadmin.id
+                           'maintainer': testsysadmin.id,
+                           'maintainer_email': None
                            }
 
         self._get_action('hdx_package_update_metadata')(context, modified_fields)
