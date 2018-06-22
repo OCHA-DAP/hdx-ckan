@@ -155,7 +155,8 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
                 'num_followers': [],
                 'created': [],
                 'revision_id': [],
-                'state': []
+                'state': [],
+                'display_name': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
 
             }
             schema.update(new_org_schema)
