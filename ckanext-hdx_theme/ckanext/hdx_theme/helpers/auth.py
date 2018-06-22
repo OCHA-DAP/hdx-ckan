@@ -100,3 +100,9 @@ def showcase_package_association_create(context, data_dict):
 # showcase
 def showcase_package_association_delete(context, data_dict):
     return {'success': _is_editor()}
+
+def hdx_user_statistics(context, data_dict):
+    '''
+    Only sysadmins are allowed to call this action
+    '''
+    return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
