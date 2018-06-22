@@ -1,7 +1,7 @@
-import sys, re
+import re
 import ckan.lib.base as base
 from ckan.lib.base import request
-from ckan.lib.base import c, g, h
+from ckan.lib.base import c, h
 from ckan.lib.base import model
 from ckan.lib.base import render
 from ckan.lib.base import _
@@ -10,12 +10,14 @@ import ckan.plugins.toolkit as tk
 
 from ckan.controllers.group import GroupController as gc
 from ckan.controllers.home import HomeController
+from ckan.common import config
 
 import ckanext.hdx_package.helpers.caching as caching
 
 NotAuthorized = logic.NotAuthorized
 check_access = logic.check_access
 get_action = logic.get_action
+abort = base.abort
 
 
 class SplashPageController(HomeController):
@@ -55,6 +57,7 @@ class SplashPageController(HomeController):
         # print c.group_package_stuff
 
         if c.userobj is not None:
+            site_title = config.get('ckan.site_title', 'CKAN')
             msg = None
             url = h.url_for(controller='user', action='edit')
             is_google_id = \
@@ -64,13 +67,13 @@ class SplashPageController(HomeController):
                         u' and add your email address and your full name. '
                         u'{site} uses your email address'
                         u' if you need to reset your password.'.format(
-                    link=url, site=g.site_title))
+                    link=url, site=site_title))
             elif not c.userobj.email:
                 msg = _('Please <a href="%s">update your profile</a>'
                         ' and add your email address. ') % url + \
                       _('%s uses your email address'
                         ' if you need to reset your password.') \
-                      % g.site_title
+                      % site_title
             elif is_google_id and not c.userobj.fullname:
                 msg = _('Please <a href="%s">update your profile</a>'
                         ' and add your full name.') % (url)

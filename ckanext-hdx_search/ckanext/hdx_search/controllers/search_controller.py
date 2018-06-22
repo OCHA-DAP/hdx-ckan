@@ -9,7 +9,6 @@ from paste.deploy.converters import asbool
 
 import ckan.logic as logic
 import ckan.lib.base as base
-import ckan.lib.maintain as maintain
 import ckan.lib.navl.dictization_functions as dict_fns
 import ckan.lib.helpers as h
 import ckan.model as model
@@ -17,7 +16,7 @@ import ckan.plugins as p
 
 import ckanext.hdx_search.helpers.search_history as search_history
 
-from ckan.common import OrderedDict, _, json, request, c, g, response
+from ckan.common import OrderedDict, _, json, request, c, response
 
 from ckan.controllers.package import PackageController
 from ckan.controllers.api import CONTENT_TYPES
@@ -41,7 +40,7 @@ log = logging.getLogger(__name__)
 
 render = base.render
 abort = base.abort
-redirect = base.redirect
+redirect = h.redirect_to
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -358,7 +357,7 @@ class HDXSearchController(PackageController):
 
             default_facet_titles = get_default_facet_titles()
 
-            for facet in g.facets:
+            for facet in h.facets():
                 if facet in default_facet_titles:
                     facets[facet] = default_facet_titles[facet]
                 else:
@@ -399,10 +398,6 @@ class HDXSearchController(PackageController):
                     parameter_name='_%s_limit' % facet
                 ))
             c.search_facets_limits[facet] = limit
-
-        maintain.deprecate_context_item(
-            'facets',
-            'Use `c.search_facets` instead.')
 
         # return render(self._search_template(package_type))
         full_facet_info = self._prepare_facets_info(c.search_facets, c.fields_grouped, search_extras, c.facet_titles,
