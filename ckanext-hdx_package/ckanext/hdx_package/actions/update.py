@@ -82,15 +82,18 @@ def package_update(context, data_dict):
 
     model = context['model']
     user = context['user']
-    name_or_id = data_dict.get("id") or data_dict['name']
+    name_or_id = data_dict.get('id') or data_dict.get('name')
+    if name_or_id is None:
+        raise logic.ValidationError({'id': _('Missing value')})
 
     pkg = model.Package.get(name_or_id)
     if pkg is None:
         raise logic.NotFound(_('Package was not found.'))
     context["package"] = pkg
     data_dict["id"] = pkg.id
-    if 'groups' in data_dict:
-        data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
+    data_dict['type'] = pkg.type
+    # if 'groups' in data_dict:
+    #    data_dict['solr_additions'] = helpers.build_additions(data_dict['groups'])
 
     _check_access('package_update', context, data_dict)
 
@@ -133,7 +136,6 @@ def package_update(context, data_dict):
 
     data, errors = lib_plugins.plugin_validate(
         package_plugin, context, data_dict, schema, 'package_update')
-    #data, errors = _validate(data_dict, schema, context)
     log.debug('package_update validate_errs=%r user=%s package=%s data=%r',
               errors, context.get('user'),
               context.get('package').name if context.get('package') else '',
@@ -150,7 +152,7 @@ def package_update(context, data_dict):
     else:
         rev.message = _(u'REST API: Update object %s') % data.get("name")
 
-    # avoid revisioning by updating directly
+    #avoid revisioning by updating directly
     model.Session.query(model.Package).filter_by(id=pkg.id).update(
         {"metadata_modified": datetime.datetime.utcnow()})
     model.Session.refresh(pkg)
@@ -158,31 +160,27 @@ def package_update(context, data_dict):
     if 'tags' in data:
         data['tags'] = helpers.get_tag_vocabulary(data['tags'])
 
-    pkg = modified_save(context, data)
+    # pkg = modified_save(context, data)
+    pkg = model_save.package_dict_save(data, context)
 
     context_org_update = context.copy()
     context_org_update['ignore_auth'] = True
     context_org_update['defer_commit'] = True
-    org_dict = {'id': pkg.id}
-    if 'owner_org' in data:
-        org_dict['organization_id'] = pkg.owner_org
+    context_org_update['add_revision'] = False
     _get_action('package_owner_org_update')(context_org_update,
-                                            org_dict)
+                                            {'id': pkg.id,
+                                             'organization_id': pkg.owner_org})
 
+    # Needed to let extensions know the new resources ids
+    model.Session.flush()
     if data.get('resources'):
         for index, resource in enumerate(data['resources']):
             resource['id'] = pkg.resources[index].id
-
 
     for item in plugins.PluginImplementations(plugins.IPackageController):
         item.edit(pkg)
 
         item.after_update(context, data)
-
-    # Create default views for resources if necessary
-    if data.get('resources'):
-        logic.get_action('package_create_default_resource_views')(
-            context, {'package': data})
 
     if not context.get('defer_commit'):
         model.repo.commit()
@@ -227,88 +225,88 @@ def process_skip_validation(context, data_dict):
         del data_dict[SKIP_VALIDATION]
 
 
-def modified_save(context, data):
-    """
-    Wrapper around lib.dictization.model_save.package_dict_save
-    """
-    groups_key = 'groups'
-    if groups_key in data:
-        temp_groups = data[groups_key]
-        data[groups_key] = None
-        pkg = model_save.package_dict_save(data, context)
-        data[groups_key] = temp_groups
-    else:
-        pkg = model_save.package_dict_save(data, context)
-    package_membership_list_save(data.get("groups"), pkg, context)
-    return pkg
-
-
-def package_membership_list_save(group_dicts, package, context):
-    """
-    Overrides lib.dictization.model_save.package_membership_list_save
-    """
-
-    allow_partial_update = context.get("allow_partial_update", False)
-    if group_dicts is None and allow_partial_update:
-        return
-
-    capacity = 'public'
-    model = context["model"]
-    session = context["session"]
-    pending = context.get('pending')
-    user = context.get('user')
-
-    members = session.query(model.Member) \
-        .filter(model.Member.table_id == package.id) \
-        .filter(model.Member.capacity != 'organization')
-
-    group_member = dict((member.group, member)
-                        for member in
-                        members)
-    groups = set()
-    for group_dict in group_dicts or []:
-        id = group_dict.get("id")
-        name = group_dict.get("name")
-        capacity = group_dict.get("capacity", "public")
-        if capacity == 'organization':
-            continue
-        if id:
-            group = session.query(model.Group).get(id)
-        else:
-            group = session.query(model.Group).filter_by(name=name).first()
-        if group:
-            groups.add(group)
-
-    # need to flush so we can get out the package id
-    model.Session.flush()
-
-    # Remove any groups we are no longer in
-    for group in set(group_member.keys()) - groups:
-        member_obj = group_member[group]
-        if member_obj and member_obj.state == 'deleted':
-            continue
-
-        member_obj.capacity = capacity
-        member_obj.state = 'deleted'
-        session.add(member_obj)
-
-    # Add any new groups
-    for group in groups:
-        member_obj = group_member.get(group)
-        if member_obj and member_obj.state == 'active':
-            continue
-        member_obj = group_member.get(group)
-        if member_obj:
-            member_obj.capacity = capacity
-            member_obj.state = 'active'
-        else:
-            member_obj = model.Member(table_id=package.id,
-                                      table_name='package',
-                                      group=group,
-                                      capacity=capacity,
-                                      group_id=group.id,
-                                      state='active')
-        session.add(member_obj)
+# def modified_save(context, data):
+#     """
+#     Wrapper around lib.dictization.model_save.package_dict_save
+#     """
+#     groups_key = 'groups'
+#     if groups_key in data:
+#         temp_groups = data[groups_key]
+#         data[groups_key] = None
+#         pkg = model_save.package_dict_save(data, context)
+#         data[groups_key] = temp_groups
+#     else:
+#         pkg = model_save.package_dict_save(data, context)
+#     package_membership_list_save(data.get("groups"), pkg, context)
+#     return pkg
+#
+#
+# def package_membership_list_save(group_dicts, package, context):
+#     """
+#     Overrides lib.dictization.model_save.package_membership_list_save
+#     """
+#
+#     allow_partial_update = context.get("allow_partial_update", False)
+#     if group_dicts is None and allow_partial_update:
+#         return
+#
+#     capacity = 'public'
+#     model = context["model"]
+#     session = context["session"]
+#     pending = context.get('pending')
+#     user = context.get('user')
+#
+#     members = session.query(model.Member) \
+#         .filter(model.Member.table_id == package.id) \
+#         .filter(model.Member.capacity != 'organization')
+#
+#     group_member = dict((member.group, member)
+#                         for member in
+#                         members)
+#     groups = set()
+#     for group_dict in group_dicts or []:
+#         id = group_dict.get("id")
+#         name = group_dict.get("name")
+#         capacity = group_dict.get("capacity", "public")
+#         if capacity == 'organization':
+#             continue
+#         if id:
+#             group = session.query(model.Group).get(id)
+#         else:
+#             group = session.query(model.Group).filter_by(name=name).first()
+#         if group:
+#             groups.add(group)
+#
+#     # need to flush so we can get out the package id
+#     model.Session.flush()
+#
+#     # Remove any groups we are no longer in
+#     for group in set(group_member.keys()) - groups:
+#         member_obj = group_member[group]
+#         if member_obj and member_obj.state == 'deleted':
+#             continue
+#
+#         member_obj.capacity = capacity
+#         member_obj.state = 'deleted'
+#         session.add(member_obj)
+#
+#     # Add any new groups
+#     for group in groups:
+#         member_obj = group_member.get(group)
+#         if member_obj and member_obj.state == 'active':
+#             continue
+#         member_obj = group_member.get(group)
+#         if member_obj:
+#             member_obj.capacity = capacity
+#             member_obj.state = 'active'
+#         else:
+#             member_obj = model.Member(table_id=package.id,
+#                                       table_name='package',
+#                                       group=group,
+#                                       capacity=capacity,
+#                                       group_id=group.id,
+#                                       state='active')
+#         session.add(member_obj)
 
 
 def hdx_package_update_metadata(context, data_dict):
