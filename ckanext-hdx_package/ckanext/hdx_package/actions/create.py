@@ -9,6 +9,7 @@ import logging
 import ckan.logic.action.create as core_create
 import ckan.logic as logic
 import ckan.lib.plugins as lib_plugins
+import ckan.lib.dictization.model_save as model_save
 import ckan.plugins as plugins
 
 import ckanext.hdx_package.helpers.geopreview as geopreview
@@ -55,7 +56,8 @@ def package_create(context, data_dict):
     for the new dataset, you must also be authorized to edit these groups.
 
     Plugins may change the parameters of this function depending on the value
-    of the ``type`` parameter, see the ``IDatasetForm`` plugin interface.
+    of the ``type`` parameter, see the
+    :py:class:`~ckan.plugins.interfaces.IDatasetForm` plugin interface.
 
     :param name: the name of the new dataset, must be between 2 and 100
         characters long and contain only lowercase alphanumeric characters,
@@ -64,6 +66,8 @@ def package_create(context, data_dict):
     :param title: the title of the dataset (optional, default: same as
         ``name``)
     :type title: string
+    :param private: If ``True`` creates a private dataset
+    :type private: bool
     :param author: the name of the dataset's author (optional)
     :type author: string
     :param author_email: the email address of the dataset's author (optional)
@@ -73,8 +77,9 @@ def package_create(context, data_dict):
     :param maintainer_email: the email address of the dataset's maintainer
         (optional)
     :type maintainer_email: string
-    :param license_id: the id of the dataset's license, see ``license_list()``
-        for available values (optional)
+    :param license_id: the id of the dataset's license, see
+        :py:func:`~ckan.logic.action.get.license_list` for available values
+        (optional)
     :type license_id: license id string
     :param notes: a description of the dataset (optional)
     :type notes: string
@@ -88,14 +93,16 @@ def package_create(context, data_dict):
         authorized to change the state of the dataset (optional, default:
         ``'active'``)
     :type state: string
-    :param type: the type of the dataset (optional), ``IDatasetForm`` plugins
+    :param type: the type of the dataset (optional),
+        :py:class:`~ckan.plugins.interfaces.IDatasetForm` plugins
         associate themselves with different dataset types and provide custom
         dataset handling behaviour for these types
     :type type: string
-    :param resources: the dataset's resources, see ``resource_create()``
-        for the format of resource dictionaries (optional)
+    :param resources: the dataset's resources, see
+        :py:func:`resource_create` for the format of resource dictionaries
+        (optional)
     :type resources: list of resource dictionaries
-    :param tags: the dataset's tags, see ``tag_create()`` for the format
+    :param tags: the dataset's tags, see :py:func:`tag_create` for the format
         of tag dictionaries (optional)
     :type tags: list of tag dictionaries
     :param extras: the dataset's extras (optional), extras are arbitrary
@@ -103,21 +110,22 @@ def package_create(context, data_dict):
         dictionary should have keys ``'key'`` (a string), ``'value'`` (a
         string)
     :type extras: list of dataset extra dictionaries
-    :param relationships_as_object: see ``package_relationship_create()`` for
-        the format of relationship dictionaries (optional)
+    :param relationships_as_object: see :py:func:`package_relationship_create`
+        for the format of relationship dictionaries (optional)
     :type relationships_as_object: list of relationship dictionaries
-    :param relationships_as_subject: see ``package_relationship_create()`` for
-        the format of relationship dictionaries (optional)
+    :param relationships_as_subject: see :py:func:`package_relationship_create`
+        for the format of relationship dictionaries (optional)
     :type relationships_as_subject: list of relationship dictionaries
     :param groups: the groups to which the dataset belongs (optional), each
         group dictionary should have one or more of the following keys which
         identify an existing group:
-        ``'id'`` (the id of the group, string), ``'name'`` (the name of the
-        group, string), ``'title'`` (the title of the group, string), to see
-        which groups exist call ``group_list()``
+        ``'id'`` (the id of the group, string), or ``'name'`` (the name of the
+        group, string),  to see which groups exist
+        call :py:func:`~ckan.logic.action.get.group_list`
     :type groups: list of dictionaries
     :param owner_org: the id of the dataset's owning organization, see
-        ``organization_list()`` or ``organization_list_for_user`` for
+        :py:func:`~ckan.logic.action.get.organization_list` or
+        :py:func:`~ckan.logic.action.get.organization_list_for_user` for
         available values (optional)
     :type owner_org: string
 
@@ -196,17 +204,17 @@ def package_create(context, data_dict):
     else:
         rev.message = _(u'REST API: Create object %s') % data.get("name")
 
-    admins = []
     if user:
         user_obj = model.User.by_name(user.decode('utf8'))
         if user_obj:
-            admins = [user_obj]
             data['creator_user_id'] = user_obj.id
 
     # Replace model_save.package_dict_save() call with our wrapped version to be able to save groups
     # pkg = model_save.package_dict_save(data, context)
-    from ckanext.hdx_package.actions.update import modified_save
-    pkg = modified_save(context, data)
+    # from ckanext.hdx_package.actions.update import modified_save
+    # pkg = modified_save(context, data)
+
+    pkg = model_save.package_dict_save(data, context)
 
     # Needed to let extensions know the package and resources ids
     model.Session.flush()
@@ -243,9 +251,9 @@ def package_create(context, data_dict):
     if not context.get('defer_commit'):
         model.repo.commit()
 
-    ## need to let rest api create
+    # need to let rest api create
     context["package"] = pkg
-    ## this is added so that the rest controller can make a new location
+    # this is added so that the rest controller can make a new location
     context["id"] = pkg.id
     log.debug('Created object %s' % pkg.name)
 
