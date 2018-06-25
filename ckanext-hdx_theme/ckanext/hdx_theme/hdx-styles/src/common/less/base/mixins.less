@@ -67,6 +67,23 @@
   }
 }
 
+.paddingHackMixin(){
+  .paddingRowHack{
+    margin-left: -@containerMarginSize;
+    margin-right: -@containerMarginSize;
+  }
+
+  .paddingRowHack .paddingLeftHack{
+    padding-left: @containerMarginSize;
+    margin-left: 0;
+  }
+
+  .paddingRowHack .paddingRightHack{
+    padding-right: @containerMarginSize;
+    margin-right: 0;
+  }
+}
+
 // Vertical align items using tables
 .table-valign{
   display: table;

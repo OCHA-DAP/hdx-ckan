@@ -254,7 +254,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_carousel_settings_update': hdx_actions.hdx_carousel_settings_update,
             # 'hdx_get_json_from_resource':hdx_actions.hdx_get_json_from_resource
             #'hdx_get_activity_list': hdx_actions.hdx_get_activity_list
-            'hdx_general_statistics': hdx_actions.hdx_general_statistics
+            'hdx_general_statistics': hdx_actions.hdx_general_statistics,
+            'hdx_user_statistics': hdx_actions.hdx_user_statistics
         }
 
     def get_auth_functions(self):
@@ -286,6 +287,8 @@ class HDXThemePlugin(plugins.SingletonPlugin):
             'hdx_send_editor_request_for_org': auth.hdx_send_editor_request_for_org,
             'invalidate_cache_for_groups': auth.invalidate_cache_for_groups,
             'invalidate_cache_for_organizations': auth.invalidate_cache_for_organizations,
+            'hdx_user_statistics': auth.hdx_user_statistics,
+
         }
 
     def make_middleware(self, app, config):

@@ -709,3 +709,44 @@ def hdx_general_statistics(context, data_dict):
     }
 
     return results
+
+# def page_create(context, data_dict):
+#     '''
+#     Only sysadmins are allowed to call this action
+#     '''
+#     return {'success': False, 'msg': _('Only sysadmins can manage custom pages')}
+
+@logic.side_effect_free
+def hdx_user_statistics(context, data_dict):
+
+    _check_access('hdx_user_statistics', context, data_dict)
+
+    start_date = data_dict.get('start_date', None)
+    end_date = data_dict.get('end_date', None)
+    q = model.Session.query(model.User)
+    q = q.filter(model.User.state == 'active')
+    user_list = q.all()
+
+    result = {}
+    for user in user_list:
+        no_activities = get_activities_by_user_by_date(user.id, start_date, end_date)
+        result[user.id] = {
+            'id': user.id,
+            'name': user.name,
+            'no_of_activities': no_activities
+        }
+    return result
+
+
+def get_activities_by_user_by_date(user_id, start_date=None, end_date=None):
+    result = None
+    if user_id:
+        q = model.Session.query(model.Activity)
+        q = q.filter(model.Activity.user_id == user_id)
+        if start_date:
+            q = q.filter(model.Activity.timestamp >= start_date)
+        if end_date:
+            q = q.filter(model.Activity.timestamp <= end_date)
+        result = q.count()
+    return result
+
