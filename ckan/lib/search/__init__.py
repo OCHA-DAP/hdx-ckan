@@ -146,6 +146,7 @@ def rebuild(package_id=None, only_missing=False, force=False, refresh=False,
     context = {'model': model, 'ignore_auth': True, 'validate': False,
         'use_cache': False}
 
+    from ckan.common import config
     use_hdx_reindex = asbool(config.get('hdx.reindexing.enabled', True))
     if use_hdx_reindex:
         from ckanext.hdx_search.helpers.reindexing import HdxSolrReindexer
