@@ -297,7 +297,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         response = webtest_submit(form, 'save', extra_environ=env)
 
         # error message in response
-        assert_true('Email: The email address is already registered on HDX. Please use the sign in screen below.' in response)
+        assert_true('Email: That login email is not available.' in response)
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
@@ -372,7 +372,7 @@ class TestEditUserEmail(hdx_test_base.HdxFunctionalBaseTest):
         response = webtest_submit(form, 'save', extra_environ=env)
 
         # error message in response
-        assert_true('Email: The email address is already registered on HDX. Please use the sign in screen below.' in response)
+        assert_true('Email: That login email is not available.' in response)
 
         # sue user email hasn't changed.
         user = model.Session.query(model.User).get(sue_user['id'])
