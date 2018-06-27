@@ -1,16 +1,17 @@
 import json
 import os
+
 from pylons import config
 
+import ckan.lib.helpers as h
 import ckan.plugins as p
 from ckan.model import Session
-import ckan.lib.helpers as h
 
 
 class FeatureSearchCommand(p.toolkit.CkanCommand):
     '''
     Usage:
-        paster hdx-feature-search build
+        paster hdx-feature-search build   or use   hdxckantool feature
         - Writes a json file to be used to run custom searches of all
          Featured pages (Countries, Organizations, Topics, Crisis)
          We'll need to be changed in the event that we make crisis or
@@ -80,7 +81,7 @@ def buildIndex(path):
     ## I think this is the only way to go. Please update
     ## when new crisis are added
 
-    index.append({'title': 'Ebola', 'url': h.url_for(
+    index.append({'title': 'West Africa Ebola Outbreak 2014', 'url': h.url_for(
         controller='ckanext.hdx_crisis.controllers.ebola_custom_location_controller:EbolaCustomLocationController',
         action='read', qualified=True), 'type': 'event'})
     index.append({'title': 'Nepal Earthquake', 'url': h.url_for(
