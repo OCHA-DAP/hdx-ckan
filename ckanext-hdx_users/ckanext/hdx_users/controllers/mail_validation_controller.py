@@ -64,6 +64,9 @@ OnbIntegrityErr = json.dumps({'success': False, 'error': {'message': 'Integrity 
 OnbCaptchaErr = json.dumps({'success': False, 'error': {'message': CaptchaNotValid}})
 OnbLoginErr = json.dumps({'success': False, 'error': {'message': LoginFailed}})
 OnbSuccess = json.dumps({'success': True})
+OnbErr = json.dumps({'success': False, 'error': {'message': _('Something went wrong. Please contact support.')}})
+OnbValidationErr = json.dumps({'success': False, 'error': {'message': _('You have not yet validated your email.')}})
+OnbResetLinkErr = json.dumps({'success': False, 'error': {'message': _('Could not send reset link.')}})
 
 
 def name_validator_with_changed_msg(val, context):
@@ -136,8 +139,7 @@ class ValidationController(ckan.controllers.user.UserController):
         if not c.user:
             came_from = request.params.get('came_from')
             if not came_from:
-                came_from = h.url_for(controller='user', action='logged_in',
-                                      __ckan_no_root=True)
+                came_from = h.url_for(controller='user', action='logged_in')
             c.login_handler = h.url_for(
                 self._get_repoze_handler('login_handler_path'),
                 came_from=came_from)
@@ -916,3 +918,82 @@ class ValidationController(ckan.controllers.user.UserController):
 
     def _get_mailchimp_api(self):
         return mailchimp.Mailchimp(configuration.config.get('hdx.mailchimp.api.key'))
+
+    # moved from login_controller.py
+    def _new_login(self, message, page_subtitle, error=None):
+        self.login(error)
+        # vars = {'contribute': True}
+        # tmp = hdx_mail_c.ValidationController()
+        return self.new_login(info_message=message, page_subtitle=page_subtitle)
+
+    def contribute(self, error=None):
+        """
+        If the user tries to add data but isn't logged in, directs
+        them to a specific contribute login page.
+        """
+
+        return self._new_login(_('In order to add data, you need to login below or register on HDX'),
+                               _('Login to contribute'), error=error)
+
+    def contact_hdx(self, error=None):
+        """
+        If the user tries to contact contributor but isn't logged in, directs
+        them to a specific login page.
+        """
+        return self._new_login(_('In order to contact the contributor, you need to login below or register on HDX'),
+                               _('Login to contact HDX'), error=error)
+
+    def save_mapexplorer_config(self, error=None):
+        """
+        If the user tries to save a map explorer configuration, we direct
+        them to a specific login page.
+        """
+        return self._new_login(
+            _('In order to save a custom map explorer view, you need to login below or register on HDX'),
+            _('Login to save map explorer view'), error=error)
+
+    def request_reset(self):
+        """
+        Email password reset instructions to user
+        """
+        context = {'model': model, 'session': model.Session, 'user': c.user,
+                   'auth_user_obj': c.userobj}
+        try:
+            check_access('request_reset', context)
+        except NotAuthorized:
+            base.abort(401, _('Unauthorized to request reset password.'))
+
+        if request.method == 'POST':
+            # user_id should be lowercase (for name and email)
+            user_id = request.params.get('user').lower()
+
+            context = {'model': model,
+                       'user': c.user}
+
+            user_obj = None
+            try:
+                data_dict = get_action('user_show')(context, {'id': user_id})
+                user_obj = context['user_obj']
+            except NotFound:
+                return OnbUserNotFound
+            try:
+                token = tokens.token_show(context, data_dict)
+            except NotFound, e:
+                token = {'valid': True}  # Until we figure out what to do with existing users
+            except:
+                OnbErr
+
+            if not token['valid']:
+                # redirect to validation page
+                if user_obj and tokens.send_validation_email({'id': user_obj.id, 'email': user_obj.email}, token):
+                    return OnbSuccess
+                return OnbErr
+            if user_obj:
+                try:
+                    # hdx_mailer.send_reset_link(user_obj)
+                    get_action('hdx_send_reset_link')(context, {'id': user_id})
+                    return OnbSuccess
+                except hdx_mailer.MailerException, e:
+                    return OnbResetLinkErr
+        # return render('user/request_reset.html')
+        return render('home/index.html')

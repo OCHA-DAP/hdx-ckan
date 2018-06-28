@@ -137,15 +137,15 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
         map.connect('/user/register',
                     controller='ckanext.hdx_users.controllers.registration_controller:RequestController',
                     action='register')
-        map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
-                    action='logged_in')
-        map.connect('/user/reset', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        # map.connect('/user/logged_in', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+        #             action='logged_in')
+        map.connect('/user/reset', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='request_reset')
-        map.connect('/contribute', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        map.connect('/contribute', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contribute')
-        map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        map.connect('/contact_hdx', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='contact_hdx')
-        map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        map.connect('/save_mapexplorer_config', controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                     action='save_mapexplorer_config')
         # Included to fix fussiness when overriding user profile route
         map.connect('/user/edit', controller='user', action='edit')
