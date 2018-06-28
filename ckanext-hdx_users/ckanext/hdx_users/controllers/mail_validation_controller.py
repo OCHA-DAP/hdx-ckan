@@ -276,13 +276,15 @@ class ValidationController(ckan.controllers.user.UserController):
             check_access('user_can_register', context, data_dict)
         except NotAuthorized, e:
             if e.args and len(e.args):
-                if 'That login email is not available.' in self._get_exc_msg_by_key(e, 'email'):
-                    return self.error_message(['The email address is already registered on HDX. Please use the sign in screen below.'])
+                # return self.error_message(['The email address is already registered on HDX. Please use the sign in screen below.'])
                 return self.error_message(self._get_exc_msg_by_key(e, 'email'))
             return OnbNotAuth
         except ValidationError, e:
             # errors = e.error_dict
-            error_summary = e.error_summary
+            if e and e.error_summmary:
+                error_summary = e.error_summary
+            else:
+                error_summary = ['Email address is not valid. Please contact our team.']
             return self.error_message(error_summary)
 
         # hack to disable check if user is logged in
