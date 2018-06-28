@@ -179,8 +179,9 @@ def package_search(context, data_dict):
 
     fl
         The parameter that controls which fields are returned in the solr
-        query cannot be changed.  CKAN always returns the matched datasets as
-        dictionary objects.
+        query.
+        fl can be  None or a list of result fields, such as ['id', 'extras_custom_field'].
+        if fl = None, datasets are returned as a list of full dictionary.
     '''
     # sometimes context['schema'] is None
     schema = (context.get('schema') or
@@ -223,74 +224,60 @@ def package_search(context, data_dict):
         else:
             data_source = 'validated_data_dict'
         data_dict.pop('use_default_schema', None)
-        # return a list of package ids
-        data_dict['fl'] = 'id {0}'.format(data_source)
 
-        # we should remove any mention of capacity from the fq and
-        # instead set it to only retrieve public datasets
-        fq = data_dict.get('fq', '')
+        result_fl = data_dict.get('fl')
+        if not result_fl:
+            data_dict['fl'] = 'id {0}'.format(data_source)
+        else:
+            data_dict['fl'] = ' '.join(result_fl)
 
         # Remove before these hit solr FIXME: whitelist instead
         include_private = asbool(data_dict.pop('include_private', False))
         include_drafts = asbool(data_dict.pop('include_drafts', False))
-
-        capacity_fq = 'capacity:"public"'
-        if include_private and authz.is_sysadmin(user):
-            capacity_fq = None
-        elif include_private and user:
-            orgs = logic.get_action('organization_list_for_user')(
-                {'user': user}, {'permission': 'read'})
-            if orgs:
-                capacity_fq = '({0} OR owner_org:({1}))'.format(
-                    capacity_fq,
-                    ' OR '.join(org['id'] for org in orgs))
-            if include_drafts:
-                capacity_fq = '({0} OR creator_user_id:({1}))'.format(
-                    capacity_fq,
-                    authz.get_user_id_for_username(user))
-
-        if capacity_fq:
-            fq = ' '.join(p for p in fq.split() if 'capacity:' not in p)
-            data_dict['fq'] = capacity_fq + ' ' + fq
-
-        fq = data_dict.get('fq', '')
+        data_dict.setdefault('fq', '')
+        if not include_private:
+            data_dict['fq'] = '+capacity:public ' + data_dict['fq']
         if include_drafts:
-            user_id = authz.get_user_id_for_username(user, allow_none=True)
-            if authz.is_sysadmin(user):
-                data_dict['fq'] = '+state:(active OR draft) ' + fq
-            elif user_id:
-                # Query to return all active datasets, and all draft datasets
-                # for this user.
-                u_fq = ' ((creator_user_id:{0} AND +state:(draft OR active))' \
-                       ' OR state:active) '.format(user_id)
-                data_dict['fq'] = u_fq + ' ' + fq
-        elif not authz.is_sysadmin(user):
-            data_dict['fq'] = '+state:active ' + fq
+            data_dict['fq'] += ' +state:(active OR draft)'
 
         # Pop these ones as Solr does not need them
         extras = data_dict.pop('extras', None)
 
+        # enforce permission filter based on user
+        if context.get('ignore_auth') or (user and authz.is_sysadmin(user)):
+            labels = None
+        else:
+            labels = lib_plugins.get_permission_labels(
+                ).get_user_dataset_labels(context['auth_user_obj'])
+
         query = search.query_for(model.Package)
-        query.run(data_dict)
+        query.run(data_dict, permission_labels=labels)
 
         # Add them back so extensions can use them on after_search
         data_dict['extras'] = extras
 
-        for package in query.results:
-            # get the package object
-            package_dict = package.get(data_source)
-            ## use data in search index if there
-            if package_dict:
-                # the package_dict still needs translating when being viewed
-                package_dict = json.loads(package_dict)
-                if context.get('for_view'):
-                    for item in plugins.PluginImplementations(
-                            plugins.IPackageController):
-                        package_dict = item.before_view(package_dict)
-                results.append(package_dict)
-            else:
-                log.error('No package_dict is coming from solr for package '
-                          'id %s', package['id'])
+        if result_fl:
+            for package in query.results:
+                if package.get('extras'):
+                    package.update(package['extras'] )
+                    package.pop('extras')
+                results.append(package)
+        else:
+            for package in query.results:
+                # get the package object
+                package_dict = package.get(data_source)
+                ## use data in search index if there
+                if package_dict:
+                    # the package_dict still needs translating when being viewed
+                    package_dict = json.loads(package_dict)
+                    if context.get('for_view'):
+                        for item in plugins.PluginImplementations(
+                                plugins.IPackageController):
+                            package_dict = item.before_view(package_dict)
+                    results.append(package_dict)
+                else:
+                    log.error('No package_dict is coming from solr for package '
+                              'id %s', package['id'])
 
         count = query.count
         facets = query.facets
