@@ -56,9 +56,10 @@ def is_redis_available():
 
     .. seealso:: :py:func:`connect_to_redis`
     '''
-    redis_conn = connect_to_redis()
-    try:
-        return redis_conn.ping()
-    except Exception:
-        log.exception(u'Redis is not available')
-        return False
+    # redis_conn = connect_to_redis()
+    # try:
+    #     return redis_conn.ping()
+    # except Exception:
+    #     log.exception(u'Redis is not available')
+    #     return False
+    return False
