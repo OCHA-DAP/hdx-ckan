@@ -85,19 +85,8 @@ def register_user_schema():
     user_email_validator = tk.get_validator('user_email_validator')
 
     schema = {
-        # 'id': [ignore_missing, unicode],
         'name': [not_empty, unicode],
-        # 'fullname': [ignore_missing, unicode],
-        # 'password': [user_password_validator, user_password_not_empty, ignore_missing, unicode],
         'email': [not_empty, user_email_validator, unicode],
-        # 'about': [ignore_missing, user_about_validator, unicode],
-        # 'created': [ignore],
-        # 'openid': [ignore_missing],
-        # 'sysadmin': [ignore_missing, ignore_not_sysadmin],
-        # 'apikey': [ignore],
-        # 'reset_key': [ignore],
-        # 'activity_streams_email_notifications': [ignore_missing],
-        # 'state': [ignore_missing],
     }
     return schema
 
@@ -112,13 +101,6 @@ def register_details_user_schema():
         'fullname': [ignore_missing, unicode],
         'password': [user_password_validator, user_password_not_empty, ignore_missing, unicode],
         'email': [not_empty, user_email_validator, unicode],
-        # 'about': [ignore_missing, user_about_validator, unicode],
-        # 'created': [ignore],
-        # 'openid': [ignore_missing],
-        # 'sysadmin': [ignore_missing, ignore_not_sysadmin],
-        # 'apikey': [ignore],
-        # 'reset_key': [ignore],
-        # 'activity_streams_email_notifications': [ignore_missing],
         'state': [ignore_missing],
     }
     return schema
