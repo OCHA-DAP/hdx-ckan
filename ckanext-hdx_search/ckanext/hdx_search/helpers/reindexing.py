@@ -6,6 +6,16 @@ log = logging.getLogger(__name__)
 
 
 class HdxSolrReindexer(object):
+    '''
+        This is based on rebuild() from ckan.lib.search.__init__.py . That rebuild() function
+        was slightly modified to defer all work to this class in case the 'hdx.reindexing.enabled'
+        flag is set in the .ini file.
+        Among other things:
+            - uses reindex_helper.package_list_show_for_reindex() to fetch more datasets
+            at once from the database
+            - uses package_index.index_packages() instead of index_package() to add several
+            datasets at once to solr
+    '''
 
     def __init__(self, context, model, package_index, query_for, text_traceback):
         super(HdxSolrReindexer, self).__init__()

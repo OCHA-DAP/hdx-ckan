@@ -101,6 +101,12 @@ class PackageSearchIndex(SearchIndex):
         self.index_package(pkg_dict, defer_commit)
 
     def index_packages(self, pkg_dicts, defer_commit=False):
+        '''
+        Added by HDX.
+        Works in the same way as index_package() BUT for a list of package dicts.
+        That means that several datasets are added to solr at once.
+
+        '''
         if not pkg_dicts:
             return
 
