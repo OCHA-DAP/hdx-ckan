@@ -102,7 +102,9 @@ def hdx_topline_num_for_group(context, data_dict):
      that are specific to the source.
     '''
     id = _get_or_bust(data_dict, "id")
-    group_info, custom_dict = get_group(id)
+    grp_result = get_group(id)
+    group_info = grp_result.get('group_info')
+    custom_dict = grp_result.get('custom_dict')
 
     datastore_id = custom_dict.get('topline_resource', None)
 
@@ -218,7 +220,7 @@ def get_group(id):
     else:
         custom_dict = {}
 
-    return group_info, custom_dict
+    return {'group_info': group_info, 'custom_dict': custom_dict}
 
 
 @logic.side_effect_free

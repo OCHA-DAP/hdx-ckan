@@ -42,10 +42,10 @@ def is_custom(environ, result):
     :return:
     '''
     try:
-        group_info, custom_dict = hdx_org_get.get_group(result['id'])
-        result['group_info'] = group_info
-        result['group_customization'] = custom_dict
-        if group_info.get('custom_loc', False):
+        grp_result = hdx_org_get.get_group(result['id'])
+        result['group_info'] = grp_result.get('group_info')
+        result['group_customization'] = grp_result.get('custom_dict')
+        if result['group_info'].get('custom_loc', False):
             return True
     except Exception, e:
         log.warning("Exception while checking if page is custom")
