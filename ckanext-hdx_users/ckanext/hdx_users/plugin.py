@@ -1,6 +1,5 @@
 import ckanext.hdx_users.actions.create as create
 import ckanext.hdx_users.actions.get as get
-import ckanext.hdx_users.actions.misc as misc
 import ckanext.hdx_users.actions.update as update
 import ckanext.hdx_users.helpers.user_extra as h_user_extra
 import ckanext.hdx_users.logic.register_auth as authorize
@@ -225,7 +224,7 @@ class HDXUsersPlugin(plugins.SingletonPlugin):
     def get_actions(self):
         return {
             'hdx_user_autocomplete': get.hdx_user_autocomplete,
-            'hdx_user_show': misc.hdx_user_show,
+            'hdx_user_show': get.hdx_user_show,
         }
 
     def get_validators(self):
