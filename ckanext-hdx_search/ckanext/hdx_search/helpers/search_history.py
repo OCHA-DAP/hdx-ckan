@@ -2,6 +2,9 @@ import ckan.model as model
 import ckan.lib.helpers as h
 from ckanext.hdx_search.model import SearchedString
 from ckan.plugins import toolkit as tk
+import logging as logging
+
+log = logging.getLogger(__name__)
 
 
 _get_action = tk.get_action
@@ -34,15 +37,18 @@ def num_of_results_for_prev_searches(userobj):
                 'rows': 1,
                 'start': 0,
             }
-            query = _get_action('package_search')(context, data_dict)
-            count = query.get('count', 0)
-            if count > 0:
-                num_of_results_per_search.append({
-                    'text': s.search_string,
-                    'count': count,
-                    'url': h.url_for('search', ext_after_metadata_modified=last_search_time,
-                                     ext_search_source='main-nav', q=s.search_string)
-                })
+            try:
+                query = _get_action('package_search')(context, data_dict)
+                count = query.get('count', 0)
+                if count > 0:
+                    num_of_results_per_search.append({
+                        'text': s.search_string,
+                        'count': count,
+                        'url': h.url_for('search', ext_after_metadata_modified=last_search_time,
+                                         ext_search_source='main-nav', q=s.search_string)
+                    })
+            except Exception, ex:
+                log.error(ex)
             if len(num_of_results_per_search) >= 3:
                 break
 
