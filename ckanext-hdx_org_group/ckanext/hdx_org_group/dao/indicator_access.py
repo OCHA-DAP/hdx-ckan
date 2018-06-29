@@ -4,7 +4,6 @@ Created on April 20, 2015
 @author: alexandru-m-g
 '''
 
-
 import logging
 import datetime as dt
 
@@ -19,6 +18,7 @@ import ckanext.hdx_org_group.dao.common_functions as common_functions
 abort = base.abort
 get_action = logic.get_action
 _ = common._
+
 
 class IndicatorAccess(object):
 

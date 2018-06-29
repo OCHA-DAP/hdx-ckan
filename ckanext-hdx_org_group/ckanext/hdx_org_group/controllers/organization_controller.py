@@ -16,6 +16,7 @@ import ckanext.hdx_org_group.helpers.static_lists as static_lists
 import ckanext.hdx_search.controllers.search_controller as search_controller
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_theme.util.jql as jql
+import ckan.lib.navl.dictization_functions as dict_fns
 
 import ckan.authz as new_authz
 import ckan.common as common
@@ -495,3 +496,32 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             return render(custom_org.CustomOrgController()._activity_template('organization'))
         else:
             return render(self._activity_template('organization'))
+
+    def _restore_org(self, id, context):
+
+        try:
+            self._check_access('organization_delete', context)
+        except NotAuthorized:
+            abort(401, _('Unauthorized to restore this organization'))
+
+        try:
+            data_dict = clean_dict(dict_fns.unflatten(
+                tuplize_dict(parse_params(request.params))))
+            context['message'] = data_dict.get('log_message', '')
+            data_dict['id'] = id
+            context['allow_partial_update'] = True
+            data_dict['state'] = 'active'
+            group = self._action('group_update')(context, data_dict)
+            if id != group['name']:
+                self._force_reindex(group)
+            h.redirect_to('%s_read' % group['type'], id=group['name'])
+        except NotAuthorized:
+            abort(401, _('Unauthorized to read group %s') % id)
+        except NotFound, e:
+            abort(404, _('Group not found'))
+        except dict_fns.DataError:
+            abort(400, _(u'Integrity Error'))
+        except ValidationError, e:
+            errors = e.error_dict
+            error_summary = e.error_summary
+            return self.edit(id, data_dict, errors, error_summary)

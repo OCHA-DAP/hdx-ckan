@@ -5,14 +5,12 @@ Created on Jun 10, 2014
 '''
 
 import logging as logging
-import exceptions as exceptions
 
 import ckan.lib.helpers as h
 import ckan.logic as logic
 import ckan.lib.base as base
 import ckan.plugins.toolkit as tk
 from ckan.common import c, request, _
-import ckan.lib.base as base
 import ckan.model as model
 
 import ckanext.hdx_org_group.helpers.static_lists as static_lists
@@ -70,7 +68,7 @@ class HDXReqsOrgController(base.BaseController):
             admins_with_email = [admin for admin in admins if admin['email']]
 
             data_dict = {'display_name': user['display_name'], 'name': user['name'],
-                         'email': user['email'], 'organization': org_id, 
+                         'email': user['email'], 'organization': org_id,
                          'message': msg, 'admins': admins_with_email}
             tk.get_action('hdx_send_editor_request_for_org')(context, data_dict)
             h.flash_success(_('Message sent'))
@@ -83,13 +81,12 @@ class HDXReqsOrgController(base.BaseController):
         h.redirect_to(controller='organization', action='read', id=org_id)
 
     def request_new_organization(self):
-        context = {'model': model, 'session': model.Session,
-                       'user': c.user or c.author}
+        context = {'model': model, 'session': model.Session, 'user': c.user or c.author}
         try:
             tk.check_access('hdx_send_new_org_request',context)
         except logic.NotAuthorized:
             base.abort(401, _('Unauthorized to send a new org request'))
-            
+
         errors = {}
         error_summary = {}
         data = {'from': request.params.get('from','')}
@@ -99,9 +96,9 @@ class HDXReqsOrgController(base.BaseController):
             try:
                 data = self._process_new_org_request()
                 self._validate_new_org_request_field(data)
-                
+
                 tk.get_action('hdx_send_new_org_request')(context, data)
-                
+
                 data.clear()
                 h.flash_success(_('Request sent successfully'))
                 sent_successfully = True
@@ -110,7 +107,7 @@ class HDXReqsOrgController(base.BaseController):
             except logic.ValidationError, e:
                 errors = e.error_dict
                 error_summary = e.error_summary
-            except exceptions.Exception, e:
+            except Exception, e:
                 log.error(str(e))
                 h.flash_error(_('Request can not be sent. Contact an administrator'))
             if sent_successfully:
