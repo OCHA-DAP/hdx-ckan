@@ -340,7 +340,7 @@ class ValidationController(ckan.controllers.user.UserController):
                         }
                         m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
                 except mailchimp.Error, ex:
-                    log.error(str(ex.error_summary))
+                    log.error(ex)
                 signup = signup
         return None
 
@@ -355,7 +355,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 }
                 m.lists.subscribe(list_id, email, None, 'html', False, False, True, False)
         except mailchimp.Error, ex:
-            log.error(str(ex.error_summary))
+            log.error(ex)
 
         return None
 
