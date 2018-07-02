@@ -31,6 +31,16 @@ def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 
 
+@bcache.cache_region('hdx_memory_cache', 'cached_grp_iso_to_title')
+def cached_group_iso_to_title():
+    log.info("Creating cache for group iso to title mapping")
+    groups = cached_group_list()
+
+    result = {g.get('name'):g.get('title') for g in groups}
+
+    return result
+
+
 @bcache.cache_region('hdx_memory_cache', 'cached_grp_list')
 def cached_group_list():
     log.info("Creating cache for group list ")
@@ -52,6 +62,7 @@ def cached_group_list():
 def invalidate_cached_group_list():
     log.info("Invalidating cache for group list")
     bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_list')
+    bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_iso_to_title')
 
 
 def filter_focus_countries(group_package_stuff):
