@@ -9,8 +9,8 @@ except ImportError:
     # CKAN 2.6 and earlier
     from pylons import config
 
-
 log = logging.getLogger(__name__)
+
 
 def is_api_call(environ):
     route_info = get_route_info(environ)
@@ -33,9 +33,11 @@ def is_api_call(environ):
 
     return False
 
+
 def get_route_info(environ):
     routing_args = environ.get('wsgiorg.routing_args')
     return routing_args[1] if routing_args and len(routing_args) > 1 else {}
+
 
 def get_api_action(environ):
     route_info = get_route_info(environ)
