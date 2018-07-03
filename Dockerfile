@@ -1,5 +1,4 @@
 FROM unocha/debian-base-s6:9-slim
-# FROM phusion/baseimage:latest
 
 ENV DEBIAN_FRONTEND=noninteractive \
     LANG=en_US.UTF-8 \
@@ -92,12 +91,6 @@ RUN apt-get -qq -y update && \
         /var/tmp/* \
         /tmp/*
 
-ENTRYPOINT ["/init"]
-
-CMD []
-
 VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
 
 EXPOSE 5000
-
-# CMD ["/sbin/my_init"]
