@@ -121,7 +121,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         all_orgs = get_action('cached_organization_list')(context, data_dict)
 
-        all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs, sort_option, q)
+        all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs, sort_option, q=q, has_datasets=True)
 
         c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
 

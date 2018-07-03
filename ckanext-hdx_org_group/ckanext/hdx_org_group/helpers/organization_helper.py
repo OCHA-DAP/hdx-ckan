@@ -45,7 +45,7 @@ NotFound = logic.NotFound
 ValidationError = logic.ValidationError
 
 
-def filter_and_sort_results_case_insensitive(results, sort_by, q=None):
+def filter_and_sort_results_case_insensitive(results, sort_by, q=None, has_datasets=False):
     '''
     :param results: list of organizations to filter/sort
     :type results: list[dict]
@@ -53,16 +53,21 @@ def filter_and_sort_results_case_insensitive(results, sort_by, q=None):
     :type sort_by: str
     :param q:
     :type q: str
+    :param has_datasets: True if it should filter out orgs without at least one datasets
+    :type has_datasets: bool
     :return: sorted/filtered list
     :rtype: list[dict]
     '''
+
+    filtered_results = results
     if q:
         q = q.lower()
-        filtered_results = [org for org in results
+        filtered_results = [org for org in filtered_results
                             if q in org.get('title', '').lower() or q in org.get('name', '')
                             or q in org.get('description', '').lower()]
-    else:
-        filtered_results = results
+    if has_datasets:
+        filtered_results = [org for org in filtered_results if 'package_count' in org and org['package_count']]
+
     if filtered_results:
         if sort_by == 'title asc':
             return sorted(filtered_results, key=lambda x: x.get('title', '').lower())
