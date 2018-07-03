@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/with-contenv sh
 
 # preparing to run ckan...
 bash /srv/ckan/docker/ckan_helper.sh

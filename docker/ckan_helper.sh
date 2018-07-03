@@ -21,9 +21,9 @@ chown -R www-data:www-data /var/log/ckan
 #python /srv/ckan/docker/helper.py
 
 # set pgpass if it's not there
-hdxckantool pgpass > /dev/null
+#hdxckantool pgpass > /dev/null
 # set proper permissions on datastore
-hdxckantool db set-perms > /dev/null
+#hdxckantool db set-perms > /dev/null
 
 # make ckan dependent on pgb
 #sv start pgb || exit 1
