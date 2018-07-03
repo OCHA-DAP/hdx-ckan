@@ -217,6 +217,8 @@ hdx.analytics.mixpanel.secret = OVERWRITE_WITH_SECRET_FROM_MP_PROJECT
 hdx.analytics.hours_for_results_in_cache = 12
 # Disable HDX API tracking
 hdx.analytics.track_api = false
+hdx.analytics.track_api.exclude_browsers =
+hdx.analytics.track_api.exclude_other =
 
 # Scheduled execution
 # This should be overriden in your own prod.ini.
