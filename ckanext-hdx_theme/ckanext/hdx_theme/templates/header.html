@@ -24,22 +24,22 @@
                 {% if step == "hdx_onboarding_first_login" %}
                 <div id="first-login" style="display: none;">first login</div>
                 <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
                 </div>
                 {% endif %}
                 {% if step == "hdx_onboarding_follows" %}
                 <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
                 </div>
                 {% endif %}
                 {% if step == "hdx_onboarding_org" %}
                 <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
+                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup');" href="#">Complete setting up your account</a>
                 </div>
                 {% endif %}
                 {% if step == "hdx_onboarding_friends" %}
                 <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
+                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
                 </div>
                 {% endif %}
                 {% endif %}
@@ -231,7 +231,7 @@
                                         </li>
                                       {% endfor %}
                                       <li>
-                                          <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola</a></div>
+                                          <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>
                                           <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                                       </li>
                                       <li>
@@ -278,7 +278,7 @@
                                 <div id="input-search">
                                     <div class="input-prepend input-append">
                                         <i class="icon-search"></i>
-                                        <input type="text" class="searchInput" id="q" name="q" value="" autocomplete="off" placeholder="Search Datasets">
+                                        <input type="text" class="searchInput" id="qMobile" name="q" value="" autocomplete="off" placeholder="Search Datasets">
                                         <input type="hidden" value="main-nav" name="ext_search_source" />
                                     </div>
                                     <div class="search-ahead"></div>
@@ -312,7 +312,7 @@
                   <li class="crisis"><a href="/{{ev.type}}/{{ev.name}}">{{ ev.title }}</a></li>
                 {% endfor %}
                 <li class="crisis"><a href="{{ nepalLink }}">Nepal Earthquake</a></li>
-                <li class="crisis"><a href="{{ ebolaLink }}">Ebola</a></li>
+                <li class="crisis"><a href="{{ ebolaLink }}">Ebola 2014</a></li>
 
                 <li class="sub-nav"><a href="{{ faqLink }}">FAQ</a></li>
                 <li class="sub-nav top-pad">{% link_for _('Data Licenses'), controller='ckanext.hdx_theme.splash_page:SplashPageController', action='about', page='license' %}</li>
