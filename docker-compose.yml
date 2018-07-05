@@ -5,7 +5,7 @@ networks:
 
 services:
   solr:
-    image: unocha/alpine-solr:4
+    image: unocha/alpine-solr:6.3.0-201701-01
     hostname: solr
     container_name: solr
 
