@@ -62,7 +62,7 @@ def cached_group_list():
 def invalidate_cached_group_list():
     log.info("Invalidating cache for group list")
     bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_list')
-    bcache.region_invalidate(cached_group_list, 'hdx_memory_cache', 'cached_grp_iso_to_title')
+    bcache.region_invalidate(cached_group_iso_to_title, 'hdx_memory_cache', 'cached_grp_iso_to_title')
 
 
 def filter_focus_countries(group_package_stuff):

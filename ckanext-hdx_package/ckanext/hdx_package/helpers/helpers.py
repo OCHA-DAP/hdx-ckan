@@ -41,7 +41,9 @@ def build_additions(groups):
     for g in groups:
         try:
             if 'name' in g:
-                countries.append(cached_group_iso_to_title()[g['name']])
+                grp_list = cached_group_iso_to_title()
+                country = grp_list[g.get('name')] if g.get('name') in grp_list else g.get('name')
+                countries.append(country)
         except Exception, e:
             ex_msg = e.message if hasattr(e, 'message') else str(e)
             log.error(ex_msg)

@@ -24,6 +24,7 @@ from nose import tools as nosetools
 
 log = logging.getLogger(__name__)
 
+
 organization = {
     'name': 'hdx-test-org',
     'title': 'Hdx Test Org',
@@ -127,15 +128,31 @@ class TestHDXPackageUpdate(hdx_test_base.HdxBaseTest):
         testsysadmin = model.User.by_name('testsysadmin')
         legacy_tests.call_action_api(self.app, 'group_create', name="col", title="Colombia", apikey=testsysadmin.apikey,
                                      status=200)
-        p = legacy_tests.call_action_api(self.app, 'package_create', package_creator="test function",
-                                         name="test_activity_4",
-                                         dataset_source="World Bank", notes="This is a test activity 4",
-                                         title="Test Activity 4",
-                                         indicator=1, groups=[{"name": "col"}], apikey=testsysadmin.apikey, status=200,
-                                         owner_org="hdx-test-org")
         context = {'ignore_auth': True,
-                   'model': model, 'session': model.Session, 'user': 'nouser'}
-        s = self._get_action('package_show')(context, {"id": p["id"]})
+                                  'model': model, 'session': model.Session, 'user': 'testsysadmin'}
+        try:
+            self._get_action('organization_create')(context, organization)
+        except Exception, ex:
+            log.error(ex)
+        package = {"package_creator": "test function",
+                   "private": False,
+                   "dataset_date": "01/01/1960-12/31/2012",
+                   "caveats": "These are the caveats",
+                   "license_other": "TEST OTHER LICENSE",
+                   "methodology": "This is a test methodology",
+                   "dataset_source": "World Bank",
+                   "license_id": "hdx-other",
+                   "notes": "This is a test activity",
+                   "groups": [{"name": "col"}],
+                   "owner_org": "hdx-test-org",
+                   'name': 'test_activity_4',
+                   'title': 'Test Activity 4',
+                   'maintainer': testsysadmin.id,
+                   'maintainer_email': None
+                   }
+        p = self._get_action('package_create')(context, package)
+        context = {'ignore_auth': True, 'model': model, 'session': model.Session, 'user': 'nouser'}
+        s = self._get_action('package_show')(context, {"id": p.get('id')})
         assert json.loads(s['solr_additions'])['countries'] == ['Colombia']
 
     def test_hdx_package_update_metadata(self):
