@@ -1,12 +1,12 @@
 import re
 import logging
 import ckan.lib.base as base
-from ckan.common import _, c, g, request, response
+from ckan.common import request
 # import exceptions as exceptions
 import ckan.logic as logic
 # import json
 import pylons.configuration as configuration
-
+import ckan.lib.helpers as h
 # import ckanext.hdx_users.controllers.mailer as hdx_mailer
 # from ckanext.hdx_theme.helpers.faq_data import faq_data
 
@@ -55,6 +55,7 @@ class ExplorerController(base.BaseController):
         }
         if is_mobile_browser(request.environ['HTTP_USER_AGENT']):
             log.info("Found mobile browser")
-            base.redirect(url)
+            # base.redirect(url)
+            h.redirect_to(url)
         else:
             return base.render('explorer/main.html', extra_vars=template_data)
