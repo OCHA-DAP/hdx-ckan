@@ -73,6 +73,11 @@ ckan.plugins = hdx_hxl_preview ytp_request hdx_pages hdx_choropleth_map_view hdx
 ckan.use_pylons_response_cleanup_middleware = False
 hdx_portal = True
 
+# Map Explorer configs
+hdx.explorer.url = /mpx/#/
+hdx.explorer.iframe.width = 100%
+hdx.explorer.iframe.height = 750px
+
 # use <strong> so we can check that html is *not* escaped
 ckan.template_head_end = <link rel="stylesheet" href="TEST_TEMPLATE_HEAD_END.css" type="text/css">
 
