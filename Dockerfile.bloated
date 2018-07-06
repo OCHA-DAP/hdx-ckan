@@ -1,0 +1,116 @@
+FROM phusion/baseimage:latest
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en \
+    LC_ALL=en_US.UTF-8 \
+    HDX_CKAN_WORKERS=4 \
+    INI_FILE=/etc/ckan/prod.ini
+
+
+COPY . /srv/ckan/
+
+WORKDIR /srv/ckan
+
+RUN cp docker/locale /etc/default/locale && \
+    locale-gen en_US.UTF-8 && dpkg-reconfigure locales
+
+# apt-get -qq -y dist-upgrade && \
+
+RUN apt-get -qq update && \
+    apt-get -qq -y install \
+        gettext-base \
+        nano \
+        python-software-properties \
+        software-properties-common \
+        git \
+        build-essential \
+        libxml2-dev \
+        libxslt1-dev \
+        zlib1g-dev \
+        python-dev \
+        python-pip \
+        postgresql-client \
+        libpq-dev \
+        libyaml-dev \
+        python3-psycopg2 \
+        libffi-dev \
+        libssl-dev \
+        nodejs \
+        npm && \
+    ln -s /usr/bin/nodejs /usr/bin/node && \
+    npm install -g less && \
+    pip -q install --upgrade --no-cache-dir \
+        pip \
+        setuptools \
+        gevent \
+        gunicorn \
+        lxml
+
+# hopefully not needed anymore
+# RUN add-apt-repository ppa:tanguy-patte/phantomjs && \
+#     apt-get -qq update && \
+#     apt-get install \
+#         imagemagick \
+#         phantomjs && \
+#         npm install -g capturejs
+
+# not needed anymore, we are using either sendgrid or mailhog
+# RUN cp docker/msmtprc /etc/ && \
+#     apt-get -qq -y install msmtp && \
+#     if [ -e /usr/sbin/sendmail ]; then mv /usr/sbin/sendmail /usr/sbin/sendmail.orig; fi && \
+#     cd /usr/lib && ln -sf ../bin/msmtp sendmail && cd /usr/sbin && ln -sf ../bin/msmtp sendmail
+
+
+# /srv/pgb /etc/service/pgb && \
+    
+RUN rm -rf /usr/local/man && \
+    mkdir -p /var/log/ckan /srv/filestore /etc/service/ckan /etc/ckan && \
+    cp -a docker/prod.ini.tpl /etc/ckan && \
+    cp -a docker/run_ckan /etc/service/ckan/run && \
+    chmod +x /etc/service/ckan/run && \
+    chown www-data:www-data -R /var/log/ckan /srv/filestore && \
+    curl -s -o /srv/hdxckantool.py https://raw.githubusercontent.com/OCHA-DAP/hdx-infra-tools/master/hdxckantool.py && \
+    chmod +x /srv/hdxckantool.py && \
+    ln -s /srv/hdxckantool.py /usr/sbin/hdxckantool && \
+    echo "application/vnd.geo+json       geojson" >> /etc/mime.types && \
+    python setup.py develop && \
+    pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir newrelic && \
+    hdxckantool plugins dev && \
+    newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini
+
+# cleanup!
+RUN apt-get -qq -y remove \
+        build-essential \
+        libffi-dev \
+        libpq-dev \
+        libssl-dev \
+        libxml2-dev \
+        libxslt1-dev \
+        libyaml-dev \
+        zlib1g-dev \
+        python-dev
+
+# optional dev stuff
+# RUN apt-get install --qq -y \
+#         git \
+#         mc
+
+RUN apt-get -y autoremove && \
+    apt-get clean && \
+    rm -rf \
+        .git \
+        /root/.cache \
+        /root/.npm \
+        /usr/share/doc \
+        /usr/share/man \
+        /var/lib/apt/lists/* \
+        /var/tmp/* \
+        /tmp/*
+
+VOLUME ["/srv/filestore", "/srv/backup", "/var/log/ckan"]
+
+EXPOSE 5000
+
+CMD ["/sbin/my_init"]

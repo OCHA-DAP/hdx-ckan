@@ -83,6 +83,10 @@ hdx.analytics.mixpanel.secret = ${HDX_MIXPANEL_SECRET}
 hdx.analytics.enqueue_url    = http://gislayer:5000/api/send-analytics
 #hdx.analytics.enqueue_url    = http://${HDX_GISLAYER_ADDR}:${HDX_GISLAYER_PORT}/api/send-analytics
 hdx.analytics.hours_for_results_in_cache = ${HDX_HOURS_MIXPANEL_CACHE}
+#API Tracking
+hdx.analytics.track_api = ${HDX_ANALYTICS_TRACK_API}
+hdx.analytics.track_api.exclude_browsers = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_BROWSERS}
+hdx.analytics.track_api.exclude_other = ${HDX_ANALYTICS_TRACK_API_EXCLUDE_OTHER}
 
 # HXL Proxy
 # This should be overriden in your own prod.ini
