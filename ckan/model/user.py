@@ -53,11 +53,13 @@ class User(vdm.sqlalchemy.StatefulObjectMixin,
     def by_email(cls, email):
         return meta.Session.query(cls).filter_by(email=email).all()
 
+    # added email by HDX
     @classmethod
     def get(cls, user_reference):
         query = meta.Session.query(cls).autoflush(False)
         query = query.filter(or_(cls.name == user_reference,
-                                 cls.id == user_reference))
+                                 cls.id == user_reference,
+                                 cls.email == user_reference))
         return query.first()
 
     @classmethod
