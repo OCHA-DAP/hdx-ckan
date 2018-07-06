@@ -412,7 +412,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
         bob_user = factories.User(name='bob', email='bob@example.com')
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
         params = {
             'user': bob_user['email']
@@ -440,7 +440,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
         bob_user = factories.User(name='bob', email='bob@example.com')
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
         params = {
             'user': bob_user['name']
@@ -469,7 +469,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
         bob_user = factories.User(name='bob', email='bob@example.com')
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
         params = {
             'user': 'BOB@example.com'
@@ -496,7 +496,7 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
         '''Password reset email is not sent for a valid email but no account'''
 
         # send email
-        url = h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                         action='request_reset')
 
         # user doesn't exist

@@ -204,7 +204,7 @@ class DatasetController(PackageController):
         """
         # If user not logged in, redirect
         if not c.user:
-            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                                       action='contribute'))
 
         c.am_sysadmin = new_authz.is_sysadmin(c.user)
@@ -232,7 +232,7 @@ class DatasetController(PackageController):
                 # if this_org in user_orgs:
                 #     return render('organization/request_mem_or_org.html')
         except:
-            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.login_controller:LoginController',
+            return redirect(h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                                       action='contribute'))
 
         package_type = self._guess_package_type(True)
