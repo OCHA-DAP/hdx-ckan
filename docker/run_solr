@@ -1,0 +1,36 @@
+#!/usr/bin/with-contenv sh
+
+BASEDIR=/srv/solr
+
+cd $BASEDIR
+
+if [ -f /srv/solrconfig.xml ]; then
+    echo "Performing a one time HDX-specific SOLR initialization..."
+    echo "Starting a blank solr..."
+    bin/solr start -force > /dev/null 2>&1
+    echo "Waiting for blank solr to come online..."
+    sleep 20
+    echo "Creating a new solr node..."
+    bin/solr create_core -c ckan -force > /dev/null 2>&1
+    sleep 5
+    echo "Stopping the blank solr..."
+    bin/solr stop -all > /dev/null 2>&1
+    sleep 5
+    echo "Reconfiguring new HDX solr node and applying HDX schema..."
+    mv /srv/solrconfig.xml /srv/solr/server/solr/ckan/conf/
+    mv /srv/schema.xml /srv/solr/server/solr/ckan/conf/
+    echo "HDX init done!"
+else
+    echo "HDX-specific SOLR initialization seems completed. Skipping it."
+fi
+
+echo "Starting SOLR service."
+
+EXTRAOPTS="-DMASTER_PROTO=${MASTER_PROTO:-http} \
+           -DMASTER_ADDR=${MASTER_ADDR:-solr}\
+           -DMASTER_PORT=${MASTER_PORT:-8983} \
+           -DMASTER_CORE=${MASTER_CORE:-ckan} \
+           -DIS_MASTER=${IS_MASTER:-true} \
+           -DIS_SLAVE=${IS_SLAVE:-false}"
+
+exec bin/solr -force -f -m ${SOLR_HEAP_SIZE:-512m} -a "${EXTRAOPTS}"
