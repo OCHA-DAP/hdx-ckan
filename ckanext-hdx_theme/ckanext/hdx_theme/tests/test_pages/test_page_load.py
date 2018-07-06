@@ -16,7 +16,7 @@ pages = [
     {'controller': 'ckanext.hdx_users.controllers.registration_controller:RequestController',
      'action': 'register', 'usertype': None},
     {'controller': 'user', 'action': 'login', 'usertype': None},
-    {'controller': 'ckanext.hdx_users.controllers.login_controller:LoginController',
+    {'controller': 'ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
      'action': 'contribute', 'usertype': None},
     {'controller': 'package', 'action': 'search', 'usertype': 'all'},
     {'controller': 'group', 'action': 'index', 'usertype': 'all'},
