@@ -1,4 +1,5 @@
 import pylons.config as config
+from ckan.plugins import toolkit as tk
 
 import ckan.logic as logic
 import ckan.lib.dictization.model_dictize as model_dictize

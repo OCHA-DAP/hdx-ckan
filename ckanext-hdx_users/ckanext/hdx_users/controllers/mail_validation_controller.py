@@ -799,9 +799,6 @@ class ValidationController(ckan.controllers.user.UserController):
             # c.is_sysadmin = new_authz.is_sysadmin(c.user)
             # c.form = render(self.new_user_form, extra_vars=vars)
 
-
-
-
             # return render('user/new.html')
 
     # def _save_new(self, context):
@@ -986,8 +983,8 @@ class ValidationController(ckan.controllers.user.UserController):
                 token = tokens.token_show(context, data_dict)
             except NotFound, e:
                 token = {'valid': True}  # Until we figure out what to do with existing users
-            except:
-                OnbErr
+            except Exception, ex:
+                return OnbErr
 
             if not token['valid']:
                 # redirect to validation page
