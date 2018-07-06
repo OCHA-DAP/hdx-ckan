@@ -132,7 +132,7 @@ class TestEmailAccess(hdx_test_base.HdxFunctionalBaseTest):
     def test_delete_user(self):
         res = self._create_user()
 
-        user = model.User.get('valid@example.com')
+        user = model.User.by_email('valid@example.com')
         admin = model.User.by_name('testsysadmin')
         offset2 = h.url_for(controller='user', action='delete', id=user.id)
         res2 = self.app.get(offset2, status=[200, 302], headers={'Authorization': unicodedata.normalize(
@@ -180,7 +180,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
         res = self.app.post(url, params)
         assert_true(json.loads(res.body)['success'])
 
-        user = model.User.get('valid@example.com')
+        user = model.User.by_email('valid@example.com')
 
         assert_true(user is not None)
         assert_true(user.password is None)
@@ -222,7 +222,7 @@ class TestUserEmailRegistration(hdx_test_base.HdxFunctionalBaseTest):
                         action='register_email')
         params = {'email': 'VALID@example.com', 'nosetest': 'true'}
         self.app.post(url, params)
-        user = model.User.get('valid@example.com')
+        user = model.User.by_email('valid@example.com')
         # retrieved user has lowercase email
         assert_equal(user.email, 'valid@example.com')
         assert_not_equal(user.email, 'VALID@example.com')
