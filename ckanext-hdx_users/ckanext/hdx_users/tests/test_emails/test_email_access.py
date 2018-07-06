@@ -494,28 +494,28 @@ class TestPasswordReset(SmtpServerHarness, PylonsTestCase):
         assert_equal(msg[2], [bob_user['email']])
         assert_true('Reset' in msg[3])
 
-    # def test_no_send_reset_email_for_non_user(self):
-    #     '''Password reset email is not sent for a valid email but no account'''
-    #
-    #     # send email
-    #     url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
-    #                     action='request_reset')
-    #
-    #     # user doesn't exist
-    #     params = {
-    #         'user': 'bob@example.com'
-    #     }
-    #
-    #     # no emails sent yet
-    #     msgs = self.get_smtp_messages()
-    #     assert_equal(len(msgs), 0)
-    #
-    #     res = json.loads(self.app.post(url, params).body)
-    #     assert_false(res['success'])
-    #
-    #     # no email has been sent
-    #     msgs = self.get_smtp_messages()
-    #     assert_equal(len(msgs), 0)
+    def test_no_send_reset_email_for_non_user(self):
+        '''Password reset email is not sent for a valid email but no account'''
+
+        # send email
+        url = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
+                        action='request_reset')
+
+        # user doesn't exist
+        params = {
+            'user': 'bob@example.com'
+        }
+
+        # no emails sent yet
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
+
+        res = json.loads(self.app.post(url, params).body)
+        assert_false(res['success'])
+
+        # no email has been sent
+        msgs = self.get_smtp_messages()
+        assert_equal(len(msgs), 0)
 
 
         # TODO create user according to the last onboarding. Note CAPTCHA!
