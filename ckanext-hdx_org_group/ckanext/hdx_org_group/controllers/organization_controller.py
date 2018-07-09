@@ -123,7 +123,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
 
         all_orgs = helper.filter_and_sort_results_case_insensitive(all_orgs, sort_option, q=q, has_datasets=True)
 
-        c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
+        # c.featured_orgs = helper.hdx_get_featured_orgs(context, data_dict)
 
         def pager_url(page=None):
             if sort_option:
@@ -140,7 +140,8 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
             items_per_page=limit
         )
 
-        displayed_orgs = c.featured_orgs + [o for o in c.page]
+        # displayed_orgs = c.featured_orgs + [o for o in c.page]
+        displayed_orgs = [o for o in c.page]
         org_add_last_updated_field(displayed_orgs)
 
         return base.render('organization/index.html')
