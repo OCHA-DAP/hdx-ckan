@@ -1083,7 +1083,6 @@ class DatasetController(PackageController):
         result = super(DatasetController, self).resource_download(id, resource_id)
         context = {'model': model, 'session': model.Session,
                    'user': c.user or c.author, 'auth_user_obj': c.userobj}
-
         try:
             rsc = get_action('resource_show')(context, {'id': resource_id})
             response.headers['Content-Disposition'] = 'inline; filename="{}"'.format(rsc.get('name', 'download'))

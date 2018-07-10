@@ -137,8 +137,9 @@ def make_flask_stack(conf, **app_conf):
 
     # Start other middleware
 
-    for plugin in PluginImplementations(IMiddleware):
-        app = plugin.make_middleware(app, config)
+    # changed by HDX for HDX-6020
+    # for plugin in PluginImplementations(IMiddleware):
+    #     app = plugin.make_middleware(app, config)
 
     # Fanstatic
     if debug:
