@@ -18,6 +18,7 @@ import paste.deploy.converters as converters
 import pylons.config as config
 from ckanext.hdx_theme.helpers.screenshot_creator import ScreenshotCreator
 from sqlalchemy import func
+import ckanext.hdx_org_group.helpers.static_lists as static_lists
 
 import ckan.lib.dictization as dictization
 import ckan.lib.dictization.model_dictize as model_dictize
@@ -732,3 +733,13 @@ def hdx_user_in_org_or_group(group_id, include_pending=False):
         .filter(model.Member.table_id == c.userobj.id)
     length = query.all()[0][0]
     return length != 0
+
+
+def hdx_organization_type_list(include_default_value=None):
+    result = []
+    if include_default_value:
+        result.append({'value': '-1', 'text': _('-- Please select --')})
+    result.extend([{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST])
+    # return [{'value': '-1', 'text': _('-- Please select --')}] + \
+    #        [{'value': t[1], 'text': _(t[0])} for t in static_lists.ORGANIZATION_TYPE_LIST]
+    return result

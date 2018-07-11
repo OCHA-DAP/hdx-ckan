@@ -4,12 +4,13 @@ duplicates methods from registration_controller.py because when
 enabled it will override them when enabled
 """
 import datetime
-import exceptions as exceptions
+# import exceptions as exceptions
 import hashlib
 import json
 import logging as logging
 import re
 import urllib2 as urllib2
+import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
@@ -39,6 +40,7 @@ import ckan.plugins as p
 from ckan.common import _, c, g, request, response
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
+_validate = dictization_functions.validate
 log = logging.getLogger(__name__)
 render = base.render
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -116,7 +118,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 get_action('user_extra_update')(context, data_dict)
             except NotFound, e:
                 return OnbUserNotFound
-            except exceptions.Exception, e:
+            except Exception, e:
                 error_summary = str(e)
                 return self.error_message(error_summary)
         else:
@@ -253,7 +255,7 @@ class ValidationController(ckan.controllers.user.UserController):
             if error_summary == CaptchaNotValid:
                 return OnbCaptchaErr
             return self.error_message(error_summary)
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = e.error_summary
             return self.error_message(error_summary)
 
@@ -316,7 +318,7 @@ class ValidationController(ckan.controllers.user.UserController):
             # errors = e.error_dict
             error_summary = e.error_summary
             return self.error_message(error_summary)
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
 
@@ -394,7 +396,7 @@ class ValidationController(ckan.controllers.user.UserController):
             # get_action('user_extra_update')(context, data_dict)
         except NotFound, e:
             return OnbUserNotFound
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
 
@@ -438,7 +440,7 @@ class ValidationController(ckan.controllers.user.UserController):
         #     if error_summary == CaptchaNotValid:
         #         return OnbCaptchaErr
         #     return self.error_message(error_summary)
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = e.error_summary
             return self.error_message(error_summary)
         # hack to disable check if user is logged in
@@ -492,7 +494,7 @@ class ValidationController(ckan.controllers.user.UserController):
             return self.error_message(error_summary or e.error_summary)
         except IntegrityError:
             return OnbExistingUsername
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
         c.user = save_user
@@ -523,7 +525,7 @@ class ValidationController(ckan.controllers.user.UserController):
         except ValidationError, e:
             error_summary = e.error_summary
             return self.error_message(error_summary)
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
         return OnbSuccess
@@ -543,20 +545,20 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             user = model.User.get(context['user'])
             data = self._process_new_org_request(user)
-            self._validate_new_org_request_field(data)
+            self._validate_new_org_request_field(data,context)
 
             get_action('hdx_send_new_org_request')(context, data)
 
             ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
-            get_action('user_extra_update')(context, ue_dict)
+            # get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException, e:
             error_summary = e.error_summary
             return self.error_message(error_summary)
         except logic.ValidationError, e:
-            error_summary = e.error_summary
+            error_summary = e.error_summary.get('Message') if 'Message' in e.error_summary else e.error_summary
             return self.error_message(error_summary)
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
         return OnbSuccess
@@ -592,7 +594,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
         except hdx_mail.NoRecipientException, e:
             return self.error_message(_(str(e)))
-        except exceptions.Exception, e:
+        except Exception, e:
             log.error(str(e))
             return self.error_message(_('Request can not be sent. Contact an administrator.'))
         return OnbSuccess
@@ -638,7 +640,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 if f:
                     hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
 
-        except exceptions.Exception, e:
+        except Exception, e:
             error_summary = str(e)
             return self.error_message(error_summary)
         return OnbSuccess
@@ -892,20 +894,39 @@ class ValidationController(ckan.controllers.user.UserController):
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
 
-    def _validate_new_org_request_field(self, data):
+    #     user_email_validator = tk.get_validator('user_email_validator')
+    #
+    #     schema = {
+    #         'name': [not_empty, unicode],
+    #         'email': [not_empty, user_email_validator, unicode],
+    #     }
+    #     return schema
+
+    def _validate_new_org_request_field(self, data, context):
         errors = {}
-        for field in ['title', 'description', 'your_email', 'your_name']:
+        for field in ['name', 'description', 'description_data', 'work_email', 'your_name', 'your_email']:
             if data[field].strip() == '':
                 errors[field] = [_('should not be empty')]
 
         if len(errors) > 0:
             raise logic.ValidationError(errors)
 
+        user_email_validator = tk.get_validator('user_email_validator')
+        schema = {'work_email': [user_email_validator, unicode]}
+        data_dict, _errors = _validate(data, schema, context)
+
+        if _errors:
+            raise logic.ValidationError(_errors.get('work_email'))
+
     def _process_new_org_request(self, user):
         data = {'name': request.params.get('name', ''),
-                'title': request.params.get('name', ''),
-                'org_url': request.params.get('url', ''),
+                # 'title': request.params.get('name', ''),
                 'description': request.params.get('description', ''),
+                'description_data': request.params.get('description_data', ''),
+                'work_email': request.params.get('work_email', ''),
+                'org_url': request.params.get('url', ''),
+                'acronym': request.params.get('acronym', ''),
+                'org_type': request.params.get('org_type') if request.params.get('org_type') != '-1' else '',
                 'your_email': user.email,
                 'your_name': user.fullname,
                 }

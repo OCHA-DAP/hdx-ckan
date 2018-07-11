@@ -50,7 +50,10 @@ class HDXOrgGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultOrganization
         org_group_model.create_table()
 
     def get_helpers(self):
-        return {}
+        from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_h
+        return {
+            'hdx_organization_type_list': hdx_org_h.hdx_organization_type_list,
+        }
 
     def get_actions(self):
         from ckanext.hdx_org_group.helpers import organization_helper as hdx_org_actions

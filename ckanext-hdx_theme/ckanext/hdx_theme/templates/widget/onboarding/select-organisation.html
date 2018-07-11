@@ -17,12 +17,15 @@ Example:
 
 {% block left_content %}
     <div>
-        <div class="large-title">Prepare to share data</div>
+        <div class="large-title">Prepare to share* data</div>
         <div class="mTop20 large-text">Sharing data on HDX is easy.</div>
         <div class="mTop20 regular-text">
             Data on HDX is <strong>shared through organisations.</strong><br/>
             Create a new organisation or join an existing one. <br/>
             Data can be shared publicly or privately with members of an organisation.
+        </div>
+        <div class="mTop20 star-text star-box">
+            *Approved organisations will remain inactive until at least one dataset has been shared through HDX.
         </div>
     </div>
 {% endblock %}
@@ -50,28 +53,50 @@ Example:
 
     <div id="create-organisation" style="display: none;">
         <div class="bold-regular-text">Create a new organisation: </div>
-        <div class="regular-text">Tell us a bit more about your organisation. We will review your request and get back to you within 24 hours. Check <a href="#" onclick="$('#create-organisation').hide();$('#select-organisation').show();">existing organisations</a></div>
+        <div class="regular-text">Please tell us more about your organisation. We will review your request and get back to you within 24 hours to discuss the data you would like to share. Please confirm that your organisation does not already exist by checking the current organisation list <a href="#" onclick="$('#create-organisation').hide();$('#select-organisation').show();">here</a>.</div>
         <form id="create-organisation-form">
             <div class="mTop20 control">
                 <input id="org-name" name="name" class="full-width required" type="text">
-                <label for="org-name">Name of organisation</label>
+                <label for="org-name">Name of Organisation</label>
             </div>
-
-            <div class="mTop20 control">
-                <input id="org-url" name="url" class="full-width required" type="text">
-                <label for="org-url">URL of organisation</label>
-            </div>
-
             <div class="mTop20 control">
                 <textarea id="org-description" name="description" class="full-width required"></textarea>
-                <label for="org-description">Description of organisation</label>
+                <label for="org-description">Description of Organisation</label>
             </div>
+            <div class="mTop20 control">
+                <textarea id="org-description-data" name="description_data" class="full-width required"></textarea>
+                <label for="org-description-data">Description of data you plan to share</label>
+            </div>
+            <div class="mTop20 control">
+                <input id="org-work-email" name="work_email" class="full-width required" type="text">
+                <label for="org-work-email">Your Work Email</label>
+            </div>
+            <div class="mTop20 control">
+                <input id="org-url" name="url" class="full-width" type="text">
+                <label for="org-url">URL of Organisation</label>
+            </div>
+            <div class="mTop20 control">
+                <input id="org-acronym" name="acronym" class="full-width" type="text">
+                <label for="org-acronym">Organisation Acronym</label>
+            </div>
+            <div class="mTop20 control">
+                {% set hdx_org_type_list = h.hdx_organization_type_list() %}
+                <select class="mTop20" id="org-type-selector" name="org_type">
+                  <option value="-1">{{_('Select organisation type...')}}</option>
+                  {% for t in hdx_org_type_list %}
+                    <option value="{{t.value}}">{{ t.text }}</option>
+                  {% endfor %}
+                </select>
+
+            </div>
+
 <!-- FTS ID is removed
             <div class="mTop20 control">
                 <input id="org-fts" name="fts_id" class="full-width required" type="text">
                 <label for="org-fts">FTS ID</label>
             </div>
 -->
+
             <div class="mTop20 control">
                 <label class="terms-of-service vertically-center" data-module="hdx_terms_checkbox" data-module-button="new-org-req-submit">
                     <input type="checkbox">

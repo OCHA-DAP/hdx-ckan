@@ -33,50 +33,50 @@ overriding the form blocks depending on the current context
         {% set domain = h.url_for(controller='organization', action='read', id='', qualified=true) %}
         {% set domain = domain|replace("http://", "")|replace("https://", "") %}
         {% set attrs = {'data-module': 'slug-preview-slug', 'data-module-prefix': domain, 'data-module-placeholder': '<organization>'} %}
-		<div class="org-control-info  info-field">
-			<div class="org-info-label">{{_("Be as specific as possible (i.e. don't just say WFP, say WFP-Colombia)")}}</div>
-		</div>
-	</div>
-	<div class="org-control-container url-align">
-    {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
-	</div>
-	<div class="org-control-container">
-	    {{ form.input('org_url', label=_('URL of Organisation (please include protocol, e.g. "http://")'), id='field-org-url',
-	            type='url', placeholder=_('http://example.com/about'), value=data.org_url, error=errors.org_url, classes=['control-full','org-control','field-with-info']) }}
-	    <div class="org-control-info info-field">
-	    	<div class="org-info-label">{{_('Where can people go to find more about this organisation?')}}</div>
-	    </div>
-	</div>
-	<div class="org-control-container">
-	    {{ form.markdown('description', id='field-description', label=_('Description of Organisation'), value=data.description, error=errors.description, classes=['org-control','mandatory','field-with-info']) }}
-	    <div class="org-control-info-large  info-field">
-	    	<div class="org-info-label-large">
-	    		{{_('Brief overview of what organisation is for.')}}</div>
-	    </div>
-    </div>
-      <div class="org-control-container">
-          {% set org_acronym = h.hdx_get_extras_element(data, value_key="org_acronym") %}
-          {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full','org-control','field-with-info']) }}
-          <div class="org-control-info info-field">
-              <div class="org-info-label">{{ _('Organisation Acronym') }}</div>
-          </div>
+      <div class="org-control-info  info-field">
+        <div class="org-info-label">{{_("Be as specific as possible (i.e. don't just say WFP, say WFP-Colombia)")}}</div>
       </div>
-      <div class="org-control-container">
-          {% set hdx_org_type = h.hdx_get_extras_element(data, value_key='hdx_org_type') %}
-          {{ form.select('hdx_org_type', id='hdx-org-type', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full','org-control','mandatory','field-with-info']) }}
-          <div class="org-control-info info-field">
-              <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
-          </div>
-      </div>
-	  {% if c.userobj.sysadmin %}
-	  <div class="org-control-container" style="margin-top:50px;">
-		{% set fts_id = h.hdx_get_extras_element(data, value_key="fts_id") %}
-		  {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
-		  <div class="org-control-info info-field">
-			<div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
-		  </div>
 	  </div>
-	  {% endif %}
+    <div class="org-control-container url-align">
+      {{ form.prepend('name', label=_('URL'), prepend=prefix, id='field-url', placeholder=_('my-organisation'), value=data.name, error=errors.name, attrs=attrs) }}
+    </div>
+    <div class="org-control-container">
+        {{ form.input('org_url', label=_('URL of Organisation (please include protocol, e.g. "http://")'), id='field-org-url',
+                type='url', placeholder=_('http://example.com/about'), value=data.org_url, error=errors.org_url, classes=['control-full','org-control','field-with-info']) }}
+        <div class="org-control-info info-field">
+          <div class="org-info-label">{{_('Where can people go to find more about this organisation?')}}</div>
+        </div>
+    </div>
+    <div class="org-control-container">
+        {{ form.markdown('description', id='field-description', label=_('Description of Organisation'), value=data.description, error=errors.description, classes=['org-control','mandatory','field-with-info']) }}
+        <div class="org-control-info-large  info-field">
+          <div class="org-info-label-large">
+            {{_('Brief overview of what organisation is for.')}}</div>
+        </div>
+      </div>
+        <div class="org-control-container">
+            {% set org_acronym = h.hdx_get_extras_element(data, value_key="org_acronym") %}
+            {{ form.input('org_acronym', label=_('Organisation Acronym'), id='field-org-acronym-id', type='text', value=org_acronym, error=errors.org_acronym, classes=['control-full','org-control','field-with-info']) }}
+            <div class="org-control-info info-field">
+                <div class="org-info-label">{{ _('Organisation Acronym') }}</div>
+            </div>
+        </div>
+        <div class="org-control-container">
+            {% set hdx_org_type = h.hdx_get_extras_element(data, value_key='hdx_org_type') %}
+            {{ form.select('hdx_org_type', id='hdx-org-type', label=_('Organisation Type'), options=c.hdx_org_type_list, selected=hdx_org_type, error=errors.hdx_org_type, classes=['control-full','org-control','mandatory','field-with-info']) }}
+            <div class="org-control-info info-field">
+                <div class="org-info-label">{{ _('What is the type of your organisation ?') }}</div>
+            </div>
+        </div>
+      {% if c.userobj.sysadmin %}
+      <div class="org-control-container" style="margin-top:50px;">
+      {% set fts_id = h.hdx_get_extras_element(data, value_key="fts_id") %}
+        {{ form.input('fts_id', label=_('FTS ID'), id='field-fts-id', type='text', value=fts_id, error=errors.fts_id, classes=['control-full','org-control','field-with-info']) }}
+        <div class="org-control-info info-field">
+        <div class="org-info-label">{{_('ID for Financial Tracking Service')}}</div>
+        </div>
+      </div>
+      {% endif %}
 
   {% endblock %}
 
@@ -89,15 +89,15 @@ overriding the form blocks depending on the current context
 </div>
 	{% block user_info_fields %}
 			<div class="org-control-container">
-				<input type="hidden" name="from" value="{{data.from}}" /> 
-			    {{ form.input('your_name', label=_('Your Name'), id='field-image-url', placeholder=_('Type your name here'), 
+				<input type="hidden" name="from" value="{{data.from}}" />
+			    {{ form.input('your_name', label=_('Your Name'), id='field-image-url', placeholder=_('Type your name here'),
 			    	value=data.your_name, error=errors.your_name, classes=['control-full','org-control','field-with-info', 'mandatory']) }}
 			    <div class="org-control-info info-field">
 			    	<div class="org-info-label">{{_('We need your full, real name')}}</div>
 			    </div>
 			</div>
 			<div class="org-control-container">
-			    {{ form.input('your_email', label=_('Your Email'), id='your-email', type='email', placeholder=_('name@example.com'), 
+			    {{ form.input('your_email', label=_('Your Email'), id='your-email', type='email', placeholder=_('name@example.com'),
 			    	value=data.your_email, error=errors.your_email, classes=['control-full','org-control','field-with-info', 'mandatory']) }}
 			    <div class="org-control-info info-field">
 			    	<div class="org-info-label">{{_('This email should be related to the organisation.')}}</div>

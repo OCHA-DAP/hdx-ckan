@@ -10,6 +10,7 @@ $(document).ready(function(){
             $('#existing-org-selector').select2();
         }
     });
+    $('#org-type-selector').select2();
 
     $('#select-organisation-form').on('submit', function(){
         $this = $(this);

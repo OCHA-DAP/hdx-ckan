@@ -227,10 +227,12 @@ def hdx_send_new_org_request(context, data_dict):
         ckan_email = c.userobj.email
 
     subject = _('New organisation request:') + ' ' \
-              + data_dict['title']
+              + data_dict.get('name')
     body = _('<h3>New organisation request </h3><br/>' \
              'Organisation Name: {org_name}<br/>' \
              'Organisation Description: {org_description}<br/>' \
+             'Organisation Data Description: {org_description_data}<br/>' \
+             'Work email: {org_work_email}<br/>' \
              'Organisation URL: {org_url}<br/>' \
              'Organisation Type: {hdx_org_type}<br/>' \
              'Organisation Acronym: {org_acronym}<br/>' \
@@ -240,9 +242,11 @@ def hdx_send_new_org_request(context, data_dict):
              'Person\'s ckan email: {ckan_email}<br/>' \
              'Request time: {request_time}<br/>' \
              '(This is an automated mail)<br/><br/>' \
-             '').format(org_name=data_dict.get('title',''), org_description=data_dict.get('description',''),
-                        org_url=data_dict.get('org_url',''), org_acronym=data_dict.get('org_acronym',''),
-                        hdx_org_type=data_dict.get('hdx_org_type',''),
+             '').format(org_name=data_dict.get('name',''), org_description=data_dict.get('description',''),
+                        org_description_data=data_dict.get('description_data',''),
+                        org_work_email=data_dict.get('work_email', ''),
+                        org_url=data_dict.get('org_url',''), org_acronym=data_dict.get('acronym',''),
+                        hdx_org_type=data_dict.get('org_type',''),
                         person_name=data_dict.get('your_name',''),
                         person_email=data_dict.get('your_email',''),
                         ckan_username=ckan_username, ckan_email=ckan_email,
