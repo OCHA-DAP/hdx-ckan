@@ -113,8 +113,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         #                    action='request_new_organization')
         offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                            action='request_new_organization')
-        self.app.post(offset, params=postparams,
-                      extra_environ=auth)
+        self.app.post(offset, params=postparams, extra_environ=auth)
 
         assert mail_info, 'This needs to contain the email that will be sent'
         assert 'tester' in mail_info, 'Ckan username needs to be in the email'
