@@ -19,7 +19,10 @@ $(document).ready(function(){
             $sel = $($("#select-organisation-form .select2-container.mTop20.required").find("a:first"));
             $sel.css("border", "");
             if (result.success){
-                closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
+                closeCurrentWidget($this);
+                if($('#user_extra').val() === 'True'){
+                  showOnboardingWidget('#invitePopup');
+                }
             } else {
                 //alert("Can't join org: " + result.error.message);
                 $sel.css("border", "1px solid red");
@@ -33,7 +36,11 @@ $(document).ready(function(){
         $.post('/user/request_new_organization', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
             if (result.success){
-                closeCurrentWidget($this);showOnboardingWidget('#invitePopup');
+                closeCurrentWidget($this);
+                if($('#user_extra').val() === 'True'){
+                  showOnboardingWidget('#invitePopup');
+                }
+
             } else {
                 alert("Can't create org: " + result.error.message);
             }
