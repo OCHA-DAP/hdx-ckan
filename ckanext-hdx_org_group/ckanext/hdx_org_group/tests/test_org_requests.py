@@ -57,11 +57,13 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         auth = {'Authorization': str(user.apikey)}
         postparams = {
             'save': '',
-            'title': 'Test org',
+            'name': 'Test org',
             'org_url': 'http://test.com',
-            'org_acronym': 'TO',
-            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+            'acronym': 'TOACRONYM',
+            'org_type': ORGANIZATION_TYPE_LIST[0][1],
             'description': 'Test description',
+            'description_data': 'Test description data',
+            'work_email': 'emailwork1@testemail.com',
             'your_email': 'email1@testemail.com',
             'your_name': 'Test User'
         }
@@ -74,9 +76,13 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         assert 'test@test.com' in mail_info, 'Ckan email needs to be in the email'
         assert 'Test User' in mail_info, 'Person\'s name needs to be in the email'
         assert 'email1@testemail.com' in mail_info, 'Person\'s email needs to be in the email'
+        assert 'emailwork1@testemail.com' in mail_info, 'Person\'s work email needs to be in the email'
         assert 'Test description' in mail_info, 'Description needs to be in the email'
+        assert 'Test description data' in mail_info, 'Description data needs to be in the email'
         assert 'Test org' in mail_info, 'Org name needs to be in the email'
         assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
+        assert ORGANIZATION_TYPE_LIST[0][1] in mail_info, 'Org type needs to be in the email'
+        assert 'TOACRONYM' in mail_info, 'Org acronym needs to be in the email'
 
     def test_new_org_req_with_special_chars(self):
         global original_send_mail
@@ -89,11 +95,13 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         auth = {'Authorization': str(user.apikey)}
         postparams = {
             'save': '',
-            'title': 'Org êßȘ',
-            'org_acronym': 'SCO',
-            'hdx_org_type': ORGANIZATION_TYPE_LIST[0][1],
+            'name': 'Org êßȘ',
+            'acronym': 'SCOACRONYM',
+            'org_type': ORGANIZATION_TYPE_LIST[0][1],
             'org_url': 'http://test.com',
             'description': 'Description ê,ß, and Ș',
+            'description_data': 'Description data ê,ß, and Ș',
+            'work_email': 'emailwork1@testemail.com',
             'your_email': 'email1@testemail.com',
             'your_name': 'Test êßȘ'
         }
@@ -105,7 +113,11 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         assert 'tester' in mail_info, 'Ckan username needs to be in the email'
         assert u'Test êßȘ' in mail_info, 'Person\'s name needs to be in the email'
         assert 'email1@testemail.com' in mail_info, 'Person\'s email needs to be in the email'
+        assert 'emailwork1@testemail.com' in mail_info, 'Person\'s work email needs to be in the email'
         assert u'Description ê,ß, and Ș' in mail_info, 'Description needs to be in the email'
+        assert u'Description data ê,ß, and Ș' in mail_info, 'Description data needs to be in the email'
         assert u'Org êßȘ' in mail_info, 'Org name needs to be in the email'
         assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
+        assert ORGANIZATION_TYPE_LIST[0][1] in mail_info, 'Org type needs to be in the email'
+        assert 'SCOACRONYM' in mail_info, 'Org acronym needs to be in the email'
 
