@@ -898,7 +898,7 @@ class ValidationController(ckan.controllers.user.UserController):
     def _validate_new_org_request_field(self, data, context):
         errors = {}
         for field in ['name', 'description', 'description_data', 'work_email', 'your_name', 'your_email']:
-            if data[field].strip() == '':
+            if data[field] is None or data[field].strip() == '':
                 errors[field] = [_('should not be empty')]
 
         if len(errors) > 0:
