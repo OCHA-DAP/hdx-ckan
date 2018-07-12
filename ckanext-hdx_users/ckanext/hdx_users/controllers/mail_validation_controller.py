@@ -921,7 +921,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 'acronym': request.params.get('acronym', ''),
                 'org_type': request.params.get('org_type') if request.params.get('org_type') != '-1' else '',
                 'your_email': user.email,
-                'your_name': user.fullname,
+                'your_name': user.fullname or user.name,
                 'user_extra': request.params.get('user_extra') if request.params.get('user_extra') == 'True' else None
                 }
         return data

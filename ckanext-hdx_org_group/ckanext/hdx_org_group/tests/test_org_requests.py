@@ -60,7 +60,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         postparams = {
             'save': '',
             'name': 'Test org',
-            'org_url': 'http://test.com',
+            'url': 'http://test.com',
             'acronym': 'TOACRONYM',
             'org_type': ORGANIZATION_TYPE_LIST[0][1],
             'description': 'Test description',
@@ -102,7 +102,7 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'name': 'Org êßȘ',
             'acronym': 'SCOACRONYM',
             'org_type': ORGANIZATION_TYPE_LIST[0][1],
-            'org_url': 'http://test.com',
+            'url': 'http://test.com',
             'description': 'Description ê,ß, and Ș',
             'description_data': 'Description data ê,ß, and Ș',
             'work_email': 'emailwork1@testemail.com',
