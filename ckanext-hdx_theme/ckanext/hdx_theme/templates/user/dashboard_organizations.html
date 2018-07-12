@@ -27,16 +27,18 @@
         {% snippet "organization/snippets/organization_list.html", organizations=organizations %}
       </div>
     {% else %}
-    <div class="mL30">
+    <div class="mL30 mBottom20">
         {# snippet "organization/snippets/mem_or_org.html", parent_route='user_dashboard_organizations' #}
         <div class="row row-fluid">
         <h3 class="center sspRegular14"> {{ _('Thank you for becoming a registered user in HDX. If you plan on sharing data, you need to create an organisation or become an editor of an existing organisation.') }}</h3>
         <br/>
-        <center>
+        <div style="text-align:center">
           <a href="/organization" class="btn btn-primary">{{ _("Find Your Organisation")}}</a>
           <span class="mLR30">{{_("OR")}}</span>
-          <a href="/organization/request_new" class="btn btn-primary">+ {{ _("Request New Organisation")}}</a>
-        </center>
+          <!--<a href="/organization/request_new" class="btn btn-primary">+ {{ _("Request New Organisation")}}</a>-->
+           <!--|-->
+          <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup', '#user_extra','False');" href="#" class="btn btn-primary">+ {{ _("Request New Organisation")}}</a>
+        </div>
         </div>
     </div>
     {% endif %}

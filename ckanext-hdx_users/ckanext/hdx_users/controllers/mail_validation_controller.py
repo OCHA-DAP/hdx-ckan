@@ -549,8 +549,9 @@ class ValidationController(ckan.controllers.user.UserController):
 
             get_action('hdx_send_new_org_request')(context, data)
 
-            ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
-            # get_action('user_extra_update')(context, ue_dict)
+            if data.get('user_extra'):
+                ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
+                # get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException, e:
             error_summary = e.error_summary
@@ -894,14 +895,6 @@ class ValidationController(ckan.controllers.user.UserController):
     def error_message(self, error_summary):
         return json.dumps({'success': False, 'error': {'message': error_summary}})
 
-    #     user_email_validator = tk.get_validator('user_email_validator')
-    #
-    #     schema = {
-    #         'name': [not_empty, unicode],
-    #         'email': [not_empty, user_email_validator, unicode],
-    #     }
-    #     return schema
-
     def _validate_new_org_request_field(self, data, context):
         errors = {}
         for field in ['name', 'description', 'description_data', 'work_email', 'your_name', 'your_email']:
@@ -929,6 +922,7 @@ class ValidationController(ckan.controllers.user.UserController):
                 'org_type': request.params.get('org_type') if request.params.get('org_type') != '-1' else '',
                 'your_email': user.email,
                 'your_name': user.fullname,
+                'user_extra': request.params.get('user_extra') if request.params.get('user_extra') == 'True' else None
                 }
         return data
 

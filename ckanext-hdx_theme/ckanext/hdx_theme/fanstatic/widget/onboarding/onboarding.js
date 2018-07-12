@@ -10,7 +10,7 @@ function notYou(){
     $('#field-login').focus();
 }
 
-function showOnboardingWidget(id){
+function showOnboardingWidget(id, elid, val){
     if (id == "#signupPopup") {
         // we only want to send the analytics event for the sign-up widget
         hdxUtil.analytics.sendUserRegisteredEvent("start user register");
@@ -32,7 +32,9 @@ function showOnboardingWidget(id){
             clone.attr("src", src);
         }, 0);
     });
-
+    if(elid){
+      $(elid).val(val);
+    }
     function _triggerInputDataClass($this){
         if ($this.val() === "")
             $this.removeClass("input-content");

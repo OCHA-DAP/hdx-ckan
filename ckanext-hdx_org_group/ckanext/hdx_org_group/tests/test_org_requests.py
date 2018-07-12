@@ -69,7 +69,9 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test User'
         }
-        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+        # offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+        #                    action='request_new_organization')
+        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                            action='request_new_organization')
         self.app.post(offset, params=postparams, extra_environ=auth)
 
@@ -107,7 +109,9 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test êßȘ'
         }
-        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+        # offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+        #                    action='request_new_organization')
+        offset = h.url_for(controller='ckanext.hdx_users.controllers.mail_validation_controller:ValidationController',
                            action='request_new_organization')
         self.app.post(offset, params=postparams,
                       extra_environ=auth)
