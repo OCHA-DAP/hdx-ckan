@@ -17,15 +17,17 @@ from ckanext.hdx_org_group.helpers.static_lists import ORGANIZATION_TYPE_LIST
 
 log = logging.getLogger(__name__)
 
-
 mail_info = None
 original_send_mail = None
+
 
 def send_mail(recipients, subject, body):
     global mail_info
     if recipients and len(recipients) > 0:
         mail_info = u'\nSending email to {recipients} with subject "{subject}" with body: {body}' \
-            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject, body=body)
+            .format(recipients=', '.join([r['display_name'] + ' - ' + r['email'] for r in recipients]), subject=subject,
+                    body=body)
+
 
 class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
 
@@ -67,9 +69,9 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test User'
         }
-        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
-        self.app.post(offset, params=postparams,
-                            extra_environ=auth)
+        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+                           action='request_new_organization')
+        self.app.post(offset, params=postparams, extra_environ=auth)
 
         assert mail_info, 'This needs to contain the email that will be sent'
         assert 'tester' in mail_info, 'Ckan username needs to be in the email'
@@ -105,9 +107,10 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
             'your_email': 'email1@testemail.com',
             'your_name': 'Test êßȘ'
         }
-        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
+        offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController',
+                           action='request_new_organization')
         self.app.post(offset, params=postparams,
-                            extra_environ=auth)
+                      extra_environ=auth)
 
         assert mail_info, 'This needs to contain the email that will be sent'
         assert 'tester' in mail_info, 'Ckan username needs to be in the email'
@@ -120,4 +123,3 @@ class TestHDXReqsOrgController(org_group_base.OrgGroupBaseTest):
         assert 'http://test.com' in mail_info, 'Org url needs to be in the email'
         assert ORGANIZATION_TYPE_LIST[0][1] in mail_info, 'Org type needs to be in the email'
         assert 'SCOACRONYM' in mail_info, 'Org acronym needs to be in the email'
-
