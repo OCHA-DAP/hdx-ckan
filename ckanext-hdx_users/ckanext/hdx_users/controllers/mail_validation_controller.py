@@ -551,7 +551,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
             if data.get('user_extra'):
                 ue_dict = self._get_ue_dict(user.id, user_model.HDX_ONBOARDING_ORG)
-                # get_action('user_extra_update')(context, ue_dict)
+                get_action('user_extra_update')(context, ue_dict)
 
         except hdx_mail.NoRecipientException, e:
             error_summary = e.error_summary
