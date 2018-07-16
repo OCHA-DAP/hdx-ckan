@@ -12,8 +12,6 @@ $(document).ready(function(){
     });
     $('#org-type-selector').select2();
 
-    $('#select-organisation-form')[0].reset();
-    $('#create-organisation-form')[0].reset();
 
     $('#select-organisation-form').on('submit', function(){
         $this = $(this);
@@ -23,6 +21,7 @@ $(document).ready(function(){
             $sel.css("border", "");
             if (result.success){
                 closeCurrentWidget($this);
+                $('#select-organisation-form')[0].reset();
                 showOnboardingWidget('#invitePopup');
             } else {
                 //alert("Can't join org: " + result.error.message);
@@ -37,6 +36,7 @@ $(document).ready(function(){
         $.post('/user/request_new_organization', $this.serialize(), function(result_data){
             var result = JSON.parse(result_data);
             if (result.success){
+              $('#create-organisation-form')[0].reset();
                 closeCurrentWidget($this);
                 if($('#user_extra').val() === 'True'){
                   showOnboardingWidget('#invitePopup');
