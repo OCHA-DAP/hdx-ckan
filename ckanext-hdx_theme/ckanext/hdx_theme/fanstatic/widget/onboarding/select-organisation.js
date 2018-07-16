@@ -12,6 +12,9 @@ $(document).ready(function(){
     });
     $('#org-type-selector').select2();
 
+    $('#select-organisation-form')[0].reset();
+    $('#create-organisation-form')[0].reset();
+
     $('#select-organisation-form').on('submit', function(){
         $this = $(this);
         $.post('/user/request_membership', $this.serialize(), function(result_data){
