@@ -20,9 +20,7 @@ $(document).ready(function(){
             $sel.css("border", "");
             if (result.success){
                 closeCurrentWidget($this);
-                if($('#user_extra').val() === 'True'){
-                  showOnboardingWidget('#invitePopup');
-                }
+                showOnboardingWidget('#invitePopup');
             } else {
                 //alert("Can't join org: " + result.error.message);
                 $sel.css("border", "1px solid red");
