@@ -69,6 +69,7 @@ $(document).ready(function(){
         if (name && name.length > LABEL_MAX_LENGTH){
             trimName = name.slice(0, LABEL_MAX_LENGTH - 3) + "...";
         }
+        el['idx'] = idx;
         el['trimName'] = trimName;
     });
 
@@ -79,16 +80,9 @@ $(document).ready(function(){
                 // augment tick contents with link
                 var self = d3.select(this);
                 var text = self.text();
-                // var url;
-                // var item = $.grep(dataTopDownloads, function(el, idx) {
-                //    return (el['trimName'] === text);
-                // });
-                var dataIndex = i % dataTopDownloads.length; // The list of items is repeated in the interface
+                var dataIndex = parseInt(text) % dataTopDownloads.length;
                 var item = dataTopDownloads[dataIndex];
-                // if (item.length !== 1) {
-                //     console.error('Two datasets with same name!');
-                // }
-                self.html("<a xlink:href='"+ item['url'] +"' target='_blank' style='fill: #0077ce;'>"+ text +"</a>");
+                self.html("<a xlink:href='"+ item['url'] +"' target='_blank' style='fill: #0077ce; cursor: pointer;'>"+ item['trimName'] +"</a>");
             });
         d3.selectAll('#chart-data-top-downloads svg > g:nth-of-type(2)').attr('style', 'display: none;');
     }.bind(this);
@@ -107,7 +101,7 @@ $(document).ready(function(){
         data: {
             json: dataTopDownloads,
             keys: {
-                x: 'trimName',
+                x: 'idx',
                 value: ['value']
             },
             type: 'bar',
