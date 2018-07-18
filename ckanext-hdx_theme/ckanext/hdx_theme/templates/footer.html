@@ -86,16 +86,16 @@
                         Search data
                         <ul>
                           <li>
-                            <a href="/dataset">Data</a>
+                            <a href="/dataset" data-module="hdx_click_stopper" data-module-link_type="footer">Data</a>
                           </li>
                           <li>
-                            <a href="/showcase">Dataviz</a>
+                            <a href="/showcase" data-module="hdx_click_stopper" data-module-link_type="footer">Dataviz</a>
                           </li>
                           <li>
-                            <a href="/group">Locations</a>
+                            <a href="/group" data-module="hdx_click_stopper" data-module-link_type="footer">Locations</a>
                           </li>
                           <li>
-                            <a href="/organization">Organisations</a>
+                            <a href="/organization" data-module="hdx_click_stopper" data-module-link_type="footer">Organisations</a>
                           </li>
                         </ul>
                       </label>
@@ -105,18 +105,18 @@
                         <ul>
                           {% for ev in events.ongoing %}
                             <li>
-                              <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                              <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="footer">{{ ev.title }}</a></div>
                               <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                             </li>
                           {% endfor %}
                           <li>
-                            <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>
+                            <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="footer">South Sudan</a></div>
                           </li>
                           <li>
-                            <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>
+                            <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="footer">Syria</a></div>
                           </li>
                           <li>
-                            <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>
+                            <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="footer">Yemen</a></div>
                           </li>
                         </ul>
                       </label>
@@ -126,17 +126,17 @@
                         <ul>
                           {% for ev in events.archived %}
                           <li>
-                            <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                            <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="footer">{{ ev.title }}</a></div>
                             <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                           </li>
                           {% endfor %}
                           <li>
-                            <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>
+                            <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="footer">Ebola 2014</a></div>
                             <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                           </li>
                           <li>
                             {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
-                            <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
+                            <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="footer">Nepal Earthquake</a></div>
                             <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
                           </li>
 
@@ -148,33 +148,43 @@
                         Work with data
                         <ul>
                           <li>
-                            <a href="https://tools.humdata.org/wizard/#datacheck" target="_blank">Data Check <i class="icon icon-external-link"></i> </a>
+                            <a href="https://tools.humdata.org/wizard/#datacheck" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Data Check <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="https://tools.humdata.org/quickcharts/" target="_blank">Quick Charts <i class="icon icon-external-link"></i> </a>
+                            <a href="https://tools.humdata.org/quickcharts/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Quick Charts <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="https://tools.humdata.org/examples/hxl/" target="_blank">HXL Tag Assist <i class="icon icon-external-link"></i> </a>
+                            <a href="https://tools.humdata.org/examples/hxl/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              HXL Tag Assist <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                         </ul>
                       </label>
 
                       <label class="links-list">
                         POWERED BY
-                        <a href="https://tools.humdata.org" target="_blank"><img class="logo-tools-gray" src="/images/homepage/logo-tools-gray.png"/></a>
+                        <a href="https://tools.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                          <img class="logo-tools-gray" src="/images/homepage/logo-tools-gray.png"/>
+                        </a>
                       </label>
 
                       <label class="links-list">
                         Resources
                         <ul>
                           <li>
-                            <a href="https://centre.humdata.org/category/blog/" target="_blank">Blog <i class="icon icon-external-link"></i> </a>
+                            <a href="https://centre.humdata.org/category/blog/" target="_blank"  data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Blog <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="/about/license">Data Licenses</a>
+                            <a href="/about/license" data-module="hdx_click_stopper" data-module-link_type="footer">Data Licenses</a>
                           </li>
                           <li>
-                            <a href="/about/terms">Terms of Service</a>
+                            <a href="/about/terms" data-module="hdx_click_stopper" data-module-link_type="footer">Terms of Service</a>
                           </li>
                         </ul>
                       </label>
@@ -185,19 +195,25 @@
                         About
                         <ul>
                           <li>
-                            <a href="/faq">FAQ</a>
+                            <a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">FAQ</a>
                           </li>
                           <li>
-                            <a href="https://centre.humdata.org/" target="_blank">Centre for Humdata <i class="icon icon-external-link"></i> </a>
+                            <a href="https://centre.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Centre for Humdata <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="http://hxlstandard.org/" target="_blank">HXL Standards <i class="icon icon-external-link"></i> </a>
+                            <a href="http://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              HXL Standards <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="https://github.com/OCHA-DAP" target="_blank">Open source <i class="icon icon-external-link"></i> </a>
+                            <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Open source <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="https://centre.humdata.org/get-involved/">Contact</a>
+                            <a href="https://centre.humdata.org/get-involved/"  data-module="hdx_click_stopper" data-module-link_type="footer">Contact</a>
                           </li>
                         </ul>
                       </label>
@@ -205,10 +221,14 @@
                         Related Sites
                         <ul>
                           <li>
-                            <a href="https://www.humanitarianresponse.info" target="_blank">HR info <i class="icon icon-external-link"></i> </a>
+                            <a href="https://www.humanitarianresponse.info" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              HR info <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                           <li>
-                            <a href="https://reliefweb.int" target="_blank">ReliefWeb <i class="icon icon-external-link"></i> </a>
+                            <a href="https://reliefweb.int" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              ReliefWeb <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                         </ul>
                       </label>
