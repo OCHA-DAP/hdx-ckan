@@ -174,7 +174,7 @@
 
                                     <div class="col-xs-9" id="resource-widget">
 
-                                        
+
 
                                         <script type="text/template" id="resource-item-tmpl">
                                             <div class="row">
@@ -361,7 +361,7 @@
                                             </div>
 
                                             <div data-module="hdx_form_element_manager" data-module-element_name="subnational" data-module-required="public">
-                                            {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational, error=errors.subnational, classes=['form-group'], attrs={}) }}
+                                            {{ form.checkbox('subnational', id='field_subnational', label=_('Dataset contains sub-national data'), value='1', checked=data.subnational and data.subnational != '0', error=errors.subnational, classes=['form-group'], attrs={}) }}
                                             </div>
 
                                             {% if user_is_sysadmin %}
