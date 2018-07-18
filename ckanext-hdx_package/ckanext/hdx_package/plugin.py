@@ -91,6 +91,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IResourceController, inherit=True)
     plugins.implements(plugins.IValidators, inherit=True)
 
+    __startup_tasks_done = False
+
     def update_config(self, config):
         tk.add_template_directory(config, 'templates')
 
@@ -359,7 +361,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
                 }
 
     def make_middleware(self, app, config):
-        run_on_startup()
+        if not HDXPackagePlugin.__startup_tasks_done:
+            run_on_startup()
+            HDXPackagePlugin.__startup_tasks_done = True
         return app
 
     def validate(self, context, data_dict, schema, action):
@@ -469,12 +473,17 @@ class HDXAnalyticsPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IMiddleware, inherit=True)
     plugins.implements(plugins.IPackageController, inherit=True)
 
+    __startup_tasks_done = False
+
     def run_on_startup(self):
         # wrap resource download function so that we can track download events
         analytics.wrap_resource_download_function()
 
     def make_middleware(self, app, config):
-        self.run_on_startup()
+        if not HDXAnalyticsPlugin.__startup_tasks_done:
+            self.run_on_startup()
+            HDXAnalyticsPlugin.__startup_tasks_done = True
+
         return app
 
     # def after_create(self, context, data_dict):
