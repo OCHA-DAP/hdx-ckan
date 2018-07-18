@@ -70,6 +70,7 @@ $(document).ready(function(){
             function (postData, analyticsData) {
                 var result = postData[0];
                 if (result.success) {
+                    $this[0].reset();
                     closeCurrentWidget($this);
                     showFaqWidget('#faqDonePopup');
                 }
@@ -78,7 +79,6 @@ $(document).ready(function(){
                         $iframe.css("border", "1px solid red");
                     } else {
                         alert("Can't send your request: " + result.error.message);
-                        grecaptcha.reset();
                     }
                 }
             },
@@ -86,8 +86,7 @@ $(document).ready(function(){
                 alert("Can't send your request!");
             }
         );
-
-        return false;
+        grecaptcha.reset(1);
     };
     // $('#faq-send-message-form').on('submit', faqSendMessageOnSubmit);
 
