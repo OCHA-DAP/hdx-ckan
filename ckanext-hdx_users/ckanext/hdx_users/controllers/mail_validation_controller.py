@@ -904,7 +904,7 @@ class ValidationController(ckan.controllers.user.UserController):
         if len(errors) > 0:
             raise logic.ValidationError(errors)
 
-        user_email_validator = tk.get_validator('user_email_validator')
+        user_email_validator = tk.get_validator('email_validator')
         schema = {'work_email': [user_email_validator, unicode]}
         data_dict, _errors = _validate(data, schema, context)
 
