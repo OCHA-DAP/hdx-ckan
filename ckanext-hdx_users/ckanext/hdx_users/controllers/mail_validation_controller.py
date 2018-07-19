@@ -638,7 +638,7 @@ class ValidationController(ckan.controllers.user.UserController):
 
             friends = [request.params.get('email1'), request.params.get('email2'), request.params.get('email3')]
             for f in friends:
-                if f:
+                if f and configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
                     hdx_mailer.mail_recipient([{'display_name': f, 'email': f}], subject, html)
 
         except Exception, e:
@@ -904,7 +904,7 @@ class ValidationController(ckan.controllers.user.UserController):
         if len(errors) > 0:
             raise logic.ValidationError(errors)
 
-        user_email_validator = tk.get_validator('user_email_validator')
+        user_email_validator = tk.get_validator('email_validator')
         schema = {'work_email': [user_email_validator, unicode]}
         data_dict, _errors = _validate(data, schema, context)
 
