@@ -60,6 +60,19 @@ $(document).ready(function(){
         $iframe.css("border", "");
         //$sel = $($("#faq-send-message-form .select2-container.mTop20.required").find("a:first"));
         //$sel.css("border", "");
+        var grecaptchaID = 0;
+        var grecaptchaElementID = $("#faq-send-message-form").find(".g-recaptcha-response").prop("id");
+        var gRecaptchaResponseText = "g-recaptcha-response-";
+        if (grecaptchaElementID && grecaptchaElementID.indexOf(gRecaptchaResponseText) >= 0) {
+          var idNum = grecaptchaElementID.substr(grecaptchaElementID.indexOf(gRecaptchaResponseText) + gRecaptchaResponseText.length);
+          if (idNum.length > 0){
+            grecaptchaID = parseInt(idNum);
+          }
+        } else {
+          if (___grecaptcha_cfg && ___grecaptcha_cfg.count) {
+            grecaptchaID = ___grecaptcha_cfg.count - 1;
+          }
+        }
 
         var analyticsPromise =
             hdxUtil.analytics.sendMessagingEvent('faq', 'faq',
@@ -86,7 +99,7 @@ $(document).ready(function(){
                 alert("Can't send your request!");
             }
         );
-        grecaptcha.reset(1);
+        grecaptcha.reset(grecaptchaID);
     };
     // $('#faq-send-message-form').on('submit', faqSendMessageOnSubmit);
 
