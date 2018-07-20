@@ -17,17 +17,27 @@ def is_api_call(environ):
 
     if (route_info.get('controller') == 'api'):
         user_agent_str = environ.get('HTTP_USER_AGENT')
-        user_agent = parse(user_agent_str)
 
-        exclude_browsers_string = config.get('hdx.analytics.track_api.exclude_browsers')
-        exclude_browsers = exclude_browsers_string.split(',')
-        if any(item in user_agent.browser.family for item in exclude_browsers):
-            return False
+        if (not user_agent_str):
+            #no user_agent, we track the request
+            return True
+
+        try:
+            user_agent = parse(user_agent_str)
+
+            exclude_browsers_string = config.get('hdx.analytics.track_api.exclude_browsers')
+            if (exclude_browsers_string):
+                exclude_browsers = exclude_browsers_string.split(',')
+                if any(item in user_agent.browser.family for item in exclude_browsers):
+                    return False
+        except Exception as e:
+            log.error('Exception while trying to evaluate user_agent: %r', e)
 
         exclude_other_string = config.get('hdx.analytics.track_api.exclude_other')
-        exclude_other = exclude_other_string.split(',')
-        if any(item in user_agent_str for item in exclude_other):
-            return False
+        if (exclude_other_string):
+            exclude_other = exclude_other_string.split(',')
+            if any(item in user_agent_str for item in exclude_other):
+                return False
 
         return True
 
