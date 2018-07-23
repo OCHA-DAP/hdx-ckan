@@ -29,6 +29,10 @@ RUN apt-get -qq -y update && \
         /usr/share/man/man8 \
         /usr/share/man/man9 && \
     apt-get -qq -y install \
+        procps \
+        psmisc \
+        net-tools \
+        iputils-ping \
         gettext-base \
         nano \
         libmagic1 \
