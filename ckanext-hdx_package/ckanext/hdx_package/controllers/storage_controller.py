@@ -17,7 +17,7 @@ from pylons import config
 from paste.fileapp import FileApp
 from paste.deploy.converters import asbool
 
-from ckan.lib.base import c, request, config, h, redirect, abort
+from ckan.lib.base import config, h
 from ckan.lib.jsonp import jsonpify
 from ckan.common import _, request, c, response
 import ckan.lib.uploader as uploader
@@ -43,6 +43,7 @@ BUCKET = config.get('ckan.storage.bucket', 'default')
 key_prefix = config.get('ckan.storage.key_prefix', 'file/')
 
 _eq_re = re.compile(r"^(.*)(=[0-9]*)$")
+
 
 
 def generate_response(http_status, unicode_body, no_cache=True, other_headers=None):
@@ -143,6 +144,7 @@ class FileDownloadController(storage.StorageController):
         # from label find resource id
         url = config.get('ckan.site_url', '') + \
             '/storage/f/' + urllib.quote(label)
+
         engine = create_engine(config.get('sqlalchemy.url', ''), echo=True)
         connection = engine.connect()
         query = connection.execute(
@@ -175,7 +177,7 @@ class FileDownloadController(storage.StorageController):
             label = self._get_label_from_resource(res)
 
         return self._download_file(res, label)
-        
+
     # def perma_file(self, id, resource_id):
     #     """
     #     Same as the above but for permalinks

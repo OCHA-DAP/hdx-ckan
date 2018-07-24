@@ -159,7 +159,10 @@ def wrap_resource_download_function():
                 send_event = False
 
         if send_event:
-            ResourceDownloadAnalyticsSender(id, resource_id).send_to_queue()
+            try:
+                ResourceDownloadAnalyticsSender(id, resource_id).send_to_queue()
+            except Exception, ex:
+                log.error(ex)
 
         return original_resource_download(self, id, resource_id, filename)
 
