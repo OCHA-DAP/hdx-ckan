@@ -6,25 +6,16 @@ import ckan.controllers.storage as storage
 import os
 import re
 import urllib
-import uuid
-from datetime import datetime
-from cgi import FieldStorage
 
 from ofs import get_impl
-from pylons import request, response
-from pylons.controllers.util import abort, redirect_to
+from pylons import request
 from pylons import config
 from paste.fileapp import FileApp
-from paste.deploy.converters import asbool
 
-from ckan.lib.base import c, request, config, h, redirect, abort
-from ckan.lib.jsonp import jsonpify
-from ckan.common import _, request, c, response
-import ckan.lib.uploader as uploader
+from ckan.lib.base import config, h
+from ckan.common import request, c
 import ckan.model as model
 import ckan.logic as logic
-import paste.fileapp
-import mimetypes
 
 try:
     from cStringIO import StringIO
@@ -175,7 +166,7 @@ class FileDownloadController(storage.StorageController):
             label = self._get_label_from_resource(res)
 
         return self._download_file(res, label)
-        
+
     # def perma_file(self, id, resource_id):
     #     """
     #     Same as the above but for permalinks
