@@ -211,10 +211,10 @@ def package_create(context, data_dict):
 
     # Replace model_save.package_dict_save() call with our wrapped version to be able to save groups
     # pkg = model_save.package_dict_save(data, context)
-    # from ckanext.hdx_package.actions.update import modified_save
-    # pkg = modified_save(context, data)
+    from ckanext.hdx_package.actions.update import modified_save
+    pkg = modified_save(context, data)
 
-    pkg = model_save.package_dict_save(data, context)
+    #pkg = model_save.package_dict_save(data, context)
 
     # Needed to let extensions know the package and resources ids
     model.Session.flush()
