@@ -17,14 +17,14 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
 {% set has_url = package.url or False %}
 
 {% block package_item %}
-
+{% set img_url = package.image_display_url or package.img_url %}
 <div class="{% if dataset %} col-xs-12 {% else %} col-xs-3 {% endif %}">
 
     <div class="showcase-item">
       <a href="{{url}}" {% if has_url %} target="_blank" {% endif %}>
         <div class="showcase-image">
-        {% if package.image_display_url %}
-          <img src="{{ package.image_display_url }}" alt="{{ package.name }}">
+        {% if img_url %}
+          <img src="{{ img_url }}" alt="{{ package.name }}">
         {% else %}
           <div class="img-placeholder">
             <span class="img-placeholder-text"></span>
