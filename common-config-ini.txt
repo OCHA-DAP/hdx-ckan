@@ -225,9 +225,9 @@ hdx.analytics.hours_for_results_in_cache = 12
 # This should be overriden in your own prod.ini.
 hdx.jobprocessor.scheduled.base_url = http://localhost:1234/api/scheduler/
 
-hdx.captcha = false
+hdx.captcha = true
 hdx.captcha.url = https://www.google.com/recaptcha/api/siteverify
-hdx.onboarding.send_confirmation_email = false
+hdx.onboarding.send_confirmation_email = true
 
 # The configuration for running the service checks
 hdx.checks.config_path = /srv/ckan/ckanext-hdx_service_checker/ckanext/hdx_service_checker/config/config.json
