@@ -8,6 +8,7 @@ import logging as logging
 import ckan.plugins.toolkit as tk
 import ckan.model as model
 import ckan.logic as logic
+import ckan.tests.factories as factories
 
 import ckanext.hdx_theme.tests.hdx_test_base as hdx_test_base
 import ckanext.hdx_users.model as umodel
@@ -27,6 +28,7 @@ organization = {
     'description': 'This is a test organization',
     'users': [{'name': 'testsysadmin'}, {'name': 'janedoe3'}]
 }
+
 
 class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
     @classmethod
@@ -82,8 +84,6 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         except logic.ValidationError:
             assert False
 
-
-
     def test_create_with_group(self):
         package = {
             "package_creator": "test function",
@@ -126,3 +126,34 @@ class TestHDXPackageCreate(hdx_test_base.HdxBaseTest):
         except logic.ValidationError:
             assert False
 
+    def test_create_dataset_as_normal_user(self):
+        normal_user = factories.User()
+        org = factories.Organization(user=normal_user, org_url='http://test.local/', hdx_org_type='donor')
+
+        package = {
+            'package_creator': 'test function',
+            'private': False,
+            'dataset_date': '01/01/1960-12/31/2012',
+            'indicator': '1',
+            'caveats': 'These are the caveats',
+            'license_other': 'TEST OTHER LICENSE',
+            'methodology': 'This is a test methodology',
+            'dataset_source': 'World Bank',
+            'license_id': 'hdx-other',
+            'name': 'test_activity_3_as_normal_user',
+            'notes': 'This is a test activity',
+            'title': 'Test Activity 3',
+            'owner_org': org['name'],
+        }
+
+        package['groups'] = [{'name': 'roger'}]
+
+        context = {
+            'model': model, 'session': model.Session, 'user': normal_user['name']}
+
+        try:
+            dataset_dict = self._get_action('package_create')(context, package)
+            assert dataset_dict and dataset_dict.get('groups') and dataset_dict.get('groups')[0].get(
+                'name') == 'roger', 'The group needs to be part of the created dataset'
+        except logic.ValidationError, e:
+            assert False, str(e)
