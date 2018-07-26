@@ -1,10 +1,12 @@
-import ckanext.hdx_users.model as umodel
-import ckan.logic as logic
-import pylons.config as config
-import ckan.lib.helpers as h
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import exceptions as exceptions
 import logging as logging
+
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+import ckanext.hdx_users.model as umodel
+import pylons.config as config
+
+import ckan.lib.helpers as h
+import ckan.logic as logic
 
 log = logging.getLogger(__name__)
 
@@ -45,15 +47,21 @@ def send_validation_email(user, token):
         action='validate',
         token=token['token'])
     link = '{0}{1}'
-    subject = "Please verify your email for HDX registration"
+    subject = "HDX: Complete your registration"
     print 'Validate link: ' + validate_link
     html = """\
-            <p>Thank you for your interest in HDX. In order to continue registering your account, please verify your email address by simply clicking below.</p>
+            <p>Hello,</p> 
+            <br/>
+            <p>Thank you for your interest in the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>. Please complete the registration process by clicking the link below.</p>
+            <br/>
             <p><a href="{link}">Verify Email</a></p>
+            <br/>
+            <p>Best wishes,</p>
+            <p>The HDX team</p>
         """.format(link=link.format(config['ckan.site_url'], validate_link))
 
     try:
-        hdx_mailer.mail_recipient([{'display_name': 'User', 'email': user['email']}], subject, html)
+        hdx_mailer.mail_recipient([{'email': user['email']}], subject, html)
         return True
     except exceptions.Exception, e:
         error_summary = str(e)
