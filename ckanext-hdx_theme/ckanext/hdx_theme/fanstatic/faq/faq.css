@@ -5,6 +5,7 @@
   position: fixed;
   top: 15px;
   z-index: 99;
+  max-width: 270px;
 }
 .hdx-faq-sidebar .nav li a {
   font-family: 'Gotham-Book', sans-serif;
@@ -87,7 +88,7 @@
   padding-top: 30px;
   cursor: pointer;
 }
-.hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title a {
+.hdx-wrapper .hdx-panel-group .panel .panel-heading .panel-title .faq-question-link {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 18px;

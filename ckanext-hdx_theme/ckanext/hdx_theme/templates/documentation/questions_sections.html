@@ -8,15 +8,14 @@
             {% set q_id = 'auto-%s-%s-q' | format(section.id, question.id) %}
             {% set a_id = 'auto-%s-%s-a' | format(section.id, question.id) %}
             <div class="panel">
-                <div class="panel-heading" role="tab" id="{{ q_id }}">
+                <div class="panel-heading"id="{{ q_id }}">
                     <h4 class="panel-title">
-                        <a role="button" data-toggle="collapse" data-parent=".hdx-panel-group" href="#{{ a_id }}"
-                           aria-expanded="false" aria-controls="{{ a_id }}" class="faq-question-link">
+                        <span class="faq-question-link">
                             {{ question.q | safe }}
-                        </a>
+                        </span>
                     </h4>
                 </div>
-                <div id="{{ a_id }}" class="panel-collapse collapse faq-panel-collapse" role="tabpanel" aria-labelledby="{{ q_id }}">
+                <div id="{{ a_id }}" >
                     <div class="panel-body">
                         {{ question.a | safe }}
                     </div>
