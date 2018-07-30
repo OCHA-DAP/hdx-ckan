@@ -1,0 +1,77 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ _("Resources for Developers") }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active">{{ h.nav_link(_('Resources for Developers'), controller='ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', action='show') }}</li>
+{% endblock %}
+
+{% block pre_primary %}
+    {%- block faqwidget %}
+        {{ h.snippet('widget/faq/faq-send-message.html', id="faqSendMsgPopup", topics=data.topics, fullname=data.fullname,
+                        email=data.email, capcha_api_key=capcha_api_key) }}
+        {{ h.snippet('widget/faq/done.html', id="faqDonePopup") }}
+    {% endblock -%}
+    <div class="row top-banner">
+        <div class="col-xs-12">
+            <div class="top-banner-text-wrapper">
+                <div class="top-banner-title">
+                   {{ _('Resources for Developers') }}
+                </div>
+                <div class="top-banner-more mTop60">
+                    {{ _("Don't see an answer you are looking for ?") }}
+                </div>
+                <div class="top-banner-more-button-wrapper mTop30">
+                    <a class="btn hdx-btn btn-blue-on-white" onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">
+                        {{ _("Contact us") }}
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block primary %}
+    <div class="row mTop60">
+        <div class="col-xs-12">
+            <div id="body-about-hdx" class="section-flag" style="">About the Humanitarian Data Exchange</div>
+            <p class="mTop10">
+                The Humanitarian Data Exchange (HDX) is an open platform for sharing data, launched in July 2014. The goal of HDX is to make
+                humanitarian data easy to find and use for analysis. Our growing collection of
+                datasets has been accessed by users in over 200 countries and territories. Watch this
+                <a href="https://centre.humdata.org/making-the-invisible-visible-a-short-film-about-humanitarian-data/" target="_blank">video</a>
+                to learn more.
+            </p>
+
+            <p>
+              HDX is based on CKAN, an open-source data management system for powering data hubs and data portals. The source code for HDX can be found here.
+            </p>
+        </div>
+    </div>
+    {% snippet 'faq/questions_sections.html', data=data.faq_data %}
+{% endblock %}
+
+{% block secondary %}
+    <div id="hdx-faq-sidebar-wrapper" class="mTop60">
+        <div class="hdx-faq-sidebar" id="hdx-faq-sidebar">
+            <ul class="nav">
+            {% for section in data.faq_data %}
+                <li>
+                    <a id='menu-{{ section.id }}' href="#body-{{ section.id }}"> {{ section.title }} </a>
+                </li>
+            {% endfor %}
+            </ul>
+            <p class="no-answer-found mTop30">
+                <a onclick="closeCurrentWidget(this);showFaqWidget('#faqSendMsgPopup');" href="#">{{ _("Don't see an answer?") }}</a>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+
+{%- block styles %}
+    {{ super() }}
+    {% resource 'hdx_theme/faq/faq.css' %}
+    {% resource 'hdx_theme/faq/faq.js' %}
+{% endblock %}
