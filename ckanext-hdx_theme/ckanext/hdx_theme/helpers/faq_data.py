@@ -389,9 +389,6 @@ sharing_data = {
                  'the data. This has to be done manually in HDX by the dataset owner. '
                  'We are working to improve this functionality, so please bear with us! '
         },
-        {
-
-        },
     ]
 }
 
