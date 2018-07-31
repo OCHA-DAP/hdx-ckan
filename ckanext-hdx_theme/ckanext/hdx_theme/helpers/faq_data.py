@@ -12,20 +12,9 @@ getting_started = {
                  '</ol>',
         },
         {
-            'q': 'What is the difference between a dataset and an indicator?',
-            'a': 'HDX includes two categories of data - curated indicators and user-contributed datasets. '
-                 'We curate about '
-                 '<a href="https://data.humdata.org/dataset?sort=metadata_modified+desc&ext_indicator=1">130 indicators</a> '
-                 'from multiple sources, ensuring they are comparable across countries and have gone '
-                 'through a quality-control process. We also have '
-                 '<a href="https://data.humdata.org/dataset?sort=metadata_modified+desc&ext_indicator=0">datasets</a> '
-                 'that organisations have shared.',
-        },
-        {
             'q': 'Is HDX open source?',
             'a': 'Yes. HDX uses an open-source software called <a target="_blank"  href="http://ckan.org/">CKAN</a> '
-                 'for our technical back-end. We partner with <a target="_blank"  href="http://sensiblecode.io/">Sensiblecode.io</a> '
-                 'for data transformation and operations support. You can find all of our code on '
+                 'for our technical back-end. You can find all of our code on '
                  '<a target="_blank"  href="https://github.com/OCHA-DAP">GitHub</a>.',
         },
         {
@@ -38,17 +27,25 @@ getting_started = {
             'a': 'You can register by clicking on \'Sign Up\' on the upper-right corner of any HDX page.',
         },
         {
+
+            'q': 'What if I forget my username and password?',
+            'a': 'Use our <a target="_blank" href="https://data.humdata.org/user/reset">password recovery form</a> to reset your account '
+                 'details. Enter your username or e-mail and we will send you an e-mail with a link to create a new password.',
+        },
+        {
+
             'q': 'What are the benefits of being a registered user?',
             'a': 'Anyone can view and download the data from the site, but registered users can access more features. '
                  'After signing up you can: '
                  '<ol>'
-                 '<li> follow the latest changes to data, locations, organisations, topics and crises; </li> '
-                 '<li> share datasets (or only metadata) publicly or privately; </li>'
-                 '<li> request access to datasets where only metadata has been shared and contact data contributors; </li>'
-                 '<li> join organisations to get access to private datasets*; </li>'
-                 '<li> add data visualizations as gallery items alongside datasets*. </li>'
-                 '</ol> '
-                 '<br/><br/><p>*You need to be affiliated with an organisation to access these features.</p>',
+                 '<li> Contact data contributors to ask for more information about their data. </li> '
+                 '<li> Request access to the underlying data for metadata only entries (our HDX Connect feature). </li>'
+                 '<li> Join organisations to share data or to access private data, depending on your role within the organisation, e.g. an admin, editor, or member of the organisation (see more below). </li>'
+                 '<li> Request to create a new organisation and if approved, share data publicly or privately. /li>'
+                 '<li> Add data visualizations as showcase items alongside your organisations datasets. </li>'
+                 '<li> Follow the latest changes to data. </li>'
+                 '</ol> ',
+
         },
         {
             'q': 'What does it mean to \'follow\' data?',
@@ -59,18 +56,13 @@ getting_started = {
         },
         {
             'q': 'How do I request access to a dataset where I can only see metadata?',
-            'a': 'You\'ll find a \'request data\' button in the data and resources section of every requestable dataset. '
-                 'Please find more details <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>.',
+            'a': 'You\'ll find a \'Request Access\' button for datasets where only metadata is provided. The HDX Connect feature makes it possible to discover what data is available or what data collection initiatives are underway. Only registered users have the ability to contact the organisation through the request access module. The administrator for the contributing organisation can decide whether to accept or deny the request. Once the connection is made, HDX is not involved in the decision to share the data. Learn more about HDX Connect <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>. Find all \'by request\' datasets <a target="_blank"  href="https://data.humdata.org/search?ext_requestdata=1&q=&ext_page_size=25">here</a>.',
         },
         {
             'q': 'How do I contact a data contributor?',
-            'a': 'You\'ll find a \'contact the contributor\' link below the title of every dataset. Please find more details '
-                 '<a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.'
-        },
-        {
-            'q': 'What if I forget my username and password?',
-            'a': 'Use our <a target="_blank" href="https://data.humdata.org/user/reset">password recovery form</a> to reset your account '
-                 'details. Enter your username or e-mail and we will send you an e-mail with a link to create a new password.',
+            'a': 'You\'ll find a \'contact the contributor\' link below the title of the data on all the dataset pages. Please find more details '
+                 '<a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.',
+
         }
     ]
 }
@@ -86,8 +78,8 @@ organizations = {
                  'relevant data to share with the HDX user community.',
         },
         {
-            'q': 'Where can I see how popular an organization\'s datasets are?',
-            'a': 'On an organization\'s page, click on the "Stats" tab to see how many visitors an organization has '
+            'q': 'Where can I see how popular an organisation\'s datasets are?',
+            'a': 'On an organisation\'s page, click on the \'Stats\' tab to see how many visitors an organization has '
                  'received and which datasets are most popular in terms of downloads.  Here\'s an '
                  '<a target="_blank" href="https://data.humdata.org/organization/stats/un-operational-satellite-appplications-programme-unosat">example</a>. '
                  'The number of unique visitors is approximate and is based on the browser someone uses when visiting HDX.  A user visiting from different '
@@ -95,7 +87,7 @@ organizations = {
                  '<br/><br/>'
                  'You can also see a timeline of how often an individual dataset has been downloaded on each dataset page.  The download timeline '
                  'is located on the left side of a dataset page, just beside the dataset description. '
-                 'Downloads for a dataset are counted as the total of downloads of any resource in a dataset, with '
+                 'Downloads for a dataset are counted as the total number of downloads of any resource in a dataset, with '
                  'repeated downloads of the same resource by the same user being counted a maximum of once per day. '
                  '<br/><br/>'
                  'There is a delay, usually less than one day, between when a user views a page or downloads a resource '
@@ -137,16 +129,19 @@ organizations = {
         },
         {
             'q': 'Can I be part of more than one organisation?',
-            'a': 'Yes. Registered users can be part of several organisations. Only users belonging to an organisation '
-                 'can add data to HDX.',
+            'a': 'Yes. Registered users can be part of several organisations. ',
         },
         {
-            'q': 'I don\'t see my organisation.',
-            'a': 'If your organisation is not listed, you can request to create one (click the \'Add Data\' button) or '
-                 'you may want to join an existing organisation. For instance, there may be a WFP organisation that was '
+            'q': 'I don\'t see my organisation. What should I do? ',
+            'a': 'If your organisation is not listed, you can request to create one or you may want to join an existing organisation via your <a target="_blank" href="https://data.humdata.org/dashboard/">dashboard</a>. For instance, there may be a WFP organisation that was '
                  'created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a '
                  'separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of '
-                 'organisations by clicking the \'Organisations\' link at the top of any page.',
+                 'organisations by clicking \'Organisations\' in the main navigation.'
+                 'If you have previously created an organisation and no longer see it on the site, this is because you '
+                 'have not yet shared a public dataset. Once you share a dataset, your organisation will become active and visible on the site. '
+                 'For details on how to upload a dataset, see '
+                 '<a target="_blank" href="https://data.humdata.org/faq#auto-faq-Sharing_and_Using_Data-How_do_I_add_a_dataset_-a">"How do I add a dataset?"</a>. ',
+
         },
         {
             'q': 'Can an organisation have more than one administrator?',
@@ -157,17 +152,16 @@ organizations = {
                  'so please bear with us!',
         },
         {
-            'q': 'How do I create a branded organisation page in HDX?',
+            'q': 'How do I create a branded organisation page on HDX?',
             'a': 'HDX offers custom organisation pages to all organisations on the site. The page includes the '
                  'organisation\'s logo and colour palette, topline figures, space for a data visualization and the list '
-                 'of datasets. We created our first custom organisation pages for '
-                 '<a target="_blank"  href="https://data.humdata.org/organization/wfp">WFP</a> and the '
-                 '<a target="_blank"  href="https://data.humdata.org/organization/somalia-ngo-consortium">Somalia NGO Consortium</a>. '
+                 'of datasets. '
                  'If you would like a custom page, send a request to hdx.feedback@gmail.com.',
         },
         {
             'q': 'How do I use the Group Message feature?',
-            'a': 'Please find more details '
+            'a': '\'Group message\' lets members of an organisation send messages to all other members of their organisation. '
+                 'Please find more details '
                  '<a target="_blank" href="https://centre.humdata.org/new-features-contact-the-contributor-and-group-message/">here</a>.'
         },
         {
@@ -187,21 +181,21 @@ sharing_data = {
             'q': 'How do I share data on HDX?',
             'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with '
                  'appropriate privileges) before you can contribute data. If you have data to share, you can either '
-                 'request to create a new organisation or ask to join an existing one. (See more under Organisations above.)',
-        },
-        {
-            'q': 'What if my data is sensitive?',
-            'a': 'You can publish your dataset\'s metadata on HDX without including the actual data. '
-                 'This enables people to find out about the existence of your data. '
-                 'They are then able to request access to it in HDX and you will be notified of any requests by email. '
-                 'Control of access is entirely within your hands and no sensitive data is stored on HDX during this process.',
-        },
-        {
-            'q': 'Can I share data privately with my organisation\'s members?',
-            'a': 'Yes. For each dataset that you create, you have a choice of sharing data publicly, sharing only metadata publicly or restricting access to other members of the same organisation. '
-                 'The default visibility is set to private when you upload a new dataset. '
-                 'We encourage the open sharing of data, but we recognize that some data may not be suitable for public release in which case you can publish only metadata so that people can find and request your data. '
-                 'For fully restricted access (which we discourage), you can make your dataset and its metadata private so that only members of your organization can see it.',
+                 'request to create a new organisation or ask to join an existing one. (See the <a target="_blank" href="https://data.humdata.org/faq#body-faq-Organisations/">Organisations section</a> above.)'
+                 'There are three ways to share data on HDX: '
+                 '<br/><br/>'
+                 'Public - Data shared publicly is accessible to all users of the HDX platform, whether or not they are '
+                 'registered. All public data must be shared under an appropriate license. Select the \'public\' setting in the '
+                 'metadata field when uploading data. '
+                 '<br/><br/>'
+                 'Private - Organisations can share data privately with their members. The administrator of each organisation '
+                 'controls who can become a member. The default visibility is set to \'private\' when uploading new data. '
+                 'To make data accessible to HDX users, the contributing organisation needs to change the visibility to public. '
+                 '<br/><br/>'
+                 'By Request - Organisations can share the metadata of a dataset and grant access to the underlying data when requested by a registered user. Learn more about the HDX Connect feature here.'
+                 '<br/><br/>'
+                 'Learn more about how HDX handles sensitive data below.'
+            ,
         },
         {
             'q': 'What is the difference between a dataset and a resource?',
@@ -226,7 +220,7 @@ sharing_data = {
                  'which provides some simple formatting commands.'
                  '<br/><br/>'
                  'The "description", "methodology:other", and "caveats/comments" fields, as well as the description field for each resource '
-                 'attached to the dataset, all accept markdown formatting. ' 
+                 'attached to the dataset, all accept markdown formatting. '
                  'The most useful markdown commands are outlined here:'
                  '<br/><br/>'
                  'Links can be entered like this: <pre>[the linked text](https://data.humdata.org)</pre> '
@@ -257,38 +251,37 @@ sharing_data = {
         {
             'q': 'How do I edit a dataset?',
             'a': 'You can only edit a dataset if you are an administrator or editor of your organisation. If you have '
-                 'the appropriate role, you will find an \'Edit\' button just below the dataset description. This will '
+                 'the appropriate role, on the dataset page you will find an \'Edit\' button just below the dataset title on the right. This will '
                  'allow you to edit the dataset metadata and the resources. '
                  '<a target="_blank" href="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/present#slide=id.g10ad610ac0_0_147">These slides</a> '
                  'provide a walk-through of how to edit a dataset.',
         },
         {
-            'q':'How can I add graphs and key figures to my dataset?',
-            'a':'If your data uses the '
-                '<a target="_blank" href="http://hxlstandard.org/">HXL standard</a>, then HDX can automatically create '
-                'customizable graphs and key figures to help you highlight the most important aspects of your dataset. '
-                'We call these "Quick Charts". For a Quick Chart to be generated, your dataset needs to be public and contain '
-                'a CSV or XLSX resource with HXL tags.  HXL is easy! '
-                'Check out the <a target="_blank" href="http://hxlstandard.org/">30-second tutorial</a>.' 
-                '<br/><br/>'
-                'The resource can be stored on HDX or as a remote resource at another URL. Quick Charts will be generated '
-                'from the first resource with HXL tags in the list of a dataset\'s resources. The system will try to '
-                'generate up to three charts based on the HXL tags, and these can be changed to best tell the story in '
-                'your data. You can edit each Quick Chart\'s title, axis labels, and description. Don\'t forget to save '
-                'the changes so they become the default view that users see when viewing your dataset. Here\'s a good '
-                '<a target="_blank" href="https://data.humdata.org/dataset/madagascar-cyclone-enawo-needs-assessment-data-5-april">example</a> '
-                'to get you started.'
-                '<br/><br/>'
-                'Quick Charts doesn\'t work with all HXL tags, but we\'re working to expand its capabilities and your feedback '
-                'is welcome at <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>.',
+            'q': 'How can I add graphs and key figures to my dataset?',
+            'a': 'If your data uses the '
+                 '<a target="_blank" href="http://hxlstandard.org/">HXL standard</a>, then HDX can automatically create '
+                 'customizable graphs and key figures to help you highlight the most important aspects of your dataset. '
+                 'We call these "Quick Charts". For a Quick Chart to be generated, your dataset needs to be public and contain '
+                 'a CSV or XLSX resource with HXL tags.  HXL is easy! '
+                 'Check out the <a target="_blank" href="http://hxlstandard.org/">30-second tutorial</a>.'
+                 '<br/><br/>'
+                 'The resource can be stored on HDX or as a remote resource at another URL. Quick Charts will be generated '
+                 'from the first resource with HXL tags in the list of a dataset\'s resources. The system will try to '
+                 'generate up to three charts based on the HXL tags, and these can be changed to best tell the story in '
+                 'your data. You can edit each Quick Chart\'s title, axis labels, and description. Don\'t forget to save '
+                 'the changes so they become the default view that users see when viewing your dataset. Here\'s a good '
+                 '<a target="_blank" href="https://data.humdata.org/dataset/madagascar-cyclone-enawo-needs-assessment-data-5-april">example</a> '
+                 'to get you started.'
+                 '<br/><br/>'
+                 'Learn more about HXL and HDX Tools in the section below. ',
         },
         {
             'q': 'What are the recommended data formats?',
-            'a': 'We define data as information that software can read and analyse. We encourage contributions in any '
+            'a': 'We define data as information that common software can read and analyse. We encourage contributions in any '
                  'common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel '
                  '(xls only) formats, and for geographic data in zipped shapefile, kml and geojson formats.'
                  '<br/><br/>'
-                 'A PDF file is not data. If you have a data visualization in PDF format, you can add it as a gallery '
+                 'A PDF file is not data. If you have a data visualization in PDF format, you can add it as a showcase '
                  'item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian '
                  'information that are not related to the data you are sharing, please visit our companion sites '
                  '<a target="_blank" href="http://reliefweb.int/">ReliefWeb</a> and '
@@ -297,12 +290,23 @@ sharing_data = {
                  'the dataset.',
         },
         {
+            'q': 'What are the best practices for managing resources in a dataset?',
+            'a': 'Resources can be either different formats of the same data (such as XLSX and CSV) or different releases '
+                 'of the same data (such as March, April, and May needs assessments). Always put the resource with the '
+                 'most-recent or most-important information first, because the HDX system will by default use the first '
+                 'resource to create visualisations such as Quick Charts or geographic preview (this default can be '
+                 'overridden in the dataset edit page). '
+                 '<br/><br/>'
+                 'If you have data that is substantially different, like a different type of assessment or data about '
+                 'a different province, we recommend creating a separate dataset. ',
+        },
+        {
             'q': 'What are the recommended best practices for naming datasets and resources?',
             'a': 'For datasets: the keywords in your dataset title are matched to the search terms users enter when '
                  'looking for data in HDX. Avoid using abbreviations in the title that users may not be familiar with. '
                  'Also avoid using words such as current, latest or previous when referring to the time period (e.g., '
                  'latest 3W), as these terms become misleading as the dataset ages. The following is a good example of '
-                 'a dataset title: \'Who is Doing What Where in Afghanistan, Dec 2016\'.'
+                 'a dataset title: \'Who is Doing What Where in Afghanistan in Dec 2016\'.'
                  '<br/><br/>'
                  'For resources: by default, the resource name is the name of the uploaded file. However, you can change '
                  'this if needed to make it more clear to users. '
@@ -311,6 +315,7 @@ sharing_data = {
                  'not require this construction.',
         },
         {
+
             'q': 'Is there a limit on file size for the data that I upload?',
             'a': 'If your resource is simply a link to a file hosted elsewhere, there is no size limit. If you are '
                  'uploading a file onto HDX, the file size is limited to 300MB. If you have larger files that you want '
@@ -339,61 +344,50 @@ sharing_data = {
                  'copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version '
                  'of the Google document.</p>'
                  '<p>The HDX Resource Picker for Google Drive will only have access to your list of Google Drive files '
-                 'when you are logged into Google Drive.  You can revoke this permission at any time in '
+                 'when you are choosing Google Drive resources through the HDX interface.  You can revoke this permission at any time in '
                  '<a target="_blank" href="https://security.google.com/settings/security/permissions?pli=1">Google Drive\'s App Manager</a>. '
                  'However, this will not change the visibility of the Google Drive resources already created on HDX.</p>',
         },
         {
-            'q': 'How can I share data from my Dropbox account?',
-            'a': '<p>HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they '
-                 'are in CSV or XLS format. You can click on \'Add Data\' and choose the option to import files from '
-                 '\'Dropbox\'. A \'Dropbox\' popup will show and help you choose the file/files from your account.</p>'
-                 # '<p>You can choose to let Dropbox \'remember me\' when you connect via HDX.  And you can revoke that permission any time in the Dropbox pop-up by clicking the \'sign out\' link on the bottom right of the pop-up.</p>',
+            'q': 'How do I share a live Google Sheet?',
+            'a': 'To include a link to a Google Sheet, you must first set the sheet\'s sharing permissions so that it is '
+                 'either publicly visible or at least accessible to anyone who has the link. We recommend creating at '
+                 'least two separate resources for each Google Sheet: 1) a link to the sheet itself in the regular Google '
+                 'Drive interface; and 2) a direct-download link to an Excel or CSV version of the sheet, so that users '
+                 'can preview it in HDX. The version in HDX will update automatically as you make changes to the original '
+                 'Google Sheet.'
+                 '<br/><br/>'
+                 'To obtain the direct download link, select "Publish to the web..." from the "File" menu in Google Sheets, '
+                 'then in the dialog box that opens, under the \'Link\' tab select your preferred file format '
+                 '(such as Excel or CSV), confirm, and Google Sheets will provide you the link. (Note that this process '
+                 'is not necessary simply for working with HXL-aware tools like Quick Charts, because they can open data '
+                 'directly from the regular Google Sheets link.)'
         },
         {
-            'q':'How do I share a live Google Sheet?',
-            'a':'To include a link to a Google Sheet, you must first set the sheet\'s sharing permissions so that it is '
-                'either publicly visible or at least accessible to anyone who has the link. We recommend creating at '
-                'least two separate resources for each Google Sheet: 1) a link to the sheet itself in the regular Google '
-                'Drive interface; and 2) a direct-download link to an Excel or CSV version of the sheet, so that users '
-                'can preview it in HDX. The version in HDX will update automatically as you make changes to the original '
-                'Google Sheet.'
-                '<br/><br/>'
-                'To obtain the direct download link, download the sheet to your own computer in Excel or CSV format, '
-                'then open your web browser\'s \'Downloads\' screen and copy the link from there.'
+            'q': 'How do I share a live spreadsheet from Dropbox?',
+            'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are '
+                 'in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder '
+                 'containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share '
+                 'link\', following the instructions in the Dropbox help centre. You will then receive a special link '
+                 'that allows anyone to download the file.'
+                 '<br/><br/>'
+                 'Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks '
+                 'something like this: <br/> https://www.dropbox.com/etc/etc/your_file_name.csv?dl=0'
+                 '<br/><br/>'
+                 'For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' '
+                 'so that it looks like this: <br/>https://www.dropbox.com/etc/etc/your_file_name.csv?dl=1'
+                 '<br/><br/>'
+                 'The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. '
+                 'Be careful not to move or rename the file after you share it.'
         },
         {
-            'q':'How do I share a live spreadsheet from Dropbox?',
-            'a':'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are '
-                'in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder '
-                'containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share '
-                'link\', following the instructions in the Dropbox help centre. You will then receive a special link '
-                'that allows anyone to download the file.'
-                '<br/><br/>'
-                'Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks '
-                'something like this: <br/> https://www.dropbox.com/etc/etc/your_file_name.csv?dl=0'
-                '<br/><br/>'
-                'For HDX to be able to process and preview your file, you\'ll need to change the last \'0\' to a \'1\' '
-                'so that it looks like this: <br/>https://www.dropbox.com/etc/etc/your_file_name.csv?dl=0'
-                '<br/><br/>'
-                'The HDX resource will automatically track any changes you save to the Dropbox file on your own computer. '
-                'Be careful not to move or rename the file after you share it.'
-        },
-        {
-            'q': 'I\'ve updated the data in my remote resource, but the "updated" date on HDX did not change.',
-            'a': 'The data on HDX will always reflect updates made to the remote resource (such as a file on Dropbox or '
-                 'on a GeoNode). However, the metadata and activity stream will not automatically indicate the date of '
-                 'the update. Basically, at the moment HDX has no way of knowing that the remote resource has changed '
-                 '(we\'re working on a solution to this). Triggering an update to the date on HDX can be done manually '
-                 'by the dataset maintainer by making a small change to some part of the metadata of the dataset and saving '
-                 'it. If the resource is not remote (i.e. it is uploaded to HDX), the "updated" date will change each time a '
-                 'resource is uploaded.',
-        },
-        {
-            'q': 'How do I access the HDX Python Library?',
-            'a': 'The library is open source and is available here: '
-                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">hdx-python-api</a>. Learn more '
-                 'about the library in this <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">blog post</a>.'
+            'q': 'If the dataset date on HDX did not change automatically after updating my remote resource, '
+                 'how to I change it to the correct date? ',
+            'a': 'The data that users download from HDX will always reflect updates made to the remote resource '
+                 '(such as a file on Dropbox or Google Drive). However, the metadata and activity stream will not '
+                 'automatically indicate the updated date of '
+                 'the data. This has to be done manually in HDX by the dataset owner. '
+                 'We are working to improve this functionality, so please bear with us! '
         },
     ]
 }
@@ -424,18 +418,8 @@ geodata = {
                  'one layer within it. Resources with multiple layers (e.g., multiple shapefiles in a single zip file) '
                  'are not supported. In this case, the system will only create a preview of the first layer in the '
                  'resource, however all the layers will still be available in the downloaded file. If you would like '
-                 'all of the layers to display, you need to create a separate resource for each layer.',
-        },
-        {
-            'q': 'Is HDX integrated with any GeoNodes?',
-            'a': 'HDX has some datasets that are links to data stored on GeoNodes, such as the '
-                 '<a target="_blank"  href="http://ebolageonode.org/">Ebola GeoNode</a>, the '
-                 '<a target="_blank"  href="http://geonode.salahumanitaria.co/">Sala Humanitaria GeoNode</a>, and the '
-                 '<a target="_blank"  href="http://geonode.state.gov/">U.S. Department of State GeoNode</a>. '
-                 'These links are currently maintained manually. Updates to downloadable resources on a GeoNode will be '
-                 'reflected in the download from HDX. Updates to metadata or descriptions are only captured if the '
-                 'dataset owner updates them manually on HDX.',
-        },
+                 'all of the layers to display, you need to create a separate resource for each layer.'
+        }
     ]
 }
 
@@ -448,17 +432,18 @@ search = {
                  'search bar found at the top of almost every page on HDX, and by filtering a list of search results.'
                  '<br/><br/>'
                  '<p>Entering a search term causes HDX to look for matching terms in the titles, descriptions, locations '
-                 'and tags of a dataset. The resulting list of items can be further filtered by clicking on the blue '
-                 'filter icon at the top of the page (in the search bar).  You can filter by location, tag, '
-                 'organisation, license and format.</p>',
+                 'and tags of a dataset. The resulting list of items can be further refined using the filter options on '
+                 'the left side of the search result. .  You can filter by location, tag, '
+                 'organisation, license and format as well as filtering for some special classes of datasets '
+                 '(like datasets with HXL tags or datasets with Quick Charts) in the \'featured\' filters.</p>'
         },
         {
             'q': 'How do I find the Common Operational Datasets in HDX?',
             'a': 'In 2015, HDX migrated the Common Operational Datasets (CODs) from the COD Registry on '
                  'HumanitarianResponse.info to HDX. Each of these datasets has a \'cod\' tag. To limit search results '
-                 'to only CODs, open the filter panel (click the blue filter icon) and check the \'Only show CODs\' '
-                 'option.',
-        },
+                 'to only CODs, use the \'CODs\' filter in the filter panel on the left side of the dataset list.'
+                 'You can also find all CODs datasets <a target="_blank"  href="https://data.humdata.org/cod">here</a>. '
+        }
     ]
 }
 
@@ -474,7 +459,7 @@ metadata_and_data_quality = {
         },
         {
             'q': 'How does HDX ensure data quality?',
-            'a': 'Data quality is important to us, so we manually review every new dataset for relevance, accuracy, '
+            'a': 'Data quality is important to us, so we manually review every new dataset for relevance, '
                  'timeliness, interpretability and comparability. We contact data contributors if we have any concerns '
                  'or suggestions for improvement. You can learn more about our definition of the dimensions of data '
                  'quality and our quality-assurance processes '
@@ -482,9 +467,9 @@ metadata_and_data_quality = {
         },
         {
             'q': 'Does HDX make any changes to my dataset?',
-            'a': 'HDX will never make changes to the data that has been shared. We do add tags, or make changes to '
+            'a': 'No. HDX will never make changes to the data that has been shared. We do add tags, or make changes to '
                  'dataset titles to help make your data more discoverable by HDX users. We may also add a data '
-                 'visualization for the data in the dataset gallery. These changes will appear in the activity stream '
+                 'visualization for the data in the dataset showcase. A list of changes appears in the activity stream '
                  'on the left-hand column of the dataset page.',
         },
     ]
@@ -509,40 +494,143 @@ hdx_api = {
 }
 
 hxl = {
-    'title': 'HXL',
+    'title': 'HXL and HDX Tools',
     'questions': [
         {
             'q': 'What is the Humanitarian Exchange Language?',
             'a': 'The Humanitarian Exchange Language (HXL) is a simple standard for messy data. It is based on '
-                 'spreadsheet formats such as CSV or Excel, but it adds hashtags with semantic information to allow '
-                 'software to validate, clean, merge and analyse data more easily.'
+                 'spreadsheet formats such as CSV or Excel. The standard works by adding hashtags with semantic '
+                 'information in the row between the column header and data allow software to validate, clean, '
+                 'merge and analyse data more easily. To learn more about HXL and who\'s currently using it, visit '
+                 'the <a target="_blank" href="http://hxlstandard.org">HXL standard site</a>.'
                  '<br/><br/>'
                  '<p>HDX is currently adding features to visualise HXL-tagged data. To learn more about HXL and who\'s '
-                 'currently using it, visit the <a target="_blank"  href="http://hxlstandard.org/">HXL standard site</a>.</p>',
+                 'currently using it, visit the <a target="_blank"  href="http://hxlstandard.org/">HXL standard site</a>.</p>'
+        },
+        {
+            'q': 'What are HDX Tools?',
+            'a': 'HDX Tools include a number of HXL-enabled support processes that help you do more with your data, '
+                 'more quickly. The tools include: '
+                 '<ul>'
+                 '<li> Quick Charts - Automatically generate embeddable, live data charts, graphs and key figures from your spreadsheet. </li> '
+                 '<li> HXL Tag Assist - See HXL hashtags in action and add them to your own spreadsheet. </li>'
+                 '<li> Data Check - Data cleaning for humanitarian data, automatically detects and highlights common errors including validation against CODs and other vocabularies. </li>'
+                 '</ul> '
+                 '<br/><br/>'
+                 'You can find all HDX Tools through tools.humdata.org. The tools will work with data that is stored on HDX, '
+                 'the cloud or local machines. The only requirement will be that the data includes HXL hashtags. '
+        },
+        {
+            'q': 'How can I add Quick Charts to my dataset?',
+            'a': 'If your data uses HXL hashtags, then the Quick Charts tool can automatically create customizable '
+                 'graphs and key figures to help you highlight the most important aspects of your dataset. Quick Charts require the following: '
+                 '<ol>'
+                 '<li>The first resource in your dataset (stored on HDX or remotely) must have HXL hashtags. </li>'
+                 '<li>That dataset must have the HDX category tag \'HXL\' (not to be confused with the actual HXL hashtags). </li>'
+                 '</ol> '
+                 '<br/><br/>'
+                 'For more details you can view '
+                 '<a target="_blank" href="https://docs.google.com/presentation/d/12MVgXAbxL_8eLYz2SxZe3wJrGNjBaX8A231Wed7avj8/edit?usp=sharing/">'
+                 'these walkthrough slides</a>.'
+
+        },
+        {
+            'q': 'How can I add Quick Charts to my own web sites or blogs?',
+            'a': 'Every Quick Chart on HDX includes a small link icon at the bottom, that will give you HTML markup to copy into a '
+                 'web page or blog to add the chart. The chart will be live, and will update whenever the source data updates. '
+                 'If your data is not on HDX, you can also generate a Quick Chart using the standalone version of the service, available on '
+                 '<a target="_blank"  href="https://tools.humdata.org/">SOMETHING MISSING HERE</a>.'
+
+        },
+        {
+            'q': 'Why isn\'t Quick Charts recognizing the HXL hashtags in my dataset?',
+            'a': 'At this stage, Quick Charts are working with a limited number of HXL hashtags, but we are constantly expanding '
+                 'the list. The current set of JSON-encoded Quick Charts recipes is available on '
+                 '<a target="_blank"  href="https://github.com/OCHA-DAP/hxl-recipes/">GitHub</a>.'
+        },
+        {
+            'q': 'How does HXL Tag Assist work?',
+            'a': 'The <a target="_blank"  https://tools.humdata.org/examples/hxl/">HXL Tag Assist tool</a> will show you different HXL '
+                 'hashtags in datasets that organisations have already '
+                 'uploaded to HDX. You can find a quick (and portable) list of the core HXL hashtags on the <a target="_blank"  href="http://hxlstandard.org/standard/postcards/">HXL Postcard</a>. '
+                 'The detailed list of HXL hashtags and attributes is available in the <a target="_blank"  href="http://hxlstandard.org/standard/1_1final/dictionary/">HXL hashtag dictionary</a>. Finally, an '
+                 'up-to-date machine-readable version of the hashtag dictionary is <a target="_blank"  href="https://data.humdata.org/dataset/hxl-core-schemas/"> available on HDX.</a>'
+
+        },
+        {
+            'q': 'How does Data Check work?',
+            'a': 'You can use <a target="_blank"  https://centre.humdata.org/clean-your-data-with-data-check/"> Data Check</a> to '
+                 'compare your HXL-tagged dataset against a collection of validation rules that you can configure. '
+                 'Data Check identifies the errors in your data such as spelling mistakes, incorrect geographical codes, extra whitespace, '
+                 'numerical outliers, and incorrect data types. '
+                 '<br/><br/>'
+                 'For more details you can view '
+                 '<a target="_blank"  https://docs.google.com/presentation/d/1AiRDyEBe_56_b8KL0r4_a5W96Q3ZE2m56IT-r29nZFo/edit?usp=sharing"> '
+                 'these walkthrough slides </a>.'
+
         },
     ]
 }
 
 data_policy = {
-    'title': 'Data Policy',
+    'title': 'Sensitive Data',
     'questions': [
         {
-            'q': 'Does HDX accept personally identifiable information?',
-            'a': 'Yes and no. HDX does not allow personally identifiable information (PII) to be shared in public '
-                 'datasets. All data shared publicly through the platform must be sufficiently aggregated or anonymized '
-                 'so as to prevent identification of people or harm to affected people and the humanitarian community. '
-                 'We do allow private datasets to include PII, such as contact information for humanitarian responders. '
-                 'Read more about our <a href="https://data.humdata.org/about/terms">Terms of Service</a>.',
+            'q': 'How does HDX define sensitive data?',
+            'a': 'For the purpose of sharing data through HDX, we have developed the following categories to '
+                 'communicate data sensitivity: '
+                 '<ol>'
+                 '<li>Non-Sensitive - This includes datasets containing country statistics, roadmaps, weather data and '
+                 'other data with no foreseeable risk associated with sharing. </li>'
+                 '<li>Uncertain Sensitivity - For this data, sensitivity depends on a number of factors, including other '
+                 'datasets collected in the same context, what technology is or could be used to extract insights, and the '
+                 'local context from which the data is collected or which will be impacted by use of the data. </li>'
+                 '<li>Sensitive - This includes any dataset containing personal data of affected populations '
+                 'or aid workers. Datasets containing demographically identifiable information (DII) or community '
+                 'identifiable information (CII) that can put affected populations or aid workers at risk, are also '
+                 'considered sensitive data. Depending on context, satellite imagery can also fall into this third category of sensitivity. </li>'
+                 '</ol> '
+
         },
         {
-            'q': 'What data licences do you offer?',
+            'q': 'Can I share personal data through HDX?',
+            'a': 'HDX does not allow personal data or personally identifiable information (PII) to be shared in public '
+                 'or private datasets. All data shared through the platform must be sufficiently aggregated or anonymized '
+                 'so as to prevent identification of people or harm to affected people and the humanitarian community. '
+                 'We do allow private datasets to include contact information of aid workers if they have provided consent'
+                 'to the sharing of their data within the organisation. Read more in our '
+                 '<a target="_blank"  https://data.humdata.org/about/terms">Terms of Service</a>.'
+
+        },
+        {
+            'q': 'How does HDX assess the sensitivity of data?',
+            'a': 'HDX endeavors not to allow publicly shared data that includes community identifiable information (CII) '
+                 'or demographically identifiable information (DII) that may put affected people at risk. However, this type '
+                 'of data is more challenging to identify within datasets during our quality assurance process without deeper analysis. '
+                 'In cases where we suspect that survey data may have a high risk of re-identification of affected people, we run '
+                 'an internal statistical disclosure control process using SDCmicro. If the risk level is high (>2%), '
+                 'HDX will make the dataset private and notify the data contributor who can then further anonymize the data or '
+                 'share only the metadata through HDX Connect.'
+                 '<br/><br/>'
+                 'We invite HDX users to notify us should they become aware of this type of data being shared through the site. '
+                 'Data contributors can request HDX to analyze the risk of data before it is shared. '
+                 'Send an e-mail to hdx.feedback@gmail.com to request this support. '
+        },
+    ]
+}
+
+licenses = {
+    'title': 'Data Licenses',
+    'questions': [
+        {
+            'q': 'What data licences does HDX offer?',
             'a': 'HDX promotes the use of licenses developed by the '
                  '<a target="_blank"  href="http://creativecommons.org/">Creative Commons Foundation</a> '
                  'and the <a target="_blank"  href="http://opendatacommons.org">Open Data Foundation</a>. The main '
                  'difference between the two classes of licences is that the Creative Commons licences were developed '
                  'for sharing creative works in general, while the Open Data Commons licences were developed more '
                  'specifically for sharing databases. See the full list of licences '
-                 '<a href="https://data.humdata.org/about/license">here</a>.',
+                 '<a href="https://data.humdata.org/about/license">here</a>.'
         },
     ]
 }
@@ -555,12 +643,11 @@ contact = {
             'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with '
                  'the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also '
                  'reach us on Twitter at <a target="_blank" href="https://twitter.com/humdata">@humdata</a>. Sign up '
-                 'to receive our blog posts '
+                 'to receive our newsletter '
                  '<a target="_blank"  href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1">here</a>.',
         },
     ]
 }
-
 
 # popular = {
 #     'title': 'Popular Questions',
@@ -627,6 +714,7 @@ faq_data = [
     hdx_api,
     hxl,
     data_policy,
+    licenses,
     contact,
 
     # popular,
