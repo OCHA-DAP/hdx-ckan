@@ -121,27 +121,27 @@
                         </ul>
                       </label>
 
-                      <label class="links-list">
-                        QUICK LINKS - ARCHIVED
-                        <ul>
-                          {% for ev in events.archived %}
-                          <li>
-                            <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="footer">{{ ev.title }}</a></div>
-                            <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                          </li>
-                          {% endfor %}
-                          <li>
-                            <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="footer">Ebola 2014</a></div>
-                            <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                          </li>
-                          <li>
-                            {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
-                            <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="footer">Nepal Earthquake</a></div>
-                            <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                          </li>
+                      <!--<label class="links-list">-->
+                        <!--QUICK LINKS - ARCHIVED-->
+                        <!--<ul>-->
+                          <!--{% for ev in events.archived %}-->
+                          <!--<li>-->
+                            <!--<div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="footer">{{ ev.title }}</a></div>-->
+                            <!--&lt;!&ndash;<div class="crises-datasets">[ ## Datasets ]</div>&ndash;&gt;-->
+                          <!--</li>-->
+                          <!--{% endfor %}-->
+                          <!--<li>-->
+                            <!--<div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="footer">Ebola 2014</a></div>-->
+                            <!--&lt;!&ndash;<div class="crises-datasets">[ ## Datasets ]</div>&ndash;&gt;-->
+                          <!--</li>-->
+                          <!--<li>-->
+                            <!--{% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}-->
+                            <!--<div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="footer">Nepal Earthquake</a></div>-->
+                            <!--&lt;!&ndash;<div class="crises-datasets">[ ## Datasets ]</div>&ndash;&gt;-->
+                          <!--</li>-->
 
-                        </ul>
-                      </label>
+                        <!--</ul>-->
+                      <!--</label>-->
                     </div>
                     <div class="col-xs-4">
                       <label class="links-list">
@@ -173,11 +173,22 @@
                       </label>
 
                       <label class="links-list">
-                        Resources
+                        Documentation
                         <ul>
                           <li>
-                            <a href="https://centre.humdata.org/category/blog/" target="_blank"  data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Blog <i class="icon icon-external-link"></i>
+                            <a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">FAQ</a>
+                          </li>
+                          <li>
+                            <a href="/documentation" data-module="hdx_click_stopper" data-module-link_type="footer">Resources for Developers</a>
+                          </li>
+                          <li>
+                            <a href="http://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              HXL Standards <i class="icon icon-external-link"></i>
+                            </a>
+                          </li>
+                          <li>
+                            <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Open source <i class="icon icon-external-link"></i>
                             </a>
                           </li>
                           <li>
@@ -185,6 +196,12 @@
                           </li>
                           <li>
                             <a href="/about/terms" data-module="hdx_click_stopper" data-module-link_type="footer">Terms of Service</a>
+                          </li>
+
+                          <li>
+                            <a href="https://centre.humdata.org/category/blog/" target="_blank"  data-module="hdx_click_stopper" data-module-link_type="footer">
+                              Blog <i class="icon icon-external-link"></i>
+                            </a>
                           </li>
                         </ul>
                       </label>
@@ -195,21 +212,8 @@
                         About
                         <ul>
                           <li>
-                            <a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">FAQ</a>
-                          </li>
-                          <li>
                             <a href="https://centre.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
                               Centre for Humdata <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="http://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              HXL Standards <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Open source <i class="icon icon-external-link"></i>
                             </a>
                           </li>
                           <li>
