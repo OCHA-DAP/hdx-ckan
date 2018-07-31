@@ -4,6 +4,7 @@ Created on Apr 10, 2014
 @author:alexandru-m-g
 '''
 import io
+import os
 import json
 import logging
 
@@ -80,6 +81,23 @@ def cached_group_list():
     return tk.get_action('cached_group_list')()
 
 
+def file_remove(id):
+    storage_path = uploader.get_storage_path()
+    directory = os.path.join(storage_path, 'resources', id[0:3], id[3:6])
+    filepath = os.path.join(directory, id[6:])
+
+    # remove file and its directory tree
+    try:
+        # remove file
+        os.remove(filepath)
+        # remove empty parent directories
+        os.removedirs(directory)
+        log.info(u'File %s is deleted.' % filepath)
+    except OSError, e:
+        log.debug(u'Error: %s - %s.' % (e.filename, e.strerror))
+
+    pass
+
 class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -100,8 +118,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('dataset_edit', '/dataset/edit/{id}',
                     controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
                     action='show_notification_page')
-
         return map
+
+    def before_delete(context, data_dict, resource, resources):
+        try:
+            if resource.get('id'):
+                file_remove(resource.get('id'))
+        except Exception, ex:
+            log.error(ex)
 
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}',
