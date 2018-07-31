@@ -1,16 +1,24 @@
-import ckan.logic
+import ckan.logic as logic
 import logging
 import ckan.logic.action.delete as core_delete
 
 from ckanext.hdx_package.actions.update import process_batch_mode
 
-_check_access = ckan.logic.check_access
-NotFound = ckan.logic.NotFound
-_get_or_bust = ckan.logic.get_or_bust
+_check_access = logic.check_access
+NotFound = logic.NotFound
+_get_or_bust = logic.get_or_bust
 log = logging.getLogger(__name__)
+_get_action = logic.get_action
 
 
 def hdx_dataset_purge(context, data_dict):
+    _check_access('package_delete', context, data_dict)
+
+    model = context['model']
+    id = _get_or_bust(data_dict, 'id')
+    pkg = model.Package.get(id)
+    for r in pkg.resources:
+        _get_action('resource_delete')(context, {'id': r.id})
     return dataset_purge(context, data_dict)
 
 
@@ -68,6 +76,7 @@ def resource_delete(context, data_dict):
     result_dict = core_delete.resource_delete(context, data_dict)
 
     return result_dict
+
 
 def _is_requested_data_type(entity):
     for extra in entity.extras_list:
