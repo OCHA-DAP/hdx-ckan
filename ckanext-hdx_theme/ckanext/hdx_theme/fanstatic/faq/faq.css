@@ -8,20 +8,16 @@
   max-width: 270px;
 }
 .hdx-faq-sidebar .nav li a {
+  padding: 0;
+  color: #333333;
+  letter-spacing: 0.01em;
   font-family: 'Gotham-Book', sans-serif;
   font-size: 14px;
-  color: #888888;
-  letter-spacing: 0.01em;
-  padding: 0;
+  line-height: 20px;
 }
 .hdx-faq-sidebar .nav li a:hover,
 .hdx-faq-sidebar .nav li a.active {
-  font-family: 'Gotham-Medium', sans-serif;
-  font-size: 14px;
   color: #007CE0;
-  line-height: 20px;
-  letter-spacing: 0.01em;
-  padding: 0;
 }
 .hdx-faq-sidebar .no-answer-found a {
   color: #000;
@@ -30,10 +26,9 @@
   color: #007CE0;
 }
 .hdx-wrapper .section-flag {
-  font-family: 'Gotham-Book', sans-serif;
-  font-size: 14px;
-  color: #888888;
-  letter-spacing: 0.01em;
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 18px;
+  color: #007CE0;
 }
 .hdx-wrapper .top-banner {
   background-color: #FFFFFF;
@@ -101,7 +96,7 @@
   box-shadow: none;
   font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
-  color: #888888;
+  color: #333333;
   line-height: 20px;
   letter-spacing: 0.01em;
 }

@@ -20,15 +20,14 @@
     max-width: 270px;
   }
   .nav li a {
-    .menu-item-font(@grayColor);
     padding: 0;
+    color: @darkGrayColor;
+    letter-spacing: 0.01em;
+    font-family: @gothamBookFont;
+    font-size: 14px;
+    line-height: 20px;
     &:hover, &.active {
-      font-family: @gothamMediumFont;
-      font-size: 14px;
       color: @blueColor;
-      line-height: 20px;
-      letter-spacing: 0.01em;
-      padding: 0;
     }
   }
 
@@ -43,7 +42,9 @@
 }
 
 .hdx-wrapper .section-flag {
-  .menu-item-font(@grayColor);
+    font-family: @gothamMediumFont;
+    font-size: 18px;
+    color: @blueColor;
 }
 
 .hdx-wrapper .top-banner {
@@ -116,7 +117,7 @@
 
       font-family: @sourceSansProFont;
       font-size: 14px;
-      color: @grayColor;
+      color: @darkGrayColor;
       line-height: 20px;
       letter-spacing: 0.01em;
 
