@@ -249,7 +249,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'batch': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
-                             tk.get_converter('convert_to_extras')]
+                             tk.get_converter('convert_to_extras')],
+            'author_email': [tk.get_validator('ignore_missing'), unicode],
         })
 
         schema['resources'].update(
