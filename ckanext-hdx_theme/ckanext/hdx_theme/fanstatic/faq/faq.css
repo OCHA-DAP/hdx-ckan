@@ -63,6 +63,40 @@
 .hdx-wrapper .top-banner .top-banner-text-wrapper .top-banner-more-button-wrapper {
   text-align: center;
 }
+.hdx-wrapper .top-banner-documentation {
+  background-color: #FFFFFF;
+  background-image: url("/images/backgrounds/faq_top_f.png");
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  background-size: 100% auto;
+  height: 315px;
+  margin-left: -45px;
+  margin-right: -45px;
+  background-image: url("/images/backgrounds/documentation_top_f.jpg");
+}
+.hdx-wrapper .top-banner-documentation .top-banner-text-wrapper {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 90px;
+  width: 50%;
+}
+.hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-title {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-size: 36px;
+  color: #FFFFFF;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+.hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-more {
+  font-family: 'Gotham-Book', sans-serif;
+  font-size: 14px;
+  color: #FFFFFF;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+.hdx-wrapper .top-banner-documentation .top-banner-text-wrapper .top-banner-more-button-wrapper {
+  text-align: center;
+}
 .hdx-wrapper .hdx-panel-group .panel {
   border: none;
   border-bottom: 1px solid #cccccc;
