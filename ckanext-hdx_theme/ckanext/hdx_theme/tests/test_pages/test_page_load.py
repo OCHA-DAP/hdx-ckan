@@ -22,6 +22,7 @@ pages = [
     {'controller': 'group', 'action': 'index', 'usertype': 'all'},
     {'controller': 'organization', 'action': 'index', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_theme.controllers.faq:FaqController', 'action': 'show', 'usertype': 'all'},
+    {'controller': 'ckanext.hdx_theme.controllers.documentation_controller:DocumentationController', 'action': 'show', 'usertype': 'all'},
     {'controller': 'user', 'action': 'dashboard_organizations', 'usertype': 'all'},
     {'controller': 'ckanext.hdx_users.controllers.dashboard_controller:DashboardController',
      'action': 'dashboard', 'usertype': 'all'},

@@ -11,10 +11,10 @@
     {% if organizations %}
       <div class="pull-right">
         <div>
-        <a class="btn btn-primary" href="/organization">{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
+        <a class="btn btn-primary" href="#" onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');$('#select-organisation').show();$('#create-organisation').hide();" >{{ _('+ Join Another Organisation') }}</a> <br/> <br/>
         </div>
         <div>
-          <a class="btn btn-primary" href="/organization/request_new">{{ _('+ Request New Organisation') }}</a><br/> <br/>
+          <a class="btn btn-primary" onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');$('#select-organisation').hide();$('#create-organisation').show();" href="#">{{ _('+ Request New Organisation') }}</a><br/> <br/>
         </div>
         <div>
             {% snippet "snippets/help_box.html", links=[{'url':'https://centre.humdata.org/screencasts#creating-an-organization','text':'Request Org'},{'url':'https://centre.humdata.org/screencasts#joining-an-organization','text':'Join Org'},{'url':'https://centre.humdata.org/get-involved/','text':'Contact Us'}] %}
@@ -35,12 +35,12 @@
         {% resource 'hdx_theme/popup' %}
         {{ h.snippet('widget/onboarding/select-organisation.html', id="selectOrgPopup") }}
         <center>
-          <a href="/organization" class="btn btn-primary">{{ _("Find Your Organisation")}}</a>
+          <a href="#" onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');$('#select-organisation').show();$('#create-organisation').hide();" class="btn btn-primary">{{ _("Find Your Organisation")}}</a>
           <span class="mLR30">{{_("OR")}}</span>
           <!--<a href="/organization/request_new" class="btn btn-primary">+ {{ _("Request New Organisation")}}</a>-->
            <!--|-->
 
-          <a onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');" href="#" class="btn btn-primary">+ {{ _("Request New Organisation")}}</a>
+          <a onclick="showOnboardingWidget('#selectOrgPopup', '#user_extra','False');$('#select-organisation').hide();$('#create-organisation').show();" href="#" class="btn btn-primary">+ {{ _("Request New Organisation")}}</a>
         </center>
         </div>
     </div>
