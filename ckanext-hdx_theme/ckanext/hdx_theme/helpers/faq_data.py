@@ -493,13 +493,13 @@ resources_for_developers = {
             'a': 'Please see our <a target="_blank"  href=" data.humdata.org/documentation">Resources for Developers</a> '
                 'page for more information. '
          },
-        {       
+        {
             'q': 'Where can I read about coding with HDX? ',
             'a': 'Please see our <a target="_blank"  href=" data.humdata.org/documentation">Resources for Developers</a> '
                 'page for more information. '
         },
     ]
-}      
+}
 
 
 hdx_api = {
@@ -737,6 +737,7 @@ faq_data = [
     geodata,
     search,
     metadata_and_data_quality,
+    resources_for_developers,
     hdx_api,
     hxl,
     data_policy,
