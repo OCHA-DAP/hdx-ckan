@@ -56,7 +56,12 @@ getting_started = {
         },
         {
             'q': 'How do I request access to a dataset where I can only see metadata?',
-            'a': 'You\'ll find a \'Request Access\' button for datasets where only metadata is provided. The HDX Connect feature makes it possible to discover what data is available or what data collection initiatives are underway. Only registered users have the ability to contact the organisation through the request access module. The administrator for the contributing organisation can decide whether to accept or deny the request. Once the connection is made, HDX is not involved in the decision to share the data. Learn more about HDX Connect <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>. Find all \'by request\' datasets <a target="_blank"  href="https://data.humdata.org/search?ext_requestdata=1&q=&ext_page_size=25">here</a>.',
+            'a': 'You\'ll find a \'Request Access\' button for datasets where only metadata is provided. '
+                 'The HDX Connect feature makes it possible to discover what data is available or what data collection initiatives are underway. '
+                 'Only registered users have the ability to contact the organisation through the request access module. '
+                 'The administrator for the contributing organisation can decide whether to accept or deny the request. '
+                 'Once the connection is made, HDX is not involved in the decision to share the data. '
+                 'Learn more about HDX Connect <a target="_blank"  href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>. Find all \'by request\' datasets <a target="_blank"  href="https://data.humdata.org/search?ext_requestdata=1&q=&ext_page_size=25">here</a>.',
         },
         {
             'q': 'How do I contact a data contributor?',
@@ -79,7 +84,7 @@ organizations = {
         },
         {
             'q': 'Where can I see how popular an organisation\'s datasets are?',
-            'a': 'On an organisation\'s page, click on the \'Stats\' tab to see how many visitors an organization has '
+            'a': 'On an organisation\'s page, click on the \'Stats\' tab to see how many visitors an organisation has '
                  'received and which datasets are most popular in terms of downloads.  Here\'s an '
                  '<a target="_blank" href="https://data.humdata.org/organization/stats/un-operational-satellite-appplications-programme-unosat">example</a>. '
                  'The number of unique visitors is approximate and is based on the browser someone uses when visiting HDX.  A user visiting from different '
@@ -133,10 +138,12 @@ organizations = {
         },
         {
             'q': 'I don\'t see my organisation. What should I do? ',
-            'a': 'If your organisation is not listed, you can request to create one or you may want to join an existing organisation via your <a target="_blank" href="https://data.humdata.org/dashboard/">dashboard</a>. For instance, there may be a WFP organisation that was '
+            'a': 'If your organisation is not listed, you can request to create one or you may want to join an existing organisation via your <a target="_blank" href="https://data.humdata.org/dashboard/">dashboard</a>. '
+                 'For instance, there may be a WFP organisation that was '
                  'created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a '
                  'separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of '
-                 'organisations by clicking \'Organisations\' in the main navigation.'
+                 'organisations by clicking <a target="_blank" href="https://https://data.humdata.org/organization">\'Organisations\'</a> in the main navigation.'
+                 '<br/><br/>'
                  'If you have previously created an organisation and no longer see it on the site, this is because you '
                  'have not yet shared a public dataset. Once you share a dataset, your organisation will become active and visible on the site. '
                  'For details on how to upload a dataset, see '
@@ -156,7 +163,7 @@ organizations = {
             'a': 'HDX offers custom organisation pages to all organisations on the site. The page includes the '
                  'organisation\'s logo and colour palette, topline figures, space for a data visualization and the list '
                  'of datasets. '
-                 'If you would like a custom page, send a request to hdx.feedback@gmail.com.',
+                 'If you would like a custom page, send a request to <a href="mailto:hdx@un.org">hdx@un.org</a>.',
         },
         {
             'q': 'How do I use the Group Message feature?',
@@ -167,7 +174,7 @@ organizations = {
         {
             'q': 'I changed my job - what happens to my account?',
             'a': 'You can keep your account. On the organisation page that you\'re a part of, click the link to \'Leave '
-                 'this organisation\'. If you want to change the email address associated with your account, click on '
+                 'this organisation\'. If you want to change the e-mail address associated with your account, click on '
                  'your username on the upper-right corner of any HDX page and then select \'User Settings\'. From there, '
                  'you can update your profile.'
         }
@@ -192,7 +199,8 @@ sharing_data = {
                  'controls who can become a member. The default visibility is set to \'private\' when uploading new data. '
                  'To make data accessible to HDX users, the contributing organisation needs to change the visibility to public. '
                  '<br/><br/>'
-                 'By Request - Organisations can share the metadata of a dataset and grant access to the underlying data when requested by a registered user. Learn more about the HDX Connect feature here.'
+                 'By Request - Organisations can share the metadata of a dataset and grant access to the underlying data when requested by a registered user. '
+                 ' Learn more about the HDX Connect feature <a target="_blank" href="https://centre.humdata.org/a-new-call-to-action-sharing-the-existence-of-data/">here</a>.'
                  '<br/><br/>'
                  'Learn more about how HDX handles sensitive data below.'
             ,
@@ -261,7 +269,7 @@ sharing_data = {
             'a': 'If your data uses the '
                  '<a target="_blank" href="http://hxlstandard.org/">HXL standard</a>, then HDX can automatically create '
                  'customizable graphs and key figures to help you highlight the most important aspects of your dataset. '
-                 'We call these "Quick Charts". For a Quick Chart to be generated, your dataset needs to be public and contain '
+                 'We call these \'Quick Charts\'. For a Quick Chart to be generated, your dataset needs to be public and contain '
                  'a CSV or XLSX resource with HXL tags.  HXL is easy! '
                  'Check out the <a target="_blank" href="http://hxlstandard.org/">30-second tutorial</a>.'
                  '<br/><br/>'
@@ -291,7 +299,7 @@ sharing_data = {
         },
         {
             'q': 'What are the best practices for managing resources in a dataset?',
-            'a': 'Resources can be either different formats of the same data (such as XLSX and CSV) or different releases '
+            'a': 'Resources can be either different <i>formats</i> of the same data (such as XLSX and CSV) or different <i>releases<i/> '
                  'of the same data (such as March, April, and May needs assessments). Always put the resource with the '
                  'most-recent or most-important information first, because the HDX system will by default use the first '
                  'resource to create visualisations such as Quick Charts or geographic preview (this default can be '
@@ -319,7 +327,7 @@ sharing_data = {
             'q': 'Is there a limit on file size for the data that I upload?',
             'a': 'If your resource is simply a link to a file hosted elsewhere, there is no size limit. If you are '
                  'uploading a file onto HDX, the file size is limited to 300MB. If you have larger files that you want '
-                 'to share, e-mail us at hdx.feedback@gmail.com.',
+                 'to share, e-mail us at <a href="mailto:hdx@un.org">hdx@un.org</a>.',
         },
         {
             'q': 'Can I share data hosted elsewhere?',
@@ -368,7 +376,8 @@ sharing_data = {
             'a': 'HDX can live-link to and preview files stored in any Dropbox folder and even preview them if they are '
                  'in CSV or XLS format. You must login to Dropbox via the web application and navigate to the folder '
                  'containing the spreadsheet (or other file) that you want to share. Select the file and choose \'Share '
-                 'link\', following the instructions in the Dropbox help centre. You will then receive a special link '
+                 'link\', following the <a target="_blank" href="https://www.dropbox.com/en/help/167">instructions in the Dropbox help centre</a>. '
+                 ' You will then receive a special link '
                  'that allows anyone to download the file.'
                  '<br/><br/>'
                  'Add that link as a resource to your HDX dataset. When you receive a Dropbox link, it normally looks '
@@ -382,7 +391,7 @@ sharing_data = {
         },
         {
             'q': 'If the dataset date on HDX did not change automatically after updating my remote resource, '
-                 'how to I change it to the correct date? ',
+                 'how do I change it to the correct date? ',
             'a': 'The data that users download from HDX will always reflect updates made to the remote resource '
                  '(such as a file on Dropbox or Google Drive). However, the metadata and activity stream will not '
                  'automatically indicate the updated date of '
@@ -400,7 +409,7 @@ geodata = {
             'a': 'The HDX system will attempt to create a map, or geographic preview, from geodata formats that it '
                  'recognizes. For a geographic preview to be generated, your data needs to be in either a zipped '
                  'shapefile, kml or geojson format.  Ensure that the \'File type\' field for the resource also has one of '
-                 'the above formats. Pro tip: HDX will automatically add the correct format if the extension is '
+                 'the above formats. Pro tip: HDX will automatically add the correct format if the file extension is '
                  '\'.shp.zip\', \'.kml\', or \'.geojson\'. Here are examples of geodata '
                  '<a href="https://data.humdata.org/dataset/somalia-schools">points</a>, '
                  '<a href="https://data.humdata.org/dataset/nigeria-water-courses-cod">lines</a>, and '
@@ -433,9 +442,11 @@ search = {
                  '<br/><br/>'
                  '<p>Entering a search term causes HDX to look for matching terms in the titles, descriptions, locations '
                  'and tags of a dataset. The resulting list of items can be further refined using the filter options on '
-                 'the left side of the search result. .  You can filter by location, tag, '
+                 'the left side of the search result. You can filter by location, tag, '
                  'organisation, license and format as well as filtering for some special classes of datasets '
-                 '(like datasets with HXL tags or datasets with Quick Charts) in the \'featured\' filters.</p>'
+                 '(like <a target="_blank"  href="https://data.humdata.org/search?ext_hxl=1">datasets with HXL tags</a> or '
+                 '<a target="_blank"  href="https://data.humdata.org/search?ext_quickcharts=1">datasets with Quick Charts</a>) '
+                 'in the \'featured\' filters.</p>'
         },
         {
             'q': 'How do I find the Common Operational Datasets in HDX?',
@@ -474,6 +485,22 @@ metadata_and_data_quality = {
         },
     ]
 }
+resources_for_developers = {
+    'title': 'Resources for Developers',
+    'questions': [
+        {
+            'q': 'How do I access the HDX API? ',
+            'a': 'Please see our <a target="_blank"  href=" data.humdata.org/documentation">Resources for Developers</a> '
+                'page for more information. '
+         },
+        {       
+            'q': 'Where can I read about coding with HDX? ',
+            'a': 'Please see our <a target="_blank"  href=" data.humdata.org/documentation">Resources for Developers</a> '
+                'page for more information. '
+        },
+    ]
+}      
+
 
 hdx_api = {
     'title': 'HDX API',
@@ -481,14 +508,14 @@ hdx_api = {
         {
             'q': 'How do I access the HDX API?',
             'a': 'There are two APIs for accessing HDX. '
-                 'The best choice for most tasks is the HDX Python Library which is open source and available here:'
-                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">https://github.com/OCHA-DAP/hdx-python-api</a>. '
+                 'The best choice for most tasks is the HDX Python Library which is open source and available ' 
+                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">here</a>. '
                  'The library is a wrapper around the the base CKAN API with additional features that simplify usage.'
                  'Learn more about it <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
                  '<br/><br/>'
                  'HDX supports both the core <a target="_blank" href="http://docs.ckan.org/en/ckan-2.6.3/api/index.html">CKAN 2.6 API</a> '
                  'and, for some datasets, the CKAN Datastore API. '
-                 'For more information, please e-mail <a href="mailto:hdx@un.org">hdx.feedback@gmail.com</a>. We will be happy to assist you.'
+                 'For more information, please e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. We will be happy to assist you.'
         },
     ]
 }
@@ -539,7 +566,7 @@ hxl = {
             'a': 'Every Quick Chart on HDX includes a small link icon at the bottom, that will give you HTML markup to copy into a '
                  'web page or blog to add the chart. The chart will be live, and will update whenever the source data updates. '
                  'If your data is not on HDX, you can also generate a Quick Chart using the standalone version of the service, available on '
-                 '<a target="_blank"  href="https://tools.humdata.org/">SOMETHING MISSING HERE</a>.'
+                 '<a target="_blank"  href="https://tools.humdata.org/">https://tools.humdata.org</a>.'
 
         },
         {
@@ -614,7 +641,7 @@ data_policy = {
                  '<br/><br/>'
                  'We invite HDX users to notify us should they become aware of this type of data being shared through the site. '
                  'Data contributors can request HDX to analyze the risk of data before it is shared. '
-                 'Send an e-mail to hdx.feedback@gmail.com to request this support. '
+                 'Send an e-mail to <a href="mailto:hdx@un.org">hdx@un.org</a> to request this support. '
         },
     ]
 }
@@ -640,8 +667,7 @@ contact = {
     'questions': [
         {
             'q': 'How do I contact the HDX team?',
-            'a': 'For general enquiries, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. If you see an issue with '
-                 'the site, e-mail <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a>. You can also '
+            'a': 'For general enquiries or issues with the site, e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. You can also '
                  'reach us on Twitter at <a target="_blank" href="https://twitter.com/humdata">@humdata</a>. Sign up '
                  'to receive our newsletter '
                  '<a target="_blank"  href="http://humdata.us14.list-manage.com/subscribe?u=ea3f905d50ea939780139789d&id=99796325d1">here</a>.',
@@ -677,7 +703,7 @@ contact = {
 #         },
 #         {
 #             'q': 'Has HDX been featured in the media?',
-#             'a': 'Yes. The following articles have been written about HDX:<br/><br/><p>The Guardian - <a target="_blank"  href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data Exchange Helps Humanitarians Act Fast and Effectively</a></p><p>Fast Company - <a target="_blank"  href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the Candy Crush of Data is Saving Lives in Nepal</a></p><p>Forbes - <a target="_blank"  href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN Deploys New Tech to Make Relief Faster in Nepal</a></p><p>The Independent - <a target="_blank"  href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a></p><p>Reuters - <a target="_blank"  href="http://af.reuters.com/article/commoditiesNews/idAFL5N18N1U1">From displacement to death, UN data innovation aims to boost aid response</a></p>',
+#             'a': 'Yes. The following Launched in July 2014 have been written about HDX:<br/><br/><p>The Guardian - <a target="_blank"  href="http://www.theguardian.com/global-development/2014/dec/29/humanitarian-data-exchange-ebola-refugees">Data Exchange Helps Humanitarians Act Fast and Effectively</a></p><p>Fast Company - <a target="_blank"  href="http://www.fastcodesign.com/3045699/how-the-candy-crush-of-data-is-saving-lives-in-nepal">How the Candy Crush of Data is Saving Lives in Nepal</a></p><p>Forbes - <a target="_blank"  href="http://www.forbes.com/sites/eshachhabra/2015/05/31/un-deploys-new-tech-to-make-relief-faster-in-nepal/">UN Deploys New Tech to Make Relief Faster in Nepal</a></p><p>The Independent - <a target="_blank"  href="http://www.independent.co.uk/life-style/gadgets-and-tech/news/open-data-what-is-it-and-why-are-people-so-scared-of-it-10405636.html">Open Data: What is it and why are people so scared of it?</a></p><p>Reuters - <a target="_blank"  href="http://af.reuters.com/article/commoditiesNews/idAFL5N18N1U1">From displacement to death, UN data innovation aims to boost aid response</a></p>',
 #         },
 #     ]
 # }
