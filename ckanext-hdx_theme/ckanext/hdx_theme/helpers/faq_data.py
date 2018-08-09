@@ -299,7 +299,7 @@ sharing_data = {
         },
         {
             'q': 'What are the best practices for managing resources in a dataset?',
-            'a': 'Resources can be either different <i>formats</i> of the same data (such as XLSX and CSV) or different <i>releases<i/> '
+            'a': 'Resources can be either different <i>formats</i> of the same data (such as XLSX and CSV) or different <i>releases</i> '
                  'of the same data (such as March, April, and May needs assessments). Always put the resource with the '
                  'most-recent or most-important information first, because the HDX system will by default use the first '
                  'resource to create visualisations such as Quick Charts or geographic preview (this default can be '
@@ -411,15 +411,15 @@ geodata = {
                  'shapefile, kml or geojson format.  Ensure that the \'File type\' field for the resource also has one of '
                  'the above formats. Pro tip: HDX will automatically add the correct format if the file extension is '
                  '\'.shp.zip\', \'.kml\', or \'.geojson\'. Here are examples of geodata '
-                 '<a href="https://data.humdata.org/dataset/somalia-schools">points</a>, '
-                 '<a href="https://data.humdata.org/dataset/nigeria-water-courses-cod">lines</a>, and '
-                 '<a href="https://data.humdata.org/dataset/health-districts">polygons</a> '
+                 '<a target="_blank" href="https://data.humdata.org/dataset/somalia-schools">points</a>, '
+                 '<a target="_blank" href="https://data.humdata.org/dataset/nigeria-water-courses-cod">lines</a>, and '
+                 '<a target="_blank" href="https://data.humdata.org/dataset/health-districts">polygons</a> '
                  'showing the preview feature.'
                  '<br/><br/>'
                  'The preview feature will continue to work when there are multiple geodata resources in a single '
                  'dataset (i.e., one HDX dataset with many resources attached). The layers icon in the top-right corner '
                  'of the map enables users to switch between geodata layers. Here is an '
-                 '<a href="https://data.humdata.org/dataset/nigeria-water-courses-cod">example</a>.'
+                 '<a target="_blank" href="https://data.humdata.org/dataset/nigeria-water-courses-cod">example</a>.'
         },
         {
             'q': 'Why is the geodata preview only working for one layer in my resource?',
@@ -490,12 +490,12 @@ resources_for_developers = {
     'questions': [
         {
             'q': 'How do I access the HDX API? ',
-            'a': 'Please see our <a target="_blank"  href=" data.humdata.org/documentation">Resources for Developers</a> '
+            'a': 'Please see our <a target="_blank" href="https://data.humdata.org/documentation">Resources for Developers</a> '
                 'page for more information. '
          },
         {
             'q': 'Where can I read about coding with HDX? ',
-            'a': 'Please see our <a target="_blank"  href=" data.humdata.org/documentation">Resources for Developers</a> '
+            'a': 'Please see our <a target="_blank" href="https://data.humdata.org/documentation">Resources for Developers</a> '
                 'page for more information. '
         },
     ]
@@ -513,7 +513,7 @@ hdx_api = {
                  'The library is a wrapper around the the base CKAN API with additional features that simplify usage.'
                  'Learn more about it <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
                  '<br/><br/>'
-                 'HDX supports both the core <a target="_blank" href="http://docs.ckan.org/en/ckan-2.6.3/api/index.html">CKAN 2.6 API</a> '
+                 'HDX supports both the core <a target="_blank" href="http://docs.ckan.org/en/2.7/api/index.html">CKAN 2.7 API</a> '
                  'and, for some datasets, the CKAN Datastore API. '
                  'For more information, please e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. We will be happy to assist you.'
         },
@@ -577,7 +577,7 @@ hxl = {
         },
         {
             'q': 'How does HXL Tag Assist work?',
-            'a': 'The <a target="_blank"  https://tools.humdata.org/examples/hxl/">HXL Tag Assist tool</a> will show you different HXL '
+            'a': 'The <a target="_blank" href="https://tools.humdata.org/examples/hxl/">HXL Tag Assist tool</a> will show you different HXL '
                  'hashtags in datasets that organisations have already '
                  'uploaded to HDX. You can find a quick (and portable) list of the core HXL hashtags on the <a target="_blank"  href="http://hxlstandard.org/standard/postcards/">HXL Postcard</a>. '
                  'The detailed list of HXL hashtags and attributes is available in the <a target="_blank"  href="http://hxlstandard.org/standard/1_1final/dictionary/">HXL hashtag dictionary</a>. Finally, an '
@@ -626,7 +626,7 @@ data_policy = {
                  'so as to prevent identification of people or harm to affected people and the humanitarian community. '
                  'We do allow private datasets to include contact information of aid workers if they have provided consent'
                  'to the sharing of their data within the organisation. Read more in our '
-                 '<a target="_blank"  https://data.humdata.org/about/terms">Terms of Service</a>.'
+                 '<a target="_blank" href="https://data.humdata.org/about/terms">Terms of Service</a>.'
 
         },
         {
@@ -657,7 +657,7 @@ licenses = {
                  'difference between the two classes of licences is that the Creative Commons licences were developed '
                  'for sharing creative works in general, while the Open Data Commons licences were developed more '
                  'specifically for sharing databases. See the full list of licences '
-                 '<a href="https://data.humdata.org/about/license">here</a>.'
+                 '<a target="_blank" href="https://data.humdata.org/about/license">here</a>.'
         },
     ]
 }
