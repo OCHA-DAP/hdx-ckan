@@ -502,24 +502,6 @@ resources_for_developers = {
 }
 
 
-hdx_api = {
-    'title': 'HDX API',
-    'questions': [
-        {
-            'q': 'How do I access the HDX API?',
-            'a': 'There are two APIs for accessing HDX. '
-                 'The best choice for most tasks is the HDX Python Library which is open source and available ' 
-                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">here</a>. '
-                 'The library is a wrapper around the the base CKAN API with additional features that simplify usage.'
-                 'Learn more about it <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
-                 '<br/><br/>'
-                 'HDX supports both the core <a target="_blank" href="http://docs.ckan.org/en/2.7/api/index.html">CKAN 2.7 API</a> '
-                 'and, for some datasets, the CKAN Datastore API. '
-                 'For more information, please e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. We will be happy to assist you.'
-        },
-    ]
-}
-
 hxl = {
     'title': 'HXL and HDX Tools',
     'questions': [
@@ -539,13 +521,13 @@ hxl = {
             'a': 'HDX Tools include a number of HXL-enabled support processes that help you do more with your data, '
                  'more quickly. The tools include: '
                  '<ul>'
-                 '<li> Quick Charts - Automatically generate embeddable, live data charts, graphs and key figures from your spreadsheet. </li> '
-                 '<li> HXL Tag Assist - See HXL hashtags in action and add them to your own spreadsheet. </li>'
-                 '<li> Data Check - Data cleaning for humanitarian data, automatically detects and highlights common errors including validation against CODs and other vocabularies. </li>'
+                 '<li><a target="_blank" href="https://tools.humdata.org/wizard/#quickcharts">Quick Charts</a> - Automatically generate embeddable, live data charts, graphs and key figures from your spreadsheet. </li> '
+                 '<li><a target="_blank" href="https://tools.humdata.org/examples/hxl/">HXL Tag Assist</a> - See HXL hashtags in action and add them to your own spreadsheet. </li>'
+                 '<li><a target="_blank" href="https://tools.humdata.org/wizard/#datacheck">Data Check</a> - Data cleaning for humanitarian data, automatically detects and highlights common errors including validation against CODs and other vocabularies. </li>'
                  '</ul> '
                  '<br/><br/>'
-                 'You can find all HDX Tools through tools.humdata.org. The tools will work with data that is stored on HDX, '
-                 'the cloud or local machines. The only requirement will be that the data includes HXL hashtags. '
+                 'You can find all HDX Tools through <a target="_blank" href="https://tools.humdata.org">tools.humdata.org</a>. The tools will work with data that is stored on HDX, '
+                 'the cloud or local machines. The only requirement is that the data includes HXL hashtags. '
         },
         {
             'q': 'How can I add Quick Charts to my dataset?',
@@ -675,6 +657,23 @@ contact = {
     ]
 }
 
+#hdx_api = {
+#    'title': 'HDX API',
+#    'questions': [
+#        {
+#            'q': 'How do I access the HDX API?',
+#            'a': 'There are two APIs for accessing HDX. '
+#                 'The best choice for most tasks is the HDX Python Library which is open source and available ' 
+#                 '<a target="_blank" href="https://github.com/OCHA-DAP/hdx-python-api">here</a>. '
+#                 'The library is a wrapper around the the base CKAN API with additional features that simplify usage.'
+#                 'Learn more about it <a target="_blank" href="https://centre.humdata.org/hdx-python-library/">in this blog post</a>.'
+#                 '<br/><br/>'
+#                 'HDX supports both the core <a target="_blank" href="http://docs.ckan.org/en/2.7/api/index.html">CKAN 2.7 API</a> '
+#                 'and, for some datasets, the CKAN Datastore API. '
+#                 'For more information, please e-mail <a href="mailto:hdx@un.org">hdx@un.org</a>. We will be happy to assist you.'
+#        },
+#    ]
+#}
 # popular = {
 #     'title': 'Popular Questions',
 #     'questions': [
@@ -738,7 +737,6 @@ faq_data = [
     search,
     metadata_and_data_quality,
     resources_for_developers,
-    hdx_api,
     hxl,
     data_policy,
     licenses,
