@@ -299,7 +299,7 @@ sharing_data = {
         },
         {
             'q': 'What are the best practices for managing resources in a dataset?',
-            'a': 'Resources can be either different <i>formats</i> of the same data (such as XLSX and CSV) or different <i>releases<i/> '
+            'a': 'Resources can be either different <i>formats</i> of the same data (such as XLSX and CSV) or different <i>releases</i> '
                  'of the same data (such as March, April, and May needs assessments). Always put the resource with the '
                  'most-recent or most-important information first, because the HDX system will by default use the first '
                  'resource to create visualisations such as Quick Charts or geographic preview (this default can be '
