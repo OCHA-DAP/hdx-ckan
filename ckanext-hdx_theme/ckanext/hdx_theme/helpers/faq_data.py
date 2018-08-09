@@ -188,7 +188,7 @@ sharing_data = {
             'q': 'How do I share data on HDX?',
             'a': 'Data on HDX is shared through organisations. You need to be a member of an organisation (with '
                  'appropriate privileges) before you can contribute data. If you have data to share, you can either '
-                 'request to create a new organisation or ask to join an existing one. (See the <a target="_blank" href="https://data.humdata.org/faq#body-faq-Organisations/">Organisations section</a> above.)'
+                 'request to create a new organisation or ask to join an existing one. (See the <a href="#body-faq-Organisations">Organisations section</a> above.)'
                  'There are three ways to share data on HDX: '
                  '<br/><br/>'
                  'Public - Data shared publicly is accessible to all users of the HDX platform, whether or not they are '
