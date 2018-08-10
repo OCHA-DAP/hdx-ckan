@@ -50,7 +50,7 @@ def add_msg_niceties(body, footer=None):
     <html>
       <header>{style}</header>
       <body>
-        <img style="max-width: 150px" src="https://data.humdata.org/images/homepage/logo-combined.jpg" />
+        <img style="max-width: 150px" src="https://data.humdata.org/images/homepage/logo-combined.png" />
         {content}
       </body>
     </html>
