@@ -41,7 +41,7 @@ getting_started = {
                  '<li> Contact data contributors to ask for more information about their data. </li> '
                  '<li> Request access to the underlying data for metadata only entries (our HDX Connect feature). </li>'
                  '<li> Join organisations to share data or to access private data, depending on your role within the organisation, e.g. an admin, editor, or member of the organisation (see more below). </li>'
-                 '<li> Request to create a new organisation and if approved, share data publicly or privately. /li>'
+                 '<li> Request to create a new organisation and if approved, share data publicly or privately. </li>'
                  '<li> Add data visualizations as showcase items alongside your organisations datasets. </li>'
                  '<li> Follow the latest changes to data. </li>'
                  '</ol> ',
@@ -568,13 +568,13 @@ hxl = {
         },
         {
             'q': 'How does Data Check work?',
-            'a': 'You can use <a target="_blank"  https://centre.humdata.org/clean-your-data-with-data-check/"> Data Check</a> to '
+            'a': 'You can use <a target="_blank" href="https://centre.humdata.org/clean-your-data-with-data-check/"> Data Check</a> to '
                  'compare your HXL-tagged dataset against a collection of validation rules that you can configure. '
                  'Data Check identifies the errors in your data such as spelling mistakes, incorrect geographical codes, extra whitespace, '
                  'numerical outliers, and incorrect data types. '
                  '<br/><br/>'
                  'For more details you can view '
-                 '<a target="_blank"  https://docs.google.com/presentation/d/1AiRDyEBe_56_b8KL0r4_a5W96Q3ZE2m56IT-r29nZFo/edit?usp=sharing"> '
+                 '<a target="_blank" href="https://docs.google.com/presentation/d/1AiRDyEBe_56_b8KL0r4_a5W96Q3ZE2m56IT-r29nZFo/edit?usp=sharing"> '
                  'these walkthrough slides </a>.'
 
         },
