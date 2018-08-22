@@ -80,6 +80,11 @@
       <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
       </div>
     </div>
+    {% block pre_primary_content2 %}
+      {% if pkg.customviz %}
+        {% snippet "indicator/snippets/custom_viz.html", customviz = pkg.customviz %}
+      {% endif %}
+    {% endblock %}
   </div>
 
 {% endblock %}

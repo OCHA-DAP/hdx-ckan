@@ -1,0 +1,6 @@
+.viz-deactivated {
+  pointer-events: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: #888888;
+}
