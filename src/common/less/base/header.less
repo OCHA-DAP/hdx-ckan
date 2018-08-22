@@ -218,7 +218,7 @@ h4 small {
 
     .icon-search{
       margin: 0 20px;
-
+      color: @grayColor;
       font-size: 20px;
       line-height: 28px;
     }
@@ -259,6 +259,24 @@ h4 small {
       opacity: 1;
     }
   }
+}
+
+.header-message {
+    max-width: @containerRealSize + 2*@containerMarginSize;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+
+    .header-message-container {
+        line-height: 1;
+        font-size: 0;
+        background-image: url("/images/empty.png");
+        background-repeat: repeat-x;
+
+        img.header-message-image {
+            visibility: hidden;
+        }
+    }
 }
 
 //FIX THIS
@@ -858,3 +876,22 @@ nav{
     }
   }
 }
+
+label.terms-of-service {
+    font-weight: 400;
+    margin: 0;
+
+    &:after {
+        content: none;
+    }
+}
+
+.vertically-center-reference {
+    position: relative;
+    .vertically-center {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+

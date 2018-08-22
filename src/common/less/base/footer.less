@@ -5,7 +5,12 @@
 @import "variables";
 @import "mixins";
 
+@import "allow-cookies";
+
+
 .hdx-footer {
+    position: relative;
+    z-index: 100;
     .titlePlusVersion{
         color: #888888;
         .gothamBookFont(12px);
@@ -44,8 +49,9 @@
         }
 
         .btn.btn-primary {
-            height: 44px;
-            margin-left: 20px;
+            height: 45px;
+            margin-left: 7px;
+            margin-top: -3px;
             padding: 0 20px;
         }
     }
@@ -66,7 +72,7 @@
                 .gothamBoldFont(12px);
                 color: @extraLightGrayColor;
 
-                .glyphicon-new-window {
+                .glyphicon-new-window, .icon-external-link {
                     color: @grayColor;
                     margin-left: 3px;
                     font-weight: 400;
@@ -100,10 +106,12 @@
 
             a {
                 margin-left: 15px;
-                svg {
+                svg, .icon {
                     height: 18px;
                     width: 18px;
                     fill: @lightGrayColor;
+                    font-size: 18px;
+                    color: @lightGrayColor
                 }
             }
         }
@@ -124,7 +132,7 @@
     }
 
 
-    .col-xs-12 > .row {
+    .footer-wrapper {
         vertical-align: middle;
         padding-top: 60px;
         padding-bottom: 60px;
