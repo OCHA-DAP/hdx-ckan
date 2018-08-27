@@ -68,6 +68,7 @@ class ContributeFlowController(base.BaseController):
                     self.process_groups(dataset_dict)
                     self.process_tags(dataset_dict)
                     self.process_dataset_preview_edit(dataset_dict)
+                    self.process_custom_viz(dataset_dict)
                     maintainer_dict = logic.get_action('user_show')(context,
                                                                     {'id': dataset_dict.get('maintainer', None)})
                     if maintainer_dict:
@@ -121,6 +122,11 @@ class ContributeFlowController(base.BaseController):
         if dataset_dict and not dataset_dict.get('tag_string'):
             dataset_dict['tag_string'] = ''
             dataset_dict['tags'] = []
+
+    def process_custom_viz(self, dataset_dict):
+        if dataset_dict.get('customviz'):
+            custom_url_list = [item.get('url') for item in dataset_dict.get('customviz')]
+            dataset_dict['customviz_list'] = json.dumps(custom_url_list)
 
     def _abort(self, save_type, status_code, message):
         if '-json' in save_type:

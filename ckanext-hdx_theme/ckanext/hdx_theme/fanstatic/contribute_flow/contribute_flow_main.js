@@ -52,6 +52,10 @@ ckan.module('contribute_flow_main', function($, _) {
                             var formDataArray = this.getFormValues('validate-json');
                             var resourceDataArray = this.generateResourcePostData();
                             formDataArray = formDataArray.concat(resourceDataArray);
+
+                            var customVizArray = this.generateCustomVizPostData();
+                            formDataArray = formDataArray.concat(customVizArray);
+
                             formDataArray.push({'name': 'id', 'value': datasetId});
 
                             $.post(validateUrl, formDataArray,
@@ -108,6 +112,10 @@ ckan.module('contribute_flow_main', function($, _) {
                                     isNewDataset = true;
                                 }
                                 formDataArray.push({'name': 'batch_mode', 'value': 'DONT_GROUP'});
+
+                                var customVizArray = contributeGlobal.generateCustomVizPostData();
+                                formDataArray = formDataArray.concat(customVizArray);
+
                                 contributeGlobal.controlUserWaitingWidget(true, 'Saving dataset form...');
 
                                 $.when(analyticsPromise).done(function () {
@@ -133,12 +141,20 @@ ckan.module('contribute_flow_main', function($, _) {
                         }
                     ];
                     var formDataArray = $(formSelector).find(':input').serializeArray();
+
+                    /**
+                     * We're generating the custom viz POST data in generateCustomVizPostData(). So this input field is
+                     * not needed anymore
+                     */
+                    var toSkip = ['custom_viz_url'];
                     for (var i=0; i<formDataArray.length; i++) {
                         var item = formDataArray[i];
-                        if (item.value) {
+                        if (item.value && toSkip.indexOf(item.name) === -1) {
                             modifiedFormDataArray.push(item);
                         }
                     }
+
+
                     return modifiedFormDataArray;
                 },
                 'updateInnerState': function (data, status) {
@@ -170,7 +186,8 @@ ckan.module('contribute_flow_main', function($, _) {
                                 var message = {
                                     type: 'new',
                                     elementName: key,
-                                    errorInfo: errorList[i]
+                                    errorInfo: errorList[i],
+                                    index: i
                                 };
                                 sandbox.publish('hdx-form-validation', message);
                             }
@@ -239,6 +256,36 @@ ckan.module('contribute_flow_main', function($, _) {
                 },
                 'setResourceModelList': function (resourceModelList) {
                     this.resourceModelList = resourceModelList;
+                },
+                /**
+                *
+                * @param {[string]} customVizList
+                */
+                'setCustomVizList': function (customVizUrls) {
+                  this.customVizUrls = customVizUrls;
+                },
+                'generateCustomVizPostData': function() {
+                  var customVizList = [];
+                  if (this.customVizUrls) {
+
+                    /**
+                     * If we only have one empty custom viz then don't send it to the server
+                     * because it's the one that is being shown automatically
+                     */
+                    if (this.customVizUrls.length >= 2 || this.customVizUrls[0]) {
+                      for (var i = 0; i < this.customVizUrls.length; i++) {
+                        customVizList.push({
+                          name: 'customviz__' + i + '__url',
+                          value: this.customVizUrls[i]
+                        });
+                        // customVizList.push({
+                        //   name: 'customviz__' + i + '__name',
+                        //   value: 'CV TITLE ' + i
+                        // });
+                      }
+                    }
+                  }
+                  return customVizList;
                 },
                 'generateDatasetPreviewOptions': function (resourceModelList) {
                     var newOptions = resourceModelList.models;

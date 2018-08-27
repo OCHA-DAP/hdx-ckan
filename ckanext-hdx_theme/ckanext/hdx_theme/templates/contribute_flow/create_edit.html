@@ -405,6 +405,59 @@
                                             </div>
                                         </div>
                                     </span>
+                                  <div class="row form-section">
+                                    <div class="col-xs-3">
+                                      <h3>Custom Dataviz for This Dataset</h3>
+                                      <p>
+                                        You can add up to 5 dataviz using the embed code.
+                                      </p>
+                                    </div>
+                                    <div class="col-xs-9">
+                                      <div class="custom-viz-list" data-module="hdx_custom_dataviz_manager" data-module-custom_viz_urls="{{ data.customviz_list }}">
+                                        <div class="custom-viz-item">
+                                          <label class="label-title-style mBottom10">${index} DATA VIZ</label>
+                                          <div class="drag-drop-component">
+                                            <div class="row">
+                                              <div class="col-xs-12">
+                                                <span style="cursor: move; cursor: grab; cursor: -webkit-grab; cursor: -moz-grab;" class="drag-handle">
+                                                              <i class="glyphicon glyphicon-resize-vertical grey"></i>
+                                                              <i class="glyphicon glyphicon-align-justify grey"
+                                                                 style="margin-left: -5px; margin-right: 5px; font-size: 15px;"></i>
+                                                </span>
+                                                <label class="control-label">Data Viz ${index}</label>
+                                                <span class="pull-right">
+                                                  <a href="javascript:void(0)" class="delete_custom_viz">
+                                                    <i class="glyphicon glyphicon-trash grey"></i>
+                                                  </a>
+                                                </span>
+                                              </div>
+                                            </div>
+                                            <div class="row">
+                                              <div class="col-xs-12">
+                                                <div class="control-group form-group">
+                                                  <div class="controls ">
+                                                    <input name="custom_viz_url" value="${url}"
+                                                           placeholder="eg. http://example.com/dataviz *"
+                                                           class="form-control custom-viz-url" type="text">
+                                                    <span class="error-block"></span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <input class="add_custom_viz btn btn-primary btn-lg"
+                                               value="Add more data viz" type="button">
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <div class="col-xs-12">
+                                      <hr class="form-hr"/>
+                                    </div>
+                                  </div>
                                     <div class="row form-horizontal form-section">
                                         <div class="col-xs-3">
                                             <h3>Metadata</h3>

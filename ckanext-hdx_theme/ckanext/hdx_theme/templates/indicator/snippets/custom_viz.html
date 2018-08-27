@@ -1,0 +1,27 @@
+{#
+ Example:
+
+  {% snippet "indicator/snippets/custom_viz.html", customviz = pkg.customviz %}
+
+#}
+
+<div class="col-xs-12">
+  <div class="list-header">
+    <span class="mL15 list-header-title">{{ _('Interactive Data') }}</span>
+    {% for viz in customviz %}
+      {% if loop.index > 1 %} | {% endif %}
+      <a data-module="hdx_custom_dataviz_show" data-module-index="{{ loop.index-1 }}"
+         data-module-target="custom-viz-iframe" data-module-url="{{ viz.url }}"
+         href="javascript:void(0)"
+         class="{% if loop.index == 1 %} mL30 {% endif %}">{{ _('Data Viz') }} {{ loop.index }}</a>
+    {% endfor %}
+  </div>
+</div>
+<div class="col-xs-12">
+  <iframe style="width: 100%; border-style: none; height: 500px" src="{{ customviz[0].url }}" class="hxl-preview-iframe" id="custom-viz-iframe">
+  </iframe>
+</div>
+<div class="col-xs-12">
+  <div class="mBottom15" style="border-bottom: 1px solid #dddddd;">
+  </div>
+</div>
