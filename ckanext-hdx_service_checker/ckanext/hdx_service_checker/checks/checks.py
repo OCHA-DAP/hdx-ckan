@@ -1,4 +1,3 @@
-import requests
 
 import ckanext.hdx_service_checker.checks as checks
 import ckanext.hdx_service_checker.exceptions as exceptions
@@ -37,7 +36,7 @@ class HttpStatusCodeCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = requests.get(url, verify=False)
+            r = self._request_get(url)
             status = str(r.status_code)
             if status in accepted_codes:
                 self.result = 'Passed'
@@ -75,7 +74,7 @@ class HttpResponseTextCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = requests.get(url, verify=False)
+            r = self._request_get(url)
 
             if included_text in r.text:
                 self.result = 'Passed'
@@ -111,7 +110,7 @@ class ProxyForRemoteCheck(checks.Check):
             raise exceptions.ParamMissingException('Param missing for HttpStatusCodeCheck')
 
         try:
-            r = requests.get(url, verify=False)
+            r = self._request_get(url)
             response = r.json()
             if 'result' in response:
                 self.subchecks = response['result']
