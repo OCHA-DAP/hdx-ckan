@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 
 import ckanext.hdx_theme.helpers.api_tracking_helper as api_th
 import pylons.config as config
@@ -83,6 +84,10 @@ class AbstractAnalyticsSender(object):
         mixpanel_meta = self.analytics_dict.get('mixpanel_meta')
         if (self.is_api_call):
             self._set_if_not_exists(mixpanel_meta, 'event source', 'api')
+
+        # setting the event time
+        event_time = time.time()
+        self._set_if_not_exists(mixpanel_meta, 'time', event_time)
 
         self._set_if_not_exists(mixpanel_meta, 'server side', True)
         self._set_if_not_exists(mixpanel_meta, 'user agent', self.user_agent)
