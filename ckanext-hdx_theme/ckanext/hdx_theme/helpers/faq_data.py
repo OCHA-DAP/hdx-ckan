@@ -477,6 +477,14 @@ metadata_and_data_quality = {
                  '<a target="_blank"  href="https://centre.humdata.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
         },
         {
+            'q': 'What does the green leaf symbol mean?',
+            'a': 'The green leaf symbol indicates that a dataset is up to date. This means that there has been an '
+                 'update to the metadata or the data in the dataset within the expected update frequency plus '
+                 'some leeway. The relationship between the expected update frequency text and the number of '
+                 'days a dataset qualifies as being fresh can be seen '
+                 '<a target="_blank"  href="https://humanitarian.atlassian.net/wiki/spaces/HDX/pages/442826919/Expected+Update+Frequency+vs+Freshness+Status">here</a>.',
+        },
+        {
             'q': 'Does HDX make any changes to my dataset?',
             'a': 'No. HDX will never make changes to the data that has been shared. We do add tags, or make changes to '
                  'dataset titles to help make your data more discoverable by HDX users. We may also add a data '
