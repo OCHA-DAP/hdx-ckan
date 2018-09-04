@@ -478,10 +478,10 @@ metadata_and_data_quality = {
         },
         {
             'q': 'What does the green leaf symbol mean?',
-            'a': 'The green leaf symbol indicates that a dataset is up to date. This means that there has been an '
-                 'update to the metadata or the data in the dataset within the expected update frequency plus '
-                 'some leeway. The relationship between the expected update frequency text and the number of '
-                 'days a dataset qualifies as being fresh can be seen '
+            'a': 'The green leaf symbol indicates that a dataset is up to date - that there has been an update to '
+                 'the metadata or the data in the dataset within the expected update frequency plus some leeway. '
+                 'For more information on the expected update frequency metadata field and the number of days '
+                 'a dataset qualifies as being fresh, see '
                  '<a target="_blank"  href="https://humanitarian.atlassian.net/wiki/spaces/HDX/pages/442826919/Expected+Update+Frequency+vs+Freshness+Status">here</a>.',
         },
         {
