@@ -65,6 +65,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
             template_data = self.get_template_data(country_dict, not_filtered_facet_info, latest_cod_dataset)
 
+            # data grid / data completeness code
+            if country_dict.get('data_completeness') == 'active':
+                pass
+
             if get_only_toplines:
                 result = render('country/country_topline.html', extra_vars=template_data)
             else:
@@ -250,8 +254,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         try:
             context['include_datasets'] = False
-            group_dict = self._action(
-                'hdx_light_group_show')(context, data_dict)
+            group_dict = self._action('hdx_light_group_show')(context, data_dict)
 
             return group_dict
 
