@@ -53,7 +53,13 @@
 {% if package.is_requestdata_type %}
   <li class="label-icons"><span class="download-counts">{{ _('This data is by request only') }}</span></li>
 {% elif package.type == 'dataset' and package.data_update_frequency %}
-  <li class="label-icons"><span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }} </span></li>
+  <li class="label-icons">
+    <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
+    {%  if package.is_fresh %}
+      <span class="icon-leaf fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+      <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="icon-questionmark freshness"></a>
+    {% endif %}
+  </li>
 {% endif %}
 
 {% set layer = h.hdx_get_layer_info(package.name) %}
