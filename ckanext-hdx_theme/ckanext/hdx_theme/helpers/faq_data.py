@@ -142,7 +142,6 @@ organizations = {
                  'For instance, there may be a WFP organisation that was '
                  'created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a '
                  'separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of '
-                 'organisations by clicking <a target="_blank" href="https://https://data.humdata.org/organization">\'Organisations\'</a> in the main navigation.'
                  '<br/><br/>'
                  'If you have previously created an organisation and no longer see it on the site, this is because you '
                  'have not yet shared a public dataset. Once you share a dataset, your organisation will become active and visible on the site. '
