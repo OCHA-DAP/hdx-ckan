@@ -10,6 +10,7 @@ from operator import itemgetter
 
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_org_group.helpers.data_completness as data_completness
 import ckanext.hdx_package.helpers.screenshot as screenshot
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
@@ -122,6 +123,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                     'tag_list': f_tag_list[:10],
                     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
                 },
+                'data_completness': self._get_data_completness(country_dict.get('name')),
 
             },
             'errors': None,
@@ -241,6 +243,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         context = {'model': model, 'session': model.Session, 'user': c.user or c.author, 'auth_user_obj': c.userobj}
         pages_list = get_action('group_page_list')(context, {'id': group_id})
         return pages_list
+
+    def _get_data_completness(self, location_code):
+        return data_completness.DataCompletness(location_code).get_config()
+
 
     def get_country(self, id):
         group_type = self._ensure_controller_matches_group_type(

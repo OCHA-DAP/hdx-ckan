@@ -216,6 +216,11 @@
     </div>
     {% endif %}
 
+    {% if data.data_completness %}
+      <div style="height: 200px; overflow: auto;">
+      {{ data.data_completness }}
+      </div>
+    {% endif %}
 
     {% if data.widgets.top_line_data_list %}
     <div class="row">
