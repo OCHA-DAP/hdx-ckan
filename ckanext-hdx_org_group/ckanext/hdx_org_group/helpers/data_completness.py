@@ -2,6 +2,8 @@ import yaml
 import requests
 import ckan.logic as logic
 
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
+
 
 class DataCompletness(object):
 
@@ -37,9 +39,13 @@ class DataCompletness(object):
                     search_result = logic.get_action('package_search')({}, {
                         'start': 0,
                         'rows': 500,
+                        'fl': ['id','name','title','metadata_modified','extras_data_update_frequency'],
                         'fq': query_string
                     })
                     ds['datasets'] = search_result.get('results', [])
+                    for dataset in ds['datasets']:
+                        FreshnessCalculator(dataset).populate_with_freshness()
+                    pass
 
     def __build_query(self, include_rule, exclude_rule):
         query_string = ''

@@ -18,10 +18,14 @@ class FreshnessCalculator(object):
 
     def __init__(self, dataset_dict):
         self.surely_not_fresh = True
+        self.dataset_dict = dataset_dict
         update_freq = dataset_dict.get('data_update_frequency')
+        modified = dataset_dict.get('metadata_modified')
         try:
             if update_freq and UPDATE_FREQ_INFO.get(update_freq):
-                self.modified = datetime.datetime.strptime(dataset_dict.get('metadata_modified'), "%Y-%m-%dT%H:%M:%S.%f")
+                if modified.endswith('Z'):
+                    modified = modified.replace('Z', '')
+                self.modified = datetime.datetime.strptime(modified, "%Y-%m-%dT%H:%M:%S.%f")
                 self.extra_days = UPDATE_FREQ_INFO.get(update_freq)
                 self.update_freq_in_days = int(update_freq)
                 self.surely_not_fresh = False
@@ -40,3 +44,6 @@ class FreshnessCalculator(object):
             return fresh
         else:
             return False
+
+    def populate_with_freshness(self):
+        self.dataset_dict['is_fresh'] = self.is_fresh()
