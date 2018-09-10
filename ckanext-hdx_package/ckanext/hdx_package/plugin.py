@@ -251,6 +251,9 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
                              tk.get_converter('convert_to_extras')],
             'author_email': [tk.get_validator('ignore_missing'), unicode],
+            'customviz': {
+                'url': [tk.get_validator('hdx_is_url'), tk.get_validator('hdx_convert_list_item_to_extras')],
+            }
         })
 
         schema['resources'].update(
@@ -308,7 +311,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'has_quickcharts': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_geodata': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'batch': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')]
+            'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')],
+            'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'), tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -373,7 +377,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_show_subnational': vd.hdx_show_subnational,
             'hdx_find_package_maintainer': vd.hdx_find_package_maintainer,
             'hdx_dataset_preview_validator': vd.hdx_dataset_preview_validator,
-            'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp
+            'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp,
+            'hdx_convert_list_item_to_extras': vd.hdx_convert_list_item_to_extras,
+            'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
+            'hdx_is_url':  vd.hdx_is_url
         }
 
     def get_auth_functions(self):

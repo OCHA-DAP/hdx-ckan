@@ -11,6 +11,7 @@ from ckanext.hdx_package.helpers import helpers
 from ckanext.hdx_package.helpers.geopreview import GIS_FORMATS, get_latest_shape_info
 from ckanext.hdx_theme.util.mail import simple_validate_email
 from ckanext.hdx_theme.util.jql import downloads_per_dataset_per_week_last_24_weeks_cached
+from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 import ckanext.hdx_package.helpers.custom_validator as vd
 from pylons import config
 
@@ -653,6 +654,7 @@ class DatasetController(PackageController):
                            'auth_user_obj': c.userobj}
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
+                c.pkg_dict['is_fresh'] = FreshnessCalculator(c.pkg_dict).is_fresh()
             else:
                 abort(404, _('Package type is not dataset'))
         except NotFound:

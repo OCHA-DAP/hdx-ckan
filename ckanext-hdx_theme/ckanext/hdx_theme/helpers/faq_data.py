@@ -142,7 +142,6 @@ organizations = {
                  'For instance, there may be a WFP organisation that was '
                  'created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a '
                  'separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of '
-                 'organisations by clicking <a target="_blank" href="https://https://data.humdata.org/organization">\'Organisations\'</a> in the main navigation.'
                  '<br/><br/>'
                  'If you have previously created an organisation and no longer see it on the site, this is because you '
                  'have not yet shared a public dataset. Once you share a dataset, your organisation will become active and visible on the site. '
@@ -475,6 +474,14 @@ metadata_and_data_quality = {
                  'or suggestions for improvement. You can learn more about our definition of the dimensions of data '
                  'quality and our quality-assurance processes '
                  '<a target="_blank"  href="https://centre.humdata.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
+        },
+        {
+            'q': 'What does the green leaf symbol mean?',
+            'a': 'The green leaf symbol indicates that a dataset is up to date - that there has been an update to '
+                 'the metadata or the data in the dataset within the expected update frequency plus some leeway. '
+                 'For more information on the expected update frequency metadata field and the number of days '
+                 'a dataset qualifies as being fresh, see '
+                 '<a target="_blank"  href="https://humanitarian.atlassian.net/wiki/spaces/HDX/pages/442826919/Expected+Update+Frequency+vs+Freshness+Status">here</a>.',
         },
         {
             'q': 'Does HDX make any changes to my dataset?',
