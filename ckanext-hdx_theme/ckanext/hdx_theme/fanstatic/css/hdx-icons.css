@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'hdx-icons';
-  src:  url('fonts/hdx-icons.eot?uehlqn');
-  src:  url('fonts/hdx-icons.eot?uehlqn#iefix') format('embedded-opentype'),
-    url('fonts/hdx-icons.ttf?uehlqn') format('truetype'),
-    url('fonts/hdx-icons.woff?uehlqn') format('woff'),
-    url('fonts/hdx-icons.svg?uehlqn#hdx-icons') format('svg');
+  src:  url('fonts/hdx-icons.eot?9ndaqs');
+  src:  url('fonts/hdx-icons.eot?9ndaqs#iefix') format('embedded-opentype'),
+    url('fonts/hdx-icons.ttf?9ndaqs') format('truetype'),
+    url('fonts/hdx-icons.woff?9ndaqs') format('woff'),
+    url('fonts/hdx-icons.svg?9ndaqs#hdx-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -125,4 +125,10 @@
 }
 .icon-quickchart:before {
   content: "\e904";
+}
+.icon-leaf:before {
+  content: "\e90a";
+}
+.icon-questionmark:before {
+  content: "\e90b";
 }
