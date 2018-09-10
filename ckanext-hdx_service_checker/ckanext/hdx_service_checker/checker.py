@@ -30,6 +30,7 @@ class Checker(object):
             class_name = config['class_name']
             module_name = config['module_name']
             key = '{}:{}'.format(module_name, class_name)
+            user_agent = runtime_vars.get('HDX_USER_AGENT', 'SERVICE_CHECKER')
 
             self.__replace_runtime_vars(config, runtime_vars)
 
@@ -40,7 +41,7 @@ class Checker(object):
                     clazz = getattr(c_module, class_name)
                     checks.add_check_implementation(key, clazz)
 
-            check_obj = checks.get_check_implementation(key)(config)
+            check_obj = checks.get_check_implementation(key)(config, user_agent)
             self.checks.append(check_obj)
         pass
 

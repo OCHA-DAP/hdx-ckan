@@ -4,6 +4,7 @@ Created on Apr 10, 2014
 @author:alexandru-m-g
 '''
 import io
+import os
 import json
 import logging
 
@@ -80,6 +81,23 @@ def cached_group_list():
     return tk.get_action('cached_group_list')()
 
 
+def file_remove(id):
+    storage_path = uploader.get_storage_path()
+    directory = os.path.join(storage_path, 'resources', id[0:3], id[3:6])
+    filepath = os.path.join(directory, id[6:])
+
+    # remove file and its directory tree
+    try:
+        # remove file
+        os.remove(filepath)
+        # remove empty parent directories
+        os.removedirs(directory)
+        log.info(u'File %s is deleted.' % filepath)
+    except OSError, e:
+        log.debug(u'Error: %s - %s.' % (e.filename, e.strerror))
+
+    pass
+
 class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IConfigurer, inherit=False)
@@ -100,8 +118,14 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
         map.connect('dataset_edit', '/dataset/edit/{id}',
                     controller='ckanext.hdx_package.controllers.dataset_old_links_controller:DatasetOldLinks',
                     action='show_notification_page')
-
         return map
+
+    def before_delete(context, data_dict, resource, resources):
+        try:
+            if resource.get('id'):
+                file_remove(resource.get('id'))
+        except Exception, ex:
+            log.error(ex)
 
     def before_map(self, map):
         map.connect('storage_file', '/storage/f/{label:.*}',
@@ -225,7 +249,11 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'batch': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
             'maintainer': [tk.get_validator('hdx_find_package_maintainer'), tk.get_validator('not_empty')],
             'dataset_preview': [tk.get_validator('hdx_dataset_preview_validator'), tk.get_validator('ignore_missing'),
-                             tk.get_converter('convert_to_extras')]
+                             tk.get_converter('convert_to_extras')],
+            'author_email': [tk.get_validator('ignore_missing'), unicode],
+            'customviz': {
+                'url': [tk.get_validator('hdx_is_url'), tk.get_validator('hdx_convert_list_item_to_extras')],
+            }
         })
 
         schema['resources'].update(
@@ -283,7 +311,8 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'has_quickcharts': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'has_geodata': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
             'batch': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')],
-            'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')]
+            'dataset_preview': [tk.get_converter('convert_from_extras'), tk.get_validator('hdx_dataset_preview_validator')],
+            'customviz__url': [tk.get_converter('hdx_convert_from_extras_to_list_item'), tk.get_validator('ignore_missing')]
         })
         return schema
 
@@ -348,7 +377,10 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_show_subnational': vd.hdx_show_subnational,
             'hdx_find_package_maintainer': vd.hdx_find_package_maintainer,
             'hdx_dataset_preview_validator': vd.hdx_dataset_preview_validator,
-            'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp
+            'hdx_convert_to_timestamp': vd.hdx_convert_to_timestamp,
+            'hdx_convert_list_item_to_extras': vd.hdx_convert_list_item_to_extras,
+            'hdx_convert_from_extras_to_list_item': vd.hdx_convert_from_extras_to_list_item,
+            'hdx_is_url':  vd.hdx_is_url
         }
 
     def get_auth_functions(self):

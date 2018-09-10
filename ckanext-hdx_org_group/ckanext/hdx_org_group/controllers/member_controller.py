@@ -85,7 +85,7 @@ class HDXOrgMemberController(org.OrganizationController):
             }
             self._set_c_params(c_params)
         except NotAuthorized:
-            base.abort(401, _('Unauthorized to delete group %s') % '')
+            base.abort(401, _('Unauthorized to view member list %s') % '')
         except NotFound:
             base.abort(404, _('Group not found'))
         except Exception, ex:

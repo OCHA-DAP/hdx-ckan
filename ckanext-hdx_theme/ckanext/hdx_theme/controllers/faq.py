@@ -1,6 +1,6 @@
 import exceptions as exceptions
 import json
-
+import logging
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
 import pylons.configuration as configuration
 import requests
@@ -12,6 +12,7 @@ import ckan.logic as logic
 from ckan.common import _, c, request, response
 from ckan.controllers.api import CONTENT_TYPES
 
+log = logging.getLogger(__name__)
 get_action = logic.get_action
 ValidationError = logic.ValidationError
 CaptchaNotValid = _('Captcha is not valid')
@@ -23,8 +24,11 @@ for section in faq_data:
     s_id = 'faq-{}'.format(s_id)
     section['id'] = s_id
     for question in section['questions']:
-        q_id = ''.join(i if i.isalnum() else '_' for i in question['q'])
-        question['id'] = q_id
+        try:
+            q_id = ''.join(i if i.isalnum() else '_' for i in question['q'])
+            question['id'] = q_id
+        except Exception, ex:
+            log.error(ex)
 
 topics = {}
 for f in faq_data:

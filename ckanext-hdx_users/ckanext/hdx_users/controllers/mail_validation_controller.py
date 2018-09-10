@@ -10,7 +10,6 @@ import json
 import logging as logging
 import re
 import urllib2 as urllib2
-import ckan.plugins.toolkit as tk
 
 import ckanext.hdx_theme.util.mail as hdx_mail
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
@@ -37,6 +36,7 @@ import ckan.lib.navl.dictization_functions as dictization_functions
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins as p
+import ckan.plugins.toolkit as tk
 from ckan.common import _, c, g, request, response
 from ckan.logic.validators import name_validator, name_match, PACKAGE_NAME_MAX_LENGTH
 
@@ -425,7 +425,8 @@ class ValidationController(ckan.controllers.user.UserController):
         context = {'model': model, 'session': model.Session, 'user': user_obj.name,
                    'schema': temp_schema}
         # data_dict['name'] = data_dict['email']
-        data_dict['fullname'] = data_dict['first-name'] + ' ' + data_dict['last-name']
+        first_name = data_dict['first-name']
+        data_dict['fullname'] = first_name + ' ' + data_dict['last-name']
         try:
             # is_captcha_enabled = configuration.config.get('hdx.captcha', 'false')
             # if is_captcha_enabled == 'true':
@@ -459,25 +460,33 @@ class ValidationController(ckan.controllers.user.UserController):
             get_action('user_extra_update')(context, ue_dict)
 
             if configuration.config.get('hdx.onboarding.send_confirmation_email') == 'true':
-                subject = 'Thank you for registering on HDX!'
+                subject = 'Thank you for joining the HDX community'
                 link = config['ckan.site_url'] + '/login'
                 # tour_link = '<a href="https://www.youtube.com/watch?v=P8XDNmcQI0o">tour</a>'
                 # <p>You can learn more about HDX by taking this quick {tour_link} or by reading our FAQ.</p>
-                faq_link = '<a href="https://data.humdata.org/faq">reading our FAQ</a>'
+                faq_link = '<a href="https://data.humdata.org/faq">Frequently Asked Questions</a>'
+                full_name = data_dict.get('fullname')
                 html = """\
                 <html>
                   <head></head>
                   <body>
-                    <p>You have successfully registered your account on HDX.</p>
+                    <p>Dear {first_name},</p> 
+                    <br/>
+                    <p>Welcome to the <a href="https://data.humdata.org/">Humanitarian Data Exchange (HDX)</a>! You have successfully registered your account on HDX.</p>
+                    <br/>
                     <p>Your username is {username}</p>
-                    <p>Please use the following link to <a href="{link}">Login</a></p>
-                    <p>You can learn more about HDX by {faq_link}.</p>
+                    <p>Please use the following link to <a href="{link}">login</a></p>
+                    <br/>
+                    <p>You can learn more about HDX in our {faq_link}. Look out for a couple more emails from us in the coming days -- we will be offering tips on making the most of the platform. </p>
+                    <br/>
+                    <p>Best wishes,</p>
+                    <p>The HDX team</p>
                   </body>
                 </html>
-                """.format(username=data_dict.get('name'), link=link, faq_link=faq_link)
+                """.format(username=data_dict.get('name'), link=link, faq_link=faq_link, first_name=first_name)
                 if configuration.config.get('hdx.onboarding.send_confirmation_email', 'false') == 'true':
                     hdx_mailer.mail_recipient(
-                        [{'display_name': data_dict.get('fullname'), 'email': data_dict.get('email')}], subject, html)
+                        [{'display_name': full_name, 'email': data_dict.get('email')}], subject, html)
 
         except NotAuthorized:
             return OnbNotAuth

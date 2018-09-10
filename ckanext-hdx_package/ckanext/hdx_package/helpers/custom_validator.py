@@ -5,7 +5,7 @@ Created on Apr 11, 2014
 '''
 
 import bisect
-import datetime
+import re
 
 import ckanext.hdx_package.helpers.caching as caching
 import ckanext.hdx_package.helpers.geopreview as geopreview
@@ -23,7 +23,20 @@ get_action = logic.get_action
 _DATASET_PREVIEW_FIRST_RESOURCE = 'first_resource'
 _DATASET_PREVIEW_RESOURCE_ID = 'resource_id'
 _DATASET_PREVIEW_NO_PREVIEW = 'no_preview'
-DATASET_PREVIEW_VALUES_LIST = [_DATASET_PREVIEW_FIRST_RESOURCE, _DATASET_PREVIEW_RESOURCE_ID, _DATASET_PREVIEW_NO_PREVIEW]
+DATASET_PREVIEW_VALUES_LIST = [_DATASET_PREVIEW_FIRST_RESOURCE, _DATASET_PREVIEW_RESOURCE_ID,
+                               _DATASET_PREVIEW_NO_PREVIEW]
+
+# Regular expression for validating urls based on
+# https://stackoverflow.com/questions/7160737/python-how-to-validate-a-url-in-python-malformed-or-not
+# from Django framework
+
+url_regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 
 # same as not_empty, but ignore whitespaces
@@ -90,6 +103,14 @@ def groups_not_empty(key, data, errors, context):
             errors[key].append(error_msg)
             raise StopOnError
     return None
+
+
+def hdx_is_url(key, data, errors, context):
+    value = data.get(key)
+    match_result = re.match(url_regex, value)
+    if match_result is None:
+        errors[key].append(_('Value is not a URL'))
+        raise StopOnError
 
 
 def _in_sorted_list(value, sorted_list):
@@ -241,3 +262,56 @@ def hdx_convert_to_timestamp(key, data, errors, context):
         # value not in ('1',1,'0',0, True, False, 'True', 'False'):
         data[key] = None
     return data[key]
+
+
+def hdx_convert_list_item_to_extras(key, data, errors, context):
+    # Get the current extras index
+    current_indexes = [k[1] for k in data.keys()
+                       if len(k) > 1 and k[0] == 'extras']
+
+    new_index = max(current_indexes) + 1 if current_indexes else 0
+
+    data[('extras', new_index, 'key')] = '__'.join((str(item) for item in key))
+    data[('extras', new_index, 'value')] = data[key]
+
+
+def hdx_convert_from_extras_to_list_item(key, data, errors, context):
+    def remove_from_extras(data, key):
+        to_remove = []
+        for data_key, data_value in data.iteritems():
+            if (data_key[0] == 'extras'
+                and data_key[1] == key):
+                to_remove.append(data_key)
+        for item in to_remove:
+            del data[item]
+
+    keys_to_remove = []
+    key_value_to_add = []
+
+    for data_key, data_value in data.iteritems():
+        if isinstance(data_value, basestring):
+            data_value_parts = data_value.split('__') # Example: ['customviz', 0, 'url']
+            key_parts = key[-1].split('__') # Example ['customviz', 'url']
+            if data_key[0] == 'extras' and data_key[-1] == 'key' \
+                    and len(data_value_parts) == 3 and len(key_parts) == 2 \
+                    and data_value_parts[0] == key_parts[0] and data_value_parts[2] == key_parts[1]:
+
+                list_name = key_parts[0]
+                property_name = key_parts[1]
+
+                # current_indexes = [k[1] for k in data.keys()
+                #                    if len(k) == 3 and k[0] == list_name and k[2] == property_name]
+                # index = max(current_indexes) + 1 if current_indexes else 0
+
+                key_value_to_add.append({
+                    'key': (list_name, data_key[1], property_name),
+                    'value': data[('extras', data_key[1], 'value')]
+                })
+                keys_to_remove.append(data_key[1])
+
+    for key_val in key_value_to_add:
+        data[key_val['key']] = key_val['value']
+
+    for k in keys_to_remove:
+        remove_from_extras(data, k)
+

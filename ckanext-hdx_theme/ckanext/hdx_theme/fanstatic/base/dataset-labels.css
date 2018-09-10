@@ -215,3 +215,12 @@ ul.dataset-resources li + li.label-icons {
   height: 35px;
   background-position: -320px -62px;
 }
+.icon-leaf.fresh {
+  color: #1bb580;
+  font-size: 16px;
+  margin-left: 0;
+}
+.icon-questionmark.freshness {
+  color: #007CE0;
+  font-size: 15px;
+}
