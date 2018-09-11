@@ -68,7 +68,7 @@ class FaqController(base.BaseController):
             fullname = request.params.get('fullname')
             email = request.params.get('email')
             msg = request.params.get('faq-msg')
-            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            hdx_email = configuration.config.get('hdx.faqrequest.email', 'hdx@un.org')
 
             captcha_response = request.params.get('g-recaptcha-response')
             if not self.is_valid_captcha(response=captcha_response):

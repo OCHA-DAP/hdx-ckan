@@ -18,7 +18,7 @@ _MESSAGE_MEMBERSHIP_REQUEST = \
     <br/><br/>
     The message has been sent to all the admins of the {org_title} organisation on HDX.
     <br/><br/>
-    You can get in touch with the HDX team at HDX.Feedback@gmail.com if you have any questions regarding this process.
+    You can get in touch with the HDX team at hdx@un.org if you have any questions regarding this process.
     <br/><br/>
     Best wishes, <br/>
     the HDX Team <br/>
