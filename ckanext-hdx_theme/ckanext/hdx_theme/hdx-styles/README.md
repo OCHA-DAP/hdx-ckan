@@ -27,6 +27,9 @@ This repo is usually included as a subtree in other repositories. Follow the fol
 
 ` git subtree pull --prefix src/hdx-styles hdx-styles master --squash `
 
+e.g.
+` git subtree pull --prefix ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles hdx-styles master --squash `
+
 ### Commiting changes inside the subtree
 1. Please, do an individual commit for the changes inside the subtree.
 
@@ -35,6 +38,9 @@ This repo is usually included as a subtree in other repositories. Follow the fol
 2. Push all the commits on the subtree back to the origin in <your-changes-branch>
 
 ` git subtree push --prefix src/hdx-styles hdx-styles <your-changes-branch> `
+
+e.g.
+` git subtree push --prefix ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles hdx-styles feature/HDX-6096-freshness `
 
  
 
