@@ -13,6 +13,8 @@ UPDATE_FREQ_INFO = {
     '365': 60,
 }
 
+FRESHNESS_PROPERTY = 'is_fresh'
+
 
 class FreshnessCalculator(object):
 
@@ -46,4 +48,4 @@ class FreshnessCalculator(object):
             return False
 
     def populate_with_freshness(self):
-        self.dataset_dict['is_fresh'] = self.is_fresh()
+        self.dataset_dict[FRESHNESS_PROPERTY] = self.is_fresh()
