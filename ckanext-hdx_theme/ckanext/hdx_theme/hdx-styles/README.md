@@ -21,7 +21,7 @@ This repo is usually included as a subtree in other repositories. Follow the fol
 
 2. Add&pull the repo while squashing the previous commit from the hdx-style repo 
 
-` git subtree add --prefix src/hdx-styles hdx-styles master --squash `
+` git subtree add --prefix ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles hdx-styles master --squash `
 
 ### On a daily base, getting the latest changes from the repo inside the subtree
 
