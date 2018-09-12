@@ -79,8 +79,21 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
     def country_topline(self, id):
         log.info("The id of the page is: " + id)
-        # return base.render('country/country_topline.html')
-        return self.country_read(id=id, get_only_toplines=True)
+
+        country_dict = self.get_country(id)
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+            country_dict).get_dataset_results()
+        template_data = {
+            'data': {
+                'country_dict': country_dict,
+                'widgets': {
+                    'top_line_data_list': top_line_data_list
+                }
+            }
+        }
+        return base.render('country/country_topline.html', extra_vars=template_data)
+
+        # return self.country_read(id=id, get_only_toplines=True)
 
     def get_template_data(self, country_dict, not_filtered_facet_info, latest_cod_dataset):
 
@@ -200,7 +213,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         '''
 
         cloned_latest_datasets = latest_datasets[:]
-        default_thumbnail_url = '/images/featured_locs_placeholder1.png';
+        default_thumbnail_url = '/images/featured_locs_placeholder1.png'
         thumbnail_list = [None, None]
         if event_list:
             thumbnail_list[0] = self.__event_as_thumbnail_dict(event_list[0], default_thumbnail_url)
