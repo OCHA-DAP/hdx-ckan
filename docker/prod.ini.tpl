@@ -49,7 +49,7 @@ smtp.starttls    = ${HDX_SMTP_TLS}
 
 hdx.cache.onstartup = true
 
-hdx.orgrequest.email = hdx.feedback@gmail.com
+hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
 
 hdx.datapreview.url = /dataproxy

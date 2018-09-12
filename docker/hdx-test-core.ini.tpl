@@ -112,7 +112,7 @@ who.config_file = %(here)s/ckan/config/who.ini
 who.log_level = warning
 who.log_file = %(cache_dir)s/who_log.ini
 
-hdx.orgrequest.email = hdx.feedback@gmail.com
+hdx.orgrequest.email = hdx@un.org
 hdx.cache.onstartup = false
 
 ckan.storage_path = /srv/filestore

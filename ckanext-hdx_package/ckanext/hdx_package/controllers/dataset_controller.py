@@ -1298,7 +1298,7 @@ class DatasetController(PackageController):
             data_dict['pkg_id'] = request.params.get('pkg_id')
             data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
                                              qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
             simple_validate_email(data_dict['email'])
 
@@ -1354,7 +1354,7 @@ class DatasetController(PackageController):
                 data_dict['pkg_id'] = request.params.get('pkg_id')
                 data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
                                                  qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
             simple_validate_email(data_dict['email'])
 
