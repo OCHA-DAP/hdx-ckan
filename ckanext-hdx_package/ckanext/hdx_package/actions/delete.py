@@ -17,8 +17,13 @@ def hdx_dataset_purge(context, data_dict):
     model = context['model']
     id = _get_or_bust(data_dict, 'id')
     pkg = model.Package.get(id)
-    for r in pkg.resources:
-        _get_action('resource_delete')(context, {'id': r.id})
+
+    _get_action('package_delete')(context, {'id': id})
+
+    if pkg and pkg.resources:
+        for r in pkg.resources:
+            _get_action('resource_delete')(context, {'id': r.id})
+
     return dataset_purge(context, data_dict)
 
 

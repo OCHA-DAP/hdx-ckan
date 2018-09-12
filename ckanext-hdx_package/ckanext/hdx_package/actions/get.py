@@ -37,7 +37,7 @@ _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
 
-_FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER + '<small><p>Note: <a href="mailto:hdx.feedback@gmail.com">hdx.feedback@gmail.com</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
+_FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
 
 GEODATA_FORMATS = GIS_FORMATS + ['shapefile', 'shapefiles', 'dem', 'feature server', 'feature service', 'file geodatabase',
