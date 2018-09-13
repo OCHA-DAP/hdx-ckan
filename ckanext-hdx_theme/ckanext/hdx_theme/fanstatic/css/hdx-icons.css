@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'hdx-icons';
-  src:  url('fonts/hdx-icons.eot?meapp');
-  src:  url('fonts/hdx-icons.eot?meapp#iefix') format('embedded-opentype'),
-    url('fonts/hdx-icons.ttf?meapp') format('truetype'),
-    url('fonts/hdx-icons.woff?meapp') format('woff'),
-    url('fonts/hdx-icons.svg?meapp#hdx-icons') format('svg');
+  src:  url('fonts/hdx-icons.eot?dhvom7');
+  src:  url('fonts/hdx-icons.eot?dhvom7#iefix') format('embedded-opentype'),
+    url('fonts/hdx-icons.ttf?dhvom7') format('truetype'),
+    url('fonts/hdx-icons.woff?dhvom7') format('woff'),
+    url('fonts/hdx-icons.svg?dhvom7#hdx-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-leef-optimized:before {
+  content: "\e914";
+}
+.icon-question_updated-1:before {
+  content: "\e915";
+}
 .icon-completeness-flag:before {
   content: "\e90c";
   color: #dadce0;

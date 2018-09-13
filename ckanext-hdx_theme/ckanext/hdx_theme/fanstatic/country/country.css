@@ -336,6 +336,7 @@ h1.country-title {
   text-overflow: ellipsis;
   padding-right: 15px;
   position: relative;
+  cursor: default;
 }
 .data-completeness .data-item .data-item-summary .categ-title .icon-completeness-flag {
   position: absolute;
@@ -370,6 +371,10 @@ h1.country-title {
 .data-completeness .data-item .data-item-details {
   padding-top: 10px;
   border-top: 1px solid #333333;
+}
+.data-completeness .data-item .data-item-details .sub-category {
+  max-height: 220px;
+  overflow-y: scroll;
 }
 .data-completeness .data-item .data-item-details .sub-category ~ .sub-category {
   margin-top: 5px;
