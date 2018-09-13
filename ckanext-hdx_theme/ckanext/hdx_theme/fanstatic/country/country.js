@@ -220,8 +220,13 @@ function buildGraphs() {
     });
 }
 
+function onDataCompletenessExpand() {
+  $(".data-item-details").toggle(this.checked);
+}
+
 $(document).ready(function() {
     drawMap();
     buildGraphs();
     c3Sparklines();
+    $("#expand-data-completeness").change(onDataCompletenessExpand);
 });

@@ -276,3 +276,212 @@ h1.country-title {
   list-style: none;
   display: inline-block;
 }
+.data-completeness .list-header-showall.list-completeness > span {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 14px;
+  font-size: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.data-completeness .list-header-showall.list-completeness > span.active {
+  color: #007CE0;
+}
+.data-completeness .progress-breakdown {
+  height: 20px;
+  border: 1px solid #cccccc;
+  background: #eeeeee;
+}
+.data-completeness .progress-breakdown.mini {
+  height: 12px;
+}
+.data-completeness .progress-breakdown span[class^="progress-"] {
+  height: 100%;
+  display: block;
+  float: left;
+}
+.data-completeness .progress-breakdown .progress-blue {
+  background: #007CE0;
+}
+.data-completeness .progress-breakdown .progress-striped {
+  background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 7px, #fff 5px, #fff 12px);
+}
+.data-completeness .icon-completeness-flag {
+  float: right;
+}
+.data-completeness .icon-completeness-flag:before {
+  color: #cccccc;
+}
+.data-completeness .icon-completeness-flag.red:before {
+  color: #f2645a;
+}
+.data-completeness .icon-completeness-flag.blue:before {
+  color: #007CE0;
+}
+.data-completeness .data-item {
+  margin: 15px 0;
+}
+.data-completeness .data-item .data-item-summary {
+  margin-bottom: 20px;
+}
+.data-completeness .data-item .data-item-summary .categ-title {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #333333;
+  line-height: 20px;
+  margin-bottom: 5px;
+  height: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 15px;
+  position: relative;
+}
+.data-completeness .data-item .data-item-summary .categ-title .icon-completeness-flag {
+  position: absolute;
+  right: 0;
+  font-size: 12px;
+  margin-top: 4px;
+}
+.data-completeness .data-item .data-item-summary .categ-sub-title {
+  margin-bottom: 5px;
+}
+.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path2,
+.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path3,
+.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path4 {
+  font-size: 14px;
+}
+.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path2:before,
+.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path3:before,
+.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path4:before {
+  color: #888888;
+}
+.data-completeness .data-item .data-item-summary .categ-sub-title .dataset-count {
+  float: right;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  color: #888888;
+  text-transform: uppercase;
+}
+.data-completeness .data-item .data-item-summary .completeness-progress {
+  margin: 10px 0;
+}
+.data-completeness .data-item .data-item-details {
+  padding-top: 10px;
+  border-top: 1px solid #333333;
+}
+.data-completeness .data-item .data-item-details .sub-category ~ .sub-category {
+  margin-top: 5px;
+  border-top: 1px solid #cccccc;
+}
+.data-completeness .data-item .data-item-details .sub-category .sub-categ-title {
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #888888;
+  text-transform: uppercase;
+  margin: 5px 0;
+}
+.data-completeness .data-item .data-item-details .sub-category a.add-data {
+  color: #f2645a;
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset {
+  position: relative;
+  padding-left: 16px;
+  padding-right: 90px;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset .data-completeness {
+  display: block;
+  position: absolute;
+  top: 4px;
+  left: 0;
+  height: 12px;
+  width: 12px;
+  background-color: #eeeeee;
+  border: 1px solid #cccccc;
+  margin-right: 5px;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset .data-completeness.blue {
+  background-color: #007CE0;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset .data-completeness.striped {
+  background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 2px, #fff 2px, #fff 4px);
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset .dataset-link {
+  width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset .dataset-link a {
+  color: #007CE0;
+}
+.data-completeness .data-item .data-item-details .sub-category .dataset .data-org {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  margin-left: 10px;
+  text-align: right;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 300;
+  font-size: 12px;
+}
+.data-completeness .completeness-legend {
+  border: 1px solid #cccccc;
+  padding: 15px;
+}
+.data-completeness .completeness-legend .legend-title {
+  color: #333333;
+  font-family: 'Gotham-Medium', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+.data-completeness .completeness-legend .legend-description {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 25px;
+  color: #333333;
+}
+.data-completeness .completeness-legend .legend-description .orange {
+  color: #f2645a;
+}
+.data-completeness .completeness-legend .legend-item {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  color: #333333;
+}
+.data-completeness .completeness-legend .legend-item ul {
+  list-style: none;
+  padding: 0;
+}
+.data-completeness .completeness-legend .legend-item ul li {
+  font-weight: 300;
+  position: relative;
+  padding-left: 40px;
+  color: #888888;
+}
+.data-completeness .completeness-legend .legend-item ul li .progress-breakdown {
+  width: 30px;
+}
+.data-completeness .completeness-legend .legend-item ul li > span {
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+.data-completeness .completeness-legend .legend-item ul li i {
+  position: absolute;
+  left: 8px;
+  top: 3px;
+}

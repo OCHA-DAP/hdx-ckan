@@ -329,3 +329,250 @@ h1.country-title {
     }
   }
 }
+
+.data-completeness {
+    .list-header-showall.list-completeness > span {
+        .sourceSansProFont(14px, 400);
+        .uppercase();
+        .letter-spacing-3();
+
+        &.active {
+            color: @blueColor;
+        }
+    }
+
+    .progress-breakdown {
+        height: 20px;
+        border: 1px solid @lightGrayColor;
+        background: @extraLightGrayColor;
+
+        &.mini {
+            height: 12px;
+        }
+
+        span[class^="progress-"]{
+            height: 100%;
+            display: block;
+            float: left;
+        }
+
+        .progress-blue {
+            background: @blueColor;
+        }
+        .progress-striped {
+            background: repeating-linear-gradient(
+                -45deg,
+                @blueColor,
+                @blueColor 7px,
+                @whiteColor 5px,
+                @whiteColor 12px
+            );
+        }
+    }
+
+    .icon-completeness-flag {
+        float: right;
+
+        &:before {
+            color: @lightGrayColor;
+        }
+        &.red:before {
+            color: @orangeColor;
+        }
+        &.blue:before {
+            color: @blueColor;
+        }
+    }
+
+    .data-item {
+        margin: 15px 0;
+
+
+        .data-item-summary {
+            @categTitleLineHeight: 20px;
+            @categTitleFontSize: 16px;
+            margin-bottom: 20px;
+            .categ-title {
+                .gothamMediumFont(@categTitleFontSize);
+                color: @darkGrayColor;
+                line-height: @categTitleLineHeight;
+                margin-bottom: 5px;
+                height: 20px;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                padding-right: 15px;
+                position: relative;
+
+                .icon-completeness-flag{
+                    position: absolute;
+                    right: 0;
+                    @categTitleIconSize: 12px;
+                    font-size: @categTitleIconSize;
+                    margin-top: (@categTitleLineHeight - @categTitleIconSize)/2;
+                }
+            }
+            .categ-sub-title {
+                margin-bottom: 5px;
+
+                span[class^="icon-"] {
+                    .path2, .path3, .path4 {
+                        font-size: 14px;
+                        &:before {
+                            color: @grayColor;
+                        }
+                    }
+                }
+
+                .dataset-count {
+                    float: right;
+                    .sourceSansProFont(300, 14px);
+                    color: @grayColor;
+                    .uppercase();
+                }
+            }
+
+            .completeness-progress {
+                margin: 10px 0;
+            }
+        }
+
+        .data-item-details {
+            padding-top: 10px;
+            border-top: 1px solid @darkGrayColor;
+
+            .sub-category {
+                ~ .sub-category {
+                    margin-top: 5px;
+                    border-top: 1px solid @lightGrayColor;
+                }
+
+                .sub-categ-title {
+                    .gothamMediumFont(12px);
+                    color: @grayColor;
+                    .uppercase();
+                    margin: 5px 0;
+                }
+                a.add-data {
+                    color: @orangeColor;
+                    .gothamBookFont(12px);
+                    .uppercase();
+                }
+                .dataset {
+                    @datasetOrgWidth: 80px;
+                    @datasetOrgMargin: 10px;
+                    position: relative;
+                    padding-left: 16px;
+                    padding-right: @datasetOrgWidth + @datasetOrgMargin;
+
+                    .data-completeness {
+                        display: block;
+                        position: absolute;
+                        top: 4px;
+                        left: 0;
+
+                        height: 12px;
+                        width: 12px;
+
+                        background-color: @extraLightGrayColor;
+                        border: 1px solid @lightGrayColor;
+                        margin-right: 5px;
+
+                        &.blue {
+                            background-color: @blueColor;
+                        }
+
+                        &.striped {
+                            background: repeating-linear-gradient(
+                                -45deg,
+                                @blueColor,
+                                @blueColor 2px,
+                                @whiteColor 2px,
+                                @whiteColor 4px
+                            );
+                        }
+
+                    }
+
+                    .dataset-link {
+                        width: 100%;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+
+                        a {
+                            color: @blueColor;
+                        }
+                    }
+
+                    .data-org {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        width: @datasetOrgWidth;
+                        margin-left: @datasetOrgMargin;
+                        text-align: right;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+
+                        .sourceSansProFont(300, 12px);
+                    }
+                }
+            }
+
+        }
+    }
+
+    .completeness-legend {
+        border: 1px solid @lightGrayColor;
+        padding: 15px;
+
+        .legend-title {
+            color: @darkGrayColor;
+            .gothamMediumFont(16px);
+        }
+        .legend-description {
+            .sourceSansProFont(400, 16px);
+            line-height: 25px;
+            color: @darkGrayColor;
+
+            .orange {
+                color: @orangeColor;
+            }
+        }
+        .legend-item {
+            .sourceSansProFont(400, 12px);
+            line-height: 16px;
+            color: @darkGrayColor;
+            ul {
+                list-style: none;
+                padding: 0;
+
+                li {
+                    font-weight: 300;
+                    position: relative;
+                    padding-left: 40px;
+                    color: @grayColor;
+
+                    .progress-breakdown{
+                        width: 30px;
+                    }
+
+                    > span {
+                        position: absolute;
+                        left: 0;
+                        top: 3px;
+                    }
+
+                    i {
+                        position: absolute;
+                        left: 8px;
+                        top: 3px;
+                    }
+                }
+            }
+        }
+
+    }
+}
