@@ -386,7 +386,7 @@
                 <div class="categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
                      data-original-title="{{ category.title }}">
                   {{ category.title }}
-                  <i class="icon-completeness-flag {% if (category.stats.datasets_num > 0) %} {% if (category.stats.is_fresh) %} blue {% else %} red {% endif %}{% endif %}"></i>
+                  <i class="icon-completeness-flag {% if (category.stats.status == 'fresh') %}blue{% endif %} {% if (category.stats.status == 'not_fresh') %}red{% endif %}"></i>
                 </div>
                 <div class="categ-sub-title">
                   <span class="icon-circle-info" data-module="bs_tooltip" data-module-placement="right" data-toggle="tooltip"
@@ -398,7 +398,7 @@
                     <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
                   </span>
                   #}
-                  <span class="dataset-count">{{ category.stats.datasets_num }} Datasets</span>
+                  <span class="dataset-count">{{ category.stats.total_datasets_num }} Datasets</span>
                 </div>
                 <div class="completeness-progress">
                     <div class="progress-breakdown">
