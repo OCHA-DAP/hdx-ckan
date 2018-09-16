@@ -27,6 +27,8 @@ class FreshnessCalculator(object):
             if update_freq and UPDATE_FREQ_INFO.get(update_freq):
                 if modified.endswith('Z'):
                     modified = modified.replace('Z', '')
+                if '.' not in modified:
+                    modified += '.000'
                 self.modified = datetime.datetime.strptime(modified, "%Y-%m-%dT%H:%M:%S.%f")
                 self.extra_days = UPDATE_FREQ_INFO.get(update_freq)
                 self.update_freq_in_days = int(update_freq)
