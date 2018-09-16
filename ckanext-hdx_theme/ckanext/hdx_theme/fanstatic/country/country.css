@@ -276,20 +276,37 @@ h1.country-title {
   list-style: none;
   display: inline-block;
 }
-.data-completeness .list-header-showall.list-completeness > span {
+.data-completeness .crisis-list-header {
+  position: relative;
+}
+.data-completeness .crisis-list-header .list-header-showall.list-completeness > span {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 14px;
   font-size: 400;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
-.data-completeness .list-header-showall.list-completeness > span.active {
+.data-completeness .crisis-list-header .list-header-showall.list-completeness > span.active {
   color: #007CE0;
+}
+.data-completeness .crisis-list-header .icon-completeness-flag {
+  position: relative;
+  top: 2px;
 }
 .data-completeness .progress-breakdown {
   height: 20px;
   border: 1px solid #cccccc;
   background: #eeeeee;
+}
+.data-completeness .progress-breakdown.progress-header {
+  display: inline-block;
+  width: 100px;
+  border: none;
+  background: #fff;
+  height: 15px;
+  position: relative;
+  top: 3px;
+  margin-right: 10px;
 }
 .data-completeness .progress-breakdown.mini {
   height: 12px;
@@ -304,9 +321,6 @@ h1.country-title {
 }
 .data-completeness .progress-breakdown .progress-striped {
   background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 7px, #fff 5px, #fff 12px);
-}
-.data-completeness .icon-completeness-flag {
-  float: right;
 }
 .data-completeness .icon-completeness-flag:before {
   color: #cccccc;

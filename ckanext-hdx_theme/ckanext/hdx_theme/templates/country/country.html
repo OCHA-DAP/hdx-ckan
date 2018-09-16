@@ -216,12 +216,6 @@
     </div>
     {% endif %}
 
-    {% if data.data_completness %}
-      <div style="height: 200px; overflow: auto;">
-      {# data.data_completness #}
-      </div>
-    {% endif %}
-
     {% if data.widgets.top_line_data_list %}
     <div class="row">
         <div class="col-xs-12">
@@ -350,9 +344,17 @@
     <div class="row data-completeness">
       <div class="col-xs-12">
         <div class="list-header crisis-list-header">
-          <span class="mL15 list-header-title">
+          <span class="mL15 mR30 list-header-title">
               {{ _("Data Completeness") }}
           </span>
+
+          <div class="progress-breakdown progress-header">
+            <span class="progress-blue" style="width: 40%;">
+            </span>
+            <span class="progress-striped" style="width: 40%;"></span>
+          </div>
+
+          <i class="icon-completeness-flag "></i>
 
           <span class="mL45 list-header-showall list-completeness">
             <span class="active">8/16 Core Data</span>
@@ -382,7 +384,7 @@
             <div class="col-xs-3 data-item">
               <div class="data-item-summary">
                 <div class="categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
-                     data-original-title="{{ category.description }}">
+                     data-original-title="{{ category.title }}">
                   {{ category.title }}
                   <i class="icon-completeness-flag {% if (category.stats.datasets_num > 0) %} {% if (category.stats.is_fresh) %} blue {% else %} red {% endif %}{% endif %}"></i>
                 </div>
@@ -417,15 +419,18 @@
                     {% for dataset in subcateg.datasets %}
                     <div class="dataset">
                       <span class="data-completeness {% if dataset.is_fresh %}blue{% else %}striped{% endif %}"></span>
-                      <div class="dataset-link">
-                        <a href="#{{ dataset.id }}">{{ dataset.title }}</a>
+                      <div class="dataset-link"
+                           title="{{ dataset.title }}">
+                        <a href="#{{ dataset.id }}">
+                          {{ dataset.title }}
+                        </a>
                       </div>
                       <span class="data-org">TODO</span>
                     </div>
                     {% endfor %}
                   {% else %}
                     <div>
-                      <a class="add-data">Add Data (TODO)</a>
+                      <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}" class="add-data">Add Data</a>
                     </div>
                   {% endif %}
                 </div>
