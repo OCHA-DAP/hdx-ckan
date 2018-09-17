@@ -108,7 +108,7 @@ class DataCompletness(object):
         fresh_datasets_num = reduce(lambda acc, item: acc + (1 if item.get(FRESHNESS_PROPERTY) else 0),
                                     category_dataset_map.values(), 0)
 
-        freshness_percentage = 0 if total_datasets_num == 0 else float(fresh_datasets_num) / total_datasets_num
+        dataset_freshness_percentage = 0 if total_datasets_num == 0 else float(fresh_datasets_num) / total_datasets_num
 
         dataseries = category.get('data_series', [])
         total_dataseries_num  = len(dataseries)
@@ -125,16 +125,24 @@ class DataCompletness(object):
             elif state == 'fresh':
                 fresh_dataseries_num += 1
 
-
+        dataseries_fresh_percentage = 0 if total_dataseries_num == 0 else \
+                        float(fresh_dataseries_num) / total_dataseries_num
+        dataseries_not_fresh_percentage = 0 if total_dataseries_num == 0 else \
+            float(not_fresh_dataseries_num) / total_dataseries_num
+        dataseries_empty_percentage = 0 if total_dataseries_num == 0 else \
+            float(empty_dataseries_num) / total_dataseries_num
 
         category['stats'] = {
             'total_datasets_num': total_datasets_num,
             'fresh_datasets_num': fresh_datasets_num,
-            'dataset_freshness_percentage': freshness_percentage,
+            'dataset_freshness_percentage': dataset_freshness_percentage,
             'total_dataseries_num': total_dataseries_num,
             'fresh_dataseries_num': fresh_dataseries_num,
             'not_fresh_dataseries_num': not_fresh_dataseries_num,
             'empty_dataseries_num': empty_dataseries_num,
+            'dataseries_fresh_percentage': dataseries_fresh_percentage,
+            'dataseries_not_fresh_percentage': dataseries_not_fresh_percentage,
+            'dataseries_empty_percentage': dataseries_empty_percentage,
             'state': 'empty' if total_datasets_num == 0
                                 else 'not-fresh' if fresh_datasets_num < total_datasets_num else 'fresh'
         }
@@ -151,10 +159,10 @@ class DataCompletness(object):
         empty_dataseries_num = reduce(
             lambda acc, item: acc + item.get('stats', {}).get('empty_dataseries_num', 0), categories, 0)
 
-        dataseries_freshness_percentage = 0 if total_dataseries_num == 0 else \
+        dataseries_fresh_percentage = 0 if total_dataseries_num == 0 else \
             float(fresh_dataseries_num) / total_dataseries_num
 
-        dataseries_not_freshness_percentage = 0 if total_dataseries_num == 0 else \
+        dataseries_not_fresh_percentage = 0 if total_dataseries_num == 0 else \
             float(not_fresh_dataseries_num) / total_dataseries_num
 
         dataseries_empty_percentage = 0 if total_dataseries_num == 0 else \
@@ -167,8 +175,8 @@ class DataCompletness(object):
             'fresh_dataseries_num': fresh_dataseries_num,
             'not_fresh_dataseries_num': not_fresh_dataseries_num,
             'empty_dataseries_num': empty_dataseries_num,
-            'dataseries_freshness_percentage': dataseries_freshness_percentage,
-            'dataseries_not_freshness_percentage': dataseries_not_freshness_percentage,
+            'dataseries_fresh_percentage': dataseries_fresh_percentage,
+            'dataseries_not_fresh_percentage': dataseries_not_fresh_percentage,
             'dataseries_empty_percentage': dataseries_empty_percentage,
 
         }
