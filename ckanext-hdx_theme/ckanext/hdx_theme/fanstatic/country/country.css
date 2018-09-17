@@ -442,6 +442,7 @@ h1.country-title {
 }
 .data-completeness .data-item .data-item-details .sub-category .dataset .data-org {
   position: absolute;
+  cursor: default;
   top: 0;
   right: 0;
   width: 80px;

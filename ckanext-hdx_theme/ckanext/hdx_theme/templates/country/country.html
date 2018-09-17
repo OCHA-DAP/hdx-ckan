@@ -349,15 +349,15 @@
           </span>
 
           <div class="progress-breakdown progress-header">
-            <span class="progress-blue" style="width: 40%;">
+            <span class="progress-blue" style="width: {{100*data.data_completness.stats.dataseries_fresh_percentage}}%;">
             </span>
-            <span class="progress-striped" style="width: 40%;"></span>
+            <span class="progress-striped" style="width: {{100*data.data_completness.stats.dataseries_not_fresh_percentage}}%;"></span>
           </div>
 
           <i class="icon-completeness-flag "></i>
 
           <span class="mL45 list-header-showall list-completeness">
-            <span class="active">8/16 Core Data</span>
+            <span class="active">{{data.data_completness.stats.fresh_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
             <span>{{ data.stats_section.num_of_datasets }} Datasets</span>
             <span>{{ data.stats_section.num_of_organizations }} Organisations</span>
           </span>
@@ -402,9 +402,9 @@
                 </div>
                 <div class="completeness-progress">
                     <div class="progress-breakdown">
-                      <span class="progress-blue" style="width: 40%;">
+                      <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_fresh_percentage }}%;">
                       </span>
-                      <span class="progress-striped" style="width: 40%;"></span>
+                      <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_fresh_percentage }}%;"></span>
 
                     </div>
                 </div>
@@ -421,11 +421,14 @@
                       <span class="data-completeness {% if dataset.is_fresh %}blue{% else %}striped{% endif %}"></span>
                       <div class="dataset-link"
                            title="{{ dataset.title }}">
-                        <a href="#{{ dataset.id }}">
+                        <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}">
                           {{ dataset.title }}
                         </a>
                       </div>
-                      <span class="data-org">TODO</span>
+                      <span class="data-org"
+                        title="{{ dataset.organization_title }}">
+                        {{ dataset.organization_title }}
+                      </span>
                     </div>
                     {% endfor %}
                   {% else %}
