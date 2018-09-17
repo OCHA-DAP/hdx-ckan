@@ -31,14 +31,14 @@ class DataCompletness(object):
         for category in self.config.get('categories', []):
             category_dataset_map = {}
             for ds in category.get('data_series', []):
-                include_rule = ds.get('rules', {}).get('include') or ''
-                exclude_rule = ds.get('rules', {}).get('exclude') or ''
-                if isinstance(include_rule, list):
-                    include_rule = include_rule[0]
-                if isinstance(exclude_rule, list):
-                    exclude_rule = exclude_rule[0]
+                include_rules = ds.get('rules', {}).get('include') or ''
+                exclude_rules = ds.get('rules', {}).get('exclude') or ''
+                if isinstance(include_rules, basestring):
+                    include_rules = [include_rules]
+                if isinstance(exclude_rules, basestring):
+                    exclude_rules = [exclude_rules]
 
-                query_string = self.__build_query(include_rule.strip(), exclude_rule.strip())
+                query_string = self.__build_query(include_rules, exclude_rules)
                 if query_string:
                     search_result = logic.get_action('package_search')({}, {
                         'start': 0,
@@ -58,15 +58,27 @@ class DataCompletness(object):
                     self.__calculate_stats_for_dataseries(ds)
             self.__calculate_stats_for_category(category, category_dataset_map)
         self.__calculate_stats_general(self.config, all_dataset_map, self.__org_name_to_title_cache)
+        pass
 
-    def __build_query(self, include_rule, exclude_rule):
+    def __build_query(self, include_rules, exclude_rules):
         query_string = ''
-        if include_rule:
-            query_string += self.__add_paranthesis_if_missing(include_rule)
-            if exclude_rule:  # you can't just have exclude rules
-                query_string += ' AND -{}'.format(self.__add_paranthesis_if_missing(exclude_rule))
+        if include_rules:
+            include_query = self.__generate_query_from_rules(include_rules)
+            query_string += include_query
+            query_string += ' AND (groups:{})'.format(self.location_code)
+            if exclude_rules:  # you can't just have exclude rules without any include rules
+                exclude_query = self.__generate_query_from_rules(exclude_rules)
+                if exclude_query:
+                    query_string += ' AND -{}'.format(exclude_query)
 
         return query_string
+
+    def __generate_query_from_rules(self, include_rules):
+        query = ''
+        processed_include_rules = [self.__add_paranthesis_if_missing(r) for r in include_rules if r and r.strip()]
+        if processed_include_rules:
+            query = '(' + ' OR '.join(processed_include_rules) + ')'
+        return query
 
     def __add_paranthesis_if_missing(self, rule):
         return '({})'.format(rule) if not rule.startswith('(') else rule
