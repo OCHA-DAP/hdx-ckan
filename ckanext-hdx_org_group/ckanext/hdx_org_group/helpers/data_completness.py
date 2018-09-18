@@ -11,7 +11,7 @@ class DataCompletness(object):
         self.location_code = location_code
         self.config = {}
         self.all_orgs = logic.get_action('cached_organization_list')({}, {})
-        self.__org_name_to_title_cache = {}
+        self.__org_name_to_info_cache = {}
 
     def get_config(self):
         url = 'https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/master/data%20grid%20recipe%20-%20default.yml'
@@ -57,7 +57,7 @@ class DataCompletness(object):
 
                     self.__calculate_stats_for_dataseries(ds)
             self.__calculate_stats_for_category(category, category_dataset_map)
-        self.__calculate_stats_general(self.config, all_dataset_map, self.__org_name_to_title_cache)
+        self.__calculate_stats_general(self.config, all_dataset_map, self.__org_name_to_info_cache)
         pass
 
     def __build_query(self, include_rules, exclude_rules):
@@ -85,14 +85,18 @@ class DataCompletness(object):
 
     def __replace_org_name_with_title(self, dataset):
         org_name = dataset.get('organization')
-        title = self.__org_name_to_title_cache.get(org_name)
-        if not title:
+        org_info = self.__org_name_to_info_cache.get(org_name)
+        if not org_info:
             for org in self.all_orgs:
                 if org.get('name') == org_name:
-                    title = org.get('title')
-                    self.__org_name_to_title_cache[org_name] = title
+                    org_info = {
+                        'title': org.get('title'),
+                        'org_acronym': org.get('org_acronym', org_name)
+                    }
+                    self.__org_name_to_info_cache[org_name] = org_info
                     break
-        dataset['organization_title'] = title
+        dataset['organization_title'] = org_info.get('title')
+        dataset['organization_acronym'] = org_info.get('org_acronym')
 
 
     @staticmethod
@@ -155,9 +159,12 @@ class DataCompletness(object):
             'dataseries_fresh_percentage': dataseries_fresh_percentage,
             'dataseries_not_fresh_percentage': dataseries_not_fresh_percentage,
             'dataseries_empty_percentage': dataseries_empty_percentage,
-            'state': 'empty' if total_datasets_num == 0
-                                else 'not-fresh' if fresh_datasets_num < total_datasets_num else 'fresh'
+            'state': 'empty' if total_dataseries_num == 0 or empty_dataseries_num > 0
+                                else 'not_fresh' if fresh_dataseries_num < total_dataseries_num else 'fresh',
         }
+
+        state = category['stats']['state']
+        category['stats']['state_flag'] = 'blue' if state == 'fresh' else 'red' if state == 'empty' else ''
 
     @staticmethod
     def __calculate_stats_general(config, all_dataset_map, org_map):
@@ -190,7 +197,12 @@ class DataCompletness(object):
             'dataseries_fresh_percentage': dataseries_fresh_percentage,
             'dataseries_not_fresh_percentage': dataseries_not_fresh_percentage,
             'dataseries_empty_percentage': dataseries_empty_percentage,
+            'state': 'empty' if total_dataseries_num == 0 or empty_dataseries_num > 0
+                                else 'not_fresh' if fresh_dataseries_num < total_dataseries_num else 'fresh'
 
         }
+
+        state = config['stats']['state']
+        config['stats']['state_flag'] = 'blue' if state == 'fresh' else 'red' if state == 'empty' else ''
 
 

@@ -354,7 +354,7 @@
             <span class="progress-striped" style="width: {{100*data.data_completness.stats.dataseries_not_fresh_percentage}}%;"></span>
           </div>
 
-          <i class="icon-completeness-flag "></i>
+          <i class="icon-completeness-flag {{ data.data_completness.stats.state_flag }}"></i>
 
           <span class="mL45 list-header-showall list-completeness">
             <span class="active">{{data.data_completness.stats.fresh_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
@@ -386,7 +386,7 @@
                 <div class="categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
                      data-original-title="{{ category.title }}">
                   {{ category.title }}
-                  <i class="icon-completeness-flag {% if (category.stats.status == 'fresh') %}blue{% endif %} {% if (category.stats.status == 'not_fresh') %}red{% endif %}"></i>
+                  <i class="icon-completeness-flag {{ category.stats.state_flag }}"></i>
                 </div>
                 <div class="categ-sub-title">
                   <span class="icon-circle-info" data-module="bs_tooltip" data-module-placement="right" data-toggle="tooltip"
