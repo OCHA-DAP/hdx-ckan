@@ -654,7 +654,7 @@ class DatasetController(PackageController):
                            'auth_user_obj': c.userobj}
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
-                c.pkg_dict['is_fresh'] = FreshnessCalculator(c.pkg_dict).is_fresh()
+                FreshnessCalculator(c.pkg_dict).populate_with_freshness()
             else:
                 abort(404, _('Package type is not dataset'))
         except NotFound:

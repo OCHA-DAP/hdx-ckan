@@ -83,7 +83,10 @@ def dataset_purge(context, data_dict):
     # no new_revision() needed since there are no object_revisions created
     # during purge
     pkg.purge()
-    model.repo.commit_and_remove()
+    try:
+        model.repo.commit_and_remove()
+    except Exception, ex:
+        log.error(ex)
 
     # if is_requested_data_type:
     #     toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})
