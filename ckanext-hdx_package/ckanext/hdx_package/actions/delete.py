@@ -1,8 +1,11 @@
+import os
+
 import ckan.logic as logic
 import logging
 import ckan.logic.action.delete as core_delete
 
 from ckanext.hdx_package.actions.update import process_batch_mode
+from ckan.lib import uploader
 
 _check_access = logic.check_access
 NotFound = logic.NotFound
@@ -10,6 +13,22 @@ _get_or_bust = logic.get_or_bust
 log = logging.getLogger(__name__)
 _get_action = logic.get_action
 
+def file_remove(id):
+    storage_path = uploader.get_storage_path()
+    directory = os.path.join(storage_path, 'resources', id[0:3], id[3:6])
+    filepath = os.path.join(directory, id[6:])
+
+    # remove file and its directory tree
+    try:
+        # remove file
+        os.remove(filepath)
+        # remove empty parent directories
+        os.removedirs(directory)
+        log.info(u'File %s is deleted.' % filepath)
+    except OSError, e:
+        log.debug(u'Error: %s - %s.' % (e.filename, e.strerror))
+
+    pass
 
 def hdx_dataset_purge(context, data_dict):
     _check_access('package_delete', context, data_dict)
@@ -17,8 +36,13 @@ def hdx_dataset_purge(context, data_dict):
     model = context['model']
     id = _get_or_bust(data_dict, 'id')
     pkg = model.Package.get(id)
-    for r in pkg.resources:
-        _get_action('resource_delete')(context, {'id': r.id})
+
+    _get_action('package_delete')(context, {'id': id})
+
+    if pkg and pkg.resources:
+        for r in pkg.resources:
+            file_remove(r.id)
+
     return dataset_purge(context, data_dict)
 
 
@@ -59,7 +83,10 @@ def dataset_purge(context, data_dict):
     # no new_revision() needed since there are no object_revisions created
     # during purge
     pkg.purge()
-    model.repo.commit_and_remove()
+    try:
+        model.repo.commit_and_remove()
+    except Exception, ex:
+        log.error(ex)
 
     # if is_requested_data_type:
     #     toolkit.get_action("requestdata_request_delete_by_package_id")(context, {'package_id': id})

@@ -160,9 +160,9 @@ smtp.starttls = False
 #smtp.password = your_password
 #smtp.mail_from =
 
-#hdx.orgrequest.email = hdx.feedback@gmail.com
+#hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
-hdx.faqrequest.email = hdx.feedback@gmail.com
+hdx.faqrequest.email = hdx@un.org
 hdx.cache.onstartup = true
 hdx.less_compile.onstartup = false
 hdx.homepage.extrasources = 13
