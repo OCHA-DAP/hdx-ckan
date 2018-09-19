@@ -10,6 +10,7 @@ from operator import itemgetter
 
 import ckanext.hdx_org_group.dao.widget_data_service as widget_data_service
 import ckanext.hdx_org_group.helpers.country_helper as country_helper
+import ckanext.hdx_org_group.helpers.data_completness as data_completness
 import ckanext.hdx_package.helpers.screenshot as screenshot
 import ckanext.hdx_search.controllers.search_controller as search_controller
 
@@ -65,6 +66,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
             template_data = self.get_template_data(country_dict, not_filtered_facet_info, latest_cod_dataset)
 
+            # data grid / data completeness code
+            if country_dict.get('data_completeness') == 'active':
+                pass
+
             if get_only_toplines:
                 result = render('country/country_topline.html', extra_vars=template_data)
             else:
@@ -74,8 +79,21 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
     def country_topline(self, id):
         log.info("The id of the page is: " + id)
-        # return base.render('country/country_topline.html')
-        return self.country_read(id=id, get_only_toplines=True)
+
+        country_dict = self.get_country(id)
+        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+            country_dict).get_dataset_results()
+        template_data = {
+            'data': {
+                'country_dict': country_dict,
+                'widgets': {
+                    'top_line_data_list': top_line_data_list
+                }
+            }
+        }
+        return base.render('country/country_topline.html', extra_vars=template_data)
+
+        # return self.country_read(id=id, get_only_toplines=True)
 
     def get_template_data(self, country_dict, not_filtered_facet_info, latest_cod_dataset):
 
@@ -118,6 +136,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                     'tag_list': f_tag_list[:10],
                     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
                 },
+                'data_completness': self._get_data_completness(country_dict.get('name')),
 
             },
             'errors': None,
@@ -194,7 +213,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         '''
 
         cloned_latest_datasets = latest_datasets[:]
-        default_thumbnail_url = '/images/featured_locs_placeholder1.png';
+        default_thumbnail_url = '/images/featured_locs_placeholder1.png'
         thumbnail_list = [None, None]
         if event_list:
             thumbnail_list[0] = self.__event_as_thumbnail_dict(event_list[0], default_thumbnail_url)
@@ -238,6 +257,10 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         pages_list = get_action('group_page_list')(context, {'id': group_id})
         return pages_list
 
+    def _get_data_completness(self, location_code):
+        return data_completness.DataCompletness(location_code).get_config()
+
+
     def get_country(self, id):
         group_type = self._ensure_controller_matches_group_type(
             id.split('@')[0])
@@ -250,8 +273,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
         try:
             context['include_datasets'] = False
-            group_dict = self._action(
-                'hdx_light_group_show')(context, data_dict)
+            group_dict = self._action('hdx_light_group_show')(context, data_dict)
 
             return group_dict
 

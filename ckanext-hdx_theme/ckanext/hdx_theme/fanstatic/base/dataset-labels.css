@@ -31,6 +31,7 @@
 ul.dataset-resources li + li.label-icons {
   border-left: 1px solid #888888;
   margin-left: 10px;
+  white-space: nowrap;
 }
 /* END Style dataset icons */
 /* Label style (eg. tags) */

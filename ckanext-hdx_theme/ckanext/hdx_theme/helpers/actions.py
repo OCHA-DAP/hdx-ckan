@@ -219,7 +219,7 @@ def hdx_send_new_org_request(context, data_dict):
 
     email = config.get('hdx.orgrequest.email', None)
     if not email:
-        email = 'hdx.feedback@gmail.com'
+        email = 'hdx@un.org'
     display_name = 'HDX Feedback'
 
     ckan_username = c.user

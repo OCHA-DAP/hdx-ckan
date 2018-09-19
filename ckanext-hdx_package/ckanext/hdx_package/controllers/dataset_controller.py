@@ -654,7 +654,7 @@ class DatasetController(PackageController):
                            'auth_user_obj': c.userobj}
                 c.showcase_list = get_action('ckanext_package_showcase_list')(context_showcase, {'package_id': c.pkg_dict['id']})
                 c.pkg_dict['showcase_count'] = len(c.showcase_list)
-                c.pkg_dict['is_fresh'] = FreshnessCalculator(c.pkg_dict).is_fresh()
+                FreshnessCalculator(c.pkg_dict).populate_with_freshness()
             else:
                 abort(404, _('Package type is not dataset'))
         except NotFound:
@@ -1298,7 +1298,7 @@ class DatasetController(PackageController):
             data_dict['pkg_id'] = request.params.get('pkg_id')
             data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
                                              qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
             simple_validate_email(data_dict['email'])
 
@@ -1354,7 +1354,7 @@ class DatasetController(PackageController):
                 data_dict['pkg_id'] = request.params.get('pkg_id')
                 data_dict['pkg_url'] = h.url_for(controller='package', action='read', id=request.params.get('pkg_id'),
                                                  qualified=True)
-            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx.feedback@gmail.com')
+            data_dict['hdx_email'] = config.get('hdx.faqrequest.email', 'hdx@un.org')
 
             simple_validate_email(data_dict['email'])
 

@@ -21,11 +21,14 @@ This repo is usually included as a subtree in other repositories. Follow the fol
 
 2. Add&pull the repo while squashing the previous commit from the hdx-style repo 
 
-` git subtree add --prefix src/hdx-styles hdx-styles master --squash `
+` git subtree add --prefix ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles hdx-styles master --squash `
 
 ### On a daily base, getting the latest changes from the repo inside the subtree
 
 ` git subtree pull --prefix src/hdx-styles hdx-styles master --squash `
+
+e.g.
+` git subtree pull --prefix ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles hdx-styles master --squash `
 
 ### Commiting changes inside the subtree
 1. Please, do an individual commit for the changes inside the subtree.
@@ -35,6 +38,9 @@ This repo is usually included as a subtree in other repositories. Follow the fol
 2. Push all the commits on the subtree back to the origin in <your-changes-branch>
 
 ` git subtree push --prefix src/hdx-styles hdx-styles <your-changes-branch> `
+
+e.g.
+` git subtree push --prefix ckanext-hdx_theme/ckanext/hdx_theme/hdx-styles hdx-styles feature/HDX-6096-freshness `
 
  
 
