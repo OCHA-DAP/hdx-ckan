@@ -22,91 +22,96 @@ _ = common._
 
 class IndicatorAccess(object):
 
-    def __init__(self, country_code, dataseries_list, additional_cps_params_dict={}, recompute_units=False):
+    def __init__(self, country_code, dataseries_list, recompute_units=False):
 
         self.__recompute_units = recompute_units
-        self.__cps_params_dict = {
+        self._params_dict = {
             'l': country_code.upper(),
             # 'ds': [el[0] + '___' + el[1] for el in dataseries_list]
         }
-        self.__cps_params_dict.update(additional_cps_params_dict)
+        # self.__cps_params_dict.update(additional_cps_params_dict)
 
         self.__dataseries_list = dataseries_list
 
-    def fetch_indicator_data_from_cps(self):
+    def fetch_indicator_data_for_country(self):
+        '''
+        fetches topline numbers for standard/normal groups
+        :return:
+        :rtype: dict
+        '''
         try:
-            self.__cps_data = get_action('hdx_get_indicator_values')({}, self.__cps_params_dict)
+            self.__country_data = get_action('hdx_get_indicator_values')({}, self._params_dict)
             if self.__recompute_units:
-                for element in self.__cps_data:
+                for element in self.__country_data:
                     value = element.get('value')
                     if value:
                         unit = common_functions.compute_simplifying_units(value)
                         element['units'] = unit
 
         except Exception, e:
-            self.__cps_data = {}
-        return self.__cps_data
+            self.__country_data = {}
+        return self.__country_data
 
-    def get_structured_data_from_cps(self):
-        '''
-
-        :return: A dict structure as in the sample below
-            {
-                INDICATOR_CODE: {
-                    SOURCE_CODE: {
-                        'title': INDICATOR_TYPE_NAME,
-                        'sourceName': SOURCE_NAME,
-                        'sourceCode': SOURCE_CODE,
-                        'lastDate': LAST_DATE,
-                        'lastValue': LAST_VALUE,
-                        'unit': UNIT_NAME,
-                        'code': INDICATOR_TYPE_CODE,
-                        'data': [{'date': DATE, 'value': VALUE},..]
-                    }
-                }
-            }
-        '''
-        structured_cps_data = {}
-        for el in self.__cps_data.get('results', []):
-            ind_type = el.get('indicatorTypeCode', None)
-            src = el.get('sourceCode', None)
-            if ind_type and src:
-                # d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
-                el_time = el.get('time')
-                el_value = el.get('value')
-                val = {
-                    'date': el_time,
-                    'value': el_value
-                }
-
-                if ind_type in structured_cps_data and src in structured_cps_data[ind_type]:
-                    data_dict = structured_cps_data[ind_type][src]
-                    data_dict['data'].append(val)
-
-                    last_date = dt.datetime.strptime(
-                        data_dict['lastDate'], '%Y-%m-%d')
-                    curr_date = dt.datetime.strptime(el_time, '%Y-%m-%d')
-
-                    if last_date < curr_date:
-                        data_dict['lastDate'] = el_time
-                        data_dict['lastValue'] = el_value
-
-                else:
-                    if ind_type not in structured_cps_data:
-                        structured_cps_data[ind_type] = {}
-                    newel = {
-                        'title': el.get('indicatorTypeName'),
-                        'sourceName': el.get('sourceName'),
-                        'sourceCode': src,
-                        'lastDate': el_time,
-                        'lastValue': el_value,
-                        'unit': el.get('unitName'),
-                        'code': ind_type,
-                        'data': [val]
-                    }
-                    structured_cps_data[ind_type][src] = newel
-
-        return structured_cps_data
+    # def get_structured_data_from_cps(self):
+    #     '''
+    #
+    #     :return: A dict structure as in the sample below
+    #         {
+    #             INDICATOR_CODE: {
+    #                 SOURCE_CODE: {
+    #                     'title': INDICATOR_TYPE_NAME,
+    #                     'sourceName': SOURCE_NAME,
+    #                     'sourceCode': SOURCE_CODE,
+    #                     'lastDate': LAST_DATE,
+    #                     'lastValue': LAST_VALUE,
+    #                     'unit': UNIT_NAME,
+    #                     'code': INDICATOR_TYPE_CODE,
+    #                     'data': [{'date': DATE, 'value': VALUE},..]
+    #                 }
+    #             }
+    #         }
+    #     '''
+    #     structured_cps_data = {}
+    #     for el in self.__cps_data.get('results', []):
+    #         ind_type = el.get('indicatorTypeCode', None)
+    #         src = el.get('sourceCode', None)
+    #         if ind_type and src:
+    #             # d = dt.datetime.strptime(el.get('time', ''), '%Y-%m-%d')
+    #             el_time = el.get('time')
+    #             el_value = el.get('value')
+    #             val = {
+    #                 'date': el_time,
+    #                 'value': el_value
+    #             }
+    #
+    #             if ind_type in structured_cps_data and src in structured_cps_data[ind_type]:
+    #                 data_dict = structured_cps_data[ind_type][src]
+    #                 data_dict['data'].append(val)
+    #
+    #                 last_date = dt.datetime.strptime(
+    #                     data_dict['lastDate'], '%Y-%m-%d')
+    #                 curr_date = dt.datetime.strptime(el_time, '%Y-%m-%d')
+    #
+    #                 if last_date < curr_date:
+    #                     data_dict['lastDate'] = el_time
+    #                     data_dict['lastValue'] = el_value
+    #
+    #             else:
+    #                 if ind_type not in structured_cps_data:
+    #                     structured_cps_data[ind_type] = {}
+    #                 newel = {
+    #                     'title': el.get('indicatorTypeName'),
+    #                     'sourceName': el.get('sourceName'),
+    #                     'sourceCode': src,
+    #                     'lastDate': el_time,
+    #                     'lastValue': el_value,
+    #                     'unit': el.get('unitName'),
+    #                     'code': ind_type,
+    #                     'data': [val]
+    #                 }
+    #                 structured_cps_data[ind_type][src] = newel
+    #
+    #     return structured_cps_data
 
     def fetch_indicator_data_from_ckan(self):
         indic_code_list = [el[0] for el in self.__dataseries_list]

@@ -41,6 +41,9 @@ group_type = 'group'
 
 class CountryController(group.GroupController, search_controller.HDXSearchController):
     def country_read(self, id, get_only_toplines=False):
+        # import cProfile
+        # profile = cProfile.Profile()
+        # profile.enable()
         country_dict = self.get_country(id)
 
         country_code = country_dict.get('name', id)
@@ -74,14 +77,15 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 result = render('country/country_topline.html', extra_vars=template_data)
             else:
                 result = render('country/country.html', extra_vars=template_data)
-
+            # profile.disable()
+            # profile.print_stats('cumulative')
             return result
 
     def country_topline(self, id):
         log.info("The id of the page is: " + id)
 
         country_dict = self.get_country(id)
-        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+        top_line_data_list = widget_data_service.build_widget_data_access(
             country_dict).get_dataset_results()
         template_data = {
             'data': {
@@ -102,7 +106,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {'id': country_dict['id']}
         )
 
-        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
+        top_line_data_list = widget_data_service.build_widget_data_access(
             country_dict).get_dataset_results()
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
@@ -112,6 +116,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                                                                  latest_cod_dataset)
         f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
         f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
+
+        data_completness = self._get_data_completness(country_dict.get('name')) \
+                            if country_dict.get('data_completeness') == 'active' else None
 
         template_data = {
             'data': {
@@ -126,8 +133,8 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                 },
                 'widgets': {
                     'top_line_data_list': top_line_data_list,
-                    'chart_data_list': chart_data_list,
-                    'show': len(top_line_data_list) > 0 or len(chart_data_list) > 0
+                    # 'chart_data_list': chart_data_list,
+                    'show': len(top_line_data_list) > 0  # or len(chart_data_list) > 0
                 },
                 'featured_section': {
                     'thumbnail_list': f_thumbnail_list,
@@ -136,7 +143,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                     'tag_list': f_tag_list[:10],
                     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
                 },
-                'data_completness': self._get_data_completness(country_dict.get('name')),
+                'data_completness': data_completness,
 
             },
             'errors': None,

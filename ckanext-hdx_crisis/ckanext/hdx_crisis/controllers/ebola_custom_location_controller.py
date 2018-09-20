@@ -14,7 +14,7 @@ import ckan.common as common
 import ckan.logic as logic
 import ckan.lib.helpers as h
 
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
+# import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.top_line_items_formatter as formatters
 import ckanext.hdx_crisis.dao.ebola_crisis_data_access as ebola_crisis_data_access
 import ckanext.hdx_search.controllers.search_controller as search_controller
@@ -33,7 +33,7 @@ _ = common._
 
 log = logging.getLogger(__name__)
 
-IndicatorAccess = indicator_access.IndicatorAccess
+# IndicatorAccess = indicator_access.IndicatorAccess
 
 
 class EbolaCustomLocationController(search_controller.HDXSearchController):

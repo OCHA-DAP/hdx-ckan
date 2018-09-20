@@ -142,10 +142,10 @@ def hdx_topline_num_for_group(context, data_dict):
             for item in top_line_data_list
         ]
     else:
-        # source is CPS
+        # source is configured in 'hdx.locations.toplines_url'
         ckan_site_url = config.get('ckan.site_url')
-        indicator_dao = IndicatorAccess(id, None, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
-        cps_top_line_items = indicator_dao.fetch_indicator_data_from_cps()
+        indicator_dao = IndicatorAccess(id, None)
+        cps_top_line_items = indicator_dao.fetch_indicator_data_for_country()
         ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
         top_line_items = []
         for item in cps_top_line_items.get('results', {}):
