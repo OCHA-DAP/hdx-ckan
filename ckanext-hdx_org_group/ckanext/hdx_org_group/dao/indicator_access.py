@@ -113,30 +113,30 @@ class IndicatorAccess(object):
     #
     #     return structured_cps_data
 
-    def fetch_indicator_data_from_ckan(self):
-        indic_code_list = [el[0] for el in self.__dataseries_list]
-        self.__ckan_data = {}
-        fq = '+extras_indicator_type_code:('
-        fq += ' OR '.join(['"{}"'.format(code) for code in indic_code_list])
-        fq += ')'
-        data_dict = {
-            'rows': 25,
-            'start': 0,
-            'ext_indicator': u'1',
-            'fq': fq + ' +dataset_type:dataset'
-        }
-        try:
-            query = get_action("package_search")({}, data_dict)
-        except search.SearchError as se:
-            query = {}
-        except Exception as e:
-            abort(404, _('Query produced some error'))
-        if 'results' in query:
-            for dataset in query['results']:
-                date_parts = dataset.get('metadata_modified', '').split('T')
-                if date_parts:
-                    self.__ckan_data[dataset['indicator_type_code']] = {
-                        'datasetUpdateDate': dt.datetime.strptime(date_parts[0], '%Y-%m-%d').strftime('%b %d, %Y'),
-                        'datasetLink': h.url_for(controller='package', action='read', id=dataset['name'])
-                    }
-        return self.__ckan_data
+    # def fetch_indicator_data_from_ckan(self):
+    #     indic_code_list = [el[0] for el in self.__dataseries_list]
+    #     self.__ckan_data = {}
+    #     fq = '+extras_indicator_type_code:('
+    #     fq += ' OR '.join(['"{}"'.format(code) for code in indic_code_list])
+    #     fq += ')'
+    #     data_dict = {
+    #         'rows': 25,
+    #         'start': 0,
+    #         'ext_indicator': u'1',
+    #         'fq': fq + ' +dataset_type:dataset'
+    #     }
+    #     try:
+    #         query = get_action("package_search")({}, data_dict)
+    #     except search.SearchError as se:
+    #         query = {}
+    #     except Exception as e:
+    #         abort(404, _('Query produced some error'))
+    #     if 'results' in query:
+    #         for dataset in query['results']:
+    #             date_parts = dataset.get('metadata_modified', '').split('T')
+    #             if date_parts:
+    #                 self.__ckan_data[dataset['indicator_type_code']] = {
+    #                     'datasetUpdateDate': dt.datetime.strptime(date_parts[0], '%Y-%m-%d').strftime('%b %d, %Y'),
+    #                     'datasetLink': h.url_for(controller='package', action='read', id=dataset['name'])
+    #                 }
+    #     return self.__ckan_data
