@@ -192,11 +192,43 @@
 }
 
 .showcase-item {
+  position: relative;
   border: 1px solid @extraLightGrayColor;
   height: 330px;
   padding: 15px;
 
   margin-bottom: 15px;
+
+  &:hover {
+    .showcase-hover {
+      display: block !important;
+    }
+  }
+
+  .showcase-hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10000;
+    background-color: fade(@blueColor, 90%);
+    text-align: center;
+
+    .showcase-hover-content {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+
+      a {
+          width: 100%;
+          color: @whiteColor;
+          .gothamBoldFont(12px);
+
+      }
+    }
+
+  }
 
   &:hover {
     .remove-link {

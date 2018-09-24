@@ -60,6 +60,27 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
           <a href="{{ h.url_for('ckanext_showcase_edit', id=package.name) }}" class="remove-link">{{ _('Edit') }}</a>
         </div>
       {% endif %}
+
+      <div class="showcase-hover" style="display: none;">
+        <div class="showcase-hover-content">
+          <div>
+            <a href="{{ h.url_for(controller='ckanext.showcase.controller:ShowcaseController', action='read', id=package.name) }}"
+               class="btn btn-empty-white">Read more</a>
+          </div>
+          <div style="margin-top: 14px;">
+            <a href="{{url}}" {% if has_url %} target="_blank" {% endif %} class="btn btn-empty-white">
+              Visit external site <i class="icon icon-external-link"></i>
+            </a>
+          </div>
+          {% if h.check_access('ckanext_showcase_update', {'id':package.id }) %}
+            <div style="margin-top: 14px;">
+              {% link_for _('Edit Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='edit', id=package.name, class_='' %}
+            </div>
+          {% endif %}
+
+        </div>
+
+      </div>
     </div>
 </div>
 {% endblock %}
