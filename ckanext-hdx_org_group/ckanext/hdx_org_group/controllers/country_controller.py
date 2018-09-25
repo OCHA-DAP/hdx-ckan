@@ -113,6 +113,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
         f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
 
+        data_completness = self._get_data_completness(country_dict.get('name')) \
+            if country_dict.get('data_completeness') == 'active' else None
+
         template_data = {
             'data': {
                 'country_dict': country_dict,
@@ -136,7 +139,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
                     'tag_list': f_tag_list[:10],
                     'show': len(f_organization_list) > 0 or len(f_tag_list) > 0
                 },
-                'data_completness': self._get_data_completness(country_dict.get('name')),
+                'data_completness': data_completness,
 
             },
             'errors': None,
