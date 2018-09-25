@@ -9,13 +9,13 @@ $(document).ready(function(){
 	});
 
 	$('#chart-select-1, #chart-select-2').click(function(){
-		var chart_num = $(this).attr('chart-num');
-        if(this.value =='indicator line chart') {
-            $('#chart' + chart_num + ' .cps-sourced-charts').show();
-            $('#chart' + chart_num + ' .ckan-sourced-charts').hide();
-        }
-		else {
-            $('#chart' + chart_num + ' .cps-sourced-charts').hide();
+    var chart_num = $(this).attr('chart-num');
+    // if (this.value == 'indicator line chart') {
+    //   $('#chart' + chart_num + ' .cps-sourced-charts').show();
+    //   $('#chart' + chart_num + ' .ckan-sourced-charts').hide();
+    // }
+		// else {
+    //         $('#chart' + chart_num + ' .cps-sourced-charts').hide();
             $('#chart' + chart_num + ' .ckan-sourced-charts').show();
 
             if(this.value =='multiple bar chart' || this.value == 'multiple line chart'){
@@ -23,8 +23,9 @@ $(document).ready(function(){
             }else{
                 $('#chart_'+chart_num+'_second_line').hide();
             }
-        }
-	})
+        // }
+	});
+
 	//On form submit
 	$('.create-loc-btn').click(function(){
 		//Set timestamp

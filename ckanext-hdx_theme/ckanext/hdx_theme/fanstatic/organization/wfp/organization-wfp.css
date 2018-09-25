@@ -325,6 +325,18 @@ a.test:focus {
   color: #007CE0;
   border-color: #007CE0;
 }
+.btn-empty-white {
+  border: 1px solid #fff;
+  color: #fff;
+  background-color: transparent;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.btn-empty-white:hover,
+.btn-empty-white:focus {
+  color: #fff;
+  border-color: #fff;
+}
 .btn-blue-on-white,
 .btn-blue-on-white:hover,
 .btn-blue-on-white:focus {

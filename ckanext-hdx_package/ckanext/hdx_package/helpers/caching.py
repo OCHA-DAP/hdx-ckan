@@ -24,8 +24,6 @@ bcache.cache_regions.update({
     }
 })
 
-GLOBAL_BASE_DIR = config.get('hdx.caching.base_dir', '/tmp/hdx')
-
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
