@@ -1,156 +1,161 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "lv", 
+    "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2);"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Pievienot filtru"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "Notika kļūda"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "Vai esat pārliecināts, ka vēlaties veikt šo darbību?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Atcelt"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Apstiprināt"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Rediģēt"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Neizdevās ielādēt API datu informāciju"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "Fails"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Filtri"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Sekot"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Grafiks"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Slēpt"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Attēls"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
     "", 
     ""
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Saite"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Saite uz URL internetā (jūs varat arī norādīt saiti uz API)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Notiek ielāde..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Karte"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Nav atrastas sakritības"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Lūdzu, apstipriniet darbību"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Dzēst"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Resurss augšupielādēts"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Saglabāt secību"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Saglabā..."
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Rādīt vairāk"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Sāciet rakstīt ..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Šajā formā ir nesaglabātas izmaiņas"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "Nav API datu, lai ielādētu šo resursu"
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "Neizdevās autentificēt augšupielādi"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "Nevar iegūt datus par augšupielādēto failu"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Nevar augšupielādēt failu"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Atspējot sekošanu"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Augšuplādēt"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Augšupielādēt failu "
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Augšupielādēt failu uz jūsu datora"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Jūs augšupielādējat failu. Vai tiešām vēlaties doties prom, un apturēt šo augšupielādi?"
+  ], 
+  "error loading view": [
+    null, 
+    "kļūda ielādējot skatu"
   ]
 }

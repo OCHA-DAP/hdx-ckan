@@ -1,147 +1,156 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "pt_PT",
+    "domain": "ckan", 
+    "lang": "pt_PT", 
     "plural-forms": "nplurals=2; plural=(n != 1);"
-  },
+  }, 
+  "Add Filter": [
+    null, 
+    "Adicionar Filtro"
+  ], 
   "An Error Occurred": [
-    null,
+    null, 
     "Ocorreu Um Erro"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "Tem a certeza que deseja realizar esta ação?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "Cancelar"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "Confirmar"
-  ],
+  ], 
   "Edit": [
-    null,
+    null, 
     "Editar"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "Falha no carregamento da informação dos dados API"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "Ficheiro"
-  ],
+  ], 
+  "Filters": [
+    null, 
+    "Filtros"
+  ], 
   "Follow": [
-    null,
+    null, 
     "Seguir"
-  ],
+  ], 
+  "Graph": [
+    null, 
+    "Gráfico"
+  ], 
   "Hide": [
-    null,
+    null, 
     "Ocultar"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "Imagem"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "Entrada muito curta, deve ter pelo menos um caratere."
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    "", 
+    ""
+  ], 
   "Link": [
-    null,
+    null, 
     "Hiperligação"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "Link para um URL na internet ( pode também ligar-se com API)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "A carregar ..."
-  ],
+  ], 
+  "Map": [
+    null, 
+    "Mapa"
+  ], 
   "No matches found": [
-    null,
+    null, 
     "Não foram encontradas correspondências"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "Por favor, Confirme a Ação"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "Remover"
-  ],
-  "Reorder resource view": [
-    null,
-    "Reordenar as vistas dos recursos"
-  ],
-  "Reorder resources": [
-    null,
-    "Reordenar recursos"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "Recurso enviado"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "Guardar ordenação"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "A guardar ..."
-  ],
+  ], 
   "Show more": [
-    null,
+    null, 
     "Mostrar mais"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "Comece a escrever ..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "Existem modificações que não estão a ser guardadas"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "Não há dados API para carregar neste recurso"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "Não é possivel autenticar o envio"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "Não foi possivel obter dados a partir do ficheiro enviado"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "Não é possivel enviar o ficheiro"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "Não Seguir"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "Enviar"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "Enviar um ficheiro"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "Envie um ficheiro no seu computador"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "Está a enviar um ficheiro. Tem a certeza de que deseja sair e parar o envio?"
   ]
 }

@@ -1,156 +1,158 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "sl", 
+    "plural-forms": "nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Dodaj filter"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "Prišlo je do napake"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "Ste prepričani da želite izvesti to dejanje?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Prekliči"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Potrdi"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Uredi"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Nalaganje podatkov o API informacijah ni uspelo"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "Datoteka"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Filtri"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Sledi"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Graf"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Skrij"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Slika"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
+    "", 
     "", 
     ""
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Poveži"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Povezava na URL na internetu (lahko tudi povezava na API)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Nalaganje..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Zemljevid"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Ni zadetkov"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Prosim potrdite dejanje"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Odstrani"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Vir naložen"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Shrani naročilo"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Shranjujem..."
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Pokaži več"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Začnite tipkati…"
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Na tem obrazcu so neshranjene spremembe"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "Ni na voljo API podatkov za ta vir"
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "Prenosa ni mogoče avtenticirati"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "Podatkov za preneseno datoteko ni mogoč pridobiti"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Ni možno naložiti datoteke"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Prenehaj slediti"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Naloži"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Naloži datoteko"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Naložite datoteko z vašega računalnika"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Trenutno prenašate datoteko. Ste prepričani da se želite preusmeriti drugam in prekiniti ta prenos?"
   ]
 }

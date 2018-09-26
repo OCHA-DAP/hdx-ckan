@@ -1,147 +1,181 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "uk_UA",
+    "domain": "ckan", 
+    "lang": "uk_UA", 
     "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
-  },
+  }, 
+  "Add Filter": [
+    null, 
+    "Додати фільтр"
+  ], 
   "An Error Occurred": [
-    null,
+    null, 
     "Виникла помилка"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "Ви впевнені, що хочете виконати цю операцію?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "Скасувати"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "Підтвердити"
-  ],
+  ], 
+  "Could not load view": [
+    null, 
+    "Не вдалось завантажити представлення"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "DataProxy повернув помилку"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "DataStore повернув помилку"
+  ], 
   "Edit": [
-    null,
+    null, 
     "Редагувати"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "Не вдалося завантажити інформацію про дані API"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "Файл"
-  ],
+  ], 
+  "Filters": [
+    null, 
+    "Фільтри"
+  ], 
   "Follow": [
-    null,
+    null, 
     "Стежити"
-  ],
+  ], 
+  "Graph": [
+    null, 
+    "Графік"
+  ], 
+  "Grid": [
+    null, 
+    "Сітка"
+  ], 
   "Hide": [
-    null,
+    null, 
     "Сховати"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "Зображення"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "Ввід надто короткий, має бути хоча би один символ"
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    "Ввід надто короткий, має бути хоча би один символ", 
+    "Ввід надто короткий, має бути хоча би %(num)d символа", 
+    "Ввід надто короткий, має бути хоча би %(num)d символ"
+  ], 
   "Link": [
-    null,
+    null, 
     "Посилання"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "Додати посилання на адресу в інтернеті (або посилання на API)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "Завантаження..."
-  ],
+  ], 
+  "Map": [
+    null, 
+    "Карта"
+  ], 
   "No matches found": [
-    null,
+    null, 
     "Збігів не знайдено"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "Підтвердіть операцію"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "Видалити"
-  ],
-  "Reorder resource view": [
-    null,
-    "Змінити порядок представлення ресурсу"
-  ],
-  "Reorder resources": [
-    null,
-    "Змінити порядок ресурсів"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "Ресурс вивантажено"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "Зберегти порядок"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "Збереження..."
-  ],
+  ], 
+  "Select a field": [
+    null, 
+    "Оберіть поле"
+  ], 
   "Show more": [
-    null,
+    null, 
     "Показати більше"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "Друкуйте..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "Ця форма містить незбережені зміни"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "Для цього ресурсу немає доступних для завантаження даних API"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "Не вдалося завантажити"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "Не вдалось отримати дані з вивантаженого файла"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "Не вдалось вивантажити файл"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "Не стежити"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "Вивантажити"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "Вкласти файл"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "Вкласти файл з комп’ютера"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "Ви вкладаєте файл. Ви впевнені, що хочете перейти на іншу сторінку і припинити вкладення?"
+  ], 
+  "error loading view": [
+    null, 
+    "помилка при завантаженні представлення"
   ]
 }

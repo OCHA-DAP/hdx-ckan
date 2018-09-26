@@ -1,143 +1,140 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "da_DK",
+    "domain": "ckan", 
+    "lang": "da_DK", 
     "plural-forms": "nplurals=2; plural=(n != 1);"
-  },
+  }, 
   "An Error Occurred": [
-    null,
+    null, 
     "Der opstod en fejl"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "Er du sikker på, at du vil udføre denne handling?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "Annullér"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "Bekræft"
-  ],
+  ], 
   "Edit": [
-    null,
+    null, 
     "Redigér"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "Kunne ikke indlæse data-API-information"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "Fil"
-  ],
+  ], 
   "Follow": [
-    null,
+    null, 
     "Følg"
-  ],
+  ], 
   "Hide": [
-    null,
+    null, 
     "Skjul"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "Billede"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "Input er for kort, skal være mindst én karakter"
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    "", 
+    ""
+  ], 
   "Link": [
-    null,
+    null, 
     "Link"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "Link til en URL på internettet (du kan også linke til et API)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "Loading..."
-  ],
+  ], 
   "No matches found": [
-    null,
+    null, 
     "Ingen resultater fundet"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "Bekræft venligst handling"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "Fjern"
-  ],
-  "Reorder resources": [
-    null,
-    "Skift rækkefølge på ressourcer"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "Ressource uploadet"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "Gem rækkefølge"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "Gemmer..."
-  ],
+  ], 
   "Show more": [
-    null,
+    null, 
     "Vis mere"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "Begynd indtastning..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "Der er ændringer til denne formular som ikke er gemt"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "Der er ingen API-data at indlæse for denne ressource"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "Ude af stand til at autentificere upload"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "Ude af stand til at hente data for uploadet fil"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "Ude af stand til at uploade fil"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "Følg ikke"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "Upload"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "Upload en fil"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "Upload en fil fra din computer"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "Du uploader en fil. Er du sikker på, du vil navigere væk og standse upload?"
   ]
 }

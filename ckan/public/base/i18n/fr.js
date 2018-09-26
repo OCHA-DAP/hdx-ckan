@@ -1,129 +1,141 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "he", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "lang": "fr", 
+    "plural-forms": "nplurals=2; plural=(n > 1);"
   }, 
   "Add Filter": [
     null, 
-    "הוספת מסנן"
+    "Ajouter un filtre"
   ], 
   "An Error Occurred": [
     null, 
-    "אירעה שגיאה"
+    "Erreur"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "האם אתם בטוחים שברצונכם לבצע את הפעולה הזו?"
+    "Etes-vous sûr de vouloir exécuter cette commande ?"
   ], 
   "Cancel": [
     null, 
-    "ביטול"
+    "Annuler"
   ], 
   "Confirm": [
     null, 
-    "אישור"
+    "Confirmation"
   ], 
   "Could not load view": [
     null, 
-    "לא ניתן לטעון את התצוגה"
+    "Impossible de charger la vue"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "DataProxy a retourné une erreur"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "Le Magasin de Données a retourné une erreur"
   ], 
   "Edit": [
     null, 
-    "לערוך"
+    "Éditer"
   ], 
   "Failed to load data API information": [
     null, 
-    "לא הצלחתי לטעון את נתוני המידע של ה-API "
+    "Le chargement de l'information de l'API de données a échoué"
   ], 
   "File": [
     null, 
-    "קובץ"
+    "Fichier"
   ], 
   "Filters": [
     null, 
-    "מסננים"
+    "Filtres"
   ], 
   "Follow": [
     null, 
-    "עקוב"
+    "S'abonner"
   ], 
   "Graph": [
     null, 
-    "תרשים"
+    "Graphe"
+  ], 
+  "Grid": [
+    null, 
+    "Grille"
   ], 
   "Hide": [
     null, 
-    "החביאי"
+    "Cacher"
   ], 
   "Image": [
     null, 
-    "תמונה"
+    "Image"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    "", 
-    ""
+    "Saisie trop courte, au moins un caractère est nécessaire", 
+    "Saisie trop courte, au moins %(num)d caractères sont nécessaires"
   ], 
   "Link": [
     null, 
-    "קישור"
+    "Lien"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "קישור לכתובת אינטרנט (ניתן לקשר גם ל-API)"
+    "Lien vers une URL sur internet (vous pouvez aussi donner un lien vers une API)"
   ], 
   "Loading...": [
     null, 
-    "טוען..."
+    "Chargement..."
   ], 
   "Map": [
     null, 
-    "מפה"
+    "Carte"
   ], 
   "No matches found": [
     null, 
-    "לא נמצאו התאמות"
+    "Aucune correspondance trouvée"
   ], 
   "Please Confirm Action": [
     null, 
-    "אשר את הפעולה בבקשה"
+    "Veuillez confirmer l'action"
   ], 
   "Remove": [
     null, 
-    "הסרה"
+    "Supprimer"
   ], 
   "Resource uploaded": [
     null, 
-    "המקור הועלה"
+    "Ressource  téléchargée"
   ], 
   "Save order": [
     null, 
-    "סדר שמירה"
+    "Sauvegarder la commande"
   ], 
   "Saving...": [
     null, 
-    "שומר..."
+    "Sauvegarde en cours..."
   ], 
   "Select a field": [
     null, 
-    "בחירת שדה"
+    "Sélectionnez un champ"
   ], 
   "Show more": [
     null, 
-    "הראי עוד"
+    "Montrer plus"
   ], 
   "Start typing…": [
     null, 
-    "התחילו להקליד..."
+    "Commencez la saisie ..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "ישנם שינויים שלא נשמרו לטופס הזה"
+    "Des modifications de ce formulaire n'ont pas été enregistrées"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "אין נתוני ממשק מכונה כדי לטעון את המקור הזה"
+    "Il n'y a pas de données API à télécharger pour cette ressource"
   ], 
   "URL": [
     null, 
@@ -131,38 +143,38 @@
   ], 
   "Unable to authenticate upload": [
     null, 
-    "איני יכולה לאמת את ההעלאה"
+    "Échec de l'authentification du transfert"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "איני מצליחה לקבל נתונים מהקובץ שהועלה"
+    "Impossible d'accéder aux données du fichier déposé"
   ], 
   "Unable to upload file": [
     null, 
-    "איני יכולה להעלות את הקובץ"
+    "Échec du transfert de fichier "
   ], 
   "Unfollow": [
     null, 
-    "ביטול עקיבה"
+    "Se désabonner"
   ], 
   "Upload": [
     null, 
-    "העלה"
+    "Envoi"
   ], 
   "Upload a file": [
     null, 
-    "העלאת קבצים"
+    "Envoyer un fichier depuis votre ordinateur"
   ], 
   "Upload a file on your computer": [
     null, 
-    "העלו תמונה מהמחשב שלכם"
+    "Télécharger un fichier sur votre ordinateur"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "אתם מעלים קובץ. האם אתם בטוחים שברצונכם לצאת מהעמוד ולהפסיק את ההעלאה?"
+    "Vous êtes en train de transférer un fichier. Êtes-vous sûr de vouloir naviguer ailleurs et interrompre ce transfert ?"
   ], 
   "error loading view": [
     null, 
-    "טעינת התצוגה נכשלה"
+    "erreur lors du chargement de la vue"
   ]
 }
