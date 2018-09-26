@@ -49,17 +49,7 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
         {% elif package.num_datasets == 0 %}
           <div><strong class="count count-zero">{{ _('0 Datasets') }}</strong></div>
         {% endif %}
-
-        <span>
-            <strong class="count">{{ _('Read More') }}</strong>
-        </span>
       </a>
-
-      {% if show_remove %}
-        <div class="pull-right">
-          <a href="{{ h.url_for('ckanext_showcase_edit', id=package.name) }}" class="remove-link">{{ _('Edit') }}</a>
-        </div>
-      {% endif %}
 
       <div class="showcase-hover" style="display: none;">
         <div class="showcase-hover-content">
