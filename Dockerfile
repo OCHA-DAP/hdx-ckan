@@ -72,6 +72,7 @@ RUN apt-get -qq -y update && \
     pip install --no-cache-dir newrelic && \
     hdxckantool plugins dev && \
     newrelic-admin generate-config LICENSE_KEY /srv/newrelic.ini && \
+    chown -R www-data ckan/public/base/i18n && \
     apt-get -qq -y remove \
         build-essential \
         gpg \
