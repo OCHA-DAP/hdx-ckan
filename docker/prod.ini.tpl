@@ -48,6 +48,7 @@ smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
 
 hdx.cache.onstartup = true
+hdx.caching.base_dir = ${HDX_CACHE_DIR}
 
 hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true
