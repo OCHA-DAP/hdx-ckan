@@ -1,60 +1,60 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "it", 
+    "plural-forms": "nplurals=2; plural=(n != 1);"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Aggiungi Filtro"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "Si è verificato un errore"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "Sei certo di voler confermare questa azione?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Annulla"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Conferma"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Modifica"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Lettura dei dati attraverso le API fallita"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "File"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Filtri"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Segui"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Grafo"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Nascondi"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Immagine"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
@@ -63,94 +63,98 @@
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Link"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Link a un indirizzo internet (puoi anche inserire l'URL di un API)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Caricando..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Mappa"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Elementi non trovati"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Confermare azione"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Rimuovi"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Risorsa caricata"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Salva ordine"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Salvataggio in corso..."
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Mostra più"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Inizia a scrivere..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Ci sono modifiche non salvate per questa form"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "Non ci sono dati da caricare via API per questa risorsa "
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "Impossibile autenticare il caricamento"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "Impossibile accedere ai dati per il file caricato"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Impossibile caricare il file"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Non seguire più"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Carica"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Carica un file"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Carica un file dal computer"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Stai caricando un file. Sei sicuro che vuoi abbandonare questa pagina e interrompere il caricamento?"
+  ], 
+  "error loading view": [
+    null, 
+    "Errore nel caricamento della vista"
   ]
 }

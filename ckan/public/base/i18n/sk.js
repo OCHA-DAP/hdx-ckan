@@ -1,156 +1,157 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "sk", 
+    "plural-forms": "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Pridať filter"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "Vyskytla sa chyba"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "Chcete vykonať túto akciu?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Zrušiť"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Potvrdiť"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Upraviť"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Zlyhalo načítanie informácie o dátovom API"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "Súbor"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Filtre"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Odoberať"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Graf"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Skryť"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Obrázok"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
     "", 
     ""
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Odkaz"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Odkaz URL na internete (môžete prepojiť s API)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Prebieha načítavanie..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Mapa"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Žiadna zhoda"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Prosím, potvrďte túto akciu"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Zmazať"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Zdroj nahraný"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Uložiť výber"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Ukladám..."
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Ukázať viac"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Začnite písať..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Neuložili ste vykonané zmeny vo formulári"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "Neexistuje dátové API na načítanie tohto zdroja"
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "Nie je možné autentifikovať nahraté súbory"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "Nie je možné pristúpiť k nahranému súboru"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Nie je možné nahrať súbor"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Prestať odoberať"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Nahrávanie"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Nahrať súbor"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Odošlite súbor na váš počítať"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Nahrávate súbor. Chcete odísť preč a prerušiť nahrávanie?"
   ]
 }

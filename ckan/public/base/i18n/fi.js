@@ -1,156 +1,180 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "fi", 
+    "plural-forms": "nplurals=2; plural=(n != 1);"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Lisää suodatin"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "Tapahtui virhe"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "Oletko varma, että haluat tehdä tämän?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Peruuta"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Vahvista"
+  ], 
+  "Could not load view": [
+    null, 
+    "Näkymää ei pystytty lataamaan"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "Dataproxy palautti virheen"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "DataStore palautti virheen"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Muokkaa"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Data API:n tietojen lataaminen epäonnistui"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "Tiedosto"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Suodattimet"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Seuraa"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Kaavio"
+  ], 
+  "Grid": [
+    null, 
+    "Taulokku"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Piilota"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Kuva"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    "", 
-    ""
+    "Syöte on liian lyhyt, pitää olla vähintään yksi merkki", 
+    "Syöte on liian lyhyt, tulee olla vähintään %(num)dmerkkiä"
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Linkki"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Linkki URL-osoitteeseen internetissä (voit myös linkittää API:in)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Ladataan..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Kartta"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Ei yhtään osumaa"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Vahvista toimenpide"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Poista"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Resurssi on ladattu"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Tallenna järjestys"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Tallentaa..."
+  ], 
+  "Select a field": [
+    null, 
+    "Valitse tietokenttä"
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Näytä enemmän"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Ala kirjoittaa..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Lomakkeella on tallentamattomia tietoja"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "API:n kautta ei ole ladattavissa dataa tälle resurssille"
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "Lataamisen autentikointi epäonnistui"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "Datan saaminen ladattavaan tiedostoon epäonnistui"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Tiedoston lataaminen epäonnistui"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Lopeta seuraaminen"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Lataa"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Tallenna tiedosto"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Lataa tiedosto työasemalta"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Olet parhaillaan lataamassa tiedostoa palvelimelle. Oletko varma, että haluat poistua sivulta ja keskeyttää lataamisen?"
+  ], 
+  "error loading view": [
+    null, 
+    "virhe ladattaessa näkymää"
   ]
 }

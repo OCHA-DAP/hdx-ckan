@@ -1,129 +1,142 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "he", 
-    "plural-forms": "nplurals=2; plural=(n != 1);"
+    "lang": "cs_CZ", 
+    "plural-forms": "nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
   }, 
   "Add Filter": [
     null, 
-    "הוספת מסנן"
+    "Přidat filtr"
   ], 
   "An Error Occurred": [
     null, 
-    "אירעה שגיאה"
+    "Nastala chyba"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "האם אתם בטוחים שברצונכם לבצע את הפעולה הזו?"
+    "Jste si jistí, že chcete provést tuto akci?"
   ], 
   "Cancel": [
     null, 
-    "ביטול"
+    "Zrušit"
   ], 
   "Confirm": [
     null, 
-    "אישור"
+    "Potvrdit"
   ], 
   "Could not load view": [
     null, 
-    "לא ניתן לטעון את התצוגה"
+    "Nelze načíst pohled"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "Nastala chyba v DataProxy"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "Nastala chyba v DataStore"
   ], 
   "Edit": [
     null, 
-    "לערוך"
+    "Upravit"
   ], 
   "Failed to load data API information": [
     null, 
-    "לא הצלחתי לטעון את נתוני המידע של ה-API "
+    "Pokus o získání informací pomocí API selhal"
   ], 
   "File": [
     null, 
-    "קובץ"
+    "Soubor"
   ], 
   "Filters": [
     null, 
-    "מסננים"
+    "Filtry"
   ], 
   "Follow": [
     null, 
-    "עקוב"
+    "Sledovat"
   ], 
   "Graph": [
     null, 
-    "תרשים"
+    "Graf"
+  ], 
+  "Grid": [
+    null, 
+    "Mřížka"
   ], 
   "Hide": [
     null, 
-    "החביאי"
+    "Skrýt"
   ], 
   "Image": [
     null, 
-    "תמונה"
+    "Obrázek"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    "", 
-    ""
+    "Vstup je příliš krátky, musí mít alespoň jeden znak", 
+    "Vstup je příliš krátky, musí mít alespoň %(num)d znaky", 
+    "Vstup je příliš krátky, musí mít alespoň %(num)d znaků"
   ], 
   "Link": [
     null, 
-    "קישור"
+    "Odkaz"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "קישור לכתובת אינטרנט (ניתן לקשר גם ל-API)"
+    "Odkaz na internetovou URL adresu (můžete také zadat odkaz na API)"
   ], 
   "Loading...": [
     null, 
-    "טוען..."
+    "Nahrávám..."
   ], 
   "Map": [
     null, 
-    "מפה"
+    "Mapa"
   ], 
   "No matches found": [
     null, 
-    "לא נמצאו התאמות"
+    "Nenalezena žádná shoda"
   ], 
   "Please Confirm Action": [
     null, 
-    "אשר את הפעולה בבקשה"
+    "Prosím potvrďte akci"
   ], 
   "Remove": [
     null, 
-    "הסרה"
+    "Odstranit"
   ], 
   "Resource uploaded": [
     null, 
-    "המקור הועלה"
+    "Datový zdroj nahrán"
   ], 
   "Save order": [
     null, 
-    "סדר שמירה"
+    "Uložit pořadí"
   ], 
   "Saving...": [
     null, 
-    "שומר..."
+    "Ukládám..."
   ], 
   "Select a field": [
     null, 
-    "בחירת שדה"
+    "Vyberte pole"
   ], 
   "Show more": [
     null, 
-    "הראי עוד"
+    "Ukázat více"
   ], 
   "Start typing…": [
     null, 
-    "התחילו להקליד..."
+    "Začněte psát..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "ישנם שינויים שלא נשמרו לטופס הזה"
+    "Tento formulář obsahuje neuložené změny"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "אין נתוני ממשק מכונה כדי לטעון את המקור הזה"
+    "Tento datový zdroj neobsahuje žádná data, která lze poskytnou přes API"
   ], 
   "URL": [
     null, 
@@ -131,38 +144,38 @@
   ], 
   "Unable to authenticate upload": [
     null, 
-    "איני יכולה לאמת את ההעלאה"
+    "Nastala chyba autentizace při nahrávání dat"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "איני מצליחה לקבל נתונים מהקובץ שהועלה"
+    "Nelze získat data z nahraného souboru"
   ], 
   "Unable to upload file": [
     null, 
-    "איני יכולה להעלות את הקובץ"
+    "Nelze nahrát soubor"
   ], 
   "Unfollow": [
     null, 
-    "ביטול עקיבה"
+    "Přestat sledovat"
   ], 
   "Upload": [
     null, 
-    "העלה"
+    "Nahrát"
   ], 
   "Upload a file": [
     null, 
-    "העלאת קבצים"
+    "Nahrát soubor"
   ], 
   "Upload a file on your computer": [
     null, 
-    "העלו תמונה מהמחשב שלכם"
+    "Nahrát soubor z počítače"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "אתם מעלים קובץ. האם אתם בטוחים שברצונכם לצאת מהעמוד ולהפסיק את ההעלאה?"
+    "Právě nahráváte soubor. Jste si opravdu jistí, že chcete tuto stránku opustit a ukončit tak nahrávání?"
   ], 
   "error loading view": [
     null, 
-    "טעינת התצוגה נכשלה"
+    "Chyba při načítání pohledu"
   ]
 }

@@ -1,122 +1,141 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "hr", 
-    "plural-forms": "nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
+    "lang": "pt_BR", 
+    "plural-forms": "nplurals=2; plural=(n > 1);"
   }, 
   "Add Filter": [
     null, 
-    "Dodaj filter"
+    "Adicionar Filtro"
   ], 
   "An Error Occurred": [
     null, 
-    "Došlo je do pogreške"
+    "Ocorreu um erro"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Jeste li sigurni da želite izvršiti ovu akciju?"
+    "Você tem certeza de que deseja executar essa ação?"
   ], 
   "Cancel": [
     null, 
-    "Otkаži"
+    "Cancelar"
   ], 
   "Confirm": [
     null, 
-    "Potvrdi"
+    "Confirme"
+  ], 
+  "Could not load view": [
+    null, 
+    "Não foi possível carregar a visão"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "DataPorxy retornou um erro"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "DataStore retornou um erro"
   ], 
   "Edit": [
     null, 
-    "Uređivаnje"
+    "Editar"
   ], 
   "Failed to load data API information": [
     null, 
-    "Pogreška pri dohvatu informacija o API-ju podataka"
+    "Falhou em carregar informações sobre a API de dados"
   ], 
   "File": [
     null, 
-    "Datoteka"
+    "Arquivo"
   ], 
   "Filters": [
     null, 
-    "Filteri"
+    "Filtros"
   ], 
   "Follow": [
     null, 
-    "Slijedi"
+    "Seguir"
   ], 
   "Graph": [
     null, 
-    "Graf"
+    "Gráfico"
+  ], 
+  "Grid": [
+    null, 
+    "Grade"
   ], 
   "Hide": [
     null, 
-    "Sakrij"
+    "Ocultar"
   ], 
   "Image": [
     null, 
-    "Slikа"
+    "Imagem"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    "", 
-    "", 
-    ""
+    "A entrada é curta demais, deve possuir pelo menos um caractere", 
+    "A entrada é curta demais, deve possuir pelo menos %(num)d caracteres"
   ], 
   "Link": [
     null, 
-    "Veza"
+    "Link"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Kreirajte link na URL na internetu (također možete kreirati link na API)"
+    "Link para uma URL na internet (você também pode ligar a uma API)"
   ], 
   "Loading...": [
     null, 
-    "Učitаvаnje ..."
+    "Carregando ..."
   ], 
   "Map": [
     null, 
-    "Karta"
+    "Mapa"
   ], 
   "No matches found": [
     null, 
-    "Nije pronađeno"
+    "Nenhum resultado encontrado"
   ], 
   "Please Confirm Action": [
     null, 
-    "Molimo potvrdite akciju"
+    "Favor confirmar a ação"
   ], 
   "Remove": [
     null, 
-    "Ukloni"
+    "Remover"
   ], 
   "Resource uploaded": [
     null, 
-    "Resurs učitan"
+    "Recurso enviado"
   ], 
   "Save order": [
     null, 
-    "Spremi redoslijed"
+    "Salvar ordem"
   ], 
   "Saving...": [
     null, 
-    "Spremanje..."
+    "Salvando..."
+  ], 
+  "Select a field": [
+    null, 
+    "Selecione um campo"
   ], 
   "Show more": [
     null, 
-    "Prikaži više"
+    "Mostrar mais"
   ], 
   "Start typing…": [
     null, 
-    "Počnite upisivati..."
+    "Comece a digitar ..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Postoje izmjene ovog obrasca koje nisu spremljene"
+    "Há modificações não salvas neste formulário"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Ne postoji API sa podacima za punjenje ovog resursa"
+    "Não existe API de dados para carregar para este recurso"
   ], 
   "URL": [
     null, 
@@ -124,34 +143,38 @@
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Nije moguće potvrditi učitavanje"
+    "Não foi possível autenticar o envio"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Nije moguće dohvatiti podatke za učitanu datoteku"
+    "Não foi possível obter os dados do arquivo carregado"
   ], 
   "Unable to upload file": [
     null, 
-    "Nije moguće učitati datoteku"
+    "Não foi possível enviar o arquivo"
   ], 
   "Unfollow": [
     null, 
-    "Prestani slijediti"
+    "Deixar de seguir"
   ], 
   "Upload": [
     null, 
-    "Učitaj"
+    "Enviar"
   ], 
   "Upload a file": [
     null, 
-    "Učitaj datoteku"
+    "Carrega um arquivo"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Učitajte datoteku sa vašeg računala"
+    "Enviar um arquivo do seu computador"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "U tijeku je učitavanje datoteke. Jeste li sigurni da želite otići sa ove stranice i prekinuti učitavanje?"
+    "Você está enviando um arquivo. Tem certeza de que quer navegar para outra página e parar esse envio?"
+  ], 
+  "error loading view": [
+    null, 
+    "erro ao carregar visualização"
   ]
 }

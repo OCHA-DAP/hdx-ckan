@@ -1,60 +1,60 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "sq", 
+    "plural-forms": "nplurals=2; plural=(n != 1);"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Shtoni filterin"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "Ka ndodhur një gabim"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "A jeni te sigurte qe doni ta kryeni këtë veprim?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Anulo"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Konfirmo"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Modifikoni"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Dështoi ngarkimi i informacioneve të të dhënave të API-së"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "Skedari"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Filterët"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Ndjek"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Grafi"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Fsheh"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Figurë"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
@@ -63,94 +63,94 @@
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Lidhëse"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Lidhu me një URL në internet ( ju mund të lidheni me një API)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Duke u ngarkuar..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Harta"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Asnjë rezultat nuk u përputh"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Ju lutem konfirmoni veprimin"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Largo"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Burimi u ngarkua"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Ruaj renditjen"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Duke u ruajtur..."
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Shfaq më shumë"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Fillo shkrimin..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Forma përmbanë ndryshime të paruajtura"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "Nuk ka ndonjë API të të dhënave që të ngarkoj burimin"
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "E pamundur të autentikohet ngarkimi"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "E pamundur të nxirren të dhënat për dosjen e ngarkuar"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Skedari nuk u ngarkua"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Mos ndjek"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Ngarko"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Ngarko një skedar"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Ngarko një skedar në kompjuerin tuaj"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Ju jeni duke ngarkuar një skedar. A jeni të sigurt që doni të largoheni dhe t'a ndalni këtë ngarkim?"
   ]
 }

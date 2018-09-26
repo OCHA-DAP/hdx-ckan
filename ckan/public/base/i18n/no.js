@@ -1,156 +1,180 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "is", 
-    "plural-forms": "nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
+    "lang": "no", 
+    "plural-forms": "nplurals=2; plural=(n != 1);"
   }, 
   "Add Filter": [
     null, 
-    "Bæta við síu"
+    "Opprett filter"
   ], 
   "An Error Occurred": [
     null, 
-    "Villa kom upp"
+    "En feil oppsto"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "Ertu viss um að þú viljir framkvæma þessa aðgerð?"
+    "Er du sikker på at du vil utføre denne handlingen?"
   ], 
   "Cancel": [
     null, 
-    "Hætta við"
+    "Avbryt"
   ], 
   "Confirm": [
     null, 
-    "Staðfesta"
+    "Bekreft"
+  ], 
+  "Could not load view": [
+    null, 
+    "Klarte ikke å laste visning"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "Feilmelding fra DataProxy"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "Feilmelding fra DataStore"
   ], 
   "Edit": [
     null, 
-    "Breyta"
+    "Rediger"
   ], 
   "Failed to load data API information": [
     null, 
-    "Villa kom upp við að sækja upplýsingar um API gögn"
+    "Kunne ikke laste informasjon om data-API"
   ], 
   "File": [
     null, 
-    "Skrá"
+    "Fil"
   ], 
   "Filters": [
     null, 
-    "Síur"
+    "Filtere"
   ], 
   "Follow": [
     null, 
-    "Fylgjast með"
+    "Følg"
   ], 
   "Graph": [
     null, 
-    "Myndrit"
+    "Graf"
+  ], 
+  "Grid": [
+    null, 
+    "Rutenett"
   ], 
   "Hide": [
     null, 
-    "Fela"
+    "Skjul"
   ], 
   "Image": [
     null, 
-    "Mynd"
+    "Bilde"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
-    "", 
-    ""
+    "For kort, må være minst ett tegn", 
+    "For kort, må være minst %(num)d tegn"
   ], 
   "Link": [
     null, 
-    "Tengill"
+    "Lenke"
   ], 
   "Link to a URL on the internet (you can also link to an API)": [
     null, 
-    "Farðu inn á vefslóð á netinu (þú getur líka tengst API)"
+    "Lenke til en URL på internett (du kan også lenke til et API)"
   ], 
   "Loading...": [
     null, 
-    "Hleð..."
+    "Laster..."
   ], 
   "Map": [
     null, 
-    "Kort"
+    "Kart"
   ], 
   "No matches found": [
     null, 
-    "Ekkert fannst"
+    "Ingen treff"
   ], 
   "Please Confirm Action": [
     null, 
-    "Vinsamlegast staðfestu aðgerðina"
+    "Bekreft handling"
   ], 
   "Remove": [
     null, 
-    "Fjarlægja"
+    "Fjern"
   ], 
   "Resource uploaded": [
     null, 
-    "Skránni hefur verið hlaðið inn"
+    "Ressurs lastet opp"
   ], 
   "Save order": [
     null, 
-    "Vistaðu pöntun"
+    "Lagre rekkefølge"
   ], 
   "Saving...": [
     null, 
-    "Vistun í gangi..."
+    "Lagrer..."
+  ], 
+  "Select a field": [
+    null, 
+    "Velg et felt"
   ], 
   "Show more": [
     null, 
-    "Sýna fleiri"
+    "Vis mer"
   ], 
   "Start typing…": [
     null, 
-    "Sláðu inn fyrstu stafina..."
+    "Skriv inn..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "Það eru óvistaðar breytingar í þessu formi"
+    "Du har gjort endringer i skjemaet som ikke er lagret"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "Það eru engin API gögn sem er hægt að hlaða inn fyrir þessa skrá"
+    "Ingen API-data kan lastes for denne ressursen"
   ], 
   "URL": [
     null, 
-    "Vefslóð"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "Ekki fékkst heimild til að hlaða inn skrá"
+    "Klarer ikke å autentisere opplasting"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "Ekki tókst að sækja gögn úr skránni sem þú hlóðst inn"
+    "Finner ikke data for opplastet fil"
   ], 
   "Unable to upload file": [
     null, 
-    "Ekki tókst að hlaða inn skrá"
+    "Klarer ikke å laste opp fil"
   ], 
   "Unfollow": [
     null, 
-    "Hætta að fylgjast með"
+    "Ikke følg"
   ], 
   "Upload": [
     null, 
-    "Hlaða inn"
+    "Opplasting"
   ], 
   "Upload a file": [
     null, 
-    "Hlaða inn skrá"
+    "Last opp en fil"
   ], 
   "Upload a file on your computer": [
     null, 
-    "Sæktu skrá á tölvuna þína"
+    "Last opp en fil til datamaskinen din"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "Þú ert að sækja skrá. Ertu viss um að viljir fara af síðunni og stöðva niðurhalið? "
+    "Du laster opp en fil. Er du sikker på at du vil forlate siden og stoppe denne opplastingen?"
+  ], 
+  "error loading view": [
+    null, 
+    "feil ved lasting av visning"
   ]
 }

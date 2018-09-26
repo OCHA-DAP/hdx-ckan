@@ -1,59 +1,41 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "id", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "lang": "sr", 
+    "plural-forms": "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
   }, 
   "Cancel": [
     null, 
-    "Batal"
+    "Откажи"
   ], 
   "Edit": [
     null, 
-    "Edit"
-  ], 
-  "Follow": [
-    null, 
-    "Ikuti"
-  ], 
-  "Graph": [
-    null, 
-    "Grafik"
+    "Уређивање"
   ], 
   "Image": [
     null, 
-    "Gambar"
+    "Слика"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
+    "", 
     ""
   ], 
   "Loading...": [
     null, 
-    "Memuat..."
-  ], 
-  "Map": [
-    null, 
-    "Peta"
+    "Учитавање ..."
   ], 
   "URL": [
     null, 
     "URL"
   ], 
-  "Unfollow": [
-    null, 
-    "Tidak ikuti"
-  ], 
   "Upload": [
     null, 
-    "Unggah"
+    "Допреми"
   ], 
   "Upload a file": [
     null, 
-    "Unggah file"
-  ], 
-  "error loading view": [
-    null, 
-    "Kesalahan dalam memuat pratayang"
+    "Допреми фајл"
   ]
 }

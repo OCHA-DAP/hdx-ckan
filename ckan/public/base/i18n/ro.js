@@ -1,151 +1,113 @@
 {
   "": {
     "domain": "ckan", 
-    "lang": "zh_CN", 
-    "plural-forms": "nplurals=1; plural=0;"
+    "lang": "ro", 
+    "plural-forms": "nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));"
   }, 
-  "Add Filter": [
-    null, 
-    "增加筛选条件"
-  ], 
   "An Error Occurred": [
     null, 
-    "发生错误"
+    "Eroare"
   ], 
   "Are you sure you want to perform this action?": [
     null, 
-    "确定要进行这个操作吗?"
+    "Sunteți sigur că doriți să efectuați această acțiune?"
   ], 
   "Cancel": [
     null, 
-    "取消"
+    "Anulare"
   ], 
   "Confirm": [
     null, 
-    "确认"
+    "Confirm"
   ], 
   "Edit": [
     null, 
-    "编辑"
+    "Editează"
   ], 
   "Failed to load data API information": [
     null, 
-    "读取API资讯失败"
-  ], 
-  "File": [
-    null, 
-    "文件"
-  ], 
-  "Filters": [
-    null, 
-    "筛选"
+    "Nu a reușit să se încarce datele de informații API"
   ], 
   "Follow": [
     null, 
-    "追随"
-  ], 
-  "Graph": [
-    null, 
-    "图"
+    "Urmăriți"
   ], 
   "Hide": [
     null, 
-    "隐藏"
+    "Ascunde"
   ], 
   "Image": [
     null, 
-    "图片"
+    "Imagine"
   ], 
   "Input is too short, must be at least one character": [
     "Input is too short, must be at least %(num)d characters", 
+    "", 
+    "", 
     ""
-  ], 
-  "Link": [
-    null, 
-    "链接"
-  ], 
-  "Link to a URL on the internet (you can also link to an API)": [
-    null, 
-    "链接到你指明的URL(或者API)"
   ], 
   "Loading...": [
     null, 
-    "读取中..."
+    "Se încarcă..."
   ], 
   "No matches found": [
     null, 
-    "沒有匹配的资料"
+    "Nu a fost găsit"
   ], 
   "Please Confirm Action": [
     null, 
-    "请确认行动"
-  ], 
-  "Remove": [
-    null, 
-    "移除"
+    "Confirmați Acțiunea"
   ], 
   "Resource uploaded": [
     null, 
-    "上传资源"
-  ], 
-  "Save order": [
-    null, 
-    "保存排序"
-  ], 
-  "Saving...": [
-    null, 
-    "保存中..."
+    "Resursă încărcată"
   ], 
   "Show more": [
     null, 
-    "显示更多"
+    "Mai mult"
   ], 
   "Start typing…": [
     null, 
-    "开始输入..."
+    "Introduceți..."
   ], 
   "There are unsaved modifications to this form": [
     null, 
-    "此表格有未保存的修改"
+    "Acest formular conține modificari care nu au fost salvate"
   ], 
   "There is no API data to load for this resource": [
     null, 
-    "这个资源中沒有API资料可供读取"
+    "Nu există API pentru a încărca date în aceată resursă"
   ], 
   "URL": [
     null, 
-    "网址"
+    "URL"
   ], 
   "Unable to authenticate upload": [
     null, 
-    "无法验证上传"
+    "Incapabil să autentific încărcarea"
   ], 
   "Unable to get data for uploaded file": [
     null, 
-    "无法取得上传文档的数据"
+    "Incapabil să obțin date din fișierul încărcat"
   ], 
   "Unable to upload file": [
     null, 
-    "无法上传文件"
+    "Incapabil să încarc fișierul"
   ], 
   "Unfollow": [
     null, 
-    "取消追随"
+    "Anulați urmărirea"
   ], 
   "Upload": [
     null, 
-    "上传"
+    "Încărcare"
   ], 
   "Upload a file": [
     null, 
-    "上传文件"
-  ], 
-  "Upload a file on your computer": [
-    null, 
-    "从你的电脑上传文件"
+    "Încărcați un fișier"
   ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
     null, 
-    "你正在上传文件。你是否确定要放弃上传而浏览别处？"
+    "Sunteți în proces de încărcare a fișierului. Sunteți sigur să doriți să navigați mai departe și să opriți încărcarea fișierului?"
   ]
 }
