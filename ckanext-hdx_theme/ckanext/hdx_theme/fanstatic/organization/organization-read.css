@@ -203,7 +203,7 @@ dt.uppercase {
 .approval-request .user-details .approval-actions button {
   opacity: 1;
   transition-property: opacity;
-  transition-duration: .5s;
+  transition-duration: 0.5s;
   transition-timing-function: linear;
   z-index: 10;
   position: relative;
@@ -218,7 +218,7 @@ dt.uppercase {
   top: 0;
   left: 0;
   transition-property: opacity;
-  transition-duration: .5s;
-  transition-delay: .5s;
+  transition-duration: 0.5s;
+  transition-delay: 0.5s;
   transition-timing-function: linear;
 }
