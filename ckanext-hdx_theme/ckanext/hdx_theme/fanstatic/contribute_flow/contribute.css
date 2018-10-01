@@ -37,7 +37,7 @@
 .drag-drop-component.source-url .source-file-upload {
   display: none;
 }
-@media (min-width: 1200px - 30px + 2*45px) {
+@media (min-width: 1260px) {
   body.contribute-body,
   #create-dataset-app {
     overflow-x: hidden;

@@ -113,8 +113,10 @@
 }
 .btn-empty-white:hover,
 .btn-empty-white:focus {
-  color: #fff;
+  background-color: #fff;
+  color: #007CE0;
   border-color: #fff;
+  opacity: 1;
 }
 .btn-blue-on-white,
 .btn-blue-on-white:hover,
