@@ -221,6 +221,9 @@
   font-weight: 400;
   font-size: 12px;
 }
+.showcase-item .showcase-hover .showcase-hover-content a.white-link {
+  color: #fff;
+}
 .showcase-item:hover .remove-link {
   display: block;
 }

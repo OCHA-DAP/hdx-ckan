@@ -64,7 +64,7 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
           </div>
           {% if h.check_access('ckanext_showcase_update', {'id':package.id }) %}
             <div style="margin-top: 14px;">
-              {% link_for _('Edit Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='edit', id=package.name, class_='' %}
+              {% link_for _('Edit Showcase'), controller='ckanext.showcase.controller:ShowcaseController', action='edit', id=package.name, class_='white-link' %}
             </div>
           {% endif %}
 
