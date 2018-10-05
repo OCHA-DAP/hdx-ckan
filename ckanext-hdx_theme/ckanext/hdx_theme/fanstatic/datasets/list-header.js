@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    const LS_FILTER_CONFIG = "/search:filterConfig";
+    var LS_FILTER_CONFIG = "/search:filterConfig";
     var filterConfig = window.localStorage.getItem(LS_FILTER_CONFIG);
     if (!filterConfig) {
         filterConfig = {
@@ -114,7 +114,7 @@ function getFilterUrlNew(resetFilters) {
     }
 
     //check non filter params
-    const params2 = $("#headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort, " +
+    var params2 = $("#headerSearch, .filter-pagination input[name='ext_page_size'], #header-search-sort, " +
         "#ext_after_metadata_modified").serialize();
     params += ((params !== "" && params2 != null) ? "&" : "") + params2;
 
