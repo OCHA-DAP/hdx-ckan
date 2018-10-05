@@ -9,13 +9,19 @@
 
 ckan.module('hdx-modal-form', function($) {
     var api = {
-        get: function(action, params, api_ver = 3) {
+        get: function(action, params, api_ver) {
+            if (!api_ver) {
+              api_ver = 3;
+            }
             var base_url = ckan.sandbox().client.endpoint;
             params = $.param(params);
             var url = base_url + '/api/' + api_ver + '/action/' + action + '?' + params;
             return $.getJSON(url);
         },
-        post: function(action, data, api_ver = 3) {
+        post: function(action, data, api_ver) {
+            if (!api_ver) {
+              api_ver = 3;
+            }
             var base_url = ckan.sandbox().client.endpoint;
             var url = base_url + '/api/' + api_ver + '/action/' + action;
             return $.post(url, JSON.stringify(data), "json");
