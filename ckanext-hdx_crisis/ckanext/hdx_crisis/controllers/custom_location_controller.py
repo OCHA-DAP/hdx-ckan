@@ -14,7 +14,7 @@ import ckan.logic as logic
 import ckan.controllers.group as group
 import ckanext.hdx_crisis.dao.location_data_access as location_data_access
 import ckanext.hdx_org_group.actions.get as hdx_org_get
-import ckanext.hdx_org_group.dao.indicator_access as indicator_access
+# import ckanext.hdx_org_group.dao.indicator_access as indicator_access
 import ckanext.hdx_theme.helpers.helpers as helpers
 import ckanext.hdx_crisis.config.crisis_config as crisis_config
 import ckanext.hdx_search.controllers.search_controller as search_controller
@@ -31,7 +31,7 @@ request = common.request
 response = common.response
 log = logging.getLogger(__name__)
 
-IndicatorAccess = indicator_access.IndicatorAccess
+# IndicatorAccess = indicator_access.IndicatorAccess
 
 
 def is_custom(environ, result):
@@ -154,62 +154,62 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
                 chart['sources'].append(source)
         return chart
 
-    def _cps_src_chart_config(self, chart_config, chart_type, country_code):
-        '''
-        Used in _get_charts_config method. Return information stored in CPS to be used in a chart
-        :param chart_config:
-        :param chart_type:
-        :param country_code:
-        :return: chart dictionary metadata and data
-        '''
-        dataseries_code = chart_config.get('chart_dataseries_code', '')
-        if '___' in dataseries_code:
-            splitted_codes = dataseries_code.split('___')
-            dataseries_list = [(splitted_codes[0], splitted_codes[1])]
-            indicator_dao = IndicatorAccess(country_code, dataseries_list, {'sorting': 'INDICATOR_TYPE_ASC'})
-            indicator_dao.fetch_indicator_data_from_cps()
-            structured_cps_data = indicator_dao.get_structured_data_from_cps()
-            ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
-            try:
-                ind_code = structured_cps_data.iterkeys().next()
-                ind_dict = structured_cps_data[ind_code].itervalues().next()
-                chart = {
-                    'title': chart_config.get('chart_title', ''),
-                    'type': chart_type,
-                    'dataseries_code': chart_config.get('chart_dataseries_code', ''),
-                    'title_x': _('Date'),
-                    'title_y': ind_dict.get('unit', ''),
-                    'sources': [
-                        {
-                            'source_type': 'cps',
-                            'source': ind_dict.get('sourceName', ''),
-                            'label_x': ind_dict.get('title', ''),
-                            'column_x': 'date',
-                            'column_y': 'value',
-                            'data': {
-                                'fields': [
-                                    {
-                                        'id': 'date',
-                                        'type': 'timestamp'
-                                    },
-                                    {
-                                        'id': 'value',
-                                        'type': 'float'
-                                    }
-                                ],
-                                'records': ind_dict.get('data', [])
-                            }
-                        }
-                    ]
-
-                }
-                data_link_url = ckan_data.get(ind_code, {}).get('datasetLink', '')
-                if data_link_url:
-                    chart['sources'][0]['data_link_url'] = data_link_url
-                return chart
-            except Exception, e:
-                log.warning("Exception while iterating dataseries data: " + str(e))
-                return {}
+    # def _cps_src_chart_config(self, chart_config, chart_type, country_code):
+    #     '''
+    #     Used in _get_charts_config method. Return information stored in CPS to be used in a chart
+    #     :param chart_config:
+    #     :param chart_type:
+    #     :param country_code:
+    #     :return: chart dictionary metadata and data
+    #     '''
+    #     dataseries_code = chart_config.get('chart_dataseries_code', '')
+    #     if '___' in dataseries_code:
+    #         splitted_codes = dataseries_code.split('___')
+    #         dataseries_list = [(splitted_codes[0], splitted_codes[1])]
+    #         indicator_dao = IndicatorAccess(country_code, dataseries_list, {'sorting': 'INDICATOR_TYPE_ASC'})
+    #         indicator_dao.fetch_indicator_data_for_country()
+    #         structured_cps_data = indicator_dao.get_structured_data_from_cps()
+    #         ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
+    #         try:
+    #             ind_code = structured_cps_data.iterkeys().next()
+    #             ind_dict = structured_cps_data[ind_code].itervalues().next()
+    #             chart = {
+    #                 'title': chart_config.get('chart_title', ''),
+    #                 'type': chart_type,
+    #                 'dataseries_code': chart_config.get('chart_dataseries_code', ''),
+    #                 'title_x': _('Date'),
+    #                 'title_y': ind_dict.get('unit', ''),
+    #                 'sources': [
+    #                     {
+    #                         'source_type': 'cps',
+    #                         'source': ind_dict.get('sourceName', ''),
+    #                         'label_x': ind_dict.get('title', ''),
+    #                         'column_x': 'date',
+    #                         'column_y': 'value',
+    #                         'data': {
+    #                             'fields': [
+    #                                 {
+    #                                     'id': 'date',
+    #                                     'type': 'timestamp'
+    #                                 },
+    #                                 {
+    #                                     'id': 'value',
+    #                                     'type': 'float'
+    #                                 }
+    #                             ],
+    #                             'records': ind_dict.get('data', [])
+    #                         }
+    #                     }
+    #                 ]
+    #
+    #             }
+    #             data_link_url = ckan_data.get(ind_code, {}).get('datasetLink', '')
+    #             if data_link_url:
+    #                 chart['sources'][0]['data_link_url'] = data_link_url
+    #             return chart
+    #         except Exception, e:
+    #             log.warning("Exception while iterating dataseries data: " + str(e))
+    #             return {}
 
     def _get_charts_config(self, country_code, custom_dict, top_line_items_count, errors):
         '''
@@ -235,10 +235,10 @@ class CustomLocationController(group.GroupController, search_controller.HDXSearc
                 chart = self._ckan_src_chart_config(chart_config, chart_type)
                 if self._show_chart(chart, errors):
                     charts.append(chart)
-            else:
-                chart = self._cps_src_chart_config(chart_config, chart_type, country_code)
-                if self._show_chart(chart, errors):
-                    charts.append(chart)
+            # else:
+            #     chart = self._cps_src_chart_config(chart_config, chart_type, country_code)
+            #     if self._show_chart(chart, errors):
+            #         charts.append(chart)
 
         return charts
 

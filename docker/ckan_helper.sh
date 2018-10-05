@@ -23,6 +23,9 @@ lunr_dir=/srv/ckan/ckanext-hdx_theme/ckanext/hdx_theme/fanstatic/search/lunr
 [ -d $lunr_dir ] || mkdir -p $lunr_dir
 [ -f $lunr_dir/feature-index.js ] || touch $lunr_dir/feature-index.js
 
+# make sure cache dir permissions are correct
+chown -R www-data:www-data ${HDX_CACHE_DIR}
+
 #python /srv/ckan/docker/helper.py
 
 # set pgpass if it's not there

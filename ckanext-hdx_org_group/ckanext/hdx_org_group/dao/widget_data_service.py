@@ -16,6 +16,7 @@ log = logging.getLogger(__name__)
 
 _get_action = tk.get_action
 
+
 def build_widget_data_access(country_dict):
     '''
 
@@ -29,20 +30,20 @@ def build_widget_data_access(country_dict):
     else:
         return WidgetDataService(country_dict.get('name'))
 
+
 class WidgetDataService(object):
 
     def __init__(self, country_name):
         self.country_name = country_name
-
 
     def get_dataset_results(self):
 
         country_id = self.country_name
 
         top_line_dao = indicator_access.IndicatorAccess(
-            country_id, None, {'periodType': 'LATEST_YEAR_BY_COUNTRY'}, recompute_units=True)
+            country_id, None, recompute_units=True)
 
-        top_line_data = top_line_dao.fetch_indicator_data_from_cps()
+        top_line_data = top_line_dao.fetch_indicator_data_for_country()
 
         if not top_line_data:
             log.warn(
@@ -63,7 +64,7 @@ class WidgetDataService(object):
 
 
 
-        return top_line_data, []
+        return top_line_data
 
 class RWWidgetDataService(WidgetDataService):
     '''
@@ -104,6 +105,6 @@ class RWWidgetDataService(WidgetDataService):
         else:
             log.error('No value found for hdx.active_locations_toplines.url in ini file')
 
-        return top_line_data, []
+        return top_line_data
 
 

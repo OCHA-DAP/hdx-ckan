@@ -1,147 +1,179 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "ja",
+    "domain": "ckan", 
+    "lang": "ja", 
     "plural-forms": "nplurals=1; plural=0;"
-  },
+  }, 
+  "Add Filter": [
+    null, 
+    "フィルター追加"
+  ], 
   "An Error Occurred": [
-    null,
+    null, 
     "エラーが発生しました"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "このアクションを実行してよろしいですか？"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "キャンセル"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "確認"
-  ],
+  ], 
+  "Could not load view": [
+    null, 
+    "ビューを読み込めません"
+  ], 
+  "DataProxy returned an error": [
+    null, 
+    "データプロキシでエラーが発生しています"
+  ], 
+  "DataStore returned an error": [
+    null, 
+    "データストアでエラーが発生しています"
+  ], 
   "Edit": [
-    null,
+    null, 
     "編集"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "データAPIの情報の読み込みに失敗しました"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "ファイル"
-  ],
+  ], 
+  "Filters": [
+    null, 
+    "フィルター"
+  ], 
   "Follow": [
-    null,
+    null, 
     "フォロー"
-  ],
+  ], 
+  "Graph": [
+    null, 
+    "グラフ"
+  ], 
+  "Grid": [
+    null, 
+    "グリッド"
+  ], 
   "Hide": [
-    null,
+    null, 
     "隠す"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "画像"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "1文字以上入力してください"
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    "%(num)d 文字以上入力してください"
+  ], 
   "Link": [
-    null,
+    null, 
     "リンク"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "Web上のURLへリンク(APIへのリンク可)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "ロード中..."
-  ],
+  ], 
+  "Map": [
+    null, 
+    "マップ"
+  ], 
   "No matches found": [
-    null,
+    null, 
     "見つかりません"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "アクションを確認してください"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "削除"
-  ],
-  "Reorder resource view": [
-    null,
-    "リソースビューを再整列"
-  ],
-  "Reorder resources": [
-    null,
-    "リソースを再整列"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "リソースがアップロードされました"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "並び順を保存"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "保存中..."
-  ],
+  ], 
+  "Select a field": [
+    null, 
+    "フィールドを選択"
+  ], 
   "Show more": [
-    null,
+    null, 
     "もっとみる"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "入力開始..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "保存されていない変更があります"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "このリソースのデータを読み込むためのAPIがありません"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "アップロードを許可できません"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "アップロードしたファイルからデータを取得できません"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "ファイルをアップロードできません"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "フォロー解除"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "アップロード"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "ファイルをアップロード"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "コンピュータ上のファイルをアップロード"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "ファイルをアップロードしています。ナビゲートを離れてこのアップロードを終了しても良いですか？"
+  ], 
+  "error loading view": [
+    null, 
+    "エラーローディングビュー"
   ]
 }

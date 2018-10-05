@@ -39,8 +39,8 @@ ckan.tracking_enabled = true
 
 ## Email settings
 
-email_to         = ckan.${HDX_TYPE}@${HDX_DOMAIN}
-error_email_from = ckan.${HDX_TYPE}@${HDX_DOMAIN}
+email_to         = ${HDX_PREFIX}ckan@${HDX_DOMAIN}
+error_email_from = ${HDX_PREFIX}ckan@${HDX_DOMAIN}
 smtp.mail_from   = noreply@${HDX_DOMAIN}
 smtp.server      = ${HDX_SMTP_ADDR}:${HDX_SMTP_PORT}
 smtp.user        = ${HDX_SMTP_USER}
@@ -48,6 +48,7 @@ smtp.password    = ${HDX_SMTP_PASS}
 smtp.starttls    = ${HDX_SMTP_TLS}
 
 hdx.cache.onstartup = true
+hdx.caching.base_dir = ${HDX_CACHE_DIR}
 
 hdx.orgrequest.email = hdx@un.org
 hdx.orgrequest.sendmails = true

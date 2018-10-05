@@ -1,143 +1,168 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "he",
+    "domain": "ckan", 
+    "lang": "he", 
     "plural-forms": "nplurals=2; plural=(n != 1);"
-  },
+  }, 
+  "Add Filter": [
+    null, 
+    "הוספת מסנן"
+  ], 
   "An Error Occurred": [
-    null,
+    null, 
     "אירעה שגיאה"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "האם אתם בטוחים שברצונכם לבצע את הפעולה הזו?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "ביטול"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "אישור"
-  ],
+  ], 
+  "Could not load view": [
+    null, 
+    "לא ניתן לטעון את התצוגה"
+  ], 
   "Edit": [
-    null,
+    null, 
     "לערוך"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "לא הצלחתי לטעון את נתוני המידע של ה-API "
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "קובץ"
-  ],
+  ], 
+  "Filters": [
+    null, 
+    "מסננים"
+  ], 
   "Follow": [
-    null,
+    null, 
     "עקוב"
-  ],
+  ], 
+  "Graph": [
+    null, 
+    "תרשים"
+  ], 
   "Hide": [
-    null,
+    null, 
     "החביאי"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "תמונה"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "הקלט קצר מידי. צריך להכניס לפחות תו אחד"
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    "", 
+    ""
+  ], 
   "Link": [
-    null,
+    null, 
     "קישור"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "קישור לכתובת אינטרנט (ניתן לקשר גם ל-API)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "טוען..."
-  ],
+  ], 
+  "Map": [
+    null, 
+    "מפה"
+  ], 
   "No matches found": [
-    null,
+    null, 
     "לא נמצאו התאמות"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "אשר את הפעולה בבקשה"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "הסרה"
-  ],
-  "Reorder resources": [
-    null,
-    "סדר מחדש משאבים"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "המקור הועלה"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "סדר שמירה"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "שומר..."
-  ],
+  ], 
+  "Select a field": [
+    null, 
+    "בחירת שדה"
+  ], 
   "Show more": [
-    null,
+    null, 
     "הראי עוד"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "התחילו להקליד..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "ישנם שינויים שלא נשמרו לטופס הזה"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "אין נתוני ממשק מכונה כדי לטעון את המקור הזה"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "איני יכולה לאמת את ההעלאה"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "איני מצליחה לקבל נתונים מהקובץ שהועלה"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "איני יכולה להעלות את הקובץ"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "ביטול עקיבה"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "העלה"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "העלאת קבצים"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "העלו תמונה מהמחשב שלכם"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "אתם מעלים קובץ. האם אתם בטוחים שברצונכם לצאת מהעמוד ולהפסיק את ההעלאה?"
+  ], 
+  "error loading view": [
+    null, 
+    "טעינת התצוגה נכשלה"
   ]
 }

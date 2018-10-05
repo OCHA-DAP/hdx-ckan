@@ -1,143 +1,139 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "th",
+    "domain": "ckan", 
+    "lang": "th", 
     "plural-forms": "nplurals=1; plural=0;"
-  },
+  }, 
   "An Error Occurred": [
-    null,
+    null, 
     "เกิดข้อผิดพลาด"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "คุณแน่ใจหรือไม่ที่จะทำ?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "ยกเลิก"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "ยืนยัน"
-  ],
+  ], 
   "Edit": [
-    null,
+    null, 
     "แก้ไข"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "ไม่สามารถโหลดข้อมูลผ่าน API นี้ได้"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "ไฟล์"
-  ],
+  ], 
   "Follow": [
-    null,
+    null, 
     "ติดตาม"
-  ],
+  ], 
   "Hide": [
-    null,
+    null, 
     "ซ่อน"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "รูปภาพ"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "อินพุตสั้นเกินไป กรุณาใส่อย่างน้อยหนึ่งตัวอักษร"
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    ""
+  ], 
   "Link": [
-    null,
+    null, 
     "ลิงก์"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "ลิงก์ไป URL บนอินเทอร์เน็ต (คุณสามารถลิงก์ไป API ได้เช่นกัน)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "กำลังโหลด..."
-  ],
+  ], 
   "No matches found": [
-    null,
+    null, 
     "ไม่พบข้อมูลที่ค้นหา"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "กรุณายืนยันการกระทำ"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "ถอดถอน"
-  ],
-  "Reorder resources": [
-    null,
-    "เรียงลำดับทรัพยากร"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "อัพโหลดทรัพยากรแล้ว"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "บันทึกลำดับ"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "กำลังบันทึก..."
-  ],
+  ], 
   "Show more": [
-    null,
+    null, 
     "แสดงอีก"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "กำลังพิมพ์..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "ฟอร์มนี้มีการแก้ไขที่ยังไม่ได้ถูกบันทึก"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "ไม่มีข้อมูล API สำหรับทรัพยากรนี้"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "URL"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "ไม่สามารถที่จะตรวจสอบการอัพโหลด"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "ไม่สามารถที่จะดึงข้อมูลจากไฟล์ที่อัพโหลดมา"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "ไม่สามารถอัพโหลดแฟ้ม"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "เลิกติดตาม"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "อัพโหลด"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "อัพโหลดไฟล์"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "อัพโหลดแฟ้มจากคอมพิวเตอร์ของคุณ"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "คุณกำลังอัพโหลดไฟล์อยู่ กรุณายืนยันว่าคุณต้องการเปลี่ยนไปหน้าอื่น และหยุดการอัพโหลดนี้"
   ]
 }

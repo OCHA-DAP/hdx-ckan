@@ -1,143 +1,151 @@
 {
   "": {
-    "domain": "ckan",
-    "lang": "zh_CN",
+    "domain": "ckan", 
+    "lang": "zh_CN", 
     "plural-forms": "nplurals=1; plural=0;"
-  },
+  }, 
+  "Add Filter": [
+    null, 
+    "增加筛选条件"
+  ], 
   "An Error Occurred": [
-    null,
+    null, 
     "发生错误"
-  ],
+  ], 
   "Are you sure you want to perform this action?": [
-    null,
+    null, 
     "确定要进行这个操作吗?"
-  ],
+  ], 
   "Cancel": [
-    null,
+    null, 
     "取消"
-  ],
+  ], 
   "Confirm": [
-    null,
+    null, 
     "确认"
-  ],
+  ], 
   "Edit": [
-    null,
+    null, 
     "编辑"
-  ],
+  ], 
   "Failed to load data API information": [
-    null,
+    null, 
     "读取API资讯失败"
-  ],
+  ], 
   "File": [
-    null,
+    null, 
     "文件"
-  ],
+  ], 
+  "Filters": [
+    null, 
+    "筛选"
+  ], 
   "Follow": [
-    null,
+    null, 
     "追随"
-  ],
+  ], 
+  "Graph": [
+    null, 
+    "图"
+  ], 
   "Hide": [
-    null,
+    null, 
     "隐藏"
-  ],
+  ], 
   "Image": [
-    null,
+    null, 
     "图片"
-  ],
+  ], 
   "Input is too short, must be at least one character": [
-    null,
-    "输入的內容太短，必须至少输入一个字元"
-  ],
+    "Input is too short, must be at least %(num)d characters", 
+    ""
+  ], 
   "Link": [
-    null,
+    null, 
     "链接"
-  ],
+  ], 
   "Link to a URL on the internet (you can also link to an API)": [
-    null,
+    null, 
     "链接到你指明的URL(或者API)"
-  ],
+  ], 
   "Loading...": [
-    null,
+    null, 
     "读取中..."
-  ],
+  ], 
   "No matches found": [
-    null,
+    null, 
     "沒有匹配的资料"
-  ],
+  ], 
   "Please Confirm Action": [
-    null,
+    null, 
     "请确认行动"
-  ],
+  ], 
   "Remove": [
-    null,
+    null, 
     "移除"
-  ],
-  "Reorder resources": [
-    null,
-    "资源重排序"
-  ],
+  ], 
   "Resource uploaded": [
-    null,
+    null, 
     "上传资源"
-  ],
+  ], 
   "Save order": [
-    null,
+    null, 
     "保存排序"
-  ],
+  ], 
   "Saving...": [
-    null,
+    null, 
     "保存中..."
-  ],
+  ], 
   "Show more": [
-    null,
+    null, 
     "显示更多"
-  ],
+  ], 
   "Start typing…": [
-    null,
+    null, 
     "开始输入..."
-  ],
+  ], 
   "There are unsaved modifications to this form": [
-    null,
+    null, 
     "此表格有未保存的修改"
-  ],
+  ], 
   "There is no API data to load for this resource": [
-    null,
+    null, 
     "这个资源中沒有API资料可供读取"
-  ],
+  ], 
   "URL": [
-    null,
+    null, 
     "网址"
-  ],
+  ], 
   "Unable to authenticate upload": [
-    null,
+    null, 
     "无法验证上传"
-  ],
+  ], 
   "Unable to get data for uploaded file": [
-    null,
+    null, 
     "无法取得上传文档的数据"
-  ],
+  ], 
   "Unable to upload file": [
-    null,
+    null, 
     "无法上传文件"
-  ],
+  ], 
   "Unfollow": [
-    null,
+    null, 
     "取消追随"
-  ],
+  ], 
   "Upload": [
-    null,
+    null, 
     "上传"
-  ],
+  ], 
   "Upload a file": [
-    null,
+    null, 
     "上传文件"
-  ],
+  ], 
   "Upload a file on your computer": [
-    null,
+    null, 
     "从你的电脑上传文件"
-  ],
+  ], 
   "You are uploading a file. Are you sure you want to navigate away and stop this upload?": [
-    null,
+    null, 
     "你正在上传文件。你是否确定要放弃上传而浏览别处？"
   ]
 }

@@ -108,6 +108,8 @@ def hdx_topline_num_for_group(context, data_dict):
 
     datastore_id = custom_dict.get('topline_resource', None)
 
+    common_format = data_dict.get('common_format', True) not in ['false', '0']  # type: bool
+
     if group_info.get('custom_loc', False) and datastore_id:
         # source is datastore
         crisis_data_access = location_data_access.LocationDataAccess(datastore_id)
@@ -117,10 +119,26 @@ def hdx_topline_num_for_group(context, data_dict):
             item['source_system'] = 'datastore'
             del item['units']
     elif group_info.get('activity_level') == 'active':
-        # source is rw
-        top_line_data_list, chart_data_list = widget_data_service.build_widget_data_access(
-            group_info).get_dataset_results()
+        top_line_items = __get_toplines_for_active_country(group_info, common_format)
+    else:
+        top_line_items = __get_toplines_for_standard_country(group_info, common_format)
 
+    return top_line_items
+
+
+def __get_toplines_for_active_country(group_info, common_format):
+    '''
+    :param group_info:
+    :type group_info: dict
+    :param common_format:
+    :type common_format: bool
+    :return:
+    :rtype: list
+    '''
+
+    # source is rw
+    top_line_data_list = widget_data_service.build_widget_data_access(group_info).get_dataset_results()
+    if common_format:
         def _parse_integer_value(item):
             try:
                 value = float(item.get('value', ''))
@@ -142,26 +160,41 @@ def hdx_topline_num_for_group(context, data_dict):
             for item in top_line_data_list
         ]
     else:
-        # source is CPS
-        ckan_site_url = config.get('ckan.site_url')
-        indicator_dao = IndicatorAccess(id, None, {'periodType': 'LATEST_YEAR_BY_COUNTRY'})
-        cps_top_line_items = indicator_dao.fetch_indicator_data_from_cps()
-        ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
-        top_line_items = []
-        for item in cps_top_line_items.get('results', {}):
+        top_line_items = top_line_data_list
+    return top_line_items
+
+
+def __get_toplines_for_standard_country(group_info, common_format):
+    '''
+    :param group_info:
+    :type group_info: dict
+    :param common_format:
+    :type common_format: bool
+    :return:
+    :rtype: list
+    '''
+    # source is configured in 'hdx.locations.toplines_url'
+    # ckan_site_url = config.get('ckan.site_url')
+    raw_top_line_items = widget_data_service.build_widget_data_access(group_info).get_dataset_results()
+    # ckan_data = indicator_dao.fetch_indicator_data_from_ckan()
+    top_line_items = []
+    if common_format:
+        for item in raw_top_line_items:
             code = item.get('indicatorTypeCode', '')
+            title = item.get('indicatorTypeName', '')
             new_item = {
                 'source_system': 'cps',
-                'code': code,
-                'title': item.get('indicatorTypeName', ''),
-                'source_link': ckan_site_url + ckan_data.get(code, {}).get('datasetLink', ''),
+                'code': code or title,
+                'title': title or code,
+                # 'source_link': ckan_site_url + ckan_data.get(code, {}).get('datasetLink', ''),
                 'source': item.get('sourceName', ''),
                 'value': item.get('value', ''),
                 'latest_date': item.get('time', ''),
                 'units': item.get('unitName', )
             }
             top_line_items.append(new_item)
-
+    else:
+        top_line_items = raw_top_line_items
     return top_line_items
 
 
@@ -189,6 +222,7 @@ def hdx_light_group_show(context, data_dict):
     group_dict['revision_id'] = group.revision_id
     group_dict['state'] = group.state
     group_dict['created'] = group.created
+    group_dict['type'] = group.type
 
     result_list = []
     for name, extra in group._extras.iteritems():
