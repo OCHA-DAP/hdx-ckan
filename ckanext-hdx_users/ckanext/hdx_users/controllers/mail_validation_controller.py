@@ -233,7 +233,10 @@ class ValidationController(ckan.controllers.user.UserController):
                               action='login', came_from=came_from)
 
             else:
-                return self.login(error=err)
+                template_data = ue_helpers.get_login(False, err)
+                log.error("Status code 401 : username or password incorrect")
+                return render('home/index.html', extra_vars=template_data)
+                # return self.login(error=err)
 
     def logged_out_page(self):
         template_data = ue_helpers.get_logout(True, _('User logged out with success'))
