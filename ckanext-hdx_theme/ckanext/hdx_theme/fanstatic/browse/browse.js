@@ -58,7 +58,7 @@ function prepareCountryList(countDatasets) {
 function prepareMap(countDatasets, openNewWindow){
   var closeTooltip, country, countryLayer, country_id, feature, featureClicked, first_letter, getStyle, highlightFeature, k, line, map, mapID, onEachFeature, openURL, popup, resetFeature, topLayer, topPane, v, _i, _j, _len, _len1, _ref, closePopupTimeout;
   //mapID = 'yumiendo.ijchbik8';
-  const openTarget = openNewWindow ? "_blank" : "_self";
+  var openTarget = openNewWindow ? "_blank" : "_self";
   openURL = function(url) {
     return window.open(url, openTarget).focus();
   };

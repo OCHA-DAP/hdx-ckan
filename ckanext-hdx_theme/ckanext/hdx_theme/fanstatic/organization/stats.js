@@ -1,6 +1,6 @@
 var substituteDatasetNamesWithLinks; //function that will substitute dataset names :)
 $(document).ready(function(){
-    const LABEL_MAX_LENGTH = 40;
+    var LABEL_MAX_LENGTH = 40;
     var dataPageviews = JSON.parse($("#stats-data-pageviews").html());
     var dataTopDownloads = JSON.parse($("#stats-data-top-downloads").html());
 
@@ -226,13 +226,13 @@ function enableMouseWheelZoom(chartId, itemCount, c3_chart){
     };
 
     var zoomHandler = function() {
-        const event = d3.event;
+        var event = d3.event;
         event.preventDefault();
         event.stopPropagation();
-        const eventDelta = normalizeWheel(event);
+        var eventDelta = normalizeWheel(event);
 
         var swapAxis = true;
-        const delta = -1*(swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
+        var delta = -1*(swapAxis ? eventDelta.pixelY : eventDelta.pixelX);
 
         if (!c3_chart.internal.brush.leftMargin) {
             c3_chart.internal.brush.leftMargin = 0;

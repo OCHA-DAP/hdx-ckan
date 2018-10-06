@@ -29,7 +29,7 @@ $('document').ready(function(){
         $('#search-recs').html(html);
     }
 
-    const onSearch = function(){
+    var onSearch = function(){
         var q = $(this).val();
         var prevSearch = JSON.parse($("#previous-searches").text());
 
