@@ -1,5 +1,6 @@
 import logging, re
 import unicodedata
+import ckan.logic
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 from ckan.common import _
@@ -9,6 +10,7 @@ import ckanext.hdx_search.model as search_model
 import ckanext.hdx_search.helpers.search_history as search_history
 import ckanext.hdx_package.helpers.helpers as hdx_package_helper
 
+NotFound = ckan.logic.NotFound
 
 def convert_country(q):
     for c in tk.get_action('group_list')({'user':'127.0.0.1'},{'all_fields': True}):
@@ -72,20 +74,23 @@ class HDXSearchPlugin(plugins.SingletonPlugin):
             :param param_name: request param name without the "ext_" part, for example "indicator"
             :type str:
             '''
-            req_param = 'ext_{}'.format(param_name)
-            solr_param = 'extras_{}'.format(param_name)
+            try:
+                req_param = 'ext_{}'.format(param_name)
+                solr_param = 'extras_{}'.format(param_name)
 
-            if not fq_filter_1:
-                fq_filter_1 = ' +{}:1'.format(solr_param)
-            if not fq_filter_0:
-                fq_filter_0 = ' -{}:1'.format(solr_param)
+                if not fq_filter_1:
+                    fq_filter_1 = ' +{}:1'.format(solr_param)
+                if not fq_filter_0:
+                    fq_filter_0 = ' -{}:1'.format(solr_param)
 
 
-            if req_param in search_params['extras']:
-                if int(search_params['extras'][req_param]) == 1:
-                    search_params['fq'] += fq_filter_1
-                elif int(search_params['extras'][req_param]) == 0:
-                    search_params['fq'] += fq_filter_0
+                if req_param in search_params['extras']:
+                    if int(search_params['extras'][req_param]) == 1:
+                        search_params['fq'] += fq_filter_1
+                    elif int(search_params['extras'][req_param]) == 0:
+                        search_params['fq'] += fq_filter_0
+            except Exception, ex:
+                raise NotFound('Wrong parameter value for fq')
 
         # If indicator flag is set, search only that type
         adapt_solr_fq('indicator')
