@@ -14,6 +14,7 @@ import ckan.lib.search as search
 import ckan.logic.action.get as logic_get
 import ckan.lib.plugins as lib_plugins
 import ckan.authz as authz
+import ckan.lib.base as base
 
 import sqlalchemy
 import logging
@@ -33,9 +34,11 @@ from ckanext.hdx_search.actions.actions import hdx_get_package_showcase_id_list
 
 _validate = ckan.lib.navl.dictization_functions.validate
 ValidationError = logic.ValidationError
+NotFound = ckan.logic.NotFound
 _check_access = logic.check_access
 log = logging.getLogger(__name__)
 get_action = logic.get_action
+base_abort = base.abort
 
 _FOOTER_CONTACT_CONTRIBUTOR = hdx_mailer.FOOTER #+ '<small><p>Note: <a href="mailto:hdx@un.org">hdx@un.org</a> is blind copied on this message so that we are aware of the initial correspondence related to datasets on the HDX site. Please contact us directly should you need further support.</p></small>'
 _FOOTER_GROUP_MESSAGE = hdx_mailer.FOOTER
@@ -207,8 +210,11 @@ def package_search(context, data_dict):
         data_dict['extras'][key] = data_dict.pop(key)
 
     # check if some extension needs to modify the search params
-    for item in plugins.PluginImplementations(plugins.IPackageController):
-        data_dict = item.before_search(data_dict)
+    try:
+        for item in plugins.PluginImplementations(plugins.IPackageController):
+            data_dict = item.before_search(data_dict)
+    except NotFound, e:
+        base_abort(404, 'Wrong parameter value in url')
 
     # the extension may have decided that it is not necessary to perform
     # the query
