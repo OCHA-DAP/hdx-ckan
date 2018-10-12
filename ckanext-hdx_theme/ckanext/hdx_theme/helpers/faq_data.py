@@ -283,6 +283,15 @@ sharing_data = {
                  'Learn more about HXL and HDX Tools in the section below. ',
         },
         {
+            'q': 'How can I add data visualizations to my dataset?',
+            'a': 'Organization admins and editors can add data visualizations to dataset pages to let users explore '
+                 'your data. The data visuals can be made using Tableau, Power BI or whatever software you prefer. '
+                 'The visuals will appear in the "Interactive Data" section at the top of the page.'
+                 '<br/><br/>'
+                 'Learn how to do this by taking a quick look at '
+                 '<a href="https://drive.google.com/open?id=1kxhmlrivu19owt1emwe65JheCJxhAHQS4zu7CCQeT7E" target="_blank">these slides</a>.',
+        },
+        {
             'q': 'What are the recommended data formats?',
             'a': 'We define data as information that common software can read and analyse. We encourage contributions in any '
                  'common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel '
