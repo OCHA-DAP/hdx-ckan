@@ -176,7 +176,7 @@
               <div class="graphic">
                   {% set link_targe = "_blank" if item.embed else "_self" %}
                     <a href="{{ item.url }}" target="{{ link_targe }}" data-module="hdx_click_stopper" data-module-link_type="carousel">
-                      <img src="{{ item.graphic }}">
+                      <img class="lazyload" data-src="{{ item.graphic }}">
                     </a>
               </div>
               <a href="{{ item.url }}" >
@@ -208,7 +208,7 @@
           {% endif %}
                 <div class="sub-item">
                   <div class="sub-item-image">
-                      <img class="graphic" src="{{ item.graphic }}">
+                      <img class="graphic lazyload" data-src="{{ item.graphic }}">
                       <div class="sub-item-action">
                           {% if item.embed %}
                               <a href="{{ item.url }}" class="btn" target="_blank" data-module="hdx_click_stopper" data-module-link_type="carousel">Watch</a>
