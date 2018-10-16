@@ -104,6 +104,15 @@
     sticky_menu();
     add_menu_click_events();
 
+    function showPresentationModal(id){
+        var modal = $(id);
+        var iframe = $(id + ' iframe');
+        iframe.attr('src', '');
+        modal.modal('show');
+        iframe.attr('src', iframe.attr('load-src'));
+        iframe.focus();
+    }
+
     $(document).ready(function(){
         if (location.hash) {
             if (location.hash.endsWith("-a")) {
@@ -116,6 +125,10 @@
             }
         }
 
+        $("#learn-add-viz-dataset-link").click(function () {
+          console.log("yeeeah");
+          showPresentationModal("#learn-add-viz-dataset");
+        });
 
     });
 

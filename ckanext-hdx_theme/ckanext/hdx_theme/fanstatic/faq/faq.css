@@ -142,3 +142,22 @@
   color: #007CE0;
   font-weight: 700;
 }
+.presentation-modal.in .modal-dialog .close {
+  position: absolute;
+  right: -30px;
+  top: -40px;
+  font-size: 40px;
+  opacity: 1;
+  color: white;
+}
+.presentation-modal.in .modal-dialog .modal-content {
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  min-height: auto;
+  min-width: auto;
+  height: 560px;
+}
+a.link {
+  cursor: pointer;
+}
