@@ -49,7 +49,7 @@
                         {% set org_id = pkg.organization.name or pkg.owner_org %}
                         {% set url_org = h.url_for(controller='organization', action='read', id=org_id) or '#' %}
                         <a href="{{url_org}}">
-                            <img class="org-logo" src="{{ c.logo_config.image_url }}" alt="{{ _('Organization logo') }}"/>
+                            <img class="org-logo lazyload" data-src="{{ c.logo_config.image_url }}" alt="{{ _('Organization logo') }}"/>
                         </a>
                     </div>
                 </div>
