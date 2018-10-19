@@ -289,7 +289,12 @@ sharing_data = {
                  'The visuals will appear in the "Interactive Data" section at the top of the page.'
                  '<br/><br/>'
                  'Learn how to do this by taking a quick look at '
-                 '<a href="https://drive.google.com/open?id=1kxhmlrivu19owt1emwe65JheCJxhAHQS4zu7CCQeT7E" target="_blank">these slides</a>.',
+                 '<a class="link" id="learn-add-viz-dataset-link">these slides</a>.'
+                 ''
+                 '<div class="modal presentation-modal" id="learn-add-viz-dataset" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vS1A1i-fg5PucF0hIRWDc_4_IUC_TXomWho8POCefSYuNHl9wN1SvS3_EM4jOsiWY4XvzZZDzquisgk/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>',
         },
         {
             'q': 'What are the recommended data formats?',

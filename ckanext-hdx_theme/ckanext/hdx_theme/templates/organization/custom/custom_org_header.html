@@ -10,9 +10,9 @@
             <div class="table-valign-content">
                 <!-- TODO: add correct image url after functionality is ready  -->
                 {% if c.org_meta.custom_sq_logo_url %}
-                    <img class="org-logo" src="{{ c.org_meta.custom_sq_logo_url }}" alt="{{ _('small logo') }}">
+                    <img class="org-logo lazyload" data-src="{{ c.org_meta.custom_sq_logo_url }}" alt="{{ _('small logo') }}">
                 {% else %}
-                    <img class="org-logo" src="https://placehold.it/75x75" />
+                    <img class="org-logo lazyload" data-src="https://placehold.it/75x75" />
                 {% endif %}
             </div>
         </div>
@@ -88,9 +88,9 @@
                         <div class="org-logo-large table-valign">
                             <div class="table-valign-content">
                                 {% if c.org_meta.custom_sq_logo_url %}
-                                    <img src="{{c.org_meta.custom_rect_logo_url}}"/>
+                                    <img class="lazyload" data-src="{{c.org_meta.custom_rect_logo_url}}"/>
                                 {% else %}
-                                    <img src="https://placehold.it/300x125"/>
+                                    <img class="lazyload" data-src="https://placehold.it/300x125"/>
                                 {% endif %}
                             </div>
                         </div>

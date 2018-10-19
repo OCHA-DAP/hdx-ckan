@@ -262,8 +262,9 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         pages_list = get_action('group_page_list')(context, {'id': group_id})
         return pages_list
 
+    # TODO implement cache for data_completeness
+    # @bcache.cache_region('hdx_memory_cache', '_get_data_completness')
     @staticmethod
-    @bcache.cache_region('hdx_memory_cache', '_get_data_completness')
     def _get_data_completness(location_code):
         return data_completness.DataCompletness(location_code).get_config()
 

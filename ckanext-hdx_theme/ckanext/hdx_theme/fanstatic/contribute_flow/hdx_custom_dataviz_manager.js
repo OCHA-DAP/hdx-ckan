@@ -103,7 +103,8 @@ ckan.module('hdx_custom_dataviz_manager', function($, _) {
         afterChange: function() {
           var urls = [];
           var createListOfUrls = function (index, element) {
-            urls.push($(element).val());
+            var url = $(element).val();
+            urls.push(url.trim());
           }.bind(this);
           this.el.find('.custom-viz-url').each(createListOfUrls);
 

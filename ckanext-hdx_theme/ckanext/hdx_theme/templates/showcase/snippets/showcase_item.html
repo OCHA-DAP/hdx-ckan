@@ -24,7 +24,7 @@ show_remove    - If True, show the remove button to remove showcase/dataset asso
       <a href="{{url}}" {% if has_url %} target="_blank" {% endif %}>
         <div class="showcase-image">
         {% if img_url %}
-          <img src="{{ img_url }}" alt="{{ package.name }}">
+          <img class="lazyload" data-src="{{ img_url }}" alt="{{ package.name }}">
         {% else %}
           <div class="img-placeholder">
             <span class="img-placeholder-text"></span>

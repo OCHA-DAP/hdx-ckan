@@ -70,7 +70,7 @@
                       <div class="showcase-image">
                           <a href="{% if pkg.url %} {{ pkg.url }} {% else %}#{% endif %}" target="{% if pkg.url %}_blank{% else %} _self {% endif %}">
                               {% if pkg.image_display_url %}
-                                <img src="{{ pkg.image_display_url }}" alt="{{ pkg.name }}">
+                                <img class="lazyload" data-src="{{ pkg.image_display_url }}" alt="{{ pkg.name }}">
                               {% else %}
                                 <div class="img-placeholder">
                                   <span class="img-placeholder-text"></span>
