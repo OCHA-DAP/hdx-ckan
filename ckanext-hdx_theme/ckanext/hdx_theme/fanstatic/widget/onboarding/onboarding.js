@@ -2,6 +2,13 @@ function closeCurrentWidget(self){
     $(self).parents(".popup").hide();
 }
 
+function spawnRecaptcha(id){
+    var container = $(id);
+    container.find(".hdx-recaptcha").each(function (idx, el) {
+        grecaptcha.render(el);
+    });
+}
+
 function notYou(){
     $('#field-login').val('');
     $('#field-login').removeClass('input-content');

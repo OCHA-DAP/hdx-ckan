@@ -276,7 +276,7 @@ ckan.module('contribute_flow_main', function($, _) {
                       for (var i = 0; i < this.customVizUrls.length; i++) {
                         customVizList.push({
                           name: 'customviz__' + i + '__url',
-                          value: this.customVizUrls[i]
+                          value: this.customVizUrls[i].trim()
                         });
                         // customVizList.push({
                         //   name: 'customviz__' + i + '__name',
