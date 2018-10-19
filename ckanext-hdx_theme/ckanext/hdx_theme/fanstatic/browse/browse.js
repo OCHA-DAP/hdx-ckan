@@ -30,7 +30,7 @@ function prepareCountryList(countDatasets) {
         if (country == null || (country.dataset_count == null && country.indicator_count == null)) {
           $("<div class='country-item inactive'><a>" + countryItem[1] + "</a></div>").appendTo(one_char_box);
         } else {
-          console.log(JSON.stringify(country));
+          // console.log(JSON.stringify(country));
           var displayDatasets = 0;
           var displayIndicators = 0;
           if (country.dataset_count != null)
