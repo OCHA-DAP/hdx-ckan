@@ -276,6 +276,11 @@ h1.country-title {
   list-style: none;
   display: inline-block;
 }
+.data-completeness .tooltip .tooltip-inner {
+  text-align: left;
+  text-transform: none;
+  font-size: 13px;
+}
 .data-completeness .crisis-list-header {
   position: relative;
 }
@@ -301,8 +306,6 @@ h1.country-title {
 .data-completeness .progress-breakdown.progress-header {
   display: inline-block;
   width: 100px;
-  border: none;
-  background: #fff;
   height: 15px;
   position: relative;
   top: 3px;
