@@ -294,10 +294,6 @@ h1.country-title {
 .data-completeness .crisis-list-header .list-header-showall.list-completeness > span.active {
   color: #007CE0;
 }
-.data-completeness .crisis-list-header .icon-completeness-flag {
-  position: relative;
-  top: 2px;
-}
 .data-completeness .progress-breakdown {
   height: 20px;
   border: 1px solid #cccccc;
@@ -325,15 +321,6 @@ h1.country-title {
 .data-completeness .progress-breakdown .progress-striped {
   background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 7px, #fff 5px, #fff 12px);
 }
-.data-completeness .icon-completeness-flag:before {
-  color: #cccccc;
-}
-.data-completeness .icon-completeness-flag.red:before {
-  color: #f2645a;
-}
-.data-completeness .icon-completeness-flag.blue:before {
-  color: #007CE0;
-}
 .data-completeness .data-item {
   margin: 15px 0;
 }
@@ -354,12 +341,6 @@ h1.country-title {
   padding-right: 15px;
   position: relative;
   cursor: default;
-}
-.data-completeness .data-item .data-item-summary .categ-title .icon-completeness-flag {
-  position: absolute;
-  right: 0;
-  font-size: 12px;
-  margin-top: 4px;
 }
 .data-completeness .data-item .data-item-summary .categ-sub-title {
   margin-bottom: 5px;

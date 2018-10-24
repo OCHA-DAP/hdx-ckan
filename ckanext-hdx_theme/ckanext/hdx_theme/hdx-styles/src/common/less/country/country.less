@@ -351,10 +351,6 @@ h1.country-title {
                 color: @blueColor;
             }
         }
-        .icon-completeness-flag {
-            position: relative;
-            top: 2px;
-        }
     }
 
     .progress-breakdown {
@@ -395,18 +391,6 @@ h1.country-title {
         }
     }
 
-    .icon-completeness-flag {
-        &:before {
-            color: @lightGrayColor;
-        }
-        &.red:before {
-            color: @orangeColor;
-        }
-        &.blue:before {
-            color: @blueColor;
-        }
-    }
-
     .data-item {
         margin: 15px 0;
 
@@ -426,14 +410,6 @@ h1.country-title {
                 padding-right: 15px;
                 position: relative;
                 cursor: default;
-
-                .icon-completeness-flag{
-                    position: absolute;
-                    right: 0;
-                    @categTitleIconSize: 12px;
-                    font-size: @categTitleIconSize;
-                    margin-top: (@categTitleLineHeight - @categTitleIconSize)/2;
-                }
             }
             .categ-sub-title {
                 margin-bottom: 5px;
