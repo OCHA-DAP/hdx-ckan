@@ -88,4 +88,7 @@ timeago==1.0.7
 # ckanext-showcase v1.0.9
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.0.9#egg=ckanext-showcase
 
+# ckanext-dcat
+-e git+https://github.com/ckan/ckanext-dcat.git@v0.0.8#egg=ckanext-dcat
+
 PyYAML==3.13
