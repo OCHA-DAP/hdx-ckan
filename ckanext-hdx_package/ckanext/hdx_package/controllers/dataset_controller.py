@@ -793,7 +793,7 @@ class DatasetController(PackageController):
                     if _res_view is None:
                         continue
                     if _res_view.get('type') == 'hdx_geo_preview':
-                        c.shapes = json.dumps(self._process_shapes(c.pkg_dict['resources'], r.get('id')))
+                        c.shapes = json.dumps(DatasetController.process_shapes(c.pkg_dict['resources'], r.get('id')))
                         return render('indicator/hdx-shape-read.html')
                     if _res_view.get('type') == 'hdx_hxl_preview':
                         c.default_view = _res_view
@@ -893,7 +893,8 @@ class DatasetController(PackageController):
     #             return _default_view
     #     return None
 
-    def _has_shape_info(self, resource):
+    @classmethod
+    def _has_shape_info(cls, resource):
         if lower(resource.get('format', '')) in GIS_FORMATS and resource.get('shape_info'):
             shp_info = get_latest_shape_info(resource)
             if shp_info.get('state', '') == 'success':
@@ -912,11 +913,12 @@ class DatasetController(PackageController):
                 }
         return None
 
-    def _process_shapes(self, resources, id=None):
+    @classmethod
+    def process_shapes(cls, resources, id=None):
         result = []
 
         for resource in resources:
-            if self._has_shape_info(resource):
+            if cls._has_shape_info(resource):
                 res_pbf_template_url = config.get('hdx.gis.resource_pbf_url')
                 shp_info = get_latest_shape_info(resource)
 

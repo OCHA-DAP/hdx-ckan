@@ -616,7 +616,7 @@ class HDXGeopreviewPlugin(plugins.SingletonPlugin):
     def setup_template_variables(self, context, data_dict):
         from ckanext.hdx_package.controllers.dataset_controller import DatasetController
 
-        shape_info = DatasetController._process_shapes([data_dict['resource']])
+        shape_info = DatasetController.process_shapes([data_dict['resource']])
 
         return {
             'shape_info': json.dumps(shape_info)
