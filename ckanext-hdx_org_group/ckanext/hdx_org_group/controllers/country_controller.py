@@ -22,6 +22,7 @@ import ckan.lib.helpers as helpers
 import ckan.logic as logic
 import ckan.model as model
 from ckan.controllers.api import CONTENT_TYPES
+from ckan.common import config
 
 render = base.render
 abort = base.abort
@@ -115,7 +116,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         f_organization_list = self._get_org_list_for_featured_from_facets(not_filtered_facet_info)
         f_tag_list = self._get_tag_list_for_featured_from_facets(not_filtered_facet_info)
 
-        data_completness = self._get_data_completness(country_dict.get('name')) \
+        data_completness = self._get_data_completeness(country_dict.get('name')) \
                             if country_dict.get('data_completeness') == 'active' else None
 
         template_data = {
@@ -262,11 +263,27 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         pages_list = get_action('group_page_list')(context, {'id': group_id})
         return pages_list
 
-    # TODO implement cache for data_completeness
-    # @bcache.cache_region('hdx_memory_cache', '_get_data_completness')
     @staticmethod
-    def _get_data_completness(location_code):
-        return data_completness.DataCompletness(location_code).get_config()
+    def _get_data_completeness(location_code):
+        url_pattern = config.get('hdx.datagrid.config_url_pattern')
+        for_prod = config.get('hdx.datagrid.prod') == 'true'
+        branch = 'master' if for_prod else location_code
+        url = url_pattern.format(branch=branch, iso=location_code)
+
+        cached = for_prod
+
+        data = None
+        if cached:
+            data = CountryController._get_data_completeness_cached(location_code, url)
+        else:
+            data = data_completness.DataCompletness(location_code, url).get_config()
+
+        return data
+
+    @staticmethod
+    @bcache.cache_region('hdx_memory_cache', '_get_data_completness_cached')
+    def _get_data_completeness_cached(location_code, url):
+        return data_completness.DataCompletness(location_code, url).get_config()
 
     @staticmethod
     @bcache.cache_region('hdx_memory_cache', '_get_topline_numbers')

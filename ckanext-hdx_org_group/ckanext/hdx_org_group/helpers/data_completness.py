@@ -7,15 +7,15 @@ from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 class DataCompletness(object):
 
-    def __init__(self, location_code):
+    def __init__(self, location_code, config_url):
         self.location_code = location_code
+        self.config_url = config_url
         self.config = {}
         self.all_orgs = logic.get_action('cached_organization_list')({}, {})
         self.__org_name_to_info_cache = {}
 
     def get_config(self):
-        url = 'https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/master/data%20grid%20recipe%20-%20default.yml'
-        response = requests.get(url)
+        response = requests.get(self.config_url)
         yaml_text = response.text
         self.config = yaml.load(yaml_text)
 
