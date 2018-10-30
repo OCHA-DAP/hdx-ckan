@@ -355,7 +355,7 @@
           </div>
 
           <span class="mL45 list-header-showall list-completeness">
-            <span class="active">{{data.data_completness.stats.fresh_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
+            <span>{{data.data_completness.stats.fresh_dataseries_num}}/{{data.data_completness.stats.total_dataseries_num}} Core Data</span>
             <span>{{ data.data_completness.stats.total_datasets_num }} Datasets</span>
             <span>{{ data.data_completness.stats.org_num }} Organisations</span>
           </span>
@@ -386,10 +386,9 @@
                   {{ category.title }}
                 </div>
                 <div class="categ-sub-title">
-                  <span class="icon-circle-info" data-module="bs_tooltip" data-module-placement="right" data-toggle="tooltip"
+                  <i class="icon-questionmark" data-module="bs_tooltip" data-module-placement="right" data-toggle="tooltip"
                      data-original-title="{{ category.description }}">
-                    <span class="path1"></span><span class="path2"></span><span class="path3"></span>
-                  </span>
+                  </i>
                   {#
                   <span class="icon-circle-down">
                     <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>

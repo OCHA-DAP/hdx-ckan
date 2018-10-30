@@ -353,6 +353,16 @@ h1.country-title {
         }
     }
 
+    .progress-stripes-pattern() {
+        background: repeating-linear-gradient(
+            -45deg,
+            @blueColor,
+            @blueColor 2px,
+            @whiteColor 2px,
+            @whiteColor 4px
+        );
+    }
+
     .progress-breakdown {
         height: 20px;
         border: 1px solid @lightGrayColor;
@@ -381,13 +391,7 @@ h1.country-title {
             background: @blueColor;
         }
         .progress-striped {
-            background: repeating-linear-gradient(
-                -45deg,
-                @blueColor,
-                @blueColor 7px,
-                @whiteColor 5px,
-                @whiteColor 12px
-            );
+            .progress-stripes-pattern();
         }
     }
 
@@ -414,13 +418,9 @@ h1.country-title {
             .categ-sub-title {
                 margin-bottom: 5px;
 
-                span[class^="icon-"] {
-                    .path2, .path3, .path4 {
-                        font-size: 14px;
-                        &:before {
-                            color: @grayColor;
-                        }
-                    }
+                .icon-questionmark {
+                    font-size: 16px;
+                    color: @blueColor;
                 }
 
                 .dataset-count {
@@ -488,13 +488,7 @@ h1.country-title {
                         }
 
                         &.striped {
-                            background: repeating-linear-gradient(
-                                -45deg,
-                                @blueColor,
-                                @blueColor 2px,
-                                @whiteColor 2px,
-                                @whiteColor 4px
-                            );
+                            .progress-stripes-pattern();
                         }
 
                     }
@@ -530,18 +524,47 @@ h1.country-title {
         }
     }
 
+    i.icon-questionmark:hover ~ .completeness-legend {
+        display: block;
+    }
     .completeness-legend {
+        display: none;
+        position: absolute;
+        width: 880px;
+        z-index: 100;
+        top: -30px;
+        left: 210px;
         border: 1px solid @lightGrayColor;
+        border-radius: 10px;
         padding: 15px;
+        background-color: @darkGrayColor;
+
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+
+        &:before {
+            content: " ";
+            position: absolute;
+            top: 45px;
+            left: 0;
+
+            border-left: 1px solid @lightGrayColor;
+            border-top: 1px solid @lightGrayColor;
+            height: 15px;
+            width: 15px;
+            background-color: @darkGrayColor;
+            transform: translate(-50%, 0) rotateZ(-45deg);
+        }
 
         .legend-title {
-            color: @darkGrayColor;
+            color: @extraLightGrayColor;
             .gothamMediumFont(16px);
+            line-height: 1.5em;
+            margin-bottom: 10px;
         }
         .legend-description {
             .sourceSansProFont(400, 16px);
             line-height: 25px;
-            color: @darkGrayColor;
+            color: @extraLightGrayColor;
 
             .orange {
                 color: @orangeColor;
@@ -550,7 +573,7 @@ h1.country-title {
         .legend-item {
             .sourceSansProFont(400, 12px);
             line-height: 16px;
-            color: @darkGrayColor;
+            color: @extraLightGrayColor;
             ul {
                 list-style: none;
                 padding: 0;
@@ -559,7 +582,7 @@ h1.country-title {
                     font-weight: 300;
                     position: relative;
                     padding-left: 40px;
-                    color: @grayColor;
+                    color: @lightGrayColor;
 
                     .progress-breakdown{
                         width: 30px;

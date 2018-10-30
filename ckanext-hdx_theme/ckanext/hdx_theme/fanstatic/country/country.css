@@ -319,7 +319,7 @@ h1.country-title {
   background: #007CE0;
 }
 .data-completeness .progress-breakdown .progress-striped {
-  background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 7px, #fff 5px, #fff 12px);
+  background: repeating-linear-gradient(-45deg, #007CE0, #007CE0 2px, #fff 2px, #fff 4px);
 }
 .data-completeness .data-item {
   margin: 15px 0;
@@ -345,15 +345,9 @@ h1.country-title {
 .data-completeness .data-item .data-item-summary .categ-sub-title {
   margin-bottom: 5px;
 }
-.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path2,
-.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path3,
-.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path4 {
-  font-size: 14px;
-}
-.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path2:before,
-.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path3:before,
-.data-completeness .data-item .data-item-summary .categ-sub-title span[class^="icon-"] .path4:before {
-  color: #888888;
+.data-completeness .data-item .data-item-summary .categ-sub-title .icon-questionmark {
+  font-size: 16px;
+  color: #007CE0;
 }
 .data-completeness .data-item .data-item-summary .categ-sub-title .dataset-count {
   float: right;
@@ -372,7 +366,7 @@ h1.country-title {
 }
 .data-completeness .data-item .data-item-details .sub-category {
   max-height: 220px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .data-completeness .data-item .data-item-details .sub-category ~ .sub-category {
   margin-top: 5px;
@@ -439,22 +433,48 @@ h1.country-title {
   font-weight: 300;
   font-size: 12px;
 }
+.data-completeness i.icon-questionmark:hover ~ .completeness-legend {
+  display: block;
+}
 .data-completeness .completeness-legend {
+  display: none;
+  position: absolute;
+  width: 880px;
+  z-index: 100;
+  top: -30px;
+  left: 210px;
   border: 1px solid #cccccc;
+  border-radius: 10px;
   padding: 15px;
+  background-color: #333333;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+}
+.data-completeness .completeness-legend:before {
+  content: " ";
+  position: absolute;
+  top: 45px;
+  left: 0;
+  border-left: 1px solid #cccccc;
+  border-top: 1px solid #cccccc;
+  height: 15px;
+  width: 15px;
+  background-color: #333333;
+  transform: translate(-50%, 0) rotateZ(-45deg);
 }
 .data-completeness .completeness-legend .legend-title {
-  color: #333333;
+  color: #eeeeee;
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
   font-size: 16px;
+  line-height: 1.5em;
+  margin-bottom: 10px;
 }
 .data-completeness .completeness-legend .legend-description {
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 25px;
-  color: #333333;
+  color: #eeeeee;
 }
 .data-completeness .completeness-legend .legend-description .orange {
   color: #f2645a;
@@ -464,7 +484,7 @@ h1.country-title {
   font-weight: 400;
   font-size: 12px;
   line-height: 16px;
-  color: #333333;
+  color: #eeeeee;
 }
 .data-completeness .completeness-legend .legend-item ul {
   list-style: none;
@@ -474,7 +494,7 @@ h1.country-title {
   font-weight: 300;
   position: relative;
   padding-left: 40px;
-  color: #888888;
+  color: #cccccc;
 }
 .data-completeness .completeness-legend .legend-item ul li .progress-breakdown {
   width: 30px;
