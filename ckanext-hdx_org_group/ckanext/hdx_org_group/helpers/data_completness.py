@@ -7,6 +7,13 @@ from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator
 
 class DataCompletness(object):
 
+    basic_query_params = {
+        'start': 0,
+        'rows': 500,
+        'fl': ['id', 'name', 'title', 'organization',
+               'metadata_modified', 'extras_data_update_frequency']
+    }
+
     def __init__(self, location_code, config_url):
         self.location_code = location_code
         self.config_url = config_url
@@ -31,6 +38,7 @@ class DataCompletness(object):
         for category in self.config.get('categories', []):
             category_dataset_map = {}
             for ds in category.get('data_series', []):
+                overrides_map = self.__get_map_of_overrides_from_dataseries(ds)
                 include_rules = ds.get('rules', {}).get('include') or ''
                 exclude_rules = ds.get('rules', {}).get('exclude') or ''
                 if isinstance(include_rules, basestring):
@@ -40,17 +48,14 @@ class DataCompletness(object):
 
                 query_string = self.__build_query(include_rules, exclude_rules)
                 if query_string:
-                    search_result = logic.get_action('package_search')({}, {
-                        'start': 0,
-                        'rows': 500,
-                        'fl': ['id', 'name', 'title', 'organization',
-                               'metadata_modified', 'extras_data_update_frequency'],
-                        'fq': query_string
-                    })
+                    query_params = {'fq': query_string}
+                    query_params.update(self.basic_query_params)
+                    search_result = logic.get_action('package_search')({},query_params)
                     ds['datasets'] = search_result.get('results', [])
                     for dataset in ds['datasets']:
                         FreshnessCalculator(dataset).populate_with_freshness()
                         self.__replace_org_name_with_title(dataset)
+                        self.__add_metadata_overrides(dataset, overrides_map)
                         self.__add_dataset_to_map(category_dataset_map, dataset)
                         self.__add_dataset_to_map(all_dataset_map, dataset)
 
@@ -98,12 +103,27 @@ class DataCompletness(object):
         dataset['organization_title'] = org_info.get('title')
         dataset['organization_acronym'] = org_info.get('org_acronym')
 
+    @staticmethod
+    def __add_metadata_overrides(dataset, overrides_map):
+        override = overrides_map.get(dataset['name'])
+
+        if override:
+            dataset['completeness'] = override.get('display_state') == 'complete'
+            dataset['completeness_comment'] = override.get('comments')
 
     @staticmethod
     def __add_dataset_to_map(map, dataset):
         name = dataset.get('name')
         if name not in map:
             map[name] = dataset
+
+    @staticmethod
+    def __get_map_of_overrides_from_dataseries(ds):
+        map = {}
+        overrides = ds.get('metadata_overrides', [])
+        for override in overrides:
+            map[override.get('dataset_name')] = override
+        return map
 
     @staticmethod
     def __calculate_stats_for_dataseries(ds):
