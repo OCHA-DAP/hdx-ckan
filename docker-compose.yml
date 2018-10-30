@@ -30,6 +30,10 @@ services:
     depends_on:
       - db
       - solr
+    env_file:
+      - travis.env
+    volumes:
+      - "./.git:/srv/ckan/.git"
     environment:
       HDX_HOURS_MIXPANEL_CACHE: 1
       HDX_CKANDB_ADDR: 'dbckan'
