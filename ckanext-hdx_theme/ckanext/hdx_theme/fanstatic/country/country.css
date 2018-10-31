@@ -441,7 +441,7 @@ h1.country-title {
   position: absolute;
   width: 880px;
   z-index: 100;
-  top: -30px;
+  top: -140px;
   left: 210px;
   border: 1px solid #cccccc;
   border-radius: 10px;
@@ -452,7 +452,7 @@ h1.country-title {
 .data-completeness .completeness-legend:before {
   content: " ";
   position: absolute;
-  top: 45px;
+  top: 155px;
   left: 0;
   border-left: 1px solid #cccccc;
   border-top: 1px solid #cccccc;

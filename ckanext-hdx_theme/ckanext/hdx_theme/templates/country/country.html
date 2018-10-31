@@ -346,7 +346,47 @@
         <div class="list-header crisis-list-header">
           <span class="mL15 mR30 list-header-title">
               {{ _("Data Completeness") }}
+              <i class="icon-questionmark"></i>
+              <div class="completeness-legend">
+                <div class="hdx-arrow-wrapper"></div>
+                <div class="row">
+                  <div class="col-xs-6">
+                    <div class="legend-title">What is Data Completeness?</div>
+                    <div class="legend-description">
+                      Data Completeness defines
+                      <span class="orange">
+                      a set of data categories and sub-categories that are essential for preparedness and
+                      emergency response.
+                    </span>
+                      HDX automatically looks for datasets that meet the requirements of each sub-category.
+                      Please help us improve this feature by sending your feedback to
+                      <a href="mailto: hdx@un.org">hdx@un.org</a>.
+                    </div>
+                  </div>
+                  <div class="col-xs-6">
+                    <div class="legend-title">LEGEND:</div>
+                    <div class="legend-item">
+                      Presence and freshness of data
+                      <ul>
+                        <li>
+                          <span class="progress-breakdown mini"><span class="progress-blue" style="width: 100%;"></span></span>
+                          Dataset matches basic criteria and appears to be updated
+                        </li>
+                        <li>
+                          <span class="progress-breakdown mini"><span class="progress-striped" style="width: 100%;"></span></span>
+                          Dataset matches basic criteria but does not appear to be updated
+                        </li>
+                        <li>
+                          <span class="progress-breakdown mini"></span>
+                          No dataset found matching basic criteria
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
           </span>
+
 
           <div class="progress-breakdown progress-header">
             <span class="progress-blue" style="width: {{100*data.data_completness.stats.dataseries_fresh_percentage}}%;">
@@ -442,44 +482,7 @@
         </div>
         <div class="row">
           <div class="mLR15">
-            <div class="col-xs-12">
-              <div class="completeness-legend">
-                <div class="row">
-                  <div class="col-xs-6">
-                    <div class="legend-title">What is Data Completeness?</div>
-                    <div class="legend-description">
-                      Data Completeness defines
-                      <span class="orange">
-                      a set of data categories and sub-categories that are essential for preparedness and
-                      emergency response.
-                    </span>
-                      HDX automatically looks for datasets that meet the requirements of each sub-category.
-                      Please help us improve this feature by sending your feedback to
-                      <a href="mailto: hdx@un.org">hdx@un.org</a>.
-                    </div>
-                  </div>
-                  <div class="col-xs-6">
-                    <div class="legend-title">LEGEND:</div>
-                    <div class="legend-item">
-                      Presence and freshness of data
-                      <ul>
-                        <li>
-                          <span class="progress-breakdown mini"><span class="progress-blue" style="width: 100%;"></span></span>
-                          Dataset matches basic criteria and appears to be updated
-                        </li>
-                        <li>
-                          <span class="progress-breakdown mini"><span class="progress-striped" style="width: 100%;"></span></span>
-                          Dataset matches basic criteria but does not appear to be updated
-                        </li>
-                        <li>
-                          <span class="progress-breakdown mini"></span>
-                          No dataset found matching basic criteria
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="col-xs-11">
             </div>
           </div>
         </div>
