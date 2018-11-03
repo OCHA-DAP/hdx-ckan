@@ -457,7 +457,7 @@
                       <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
                       <div class="dataset-link"
                            title="{{ dataset.title }}">
-                        <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}">
+                        <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
                           {{ dataset.title }}
                         </a>
                       </div>
@@ -469,7 +469,11 @@
                     {% endfor %}
                   {% else %}
                     <div>
-                      <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}" class="add-data">Add Data</a>
+                      {% if c.userobj %}
+                        <a href="javascript:void(0);" onclick="contributeAddDetails(null, 'data grid');" class="add-data">Add Data</a>
+                      {% else %}
+                        <a href="/contribute" class="add-data" data-module="hdx_click_stopper" data-module-link_type="data grid add data">Add Data</a>
+                      {% endif %}
                     </div>
                   {% endif %}
                 </div>

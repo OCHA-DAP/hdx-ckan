@@ -72,7 +72,8 @@ Example:
         {% endtrans %}
       {% else %}
         {# Comment out "add some" as action doesn't exist yet #}
-        <p class="empty mTop20">This dataset has no data, <a class="info-item-name" href="#" onclick="contributeAddDetails('{{pkg.id}}')" >why not add some?</a>
+        <p class="empty mTop20">This dataset has no data,
+          <a class="info-item-name" href="#" onclick="contributeAddDetails('{{pkg.id}}', 'resource list')" >why not add some?</a>
         </p>
       {% endif %}
 
