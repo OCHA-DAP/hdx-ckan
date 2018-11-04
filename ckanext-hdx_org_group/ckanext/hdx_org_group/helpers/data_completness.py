@@ -115,10 +115,12 @@ class DataCompletness(object):
         '''
         override = overrides_map.get(dataset['name'])
 
-        if override:
+        if override and override.get('display_state'):
             dataset['completeness_comment'] = override.get('comments')
             dataset['is_complete'] = override.get('display_state') == 'complete'
             dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False) and dataset.get('is_complete')
+        else:
+            dataset[GOODNESS_PROPERTY] = dataset.get(FRESHNESS_PROPERTY, False)
 
     @staticmethod
     def __add_dataset_to_map(map, dataset):
@@ -188,12 +190,12 @@ class DataCompletness(object):
             'dataseries_good_percentage': dataseries_good_percentage,
             'dataseries_not_good_percentage': dataseries_not_good_percentage,
             'dataseries_empty_percentage': dataseries_empty_percentage,
-            'state': 'empty' if total_dataseries_num == 0 or empty_dataseries_num > 0
-                                else 'not_good' if good_dataseries_num < total_dataseries_num else 'good',
+            # 'state': 'empty' if total_dataseries_num == 0 or empty_dataseries_num > 0
+            #                     else 'not_good' if good_dataseries_num < total_dataseries_num else 'good',
         }
 
-        state = category['stats']['state']
-        category['stats']['state_flag'] = 'blue' if state == 'good' else 'red' if state == 'empty' else ''
+        # state = category['stats']['state']
+        # category['stats']['state_flag'] = 'blue' if state == 'good' else 'red' if state == 'empty' else ''
 
     @staticmethod
     def __calculate_stats_general(config, all_dataset_map, org_map):
@@ -231,7 +233,7 @@ class DataCompletness(object):
 
         }
 
-        state = config['stats']['state']
-        config['stats']['state_flag'] = 'blue' if state == 'good' else 'red' if state == 'empty' else ''
+        # state = config['stats']['state']
+        # config['stats']['state_flag'] = 'blue' if state == 'good' else 'red' if state == 'empty' else ''
 
 
