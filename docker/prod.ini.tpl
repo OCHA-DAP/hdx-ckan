@@ -113,7 +113,7 @@ hdx.validation.allow_skip_for_sysadmin = dataset_date,notes,maintainer,methodolo
 hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%20grid%20recipe%20-%20{iso}.yml
 
 # if true, caching will be enabled and the "master" branch from the github repo will be used
-hdx.datagrid.prod = true
+hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
 
 ## Logging configuration
 [loggers]
