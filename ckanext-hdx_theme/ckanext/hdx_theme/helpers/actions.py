@@ -688,6 +688,7 @@ def hdx_general_statistics(context, data_dict):
             'has_geodata',
             'has_showcases'
         ],
+        'facet.limit': 2000,
         'q': u'',
         'rows': 1,
         'start': 0
