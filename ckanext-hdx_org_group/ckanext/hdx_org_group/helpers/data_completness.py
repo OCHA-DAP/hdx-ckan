@@ -1,8 +1,11 @@
 import yaml
 import requests
+import logging
 import ckan.logic as logic
 
 from ckanext.hdx_package.helpers.freshness_calculator import FreshnessCalculator, FRESHNESS_PROPERTY
+
+log = logging.getLogger(__name__)
 
 GOODNESS_PROPERTY = 'is_good'
 
@@ -23,15 +26,21 @@ class DataCompletness(object):
         self.__org_name_to_info_cache = {}
 
     def get_config(self):
-        response = requests.get(self.config_url)
-        yaml_text = response.text
-        self.config = yaml.load(yaml_text)
+        try:
+            response = requests.get(self.config_url)
+            response.raise_for_status()
+            yaml_text = response.text
+            self.config = yaml.load(yaml_text)
 
-        context = {}
-        # datasets = logic.get_action('package_search')(context, {
-        #     'fq': '(res_format:"DOCX") AND -(groups:"ken")'
-        # })
-        self.__populate_dataseries()
+            context = {}
+            # datasets = logic.get_action('package_search')(context, {
+            #     'fq': '(res_format:"DOCX") AND -(groups:"ken")'
+            # })
+            self.__populate_dataseries()
+        except Exception, e:
+            logging.warn(str(e))
+            self.config = None
+
         return self.config
 
     def __populate_dataseries(self):
