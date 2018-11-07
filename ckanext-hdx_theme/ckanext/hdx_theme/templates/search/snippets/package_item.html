@@ -3,13 +3,17 @@
 <li class="list-items {{ item_class or "dataset-item" }} {% if package.batch_length and package.batch_length > 0 %} stacked-item {% endif %}">
   {% block package_item_content %}
     <div class="dataset-pre-content">
-      <div class="list-items dataset-content">
+      <div class="list-items dataset-content dataset-content2">
         <div class="row">
           <div class="col-xs-6">
             {% block pre_icon %}
             {% endblock %}
             <span class="pull-left">
             <div class="dataset-heading" data-module="highlight" data-module-text="{{ query }}">
+              {% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
+              {% if popular %}
+                <span class="popular icon-trending" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+              {% endif %}
               {% if is_metadata_only %}
                 {% block metadata_only_icon %}
                   <img src="/images/metadata-only-restricted.png" width="16" height="16" style="margin-top: -3px;" />
@@ -26,12 +30,12 @@
                 {% if package.private %}
                    <span class="hdx-ds-title-icon glyphicon glyphicon-lock" title="{{ _('Private Dataset') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
                 {% endif %}
-
               {% endblock %}
             </div>
             <div class="dataset-updated">
               {% block updated %}
                 {% block owner_update %}
+                  <div class="dataset-updated-org">
                     {% set updated_time = package.metadata_modified or package.metadata_created%}
                     {% set f_updated_time = h.render_datetime(updated_time) %}
 
@@ -40,7 +44,34 @@
                         {{ package.organization.title or package.organization.name }}
                       </a>
                     {% endif %}
-                    <br/>
+                  </div>
+                  <div class="dataset-updated-icons">
+                    {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
+                    {% set has_quality_checked = package.indicator == '1' or package.quality %}
+
+                    {# NEW ICONS
+                    <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
+                                  data-module-placement="top" data-toggle="tooltip">
+                    </span>
+
+                    <span class="icon-check" title="{{ _('Dataset Containing Data Checks') }}" data-module="bs_tooltip"
+                                  data-module-placement="top" data-toggle="tooltip">
+                    </span>
+                    #}
+
+                    {% if package.has_quickcharts %}
+                        <a href="{% url_for controller='package', action='search', ext_quickcharts=1 %}">
+                            <span class="icon-quickchart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
+                                  data-module-placement="top" data-toggle="tooltip"></span>
+                        </a>
+                    {% endif %}
+
+                    {% if package.approx_total_downloads  %}
+                      <span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span>
+                    {% endif %}
+
+                  </div>
+                  <div class="dataset-dates">
                     Updated {{f_updated_time}}
                     {% if package.dataset_date%}
                       {% set dataset_date = h.get_dataset_date_format(package.dataset_date) %}
@@ -48,6 +79,18 @@
                           | Dataset date: {{dataset_date}}
                       {% endif %}
                     {% endif %}
+                  </div>
+                  <div>
+                    {% if package.is_requestdata_type %}
+                      <span class="download-counts">{{ _('This data is by request only') }}</span>
+                    {% elif package.type == 'dataset' and package.data_update_frequency %}
+                        <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
+                        {%  if package.is_fresh %}
+                          <span class="icon-leaf fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+                          <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="icon-questionmark freshness"></a>
+                        {% endif %}
+                    {% endif %}
+                  </div>
                 {% endblock %}
               {% endblock %}
             </div>

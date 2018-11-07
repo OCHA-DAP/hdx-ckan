@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'hdx-icons';
-  src:  url('fonts/hdx-icons.eot?dhvom7');
-  src:  url('fonts/hdx-icons.eot?dhvom7#iefix') format('embedded-opentype'),
-    url('fonts/hdx-icons.ttf?dhvom7') format('truetype'),
-    url('fonts/hdx-icons.woff?dhvom7') format('woff'),
-    url('fonts/hdx-icons.svg?dhvom7#hdx-icons') format('svg');
+  src:  url('fonts/hdx-icons.eot?8bs9zz');
+  src:  url('fonts/hdx-icons.eot?8bs9zz#iefix') format('embedded-opentype'),
+    url('fonts/hdx-icons.ttf?8bs9zz') format('truetype'),
+    url('fonts/hdx-icons.woff?8bs9zz') format('woff'),
+    url('fonts/hdx-icons.svg?8bs9zz#hdx-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,48 +24,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-leef-optimized:before {
-  content: "\e914";
-}
-.icon-question_updated-1:before {
-  content: "\e915";
-}
-.icon-completeness-flag:before {
+.icon-hxl-tags:before {
   content: "\e90c";
-  color: #dadce0;
 }
-.icon-circle-info .path1:before {
-  content: "\e90d";
-  color: rgb(255, 255, 255);
+.icon-data-freshness-info:before {
+  content: "\e91a";
 }
-.icon-circle-info .path2:before {
-  content: "\e90e";
-  margin-left: -1em;
-  color: rgb(172, 178, 191);
+.icon-quickcharts:before {
+  content: "\e91d";
 }
-.icon-circle-info .path3:before {
-  content: "\e90f";
-  margin-left: -1em;
-  color: rgb(172, 178, 191);
+.icon-trending:before {
+  content: "\e91e";
 }
-.icon-circle-down .path1:before {
+.icon-circle-down:before {
   content: "\e910";
-  color: rgb(255, 255, 255);
-}
-.icon-circle-down .path2:before {
-  content: "\e911";
-  margin-left: -1em;
-  color: rgb(172, 178, 191);
-}
-.icon-circle-down .path3:before {
-  content: "\e912";
-  margin-left: -1em;
-  color: rgb(172, 178, 191);
-}
-.icon-circle-down .path4:before {
-  content: "\e913";
-  margin-left: -1em;
-  color: rgb(172, 178, 191);
 }
 .icon-dataviz:before {
   content: "\e908";
@@ -96,75 +68,98 @@
 }
 .icon-fight:before {
   content: "\e600";
+  color: #444;
 }
 .icon-gallery:before {
   content: "\e601";
+  color: #444;
 }
 .icon-gplus:before {
   content: "\e602";
+  color: #444;
 }
 .icon-quality_checked:before {
   content: "\e603";
+  color: #444;
 }
 .icon-subnational:before {
   content: "\e604";
+  color: #444;
 }
 .icon-cc:before {
   content: "\e605";
+  color: #444;
 }
 .icon-check:before {
   content: "\e606";
+  color: #444;
 }
 .icon-close_filter_button:before {
   content: "\e607";
+  color: #444;
 }
 .icon-download:before {
   content: "\e608";
+  color: #444;
 }
 .icon-earth:before {
   content: "\e609";
+  color: #444;
 }
 .icon-expand:before {
   content: "\e60a";
+  color: #444;
 }
 .icon-fb:before {
   content: "\e60b";
+  color: #444;
 }
 .icon-fileupload:before {
   content: "\e60c";
+  color: #444;
 }
 .icon-fire:before {
   content: "\e60d";
+  color: #444;
 }
 .icon-location:before {
   content: "\e60e";
+  color: #444;
 }
 .icon-lock:before {
   content: "\e60f";
+  color: #444;
 }
 .icon-mail-01:before {
   content: "\e610";
+  color: #444;
 }
 .icon-open_filter_button:before {
   content: "\e611";
+  color: #444;
 }
 .icon-search:before {
   content: "\e612";
+  color: #444;
 }
 .icon-share:before {
   content: "\e613";
+  color: #444;
 }
 .icon-spanner:before {
   content: "\e614";
+  color: #444;
 }
 .icon-tag:before {
   content: "\e615";
+  color: #444;
 }
 .icon-twitter:before {
   content: "\e616";
 }
 .icon-visualize:before {
   content: "\e617";
+  color: #444;
 }
 .icon-quickchart:before {
   content: "\e904";

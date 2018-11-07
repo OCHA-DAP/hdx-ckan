@@ -41,54 +41,9 @@
         @stackedMarginSize: 5px;
         @datasetItemPadding: 15px;
         &.stacked-item {
-            /* BEGIN 3 stacked items old style */
-            /*
-            border-bottom: none;
-            margin-bottom: 2*@stackedMarginSize;
-            margin-top: @datasetItemPadding;
-
-            + .stacked-item {
-                margin-top: @datasetItemPadding + 2*@stackedMarginSize;
-            }
-
-            &:before {
-                content: " ";
-                background-color: @extraLightBlueColor;
-                height: 100%;
-                width: 100%;
-                border: 1px solid @blueColor;
-                position: absolute;
-                display: block;
-                top: 0; left: 0;
-                z-index: 100;
-            }
-
-            .dataset-pre-content:before {
-                content: " ";
-                background-color: @extraLightBlueColor;
-                height: 100%;
-                width: 100%;
-                border: 1px solid @blueColor;
-                position: absolute;
-                display: block;
-                top: @stackedMarginSize; left: @stackedMarginSize;
-                z-index: 101;
-            }
-            .dataset-content {
-                position: relative;
-                top: 2*@stackedMarginSize; left: 2*@stackedMarginSize;
-                z-index: 102;
-                background-color: @whiteColor;
-                border: 1px solid @blueColor;
-                padding-bottom: 0;
-            }
-            */
-            //remove following if reverting style
             .dataset-content {
                 padding-bottom: 0;
             }
-            /* END 3 stacked items old style */
-
             .stacked-info {
                 background-color: @extraLightBlueColor;
                 color: @blueColor;
@@ -99,102 +54,175 @@
                 margin-top: 10px;
                 display: block;
             }
-
-
         }
 
         .dataset-content {
             padding: @datasetItemPadding;
+
+
+            .dataset-heading {
+                margin-bottom: 0;
+                line-height: 1;
+                font-size: 14px;
+
+                a {
+                    .sourceSansProFont(400, 14px);
+                    /*color: #007ce0;*/  /*let's try and use default color*/
+                    .letter-spacing-1();
+                    line-height: 1;
+                }
+
+            }
+            .dataset-updated{
+                .sourceSansProFont(400, 12px);
+                color: @grayColor;
+                .letter-spacing-1();
+            }
+
+            .updatedNameColor {
+                .sourceSansProFont(400, 12px);
+                color: @darkGrayColor;
+                .letter-spacing-1();
+            }
+
+            .dataset-actions {
+                img svg{
+                    height: 15px;
+                    fill: @blueColor;
+                }
+                > ul {
+                    display: inline;
+                    list-style: none;
+                }
+                > ul > li{
+                    display: inline;
+                    color: @blueColor;
+                }
+                > ul > li > a{
+                    text-transform: uppercase;
+                    .sourceSansProFont(700, 12px);
+                    color: @blueColor;
+                    .letter-spacing-1();
+
+                }
+                > ul > li > a::after{
+                    margin-left: 7px;
+                    margin-right: 4px;
+                }
+                > ul > li > a.link-separator::before{
+                    content: "|";
+                    margin-left: 7px;
+                    margin-right: 4px;
+
+                }
+
+                > ul > li:last-child > a::after{
+                    content: "";
+                    margin: 0;
+                }
+            }
+
+            .dataset-description {
+                .sourceSansProFont(400, 12px);
+                color: @grayColor;
+                .letter-spacing-1();
+            }
+
+            .dataset-others {
+                .list-items {
+                    margin: 0;
+                }
+                .label-size {
+                    font-family: 'Source Sans Pro', sans-serif;
+                    font-weight: 400;
+                    font-size: 10px;
+                    .sourceSansProFont(400, 12px);
+                    color: @grayColor;
+                    .letter-spacing-1();
+                    margin-left: 5px;
+                }
+            }
+
+
         }
 
+        .dataset-content2 {
+            //Since dataset-content is used in other parts than the dataset search results
+            //we're going to override the styles to create the new search results look
+            @datasetTitleFontSize: 14px;
+            @slightlySmallerFontSize: @datasetTitleFontSize - 0.75px;
+            padding: 32px 15px;
+
+            .dataset-heading {
+                line-height: 1;
+
+                .popular {
+                    color: @darkGrayColor;
+                    font-size: 14px;
+                    margin-right: 2px;
+                }
+
+                a {
+                    .sourceSansProFont(600, @datasetTitleFontSize);
+                    color: @darkGrayColor;
+                }
+            }
+            .dataset-updated {
+                line-height: 1;
+
+                .dataset-updated-org {
+                    margin: 8px 0;
+                    font-size: @slightlySmallerFontSize;
+                }
+
+                .dataset-updated-icons {
+                    margin-bottom: 8px;
+                    font-size: @slightlySmallerFontSize;
+
+                    [class^="icon-"], [class*=" icon-"] {
+                        display: inline-block;
+                        margin-right: 10px;
+                        color: @grayColor;
+                        font-size: 16px;
+
+                        &::before {
+                            color: @grayColor;
+                        }
+                    }
+
+                    .icon-quickchart:hover::before {
+                        color: @blueColor;
+                    }
+                    .icon-check:hover::before {
+                        color: @greenColor;
+                    }
+                    .icon-hxl-tags:hover::before {
+                        color: @orangeColor;
+                    }
+
+                }
+            }
+
+            .icon-leaf {
+                margin: 0 4px;
+            }
+
+            .dataset-dates {
+                margin-bottom: 8px;
+            }
+
+            .updatedNameColor {
+                .sourceSansProFont(600, @slightlySmallerFontSize);
+                color: @blueColor;
+            }
+
+        }
 
         &:last-of-type{
             border-bottom: none;
         }
 
 
-        .dataset-heading {
-            margin-bottom: 0;
-            line-height: 1;
-            font-size: 14px;
-
-            a {
-                .sourceSansProFont(400, 14px);
-                /*color: #007ce0;*/  /*let's try and use default color*/
-                .letter-spacing-1();
-                line-height: 1;
-            }
-
-        }
-        .dataset-updated{
-            .sourceSansProFont(400, 12px);
-            color: @grayColor;
-            .letter-spacing-1();
-        }
-        .updatedNameColor {
-            .sourceSansProFont(400, 12px);
-            color: @darkGrayColor;
-            .letter-spacing-1();
-        }
-
-        .dataset-actions {
-            img svg{
-                height: 15px;
-                fill: @blueColor;
-            }
-            > ul {
-                display: inline;
-                list-style: none;
-            }
-            > ul > li{
-                display: inline;
-                color: @blueColor;
-            }
-            > ul > li > a{
-                text-transform: uppercase;
-                .sourceSansProFont(700, 12px);
-                color: @blueColor;
-                .letter-spacing-1();
-
-            }
-            > ul > li > a::after{
-                margin-left: 7px;
-                margin-right: 4px;
-            }
-            > ul > li > a.link-separator::before{
-                content: "|";
-                margin-left: 7px;
-                margin-right: 4px;
-
-            }
-
-            > ul > li:last-child > a::after{
-                content: "";
-                margin: 0;
-            }
-        }
-
-
-        .dataset-description {
-            .sourceSansProFont(400, 12px);
-            color: @grayColor;
-            .letter-spacing-1();
-        }
-
-        .dataset-others {
-            .list-items {
-                margin: 0;
-            }
-            .label-size {
-                font-family: 'Source Sans Pro', sans-serif;
-                font-weight: 400;
-                font-size: 10px;
-                .sourceSansProFont(400, 12px);
-                color: @grayColor;
-                .letter-spacing-1();
-                margin-left: 5px;
-            }
-        }
 
         .hdx-ds-title-icon {
             font-size: 12px;
