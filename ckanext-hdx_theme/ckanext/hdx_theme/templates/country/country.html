@@ -455,7 +455,7 @@
                     {% for dataset in subcateg.datasets %}
                     <div class="dataset">
                       <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
-                      {% set dataset_hover_title = dataset.title + " &#013;Limitations: " + dataset.completeness_comment if dataset.completeness_comment else dataset.title %}
+                      {% set dataset_hover_title = dataset.title + " - Limitations: " + dataset.completeness_comment if dataset.completeness_comment else dataset.title %}
                       <div class="dataset-link"
                            title="{{ dataset_hover_title }}">
                         <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
