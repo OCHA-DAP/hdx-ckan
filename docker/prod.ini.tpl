@@ -109,6 +109,12 @@ hdx.active_locations_reliefweb.resource_id = 4551480e-448e-4b09-b02f-ed31d42a43d
 # Dataset Validation
 hdx.validation.allow_skip_for_sysadmin = dataset_date,notes,maintainer,methodology,methodology_other,data_update_frequency,groups_list,resources/format
 
+# DATA GRID / COMPLETENESS
+hdx.datagrid.config_url_pattern = https://raw.githubusercontent.com/OCHA-DAP/data-grid-recipes/{branch}/data%20grid%20recipe%20-%20{iso}.yml
+
+# if true, caching will be enabled and the "master" branch from the github repo will be used
+hdx.datagrid.prod = ${HDX_DATAGRID_PROD}
+
 ## Logging configuration
 [loggers]
 keys = root, ckan, ckanext

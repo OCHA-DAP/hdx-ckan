@@ -15,7 +15,7 @@
 {% block user_actions %}
     {% if can_create_dataset %}
         <li>
-            <a href="#" onclick="contributeAddDetails()">
+            <a href="#" onclick="contributeAddDetails(null, 'org')">
                 {{_('Add Dataset')}}
             </a>
         </li>

@@ -456,6 +456,8 @@ def hdx_check_add_data():
     try:
         logic.check_access("package_create", context, dataset_dict)
     except logic.NotAuthorized, e:
+        data_dict['data_module'] = 'hdx_click_stopper'
+        data_dict['data_module_link_type'] = 'header'
         if c.userobj or c.user:
             data_dict['href'] = '/dashboard/organizations'
             data_dict['onclick'] = ''
@@ -465,6 +467,6 @@ def hdx_check_add_data():
         return data_dict
 
     data_dict['href'] = '#'
-    data_dict['onclick'] = 'contributeAddDetails()'
+    data_dict['onclick'] = 'contributeAddDetails(null, "header")'
 
     return data_dict

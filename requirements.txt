@@ -76,7 +76,7 @@ ua-parser==0.7.2
 user_agents==1.1.0
 
 # Below lines are needed for ckanext-powerview
-ckantoolkit==0.0.2
+ckantoolkit==0.0.3
 -e git+https://github.com/OCHA-DAP/ckanext-powerview.git@v0.0.2#egg=ckanext-powerview
 
 # request data plugin
@@ -87,5 +87,13 @@ timeago==1.0.7
 
 # ckanext-showcase v1.0.9
 -e git+https://github.com/OCHA-DAP/ckanext-showcase.git@1.0.9#egg=ckanext-showcase
+
+# reqs for ckanext-dcat
+rdflib==4.2.1
+rdflib-jsonld==0.4.0
+git+https://github.com/geomet/geomet.git
+#ckantoolkit==0.0.3 already installed for ckanext-powerview
+# ckanext-dcat
+-e git+https://github.com/ckan/ckanext-dcat.git@v0.0.8#egg=ckanext-dcat
 
 PyYAML==3.13
