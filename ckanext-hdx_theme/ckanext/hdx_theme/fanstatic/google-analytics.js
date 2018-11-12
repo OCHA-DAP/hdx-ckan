@@ -577,7 +577,7 @@ $(
         var mixpanelDeferred = new $.Deferred();
         var gaDeferred = new $.Deferred();
 
-        if (mixpanelData) {
+        if (mixpanel && mixpanelData) {
             mixpanel.track(mixpanelData.eventName, mixpanelData.eventMeta, function () {
                 if (mixpanelDeferred.state() == "pending") {
                     console.log("Finishing sending click event to mixpanel");
@@ -592,7 +592,7 @@ $(
             mixpanelDeferred.resolve(true);
         }
 
-        if (gaData) {
+        if (ga && gaData) {
             ga('send', 'event', gaData.eventCategory, gaData.eventAction, gaData.eventLabel, {
                 hitCallback: function () {
                     if (gaDeferred.state() == "pending") {
