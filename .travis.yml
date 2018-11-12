@@ -13,7 +13,7 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 script:
-  - echo "$(env | grep TRAVIS_)" >> travis.env
+  - echo "$(env | grep TRAVIS)" >> travis.env
   - echo "CI=\"$CI\"" >> travis.env
   - cat travis.env
   - docker-compose build ckan
