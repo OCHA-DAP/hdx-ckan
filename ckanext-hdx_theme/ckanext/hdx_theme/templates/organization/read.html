@@ -64,7 +64,7 @@
 			    </p>
 			    <p>
 			      {% if h.check_access('package_create', {'organization_id': c.group_dict.id, 'owner_org': c.group_dict.id}) %}
-				  		{% link_for _('+ Add Dataset'), controller='package', action='new', group=c.group_dict.id, class_='big-info-item-name' %}
+				  		<a href="javascript:void(0);" onclick="contributeAddDetails(null, 'empty org');" class="add-data">Add Data</a>
 				  {% endif %}
 			    </p>
 		    </div>
