@@ -122,7 +122,7 @@ class DataCompletness(object):
         :param overrides_map:
         :return:
         '''
-        override = overrides_map.get(dataset['name'])
+        override = overrides_map.get(dataset['name'], overrides_map.get(dataset['id']))
 
         if override and override.get('display_state'):
             dataset['completeness_comment'] = override.get('comments')
@@ -142,7 +142,9 @@ class DataCompletness(object):
         map = {}
         overrides = ds.get('metadata_overrides', [])
         for override in overrides:
-            map[override.get('dataset_name')] = override
+            key = override.get('dataset_name')
+            if key:
+                map[key.strip()] = override
         return map
 
     @staticmethod
