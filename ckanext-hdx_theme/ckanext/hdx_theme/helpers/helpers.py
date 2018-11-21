@@ -640,9 +640,9 @@ def hdx_frequency_list(for_sysadmin=False, include_value=None):
         {'value': '90', 'text': 'Every three months', 'onlySysadmin': False},
         {'value': '180', 'text': 'Every six months', 'onlySysadmin': False},
         {'value': '365', 'text': 'Every year', 'onlySysadmin': False},
-        {'value': '0', 'text': 'Live', 'onlySysadmin': True},
-        {'value': '-2', 'text': 'Adhoc', 'onlySysadmin': True},
-        {'value': '-1', 'text': 'Never', 'onlySysadmin': True},
+        {'value': '0', 'text': 'Live', 'onlySysadmin': False},
+        {'value': '-2', 'text': 'As needed', 'onlySysadmin': False},
+        {'value': '-1', 'text': 'Never', 'onlySysadmin': False},
     ]
     filtered_result = result
     if not for_sysadmin:
