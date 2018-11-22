@@ -17,6 +17,15 @@
 .dataset-resources li {
   display: inline;
 }
+.dataset-resources [class^="icon-"],
+.dataset-resources [class*=" icon-"] {
+  display: inline-block;
+  font-size: 16px;
+}
+.dataset-resources [class^="icon-"]:before,
+.dataset-resources [class*=" icon-"]:before {
+  color: #888888;
+}
 /* Style dataset icons */
 .label-icons span {
   font-size: 15px;

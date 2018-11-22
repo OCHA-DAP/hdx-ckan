@@ -6,13 +6,6 @@
 {% if package.has_quickcharts or visualization or popular or has_showcase_items or (package.subnational and package.subnational != '0')
         or package.private or has_quality_checked %}
   <li class="label-icons">
-    {#
-      {% if geolocated %}
-        <!--
-        <span class="icon-location" title="{{ _("Geo tagged") }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-        -->
-      {% endif %}
-    #}
     {% if visualization %}
       <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
     {% endif %}
@@ -25,40 +18,7 @@
     {% if package.subnational and package.subnational != '0' %}
       <span class="icon-subnational" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
     {% endif %}
-    {% if package.has_quickcharts %}
-        <a href="{% url_for controller='package', action='search', ext_quickcharts=1 %}">
-            <span class="icon-quickchart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"
-                  data-module-placement="top" data-toggle="tooltip"></span>
-        </a>
-    {% endif %}
-    {% if popular %}
-      {#
-      {% if c.search %}
-      {-# Search Page #-}
-        <span class="icon-fire" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
-      {% else %}
-      {-# Dataset page #-}
-        {{ h.hdx_popular('recent views', package.pageviews_last_14_days, min=10) }}
-      {% endif %}
-      #}
-        <span class="popular icon-fire" title="{{ _('Trending') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-    {% endif %}
 
-  </li>
-{% endif %}
-{% if package.approx_total_downloads  %}
-  <li class="label-icons"><span class="download-counts" title="{{ _('Total number of downloads') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip">{{ package.approx_total_downloads }}+ {{ _('Downloads') }} </span></li>
-{% endif %}
-
-{% if package.is_requestdata_type %}
-  <li class="label-icons"><span class="download-counts">{{ _('This data is by request only') }}</span></li>
-{% elif package.type == 'dataset' and package.data_update_frequency %}
-  <li class="label-icons">
-    <span class="download-counts">{{ _('This dataset updates') }}: {{ h.hdx_get_frequency_by_value(package.data_update_frequency) }}</span>
-    {%  if package.is_fresh %}
-      <span class="icon-leaf fresh" title="{{ _('This dataset is up to date') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
-      <a href="/faq#auto-faq-Metadata_and_Data_Quality-What_does_the_green_leaf_symbol_mean_-a" target="_blank" class="icon-questionmark freshness"></a>
-    {% endif %}
   </li>
 {% endif %}
 
