@@ -1,0 +1,33 @@
+{% set popular = package.pageviews_last_14_days and package.pageviews_last_14_days >= 50 %}
+{# set has_related_items = package.related_count and package.related_count > 0 #}
+{% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
+{% set has_quality_checked = package.indicator == '1' or package.quality %}
+{% if package.has_quickcharts or visualization or popular or has_showcase_items or (package.subnational and package.subnational != '0')
+        or package.private or has_quality_checked %}
+  <li class="label-icons">
+    {% if visualization %}
+      <span class="icon-visualize" title="{{ _('Comparable Indicator') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+    {% endif %}
+    {% if has_quality_checked %}
+      <span class="icon-quality_checked" title="{{ _('Quality Checked') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip" ></span>
+    {% endif %}
+    {% if has_showcase_items %}
+      <span class="icon-gallery" title="{{ _('Showcase Item') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+    {% endif %}
+    {% if package.subnational and package.subnational != '0' %}
+      <span class="icon-subnational" title="{{ _('Sub-national Data') }}" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"  ></span>
+    {% endif %}
+
+    {% block other_icons %}
+    {% endblock %}
+
+  </li>
+{% endif %}
+
+{% block other_info %}
+{% endblock %}
+
+{% set layer = h.hdx_get_layer_info(package.name) %}
+{% if layer  %}
+<li class="label-icons"><a href="/explore?crisis={{layer.crisis}}&id={{layer.layer}}" class="explorer-link">{{ _('See this dataset in Map Explorer') }}</a></li>
+{% endif %}
