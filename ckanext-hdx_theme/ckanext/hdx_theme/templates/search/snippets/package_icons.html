@@ -22,9 +22,6 @@
   </li>
 {% endif %}
 
-{% if package.is_requestdata_type %}
-  <li class="label-icons"><span class="download-counts">{{ _('This data is by request only') }}</span></li>
-{% endif %}
 
 {% set layer = h.hdx_get_layer_info(package.name) %}
 {% if layer  %}
