@@ -339,6 +339,7 @@ class HDXPackagePlugin(plugins.SingletonPlugin, tk.DefaultDatasetForm):
             'hdx_send_mail_contributor': hdx_get.hdx_send_mail_contributor,
             'hdx_send_mail_members': hdx_get.hdx_send_mail_members,
             'hdx_create_screenshot_for_cod': hdx_create.hdx_create_screenshot_for_cod,
+            'recently_changed_packages_activity_list': hdx_get.recently_changed_packages_activity_list
         }
 
     def before_show(self, resource_dict):
