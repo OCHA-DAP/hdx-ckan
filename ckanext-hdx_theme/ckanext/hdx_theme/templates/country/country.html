@@ -418,71 +418,79 @@
       <div class="col-xs-12">
         <div class="row">
           <div class="mLR15">
-            {% for category in data.data_completness.categories %}
-            <div class="col-xs-3 data-item">
-              <div class="data-item-summary">
-                <div class="categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
-                     data-original-title="{{ category.title }}">
-                  {{ category.title }}
-                </div>
-                <div class="categ-sub-title">
-                  <i class="icon-questionmark" data-module="bs_tooltip" data-module-placement="right" data-toggle="tooltip"
-                     data-original-title="{{ category.description }}">
-                  </i>
-                  {#
-                  <span class="icon-circle-down">
-                    <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
-                  </span>
-                  #}
-                  <span class="dataset-count">{{ category.stats.total_datasets_num }} Datasets</span>
-                </div>
-                <div class="completeness-progress">
-                    <div class="progress-breakdown">
-                      <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_good_percentage }}%;">
-                      </span>
-                      <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_good_percentage }}%;"></span>
+            <div class="col-xs-12">
+              {% set loop_items = 4 %}
+              {% for category in data.data_completness.categories %}
+                {% if (loop.index - 1) is divisibleby loop_items %}
+                  <div class="row">
+                {% endif %}
+                    <div class="col-xs-3 data-item">
+                      <div class="data-item-summary">
+                        <div class="categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
+                             data-original-title="{{ category.title }}">
+                          {{ category.title }}
+                        </div>
+                        <div class="categ-sub-title">
+                          <i class="icon-questionmark" data-module="bs_tooltip" data-module-placement="right" data-toggle="tooltip"
+                             data-original-title="{{ category.description }}">
+                          </i>
+                          {#
+                          <span class="icon-circle-down">
+                            <span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span>
+                          </span>
+                          #}
+                          <span class="dataset-count">{{ category.stats.total_datasets_num }} Datasets</span>
+                        </div>
+                        <div class="completeness-progress">
+                            <div class="progress-breakdown">
+                              <span class="progress-blue" style="width: {{ 100*category.stats.dataseries_good_percentage }}%;">
+                              </span>
+                              <span class="progress-striped" style="width: {{ 100*category.stats.dataseries_not_good_percentage }}%;"></span>
 
-                    </div>
-                </div>
-              </div>
-              <div class="data-item-details" style="display: none">
-                {% for subcateg in category.data_series %}
-                <div class="sub-category">
-                  <div class="sub-categ-title">
-                    {{ subcateg.title }}
-                  </div>
-                  {% if subcateg.datasets | length > 0 %}
-                    {% for dataset in subcateg.datasets %}
-                    <div class="dataset">
-                      <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
-                      {% set dataset_hover_title = dataset.title + " - Limitations: " + dataset.completeness_comment if dataset.completeness_comment else dataset.title %}
-                      <div class="dataset-link"
-                           title="{{ dataset_hover_title }}">
-                        <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
-                          {{ dataset.title }}
-                        </a>
+                            </div>
+                        </div>
                       </div>
-                      <span class="data-org"
-                        title="{{ dataset.organization_title }}">
-                        {{ dataset.organization_title }}
-                      </span>
+                      <div class="data-item-details" style="display: none">
+                        {% for subcateg in category.data_series %}
+                        <div class="sub-category">
+                          <div class="sub-categ-title">
+                            {{ subcateg.title }}
+                          </div>
+                          {% if subcateg.datasets | length > 0 %}
+                            {% for dataset in subcateg.datasets %}
+                            <div class="dataset">
+                              <span class="data-completeness {% if dataset.is_good %}blue{% else %}striped{% endif %}"></span>
+                              {% set dataset_hover_title = dataset.title + " - Limitations: " + dataset.completeness_comment if dataset.completeness_comment else dataset.title %}
+                              <div class="dataset-link"
+                                   title="{{ dataset_hover_title }}">
+                                <a href="{{ h.url_for(controller='package', action='read', id=dataset.name) }}" data-module="hdx_click_stopper" data-module-link_type="data grid dataset">
+                                  {{ dataset.title }}
+                                </a>
+                              </div>
+                              <span class="data-org"
+                                title="{{ dataset.organization_title }}">
+                                {{ dataset.organization_title }}
+                              </span>
+                            </div>
+                            {% endfor %}
+                          {% else %}
+                            <div>
+                              {% if c.userobj %}
+                                <a href="javascript:void(0);" onclick="contributeAddDetails(null, 'data grid');" class="add-data">Add Data</a>
+                              {% else %}
+                                <a href="/contribute" class="add-data" data-module="hdx_click_stopper" data-module-link_type="data grid add data">Add Data</a>
+                              {% endif %}
+                            </div>
+                          {% endif %}
+                        </div>
+                        {% endfor %}
+                      </div>
                     </div>
-                    {% endfor %}
-                  {% else %}
-                    <div>
-                      {% if c.userobj %}
-                        <a href="javascript:void(0);" onclick="contributeAddDetails(null, 'data grid');" class="add-data">Add Data</a>
-                      {% else %}
-                        <a href="/contribute" class="add-data" data-module="hdx_click_stopper" data-module-link_type="data grid add data">Add Data</a>
-                      {% endif %}
-                    </div>
-                  {% endif %}
-                </div>
-                {% endfor %}
-              </div>
+                {% if ((loop.index) is divisibleby loop_items) or (loop.index == data.data_completness.categories|length) %}
+                  </div>
+                {% endif %}
+              {% endfor %}
             </div>
-            {% endfor %}
-
           </div>
         </div>
         <div class="row">
