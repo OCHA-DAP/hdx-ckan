@@ -453,7 +453,7 @@
                       <div class="data-item-details" style="display: none">
                         {% for subcateg in category.data_series %}
                         <div class="sub-category">
-                          <div class="sub-categ-title">
+                          <div class="sub-categ-title" title="{{ subcateg.description}}">
                             {{ subcateg.title }}
                           </div>
                           {% if subcateg.datasets | length > 0 %}
