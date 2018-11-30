@@ -311,7 +311,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
-            abort(401, _('Unauthorized to read group %s') % id)
+            abort(403, _('Unauthorized to read group %s') % id)
 
     # def get_activity_stream(self, country_uuid):
     #     context = {'model': model, 'session': model.Session,

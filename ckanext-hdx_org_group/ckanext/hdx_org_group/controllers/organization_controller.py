@@ -97,7 +97,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         try:
             self._check_access('site_read', context)
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         # pass user info to context as needed to view private datasets of
         # orgs correctly
@@ -160,7 +160,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         except NotFound, e:
             abort(404)
         except NotAuthorized, e:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         org_add_last_updated_field([org_meta.org_dict])
 
@@ -210,7 +210,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         except NotFound:
             abort(404, _('Org not found'))
         except NotAuthorized:
-            abort(401, _('Unauthorized to read org %s') % id)
+            abort(403, _('Unauthorized to read org %s') % id)
 
         return {}
 
@@ -259,7 +259,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         try:
             self._check_access('group_create', context)
         except NotAuthorized:
-            abort(401, _('Unauthorized to create a group'))
+            abort(403, _('Unauthorized to create a group'))
 
         if context['save'] and not data:
             return self._save_new(context, group_type)
@@ -304,7 +304,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
-            abort(401, _('Unauthorized to read group %s') % '')
+            abort(403, _('Unauthorized to read group %s') % '')
 
         group = context.get("group")
         c.group = group
@@ -313,7 +313,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         try:
             self._check_access('group_update', context)
         except NotAuthorized, e:
-            abort(401, _('User %r not authorized to edit %s') % (c.user, id))
+            abort(403, _('User %r not authorized to edit %s') % (c.user, id))
 
         errors = errors or {}
         vars = {'data': data, 'errors': errors,
@@ -505,7 +505,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
         try:
             self._check_access('organization_delete', context)
         except NotAuthorized:
-            abort(401, _('Unauthorized to restore this organization'))
+            abort(403, _('Unauthorized to restore this organization'))
 
         try:
             data_dict = clean_dict(dict_fns.unflatten(
@@ -519,7 +519,7 @@ class HDXOrganizationController(org.OrganizationController, search_controller.HD
                 self._force_reindex(group)
             h.redirect_to('%s_read' % group['type'], id=group['name'])
         except NotAuthorized:
-            abort(401, _('Unauthorized to read group %s') % id)
+            abort(403, _('Unauthorized to read group %s') % id)
         except NotFound, e:
             abort(404, _('Group not found'))
         except dict_fns.DataError:

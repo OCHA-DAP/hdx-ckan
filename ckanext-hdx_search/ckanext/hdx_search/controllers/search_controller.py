@@ -193,7 +193,7 @@ class HDXSearchController(PackageController):
                        'auth_user_obj': c.userobj}
             check_access('site_read', context)
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         package_type = self._guess_package_type()
 

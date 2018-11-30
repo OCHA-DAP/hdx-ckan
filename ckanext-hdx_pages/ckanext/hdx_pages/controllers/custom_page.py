@@ -47,7 +47,7 @@ class PagesController(HDXSearchController):
         try:
             check_access('page_create', context, {})
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
@@ -61,7 +61,7 @@ class PagesController(HDXSearchController):
                 try:
                     check_access('page_create', context, {})
                 except NotAuthorized:
-                    abort(401, _('Not authorized to see this page'))
+                    abort(403, _('Not authorized to see this page'))
                 except Exception, e:
                     error_summary = e.error_summary
                     return self.error_message(error_summary)
@@ -92,7 +92,7 @@ class PagesController(HDXSearchController):
         try:
             check_access('page_update', context, {})
         except NotAuthorized:
-            abort(401, _('Not authorized to edit this page'))
+            abort(403, _('Not authorized to edit this page'))
 
         # checking pressed button
         active_page = request.params.get('save_custom_page')
@@ -106,7 +106,7 @@ class PagesController(HDXSearchController):
                 try:
                     check_access('page_update', context, {})
                 except NotAuthorized:
-                    abort(401, _('Not authorized to edit this page'))
+                    abort(403, _('Not authorized to edit this page'))
                 except Exception, e:
                     error_summary = e.error_summary
                     return self.error_message(error_summary)
@@ -147,7 +147,7 @@ class PagesController(HDXSearchController):
         try:
             page_dict = logic.get_action('page_show')(context, {'id': id})
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         if page_dict.get('sections'):
             sections = json.loads(page_dict['sections'])

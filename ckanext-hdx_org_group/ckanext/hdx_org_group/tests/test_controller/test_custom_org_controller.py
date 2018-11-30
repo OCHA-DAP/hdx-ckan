@@ -158,8 +158,14 @@ class TestCustomOrgController(org_group_base.OrgGroupBaseWithIndsAndOrgsTest):
         assert 'id="customization-trigger"' in str(result.response)
 
         testadmin = model.User.by_name('janedoe3')
-        result = self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
-        assert 'id="customization-trigger"' not in str(result.response)
+        flag = False
+        try:
+            self.app.get(url, extra_environ={'Authorization': str(testadmin.apikey)})
+        except Exception, ex:
+            assert 'something went wrong' in ex.message
+            flag = True
+        assert flag
+        # assert 'id="customization-trigger"' not in str(result.response)
 
     # COMMENTED OUT FOR 2.6 UPGRADE - TO BE REVIEWED
     #

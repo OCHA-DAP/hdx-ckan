@@ -117,7 +117,7 @@ class OrgMetaDao(search_controller.HDXSearchController):
         except NotFound:
             abort(404, _('Group not found'))
         except NotAuthorized:
-            abort(401, _('Unauthorized to read group %s') % self.id)
+            abort(403, _('Unauthorized to read group %s') % self.id)
 
     def fetch_permissions(self):
         self._fetched_permissions = True
