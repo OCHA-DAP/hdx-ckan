@@ -60,7 +60,7 @@ def hdx_user_org_num(user_id):
         user = tk.get_action('organization_list_for_user')(
             context, {'id': user_id, 'permission': 'create_dataset'})
     except logic.NotAuthorized:
-        base.abort(401, _('Unauthorized to see organization member list'))
+        base.abort(403, _('Unauthorized to see organization member list'))
 
     return user
 

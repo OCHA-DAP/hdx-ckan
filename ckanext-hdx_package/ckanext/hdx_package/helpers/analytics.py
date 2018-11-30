@@ -215,7 +215,7 @@ class ResourceDownloadAnalyticsSender(AbstractAnalyticsSender):
         except logic.NotFound:
             base.abort(404, _('Resource not found'))
         except logic.NotAuthorized:
-            base.abort(401, _('Unauthorized to read resource %s') % id)
+            base.abort(403, _('Unauthorized to read resource %s') % id)
         except Exception, e:
             log.error('Unexpected error {}'.format(e))
 

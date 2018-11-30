@@ -52,7 +52,7 @@ class RelatedController(base.BaseController):
                    'user': c.user or c.author, 'for_view': True,
                    'auth_user_obj': c.userobj}, {'id': id})
             except logic.NotAuthorized:
-                base.abort(401, base._('Not authorized'))
+                base.abort(403, base._('Not authorized'))
             
         try:
             c.pkg_dict = logic.get_action('package_show')(context, {'id': id})
