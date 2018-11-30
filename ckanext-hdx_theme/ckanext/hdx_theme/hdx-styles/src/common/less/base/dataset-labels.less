@@ -32,11 +32,20 @@
 
 /* Style dataset labels */
 .dataset-resources {
-  margin-top: 8px;
-  padding: 0;
-  li {
-    display: inline;
-  }
+    margin-top: 8px;
+    padding: 0;
+    li {
+        display: inline;
+    }
+
+    [class^="icon-"], [class*=" icon-"] {
+        display: inline-block;
+        &:before {
+            color: @grayColor;
+        }
+        font-size: 16px;
+    }
+
 }
 
 /* Style dataset icons */

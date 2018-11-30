@@ -5,7 +5,7 @@ Created on Sep 02, 2015
 '''
 
 import os
-
+import ckan.logic.schema
 import ckan.logic as logic
 import ckan.model as model
 import ckan.plugins as plugins
@@ -673,3 +673,23 @@ def hdx_send_mail_members(context, data_dict):
                               footer=_FOOTER_GROUP_MESSAGE)
 
     return None
+
+@logic.validate(logic.schema.default_pagination_schema)
+@logic.side_effect_free
+def recently_changed_packages_activity_list(context, data_dict):
+    result = logic_get.recently_changed_packages_activity_list(context,data_dict)
+    user_obj = context.get('auth_user_obj')
+    is_sysadmin = user_obj and user_obj.sysadmin
+    if is_sysadmin:
+        return result
+
+    for item in result:
+        if 'data' in item:
+            _data = item.get('data')
+            if 'package' in _data:
+                _package_dict = _data.get('package')
+                member_list = get_action('hdx_member_list')(context, {'org_id': _package_dict.get('owner_org')})
+                if (member_list and not member_list.get('is_member')) or member_list is None:
+                    del _package_dict['maintainer_email']
+
+    return result
