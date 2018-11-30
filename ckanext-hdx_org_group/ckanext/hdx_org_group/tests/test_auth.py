@@ -115,7 +115,7 @@ class TestOrgAuth(org_group_base.OrgGroupBaseTest):
     def test_new_org_request_page(self):
         offset = h.url_for(controller='ckanext.hdx_org_group.controllers.request_controller:HDXReqsOrgController', action='request_new_organization')
         result = self.app.get(offset)
-        assert '302' in result.status, 'page should not be accessible when not logged in'
+        assert '403' in result.status, 'something went wrong'
 
     def test_new_org_request(self):
         tests.call_action_api(self.app, 'hdx_send_new_org_request',
