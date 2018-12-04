@@ -344,13 +344,13 @@ h1.country-title {
 }
 .data-completeness .data-item .data-item-summary .categ-sub-title {
   margin-bottom: 5px;
+  text-align: right;
 }
 .data-completeness .data-item .data-item-summary .categ-sub-title .icon-questionmark {
   font-size: 16px;
   color: #007CE0;
 }
 .data-completeness .data-item .data-item-summary .categ-sub-title .dataset-count {
-  float: right;
   font-family: 'Source Sans Pro', sans-serif;
   font-weight: 300;
   font-size: 14px;
@@ -508,4 +508,13 @@ h1.country-title {
   position: absolute;
   left: 8px;
   top: 3px;
+}
+.tooltip .tooltip-column {
+  max-width: 262px;
+}
+.tooltip .tooltip-column .tooltip-content {
+  width: 242px;
+  text-transform: none;
+  text-align: left;
+  font-size: 13px;
 }
