@@ -100,20 +100,24 @@
       margin: 0;
     }
     .panel-heading {
-      height: 74px;
+      min-height: 74px;
       border: none;
       box-shadow: none;
       background-color: inherit;
       padding-top: 30px;
+      padding-bottom: 20px;
       cursor: pointer;
 
-      .panel-title .faq-question-link {
-        font-family: @sourceSansProFont;
-        font-weight: 400;
-        font-size: 18px;
-        color: @blackColor;
-        line-height: 24px;
-        letter-spacing: 0.01em;
+      .panel-title{
+        line-height: 20px;
+        .faq-question-link {
+          font-family: @sourceSansProFont;
+          font-weight: 400;
+          font-size: 18px;
+          color: @blackColor;
+          line-height: 24px;
+          letter-spacing: 0.01em;
+        }
       }
     }
 
@@ -134,4 +138,29 @@
     }
 
   }
+}
+
+.presentation-modal.in {
+    .modal-dialog {
+        .close {
+            position: absolute;
+            right: -30px;
+            top: -40px;
+            font-size: 40px;
+            opacity: 1;
+            color: white;
+        }
+        .modal-content {
+            box-shadow: none;
+            border: none;
+            border-radius: 0;
+            min-height: auto;
+            min-width: auto;
+            height: 560px;
+        }
+    }
+}
+
+a.link {
+    cursor: pointer;
 }
