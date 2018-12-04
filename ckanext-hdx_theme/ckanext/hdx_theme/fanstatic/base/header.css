@@ -2,6 +2,7 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
 @font-face {
   font-family: 'Gotham-Bold';
   src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');
@@ -598,6 +599,11 @@ ul.dataset-resources li + li.label-icons {
   background-position: -320px -62px;
 }
 .icon-leaf.fresh {
+  color: #1bb580;
+  font-size: 16px;
+  margin-left: 0;
+}
+.icon-leaf.fresh::before {
   color: #1bb580;
   font-size: 16px;
   margin-left: 0;
