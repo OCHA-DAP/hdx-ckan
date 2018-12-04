@@ -612,6 +612,10 @@ ul.dataset-resources li + li.label-icons {
   color: #007CE0;
   font-size: 15px;
 }
+.icon-questionmark.freshness::before {
+  color: #007CE0;
+  font-size: 15px;
+}
 /*These styles will be probably be deprecated after next sprint*/
 /* style the filter items present in the left side dark section*/
 .secondary .nav-simple .nav-item {

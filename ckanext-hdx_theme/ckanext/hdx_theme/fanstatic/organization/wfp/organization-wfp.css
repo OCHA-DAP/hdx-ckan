@@ -2,6 +2,7 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700);
 .table-valign {
   display: table;
   position: relative;
@@ -681,6 +682,10 @@ ul.dataset-resources li + li.label-icons {
   margin-left: 0;
 }
 .icon-questionmark.freshness {
+  color: #007CE0;
+  font-size: 15px;
+}
+.icon-questionmark.freshness::before {
   color: #007CE0;
   font-size: 15px;
 }

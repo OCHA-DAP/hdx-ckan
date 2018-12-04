@@ -239,3 +239,7 @@ ul.dataset-resources li + li.label-icons {
   color: #007CE0;
   font-size: 15px;
 }
+.icon-questionmark.freshness::before {
+  color: #007CE0;
+  font-size: 15px;
+}
