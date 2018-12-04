@@ -142,6 +142,9 @@ organizations = {
                  'For instance, there may be a WFP organisation that was '
                  'created by its staff at headquarters in Rome. You may prefer to join that one rather than creating a '
                  'separate organisation for a specific location, e.g., WFP Liberia. You can see the full list of '
+                 'organisations by clicking '
+                 '<a href="https://data.humdata.org/organization">Organisations</a> '
+                 'in the main navigation.'
                  '<br/><br/>'
                  'If you have previously created an organisation and no longer see it on the site, this is because you '
                  'have not yet shared a public dataset. Once you share a dataset, your organisation will become active and visible on the site. '
@@ -217,7 +220,7 @@ sharing_data = {
             'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate '
                  'yourself with an organisation. '
                  '<a target="_blank" href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/present#slide=id.gf01e139c5_1_152">These slides</a> '
-                 'provide a walk-through of how to add a dataset. Here are more details on the '
+                 'provide a walkthrough of how to add a dataset. Here are more details on the '
                  '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field.',
         },
         {
@@ -300,7 +303,10 @@ sharing_data = {
             'q': 'What are the recommended data formats?',
             'a': 'We define data as information that common software can read and analyse. We encourage contributions in any '
                  'common data format. HDX has built-in preview support for tabular data in CSV and Microsoft Excel '
-                 '(xls only) formats, and for geographic data in zipped shapefile, kml and geojson formats.'
+                 '(xls only) formats, and for geographic data in zipped shapefile, kml and geojson formats. If multiple '
+                 'formats are available, each can be added as a resource to the dataset, or if you only wish to add '
+                 'one format, then for tabular data, csv is preferable and for geographic data, '
+                 'zipped shapefile is preferred.'
                  '<br/><br/>'
                  'A PDF file is not data. If you have a data visualization in PDF format, you can add it as a showcase '
                  'item on the dataset page. If you wish to share documents, graphics, or other types of humanitarian '
@@ -488,6 +494,19 @@ metadata_and_data_quality = {
                  'or suggestions for improvement. You can learn more about our definition of the dimensions of data '
                  'quality and our quality-assurance processes '
                  '<a target="_blank"  href="https://centre.humdata.org/wp-content/uploads/HDX_Quality_Assurance_Framework_Draft.pdf">here</a>.',
+        },
+        {
+            'q': 'What should I put for expected update frequency?',
+            'a': 'This metadata field indicates how often you expect your data to be updated and includes values '
+                 'like Every day and Every year as well as the following:<br/>'
+                 '<ul>'
+                 '<li>Live - for datasets where updates are continuous and ongoing</li>'
+                 '<li>As needed - for datasets with an unpredictable, widely varying update frequency</li>'
+                 '<li>Never - for datasets with data that will never be changed</li>'
+                 '</ul'
+                 'We recommend you choose the nearest less frequent regular value instead of As needed or Never as '
+                 'this helps with our monitoring of data freshness. For example, if your data will be updated '
+                 'every 1-6 days, pick Every week, or if every 2 to 9 weeks, choose Every three months.',
         },
         {
             'q': 'What does the green leaf symbol mean?',
