@@ -716,3 +716,9 @@ def hdx_organization_list_for_user(user_id):
         # return tk.get_action('organization_list_for_user')(context, {'id': user_id})
         return tk.get_action('hdx_organization_list_for_user')(_get_context(), {'id': user_id})
     return orgs
+
+def hdx_dataset_is_hxl(tag_list):
+    for tag in tag_list:
+        if tag.get('name') == 'hxl' and tag.get('display_name') == 'hxl':
+            return True
+    return False
