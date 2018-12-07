@@ -455,7 +455,7 @@
                           </div>
                           {% if subcateg.datasets | length > 0 %}
                             {% for dataset in subcateg.datasets %}
-                              {% set dataset_hover_title = dataset.title + "<br/><b>Limitations</b>: " + dataset.completeness_comment if dataset.completeness_comment else dataset.title %}
+                              {% set dataset_hover_title = dataset.title + "<br/><b>Limitations</b>: " + dataset.completeness_comment + " The dataset is not up-to-date." if dataset.completeness_comment else dataset.title %}
                               {% set dataset_hover_title = '<div class="tooltip-content">' + dataset_hover_title + '</div>' %}
                               {% set dataset_hover_body = '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-column"></div></div>' %}
                             <div class="dataset" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
