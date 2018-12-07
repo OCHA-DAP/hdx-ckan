@@ -158,7 +158,7 @@ class RequestController(ckan.controllers.user.UserController):
         try:
             check_access('user_create', context)
         except NotAuthorized:
-            abort(401, _('Unauthorized to register as a user.'))
+            abort(403, _('Unauthorized to register as a user.'))
         #hack to disable check if user is logged in
         save_user = c.user
         c.user = None
@@ -185,7 +185,7 @@ class RequestController(ckan.controllers.user.UserController):
         try:
             check_access('user_create', context)
         except NotAuthorized:
-            abort(401, _('Unauthorized to create a user'))
+            abort(403, _('Unauthorized to create a user'))
 
         if context['save'] and not data:
             return self._save_new(context)

@@ -48,12 +48,15 @@
                   <div class="dataset-updated-icons">
                     {% set has_showcase_items = package.showcase_count and package.showcase_count > 0 %}
                     {% set has_quality_checked = package.indicator == '1' or package.quality %}
+                    {% if h.hdx_dataset_is_hxl(package.tags) %}
+                      <a href="{% url_for controller='package', action='search', ext_hxl=1 %}">
+                        <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
+                              data-module-placement="top" data-toggle="tooltip">
+                        </span>
+                      </a>
+                    {% endif %}
 
                     {# NEW ICONS
-                    <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
-                                  data-module-placement="top" data-toggle="tooltip">
-                    </span>
-
                     <span class="icon-check" title="{{ _('Dataset Containing Data Checks') }}" data-module="bs_tooltip"
                                   data-module-placement="top" data-toggle="tooltip">
                     </span>

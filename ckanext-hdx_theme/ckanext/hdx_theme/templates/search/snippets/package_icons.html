@@ -1,6 +1,13 @@
 {% extends "search/snippets/package_icons_base.html" %}
 
 {% block other_icons %}
+  {% if h.hdx_dataset_is_hxl(package.tags) %}
+    <a href="{% url_for controller='package', action='search', ext_hxl=1 %}">
+      <span class="icon-hxl-tags" title="{{ _('Dataset Containing HXL Tags') }}" data-module="bs_tooltip"
+            data-module-placement="top" data-toggle="tooltip">
+      </span>
+    </a>
+  {% endif %}
   {% if package.has_quickcharts %}
     <a href="{% url_for controller='package', action='search', ext_quickcharts=1 %}">
         <span class="icon-quickchart" title="{{ _('Dataset Containing Quick Charts') }}" data-module="bs_tooltip"

@@ -85,7 +85,7 @@ class HDXOrgMemberController(org.OrganizationController):
             }
             self._set_c_params(c_params)
         except NotAuthorized:
-            base.abort(401, _('Unauthorized to view member list %s') % '')
+            base.abort(403, _('Unauthorized to view member list %s') % '')
         except NotFound:
             base.abort(404, _('Group not found'))
         except Exception, ex:
@@ -215,7 +215,7 @@ class HDXOrgMemberController(org.OrganizationController):
             if not request.params['username']:
                 abort(404, _('User not found'))
         except NotAuthorized:
-            abort(401, _('Unauthorized to add member to group %s') % '')
+            abort(403, _('Unauthorized to add member to group %s') % '')
         except NotFound:
             abort(404, _('Group not found'))
         except ValidationError, e:
@@ -277,7 +277,7 @@ class HDXOrgMemberController(org.OrganizationController):
             self._redirect_to_this_controller(action='members', id=id)
 
         except NotAuthorized:
-            abort(401, _('Unauthorized to add member to group %s') % '')
+            abort(403, _('Unauthorized to add member to group %s') % '')
         except NotFound:
             abort(404, _('Group not found'))
         except ValidationError, e:
@@ -360,7 +360,7 @@ class HDXOrgMemberController(org.OrganizationController):
         try:
             self._check_access('group_member_delete', context, {'id': id})
         except NotAuthorized:
-            abort(401, _('Unauthorized to delete group %s members') % '')
+            abort(403, _('Unauthorized to delete group %s members') % '')
 
         try:
             user_id = request.params.get('user')
@@ -378,7 +378,7 @@ class HDXOrgMemberController(org.OrganizationController):
             c.user_id = user_id
             c.group_id = id
         except NotAuthorized:
-            abort(401, _('Unauthorized to delete group %s') % '')
+            abort(403, _('Unauthorized to delete group %s') % '')
         except NotFound:
             abort(404, _('Group not found'))
         # modified by HDX

@@ -85,7 +85,7 @@ class HDXReqsOrgController(base.BaseController):
         try:
             tk.check_access('hdx_send_new_org_request',context)
         except logic.NotAuthorized:
-            base.abort(401, _('Unauthorized to send a new org request'))
+            base.abort(403, _('Unauthorized to send a new org request'))
 
         errors = {}
         error_summary = {}

@@ -78,7 +78,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
             except NotFound:
                 abort(404, _('{0} not found').format(filter_type))
             except NotAuthorized:
-                abort(401, _('Unauthorized to read {0} {1}').format(
+                abort(403, _('Unauthorized to read {0} {1}').format(
                     filter_type, id))
             if followee is not None:
                 return {
@@ -133,7 +133,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         except NotFound:
             abort(404, _('User not found'))
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
         if user_dict['state'] == 'deleted' and not c.is_sysadmin:
             abort(404, _('User not found'))
         c.user_dict = user_dict
@@ -248,7 +248,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         except NotFound:
             abort(404, _('User not found'))
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         c.is_myself = user_dict['name'] == c.user
         if self._is_facet_only_request():
@@ -290,7 +290,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         try:
             powerviews = get_action('powerview_list')(context, data_dict)
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         template_data = {
             'data': {
@@ -320,7 +320,7 @@ class DashboardController(uc.UserController, search_controller.HDXSearchControll
         try:
             get_action('powerview_delete')(context, data_dict)
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
 
         h.redirect_to(controller='ckanext.hdx_users.controllers.dashboard_controller:DashboardController', action='dashboard_visualizations')
         # return self.dashboard_visualizations()

@@ -49,7 +49,7 @@ class ContributeFlowController(base.BaseController):
         except logic.NotAuthorized, e:
             if c.userobj or c.user:
                 h.redirect_to('user_dashboard_organizations')
-            abort(401, _('Unauthorized to create a package'))
+            abort(403, _('Unauthorized to create a package'))
 
         save_type = request.POST.get('save')
 

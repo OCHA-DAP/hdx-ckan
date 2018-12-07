@@ -37,7 +37,7 @@ class SplashPageController(HomeController):
         try:
             self._check_access('site_read', context)
         except NotAuthorized:
-            abort(401, _('Not authorized to see this page'))
+            abort(403, _('Not authorized to see this page'))
         if c.userobj:
             context['user_id'] = c.userobj.id
             context['user_is_admin'] = c.userobj.sysadmin

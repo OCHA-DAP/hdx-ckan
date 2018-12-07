@@ -170,7 +170,7 @@ def hdx_get_user_info(user_id):
     try:
         user = tk.get_action('hdx_basic_user_info')(context, {'id': user_id})
     except logic.NotAuthorized:
-        base.abort(401, _('Unauthorized to see organization member list'))
+        base.abort(403, _('Unauthorized to see organization member list'))
     return user
 
 
@@ -716,3 +716,9 @@ def hdx_organization_list_for_user(user_id):
         # return tk.get_action('organization_list_for_user')(context, {'id': user_id})
         return tk.get_action('hdx_organization_list_for_user')(_get_context(), {'id': user_id})
     return orgs
+
+def hdx_dataset_is_hxl(tag_list):
+    for tag in tag_list:
+        if tag.get('name') == 'hxl' and tag.get('display_name') == 'hxl':
+            return True
+    return False

@@ -417,6 +417,7 @@ h1.country-title {
             }
             .categ-sub-title {
                 margin-bottom: 5px;
+                text-align: right;
 
                 .icon-questionmark {
                     font-size: 16px;
@@ -424,7 +425,6 @@ h1.country-title {
                 }
 
                 .dataset-count {
-                    float: right;
                     .sourceSansProFont(300, 14px);
                     color: @grayColor;
                     .uppercase();
@@ -605,3 +605,16 @@ h1.country-title {
 
     }
 }
+
+.tooltip {
+    .tooltip-column {
+        max-width: 262px;
+        .tooltip-content {
+            width: 242px;
+            text-transform: none;
+            text-align: left;
+            font-size: 13px;
+        }
+    }
+}
+

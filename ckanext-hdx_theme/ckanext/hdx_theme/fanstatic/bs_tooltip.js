@@ -5,7 +5,8 @@ ckan.module('bs_tooltip', function ($, _) {
     initialize: function () {
       this.el.tooltip({ 
     	  trigger: this.options.trigger,
-          placement: this.options.placement});
+        placement: this.options.placement
+      });
     },
     options: {
     	placement: 'top',

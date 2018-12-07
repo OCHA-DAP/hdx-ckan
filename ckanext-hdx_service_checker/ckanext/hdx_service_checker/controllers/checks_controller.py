@@ -14,7 +14,7 @@ class ChecksController(base.BaseController):
         try:
             result = logic.get_action('run_checks')(context, {})
         except logic.NotAuthorized:
-            base.abort(401, _('Not authorized to see this page'))
+            base.abort(403, _('Not authorized to see this page'))
 
         self._compute_render_color(result)
         return base.render("show_check_results.html", extra_vars={'data': result, 'errors': {}})

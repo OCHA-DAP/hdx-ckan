@@ -746,7 +746,7 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             check_access('user_create', context)
         except NotAuthorized:
-            abort(401, _('Unauthorized to register as a user.'))
+            abort(403, _('Unauthorized to register as a user.'))
         # hack to disable check if user is logged in
         # save_user = c.user
         # c.user = None
@@ -991,7 +991,7 @@ class ValidationController(ckan.controllers.user.UserController):
         try:
             check_access('request_reset', context)
         except NotAuthorized:
-            base.abort(401, _('Unauthorized to request reset password.'))
+            base.abort(403, _('Unauthorized to request reset password.'))
 
         if request.method == 'POST':
             # user_id should be lowercase (for name and email)
