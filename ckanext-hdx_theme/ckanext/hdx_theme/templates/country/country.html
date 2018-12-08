@@ -450,7 +450,10 @@
                       <div class="data-item-details" style="display: none">
                         {% for subcateg in category.data_series %}
                         <div class="sub-category">
-                          <div class="sub-categ-title" title="{{ subcateg.description}}">
+                          {% set subcateg_hover_body = '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner tooltip-column"></div></div>' %}
+                          {% set subcateg_hover_title = '<div class="tooltip-content">' + subcateg.description + '</div>' %}
+                          <div class="sub-categ-title" data-module="bs_tooltip" data-module-placement="top" data-toggle="tooltip"
+                               data-original-title="{{ subcateg_hover_title }}" data-container="body" data-html="true" data-template="{{ subcateg_hover_body }}">
                             {{ subcateg.title }}
                           </div>
                           {% if subcateg.datasets | length > 0 %}
