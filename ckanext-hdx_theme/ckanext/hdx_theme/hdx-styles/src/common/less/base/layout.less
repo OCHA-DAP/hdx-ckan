@@ -1,2 +1,140 @@
 @import "variables.less";
+@import "mixins";
 
+/* Customize fixed Bootstrap layout -- ugly hacking :) */
+.container,
+.navbar-static-top .container,
+.navbar-fixed-top .container,
+.navbar-fixed-bottom .container {
+    width: @containerRealSize;
+    padding: 0;
+}
+
+.paddingHackMixin();
+
+body{
+    line-height: 20px;
+}
+/* END - Customize fixed Bootstrap layout */
+
+
+/* Style default Primary */
+[role=main] .primary{
+    width: 100%;
+    float: none;
+    padding-left: 0;
+}
+
+[role=main] .secondary{
+    margin: 0;
+    padding-right: @gutterSmallSize; /* mimic the left 45 padding */
+    width: 100%;
+    color: #ffffff;
+}
+
+/* Fix main content */
+    [role=main], .main {
+        padding: 0;
+        background: none;
+    }
+
+    .hdx-wrapper.wrapper {
+        background: none;
+        border: none;
+        box-shadow: 0 0 0 0;
+        margin: 0;
+    }
+/* END Fix main content */
+
+/* Main Content */
+    .mainContent > .row{
+        background-color: #ffffff;
+    }
+    .mainContent .module-content {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+        /*margin-bottom: 0;*/
+    }
+
+	.mainContent .module-content.mBottom10 {
+	    margin-bottom: 10px;
+	    padding-bottom: 0;
+	    padding-left: 0;
+	    padding-right: 0;
+	}
+
+    .mainContent .primary .module:last-child{
+        margin-bottom: 0;
+    }
+/* END Main Content */
+
+.secondary input{
+    color: #333;
+}
+.secondary .simple-input .field .btn-search {
+    margin-right: 12px;
+}
+
+.secondary .nav-simple > li, .nav-aside > li {
+    padding: 7px 19px;
+    width:95%;
+}
+
+
+/* END Style default Primary */
+
+/* Style default Secondary */
+    .twoColumnBackground{
+        background-image:url('/images/homepage/columnBackground.png');
+        background-repeat: repeat-y;
+        min-height: 350px;
+    }
+
+    .secondary .module-heading{
+        background-color: transparent;
+        border: none;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 600;
+        font-size: 18px;
+        margin: 35px 0;
+        padding: 0 0 35px;
+        border-bottom: 1px dotted #888888;
+    }
+    .secondary .pTopBottom35 .module-heading {
+        margin: 0;
+    }
+
+    .secondary .module-heading i{
+        display: none;
+    }
+
+    .secondary .module-content{
+        padding: 0;
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+    }
+
+    .secondary .module{
+        margin-bottom: 20px;
+    }
+
+    .secondary .nav-simple .nav-item a{
+        color: #ffffff;
+    }
+
+    .secondary .nav-simple .nav-item a:hover, .secondary .nav-simple .nav-item a:focus{
+        background-color: #888888;
+    }
+
+    .module-footer {
+        border: 0;
+    }
+/* END Style default Secondary */
+
+
+//special offset hack class
+.offset1andHalf{
+    margin-left: 12.5% !important; //should be able to override spanX
+}

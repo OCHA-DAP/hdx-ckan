@@ -1,0 +1,57 @@
+@import "../../variables";
+@import "../../mixins";
+
+
+/* Actions */
+.base-actions-menu{
+  @listMarginUnit: 16px;
+  a.btn.hdx-btn {
+    margin-left: 12px;
+  }
+
+  ul {
+    list-style: none;
+    li {
+      line-height: @listMarginUnit;
+      .sourceSansProFont(400, 14px);
+
+      display: inline;
+      margin-right: @listMarginUnit;
+
+      &:last-child{
+        margin-right: 0;
+      }
+
+      &:first-child:before {
+        border: none;
+      }
+
+      &:before {
+        content: "";
+        border-left: 1px solid @grayColor;
+        height: @listMarginUnit;
+        margin-right: @listMarginUnit;
+      }
+
+      &.delete-override{
+        a {
+          color: @orangeColor;
+          text-transform: none;
+        }
+      }
+
+      a {
+        i {
+          margin-right: 5px;
+        }
+      }
+
+      .direct-share-links{
+        position: relative;
+        bottom: -5px;
+      }
+    }
+  }
+}
+
+/* END - Actions */

@@ -1,0 +1,186 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* The slider*/
+.checkbox-slider {
+  position: relative;
+  width: 30px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+.checkbox-slider .checkbox-slider-checkbox {
+  display: none;
+}
+.checkbox-slider .checkbox-slider-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  border-radius: 28px;
+  margin: 0;
+}
+.checkbox-slider .checkbox-slider-label:after {
+  content: none;
+}
+.checkbox-slider .checkbox-slider-checkbox:checked + .checkbox-slider-label .checkbox-slider-inner {
+  margin-left: 0;
+}
+.checkbox-slider .checkbox-slider-checkbox:checked + .checkbox-slider-label .checkbox-slider-switch {
+  right: 0px;
+  border-color: #007CE0;
+}
+.checkbox-slider .checkbox-slider-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.checkbox-slider .checkbox-slider-inner:before,
+.checkbox-slider .checkbox-slider-inner:after {
+  display: block;
+  float: left;
+  width: 50%;
+  height: 20px;
+  padding: 0;
+  line-height: 20px;
+  font-size: 20px;
+  color: white;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  box-sizing: border-box;
+}
+.checkbox-slider .checkbox-slider-inner:before {
+  content: "";
+  padding-left: 10px;
+  background-color: #007CE0;
+  color: #FFFFFF;
+}
+.checkbox-slider .checkbox-slider-inner:after {
+  content: "";
+  padding-right: 10px;
+  background-color: #888888;
+  color: #666666;
+  text-align: right;
+}
+.checkbox-slider .checkbox-slider-switch {
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 0px;
+  background: #FFFFFF;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 10px;
+  border: 2px solid #888888;
+  border-radius: 28px;
+  transition: all 0.3s ease-in 0s;
+}
+.filter-title {
+  padding: 15px;
+  color: #000;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.filter-title .filter-clear {
+  color: #007CE0;
+  cursor: pointer;
+}
+.filter-category {
+  border: 1px solid #eeeeee;
+}
+.filter-category .categ-title {
+  background-color: #edf6fd;
+  padding: 15px;
+  border-bottom: 1px solid #eeeeee;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888888;
+  line-height: 1em;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+.filter-category .categ-list .categ-search {
+  margin: 15px;
+  padding: 0;
+  display: none;
+  position: relative;
+}
+.filter-category .categ-list .categ-search input {
+  width: 100%;
+  border: 1px solid #cccccc;
+  padding: 5px;
+  padding-left: 10px;
+}
+.filter-category .categ-list .categ-search input:focus {
+  outline: none;
+}
+.filter-category .categ-list .categ-search i.glyphicon-search {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+.filter-category .categ-list .categ-items {
+  list-style: none;
+  margin: 15px;
+  padding: 0;
+  padding-right: 20px;
+  padding-left: 1px;
+}
+.filter-category .categ-list .categ-items li {
+  line-height: 20px;
+  color: #333333;
+}
+.filter-category .categ-list .categ-items li label {
+  margin-bottom: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+.filter-category .categ-list .categ-items li label:after {
+  content: none;
+}
+.filter-category .categ-list .categ-items li input[type='checkbox'] {
+  top: 0;
+  margin-right: 5px;
+}
+.filter-category .categ-list .categ-items li .item-count {
+  margin-left: 2px;
+  color: #888888;
+}
+.filter-category .categ-list .categ-items li:nth-child(n+6) {
+  display: none;
+}
+.filter-category .categ-list.show-all .categ-search {
+  display: block;
+}
+.filter-category .categ-list.show-all .categ-items {
+  max-height: 210px;
+  overflow-y: scroll;
+}
+.filter-category .categ-list.show-all .categ-items li:nth-child(n+6) {
+  display: block;
+}
+.filter-category .categ-list.show-always .categ-items li:nth-child(n+6) {
+  display: block;
+}
+.filter-category .categ-actions {
+  margin: 15px;
+}
+.filter-category .categ-actions .show-more {
+  color: #007CE0;
+  cursor: pointer;
+}
+.filter-category ~ .filter-category {
+  margin-top: -1px;
+}

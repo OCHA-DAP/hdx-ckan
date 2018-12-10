@@ -1,0 +1,68 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* Style links inside header-nav, main navigation links */
+.mainLinks {
+  padding-left: 20px;
+  margin: 0;
+}
+.mainLinks.mainLinks-gray > li > a {
+  font-family: 'Gotham-Book', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #cccccc;
+  line-height: 1;
+}
+.mainLinks.mainLinks-gray > li > a:hover,
+.mainLinks.mainLinks-gray > li > a:focus {
+  color: #cccccc;
+}
+.mainLinks > li {
+  display: inline;
+}
+.mainLinks > li > a {
+  margin-left: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+  font-family: 'Gotham-Bold', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: #333333;
+  letter-spacing: 0.03em;
+  line-height: 31px;
+  text-transform: uppercase;
+}
+.mainLinks > li > a:hover,
+.mainLinks > li > a:focus {
+  color: #000000;
+}
+.mainLinks > li > a:after {
+  content: "|";
+  margin-left: 15px;
+}
+.mainLinks > li > a:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+.mainLinks > li .dropdown-menu a:hover {
+  background-color: #FFFFFF;
+  color: #333333;
+  text-decoration: underline;
+}
+.mainLinks > li #crises-label:after {
+  content: '\25bc';
+  margin-left: 3px;
+  font-size: 13px;
+}
+.mainLinks > li:first-child > a {
+  margin-left: 0;
+}
+.mainLinks > li:last-child > a:after {
+  content: "";
+  margin: 0;
+}

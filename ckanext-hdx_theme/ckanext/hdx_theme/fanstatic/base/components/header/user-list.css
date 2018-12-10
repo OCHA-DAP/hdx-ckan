@@ -1,0 +1,16 @@
+/* Style Sysadmin settings*/
+.user-list {
+  margin: 0;
+  list-style: none;
+}
+.user-list li {
+  margin: 0 0 10px 0;
+}
+.user-list .gravatar {
+  vertical-align: -4px;
+  margin-right: 3px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
+}
+/* END Style Sysadmin settings*/

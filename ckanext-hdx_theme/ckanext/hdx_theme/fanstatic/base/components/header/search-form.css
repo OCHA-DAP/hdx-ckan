@@ -1,0 +1,20 @@
+/* search_form.html customisations */
+.list-items.search-form {
+  border-bottom: none;
+  margin: 0;
+  padding: 0;
+}
+.list-items.search-form h2 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+}
+.list-items.search-form .search-input.search-giant input {
+  border-radius: 14px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+}
+.list-items.search-form .search-input {
+  margin-bottom: 25px;
+}
+/* END search_form.html customisations */

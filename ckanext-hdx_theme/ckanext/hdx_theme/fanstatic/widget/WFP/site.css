@@ -55,7 +55,7 @@
 }
 #wfp-visualization-wrapper .brush .extent {
   stroke: #fff;
-  fill-opacity: .125;
+  fill-opacity: 0.125;
   shape-rendering: crispEdges;
 }
 #wfp-visualization-wrapper .bar {

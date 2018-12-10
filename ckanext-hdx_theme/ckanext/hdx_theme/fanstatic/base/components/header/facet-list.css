@@ -1,0 +1,70 @@
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}
+/* Facets fonts */
+.facet-hidden {
+  display: none;
+}
+.module-heading.facet-title {
+  cursor: pointer;
+  font-family: 'Gotham-Black', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #888888;
+  border: 0;
+}
+.module-heading .facet-title-counter {
+  font-family: 'Gotham-Black', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  color: #ffffff;
+}
+.nav-facet .list-items {
+  padding: 7px 10px;
+  border-bottom: none;
+}
+.nav-facet .list-items a {
+  color: #ffffff;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+}
+.nav-facet .list-items a .float-right {
+  font-family: "Gotham-Book", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+}
+.nav-facet .list-items a:hover {
+  background-color: inherit;
+}
+.list-items.module-narrow .module-heading,
+.list-items.module-narrow .module-content,
+.list-items.module-narrow .module-footer {
+  padding: 0;
+}
+.list-items .list-items.action {
+  margin-top: 5px;
+}
+.list-items.facet-items {
+  border-bottom: 1px solid #888888;
+}
+/* overwrite the hover the selected facets - #702*/
+.nav-item.active > a:hover,
+.nav-aside li.active a:hover {
+  color: #ffffff;
+  background-color: #8ca0a6;
+}
+/* Followers Count */
+.followers-count {
+  font-family: 'Gotham-Light', sans-serif;
+  font-weight: 400;
+  font-size: 48px;
+  line-height: normal;
+}
+/* END Followers Count */
+/* END Facets fonts */
