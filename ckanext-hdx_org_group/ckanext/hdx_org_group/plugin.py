@@ -381,4 +381,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
 
         if shape_infos and not screenshot.screenshot_exists(cod_dict):
             context = {'ignore_auth': True}
-            tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
+            try:
+                tk.get_action('hdx_create_screenshot_for_cod')(context, {'id': cod_dict['id']})
+            except Exception, ex:
+                log.error(ex)

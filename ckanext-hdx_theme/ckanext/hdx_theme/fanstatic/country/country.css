@@ -379,6 +379,7 @@ h1.country-title {
   color: #888888;
   text-transform: uppercase;
   margin: 5px 0;
+  cursor: default;
 }
 .data-completeness .data-item .data-item-details .sub-category a.add-data {
   color: #f2645a;
