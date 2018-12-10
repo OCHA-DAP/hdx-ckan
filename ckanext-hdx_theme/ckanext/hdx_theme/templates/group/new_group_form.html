@@ -39,7 +39,7 @@ overriding the form blocks depending on the current context
 
   {% set activity_level = data.get('activity_level', '') %}
   <div class="control-group control-full">
-  	<label class="control-label" for="field-activity-level">{{ _("Activity Level")}}</label>
+  	<label class="control-label" for="field-activity-level">{{ _("Activity Level (Featured Section)")}}</label>
   	<div class="controls">
         <select id="field-activity-level" name="activity_level">
             <option value="inactive" {% if activity_level == 'inactive' %}selected="selected"{% endif %}>
@@ -47,6 +47,22 @@ overriding the form blocks depending on the current context
             </option>
             <option value="active"
                     {% if activity_level == 'active' %}selected="selected"{% endif %}>
+                {{ _('Active') }}
+            </option>
+        </select>
+  	</div>
+  </div>
+
+  {% set key_figures = data.get('key_figures', '') %}
+  <div class="control-group control-full">
+  	<label class="control-label" for="field-key-figures">{{ _("Key Figures")}}</label>
+  	<div class="controls">
+        <select id="field-key-figures" name="key_figures">
+            <option value="inactive" {% if key_figures == 'inactive' %}selected="selected"{% endif %}>
+                {{ _('Inactive') }}
+            </option>
+            <option value="active"
+                    {% if key_figures == 'active' %}selected="selected"{% endif %}>
                 {{ _('Active') }}
             </option>
         </select>
