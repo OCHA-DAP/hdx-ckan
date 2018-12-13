@@ -106,7 +106,7 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
             {'id': country_dict['id']}
         )
 
-        top_line_data_list = self._get_topline_numbers(country_dict['id'])
+        top_line_data_list = self._get_topline_numbers(country_dict['id'], country_dict.get('activity_level'))
 
         organization_list = self._get_org_list_for_menu_from_facets(not_filtered_facet_info)
         f_event_list = self._get_event_list_for_featured(country_dict['id'])
@@ -287,7 +287,16 @@ class CountryController(group.GroupController, search_controller.HDXSearchContro
 
     @staticmethod
     @bcache.cache_region('hdx_memory_cache', '_get_topline_numbers')
-    def _get_topline_numbers(id):
+    def _get_topline_numbers(id, activity_level=None):
+        '''
+        :param id:
+        :type id: string
+        :param activity_level: used to invalidate cache for one group (activity_level) - relief web
+        :type activity_level: string
+
+        :return: list with topline numbers for a group
+        :rtype: list
+        '''
         return get_action('hdx_topline_num_for_group')({}, {'id': id, 'common_format': 'false'})
 
 

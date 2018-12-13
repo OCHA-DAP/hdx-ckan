@@ -215,8 +215,7 @@
         </div>
     </div>
     {% endif %}
-
-    {% if not data.data_completness and data.widgets.top_line_data_list %}
+    {% if (not data.country_dict.key_figures or data.country_dict.key_figures == 'active') and data.widgets.top_line_data_list %}
     <div class="row">
         <div class="col-xs-12">
             <div class="list-header crisis-list-header">
