@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .section-body iframe {
   background-color: #cccccc;
 }

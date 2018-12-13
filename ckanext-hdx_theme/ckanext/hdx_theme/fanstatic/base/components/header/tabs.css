@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 /* Alter page-header style - used with nav-tabs */
 .page-header {
   background: none;

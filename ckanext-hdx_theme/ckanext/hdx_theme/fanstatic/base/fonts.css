@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 @font-face {
   font-family: 'Gotham-Bold';
   src: url('/fonts/Gotham_OTF/Gotham-Bold.otf');

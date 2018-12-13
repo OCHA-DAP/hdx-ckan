@@ -15,14 +15,6 @@
   border-radius: 100px;
 }
 /* END Style Dashboard - Newsfeed list */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 /* Actions */
 .base-actions-menu a.btn.hdx-btn {
   margin-left: 12px;
@@ -1308,3 +1300,11 @@ hr.dotted {
   float: right;
 }
 /* END Common Classes */
+.table-valign {
+  display: table;
+  position: relative;
+}
+.table-valign-content {
+  display: table-cell;
+  vertical-align: middle;
+}

@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 /* Actions */
 .base-actions-menu a.btn.hdx-btn {
   margin-left: 12px;

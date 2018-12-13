@@ -1,12 +1,4 @@
 /* Style Modal Dialogs */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .modal.in {
   position: fixed;
   top: 0;

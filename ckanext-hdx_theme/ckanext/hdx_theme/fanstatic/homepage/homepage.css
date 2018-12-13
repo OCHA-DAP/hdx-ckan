@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 /* Fix search widget */
 /* Fix size due to different box-sizing */
 .form-search .input-append .searchInput {
@@ -54,6 +46,21 @@
 header {
   position: relative;
   z-index: 10000;
+  /* Header Homepage */
+  /* END Header Homepage */
+}
+header .global-header {
+  background-color: #333333;
+}
+header .global-header .header-message {
+  max-width: 100%;
+}
+header .homepage-header-nav-border {
+  background-color: #ffffff;
+  border-bottom: 3px solid #cccccc;
+}
+header .homepage-header-nav-border > div {
+  margin-bottom: -3px;
 }
 .homepage-main {
   background-color: #1ebfb3;
@@ -305,21 +312,6 @@ header {
   /*min-width: 1382px;*/
 }
 /* END Homepage */
-/* Header Homepage */
-.homepage-header-user-bg {
-  background-color: #333333;
-}
-.homepage-header-user-bg .header-message {
-  max-width: 100%;
-}
-.homepage-header-nav-border {
-  background-color: #ffffff;
-  border-bottom: 3px solid #cccccc;
-}
-.homepage-header-nav-border > div {
-  margin-bottom: -3px;
-}
-/* END Header Homepage */
 /* Footer Homepage */
 /* Set page background to white - on large screens footer was to short - green was showing :) */
 /*body{*/

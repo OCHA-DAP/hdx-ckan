@@ -95,38 +95,60 @@
 
 
     .social-footer {
-        height: 100px;
         position: relative;
 
-        .social-links {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translate(0, -50%);
-
+        .terms {
+            margin: 30px 0;
             a {
-                margin-left: 15px;
-                svg, .icon {
-                    height: 18px;
-                    width: 18px;
-                    fill: @lightGrayColor;
-                    font-size: 18px;
-                    color: @lightGrayColor
-                }
+                text-transform: uppercase;
+                margin-right: 30px;
+                color: @extraLightGrayColor;
             }
         }
+        .service {
+          margin-bottom: 45px;
+          color: @whiteColor;
 
-        .product-links {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translate(0, -50%);
-
-            .sourceSansProFont(400, 15px);
-
-            img {
-                margin-left: 20px;
+          .provided-by {
+          }
+          .service-details {
+            display: flex;
+            font-size: 12px;
+            .ocha-service {
+              display: flex;
+              @ochaLogoHeight: 40px;
+              .ocha-logo {
+                height: @ochaLogoHeight;
+                margin: 10px 0;
+              }
+              .spacer {
+                border-right: 1px solid @whiteColor;
+                height: @ochaLogoHeight;
+                margin: 10px;
+              }
+              .ocha-text {
+                //width: 510px;
+                flex: 510px 1 1;
+                margin: 10px 0;
+                margin-right: 10px;
+              }
             }
+
+            .license {
+              width: 290px;
+              text-align: right;
+              margin: 10px 0;
+              margin-left: auto;
+              margin-right: 10px;
+            }
+            .license-cc {
+              margin: 10px 0;
+              > svg {
+                margin-top: 10px;
+                fill: @whiteColor;
+              }
+            }
+          }
         }
 
     }
@@ -158,8 +180,8 @@
     }
 
     a.social-icon {
-		background-image: url("@{imagePath}/homepage/socialBlog.png");
-		background-size: 250px 64px;
+        background-image: url("@{imagePath}/homepage/socialBlog.png");
+        background-size: 250px 64px;
         background-color: #404040;
         border-radius: 3px;
         float: left;
@@ -167,7 +189,7 @@
         list-style: none;
         margin-left: 4px;
         width: 25px;
-	}
+    }
 
     a.social-icon:hover{
         background-color: #007ce0;

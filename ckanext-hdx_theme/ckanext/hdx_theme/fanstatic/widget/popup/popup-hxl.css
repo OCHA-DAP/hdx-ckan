@@ -74,14 +74,6 @@ ul.hdx-bs3 {
   display: inline-block;
 }
 /* END - Actions button list */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .popup {
   position: fixed;
   top: 0;

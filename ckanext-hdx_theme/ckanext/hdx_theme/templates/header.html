@@ -10,250 +10,323 @@
 {% block header_wrapper %}
 <div>
 </div>
-<header class="newHeader">
-<div class="homepage-header-user-bg">
-    <div class="header-message header-user-bg">
+<header class="new-header">
+<div class="global-header homepage-header-user-bg"> <!-- header is streched for the homepage -->
+    <div class="header-message global-header-bg">
         <div class="header-message-container">
             <img class="header-message-image" src="/images/empty.png" />
         </div>
     </div>
     <div class="container">
-        <div class="row paddingRowHack header-user-bg">
-            <div class="col-xs-12 paddingLeftHack paddingRightHack" style="position: relative;">
-                {% if step %}
-                {% if step == "hdx_onboarding_first_login" %}
-                <div id="first-login" style="display: none;">first login</div>
-                <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
-                </div>
-                {% endif %}
-                {% if step == "hdx_onboarding_follows" %}
-                <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
-                </div>
-                {% endif %}
-                {% if step == "hdx_onboarding_org" %}
-                <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup', '#user_extra', 'True');" href="#">Complete setting up your account</a>
-                </div>
-                {% endif %}
-                {% if step == "hdx_onboarding_friends" %}
-                <div id="incomplete-profile" class="pull-left">
-                    » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
-                </div>
-                {% endif %}
-                {% endif %}
-                <div class="header-user-box pull-right">
-                    {% if c.userobj %}
-                    <span class="dropdown">
-              {% block header_request_data_notification %}
-                {% set notification_seen = h.requestdata_get_notification() %}
-                {% if not notification_seen %}
-                  <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}" title="{{ _('New data request') }}">
-                    <div class="request-data-notification"></div>
-                  </a>
-                {% endif %}
-              {% endblock %}
-              <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
-                <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
+        <div class="row paddingRowHack global-header-bg">
+            <div class="col-xs-12 paddingLeftHack paddingRightHack global-header-content">
+              <a href="#" data-toggle="dropdown" class="ocha-services">
+                <span class="ocha-logo"></span>
+                OCHA Services
+                <svg class="icon-o-arrow-up" viewBox="0 0 48 48"><path d="M0,34a4,4,0,0,1,1.17-2.83l20-20a4,4,0,0,1,5.66,0l20,20a4,4,0,1,1-5.66,5.66L24,19.66,6.83,36.83A4,4,0,0,1,0,34Z"/></svg>
+                <svg class="icon-o-arrow-down" viewBox="0 0 48 48"><path d="M48,14a4,4,0,0,1-1.17,2.83l-20,20a4,4,0,0,1-5.66,0l-20-20a4,4,0,0,1,5.66-5.66L24,28.34,41.17,11.17A4,4,0,0,1,48,14Z"/></svg>
               </a>
-              <ul class="dropdown-menu" role="menu">
-                {% block header_account_logged %}
-                {% if c.userobj.sysadmin %}
-                <li>
-                  <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
-                    <i class="icon-legal"></i>
-                    <span>{{ _('Sysadmin settings') }}</span>
-                  </a>
-                </li>
-                {% endif %}
-                <li>
-                  <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
-                    <i class="icon-user"></i>
-                    <span>{{ _('Profile') }}</span>
-                  </a>
-                </li>
-                <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
-                  {# CKAN 2.2 DOES NOT LIKE THIS #}
-                  {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
-                  <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{# notifications_tooltip #}">
-                    <i class="icon-dashboard"></i>
-                    <span> {{ _('Dashboard') }} </span>
-                  </a>
-                </li>
-                <li>
-                  <a href="{{ h.url_for(controller='user', action='dashboard_organizations') }}" title="{{ _('My Organisations') }}">
-                    <i class="icon-user"></i>
-                    <span>{{ _('My Organisations') }}</span>
-                  </a>
-                </li>
-                {% block header_account_settings_link %}
-                <li>
-                  <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
-                    <i class="icon-cog"></i>
-                    <span>{{ _('User settings') }}</span>
-                  </a>
-                </li>
-                {% endblock %}
-                {% block header_account_log_out_link %}
-                <li>
-                  <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
-                    <i class="icon-signout"></i>
-                    <span>{{ _('Log out') }}</span>
-                  </a>
-                </li>
-                {% endblock %}
-                {% endblock %}
-              </ul>
-            </span>
-                    <span style="margin: 0 10px;">|</span>
-                    <span>
-              <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
-                {{ _('Log out') }}
-              </a>
-            </span>
-                    {% else %}
-                    {% block header_account_notlogged %}
-                    <span>
-                <a class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#">Log in</a>
-              </span>
-                    <span style="margin: 0 10px;">|</span>
-                    <span><a onclick="spawnRecaptcha('#signupPopup');showOnboardingWidget('#signupPopup');" href="#">{{_('Sign up')}}</a></span>
-                    {% endblock %}
-                    {% endif %}
+              <div class="dropdown-menu ocha-services-menu" role="menu">
+                <div class="paddingLeftHack paddingRightHack ">
+                  <div class="row">
+                    <div class="col-xs-3">
+                      <p class="list-title">
+                        Related Platforms
+                      </p>
+                      <ul class="ocha-links-list">
+                        <li>
+                          <a href="https://centre.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Centre for Humanitarian Data</a>
+                        </li>
+                        <li>
+                          <a href="https://data.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Data Exchange (HDX)</a>
+                        </li>
+                        <li>
+                          <a href="https://tools.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">HDX Tools</a>
+                        </li>
+                        <li>
+                          <a href="http://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Exchange Language (HXL)</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-xs-3">
+                      <p class="list-title">
+                        Other OCHA Services
+                      </p>
+                      <ul class="ocha-links-list">
+                        <li>
+                          <a href="https://fts.unocha.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Financial Tracking Service (FTS)</a>
+                        </li>
+                        <li>
+                          <a href="https://hum-insight.info/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian InSight</a>
+                        </li>
+                        <li>
+                          <a href="https://www.humanitarianresponse.info" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Humanitarian Response</a>
+                        </li>
+                        <li>
+                          <a href="https://www.unocha.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">UN OCHA</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="col-xs-3">
+                      <p class="list-title">
+                        &nbsp;
+                      </p>
+                      <ul class="ocha-links-list">
+                        <li>
+                          <a href="https://reliefweb.int" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header">Relief Web</a>
+                        </li>
+
+                      </ul>
+                    </div>
+                    <div class="col-xs-3">
+                      <a href="https://www.unocha.org/ocha-digital-services" target="_blank" data-module="hdx_click_stopper" data-module-link_type="header" class="btn ocha-see-all">
+                        See all
+                      </a>
+                    </div>
+                  </div>
                 </div>
+
+              </div>
+              {% if step %}
+                <div class="onboarding-step">
+                  {% if step == "hdx_onboarding_first_login" %}
+                    <div id="first-login" style="display: none;">first login</div>
+                    <div id="incomplete-profile" class="pull-left">
+                        » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+                    </div>
+                  {% endif %}
+                  {% if step == "hdx_onboarding_follows" %}
+                    <div id="incomplete-profile" class="pull-left">
+                        » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#registeredPopup');" href="#">Complete setting up your account</a>
+                    </div>
+                  {% endif %}
+                  {% if step == "hdx_onboarding_org" %}
+                    <div id="incomplete-profile" class="pull-left">
+                        » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#selectOrgPopup', '#user_extra', 'True');" href="#">Complete setting up your account</a>
+                    </div>
+                  {% endif %}
+                  {% if step == "hdx_onboarding_friends" %}
+                    <div id="incomplete-profile" class="pull-left">
+                        » You haven't optimised your account. <a onclick="closeCurrentWidget(this);showOnboardingWidget('#invitePopup');" href="#">Complete setting up your account</a>
+                    </div>
+                  {% endif %}
+                </div>
+              {% endif %}
+              <div class="header-user-box pull-right">
+                {% if c.userobj %}
+                  <ul class="separated-list">
+                    <li>
+                      <svg class="icon-o-help" viewBox="0 0 48 48"><path d="M29,43a5,5,0,0,1-5,5,5,5,0,1,1,3.53-8.53A4.82,4.82,0,0,1,29,43Z"/><path d="M24,0A11,11,0,0,0,13,11a4,4,0,0,0,8,0,3,3,0,0,1,6,0h0c0,2-.64,3-2.33,4.67-2,2-4.67,4.67-4.67,9.33v5a4,4,0,0,0,8,0V25c0-1.23.64-2,2.33-3.67A14.43,14.43,0,0,0,35,11h0A11,11,0,0,0,24,0Z"/></svg>
+                      <a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer"> FAQ</a>
+                    </li>
+                    <li>
+                      <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
+                      <span class="dropdown">
+                          {% block header_request_data_notification %}
+                            {% set notification_seen = h.requestdata_get_notification() %}
+                            {% if not notification_seen %}
+                              <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}" title="{{ _('New data request') }}">
+                                <div class="request-data-notification"></div>
+                              </a>
+                            {% endif %}
+                          {% endblock %}
+                          <a href="#" class="dropdown-toggle header-user-name" data-toggle="dropdown">
+                            <span class="username">{{ h.markdown_extract(c.userobj.display_name, extract_length=15) }}</span>
+                          </a>
+                          <ul class="dropdown-menu" role="menu">
+                            {% block header_account_logged %}
+                            {% if c.userobj.sysadmin %}
+                            <li>
+                              <a href="{{ h.url_for(controller='admin', action='index') }}" title="{{ _('Sysadmin settings') }}">
+                                <i class="icon-legal"></i>
+                                <span>{{ _('Sysadmin settings') }}</span>
+                              </a>
+                            </li>
+                            {% endif %}
+                            <li>
+                              <a href="{{ h.url_for(controller='user', action='read', id=c.userobj.name) }}" class="image" title="{{ _('View profile') }}">
+                                <i class="icon-user"></i>
+                                <span>{{ _('Profile') }}</span>
+                              </a>
+                            </li>
+                            <li class="notifications {% if c.new_activities > 0 %}notifications-important{% endif %}">
+                              {# CKAN 2.2 DOES NOT LIKE THIS #}
+                              {# set notifications_tooltip = ngettext('Dashboard (%(num)d new item)', 'Dashboard (%(num)d new items)', c.new_activities) #}
+                              <a href="{{ h.url_for(controller='user', action='dashboard') }}" title="{# notifications_tooltip #}">
+                                <i class="icon-dashboard"></i>
+                                <span> {{ _('Dashboard') }} </span>
+                              </a>
+                            </li>
+                            <li>
+                              <a href="{{ h.url_for(controller='user', action='dashboard_organizations') }}" title="{{ _('My Organisations') }}">
+                                <i class="icon-user"></i>
+                                <span>{{ _('My Organisations') }}</span>
+                              </a>
+                            </li>
+                            {% block header_account_settings_link %}
+                            <li>
+                              <a href="{{ h.url_for(controller='user', action='edit', id=c.userobj.name) }}" title="{{ _('Edit settings') }}">
+                                <i class="icon-cog"></i>
+                                <span>{{ _('User settings') }}</span>
+                              </a>
+                            </li>
+                            {% endblock %}
+                            {% block header_account_log_out_link %}
+                            <li>
+                              <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                                <i class="icon-signout"></i>
+                                <span>{{ _('Log out') }}</span>
+                              </a>
+                            </li>
+                            {% endblock %}
+                            {% endblock %}
+                          </ul>
+                        </span>
+                    </li>
+                    <li>
+                      <a href="{{ h.url_for('/user/_logout') }}" title="{{ _('Log out') }}">
+                        {{ _('Log out') }}
+                      </a>
+                    </li>
+                  </ul>
+                {% else %}
+                  {% block header_account_notlogged %}
+                    <ul class="separated-list">
+                      <li>
+                        <svg class="icon-o-help" viewBox="0 0 48 48"><path d="M29,43a5,5,0,0,1-5,5,5,5,0,1,1,3.53-8.53A4.82,4.82,0,0,1,29,43Z"/><path d="M24,0A11,11,0,0,0,13,11a4,4,0,0,0,8,0,3,3,0,0,1,6,0h0c0,2-.64,3-2.33,4.67-2,2-4.67,4.67-4.67,9.33v5a4,4,0,0,0,8,0V25c0-1.23.64-2,2.33-3.67A14.43,14.43,0,0,0,35,11h0A11,11,0,0,0,24,0Z"/></svg>
+                        <a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer"> FAQ</a>
+                      </li>
+                      <li>
+                        <svg class="icon-o-user" viewBox="0 0 48 48"><path d="M23,24h2A16,16,0,0,1,41,40v4a0,0,0,0,1,0,0H7a0,0,0,0,1,0,0V40A16,16,0,0,1,23,24Z"/><rect x="15" y="4" width="18" height="18" rx="9" ry="9"/></svg>
+                        <a class="special-menuitem" onclick="showOnboardingWidget('#loginPopup');" href="#">Log in</a>
+                      </li>
+                      <li>
+                        <svg class="icon-o-checked" viewBox="0 0 48 48"><path d="M24,2A22,22,0,1,0,46,24,22,22,0,0,0,24,2ZM38.06,18.37,23,33.83a2.92,2.92,0,0,1-2.9.8,3,3,0,0,1-1.6-.83L10,25.29A3,3,0,0,1,14.2,21l6.5,6.5L33.77,14.17a3,3,0,1,1,4.29,4.19Z"/></svg>
+                        <a onclick="spawnRecaptcha('#signupPopup');showOnboardingWidget('#signupPopup');" href="#">{{_('Sign up')}}</a>
+                      </li>
+                    </ul>
+                  {% endblock %}
+                {% endif %}
+              </div>
             </div>
         </div>
     </div>
 </div>
-<div class="homepage-header-nav-border">
+<div class="hdx-header homepage-header-nav-border">
   <div class="container">
-    <div class="row paddingRowHack header-nav-bg">
-      <div class="span12 paddingLeftHack paddingRightHack header-nav-border">
+    <div class="row paddingRowHack hdx-header-bg">
+      <div class="paddingLeftHack paddingRightHack header-nav-border">
         <div class="header-nav">
-          {# The .header-image class hides the main text and uses image replacement for the title #}
-          <span class="table-valign pull-left">
-            <span class="hdxLogo table-valign-content">
-              {% block header_logo %}
-                {% if g.site_logo %}
-                  <a class="logo" href="{{ h.url('home') }}"><div class="logo-img" alt="{{ g.site_title }} Logo" ></div><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
-                {% else %}
-                  <h1>
-                    <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
-                  </h1>
-                  {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
-                {% endif %}
-              {% endblock %}
-            </span>
-          </span>
-          <span class="header-nav-search table-valign pull-left">
-            <span class="table-valign-content">
-              <div id="previous-searches" style="display: none;">
-                  {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) }}
-              </div>
-              <div class="">
-                <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
-                  <div id="input-search">
-                  <div class="input-prepend input-append">
-                    <i class="icon-search"></i>
-                    <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
-                    <input type="hidden" value="main-nav" name="ext_search_source" />
-                    {# if c.full_facet_info %}
-                      {% set filter_icon_class = 'icon-close_filter_button' if c.full_facet_info.get("filters_selected") or c.full_facet_info.get("query_selected") else 'icon-open_filter_button' %}
-                      <i id="search_filter_btn" class="{{ filter_icon_class }} filter-icon"  title="{{ _('Filters') }}"></i>
-                    {% endif #}
-                  </div>
-                  <div class="search-ahead"></div>
-                </div>
-                </form>
-              </div>
-            </span>
-          </span>
-          <span class="table-valign pull-right" style="margin-left: 20px;">
-            <span class="table-valign-content">
-              {% set add_data_obj = h.hdx_check_add_data() %}
-              {% if add_data_obj %}
-                <a href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
-                   data-module="{{ add_data_obj.data_module }}" data-module-link_type="{{ add_data_obj.data_module_link_type }}">
+          <span class="hdxLogo">
+            {% block header_logo %}
+              {% if g.site_logo %}
+                <a class="logo" href="{{ h.url('home') }}"><div class="logo-img" alt="{{ g.site_title }} Logo" ></div><span id="hdxVersion">{{ h.hdx_version() }}</span></a>
               {% else %}
-                  <!-- keeping for the moment the old way just in case. To be removed after good testing -->
-                  <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails(null, 'header');{% endif %}">
+                <h1>
+                  <a href="{{ h.url('home') }}">{{ g.site_title }}</a>
+                </h1>
+                {% if g.site_description %}<h2>{{ g.site_description }}</h2>{% endif %}
               {% endif %}
-              <!--<a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails();{% endif %}"> -->
-              <!--<a href="{% if c.userobj %}/dataset/preselect{% else %}/contribute{% endif %}">-->
-                <div class="submitData">
-                  {{ _("Add data") }}
-                  <!--<img src="/images/homepage/attachment.svg" style="height: 21px; margin-left: 20px;" />-->
-                </div>
-              </a>
-            </span>
+            {% endblock %}
           </span>
-          <span class="table-valign pull-left">
-            <span class="table-valign-content">
-              <ul class="mainLinks">
-                {% block header_site_navigation_tabs %}
-                  <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Data') }}</a></li>
-                  <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Locations') }}</a></li>
-                  <li><a href="{{ orgLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Organisations') }}</a></li>
-                  <li style="position: relative">
-                      <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
-                        <span id="crises-label" >{{ _('Quicklinks') }}</span>
-                      </a>
-                      <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
-                          <li class="crises-group">
-                              Ongoing
-                              <ul>
+          <div class="header-nav-search">
+            <div id="previous-searches" style="display: none;">
+                {{ h.json_dumps(h.num_of_results_for_prev_searches(c.userobj)) }}
+            </div>
+            <div class="">
+              <form class="header-search-form" method="get" action="{% url_for 'search', sort='metadata_modified desc' %}">
+                <div id="input-search">
+                <div class="input-prepend input-append">
+                  <i class="icon-search"></i>
+                  <input type="text" class="searchInput" id="q" name="q" value="{{ c.q }}" autocomplete="off" placeholder="{{ _('Search Datasets') }}">
+                  <input type="hidden" value="main-nav" name="ext_search_source" />
+                  {# if c.full_facet_info %}
+                    {% set filter_icon_class = 'icon-close_filter_button' if c.full_facet_info.get("filters_selected") or c.full_facet_info.get("query_selected") else 'icon-open_filter_button' %}
+                    <i id="search_filter_btn" class="{{ filter_icon_class }} filter-icon"  title="{{ _('Filters') }}"></i>
+                  {% endif #}
+                </div>
+                <div class="search-ahead"></div>
+              </div>
+              </form>
+            </div>
+          </div>
 
-                                  {% for ev in events.ongoing %}
-                                    <li>
-                                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                                    </li>
-                                  {% endfor %}
-                                    <li>
-                                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>
-                                    </li>
-                                    <li>
-                                      <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>
-                                    </li>
-                                    <li>
-                                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>
-                                    </li>
-                                    <li>
-                                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></div>
-                                    </li>
-                              </ul>
-                          </li>
-                          {# if events.archived #}
-                              <li class="crises-group">
-                                  Archived
-                                  <ul>
-                                      {% for ev in events.archived %}
-                                        <li>
-                                          <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
-                                          <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                                        </li>
-                                      {% endfor %}
-                                      <li>
-                                          <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>
-                                          <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                                      </li>
-                                      <li>
-                                          {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
-                                          <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
-                                          <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                                      </li>
+          <ul class="mainLinks">
+            {% block header_site_navigation_tabs %}
+            <li><a href="{{ dataLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Data') }}</a></li>
+            <li><a href="{{ locationLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Locations') }}</a></li>
+            <li><a href="{{ orgLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Organisations') }}</a></li>
+            <li style="position: relative">
+              <a href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false">
+                <span id="crises-label" >{{ _('Quicklinks') }}</span>
+              </a>
+              <ul class="dropdown-menu crises-menu" role="menu" aria-labelledby="crises-label">
+                <li class="crises-group">
+                  Ongoing
+                  <ul>
 
-                                  </ul>
-                              </li>
-                          {# endif #}
-                      </ul>
-                  </li>
-                  <li><a id="faq-label" href="{{ faqLink }}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ _('Faq') }}</a></li>
-                  <!--<li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>-->
-                {% endblock %}
+                    {% for ev in events.ongoing %}
+                    <li>
+                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
+                    </li>
+                    {% endfor %}
+                    <li>
+                      <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">South Sudan</a></div>
+                    </li>
+                    <li>
+                      <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Syria</a></div>
+                    </li>
+                    <li>
+                      <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Yemen</a></div>
+                    </li>
+                    <li>
+                      <div><a href="{{h.url_for(controller='ckanext.hdx_pages.controllers.custom_page:PagesController', action='read_dashboards', id='cod')}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Common Operational Datasets</a></div>
+                    </li>
+                  </ul>
+                </li>
+                {# if events.archived #}
+                <li class="crises-group">
+                  Archived
+                  <ul>
+                    {% for ev in events.archived %}
+                    <li>
+                      <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="main nav">{{ ev.title }}</a></div>
+                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
+                    </li>
+                    {% endfor %}
+                    <li>
+                      <div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="main nav">Ebola 2014</a></div>
+                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
+                    </li>
+                    <li>
+                      {% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}
+                      <div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="main nav">Nepal Earthquake</a></div>
+                      <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
+                    </li>
+
+                  </ul>
+                </li>
+                {# endif #}
               </ul>
-            </span>
+            </li>
+            <!--<li><a id="feedback-label" href="http://docs.hdx.rwlabs.org/get-involved/">{{ _('Feedback') }}</a></li>-->
+            {% endblock %}
+          </ul>
+
+          <span class="submit-data">
+            {% set add_data_obj = h.hdx_check_add_data() %}
+            {% if add_data_obj %}
+              <a href="{{ add_data_obj.href }}" onclick="{{ add_data_obj.onclick }}"
+                 data-module="{{ add_data_obj.data_module }}" data-module-link_type="{{ add_data_obj.data_module_link_type }}">
+            {% else %}
+              <!-- keeping for the moment the old way just in case. To be removed after good testing -->
+              <a href="{% if c.userobj %}#{% else %}/contribute{% endif %}" onclick="{% if c.userobj %}contributeAddDetails(null, 'header');{% endif %}">
+            {% endif %}
+              <div class="submitData">
+                {{ _("Add data") }}
+              </div>
+            </a>
           </span>
 
         </div>

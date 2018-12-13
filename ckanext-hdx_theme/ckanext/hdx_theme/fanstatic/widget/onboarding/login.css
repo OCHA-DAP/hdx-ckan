@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .login-widget .login-top {
   position: relative;
   background-image: url('/images/backgrounds/browse_illustration.png');

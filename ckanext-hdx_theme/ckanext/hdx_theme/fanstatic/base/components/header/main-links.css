@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 /* Style links inside header-nav, main navigation links */
 .mainLinks {
   padding-left: 20px;

@@ -2,14 +2,6 @@
  * HDX Allow Cookies Banner
  * - used on CKAN, Tools
  */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .allow-cookies-container {
   position: fixed;
   z-index: 10000;
