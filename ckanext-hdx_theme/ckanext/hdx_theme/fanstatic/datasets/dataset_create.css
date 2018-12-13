@@ -2,14 +2,6 @@
  *  --- AUTO-GENERATED ---
  * Please edit the LESS files
  */
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .module .datasetModule {
   margin-left: 100px;
 }
