@@ -111,8 +111,7 @@
         </div>
     </div>
 
-
-    {% if data.country_dict.featured_section == 'active' and data.featured_section.show and country_active %}
+    {% if (not data.country_dict.featured_section or data.country_dict.featured_section == 'active') and data.featured_section.show and country_active %}
     <div class="row featured-section">
         <div class="col-xs-12">
             <div class="list-header crisis-list-header">
