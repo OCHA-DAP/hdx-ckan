@@ -1,0 +1,76 @@
+@import "../../variables";
+@import "../../mixins";
+
+@mainLinksColor: @darkGrayColor;
+
+/* Style links inside header-nav, main navigation links */
+
+.mainLinks {
+  padding-left: 20px;
+  margin: 0;
+
+  &.mainLinks-gray {
+    > li {
+      > a {
+        .gothamBookFont(12px);
+        color: @lightGrayColor;
+        line-height: 1;
+
+        &:hover, &:focus {
+          color: @lightGrayColor;
+        }
+      }
+    }
+  }
+
+  >li {
+    display: inline;
+
+    >a {
+      margin-left: 15px;
+      margin-top: 0;
+      margin-bottom: 0;
+
+      .gothamBoldFont(12px);
+      color: @mainLinksColor;
+      .letter-spacing-3;
+      line-height: 31px;
+      .uppercase;
+
+      &:hover, &:focus {
+        color: darken(@mainLinksColor, 20%);
+      }
+    }
+
+    >a:after{
+      content: "|";
+      margin-left: 15px;
+    }
+
+    >a:focus {
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .dropdown-menu a:hover{
+      background-color: #FFFFFF;
+      color: #333333;
+      text-decoration: underline;
+    }
+
+    #crises-label:after {
+      content: '\25bc';
+      margin-left: 3px;
+      font-size: 13px;
+    }
+
+  }
+
+  >li:first-child > a {
+    margin-left: 0;
+  }
+
+  >li:last-child > a:after {
+    content: "";
+    margin: 0;
+  }
+}

@@ -41,6 +41,11 @@
   .font-definition(@weight, @size);
 }
 
+.helveticaFont(@size: 16px) {
+  font-family: @helveticaFont;
+  .font-definition(400, @size);
+}
+
 .letter-spacing-1() {
   letter-spacing: 0.01em;
 }
@@ -84,14 +89,3 @@
   }
 }
 
-// Vertical align items using tables
-.table-valign{
-  display: table;
-  position: relative;
-}
-.table-valign-content{
-  display: table-cell;
-  vertical-align: middle;
-}
-
-// END - Vertical align items using tables

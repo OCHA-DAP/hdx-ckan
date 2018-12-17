@@ -1,12 +1,32 @@
 @import "../base/variables";
 @import "../base/mixins";
 @import "homepage-carousel";
+@import "form-search";
+
 
 /* Homepage */
 header {
     //moving the .homepage-main under the header with it's size (78px) so the header should overlap
     position: relative;
     z-index: 10000;
+
+    /* Header Homepage */
+    .global-header{
+        background-color: @darkGrayColor;
+        .header-message {
+            max-width: 100%;
+        }
+    }
+
+    .homepage-header-nav-border{
+        background-color: #ffffff;
+        border-bottom: 3px solid #cccccc;
+    }
+    .homepage-header-nav-border > div{
+        margin-bottom: -3px;
+    }
+    /* END Header Homepage */
+
 }
 .homepage-main {
     background-color: @greenColor;
@@ -203,26 +223,6 @@ header {
 }
 /* END Homepage */
 
-/* Header Homepage */
-//.header-nav-search{
-//    visibility: hidden;
-//}
-
-.homepage-header-user-bg{
-    background-color: #333333;
-    .header-message {
-        max-width: 100%;
-    }
-}
-
-.homepage-header-nav-border{
-    background-color: #ffffff;
-    border-bottom: 3px solid #cccccc;
-}
-.homepage-header-nav-border > div{
-    margin-bottom: -3px;
-}
-/* END Header Homepage */
 
 /* Footer Homepage */
 /* Set page background to white - on large screens footer was to short - green was showing :) */
