@@ -332,6 +332,7 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
                        'custom_loc': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'customization': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'activity_level': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
+                       'featured_section': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'key_figures': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')],
                        'data_completeness': [tk.get_validator('ignore_missing'), tk.get_converter('convert_to_extras')]
                        })
@@ -353,6 +354,11 @@ class HDXGroupPlugin(plugins.SingletonPlugin, lib_plugins.DefaultGroupForm):
         schema.update({'customization': [tk.get_converter('convert_from_extras'), tk.get_validator('ignore_missing')]})
         schema.update({
             'activity_level': [
+                tk.get_converter('convert_from_extras'),
+                tk.get_validator('ignore_missing')]
+        })
+        schema.update({
+            'featured_section': [
                 tk.get_converter('convert_from_extras'),
                 tk.get_validator('ignore_missing')]
         })
