@@ -16,9 +16,29 @@
         .gothamBookFont(12px);
     }
 
+    @logo-gray-height: 40px;
+    @logo-gray-margin: 10px;
     .logo-gray {
-        height: 40px;
-        margin-bottom: 10px;
+        height: @logo-gray-height;
+        margin-bottom: @logo-gray-margin;
+    }
+    .match-logo-margin {
+        margin-top: @logo-gray-margin + @logo-gray-height;
+    }
+    .other-services {
+      text-align: center;
+      img {
+        max-height: @logo-gray-height;
+        max-width: 100%;
+
+        &.logo-centre {
+          margin-bottom: -8px;
+        }
+        &.logo-hxl {
+          max-height: 30px;
+          max-width: 137px;
+        }
+      }
     }
 
     .mailChimpForm {
@@ -99,10 +119,23 @@
 
         .terms {
             margin: 30px 0;
+            display: flex;
+
+            .separator {
+              margin-left: auto;
+            }
             a {
                 text-transform: uppercase;
                 margin-right: 30px;
                 color: @extraLightGrayColor;
+
+                &:last-child {
+                  margin-right: 0;
+                }
+
+                .icon-external-link {
+                  color: @grayColor;
+                }
             }
         }
         .service {
