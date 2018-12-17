@@ -8,7 +8,9 @@ ckan.module('hdx_click_stopper', function ($, _) {
             var target = aElement.attr('target');
             var isNewTab = "_blank" == target;
             aElement.click(function (e) {
-                if (!isNewTab) {
+
+                var ctrlCmdKey = e.ctrlKey || e.metaKey;
+                if (!isNewTab && !ctrlCmdKey) {
                     e.preventDefault();
                 }
                 var data = {
@@ -23,16 +25,17 @@ ckan.module('hdx_click_stopper', function ($, _) {
                      * The callback function opens the link after the analytics events are sent.
                      */
                     function () {
-                        if (data.destinationUrl) {
-                            console.log("Executing original click action");
-                            if (!target) {
+                        if (data.destinationUrl && !ctrlCmdKey) {
+                            console.log("Executing original click action " + e.ctrlKey + " " + e.metaKey);
+
+                            if (target) {
+                                window.open(data.destinationUrl, target);
+                            } else {
                                 window.location.href = data.destinationUrl;
                             }
-                            else if (target != "_blank") {
-                                window.open(data.destinationUrl, target);
-                            }
+                        }
                     }
-                });
+                );
 
             }.bind(this));
         },
