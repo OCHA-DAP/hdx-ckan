@@ -1,0 +1,49 @@
+@import "../../variables";
+@import "../../mixins";
+
+@toolbarBackgroundColor: @extraLightGrayColor;
+@toolbarHeight: 20px;
+/* Style breadcrumbs */
+.toolbarRow{
+  background-color: @toolbarBackgroundColor;
+  height: @toolbarHeight;
+
+  .toolbar{
+    margin: 0;
+    padding: 0;
+
+    .breadcrumb{
+      border: none;
+      background: none;
+      margin: 0;
+      padding: 0;
+      .sourceSansProFont(400, 12px);
+      line-height: @toolbarHeight;
+      .uppercase;
+      > li {
+        text-shadow: none;
+        white-space: nowrap;
+        &:after{
+          content: " / ";
+        }
+        &.active {
+          &:after{
+            content: "";
+          }
+          a {
+            color: @darkGrayColor;
+            font-weight: bold;
+          }
+        }
+        a {
+          color: @darkGrayColor;
+        }
+      }
+      > li + li::before {
+        content: "";
+        padding: 0;
+      }
+    }
+  }
+}
+/* END Style breadcrumbs */

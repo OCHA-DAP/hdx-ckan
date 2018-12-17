@@ -1,0 +1,17 @@
+/* Style Dashboard - Newsfeed list */
+.activity {
+  margin: 10px 0;
+  padding: 0;
+  list-style-type: none;
+  background: transparent url('../../../../base/images/dotted.png') 14px 0 repeat-y;
+}
+.activity .load-less {
+  margin-bottom: 15px;
+}
+.activity .item .actor .gravatar {
+  position: absolute;
+  top: 0;
+  left: 40px;
+  border-radius: 100px;
+}
+/* END Style Dashboard - Newsfeed list */

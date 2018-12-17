@@ -1,0 +1,42 @@
+/* Style breadcrumbs */
+.toolbarRow {
+  background-color: #eeeeee;
+  height: 20px;
+}
+.toolbarRow .toolbar {
+  margin: 0;
+  padding: 0;
+}
+.toolbarRow .toolbar .breadcrumb {
+  border: none;
+  background: none;
+  margin: 0;
+  padding: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+  text-transform: uppercase;
+}
+.toolbarRow .toolbar .breadcrumb > li {
+  text-shadow: none;
+  white-space: nowrap;
+}
+.toolbarRow .toolbar .breadcrumb > li:after {
+  content: " / ";
+}
+.toolbarRow .toolbar .breadcrumb > li.active:after {
+  content: "";
+}
+.toolbarRow .toolbar .breadcrumb > li.active a {
+  color: #333333;
+  font-weight: bold;
+}
+.toolbarRow .toolbar .breadcrumb > li a {
+  color: #333333;
+}
+.toolbarRow .toolbar .breadcrumb > li + li::before {
+  content: "";
+  padding: 0;
+}
+/* END Style breadcrumbs */

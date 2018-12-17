@@ -1,11 +1,3 @@
-.table-valign {
-  display: table;
-  position: relative;
-}
-.table-valign-content {
-  display: table-cell;
-  vertical-align: middle;
-}
 .topSection {
   background-color: #333333;
   background-image: url('/images/backgrounds/pixels.png');

@@ -33,7 +33,7 @@
 					}
 				}
 			}
-			.newHeader{
+			.new-header{
 				.homepage-header-nav-border{
 					> .container{
 						padding: 0;
@@ -100,7 +100,7 @@
 					}
 				}
 			}
-			.newHeader{
+			.new-header{
 				.submitData{
 					padding: 10px;
 				}
@@ -307,7 +307,7 @@
 					display: block;
 				}
 			}
-			.newHeader{
+			.new-header{
 				display: none;
 			}
 			.container,
@@ -350,6 +350,7 @@
 						text-indent: 56px;
 					}
 				}
+                margin-bottom: -3px;
 			}
 			.navbar-toggle {
 				margin: 6px 0 0;
@@ -535,57 +536,69 @@
                }
                 margin-bottom: 10px;
             }
+          .social-footer {
+            .service {
+              .service-details {
+                flex-wrap: wrap;
+                .ocha-service {
+                  width: 100%;
+                }
+                .license {
+                  text-align: left;
+                  order: 3;
+                  margin-left: 0;
+                }
+                .license-cc {
+                  order: 2;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
 
         }
 	}
 }
 
 @media (max-width: 414px) {
-	@carousel-left-pos: 80px;
-	body{
-		&.home{
-			.homepage-main{
-				.carousel{
-					&.mobile-carousel{
-						.mobile-carousel-inner{
-							left: @carousel-left-pos;
-						}
-					}
-				}
-			}
-		}
-
-        .hdx-footer {
-            .mailChimpForm {
-               form {
-                   input[type="submit"].btn.btn-primary {
-                       margin-left: 0;
-                       margin-top: 10px;
-                       margin-bottom: 10px;
-                   }
-               }
+  @carousel-left-pos: 80px;
+  body{
+    &.home{
+      .homepage-main{
+        .carousel{
+          &.mobile-carousel{
+            .mobile-carousel-inner{
+              left: @carousel-left-pos;
             }
-
-            .social-footer {
-                .product-links {
-                    img {
-                        margin-left: 5px;
-                    }
-                    a:first-child {
-                        img {
-                            height: 20px !important;
-                        }
-                    }
-                    a {
-                        img {
-                            height: 26px !important;
-                        }
-                    }
-
-                }
-            }
+          }
         }
-	}
+      }
+    }
+
+    .hdx-footer {
+      .mailChimpForm {
+        form {
+          input[type="submit"].btn.btn-primary {
+            margin-left: 0;
+            margin-top: 10px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+      .social-footer {
+        .service {
+          .service-details {
+            .ocha-service {
+              flex-wrap: wrap;
+            }
+            .spacer {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 @media (max-width: 320px) {
@@ -601,6 +614,7 @@
 					}
 				}
 			}
+
 		}
 	}
 }

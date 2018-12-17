@@ -30,10 +30,10 @@
     text-indent: 44px;
     width: 197px;
   }
-  body.home .newHeader .homepage-header-nav-border > .container {
+  body.home .new-header .homepage-header-nav-border > .container {
     padding: 0;
   }
-  body.home .newHeader .submitData {
+  body.home .new-header .submitData {
     padding: 10px 20px;
   }
   body.home .mainLinks > li > a:after {
@@ -69,23 +69,23 @@
     min-height: 35px;
     width: 29px;
   }
-  body.home .newHeader .submitData {
+  body.home .new-header .submitData {
     padding: 10px;
   }
-  body.home .newHeader .header-nav span {
+  body.home .new-header .header-nav span {
     margin-left: 0;
   }
-  body.home .newHeader .header-nav span.header-nav-search {
+  body.home .new-header .header-nav span.header-nav-search {
     width: 25%;
   }
-  body.home .newHeader .header-nav span.header-nav-search .icon-search {
+  body.home .new-header .header-nav span.header-nav-search .icon-search {
     position: absolute;
   }
-  body.home .newHeader .header-nav span.header-nav-search .header-search-form input {
+  body.home .new-header .header-nav span.header-nav-search .header-search-form input {
     text-indent: 44px;
     width: 100%;
   }
-  body.home .newHeader .header-nav .table-valign {
+  body.home .new-header .header-nav .table-valign {
     margin-left: 0px !important;
   }
   body.home .mainLinks {
@@ -230,7 +230,7 @@
   body.home nav.mobile-only {
     display: block;
   }
-  body.home .newHeader {
+  body.home .new-header {
     display: none;
   }
   body.home .container,
@@ -266,6 +266,7 @@
     height: 58px;
     margin-left: 0;
     width: 70%;
+    margin-bottom: -3px;
   }
   body.home .header-nav-search .header-search-form input {
     text-indent: 56px;
@@ -411,6 +412,21 @@
     margin-left: 7px;
     margin-top: -3px;
   }
+  body .hdx-footer .social-footer .service .service-details {
+    flex-wrap: wrap;
+  }
+  body .hdx-footer .social-footer .service .service-details .ocha-service {
+    width: 100%;
+  }
+  body .hdx-footer .social-footer .service .service-details .license {
+    text-align: left;
+    order: 3;
+    margin-left: 0;
+  }
+  body .hdx-footer .social-footer .service .service-details .license-cc {
+    order: 2;
+    margin-right: 10px;
+  }
 }
 @media (max-width: 414px) {
   body.home .homepage-main .carousel.mobile-carousel .mobile-carousel-inner {
@@ -421,14 +437,11 @@
     margin-top: 10px;
     margin-bottom: 10px;
   }
-  body .hdx-footer .social-footer .product-links img {
-    margin-left: 5px;
+  body .hdx-footer .social-footer .service .service-details .ocha-service {
+    flex-wrap: wrap;
   }
-  body .hdx-footer .social-footer .product-links a:first-child img {
-    height: 20px !important;
-  }
-  body .hdx-footer .social-footer .product-links a img {
-    height: 26px !important;
+  body .hdx-footer .social-footer .service .service-details .spacer {
+    display: none;
   }
 }
 @media (max-width: 320px) {
