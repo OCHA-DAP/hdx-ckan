@@ -1261,7 +1261,8 @@ ul.dataset-resources li + li.label-icons {
   -moz-border-radius: 0 3px 0 0;
   border-radius: 0 3px 0 0;
   padding: 0;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .page-header.page-header-gray {
   border-bottom-color: #cccccc;
@@ -2757,6 +2758,23 @@ ul.list-horizontal li:first-child:before {
   height: 40px;
   margin-bottom: 10px;
 }
+.hdx-footer .match-logo-margin {
+  margin-top: 50px;
+}
+.hdx-footer .other-services {
+  text-align: center;
+}
+.hdx-footer .other-services img {
+  max-height: 40px;
+  max-width: 100%;
+}
+.hdx-footer .other-services img.logo-centre {
+  margin-bottom: -8px;
+}
+.hdx-footer .other-services img.logo-hxl {
+  max-height: 30px;
+  max-width: 137px;
+}
 .hdx-footer .mailChimpForm .subscribeText {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
@@ -2832,11 +2850,21 @@ ul.list-horizontal li:first-child:before {
 }
 .hdx-footer .social-footer .terms {
   margin: 30px 0;
+  display: flex;
+}
+.hdx-footer .social-footer .terms .separator {
+  margin-left: auto;
 }
 .hdx-footer .social-footer .terms a {
   text-transform: uppercase;
   margin-right: 30px;
   color: #eeeeee;
+}
+.hdx-footer .social-footer .terms a:last-child {
+  margin-right: 0;
+}
+.hdx-footer .social-footer .terms a .icon-external-link {
+  color: #888888;
 }
 .hdx-footer .social-footer .service {
   margin-bottom: 45px;
@@ -2923,6 +2951,12 @@ ul.list-horizontal li:first-child:before {
 }
 .hdx-footer a.social-icon.rss {
   background-position: -224px -4px;
+}
+.new-header .global-header a:hover {
+  text-decoration: underline;
+}
+.new-header .global-header a:hover.btn {
+  text-decoration: none;
 }
 .new-header .global-header .global-header-content {
   position: relative;

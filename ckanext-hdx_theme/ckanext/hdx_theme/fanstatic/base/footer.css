@@ -51,6 +51,23 @@
   height: 40px;
   margin-bottom: 10px;
 }
+.hdx-footer .match-logo-margin {
+  margin-top: 50px;
+}
+.hdx-footer .other-services {
+  text-align: center;
+}
+.hdx-footer .other-services img {
+  max-height: 40px;
+  max-width: 100%;
+}
+.hdx-footer .other-services img.logo-centre {
+  margin-bottom: -8px;
+}
+.hdx-footer .other-services img.logo-hxl {
+  max-height: 30px;
+  max-width: 137px;
+}
 .hdx-footer .mailChimpForm .subscribeText {
   font-family: 'Gotham-Medium', sans-serif;
   font-weight: 400;
@@ -126,11 +143,21 @@
 }
 .hdx-footer .social-footer .terms {
   margin: 30px 0;
+  display: flex;
+}
+.hdx-footer .social-footer .terms .separator {
+  margin-left: auto;
 }
 .hdx-footer .social-footer .terms a {
   text-transform: uppercase;
   margin-right: 30px;
   color: #eeeeee;
+}
+.hdx-footer .social-footer .terms a:last-child {
+  margin-right: 0;
+}
+.hdx-footer .social-footer .terms a .icon-external-link {
+  color: #888888;
 }
 .hdx-footer .social-footer .service {
   margin-bottom: 45px;
