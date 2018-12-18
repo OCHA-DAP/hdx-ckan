@@ -299,12 +299,48 @@
 
 @media (max-width: 767px) {
 	body{
+
     &.home{
       min-width: 100%;
       width: 100%;
       nav{
         &.mobile-only{
           display: block;
+
+          .global-header {
+            .container {
+              width: 100%;
+              padding: 0;
+              .ocha-services {
+                .ocha-services-text {
+                  display: none;
+                }
+                .icon-o-arrow-up, .icon-o-arrow-down {
+                  margin-left: 0;
+                }
+              }
+
+              .ocha-services-menu:before {
+                left: 44px;
+              }
+              .separated-list {
+                a.action {
+                  .action-text {
+                    display: none;
+                  }
+
+                }
+              }
+              .ocha-services-menu {
+                .section-spacing {
+                  margin-bottom: 20px;
+                }
+              }
+              .list-title-empty {
+                display: none;
+              }
+            }
+          }
         }
       }
       .new-header{
