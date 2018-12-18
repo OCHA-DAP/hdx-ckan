@@ -412,6 +412,25 @@
     margin-left: 7px;
     margin-top: -3px;
   }
+  body .hdx-footer .other-services {
+    text-align: left;
+    margin-bottom: 30px;
+  }
+  body .hdx-footer .other-services:last-child {
+    margin-bottom: 0;
+  }
+  body .hdx-footer .match-logo-margin {
+    margin-top: 30px;
+  }
+  body .hdx-footer .social-footer .terms {
+    flex-wrap: wrap;
+  }
+  body .hdx-footer .social-footer .terms .separator {
+    display: none;
+  }
+  body .hdx-footer .social-footer .terms a {
+    flex-shrink: 0;
+  }
   body .hdx-footer .social-footer .service .service-details {
     flex-wrap: wrap;
   }

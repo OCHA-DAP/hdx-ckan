@@ -33,6 +33,12 @@
 .new-header {
   @global-header-height: 35px;
   .global-header {
+    a:hover {
+      &.btn {
+        text-decoration: none;
+      }
+      text-decoration: underline;
+    }
     .global-header-content {
       position: relative;
       height: @global-header-height;

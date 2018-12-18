@@ -916,7 +916,8 @@ ul.dataset-resources li + li.label-icons {
   -moz-border-radius: 0 3px 0 0;
   border-radius: 0 3px 0 0;
   padding: 0;
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 .page-header.page-header-gray {
   border-bottom-color: #cccccc;

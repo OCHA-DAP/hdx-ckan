@@ -81,161 +81,25 @@
                 </div>
                 <div class="col-xs-12 col-md-offset-1 col-md-6">
                   <div class="row">
-                    <div class="col-xs-4">
-                      <label class="links-list">
-                        Search data
-                        <ul>
-                          <li>
-                            <a href="/dataset" data-module="hdx_click_stopper" data-module-link_type="footer">Data</a>
-                          </li>
-                          <li>
-                            <a href="/showcase" data-module="hdx_click_stopper" data-module-link_type="footer">Dataviz</a>
-                          </li>
-                          <li>
-                            <a href="/group" data-module="hdx_click_stopper" data-module-link_type="footer">Locations</a>
-                          </li>
-                          <li>
-                            <a href="/organization" data-module="hdx_click_stopper" data-module-link_type="footer">Organisations</a>
-                          </li>
-                        </ul>
-                      </label>
-
-                      <label class="links-list">
-                        QUICK LINKS - ONGOING
-                        <ul>
-                          {% for ev in events.ongoing %}
-                            <li>
-                              <div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="footer">{{ ev.title }}</a></div>
-                              <!--<div class="crises-datasets">[ ## Datasets ]</div>-->
-                            </li>
-                          {% endfor %}
-                          <li>
-                            <div><a href="{{h.url_for('group_read', id='ssd')}}" data-module="hdx_click_stopper" data-module-link_type="footer">South Sudan</a></div>
-                          </li>
-                          <li>
-                            <div><a href="{{h.url_for('group_read', id='syr')}}" data-module="hdx_click_stopper" data-module-link_type="footer">Syria</a></div>
-                          </li>
-                          <li>
-                            <div><a href="{{h.url_for('group_read', id='yem')}}" data-module="hdx_click_stopper" data-module-link_type="footer">Yemen</a></div>
-                          </li>
-                        </ul>
-                      </label>
-
-                      <!--<label class="links-list">-->
-                        <!--QUICK LINKS - ARCHIVED-->
-                        <!--<ul>-->
-                          <!--{% for ev in events.archived %}-->
-                          <!--<li>-->
-                            <!--<div><a href="/{{ev.type}}/{{ev.name}}" data-module="hdx_click_stopper" data-module-link_type="footer">{{ ev.title }}</a></div>-->
-                            <!--&lt;!&ndash;<div class="crises-datasets">[ ## Datasets ]</div>&ndash;&gt;-->
-                          <!--</li>-->
-                          <!--{% endfor %}-->
-                          <!--<li>-->
-                            <!--<div><a href="/ebola" data-module="hdx_click_stopper" data-module-link_type="footer">Ebola 2014</a></div>-->
-                            <!--&lt;!&ndash;<div class="crises-datasets">[ ## Datasets ]</div>&ndash;&gt;-->
-                          <!--</li>-->
-                          <!--<li>-->
-                            <!--{% set nepalLink = h.url_for('show_custom_country', id='nepal-earthquake') %}-->
-                            <!--<div><a href="{{nepalLink}}" data-module="hdx_click_stopper" data-module-link_type="footer">Nepal Earthquake</a></div>-->
-                            <!--&lt;!&ndash;<div class="crises-datasets">[ ## Datasets ]</div>&ndash;&gt;-->
-                          <!--</li>-->
-
-                        <!--</ul>-->
-                      <!--</label>-->
+                    <div class="col-xs-12">
+                      <div class="titlePlusVersion match-logo-margin mBottom20">
+                        {{ _("OUR OTHER SERVICES") }}
+                      </div>
                     </div>
-                    <div class="col-xs-4">
-                      <label class="links-list">
-                        Work with data
-                        <ul>
-                          <li>
-                            <a href="https://tools.humdata.org/wizard/#datacheck" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Data Check <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="https://tools.humdata.org/quickcharts/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Quick Charts <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="https://tools.humdata.org/examples/hxl/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              HXL Tag Assist <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                        </ul>
-                      </label>
-
-                      <label class="links-list">
-                        POWERED BY
-                        <a href="https://tools.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                          <img class="logo-tools-gray lazyload" data-src="/images/homepage/logo-tools-gray.png"/>
-                        </a>
-                      </label>
-
-                      <label class="links-list">
-                        Documentation
-                        <ul>
-                          <li>
-                            <a href="/faq" data-module="hdx_click_stopper" data-module-link_type="footer">FAQ</a>
-                          </li>
-                          <li>
-                            <a href="/documentation" data-module="hdx_click_stopper" data-module-link_type="footer">Resources for Developers</a>
-                          </li>
-                          <li>
-                            <a href="http://hxlstandard.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              HXL Standards <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Open source <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="/about/license" data-module="hdx_click_stopper" data-module-link_type="footer">Data Licenses</a>
-                          </li>
-                          <li>
-                            <a href="/about/terms" data-module="hdx_click_stopper" data-module-link_type="footer">Terms of Service</a>
-                          </li>
-
-                          <li>
-                            <a href="https://centre.humdata.org/category/blog/" target="_blank"  data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Blog <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                        </ul>
-                      </label>
-
+                    <div class="col-xs-12 col-md-4 other-services">
+                      <a href="https://tools.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                        <img class="lazyload logo-tools" data-src="/images/homepage/logo-tools-gray.png">
+                      </a>
                     </div>
-                    <div class="col-xs-4">
-                      <label class="links-list">
-                        About
-                        <ul>
-                          <li>
-                            <a href="https://centre.humdata.org/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              Centre for Humdata <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="https://centre.humdata.org/contact-us/"  data-module="hdx_click_stopper" data-module-link_type="footer">Contact</a>
-                          </li>
-                        </ul>
-                      </label>
-                      <label class="links-list">
-                        Related Sites
-                        <ul>
-                          <li>
-                            <a href="https://www.humanitarianresponse.info" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              HR info <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                          <li>
-                            <a href="https://reliefweb.int" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
-                              ReliefWeb <i class="icon icon-external-link"></i>
-                            </a>
-                          </li>
-                        </ul>
-                      </label>
+                    <div class="col-xs-12 col-md-4 other-services">
+                      <a href="https://centre.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                        <img class="lazyload logo-centre" data-src="/images/homepage/logo-centre-gray.png">
+                      </a>
+                    </div>
+                    <div class="col-xs-12 col-md-4 other-services">
+                      <a href="https://centre.humdata.org" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                        <img class="lazyload logo-hxl" data-src="/images/homepage/logo-hxl.svg">
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -259,8 +123,31 @@
           <div class="col-xs-12 paddingLeftHack paddingRightHack">
             <div class="social-footer">
               <div class="terms">
-                <a href="https://www.un.org/en/sections/about-website/privacy-notice/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">Privacy Policy</a>
-                <a href="https://www.un.org/en/sections/about-website/terms-use/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">Terms of Use</a>
+                <a href="https://data.humdata.org/about/terms" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  TERMS OF SERVICE
+                </a>
+                <a href="https://github.com/OCHA-DAP" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  OPEN SOURCE <i class="icon icon-external-link"></i>
+                </a>
+                <a href="https://data.humdata.org/documentation" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  RESOURCES FOR DEVELOPERS
+                </a>
+                <a href="https://data.humdata.org/about/license" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  DATA LICENSES
+                </a>
+                <a href="https://centre.humdata.org/category/blog/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  BLOG <i class="icon icon-external-link"></i>
+                </a>
+                <a href="https://centre.humdata.org/contact-us/" target="_blank" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  CONTACT <i class="icon icon-external-link"></i>
+                </a>
+                <span class="separator"></span>
+                <a href="http://www.twitter.com/humdata" title="Twitter" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  <i class="icon icon-twitter"></i>
+                </a>
+                <a href="https://github.com/OCHA-DAP" title="GitHub" data-module="hdx_click_stopper" data-module-link_type="footer">
+                  <i class="icon icon-github"></i>
+                </a>
               </div>
               <div class="service">
                 <div class="provided-by">
