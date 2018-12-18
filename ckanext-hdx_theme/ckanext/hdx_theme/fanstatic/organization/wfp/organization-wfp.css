@@ -2935,6 +2935,9 @@ ul.list-horizontal li:first-child:before {
   margin-right: 30px;
   color: #eeeeee;
 }
+.hdx-footer .social-footer .terms a:hover {
+  text-decoration: underline;
+}
 .hdx-footer .social-footer .terms a:last-child {
   margin-right: 0;
 }
