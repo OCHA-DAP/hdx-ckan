@@ -230,6 +230,29 @@
   body.home nav.mobile-only {
     display: block;
   }
+  body.home nav.mobile-only .global-header .container {
+    width: 100%;
+    padding: 0;
+  }
+  body.home nav.mobile-only .global-header .container .ocha-services .ocha-services-text {
+    display: none;
+  }
+  body.home nav.mobile-only .global-header .container .ocha-services .icon-o-arrow-up,
+  body.home nav.mobile-only .global-header .container .ocha-services .icon-o-arrow-down {
+    margin-left: 0;
+  }
+  body.home nav.mobile-only .global-header .container .ocha-services-menu:before {
+    left: 44px;
+  }
+  body.home nav.mobile-only .global-header .container .separated-list a.action .action-text {
+    display: none;
+  }
+  body.home nav.mobile-only .global-header .container .ocha-services-menu .section-spacing {
+    margin-bottom: 20px;
+  }
+  body.home nav.mobile-only .global-header .container .list-title-empty {
+    display: none;
+  }
   body.home .new-header {
     display: none;
   }
