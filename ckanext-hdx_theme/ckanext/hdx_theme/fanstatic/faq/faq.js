@@ -125,10 +125,26 @@
             }
         }
 
-        $("#learn-add-viz-dataset-link").click(function () {
-          console.log("yeeeah");
-          showPresentationModal("#learn-add-viz-dataset");
-        });
+        // $("#learn-add-viz-dataset-link").click(function () {
+        //   showPresentationModal("#learn-add-viz-dataset");
+        // });
+
+        var clickCallbackCreator = function (index) {
+          var callback = function () {
+            var strDiv = "#faq-google-embed-" + index;
+            showPresentationModal(strDiv);
+          };
+          return callback;
+        };
+
+        var nrEmbeds = $('.faq-google-embed-marker');
+        for (var i = 1; i <= nrEmbeds.length; i++) {
+          var strLnk = "#faq-google-embed-link-" + i;
+
+          $(strLnk).click(clickCallbackCreator(i));
+
+      }
+
 
     });
 

@@ -219,7 +219,12 @@ sharing_data = {
             'q': 'How do I add a dataset?',
             'a': 'Click on the \'Add Data\' button from any page on HDX. You will be required to login and associate '
                  'yourself with an organisation. '
-                 '<a target="_blank" href="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/present#slide=id.gf01e139c5_1_152">These slides</a> '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-1">These slides</a> '
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-1" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/1GCO30_N8cCegoTD3bwPgUQ0NcQ5N7C_moUbSrlzLYaU/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
                  'provide a walkthrough of how to add a dataset. Here are more details on the '
                  '\'<a target="_blank" href="https://humanitarian.atlassian.net/wiki/display/HDX/2016/11/16/Data+Freshness+Part+1%3A+Adding+a+New+Metadata+Field">update frequency</a>\' field.',
         },
@@ -263,7 +268,12 @@ sharing_data = {
             'a': 'You can only edit a dataset if you are an administrator or editor of your organisation. If you have '
                  'the appropriate role, on the dataset page you will find an \'Edit\' button just below the dataset title on the right. This will '
                  'allow you to edit the dataset metadata and the resources. '
-                 '<a target="_blank" href="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/present#slide=id.g10ad610ac0_0_147">These slides</a> '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-2">These slides</a> '
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-2" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/1Tw2KF6SNLUMMTKSQ3y_B0bebn27B5kSQf74-Cb02OFg/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
                  'provide a walk-through of how to edit a dataset.',
         },
         {
@@ -292,9 +302,9 @@ sharing_data = {
                  'The visuals will appear in the "Interactive Data" section at the top of the page.'
                  '<br/><br/>'
                  'Learn how to do this by taking a quick look at '
-                 '<a class="link" id="learn-add-viz-dataset-link">these slides</a>.'
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-3">these slides</a>.'
                  ''
-                 '<div class="modal presentation-modal" id="learn-add-viz-dataset" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<div class="modal presentation-modal" id="faq-google-embed-3" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
                  '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
                  '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/e/2PACX-1vS1A1i-fg5PucF0hIRWDc_4_IUC_TXomWho8POCefSYuNHl9wN1SvS3_EM4jOsiWY4XvzZZDzquisgk/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
                  '</div></div>',
@@ -365,7 +375,12 @@ sharing_data = {
             'q': 'How can I share data from my Google Drive?',
             'a': '<p>First you need to be sure that the Google Drive file or files are publicly visible or accessible '
                  'to anyone who has the link. For instructions on how to change, follow '
-                 '<a target="_blank" href="https://docs.google.com/presentation/d/17ihVuVlVfw3K2_L9u4cL-Lp-RaZNcBw6BJgxGjbWu4o/edit#slide=id.gf01e139c5_1_52">this walkthrough</a>. '
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-4">this walkthrough</a>. '
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-4" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/17ihVuVlVfw3K2_L9u4cL-Lp-RaZNcBw6BJgxGjbWu4o/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
                  'You can click on \'Add Data\' and choose the option to import files from \'Google Drive\'. A \'Google '
                  'Drive\' pop-up will show and help you choose the file/files from your account. The files will not be '
                  'copied into HDX. Instead, the HDX \'Download\' button will always direct users to the live version '
@@ -579,8 +594,12 @@ hxl = {
                  '</ol> '
                  '<br/><br/>'
                  'For more details you can view '
-                 '<a target="_blank" href="https://docs.google.com/presentation/d/12MVgXAbxL_8eLYz2SxZe3wJrGNjBaX8A231Wed7avj8/edit?usp=sharing/">'
-                 'these walkthrough slides</a>.'
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-5">these walkthrough</a>. '
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-5" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/12MVgXAbxL_8eLYz2SxZe3wJrGNjBaX8A231Wed7avj8/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
 
         },
         {
@@ -614,8 +633,12 @@ hxl = {
                  'numerical outliers, and incorrect data types. '
                  '<br/><br/>'
                  'For more details you can view '
-                 '<a target="_blank" href="https://docs.google.com/presentation/d/1AiRDyEBe_56_b8KL0r4_a5W96Q3ZE2m56IT-r29nZFo/edit?usp=sharing"> '
-                 'these walkthrough slides </a>.'
+                 '<a class="link faq-google-embed-marker" id="faq-google-embed-link-6">these walkthrough slides</a>.'
+                 ''
+                 '<div class="modal presentation-modal" id="faq-google-embed-6" tabindex="-1" role="dialog"><div class="modal-dialog" role="document">'
+                 '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'
+                 '<div class="modal-content"><iframe load-src="https://docs.google.com/presentation/d/1AiRDyEBe_56_b8KL0r4_a5W96Q3ZE2m56IT-r29nZFo/embed?start=false&loop=false&delayms=10000" frameborder="0" width="900" height="560" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></div>'
+                 '</div></div>'
 
         },
     ]
