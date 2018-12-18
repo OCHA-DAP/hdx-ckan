@@ -2790,7 +2790,6 @@ ul.list-horizontal li:first-child:before {
   z-index: 10000;
   left: 0;
   width: 100%;
-  height: 80px;
   bottom: 0;
   font-family: 'Gotham-Book', sans-serif;
   font-weight: 400;
@@ -2840,6 +2839,9 @@ ul.list-horizontal li:first-child:before {
 .hdx-footer .other-services img {
   max-height: 40px;
   max-width: 100%;
+}
+.hdx-footer .other-services img.logo-hdx {
+  max-height: 30px;
 }
 .hdx-footer .other-services img.logo-centre {
   margin-bottom: -8px;
