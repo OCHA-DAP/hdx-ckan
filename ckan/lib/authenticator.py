@@ -27,6 +27,9 @@ class UsernamePasswordAuthenticator(object):
                 user = users[0]
             except:
                 user = None
+        # Only allow sysadmin users to login when not using oauth
+        if user and not user.sysadmin:
+            user = None
         ## END HDX HACK ##
 
         if user is None:
